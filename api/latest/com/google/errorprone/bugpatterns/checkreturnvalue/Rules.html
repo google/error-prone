@@ -83,7 +83,7 @@ loadScripts(document, 'script');</script>
 <hr>
 <pre>public final class <span class="type-name-label">Rules</span>
 extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></pre>
-<div class="block">Factories for common kinds <a href="ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUseRule</code></a>s.</div>
+<div class="block">Factories for common kinds of <a href="ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUseRule</code></a>s.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -104,7 +104,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </thead>
 <tbody>
 <tr class="alt-color" id="i0">
-<td class="col-first"><code>static <a href="ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a></code></td>
+<td class="col-first"><code>static <a href="ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a>&lt;<a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>,&#8203;com.sun.tools.javac.code.Symbol&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#globalDefault(java.util.Optional,java.util.Optional)">globalDefault</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="ResultUsePolicy.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicy</a>&gt;&nbsp;methodDefault,
 <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="ResultUsePolicy.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicy</a>&gt;&nbsp;constructorDefault)</code></th>
 <td class="col-last">
@@ -113,7 +113,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </td>
 </tr>
 <tr class="row-color" id="i1">
-<td class="col-first"><code>static <a href="ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a></code></td>
+<td class="col-first"><code>static <a href="ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a>&lt;<a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>,&#8203;com.sun.tools.javac.code.Symbol&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#mapAnnotationSimpleName(java.lang.String,com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicy)">mapAnnotationSimpleName</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;simpleName,
 <a href="ResultUsePolicy.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicy</a>&nbsp;policy)</code></th>
 <td class="col-last">
@@ -142,7 +142,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <li>
 <section class="detail" id="globalDefault(java.util.Optional,java.util.Optional)">
 <h3>globalDefault</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a></span>&nbsp;<span class="member-name">globalDefault</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="ResultUsePolicy.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicy</a>&gt;&nbsp;methodDefault,
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a>&lt;<a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>,&#8203;com.sun.tools.javac.code.Symbol&gt;</span>&nbsp;<span class="member-name">globalDefault</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="ResultUsePolicy.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicy</a>&gt;&nbsp;methodDefault,
 <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="ResultUsePolicy.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicy</a>&gt;&nbsp;constructorDefault)</span></div>
 <div class="block">Returns a simple global rule that always returns the given defaults for methods and
  constructors.</div>
@@ -151,7 +151,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <li>
 <section class="detail" id="mapAnnotationSimpleName(java.lang.String,com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicy)">
 <h3>mapAnnotationSimpleName</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a></span>&nbsp;<span class="member-name">mapAnnotationSimpleName</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;simpleName,
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a>&lt;<a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>,&#8203;com.sun.tools.javac.code.Symbol&gt;</span>&nbsp;<span class="member-name">mapAnnotationSimpleName</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;simpleName,
 <a href="ResultUsePolicy.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicy</a>&nbsp;policy)</span></div>
 <div class="block">Returns a <a href="ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUseRule</code></a> that maps annotations with the given <code>simpleName</code> to the
  given <code>policy</code>.</div>

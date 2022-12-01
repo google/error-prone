@@ -348,15 +348,15 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/apidiff/ApiDiffProto.MemberDiff.Builder.html#addRepeatedField(com.google.protobuf.Descriptors.FieldDescriptor,java.lang.Object)">addRepeatedField(Descriptors.FieldDescriptor, Object)</a></span> - Method in class com.google.errorprone.bugpatterns.apidiff.<a href="com/google/errorprone/bugpatterns/apidiff/ApiDiffProto.MemberDiff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.MemberDiff.Builder</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.Builder.html#addRule(com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule)">addRule(ResultUseRule)</a></span> - Method in class com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.Builder.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicyEvaluator.Builder</a></dt>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.Builder.html#addRule(com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule)">addRule(ResultUseRule&lt;C, S&gt;)</a></span> - Method in class com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.Builder.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicyEvaluator.Builder</a></dt>
 <dd>
 <div class="block">Adds the given <code>rule</code>.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.Builder.html#addRules(com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule...)">addRules(ResultUseRule...)</a></span> - Method in class com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.Builder.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicyEvaluator.Builder</a></dt>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.Builder.html#addRules(com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule...)">addRules(ResultUseRule&lt;C, S&gt;...)</a></span> - Method in class com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.Builder.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicyEvaluator.Builder</a></dt>
 <dd>
 <div class="block">Adds all the given <code>rules</code>.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.Builder.html#addRules(java.lang.Iterable)">addRules(Iterable&lt;? extends ResultUseRule&gt;)</a></span> - Method in class com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.Builder.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicyEvaluator.Builder</a></dt>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.Builder.html#addRules(java.lang.Iterable)">addRules(Iterable&lt;? extends ResultUseRule&lt;C, S&gt;&gt;)</a></span> - Method in class com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.Builder.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicyEvaluator.Builder</a></dt>
 <dd>
 <div class="block">Adds all the given <code>rules</code>.</div>
 </dd>
@@ -1502,10 +1502,6 @@ loadScripts(document, 'script');</script>
 <div class="block">Returns a Description builder, which allows you to customize the diagnostic with a custom
  message or multiple fixes.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.html#builder()">builder()</a></span> - Static method in class com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicyEvaluator</a></dt>
-<dd>
-<div class="block">Returns a new <a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.Builder.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUsePolicyEvaluator.Builder</code></a> for creating a <a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUsePolicyEvaluator</code></a>.</div>
-</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#builder()">builder()</a></span> - Static method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/ErrorProneFlags.html#builder()">builder()</a></span> - Static method in class com.google.errorprone.<a href="com/google/errorprone/ErrorProneFlags.html" title="class in com.google.errorprone">ErrorProneFlags</a></dt>
@@ -1514,6 +1510,10 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/fixes/SuggestedFix.html#builder()">builder()</a></span> - Static method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.html#builder(com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicyEvaluator.MethodInfo)">builder(ResultUsePolicyEvaluator.MethodInfo&lt;C, S, M&gt;)</a></span> - Static method in class com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicyEvaluator</a></dt>
+<dd>
+<div class="block">Returns a new <a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.Builder.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUsePolicyEvaluator.Builder</code></a> for creating a <a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUsePolicyEvaluator</code></a>.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/matchers/Description.html#builder(com.sun.source.tree.Tree,java.lang.String,java.lang.String,com.google.errorprone.BugPattern.SeverityLevel,java.lang.String)">builder(Tree, String, String, BugPattern.SeverityLevel, String)</a></span> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></dt>
 <dd>
 <div class="block">Returns a new builder for <a href="com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers"><code>Description</code></a>s.</div>
@@ -2330,6 +2330,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Matches a class in which any of/all of its constructors match the given constructorMatcher.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.MethodInfo.MethodKind.html#CONSTRUCTOR">CONSTRUCTOR</a></span> - com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.MethodInfo.MethodKind.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicyEvaluator.MethodInfo.MethodKind</a></dt>
+<dd>
+<div class="block">A constructor.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/matchers/method/MethodInvocationMatcher.MethodKind.html#CONSTRUCTOR">CONSTRUCTOR</a></span> - com.google.errorprone.matchers.method.<a href="com/google/errorprone/matchers/method/MethodInvocationMatcher.MethodKind.html" title="enum in com.google.errorprone.matchers.method">MethodInvocationMatcher.MethodKind</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/matchers/method/ConstructorMatchState.html" title="class in com.google.errorprone.matchers.method"><span class="type-name-link">ConstructorMatchState</span></a> - Class in <a href="com/google/errorprone/matchers/method/package-summary.html">com.google.errorprone.matchers.method</a></dt>
@@ -2471,11 +2475,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Builds a Rule object from a map.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.html#create(com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule...)">create(ResultUseRule...)</a></span> - Static method in class com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicyEvaluator</a></dt>
-<dd>
-<div class="block">Creates a new <a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUsePolicyEvaluator</code></a> using the given <code>rules</code>.</div>
-</dd>
-<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.Evaluation.html#create(com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule,com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule.RuleScope,com.sun.tools.javac.code.Symbol,com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicy)">create(ResultUseRule, ResultUseRule.RuleScope, Symbol, ResultUsePolicy)</a></span> - Static method in class com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.Evaluation.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule.Evaluation</a></dt>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.Evaluation.html#create(com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule,com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule.RuleScope,S,com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicy)">create(ResultUseRule&lt;?, S&gt;, ResultUseRule.RuleScope, S, ResultUsePolicy)</a></span> - Static method in class com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.Evaluation.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule.Evaluation</a></dt>
 <dd>
 <div class="block">Creates a new <a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.Evaluation.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUseRule.Evaluation</code></a>.</div>
 </dd>
@@ -2549,10 +2549,6 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/BugCheckerInfo.html#create(java.lang.Class)">create(Class&lt;? extends BugChecker&gt;)</a></span> - Static method in class com.google.errorprone.<a href="com/google/errorprone/BugCheckerInfo.html" title="class in com.google.errorprone">BugCheckerInfo</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.html#create(java.lang.Iterable)">create(Iterable&lt;? extends ResultUseRule&gt;)</a></span> - Static method in class com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicyEvaluator</a></dt>
-<dd>
-<div class="block">Creates a new <a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUsePolicyEvaluator</code></a> using the given <code>rules</code>.</div>
-</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/refaster/UAnyOf.html#create(java.lang.Iterable)">create(Iterable&lt;? extends UExpression&gt;)</a></span> - Static method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UAnyOf.html" title="class in com.google.errorprone.refaster">UAnyOf</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/refaster/BlockTemplate.html#create(java.lang.Iterable,java.util.Map,com.google.errorprone.refaster.UStatement...)">create(Iterable&lt;UTypeVar&gt;, Map&lt;String, ? extends UType&gt;, UStatement...)</a></span> - Static method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/BlockTemplate.html" title="class in com.google.errorprone.refaster">BlockTemplate</a></dt>
@@ -3477,38 +3473,32 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/javadoc/EscapedEntity.html#%3Cinit%3E()">EscapedEntity()</a></span> - Constructor for class com.google.errorprone.bugpatterns.javadoc.<a href="com/google/errorprone/bugpatterns/javadoc/EscapedEntity.html" title="class in com.google.errorprone.bugpatterns.javadoc">EscapedEntity</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.GlobalRule.html#evaluate(boolean,com.google.errorprone.VisitorState)">evaluate(boolean, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.GlobalRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule.GlobalRule</a></dt>
-<dd>
-<div class="block">Optionally returns a global policy for methods or constructors.</div>
-</dd>
-<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.html#evaluate(com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule.RuleScope,com.sun.tools.javac.code.Symbol,com.google.errorprone.VisitorState)">evaluate(ResultUseRule.RuleScope, Symbol, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a></dt>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.html#evaluate(com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule.RuleScope,S,C)">evaluate(ResultUseRule.RuleScope, S, C)</a></span> - Method in class com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a></dt>
 <dd>
 <div class="block">Evaluates the given symbol and optionally returns an <a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.Evaluation.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUseRule.Evaluation</code></a> of it.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.html#evaluate(com.sun.tools.javac.code.Symbol.MethodSymbol,com.google.errorprone.VisitorState)">evaluate(Symbol.MethodSymbol, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicyEvaluator</a></dt>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/checkreturnvalue/PackagesRule.html#evaluate(com.sun.tools.javac.code.Symbol,com.google.errorprone.VisitorState)">evaluate(Symbol, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/PackagesRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">PackagesRule</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.html#evaluate(M,C)">evaluate(M, C)</a></span> - Method in class com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicyEvaluator</a></dt>
 <dd>
 <div class="block">Evaluates the given <code>method</code> and returns a single <a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicy.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUsePolicy</code></a> that should
  apply to it.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/checkreturnvalue/PackagesRule.html#evaluate(com.sun.tools.javac.code.Symbol,com.google.errorprone.VisitorState)">evaluate(Symbol, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/PackagesRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">PackagesRule</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.html#evaluate(com.sun.tools.javac.code.Symbol,com.google.errorprone.VisitorState)">evaluate(Symbol, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a></dt>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.html#evaluate(S,C)">evaluate(S, C)</a></span> - Method in class com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a></dt>
 <dd>
 <div class="block">Evaluates the given <code>symbol</code> and optionally returns a <a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicy.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUsePolicy</code></a> for it.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.GlobalRule.html#evaluate(com.sun.tools.javac.code.Symbol,com.google.errorprone.VisitorState)">evaluate(Symbol, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.GlobalRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule.GlobalRule</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.MethodRule.html#evaluate(com.sun.tools.javac.code.Symbol,com.google.errorprone.VisitorState)">evaluate(Symbol, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.MethodRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule.MethodRule</a></dt>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.MethodRule.html#evaluate(S,C)">evaluate(S, C)</a></span> - Method in class com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.MethodRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule.MethodRule</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ExternalCanIgnoreReturnValue.html#evaluateMethod(com.sun.tools.javac.code.Symbol.MethodSymbol,com.google.errorprone.VisitorState)">evaluateMethod(Symbol.MethodSymbol, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ExternalCanIgnoreReturnValue.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ExternalCanIgnoreReturnValue</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.MethodRule.html#evaluateMethod(com.sun.tools.javac.code.Symbol.MethodSymbol,com.google.errorprone.VisitorState)">evaluateMethod(Symbol.MethodSymbol, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.MethodRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule.MethodRule</a></dt>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.MethodRule.html#evaluateMethod(M,C)">evaluateMethod(M, C)</a></span> - Method in class com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.MethodRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule.MethodRule</a></dt>
 <dd>
 <div class="block">Evaluates the given <code>method</code> and optionally returns a <a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicy.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUsePolicy</code></a> for it.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.Evaluation.html#%3Cinit%3E()">Evaluation()</a></span> - Constructor for class com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.Evaluation.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule.Evaluation</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.html#evaluations(com.sun.tools.javac.code.Symbol.MethodSymbol,com.google.errorprone.VisitorState)">evaluations(Symbol.MethodSymbol, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicyEvaluator</a></dt>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.html#evaluations(M,C)">evaluations(M, C)</a></span> - Method in class com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicyEvaluator</a></dt>
 <dd>
 <div class="block">Returns a stream of <a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.Evaluation.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUseRule.Evaluation</code></a>s made by rules starting from the given <code>method</code>.</div>
 </dd>
@@ -5015,6 +5005,10 @@ loadScripts(document, 'script');</script>
 <dt><span class="member-name-link"><a href="com/google/errorprone/matchers/Description.html#getMessageWithoutCheckName()">getMessageWithoutCheckName()</a></span> - Method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></dt>
 <dd>
 <div class="block">Returns the message, not including the check name but including the link.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.MethodInfo.html#getMethodKind(M)">getMethodKind(M)</a></span> - Method in interface com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.MethodInfo.html" title="interface in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicyEvaluator.MethodInfo</a></dt>
+<dd>
+<div class="block">Returns the kind of the given method.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/CheckReturnValue.html#getMethodPolicy(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">getMethodPolicy(ExpressionTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/CheckReturnValue.html" title="class in com.google.errorprone.bugpatterns">CheckReturnValue</a></dt>
 <dd>
@@ -9216,6 +9210,10 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/matchers/Enclosing.Method.html#%3Cinit%3E(com.google.errorprone.matchers.Matcher)">Method(Matcher&lt;MethodTree&gt;)</a></span> - Constructor for class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Enclosing.Method.html" title="class in com.google.errorprone.matchers">Enclosing.Method</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.MethodInfo.MethodKind.html#METHOD">METHOD</a></span> - com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.MethodInfo.MethodKind.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicyEvaluator.MethodInfo.MethodKind</a></dt>
+<dd>
+<div class="block">An actual method, not a constructor.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.RuleScope.html#METHOD">METHOD</a></span> - com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.RuleScope.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule.RuleScope</a></dt>
 <dd>
 <div class="block">The specific method or constructor for which a <a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicy.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUsePolicy</code></a> is being chosen.</div>
@@ -9437,7 +9435,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Match a method that returns a non-primitive type.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.MethodRule.html#%3Cinit%3E()">MethodRule()</a></span> - Constructor for class com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.MethodRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule.MethodRule</a></dt>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.MethodRule.html#%3Cinit%3E(java.lang.Class)">MethodRule(Class&lt;M&gt;)</a></span> - Constructor for class com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.MethodRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule.MethodRule</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/CanBeStaticAnalyzer.CanBeStaticResult.html#methodsReferenced()">methodsReferenced()</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/CanBeStaticAnalyzer.CanBeStaticResult.html" title="class in com.google.errorprone.bugpatterns">CanBeStaticAnalyzer.CanBeStaticResult</a></dt>
 <dd>
@@ -10315,6 +10313,10 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/OrphanedFormatString.html#%3Cinit%3E()">OrphanedFormatString()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/OrphanedFormatString.html" title="class in com.google.errorprone.bugpatterns">OrphanedFormatString</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.MethodInfo.MethodKind.html#OTHER">OTHER</a></span> - com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.MethodInfo.MethodKind.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicyEvaluator.MethodInfo.MethodKind</a></dt>
+<dd>
+<div class="block">Neither a method nor a constructor.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/util/ASTHelpers.html#outermostClass(com.sun.tools.javac.code.Symbol)">outermostClass(Symbol)</a></span> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
 <dd>
 <div class="block">Returns the outermost enclosing owning class, or <code>null</code>.</div>
@@ -11325,28 +11327,38 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Policy for use of a method or constructor's result.</div>
 </dd>
-<dt><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><span class="type-name-link">ResultUsePolicyEvaluator</span></a> - Class in <a href="com/google/errorprone/bugpatterns/checkreturnvalue/package-summary.html">com.google.errorprone.bugpatterns.checkreturnvalue</a></dt>
+<dt><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><span class="type-name-link">ResultUsePolicyEvaluator</span></a>&lt;<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.html" title="type parameter in ResultUsePolicyEvaluator">C</a>,&#8203;<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.html" title="type parameter in ResultUsePolicyEvaluator">S</a>,&#8203;<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.html" title="type parameter in ResultUsePolicyEvaluator">M</a> extends <a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.html" title="type parameter in ResultUsePolicyEvaluator">S</a>&gt; - Class in <a href="com/google/errorprone/bugpatterns/checkreturnvalue/package-summary.html">com.google.errorprone.bugpatterns.checkreturnvalue</a></dt>
 <dd>
 <div class="block">Evaluates methods and their enclosing classes and packages to determine a <a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicy.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUsePolicy</code></a>
  for the methods.</div>
 </dd>
-<dt><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.Builder.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><span class="type-name-link">ResultUsePolicyEvaluator.Builder</span></a> - Class in <a href="com/google/errorprone/bugpatterns/checkreturnvalue/package-summary.html">com.google.errorprone.bugpatterns.checkreturnvalue</a></dt>
+<dt><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.Builder.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><span class="type-name-link">ResultUsePolicyEvaluator.Builder</span></a>&lt;<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.Builder.html" title="type parameter in ResultUsePolicyEvaluator.Builder">C</a>,&#8203;<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.Builder.html" title="type parameter in ResultUsePolicyEvaluator.Builder">S</a>,&#8203;<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.Builder.html" title="type parameter in ResultUsePolicyEvaluator.Builder">M</a> extends <a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.Builder.html" title="type parameter in ResultUsePolicyEvaluator.Builder">S</a>&gt; - Class in <a href="com/google/errorprone/bugpatterns/checkreturnvalue/package-summary.html">com.google.errorprone.bugpatterns.checkreturnvalue</a></dt>
 <dd>
 <div class="block">Builder for <a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUsePolicyEvaluator</code></a>.</div>
 </dd>
-<dt><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><span class="type-name-link">ResultUseRule</span></a> - Class in <a href="com/google/errorprone/bugpatterns/checkreturnvalue/package-summary.html">com.google.errorprone.bugpatterns.checkreturnvalue</a></dt>
+<dt><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.MethodInfo.html" title="interface in com.google.errorprone.bugpatterns.checkreturnvalue"><span class="type-name-link">ResultUsePolicyEvaluator.MethodInfo</span></a>&lt;<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.MethodInfo.html" title="type parameter in ResultUsePolicyEvaluator.MethodInfo">C</a>,&#8203;<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.MethodInfo.html" title="type parameter in ResultUsePolicyEvaluator.MethodInfo">S</a>,&#8203;<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.MethodInfo.html" title="type parameter in ResultUsePolicyEvaluator.MethodInfo">M</a> extends <a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.MethodInfo.html" title="type parameter in ResultUsePolicyEvaluator.MethodInfo">S</a>&gt; - Interface in <a href="com/google/errorprone/bugpatterns/checkreturnvalue/package-summary.html">com.google.errorprone.bugpatterns.checkreturnvalue</a></dt>
+<dd>
+<div class="block">Delegate to return information about a method symbol.</div>
+</dd>
+<dt><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.MethodInfo.MethodKind.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue"><span class="type-name-link">ResultUsePolicyEvaluator.MethodInfo.MethodKind</span></a> - Enum in <a href="com/google/errorprone/bugpatterns/checkreturnvalue/package-summary.html">com.google.errorprone.bugpatterns.checkreturnvalue</a></dt>
+<dd>
+<div class="block">What kind a method symbol is, and what scopes apply to it.</div>
+</dd>
+<dt><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><span class="type-name-link">ResultUseRule</span></a>&lt;<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.html" title="type parameter in ResultUseRule">C</a>,&#8203;<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.html" title="type parameter in ResultUseRule">S</a>&gt; - Class in <a href="com/google/errorprone/bugpatterns/checkreturnvalue/package-summary.html">com.google.errorprone.bugpatterns.checkreturnvalue</a></dt>
 <dd>
 <div class="block">A rule for determining <a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicy.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUsePolicy</code></a> for methods and/or constructors.</div>
 </dd>
-<dt><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.Evaluation.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><span class="type-name-link">ResultUseRule.Evaluation</span></a> - Class in <a href="com/google/errorprone/bugpatterns/checkreturnvalue/package-summary.html">com.google.errorprone.bugpatterns.checkreturnvalue</a></dt>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.html#%3Cinit%3E()">ResultUseRule()</a></span> - Constructor for class com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.Evaluation.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><span class="type-name-link">ResultUseRule.Evaluation</span></a>&lt;<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.Evaluation.html" title="type parameter in ResultUseRule.Evaluation">S</a>&gt; - Class in <a href="com/google/errorprone/bugpatterns/checkreturnvalue/package-summary.html">com.google.errorprone.bugpatterns.checkreturnvalue</a></dt>
 <dd>
 <div class="block">An evaluation that a rule makes.</div>
 </dd>
-<dt><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.GlobalRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><span class="type-name-link">ResultUseRule.GlobalRule</span></a> - Class in <a href="com/google/errorprone/bugpatterns/checkreturnvalue/package-summary.html">com.google.errorprone.bugpatterns.checkreturnvalue</a></dt>
+<dt><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.GlobalRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><span class="type-name-link">ResultUseRule.GlobalRule</span></a>&lt;<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.GlobalRule.html" title="type parameter in ResultUseRule.GlobalRule">C</a>,&#8203;<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.GlobalRule.html" title="type parameter in ResultUseRule.GlobalRule">S</a>&gt; - Class in <a href="com/google/errorprone/bugpatterns/checkreturnvalue/package-summary.html">com.google.errorprone.bugpatterns.checkreturnvalue</a></dt>
 <dd>
 <div class="block">A global rule that is evaluated when none of the more specific rules determine a <a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicy.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUsePolicy</code></a> for a method.</div>
 </dd>
-<dt><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.MethodRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><span class="type-name-link">ResultUseRule.MethodRule</span></a> - Class in <a href="com/google/errorprone/bugpatterns/checkreturnvalue/package-summary.html">com.google.errorprone.bugpatterns.checkreturnvalue</a></dt>
+<dt><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.MethodRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><span class="type-name-link">ResultUseRule.MethodRule</span></a>&lt;<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.MethodRule.html" title="type parameter in ResultUseRule.MethodRule">C</a>,&#8203;<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.MethodRule.html" title="type parameter in ResultUseRule.MethodRule">S</a>,&#8203;<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.MethodRule.html" title="type parameter in ResultUseRule.MethodRule">M</a> extends <a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.MethodRule.html" title="type parameter in ResultUseRule.MethodRule">S</a>&gt; - Class in <a href="com/google/errorprone/bugpatterns/checkreturnvalue/package-summary.html">com.google.errorprone.bugpatterns.checkreturnvalue</a></dt>
 <dd>
 <div class="block">A rule that evaluates methods and constructors to determine a <a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicy.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUsePolicy</code></a> for them.</div>
 </dd>
@@ -11354,7 +11366,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Scope to which a rule may apply.</div>
 </dd>
-<dt><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.SymbolRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><span class="type-name-link">ResultUseRule.SymbolRule</span></a> - Class in <a href="com/google/errorprone/bugpatterns/checkreturnvalue/package-summary.html">com.google.errorprone.bugpatterns.checkreturnvalue</a></dt>
+<dt><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.SymbolRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><span class="type-name-link">ResultUseRule.SymbolRule</span></a>&lt;<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.SymbolRule.html" title="type parameter in ResultUseRule.SymbolRule">C</a>,&#8203;<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.SymbolRule.html" title="type parameter in ResultUseRule.SymbolRule">S</a>&gt; - Class in <a href="com/google/errorprone/bugpatterns/checkreturnvalue/package-summary.html">com.google.errorprone.bugpatterns.checkreturnvalue</a></dt>
 <dd>
 <div class="block">A rule that evaluates symbols of any kind to determine a <a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicy.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUsePolicy</code></a> to associate
  with them.</div>
@@ -11428,7 +11440,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/checkreturnvalue/Rules.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><span class="type-name-link">Rules</span></a> - Class in <a href="com/google/errorprone/bugpatterns/checkreturnvalue/package-summary.html">com.google.errorprone.bugpatterns.checkreturnvalue</a></dt>
 <dd>
-<div class="block">Factories for common kinds <a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUseRule</code></a>s.</div>
+<div class="block">Factories for common kinds of <a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUseRule</code></a>s.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/BaseErrorProneJavaCompiler.html#run(java.io.InputStream,java.io.OutputStream,java.io.OutputStream,java.lang.String...)">run(InputStream, OutputStream, OutputStream, String...)</a></span> - Method in class com.google.errorprone.<a href="com/google/errorprone/BaseErrorProneJavaCompiler.html" title="class in com.google.errorprone">BaseErrorProneJavaCompiler</a></dt>
 <dd>&nbsp;</dd>
@@ -11510,6 +11522,10 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/inject/ScopeAnnotationOnInterfaceOrAbstractClass.html#%3Cinit%3E()">ScopeAnnotationOnInterfaceOrAbstractClass()</a></span> - Constructor for class com.google.errorprone.bugpatterns.inject.<a href="com/google/errorprone/bugpatterns/inject/ScopeAnnotationOnInterfaceOrAbstractClass.html" title="class in com.google.errorprone.bugpatterns.inject">ScopeAnnotationOnInterfaceOrAbstractClass</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.MethodInfo.html#scopeMembers(com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule.RuleScope,M,C)">scopeMembers(ResultUseRule.RuleScope, M, C)</a></span> - Method in interface com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.MethodInfo.html" title="interface in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicyEvaluator.MethodInfo</a></dt>
+<dd>
+<div class="block">Returns an ordered stream of elements in this scope relative to the given <code>method</code>.</div>
+</dd>
 <dt><a href="com/google/errorprone/bugpatterns/inject/dagger/ScopeOnModule.html" title="class in com.google.errorprone.bugpatterns.inject.dagger"><span class="type-name-link">ScopeOnModule</span></a> - Class in <a href="com/google/errorprone/bugpatterns/inject/dagger/package-summary.html">com.google.errorprone.bugpatterns.inject.dagger</a></dt>
 <dd>
 <div class="block">Migrate users who use JSR 330 scopes on Dagger modules.</div>
@@ -11530,6 +11546,10 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.SymbolRule.html#scopes()">scopes()</a></span> - Method in class com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.SymbolRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule.SymbolRule</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.MethodInfo.html#scopes(M)">scopes(M)</a></span> - Method in interface com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.MethodInfo.html" title="interface in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicyEvaluator.MethodInfo</a></dt>
+<dd>
+<div class="block">Returns the scopes that apply for the given method.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/BugCheckerRefactoringTestHelper.FixChoosers.html#SECOND">SECOND</a></span> - com.google.errorprone.<a href="com/google/errorprone/BugCheckerRefactoringTestHelper.FixChoosers.html" title="enum in com.google.errorprone">BugCheckerRefactoringTestHelper.FixChoosers</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.Select.html#%3Cinit%3E()">Select()</a></span> - Constructor for class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.Select.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression.Select</a></dt>
@@ -13470,6 +13490,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns the enum constant of this type with the specified name.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.MethodInfo.MethodKind.html#valueOf(java.lang.String)">valueOf(String)</a></span> - Static method in enum com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.MethodInfo.MethodKind.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicyEvaluator.MethodInfo.MethodKind</a></dt>
+<dd>
+<div class="block">Returns the enum constant of this type with the specified name.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.RuleScope.html#valueOf(java.lang.String)">valueOf(String)</a></span> - Static method in enum com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.RuleScope.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule.RuleScope</a></dt>
 <dd>
 <div class="block">Returns the enum constant of this type with the specified name.</div>
@@ -13593,6 +13617,11 @@ the order they are declared.</div>
 the order they are declared.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicy.html#values()">values()</a></span> - Static method in enum com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicy.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicy</a></dt>
+<dd>
+<div class="block">Returns an array containing the constants of this enum type, in
+the order they are declared.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.MethodInfo.MethodKind.html#values()">values()</a></span> - Static method in enum com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.MethodInfo.MethodKind.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicyEvaluator.MethodInfo.MethodKind</a></dt>
 <dd>
 <div class="block">Returns an array containing the constants of this enum type, in
 the order they are declared.</div>

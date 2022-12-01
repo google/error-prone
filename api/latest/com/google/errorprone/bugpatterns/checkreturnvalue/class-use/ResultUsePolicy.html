@@ -121,8 +121,8 @@ loadScripts(document, 'script');</script>
 <tbody>
 <tr class="alt-color">
 <td class="col-first"><code><a href="../ResultUsePolicy.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicy</a></code></td>
-<th class="col-second" scope="row"><span class="type-name-label">ResultUsePolicyEvaluator.</span><code><span class="member-name-link"><a href="../ResultUsePolicyEvaluator.html#evaluate(com.sun.tools.javac.code.Symbol.MethodSymbol,com.google.errorprone.VisitorState)">evaluate</a></span>&#8203;(com.sun.tools.javac.code.Symbol.MethodSymbol&nbsp;method,
-<a href="../../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
+<th class="col-second" scope="row"><span class="type-name-label">ResultUsePolicyEvaluator.</span><code><span class="member-name-link"><a href="../ResultUsePolicyEvaluator.html#evaluate(M,C)">evaluate</a></span>&#8203;(<a href="../ResultUsePolicyEvaluator.html" title="type parameter in ResultUsePolicyEvaluator">M</a>&nbsp;method,
+<a href="../ResultUsePolicyEvaluator.html" title="type parameter in ResultUsePolicyEvaluator">C</a>&nbsp;state)</code></th>
 <td class="col-last">
 <div class="block">Evaluates the given <code>method</code> and returns a single <a href="../ResultUsePolicy.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUsePolicy</code></a> that should
  apply to it.</div>
@@ -172,30 +172,16 @@ the order they are declared.</div>
 </tr>
 <tr class="row-color">
 <td class="col-first"><code>abstract <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../ResultUsePolicy.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicy</a>&gt;</code></td>
-<th class="col-second" scope="row"><span class="type-name-label">ResultUseRule.</span><code><span class="member-name-link"><a href="../ResultUseRule.html#evaluate(com.sun.tools.javac.code.Symbol,com.google.errorprone.VisitorState)">evaluate</a></span>&#8203;(com.sun.tools.javac.code.Symbol&nbsp;symbol,
-<a href="../../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
+<th class="col-second" scope="row"><span class="type-name-label">ResultUseRule.</span><code><span class="member-name-link"><a href="../ResultUseRule.html#evaluate(S,C)">evaluate</a></span>&#8203;(<a href="../ResultUseRule.html" title="type parameter in ResultUseRule">S</a>&nbsp;symbol,
+<a href="../ResultUseRule.html" title="type parameter in ResultUseRule">C</a>&nbsp;context)</code></th>
 <td class="col-last">
 <div class="block">Evaluates the given <code>symbol</code> and optionally returns a <a href="../ResultUsePolicy.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUsePolicy</code></a> for it.</div>
 </td>
 </tr>
 <tr class="alt-color">
-<td class="col-first"><code>abstract <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../ResultUsePolicy.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicy</a>&gt;</code></td>
-<th class="col-second" scope="row"><span class="type-name-label">ResultUseRule.GlobalRule.</span><code><span class="member-name-link"><a href="../ResultUseRule.GlobalRule.html#evaluate(boolean,com.google.errorprone.VisitorState)">evaluate</a></span>&#8203;(boolean&nbsp;constructor,
-<a href="../../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
-<td class="col-last">
-<div class="block">Optionally returns a global policy for methods or constructors.</div>
-</td>
-</tr>
-<tr class="row-color">
 <td class="col-first"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../ResultUsePolicy.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicy</a>&gt;</code></td>
-<th class="col-second" scope="row"><span class="type-name-label">ResultUseRule.GlobalRule.</span><code><span class="member-name-link"><a href="../ResultUseRule.GlobalRule.html#evaluate(com.sun.tools.javac.code.Symbol,com.google.errorprone.VisitorState)">evaluate</a></span>&#8203;(com.sun.tools.javac.code.Symbol&nbsp;symbol,
-<a href="../../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
-<td class="col-last">&nbsp;</td>
-</tr>
-<tr class="alt-color">
-<td class="col-first"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../ResultUsePolicy.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicy</a>&gt;</code></td>
-<th class="col-second" scope="row"><span class="type-name-label">ResultUseRule.MethodRule.</span><code><span class="member-name-link"><a href="../ResultUseRule.MethodRule.html#evaluate(com.sun.tools.javac.code.Symbol,com.google.errorprone.VisitorState)">evaluate</a></span>&#8203;(com.sun.tools.javac.code.Symbol&nbsp;symbol,
-<a href="../../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
+<th class="col-second" scope="row"><span class="type-name-label">ResultUseRule.MethodRule.</span><code><span class="member-name-link"><a href="../ResultUseRule.MethodRule.html#evaluate(S,C)">evaluate</a></span>&#8203;(<a href="../ResultUseRule.MethodRule.html" title="type parameter in ResultUseRule.MethodRule">S</a>&nbsp;symbol,
+<a href="../ResultUseRule.MethodRule.html" title="type parameter in ResultUseRule.MethodRule">C</a>&nbsp;context)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="row-color">
@@ -206,8 +192,8 @@ the order they are declared.</div>
 </tr>
 <tr class="alt-color">
 <td class="col-first"><code>abstract <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../ResultUsePolicy.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicy</a>&gt;</code></td>
-<th class="col-second" scope="row"><span class="type-name-label">ResultUseRule.MethodRule.</span><code><span class="member-name-link"><a href="../ResultUseRule.MethodRule.html#evaluateMethod(com.sun.tools.javac.code.Symbol.MethodSymbol,com.google.errorprone.VisitorState)">evaluateMethod</a></span>&#8203;(com.sun.tools.javac.code.Symbol.MethodSymbol&nbsp;method,
-<a href="../../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
+<th class="col-second" scope="row"><span class="type-name-label">ResultUseRule.MethodRule.</span><code><span class="member-name-link"><a href="../ResultUseRule.MethodRule.html#evaluateMethod(M,C)">evaluateMethod</a></span>&#8203;(<a href="../ResultUseRule.MethodRule.html" title="type parameter in ResultUseRule.MethodRule">M</a>&nbsp;method,
+<a href="../ResultUseRule.MethodRule.html" title="type parameter in ResultUseRule.MethodRule">C</a>&nbsp;context)</code></th>
 <td class="col-last">
 <div class="block">Evaluates the given <code>method</code> and optionally returns a <a href="../ResultUsePolicy.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUsePolicy</code></a> for it.</div>
 </td>
@@ -227,17 +213,17 @@ the order they are declared.</div>
 </thead>
 <tbody>
 <tr class="alt-color">
-<td class="col-first"><code>static <a href="../ResultUseRule.Evaluation.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule.Evaluation</a></code></td>
-<th class="col-second" scope="row"><span class="type-name-label">ResultUseRule.Evaluation.</span><code><span class="member-name-link"><a href="../ResultUseRule.Evaluation.html#create(com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule,com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule.RuleScope,com.sun.tools.javac.code.Symbol,com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicy)">create</a></span>&#8203;(<a href="../ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a>&nbsp;rule,
+<td class="col-first"><code>static &lt;S&gt;&nbsp;<a href="../ResultUseRule.Evaluation.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule.Evaluation</a>&lt;S&gt;</code></td>
+<th class="col-second" scope="row"><span class="type-name-label">ResultUseRule.Evaluation.</span><code><span class="member-name-link"><a href="../ResultUseRule.Evaluation.html#create(com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule,com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule.RuleScope,S,com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicy)">create</a></span>&#8203;(<a href="../ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a>&lt;?,&#8203;S&gt;&nbsp;rule,
 <a href="../ResultUseRule.RuleScope.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule.RuleScope</a>&nbsp;scope,
-com.sun.tools.javac.code.Symbol&nbsp;element,
+S&nbsp;element,
 <a href="../ResultUsePolicy.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicy</a>&nbsp;policy)</code></th>
 <td class="col-last">
 <div class="block">Creates a new <a href="../ResultUseRule.Evaluation.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUseRule.Evaluation</code></a>.</div>
 </td>
 </tr>
 <tr class="row-color">
-<td class="col-first"><code>static <a href="../ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a></code></td>
+<td class="col-first"><code>static <a href="../ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a>&lt;<a href="../../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>,&#8203;com.sun.tools.javac.code.Symbol&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">Rules.</span><code><span class="member-name-link"><a href="../Rules.html#mapAnnotationSimpleName(java.lang.String,com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicy)">mapAnnotationSimpleName</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;simpleName,
 <a href="../ResultUsePolicy.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicy</a>&nbsp;policy)</code></th>
 <td class="col-last">
@@ -260,7 +246,7 @@ com.sun.tools.javac.code.Symbol&nbsp;element,
 </thead>
 <tbody>
 <tr class="alt-color">
-<td class="col-first"><code>static <a href="../ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a></code></td>
+<td class="col-first"><code>static <a href="../ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a>&lt;<a href="../../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>,&#8203;com.sun.tools.javac.code.Symbol&gt;</code></td>
 <th class="col-second" scope="row"><span class="type-name-label">Rules.</span><code><span class="member-name-link"><a href="../Rules.html#globalDefault(java.util.Optional,java.util.Optional)">globalDefault</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../ResultUsePolicy.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicy</a>&gt;&nbsp;methodDefault,
 <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../ResultUsePolicy.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicy</a>&gt;&nbsp;constructorDefault)</code></th>
 <td class="col-last">

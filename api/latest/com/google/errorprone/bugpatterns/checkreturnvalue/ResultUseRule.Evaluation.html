@@ -74,18 +74,22 @@ loadScripts(document, 'script');</script>
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
 <div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">com.google.errorprone.bugpatterns.checkreturnvalue</a></div>
-<h1 title="Class ResultUseRule.Evaluation" class="title">Class ResultUseRule.Evaluation</h1>
+<h1 title="Class ResultUseRule.Evaluation" class="title">Class ResultUseRule.Evaluation&lt;S&gt;</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
-<div class="inheritance">com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule.Evaluation</div>
+<div class="inheritance">com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule.Evaluation&lt;S&gt;</div>
 </div>
 <section class="description">
 <dl class="notes">
+<dt>Type Parameters:</dt>
+<dd><code>S</code> - the type of symbols</dd>
+</dl>
+<dl class="notes">
 <dt>Enclosing class:</dt>
-<dd><a href="ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a></dd>
+<dd><a href="ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a>&lt;<a href="ResultUseRule.html" title="type parameter in ResultUseRule">C</a>,&#8203;<a href="ResultUseRule.html" title="type parameter in ResultUseRule">S</a>&gt;</dd>
 </dl>
 <hr>
-<pre>public abstract static class <span class="type-name-label">ResultUseRule.Evaluation</span>
+<pre>public abstract static class <span class="type-name-label">ResultUseRule.Evaluation&lt;S&gt;</span>
 extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></pre>
 <div class="block">An evaluation that a rule makes.</div>
 </section>
@@ -131,17 +135,17 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </thead>
 <tbody>
 <tr class="alt-color" id="i0">
-<td class="col-first"><code>static <a href="ResultUseRule.Evaluation.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule.Evaluation</a></code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#create(com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule,com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule.RuleScope,com.sun.tools.javac.code.Symbol,com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicy)">create</a></span>&#8203;(<a href="ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a>&nbsp;rule,
+<td class="col-first"><code>static &lt;S&gt;&nbsp;<a href="ResultUseRule.Evaluation.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule.Evaluation</a>&lt;S&gt;</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#create(com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule,com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule.RuleScope,S,com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicy)">create</a></span>&#8203;(<a href="ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a>&lt;?,&#8203;S&gt;&nbsp;rule,
 <a href="ResultUseRule.RuleScope.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule.RuleScope</a>&nbsp;scope,
-com.sun.tools.javac.code.Symbol&nbsp;element,
+S&nbsp;element,
 <a href="ResultUsePolicy.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicy</a>&nbsp;policy)</code></th>
 <td class="col-last">
 <div class="block">Creates a new <a href="ResultUseRule.Evaluation.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUseRule.Evaluation</code></a>.</div>
 </td>
 </tr>
 <tr class="row-color" id="i1">
-<td class="col-first"><code>abstract com.sun.tools.javac.code.Symbol</code></td>
+<td class="col-first"><code>abstract <a href="ResultUseRule.Evaluation.html" title="type parameter in ResultUseRule.Evaluation">S</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#element()">element</a></span>()</code></th>
 <td class="col-last">
 <div class="block">The specific element in the scope for which the evaluation was made.</div>
@@ -155,7 +159,7 @@ com.sun.tools.javac.code.Symbol&nbsp;element,
 </td>
 </tr>
 <tr class="row-color" id="i3">
-<td class="col-first"><code>abstract <a href="ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a></code></td>
+<td class="col-first"><code>abstract <a href="ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a>&lt;?,&#8203;<a href="ResultUseRule.Evaluation.html" title="type parameter in ResultUseRule.Evaluation">S</a>&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#rule()">rule</a></span>()</code></th>
 <td class="col-last">
 <div class="block">The rule that made this evaluation.</div>
@@ -201,11 +205,11 @@ com.sun.tools.javac.code.Symbol&nbsp;element,
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="create(com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule,com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule.RuleScope,com.sun.tools.javac.code.Symbol,com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicy)">
-<h3>create</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="ResultUseRule.Evaluation.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule.Evaluation</a></span>&nbsp;<span class="member-name">create</span>&#8203;(<span class="parameters"><a href="ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a>&nbsp;rule,
+<section class="detail" id="create(com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule,com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule.RuleScope,S,com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicy)">
+<h3 id="create(com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule,com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule.RuleScope,java.lang.Object,com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicy)">create</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;S&gt;</span>&nbsp;<span class="return-type"><a href="ResultUseRule.Evaluation.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule.Evaluation</a>&lt;S&gt;</span>&nbsp;<span class="member-name">create</span>&#8203;(<span class="parameters"><a href="ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a>&lt;?,&#8203;S&gt;&nbsp;rule,
 <a href="ResultUseRule.RuleScope.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule.RuleScope</a>&nbsp;scope,
-com.sun.tools.javac.code.Symbol&nbsp;element,
+S&nbsp;element,
 <a href="ResultUsePolicy.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicy</a>&nbsp;policy)</span></div>
 <div class="block">Creates a new <a href="ResultUseRule.Evaluation.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUseRule.Evaluation</code></a>.</div>
 </section>
@@ -213,7 +217,7 @@ com.sun.tools.javac.code.Symbol&nbsp;element,
 <li>
 <section class="detail" id="rule()">
 <h3>rule</h3>
-<div class="member-signature"><span class="modifiers">public abstract</span>&nbsp;<span class="return-type"><a href="ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a></span>&nbsp;<span class="member-name">rule</span>()</div>
+<div class="member-signature"><span class="modifiers">public abstract</span>&nbsp;<span class="return-type"><a href="ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a>&lt;?,&#8203;<a href="ResultUseRule.Evaluation.html" title="type parameter in ResultUseRule.Evaluation">S</a>&gt;</span>&nbsp;<span class="member-name">rule</span>()</div>
 <div class="block">The rule that made this evaluation.</div>
 </section>
 </li>
@@ -227,7 +231,7 @@ com.sun.tools.javac.code.Symbol&nbsp;element,
 <li>
 <section class="detail" id="element()">
 <h3>element</h3>
-<div class="member-signature"><span class="modifiers">public abstract</span>&nbsp;<span class="return-type">com.sun.tools.javac.code.Symbol</span>&nbsp;<span class="member-name">element</span>()</div>
+<div class="member-signature"><span class="modifiers">public abstract</span>&nbsp;<span class="return-type"><a href="ResultUseRule.Evaluation.html" title="type parameter in ResultUseRule.Evaluation">S</a></span>&nbsp;<span class="member-name">element</span>()</div>
 <div class="block">The specific element in the scope for which the evaluation was made.</div>
 </section>
 </li>

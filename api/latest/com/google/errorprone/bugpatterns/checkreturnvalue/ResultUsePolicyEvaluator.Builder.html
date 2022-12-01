@@ -74,18 +74,24 @@ loadScripts(document, 'script');</script>
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
 <div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">com.google.errorprone.bugpatterns.checkreturnvalue</a></div>
-<h1 title="Class ResultUsePolicyEvaluator.Builder" class="title">Class ResultUsePolicyEvaluator.Builder</h1>
+<h1 title="Class ResultUsePolicyEvaluator.Builder" class="title">Class ResultUsePolicyEvaluator.Builder&lt;C,&#8203;S,&#8203;M extends S&gt;</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
-<div class="inheritance">com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicyEvaluator.Builder</div>
+<div class="inheritance">com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicyEvaluator.Builder&lt;C,&#8203;S,&#8203;M&gt;</div>
 </div>
 <section class="description">
 <dl class="notes">
+<dt>Type Parameters:</dt>
+<dd><code>C</code> - the type of the context object used during evaluation</dd>
+<dd><code>S</code> - the type of symbols</dd>
+<dd><code>M</code> - the type of method symbols</dd>
+</dl>
+<dl class="notes">
 <dt>Enclosing class:</dt>
-<dd><a href="ResultUsePolicyEvaluator.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicyEvaluator</a></dd>
+<dd><a href="ResultUsePolicyEvaluator.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicyEvaluator</a>&lt;<a href="ResultUsePolicyEvaluator.html" title="type parameter in ResultUsePolicyEvaluator">C</a>,&#8203;<a href="ResultUsePolicyEvaluator.html" title="type parameter in ResultUsePolicyEvaluator">S</a>,&#8203;<a href="ResultUsePolicyEvaluator.html" title="type parameter in ResultUsePolicyEvaluator">M</a> extends <a href="ResultUsePolicyEvaluator.html" title="type parameter in ResultUsePolicyEvaluator">S</a>&gt;</dd>
 </dl>
 <hr>
-<pre>public static final class <span class="type-name-label">ResultUsePolicyEvaluator.Builder</span>
+<pre>public static final class <span class="type-name-label">ResultUsePolicyEvaluator.Builder&lt;C,&#8203;S,&#8203;M extends S&gt;</span>
 extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></pre>
 <div class="block">Builder for <a href="ResultUsePolicyEvaluator.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUsePolicyEvaluator</code></a>.</div>
 </section>
@@ -108,28 +114,28 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </thead>
 <tbody>
 <tr class="alt-color" id="i0">
-<td class="col-first"><code><a href="ResultUsePolicyEvaluator.Builder.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicyEvaluator.Builder</a></code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#addRule(com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule)">addRule</a></span>&#8203;(<a href="ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a>&nbsp;rule)</code></th>
+<td class="col-first"><code><a href="ResultUsePolicyEvaluator.Builder.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicyEvaluator.Builder</a>&lt;<a href="ResultUsePolicyEvaluator.Builder.html" title="type parameter in ResultUsePolicyEvaluator.Builder">C</a>,&#8203;<a href="ResultUsePolicyEvaluator.Builder.html" title="type parameter in ResultUsePolicyEvaluator.Builder">S</a>,&#8203;<a href="ResultUsePolicyEvaluator.Builder.html" title="type parameter in ResultUsePolicyEvaluator.Builder">M</a>&gt;</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#addRule(com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule)">addRule</a></span>&#8203;(<a href="ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a>&lt;<a href="ResultUsePolicyEvaluator.Builder.html" title="type parameter in ResultUsePolicyEvaluator.Builder">C</a>,&#8203;<a href="ResultUsePolicyEvaluator.Builder.html" title="type parameter in ResultUsePolicyEvaluator.Builder">S</a>&gt;&nbsp;rule)</code></th>
 <td class="col-last">
 <div class="block">Adds the given <code>rule</code>.</div>
 </td>
 </tr>
 <tr class="row-color" id="i1">
-<td class="col-first"><code><a href="ResultUsePolicyEvaluator.Builder.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicyEvaluator.Builder</a></code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#addRules(com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule...)">addRules</a></span>&#8203;(<a href="ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a>...&nbsp;rules)</code></th>
+<td class="col-first"><code><a href="ResultUsePolicyEvaluator.Builder.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicyEvaluator.Builder</a>&lt;<a href="ResultUsePolicyEvaluator.Builder.html" title="type parameter in ResultUsePolicyEvaluator.Builder">C</a>,&#8203;<a href="ResultUsePolicyEvaluator.Builder.html" title="type parameter in ResultUsePolicyEvaluator.Builder">S</a>,&#8203;<a href="ResultUsePolicyEvaluator.Builder.html" title="type parameter in ResultUsePolicyEvaluator.Builder">M</a>&gt;</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#addRules(com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule...)">addRules</a></span>&#8203;(<a href="ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a>&lt;<a href="ResultUsePolicyEvaluator.Builder.html" title="type parameter in ResultUsePolicyEvaluator.Builder">C</a>,&#8203;<a href="ResultUsePolicyEvaluator.Builder.html" title="type parameter in ResultUsePolicyEvaluator.Builder">S</a>&gt;...&nbsp;rules)</code></th>
 <td class="col-last">
 <div class="block">Adds all the given <code>rules</code>.</div>
 </td>
 </tr>
 <tr class="alt-color" id="i2">
-<td class="col-first"><code><a href="ResultUsePolicyEvaluator.Builder.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicyEvaluator.Builder</a></code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#addRules(java.lang.Iterable)">addRules</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;? extends <a href="ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a>&gt;&nbsp;rules)</code></th>
+<td class="col-first"><code><a href="ResultUsePolicyEvaluator.Builder.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicyEvaluator.Builder</a>&lt;<a href="ResultUsePolicyEvaluator.Builder.html" title="type parameter in ResultUsePolicyEvaluator.Builder">C</a>,&#8203;<a href="ResultUsePolicyEvaluator.Builder.html" title="type parameter in ResultUsePolicyEvaluator.Builder">S</a>,&#8203;<a href="ResultUsePolicyEvaluator.Builder.html" title="type parameter in ResultUsePolicyEvaluator.Builder">M</a>&gt;</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#addRules(java.lang.Iterable)">addRules</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;? extends <a href="ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a>&lt;<a href="ResultUsePolicyEvaluator.Builder.html" title="type parameter in ResultUsePolicyEvaluator.Builder">C</a>,&#8203;<a href="ResultUsePolicyEvaluator.Builder.html" title="type parameter in ResultUsePolicyEvaluator.Builder">S</a>&gt;&gt;&nbsp;rules)</code></th>
 <td class="col-last">
 <div class="block">Adds all the given <code>rules</code>.</div>
 </td>
 </tr>
 <tr class="row-color" id="i3">
-<td class="col-first"><code><a href="ResultUsePolicyEvaluator.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicyEvaluator</a></code></td>
+<td class="col-first"><code><a href="ResultUsePolicyEvaluator.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicyEvaluator</a>&lt;<a href="ResultUsePolicyEvaluator.Builder.html" title="type parameter in ResultUsePolicyEvaluator.Builder">C</a>,&#8203;<a href="ResultUsePolicyEvaluator.Builder.html" title="type parameter in ResultUsePolicyEvaluator.Builder">S</a>,&#8203;<a href="ResultUsePolicyEvaluator.Builder.html" title="type parameter in ResultUsePolicyEvaluator.Builder">M</a>&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#build()">build</a></span>()</code></th>
 <td class="col-last">
 <div class="block">Builds a new <a href="ResultUsePolicyEvaluator.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUsePolicyEvaluator</code></a>.</div>
@@ -157,7 +163,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <section class="detail" id="addRule(com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule)">
 <h3>addRule</h3>
 <div class="member-signature"><span class="annotations"><a href="../../annotations/CanIgnoreReturnValue.html" title="annotation in com.google.errorprone.annotations">@CanIgnoreReturnValue</a>
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="ResultUsePolicyEvaluator.Builder.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicyEvaluator.Builder</a></span>&nbsp;<span class="member-name">addRule</span>&#8203;(<span class="parameters"><a href="ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a>&nbsp;rule)</span></div>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="ResultUsePolicyEvaluator.Builder.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicyEvaluator.Builder</a>&lt;<a href="ResultUsePolicyEvaluator.Builder.html" title="type parameter in ResultUsePolicyEvaluator.Builder">C</a>,&#8203;<a href="ResultUsePolicyEvaluator.Builder.html" title="type parameter in ResultUsePolicyEvaluator.Builder">S</a>,&#8203;<a href="ResultUsePolicyEvaluator.Builder.html" title="type parameter in ResultUsePolicyEvaluator.Builder">M</a>&gt;</span>&nbsp;<span class="member-name">addRule</span>&#8203;(<span class="parameters"><a href="ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a>&lt;<a href="ResultUsePolicyEvaluator.Builder.html" title="type parameter in ResultUsePolicyEvaluator.Builder">C</a>,&#8203;<a href="ResultUsePolicyEvaluator.Builder.html" title="type parameter in ResultUsePolicyEvaluator.Builder">S</a>&gt;&nbsp;rule)</span></div>
 <div class="block">Adds the given <code>rule</code>.</div>
 </section>
 </li>
@@ -165,7 +171,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <section class="detail" id="addRules(com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule...)">
 <h3>addRules</h3>
 <div class="member-signature"><span class="annotations"><a href="../../annotations/CanIgnoreReturnValue.html" title="annotation in com.google.errorprone.annotations">@CanIgnoreReturnValue</a>
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="ResultUsePolicyEvaluator.Builder.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicyEvaluator.Builder</a></span>&nbsp;<span class="member-name">addRules</span>&#8203;(<span class="parameters"><a href="ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a>...&nbsp;rules)</span></div>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="ResultUsePolicyEvaluator.Builder.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicyEvaluator.Builder</a>&lt;<a href="ResultUsePolicyEvaluator.Builder.html" title="type parameter in ResultUsePolicyEvaluator.Builder">C</a>,&#8203;<a href="ResultUsePolicyEvaluator.Builder.html" title="type parameter in ResultUsePolicyEvaluator.Builder">S</a>,&#8203;<a href="ResultUsePolicyEvaluator.Builder.html" title="type parameter in ResultUsePolicyEvaluator.Builder">M</a>&gt;</span>&nbsp;<span class="member-name">addRules</span>&#8203;(<span class="parameters"><a href="ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a>&lt;<a href="ResultUsePolicyEvaluator.Builder.html" title="type parameter in ResultUsePolicyEvaluator.Builder">C</a>,&#8203;<a href="ResultUsePolicyEvaluator.Builder.html" title="type parameter in ResultUsePolicyEvaluator.Builder">S</a>&gt;...&nbsp;rules)</span></div>
 <div class="block">Adds all the given <code>rules</code>.</div>
 </section>
 </li>
@@ -173,14 +179,14 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <section class="detail" id="addRules(java.lang.Iterable)">
 <h3>addRules</h3>
 <div class="member-signature"><span class="annotations"><a href="../../annotations/CanIgnoreReturnValue.html" title="annotation in com.google.errorprone.annotations">@CanIgnoreReturnValue</a>
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="ResultUsePolicyEvaluator.Builder.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicyEvaluator.Builder</a></span>&nbsp;<span class="member-name">addRules</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;? extends <a href="ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a>&gt;&nbsp;rules)</span></div>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="ResultUsePolicyEvaluator.Builder.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicyEvaluator.Builder</a>&lt;<a href="ResultUsePolicyEvaluator.Builder.html" title="type parameter in ResultUsePolicyEvaluator.Builder">C</a>,&#8203;<a href="ResultUsePolicyEvaluator.Builder.html" title="type parameter in ResultUsePolicyEvaluator.Builder">S</a>,&#8203;<a href="ResultUsePolicyEvaluator.Builder.html" title="type parameter in ResultUsePolicyEvaluator.Builder">M</a>&gt;</span>&nbsp;<span class="member-name">addRules</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;? extends <a href="ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a>&lt;<a href="ResultUsePolicyEvaluator.Builder.html" title="type parameter in ResultUsePolicyEvaluator.Builder">C</a>,&#8203;<a href="ResultUsePolicyEvaluator.Builder.html" title="type parameter in ResultUsePolicyEvaluator.Builder">S</a>&gt;&gt;&nbsp;rules)</span></div>
 <div class="block">Adds all the given <code>rules</code>.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="build()">
 <h3>build</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="ResultUsePolicyEvaluator.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicyEvaluator</a></span>&nbsp;<span class="member-name">build</span>()</div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="ResultUsePolicyEvaluator.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicyEvaluator</a>&lt;<a href="ResultUsePolicyEvaluator.Builder.html" title="type parameter in ResultUsePolicyEvaluator.Builder">C</a>,&#8203;<a href="ResultUsePolicyEvaluator.Builder.html" title="type parameter in ResultUsePolicyEvaluator.Builder">S</a>,&#8203;<a href="ResultUsePolicyEvaluator.Builder.html" title="type parameter in ResultUsePolicyEvaluator.Builder">M</a>&gt;</span>&nbsp;<span class="member-name">build</span>()</div>
 <div class="block">Builds a new <a href="ResultUsePolicyEvaluator.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUsePolicyEvaluator</code></a>.</div>
 </section>
 </li>

@@ -15,8 +15,8 @@
 <script type="text/javascript" src="../../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":6,"i1":10,"i2":10};
-var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],8:["t4","Concrete Methods"]};
+<script type="text/javascript">var data = {"i0":10};
+var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
 var tableTab = "table-tab";
@@ -74,21 +74,26 @@ loadScripts(document, 'script');</script>
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
 <div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">com.google.errorprone.bugpatterns.checkreturnvalue</a></div>
-<h1 title="Class ResultUseRule.GlobalRule" class="title">Class ResultUseRule.GlobalRule</h1>
+<h1 title="Class ResultUseRule.GlobalRule" class="title">Class ResultUseRule.GlobalRule&lt;C,&#8203;S&gt;</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
-<div class="inheritance"><a href="ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule</a>
-<div class="inheritance">com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule.GlobalRule</div>
+<div class="inheritance"><a href="ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule</a>&lt;C,&#8203;S&gt;
+<div class="inheritance">com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule.GlobalRule&lt;C,&#8203;S&gt;</div>
 </div>
 </div>
 <section class="description">
 <dl class="notes">
+<dt>Type Parameters:</dt>
+<dd><code>C</code> - the type of the context object used during evaluation</dd>
+<dd><code>S</code> - the type of symbols</dd>
+</dl>
+<dl class="notes">
 <dt>Enclosing class:</dt>
-<dd><a href="ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a></dd>
+<dd><a href="ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a>&lt;<a href="ResultUseRule.html" title="type parameter in ResultUseRule">C</a>,&#8203;<a href="ResultUseRule.html" title="type parameter in ResultUseRule">S</a>&gt;</dd>
 </dl>
 <hr>
-<pre>public abstract static class <span class="type-name-label">ResultUseRule.GlobalRule</span>
-extends <a href="ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a></pre>
+<pre>public abstract static class <span class="type-name-label">ResultUseRule.GlobalRule&lt;C,&#8203;S&gt;</span>
+extends <a href="ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a>&lt;C,&#8203;S&gt;</pre>
 <div class="block">A global rule that is evaluated when none of the more specific rules determine a <a href="ResultUsePolicy.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUsePolicy</code></a> for a method.</div>
 </section>
 <section class="summary">
@@ -99,7 +104,7 @@ extends <a href="ResultUseRule.html" title="class in com.google.errorprone.bugpa
 <h2>Nested Class Summary</h2>
 <div class="inherited-list">
 <h2 id="nested.classes.inherited.from.class.com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule">Nested classes/interfaces inherited from class&nbsp;com.google.errorprone.bugpatterns.checkreturnvalue.<a href="ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a></h2>
-<code><a href="ResultUseRule.Evaluation.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule.Evaluation</a>, <a href="ResultUseRule.GlobalRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule.GlobalRule</a>, <a href="ResultUseRule.MethodRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule.MethodRule</a>, <a href="ResultUseRule.RuleScope.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule.RuleScope</a>, <a href="ResultUseRule.SymbolRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule.SymbolRule</a></code></div>
+<code><a href="ResultUseRule.Evaluation.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule.Evaluation</a>&lt;<a href="ResultUseRule.Evaluation.html" title="type parameter in ResultUseRule.Evaluation">S</a>&gt;, <a href="ResultUseRule.GlobalRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule.GlobalRule</a>&lt;<a href="ResultUseRule.GlobalRule.html" title="type parameter in ResultUseRule.GlobalRule">C</a>,&#8203;<a href="ResultUseRule.GlobalRule.html" title="type parameter in ResultUseRule.GlobalRule">S</a>&gt;, <a href="ResultUseRule.MethodRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule.MethodRule</a>&lt;<a href="ResultUseRule.MethodRule.html" title="type parameter in ResultUseRule.MethodRule">C</a>,&#8203;<a href="ResultUseRule.MethodRule.html" title="type parameter in ResultUseRule.MethodRule">S</a>,&#8203;<a href="ResultUseRule.MethodRule.html" title="type parameter in ResultUseRule.MethodRule">M</a> extends <a href="ResultUseRule.MethodRule.html" title="type parameter in ResultUseRule.MethodRule">S</a>&gt;, <a href="ResultUseRule.RuleScope.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule.RuleScope</a>, <a href="ResultUseRule.SymbolRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule.SymbolRule</a>&lt;<a href="ResultUseRule.SymbolRule.html" title="type parameter in ResultUseRule.SymbolRule">C</a>,&#8203;<a href="ResultUseRule.SymbolRule.html" title="type parameter in ResultUseRule.SymbolRule">S</a>&gt;</code></div>
 </section>
 </li>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
@@ -130,7 +135,7 @@ extends <a href="ResultUseRule.html" title="class in com.google.errorprone.bugpa
 <section class="method-summary" id="method.summary">
 <h2>Method Summary</h2>
 <div class="member-summary" id="method-summary-table">
-<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" id="t0" class="active-table-tab">All Methods</button><button role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t2" class="table-tab" onclick="show(2);">Instance Methods</button><button role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t3" class="table-tab" onclick="show(4);">Abstract Methods</button><button role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t4" class="table-tab" onclick="show(8);">Concrete Methods</button></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" id="t0" class="active-table-tab">All Methods</button><button role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t2" class="table-tab" onclick="show(2);">Instance Methods</button><button role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t4" class="table-tab" onclick="show(8);">Concrete Methods</button></div>
 <div id="method-summary-table.tabpanel" role="tabpanel">
 <table class="summary-table" aria-labelledby="t0">
 <thead>
@@ -142,22 +147,6 @@ extends <a href="ResultUseRule.html" title="class in com.google.errorprone.bugpa
 </thead>
 <tbody>
 <tr class="alt-color" id="i0">
-<td class="col-first"><code>abstract <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="ResultUsePolicy.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicy</a>&gt;</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#evaluate(boolean,com.google.errorprone.VisitorState)">evaluate</a></span>&#8203;(boolean&nbsp;constructor,
-<a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
-<td class="col-last">
-<div class="block">Optionally returns a global policy for methods or constructors.</div>
-</td>
-</tr>
-<tr class="row-color" id="i1">
-<td class="col-first"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="ResultUsePolicy.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicy</a>&gt;</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#evaluate(com.sun.tools.javac.code.Symbol,com.google.errorprone.VisitorState)">evaluate</a></span>&#8203;(com.sun.tools.javac.code.Symbol&nbsp;symbol,
-<a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
-<td class="col-last">
-<div class="block">Evaluates the given <code>symbol</code> and optionally returns a <a href="ResultUsePolicy.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUsePolicy</code></a> for it.</div>
-</td>
-</tr>
-<tr class="alt-color" id="i2">
 <td class="col-first"><code>com.google.common.collect.ImmutableSet&lt;<a href="ResultUseRule.RuleScope.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule.RuleScope</a>&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#scopes()">scopes</a></span>()</code></th>
 <td class="col-last">
@@ -170,7 +159,7 @@ extends <a href="ResultUseRule.html" title="class in com.google.errorprone.bugpa
 </div>
 <div class="inherited-list">
 <h3 id="methods.inherited.from.class.com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule">Methods inherited from class&nbsp;com.google.errorprone.bugpatterns.checkreturnvalue.<a href="ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a></h3>
-<code><a href="ResultUseRule.html#evaluate(com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule.RuleScope,com.sun.tools.javac.code.Symbol,com.google.errorprone.VisitorState)">evaluate</a>, <a href="ResultUseRule.html#id()">id</a>, <a href="ResultUseRule.html#toString()">toString</a></code></div>
+<code><a href="ResultUseRule.html#evaluate(com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule.RuleScope,S,C)">evaluate</a>, <a href="ResultUseRule.html#evaluate(S,C)">evaluate</a>, <a href="ResultUseRule.html#id()">id</a>, <a href="ResultUseRule.html#toString()">toString</a></code></div>
 <div class="inherited-list">
 <h3 id="methods.inherited.from.class.java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
 <code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
@@ -207,28 +196,7 @@ extends <a href="ResultUseRule.html" title="class in com.google.errorprone.bugpa
 <div class="block">The scopes this rule applies to.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="ResultUseRule.html#scopes()">scopes</a></code>&nbsp;in class&nbsp;<code><a href="ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a></code></dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="evaluate(boolean,com.google.errorprone.VisitorState)">
-<h3>evaluate</h3>
-<div class="member-signature"><span class="modifiers">public abstract</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="ResultUsePolicy.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicy</a>&gt;</span>&nbsp;<span class="member-name">evaluate</span>&#8203;(<span class="parameters">boolean&nbsp;constructor,
-<a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
-<div class="block">Optionally returns a global policy for methods or constructors.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="evaluate(com.sun.tools.javac.code.Symbol,com.google.errorprone.VisitorState)">
-<h3>evaluate</h3>
-<div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="ResultUsePolicy.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicy</a>&gt;</span>&nbsp;<span class="member-name">evaluate</span>&#8203;(<span class="parameters">com.sun.tools.javac.code.Symbol&nbsp;symbol,
-<a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
-<div class="block"><span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="ResultUseRule.html#evaluate(com.sun.tools.javac.code.Symbol,com.google.errorprone.VisitorState)">ResultUseRule</a></code></span></div>
-<div class="block">Evaluates the given <code>symbol</code> and optionally returns a <a href="ResultUsePolicy.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUsePolicy</code></a> for it.</div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code><a href="ResultUseRule.html#evaluate(com.sun.tools.javac.code.Symbol,com.google.errorprone.VisitorState)">evaluate</a></code>&nbsp;in class&nbsp;<code><a href="ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a></code></dd>
+<dd><code><a href="ResultUseRule.html#scopes()">scopes</a></code>&nbsp;in class&nbsp;<code><a href="ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a>&lt;<a href="ResultUseRule.GlobalRule.html" title="type parameter in ResultUseRule.GlobalRule">C</a>,&#8203;<a href="ResultUseRule.GlobalRule.html" title="type parameter in ResultUseRule.GlobalRule">S</a>&gt;</code></dd>
 </dl>
 </section>
 </li>
