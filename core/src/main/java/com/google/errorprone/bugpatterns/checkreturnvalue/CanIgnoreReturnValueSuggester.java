@@ -24,10 +24,12 @@ import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getReturnType;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
+import static com.google.errorprone.util.ASTHelpers.isAbstract;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.google.errorprone.util.ASTHelpers.stripParentheses;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -49,6 +51,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.TypeCastTree;
 import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.source.util.TreeScanner;
+import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 
@@ -99,9 +102,13 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
       return Description.NO_MATCH;
     }
 
-    // OK, now the real implementation: For each possible return branch, does the expression
-    // returned look like "this" or instance methods that are also @CanIgnoreReturnValue.
-    if (methodReturnsIgnorableValues(methodTree, state)) {
+    // skip @AutoValue and @AutoBuilder methods
+    if (isAbstractAutoValueOrAutoBuilderMethod(methodSymbol, state)) {
+      return Description.NO_MATCH;
+    }
+
+    // if the method looks like a builder, or if it always returns `this`, then make it @CIRV
+    if (methodLooksLikeBuilder(methodSymbol) || methodReturnsIgnorableValues(methodTree, state)) {
       SuggestedFix.Builder fix = SuggestedFix.builder();
 
       // if the method is annotated with @RIU, we need to remove it before adding @CIRV
@@ -112,15 +119,32 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
         fix.delete(riuAnnotation);
       }
 
-      String cirvName = qualifyType(state, fix, CIRV);
-      // we could add a trailing comment (e.g., @CanIgnoreReturnValue // returns `this`), but all
-      // developers will become familiar with these annotations sooner or later
-      fix.prefixWith(methodTree, "@" + cirvName + "\n");
+      // now annotate it with @CanIgnoreReturnValue
+      fix.prefixWith(methodTree, "@" + qualifyType(state, fix, CIRV) + "\n");
 
       return describeMatch(methodTree, fix.build());
     }
 
     return Description.NO_MATCH;
+  }
+
+  private static boolean isAbstractAutoValueOrAutoBuilderMethod(
+      MethodSymbol methodSymbol, VisitorState state) {
+    Symbol owner = methodSymbol.owner;
+    // TODO(kak): use ResultEvaluator instead of duplicating _some_ of the logic (right now we only
+    // exclude @AutoValue.Builder's and @AutoBuilder's)
+    return isAbstract(methodSymbol)
+        && (hasAnnotation(owner, "com.google.auto.value.AutoValue.Builder", state)
+            || hasAnnotation(owner, "com.google.auto.value.AutoBuilder", state));
+  }
+
+  private static final ImmutableSet<String> BUILDER_METHOD_PREFIXES =
+      ImmutableSet.of("add", "set", "with", "clear");
+
+  private static boolean methodLooksLikeBuilder(MethodSymbol methodSymbol) {
+    String methodName = methodSymbol.getSimpleName().toString();
+    return methodSymbol.owner.getSimpleName().toString().contains("Builder")
+        && BUILDER_METHOD_PREFIXES.stream().anyMatch(methodName::startsWith);
   }
 
   private static boolean isSimpleReturnThisMethod(MethodTree methodTree) {
