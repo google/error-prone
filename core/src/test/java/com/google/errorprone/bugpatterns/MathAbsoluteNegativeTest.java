@@ -25,10 +25,10 @@ import org.junit.runners.JUnit4;
  * @author kayco@google.com (Kayla Walker)
  */
 @RunWith(JUnit4.class)
-public class MathAbsoluteRandomTest {
+public class MathAbsoluteNegativeTest {
 
   private final CompilationTestHelper helper =
-      CompilationTestHelper.newInstance(MathAbsoluteRandom.class, getClass());
+      CompilationTestHelper.newInstance(MathAbsoluteNegative.class, getClass());
 
   @Test
   public void random() {
@@ -37,10 +37,10 @@ public class MathAbsoluteRandomTest {
             "Test.java",
             "import java.util.Random;",
             "class Test {",
-            "private static final Random random = new Random();",
+            "  private static final Random random = new Random();",
             "  void f() {",
-            "    // BUG: Diagnostic contains: MathAbsoluteRandom",
-            "    Math.abs(random.nextInt()); ",
+            "    // BUG: Diagnostic contains: MathAbsoluteNegative",
+            "    Math.abs(random.nextInt());",
             "  }",
             "}")
         .doTest();
@@ -53,9 +53,9 @@ public class MathAbsoluteRandomTest {
             "Test.java",
             "import java.util.Random;",
             "class Test {",
-            "private static final Random random = new Random();",
+            "  private static final Random random = new Random();",
             "  void f() {",
-            "    Math.abs(random.nextInt(10)); ",
+            "    Math.abs(random.nextInt(10));",
             "  }",
             "}")
         .doTest();
@@ -68,7 +68,7 @@ public class MathAbsoluteRandomTest {
             "Test.java", //
             "class Test {",
             "  void f() {",
-            "    Math.abs(-9549451); ",
+            "    Math.abs(-9549451);",
             "  }",
             "}")
         .doTest();
@@ -81,7 +81,7 @@ public class MathAbsoluteRandomTest {
             "Test.java", //
             "class Test {",
             "  void f() {",
-            "    Math.abs(Math.sin(0) * 10.0); ",
+            "    Math.abs(Math.sin(0) * 10.0);",
             "  }",
             "}")
         .doTest();
@@ -109,6 +109,51 @@ public class MathAbsoluteRandomTest {
             "class Test {",
             "  void f() {",
             "    double random = Math.abs(new Random().nextDouble());",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void hashAsInt() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.hash.Hashing.goodFastHash;",
+            "class Test {",
+            "  void f() {",
+            "    // BUG: Diagnostic contains: MathAbsoluteNegative",
+            "    int foo = Math.abs(goodFastHash(64).hashUnencodedChars(\"\").asInt());",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void hashAsLong() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.hash.Hashing.goodFastHash;",
+            "class Test {",
+            "  void f() {",
+            "    // BUG: Diagnostic contains: MathAbsoluteNegative",
+            "    long foo = Math.abs(goodFastHash(64).hashUnencodedChars(\"\").asLong());",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void hashPadToLong() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.hash.Hashing.goodFastHash;",
+            "class Test {",
+            "  void f() {",
+            "    // BUG: Diagnostic contains: MathAbsoluteNegative",
+            "    long foo = Math.abs(goodFastHash(64).hashUnencodedChars(\"\").padToLong());",
             "  }",
             "}")
         .doTest();

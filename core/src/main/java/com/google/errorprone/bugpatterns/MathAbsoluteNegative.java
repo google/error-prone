@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.allOf;
+import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.argument;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
@@ -35,23 +36,28 @@ import com.sun.source.tree.MethodInvocationTree;
 @BugPattern(
     summary =
         "Math.abs does not always give a positive result. Please consider other "
-            + "methods for positive random numbers.",
-    severity = WARNING)
-public class MathAbsoluteRandom extends BugChecker implements MethodInvocationTreeMatcher {
-
-  private static final Matcher<MethodInvocationTree> RANDOM_ABS_VAL =
+            + "methods for positive numbers.",
+    severity = WARNING,
+    altNames = "MathAbsoluteRandom")
+public final class MathAbsoluteNegative extends BugChecker implements MethodInvocationTreeMatcher {
+  private static final Matcher<MethodInvocationTree> POSSIBLY_NEGATIVE_ABS_VAL =
       allOf(
           staticMethod().onClass("java.lang.Math").named("abs"),
           argument(
               0,
-              instanceMethod()
-                  .onDescendantOf("java.util.Random")
-                  .namedAnyOf("nextInt", "nextLong")
-                  .withNoParameters()));
+              anyOf(
+                  instanceMethod()
+                      .onDescendantOf("java.util.Random")
+                      .namedAnyOf("nextInt", "nextLong")
+                      .withNoParameters(),
+                  instanceMethod()
+                      .onDescendantOf("com.google.common.hash.HashCode")
+                      .namedAnyOf("asInt", "asLong", "padToLong")
+                      .withNoParameters())));
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    if (RANDOM_ABS_VAL.matches(tree, state)) {
+    if (POSSIBLY_NEGATIVE_ABS_VAL.matches(tree, state)) {
       return describeMatch(tree);
     }
     return Description.NO_MATCH;

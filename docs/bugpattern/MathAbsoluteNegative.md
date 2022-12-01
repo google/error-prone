@@ -8,9 +8,9 @@ int veryNegative = Math.abs(Integer.MIN_VALUE);
 long veryNegativeLong = Math.abs(Long.MIN_VALUE);
 ```
 
-When trying to generate positive random numbers by using `Math.abs` around a
-random positive-or-negative integer (or long), there will a rare edge case where
-the returned value will be negative.
+When trying to generate positive random numbers or fingerprints by using
+`Math.abs` around a random positive-or-negative integer (or long), there will a
+rare edge case where the returned value will be negative.
 
 This is because there is no positive integer with the same magnitude as
 `Integer.MIN_VALUE`, which is equal to `-Integer.MAX_VALUE - 1`. Floating point
