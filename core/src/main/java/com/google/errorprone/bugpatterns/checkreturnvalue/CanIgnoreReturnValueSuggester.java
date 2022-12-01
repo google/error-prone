@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns.checkreturnvalue;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.fixes.SuggestedFixes.qualifyType;
+import static com.google.errorprone.util.ASTHelpers.getAnnotationWithSimpleName;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getReturnType;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -33,6 +34,7 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.suppliers.Supplier;
+import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.LambdaExpressionTree;
@@ -95,6 +97,15 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
     // returned look like "this" or instance methods that are also @CanIgnoreReturnValue.
     if (methodReturnsIgnorableValues(methodTree, state)) {
       SuggestedFix.Builder fix = SuggestedFix.builder();
+
+      // if the method is annotated with @RIU, we need to remove it before adding @CIRV
+      AnnotationTree riuAnnotation =
+          getAnnotationWithSimpleName(
+              methodTree.getModifiers().getAnnotations(), "ResultIgnorabilityUnspecified");
+      if (riuAnnotation != null) {
+        fix.delete(riuAnnotation);
+      }
+
       String cirvName = qualifyType(state, fix, CIRV);
       // we could add a trailing comment (e.g., @CanIgnoreReturnValue // returns `this`), but all
       // developers will become familiar with these annotations sooner or later
