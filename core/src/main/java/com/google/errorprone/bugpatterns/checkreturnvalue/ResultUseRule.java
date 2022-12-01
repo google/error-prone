@@ -19,27 +19,21 @@ package com.google.errorprone.bugpatterns.checkreturnvalue;
 import static com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule.RuleScope.ENCLOSING_ELEMENTS;
 import static com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule.RuleScope.GLOBAL;
 import static com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule.RuleScope.METHOD;
-import static com.google.errorprone.util.ASTHelpers.enclosingElements;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.ListMultimap;
-import com.google.errorprone.VisitorState;
-import com.sun.tools.javac.code.Symbol;
-import com.sun.tools.javac.code.Symbol.ClassSymbol;
-import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import com.sun.tools.javac.code.Symbol.PackageSymbol;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
-/** A rule for determining {@link ResultUsePolicy} for methods and/or constructors. */
-public abstract class ResultUseRule {
+/**
+ * A rule for determining {@link ResultUsePolicy} for methods and/or constructors.
+ *
+ * @param <C> the type of the context object used during evaluation
+ * @param <S> the type of symbols
+ */
+public abstract class ResultUseRule<C, S> {
 
   // TODO(cgdecker): Switching to a model where scopes can only either be in a "marked" or
   //  "unmarked" state and only methods can have a specific policy will simplify all of this a lot.
-
-  private ResultUseRule() {} // only allow the subclasses below
 
   /** An ID for uniquely identifying this rule. */
   public abstract String id();
@@ -47,12 +41,15 @@ public abstract class ResultUseRule {
   /** The scopes this rule applies to. */
   public abstract ImmutableSet<RuleScope> scopes();
 
+  // TODO(dpb): Reorder parameters for the following methods so they have the same initial
+  // parameters.
+
   /** Evaluates the given {@code symbol} and optionally returns a {@link ResultUsePolicy} for it. */
-  public abstract Optional<ResultUsePolicy> evaluate(Symbol symbol, VisitorState state);
+  public abstract Optional<ResultUsePolicy> evaluate(S symbol, C context);
 
   /** Evaluates the given symbol and optionally returns an {@link Evaluation} of it. */
-  public final Optional<Evaluation> evaluate(RuleScope scope, Symbol symbol, VisitorState state) {
-    return evaluate(symbol, state).map(policy -> Evaluation.create(this, scope, symbol, policy));
+  public final Optional<Evaluation<S>> evaluate(RuleScope scope, S symbol, C context) {
+    return evaluate(symbol, context).map(policy -> Evaluation.create(this, scope, symbol, policy));
   }
 
   @Override
@@ -62,9 +59,18 @@ public abstract class ResultUseRule {
 
   /**
    * A rule that evaluates methods and constructors to determine a {@link ResultUsePolicy} for them.
+   *
+   * @param <C> the type of the context object used during evaluation
+   * @param <S> the type of symbols
+   * @param <M> the type of method symbols
    */
-  public abstract static class MethodRule extends ResultUseRule {
+  public abstract static class MethodRule<C, S, M extends S> extends ResultUseRule<C, S> {
     private static final ImmutableSet<RuleScope> SCOPES = ImmutableSet.of(METHOD);
+    private final Class<M> methodSymbolClass;
+
+    protected MethodRule(Class<M> methodSymbolClass) {
+      this.methodSymbolClass = methodSymbolClass;
+    }
 
     @Override
     public final ImmutableSet<RuleScope> scopes() {
@@ -74,13 +80,12 @@ public abstract class ResultUseRule {
     /**
      * Evaluates the given {@code method} and optionally returns a {@link ResultUsePolicy} for it.
      */
-    public abstract Optional<ResultUsePolicy> evaluateMethod(
-        MethodSymbol method, VisitorState state);
+    public abstract Optional<ResultUsePolicy> evaluateMethod(M method, C context);
 
     @Override
-    public final Optional<ResultUsePolicy> evaluate(Symbol symbol, VisitorState state) {
-      return symbol instanceof MethodSymbol
-          ? evaluateMethod((MethodSymbol) symbol, state)
+    public final Optional<ResultUsePolicy> evaluate(S symbol, C context) {
+      return methodSymbolClass.isInstance(symbol)
+          ? evaluateMethod(methodSymbolClass.cast(symbol), context)
           : Optional.empty();
     }
   }
@@ -88,8 +93,11 @@ public abstract class ResultUseRule {
   /**
    * A rule that evaluates symbols of any kind to determine a {@link ResultUsePolicy} to associate
    * with them.
+   *
+   * @param <C> the type of the context object used during evaluation
+   * @param <S> the type of symbols
    */
-  public abstract static class SymbolRule extends ResultUseRule {
+  public abstract static class SymbolRule<C, S> extends ResultUseRule<C, S> {
     private static final ImmutableSet<RuleScope> SCOPES =
         ImmutableSet.of(METHOD, ENCLOSING_ELEMENTS);
 
@@ -102,89 +110,56 @@ public abstract class ResultUseRule {
   /**
    * A global rule that is evaluated when none of the more specific rules determine a {@link
    * ResultUsePolicy} for a method.
+   *
+   * @param <C> the type of the context object used during evaluation
+   * @param <S> the type of symbols
    */
-  public abstract static class GlobalRule extends ResultUseRule {
+  public abstract static class GlobalRule<C, S> extends ResultUseRule<C, S> {
     private static final ImmutableSet<RuleScope> SCOPES = ImmutableSet.of(GLOBAL);
 
     @Override
     public final ImmutableSet<RuleScope> scopes() {
       return SCOPES;
     }
-
-    /** Optionally returns a global policy for methods or constructors. */
-    public abstract Optional<ResultUsePolicy> evaluate(boolean constructor, VisitorState state);
-
-    @Override
-    public final Optional<ResultUsePolicy> evaluate(Symbol symbol, VisitorState state) {
-      return evaluate(symbol.isConstructor(), state);
-    }
   }
 
   /** Scope to which a rule may apply. */
   public enum RuleScope {
     /** The specific method or constructor for which a {@link ResultUsePolicy} is being chosen. */
-    METHOD {
-      @Override
-      Stream<Symbol> members(MethodSymbol method) {
-        return Stream.of(method);
-      }
-    },
+    METHOD,
+
     /**
      * Classes and package that enclose a <i>method</i> for which a {@link ResultUsePolicy} is being
      * chosen.
      */
-    ENCLOSING_ELEMENTS {
-      @Override
-      Stream<Symbol> members(MethodSymbol method) {
-        return enclosingElements(method)
-            .filter(s -> s instanceof ClassSymbol || s instanceof PackageSymbol);
-      }
-    },
+    ENCLOSING_ELEMENTS,
+
     /** The global scope. */
-    GLOBAL {
-      @Override
-      Stream<Symbol> members(MethodSymbol method) {
-        return Stream.of(method);
-      }
-    };
-
-    /** Returns an ordered stream of elements in this scope relative to the given {@code method}. */
-    abstract Stream<Symbol> members(MethodSymbol method);
-
-    /** Returns an ordered stream of policies from rules in this scope. */
-    final Stream<ResultUsePolicy> policies(
-        MethodSymbol method, VisitorState state, ListMultimap<RuleScope, ResultUseRule> rules) {
-      List<ResultUseRule> scopeRules = rules.get(this);
-      return members(method)
-          .flatMap(symbol -> scopeRules.stream().map(rule -> rule.evaluate(symbol, state)))
-          .flatMap(Optional::stream);
-    }
-
-    /** Returns an ordered stream of evaluations in this scope. */
-    final Stream<Evaluation> evaluations(
-        MethodSymbol method, VisitorState state, ListMultimap<RuleScope, ResultUseRule> rules) {
-      List<ResultUseRule> scopeRules = rules.get(this);
-      return members(method)
-          .flatMap(symbol -> scopeRules.stream().map(rule -> rule.evaluate(this, symbol, state)))
-          .flatMap(Optional::stream);
-    }
+    GLOBAL,
   }
 
-  /** An evaluation that a rule makes. */
+  /**
+   * An evaluation that a rule makes.
+   *
+   * @param <S> the type of symbols
+   */
   @AutoValue
-  public abstract static class Evaluation {
+  public abstract static class Evaluation<S> {
     /** Creates a new {@link Evaluation}. */
-    public static Evaluation create(
-        ResultUseRule rule, RuleScope scope, Symbol element, ResultUsePolicy policy) {
-      return new AutoValue_ResultUseRule_Evaluation(rule, scope, element, policy);
+    public static <S> Evaluation<S> create(
+        ResultUseRule<?, S> rule, RuleScope scope, S element, ResultUsePolicy policy) {
+      return new AutoValue_ResultUseRule_Evaluation<>(rule, scope, element, policy);
     }
 
     /** The rule that made this evaluation. */
-    public abstract ResultUseRule rule();
+    public abstract ResultUseRule<?, S> rule();
+
     /** The scope at which the evaluation was made. */
     public abstract RuleScope scope();
+
     /** The specific element in the scope for which the evaluation was made. */
-    public abstract Symbol element();
+    public abstract S element();
+
     /** The policy the rule selected. */
     public abstract ResultUsePolicy policy();
   }

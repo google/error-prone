@@ -21,8 +21,9 @@ import static com.google.errorprone.predicates.TypePredicates.isDescendantOfAny;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule.MethodRule;
+import com.google.errorprone.bugpatterns.checkreturnvalue.Rules.ErrorProneMethodRule;
 import com.google.errorprone.predicates.TypePredicate;
+import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import java.util.Optional;
@@ -37,7 +38,7 @@ public final class ProtoRules {
    * Returns a rule that handles proto builders, making their fluent setter methods' results
    * ignorable.
    */
-  public static ResultUseRule protoBuilders() {
+  public static ResultUseRule<VisitorState, Symbol> protoBuilders() {
     return new ProtoRule(
         isDescendantOfAny(ImmutableSet.of("com.google.protobuf.MessageLite.Builder")),
         "PROTO_BUILDER");
@@ -47,7 +48,7 @@ public final class ProtoRules {
    * Returns a rule that handles mutable protos, making their fluent setter methods' results
    * ignorable.
    */
-  public static ResultUseRule mutableProtos() {
+  public static ResultUseRule<VisitorState, Symbol> mutableProtos() {
     return new ProtoRule(
         isDescendantOfAny(ImmutableSet.of("com.google.protobuf.AbstractMutableMessageLite")),
         "MUTABLE_PROTO");
@@ -56,7 +57,7 @@ public final class ProtoRules {
   // TODO(cgdecker): Move proto rules from IgnoredPureGetter and ReturnValueIgnored here
 
   /** Rules for methods on protos. */
-  private static final class ProtoRule extends MethodRule {
+  private static final class ProtoRule extends ErrorProneMethodRule {
     // Methods that start this way produce a modification to the proto, and either return this
     // or return the parameter given, for chaining purposes.
     private static final Pattern NAMED_MUTATOR_METHOD =

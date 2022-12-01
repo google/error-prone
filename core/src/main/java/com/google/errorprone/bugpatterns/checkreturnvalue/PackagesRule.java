@@ -30,7 +30,9 @@ import java.util.Optional;
  * A rule that enables checking for methods belonging to a set of packages or any of their
  * subpackages.
  */
-public final class PackagesRule extends SymbolRule {
+// TODO(chaorenl): Why does this have METHOD scope in addition to ENCLOSING_ELEMENTS, when it only
+// ever considers packages?
+public final class PackagesRule extends SymbolRule<VisitorState, Symbol> {
 
   /**
    * Returns a new rule using the given package {@code patterns}. Each pattern string must either be

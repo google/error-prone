@@ -28,8 +28,9 @@ import com.google.common.collect.Iterables;
 import com.google.common.io.CharSource;
 import com.google.common.io.MoreFiles;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule.MethodRule;
+import com.google.errorprone.bugpatterns.checkreturnvalue.Rules.ErrorProneMethodRule;
 import com.google.errorprone.suppliers.Supplier;
+import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Types;
@@ -41,10 +42,10 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 /** External source of information about @CanIgnoreReturnValue-equivalent API's. */
-public final class ExternalCanIgnoreReturnValue extends MethodRule {
+public final class ExternalCanIgnoreReturnValue extends ErrorProneMethodRule {
 
   /** Returns a rule using an external list of APIs to ignore. */
-  public static ResultUseRule externalIgnoreList() {
+  public static ResultUseRule<VisitorState, Symbol> externalIgnoreList() {
     return new ExternalCanIgnoreReturnValue();
   }
 

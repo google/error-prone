@@ -21,21 +21,31 @@ import static com.google.errorprone.util.ASTHelpers.hasDirectAnnotationWithSimpl
 
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule.GlobalRule;
+import com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule.MethodRule;
 import com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule.SymbolRule;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import java.util.Optional;
 import java.util.function.BiPredicate;
 
-/** Factories for common kinds {@link ResultUseRule}s. */
+/** Factories for common kinds of {@link ResultUseRule}s. */
 public final class Rules {
 
   private Rules() {}
+
+  /** A {@link MethodRule} for Error Prone. */
+  abstract static class ErrorProneMethodRule
+      extends MethodRule<VisitorState, Symbol, MethodSymbol> {
+    ErrorProneMethodRule() {
+      super(MethodSymbol.class);
+    }
+  }
 
   /**
    * Returns a simple global rule that always returns the given defaults for methods and
    * constructors.
    */
-  public static ResultUseRule globalDefault(
+  public static ResultUseRule<VisitorState, Symbol> globalDefault(
       Optional<ResultUsePolicy> methodDefault, Optional<ResultUsePolicy> constructorDefault) {
     return new SimpleGlobalRule("GLOBAL_DEFAULT", methodDefault, constructorDefault);
   }
@@ -44,14 +54,15 @@ public final class Rules {
    * Returns a {@link ResultUseRule} that maps annotations with the given {@code simpleName} to the
    * given {@code policy}.
    */
-  public static ResultUseRule mapAnnotationSimpleName(String simpleName, ResultUsePolicy policy) {
+  public static ResultUseRule<VisitorState, Symbol> mapAnnotationSimpleName(
+      String simpleName, ResultUsePolicy policy) {
     return new SimpleRule(
         "ANNOTATION @" + simpleName,
         (sym, st) -> hasDirectAnnotationWithSimpleName(sym, simpleName),
         policy);
   }
 
-  private static final class SimpleRule extends SymbolRule {
+  private static final class SimpleRule extends SymbolRule<VisitorState, Symbol> {
     private final String name;
     private final BiPredicate<Symbol, VisitorState> predicate;
     private final ResultUsePolicy policy;
@@ -74,7 +85,7 @@ public final class Rules {
     }
   }
 
-  private static final class SimpleGlobalRule extends GlobalRule {
+  private static final class SimpleGlobalRule extends GlobalRule<VisitorState, Symbol> {
     private final String id;
     private final Optional<ResultUsePolicy> methodDefault;
     private final Optional<ResultUsePolicy> constructorDefault;
@@ -94,8 +105,8 @@ public final class Rules {
     }
 
     @Override
-    public Optional<ResultUsePolicy> evaluate(boolean constructor, VisitorState state) {
-      return constructor ? constructorDefault : methodDefault;
+    public Optional<ResultUsePolicy> evaluate(Symbol symbol, VisitorState context) {
+      return symbol.isConstructor() ? constructorDefault : methodDefault;
     }
   }
 }

@@ -35,6 +35,7 @@ import static com.google.errorprone.bugpatterns.checkreturnvalue.Rules.mapAnnota
 import static com.google.errorprone.fixes.SuggestedFix.emptyFix;
 import static com.google.errorprone.fixes.SuggestedFixes.qualifyType;
 import static com.google.errorprone.util.ASTHelpers.enclosingClass;
+import static com.google.errorprone.util.ASTHelpers.enclosingElements;
 import static com.google.errorprone.util.ASTHelpers.getAnnotationsWithSimpleName;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
@@ -55,6 +56,8 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.checkreturnvalue.PackagesRule;
 import com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicy;
 import com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicyEvaluator;
+import com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicyEvaluator.MethodInfo;
+import com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule.RuleScope;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
@@ -71,11 +74,14 @@ import com.sun.source.tree.NewClassTree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.Trees;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.code.Symbol.PackageSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.processing.JavacProcessingEnvironment;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 import javax.lang.model.element.ElementKind;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -99,8 +105,37 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
 
   static final String CRV_PACKAGES = "CheckReturnValue:Packages";
 
+  private static final MethodInfo<VisitorState, Symbol, MethodSymbol> METHOD_INFO =
+      new MethodInfo<>() {
+        @Override
+        public Stream<Symbol> scopeMembers(
+            RuleScope scope, MethodSymbol method, VisitorState context) {
+          switch (scope) {
+            case ENCLOSING_ELEMENTS:
+              return enclosingElements(method)
+                  .filter(s -> s instanceof ClassSymbol || s instanceof PackageSymbol);
+            case GLOBAL:
+            case METHOD:
+              return Stream.of(method);
+          }
+          throw new AssertionError(scope);
+        }
+
+        @Override
+        public MethodKind getMethodKind(MethodSymbol method) {
+          switch (method.getKind()) {
+            case METHOD:
+              return MethodKind.METHOD;
+            case CONSTRUCTOR:
+              return MethodKind.CONSTRUCTOR;
+            default:
+              return MethodKind.OTHER;
+          }
+        }
+      };
+
   private final MessageTrailerStyle messageTrailerStyle;
-  private final ResultUsePolicyEvaluator evaluator;
+  private final ResultUsePolicyEvaluator<VisitorState, Symbol, MethodSymbol> evaluator;
 
   public CheckReturnValue(ErrorProneFlags flags) {
     super(flags);
@@ -109,8 +144,8 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
             .getEnum("CheckReturnValue:MessageTrailerStyle", MessageTrailerStyle.class)
             .orElse(NONE);
 
-    ResultUsePolicyEvaluator.Builder builder =
-        ResultUsePolicyEvaluator.builder()
+    ResultUsePolicyEvaluator.Builder<VisitorState, Symbol, MethodSymbol> builder =
+        ResultUsePolicyEvaluator.builder(METHOD_INFO)
             .addRules(
                 // The order of these rules matters somewhat because when checking a method, we'll
                 // evaluate them in the order they're listed here and stop as soon as one of them

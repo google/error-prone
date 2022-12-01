@@ -26,7 +26,8 @@ import static com.google.errorprone.util.ASTHelpers.streamSuperMethods;
 import static java.util.stream.Stream.concat;
 
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule.MethodRule;
+import com.google.errorprone.bugpatterns.checkreturnvalue.Rules.ErrorProneMethodRule;
+import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import java.util.Optional;
@@ -37,17 +38,17 @@ public final class AutoValueRules {
   private AutoValueRules() {}
 
   /** Returns a rule for {@code abstract} methods on {@code @AutoValue} types. */
-  public static ResultUseRule autoValues() {
+  public static ResultUseRule<VisitorState, Symbol> autoValues() {
     return new ValueRule();
   }
 
   /** Returns a rule for {@code abstract} methods on {@code @AutoValue.Builder} types. */
-  public static ResultUseRule autoValueBuilders() {
+  public static ResultUseRule<VisitorState, Symbol> autoValueBuilders() {
     return new BuilderRule("AutoValue.Builder");
   }
 
   /** Returns a rule for {@code abstract} methods on {@code @AutoBuilder} types. */
-  public static ResultUseRule autoBuilders() {
+  public static ResultUseRule<VisitorState, Symbol> autoBuilders() {
     return new BuilderRule("AutoBuilder");
   }
 
@@ -78,7 +79,7 @@ public final class AutoValueRules {
     }
   }
 
-  private abstract static class AbstractAutoRule extends MethodRule {
+  private abstract static class AbstractAutoRule extends ErrorProneMethodRule {
     private static final String PACKAGE = "com.google.auto.value.";
 
     private final String simpleAnnotation;
