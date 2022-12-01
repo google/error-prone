@@ -57,6 +57,36 @@ public class CanIgnoreReturnValueSuggesterTest {
   }
 
   @Test
+  public void testBuilder_abstractClass() {
+    helper
+        .addInputLines(
+            "Builder.java",
+            "package com.google.frobber;",
+            "public abstract class Builder {",
+            "  public abstract Builder setName(String name);",
+            "  public abstract Builder clone();",
+            "  public abstract Builder copy();",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void testBuilder_interface() {
+    helper
+        .addInputLines(
+            "Builder.java",
+            "package com.google.frobber;",
+            "public interface Builder {",
+            "  Builder setName(String name);",
+            "  Builder copy();",
+            "  Builder clone();",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
   public void testReturnSelf_b234875737() {
     helper
         .addInputLines(
