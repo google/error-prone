@@ -937,8 +937,8 @@ toCharArray allocates a new array, using charAt is more efficient
 __[MalformedInlineTag](bugpattern/MalformedInlineTag)__<br>
 This Javadoc tag is malformed. The correct syntax is {@tag and not @{tag.
 
-__[MathAbsoluteRandom](bugpattern/MathAbsoluteRandom)__<br>
-Math.abs does not always give a positive result. Please consider other methods for positive random numbers.
+__[MathAbsoluteNegative](bugpattern/MathAbsoluteNegative)__<br>
+Math.abs does not always give a positive result. Please consider other methods for positive numbers.
 
 __[MemoizeConstantVisitorStateLookups](bugpattern/MemoizeConstantVisitorStateLookups)__<br>
 Anytime you need to look up a constant value from VisitorState, improve performance by creating a cache for it with VisitorState.memoize

@@ -1,7 +1,7 @@
 ---
-title: MathAbsoluteRandom
+title: MathAbsoluteNegative
 summary: Math.abs does not always give a positive result. Please consider other methods
-  for positive random numbers.
+  for positive numbers.
 layout: bugpattern
 tags: ''
 severity: WARNING
@@ -12,6 +12,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+_Alternate names: MathAbsoluteRandom_
 
 ## The problem
 [`Math.abs`](https://docs.oracle.com/javase/8/docs/api/java/lang/Math.html#abs-long-)
@@ -24,9 +25,9 @@ int veryNegative = Math.abs(Integer.MIN_VALUE);
 long veryNegativeLong = Math.abs(Long.MIN_VALUE);
 ```
 
-When trying to generate positive random numbers by using `Math.abs` around a
-random positive-or-negative integer (or long), there will a rare edge case where
-the returned value will be negative.
+When trying to generate positive random numbers or fingerprints by using
+`Math.abs` around a random positive-or-negative integer (or long), there will a
+rare edge case where the returned value will be negative.
 
 This is because there is no positive integer with the same magnitude as
 `Integer.MIN_VALUE`, which is equal to `-Integer.MAX_VALUE - 1`. Floating point
@@ -48,4 +49,4 @@ lng = (lng == Long.MIN_VALUE) ? 0 : Math.abs(lng);
 ```
 
 ## Suppression
-Suppress false positives by adding the suppression annotation `@SuppressWarnings("MathAbsoluteRandom")` to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("MathAbsoluteNegative")` to the enclosing element.
