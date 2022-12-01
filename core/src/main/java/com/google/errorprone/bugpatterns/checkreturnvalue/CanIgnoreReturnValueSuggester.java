@@ -21,10 +21,9 @@ import static com.google.errorprone.fixes.SuggestedFixes.qualifyType;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getReturnType;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
-import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
+import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
-import static com.google.errorprone.util.ASTHelpers.isVoidType;
 import static com.google.errorprone.util.ASTHelpers.stripParentheses;
 
 import com.google.errorprone.BugPattern;
@@ -72,46 +71,43 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
     // We have a number of preconditions we can check early to ensure that this method could
     // possibly be @CIRV-suggestible, before attempting a deeper scan of the method.
     if (methodSymbol.isStatic()
-        || methodTree.getBody() == null
-        // These methods should probably be @CheckReturnValue!
+        // the return type must be the same as the enclosing type (this skips void methods too)
+        || !isSameType(methodSymbol.owner.type, methodSymbol.getReturnType(), state)
+        // nb: these methods should probably be @CheckReturnValue!
         || isDefinitionOfZeroArgSelf(methodSymbol)
         // Constructors can't "return", and generally shouldn't be @CIRV
         || methodTree.getReturnType() == null
-        // methods whose return type is void or Void can't have @CIRV
-        || isVoidType(getType(methodTree.getReturnType()), state)
         // b/236423646 - These methods that do nothing *but* `return this;` are likely to be
         // overridden in other contexts, and we've decided that these methods shouldn't be annotated
         // automatically.
         || isSimpleReturnThisMethod(methodTree)
         // TODO(kak): This appears to be a performance optimization for refactoring passes?
-        || isSubtype(methodSymbol.owner.type, PROTO_BUILDER.get(state), state)
-        || hasAnnotation(methodSymbol, CIRV, state)) {
+        || isSubtype(methodSymbol.owner.type, PROTO_BUILDER.get(state), state)) {
       return Description.NO_MATCH;
     }
 
-    // if the method is already directly annotated w/ @CRV, bail out
-    if (hasAnnotation(methodTree, CRV, state)) {
-      // TODO(kak): we might want to actually _remove_ @CRV and add @CIRV in this case!
+    // if the method is already directly annotated w/ @CRV or @CIRV, bail out
+    if (hasAnnotation(methodTree, CRV, state) || hasAnnotation(methodSymbol, CIRV, state)) {
       return Description.NO_MATCH;
     }
 
     // OK, now the real implementation: For each possible return branch, does the expression
     // returned look like "this" or instance methods that are also @CanIgnoreReturnValue.
-    if (!methodReturnsIgnorableValues(methodTree, state)) {
-      return Description.NO_MATCH;
+    if (methodReturnsIgnorableValues(methodTree, state)) {
+      SuggestedFix.Builder fix = SuggestedFix.builder();
+      String cirvName = qualifyType(state, fix, CIRV);
+      // we could add a trailing comment (e.g., @CanIgnoreReturnValue // returns `this`), but all
+      // developers will become familiar with these annotations sooner or later
+      fix.prefixWith(methodTree, "@" + cirvName + "\n");
+
+      return describeMatch(methodTree, fix.build());
     }
 
-    SuggestedFix.Builder fix = SuggestedFix.builder();
-    String cirvName = qualifyType(state, fix, CIRV);
-    // we could add a trailing comment (e.g., @CanIgnoreReturnValue // returns `this`), but all
-    // developers will become familiar with these annotations sooner or later
-    fix.prefixWith(methodTree, "@" + cirvName + "\n");
-
-    return describeMatch(methodTree, fix.build());
+    return Description.NO_MATCH;
   }
 
   private static boolean isSimpleReturnThisMethod(MethodTree methodTree) {
-    if (methodTree.getBody().getStatements().size() == 1) {
+    if (methodTree.getBody() != null && methodTree.getBody().getStatements().size() == 1) {
       StatementTree onlyStatement = methodTree.getBody().getStatements().get(0);
       if (onlyStatement instanceof ReturnTree) {
         return returnsThisOrSelf((ReturnTree) onlyStatement);
