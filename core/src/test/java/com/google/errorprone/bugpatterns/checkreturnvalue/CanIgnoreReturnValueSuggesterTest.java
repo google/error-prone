@@ -149,6 +149,31 @@ public class CanIgnoreReturnValueSuggesterTest {
   }
 
   @Test
+  public void testAutoValueBuilder() {
+    helper
+        .addInputLines(
+            "Animal.java",
+            "package com.google.frobber;",
+            "import com.google.auto.value.AutoValue;",
+            "@AutoValue",
+            "abstract class Animal {",
+            "  abstract String name();",
+            "  abstract int numberOfLegs();",
+            "  static Builder builder() {",
+            "    return null;",
+            "  }",
+            "  @AutoValue.Builder",
+            "  abstract static class Builder {",
+            "    abstract Builder setName(String value);",
+            "    abstract Builder setNumberOfLegs(int value);",
+            "    abstract Animal build();",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
   public void testReturnSelf_b234875737() {
     helper
         .addInputLines(
