@@ -158,4 +158,49 @@ public class MathAbsoluteNegativeTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void objectHashCode() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void f(String s) {",
+            "    // BUG: Diagnostic contains: MathAbsoluteNegative",
+            "    long foo = Math.abs(s.hashCode());",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void identityHashCode() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void f(Object o) {",
+            "    // BUG: Diagnostic contains: MathAbsoluteNegative",
+            "    long foo = Math.abs(System.identityHashCode(o));",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void uuid() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.UUID;",
+            "class Test {",
+            "  void f(UUID uuid) {",
+            "    // BUG: Diagnostic contains: MathAbsoluteNegative",
+            "    long foo = Math.abs(uuid.getLeastSignificantBits());",
+            "    // BUG: Diagnostic contains: MathAbsoluteNegative",
+            "    long bar = Math.abs(uuid.getMostSignificantBits());",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

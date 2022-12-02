@@ -51,6 +51,15 @@ public final class MathAbsoluteNegative extends BugChecker implements MethodInvo
                       .namedAnyOf("nextInt", "nextLong")
                       .withNoParameters(),
                   instanceMethod()
+                      .onDescendantOf("java.util.UUID")
+                      .namedAnyOf("getLeastSignificantBits", "getMostSignificantBits")
+                      .withNoParameters(),
+                  instanceMethod()
+                      .onDescendantOf("java.lang.Object")
+                      .named("hashCode")
+                      .withNoParameters(),
+                  staticMethod().onClass("java.lang.System").named("identityHashCode"),
+                  instanceMethod()
                       .onDescendantOf("com.google.common.hash.HashCode")
                       .namedAnyOf("asInt", "asLong", "padToLong")
                       .withNoParameters())));
