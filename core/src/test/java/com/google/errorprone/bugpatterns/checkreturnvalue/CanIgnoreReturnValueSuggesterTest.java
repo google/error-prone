@@ -57,6 +57,68 @@ public class CanIgnoreReturnValueSuggesterTest {
   }
 
   @Test
+  public void testReturnsInputParam() {
+    helper
+        .addInputLines(
+            "Client.java",
+            "package com.google.frobber;",
+            "public final class Client {",
+            "  public String method(String name) {",
+            "    return name;",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void testReturnsInputParamWithMultipleReturns() {
+    helper
+        .addInputLines(
+            "Client.java",
+            "package com.google.frobber;",
+            "public final class Client {",
+            "  public String method(String a, String b) {",
+            "    if (System.currentTimeMillis() > 0) { return a; }",
+            "    return b;",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void testReturnsInputParamWithMultipleReturns_oneReturnIsConstant() {
+    helper
+        .addInputLines(
+            "Client.java",
+            "package com.google.frobber;",
+            "public final class Client {",
+            "  public String method(String a, String b) {",
+            "    if (System.currentTimeMillis() > 0) { return a; }",
+            "    return \"hi\";",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void testReturnsInputParamWithTernary() {
+    helper
+        .addInputLines(
+            "Client.java",
+            "package com.google.frobber;",
+            "public final class Client {",
+            "  public String method(String a, String b) {",
+            "    return (System.currentTimeMillis() > 0) ? a : b;",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
   public void testBuilder_abstractClass() {
     helper
         .addInputLines(
