@@ -1097,7 +1097,7 @@ __[SameNameButDifferent](bugpattern/SameNameButDifferent)__<br>
 This type name shadows another in a way that may be confusing.
 
 __[SelfAlwaysReturnsThis](bugpattern/SelfAlwaysReturnsThis)__<br>
-Non-abstract instance methods named &#39;self()&#39; that return the enclosing class must always &#39;return this&#39;
+Non-abstract instance methods named &#39;self()&#39; or &#39;getThis()&#39; that return the enclosing class must always &#39;return this&#39;
 
 __[ShortCircuitBoolean](bugpattern/ShortCircuitBoolean)__<br>
 Prefer the short-circuiting boolean operators &amp;&amp; and || to &amp; and |.

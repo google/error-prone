@@ -1,7 +1,7 @@
 ---
 title: SelfAlwaysReturnsThis
-summary: Non-abstract instance methods named 'self()' that return the enclosing class
-  must always 'return this'
+summary: Non-abstract instance methods named 'self()' or 'getThis()' that return the
+  enclosing class must always 'return this'
 layout: bugpattern
 tags: ''
 severity: WARNING
