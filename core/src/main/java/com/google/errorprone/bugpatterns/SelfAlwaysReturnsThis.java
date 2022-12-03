@@ -27,6 +27,7 @@ import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.google.errorprone.util.ASTHelpers.isVoidType;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -36,6 +37,7 @@ import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
+import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TypeCastTree;
@@ -48,28 +50,32 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/**
- * Non-abstract instance methods named {@code self()} that return the enclosing class must always
- * {@code return this}.
- */
+/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
     summary =
-        "Non-abstract instance methods named 'self()' that return the enclosing class must always"
-            + " 'return this'",
+        "Non-abstract instance methods named 'self()' or 'getThis()' that return the enclosing"
+            + " class must always 'return this'",
     severity = WARNING)
 public final class SelfAlwaysReturnsThis extends BugChecker implements MethodTreeMatcher {
+  private final boolean matchGetThis;
+
+  public SelfAlwaysReturnsThis(ErrorProneFlags flags) {
+    this.matchGetThis = flags.getBoolean("SelfAlwaysReturnsThis:GetThis").orElse(true);
+  }
+
   @Override
   public Description matchMethod(MethodTree methodTree, VisitorState state) {
     MethodSymbol methodSymbol = getSymbol(methodTree);
 
     // The method must:
     // * not be a constructor
-    // * be named `self`
+    // * be named `self` or `getThis`
     // * have no params
     // * be an instance method (not static)
     // * have a body (not abstract)
     if (methodSymbol.isConstructor()
-        || !methodSymbol.getSimpleName().contentEquals("self")
+        || (!methodSymbol.getSimpleName().contentEquals("self")
+            && (!methodSymbol.getSimpleName().contentEquals("getThis") || !matchGetThis))
         || !methodSymbol.getParameters().isEmpty()
         || methodSymbol.isStatic()
         || methodTree.getBody() == null) {
@@ -145,6 +151,10 @@ public final class SelfAlwaysReturnsThis extends BugChecker implements MethodTre
   private static boolean maybeCastThis(Tree tree) {
     return firstNonNull(
         new SimpleTreeVisitor<Boolean, Void>() {
+          @Override
+          public Boolean visitParenthesized(ParenthesizedTree tree, Void unused) {
+            return visit(tree.getExpression(), null);
+          }
 
           @Override
           public Boolean visitTypeCast(TypeCastTree tree, Void unused) {

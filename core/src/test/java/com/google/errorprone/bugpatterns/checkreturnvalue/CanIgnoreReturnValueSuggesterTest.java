@@ -57,6 +57,34 @@ public class CanIgnoreReturnValueSuggesterTest {
   }
 
   @Test
+  public void testParenthesizedCastThis() {
+    helper
+        .addInputLines(
+            "Client.java",
+            "package com.google.frobber;",
+            "public final class Client {",
+            "  private String name;",
+            "  public Client setName(String name) {",
+            "    this.name = name;",
+            "    return ((Client) (this));",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Client.java",
+            "package com.google.frobber;",
+            "import com.google.errorprone.annotations.CanIgnoreReturnValue;",
+            "public final class Client {",
+            "  private String name;",
+            "  @CanIgnoreReturnValue",
+            "  public Client setName(String name) {",
+            "    this.name = name;",
+            "    return ((Client) (this));",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void testReturnsInputParam() {
     helper
         .addInputLines(
@@ -201,6 +229,40 @@ public class CanIgnoreReturnValueSuggesterTest {
             "    return self();",
             "  }",
             "  private Client self() {",
+            "    return this;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testReturnGetThis() {
+    helper
+        .addInputLines(
+            "Client.java",
+            "package com.google.frobber;",
+            "public final class Client {",
+            "  private String name;",
+            "  public Client setName(String name) {",
+            "    this.name = name;",
+            "    return getThis();",
+            "  }",
+            "  private Client getThis() {",
+            "    return this;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Client.java",
+            "package com.google.frobber;",
+            "import com.google.errorprone.annotations.CanIgnoreReturnValue;",
+            "public final class Client {",
+            "  private String name;",
+            "  @CanIgnoreReturnValue",
+            "  public Client setName(String name) {",
+            "    this.name = name;",
+            "    return getThis();",
+            "  }",
+            "  private Client getThis() {",
             "    return this;",
             "  }",
             "}")

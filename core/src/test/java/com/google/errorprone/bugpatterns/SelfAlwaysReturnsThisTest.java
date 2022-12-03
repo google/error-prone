@@ -59,6 +59,21 @@ public class SelfAlwaysReturnsThisTest {
   }
 
   @Test
+  public void testSelfReturnsThis_withParenthesizedCast() {
+    helper
+        .addInputLines(
+            "Builder.java",
+            "package com.google.frobber;",
+            "public final class Builder {",
+            "  public Builder self() {",
+            "    return ((Builder) (this));",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
   public void testSelfReturnsThis_withCastAndTryCatch() {
     helper
         .addInputLines(
@@ -161,6 +176,28 @@ public class SelfAlwaysReturnsThisTest {
             "package com.google.frobber;",
             "public final class Builder {",
             "  public Builder self() {",
+            "    return this;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testGetThisReturnsNewBuilder() {
+    helper
+        .addInputLines(
+            "Builder.java",
+            "package com.google.frobber;",
+            "public final class Builder {",
+            "  public Builder getThis() {",
+            "    return new Builder();",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Builder.java",
+            "package com.google.frobber;",
+            "public final class Builder {",
+            "  public Builder getThis() {",
             "    return this;",
             "  }",
             "}")

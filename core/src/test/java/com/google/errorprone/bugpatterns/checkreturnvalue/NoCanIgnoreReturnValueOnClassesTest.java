@@ -60,6 +60,32 @@ public final class NoCanIgnoreReturnValueOnClassesTest {
   }
 
   @Test
+  public void testSimpleCase_returnsParenthesizedCastThis() {
+    helper
+        .addInputLines(
+            "Client.java",
+            "package com.google.frobber;",
+            "import com.google.errorprone.annotations.CanIgnoreReturnValue;",
+            "@CanIgnoreReturnValue",
+            "public final class Client {",
+            "  public Client getValue() {",
+            "    return ((Client) (this));",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Client.java",
+            "package com.google.frobber;",
+            "import com.google.errorprone.annotations.CanIgnoreReturnValue;",
+            "public final class Client {",
+            "  @CanIgnoreReturnValue",
+            "  public Client getValue() {",
+            "    return ((Client) (this));",
+            "  }",
+            "}")
+        .doTest(TestMode.TEXT_MATCH);
+  }
+
+  @Test
   public void testSimpleCase_returnsSelf() {
     helper
         .addInputLines(
@@ -86,6 +112,39 @@ public final class NoCanIgnoreReturnValueOnClassesTest {
             "  }",
             "  @CanIgnoreReturnValue",
             "  private Client self() {",
+            "    return this;",
+            "  }",
+            "}")
+        .doTest(TestMode.TEXT_MATCH);
+  }
+
+  @Test
+  public void testSimpleCase_returnsGetThis() {
+    helper
+        .addInputLines(
+            "Client.java",
+            "package com.google.frobber;",
+            "import com.google.errorprone.annotations.CanIgnoreReturnValue;",
+            "@CanIgnoreReturnValue",
+            "public final class Client {",
+            "  public Client getValue() {",
+            "    return getThis();",
+            "  }",
+            "  private Client getThis() {",
+            "    return this;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Client.java",
+            "package com.google.frobber;",
+            "import com.google.errorprone.annotations.CanIgnoreReturnValue;",
+            "public final class Client {",
+            "  @CanIgnoreReturnValue",
+            "  public Client getValue() {",
+            "    return getThis();",
+            "  }",
+            "  @CanIgnoreReturnValue",
+            "  private Client getThis() {",
             "    return this;",
             "  }",
             "}")

@@ -47,6 +47,7 @@ import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
+import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TypeCastTree;
@@ -179,6 +180,10 @@ public final class NoCanIgnoreReturnValueOnClasses extends BugChecker implements
           private boolean maybeCastThis(Tree tree) {
             return firstNonNull(
                 new SimpleTreeVisitor<Boolean, Void>() {
+                  @Override
+                  public Boolean visitParenthesized(ParenthesizedTree tree, Void unused) {
+                    return visit(tree.getExpression(), null);
+                  }
 
                   @Override
                   public Boolean visitTypeCast(TypeCastTree tree, Void unused) {
@@ -192,7 +197,8 @@ public final class NoCanIgnoreReturnValueOnClasses extends BugChecker implements
 
                   @Override
                   public Boolean visitMethodInvocation(MethodInvocationTree tree, Void unused) {
-                    return getSymbol(tree).getSimpleName().contentEquals("self");
+                    return getSymbol(tree).getSimpleName().contentEquals("self")
+                        || getSymbol(tree).getSimpleName().contentEquals("getThis");
                   }
                 }.visit(tree, null),
                 false);
