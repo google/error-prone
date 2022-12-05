@@ -25,6 +25,7 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
+import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.ParenthesizedTree;
@@ -131,6 +132,8 @@ public final class GuardedByBinder {
 
     Symbol resolveSelect(GuardedByExpression base, MemberSelectTree node);
 
+    Symbol resolveMemberReference(GuardedByExpression base, MemberReferenceTree node);
+
     Symbol resolveTypeLiteral(ExpressionTree expression);
 
     Symbol resolveEnclosingClass(ExpressionTree expression);
@@ -157,6 +160,11 @@ public final class GuardedByBinder {
 
         @Override
         public Symbol resolveSelect(GuardedByExpression base, MemberSelectTree node) {
+          return ASTHelpers.getSymbol(node);
+        }
+
+        @Override
+        public Symbol resolveMemberReference(GuardedByExpression base, MemberReferenceTree node) {
           return ASTHelpers.getSymbol(node);
         }
 
@@ -232,6 +240,16 @@ public final class GuardedByBinder {
           boolean condition = sym instanceof Symbol.VarSymbol || sym instanceof Symbol.MethodSymbol;
           checkGuardedBy(condition, "Bad member symbol: %s", sym.getClass());
           return bindSelect(normalizeBase(context, sym, base), sym);
+        }
+
+        @Override
+        public GuardedByExpression visitMemberReference(
+            MemberReferenceTree node, BinderContext context) {
+          GuardedByExpression base = visit(node.getQualifierExpression(), context);
+          checkGuardedBy(base != null, node.getQualifierExpression().toString());
+          Symbol method = context.resolver.resolveMemberReference(base, node);
+          checkGuardedBy(method != null, node.toString());
+          return bindSelect(normalizeBase(context, method, base), method);
         }
 
         private GuardedByExpression bindSelect(GuardedByExpression base, Symbol sym) {

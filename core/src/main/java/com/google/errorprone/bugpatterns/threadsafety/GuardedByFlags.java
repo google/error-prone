@@ -15,6 +15,7 @@
 package com.google.errorprone.bugpatterns.threadsafety;
 
 import com.google.auto.value.AutoValue;
+import com.google.errorprone.ErrorProneFlags;
 
 /**
  * Flags that control the behavior of threadsafety utils to facilitate rolling out new
@@ -25,7 +26,14 @@ import com.google.auto.value.AutoValue;
  */
 @AutoValue
 public abstract class GuardedByFlags {
+  public abstract boolean checkMemberReferences();
+
   public static GuardedByFlags allOn() {
-    return new AutoValue_GuardedByFlags();
+    return new AutoValue_GuardedByFlags(true);
+  }
+
+  public static GuardedByFlags from(ErrorProneFlags flags) {
+    return new AutoValue_GuardedByFlags(
+        flags.getBoolean("GuardedBy:CheckMemberReferences").orElse(true));
   }
 }

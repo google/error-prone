@@ -27,6 +27,7 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
+import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
@@ -167,6 +168,13 @@ public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
     Symbol baseSym =
         base.kind() == GuardedByExpression.Kind.THIS ? enclosingClass : base.type().asElement();
     return getField(baseSym, node.getIdentifier().toString());
+  }
+
+  @Override
+  public Symbol resolveMemberReference(GuardedByExpression base, MemberReferenceTree node) {
+    Symbol baseSym =
+        base.kind() == GuardedByExpression.Kind.THIS ? enclosingClass : base.type().asElement();
+    return getMember(MethodSymbol.class, ElementKind.METHOD, baseSym, node.getName().toString());
   }
 
   private VarSymbol getField(Symbol classSymbol, String name) {

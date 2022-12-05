@@ -1919,7 +1919,6 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  @Ignore
   public void methodReferences_shouldBeFlagged() {
     compilationHelper
         .addSourceLines(
@@ -1933,11 +1932,60 @@ public class GuardedByCheckerTest {
             "  @GuardedBy(\"this\") private final List<String> xs = new ArrayList<>();",
             "  private final List<Predicate<String>> preds = new ArrayList<>();",
             "  public synchronized void test() {",
-            // This should report an error, but doesn't currently.
             "    // BUG: Diagnostic contains:",
             "    preds.add(xs::contains);",
             "  }",
             "}")
+        .doTest();
+  }
+
+  @Test
+  public void methodReference_referencedMethodIsFlagged() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.ArrayList;",
+            "import java.util.List;",
+            "import java.util.Optional;",
+            "import java.util.function.Predicate;",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "class Test {",
+            "  private final List<Predicate<String>> preds = new ArrayList<>();",
+            "  public synchronized void test() {",
+            "    Optional.of(\"foo\").ifPresent(this::frobnicate);",
+            "    // BUG: Diagnostic contains: should be guarded by",
+            "    preds.add(this::frobnicate);",
+            "  }",
+            "  @GuardedBy(\"this\")",
+            "  public boolean frobnicate(String x) {",
+            "    return true;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void methodReference_flaggedOff_methodReferencesNotFlagged() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.ArrayList;",
+            "import java.util.List;",
+            "import java.util.Optional;",
+            "import java.util.function.Predicate;",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "class Test {",
+            "  private final List<Predicate<String>> preds = new ArrayList<>();",
+            "  public synchronized void test() {",
+            "    Optional.of(\"foo\").ifPresent(this::frobnicate);",
+            "    preds.add(this::frobnicate);",
+            "  }",
+            "  @GuardedBy(\"this\")",
+            "  public boolean frobnicate(String x) {",
+            "    return true;",
+            "  }",
+            "}")
+        .setArgs("-XepOpt:GuardedBy:CheckMemberReferences=false")
         .doTest();
   }
 }

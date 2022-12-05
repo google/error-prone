@@ -34,6 +34,7 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.LambdaExpressionTree;
+import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
@@ -250,6 +251,15 @@ public final class HeldLockAnalyzer {
         return super.visitLambdaExpression(node, heldLockSet);
       }
       // Don't descend into lambdas; they will be analyzed separately.
+      return null;
+    }
+
+    @Override
+    public Void visitMemberReference(MemberReferenceTree tree, HeldLockSet locks) {
+      if (flags.checkMemberReferences()) {
+        checkMatch(tree, locks);
+      }
+      scan(tree.getQualifierExpression(), locks);
       return null;
     }
 
