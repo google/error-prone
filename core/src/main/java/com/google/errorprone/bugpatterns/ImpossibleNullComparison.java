@@ -306,6 +306,12 @@ public final class ImpossibleNullComparison extends BugChecker
   private static final Matcher<ExpressionTree> MULTIMAP_GET_MATCHER =
       instanceMethod().onDescendantOf("com.google.common.collect.Multimap").named("get");
 
+  private static final Matcher<ExpressionTree> TABLE_ROW_MATCHER =
+      instanceMethod().onDescendantOf("com.google.common.collect.Table").named("row");
+
+  private static final Matcher<ExpressionTree> TABLE_COLUMN_MATCHER =
+      instanceMethod().onDescendantOf("com.google.common.collect.Table").named("column");
+
   private enum GetterTypes {
     OPTIONAL_GET {
       @Nullable
@@ -341,6 +347,40 @@ public final class ImpossibleNullComparison extends BugChecker
             Optional.of(
                 format(
                     "%s%s.containsKey(%s)",
+                    n ? "!" : "",
+                    s.getSourceForNode(getReceiver(tree)),
+                    s.getSourceForNode(
+                        getOnlyElement(((MethodInvocationTree) tree).getArguments()))));
+      }
+    },
+    TABLE_ROW_GET {
+      @Nullable
+      @Override
+      Fixer match(ExpressionTree tree, VisitorState state) {
+        if (!TABLE_ROW_MATCHER.matches(tree, state)) {
+          return null;
+        }
+        return (n, s) ->
+            Optional.of(
+                format(
+                    "%s%s.containsRow(%s)",
+                    n ? "!" : "",
+                    s.getSourceForNode(getReceiver(tree)),
+                    s.getSourceForNode(
+                        getOnlyElement(((MethodInvocationTree) tree).getArguments()))));
+      }
+    },
+    TABLE_COLUMN_GET {
+      @Nullable
+      @Override
+      Fixer match(ExpressionTree tree, VisitorState state) {
+        if (!TABLE_COLUMN_MATCHER.matches(tree, state)) {
+          return null;
+        }
+        return (n, s) ->
+            Optional.of(
+                format(
+                    "%s%s.containsColumn(%s)",
                     n ? "!" : "",
                     s.getSourceForNode(getReceiver(tree)),
                     s.getSourceForNode(

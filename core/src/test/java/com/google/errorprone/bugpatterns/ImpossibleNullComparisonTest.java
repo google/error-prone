@@ -476,4 +476,21 @@ public final class ImpossibleNullComparisonTest {
         .setArgs("-XepOpt:ImpossibleNullComparison:MatchOptionalAndMultimap=false")
         .doTest();
   }
+
+  @Test
+  public void tables() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.collect.Table;",
+            "public class Test {",
+            "  public void o(Table<String, String, String> t) {",
+            "    // BUG: Diagnostic contains: !t.containsRow(\"foo\")",
+            "    boolean b1 = t.row(\"foo\") == null;",
+            "    // BUG: Diagnostic contains: !t.containsColumn(\"foo\")",
+            "    boolean b2 = t.column(\"foo\") == null;",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
