@@ -157,7 +157,16 @@ public class CanIgnoreReturnValueSuggesterTest {
             "  public abstract Builder clone();",
             "  public abstract Builder copy();",
             "}")
-        .expectUnchanged()
+        .addOutputLines(
+            "Builder.java",
+            "package com.google.frobber;",
+            "import com.google.errorprone.annotations.CanIgnoreReturnValue;",
+            "public abstract class Builder {",
+            "  @CanIgnoreReturnValue",
+            "  public abstract Builder setName(String name);",
+            "  public abstract Builder clone();",
+            "  public abstract Builder copy();",
+            "}")
         .doTest();
   }
 
@@ -172,7 +181,16 @@ public class CanIgnoreReturnValueSuggesterTest {
             "  Builder copy();",
             "  Builder clone();",
             "}")
-        .expectUnchanged()
+        .addOutputLines(
+            "Builder.java",
+            "package com.google.frobber;",
+            "import com.google.errorprone.annotations.CanIgnoreReturnValue;",
+            "public interface Builder {",
+            "  @CanIgnoreReturnValue",
+            "  Builder setName(String name);",
+            "  Builder copy();",
+            "  Builder clone();",
+            "}")
         .doTest();
   }
 
