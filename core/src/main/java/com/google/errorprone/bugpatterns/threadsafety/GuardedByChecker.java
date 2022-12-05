@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns.threadsafety;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.bugpatterns.threadsafety.HeldLockAnalyzer.INVOKES_LAMBDAS_IMMEDIATELY;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
 import com.google.common.base.Joiner;
@@ -34,6 +35,7 @@ import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LambdaExpressionTree;
+import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
@@ -69,6 +71,11 @@ public class GuardedByChecker extends BugChecker
 
   @Override
   public Description matchLambdaExpression(LambdaExpressionTree tree, VisitorState state) {
+    var parent = state.getPath().getParentPath().getLeaf();
+    if (parent instanceof MethodInvocationTree
+        && INVOKES_LAMBDAS_IMMEDIATELY.matches((ExpressionTree) parent, state)) {
+      return NO_MATCH;
+    }
     analyze(state.withPath(new TreePath(state.getPath(), tree.getBody())));
     return NO_MATCH;
   }
@@ -76,9 +83,9 @@ public class GuardedByChecker extends BugChecker
   private void analyze(VisitorState state) {
     HeldLockAnalyzer.analyze(
         state,
-        (ExpressionTree tree, GuardedByExpression guard, HeldLockSet live) ->
+        (tree, guard, live) ->
             report(GuardedByChecker.this.checkGuardedAccess(tree, guard, live, state), state),
-        tree1 -> isSuppressed(tree1, state),
+        tree -> isSuppressed(tree, state),
         flags);
   }
 

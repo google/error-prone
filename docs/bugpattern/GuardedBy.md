@@ -216,8 +216,9 @@ class Transaction {
 The analysis is intra-procedural, meaning it doesn't consider the implementation
 of `doSomething`.
 
-The checker doesn't know if `doSomething` immediately calls the provided lambda
-while the lock is still held by the enclosing method `handle`, for example:
+In general, the checker doesn't know if `doSomething` immediately calls the
+provided lambda while the lock is still held by the enclosing method `handle`,
+for example:
 
 ```java
 private void doSomething(Runnable r) {
@@ -234,6 +235,9 @@ private void doSomething(Runnable r) {
   someExecutor.execute(r);
 }
 ```
+
+However, the check does special-case some method calls which are known to
+immediately call the provided lambda or method reference.
 
 #### False negatives with aliasing
 

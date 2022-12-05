@@ -16,6 +16,8 @@
 
 package com.google.errorprone.bugpatterns.threadsafety;
 
+import static com.google.errorprone.matchers.Matchers.anyOf;
+import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 
 import com.google.auto.value.AutoValue;
@@ -63,6 +65,29 @@ import javax.lang.model.element.Modifier;
  * @author cushon@google.com (Liam Miller-Cushon)
  */
 public final class HeldLockAnalyzer {
+  /** Methods which invoke lambdas on the same thread. */
+  static final Matcher<ExpressionTree> INVOKES_LAMBDAS_IMMEDIATELY =
+      anyOf(
+          instanceMethod()
+              .onExactClass("java.util.Optional")
+              .namedAnyOf(
+                  "ifPresent",
+                  "ifPresentOrElse",
+                  "filter",
+                  "map",
+                  "flatMap",
+                  "or",
+                  "orElseGet",
+                  "orElseThrow"),
+          instanceMethod()
+              .onDescendantOf("java.util.Map")
+              .namedAnyOf("forEach", "replaceAll", "computeIfAbsent", "computeIfPresent", "merge"),
+          instanceMethod().onDescendantOf("java.util.List").named("replaceAll"),
+          instanceMethod().onDescendantOf("java.util.Iterable").named("forEach"),
+          instanceMethod().onDescendantOf("java.util.Iterator").named("forEachRemaining"),
+          staticMethod()
+              .onClass("com.google.common.collect.Iterables")
+              .namedAnyOf("tryFind", "any", "all", "indexOf"));
 
   /** Listener interface for accesses to guarded members. */
   public interface LockEventListener {
@@ -219,6 +244,11 @@ public final class HeldLockAnalyzer {
 
     @Override
     public Void visitLambdaExpression(LambdaExpressionTree node, HeldLockSet heldLockSet) {
+      var parent = getCurrentPath().getParentPath().getLeaf();
+      if (parent instanceof MethodInvocationTree
+          && INVOKES_LAMBDAS_IMMEDIATELY.matches((ExpressionTree) parent, visitorState)) {
+        return super.visitLambdaExpression(node, heldLockSet);
+      }
       // Don't descend into lambdas; they will be analyzed separately.
       return null;
     }
