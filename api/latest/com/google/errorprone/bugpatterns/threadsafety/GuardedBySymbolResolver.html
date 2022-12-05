@@ -15,7 +15,7 @@
 <script type="text/javascript" src="../../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":9,"i3":9,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10};
+<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":9,"i3":9,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -149,30 +149,36 @@ com.sun.source.tree.Tree&nbsp;leaf,
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="alt-color" id="i6">
+<td class="col-first"><code>com.sun.tools.javac.code.Symbol</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#resolveMemberReference(com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression,com.sun.source.tree.MemberReferenceTree)">resolveMemberReference</a></span>&#8203;(<a href="GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&nbsp;base,
+com.sun.source.tree.MemberReferenceTree&nbsp;node)</code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="row-color" id="i7">
 <td class="col-first"><code>com.sun.tools.javac.code.Symbol.MethodSymbol</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#resolveMethod(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression,javax.lang.model.element.Name)">resolveMethod</a></span>&#8203;(com.sun.source.tree.MethodInvocationTree&nbsp;node,
 <a href="GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&nbsp;base,
 <a href="https://docs.oracle.com/javase/8/docs/api/javax/lang/model/element/Name.html" title="class or interface in javax.lang.model.element" class="external-link">Name</a>&nbsp;identifier)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i7">
+<tr class="alt-color" id="i8">
 <td class="col-first"><code>com.sun.tools.javac.code.Symbol.MethodSymbol</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#resolveMethod(com.sun.source.tree.MethodInvocationTree,javax.lang.model.element.Name)">resolveMethod</a></span>&#8203;(com.sun.source.tree.MethodInvocationTree&nbsp;node,
 <a href="https://docs.oracle.com/javase/8/docs/api/javax/lang/model/element/Name.html" title="class or interface in javax.lang.model.element" class="external-link">Name</a>&nbsp;name)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i8">
+<tr class="row-color" id="i9">
 <td class="col-first"><code>com.sun.tools.javac.code.Symbol</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#resolveSelect(com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression,com.sun.source.tree.MemberSelectTree)">resolveSelect</a></span>&#8203;(<a href="GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&nbsp;base,
 com.sun.source.tree.MemberSelectTree&nbsp;node)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i9">
+<tr class="alt-color" id="i10">
 <td class="col-first"><code>com.sun.tools.javac.code.Symbol</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#resolveTypeLiteral(com.sun.source.tree.ExpressionTree)">resolveTypeLiteral</a></span>&#8203;(com.sun.source.tree.ExpressionTree&nbsp;expr)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i10">
+<tr class="row-color" id="i11">
 <td class="col-first"><code><a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#visitorState()">visitorState</a></span>()</code></th>
 <td class="col-last">&nbsp;</td>
@@ -272,6 +278,17 @@ com.sun.source.tree.MemberSelectTree&nbsp;node)</span></div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="GuardedByBinder.Resolver.html#resolveSelect(com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression,com.sun.source.tree.MemberSelectTree)">resolveSelect</a></code>&nbsp;in interface&nbsp;<code><a href="GuardedByBinder.Resolver.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">GuardedByBinder.Resolver</a></code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="resolveMemberReference(com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression,com.sun.source.tree.MemberReferenceTree)">
+<h3>resolveMemberReference</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.sun.tools.javac.code.Symbol</span>&nbsp;<span class="member-name">resolveMemberReference</span>&#8203;(<span class="parameters"><a href="GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&nbsp;base,
+com.sun.source.tree.MemberReferenceTree&nbsp;node)</span></div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="GuardedByBinder.Resolver.html#resolveMemberReference(com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression,com.sun.source.tree.MemberReferenceTree)">resolveMemberReference</a></code>&nbsp;in interface&nbsp;<code><a href="GuardedByBinder.Resolver.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">GuardedByBinder.Resolver</a></code></dd>
 </dl>
 </section>
 </li>
