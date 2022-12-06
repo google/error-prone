@@ -22,6 +22,10 @@ import static com.google.errorprone.bugpatterns.CheckReturnValue.MessageTrailerS
 import static com.google.errorprone.bugpatterns.checkreturnvalue.AutoValueRules.autoBuilders;
 import static com.google.errorprone.bugpatterns.checkreturnvalue.AutoValueRules.autoValueBuilders;
 import static com.google.errorprone.bugpatterns.checkreturnvalue.AutoValueRules.autoValues;
+import static com.google.errorprone.bugpatterns.checkreturnvalue.ErrorMessages.annotationOnVoid;
+import static com.google.errorprone.bugpatterns.checkreturnvalue.ErrorMessages.conflictingAnnotations;
+import static com.google.errorprone.bugpatterns.checkreturnvalue.ErrorMessages.invocationResultIgnored;
+import static com.google.errorprone.bugpatterns.checkreturnvalue.ErrorMessages.methodReferenceIgnoresResult;
 import static com.google.errorprone.bugpatterns.checkreturnvalue.ExternalCanIgnoreReturnValue.externalIgnoreList;
 import static com.google.errorprone.bugpatterns.checkreturnvalue.ExternalCanIgnoreReturnValue.methodNameAndParams;
 import static com.google.errorprone.bugpatterns.checkreturnvalue.ExternalCanIgnoreReturnValue.surroundingClass;
@@ -43,7 +47,6 @@ import static com.google.errorprone.util.ASTHelpers.hasDirectAnnotationWithSimpl
 import static com.google.errorprone.util.ASTHelpers.isGeneratedConstructor;
 import static com.google.errorprone.util.ASTHelpers.isLocal;
 import static com.sun.source.tree.Tree.Kind.METHOD;
-import static java.util.stream.Collectors.joining;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -79,7 +82,6 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.PackageSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.processing.JavacProcessingEnvironment;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 import javax.lang.model.element.ElementKind;
@@ -283,9 +285,7 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
     if (!ASTHelpers.isVoidType(method.getReturnType(), state)) {
       return Description.NO_MATCH;
     }
-    String message =
-        String.format(
-            "@%s may not be applied to void-returning methods", presentAnnotations.get(0));
+    String message = annotationOnVoid(presentAnnotations.get(0));
     return buildDescription(tree).setMessage(message).build();
   }
 
@@ -293,12 +293,6 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
     return MUTUALLY_EXCLUSIVE_ANNOTATIONS.stream()
         .filter(a -> hasDirectAnnotationWithSimpleName(symbol, a))
         .collect(toImmutableList());
-  }
-
-  private static String conflictingAnnotations(List<String> annotations, String targetType) {
-    return annotations.stream().map(a -> "@" + a).collect(joining(" and "))
-        + " cannot be applied to the same "
-        + targetType;
   }
 
   /**
@@ -318,21 +312,10 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
   }
 
   private Description describeInvocationResultIgnored(
-      ExpressionTree invocationTree,
-      String shortCall,
-      String shortCallWithoutNew,
-      MethodSymbol symbol,
-      VisitorState state) {
+      ExpressionTree invocationTree, String shortCall, MethodSymbol symbol, VisitorState state) {
+    String assignmentToUnused = "var unused = ...";
     String message =
-        String.format(
-            "The result of `%s` must be used\n"
-                + "If you really don't want to use the result, then assign it to a variable:"
-                + " `var unused = ...`.\n"
-                + "\n"
-                + "If callers of `%s` shouldn't be required to use its result,"
-                + " then annotate it with `@CanIgnoreReturnValue`.\n"
-                + "%s",
-            shortCall, shortCallWithoutNew, apiTrailer(symbol, state));
+        invocationResultIgnored(shortCall, assignmentToUnused, apiTrailer(symbol, state));
     return buildDescription(invocationTree)
         .addFix(fixAtDeclarationSite(symbol, state))
         .addAllFixes(fixesAtCallSite(invocationTree, state))
@@ -344,18 +327,17 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
   protected Description describeReturnValueIgnored(MethodInvocationTree tree, VisitorState state) {
     MethodSymbol symbol = getSymbol(tree);
     String shortCall = symbol.name + (tree.getArguments().isEmpty() ? "()" : "(...)");
-    String shortCallWithoutNew = shortCall;
-    return describeInvocationResultIgnored(tree, shortCall, shortCallWithoutNew, symbol, state);
+    return describeInvocationResultIgnored(tree, shortCall, symbol, state);
   }
 
   @Override
   protected Description describeReturnValueIgnored(NewClassTree tree, VisitorState state) {
     MethodSymbol symbol = getSymbol(tree);
-    String shortCallWithoutNew =
-        state.getSourceForNode(tree.getIdentifier())
+    String shortCall =
+        "new "
+            + state.getSourceForNode(tree.getIdentifier())
             + (tree.getArguments().isEmpty() ? "()" : "(...)");
-    String shortCall = "new " + shortCallWithoutNew;
-    return describeInvocationResultIgnored(tree, shortCall, shortCallWithoutNew, symbol, state);
+    return describeInvocationResultIgnored(tree, shortCall, symbol, state);
   }
 
   @Override
@@ -364,42 +346,24 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
     Type type = state.getTypes().memberType(getType(tree.getQualifierExpression()), symbol);
     String parensAndMaybeEllipsis = type.getParameterTypes().isEmpty() ? "()" : "(...)";
 
-    String shortCallWithoutNew;
-    String shortCall;
-    if (tree.getMode() == ReferenceMode.NEW) {
-      shortCallWithoutNew =
-          state.getSourceForNode(tree.getQualifierExpression()) + parensAndMaybeEllipsis;
-      shortCall = "new " + shortCallWithoutNew;
-    } else {
-      shortCallWithoutNew = tree.getName() + parensAndMaybeEllipsis;
-      shortCall = shortCallWithoutNew;
-    }
+    String shortCall =
+        (tree.getMode() == ReferenceMode.NEW
+                ? "new " + state.getSourceForNode(tree.getQualifierExpression())
+                : tree.getName())
+            + parensAndMaybeEllipsis;
 
     String implementedMethod =
         getType(tree).asElement().getSimpleName()
             + "."
             + state.getTypes().findDescriptorSymbol(getType(tree).asElement()).getSimpleName();
     String methodReference = state.getSourceForNode(tree);
+    String assignmentLambda = parensAndMaybeEllipsis + " -> { var unused = ...; }";
     String message =
-        String.format(
-            "The result of `%s` must be used\n"
-                + "`%s` acts as an implementation of `%s`"
-                + " -- which is a `void` method, so it doesn't use the result of `%s`.\n"
-                + "\n"
-                + "To use the result, you may need to restructure your code.\n"
-                + "\n"
-                + "If you really don't want to use the result, then switch to a lambda that assigns"
-                + " it to a variable: `%s -> { var unused = ...; }`.\n"
-                + "\n"
-                + "If callers of `%s` shouldn't be required to use its result,"
-                + " then annotate it with `@CanIgnoreReturnValue`.\n"
-                + "%s",
+        methodReferenceIgnoresResult(
             shortCall,
             methodReference,
             implementedMethod,
-            shortCall,
-            parensAndMaybeEllipsis,
-            shortCallWithoutNew,
+            assignmentLambda,
             apiTrailer(symbol, state));
     return buildDescription(tree)
         .setMessage(message)
