@@ -20,6 +20,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.MethodInvocationTree;
 import java.util.regex.Pattern;
@@ -34,9 +35,10 @@ public class InvalidPatternSyntax extends AbstractPatternSyntaxChecker {
   private static final String MESSAGE_BASE = "Invalid syntax used for a regular expression: ";
 
   @Override
-  protected final Description matchRegexLiteral(MethodInvocationTree tree, String regex) {
+  protected final Description matchRegexLiteral(
+      MethodInvocationTree tree, VisitorState state, String pattern, int flags) {
     try {
-      Pattern.compile(regex);
+      Pattern.compile(pattern, flags);
       return NO_MATCH;
     } catch (PatternSyntaxException e) {
       return buildDescription(tree).setMessage(MESSAGE_BASE + e.getMessage()).build();

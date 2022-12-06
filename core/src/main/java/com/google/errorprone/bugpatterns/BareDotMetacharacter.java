@@ -20,6 +20,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
@@ -37,7 +38,8 @@ public class BareDotMetacharacter extends AbstractPatternSyntaxChecker
     implements MethodInvocationTreeMatcher {
 
   @Override
-  protected final Description matchRegexLiteral(MethodInvocationTree tree, String regex) {
+  protected final Description matchRegexLiteral(
+      MethodInvocationTree tree, VisitorState state, String regex, int flags) {
     if (regex.equals(".")) {
       return describeMatch(tree, SuggestedFix.replace(tree.getArguments().get(0), "\"\\\\.\""));
     } else {

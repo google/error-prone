@@ -28,20 +28,16 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
-import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 
 /** Finds calls to regex-accepting methods with literal strings. */
 @CheckReturnValue
-abstract class AbstractPatternSyntaxChecker extends BugChecker
+public abstract class AbstractPatternSyntaxChecker extends BugChecker
     implements MethodInvocationTreeMatcher {
 
   /*
    * Match invocations to regex-accepting methods. Subclasses will be consulted to see whether the
    * pattern passed to such methods are acceptable.
-   *
-   * <p>We deliberately omit Pattern.compile itself, as most of its users appear to be either
-   * e.g. passing LITERAL flags or deliberately testing the regex compiler.
    */
   private static final Matcher<MethodInvocationTree> REGEX_USAGE =
       anyOf(
@@ -58,21 +54,47 @@ abstract class AbstractPatternSyntaxChecker extends BugChecker
               .namedAnyOf("replaceFirst", "replaceAll")
               .withParameters("java.lang.String", "java.lang.String"),
           staticMethod().onClass("java.util.regex.Pattern").named("matches"),
+          staticMethod()
+              .onClass("java.util.regex.Pattern")
+              .named("compile")
+              .withParameters("java.lang.String"),
           staticMethod().onClass("com.google.common.base.Splitter").named("onPattern"));
+
+  private static final Matcher<MethodInvocationTree> REGEX_USAGE_WITH_FLAGS =
+      anyOf(
+          staticMethod()
+              .onClass("java.util.regex.Pattern")
+              .named("compile")
+              .withParameters("java.lang.String", "int"));
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    if (!REGEX_USAGE.matches(tree, state)) {
-      return NO_MATCH;
+    if (getMatcherWithoutFlags().matches(tree, state)) {
+      String pattern = ASTHelpers.constValue(tree.getArguments().get(0), String.class);
+      if (pattern != null) {
+        return matchRegexLiteral(tree, state, pattern, 0);
+      }
+    } else if (getMatcherWithFlags().matches(tree, state)) {
+      String pattern = ASTHelpers.constValue(tree.getArguments().get(0), String.class);
+      Integer flags = ASTHelpers.constValue(tree.getArguments().get(1), Integer.class);
+      if (pattern != null && flags != null) {
+        return matchRegexLiteral(tree, state, pattern, flags);
+      }
     }
-    ExpressionTree arg = tree.getArguments().get(0);
-    String value = ASTHelpers.constValue(arg, String.class);
-    if (value == null) {
-      return NO_MATCH;
-    }
-    return matchRegexLiteral(tree, value);
+    return NO_MATCH;
   }
 
   @ForOverride
-  protected abstract Description matchRegexLiteral(MethodInvocationTree tree, String pattern);
+  protected Matcher<? super MethodInvocationTree> getMatcherWithoutFlags() {
+    return REGEX_USAGE;
+  }
+
+  @ForOverride
+  protected Matcher<? super MethodInvocationTree> getMatcherWithFlags() {
+    return REGEX_USAGE_WITH_FLAGS;
+  }
+
+  @ForOverride
+  protected abstract Description matchRegexLiteral(
+      MethodInvocationTree tree, VisitorState state, String pattern, int flags);
 }
