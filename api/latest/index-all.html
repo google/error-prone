@@ -111,6 +111,12 @@ loadScripts(document, 'script');</script>
 <div class="block">Error Prone's fix application logic doesn't like it when a fix suggests multiple identical
  insertions at the same position.</div>
 </dd>
+<dt><a href="com/google/errorprone/bugpatterns/AbstractPatternSyntaxChecker.html" title="class in com.google.errorprone.bugpatterns"><span class="type-name-link">AbstractPatternSyntaxChecker</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>
+<div class="block">Finds calls to regex-accepting methods with literal strings.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/AbstractPatternSyntaxChecker.html#%3Cinit%3E()">AbstractPatternSyntaxChecker()</a></span> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractPatternSyntaxChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractPatternSyntaxChecker</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/AbstractReferenceEquality.html" title="class in com.google.errorprone.bugpatterns"><span class="type-name-link">AbstractReferenceEquality</span></a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
 <div class="block">Abstract implementation of a BugPattern that detects the use of reference equality to compare
@@ -4860,6 +4866,10 @@ loadScripts(document, 'script');</script>
 <div class="block">Gets the <code>Symbol</code>'s annotation info, either from a marker annotation on the symbol, from
  an accepted annotation on the symbol, or from the list of well-known types.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/AbstractPatternSyntaxChecker.html#getMatcherWithFlags()">getMatcherWithFlags()</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractPatternSyntaxChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractPatternSyntaxChecker</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/AbstractPatternSyntaxChecker.html#getMatcherWithoutFlags()">getMatcherWithoutFlags()</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractPatternSyntaxChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractPatternSyntaxChecker</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/AbstractReturnValueIgnored.html#getMatchMetadata(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">getMatchMetadata(ExpressionTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractReturnValueIgnored.html" title="class in com.google.errorprone.bugpatterns">AbstractReturnValueIgnored</a></dt>
 <dd>
 <div class="block">Returns a map of optional metadata about why this check matched the given tree.</div>
@@ -8336,7 +8346,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/AbstractMockChecker.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractMockChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractMockChecker</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/BareDotMetacharacter.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BareDotMetacharacter.html" title="class in com.google.errorprone.bugpatterns">BareDotMetacharacter</a></dt>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/AbstractPatternSyntaxChecker.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractPatternSyntaxChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractPatternSyntaxChecker</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/AbstractReturnValueIgnored.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractReturnValueIgnored.html" title="class in com.google.errorprone.bugpatterns">AbstractReturnValueIgnored</a></dt>
 <dd>&nbsp;</dd>
@@ -8842,9 +8852,11 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/BugChecker.PrimitiveTypeTreeMatcher.html#matchPrimitiveType(com.sun.source.tree.PrimitiveTypeTree,com.google.errorprone.VisitorState)">matchPrimitiveType(PrimitiveTypeTree, VisitorState)</a></span> - Method in interface com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BugChecker.PrimitiveTypeTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.PrimitiveTypeTreeMatcher</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/BareDotMetacharacter.html#matchRegexLiteral(com.sun.source.tree.MethodInvocationTree,java.lang.String)">matchRegexLiteral(MethodInvocationTree, String)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BareDotMetacharacter.html" title="class in com.google.errorprone.bugpatterns">BareDotMetacharacter</a></dt>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/AbstractPatternSyntaxChecker.html#matchRegexLiteral(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState,java.lang.String,int)">matchRegexLiteral(MethodInvocationTree, VisitorState, String, int)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractPatternSyntaxChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractPatternSyntaxChecker</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/InvalidPatternSyntax.html#matchRegexLiteral(com.sun.source.tree.MethodInvocationTree,java.lang.String)">matchRegexLiteral(MethodInvocationTree, String)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/InvalidPatternSyntax.html" title="class in com.google.errorprone.bugpatterns">InvalidPatternSyntax</a></dt>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/BareDotMetacharacter.html#matchRegexLiteral(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState,java.lang.String,int)">matchRegexLiteral(MethodInvocationTree, VisitorState, String, int)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BareDotMetacharacter.html" title="class in com.google.errorprone.bugpatterns">BareDotMetacharacter</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/InvalidPatternSyntax.html#matchRegexLiteral(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState,java.lang.String,int)">matchRegexLiteral(MethodInvocationTree, VisitorState, String, int)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/InvalidPatternSyntax.html" title="class in com.google.errorprone.bugpatterns">InvalidPatternSyntax</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/collectionincompatibletype/AbstractCollectionIncompatibleTypeMatcher.MatchResult.html#%3Cinit%3E()">MatchResult()</a></span> - Constructor for class com.google.errorprone.bugpatterns.collectionincompatibletype.<a href="com/google/errorprone/bugpatterns/collectionincompatibletype/AbstractCollectionIncompatibleTypeMatcher.MatchResult.html" title="class in com.google.errorprone.bugpatterns.collectionincompatibletype">AbstractCollectionIncompatibleTypeMatcher.MatchResult</a></dt>
 <dd>&nbsp;</dd>
