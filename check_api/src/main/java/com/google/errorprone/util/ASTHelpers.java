@@ -2549,6 +2549,9 @@ public class ASTHelpers {
      * we see a start position, we then also look for an end position, which *is* absent for
      * lambda parameters, even under javac8. Possibly we could get by looking *only* for the end
      * position, but I'm keeping both checks now that I have something that appears to work.
+     *
+     * Note that the .isImplicitlyTyped() method on JCVariableDecl returns the wrong answer after
+     * type attribution has occurred.
      */
     return getStartPosition(tree.getType()) == -1 || state.getEndPosition(tree.getType()) == -1;
   }
