@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.collect.Streams.stream;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
-import static com.google.errorprone.matchers.Matchers.anyMethod;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
@@ -195,5 +194,5 @@ public final class MockNotUsedInProduction extends BugChecker
       hasAnnotation("org.mockito.InjectMocks");
 
   private static final Matcher<ExpressionTree> WHEN_OR_VERIFY =
-      anyMethod().anyClass().namedAnyOf("when", "verify");
+      staticMethod().anyClass().namedAnyOf("when", "verify");
 }

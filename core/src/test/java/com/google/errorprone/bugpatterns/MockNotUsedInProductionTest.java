@@ -67,6 +67,25 @@ public final class MockNotUsedInProductionTest {
   }
 
   @Test
+  public void nonStaticVerify_countsAsUse() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "import static org.mockito.Mockito.spy;",
+            "class Test {",
+            "  public Object test() {",
+            "    Test test = spy(new Test());",
+            "    verify(test).test();",
+            "    return null;",
+            "  }",
+            "  Test verify (Test t) {",
+            "    return t;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void passedToProduction() {
     helper
         .addSourceLines(
