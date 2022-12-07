@@ -20,6 +20,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
+import static java.util.function.Predicate.not;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
@@ -37,6 +38,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 /**
@@ -60,7 +62,7 @@ public enum ImportPolicy {
         // Special handling to ensure that the pretty-printer always recognizes Refaster references
         return inliner.maker().Ident(inliner.asName("Refaster"));
       }
-      ImmutableSet<String> allImports = getAllImports(inliner, WhichImports.NON_STATIC);
+      ImmutableSet<String> allImports = getAllImports(inliner, WhichImports.NON_STATIC, i -> true);
       /*
        * Check if topLevelClazz or fullyQualifiedClazz is already imported.
        * If fullyQualifiedClazz is imported, return the class name.
@@ -199,9 +201,18 @@ public enum ImportPolicy {
         return IMPORT_TOP_LEVEL.staticReference(
             inliner, topLevelClazz, fullyQualifiedClazz, member);
       }
-      // Check to see if the reference is already static-imported.
-      String importableName = fullyQualifiedClazz + "." + member;
-      if (!getAllImports(inliner, WhichImports.STATIC).contains(importableName)) {
+      // Check to see if the reference (or a conflicting reference) is already static-imported.
+      String importSuffix = "." + member;
+      ImmutableSet<String> relatedImports =
+          getAllImports(inliner, WhichImports.STATIC, i -> i.endsWith(importSuffix));
+      String importableName = fullyQualifiedClazz + importSuffix;
+      if (!relatedImports.stream().allMatch(importableName::equals)) {
+        // A conflicting identifier is already statically imported.
+        return IMPORT_TOP_LEVEL.staticReference(
+            inliner, topLevelClazz, fullyQualifiedClazz, member);
+      }
+      if (relatedImports.isEmpty()) {
+        // The reference is not yet statically imported.
         inliner.addStaticImport(importableName);
       }
       return inliner.maker().Ident(inliner.asName(member));
@@ -261,7 +272,8 @@ public enum ImportPolicy {
    * Returns the set of imports that already exist of the import type (both in the source file and
    * in the pending list of imports to add).
    */
-  private static ImmutableSet<String> getAllImports(Inliner inliner, WhichImports whichImports) {
+  private static ImmutableSet<String> getAllImports(
+      Inliner inliner, WhichImports whichImports, Predicate<String> filter) {
     return Streams.concat(
             whichImports.getExistingImports(inliner),
             Optional.ofNullable(inliner.getContext())
@@ -271,6 +283,7 @@ public enum ImportPolicy {
                 .orElse(Stream.of())
                 .filter(whichImports::existingImportMatches)
                 .map(imp -> getQualifiedIdentifier(imp).toString()))
+        .filter(filter)
         .collect(toImmutableSet());
   }
 

@@ -374,4 +374,9 @@ public class TemplateIntegrationTest extends CompilerBasedTest {
   public void typeArgumentsMethodInvocation() throws IOException {
     runTest("TypeArgumentsMethodInvocationTemplate");
   }
+
+  @Test
+  public void staticImportClash() throws IOException {
+    runTest("StaticImportClashTemplate");
+  }
 }
