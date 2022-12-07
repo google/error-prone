@@ -168,13 +168,12 @@ public final class NonCanonicalTypeTest {
   }
 
   @Test
-  public void typeParameter() {
+  public void typeParameter_noFinding() {
     compilationHelper
         .addSourceLines(
             "Test.java",
             "class Test<E extends Enum<E>> {",
             "  E test(Class<E> clazz, String name) {",
-            "    // BUG: Diagnostic contains: Enum.valueOf",
             "    return E.valueOf(clazz, name);",
             "  }",
             "}")
@@ -202,6 +201,20 @@ public final class NonCanonicalTypeTest {
             "class Test {",
             "  void test () {",
             "    var c = boolean.class;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void method_noFinding() {
+    compilationHelper
+        .addSourceLines("Super.java", "class Super {", "  static void f() {}", "}")
+        .addSourceLines(
+            "Test.java",
+            "class Test extends Super {",
+            "  void test() {",
+            "    Test.f();",
             "  }",
             "}")
         .doTest();

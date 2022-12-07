@@ -22,7 +22,6 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
-import static com.google.errorprone.util.ASTHelpers.isStatic;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -86,10 +85,7 @@ public final class NonCanonicalType extends BugChecker implements MemberSelectTr
     if (sym == null) {
       return null;
     }
-    if ((sym instanceof Symbol.MethodSymbol || sym instanceof Symbol.VarSymbol) && !isStatic(sym)) {
-      return null;
-    }
-    if (sym.getSimpleName().contentEquals("class")) {
+    if (!(sym instanceof Symbol.TypeSymbol)) {
       return null;
     }
     return sym.owner.getQualifiedName() + "." + sym.getSimpleName();
