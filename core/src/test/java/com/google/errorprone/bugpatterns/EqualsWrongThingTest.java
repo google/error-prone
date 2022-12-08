@@ -153,4 +153,18 @@ public final class EqualsWrongThingTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void negativeArraysEquals() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.Arrays;",
+            "class Test {",
+            "  boolean test(int[] a, int[] b) {",
+            "    return Arrays.equals(a, 0, 1, b, 2, 3);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
