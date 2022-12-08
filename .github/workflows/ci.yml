@@ -8,8 +8,15 @@ on:
     branches:
     - master
 
+permissions:
+  contents: read #  to fetch code (actions/checkout)
+
 jobs:
   test:
+    permissions:
+      actions: write #  to cancel/stop running workflows (styfle/cancel-workflow-action)
+      contents: read #  to fetch code (actions/checkout)
+
     name: "JDK ${{ matrix.java }} on ${{ matrix.os }}"
     strategy:
       fail-fast: false
@@ -79,6 +86,9 @@ jobs:
         run: mvn source:jar deploy -B -DskipTests=true -Dinvoker.skip=true -Dmaven.javadoc.skip=true
 
   generate_docs:
+    permissions:
+      contents: write #  for git push
+
     name: 'Generate latest docs'
     needs: test
     if: github.event_name == 'push' && github.repository == 'google/error-prone' && github.ref == 'refs/heads/master'
