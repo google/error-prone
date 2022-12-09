@@ -197,12 +197,14 @@ public class SourceFile {
           repl.endPosition(),
           sourceBuilder.length());
 
-      // Write the unmodified content leading up to this change
-      newContent.append(sourceBuilder, positionInOriginal, repl.startPosition());
-      // And the modified content for this change
-      newContent.append(repl.replaceWith());
-      // Then skip everything from source between start and end
-      positionInOriginal = repl.endPosition();
+      if (repl.startPosition() >= positionInOriginal) {
+        // Write the unmodified content leading up to this change
+        newContent.append(sourceBuilder, positionInOriginal, repl.startPosition());
+        // And the modified content for this change
+        newContent.append(repl.replaceWith());
+        // Then skip everything from source between start and end
+        positionInOriginal = repl.endPosition();
+      }
     }
     // Flush out any remaining content after the final change
     newContent.append(sourceBuilder, positionInOriginal, sourceBuilder.length());
