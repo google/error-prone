@@ -19,9 +19,16 @@ package com.google.errorprone.refaster;
 import static com.google.errorprone.refaster.Unifier.unifications;
 
 import com.google.auto.value.AutoValue;
+import com.google.errorprone.util.RuntimeVersion;
 import com.sun.source.tree.EnhancedForLoopTree;
+import com.sun.source.tree.Tree;
 import com.sun.source.tree.TreeVisitor;
+import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCEnhancedForLoop;
+import com.sun.tools.javac.tree.JCTree.JCExpression;
+import com.sun.tools.javac.tree.JCTree.JCStatement;
+import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
+import com.sun.tools.javac.tree.TreeMaker;
 
 /**
  * A {@link UTree} representation of a {@link EnhancedForLoopTree}.
@@ -44,6 +51,11 @@ abstract class UEnhancedForLoop extends USimpleStatement implements EnhancedForL
   @Override
   public abstract USimpleStatement getStatement();
 
+  // TODO(cushon): support record patterns in enhanced for
+  public Tree getVariableOrRecordPattern() {
+    return getVariable();
+  }
+
   @Override
   public <R, D> R accept(TreeVisitor<R, D> visitor, D data) {
     return visitor.visitEnhancedForLoop(this, data);
@@ -56,12 +68,31 @@ abstract class UEnhancedForLoop extends USimpleStatement implements EnhancedForL
 
   @Override
   public JCEnhancedForLoop inline(Inliner inliner) throws CouldNotResolveImportException {
-    return inliner
-        .maker()
-        .ForeachLoop(
-            getVariable().inline(inliner),
-            getExpression().inline(inliner),
-            getStatement().inline(inliner));
+    return makeForeachLoop(
+        inliner.maker(),
+        getVariable().inline(inliner),
+        getExpression().inline(inliner),
+        getStatement().inline(inliner));
+  }
+
+  private static JCEnhancedForLoop makeForeachLoop(
+      TreeMaker maker, JCVariableDecl variable, JCExpression expression, JCStatement statement) {
+    try {
+      if (RuntimeVersion.isAtLeast20()) {
+        return (JCEnhancedForLoop)
+            TreeMaker.class
+                .getMethod("ForeachLoop", JCTree.class, JCExpression.class, JCStatement.class)
+                .invoke(maker, variable, expression, statement);
+      } else {
+        return (JCEnhancedForLoop)
+            TreeMaker.class
+                .getMethod(
+                    "ForeachLoop", JCVariableDecl.class, JCExpression.class, JCStatement.class)
+                .invoke(maker, variable, expression, statement);
+      }
+    } catch (ReflectiveOperationException e) {
+      throw new LinkageError(e.getMessage(), e);
+    }
   }
 
   @Override
