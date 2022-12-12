@@ -285,7 +285,7 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
     if (!ASTHelpers.isVoidType(method.getReturnType(), state)) {
       return Description.NO_MATCH;
     }
-    String message = annotationOnVoid(presentAnnotations.get(0));
+    String message = annotationOnVoid(presentAnnotations.get(0), "methods");
     return buildDescription(tree).setMessage(message).build();
   }
 

@@ -27,9 +27,12 @@ public class ErrorMessages {
   /**
    * Error message for when an annotation used by {@link Rules#mapAnnotationSimpleName} is applied
    * to a void-returning method.
+   *
+   * @param elementType the plural of the {@link java.lang.annotation.ElementType} of the annotated
+   *     element (e.g., "methods").
    */
-  public static String annotationOnVoid(String annotation) {
-    return String.format("@%s may not be applied to void-returning methods", annotation);
+  public static String annotationOnVoid(String annotation, String elementType) {
+    return String.format("@%s may not be applied to void-returning %s", annotation, elementType);
   }
 
   /**
