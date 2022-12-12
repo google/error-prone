@@ -5,7 +5,7 @@ summary: Getters on AutoValues, AutoBuilders, and Protobuf Messages are side-eff
   there are no side effects from the getter, the receiver may have side effects.
 layout: bugpattern
 tags: ''
-severity: ERROR
+severity: WARNING
 ---
 
 <!--
