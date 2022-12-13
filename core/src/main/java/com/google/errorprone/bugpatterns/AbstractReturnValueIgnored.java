@@ -22,6 +22,8 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.Lists.reverse;
 import static com.google.common.collect.Multimaps.toMultimap;
+import static com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicy.EXPECTED;
+import static com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicy.UNSPECIFIED;
 import static com.google.errorprone.fixes.SuggestedFix.delete;
 import static com.google.errorprone.fixes.SuggestedFix.postfixWith;
 import static com.google.errorprone.fixes.SuggestedFix.prefixWith;
@@ -64,6 +66,8 @@ import com.google.errorprone.bugpatterns.BugChecker.MemberReferenceTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
+import com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicy;
+import com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicyAnalyzer;
 import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -113,7 +117,8 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
     implements MethodInvocationTreeMatcher,
         MemberReferenceTreeMatcher,
         ReturnTreeMatcher,
-        NewClassTreeMatcher {
+        NewClassTreeMatcher,
+        ResultUsePolicyAnalyzer<ExpressionTree, VisitorState> {
 
   private final Supplier<UnusedReturnValueMatcher> unusedReturnValueMatcher =
       memoize(() -> UnusedReturnValueMatcher.get(allowInExceptionThrowers()));
@@ -173,27 +178,23 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
     return description;
   }
 
-  /**
-   * Returns whether this checker makes any determination about whether the given tree's return
-   * value should be used or not. Most checkers either determine that an expression is CRV or make
-   * no determination.
-   */
+  @Override
   public boolean isCovered(ExpressionTree tree, VisitorState state) {
     return isCheckReturnValue(tree, state);
   }
 
-  /**
-   * Returns whether the given tree's return value should be used according to this checker,
-   * regardless of whether or not the return value is actually used.
-   */
-  public final boolean isCheckReturnValue(ExpressionTree tree, VisitorState state) {
-    // TODO(cgdecker): Just replace specializedMatcher with this?
-    return specializedMatcher().matches(tree, state);
+  @Override
+  public ResultUsePolicy getMethodPolicy(ExpressionTree expression, VisitorState state) {
+    return isCheckReturnValue(expression, state) ? EXPECTED : UNSPECIFIED;
   }
 
-  /** Returns a map of optional metadata about why this check matched the given tree. */
-  public ImmutableMap<String, ?> getMatchMetadata(ExpressionTree tree, VisitorState state) {
-    return ImmutableMap.of();
+  /**
+   * Returns whether the given expression's return value should be used according to this checker,
+   * regardless of whether or not the return value is actually used.
+   */
+  private boolean isCheckReturnValue(ExpressionTree tree, VisitorState state) {
+    // TODO(cgdecker): Just replace specializedMatcher with this?
+    return specializedMatcher().matches(tree, state);
   }
 
   /**
