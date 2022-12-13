@@ -15,7 +15,7 @@
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":6};
+<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":6};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -84,7 +84,7 @@ loadScripts(document, 'script');</script>
 <section class="description">
 <dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code><a href="BugChecker.MemberReferenceTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MemberReferenceTreeMatcher</a></code>, <code><a href="BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a></code>, <code><a href="BugChecker.NewClassTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.NewClassTreeMatcher</a></code>, <code><a href="BugChecker.ReturnTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.ReturnTreeMatcher</a></code>, <code><a href="../matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a></code>, <code><a href="https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></code></dd>
+<dd><code><a href="BugChecker.MemberReferenceTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MemberReferenceTreeMatcher</a></code>, <code><a href="BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a></code>, <code><a href="BugChecker.NewClassTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.NewClassTreeMatcher</a></code>, <code><a href="BugChecker.ReturnTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.ReturnTreeMatcher</a></code>, <code><a href="checkreturnvalue/ResultUsePolicyAnalyzer.html" title="interface in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicyAnalyzer</a>&lt;com.sun.source.tree.ExpressionTree,&#8203;<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&gt;</code>, <code><a href="../matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a></code>, <code><a href="https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></code></dd>
 </dl>
 <dl class="notes">
 <dt>Direct Known Subclasses:</dt>
@@ -93,7 +93,7 @@ loadScripts(document, 'script');</script>
 <hr>
 <pre>public abstract class <span class="type-name-label">AbstractReturnValueIgnored</span>
 extends <a href="BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>
-implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a>, <a href="BugChecker.MemberReferenceTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MemberReferenceTreeMatcher</a>, <a href="BugChecker.ReturnTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.ReturnTreeMatcher</a>, <a href="BugChecker.NewClassTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.NewClassTreeMatcher</a></pre>
+implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a>, <a href="BugChecker.MemberReferenceTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MemberReferenceTreeMatcher</a>, <a href="BugChecker.ReturnTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.ReturnTreeMatcher</a>, <a href="BugChecker.NewClassTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.NewClassTreeMatcher</a>, <a href="checkreturnvalue/ResultUsePolicyAnalyzer.html" title="interface in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicyAnalyzer</a>&lt;com.sun.source.tree.ExpressionTree,&#8203;<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&gt;</pre>
 <div class="block">An abstract base class to match API usages in which the return value is not used.
 
  <p>In addition to regular contexts in which a return value isn't used (e.g.: the result of <code>
@@ -200,70 +200,61 @@ implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interfac
 </td>
 </tr>
 <tr class="alt-color" id="i4">
-<td class="col-first"><code>com.google.common.collect.ImmutableMap&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,&#8203;?&gt;</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getMatchMetadata(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">getMatchMetadata</a></span>&#8203;(com.sun.source.tree.ExpressionTree&nbsp;tree,
-<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
-<td class="col-last">
-<div class="block">Returns a map of optional metadata about why this check matched the given tree.</div>
-</td>
-</tr>
-<tr class="row-color" id="i5">
 <td class="col-first"><code>protected <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getMessage(javax.lang.model.element.Name)">getMessage</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/javax/lang/model/element/Name.html" title="class or interface in javax.lang.model.element" class="external-link">Name</a>&nbsp;name)</code></th>
 <td class="col-last">
 <div class="block">Returns the diagnostic message.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i6">
-<td class="col-first"><code>boolean</code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#isCheckReturnValue(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">isCheckReturnValue</a></span>&#8203;(com.sun.source.tree.ExpressionTree&nbsp;tree,
+<tr class="row-color" id="i5">
+<td class="col-first"><code><a href="checkreturnvalue/ResultUsePolicy.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicy</a></code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getMethodPolicy(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">getMethodPolicy</a></span>&#8203;(com.sun.source.tree.ExpressionTree&nbsp;expression,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">
-<div class="block">Returns whether the given tree's return value should be used according to this checker,
- regardless of whether or not the return value is actually used.</div>
+<div class="block">Returns the <a href="checkreturnvalue/ResultUsePolicy.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUsePolicy</code></a> for the method used in the given <code>expression</code>.</div>
 </td>
 </tr>
-<tr class="row-color" id="i7">
+<tr class="alt-color" id="i6">
 <td class="col-first"><code>boolean</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#isCovered(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">isCovered</a></span>&#8203;(com.sun.source.tree.ExpressionTree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">
-<div class="block">Returns whether this checker makes any determination about whether the given tree's return
- value should be used or not.</div>
+<div class="block">Returns whether this checker makes any determination about whether the given expression's
+ return value should be used or not.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i8">
+<tr class="row-color" id="i7">
 <td class="col-first"><code>protected <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;com.sun.tools.javac.code.Type&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#lostType(com.google.errorprone.VisitorState)">lostType</a></span>&#8203;(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">
 <div class="block">Check for occurrences of this type being lost, i.e.</div>
 </td>
 </tr>
-<tr class="row-color" id="i9">
+<tr class="alt-color" id="i8">
 <td class="col-first"><code>protected <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#lostTypeMessage(java.lang.String,java.lang.String)">lostTypeMessage</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;returnedType,
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;declaredReturnType)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i10">
+<tr class="row-color" id="i9">
 <td class="col-first"><code><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#matchMemberReference(com.sun.source.tree.MemberReferenceTree,com.google.errorprone.VisitorState)">matchMemberReference</a></span>&#8203;(com.sun.source.tree.MemberReferenceTree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i11">
+<tr class="alt-color" id="i10">
 <td class="col-first"><code><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">matchMethodInvocation</a></span>&#8203;(com.sun.source.tree.MethodInvocationTree&nbsp;methodInvocationTree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i12">
+<tr class="row-color" id="i11">
 <td class="col-first"><code><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#matchNewClass(com.sun.source.tree.NewClassTree,com.google.errorprone.VisitorState)">matchNewClass</a></span>&#8203;(com.sun.source.tree.NewClassTree&nbsp;newClassTree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i13">
+<tr class="alt-color" id="i12">
 <td class="col-first"><code><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#matchReturn(com.sun.source.tree.ReturnTree,com.google.errorprone.VisitorState)">matchReturn</a></span>&#8203;(com.sun.source.tree.ReturnTree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
@@ -271,7 +262,7 @@ implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interfac
 <div class="block">Returning a type from a lambda or method that returns Object loses the type information.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i14">
+<tr class="row-color" id="i13">
 <td class="col-first"><code>protected abstract <a href="../matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;? super com.sun.source.tree.ExpressionTree&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#specializedMatcher()">specializedMatcher</a></span>()</code></th>
 <td class="col-last">
@@ -289,6 +280,9 @@ implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interfac
 <div class="inherited-list">
 <h3 id="methods.inherited.from.class.java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
 <code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
+<div class="inherited-list">
+<h3 id="methods.inherited.from.class.com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicyAnalyzer">Methods inherited from interface&nbsp;com.google.errorprone.bugpatterns.checkreturnvalue.<a href="checkreturnvalue/ResultUsePolicyAnalyzer.html" title="interface in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicyAnalyzer</a></h3>
+<code><a href="checkreturnvalue/ResultUsePolicyAnalyzer.html#allNames()">allNames</a>, <a href="checkreturnvalue/ResultUsePolicyAnalyzer.html#canonicalName()">canonicalName</a>, <a href="checkreturnvalue/ResultUsePolicyAnalyzer.html#getMatchMetadata(E,C)">getMatchMetadata</a></code></div>
 <div class="inherited-list">
 <h3 id="methods.inherited.from.class.com.google.errorprone.matchers.Suppressible">Methods inherited from interface&nbsp;com.google.errorprone.matchers.<a href="../matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a></h3>
 <code><a href="../matchers/Suppressible.html#allNames()">allNames</a>, <a href="../matchers/Suppressible.html#canonicalName()">canonicalName</a>, <a href="../matchers/Suppressible.html#customSuppressionAnnotations()">customSuppressionAnnotations</a>, <a href="../matchers/Suppressible.html#supportsSuppressWarnings()">supportsSuppressWarnings</a>, <a href="../matchers/Suppressible.html#suppressedByAnyOf(java.util.Set,com.google.errorprone.VisitorState)">suppressedByAnyOf</a></code></div>
@@ -361,26 +355,27 @@ implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interfac
 <h3>isCovered</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="member-name">isCovered</span>&#8203;(<span class="parameters">com.sun.source.tree.ExpressionTree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
-<div class="block">Returns whether this checker makes any determination about whether the given tree's return
- value should be used or not. Most checkers either determine that an expression is CRV or make
- no determination.</div>
+<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="checkreturnvalue/ResultUsePolicyAnalyzer.html#isCovered(E,C)">ResultUsePolicyAnalyzer</a></code></span></div>
+<div class="block">Returns whether this checker makes any determination about whether the given expression's
+ return value should be used or not. Most checkers either determine that an expression is CRV or
+ make no determination.</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="checkreturnvalue/ResultUsePolicyAnalyzer.html#isCovered(E,C)">isCovered</a></code>&nbsp;in interface&nbsp;<code><a href="checkreturnvalue/ResultUsePolicyAnalyzer.html" title="interface in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicyAnalyzer</a>&lt;com.sun.source.tree.ExpressionTree,&#8203;<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&gt;</code></dd>
+</dl>
 </section>
 </li>
 <li>
-<section class="detail" id="isCheckReturnValue(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">
-<h3>isCheckReturnValue</h3>
-<div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="member-name">isCheckReturnValue</span>&#8203;(<span class="parameters">com.sun.source.tree.ExpressionTree&nbsp;tree,
+<section class="detail" id="getMethodPolicy(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">
+<h3>getMethodPolicy</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="checkreturnvalue/ResultUsePolicy.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicy</a></span>&nbsp;<span class="member-name">getMethodPolicy</span>&#8203;(<span class="parameters">com.sun.source.tree.ExpressionTree&nbsp;expression,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
-<div class="block">Returns whether the given tree's return value should be used according to this checker,
- regardless of whether or not the return value is actually used.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="getMatchMetadata(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">
-<h3>getMatchMetadata</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableMap&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,&#8203;?&gt;</span>&nbsp;<span class="member-name">getMatchMetadata</span>&#8203;(<span class="parameters">com.sun.source.tree.ExpressionTree&nbsp;tree,
-<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
-<div class="block">Returns a map of optional metadata about why this check matched the given tree.</div>
+<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="checkreturnvalue/ResultUsePolicyAnalyzer.html#getMethodPolicy(E,C)">ResultUsePolicyAnalyzer</a></code></span></div>
+<div class="block">Returns the <a href="checkreturnvalue/ResultUsePolicy.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUsePolicy</code></a> for the method used in the given <code>expression</code>.</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="checkreturnvalue/ResultUsePolicyAnalyzer.html#getMethodPolicy(E,C)">getMethodPolicy</a></code>&nbsp;in interface&nbsp;<code><a href="checkreturnvalue/ResultUsePolicyAnalyzer.html" title="interface in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicyAnalyzer</a>&lt;com.sun.source.tree.ExpressionTree,&#8203;<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&gt;</code></dd>
+</dl>
 </section>
 </li>
 <li>
