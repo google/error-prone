@@ -15,8 +15,8 @@ _Alternate names: static-method_
 
 ## The problem
 Consider an instance method that is not an override, is not overrideable itself,
-and never accesses this (explicitly or implicitly) in its implementation. Such a
-method can always be marked `static` without harm.
+and never accesses `this` (explicitly or implicitly) in its implementation. Such
+a method can always be marked `static` without harm.
 
 The main benefit of adding `static` is that a caller who wants to use the method
 and doesn't already have an instance handy won't have to conjure one up
