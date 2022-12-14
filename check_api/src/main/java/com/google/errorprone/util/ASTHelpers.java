@@ -808,6 +808,21 @@ public class ASTHelpers {
   }
 
   /**
+   * Flag for record types, canonical record constructors and type members that are part of a
+   * record's state vector. Can be replaced by {@code com.sun.tools.javac.code.Flags.RECORD} once
+   * the minimum JDK version is 14.
+   */
+  private static final long RECORD_FLAG = 1L << 61;
+
+  /**
+   * Returns whether the given {@link Symbol} is a record, a record's canonical constructor or a
+   * member that is part of a record's state vector.
+   */
+  public static boolean isRecord(Symbol symbol) {
+    return (symbol.flags() & RECORD_FLAG) == RECORD_FLAG;
+  }
+
+  /**
    * Determines whether a symbol has an annotation of the given type. This includes annotations
    * inherited from superclasses due to {@code @Inherited}.
    *

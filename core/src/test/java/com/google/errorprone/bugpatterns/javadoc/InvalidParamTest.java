@@ -16,9 +16,12 @@
 
 package com.google.errorprone.bugpatterns.javadoc;
 
+import static org.junit.Assume.assumeTrue;
+
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
+import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -162,6 +165,119 @@ public final class InvalidParamTest {
             "  /** Returns {@code true}. */",
             "  boolean foo(int tree);",
             "}")
+        .doTest();
+  }
+
+  @Test
+  public void negative_record() {
+    assumeTrue(RuntimeVersion.isAtLeast16());
+    helper
+        .addSourceLines(
+            "Test.java", //
+            "/**",
+            " * @param name Name.",
+            " */",
+            "public record Test(String name) {}")
+        .doTest();
+  }
+
+  @Test
+  public void badParameterName_record() {
+    assumeTrue(RuntimeVersion.isAtLeast16());
+    helper
+        .addSourceLines(
+            "Test.java",
+            "/**",
+            " // BUG: Diagnostic contains: Parameter name `bar` is unknown",
+            " * @param bar Foo.",
+            " */",
+            "public record Test(String foo) {}")
+        .doTest();
+  }
+
+  @Test
+  public void multipleConstructors_record() {
+    assumeTrue(RuntimeVersion.isAtLeast16());
+    helper
+        .addSourceLines(
+            "Test.java",
+            "/**",
+            " * @param foo Foo.",
+            " * @param bar Bar.",
+            " */",
+            "public record Test(String foo, Integer bar) {",
+            "  public Test(Integer bar) {",
+            "    this(null, bar);",
+            "  }",
+            "",
+            "  /**",
+            "   // BUG: Diagnostic contains: Parameter name `bar` is unknown",
+            "   * @param bar Foo.",
+            "   */",
+            "  public Test(String foo) {",
+            "    this(foo, null);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void typeParameter_record() {
+    assumeTrue(RuntimeVersion.isAtLeast16());
+    helper
+        .addSourceLines(
+            "Negative.java",
+            "/**",
+            " * @param <T> The type parameter.",
+            " * @param contents Contents.",
+            " * @param bar Bar.",
+            " */",
+            "public record Negative<T>(T contents, String bar) {}")
+        .addSourceLines(
+            "Positive.java",
+            "/**",
+            " // BUG: Diagnostic contains: Parameter name `E` is unknown",
+            " * @param <E> The type parameter.",
+            " * @param contents Contents.",
+            " * @param bar Bar.",
+            " */",
+            "public record Positive<T>(T contents, String bar) {}")
+        .doTest();
+  }
+
+  @Test
+  public void compactConstructor_record() {
+    assumeTrue(RuntimeVersion.isAtLeast16());
+    helper
+        .addSourceLines(
+            "Test.java",
+            "/**",
+            " * @param name Name.",
+            " */",
+            "public record Test(String name) {",
+            "  public Test {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void normalConstructor_record() {
+    assumeTrue(RuntimeVersion.isAtLeast16());
+    helper
+        .addSourceLines(
+            "Test.java",
+            "/**",
+            " * @param name Name.",
+            " */",
+            "public record Test(String name) {",
+            "  /**",
+            "   // BUG: Diagnostic contains: Parameter name `foo` is unknown",
+            "   * @param foo Name.",
+            "   */",
+            "  public Test(String name) {",
+            "    this.name = name;",
+            "  }",
+            " }")
         .doTest();
   }
 }
