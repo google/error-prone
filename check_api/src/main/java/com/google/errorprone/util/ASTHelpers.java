@@ -2571,5 +2571,10 @@ public class ASTHelpers {
     return getStartPosition(tree.getType()) == -1 || state.getEndPosition(tree.getType()) == -1;
   }
 
+  /** Returns {@code true} if this symbol was declared in Kotlin source. */
+  public static boolean isKotlin(Symbol symbol, VisitorState state) {
+    return hasAnnotation(symbol.enclClass(), "kotlin.Metadata", state);
+  }
+
   private ASTHelpers() {}
 }
