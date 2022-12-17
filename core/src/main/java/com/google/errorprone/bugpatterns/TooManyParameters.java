@@ -19,10 +19,9 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
-import static com.google.errorprone.util.ASTHelpers.findEnclosingNode;
-import static com.google.errorprone.util.ASTHelpers.findSuperMethods;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
+import static com.google.errorprone.util.ASTHelpers.methodIsPublicAndNotAnOverride;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
@@ -30,9 +29,7 @@ import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.matchers.Description;
-import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
-import javax.lang.model.element.Modifier;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
@@ -87,27 +84,12 @@ public class TooManyParameters extends BugChecker implements MethodTreeMatcher {
     return buildDescription(tree).setMessage(message).build();
   }
 
-  // Copied + modified from GoodTime API checker
-  // TODO(kak): we should probably move this somewhere that future API checks can use
   private static boolean shouldApplyApiChecks(MethodTree tree, VisitorState state) {
     for (String annotation : ANNOTATIONS_TO_IGNORE) {
       if (hasAnnotation(tree, annotation, state)) {
         return false;
       }
     }
-    // don't match non-public APIs
-    if (!getSymbol(tree).getModifiers().contains(Modifier.PUBLIC)) {
-      return false;
-    }
-    // don't match APIs in non-public classes
-    ClassTree clazz = findEnclosingNode(state.getPath(), ClassTree.class);
-    if (!getSymbol(clazz).getModifiers().contains(Modifier.PUBLIC)) {
-      return false;
-    }
-    // don't match overrides (even "effective overrides")
-    if (!findSuperMethods(getSymbol(tree), state.getTypes()).isEmpty()) {
-      return false;
-    }
-    return true;
+    return methodIsPublicAndNotAnOverride(getSymbol(tree), state);
   }
 }

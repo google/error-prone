@@ -2456,6 +2456,29 @@ public class ASTHelpers {
   }
 
   /**
+   * Returns true if the given method symbol is public (both the method and the enclosing class) and
+   * does <i>not</i> have a super-method (i.e., it is not an {@code @Override}).
+   *
+   * <p>This method is useful (in part) for determining whether to suggest API improvements or not.
+   */
+  public static boolean methodIsPublicAndNotAnOverride(MethodSymbol method, VisitorState state) {
+    // don't match non-public APIs
+    Symbol symbol = method;
+    while (symbol != null && !(symbol instanceof PackageSymbol)) {
+      if (!symbol.getModifiers().contains(Modifier.PUBLIC)) {
+        return false;
+      }
+      symbol = symbol.owner;
+    }
+
+    // don't match overrides (even "effective overrides")
+    if (!findSuperMethods(method, state.getTypes()).isEmpty()) {
+      return false;
+    }
+    return true;
+  }
+
+  /**
    * Returns true if the given method symbol is abstract.
    *
    * <p><b>Note:</b> this API does not consider interface {@code default} methods to be abstract.

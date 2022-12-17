@@ -44,6 +44,7 @@ import com.google.errorprone.bugpatterns.AutoValueBuilderDefaultsInConstructor;
 import com.google.errorprone.bugpatterns.AutoValueFinalMethods;
 import com.google.errorprone.bugpatterns.AutoValueImmutableFields;
 import com.google.errorprone.bugpatterns.AutoValueSubclassLeaked;
+import com.google.errorprone.bugpatterns.AvoidObjectArrays;
 import com.google.errorprone.bugpatterns.BadAnnotationImplementation;
 import com.google.errorprone.bugpatterns.BadComparable;
 import com.google.errorprone.bugpatterns.BadImport;
@@ -1035,6 +1036,7 @@ public class BuiltInCheckerSuppliers {
           AssertFalse.class,
           AssistedInjectAndInjectOnConstructors.class,
           AutoFactoryAtInject.class,
+          AvoidObjectArrays.class,
           BanSerializableRead.class,
           BinderIdentityRestoredDangerously.class, // TODO: enable this by default.
           BindingToUnqualifiedCommonType.class,
