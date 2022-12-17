@@ -1325,6 +1325,9 @@ Assertions may be disabled at runtime and do not guarantee that execution will h
 __[AssistedInjectAndInjectOnConstructors](bugpattern/AssistedInjectAndInjectOnConstructors)__<br>
 @AssistedInject and @Inject should not be used on different constructors in the same class.
 
+__[AvoidObjectArrays](bugpattern/AvoidObjectArrays)__<br>
+Object arrays are inferior to collections in almost every way. Prefer immutable collections (e.g., ImmutableSet, ImmutableList, etc.) over an object array whenever possible.
+
 __[BinderIdentityRestoredDangerously](bugpattern/BinderIdentityRestoredDangerously)__<br>
 A call to Binder.clearCallingIdentity() should be followed by Binder.restoreCallingIdentity() in a finally block. Otherwise the wrong Binder identity may be used by subsequent code.
 
