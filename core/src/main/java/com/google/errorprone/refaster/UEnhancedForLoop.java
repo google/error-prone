@@ -59,10 +59,7 @@ abstract class UEnhancedForLoop extends USimpleStatement implements EnhancedForL
       return AutoValue_UEnhancedForLoop.class
           .getDeclaredConstructor(UVariableDecl.class, UExpression.class, USimpleStatement.class)
           .newInstance(variable, elements, statement);
-    } catch (IllegalAccessException
-        | InstantiationException
-        | InvocationTargetException
-        | NoSuchMethodException e) {
+    } catch (ReflectiveOperationException e) {
       throw new LinkageError(e.getMessage(), e);
     }
   }
@@ -78,10 +75,7 @@ abstract class UEnhancedForLoop extends USimpleStatement implements EnhancedForL
               UExpression.class,
               USimpleStatement.class)
           .newInstance(declarationKind, variable, elements, statement);
-    } catch (IllegalAccessException
-        | InstantiationException
-        | InvocationTargetException
-        | NoSuchMethodException e) {
+    } catch (ReflectiveOperationException e) {
       throw new LinkageError(e.getMessage(), e);
     }
   }
