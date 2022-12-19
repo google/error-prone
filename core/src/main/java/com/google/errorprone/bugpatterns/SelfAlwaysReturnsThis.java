@@ -27,7 +27,6 @@ import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.google.errorprone.util.ASTHelpers.isVoidType;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -57,12 +56,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
             + " class must always 'return this'",
     severity = WARNING)
 public final class SelfAlwaysReturnsThis extends BugChecker implements MethodTreeMatcher {
-  private final boolean matchGetThis;
-
-  public SelfAlwaysReturnsThis(ErrorProneFlags flags) {
-    this.matchGetThis = flags.getBoolean("SelfAlwaysReturnsThis:GetThis").orElse(true);
-  }
-
   @Override
   public Description matchMethod(MethodTree methodTree, VisitorState state) {
     MethodSymbol methodSymbol = getSymbol(methodTree);
@@ -75,7 +68,7 @@ public final class SelfAlwaysReturnsThis extends BugChecker implements MethodTre
     // * have a body (not abstract)
     if (methodSymbol.isConstructor()
         || (!methodSymbol.getSimpleName().contentEquals("self")
-            && (!methodSymbol.getSimpleName().contentEquals("getThis") || !matchGetThis))
+            && !methodSymbol.getSimpleName().contentEquals("getThis"))
         || !methodSymbol.getParameters().isEmpty()
         || methodSymbol.isStatic()
         || methodTree.getBody() == null) {
