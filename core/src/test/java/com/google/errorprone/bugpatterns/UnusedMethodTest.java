@@ -139,6 +139,24 @@ public final class UnusedMethodTest {
   }
 
   @Test
+  public void exemptedByCustomAnnotation() {
+    helper
+        .addSourceLines(
+            "Foo.java", //
+            "package example;",
+            "@interface Foo {}")
+        .addSourceLines(
+            "ExemptedByCustomAnnotation.java",
+            "package example;",
+            "class ExemptedByCustomAnnotation {",
+            "  @Foo",
+            "  private void bar() {}",
+            "}")
+        .setArgs("-XepOpt:UnusedMethod:ExemptingMethodAnnotations=example.Foo")
+        .doTest();
+  }
+
+  @Test
   public void suppressions() {
     helper
         .addSourceLines(

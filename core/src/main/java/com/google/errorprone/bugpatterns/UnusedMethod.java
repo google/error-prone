@@ -45,6 +45,7 @@ import com.google.common.base.Ascii;
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -97,17 +98,35 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
   private static final ImmutableSet<String> EXEMPTING_METHOD_ANNOTATIONS =
       ImmutableSet.of(
           "com.fasterxml.jackson.annotation.JsonCreator",
+          "com.fasterxml.jackson.annotation.JsonValue",
           "com.google.inject.Provides",
           "com.google.inject.Inject",
           "com.google.inject.multibindings.ProvidesIntoMap",
           "com.google.inject.multibindings.ProvidesIntoSet",
           "com.tngtech.java.junit.dataprovider.DataProvider",
+          "jakarta.annotation.PreDestroy",
+          "jakarta.annotation.PostConstruct",
+          "jakarta.inject.Inject",
+          "jakarta.persistence.PostLoad",
+          "jakarta.persistence.PostPersist",
+          "jakarta.persistence.PostRemove",
+          "jakarta.persistence.PostUpdate",
+          "jakarta.persistence.PrePersist",
+          "jakarta.persistence.PreRemove",
+          "jakarta.persistence.PreUpdate",
           "javax.annotation.PreDestroy",
           "javax.annotation.PostConstruct",
           "javax.inject.Inject",
           "javax.persistence.PostLoad",
+          "javax.persistence.PostPersist",
+          "javax.persistence.PostRemove",
+          "javax.persistence.PostUpdate",
+          "javax.persistence.PrePersist",
+          "javax.persistence.PreRemove",
+          "javax.persistence.PreUpdate",
           "org.apache.beam.sdk.transforms.DoFn.ProcessElement",
           "org.aspectj.lang.annotation.Pointcut",
+          "org.aspectj.lang.annotation.After",
           "org.aspectj.lang.annotation.Before",
           "org.springframework.context.annotation.Bean",
           "org.testng.annotations.AfterClass",
@@ -115,11 +134,26 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
           "org.testng.annotations.BeforeClass",
           "org.testng.annotations.BeforeMethod",
           "org.testng.annotations.DataProvider",
-          "org.junit.AfterClass",
-          "org.junit.BeforeClass");
+          "org.junit.jupiter.api.BeforeAll",
+          "org.junit.jupiter.api.AfterAll",
+          "org.junit.jupiter.api.AfterEach",
+          "org.junit.jupiter.api.BeforeEach",
+          "org.junit.jupiter.api.RepeatedTest",
+          "org.junit.jupiter.api.Test",
+          "org.junit.jupiter.params.ParameterizedTest");
 
   /** The set of types exempting a type that is extending or implementing them. */
   private static final ImmutableSet<String> EXEMPTING_SUPER_TYPES = ImmutableSet.of();
+
+  private final ImmutableSet<String> additionalExemptingMethodAnnotations;
+
+  public UnusedMethod(ErrorProneFlags errorProneFlags) {
+    this.additionalExemptingMethodAnnotations =
+        errorProneFlags
+            .getList("UnusedMethod:ExemptingMethodAnnotations")
+            .map(ImmutableSet::copyOf)
+            .orElseGet(ImmutableSet::of);
+  }
 
   @Override
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
@@ -430,14 +464,16 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
    * Looks at the list of {@code annotations} and see if there is any annotation which exists {@code
    * exemptingAnnotations}.
    */
-  private static boolean exemptedByAnnotation(List<? extends AnnotationTree> annotations) {
+  private boolean exemptedByAnnotation(List<? extends AnnotationTree> annotations) {
     for (AnnotationTree annotation : annotations) {
       Type annotationType = getType(annotation);
       if (annotationType == null) {
         continue;
       }
       TypeSymbol tsym = annotationType.tsym;
-      if (EXEMPTING_METHOD_ANNOTATIONS.contains(tsym.getQualifiedName().toString())) {
+      String annotationName = tsym.getQualifiedName().toString();
+      if (EXEMPTING_METHOD_ANNOTATIONS.contains(annotationName)
+          || additionalExemptingMethodAnnotations.contains(annotationName)) {
         return true;
       }
     }
