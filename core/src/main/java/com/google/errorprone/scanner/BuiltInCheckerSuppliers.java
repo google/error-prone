@@ -316,6 +316,7 @@ import com.google.errorprone.bugpatterns.SelfEquals;
 import com.google.errorprone.bugpatterns.ShortCircuitBoolean;
 import com.google.errorprone.bugpatterns.ShouldHaveEvenArgs;
 import com.google.errorprone.bugpatterns.SizeGreaterThanOrEqualsZero;
+import com.google.errorprone.bugpatterns.StatementSwitchToExpressionSwitch;
 import com.google.errorprone.bugpatterns.StaticAssignmentInConstructor;
 import com.google.errorprone.bugpatterns.StaticAssignmentOfThrowable;
 import com.google.errorprone.bugpatterns.StaticMockMember;
@@ -973,6 +974,7 @@ public class BuiltInCheckerSuppliers {
           ScopeAnnotationOnInterfaceOrAbstractClass.class,
           SelfAlwaysReturnsThis.class,
           ShortCircuitBoolean.class,
+          StatementSwitchToExpressionSwitch.class,
           StaticAssignmentInConstructor.class,
           StaticAssignmentOfThrowable.class,
           StaticGuardedByInstance.class,
