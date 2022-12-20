@@ -150,6 +150,9 @@ public abstract class Api {
           case '.':
             // OK, separator
             break;
+          case '-':
+            // OK, used in Kotlin JvmName to prevent Java users.
+            break;
           default:
             checkArgument(
                 isJavaIdentifierPart(next),

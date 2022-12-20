@@ -148,4 +148,16 @@ public final class ApiTest {
     assertThat(api.isConstructor()).isTrue();
     assertThat(api.toString()).isEqualTo(string);
   }
+
+  @Test
+  public void parseApi_kotlinClassWithJvmName() {
+    String string = "com.google.inject.-GuiceExtensions#bind(com.google.inject.AbstractModule)";
+    Api api = Api.parse(string);
+
+    assertThat(api.className()).isEqualTo("com.google.inject.-GuiceExtensions");
+    assertThat(api.methodName()).isEqualTo("bind");
+    assertThat(api.parameterTypes()).containsExactly("com.google.inject.AbstractModule");
+    assertThat(api.isConstructor()).isFalse();
+    assertThat(api.toString()).isEqualTo(string);
+  }
 }
