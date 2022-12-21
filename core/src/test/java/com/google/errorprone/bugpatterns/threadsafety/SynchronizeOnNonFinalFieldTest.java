@@ -108,7 +108,7 @@ public class SynchronizeOnNonFinalFieldTest {
   }
 
   @Test
-  public void negative_Writer() {
+  public void negative_writer() {
     compilationHelper
         .addSourceLines(
             "Test.java",

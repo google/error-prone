@@ -219,73 +219,73 @@ public class FormatStringTest {
   }
 
   @Test
-  public void testPrintfMethods_StringFormat() throws Exception {
+  public void testPrintfMethods_stringFormat() throws Exception {
     testFormat("", "String.format(\"%d\", \"hello\");");
   }
 
   @Test
-  public void testPrintfMethods_StringFormatWithLocale() throws Exception {
+  public void testPrintfMethods_stringFormatWithLocale() throws Exception {
     testFormat("", "String.format(Locale.ENGLISH, \"%d\", \"hello\");");
   }
 
   @Test
-  public void testPrintfMethods_PrintWriterFormat() throws Exception {
+  public void testPrintfMethods_printWriterFormat() throws Exception {
     testFormat("", "new PrintWriter(System.err).format(\"%d\", \"hello\");");
   }
 
   @Test
-  public void testPrintfMethods_PrintWriterFormatWithLocale() throws Exception {
+  public void testPrintfMethods_printWriterFormatWithLocale() throws Exception {
     testFormat("", "new PrintWriter(System.err).format(Locale.ENGLISH, \"%d\", \"hello\");");
   }
 
   @Test
-  public void testPrintfMethods_PrintWriterPrintf() throws Exception {
+  public void testPrintfMethods_printWriterPrintf() throws Exception {
     testFormat("", "new PrintWriter(System.err).printf(\"%d\", \"hello\");");
   }
 
   @Test
-  public void testPrintfMethods_PrintWriterPrintfWithLocale() throws Exception {
+  public void testPrintfMethods_printWriterPrintfWithLocale() throws Exception {
     testFormat("", "new PrintWriter(System.err).printf(Locale.ENGLISH, \"%d\", \"hello\");");
   }
 
   @Test
-  public void testPrintfMethods_PrintStreamFormat() throws Exception {
+  public void testPrintfMethods_printStreamFormat() throws Exception {
     testFormat("", "new PrintStream(System.err).format(\"%d\", \"hello\");");
   }
 
   @Test
-  public void testPrintfMethods_PrintStreamFormatWithLocale() throws Exception {
+  public void testPrintfMethods_printStreamFormatWithLocale() throws Exception {
     testFormat("", "new PrintStream(System.err).format(Locale.ENGLISH, \"%d\", \"hello\");");
   }
 
   @Test
-  public void testPrintfMethods_PrintStreamPrintf() throws Exception {
+  public void testPrintfMethods_printStreamPrintf() throws Exception {
     testFormat("", "new PrintStream(System.err).printf(\"%d\", \"hello\");");
   }
 
   @Test
-  public void testPrintfMethods_PrintStreamPrintfWithLocale() throws Exception {
+  public void testPrintfMethods_printStreamPrintfWithLocale() throws Exception {
     testFormat("", "new PrintStream(System.err).printf(Locale.ENGLISH, \"%d\", \"hello\");");
   }
 
   @Test
-  public void testPrintfMethods_FormatterFormatWithLocale() throws Exception {
+  public void testPrintfMethods_formatterFormatWithLocale() throws Exception {
     testFormat(
         "", "new java.util.Formatter(System.err).format(Locale.ENGLISH, \"%d\", \"hello\");");
   }
 
   @Test
-  public void testPrintfMethods_ConsolePrintf() throws Exception {
+  public void testPrintfMethods_consolePrintf() throws Exception {
     testFormat("", "System.console().printf(\"%d\", \"hello\");");
   }
 
   @Test
-  public void testPrintfMethods_ConsoleFormat() throws Exception {
+  public void testPrintfMethods_consoleFormat() throws Exception {
     testFormat("", "System.console().format(\"%d\", \"hello\");");
   }
 
   @Test
-  public void testPrintfMethods_ConsoleFormat_noErrorsWithEmptyArgs() throws Exception {
+  public void testPrintfMethods_consoleFormat_noErrorsWithEmptyArgs() throws Exception {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -298,12 +298,12 @@ public class FormatStringTest {
   }
 
   @Test
-  public void testPrintfMethods_ConsoleReadline() throws Exception {
+  public void testPrintfMethods_consoleReadline() throws Exception {
     testFormat("", "System.console().readLine(\"%d\", \"hello\");");
   }
 
   @Test
-  public void testPrintfMethods_ConsoleReadPassword() throws Exception {
+  public void testPrintfMethods_consoleReadPassword() throws Exception {
     testFormat("", "System.console().readPassword(\"%d\", \"hello\");");
   }
 

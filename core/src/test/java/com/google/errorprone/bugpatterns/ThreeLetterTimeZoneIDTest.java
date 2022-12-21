@@ -142,14 +142,14 @@ public class ThreeLetterTimeZoneIDTest {
   }
 
   @Test
-  public void testReplacements_PST() {
+  public void testReplacements_pST() {
     ImmutableList<String> replacements = replacements("PST", false);
     // Suggests IANA ID first, then the fixed offset.
     assertThat(replacements).containsExactly("America/Los_Angeles", "Etc/GMT+8").inOrder();
   }
 
   @Test
-  public void testReplacements_EST() {
+  public void testReplacements_eST() {
     ImmutableList<String> replacements = replacements("EST", false);
     // Suggests fixed offset first, then the IANA ID, because this the former has the same rules as
     // TimeZone.getTimeZone("EST").
@@ -157,13 +157,13 @@ public class ThreeLetterTimeZoneIDTest {
   }
 
   @Test
-  public void testReplacements_IST() {
+  public void testReplacements_iST() {
     ImmutableList<String> replacements = replacements("IST", false);
     assertThat(replacements).containsExactly("Asia/Kolkata").inOrder();
   }
 
   @Test
-  public void testReplacements_CST() {
+  public void testReplacements_cST() {
     // Only rule-equivalent suggestions are made (unless we have explicitly provided suggestions) -
     // we don't suggest "China Standard Time" for CST, because the existing code is semantically
     // equivalent to US "Central Standard Time".

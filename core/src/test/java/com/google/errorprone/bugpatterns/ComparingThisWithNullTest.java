@@ -93,7 +93,7 @@ public class ComparingThisWithNullTest {
   }
 
   @Test
-  public void null_Negative() {
+  public void null_negative() {
     helper
         .addSourceLines(
             "Test.java",
@@ -109,7 +109,7 @@ public class ComparingThisWithNullTest {
   }
 
   @Test
-  public void this_Negative() {
+  public void this_negative() {
     helper
         .addSourceLines(
             "Test.java",
@@ -125,7 +125,7 @@ public class ComparingThisWithNullTest {
   }
 
   @Test
-  public void nullNot_Negative() {
+  public void nullNot_negative() {
     helper
         .addSourceLines(
             "Test.java",
@@ -141,7 +141,7 @@ public class ComparingThisWithNullTest {
   }
 
   @Test
-  public void thisNot_Negative() {
+  public void thisNot_negative() {
     helper
         .addSourceLines(
             "Test.java",

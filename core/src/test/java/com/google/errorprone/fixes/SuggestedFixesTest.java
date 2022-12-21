@@ -303,7 +303,7 @@ public class SuggestedFixesTest {
   }
 
   @Test
-  public void qualifiedName_Object() {
+  public void qualifiedName_object() {
     CompilationTestHelper.newInstance(CastReturn.class, getClass())
         .addSourceLines(
             "Test.java",
@@ -360,7 +360,7 @@ public class SuggestedFixesTest {
   }
 
   @Test
-  public void fullQualifiedName_Object() {
+  public void fullQualifiedName_object() {
     CompilationTestHelper.newInstance(CastReturnFullType.class, getClass())
         .addSourceLines(
             "Test.java",

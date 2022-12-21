@@ -170,7 +170,7 @@ public class ParameterCommentTest {
   }
 
   @Test
-  public void parameterComment_NestedComment() {
+  public void parameterComment_nestedComment() {
     testHelper
         .addInputLines(
             "in/Test.java",

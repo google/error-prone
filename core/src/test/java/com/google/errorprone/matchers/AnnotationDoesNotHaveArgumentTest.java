@@ -47,7 +47,7 @@ public class AnnotationDoesNotHaveArgumentTest extends CompilerBasedAbstractTest
   }
 
   @Test
-  public void matchesWhenArgumentIsNotPresent_OtherArgumentPresent() {
+  public void matchesWhenArgumentIsNotPresent_otherArgumentPresent() {
     writeFile(
         "Annotation2.java",
         "public @interface Annotation2 {",
@@ -59,13 +59,13 @@ public class AnnotationDoesNotHaveArgumentTest extends CompilerBasedAbstractTest
   }
 
   @Test
-  public void doesNotMatchWhenArgumentIsPresent_Implicit() {
+  public void doesNotMatchWhenArgumentIsPresent_implicit() {
     writeFile("Class.java", "@Annotation(\"literal\")", "public class Class {}");
     assertCompiles(annotationMatches(false));
   }
 
   @Test
-  public void doesNotMatchWhenArgumentIsPresent_Explicit() {
+  public void doesNotMatchWhenArgumentIsPresent_explicit() {
     writeFile("Class.java", "@Annotation(value = \"literal\")", "public class Class {}");
     assertCompiles(annotationMatches(false));
   }

@@ -34,87 +34,87 @@ public class JUnit3FloatingPointComparisonWithoutDeltaTest {
           JUnit3FloatingPointComparisonWithoutDelta.class, getClass());
 
   @Test
-  public void match_TwoPrimitiveDoubles() {
+  public void match_twoPrimitiveDoubles() {
     checkAssertEquals("1.0, 1.0", true);
   }
 
   @Test
-  public void match_PrimitiveAndReferenceDouble() {
+  public void match_primitiveAndReferenceDouble() {
     checkAssertEquals("1.0, (Double) 1.0", true);
   }
 
   @Test
-  public void match_ReferenceAndPrimitiveDouble() {
+  public void match_referenceAndPrimitiveDouble() {
     checkAssertEquals("(Double) 1.0, 1.0", true);
   }
 
   @Test
-  public void noMatch_TwoReferenceDoubles() {
+  public void noMatch_twoReferenceDoubles() {
     checkAssertEquals("(Double) 1.0, (Double) 1.0", false);
   }
 
   @Test
-  public void match_TwoPrimitiveDoublesWithMessage() {
+  public void match_twoPrimitiveDoublesWithMessage() {
     checkAssertEquals("\"message\", 1.0, 1.0", true);
   }
 
   @Test
-  public void noMatch_DeltaArgumentUsed() {
+  public void noMatch_deltaArgumentUsed() {
     checkAssertEquals("1.0, 1.0, 0.0", false);
   }
 
   @Test
-  public void noMatch_TwoPrimitiveInts() {
+  public void noMatch_twoPrimitiveInts() {
     checkAssertEquals("1, 1", false);
   }
 
   @Test
-  public void noMatch_TwoStrings() {
+  public void noMatch_twoStrings() {
     checkAssertEquals("\"abc\", \"abc\"", false);
   }
 
   @Test
-  public void noMatch_PrimitiveDoubleAndString() {
+  public void noMatch_primitiveDoubleAndString() {
     checkAssertEquals("1.0, \"abc\"", false);
   }
 
   @Test
-  public void match_TwoPrimitiveFloats() {
+  public void match_twoPrimitiveFloats() {
     checkAssertEquals("1.0f, 1.0f", true);
   }
 
   @Test
-  public void match_ReferenceAndPrimitiveFloat() {
+  public void match_referenceAndPrimitiveFloat() {
     checkAssertEquals("(Float) 1.0f, 1.0f", true);
   }
 
   @Test
-  public void noMatch_TwoReferenceFloats() {
+  public void noMatch_twoReferenceFloats() {
     checkAssertEquals("(Float) 1.0f, (Float) 1.0f", false);
   }
 
   @Test
-  public void match_PrimitiveFloatAndPrimitiveDouble() {
+  public void match_primitiveFloatAndPrimitiveDouble() {
     checkAssertEquals("1.0f, 1.0", true);
   }
 
   @Test
-  public void match_PrimitiveFloatAndReferenceDouble() {
+  public void match_primitiveFloatAndReferenceDouble() {
     checkAssertEquals("1.0f, (Double) 1.0", true);
   }
 
   @Test
-  public void match_PrimitiveIntAndPrimitiveDouble() {
+  public void match_primitiveIntAndPrimitiveDouble() {
     checkAssertEquals("1, 1.0", true);
   }
 
   @Test
-  public void match_PrimitiveDoubleAndReferenceInteger() {
+  public void match_primitiveDoubleAndReferenceInteger() {
     checkAssertEquals("1.0, (Integer) 1", true);
   }
 
   @Test
-  public void match_PrimitiveCharAndPrimitiveDouble() {
+  public void match_primitiveCharAndPrimitiveDouble() {
     checkAssertEquals("'a', 1.0", true);
   }
 

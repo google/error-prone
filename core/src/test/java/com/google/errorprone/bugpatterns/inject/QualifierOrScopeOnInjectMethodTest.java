@@ -48,7 +48,7 @@ public class QualifierOrScopeOnInjectMethodTest {
   }
 
   @Test
-  public void testPositiveCase_InjectConstructor() {
+  public void testPositiveCase_injectConstructor() {
     refactoringHelper
         .addInputLines(
             "in/Foo.java",

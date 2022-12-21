@@ -197,7 +197,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void testGuardedStaticFieldAccess_EnclosingClass() {
+  public void testGuardedStaticFieldAccess_enclosingClass() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
