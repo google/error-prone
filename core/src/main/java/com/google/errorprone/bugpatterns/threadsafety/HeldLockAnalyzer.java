@@ -256,9 +256,7 @@ public final class HeldLockAnalyzer {
 
     @Override
     public Void visitMemberReference(MemberReferenceTree tree, HeldLockSet locks) {
-      if (flags.checkMemberReferences()) {
-        checkMatch(tree, locks);
-      }
+      checkMatch(tree, locks);
       scan(tree.getQualifierExpression(), locks);
       return null;
     }

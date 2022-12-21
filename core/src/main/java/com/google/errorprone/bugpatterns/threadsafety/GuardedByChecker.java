@@ -22,7 +22,6 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 
 import com.google.common.base.Joiner;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.LambdaExpressionTreeMatcher;
@@ -61,11 +60,7 @@ public class GuardedByChecker extends BugChecker
 
   private static final String JUC_READ_WRITE_LOCK = "java.util.concurrent.locks.ReadWriteLock";
 
-  private final GuardedByFlags flags;
-
-  public GuardedByChecker(ErrorProneFlags flags) {
-    this.flags = GuardedByFlags.from(flags);
-  }
+  private final GuardedByFlags flags = GuardedByFlags.allOn();
 
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
@@ -92,9 +87,6 @@ public class GuardedByChecker extends BugChecker
 
   @Override
   public Description matchMemberReference(MemberReferenceTree tree, VisitorState state) {
-    if (!flags.checkMemberReferences()) {
-      return NO_MATCH;
-    }
     var parent = state.getPath().getParentPath().getLeaf();
     if (parent instanceof MethodInvocationTree
         && INVOKES_LAMBDAS_IMMEDIATELY.matches((ExpressionTree) parent, state)) {
