@@ -200,8 +200,12 @@ public final class InvalidLink extends BugChecker
                         "The reference `%s` to a method doesn't resolve to anything. Is it"
                             + " misspelt, or is the parameter list not correct? See"
                             + " https://docs.oracle.com/javase/8/docs/technotes/tools/unix/javadoc.html#JSSOR654"
-                            + " for documentation on how to form method links.",
-                        reference))
+                            + " for documentation on how to form method links.%s",
+                        reference,
+                        reference.contains("<")
+                            ? " Note, in particular, that the _erasure_ of generic types should be"
+                                + " used (for example, List rather than List<Foo>)."
+                            : ""))
                 .build());
       }
       // TODO(ghm): If this is a method reference, we could check whether class is available but the
