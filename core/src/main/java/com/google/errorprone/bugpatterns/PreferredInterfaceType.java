@@ -93,8 +93,7 @@ public final class PreferredInterfaceType extends BugChecker implements Compilat
               "com.google.common.collect.ImmutableSet",
               "com.google.common.collect.ImmutableCollection",
               "java.util.List",
-              "java.util.Set",
-              "java.util.Collection"),
+              "java.util.Set"),
           BetterTypes.of(isDescendantOf("java.util.Map"), "com.google.common.collect.ImmutableMap"),
           BetterTypes.of(
               isDescendantOf("com.google.common.collect.Table"),

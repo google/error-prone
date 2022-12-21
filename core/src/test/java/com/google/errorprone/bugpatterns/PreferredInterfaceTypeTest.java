@@ -72,6 +72,22 @@ public final class PreferredInterfaceTypeTest {
   }
 
   @Test
+  public void referringToCollectionAsIterable_noFinding() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.Collection;",
+            "import java.util.HashSet;",
+            "class Test {",
+            "  Collection<Integer> test() {",
+            "    Iterable<Integer> foo = test();",
+            "    return null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void alreadyTightenedType() {
     testHelper
         .addSourceLines(
