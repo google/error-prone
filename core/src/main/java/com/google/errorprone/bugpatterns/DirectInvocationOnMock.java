@@ -22,14 +22,18 @@ import static com.google.errorprone.fixes.SuggestedFixes.qualifyStaticImport;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyMethod;
+import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.receiverOfInvocation;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
+import static com.google.errorprone.suppliers.Suppliers.OBJECT_TYPE;
+import static com.google.errorprone.suppliers.Suppliers.arrayOf;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.MoreAnnotations.getAnnotationValue;
 import static java.lang.String.format;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -167,7 +171,15 @@ public final class DirectInvocationOnMock extends BugChecker implements Compilat
   }
 
   private static final Matcher<ExpressionTree> MOCK =
-      staticMethod().onClass("org.mockito.Mockito").named("mock").withParameters("java.lang.Class");
+      anyOf(
+          staticMethod()
+              .onClass("org.mockito.Mockito")
+              .named("mock")
+              .withParameters("java.lang.Class"),
+          staticMethod()
+              .onClass("org.mockito.Mockito")
+              .named("mock")
+              .withParametersOfType(ImmutableList.of(arrayOf(OBJECT_TYPE))));
 
   private static final Matcher<MethodInvocationTree> DO_CALL_REAL_METHOD =
       allOf(

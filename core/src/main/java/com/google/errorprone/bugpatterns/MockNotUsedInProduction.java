@@ -180,12 +180,7 @@ public final class MockNotUsedInProduction extends BugChecker
   }
 
   private static final Matcher<ExpressionTree> MOCK =
-      anyOf(
-          staticMethod()
-              .onClass("org.mockito.Mockito")
-              .namedAnyOf("mock")
-              .withParameters("java.lang.Class"),
-          staticMethod().onClass("org.mockito.Mockito").namedAnyOf("spy"));
+      staticMethod().onClass("org.mockito.Mockito").namedAnyOf("mock", "spy");
 
   private static final Matcher<VariableTree> MOCK_OR_SPY_ANNOTATED =
       anyOf(hasAnnotation("org.mockito.Mock"), hasAnnotation("org.mockito.Spy"));
