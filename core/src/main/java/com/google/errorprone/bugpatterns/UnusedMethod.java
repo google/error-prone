@@ -253,9 +253,7 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
           return false;
         }
         MethodSymbol methodSymbol = getSymbol(tree);
-        if (!methodSymbol.isPrivate()
-            && classesMadeVisible.stream()
-                .anyMatch(t -> isSubtype(t.type, methodSymbol.owner.type, state))) {
+        if (!canBeRemoved(methodSymbol, state)) {
           return false;
         }
         if (isExemptedConstructor(methodSymbol, state)
@@ -271,8 +269,13 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
             return false;
           }
         }
+        if (!methodSymbol.isPrivate()
+            && classesMadeVisible.stream()
+                .anyMatch(t -> isSubtype(t.type, methodSymbol.owner.type, state))) {
+          return false;
+        }
 
-        return canBeRemoved(methodSymbol, state);
+        return true;
       }
 
       private boolean isExemptedConstructor(MethodSymbol methodSymbol, VisitorState state) {
