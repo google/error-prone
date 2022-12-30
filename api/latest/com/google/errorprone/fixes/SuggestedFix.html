@@ -15,8 +15,8 @@
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":9,"i1":9,"i2":9,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":9,"i9":9,"i10":9,"i11":9,"i12":9,"i13":9,"i14":10};
-var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
+<script type="text/javascript">var data = {"i0":9,"i1":9,"i2":9,"i3":6,"i4":6,"i5":10,"i6":6,"i7":6,"i8":10,"i9":9,"i10":9,"i11":9,"i12":9,"i13":9,"i14":9,"i15":10};
+var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
 var tableTab = "table-tab";
@@ -49,13 +49,13 @@ loadScripts(document, 'script');</script>
 <li>Summary:&nbsp;</li>
 <li><a href="#nested.class.summary">Nested</a>&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
-<li>Constr&nbsp;|&nbsp;</li>
+<li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="sub-nav-list">
 <li>Detail:&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
-<li>Constr&nbsp;|&nbsp;</li>
+<li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.detail">Method</a></li>
 </ul>
 </div>
@@ -85,7 +85,7 @@ loadScripts(document, 'script');</script>
 <dd><code><a href="Fix.html" title="interface in com.google.errorprone.fixes">Fix</a></code></dd>
 </dl>
 <hr>
-<pre>public class <span class="type-name-label">SuggestedFix</span>
+<pre>public abstract class <span class="type-name-label">SuggestedFix</span>
 extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
 implements <a href="Fix.html" title="interface in com.google.errorprone.fixes">Fix</a></pre>
 <dl class="notes">
@@ -122,12 +122,35 @@ implements <a href="Fix.html" title="interface in com.google.errorprone.fixes">F
 </div>
 </section>
 </li>
+<!-- ======== CONSTRUCTOR SUMMARY ======== -->
+<li>
+<section class="constructor-summary" id="constructor.summary">
+<h2>Constructor Summary</h2>
+<div class="member-summary">
+<table class="summary-table">
+<caption><span>Constructors</span></caption>
+<thead>
+<tr>
+<th class="col-first" scope="col">Constructor</th>
+<th class="col-last" scope="col">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="alt-color">
+<th class="col-constructor-name" scope="row"><code><span class="member-name-link"><a href="#%3Cinit%3E()">SuggestedFix</a></span>()</code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</li>
 <!-- ========== METHOD SUMMARY =========== -->
 <li>
 <section class="method-summary" id="method.summary">
 <h2>Method Summary</h2>
 <div class="member-summary" id="method-summary-table">
-<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" id="t0" class="active-table-tab">All Methods</button><button role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t1" class="table-tab" onclick="show(1);">Static Methods</button><button role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t2" class="table-tab" onclick="show(2);">Instance Methods</button><button role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t4" class="table-tab" onclick="show(8);">Concrete Methods</button></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" id="t0" class="active-table-tab">All Methods</button><button role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t1" class="table-tab" onclick="show(1);">Static Methods</button><button role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t2" class="table-tab" onclick="show(2);">Instance Methods</button><button role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t3" class="table-tab" onclick="show(4);">Abstract Methods</button><button role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t4" class="table-tab" onclick="show(8);">Concrete Methods</button></div>
 <div id="method-summary-table.tabpanel" role="tabpanel">
 <table class="summary-table" aria-labelledby="t0">
 <thead>
@@ -158,12 +181,12 @@ implements <a href="Fix.html" title="interface in com.google.errorprone.fixes">F
 </td>
 </tr>
 <tr class="row-color" id="i3">
-<td class="col-first"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></td>
+<td class="col-first"><code>abstract com.google.common.collect.ImmutableSet&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getImportsToAdd()">getImportsToAdd</a></span>()</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="alt-color" id="i4">
-<td class="col-first"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></td>
+<td class="col-first"><code>abstract com.google.common.collect.ImmutableSet&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getImportsToRemove()">getImportsToRemove</a></span>()</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
@@ -173,7 +196,7 @@ implements <a href="Fix.html" title="interface in com.google.errorprone.fixes">F
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="alt-color" id="i6">
-<td class="col-first"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></td>
+<td class="col-first"><code>abstract <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getShortDescription()">getShortDescription</a></span>()</code></th>
 <td class="col-last">
 <div class="block">A short description which can be attached to the Fix to differentiate multiple fixes provided
@@ -181,11 +204,16 @@ implements <a href="Fix.html" title="interface in com.google.errorprone.fixes">F
 </td>
 </tr>
 <tr class="row-color" id="i7">
+<td class="col-first"><code>abstract int</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#hashCode()">hashCode</a></span>()</code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="alt-color" id="i8">
 <td class="col-first"><code>boolean</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#isEmpty()">isEmpty</a></span>()</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i8">
+<tr class="row-color" id="i9">
 <td class="col-first"><code>static <a href="SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#postfixWith(com.sun.source.tree.Tree,java.lang.String)">postfixWith</a></span>&#8203;(com.sun.source.tree.Tree&nbsp;node,
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;postfix)</code></th>
@@ -193,7 +221,7 @@ implements <a href="Fix.html" title="interface in com.google.errorprone.fixes">F
 <div class="block"><a href="SuggestedFix.Builder.html#postfixWith(com.sun.source.tree.Tree,java.lang.String)"><code>SuggestedFix.Builder.postfixWith(Tree, String)</code></a></div>
 </td>
 </tr>
-<tr class="row-color" id="i9">
+<tr class="alt-color" id="i10">
 <td class="col-first"><code>static <a href="SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#prefixWith(com.sun.source.tree.Tree,java.lang.String)">prefixWith</a></span>&#8203;(com.sun.source.tree.Tree&nbsp;node,
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;prefix)</code></th>
@@ -201,7 +229,7 @@ implements <a href="Fix.html" title="interface in com.google.errorprone.fixes">F
 <div class="block"><a href="SuggestedFix.Builder.html#prefixWith(com.sun.source.tree.Tree,java.lang.String)"><code>SuggestedFix.Builder.prefixWith(Tree, String)</code></a></div>
 </td>
 </tr>
-<tr class="alt-color" id="i10">
+<tr class="row-color" id="i11">
 <td class="col-first"><code>static <a href="SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#replace(int,int,java.lang.String)">replace</a></span>&#8203;(int&nbsp;startPos,
 int&nbsp;endPos,
@@ -211,7 +239,7 @@ int&nbsp;endPos,
  string.</div>
 </td>
 </tr>
-<tr class="row-color" id="i11">
+<tr class="alt-color" id="i12">
 <td class="col-first"><code>static <a href="SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#replace(com.sun.source.tree.Tree,java.lang.String)">replace</a></span>&#8203;(com.sun.source.tree.Tree&nbsp;tree,
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;replaceWith)</code></th>
@@ -219,7 +247,7 @@ int&nbsp;endPos,
 <div class="block"><a href="SuggestedFix.Builder.html#replace(com.sun.source.tree.Tree,java.lang.String)"><code>SuggestedFix.Builder.replace(Tree, String)</code></a></div>
 </td>
 </tr>
-<tr class="alt-color" id="i12">
+<tr class="row-color" id="i13">
 <td class="col-first"><code>static <a href="SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#replace(com.sun.source.tree.Tree,java.lang.String,int,int)">replace</a></span>&#8203;(com.sun.source.tree.Tree&nbsp;node,
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;replaceWith,
@@ -229,7 +257,7 @@ int&nbsp;endPosAdjustment)</code></th>
 <div class="block">Replace a tree node with a string, but adjust the start and end positions as well.</div>
 </td>
 </tr>
-<tr class="row-color" id="i13">
+<tr class="alt-color" id="i14">
 <td class="col-first"><code>static <a href="SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#swap(com.sun.source.tree.Tree,com.sun.source.tree.Tree)">swap</a></span>&#8203;(com.sun.source.tree.Tree&nbsp;node1,
 com.sun.source.tree.Tree&nbsp;node2)</code></th>
@@ -237,7 +265,7 @@ com.sun.source.tree.Tree&nbsp;node2)</code></th>
 <div class="block"><a href="SuggestedFix.Builder.html#swap(com.sun.source.tree.Tree,com.sun.source.tree.Tree)"><code>SuggestedFix.Builder.swap(Tree, Tree)</code></a></div>
 </td>
 </tr>
-<tr class="alt-color" id="i14">
+<tr class="row-color" id="i15">
 <td class="col-first"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#toString(com.sun.tools.javac.tree.JCTree.JCCompilationUnit)">toString</a></span>&#8203;(com.sun.tools.javac.tree.JCTree.JCCompilationUnit&nbsp;compilationUnit)</code></th>
 <td class="col-last">&nbsp;</td>
@@ -248,13 +276,27 @@ com.sun.source.tree.Tree&nbsp;node2)</code></th>
 </div>
 <div class="inherited-list">
 <h3 id="methods.inherited.from.class.java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
-<code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
+<code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
 </section>
 </li>
 </ul>
 </section>
 <section class="details">
 <ul class="details-list">
+<!-- ========= CONSTRUCTOR DETAIL ======== -->
+<li>
+<section class="constructor-details" id="constructor.detail">
+<h2>Constructor Details</h2>
+<ul class="member-list">
+<li>
+<section class="detail" id="&lt;init&gt;()">
+<h3>SuggestedFix</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="member-name">SuggestedFix</span>()</div>
+</section>
+</li>
+</ul>
+</section>
+</li>
 <!-- ============ METHOD DETAIL ========== -->
 <li>
 <section class="method-details" id="method.detail">
@@ -273,7 +315,7 @@ com.sun.source.tree.Tree&nbsp;node2)</code></th>
 <li>
 <section class="detail" id="getImportsToAdd()">
 <h3>getImportsToAdd</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="member-name">getImportsToAdd</span>()</div>
+<div class="member-signature"><span class="modifiers">public abstract</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableSet&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="member-name">getImportsToAdd</span>()</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="Fix.html#getImportsToAdd()">getImportsToAdd</a></code>&nbsp;in interface&nbsp;<code><a href="Fix.html" title="interface in com.google.errorprone.fixes">Fix</a></code></dd>
@@ -283,7 +325,7 @@ com.sun.source.tree.Tree&nbsp;node2)</code></th>
 <li>
 <section class="detail" id="getImportsToRemove()">
 <h3>getImportsToRemove</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="member-name">getImportsToRemove</span>()</div>
+<div class="member-signature"><span class="modifiers">public abstract</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableSet&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="member-name">getImportsToRemove</span>()</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="Fix.html#getImportsToRemove()">getImportsToRemove</a></code>&nbsp;in interface&nbsp;<code><a href="Fix.html" title="interface in com.google.errorprone.fixes">Fix</a></code></dd>
@@ -303,7 +345,7 @@ com.sun.source.tree.Tree&nbsp;node2)</code></th>
 <li>
 <section class="detail" id="getShortDescription()">
 <h3>getShortDescription</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="member-name">getShortDescription</span>()</div>
+<div class="member-signature"><span class="modifiers">public abstract</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="member-name">getShortDescription</span>()</div>
 <div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="Fix.html#getShortDescription()">Fix</a></code></span></div>
 <div class="block">A short description which can be attached to the Fix to differentiate multiple fixes provided
  to the user.
@@ -312,6 +354,17 @@ com.sun.source.tree.Tree&nbsp;node2)</code></th>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="Fix.html#getShortDescription()">getShortDescription</a></code>&nbsp;in interface&nbsp;<code><a href="Fix.html" title="interface in com.google.errorprone.fixes">Fix</a></code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="hashCode()">
+<h3>hashCode</h3>
+<div class="member-signature"><span class="annotations">@Memoized
+</span><span class="modifiers">public abstract</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="member-name">hashCode</span>()</div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a></code>&nbsp;in class&nbsp;<code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></dd>
 </dl>
 </section>
 </li>
@@ -445,13 +498,13 @@ com.sun.source.tree.Tree&nbsp;node2)</span></div>
 <li>Summary:&nbsp;</li>
 <li><a href="#nested.class.summary">Nested</a>&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
-<li>Constr&nbsp;|&nbsp;</li>
+<li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="sub-nav-list">
 <li>Detail:&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
-<li>Constr&nbsp;|&nbsp;</li>
+<li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.detail">Method</a></li>
 </ul>
 </div>
