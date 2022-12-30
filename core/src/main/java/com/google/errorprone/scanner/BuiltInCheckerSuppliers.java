@@ -1001,7 +1001,6 @@ public class BuiltInCheckerSuppliers {
           TypeParameterUnusedInFormals.class,
           URLEqualsHashCode.class,
           UndefinedEquals.class,
-          UnescapedEntity.class,
           UnicodeEscape.class,
           UnnecessaryAssignment.class,
           UnnecessaryLambda.class,
@@ -1138,6 +1137,7 @@ public class BuiltInCheckerSuppliers {
           TryWithResourcesVariable.class,
           TypeParameterNaming.class,
           TypeToString.class,
+          UnescapedEntity.class, // TODO(b/263817298): re-enable
           UngroupedOverloads.class,
           UnnecessarilyFullyQualified.class,
           UnnecessarilyUsedValue.class,
