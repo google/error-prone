@@ -45,6 +45,8 @@ public final class ErrorProneTimings {
 
   private final Map<String, Stopwatch> timers = new HashMap<>();
 
+  private final Stopwatch initializationTime = Stopwatch.createUnstarted();
+
   /** Creates a timing span for the given {@link Suppressible}. */
   public AutoCloseable span(Suppressible suppressible) {
     String key = suppressible.canonicalName();
@@ -52,9 +54,20 @@ public final class ErrorProneTimings {
     return () -> sw.stop();
   }
 
+  /** Creates a timing span for initialization. */
+  public AutoCloseable initializationTimeSpan() {
+    initializationTime.start();
+    return () -> initializationTime.stop();
+  }
+
   /** Returns the elapsed durations of each timer. */
   public ImmutableMap<String, Duration> timings() {
     return timers.entrySet().stream()
         .collect(toImmutableMap(e -> e.getKey(), e -> e.getValue().elapsed()));
+  }
+
+  /** Returns the elapsed initialization time. */
+  public Duration initializationTime() {
+    return initializationTime.elapsed();
   }
 }

@@ -72,13 +72,17 @@ public class ErrorProneAnalyzer implements TaskListener {
         () -> {
           // we can't load plugins from the processorpath until the filemanager has been
           // initialized, so do it lazily
-          try {
+          ErrorProneTimings timings = ErrorProneTimings.instance(context);
+          try (AutoCloseable unused = timings.initializationTimeSpan()) {
             return ErrorProneScannerTransformer.create(
                 ErrorPronePlugins.loadPlugins(scannerSupplier, context)
                     .applyOverrides(errorProneOptions)
                     .get());
           } catch (InvalidCommandLineOptionException e) {
             throw new PropagatedException(e);
+          } catch (Exception e) {
+            // for the timing span, should be impossible
+            throw new AssertionError(e);
           }
         });
   }
