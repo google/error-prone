@@ -224,6 +224,9 @@ Using IdentityHashMap with a boxed type as the key is risky since boxing may pro
 __[Immutable](bugpattern/Immutable)__<br>
 Type declaration annotated with @Immutable is not immutable
 
+__[ImpossibleNullComparison](bugpattern/ImpossibleNullComparison)__<br>
+This value cannot be null, and comparing it to null may be misleading.
+
 __[Incomparable](bugpattern/Incomparable)__<br>
 Types contained in sorted collections must implement Comparable.
 
@@ -424,9 +427,6 @@ Access to a private protocol buffer field is forbidden. This protocol buffer car
 
 __[ProtoBuilderReturnValueIgnored](bugpattern/ProtoBuilderReturnValueIgnored)__<br>
 Unnecessary call to proto&#39;s #build() method.  If you don&#39;t consume the return value of #build(), the result is discarded and the only effect is to verify that all required fields are set, which can be expressed more directly with #isInitialized().
-
-__[ProtoFieldNullComparison](bugpattern/ProtoFieldNullComparison)__<br>
-This value cannot be null, and comparing it to null may be misleading.
 
 __[ProtoStringFieldReferenceEquality](bugpattern/ProtoStringFieldReferenceEquality)__<br>
 Comparing protobuf fields of type String using reference equality
@@ -1183,9 +1183,6 @@ Avoid hash-based containers of java.net.URL--the containers rely on equals() and
 __[UndefinedEquals](bugpattern/UndefinedEquals)__<br>
 This type is not guaranteed to implement a useful #equals method.
 
-__[UnescapedEntity](bugpattern/UnescapedEntity)__<br>
-Javadoc is interpreted as HTML, so HTML entities such as &amp;, &lt;, &gt; must be escaped. If this finding seems wrong (e.g. is within a @code or @literal tag), check whether the tag could be malformed and not recognised by the compiler.
-
 __[UnicodeEscape](bugpattern/UnicodeEscape)__<br>
 Using unicode escape sequences for printable ASCII characters is obfuscated, and potentially dangerous.
 
@@ -1465,6 +1462,9 @@ Static fields are implicitly transient, so the explicit modifier is unnecessary
 
 __[TryWithResourcesVariable](bugpattern/TryWithResourcesVariable)__<br>
 This variable is unnecessary, the try-with-resources resource can be a reference to a final or effectively final variable
+
+__[UnescapedEntity](bugpattern/UnescapedEntity)__<br>
+Javadoc is interpreted as HTML, so HTML entities such as &amp;, &lt;, &gt; must be escaped. If this finding seems wrong (e.g. is within a @code or @literal tag), check whether the tag could be malformed and not recognised by the compiler.
 
 __[UnnecessarilyFullyQualified](bugpattern/UnnecessarilyFullyQualified)__<br>
 This fully qualified name is unambiguous to the compiler if imported.
