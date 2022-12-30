@@ -34,8 +34,9 @@ import com.sun.tools.javac.util.Log;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.EnumSet;
-import java.util.IdentityHashMap;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 import javax.tools.JavaFileObject;
@@ -86,10 +87,7 @@ public class JavacErrorDescriptionListener implements DescriptionListener {
     // all uses of a symbol, and reports the diagnostic on all occurrences of the symbol. This can
     // be useful in environments where diagnostics are only shown on changed lines, but can lead to
     // quadratic behaviour during fix application if we're not careful.
-    //
-    // Using IdentityHashMap is sufficient when the repeated fixes are exactly the same instance.
-    // Fix doesn't implement value equality, and we don't want to pay for it here anyways.
-    IdentityHashMap<Fix, AppliedFix> cache = new IdentityHashMap<>();
+    Map<Fix, AppliedFix> cache = new HashMap<>();
     try {
       CharSequence sourceFileContent = sourceFile.getCharContent(true);
       AppliedFix.Applier applier = AppliedFix.fromSource(sourceFileContent, endPositions);
