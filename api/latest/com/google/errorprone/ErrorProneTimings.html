@@ -15,7 +15,7 @@
 <script type="text/javascript" src="../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":9,"i1":10,"i2":10};
+<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":9,"i3":10,"i4":10};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -104,18 +104,32 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </thead>
 <tbody>
 <tr class="alt-color" id="i0">
+<td class="col-first"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/time/Duration.html" title="class or interface in java.time" class="external-link">Duration</a></code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#initializationTime()">initializationTime</a></span>()</code></th>
+<td class="col-last">
+<div class="block">Returns the elapsed initialization time.</div>
+</td>
+</tr>
+<tr class="row-color" id="i1">
+<td class="col-first"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/AutoCloseable.html" title="class or interface in java.lang" class="external-link">AutoCloseable</a></code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#initializationTimeSpan()">initializationTimeSpan</a></span>()</code></th>
+<td class="col-last">
+<div class="block">Creates a timing span for initialization.</div>
+</td>
+</tr>
+<tr class="alt-color" id="i2">
 <td class="col-first"><code>static <a href="ErrorProneTimings.html" title="class in com.google.errorprone">ErrorProneTimings</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#instance(com.sun.tools.javac.util.Context)">instance</a></span>&#8203;(com.sun.tools.javac.util.Context&nbsp;context)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i1">
+<tr class="row-color" id="i3">
 <td class="col-first"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/AutoCloseable.html" title="class or interface in java.lang" class="external-link">AutoCloseable</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#span(com.google.errorprone.matchers.Suppressible)">span</a></span>&#8203;(<a href="matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a>&nbsp;suppressible)</code></th>
 <td class="col-last">
 <div class="block">Creates a timing span for the given <a href="matchers/Suppressible.html" title="interface in com.google.errorprone.matchers"><code>Suppressible</code></a>.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i2">
+<tr class="alt-color" id="i4">
 <td class="col-first"><code>com.google.common.collect.ImmutableMap&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,&#8203;<a href="https://docs.oracle.com/javase/8/docs/api/java/time/Duration.html" title="class or interface in java.time" class="external-link">Duration</a>&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#timings()">timings</a></span>()</code></th>
 <td class="col-last">
@@ -154,10 +168,24 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </section>
 </li>
 <li>
+<section class="detail" id="initializationTimeSpan()">
+<h3>initializationTimeSpan</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/AutoCloseable.html" title="class or interface in java.lang" class="external-link">AutoCloseable</a></span>&nbsp;<span class="member-name">initializationTimeSpan</span>()</div>
+<div class="block">Creates a timing span for initialization.</div>
+</section>
+</li>
+<li>
 <section class="detail" id="timings()">
 <h3>timings</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableMap&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,&#8203;<a href="https://docs.oracle.com/javase/8/docs/api/java/time/Duration.html" title="class or interface in java.time" class="external-link">Duration</a>&gt;</span>&nbsp;<span class="member-name">timings</span>()</div>
 <div class="block">Returns the elapsed durations of each timer.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="initializationTime()">
+<h3>initializationTime</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/time/Duration.html" title="class or interface in java.time" class="external-link">Duration</a></span>&nbsp;<span class="member-name">initializationTime</span>()</div>
+<div class="block">Returns the elapsed initialization time.</div>
 </section>
 </li>
 </ul>
