@@ -153,7 +153,7 @@ public final class SameNameButDifferent extends BugChecker implements Compilatio
       String simpleName = row.getKey();
       Map<TypeSymbol, List<TreePath>> columns = row.getValue();
 
-      SuggestedFix.Builder fix = SuggestedFix.builder();
+      SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
       if (columns.size() > 1) {
         for (Map.Entry<TypeSymbol, List<TreePath>> cell : columns.entrySet()) {
           for (TreePath treePath : cell.getValue()) {
@@ -161,9 +161,9 @@ public final class SameNameButDifferent extends BugChecker implements Compilatio
             getBetterImport(typeSymbol, simpleName)
                 .ifPresent(
                     imp -> {
-                      String qualifiedName = qualifyType(state.withPath(treePath), fix, imp);
+                      String qualifiedName = qualifyType(state.withPath(treePath), fixBuilder, imp);
                       String newSimpleName = qualifiedName + "." + simpleName;
-                      fix.replace(treePath.getLeaf(), newSimpleName);
+                      fixBuilder.replace(treePath.getLeaf(), newSimpleName);
                     });
           }
         }
@@ -175,13 +175,11 @@ public final class SameNameButDifferent extends BugChecker implements Compilatio
                 columns.keySet().stream()
                     .map(t -> t.getQualifiedName().toString())
                     .collect(joining(", ", "[", "]")));
+        SuggestedFix fix = fixBuilder.build();
         for (List<TreePath> treePaths : trimmedTable.row(simpleName).values()) {
           for (TreePath treePath : treePaths) {
             state.reportMatch(
-                buildDescription(treePath.getLeaf())
-                    .setMessage(message)
-                    .addFix(fix.build())
-                    .build());
+                buildDescription(treePath.getLeaf()).setMessage(message).addFix(fix).build());
           }
         }
       }
