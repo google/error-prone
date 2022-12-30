@@ -73,8 +73,8 @@ import javax.annotation.Nullable;
 /** Matches comparison of proto fields to {@code null}. */
 @BugPattern(
     summary = "This value cannot be null, and comparing it to null may be misleading.",
-    name = "ProtoFieldNullComparison",
-    altNames = "ImpossibleNullComparison",
+    name = "ImpossibleNullComparison",
+    altNames = "ProtoFieldNullComparison",
     severity = ERROR)
 public final class ImpossibleNullComparison extends BugChecker
     implements CompilationUnitTreeMatcher {
