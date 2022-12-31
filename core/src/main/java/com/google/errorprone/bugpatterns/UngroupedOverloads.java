@@ -96,7 +96,9 @@ public class UngroupedOverloads extends BugChecker implements ClassTreeMatcher {
       Tree member = classTree.getMembers().get(i);
       if (member instanceof MethodTree) {
         MethodTree methodTree = (MethodTree) member;
-        methods.put(OverloadKey.create(methodTree), MemberWithIndex.create(i, methodTree));
+        if (!ASTHelpers.isGeneratedConstructor(methodTree)) {
+          methods.put(OverloadKey.create(methodTree), MemberWithIndex.create(i, methodTree));
+        }
       }
     }
     ImmutableList<Description> descriptions =

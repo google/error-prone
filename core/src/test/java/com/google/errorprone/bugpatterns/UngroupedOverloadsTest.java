@@ -16,10 +16,13 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static org.junit.Assume.assumeTrue;
+
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
+import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -284,6 +287,24 @@ public final class UngroupedOverloadsTest {
             "  private void bar() {}",
             "  // BUG: Diagnostic contains: constructor overloads",
             "  Test(int i) {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void recordConstructor() {
+    assumeTrue(RuntimeVersion.isAtLeast16());
+
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableSet;",
+            "import java.util.Set;",
+            "",
+            "record MyRecord(ImmutableSet<String> strings) {",
+            "  MyRecord(Set<String> strings) {",
+            "    this(strings == null ? ImmutableSet.of() : ImmutableSet.copyOf(strings));",
+            "  }",
             "}")
         .doTest();
   }
