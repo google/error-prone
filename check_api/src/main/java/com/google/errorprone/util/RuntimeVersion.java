@@ -19,7 +19,11 @@ package com.google.errorprone.util;
 /**
  * JDK runtime version utilities.
  *
- * @see TargetVersion
+ * <p>These methods are generally used when deciding which method to call reflectively. Bug checkers
+ * that rely on support for specific source code constructs should consult {@link SourceVersion}
+ * instead.
+ *
+ * @see RuntimeVersion
  */
 public final class RuntimeVersion {
   private static final int FEATURE = Runtime.version().feature();

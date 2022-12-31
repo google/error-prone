@@ -39,7 +39,7 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.Reachability;
 import com.google.errorprone.util.RuntimeVersion;
-import com.google.errorprone.util.TargetVersion;
+import com.google.errorprone.util.SourceVersion;
 import com.sun.source.tree.BreakTree;
 import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.ExpressionTree;
@@ -86,8 +86,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
 
   @Override
   public Description matchSwitch(SwitchTree switchTree, VisitorState state) {
-    // Expression switches finalized in Java 14
-    if (!TargetVersion.isAtLeast14(state.context)) {
+    if (!SourceVersion.supportsSwitchExpressions(state.context)) {
       return NO_MATCH;
     }
 
