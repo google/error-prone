@@ -122,7 +122,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
 
       List<? extends StatementTree> statements = caseTree.getStatements();
       CaseFallThru caseFallThru = CaseFallThru.MAYBE_FALLS_THRU;
-      if (statements.isEmpty()) {
+      if (statements == null || statements.isEmpty()) {
         // If the code for this case is just an empty block, then it must fall thru
         caseFallThru = CaseFallThru.DEFINITELY_DOES_FALL_THRU;
         // Can group with the next case (unless this is the last case)
