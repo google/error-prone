@@ -16,9 +16,12 @@
 
 package com.google.errorprone.util;
 
-/** JDK version string utilities. */
+/**
+ * JDK runtime version utilities.
+ *
+ * @see TargetVersion
+ */
 public final class RuntimeVersion {
-
   private static final int FEATURE = Runtime.version().feature();
 
   /** Returns true if the current runtime is JDK 12 or newer. */
