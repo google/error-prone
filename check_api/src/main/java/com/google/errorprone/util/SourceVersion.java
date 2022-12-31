@@ -46,8 +46,8 @@ public final class SourceVersion {
    * Returns true if the compiler source version level supports the {@link Feature} indicated by the
    * specified string.
    *
-   * @apiNote For features explicitly recognized by this class, prefer calling the associated method
-   *     instead.
+   * <p>For features explicitly recognized by this class, prefer calling the associated method
+   * instead.
    */
   public static boolean supportsFeature(String featureString, Context context) {
     Feature feature = KNOWN_FEATURES.get(featureString);
