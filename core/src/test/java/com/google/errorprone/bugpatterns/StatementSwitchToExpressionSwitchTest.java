@@ -1017,6 +1017,23 @@ public final class StatementSwitchToExpressionSwitchTest {
   }
 
   @Test
+  public void emptySwitchCases_noMatch() {
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void foo(int value) { ",
+            "    switch (value) {",
+            "      case 0 -> {}",
+            "      default -> {}",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void dynamicWithThrowableDuringInitializationFromMethod_noMatch() {
     assumeTrue(RuntimeVersion.isAtLeast14());
     helper
