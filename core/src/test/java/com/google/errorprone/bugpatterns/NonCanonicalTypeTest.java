@@ -242,4 +242,16 @@ public final class NonCanonicalTypeTest {
             "}")
         .doTest();
   }
+
+  // see https://github.com/google/error-prone/issues/3639
+  @Test
+  public void moduleInfo() {
+    compilationHelper
+        .addSourceLines(
+            "module-info.java", //
+            "module testmodule {",
+            "  requires java.base;",
+            "}")
+        .doTest();
+  }
 }

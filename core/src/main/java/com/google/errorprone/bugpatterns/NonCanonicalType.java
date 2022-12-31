@@ -89,7 +89,12 @@ public final class NonCanonicalType extends BugChecker implements MemberSelectTr
     if (!(sym instanceof Symbol.TypeSymbol)) {
       return null;
     }
-    return sym.owner.getQualifiedName() + "." + sym.getSimpleName();
+    Symbol owner = sym.owner;
+    if (owner == null) {
+      // module symbols don't have owners
+      return null;
+    }
+    return owner.getQualifiedName() + "." + sym.getSimpleName();
   }
 
   private static final Pattern PACKAGE_CLASS_NAME_SPLITTER = Pattern.compile("(.*?)\\.([A-Z].*)");
