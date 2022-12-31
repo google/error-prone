@@ -16,12 +16,8 @@
 
 package com.google.errorprone.util;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
 import com.sun.tools.javac.code.Source;
-import com.sun.tools.javac.code.Source.Feature;
 import com.sun.tools.javac.util.Context;
-import java.util.Arrays;
 
 /**
  * JDK source version utilities.
@@ -29,29 +25,19 @@ import java.util.Arrays;
  * @see RuntimeVersion
  */
 public final class SourceVersion {
-  private static final ImmutableMap<String, Feature> KNOWN_FEATURES =
-      Maps.uniqueIndex(Arrays.asList(Feature.values()), Enum::name);
-
   /** Returns true if the compiler source version level supports switch expressions. */
   public static boolean supportsSwitchExpressions(Context context) {
-    return supportsFeature("SWITCH_EXPRESSION", context);
+    return sourceIsAtLeast(context, "14");
   }
 
   /** Returns true if the compiler source version level supports text blocks. */
   public static boolean supportsTextBlocks(Context context) {
-    return supportsFeature("TEXT_BLOCKS", context);
+    return sourceIsAtLeast(context, "15");
   }
 
-  /**
-   * Returns true if the compiler source version level supports the {@link Feature} indicated by the
-   * specified string.
-   *
-   * <p>For features explicitly recognized by this class, prefer calling the associated method
-   * instead.
-   */
-  public static boolean supportsFeature(String featureString, Context context) {
-    Feature feature = KNOWN_FEATURES.get(featureString);
-    return feature != null && feature.allowedInSource(Source.instance(context));
+  private static boolean sourceIsAtLeast(Context context, String versionString) {
+    Source lowerBound = Source.lookup(versionString);
+    return lowerBound != null && Source.instance(context).compareTo(lowerBound) >= 0;
   }
 
   private SourceVersion() {}
