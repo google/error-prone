@@ -97,7 +97,7 @@ public class ErrorProneOptions {
     DEFAULT, // whatever is specified in the @BugPattern annotation
     OFF,
     WARN,
-    ERROR;
+    ERROR
   }
 
   @AutoValue
