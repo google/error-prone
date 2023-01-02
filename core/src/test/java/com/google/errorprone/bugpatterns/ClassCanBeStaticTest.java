@@ -401,4 +401,28 @@ public class ClassCanBeStaticTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void junitNestedClass() {
+    compilationHelper
+        .addSourceLines(
+            "Nested.java",
+            "package org.junit.jupiter.api;",
+            "import java.lang.annotation.ElementType;",
+            "import java.lang.annotation.Retention;",
+            "import java.lang.annotation.RetentionPolicy;",
+            "import java.lang.annotation.Target;",
+            "@Target(ElementType.TYPE)",
+            "@Retention(RetentionPolicy.RUNTIME)",
+            "public @interface Nested {}")
+        .addSourceLines(
+            "A.java",
+            "import org.junit.jupiter.api.Nested;",
+            "public class A {",
+            "  @Nested class Inner {",
+            "    void f() {}",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
