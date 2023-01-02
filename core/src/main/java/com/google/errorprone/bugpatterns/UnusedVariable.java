@@ -28,6 +28,7 @@ import static com.google.errorprone.util.ASTHelpers.canBeRemoved;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isStatic;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.google.errorprone.util.ASTHelpers.shouldKeep;
@@ -140,6 +141,16 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
           "org.openqa.selenium.support.FindBys",
           "org.apache.beam.sdk.transforms.DoFn.TimerId",
           "org.apache.beam.sdk.transforms.DoFn.StateId");
+
+  // TODO(ghm): Find a sensible place to dedupe this with UnnecessarilyVisible.
+  private static final ImmutableSet<String> ANNOTATIONS_INDICATING_PARAMETERS_SHOULD_BE_CHECKED =
+      ImmutableSet.of(
+          "com.google.inject.Inject",
+          "com.google.inject.Provides",
+          "com.google.inject.multibindings.ProvidesIntoMap",
+          "com.google.inject.multibindings.ProvidesIntoSet",
+          "dagger.Provides",
+          "javax.inject.Inject");
 
   private final ImmutableSet<String> methodAnnotationsExemptingParameters;
 
@@ -640,9 +651,14 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
       Symbol enclosingMethod = sym.owner;
 
       for (String annotationName : methodAnnotationsExemptingParameters) {
-        if (ASTHelpers.hasAnnotation(enclosingMethod, annotationName, state)) {
+        if (hasAnnotation(enclosingMethod, annotationName, state)) {
           return false;
         }
+      }
+
+      if (ANNOTATIONS_INDICATING_PARAMETERS_SHOULD_BE_CHECKED.stream()
+          .anyMatch(a -> hasAnnotation(enclosingMethod, a, state))) {
+        return true;
       }
 
       return enclosingMethod.getModifiers().contains(Modifier.PRIVATE);
