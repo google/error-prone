@@ -97,7 +97,7 @@ public class ErrorProneOptions {
     DEFAULT, // whatever is specified in the @BugPattern annotation
     OFF,
     WARN,
-    ERROR
+    ERROR;
   }
 
   @AutoValue
@@ -202,7 +202,7 @@ public class ErrorProneOptions {
   }
 
   public String[] getRemainingArgs() {
-    return remainingArgs.toArray(new String[remainingArgs.size()]);
+    return remainingArgs.toArray(new String[0]);
   }
 
   public ImmutableMap<String, Severity> getSeverityMap() {
