@@ -86,7 +86,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
 
   @Override
   public Description matchSwitch(SwitchTree switchTree, VisitorState state) {
-    if (!SourceVersion.supportsSwitchExpressions(state.context)) {
+    if (!SourceVersion.supportsSwitchExpressions(state.context) || isRuleSwitch(switchTree)) {
       return NO_MATCH;
     }
 
@@ -97,6 +97,18 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     }
 
     return NO_MATCH;
+  }
+
+  private static boolean isRuleSwitch(SwitchTree switchTree) {
+    return switchTree.getCases().stream().anyMatch(StatementSwitchToExpressionSwitch::isRuleCase);
+  }
+
+  private static boolean isRuleCase(CaseTree caseTree) {
+    try {
+      return "RULE".equals(CaseTree.class.getMethod("getCaseKind").invoke(caseTree).toString());
+    } catch (ReflectiveOperationException e) {
+      throw new LinkageError(e.getMessage(), e);
+    }
   }
 
   /**
@@ -122,7 +134,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
 
       List<? extends StatementTree> statements = caseTree.getStatements();
       CaseFallThru caseFallThru = CaseFallThru.MAYBE_FALLS_THRU;
-      if (statements == null || statements.isEmpty()) {
+      if (statements.isEmpty()) {
         // If the code for this case is just an empty block, then it must fall thru
         caseFallThru = CaseFallThru.DEFINITELY_DOES_FALL_THRU;
         // Can group with the next case (unless this is the last case)

@@ -1017,7 +1017,7 @@ public final class StatementSwitchToExpressionSwitchTest {
   }
 
   @Test
-  public void emptySwitchCases_noMatch() {
+  public void emptyRuleSwitchCases_noMatch() {
     assumeTrue(RuntimeVersion.isAtLeast14());
     helper
         .addSourceLines(
@@ -1030,6 +1030,25 @@ public final class StatementSwitchToExpressionSwitchTest {
             "    }",
             "  }",
             "}")
+        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
+        .doTest();
+  }
+
+  @Test
+  public void voidRuleSwitchCases_noMatch() {
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void foo(int value) { ",
+            "    switch (value) {",
+            "      case 0 -> { System.out.println(\"zero\");  }",
+            "      case 1 -> { System.out.println(\"one\"); }",
+            "    }",
+            "  }",
+            "}")
+        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
         .doTest();
   }
 
