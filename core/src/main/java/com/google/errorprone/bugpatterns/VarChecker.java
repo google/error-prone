@@ -29,12 +29,12 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
+import com.google.errorprone.util.SourceVersion;
 import com.sun.source.tree.ForLoopTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Flags;
-import com.sun.tools.javac.code.Source;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.TreeInfo;
@@ -99,7 +99,7 @@ public class VarChecker extends BugChecker implements VariableTreeMatcher {
 
   private Description handleLocalOrParam(VariableTree tree, VisitorState state, Symbol sym) {
     if (sym.getModifiers().contains(Modifier.FINAL)) {
-      if (Source.instance(state.context).compareTo(Source.lookup("1.8")) >= 0) {
+      if (SourceVersion.supportsEffectivelyFinal(state.context)) {
         // In Java 8, the final modifier is never necessary on locals/parameters because
         // effectively final variables can be used anywhere a final variable is required.
         Optional<SuggestedFix> fix = SuggestedFixes.removeModifiers(tree, state, Modifier.FINAL);

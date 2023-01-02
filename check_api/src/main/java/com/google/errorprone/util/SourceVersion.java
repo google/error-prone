@@ -27,16 +27,21 @@ import com.sun.tools.javac.util.Context;
 public final class SourceVersion {
   /** Returns true if the compiler source version level supports switch expressions. */
   public static boolean supportsSwitchExpressions(Context context) {
-    return sourceIsAtLeast(context, "14");
+    return sourceIsAtLeast(context, 14);
   }
 
   /** Returns true if the compiler source version level supports text blocks. */
   public static boolean supportsTextBlocks(Context context) {
-    return sourceIsAtLeast(context, "15");
+    return sourceIsAtLeast(context, 15);
   }
 
-  private static boolean sourceIsAtLeast(Context context, String versionString) {
-    Source lowerBound = Source.lookup(versionString);
+  /** Returns true if the compiler source version level supports effectively final. */
+  public static boolean supportsEffectivelyFinal(Context context) {
+    return sourceIsAtLeast(context, 8);
+  }
+
+  private static boolean sourceIsAtLeast(Context context, int version) {
+    Source lowerBound = Source.lookup(Integer.toString(version));
     return lowerBound != null && Source.instance(context).compareTo(lowerBound) >= 0;
   }
 
