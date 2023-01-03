@@ -26,6 +26,7 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.annotations.CheckReturnValue;
+import com.google.errorprone.annotations.RestrictedApi;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.sun.source.tree.Tree;
@@ -125,12 +126,27 @@ public class Description {
   }
 
   /** Returns a new builder for {@link Description}s. */
+  @RestrictedApi(
+      explanation = "Please use describeMatch or buildDescription on BugChecker instead.",
+      link = "",
+      allowedOnPath =
+          ".*/java/com/google/devtools/staticanalysis/errorprone/RestrictedInheritanceChecker.java"
+              + "|.*/java/com/google/devtools/staticanalysis/errorprone/pluggabletype/LatticeAdapter.java"
+              + "|.*/java/com/google/devtools/staticanalysis/errorprone/pluggabletype/LatticeInfo.java"
+              + "|.*/java/com/google/devtools/javatools/staticanalysis/xlang/java/BugCheckerUsingXlang.java"
+              + "|.*/third_party/java_src/error_prone/project/check_api/src/main/java/com/google/errorprone/bugpatterns/BugChecker.java"
+              + "|.*/third_party/java_src/error_prone/project/core/src/main/java/com/google/errorprone/bugpatterns/RestrictedApiChecker.java")
   public static Builder builder(
       Tree node, String name, @Nullable String link, SeverityLevel severity, String message) {
     return new Builder((DiagnosticPosition) node, name, link, severity, message);
   }
 
   /** Returns a new builder for {@link Description}s. */
+  @RestrictedApi(
+      explanation = "Please use describeMatch or buildDescription on BugChecker instead.",
+      link = "",
+      allowedOnPath =
+          ".*/third_party/java_src/error_prone/project/check_api/src/main/java/com/google/errorprone/bugpatterns/BugChecker.java")
   public static Builder builder(
       DiagnosticPosition position,
       String name,
@@ -141,6 +157,12 @@ public class Description {
   }
 
   /** Returns a new builder for {@link Description}s. */
+  @RestrictedApi(
+      explanation = "Please use describeMatch or buildDescription on BugChecker instead.",
+      link = "",
+      allowedOnPath =
+          ".*/third_party/java_src/error_prone/project/check_api/src/main/java/com/google/errorprone/bugpatterns/BugChecker.java"
+              + "|.*/third_party/java_src/error_prone/project/core/src/main/java/com/google/errorprone/refaster/RefasterScanner.java")
   public static Builder builder(
       JCTree tree, String name, @Nullable String link, SeverityLevel severity, String message) {
     return new Builder(tree, name, link, severity, message);
