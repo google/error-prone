@@ -44,13 +44,13 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.ArrayType;
 import com.sun.tools.javac.code.Type.ClassType;
 import com.sun.tools.javac.code.Types;
-import com.sun.tools.javac.comp.Modules;
 import com.sun.tools.javac.model.JavacElements;
 import com.sun.tools.javac.parser.Tokens.Token;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.Context;
+import com.sun.tools.javac.util.Convert;
 import com.sun.tools.javac.util.Name;
 import com.sun.tools.javac.util.Names;
 import com.sun.tools.javac.util.Options;
@@ -406,20 +406,8 @@ public class VisitorState {
    */
   @Nullable
   public ClassSymbol getSymbolFromName(Name name) {
-    boolean modular = sharedState.modules.getDefaultModule() != getSymtab().noModule;
-    if (!modular) {
-      return getSymbolFromString(getSymtab().noModule, name);
-    }
-    for (ModuleSymbol msym : sharedState.modules.allModules()) {
-      ClassSymbol result = getSymbolFromString(msym, name);
-      if (result != null) {
-        // TODO(cushon): the path where we iterate over all modules is probably slow.
-        // Try to learn some lessons from JDK-8189747, and consider disallowing this case and
-        // requiring users to call the getSymbolFromString(ModuleSymbol, Name) overload instead.
-        return result;
-      }
-    }
-    return null;
+    ModuleSymbol msym = getSymtab().inferModule(Convert.packagePart(name));
+    return msym != null ? getSymbolFromString(msym, name) : null;
   }
 
   @Nullable
@@ -735,7 +723,6 @@ public class VisitorState {
    * {@code SomeClass.instance(context)} has sizable performance improvements in aggregate.
    */
   private static final class SharedState {
-    private final Modules modules;
     private final Names names;
     private final Symtab symtab;
     private final ErrorProneTimings timings;
@@ -759,7 +746,6 @@ public class VisitorState {
         StatisticsCollector statisticsCollector,
         Map<String, SeverityLevel> severityMap,
         ErrorProneOptions errorProneOptions) {
-      this.modules = Modules.instance(context);
       this.names = Names.instance(context);
       this.symtab = Symtab.instance(context);
       this.timings = ErrorProneTimings.instance(context);
