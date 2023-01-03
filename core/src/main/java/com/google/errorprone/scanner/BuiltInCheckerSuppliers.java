@@ -169,6 +169,7 @@ import com.google.errorprone.bugpatterns.IndexOfChar;
 import com.google.errorprone.bugpatterns.InexactVarargsConditional;
 import com.google.errorprone.bugpatterns.InfiniteRecursion;
 import com.google.errorprone.bugpatterns.InitializeInline;
+import com.google.errorprone.bugpatterns.InjectOnBugCheckers;
 import com.google.errorprone.bugpatterns.InputStreamSlowMultibyteRead;
 import com.google.errorprone.bugpatterns.InsecureCipherMode;
 import com.google.errorprone.bugpatterns.InstanceOfAndCastMatchWrongType;
@@ -872,6 +873,7 @@ public class BuiltInCheckerSuppliers {
           IncorrectMainMethod.class,
           IncrementInForLoopAndHeader.class,
           InheritDoc.class,
+          InjectOnBugCheckers.class,
           InjectOnConstructorOfAbstractClass.class,
           InjectedConstructorAnnotations.class,
           InlineFormatString.class,
