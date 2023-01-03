@@ -27,7 +27,7 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.MethodTree;
-import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import java.util.Set;
 import javax.lang.model.element.Modifier;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
@@ -45,8 +45,8 @@ public class Finalize extends BugChecker implements MethodTreeMatcher {
     if (!isVoidType(getType(tree.getReturnType()), state)) {
       return NO_MATCH;
     }
-    MethodSymbol sym = getSymbol(tree);
-    if (!sym.getModifiers().contains(Modifier.PUBLIC)) {
+    Set<Modifier> modifiers = getSymbol(tree).getModifiers();
+    if (!modifiers.contains(Modifier.PROTECTED) && !modifiers.contains(Modifier.PUBLIC)) {
       return NO_MATCH;
     }
     return describeMatch(tree);

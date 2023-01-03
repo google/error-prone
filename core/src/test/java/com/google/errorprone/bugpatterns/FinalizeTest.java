@@ -34,7 +34,7 @@ public class FinalizeTest {
             "Test.java",
             "class Test {",
             "  // BUG: Diagnostic contains: Do not override finalize",
-            "  public void finalize() {}",
+            "  protected void finalize() {}",
             "  interface A {",
             "    // BUG: Diagnostic contains: Do not override finalize",
             "    void finalize();",
