@@ -39,6 +39,7 @@ import static com.google.errorprone.util.ASTHelpers.getUpperBound;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.google.errorprone.util.ASTHelpers.methodCanBeOverridden;
+import static com.google.errorprone.util.ASTHelpers.shouldKeep;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ArrayListMultimap;
@@ -200,6 +201,10 @@ public final class PreferredInterfaceType extends BugChecker implements Compilat
         if (symbol.getKind() == ElementKind.PARAMETER) {
           return false;
         }
+        if (shouldKeep(tree)) {
+          return false;
+        }
+        // TODO(ghm): Open source @Keep on the elements in SHOULD_IGNORE, and remove this.
         if (SHOULD_IGNORE.matches(tree, state)) {
           return false;
         }

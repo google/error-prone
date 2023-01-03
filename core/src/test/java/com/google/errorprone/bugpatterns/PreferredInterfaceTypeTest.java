@@ -897,4 +897,18 @@ public final class PreferredInterfaceTypeTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void obeysKeep() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Keep;",
+            "import java.util.ArrayList;",
+            "class Test {",
+            "  @Keep private static final Iterable<Integer> FOO = new ArrayList<>();",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
 }
