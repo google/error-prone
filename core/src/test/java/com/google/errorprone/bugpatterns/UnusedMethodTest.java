@@ -496,4 +496,21 @@ public final class UnusedMethodTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void effectivelyPrivateMethodMadeVisible_bySubclassImplementingPublicInterface() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  private static class A {",
+            "    public void a() {}",
+            "  }",
+            "  public interface B {",
+            "    public void a();",
+            "  }",
+            "  public static final class C extends A implements B {}",
+            "}")
+        .doTest();
+  }
 }
