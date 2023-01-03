@@ -41,7 +41,7 @@ public class ThreeLetterTimeZoneIDTest {
       CompilationTestHelper.newInstance(ThreeLetterTimeZoneID.class, getClass());
 
   @Test
-  public void testAllThreeLetterIdsAreCoveredByZoneIdShortIds() {
+  public void allThreeLetterIdsAreCoveredByZoneIdShortIds() {
     // The check's logic is predicated on there being an entry in SHORT_IDS for all three-letter
     // IDs in TimeZone.getAvailableIDs() that aren't in ZoneId.getAvailableZoneIds().
     Set<String> availableZoneIds = new HashSet<>(ZoneId.getAvailableZoneIds());
@@ -66,7 +66,7 @@ public class ThreeLetterTimeZoneIDTest {
   }
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper
         .addSourceLines(
             "a/A.java",
@@ -90,7 +90,7 @@ public class ThreeLetterTimeZoneIDTest {
   }
 
   @Test
-  public void testPositiveCaseJodaTime() {
+  public void positiveCaseJodaTime() {
     compilationHelper
         .addSourceLines(
             "a/A.java",
@@ -120,7 +120,7 @@ public class ThreeLetterTimeZoneIDTest {
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper
         .addSourceLines(
             "a/A.java",
@@ -142,14 +142,14 @@ public class ThreeLetterTimeZoneIDTest {
   }
 
   @Test
-  public void testReplacements_pST() {
+  public void replacements_pST() {
     ImmutableList<String> replacements = replacements("PST", false);
     // Suggests IANA ID first, then the fixed offset.
     assertThat(replacements).containsExactly("America/Los_Angeles", "Etc/GMT+8").inOrder();
   }
 
   @Test
-  public void testReplacements_eST() {
+  public void replacements_eST() {
     ImmutableList<String> replacements = replacements("EST", false);
     // Suggests fixed offset first, then the IANA ID, because this the former has the same rules as
     // TimeZone.getTimeZone("EST").
@@ -157,13 +157,13 @@ public class ThreeLetterTimeZoneIDTest {
   }
 
   @Test
-  public void testReplacements_iST() {
+  public void replacements_iST() {
     ImmutableList<String> replacements = replacements("IST", false);
     assertThat(replacements).containsExactly("Asia/Kolkata").inOrder();
   }
 
   @Test
-  public void testReplacements_cST() {
+  public void replacements_cST() {
     // Only rule-equivalent suggestions are made (unless we have explicitly provided suggestions) -
     // we don't suggest "China Standard Time" for CST, because the existing code is semantically
     // equivalent to US "Central Standard Time".

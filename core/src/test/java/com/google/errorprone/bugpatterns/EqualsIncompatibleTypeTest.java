@@ -34,22 +34,22 @@ public class EqualsIncompatibleTypeTest {
       CompilationTestHelper.newInstance(EqualsIncompatibleType.class, getClass());
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper.addSourceFile("EqualsIncompatibleTypePositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("EqualsIncompatibleTypeNegativeCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase_recursive() {
+  public void negativeCase_recursive() {
     compilationHelper.addSourceFile("EqualsIncompatibleTypeRecursiveTypes.java").doTest();
   }
 
   @Test
-  public void testPrimitiveBoxingIntoObject() {
+  public void primitiveBoxingIntoObject() {
     assumeFalse(RuntimeVersion.isAtLeast12()); // https://bugs.openjdk.java.net/browse/JDK-8028563
     compilationHelper
         .addSourceLines(

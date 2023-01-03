@@ -30,7 +30,7 @@ public class ValidatorTest {
       CompilationTestHelper.newInstance(Validator.class, getClass());
 
   @Test
-  public void testStaticFactoryToConstructor() {
+  public void staticFactoryToConstructor() {
     helper
         .addSourceLines(
             "Client.java",
@@ -104,7 +104,7 @@ public class ValidatorTest {
   }
 
   @Test
-  public void testInstanceMethod_withInlineComment() {
+  public void instanceMethod_withInlineComment() {
     helper
         .addSourceLines(
             "Client.java",
@@ -123,7 +123,7 @@ public class ValidatorTest {
   }
 
   @Test
-  public void testInstanceMethod_withInlineCommentInAnnotation() {
+  public void instanceMethod_withInlineCommentInAnnotation() {
     helper
         .addSourceLines(
             "Client.java",
@@ -142,7 +142,7 @@ public class ValidatorTest {
   }
 
   @Test
-  public void testInstanceMethod_with2InlineCommentInAnnotation() {
+  public void instanceMethod_with2InlineCommentInAnnotation() {
     helper
         .addSourceLines(
             "Client.java",
@@ -161,7 +161,7 @@ public class ValidatorTest {
   }
 
   @Test
-  public void testInstanceMethod_withTrailingComment() {
+  public void instanceMethod_withTrailingComment() {
     helper
         .addSourceLines(
             "Client.java",
@@ -181,7 +181,7 @@ public class ValidatorTest {
   }
 
   @Test
-  public void testInstanceMethod_withLambda() {
+  public void instanceMethod_withLambda() {
     helper
         .addSourceLines(
             "Client.java",
@@ -201,7 +201,7 @@ public class ValidatorTest {
   }
 
   @Test
-  public void testInstanceMethod_withLambdaAndVariable() {
+  public void instanceMethod_withLambdaAndVariable() {
     helper
         .addSourceLines(
             "Client.java",
@@ -220,7 +220,7 @@ public class ValidatorTest {
   }
 
   @Test
-  public void testInstanceMethod_privateVariable() {
+  public void instanceMethod_privateVariable() {
     helper
         .addSourceLines(
             "Client.java",
@@ -238,7 +238,7 @@ public class ValidatorTest {
   }
 
   @Test
-  public void testInstanceMethod_publicVariable() {
+  public void instanceMethod_publicVariable() {
     helper
         .addSourceLines(
             "Client.java",
@@ -255,7 +255,7 @@ public class ValidatorTest {
   }
 
   @Test
-  public void testInstanceMethod_privateMethod() {
+  public void instanceMethod_privateMethod() {
     helper
         .addSourceLines(
             "Client.java",
@@ -276,7 +276,7 @@ public class ValidatorTest {
   }
 
   @Test
-  public void testInstanceMethod_splitOverMultipleLines_withLambda() {
+  public void instanceMethod_splitOverMultipleLines_withLambda() {
     helper
         .addSourceLines(
             "Client.java",
@@ -299,7 +299,7 @@ public class ValidatorTest {
   private static final Pattern FROM_ANNOTATION = Pattern.compile("FromAnnotation: \\[.*;]");
 
   @Test
-  public void testConstructor() {
+  public void constructor() {
     helper
         .addSourceLines(
             "ProfileTimer.java",
@@ -320,7 +320,7 @@ public class ValidatorTest {
   }
 
   @Test
-  public void testMissingImport() {
+  public void missingImport() {
     helper
         .addSourceLines(
             "Client.java",
@@ -345,7 +345,7 @@ public class ValidatorTest {
   }
 
   @Test
-  public void testFullQualifiedReplacementType() {
+  public void fullQualifiedReplacementType() {
     helper
         .addSourceLines(
             "Client.java",
@@ -363,7 +363,7 @@ public class ValidatorTest {
   }
 
   @Test
-  public void testReplacementWithJavaLangClass() {
+  public void replacementWithJavaLangClass() {
     helper
         .addSourceLines(
             "Client.java",
@@ -381,7 +381,7 @@ public class ValidatorTest {
   }
 
   @Test
-  public void testStringLiteralThatLooksLikeAMethodCall() {
+  public void stringLiteralThatLooksLikeAMethodCall() {
     helper
         .addSourceLines(
             "Client.java",
@@ -399,7 +399,7 @@ public class ValidatorTest {
   }
 
   @Test
-  public void testTryStatement() {
+  public void tryStatement() {
     helper
         .addSourceLines(
             "Client.java",
@@ -416,7 +416,7 @@ public class ValidatorTest {
   }
 
   @Test
-  public void testNoOpMethod() {
+  public void noOpMethod() {
     helper
         .addSourceLines(
             "RpcClient.java",
@@ -433,7 +433,7 @@ public class ValidatorTest {
   }
 
   @Test
-  public void testInstanceMethod_withConstant() {
+  public void instanceMethod_withConstant() {
     helper
         .addSourceLines(
             "Client.java",
@@ -453,7 +453,7 @@ public class ValidatorTest {
   }
 
   @Test
-  public void testInstanceMethod_withConstantStaticallyImported() {
+  public void instanceMethod_withConstantStaticallyImported() {
     helper
         .addSourceLines(
             "Client.java",
@@ -474,7 +474,7 @@ public class ValidatorTest {
   }
 
   @Test
-  public void testStaticMethod_typeParameter() {
+  public void staticMethod_typeParameter() {
     helper
         .addSourceLines(
             "Client.java",
@@ -499,7 +499,7 @@ public class ValidatorTest {
       Pattern.compile("InferredFromBody: .*\\.Builder]");
 
   @Test
-  public void testAllowingNestedClassImport() {
+  public void allowingNestedClassImport() {
     helper
         .addSourceLines(
             "Client.java",
@@ -529,7 +529,7 @@ public class ValidatorTest {
   }
 
   @Test
-  public void testNestedClassWithInstanceMethodCallingStatic_implementationQualified() {
+  public void nestedClassWithInstanceMethodCallingStatic_implementationQualified() {
     helper
         .addSourceLines(
             "Client.java",
@@ -556,7 +556,7 @@ public class ValidatorTest {
   }
 
   @Test
-  public void testAssignmentToPrivateField() {
+  public void assignmentToPrivateField() {
     helper
         .addSourceLines(
             "RpcClient.java",
@@ -574,7 +574,7 @@ public class ValidatorTest {
   }
 
   @Test
-  public void testAssignmentToPublicField() {
+  public void assignmentToPublicField() {
     helper
         .addSourceLines(
             "RpcClient.java",
@@ -674,7 +674,7 @@ public class ValidatorTest {
   }
 
   @Test
-  public void testEmptyMethod() {
+  public void emptyMethod() {
     helper
         .addSourceLines(
             "Client.java",
@@ -691,7 +691,7 @@ public class ValidatorTest {
   }
 
   @Test
-  public void testMultiply() {
+  public void multiply() {
     helper
         .addSourceLines(
             "Client.java",
@@ -707,7 +707,7 @@ public class ValidatorTest {
   }
 
   @Test
-  public void testCustomInlineMe() {
+  public void customInlineMe() {
     helper
         .addSourceLines(
             "InlineMe.java", //

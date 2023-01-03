@@ -49,7 +49,7 @@ public class SuppressLintTest {
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     ImmutableList<JavaFileObject> sources =
         forResources(getClass(), "SuppressLintNegativeCases.java");
     JavaFileObject stub =

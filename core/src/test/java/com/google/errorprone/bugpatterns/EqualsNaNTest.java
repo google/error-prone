@@ -31,12 +31,12 @@ public class EqualsNaNTest {
       CompilationTestHelper.newInstance(EqualsNaN.class, getClass());
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper.addSourceFile("EqualsNaNPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("EqualsNaNNegativeCases.java").doTest();
   }
 }

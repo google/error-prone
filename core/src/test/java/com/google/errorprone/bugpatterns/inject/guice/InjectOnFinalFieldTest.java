@@ -30,12 +30,12 @@ public class InjectOnFinalFieldTest {
       CompilationTestHelper.newInstance(InjectOnFinalField.class, getClass());
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper.addSourceFile("InjectOnFinalFieldPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("InjectOnFinalFieldNegativeCases.java").doTest();
   }
 }

@@ -31,7 +31,7 @@ public class ObjectEqualsForPrimitivesTest {
       BugCheckerRefactoringTestHelper.newInstance(ObjectEqualsForPrimitives.class, getClass());
 
   @Test
-  public void testBoxedIntegers() {
+  public void boxedIntegers() {
     refactoringHelper
         .addInputLines(
             "Test.java",
@@ -46,7 +46,7 @@ public class ObjectEqualsForPrimitivesTest {
   }
 
   @Test
-  public void testBoxedAndPrimitive() {
+  public void boxedAndPrimitive() {
     refactoringHelper
         .addInputLines(
             "Test.java",
@@ -61,7 +61,7 @@ public class ObjectEqualsForPrimitivesTest {
   }
 
   @Test
-  public void testPrimitiveAndBoxed() {
+  public void primitiveAndBoxed() {
     refactoringHelper
         .addInputLines(
             "Test.java",
@@ -76,7 +76,7 @@ public class ObjectEqualsForPrimitivesTest {
   }
 
   @Test
-  public void testObjects() {
+  public void objects() {
     refactoringHelper
         .addInputLines(
             "Test.java",
@@ -91,7 +91,7 @@ public class ObjectEqualsForPrimitivesTest {
   }
 
   @Test
-  public void testPrimitives() {
+  public void primitives() {
     refactoringHelper
         .addInputLines(
             "Test.java",
@@ -125,7 +125,7 @@ public class ObjectEqualsForPrimitivesTest {
   }
 
   @Test
-  public void testPrimitivesNegated() {
+  public void primitivesNegated() {
     refactoringHelper
         .addInputLines(
             "Test.java",
@@ -159,7 +159,7 @@ public class ObjectEqualsForPrimitivesTest {
   }
 
   @Test
-  public void testIntAndLong() {
+  public void intAndLong() {
     refactoringHelper
         .addInputLines(
             "Test.java",

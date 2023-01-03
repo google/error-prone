@@ -31,12 +31,12 @@ public class EmptyIfStatementTest {
       CompilationTestHelper.newInstance(EmptyIfStatement.class, getClass());
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper.addSourceFile("EmptyIfStatementPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("EmptyIfStatementNegativeCases.java").doTest();
   }
 }

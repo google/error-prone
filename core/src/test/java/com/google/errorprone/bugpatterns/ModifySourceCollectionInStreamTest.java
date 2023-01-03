@@ -31,12 +31,12 @@ public class ModifySourceCollectionInStreamTest {
       CompilationTestHelper.newInstance(ModifySourceCollectionInStream.class, getClass());
 
   @Test
-  public void testPositiveCases() {
+  public void positiveCases() {
     compilationHelper.addSourceFile("ModifySourceCollectionInStreamPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCasse() {
+  public void negativeCasse() {
     compilationHelper.addSourceFile("ModifySourceCollectionInStreamNegativeCases.java").doTest();
   }
 }

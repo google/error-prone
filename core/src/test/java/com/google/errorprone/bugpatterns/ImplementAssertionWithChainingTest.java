@@ -30,12 +30,12 @@ public class ImplementAssertionWithChainingTest {
       CompilationTestHelper.newInstance(ImplementAssertionWithChaining.class, getClass());
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper.addSourceFile("ImplementAssertionWithChainingPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("ImplementAssertionWithChainingNegativeCases.java").doTest();
   }
 }

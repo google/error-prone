@@ -35,7 +35,7 @@ public class NullArgumentForNonNullParameterTest {
           .setArgs("-XepOpt:Nullness:Conservative=false");
 
   @Test
-  public void testPositivePrimitive() {
+  public void positivePrimitive() {
     conservativeHelper
         .addSourceLines(
             "Foo.java",
@@ -51,7 +51,7 @@ public class NullArgumentForNonNullParameterTest {
   }
 
   @Test
-  public void testPositiveAnnotatedNonnullAggressive() {
+  public void positiveAnnotatedNonnullAggressive() {
     aggressiveHelper
         .addSourceLines(
             "Foo.java",
@@ -67,7 +67,7 @@ public class NullArgumentForNonNullParameterTest {
   }
 
   @Test
-  public void testNegativeAnnotatedNonnullConservative() {
+  public void negativeAnnotatedNonnullConservative() {
     conservativeHelper
         .addSourceLines(
             "Foo.java",
@@ -82,7 +82,7 @@ public class NullArgumentForNonNullParameterTest {
   }
 
   @Test
-  public void testPositiveJavaOptionalOf() {
+  public void positiveJavaOptionalOf() {
     conservativeHelper
         .addSourceLines(
             "Foo.java",
@@ -97,7 +97,7 @@ public class NullArgumentForNonNullParameterTest {
   }
 
   @Test
-  public void testPositiveGuavaOptionalOf() {
+  public void positiveGuavaOptionalOf() {
     conservativeHelper
         .addSourceLines(
             "Foo.java",
@@ -112,7 +112,7 @@ public class NullArgumentForNonNullParameterTest {
   }
 
   @Test
-  public void testNegativeNullMarkedComGoogleCommonButNullable() {
+  public void negativeNullMarkedComGoogleCommonButNullable() {
     conservativeHelper
         .addSourceLines(
             "Foo.java",
@@ -126,7 +126,7 @@ public class NullArgumentForNonNullParameterTest {
   }
 
   @Test
-  public void testPositiveNullMarkedOtherPackageAggressive() {
+  public void positiveNullMarkedOtherPackageAggressive() {
     aggressiveHelper
         .addSourceLines(
             "Foo.java",
@@ -143,7 +143,7 @@ public class NullArgumentForNonNullParameterTest {
   }
 
   @Test
-  public void testNegativeNullMarkedNonComGoogleCommonPackageConservative() {
+  public void negativeNullMarkedNonComGoogleCommonPackageConservative() {
     conservativeHelper
         .addSourceLines(
             "Foo.java",
@@ -159,7 +159,7 @@ public class NullArgumentForNonNullParameterTest {
   }
 
   @Test
-  public void testNegativeNullMarkedTypeVariable() {
+  public void negativeNullMarkedTypeVariable() {
     aggressiveHelper
         .addSourceLines(
             "Foo.java",

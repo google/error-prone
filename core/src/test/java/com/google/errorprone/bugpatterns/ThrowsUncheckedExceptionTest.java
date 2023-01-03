@@ -32,12 +32,12 @@ public final class ThrowsUncheckedExceptionTest {
       CompilationTestHelper.newInstance(ThrowsUncheckedException.class, getClass());
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper.addSourceFile("ThrowsUncheckedExceptionPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("ThrowsUncheckedExceptionNegativeCases.java").doTest();
   }
 

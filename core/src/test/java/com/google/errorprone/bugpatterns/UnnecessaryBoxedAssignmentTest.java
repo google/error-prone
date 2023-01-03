@@ -30,7 +30,7 @@ public class UnnecessaryBoxedAssignmentTest {
       BugCheckerRefactoringTestHelper.newInstance(UnnecessaryBoxedAssignment.class, getClass());
 
   @Test
-  public void testCases() {
+  public void cases() {
     helper
         .addInput("testdata/UnnecessaryBoxedAssignmentCases.java")
         .addOutput("testdata/UnnecessaryBoxedAssignmentCases_expected.java")

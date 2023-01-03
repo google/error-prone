@@ -54,7 +54,7 @@ public class MultipleParallelOrSequentialCallsTest {
   }
 
   @Test
-  public void testFixes() {
+  public void fixes() {
     BugCheckerRefactoringTestHelper.newInstance(MultipleParallelOrSequentialCalls.class, getClass())
         .addInput("MultipleParallelOrSequentialCallsPositiveCases.java")
         .addOutput("MultipleParallelOrSequentialCallsPositiveCases_expected.java")

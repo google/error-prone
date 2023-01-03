@@ -31,18 +31,18 @@ public class ArrayHashCodeTest {
       CompilationTestHelper.newInstance(ArrayHashCode.class, getClass());
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper.addSourceFile("ArrayHashCodePositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("ArrayHashCodeNegativeCases.java").doTest();
   }
 
   /** Tests java.util.Objects hashCode methods, which are only in JDK 7 and above. */
   @Test
-  public void testJava7NegativeCase() {
+  public void java7NegativeCase() {
     compilationHelper.addSourceFile("ArrayHashCodeNegativeCases2.java").doTest();
   }
 }

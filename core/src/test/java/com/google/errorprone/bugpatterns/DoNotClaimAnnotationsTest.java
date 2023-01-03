@@ -30,7 +30,7 @@ public class DoNotClaimAnnotationsTest {
       BugCheckerRefactoringTestHelper.newInstance(DoNotClaimAnnotations.class, getClass());
 
   @Test
-  public void testPositive() {
+  public void positive() {
     testHelper
         .addInputLines(
             "Test.java",
@@ -64,7 +64,7 @@ public class DoNotClaimAnnotationsTest {
   }
 
   @Test
-  public void testNegative() {
+  public void negative() {
     testHelper
         .addInputLines(
             "Test.java",
@@ -85,7 +85,7 @@ public class DoNotClaimAnnotationsTest {
   }
 
   @Test
-  public void testNegative_notAProcessor() {
+  public void negative_notAProcessor() {
     testHelper
         .addInputLines(
             "Test.java",

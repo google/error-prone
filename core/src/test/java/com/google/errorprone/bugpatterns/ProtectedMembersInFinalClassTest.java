@@ -35,7 +35,7 @@ public class ProtectedMembersInFinalClassTest {
       CompilationTestHelper.newInstance(ProtectedMembersInFinalClass.class, getClass());
 
   @Test
-  public void testPositiveCases() {
+  public void positiveCases() {
     testHelper
         .addInputLines(
             "in/Test.java",
@@ -57,7 +57,7 @@ public class ProtectedMembersInFinalClassTest {
   }
 
   @Test
-  public void testNegativeCases() {
+  public void negativeCases() {
     compilationHelper
         .addSourceLines(
             "in/Base.java", //
@@ -79,7 +79,7 @@ public class ProtectedMembersInFinalClassTest {
   }
 
   @Test
-  public void testDiagnosticStringWithMultipleMemberMatches() {
+  public void diagnosticStringWithMultipleMemberMatches() {
     compilationHelper
         .addSourceLines(
             "in/Test.java",

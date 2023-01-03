@@ -31,17 +31,17 @@ public class FutureReturnValueIgnoredTest {
       CompilationTestHelper.newInstance(FutureReturnValueIgnored.class, getClass());
 
   @Test
-  public void testPositiveCases() {
+  public void positiveCases() {
     compilationHelper.addSourceFile("FutureReturnValueIgnoredPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("FutureReturnValueIgnoredNegativeCases.java").doTest();
   }
 
   @Test
-  public void testClassAnnotationButCanIgnoreReturnValue() {
+  public void classAnnotationButCanIgnoreReturnValue() {
     compilationHelper
         .addSourceLines(
             "lib/Lib.java",
@@ -61,7 +61,7 @@ public class FutureReturnValueIgnoredTest {
   }
 
   @Test
-  public void testCompletableFutureReturnValue() {
+  public void completableFutureReturnValue() {
     compilationHelper
         .addSourceLines(
             "test.java",
@@ -75,7 +75,7 @@ public class FutureReturnValueIgnoredTest {
   }
 
   @Test
-  public void testCompletableFutureReturnValueJdk9() {
+  public void completableFutureReturnValueJdk9() {
     compilationHelper
         .addSourceLines(
             "test.java",

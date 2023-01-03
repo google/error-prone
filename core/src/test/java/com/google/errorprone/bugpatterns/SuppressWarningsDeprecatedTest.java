@@ -33,12 +33,12 @@ public class SuppressWarningsDeprecatedTest {
       CompilationTestHelper.newInstance(SuppressWarningsDeprecated.class, getClass());
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper.addSourceFile("SuppressWarningsDeprecatedPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("SuppressWarningsDeprecatedNegativeCases.java").doTest();
   }
 }

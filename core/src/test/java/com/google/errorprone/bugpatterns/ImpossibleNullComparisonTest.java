@@ -120,7 +120,7 @@ public final class ImpossibleNullComparisonTest {
   }
 
   @Test
-  public void testProto3() {
+  public void proto3() {
     compilationHelper
         .addSourceLines(
             "TestProto3.java",
@@ -136,7 +136,7 @@ public final class ImpossibleNullComparisonTest {
   }
 
   @Test
-  public void testMessageOrBuilderGetField() {
+  public void messageOrBuilderGetField() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -152,7 +152,7 @@ public final class ImpossibleNullComparisonTest {
   }
 
   @Test
-  public void testMessageOrBuilderGetFieldCast() {
+  public void messageOrBuilderGetFieldCast() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -169,7 +169,7 @@ public final class ImpossibleNullComparisonTest {
   }
 
   @Test
-  public void testExtendableMessageGetExtension1param() {
+  public void extendableMessageGetExtension1param() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -185,7 +185,7 @@ public final class ImpossibleNullComparisonTest {
   }
 
   @Test
-  public void testMessageOrBuilderGetRepeatedField() {
+  public void messageOrBuilderGetRepeatedField() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -201,7 +201,7 @@ public final class ImpossibleNullComparisonTest {
   }
 
   @Test
-  public void testExtendableMessageGetExtension2param() {
+  public void extendableMessageGetExtension2param() {
     compilationHelper
         .addSourceLines(
             "Test.java",

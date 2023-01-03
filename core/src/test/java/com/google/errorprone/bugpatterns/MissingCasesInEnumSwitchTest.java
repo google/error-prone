@@ -31,7 +31,7 @@ public class MissingCasesInEnumSwitchTest {
       CompilationTestHelper.newInstance(MissingCasesInEnumSwitch.class, getClass());
 
   @Test
-  public void testExhaustive() {
+  public void exhaustive() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -51,7 +51,7 @@ public class MissingCasesInEnumSwitchTest {
   }
 
   @Test
-  public void testExhaustive_multipleCaseExpressions() {
+  public void exhaustive_multipleCaseExpressions() {
     assumeTrue(RuntimeVersion.isAtLeast14());
     compilationHelper
         .addSourceLines(
@@ -68,7 +68,7 @@ public class MissingCasesInEnumSwitchTest {
   }
 
   @Test
-  public void testNonExhaustive_withDefault() {
+  public void nonExhaustive_withDefault() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -89,7 +89,7 @@ public class MissingCasesInEnumSwitchTest {
   }
 
   @Test
-  public void testNonExhaustive() {
+  public void nonExhaustive() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -109,7 +109,7 @@ public class MissingCasesInEnumSwitchTest {
   }
 
   @Test
-  public void testNonExhaustive_manyCases() {
+  public void nonExhaustive_manyCases() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -128,7 +128,7 @@ public class MissingCasesInEnumSwitchTest {
   }
 
   @Test
-  public void testNonExhaustive_nonEnum() {
+  public void nonExhaustive_nonEnum() {
     compilationHelper
         .addSourceLines(
             "Test.java",

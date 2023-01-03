@@ -37,7 +37,7 @@ public class ParameterMissingNullableTest {
           .setArgs("-XepOpt:Nullness:Conservative=false");
 
   @Test
-  public void testPositiveIf() {
+  public void positiveIf() {
     aggressiveHelper
         .addSourceLines(
             "Foo.java",
@@ -53,7 +53,7 @@ public class ParameterMissingNullableTest {
   }
 
   @Test
-  public void testPositiveIfWithUnrelatedThrow() {
+  public void positiveIfWithUnrelatedThrow() {
     aggressiveHelper
         .addSourceLines(
             "Foo.java",
@@ -72,7 +72,7 @@ public class ParameterMissingNullableTest {
   }
 
   @Test
-  public void testPositiveDespiteWhileLoop() {
+  public void positiveDespiteWhileLoop() {
     // TODO(cpovirk): This doesn't look "positive" to me.
     // TODO(cpovirk): Also, I *think* the lack of braces on the while() loop is intentional?
     aggressiveHelper
@@ -89,7 +89,7 @@ public class ParameterMissingNullableTest {
   }
 
   @Test
-  public void testPositiveTernary() {
+  public void positiveTernary() {
     aggressiveHelper
         .addSourceLines(
             "Foo.java",
@@ -104,7 +104,7 @@ public class ParameterMissingNullableTest {
   }
 
   @Test
-  public void testPositiveCallToMethod() {
+  public void positiveCallToMethod() {
     conservativeHelper
         .addSourceLines(
             "Foo.java",
@@ -119,7 +119,7 @@ public class ParameterMissingNullableTest {
   }
 
   @Test
-  public void testPositiveCallToTopLevelConstructor() {
+  public void positiveCallToTopLevelConstructor() {
     conservativeHelper
         .addSourceLines(
             "Foo.java",
@@ -134,7 +134,7 @@ public class ParameterMissingNullableTest {
   }
 
   @Test
-  public void testPositiveCallToNestedConstructor() {
+  public void positiveCallToNestedConstructor() {
     conservativeHelper
         .addSourceLines(
             "Foo.java",
@@ -151,7 +151,7 @@ public class ParameterMissingNullableTest {
   }
 
   @Test
-  public void testNegativeCallToNestedConstructor() {
+  public void negativeCallToNestedConstructor() {
     conservativeHelper
         .addSourceLines(
             "Foo.java",
@@ -168,7 +168,7 @@ public class ParameterMissingNullableTest {
   }
 
   @Test
-  public void testDeclarationAnnotatedLocation() {
+  public void declarationAnnotatedLocation() {
     aggressiveRefactoringHelper
         .addInputLines(
             "in/Foo.java",
@@ -194,7 +194,7 @@ public class ParameterMissingNullableTest {
   }
 
   @Test
-  public void testTypeAnnotatedLocation() {
+  public void typeAnnotatedLocation() {
     aggressiveRefactoringHelper
         .addInputLines(
             "in/Foo.java",
@@ -220,7 +220,7 @@ public class ParameterMissingNullableTest {
   }
 
   @Test
-  public void testNegativeAlreadyAnnotated() {
+  public void negativeAlreadyAnnotated() {
     aggressiveHelper
         .addSourceLines(
             "Foo.java",
@@ -236,7 +236,7 @@ public class ParameterMissingNullableTest {
   }
 
   @Test
-  public void testNegativeCasesAlreadyTypeAnnotatedInnerClass() {
+  public void negativeCasesAlreadyTypeAnnotatedInnerClass() {
     aggressiveHelper
         .addSourceLines(
             "Foo.java",
@@ -254,7 +254,7 @@ public class ParameterMissingNullableTest {
   }
 
   @Test
-  public void testNegativePreconditionCheckMethod() {
+  public void negativePreconditionCheckMethod() {
     aggressiveHelper
         .addSourceLines(
             "Foo.java",
@@ -268,7 +268,7 @@ public class ParameterMissingNullableTest {
   }
 
   @Test
-  public void testNegativeOtherCheckMethod() {
+  public void negativeOtherCheckMethod() {
     aggressiveHelper
         .addSourceLines(
             "Foo.java",
@@ -282,7 +282,7 @@ public class ParameterMissingNullableTest {
   }
 
   @Test
-  public void testNegativeAssert() {
+  public void negativeAssert() {
     aggressiveHelper
         .addSourceLines(
             "Foo.java",
@@ -295,7 +295,7 @@ public class ParameterMissingNullableTest {
   }
 
   @Test
-  public void testNegativeCheckNotAgainstNull() {
+  public void negativeCheckNotAgainstNull() {
     aggressiveHelper
         .addSourceLines(
             "Foo.java",
@@ -310,7 +310,7 @@ public class ParameterMissingNullableTest {
   }
 
   @Test
-  public void testNegativeCheckOfNonParameter() {
+  public void negativeCheckOfNonParameter() {
     aggressiveHelper
         .addSourceLines(
             "Foo.java",
@@ -326,7 +326,7 @@ public class ParameterMissingNullableTest {
   }
 
   @Test
-  public void testNegativeThrow() {
+  public void negativeThrow() {
     aggressiveHelper
         .addSourceLines(
             "Foo.java",
@@ -344,7 +344,7 @@ public class ParameterMissingNullableTest {
   }
 
   @Test
-  public void testNegativeCreateException() {
+  public void negativeCreateException() {
     aggressiveHelper
         .addSourceLines(
             "Foo.java",
@@ -362,7 +362,7 @@ public class ParameterMissingNullableTest {
   }
 
   @Test
-  public void testNegativeLambdaParameter() {
+  public void negativeLambdaParameter() {
     aggressiveHelper
         .addSourceLines(
             "Foo.java",
@@ -374,7 +374,7 @@ public class ParameterMissingNullableTest {
   }
 
   @Test
-  public void testNegativeDoWhileLoop() {
+  public void negativeDoWhileLoop() {
     aggressiveHelper
         .addSourceLines(
             "Foo.java",
@@ -390,7 +390,7 @@ public class ParameterMissingNullableTest {
   }
 
   @Test
-  public void testNegativeWhileLoop() {
+  public void negativeWhileLoop() {
     /*
      * It would be safe to annotate this parameter as @Nullable, but it's somewhat unclear whether
      * people would prefer that in most cases. We could consider adding @Nullable if people would
@@ -411,7 +411,7 @@ public class ParameterMissingNullableTest {
   }
 
   @Test
-  public void testNegativeForLoop() {
+  public void negativeForLoop() {
     // Similar to testNegativeWhileLoop, @Nullable would be defensible here.
     aggressiveHelper
         .addSourceLines(
@@ -426,7 +426,7 @@ public class ParameterMissingNullableTest {
   }
 
   @Test
-  public void testNegativeCallArgNotNull() {
+  public void negativeCallArgNotNull() {
     conservativeHelper
         .addSourceLines(
             "Foo.java",
@@ -440,7 +440,7 @@ public class ParameterMissingNullableTest {
   }
 
   @Test
-  public void testNegativeCallAlreadyAnnotated() {
+  public void negativeCallAlreadyAnnotated() {
     conservativeHelper
         .addSourceLines(
             "Foo.java",
@@ -455,7 +455,7 @@ public class ParameterMissingNullableTest {
   }
 
   @Test
-  public void testNegativeCallTypeVariable() {
+  public void negativeCallTypeVariable() {
     conservativeHelper
         .addSourceLines(
             "Foo.java",
@@ -469,7 +469,7 @@ public class ParameterMissingNullableTest {
   }
 
   @Test
-  public void testNegativeCallOtherCompilationUnit() {
+  public void negativeCallOtherCompilationUnit() {
     conservativeHelper
         .addSourceLines(
             "Foo.java", //
@@ -487,7 +487,7 @@ public class ParameterMissingNullableTest {
   }
 
   @Test
-  public void testNegativeCallVarargs() {
+  public void negativeCallVarargs() {
     conservativeHelper
         .addSourceLines(
             "Foo.java",

@@ -37,27 +37,27 @@ public class CollectionIncompatibleTypeTest {
       BugCheckerRefactoringTestHelper.newInstance(CollectionIncompatibleType.class, getClass());
 
   @Test
-  public void testPositiveCases() {
+  public void positiveCases() {
     compilationHelper.addSourceFile("CollectionIncompatibleTypePositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCases() {
+  public void negativeCases() {
     compilationHelper.addSourceFile("CollectionIncompatibleTypeNegativeCases.java").doTest();
   }
 
   @Test
-  public void testOutOfBounds() {
+  public void outOfBounds() {
     compilationHelper.addSourceFile("CollectionIncompatibleTypeOutOfBounds.java").doTest();
   }
 
   @Test
-  public void testClassCast() {
+  public void classCast() {
     compilationHelper.addSourceFile("CollectionIncompatibleTypeClassCast.java").doTest();
   }
 
   @Test
-  public void testCastFixes() {
+  public void castFixes() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -75,7 +75,7 @@ public class CollectionIncompatibleTypeTest {
   }
 
   @Test
-  public void testSuppressWarningsFix() {
+  public void suppressWarningsFix() {
     refactorTestHelper
         .addInputLines(
             "in/Test.java",
@@ -104,7 +104,7 @@ public class CollectionIncompatibleTypeTest {
   // This test is disabled because calling Types#asSuper in the check removes the upper bound on K.
   @Test
   @Ignore
-  public void testBoundedTypeParameters() {
+  public void boundedTypeParameters() {
     compilationHelper
         .addSourceLines(
             "Test.java",

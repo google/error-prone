@@ -30,7 +30,7 @@ public class NarrowingCompoundAssignmentTest {
       CompilationTestHelper.newInstance(NarrowingCompoundAssignment.class, getClass());
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -58,7 +58,7 @@ public class NarrowingCompoundAssignmentTest {
   }
 
   @Test
-  public void testAllOps() {
+  public void allOps() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -87,7 +87,7 @@ public class NarrowingCompoundAssignmentTest {
   }
 
   @Test
-  public void testDeficientRightShift() {
+  public void deficientRightShift() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -101,7 +101,7 @@ public class NarrowingCompoundAssignmentTest {
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -119,7 +119,7 @@ public class NarrowingCompoundAssignmentTest {
   }
 
   @Test
-  public void testFloatFloat() {
+  public void floatFloat() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -137,7 +137,7 @@ public class NarrowingCompoundAssignmentTest {
 
   // bit twiddling deficient types with masks of the same width is fine
   @Test
-  public void testBitTwiddle() {
+  public void bitTwiddle() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -167,7 +167,7 @@ public class NarrowingCompoundAssignmentTest {
 
   // bit twiddling deficient types with constant masks of the same width is fine
   @Test
-  public void testBitTwiddleConstant() {
+  public void bitTwiddleConstant() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -232,7 +232,7 @@ public class NarrowingCompoundAssignmentTest {
   }
 
   @Test
-  public void testPreservePrecedence() {
+  public void preservePrecedence() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -247,7 +247,7 @@ public class NarrowingCompoundAssignmentTest {
   }
 
   @Test
-  public void testPreservePrecedence2() {
+  public void preservePrecedence2() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -262,7 +262,7 @@ public class NarrowingCompoundAssignmentTest {
   }
 
   @Test
-  public void testPreservePrecedence3() {
+  public void preservePrecedence3() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -277,128 +277,128 @@ public class NarrowingCompoundAssignmentTest {
   }
 
   @Test
-  public void testPreservePrecedenceExhaustive_multMult() throws Exception {
+  public void preservePrecedenceExhaustive_multMult() throws Exception {
     testPrecedence("*", "*", /* parens= */ true);
   }
 
   @Test
-  public void testPreservePrecedenceExhaustive_multPlus() throws Exception {
+  public void preservePrecedenceExhaustive_multPlus() throws Exception {
     testPrecedence("*", "+", /* parens= */ true);
   }
 
   @Test
-  public void testPreservePrecedenceExhaustive_multLShift() throws Exception {
+  public void preservePrecedenceExhaustive_multLShift() throws Exception {
     testPrecedence("*", "<<", /* parens= */ true);
   }
 
   @Test
-  public void testPreservePrecedenceExhaustive_multAnd() throws Exception {
+  public void preservePrecedenceExhaustive_multAnd() throws Exception {
     testPrecedence("*", "&", /* parens= */ true);
   }
 
   @Test
-  public void testPreservePrecedenceExhaustive_multOr() throws Exception {
+  public void preservePrecedenceExhaustive_multOr() throws Exception {
     testPrecedence("*", "|", /* parens= */ true);
   }
 
   @Test
-  public void testPreservePrecedenceExhaustive_plusMult() throws Exception {
+  public void preservePrecedenceExhaustive_plusMult() throws Exception {
     testPrecedence("+", "*", /* parens= */ false);
   }
 
   @Test
-  public void testPreservePrecedenceExhaustive_plusPlus() throws Exception {
+  public void preservePrecedenceExhaustive_plusPlus() throws Exception {
     testPrecedence("+", "+", /* parens= */ true);
   }
 
   @Test
-  public void testPreservePrecedenceExhaustive_plusLShift() throws Exception {
+  public void preservePrecedenceExhaustive_plusLShift() throws Exception {
     testPrecedence("+", "<<", /* parens= */ true);
   }
 
   @Test
-  public void testPreservePrecedenceExhaustive_plusAnd() throws Exception {
+  public void preservePrecedenceExhaustive_plusAnd() throws Exception {
     testPrecedence("+", "&", /* parens= */ true);
   }
 
   @Test
-  public void testPreservePrecedenceExhaustive_plusOr() throws Exception {
+  public void preservePrecedenceExhaustive_plusOr() throws Exception {
     testPrecedence("+", "|", /* parens= */ true);
   }
 
   @Test
-  public void testPreservePrecedenceExhaustive_lShiftMult() throws Exception {
+  public void preservePrecedenceExhaustive_lShiftMult() throws Exception {
     testPrecedence("<<", "*", /* parens= */ false);
   }
 
   @Test
-  public void testPreservePrecedenceExhaustive_lShiftPlus() throws Exception {
+  public void preservePrecedenceExhaustive_lShiftPlus() throws Exception {
     testPrecedence("<<", "+", /* parens= */ false);
   }
 
   @Test
-  public void testPreservePrecedenceExhaustive_lShiftLShift() throws Exception {
+  public void preservePrecedenceExhaustive_lShiftLShift() throws Exception {
     testPrecedence("<<", "<<", /* parens= */ true);
   }
 
   @Test
-  public void testPreservePrecedenceExhaustive_lShiftAnd() throws Exception {
+  public void preservePrecedenceExhaustive_lShiftAnd() throws Exception {
     testPrecedence("<<", "&", /* parens= */ true);
   }
 
   @Test
-  public void testPreservePrecedenceExhaustive_lShiftOr() throws Exception {
+  public void preservePrecedenceExhaustive_lShiftOr() throws Exception {
     testPrecedence("<<", "|", /* parens= */ true);
   }
 
   @Test
-  public void testPreservePrecedenceExhaustive_andMult() throws Exception {
+  public void preservePrecedenceExhaustive_andMult() throws Exception {
 
     testPrecedence("&", "*", /* parens= */ false);
   }
 
   @Test
-  public void testPreservePrecedenceExhaustive_andPlus() throws Exception {
+  public void preservePrecedenceExhaustive_andPlus() throws Exception {
     testPrecedence("&", "+", /* parens= */ false);
   }
 
   @Test
-  public void testPreservePrecedenceExhaustive_andLShift() throws Exception {
+  public void preservePrecedenceExhaustive_andLShift() throws Exception {
     testPrecedence("&", "<<", /* parens= */ false);
   }
 
   @Test
-  public void testPreservePrecedenceExhaustive_andAnd() throws Exception {
+  public void preservePrecedenceExhaustive_andAnd() throws Exception {
     testPrecedence("&", "&", /* parens= */ true);
   }
 
   @Test
-  public void testPreservePrecedenceExhaustive_andOr() throws Exception {
+  public void preservePrecedenceExhaustive_andOr() throws Exception {
     testPrecedence("&", "|", /* parens= */ true);
   }
 
   @Test
-  public void testPreservePrecedenceExhaustive_orMult() throws Exception {
+  public void preservePrecedenceExhaustive_orMult() throws Exception {
     testPrecedence("|", "*", /* parens= */ false);
   }
 
   @Test
-  public void testPreservePrecedenceExhaustive_orPlus() throws Exception {
+  public void preservePrecedenceExhaustive_orPlus() throws Exception {
     testPrecedence("|", "+", /* parens= */ false);
   }
 
   @Test
-  public void testPreservePrecedenceExhaustive_orLShift() throws Exception {
+  public void preservePrecedenceExhaustive_orLShift() throws Exception {
     testPrecedence("|", "<<", /* parens= */ false);
   }
 
   @Test
-  public void testPreservePrecedenceExhaustive_orAnd() throws Exception {
+  public void preservePrecedenceExhaustive_orAnd() throws Exception {
     testPrecedence("|", "&", /* parens= */ false);
   }
 
   @Test
-  public void testPreservePrecedenceExhaustive_orOr() throws Exception {
+  public void preservePrecedenceExhaustive_orOr() throws Exception {
     testPrecedence("|", "|", /* parens= */ true);
   }
 
@@ -425,7 +425,7 @@ public class NarrowingCompoundAssignmentTest {
   }
 
   @Test
-  public void testDoubleLong() {
+  public void doubleLong() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -441,7 +441,7 @@ public class NarrowingCompoundAssignmentTest {
   }
 
   @Test
-  public void testDoubleInt() {
+  public void doubleInt() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -457,7 +457,7 @@ public class NarrowingCompoundAssignmentTest {
   }
 
   @Test
-  public void testFloatLong() {
+  public void floatLong() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -473,7 +473,7 @@ public class NarrowingCompoundAssignmentTest {
   }
 
   @Test
-  public void testFloatInt() {
+  public void floatInt() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -573,7 +573,7 @@ public class NarrowingCompoundAssignmentTest {
   }
 
   @Test
-  public void testBoxing() {
+  public void boxing() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -588,7 +588,7 @@ public class NarrowingCompoundAssignmentTest {
   }
 
   @Test
-  public void testStringConcat() {
+  public void stringConcat() {
     compilationHelper
         .addSourceLines(
             "Test.java",

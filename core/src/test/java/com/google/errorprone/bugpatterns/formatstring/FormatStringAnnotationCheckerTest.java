@@ -30,7 +30,7 @@ public class FormatStringAnnotationCheckerTest {
       CompilationTestHelper.newInstance(FormatStringAnnotationChecker.class, getClass());
 
   @Test
-  public void testMatches_failsWithNonMatchingFormatArgs() {
+  public void matches_failsWithNonMatchingFormatArgs() {
     compilationHelper
         .addSourceLines(
             "test/FormatStringTestCase.java",
@@ -51,7 +51,7 @@ public class FormatStringAnnotationCheckerTest {
   }
 
   @Test
-  public void testMatches_succeedsWithMatchingFormatStringAndArgs() {
+  public void matches_succeedsWithMatchingFormatStringAndArgs() {
     compilationHelper
         .addSourceLines(
             "test/FormatStringTestCase.java",
@@ -68,7 +68,7 @@ public class FormatStringAnnotationCheckerTest {
   }
 
   @Test
-  public void testMatches_succeedsForMatchingFormatMethodWithImplicitFormatString() {
+  public void matches_succeedsForMatchingFormatMethodWithImplicitFormatString() {
     compilationHelper
         .addSourceLines(
             "test/FormatStringTestCase.java",
@@ -85,7 +85,7 @@ public class FormatStringAnnotationCheckerTest {
   }
 
   @Test
-  public void testMatches_failsWithMismatchedFormatString() {
+  public void matches_failsWithMismatchedFormatString() {
     compilationHelper
         .addSourceLines(
             "test/FormatStringTestCase.java",
@@ -103,7 +103,7 @@ public class FormatStringAnnotationCheckerTest {
   }
 
   @Test
-  public void testMatches_succeedsForCompileTimeConstantFormatString() {
+  public void matches_succeedsForCompileTimeConstantFormatString() {
     compilationHelper
         .addSourceLines(
             "test/FormatStringTestCase.java",
@@ -121,7 +121,7 @@ public class FormatStringAnnotationCheckerTest {
   }
 
   @Test
-  public void testMatches_failsWhenExpressionGivenForFormatString() {
+  public void matches_failsWhenExpressionGivenForFormatString() {
     compilationHelper
         .addSourceLines(
             "test/FormatStringTestCase.java",
@@ -142,7 +142,7 @@ public class FormatStringAnnotationCheckerTest {
   }
 
   @Test
-  public void testMatches_failsForInvalidMethodHeaders() {
+  public void matches_failsForInvalidMethodHeaders() {
     compilationHelper
         .addSourceLines(
             "test/FormatStringTestCase.java",
@@ -163,7 +163,7 @@ public class FormatStringAnnotationCheckerTest {
   }
 
   @Test
-  public void testMatches_failsForIncorrectStringParameterUsedWithImplicitFormatString() {
+  public void matches_failsForIncorrectStringParameterUsedWithImplicitFormatString() {
     compilationHelper
         .addSourceLines(
             "test/FormatStringTestCase.java",
@@ -186,7 +186,7 @@ public class FormatStringAnnotationCheckerTest {
   }
 
   @Test
-  public void testMatches_succeedsForNonParameterFinalOrEffectivelyFinalFormatStrings() {
+  public void matches_succeedsForNonParameterFinalOrEffectivelyFinalFormatStrings() {
     compilationHelper
         .addSourceLines(
             "test/FormatStringTestCase.java",
@@ -209,7 +209,7 @@ public class FormatStringAnnotationCheckerTest {
   }
 
   @Test
-  public void testMatches_failsForNonFinalParametersOrNonMatchingFinalParameters() {
+  public void matches_failsForNonFinalParametersOrNonMatchingFinalParameters() {
     compilationHelper
         .addSourceLines(
             "test/FormatStringTestCase.java",
@@ -260,7 +260,7 @@ public class FormatStringAnnotationCheckerTest {
   }
 
   @Test
-  public void testMatches_failsForBadCallToConstructor() {
+  public void matches_failsForBadCallToConstructor() {
     compilationHelper
         .addSourceLines(
             "test/FormatStringTestCase.java",
@@ -278,7 +278,7 @@ public class FormatStringAnnotationCheckerTest {
   }
 
   @Test
-  public void testMatches_succeedsForMockitoMatchers() {
+  public void matches_succeedsForMockitoMatchers() {
     compilationHelper
         .addSourceLines(
             "test/FormatStringTestCase.java",
@@ -298,7 +298,7 @@ public class FormatStringAnnotationCheckerTest {
   }
 
   @Test
-  public void testMatches_succeedsForMockitoArgumentMatchers() {
+  public void matches_succeedsForMockitoArgumentMatchers() {
     compilationHelper
         .addSourceLines(
             "test/FormatStringTestCase.java",

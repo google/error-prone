@@ -30,12 +30,12 @@ public class ChainedAssertionLosesContextTest {
       CompilationTestHelper.newInstance(ChainedAssertionLosesContext.class, getClass());
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper.addSourceFile("ChainedAssertionLosesContextPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("ChainedAssertionLosesContextNegativeCases.java").doTest();
   }
 }

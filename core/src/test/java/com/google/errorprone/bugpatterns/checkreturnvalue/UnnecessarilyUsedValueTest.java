@@ -28,7 +28,7 @@ public final class UnnecessarilyUsedValueTest {
       BugCheckerRefactoringTestHelper.newInstance(UnnecessarilyUsedValue.class, getClass());
 
   @Test
-  public void testMethods() {
+  public void methods() {
     helper
         .addInputLines(
             "Client.java",
@@ -106,7 +106,7 @@ public final class UnnecessarilyUsedValueTest {
   }
 
   @Test
-  public void testConstructors() {
+  public void constructors() {
     helper
         .addInputLines(
             "Client.java",
@@ -164,7 +164,7 @@ public final class UnnecessarilyUsedValueTest {
   }
 
   @Test
-  public void testTryWithResources() {
+  public void tryWithResources() {
     helper
         .addInputLines(
             "Client.java",

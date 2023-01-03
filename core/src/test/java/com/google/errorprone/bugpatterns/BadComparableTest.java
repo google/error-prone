@@ -30,12 +30,12 @@ public class BadComparableTest {
       CompilationTestHelper.newInstance(BadComparable.class, getClass());
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper.addSourceFile("BadComparablePositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("BadComparableNegativeCases.java").doTest();
   }
 }

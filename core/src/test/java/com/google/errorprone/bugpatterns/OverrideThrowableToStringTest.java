@@ -41,7 +41,7 @@ public class OverrideThrowableToStringTest {
   }
 
   @Test
-  public void testFixes() {
+  public void fixes() {
     BugCheckerRefactoringTestHelper.newInstance(OverrideThrowableToString.class, getClass())
         .addInput("OverrideThrowableToStringPositiveCases.java")
         .addOutput("OverrideThrowableToStringPositiveCases_expected.java")

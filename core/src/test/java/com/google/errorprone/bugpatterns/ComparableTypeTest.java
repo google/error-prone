@@ -27,12 +27,12 @@ public class ComparableTypeTest {
       CompilationTestHelper.newInstance(ComparableType.class, getClass());
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper.addSourceFile("ComparableTypePositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("ComparableTypeNegativeCases.java").doTest();
   }
 }

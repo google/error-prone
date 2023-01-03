@@ -400,14 +400,14 @@ public class StringSplitterTest {
   }
 
   @Test
-  public void testStringSplitPositive() {
+  public void stringSplitPositive() {
     CompilationTestHelper.newInstance(StringSplitter.class, getClass())
         .addSourceFile("StringSplitterPositiveCases.java")
         .doTest();
   }
 
   @Test
-  public void testStringSplitNegative() {
+  public void stringSplitNegative() {
     CompilationTestHelper.newInstance(StringSplitter.class, getClass())
         .addSourceFile("StringSplitterNegativeCases.java")
         .doTest();

@@ -250,7 +250,7 @@ public class ReferenceEqualityTest {
   }
 
   @Test
-  public void test_customEnum() {
+  public void customEnum() {
     compilationHelper
         .addSourceLines(
             "Kind.java",
@@ -348,7 +348,7 @@ public class ReferenceEqualityTest {
   }
 
   @Test
-  public void testErroneous() {
+  public void erroneous() {
     compilationHelper
         .addSourceLines(
             "Test.java",

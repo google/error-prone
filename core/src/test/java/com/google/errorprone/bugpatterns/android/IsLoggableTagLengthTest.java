@@ -34,7 +34,7 @@ public final class IsLoggableTagLengthTest {
           .setArgs(ImmutableList.of("-XDandroidCompatible=true"));
 
   @Test
-  public void testNegativeCaseLiteral() {
+  public void negativeCaseLiteral() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -46,7 +46,7 @@ public final class IsLoggableTagLengthTest {
   }
 
   @Test
-  public void testPositiveCaseLiteral() {
+  public void positiveCaseLiteral() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -59,7 +59,7 @@ public final class IsLoggableTagLengthTest {
   }
 
   @Test
-  public void testNegativeCaseLiteralUnicode() {
+  public void negativeCaseLiteralUnicode() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -71,7 +71,7 @@ public final class IsLoggableTagLengthTest {
   }
 
   @Test
-  public void testPositiveCaseLiteralUnicode() {
+  public void positiveCaseLiteralUnicode() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -84,7 +84,7 @@ public final class IsLoggableTagLengthTest {
   }
 
   @Test
-  public void testNegativeCaseFinalField() {
+  public void negativeCaseFinalField() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -97,7 +97,7 @@ public final class IsLoggableTagLengthTest {
   }
 
   @Test
-  public void testPositiveCaseFinalField() {
+  public void positiveCaseFinalField() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -111,7 +111,7 @@ public final class IsLoggableTagLengthTest {
   }
 
   @Test
-  public void testNegativeCaseClassName() {
+  public void negativeCaseClassName() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -123,7 +123,7 @@ public final class IsLoggableTagLengthTest {
   }
 
   @Test
-  public void testPositiveCaseClassName() {
+  public void positiveCaseClassName() {
     compilationHelper
         .addSourceLines(
             "ThisClassNameIsWayTooLong.java",
@@ -138,7 +138,7 @@ public final class IsLoggableTagLengthTest {
   }
 
   @Test
-  public void testNegativeCaseFinalFieldClassName() {
+  public void negativeCaseFinalFieldClassName() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -153,7 +153,7 @@ public final class IsLoggableTagLengthTest {
   }
 
   @Test
-  public void testPositiveCaseFinalFieldClassName() {
+  public void positiveCaseFinalFieldClassName() {
     compilationHelper
         .addSourceLines(
             "ThisClassNameIsWayTooLong.java",
@@ -169,7 +169,7 @@ public final class IsLoggableTagLengthTest {
   }
 
   @Test
-  public void testNegativeCaseNonFinalFieldUninitialized() {
+  public void negativeCaseNonFinalFieldUninitialized() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -182,7 +182,7 @@ public final class IsLoggableTagLengthTest {
   }
 
   @Test
-  public void testNegativeCaseNonFinalFieldClassNameTooLong() {
+  public void negativeCaseNonFinalFieldClassNameTooLong() {
     compilationHelper
         .addSourceLines(
             "ThisClassNameIsWayTooLong.java",

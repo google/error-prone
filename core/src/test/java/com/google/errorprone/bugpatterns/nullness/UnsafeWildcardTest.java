@@ -29,7 +29,7 @@ public class UnsafeWildcardTest {
       CompilationTestHelper.newInstance(UnsafeWildcard.class, getClass());
 
   @Test
-  public void testUnsoundGenericMethod() {
+  public void unsoundGenericMethod() {
     compilationHelper.addSourceFile("UnsoundGenericMethod.java").doTest();
   }
 

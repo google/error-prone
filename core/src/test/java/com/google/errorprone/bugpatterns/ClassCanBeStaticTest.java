@@ -29,22 +29,22 @@ public class ClassCanBeStaticTest {
       CompilationTestHelper.newInstance(ClassCanBeStatic.class, getClass());
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("ClassCanBeStaticNegativeCases.java").doTest();
   }
 
   @Test
-  public void testPositiveCase1() {
+  public void positiveCase1() {
     compilationHelper.addSourceFile("ClassCanBeStaticPositiveCase1.java").doTest();
   }
 
   @Test
-  public void testPositiveCase2() {
+  public void positiveCase2() {
     compilationHelper.addSourceFile("ClassCanBeStaticPositiveCase2.java").doTest();
   }
 
   @Test
-  public void testPositiveCase3() {
+  public void positiveCase3() {
     compilationHelper.addSourceFile("ClassCanBeStaticPositiveCase3.java").doTest();
   }
 

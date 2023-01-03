@@ -28,7 +28,7 @@ public class IdentityHashMapBoxingTest {
       CompilationTestHelper.newInstance(IdentityHashMapBoxing.class, getClass());
 
   @Test
-  public void testConstructorPositiveCases() {
+  public void constructorPositiveCases() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -50,7 +50,7 @@ public class IdentityHashMapBoxingTest {
   }
 
   @Test
-  public void testConstructorNegativeCases() {
+  public void constructorNegativeCases() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -70,7 +70,7 @@ public class IdentityHashMapBoxingTest {
   }
 
   @Test
-  public void testMapsPositiveCases() {
+  public void mapsPositiveCases() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -93,7 +93,7 @@ public class IdentityHashMapBoxingTest {
   }
 
   @Test
-  public void testMapsNegativeCases() {
+  public void mapsNegativeCases() {
     compilationHelper
         .addSourceLines(
             "Test.java",

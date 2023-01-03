@@ -49,7 +49,7 @@ import org.junit.runners.JUnit4;
 public class GuardedByBinderTest {
 
   @Test
-  public void testInherited() {
+  public void inherited() {
     assertThat(
             bind(
                 "Test",
@@ -66,7 +66,7 @@ public class GuardedByBinderTest {
   }
 
   @Test
-  public void testFinal() {
+  public void finalCase() {
     assertThat(
             bind(
                 "Test",
@@ -81,7 +81,7 @@ public class GuardedByBinderTest {
   }
 
   @Test
-  public void testMethod() {
+  public void method() {
     assertThat(
             bind(
                 "Test",
@@ -103,7 +103,7 @@ public class GuardedByBinderTest {
   }
 
   @Test
-  public void testBadSuperAccess() {
+  public void badSuperAccess() {
     bindFail(
         "Test",
         "Super.this.lock",

@@ -36,7 +36,7 @@ public class UnsafeReflectiveConstructionCastTest {
       CompilationTestHelper.newInstance(UnsafeReflectiveConstructionCast.class, getClass());
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     testHelper
         .addInputLines(
             "in/Test.java",
@@ -59,7 +59,7 @@ public class UnsafeReflectiveConstructionCastTest {
   }
 
   @Test
-  public void testPositiveCaseWithErasure() {
+  public void positiveCaseWithErasure() {
     testHelper
         .addInputLines(
             "in/Test.java",
@@ -82,7 +82,7 @@ public class UnsafeReflectiveConstructionCastTest {
   }
 
   @Test
-  public void testNegativeCaseWithIntersection() {
+  public void negativeCaseWithIntersection() {
     compilationHelper
         .addSourceLines(
             "in/Test.java",
@@ -98,7 +98,7 @@ public class UnsafeReflectiveConstructionCastTest {
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("UnsafeReflectiveConstructionCastNegativeCases.java").doTest();
   }
 }

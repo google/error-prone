@@ -54,7 +54,7 @@ public class VoidMissingNullableTest {
   }
 
   @Test
-  public void testDeclarationAnnotatedLocation() {
+  public void declarationAnnotatedLocation() {
     aggressiveRefactoringHelper
         .addInputLines(
             "in/Foo.java",
@@ -78,7 +78,7 @@ public class VoidMissingNullableTest {
   }
 
   @Test
-  public void testTypeAnnotatedLocation() {
+  public void typeAnnotatedLocation() {
     aggressiveRefactoringHelper
         .addInputLines(
             "in/Foo.java",

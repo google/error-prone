@@ -34,7 +34,7 @@ public final class NoCanIgnoreReturnValueOnClassesTest {
           NoCanIgnoreReturnValueOnClasses.class, getClass());
 
   @Test
-  public void testSimpleCase_returnsThis() {
+  public void simpleCase_returnsThis() {
     helper
         .addInputLines(
             "Client.java",
@@ -60,7 +60,7 @@ public final class NoCanIgnoreReturnValueOnClassesTest {
   }
 
   @Test
-  public void testSimpleCase_returnsParenthesizedCastThis() {
+  public void simpleCase_returnsParenthesizedCastThis() {
     helper
         .addInputLines(
             "Client.java",
@@ -86,7 +86,7 @@ public final class NoCanIgnoreReturnValueOnClassesTest {
   }
 
   @Test
-  public void testSimpleCase_returnsSelf() {
+  public void simpleCase_returnsSelf() {
     helper
         .addInputLines(
             "Client.java",
@@ -119,7 +119,7 @@ public final class NoCanIgnoreReturnValueOnClassesTest {
   }
 
   @Test
-  public void testSimpleCase_returnsGetThis() {
+  public void simpleCase_returnsGetThis() {
     helper
         .addInputLines(
             "Client.java",
@@ -152,7 +152,7 @@ public final class NoCanIgnoreReturnValueOnClassesTest {
   }
 
   @Test
-  public void testSimpleCase_returnsNewInstance() {
+  public void simpleCase_returnsNewInstance() {
     helper
         .addInputLines(
             "Client.java",
@@ -178,7 +178,7 @@ public final class NoCanIgnoreReturnValueOnClassesTest {
   }
 
   @Test
-  public void testSimpleCase_explicitConstructor() {
+  public void simpleCase_explicitConstructor() {
     helper
         .addInputLines(
             "Client.java",
@@ -207,7 +207,7 @@ public final class NoCanIgnoreReturnValueOnClassesTest {
   }
 
   @Test
-  public void testNestedClasses_cirvAndCrv() {
+  public void nestedClasses_cirvAndCrv() {
     helper
         .addInputLines(
             "Client.java",
@@ -247,7 +247,7 @@ public final class NoCanIgnoreReturnValueOnClassesTest {
   }
 
   @Test
-  public void testNestedClasses_bothCirv() {
+  public void nestedClasses_bothCirv() {
     helper
         .addInputLines(
             "User.java",
@@ -284,7 +284,7 @@ public final class NoCanIgnoreReturnValueOnClassesTest {
   }
 
   @Test
-  public void testAutoValue() {
+  public void autoValue() {
     helper
         .addInputLines(
             "Animal.java",
@@ -319,7 +319,7 @@ public final class NoCanIgnoreReturnValueOnClassesTest {
   }
 
   @Test
-  public void testAutoValueBuilder() {
+  public void autoValueBuilder() {
     helper
         .addInputLines(
             "Animal.java",
@@ -354,7 +354,7 @@ public final class NoCanIgnoreReturnValueOnClassesTest {
   }
 
   @Test
-  public void testNestedAutoValue() {
+  public void nestedAutoValue() {
     helper
         .addInputLines(
             "Outer.java",

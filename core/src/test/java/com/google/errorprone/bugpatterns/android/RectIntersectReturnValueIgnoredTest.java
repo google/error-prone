@@ -33,12 +33,12 @@ public class RectIntersectReturnValueIgnoredTest {
           .setArgs(ImmutableList.of("-XDandroidCompatible=true"));
 
   @Test
-  public void testPositiveCases() {
+  public void positiveCases() {
     compilationHelper.addSourceFile("RectIntersectReturnValueIgnoredPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("RectIntersectReturnValueIgnoredNegativeCases.java").doTest();
   }
 }

@@ -39,7 +39,7 @@ public class TooManyParametersTest {
   }
 
   @Test
-  public void testZeroLimit() {
+  public void zeroLimit() {
     assertThrows(
         IllegalArgumentException.class,
         () ->
@@ -48,7 +48,7 @@ public class TooManyParametersTest {
   }
 
   @Test
-  public void testNegativeLimit() {
+  public void negativeLimit() {
     assertThrows(
         IllegalArgumentException.class,
         () ->

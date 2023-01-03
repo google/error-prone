@@ -31,22 +31,22 @@ public class FinallyTest {
       CompilationTestHelper.newInstance(Finally.class, getClass());
 
   @Test
-  public void testPositiveCase1() {
+  public void positiveCase1() {
     compilationHelper.addSourceFile("FinallyPositiveCase1.java").doTest();
   }
 
   @Test
-  public void testPositiveCase2() {
+  public void positiveCase2() {
     compilationHelper.addSourceFile("FinallyPositiveCase2.java").doTest();
   }
 
   @Test
-  public void testNegativeCase1() {
+  public void negativeCase1() {
     compilationHelper.addSourceFile("FinallyNegativeCase1.java").doTest();
   }
 
   @Test
-  public void testNegativeCase2() {
+  public void negativeCase2() {
     compilationHelper.addSourceFile("FinallyNegativeCase2.java").doTest();
   }
 

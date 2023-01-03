@@ -30,12 +30,12 @@ public class ComparisonContractViolatedTest {
       CompilationTestHelper.newInstance(ComparisonContractViolated.class, getClass());
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper.addSourceFile("ComparisonContractViolatedPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("ComparisonContractViolatedNegativeCases.java").doTest();
   }
 }

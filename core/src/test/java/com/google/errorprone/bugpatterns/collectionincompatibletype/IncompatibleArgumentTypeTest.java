@@ -29,22 +29,22 @@ public class IncompatibleArgumentTypeTest {
       CompilationTestHelper.newInstance(IncompatibleArgumentType.class, getClass());
 
   @Test
-  public void testGenericMethod() {
+  public void genericMethod() {
     compilationHelper.addSourceFile("IncompatibleArgumentTypeGenericMethod.java").doTest();
   }
 
   @Test
-  public void testOwningTypes() {
+  public void owningTypes() {
     compilationHelper.addSourceFile("IncompatibleArgumentTypeEnclosingTypes.java").doTest();
   }
 
   @Test
-  public void testMultimapIntegration() {
+  public void multimapIntegration() {
     compilationHelper.addSourceFile("IncompatibleArgumentTypeMultimapIntegration.java").doTest();
   }
 
   @Test
-  public void testIntersectionTypes() {
+  public void intersectionTypes() {
     compilationHelper.addSourceFile("IncompatibleArgumentTypeIntersectionTypes.java").doTest();
   }
 }

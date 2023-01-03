@@ -44,7 +44,7 @@ public class CheckReturnValueWellKnownLibrariesTest {
 
   // Don't match methods invoked through {@link org.mockito.Mockito}.
   @Test
-  public void testIgnoreCRVOnMockito() {
+  public void ignoreCRVOnMockito() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -73,7 +73,7 @@ public class CheckReturnValueWellKnownLibrariesTest {
   }
 
   @Test
-  public void testMockitoVerifyMistake() {
+  public void mockitoVerifyMistake() {
     refactoringHelper
         .addInputLines(
             "Test.java", //
@@ -415,7 +415,7 @@ public class CheckReturnValueWellKnownLibrariesTest {
   }
 
   @Test
-  public void testAutoValueBuilderSetterMethods() {
+  public void autoValueBuilderSetterMethods() {
     compilationHelper
         .addSourceLines(
             "Animal.java",
@@ -453,7 +453,7 @@ public class CheckReturnValueWellKnownLibrariesTest {
   }
 
   @Test
-  public void testAutoValueBuilderSetterMethodsOnInterface() {
+  public void autoValueBuilderSetterMethodsOnInterface() {
     compilationHelper
         .addSourceLines(
             "Animal.java",
@@ -496,7 +496,7 @@ public class CheckReturnValueWellKnownLibrariesTest {
   }
 
   @Test
-  public void testAutoValueGetterMethods() {
+  public void autoValueGetterMethods() {
     compilationHelper
         .addSourceLines(
             "Animal.java",
@@ -526,7 +526,7 @@ public class CheckReturnValueWellKnownLibrariesTest {
   }
 
   @Test
-  public void testAutoBuilderSetterMethods() {
+  public void autoBuilderSetterMethods() {
     compilationHelper
         .addSourceLines(
             "Person.java",
@@ -571,7 +571,7 @@ public class CheckReturnValueWellKnownLibrariesTest {
   }
 
   @Test
-  public void testAutoBuilderSetterMethods_withInterface() {
+  public void autoBuilderSetterMethods_withInterface() {
     compilationHelper
         .addSourceLines(
             "LogUtil.java",

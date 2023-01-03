@@ -31,12 +31,12 @@ public class NonRuntimeAnnotationTest {
       CompilationTestHelper.newInstance(NonRuntimeAnnotation.class, getClass());
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper.addSourceFile("NonRuntimeAnnotationPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("NonRuntimeAnnotationNegativeCases.java").doTest();
   }
 }

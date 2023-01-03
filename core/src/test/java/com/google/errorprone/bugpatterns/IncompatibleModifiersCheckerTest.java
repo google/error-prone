@@ -60,7 +60,7 @@ public class IncompatibleModifiersCheckerTest {
               "}");
 
   @Test
-  public void testAnnotationWithIncompatibleModifierOnClassFails() {
+  public void annotationWithIncompatibleModifierOnClassFails() {
     compilationHelper
         .addSourceLines(
             "test/IncompatibleModifiersTestCase.java",
@@ -74,7 +74,7 @@ public class IncompatibleModifiersCheckerTest {
   }
 
   @Test
-  public void testAnnotationWithIncompatibleModifierOnFieldFails() {
+  public void annotationWithIncompatibleModifierOnFieldFails() {
     compilationHelper
         .addSourceLines(
             "test/IncompatibleModifiersTestCase.java",
@@ -89,7 +89,7 @@ public class IncompatibleModifiersCheckerTest {
   }
 
   @Test
-  public void testAnnotationWithIncompatibleModifierOnMethodFails() {
+  public void annotationWithIncompatibleModifierOnMethodFails() {
     compilationHelper
         .addSourceLines(
             "test/IncompatibleModifiersTestCase.java",
@@ -104,7 +104,7 @@ public class IncompatibleModifiersCheckerTest {
   }
 
   @Test
-  public void testAnnotationWithTwoIncompatibleModifiersFails() {
+  public void annotationWithTwoIncompatibleModifiersFails() {
     compilationHelper
         .addSourceLines(
             "test/IncompatibleModifiersTestCase.java",
@@ -119,7 +119,7 @@ public class IncompatibleModifiersCheckerTest {
   }
 
   @Test
-  public void testAnnotationWithCompatibleModifiersSucceeds() {
+  public void annotationWithCompatibleModifiersSucceeds() {
     compilationHelper
         .addSourceLines(
             "test/IncompatibleModifiersTestCase.java",

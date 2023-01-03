@@ -30,12 +30,12 @@ public class BindingToUnqualifiedCommonTypeTest {
       CompilationTestHelper.newInstance(BindingToUnqualifiedCommonType.class, getClass());
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper.addSourceFile("BindingToUnqualifiedCommonTypePositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("BindingToUnqualifiedCommonTypeNegativeCases.java").doTest();
   }
 }

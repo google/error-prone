@@ -208,7 +208,7 @@ public class BoxedPrimitiveConstructorTest {
   }
 
   @Test
-  public void testHashCode() {
+  public void hashCodeRefactoring() {
     compilationHelper
         .addSourceLines(
             "Test.java",

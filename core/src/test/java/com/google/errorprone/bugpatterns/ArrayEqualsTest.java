@@ -31,22 +31,22 @@ public class ArrayEqualsTest {
       CompilationTestHelper.newInstance(ArrayEquals.class, getClass());
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper.addSourceFile("ArrayEqualsPositiveCases.java").doTest();
   }
 
   @Test
-  public void testJava7PositiveCase() {
+  public void java7PositiveCase() {
     compilationHelper.addSourceFile("ArrayEqualsPositiveCases2.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("ArrayEqualsNegativeCases.java").doTest();
   }
 
   @Test
-  public void testJava7NegativeCase() {
+  public void java7NegativeCase() {
     compilationHelper.addSourceFile("ArrayEqualsNegativeCases2.java").doTest();
   }
 }

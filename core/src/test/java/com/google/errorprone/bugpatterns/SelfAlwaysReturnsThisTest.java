@@ -29,7 +29,7 @@ public class SelfAlwaysReturnsThisTest {
       BugCheckerRefactoringTestHelper.newInstance(SelfAlwaysReturnsThis.class, getClass());
 
   @Test
-  public void testSelfReturnsThis() {
+  public void selfReturnsThis() {
     helper
         .addInputLines(
             "Builder.java",
@@ -44,7 +44,7 @@ public class SelfAlwaysReturnsThisTest {
   }
 
   @Test
-  public void testSelfReturnsThis_withCast() {
+  public void selfReturnsThis_withCast() {
     helper
         .addInputLines(
             "Builder.java",
@@ -59,7 +59,7 @@ public class SelfAlwaysReturnsThisTest {
   }
 
   @Test
-  public void testSelfReturnsThis_withParenthesizedCast() {
+  public void selfReturnsThis_withParenthesizedCast() {
     helper
         .addInputLines(
             "Builder.java",
@@ -74,7 +74,7 @@ public class SelfAlwaysReturnsThisTest {
   }
 
   @Test
-  public void testSelfReturnsThis_withCastAndTryCatch() {
+  public void selfReturnsThis_withCastAndTryCatch() {
     helper
         .addInputLines(
             "Builder.java",
@@ -94,7 +94,7 @@ public class SelfAlwaysReturnsThisTest {
   }
 
   @Test
-  public void testSelfReturnsThis_withMultipleReturnStatements() {
+  public void selfReturnsThis_withMultipleReturnStatements() {
     helper
         .addInputLines(
             "Builder.java",
@@ -113,7 +113,7 @@ public class SelfAlwaysReturnsThisTest {
   }
 
   @Test
-  public void testSelfReturnsThis_withTwoStatementCast() {
+  public void selfReturnsThis_withTwoStatementCast() {
     helper
         .addInputLines(
             "Builder.java",
@@ -130,7 +130,7 @@ public class SelfAlwaysReturnsThisTest {
   }
 
   @Test
-  public void testSelfReturnsThis_withImplComment() {
+  public void selfReturnsThis_withImplComment() {
     helper
         .addInputLines(
             "Builder.java",
@@ -146,7 +146,7 @@ public class SelfAlwaysReturnsThisTest {
   }
 
   @Test
-  public void testSelfReturnsThis_withInlineComment() {
+  public void selfReturnsThis_withInlineComment() {
     helper
         .addInputLines(
             "Builder.java",
@@ -161,7 +161,7 @@ public class SelfAlwaysReturnsThisTest {
   }
 
   @Test
-  public void testSelfReturnsNewBuilder() {
+  public void selfReturnsNewBuilder() {
     helper
         .addInputLines(
             "Builder.java",
@@ -183,7 +183,7 @@ public class SelfAlwaysReturnsThisTest {
   }
 
   @Test
-  public void testGetThisReturnsNewBuilder() {
+  public void getThisReturnsNewBuilder() {
     helper
         .addInputLines(
             "Builder.java",
@@ -205,7 +205,7 @@ public class SelfAlwaysReturnsThisTest {
   }
 
   @Test
-  public void testSelf_voidReturn() {
+  public void self_voidReturn() {
     helper
         .addInputLines(
             "Builder.java",
@@ -219,7 +219,7 @@ public class SelfAlwaysReturnsThisTest {
   }
 
   @Test
-  public void testSelf_differentReturnType() {
+  public void self_differentReturnType() {
     helper
         .addInputLines(
             "Builder.java",
@@ -234,7 +234,7 @@ public class SelfAlwaysReturnsThisTest {
   }
 
   @Test
-  public void testSelf_static() {
+  public void self_static() {
     helper
         .addInputLines(
             "Builder.java",
@@ -249,7 +249,7 @@ public class SelfAlwaysReturnsThisTest {
   }
 
   @Test
-  public void testSelf_notNamedSelf() {
+  public void self_notNamedSelf() {
     helper
         .addInputLines(
             "Builder.java",
@@ -264,7 +264,7 @@ public class SelfAlwaysReturnsThisTest {
   }
 
   @Test
-  public void testSelf_hasParams() {
+  public void self_hasParams() {
     helper
         .addInputLines(
             "Builder.java",
@@ -279,7 +279,7 @@ public class SelfAlwaysReturnsThisTest {
   }
 
   @Test
-  public void testSelf_abstract() {
+  public void self_abstract() {
     helper
         .addInputLines(
             "Builder.java",

@@ -31,7 +31,7 @@ public class MisplacedScopeAnnotationsTest {
       BugCheckerRefactoringTestHelper.newInstance(MisplacedScopeAnnotations.class, getClass());
 
   @Test
-  public void testPositiveCase_methodInjection() {
+  public void positiveCase_methodInjection() {
     compilationHelper
         .addSourceLines(
             "Foo.java",
@@ -46,7 +46,7 @@ public class MisplacedScopeAnnotationsTest {
   }
 
   @Test
-  public void testPositiveCase_providerMethod() {
+  public void positiveCase_providerMethod() {
     refactoringHelper
         .addInputLines(
             "in/Foo.java",
@@ -72,7 +72,7 @@ public class MisplacedScopeAnnotationsTest {
   }
 
   @Test
-  public void testPositiveCase_injectConstructor() {
+  public void positiveCase_injectConstructor() {
     refactoringHelper
         .addInputLines(
             "in/Foo.java",
@@ -94,7 +94,7 @@ public class MisplacedScopeAnnotationsTest {
   }
 
   @Test
-  public void testPositiveCase_injectConstructorMultipleAnnotations() {
+  public void positiveCase_injectConstructorMultipleAnnotations() {
     refactoringHelper
         .addInputLines(
             "in/Foo.java",
@@ -116,7 +116,7 @@ public class MisplacedScopeAnnotationsTest {
   }
 
   @Test
-  public void testPositiveCase_fieldInjection() {
+  public void positiveCase_fieldInjection() {
     refactoringHelper
         .addInputLines(
             "in/Foo.java",
@@ -138,7 +138,7 @@ public class MisplacedScopeAnnotationsTest {
   }
 
   @Test
-  public void testNegativeCase_noScopeAnnotationOnInjectedParameters() {
+  public void negativeCase_noScopeAnnotationOnInjectedParameters() {
     compilationHelper
         .addSourceLines(
             "Foo.java",
@@ -158,7 +158,7 @@ public class MisplacedScopeAnnotationsTest {
   }
 
   @Test
-  public void testNegativeCase_scopeAnnotationIsAlsoQualifier() {
+  public void negativeCase_scopeAnnotationIsAlsoQualifier() {
     compilationHelper
         .addSourceLines(
             "Foo.java",

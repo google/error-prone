@@ -38,7 +38,7 @@ public class InlinerTest {
           ScannerSupplier.fromBugCheckerClasses(Inliner.class, Validator.class), getClass());
 
   @Test
-  public void testInstanceMethod_withThisLiteral() {
+  public void instanceMethod_withThisLiteral() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -111,7 +111,7 @@ public class InlinerTest {
   }
 
   @Test
-  public void testMethod_withParamSwap() {
+  public void method_withParamSwap() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -152,7 +152,7 @@ public class InlinerTest {
   }
 
   @Test
-  public void testMethod_withReturnStatement() {
+  public void method_withReturnStatement() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -188,7 +188,7 @@ public class InlinerTest {
   }
 
   @Test
-  public void testStaticMethod_explicitTypeParam() {
+  public void staticMethod_explicitTypeParam() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -228,7 +228,7 @@ public class InlinerTest {
   }
 
   @Test
-  public void testInstanceMethod_withConflictingImport() {
+  public void instanceMethod_withConflictingImport() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -272,7 +272,7 @@ public class InlinerTest {
   }
 
   @Test
-  public void testInstanceMethod_withPartiallyQualifiedInnerType() {
+  public void instanceMethod_withPartiallyQualifiedInnerType() {
     refactoringTestHelper
         .addInputLines(
             "A.java",
@@ -317,7 +317,7 @@ public class InlinerTest {
   }
 
   @Test
-  public void testInstanceMethod_withConflictingMethodNameAndParameterName() {
+  public void instanceMethod_withConflictingMethodNameAndParameterName() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -354,7 +354,7 @@ public class InlinerTest {
   }
 
   @Test
-  public void testStaticMethod_withStaticImport_withImport() {
+  public void staticMethod_withStaticImport_withImport() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -396,7 +396,7 @@ public class InlinerTest {
   // replacement here isn't considered valid.
   @Ignore("b/176439392")
   @Test
-  public void testStaticMethod_withStaticImport_withStaticImportReplacement() {
+  public void staticMethod_withStaticImport_withStaticImportReplacement() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -435,7 +435,7 @@ public class InlinerTest {
   }
 
   @Test
-  public void testInstanceMethodCalledBySubtype() {
+  public void instanceMethodCalledBySubtype() {
     refactoringTestHelper
         .addInputLines(
             "Parent.java",
@@ -475,7 +475,7 @@ public class InlinerTest {
   }
 
   @Test
-  public void testConstructorCalledBySubtype() {
+  public void constructorCalledBySubtype() {
     refactoringTestHelper
         .addInputLines(
             "Parent.java",
@@ -515,7 +515,7 @@ public class InlinerTest {
   }
 
   @Test
-  public void testFluentMethodChain() {
+  public void fluentMethodChain() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -554,7 +554,7 @@ public class InlinerTest {
   }
 
   @Test
-  public void testInliningWithField() {
+  public void inliningWithField() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -590,7 +590,7 @@ public class InlinerTest {
   }
 
   @Test
-  public void testReturnThis() {
+  public void returnThis() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -623,7 +623,7 @@ public class InlinerTest {
   }
 
   @Test
-  public void testReturnThis_preChained() {
+  public void returnThis_preChained() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -654,7 +654,7 @@ public class InlinerTest {
   }
 
   @Test
-  public void testReturnThis_postChained() {
+  public void returnThis_postChained() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -687,7 +687,7 @@ public class InlinerTest {
   }
 
   @Test
-  public void testReturnThis_alone() {
+  public void returnThis_alone() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -788,7 +788,7 @@ public class InlinerTest {
   }
 
   @Test
-  public void testVarargs() {
+  public void varargs() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -848,7 +848,7 @@ public class InlinerTest {
   }
 
   @Test
-  public void testVarargsWithPrecedingElements() {
+  public void varargsWithPrecedingElements() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -884,7 +884,7 @@ public class InlinerTest {
   }
 
   @Test
-  public void testReplaceWithJustParameter() {
+  public void replaceWithJustParameter() {
     bugCheckerWithCheckFixCompiles()
         .allowBreakingChanges()
         .addInputLines(
@@ -921,7 +921,7 @@ public class InlinerTest {
   }
 
   @Test
-  public void testOrderOfOperations() {
+  public void orderOfOperations() {
     bugCheckerWithCheckFixCompiles()
         .allowBreakingChanges()
         .addInputLines(
@@ -956,7 +956,7 @@ public class InlinerTest {
   }
 
   @Test
-  public void testOrderOfOperationsWithParamAddition() {
+  public void orderOfOperationsWithParamAddition() {
     bugCheckerWithCheckFixCompiles()
         .allowBreakingChanges()
         .addInputLines(
@@ -991,7 +991,7 @@ public class InlinerTest {
   }
 
   @Test
-  public void testOrderOfOperationsWithTrailingOperand() {
+  public void orderOfOperationsWithTrailingOperand() {
     bugCheckerWithCheckFixCompiles()
         .allowBreakingChanges()
         .addInputLines(
@@ -1026,7 +1026,7 @@ public class InlinerTest {
   }
 
   @Test
-  public void testBooleanParameterWithInlineComment() {
+  public void booleanParameterWithInlineComment() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -1062,7 +1062,7 @@ public class InlinerTest {
   }
 
   @Test
-  public void testTrailingSemicolon() {
+  public void trailingSemicolon() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -1096,7 +1096,7 @@ public class InlinerTest {
   }
 
   @Test
-  public void testCustomInlineMe() {
+  public void customInlineMe() {
     refactoringTestHelper
         .addInputLines(
             "InlineMe.java", //

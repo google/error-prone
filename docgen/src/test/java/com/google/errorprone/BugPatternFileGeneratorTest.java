@@ -132,7 +132,7 @@ public class BugPatternFileGeneratorTest {
   }
 
   @Test
-  public void testEscapeAngleBracketsInSummary() throws Exception {
+  public void escapeAngleBracketsInSummary() throws Exception {
     // Create a BugPattern with angle brackets in the summary
     BugPatternInstance instance = new BugPatternInstance();
     instance.className = "com.google.errorprone.bugpatterns.DontDoThis";

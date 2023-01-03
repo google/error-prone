@@ -121,47 +121,47 @@ public class NullnessPropagationTest {
   public static final Integer NOT_COMPILE_TIME_CONSTANT = 421;
 
   @Test
-  public void testTransferFunctions1() {
+  public void transferFunctions1() {
     compilationHelper.addSourceFile("NullnessPropagationTransferCases1.java").doTest();
   }
 
   @Test
-  public void testTransferFunctions2() {
+  public void transferFunctions2() {
     compilationHelper.addSourceFile("NullnessPropagationTransferCases2.java").doTest();
   }
 
   @Test
-  public void testTransferFunctions3() {
+  public void transferFunctions3() {
     compilationHelper.addSourceFile("NullnessPropagationTransferCases3.java").doTest();
   }
 
   @Test
-  public void testTransferFunctions4() {
+  public void transferFunctions4() {
     compilationHelper.addSourceFile("NullnessPropagationTransferCases4.java").doTest();
   }
 
   @Test
-  public void testTransferFunctions5() {
+  public void transferFunctions5() {
     compilationHelper.addSourceFile("NullnessPropagationTransferCases5.java").doTest();
   }
 
   @Test
-  public void testTransferFunctions6() {
+  public void transferFunctions6() {
     compilationHelper.addSourceFile("NullnessPropagationTransferCases6.java").doTest();
   }
 
   @Test
-  public void testTransferFunctions7() {
+  public void transferFunctions7() {
     compilationHelper.addSourceFile("NullnessPropagationTransferCases7.java").doTest();
   }
 
   @Test
-  public void testTransferFunctions8() {
+  public void transferFunctions8() {
     compilationHelper.addSourceFile("NullnessPropagationTransferCases8.java").doTest();
   }
 
   @Test
-  public void testThis() {
+  public void nonNullThis() {
     compilationHelper
         .addSourceLines(
             "ThisNonNullTest.java",
@@ -178,7 +178,7 @@ public class NullnessPropagationTest {
   }
 
   @Test
-  public void testEquals() {
+  public void equals() {
     compilationHelper
         .addSourceLines(
             "ThisEqualsTest.java",
@@ -204,7 +204,7 @@ public class NullnessPropagationTest {
   }
 
   @Test
-  public void testInstanceof() {
+  public void instanceofNonNull() {
     compilationHelper
         .addSourceLines(
             "InstanceofTest.java",
@@ -228,7 +228,7 @@ public class NullnessPropagationTest {
   }
 
   @Test
-  public void testProtoGetters() {
+  public void protoGetters() {
     compilationHelper
         .addSourceLines(
             "InstanceofTest.java",
@@ -248,7 +248,7 @@ public class NullnessPropagationTest {
   }
 
   @Test
-  public void testArrayAccess() {
+  public void arrayAccess() {
     compilationHelper
         .addSourceLines(
             "ArrayAccessTest.java",
@@ -284,7 +284,7 @@ public class NullnessPropagationTest {
   }
 
   @Test
-  public void testFieldAccess() {
+  public void fieldAccess() {
     compilationHelper
         .addSourceLines(
             "FieldAccessTest.java",
@@ -309,7 +309,7 @@ public class NullnessPropagationTest {
   }
 
   @Test
-  public void testFieldReceivers() {
+  public void fieldReceivers() {
     compilationHelper
         .addSourceLines(
             "FieldReceiversTest.java",
@@ -342,7 +342,7 @@ public class NullnessPropagationTest {
   }
 
   @Test
-  public void testFieldPathSensitivity() {
+  public void fieldPathSensitivity() {
     compilationHelper
         .addSourceLines(
             "FieldPathSensitivityTest.java",
@@ -369,7 +369,7 @@ public class NullnessPropagationTest {
   }
 
   @Test
-  public void testAccessPaths() {
+  public void accessPaths() {
     compilationHelper
         .addSourceLines(
             "AccessPathsTest.java",
@@ -400,7 +400,7 @@ public class NullnessPropagationTest {
   }
 
   @Test
-  public void testUntrackableFields() {
+  public void untrackableFields() {
     compilationHelper
         .addSourceLines(
             "UntrackableFieldsTest.java",
@@ -425,7 +425,7 @@ public class NullnessPropagationTest {
   }
 
   @Test
-  public void testAnnotatedAtGenericTypeUse() {
+  public void annotatedAtGenericTypeUse() {
     compilationHelper
         .addSourceLines(
             "AnnotatedAtGenericTypeUseTest.java",
@@ -450,7 +450,7 @@ public class NullnessPropagationTest {
   }
 
   @Test
-  public void testAnnotatedAtGenericTypeDef() {
+  public void annotatedAtGenericTypeDef() {
     compilationHelper
         .addSourceLines(
             "AnnotatedAtGenericTypeDefTest.java",
@@ -492,7 +492,7 @@ public class NullnessPropagationTest {
   }
 
   @Test
-  public void testBoundedAtGenericTypeUse() {
+  public void boundedAtGenericTypeUse() {
     compilationHelper
         .addSourceLines(
             "BoundedAtGenericTypeUseTest.java",
@@ -520,7 +520,7 @@ public class NullnessPropagationTest {
   }
 
   @Test
-  public void testBoundedAtGenericTypeDef() {
+  public void boundedAtGenericTypeDef() {
     compilationHelper
         .addSourceLines(
             "BoundedAtGenericTypeDefTest.java",
@@ -548,7 +548,7 @@ public class NullnessPropagationTest {
   }
 
   @Test
-  public void testAnnotatedMethodTypeParams() {
+  public void annotatedMethodTypeParams() {
     compilationHelper
         .addSourceLines(
             "AnnotatedMethodTypeParamsTest.java",
@@ -569,7 +569,7 @@ public class NullnessPropagationTest {
   }
 
   @Test
-  public void testFieldAnnotations() {
+  public void fieldAnnotations() {
     compilationHelper
         .addSourceLines(
             "FieldAnnotationsTest.java",
@@ -606,7 +606,7 @@ public class NullnessPropagationTest {
   }
 
   @Test
-  public void testCheckerWorksInsideLambdaBody() {
+  public void checkerWorksInsideLambdaBody() {
     compilationHelper
         .addSourceLines(
             "LambdaBodyTest.java",
@@ -625,7 +625,7 @@ public class NullnessPropagationTest {
   }
 
   @Test
-  public void testCheckerWorksInsideInitializer() {
+  public void checkerWorksInsideInitializer() {
     compilationHelper
         .addSourceLines(
             "InitializerBlockTest.java",
@@ -660,7 +660,7 @@ public class NullnessPropagationTest {
    * while we do recognize them inside a compilation unit.
    */
   @Test
-  public void testConstantsDefinedInOtherCompilationUnits() {
+  public void constantsDefinedInOtherCompilationUnits() {
     compilationHelper
         .addSourceLines(
             "AnotherEnum.java",
@@ -708,7 +708,7 @@ public class NullnessPropagationTest {
   // Regression test for b/110756716, verifying that the l-val of an assignment in expr position in
   // an equality comparison is refined
   @Test
-  public void testWhileLoopPartialCorrectness() {
+  public void whileLoopPartialCorrectness() {
     compilationHelper
         .addSourceLines(
             "PartialCorrectnessTest.java",
@@ -727,7 +727,7 @@ public class NullnessPropagationTest {
   }
 
   @Test
-  public void testCasts() {
+  public void casts() {
     compilationHelper
         .addSourceLines(
             "CastsTest.java",
@@ -748,7 +748,7 @@ public class NullnessPropagationTest {
   }
 
   @Test
-  public void testAutoValue() {
+  public void autoValue() {
     compilationHelper
         .addSourceLines(
             "AutoValueTest.java",
@@ -781,7 +781,7 @@ public class NullnessPropagationTest {
   }
 
   @Test
-  public void testGenericTypeInference() {
+  public void genericTypeInference() {
     compilationHelper
         .addSourceLines(
             "GenericTypeInferenceTest.java",
@@ -808,7 +808,7 @@ public class NullnessPropagationTest {
   }
 
   @Test
-  public void testAnnotatedFormal() {
+  public void annotatedFormal() {
     compilationHelper
         .addSourceLines(
             "AnnotatedFormalTest.java",

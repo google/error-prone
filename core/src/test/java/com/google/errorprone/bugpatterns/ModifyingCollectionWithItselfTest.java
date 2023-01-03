@@ -31,12 +31,12 @@ public class ModifyingCollectionWithItselfTest {
       CompilationTestHelper.newInstance(ModifyingCollectionWithItself.class, getClass());
 
   @Test
-  public void testPositiveCases1() {
+  public void positiveCases1() {
     compilationHelper.addSourceFile("ModifyingCollectionWithItselfPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("ModifyingCollectionWithItselfNegativeCases.java").doTest();
   }
 }

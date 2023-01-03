@@ -32,12 +32,12 @@ public class NestedInstanceOfConditionsTest {
       CompilationTestHelper.newInstance(NestedInstanceOfConditions.class, getClass());
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper.addSourceFile("NestedInstanceOfConditionsPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("NestedInstanceOfConditionsNegativeCases.java").doTest();
   }
 }

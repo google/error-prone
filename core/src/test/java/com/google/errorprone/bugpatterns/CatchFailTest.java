@@ -253,7 +253,7 @@ public class CatchFailTest {
   }
 
   @Test
-  public void testExpected() {
+  public void expected() {
     testHelper
         .addInputLines(
             "in/Foo.java",

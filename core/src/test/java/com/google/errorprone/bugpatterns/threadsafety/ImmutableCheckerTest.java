@@ -831,7 +831,7 @@ public class ImmutableCheckerTest {
   }
 
   @Test
-  public void testImmutableListImplementation() {
+  public void immutableListImplementation() {
     compilationHelper
         .addSourceLines(
             "com/google/common/collect/ImmutableList.java",

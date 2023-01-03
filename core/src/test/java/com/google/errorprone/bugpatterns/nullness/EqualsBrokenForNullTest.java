@@ -31,12 +31,12 @@ public class EqualsBrokenForNullTest {
       CompilationTestHelper.newInstance(EqualsBrokenForNull.class, getClass());
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper.addSourceFile("EqualsBrokenForNullPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("EqualsBrokenForNullNegativeCases.java").doTest();
   }
 

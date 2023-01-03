@@ -30,12 +30,12 @@ public class ProvidesMethodOutsideOfModuleTest {
       CompilationTestHelper.newInstance(ProvidesMethodOutsideOfModule.class, getClass());
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper.addSourceFile("ProvidesMethodOutsideOfModulePositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("ProvidesMethodOutsideOfModuleNegativeCases.java").doTest();
   }
 }

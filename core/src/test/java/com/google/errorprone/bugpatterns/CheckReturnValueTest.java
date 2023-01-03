@@ -46,12 +46,12 @@ public class CheckReturnValueTest {
   @Rule public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
   @Test
-  public void testPositiveCases() {
+  public void positiveCases() {
     compilationHelper.addSourceFile("CheckReturnValuePositiveCases.java").doTest();
   }
 
   @Test
-  public void testCustomCheckReturnValueAnnotation() {
+  public void customCheckReturnValueAnnotation() {
     compilationHelper
         .addSourceLines(
             "foo/bar/CheckReturnValue.java",
@@ -75,7 +75,7 @@ public class CheckReturnValueTest {
   }
 
   @Test
-  public void testCustomCanIgnoreReturnValueAnnotation() {
+  public void customCanIgnoreReturnValueAnnotation() {
     compilationHelper
         .addSourceLines(
             "foo/bar/CanIgnoreReturnValue.java",
@@ -99,12 +99,12 @@ public class CheckReturnValueTest {
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("CheckReturnValueNegativeCases.java").doTest();
   }
 
   @Test
-  public void testPackageAnnotation() {
+  public void packageAnnotation() {
     compilationHelper
         .addSourceLines(
             "package-info.java", //
@@ -128,7 +128,7 @@ public class CheckReturnValueTest {
   }
 
   @Test
-  public void testClassAnnotation() {
+  public void classAnnotation() {
     compilationHelper
         .addSourceLines(
             "lib/Lib.java",
@@ -150,7 +150,7 @@ public class CheckReturnValueTest {
 
   // Don't match void-returning methods in packages with @CRV
   @Test
-  public void testVoidReturningMethodInAnnotatedPackage() {
+  public void voidReturningMethodInAnnotatedPackage() {
     compilationHelper
         .addSourceLines(
             "package-info.java", //
@@ -205,7 +205,7 @@ public class CheckReturnValueTest {
   }
 
   @Test
-  public void testPackageAnnotationButCanIgnoreReturnValue() {
+  public void packageAnnotationButCanIgnoreReturnValue() {
     compilationHelper
         .addSourceLines(
             "package-info.java",
@@ -229,7 +229,7 @@ public class CheckReturnValueTest {
   }
 
   @Test
-  public void testClassAnnotationButCanIgnoreReturnValue() {
+  public void classAnnotationButCanIgnoreReturnValue() {
     compilationHelper
         .addSourceLines(
             "lib/Lib.java",
@@ -265,7 +265,7 @@ public class CheckReturnValueTest {
   }
 
   @Test
-  public void testNestedClassAnnotation() {
+  public void nestedClassAnnotation() {
     compilationHelper
         .addSourceLines(
             "lib/Lib.java",
@@ -290,7 +290,7 @@ public class CheckReturnValueTest {
   }
 
   @Test
-  public void testNestedClassWithCanIgnoreAnnotation() {
+  public void nestedClassWithCanIgnoreAnnotation() {
     compilationHelper
         .addSourceLines(
             "lib/Lib.java",
@@ -315,7 +315,7 @@ public class CheckReturnValueTest {
   }
 
   @Test
-  public void testPackageWithCanIgnoreAnnotation() {
+  public void packageWithCanIgnoreAnnotation() {
     compilationHelper
         .addSourceLines(
             "package-info.java",
@@ -368,7 +368,7 @@ public class CheckReturnValueTest {
 
   // Don't match Void-returning methods in packages with @CRV
   @Test
-  public void testJavaLangVoidReturningMethodInAnnotatedPackage() {
+  public void javaLangVoidReturningMethodInAnnotatedPackage() {
     compilationHelper
         .addSourceLines(
             "package-info.java",
@@ -653,7 +653,7 @@ public class CheckReturnValueTest {
   }
 
   @Test
-  public void testPackagesRule() {
+  public void packagesRule() {
     compilationHelperWithPackagePatterns("java.util")
         .addSourceLines(
             "Test.java",
@@ -671,7 +671,7 @@ public class CheckReturnValueTest {
   }
 
   @Test
-  public void testPackagesRule_negativePattern() {
+  public void packagesRule_negativePattern() {
     compilationHelperWithPackagePatterns("java.util", "-java.util.regex")
         .addSourceLines(
             "Test.java",
@@ -688,7 +688,7 @@ public class CheckReturnValueTest {
   }
 
   @Test
-  public void testPackagesRule_negativePattern_doesNotMakeOptional() {
+  public void packagesRule_negativePattern_doesNotMakeOptional() {
     // A negative pattern just makes the packages rule itself not apply to that package and its
     // subpackages if it otherwise would because of a positive pattern on a superpackage. It doesn't
     // make APIs in that package CIRV.
@@ -742,7 +742,7 @@ public class CheckReturnValueTest {
   }
 
   @Test
-  public void testSuggestCanIgnoreReturnValueForMethodInvocation() {
+  public void suggestCanIgnoreReturnValueForMethodInvocation() {
     refactoringHelper
         .addInputLines(
             "Test.java",
@@ -774,7 +774,7 @@ public class CheckReturnValueTest {
   }
 
   @Test
-  public void testSuggestCanIgnoreReturnValueForMethodReference() {
+  public void suggestCanIgnoreReturnValueForMethodReference() {
     refactoringHelper
         .addInputLines(
             "Test.java",
@@ -802,7 +802,7 @@ public class CheckReturnValueTest {
   }
 
   @Test
-  public void testSuggestCanIgnoreReturnValueForConstructor() {
+  public void suggestCanIgnoreReturnValueForConstructor() {
     refactoringHelper
         .addInputLines(
             "Test.java",
@@ -830,7 +830,7 @@ public class CheckReturnValueTest {
   }
 
   @Test
-  public void testSuggestCanIgnoreReturnValueAndRemoveCheckReturnValue() {
+  public void suggestCanIgnoreReturnValueAndRemoveCheckReturnValue() {
     refactoringHelper
         .addInputLines(
             "Test.java",
@@ -861,7 +861,7 @@ public class CheckReturnValueTest {
   }
 
   @Test
-  public void testDoesNotSuggestCanIgnoreReturnValueForOtherFile() {
+  public void doesNotSuggestCanIgnoreReturnValueForOtherFile() {
     refactoringHelper
         .addInputLines(
             "Lib.java",
@@ -896,7 +896,7 @@ public class CheckReturnValueTest {
   }
 
   @Test
-  public void testSuggestsVarUnusedForConstructor() {
+  public void suggestsVarUnusedForConstructor() {
     refactoringHelper
         .addInputLines(
             "Test.java",
@@ -918,7 +918,7 @@ public class CheckReturnValueTest {
   }
 
   @Test
-  public void testSuggestsVarUnused2() {
+  public void suggestsVarUnused2() {
     refactoringHelper
         .addInputLines(
             "Lib.java",

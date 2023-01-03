@@ -37,12 +37,12 @@ public class TruthSelfEqualsTest {
   }
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper.addSourceFile("TruthSelfEqualsPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("TruthSelfEqualsNegativeCases.java").doTest();
   }
 

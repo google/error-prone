@@ -31,7 +31,7 @@ import org.junit.runners.JUnit4;
 public class ReturnMissingNullableTest {
 
   @Test
-  public void testLiteralNullReturn() {
+  public void literalNullReturn() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -50,7 +50,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testParenthesizedLiteralNullReturn() {
+  public void parenthesizedLiteralNullReturn() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -69,7 +69,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testAssignmentOfLiteralNullReturn() {
+  public void assignmentOfLiteralNullReturn() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -89,7 +89,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testCastLiteralNullReturn() {
+  public void castLiteralNullReturn() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -108,7 +108,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testConditionalLiteralNullReturn() {
+  public void conditionalLiteralNullReturn() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -123,7 +123,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testParenthesizedConditionalLiteralNullReturn() {
+  public void parenthesizedConditionalLiteralNullReturn() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -138,7 +138,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testSwitchExpressionTree() {
+  public void switchExpressionTree() {
     assumeTrue(RuntimeVersion.isAtLeast12());
 
     createCompilationTestHelper()
@@ -158,7 +158,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testSwitchExpressionTree_negative() {
+  public void switchExpressionTree_negative() {
     assumeTrue(RuntimeVersion.isAtLeast12());
 
     createCompilationTestHelper()
@@ -177,7 +177,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testSwitchStatement() {
+  public void switchStatement() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -197,7 +197,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testSwitchStatement_negative() {
+  public void switchStatement_negative() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -216,7 +216,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testVoidReturn() {
+  public void voidReturn() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -232,7 +232,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testSubtypeOfVoidReturn() {
+  public void subtypeOfVoidReturn() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -250,7 +250,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testStaticFinalFieldAboveUsage() {
+  public void staticFinalFieldAboveUsage() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -266,7 +266,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testStaticFinalFieldBelowUsage() {
+  public void staticFinalFieldBelowUsage() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -282,7 +282,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testInstanceFinalField() {
+  public void instanceFinalField() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -298,7 +298,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testMemberSelectFinalField() {
+  public void memberSelectFinalField() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -314,7 +314,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testMultipleFilesFinalField() {
+  public void multipleFilesFinalField() {
     createCompilationTestHelper()
         .addSourceLines(
             "Foo.java",
@@ -338,7 +338,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testVoidField() {
+  public void voidField() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -354,7 +354,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testTypeAnnotatedArrayElement() {
+  public void typeAnnotatedArrayElement() {
     createRefactoringTestHelper()
         .addInputLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -402,7 +402,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testFinalLocalVariable() {
+  public void finalLocalVariable() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -418,7 +418,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testEffectivelyFinalLocalVariable() {
+  public void effectivelyFinalLocalVariable() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -434,7 +434,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testFinalLocalVariableComplexTree() {
+  public void finalLocalVariableComplexTree() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -450,7 +450,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testReturnXIfXIsNull() {
+  public void returnXIfXIsNull() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -465,7 +465,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testReturnXUnlessXIsXNotNull() {
+  public void returnXUnlessXIsXNotNull() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -480,7 +480,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testReturnXInsideIfNull() {
+  public void returnXInsideIfNull() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -498,7 +498,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testReturnXInsideElseOfNotNull() {
+  public void returnXInsideElseOfNotNull() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -517,7 +517,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testReturnFieldInsideIfNull() {
+  public void returnFieldInsideIfNull() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -536,7 +536,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testOtherVerify() {
+  public void otherVerify() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -553,7 +553,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testOrNull() {
+  public void orNull() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -569,7 +569,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testOrElseNull() {
+  public void orElseNull() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -585,7 +585,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testImplementsMap() {
+  public void implementsMap() {
     createCompilationTestHelper()
         .addSourceLines(
             "NotMap.java", //
@@ -607,7 +607,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testImplementsMapButAlwaysThrows() {
+  public void implementsMapButAlwaysThrows() {
     createCompilationTestHelper()
         .addSourceLines(
             "MyMap.java",
@@ -622,7 +622,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testImplementsMapButDoNotCall() {
+  public void implementsMapButDoNotCall() {
     createCompilationTestHelper()
         .addSourceLines(
             "MyMap.java",
@@ -637,7 +637,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testOnlyIfAlreadyInScopeAndItIs() {
+  public void onlyIfAlreadyInScopeAndItIs() {
     createCompilationTestHelper()
         .setArgs("-XepOpt:Nullness:OnlyIfAnnotationAlreadyInScope=true")
         .addSourceLines(
@@ -654,7 +654,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testOnlyStatementIsNullReturnButCannotBeOverridden() {
+  public void onlyStatementIsNullReturnButCannotBeOverridden() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -669,7 +669,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testArrayDeclaration() {
+  public void arrayDeclaration() {
     createRefactoringTestHelper()
         .addInputLines(
             "in/com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -693,7 +693,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testArrayTypeUse() {
+  public void arrayTypeUse() {
     createRefactoringTestHelper()
         .addInputLines(
             "in/com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -717,7 +717,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testArrayTypeUseTwoDimensional() {
+  public void arrayTypeUseTwoDimensional() {
     createRefactoringTestHelper()
         .addInputLines(
             "in/com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -741,7 +741,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testAlreadyTypeAnnotatedInnerClassMemberSelect() {
+  public void alreadyTypeAnnotatedInnerClassMemberSelect() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -757,7 +757,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testAlreadyTypeAnnotatedInnerClassNonMemberSelect() {
+  public void alreadyTypeAnnotatedInnerClassNonMemberSelect() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -773,7 +773,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testLimitation_staticFinalFieldInitializedLater() {
+  public void limitation_staticFinalFieldInitializedLater() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -791,7 +791,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testLimitation_instanceFinalFieldInitializedLater() {
+  public void limitation_instanceFinalFieldInitializedLater() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -809,7 +809,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testLimitation_finalLocalVariableInitializedLater() {
+  public void limitation_finalLocalVariableInitializedLater() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -825,7 +825,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testLimitation_returnThisXInsideIfNull() {
+  public void limitation_returnThisXInsideIfNull() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -843,7 +843,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testRemoveSuppressWarnings_removeNullnessReturnWarning() {
+  public void removeSuppressWarnings_removeNullnessReturnWarning() {
     createRefactoringTestHelper()
         .setArgs("-XepOpt:Nullness:RemoveSuppressWarnings=true")
         .addInputLines(
@@ -877,7 +877,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testNegativeCases_onlyStatementIsNullReturn() {
+  public void negativeCases_onlyStatementIsNullReturn() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -891,7 +891,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testNegativeCases_typeVariableUsage() {
+  public void negativeCases_typeVariableUsage() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -905,7 +905,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testNegativeCases_alreadyAnnotated() {
+  public void negativeCases_alreadyAnnotated() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -921,7 +921,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testNegativeCases_alreadyAnnotatedNullableDecl() {
+  public void negativeCases_alreadyAnnotatedNullableDecl() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/anno/my/NullableDecl.java",
@@ -941,7 +941,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testNegativeCases_alreadyAnnotatedNullableType() {
+  public void negativeCases_alreadyAnnotatedNullableType() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -956,7 +956,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testNegativeCases_alreadyTypeAnnotated() {
+  public void negativeCases_alreadyTypeAnnotated() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/anno/my/Nullable.java",
@@ -977,7 +977,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testNegativeCases_alreadyDeclarationAnnotatedArray() {
+  public void negativeCases_alreadyDeclarationAnnotatedArray() {
     createAggressiveCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -993,7 +993,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testNegativeCases_alreadyTypeAnnotatedArray() {
+  public void negativeCases_alreadyTypeAnnotatedArray() {
     createAggressiveCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -1008,7 +1008,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testNegativeCases_alreadyTypeAnnotatedMemberSelect() {
+  public void negativeCases_alreadyTypeAnnotatedMemberSelect() {
     createAggressiveCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -1023,7 +1023,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testNegativeCases_checkNotNullNullableInput() {
+  public void negativeCases_checkNotNullNullableInput() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/NullReturnTest.java",
@@ -1045,7 +1045,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testNegativeCases_nonNullArrayWithNullableElements() {
+  public void negativeCases_nonNullArrayWithNullableElements() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/anno/my/Nullable.java",
@@ -1067,7 +1067,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testNegativeCases_nonNullLiteral() {
+  public void negativeCases_nonNullLiteral() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -1081,7 +1081,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testNegativeCases_nonNullMethod() {
+  public void negativeCases_nonNullMethod() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/NonNullMethodTest.java",
@@ -1095,7 +1095,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testNegativeCases_nonNullField() {
+  public void negativeCases_nonNullField() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/NonNullFieldTest.java",
@@ -1110,7 +1110,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testNegativeCases_nonNullParameter() {
+  public void negativeCases_nonNullParameter() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/NonNullParameterTest.java",
@@ -1124,7 +1124,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testNegativeCases_this() {
+  public void negativeCases_this() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/ThisTest.java",
@@ -1140,7 +1140,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testNegativeCases_capturedLocal() {
+  public void negativeCases_capturedLocal() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/CapturedLocalTest.java",
@@ -1163,7 +1163,7 @@ public class ReturnMissingNullableTest {
    * bug, of course, but we're not trying to find those bugs in this check.
    */
   @Test
-  public void testNegativeCases_primitiveReturnType() {
+  public void negativeCases_primitiveReturnType() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/PrimitiveReturnTest.java",
@@ -1177,7 +1177,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testNegativeCases_voidMethod() {
+  public void negativeCases_voidMethod() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/VoidMethodTest.java",
@@ -1192,7 +1192,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testNegativeCases_voidTypedMethod() {
+  public void negativeCases_voidTypedMethod() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/VoidTypeTest.java",
@@ -1208,7 +1208,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testNegativeCases_nullableReturnInLambda() {
+  public void negativeCases_nullableReturnInLambda() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/MissingNullableReturnTest.java",
@@ -1222,7 +1222,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testNegativeCases_returnLambda() {
+  public void negativeCases_returnLambda() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/MissingNullableReturnTest.java",
@@ -1237,7 +1237,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testNegativeCases_returnParenthesizedLambda() {
+  public void negativeCases_returnParenthesizedLambda() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/MissingNullableReturnTest.java",
@@ -1254,7 +1254,7 @@ public class ReturnMissingNullableTest {
   // Regression test for b/110812469; verifies that untracked access paths that mix field access
   // and method invocation are "trusted" to yield nonNull values
   @Test
-  public void testNegativeCases_mixedMethodFieldAccessPath() {
+  public void negativeCases_mixedMethodFieldAccessPath() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/MissingNullableReturnTest.java",
@@ -1274,7 +1274,7 @@ public class ReturnMissingNullableTest {
 
   // Regression test for b/113123074
   @Test
-  public void testNegativeCases_delegate() {
+  public void negativeCases_delegate() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/MissingNullableReturnTest.java",
@@ -1293,7 +1293,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testNegativeCases_lambda() {
+  public void negativeCases_lambda() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/MissingNullableReturnTest.java",
@@ -1309,7 +1309,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testNegativeCases_staticNonFinalField() {
+  public void negativeCases_staticNonFinalField() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -1324,7 +1324,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testNegativeCases_polyNull() {
+  public void negativeCases_polyNull() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -1343,7 +1343,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testNegativeCases_unreachableExit() {
+  public void negativeCases_unreachableExit() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -1358,7 +1358,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testNegativeCases_unreachableFail() {
+  public void negativeCases_unreachableFail() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -1374,7 +1374,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testNegativeCases_unreachableThrowExceptionMethod() {
+  public void negativeCases_unreachableThrowExceptionMethod() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -1391,7 +1391,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testNegativeCases_unreachableCheckFalse() {
+  public void negativeCases_unreachableCheckFalse() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -1407,7 +1407,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testNegativeCases_unreachableVerifyFalse() {
+  public void negativeCases_unreachableVerifyFalse() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -1423,7 +1423,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testNegativeCases_staticFinalNonNullField() {
+  public void negativeCases_staticFinalNonNullField() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -1438,7 +1438,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testNegativeCases_returnXIfXIsNotNull() {
+  public void negativeCases_returnXIfXIsNotNull() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -1452,7 +1452,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testNegativeCases_returnXIfSameSymbolDifferentObjectIsNull() {
+  public void negativeCases_returnXIfSameSymbolDifferentObjectIsNull() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -1467,7 +1467,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testNegativeCases_returnXUnlessXIsXNull() {
+  public void negativeCases_returnXUnlessXIsXNull() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -1481,7 +1481,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testNegativeCases_returnXInsideIfNotNull() {
+  public void negativeCases_returnXInsideIfNotNull() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -1498,7 +1498,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testNegativeCases_returnXInsideIfNullElse() {
+  public void negativeCases_returnXInsideIfNullElse() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -1516,7 +1516,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testNegativeCases_returnXInsideIfNullButAfterOtherStatement() {
+  public void negativeCases_returnXInsideIfNullButAfterOtherStatement() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -1534,7 +1534,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testNegativeCases_onlyIfAlreadyInScopeAndItIsNot() {
+  public void negativeCases_onlyIfAlreadyInScopeAndItIsNot() {
     createCompilationTestHelper()
         .setArgs("-XepOpt:Nullness:OnlyIfAnnotationAlreadyInScope=true")
         .addSourceLines(
@@ -1549,7 +1549,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testNegativeCases_orElseNotNull() {
+  public void negativeCases_orElseNotNull() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -1564,7 +1564,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testNegativeCases_doesNotImplementMap() {
+  public void negativeCases_doesNotImplementMap() {
     createCompilationTestHelper()
         .addSourceLines(
             "NotMap.java",
@@ -1582,7 +1582,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testNegativeCases_suppressionForReturnTreeBased() {
+  public void negativeCases_suppressionForReturnTreeBased() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -1598,7 +1598,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testNegativeCases_suppressionForMethodTreeBased() {
+  public void negativeCases_suppressionForMethodTreeBased() {
     createCompilationTestHelper()
         .addSourceLines(
             "NotMap.java", //
@@ -1616,7 +1616,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testNegativeCases_suppressionAboveMethodLevel() {
+  public void negativeCases_suppressionAboveMethodLevel() {
     createCompilationTestHelper()
         .addSourceLines(
             "NotMap.java", //
@@ -1634,7 +1634,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testReturnSameSymbolDifferentObjectInsideIfNull() {
+  public void returnSameSymbolDifferentObjectInsideIfNull() {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -1652,7 +1652,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testSuggestNonJsr305Nullable() {
+  public void suggestNonJsr305Nullable() {
     createRefactoringTestHelper()
         .addInputLines(
             "in/Test.java",
@@ -1672,7 +1672,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testNonAnnotationNullable() {
+  public void nonAnnotationNullable() {
     createRefactoringTestHelper()
         .addInputLines(
             "in/Test.java",
@@ -1691,7 +1691,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testMultipleNullReturns() {
+  public void multipleNullReturns() {
     createRefactoringTestHelper()
         .addInputLines(
             "in/Test.java",
@@ -1720,7 +1720,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testMemberSelectReturnType() {
+  public void memberSelectReturnType() {
     createRefactoringTestHelper()
         .addInputLines(
             "in/Test.java",
@@ -1750,7 +1750,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testAnnotationInsertedAfterModifiers() {
+  public void annotationInsertedAfterModifiers() {
     createRefactoringTestHelper()
         .addInputLines(
             "in/Test.java",
@@ -1780,7 +1780,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testParameterizedMemberSelectReturnType() {
+  public void parameterizedMemberSelectReturnType() {
     createRefactoringTestHelper()
         .addInputLines(
             "in/Test.java",
@@ -1810,7 +1810,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testAnnotatedMemberSelectReturnType() {
+  public void annotatedMemberSelectReturnType() {
     createRefactoringTestHelper()
         .addInputLines(
             "in/Test.java",
@@ -1842,7 +1842,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testAnnotationNotNamedNullable() {
+  public void annotationNotNamedNullable() {
     createRefactoringTestHelper()
         .setArgs("-XepOpt:Nullness:DefaultNullnessAnnotation=javax.annotation.CheckForNull")
         .addInputLines(
@@ -1872,7 +1872,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testAggressive_onlyStatementIsNullReturn() {
+  public void aggressive_onlyStatementIsNullReturn() {
     createAggressiveCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -1887,7 +1887,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testAggressive_typeVariableUsage() {
+  public void aggressive_typeVariableUsage() {
     createAggressiveCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
@@ -1902,7 +1902,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testAggressive_voidTypedMethod() {
+  public void aggressive_voidTypedMethod() {
     createAggressiveCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/VoidTypeTest.java",
@@ -1920,7 +1920,7 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void testNegativeCases_doesNotRemoveNecessarySuppressWarnings() {
+  public void negativeCases_doesNotRemoveNecessarySuppressWarnings() {
     createRefactoringTestHelper()
         .setArgs("-XepOpt:Nullness:RemoveSuppressWarnings=true")
         .addInputLines(

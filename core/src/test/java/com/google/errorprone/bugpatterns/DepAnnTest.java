@@ -31,22 +31,22 @@ public class DepAnnTest {
   private static final ImmutableList<String> JAVACOPTS = ImmutableList.of("-Xlint:-dep-ann");
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper.setArgs(JAVACOPTS).addSourceFile("DepAnnPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase1() {
+  public void negativeCase1() {
     compilationHelper.setArgs(JAVACOPTS).addSourceFile("DepAnnNegativeCase1.java").doTest();
   }
 
   @Test
-  public void testNegativeCase2() {
+  public void negativeCase2() {
     compilationHelper.setArgs(JAVACOPTS).addSourceFile("DepAnnNegativeCase2.java").doTest();
   }
 
   @Test
-  public void testDisableable() {
+  public void disableable() {
     compilationHelper
         .setArgs(ImmutableList.of("-Xlint:-dep-ann", "-Xep:DepAnn:OFF"))
         .expectNoDiagnostics()

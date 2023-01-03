@@ -43,12 +43,12 @@ public class BindingsTest {
   }
 
   @Test
-  public void testPutRestricts() {
+  public void putRestricts() {
     assertThrows(ClassCastException.class, () -> Bindings.create().put(new Key("foo"), 3));
   }
 
   @Test
-  public void testKeyClassesDistinct() {
+  public void keyClassesDistinct() {
     new EqualsTester()
         .addEqualityGroup(new Key("foo"))
         .addEqualityGroup(new Key("bar"))

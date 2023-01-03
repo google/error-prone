@@ -37,12 +37,12 @@ public class SelfEqualsTest {
   }
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper.addSourceFile("SelfEqualsPositiveCase.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("SelfEqualsNegativeCases.java").doTest();
   }
 
@@ -63,12 +63,12 @@ public class SelfEqualsTest {
   }
 
   @Test
-  public void testPositiveCase_guava() {
+  public void positiveCase_guava() {
     compilationHelper.addSourceFile("SelfEqualsGuavaPositiveCase.java").doTest();
   }
 
   @Test
-  public void testNegativeCase_guava() {
+  public void negativeCase_guava() {
     compilationHelper.addSourceFile("SelfEqualsGuavaNegativeCases.java").doTest();
   }
 

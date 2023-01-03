@@ -33,7 +33,7 @@ public class DuplicateMapKeysTest {
       CompilationTestHelper.newInstance(DuplicateMapKeys.class, getClass());
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper
         .addSourceLines(
             "a/A.java",
@@ -54,7 +54,7 @@ public class DuplicateMapKeysTest {
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper
         .addSourceLines(
             "a/A.java",

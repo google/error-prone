@@ -35,7 +35,7 @@ public class TruthGetOrDefaultTest {
       BugCheckerRefactoringTestHelper.newInstance(TruthGetOrDefault.class, getClass());
 
   @Test
-  public void testPositiveCases() {
+  public void positiveCases() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -59,7 +59,7 @@ public class TruthGetOrDefaultTest {
   }
 
   @Test
-  public void testNegativeCases() {
+  public void negativeCases() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -79,7 +79,7 @@ public class TruthGetOrDefaultTest {
   }
 
   @Test
-  public void testFixGeneration() {
+  public void fixGeneration() {
     testHelper
         .addInputLines(
             "in/Test.java",

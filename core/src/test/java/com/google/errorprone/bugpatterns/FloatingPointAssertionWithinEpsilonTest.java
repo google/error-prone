@@ -34,21 +34,21 @@ public final class FloatingPointAssertionWithinEpsilonTest {
       CompilationTestHelper.newInstance(FloatingPointAssertionWithinEpsilon.class, getClass());
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper
         .addSourceFile("FloatingPointAssertionWithinEpsilonPositiveCases.java")
         .doTest();
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper
         .addSourceFile("FloatingPointAssertionWithinEpsilonNegativeCases.java")
         .doTest();
   }
 
   @Test
-  public void testFixes() {
+  public void fixes() {
     BugCheckerRefactoringTestHelper.newInstance(
             FloatingPointAssertionWithinEpsilon.class, getClass())
         .addInput("FloatingPointAssertionWithinEpsilonPositiveCases.java")

@@ -29,7 +29,7 @@ public class CanIgnoreReturnValueSuggesterTest {
       BugCheckerRefactoringTestHelper.newInstance(CanIgnoreReturnValueSuggester.class, getClass());
 
   @Test
-  public void testSimpleCase() {
+  public void simpleCase() {
     helper
         .addInputLines(
             "Client.java",
@@ -57,7 +57,7 @@ public class CanIgnoreReturnValueSuggesterTest {
   }
 
   @Test
-  public void testParenthesizedCastThis() {
+  public void parenthesizedCastThis() {
     helper
         .addInputLines(
             "Client.java",
@@ -85,7 +85,7 @@ public class CanIgnoreReturnValueSuggesterTest {
   }
 
   @Test
-  public void testReturnsInputParam() {
+  public void returnsInputParam() {
     helper
         .addInputLines(
             "Client.java",
@@ -100,7 +100,7 @@ public class CanIgnoreReturnValueSuggesterTest {
   }
 
   @Test
-  public void testReturnsInputParamWithMultipleReturns() {
+  public void returnsInputParamWithMultipleReturns() {
     helper
         .addInputLines(
             "Client.java",
@@ -116,7 +116,7 @@ public class CanIgnoreReturnValueSuggesterTest {
   }
 
   @Test
-  public void testReturnsInputParamWithMultipleReturns_oneReturnIsConstant() {
+  public void returnsInputParamWithMultipleReturns_oneReturnIsConstant() {
     helper
         .addInputLines(
             "Client.java",
@@ -132,7 +132,7 @@ public class CanIgnoreReturnValueSuggesterTest {
   }
 
   @Test
-  public void testReturnsInputParamWithTernary() {
+  public void returnsInputParamWithTernary() {
     helper
         .addInputLines(
             "Client.java",
@@ -147,7 +147,7 @@ public class CanIgnoreReturnValueSuggesterTest {
   }
 
   @Test
-  public void testBuilder_abstractClass() {
+  public void builder_abstractClass() {
     helper
         .addInputLines(
             "Builder.java",
@@ -171,7 +171,7 @@ public class CanIgnoreReturnValueSuggesterTest {
   }
 
   @Test
-  public void testBuilder_interface() {
+  public void builder_interface() {
     helper
         .addInputLines(
             "Builder.java",
@@ -195,7 +195,7 @@ public class CanIgnoreReturnValueSuggesterTest {
   }
 
   @Test
-  public void testAutoValueBuilder() {
+  public void autoValueBuilder() {
     helper
         .addInputLines(
             "Animal.java",
@@ -220,7 +220,7 @@ public class CanIgnoreReturnValueSuggesterTest {
   }
 
   @Test
-  public void testReturnSelf_b234875737() {
+  public void returnSelf_b234875737() {
     helper
         .addInputLines(
             "Client.java",
@@ -254,7 +254,7 @@ public class CanIgnoreReturnValueSuggesterTest {
   }
 
   @Test
-  public void testReturnGetThis() {
+  public void returnGetThis() {
     helper
         .addInputLines(
             "Client.java",
@@ -288,7 +288,7 @@ public class CanIgnoreReturnValueSuggesterTest {
   }
 
   @Test
-  public void testSimpleCaseAlreadyAnnotatedWithCirv() {
+  public void simpleCaseAlreadyAnnotatedWithCirv() {
     helper
         .addInputLines(
             "Client.java",
@@ -307,7 +307,7 @@ public class CanIgnoreReturnValueSuggesterTest {
   }
 
   @Test
-  public void testSimpleCaseAlreadyAnnotatedWithCrv() {
+  public void simpleCaseAlreadyAnnotatedWithCrv() {
     helper
         .addInputLines(
             "Client.java",
@@ -326,7 +326,7 @@ public class CanIgnoreReturnValueSuggesterTest {
   }
 
   @Test
-  public void testSimpleCaseWithNestedLambda() {
+  public void simpleCaseWithNestedLambda() {
     helper
         .addInputLines(
             "Client.java",
@@ -366,7 +366,7 @@ public class CanIgnoreReturnValueSuggesterTest {
   }
 
   @Test
-  public void testAnotherMethodDoesntReturnThis() {
+  public void anotherMethodDoesntReturnThis() {
     helper
         .addInputLines(
             "Client.java",
@@ -400,7 +400,7 @@ public class CanIgnoreReturnValueSuggesterTest {
   }
 
   @Test
-  public void testNestedCase() {
+  public void nestedCase() {
     helper
         .addInputLines(
             "Client.java",
@@ -420,7 +420,7 @@ public class CanIgnoreReturnValueSuggesterTest {
   }
 
   @Test
-  public void testNestedCaseBothReturningThis() {
+  public void nestedCaseBothReturningThis() {
     helper
         .addInputLines(
             "Client.java",
@@ -454,7 +454,7 @@ public class CanIgnoreReturnValueSuggesterTest {
   }
 
   @Test
-  public void testCapitalVoidReturnType() {
+  public void capitalVoidReturnType() {
     helper
         .addInputLines(
             "Client.java",
@@ -469,7 +469,7 @@ public class CanIgnoreReturnValueSuggesterTest {
   }
 
   @Test
-  public void testLowerVoidReturnType() {
+  public void lowerVoidReturnType() {
     helper
         .addInputLines(
             "Client.java",
@@ -484,7 +484,7 @@ public class CanIgnoreReturnValueSuggesterTest {
   }
 
   @Test
-  public void testConstructor() {
+  public void constructor() {
     helper
         .addInputLines(
             "Client.java",
@@ -498,7 +498,7 @@ public class CanIgnoreReturnValueSuggesterTest {
   }
 
   @Test
-  public void testSometimesThrows() {
+  public void sometimesThrows() {
     helper
         .addInputLines(
             "Client.java",
@@ -528,7 +528,7 @@ public class CanIgnoreReturnValueSuggesterTest {
   }
 
   @Test
-  public void testAlwaysThrows() {
+  public void alwaysThrows() {
     helper
         .addInputLines(
             "Client.java",
@@ -544,7 +544,7 @@ public class CanIgnoreReturnValueSuggesterTest {
   }
 
   @Test
-  public void testSimpleCaseWithSimpleNameConflict() {
+  public void simpleCaseWithSimpleNameConflict() {
     helper
         .addInputLines(
             "Client.java",
@@ -573,7 +573,7 @@ public class CanIgnoreReturnValueSuggesterTest {
   }
 
   @Test
-  public void testOnlyReturnsThis_b236423646() {
+  public void onlyReturnsThis_b236423646() {
     helper
         .addInputLines(
             "Client.java",
@@ -588,7 +588,7 @@ public class CanIgnoreReturnValueSuggesterTest {
   }
 
   @Test
-  public void testOnlyReturnsSelf_b236423646() {
+  public void onlyReturnsSelf_b236423646() {
     helper
         .addInputLines(
             "Client.java",
@@ -606,7 +606,7 @@ public class CanIgnoreReturnValueSuggesterTest {
   }
 
   @Test
-  public void testDelegateToCirvMethod() {
+  public void delegateToCirvMethod() {
     helper
         .addInputLines(
             "Client.java",
@@ -650,7 +650,7 @@ public class CanIgnoreReturnValueSuggesterTest {
   }
 
   @Test
-  public void testConverter_b240039465() {
+  public void converter_b240039465() {
     helper
         .addInputLines(
             "Parent.java",

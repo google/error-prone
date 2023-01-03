@@ -31,12 +31,12 @@ public class DeadExceptionTest {
       CompilationTestHelper.newInstance(DeadException.class, getClass());
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper.addSourceFile("DeadExceptionPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("DeadExceptionNegativeCases.java").doTest();
   }
 
@@ -45,7 +45,7 @@ public class DeadExceptionTest {
    * asserting that an exception is thrown in the constructor.
    */
   @Test
-  public void testNegativeCaseWhenExceptionsUnthrownInTests() {
+  public void negativeCaseWhenExceptionsUnthrownInTests() {
     compilationHelper.addSourceFile("DeadExceptionTestingNegativeCases.java").doTest();
   }
 }

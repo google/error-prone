@@ -29,7 +29,7 @@ public class CompileTimeConstantCheckerTest {
       CompilationTestHelper.newInstance(CompileTimeConstantChecker.class, getClass());
 
   @Test
-  public void testMatches_fieldAccessFailsWithNonConstant() {
+  public void matches_fieldAccessFailsWithNonConstant() {
     compilationHelper
         .addSourceLines(
             "test/CompileTimeConstantTestCase.java",
@@ -44,7 +44,7 @@ public class CompileTimeConstantCheckerTest {
   }
 
   @Test
-  public void testMatches_fieldAccessFailsWithNonConstantExpression() {
+  public void matches_fieldAccessFailsWithNonConstantExpression() {
     compilationHelper
         .addSourceLines(
             "test/CompileTimeConstantTestCase.java",
@@ -59,7 +59,7 @@ public class CompileTimeConstantCheckerTest {
   }
 
   @Test
-  public void testMatches_fieldAccessSucceedsWithLiteral() {
+  public void matches_fieldAccessSucceedsWithLiteral() {
     compilationHelper
         .addSourceLines(
             "test/CompileTimeConstantTestCase.java",
@@ -73,7 +73,7 @@ public class CompileTimeConstantCheckerTest {
   }
 
   @Test
-  public void testMatches_fieldAccessSucceedsWithStaticFinal() {
+  public void matches_fieldAccessSucceedsWithStaticFinal() {
     compilationHelper
         .addSourceLines(
             "test/CompileTimeConstantTestCase.java",
@@ -88,7 +88,7 @@ public class CompileTimeConstantCheckerTest {
   }
 
   @Test
-  public void testMatches_fieldAccessSucceedsWithConstantConcatenation() {
+  public void matches_fieldAccessSucceedsWithConstantConcatenation() {
     compilationHelper
         .addSourceLines(
             "test/CompileTimeConstantTestCase.java",
@@ -103,7 +103,7 @@ public class CompileTimeConstantCheckerTest {
   }
 
   @Test
-  public void testMatches_identCallFailsWithNonConstant() {
+  public void matches_identCallFailsWithNonConstant() {
     compilationHelper
         .addSourceLines(
             "test/CompileTimeConstantTestCase.java",
@@ -118,7 +118,7 @@ public class CompileTimeConstantCheckerTest {
   }
 
   @Test
-  public void testMatches_identCallSucceedsWithLiteral() {
+  public void matches_identCallSucceedsWithLiteral() {
     compilationHelper
         .addSourceLines(
             "test/CompileTimeConstantTestCase.java",
@@ -133,7 +133,7 @@ public class CompileTimeConstantCheckerTest {
   }
 
   @Test
-  public void testMatches_staticCallFailsWithNonConstant() {
+  public void matches_staticCallFailsWithNonConstant() {
     compilationHelper
         .addSourceLines(
             "test/CompileTimeConstantTestCase.java",
@@ -148,7 +148,7 @@ public class CompileTimeConstantCheckerTest {
   }
 
   @Test
-  public void testMatches_staticCallSucceedsWithLiteral() {
+  public void matches_staticCallSucceedsWithLiteral() {
     compilationHelper
         .addSourceLines(
             "test/CompileTimeConstantTestCase.java",
@@ -162,7 +162,7 @@ public class CompileTimeConstantCheckerTest {
   }
 
   @Test
-  public void testMatches_qualifiedStaticCallFailsWithNonConstant() {
+  public void matches_qualifiedStaticCallFailsWithNonConstant() {
     compilationHelper
         .addSourceLines(
             "test/CompileTimeConstantTestCase.java",
@@ -179,7 +179,7 @@ public class CompileTimeConstantCheckerTest {
   }
 
   @Test
-  public void testMatches_qualifiedStaticCallSucceedsWithLiteral() {
+  public void matches_qualifiedStaticCallSucceedsWithLiteral() {
     compilationHelper
         .addSourceLines(
             "test/CompileTimeConstantTestCase.java",
@@ -195,7 +195,7 @@ public class CompileTimeConstantCheckerTest {
   }
 
   @Test
-  public void testMatches_ctorSucceedsWithLiteral() {
+  public void matches_ctorSucceedsWithLiteral() {
     compilationHelper
         .addSourceLines(
             "test/CompileTimeConstantTestCase.java",
@@ -212,7 +212,7 @@ public class CompileTimeConstantCheckerTest {
   }
 
   @Test
-  public void testMatches_ctorFailsWithNonConstant() {
+  public void matches_ctorFailsWithNonConstant() {
     compilationHelper
         .addSourceLines(
             "test/CompileTimeConstantTestCase.java",
@@ -230,7 +230,7 @@ public class CompileTimeConstantCheckerTest {
   }
 
   @Test
-  public void testMatches_identCallSucceedsWithinCtorWithLiteral() {
+  public void matches_identCallSucceedsWithinCtorWithLiteral() {
     compilationHelper
         .addSourceLines(
             "test/CompileTimeConstantTestCase.java",
@@ -255,7 +255,7 @@ public class CompileTimeConstantCheckerTest {
   }
 
   @Test
-  public void testMatches_varargsInDifferentCompilationUnit() {
+  public void matches_varargsInDifferentCompilationUnit() {
     compilationHelper
         .addSourceLines(
             "test/CompileTimeConstantTestCase.java",
@@ -272,7 +272,7 @@ public class CompileTimeConstantCheckerTest {
   }
 
   @Test
-  public void testMatches_varargsSuccess() {
+  public void matches_varargsSuccess() {
     compilationHelper
         .addSourceLines(
             "test/CompileTimeConstantTestCase.java",
@@ -291,7 +291,7 @@ public class CompileTimeConstantCheckerTest {
   }
 
   @Test
-  public void testMatches_effectivelyFinalCompileTimeConstantParam() {
+  public void matches_effectivelyFinalCompileTimeConstantParam() {
     compilationHelper
         .addSourceLines(
             "test/CompileTimeConstantTestCase.java",
@@ -307,7 +307,7 @@ public class CompileTimeConstantCheckerTest {
   }
 
   @Test
-  public void testMatches_nonFinalCompileTimeConstantParam() {
+  public void matches_nonFinalCompileTimeConstantParam() {
     compilationHelper
         .addSourceLines(
             "test/CompileTimeConstantTestCase.java",
@@ -325,7 +325,7 @@ public class CompileTimeConstantCheckerTest {
   }
 
   @Test
-  public void testMatches_override() {
+  public void matches_override() {
     compilationHelper
         .addSourceLines(
             "test/CompileTimeConstantTestCase.java",
@@ -342,7 +342,7 @@ public class CompileTimeConstantCheckerTest {
   }
 
   @Test
-  public void testMatches_methodReference() {
+  public void matches_methodReference() {
     compilationHelper
         .addSourceLines(
             "test/CompileTimeConstantTestCase.java",
@@ -360,7 +360,7 @@ public class CompileTimeConstantCheckerTest {
   }
 
   @Test
-  public void testMatches_constructorReference() {
+  public void matches_constructorReference() {
     compilationHelper
         .addSourceLines(
             "test/CompileTimeConstantTestCase.java",
@@ -378,7 +378,7 @@ public class CompileTimeConstantCheckerTest {
   }
 
   @Test
-  public void testMatches_methodReferenceCorrectOverrideMethod() {
+  public void matches_methodReferenceCorrectOverrideMethod() {
     compilationHelper
         .addSourceLines(
             "test/CompileTimeConstantTestCase.java",
@@ -398,7 +398,7 @@ public class CompileTimeConstantCheckerTest {
   }
 
   @Test
-  public void testMatches_methodReferenceCorrectOverrideConstructor() {
+  public void matches_methodReferenceCorrectOverrideConstructor() {
     compilationHelper
         .addSourceLines(
             "test/CompileTimeConstantTestCase.java",
@@ -418,7 +418,7 @@ public class CompileTimeConstantCheckerTest {
   }
 
   @Test
-  public void testMatches_lambdaExpression() {
+  public void matches_lambdaExpression() {
     compilationHelper
         .addSourceLines(
             "test/CompileTimeConstantTestCase.java",
@@ -433,7 +433,7 @@ public class CompileTimeConstantCheckerTest {
   }
 
   @Test
-  public void testDoesNotMatch_lambdaExpression_correctOverride() {
+  public void doesNotMatch_lambdaExpression_correctOverride() {
     compilationHelper
         .addSourceLines(
             "test/CompileTimeConstantTestCase.java",
@@ -451,7 +451,7 @@ public class CompileTimeConstantCheckerTest {
   }
 
   @Test
-  public void testMatches_lambdaExpressionWithoutAnnotatedParameters() {
+  public void matches_lambdaExpressionWithoutAnnotatedParameters() {
     compilationHelper
         .addSourceLines(
             "test/CompileTimeConstantTestCase.java",
@@ -470,7 +470,7 @@ public class CompileTimeConstantCheckerTest {
   }
 
   @Test
-  public void testMatches_lambdaExpressionWithoutExplicitFormalParameters() {
+  public void matches_lambdaExpressionWithoutExplicitFormalParameters() {
     compilationHelper
         .addSourceLines(
             "test/CompileTimeConstantTestCase.java",

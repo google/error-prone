@@ -31,12 +31,12 @@ public class MoreThanOneInjectableConstructorTest {
       CompilationTestHelper.newInstance(MoreThanOneInjectableConstructor.class, getClass());
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper.addSourceFile("MoreThanOneInjectableConstructorPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("MoreThanOneInjectableConstructorNegativeCases.java").doTest();
   }
 }

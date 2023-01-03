@@ -37,17 +37,17 @@ public class ThreadJoinLoopTest {
   }
 
   @Test
-  public void testPositiveCases() {
+  public void positiveCases() {
     compilationTestHelper.addSourceFile("ThreadJoinLoopPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCases() {
+  public void negativeCases() {
     compilationTestHelper.addSourceFile("ThreadJoinLoopNegativeCases.java").doTest();
   }
 
   @Test
-  public void testFixes() {
+  public void fixes() {
     BugCheckerRefactoringTestHelper.newInstance(ThreadJoinLoop.class, getClass())
         .addInput("ThreadJoinLoopPositiveCases.java")
         .addOutput("ThreadJoinLoopPositiveCases_expected.java")

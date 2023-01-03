@@ -31,7 +31,7 @@ public class SuggesterTest {
       BugCheckerRefactoringTestHelper.newInstance(Suggester.class, getClass());
 
   @Test
-  public void testBuildAnnotation_withImports() {
+  public void buildAnnotation_withImports() {
     assertThat(
             InlineMeData.buildAnnotation(
                 "REPLACEMENT",
@@ -43,7 +43,7 @@ public class SuggesterTest {
   }
 
   @Test
-  public void testBuildAnnotation_withSingleImport() {
+  public void buildAnnotation_withSingleImport() {
     assertThat(
             InlineMeData.buildAnnotation(
                 "REPLACEMENT", ImmutableSet.of("java.time.Duration"), ImmutableSet.of()))
@@ -52,7 +52,7 @@ public class SuggesterTest {
   }
 
   @Test
-  public void testInstanceMethodNewImport() {
+  public void instanceMethodNewImport() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -89,7 +89,7 @@ public class SuggesterTest {
   }
 
   @Test
-  public void testStaticMethodInNewClass() {
+  public void staticMethodInNewClass() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -119,7 +119,7 @@ public class SuggesterTest {
   }
 
   @Test
-  public void testUnqualifiedStaticFieldReference() {
+  public void unqualifiedStaticFieldReference() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -148,7 +148,7 @@ public class SuggesterTest {
   }
 
   @Test
-  public void testQualifiedStaticFieldReference() {
+  public void qualifiedStaticFieldReference() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -177,7 +177,7 @@ public class SuggesterTest {
   }
 
   @Test
-  public void testProtectedConstructor() {
+  public void protectedConstructor() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -191,7 +191,7 @@ public class SuggesterTest {
   }
 
   @Test
-  public void testReturnField() {
+  public void returnField() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -219,7 +219,7 @@ public class SuggesterTest {
   }
 
   @Test
-  public void testImplementationSplitOverMultipleLines() {
+  public void implementationSplitOverMultipleLines() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -255,7 +255,7 @@ public class SuggesterTest {
   }
 
   @Test
-  public void testAnonymousClass() {
+  public void anonymousClass() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -276,7 +276,7 @@ public class SuggesterTest {
   }
 
   @Test
-  public void testMethodReference() {
+  public void methodReference() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -307,7 +307,7 @@ public class SuggesterTest {
   }
 
   @Test
-  public void testNewClass() {
+  public void newClass() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -335,7 +335,7 @@ public class SuggesterTest {
   }
 
   @Test
-  public void testNewArray() {
+  public void newArray() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -363,7 +363,7 @@ public class SuggesterTest {
   }
 
   @Test
-  public void testNewNestedClass() {
+  public void newNestedClass() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -392,7 +392,7 @@ public class SuggesterTest {
   }
 
   @Test
-  public void testReturnStringLiteral() {
+  public void returnStringLiteral() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -418,7 +418,7 @@ public class SuggesterTest {
   }
 
   @Test
-  public void testCallMethodWithStringLiteral() {
+  public void callMethodWithStringLiteral() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -450,7 +450,7 @@ public class SuggesterTest {
   }
 
   @Test
-  public void testReturnPrivateVariable() {
+  public void returnPrivateVariable() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -468,7 +468,7 @@ public class SuggesterTest {
   }
 
   @Test
-  public void testReturnPrivateVariable_qualifiedWithThis() {
+  public void returnPrivateVariable_qualifiedWithThis() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -486,7 +486,7 @@ public class SuggesterTest {
   }
 
   @Test
-  public void testSettingPrivateVariable() {
+  public void settingPrivateVariable() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -504,7 +504,7 @@ public class SuggesterTest {
   }
 
   @Test
-  public void testDelegateToParentClass() {
+  public void delegateToParentClass() {
     refactoringTestHelper
         .addInputLines(
             "Parent.java",
@@ -545,7 +545,7 @@ public class SuggesterTest {
   }
 
   @Test
-  public void testWithCast() {
+  public void withCast() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -578,7 +578,7 @@ public class SuggesterTest {
   }
 
   @Test
-  public void testAccessPrivateVariable() {
+  public void accessPrivateVariable() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -596,7 +596,7 @@ public class SuggesterTest {
   }
 
   @Test
-  public void testAccessPrivateMethod() {
+  public void accessPrivateMethod() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -615,7 +615,7 @@ public class SuggesterTest {
   }
 
   @Test
-  public void testTryWithResources() {
+  public void tryWithResources() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -635,7 +635,7 @@ public class SuggesterTest {
   }
 
   @Test
-  public void testIfStatement() {
+  public void ifStatement() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -652,7 +652,7 @@ public class SuggesterTest {
   }
 
   @Test
-  public void testNestedBlock() {
+  public void nestedBlock() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -669,7 +669,7 @@ public class SuggesterTest {
   }
 
   @Test
-  public void testTernaryOverMultipleLines() {
+  public void ternaryOverMultipleLines() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -703,7 +703,7 @@ public class SuggesterTest {
   }
 
   @Test
-  public void testStaticCallingAnotherQualifiedStatic() {
+  public void staticCallingAnotherQualifiedStatic() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -906,7 +906,7 @@ public class SuggesterTest {
   }
 
   @Test
-  public void testCustom() {
+  public void custom() {
     refactoringTestHelper
         .addInputLines(
             "InlineMe.java", //
@@ -1011,7 +1011,7 @@ public class SuggesterTest {
   }
 
   @Test
-  public void testImportStatic_getsCorrectlySuggestedAsStaticImports() {
+  public void importStatic_getsCorrectlySuggestedAsStaticImports() {
     refactoringTestHelper
         .addInputLines(
             "KeymasterEncrypter.java",
@@ -1048,7 +1048,7 @@ public class SuggesterTest {
   }
 
   @Test
-  public void testImportStatic_getsIncorrectlySuggestedAsImportsInsteadOfStaticImports() {
+  public void importStatic_getsIncorrectlySuggestedAsImportsInsteadOfStaticImports() {
     refactoringTestHelper
         .addInputLines(
             "KeymasterCrypter.java",

@@ -34,7 +34,7 @@ public class InjectOnMemberAndConstructorTest {
       CompilationTestHelper.newInstance(InjectOnMemberAndConstructor.class, getClass());
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     testHelper
         .addInputLines(
             "in/InjectOnMemberAndConstructorPositiveCases.java",
@@ -70,7 +70,7 @@ public class InjectOnMemberAndConstructorTest {
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("InjectOnMemberAndConstructorNegativeCases.java").doTest();
   }
 }

@@ -29,7 +29,7 @@ public class BareDotMetacharacterTest {
       BugCheckerRefactoringTestHelper.newInstance(BareDotMetacharacter.class, getClass());
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     refactoringHelper
         .addInputLines(
             "Test.java",

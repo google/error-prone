@@ -45,7 +45,7 @@ public class RestrictedApiCheckerTest {
   }
 
   @Test
-  public void testNormalCallAllowed() {
+  public void normalCallAllowed() {
     helper
         .addSourceLines(
             "Testcase.java",
@@ -60,7 +60,7 @@ public class RestrictedApiCheckerTest {
   }
 
   @Test
-  public void testRestrictedCallProhibited() {
+  public void restrictedCallProhibited() {
     helper
         .addSourceLines(
             "Testcase.java",
@@ -78,7 +78,7 @@ public class RestrictedApiCheckerTest {
   }
 
   @Test
-  public void testRestrictedCallProhibited_inherited() {
+  public void restrictedCallProhibited_inherited() {
     helper
         .addSourceLines(
             "Testcase.java",
@@ -100,7 +100,7 @@ public class RestrictedApiCheckerTest {
   }
 
   @Test
-  public void testRestrictedCallAllowedOnAllowlistedPath() {
+  public void restrictedCallAllowedOnAllowlistedPath() {
     helper
         .addSourceLines(
             "testsuite/Testcase.java",
@@ -116,7 +116,7 @@ public class RestrictedApiCheckerTest {
   }
 
   @Test
-  public void testRestrictedStaticCallProhibited() {
+  public void restrictedStaticCallProhibited() {
     helper
         .addSourceLines(
             "Testcase.java",
@@ -134,7 +134,7 @@ public class RestrictedApiCheckerTest {
   }
 
   @Test
-  public void testRestrictedConstructorProhibited() {
+  public void restrictedConstructorProhibited() {
     helper
         .addSourceLines(
             "Testcase.java",
@@ -152,7 +152,7 @@ public class RestrictedApiCheckerTest {
   }
 
   @Test
-  public void testRestrictedConstructorViaAnonymousClassProhibited() {
+  public void restrictedConstructorViaAnonymousClassProhibited() {
     helper
         .addSourceLines(
             "Testcase.java",
@@ -168,7 +168,7 @@ public class RestrictedApiCheckerTest {
   }
 
   @Test
-  public void testRestrictedConstructorViaAnonymousClassAllowed() {
+  public void restrictedConstructorViaAnonymousClassAllowed() {
     helper
         .addSourceLines(
             "Testcase.java",
@@ -184,7 +184,7 @@ public class RestrictedApiCheckerTest {
   }
 
   @Test
-  public void testRestrictedCallAnonymousClassFromInterface() {
+  public void restrictedCallAnonymousClassFromInterface() {
     helper
         .addSourceLines(
             "Testcase.java",
@@ -204,7 +204,7 @@ public class RestrictedApiCheckerTest {
   }
 
   @Test
-  public void testImplicitRestrictedConstructorProhibited() {
+  public void implicitRestrictedConstructorProhibited() {
     helper
         .addSourceLines(
             "Testcase.java",
@@ -219,7 +219,7 @@ public class RestrictedApiCheckerTest {
 
   @Ignore("Doesn't work yet")
   @Test
-  public void testImplicitRestrictedConstructorProhibited_implicitConstructor() {
+  public void implicitRestrictedConstructorProhibited_implicitConstructor() {
     helper
         .addSourceLines(
             "Testcase.java",
@@ -231,7 +231,7 @@ public class RestrictedApiCheckerTest {
   }
 
   @Test
-  public void testAllowWithWarning() {
+  public void allowWithWarning() {
     helper
         .addSourceLines(
             "Testcase.java",
@@ -250,7 +250,7 @@ public class RestrictedApiCheckerTest {
   }
 
   @Test
-  public void testAllowWithoutWarning() {
+  public void allowWithoutWarning() {
     helper
         .addSourceLines(
             "Testcase.java",
@@ -268,7 +268,7 @@ public class RestrictedApiCheckerTest {
 
   // Regression test for b/36160747
   @Test
-  public void testAllowAllDefinitionsInFile() {
+  public void allowAllDefinitionsInFile() {
     helper
         .addSourceLines(
             "Testcase.java",

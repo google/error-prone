@@ -33,12 +33,12 @@ public class ReturnValueIgnoredTest {
       BugCheckerRefactoringTestHelper.newInstance(ReturnValueIgnored.class, getClass());
 
   @Test
-  public void testPositiveCases() {
+  public void positiveCases() {
     compilationHelper.addSourceFile("ReturnValueIgnoredPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("ReturnValueIgnoredNegativeCases.java").doTest();
   }
 
@@ -442,7 +442,7 @@ public class ReturnValueIgnoredTest {
   }
 
   @Test
-  public void testProtoMessageNewBuilder() {
+  public void protoMessageNewBuilder() {
     compilationHelper
         .addSourceLines(
             "test.java",
@@ -459,7 +459,7 @@ public class ReturnValueIgnoredTest {
   }
 
   @Test
-  public void testProtoMessageBuildBuildPartial() {
+  public void protoMessageBuildBuildPartial() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -553,7 +553,7 @@ public class ReturnValueIgnoredTest {
   }
 
   @Test
-  public void testIterableHasNext() {
+  public void iterableHasNext() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -578,7 +578,7 @@ public class ReturnValueIgnoredTest {
   }
 
   @Test
-  public void testCollectionToArray() {
+  public void collectionToArray() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -598,7 +598,7 @@ public class ReturnValueIgnoredTest {
   }
 
   @Test
-  public void testCollectionToArray_java8() {
+  public void collectionToArray_java8() {
     compilationHelper
         .addSourceLines(
             "Test.java",

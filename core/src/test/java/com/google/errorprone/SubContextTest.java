@@ -43,7 +43,7 @@ public class SubContextTest {
   }
 
   @Test
-  public void testOverlay() {
+  public void overlay() {
     Context base = new Context();
     base.put(KEY1, "key1");
     base.put(Enum1.class, Enum1.VALUE1);
@@ -61,7 +61,7 @@ public class SubContextTest {
   }
 
   @Test
-  public void testOverride() {
+  public void override() {
     Context base = new Context();
     base.put(KEY1, "key1");
     base.put(Enum1.class, Enum1.VALUE1);

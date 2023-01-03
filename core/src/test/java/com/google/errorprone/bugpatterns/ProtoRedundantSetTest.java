@@ -36,7 +36,7 @@ public final class ProtoRedundantSetTest {
       CompilationTestHelper.newInstance(ProtoRedundantSet.class, getClass());
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper
         .addSourceLines(
             "ProtoRedundantSetPositiveCases.java",
@@ -140,7 +140,7 @@ public final class ProtoRedundantSetTest {
   }
 
   @Test
-  public void testFixes() {
+  public void fixes() {
     BugCheckerRefactoringTestHelper.newInstance(ProtoRedundantSet.class, getClass())
         .addInputLines(
             "ProtoRedundantSetPositiveCases.java",

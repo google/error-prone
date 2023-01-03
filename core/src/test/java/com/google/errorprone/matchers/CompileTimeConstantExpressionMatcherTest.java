@@ -175,7 +175,7 @@ public class CompileTimeConstantExpressionMatcherTest {
   // and assignments to such variables are compile-time-constant.
   // For now, the annotation's target is restricted to ElementType.PARAMETER.
   @Test
-  public void testCompileTimeConstantAnnotationOnlyAllowedOnParameterOrField() {
+  public void compileTimeConstantAnnotationOnlyAllowedOnParameterOrField() {
     assertThat(CompileTimeConstant.class.getAnnotation(Target.class).value())
         .isEqualTo(new ElementType[] {ElementType.PARAMETER, ElementType.FIELD});
   }

@@ -32,7 +32,7 @@ public class GuardedByLockMethodTest {
       CompilationTestHelper.newInstance(GuardedByChecker.class, getClass());
 
   @Test
-  public void testSimple() {
+  public void simple() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",

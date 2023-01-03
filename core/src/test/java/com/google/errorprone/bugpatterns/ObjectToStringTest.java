@@ -39,12 +39,12 @@ public class ObjectToStringTest {
       CompilationTestHelper.newInstance(ObjectToString.class, getClass());
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper.addSourceFile("ObjectToStringPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("ObjectToStringNegativeCases.java").doTest();
   }
 
@@ -79,7 +79,7 @@ public class ObjectToStringTest {
 
   // don't complain if we can't load the type hierarchy of a class that is toString()'d
   @Test
-  public void testIncompleteClasspath() {
+  public void incompleteClasspath() {
     CompilationTestHelper.newInstance(
             ScannerSupplier.fromBugCheckerClasses(ObjectToString.class, CompletionChecker.class),
             getClass())

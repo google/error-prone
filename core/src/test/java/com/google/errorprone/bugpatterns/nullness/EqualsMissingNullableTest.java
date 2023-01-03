@@ -37,7 +37,7 @@ public class EqualsMissingNullableTest {
           .setArgs("-XepOpt:Nullness:Conservative=false");
 
   @Test
-  public void testPositive() {
+  public void positive() {
     aggressiveHelper
         .addSourceLines(
             "Foo.java",
@@ -49,7 +49,7 @@ public class EqualsMissingNullableTest {
   }
 
   @Test
-  public void testDeclarationAnnotatedLocation() {
+  public void declarationAnnotatedLocation() {
     aggressiveRefactoringHelper
         .addInputLines(
             "in/Foo.java",
@@ -67,7 +67,7 @@ public class EqualsMissingNullableTest {
   }
 
   @Test
-  public void testTypeAnnotatedLocation() {
+  public void typeAnnotatedLocation() {
     aggressiveRefactoringHelper
         .addInputLines(
             "in/Foo.java",
@@ -85,7 +85,7 @@ public class EqualsMissingNullableTest {
   }
 
   @Test
-  public void testNegativeAlreadyAnnotated() {
+  public void negativeAlreadyAnnotated() {
     aggressiveHelper
         .addSourceLines(
             "Foo.java",
@@ -97,7 +97,7 @@ public class EqualsMissingNullableTest {
   }
 
   @Test
-  public void testNegativeAlreadyAnnotatedWithProtobufAnnotation() {
+  public void negativeAlreadyAnnotatedWithProtobufAnnotation() {
     aggressiveHelper
         .addSourceLines(
             "ProtoMethodAcceptsNullParameter.java", "@interface ProtoMethodAcceptsNullParameter {}")
@@ -110,7 +110,7 @@ public class EqualsMissingNullableTest {
   }
 
   @Test
-  public void testNegativeNotObjectEquals() {
+  public void negativeNotObjectEquals() {
     aggressiveHelper
         .addSourceLines(
             "Foo.java",
@@ -121,7 +121,7 @@ public class EqualsMissingNullableTest {
   }
 
   @Test
-  public void testPositiveConservativeNullMarked() {
+  public void positiveConservativeNullMarked() {
     conservativeHelper
         .addSourceLines(
             "Foo.java",
@@ -135,7 +135,7 @@ public class EqualsMissingNullableTest {
   }
 
   @Test
-  public void testNegativeConservativeNotNullMarked() {
+  public void negativeConservativeNotNullMarked() {
     conservativeHelper
         .addSourceLines(
             "Foo.java", //

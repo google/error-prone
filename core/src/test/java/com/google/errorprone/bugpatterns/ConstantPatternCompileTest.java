@@ -35,7 +35,7 @@ public class ConstantPatternCompileTest {
       BugCheckerRefactoringTestHelper.newInstance(ConstantPatternCompile.class, getClass());
 
   @Test
-  public void testInlineExpressions() {
+  public void inlineExpressions() {
     testHelper
         .addInputLines(
             "in/Test.java",
@@ -60,7 +60,7 @@ public class ConstantPatternCompileTest {
   }
 
   @Test
-  public void testVariableNameFromField() {
+  public void variableNameFromField() {
     testHelper
         .addInputLines(
             "in/Test.java",
@@ -87,7 +87,7 @@ public class ConstantPatternCompileTest {
   }
 
   @Test
-  public void testInlineExpression_argumentIsMethodCall() {
+  public void inlineExpression_argumentIsMethodCall() {
     testHelper
         .addInputLines(
             "in/Test.java",
@@ -114,7 +114,7 @@ public class ConstantPatternCompileTest {
   }
 
   @Test
-  public void testInlineExpression_nameDefaultsToPattern() {
+  public void inlineExpression_nameDefaultsToPattern() {
     testHelper
         .addInputLines(
             "in/Test.java",
@@ -139,7 +139,7 @@ public class ConstantPatternCompileTest {
   }
 
   @Test
-  public void testMultipleInlineExpressions() {
+  public void multipleInlineExpressions() {
     testHelper
         .addInputLines(
             "in/Test.java",
@@ -167,7 +167,7 @@ public class ConstantPatternCompileTest {
   }
 
   @Test
-  public void testSameNameInDifferentMethods() {
+  public void sameNameInDifferentMethods() {
     testHelper
         .addInputLines(
             "in/Test.java",
@@ -199,7 +199,7 @@ public class ConstantPatternCompileTest {
   }
 
   @Test
-  public void testFixGenerationStatic() {
+  public void fixGenerationStatic() {
     testHelper
         .addInputLines(
             "in/Test.java",
@@ -227,7 +227,7 @@ public class ConstantPatternCompileTest {
   }
 
   @Test
-  public void testFixGeneration_multiplePatterns() {
+  public void fixGeneration_multiplePatterns() {
     testHelper
         .addInputLines(
             "in/Test.java",
@@ -265,7 +265,7 @@ public class ConstantPatternCompileTest {
   }
 
   @Test
-  public void testFixGenerationWithJavadoc() {
+  public void fixGenerationWithJavadoc() {
     testHelper
         .addInputLines(
             "in/Test.java",
@@ -293,7 +293,7 @@ public class ConstantPatternCompileTest {
   }
 
   @Test
-  public void testFixGeneration_nonStaticInnerClass() {
+  public void fixGeneration_nonStaticInnerClass() {
     testHelper
         .addInputLines(
             "in/Test.java",
@@ -325,7 +325,7 @@ public class ConstantPatternCompileTest {
   }
 
   @Test
-  public void testNegativeCases() {
+  public void negativeCases() {
     compilationHelper
         .addSourceLines(
             "in/Test.java",
@@ -352,7 +352,7 @@ public class ConstantPatternCompileTest {
   }
 
   @Test
-  public void testNegativeCases_multiArg() {
+  public void negativeCases_multiArg() {
     compilationHelper
         .addSourceLines(
             "in/Test.java",
@@ -374,7 +374,7 @@ public class ConstantPatternCompileTest {
   }
 
   @Test
-  public void testNegativeCase_staticBlock() {
+  public void negativeCase_staticBlock() {
     compilationHelper
         .addSourceLines(
             "in/Test.java",
@@ -393,7 +393,7 @@ public class ConstantPatternCompileTest {
   // Pattern.compile call.
 
   @Test
-  public void testOnlyCode_noFinding() {
+  public void onlyCode_noFinding() {
     compilationHelper
         .addSourceLines(
             "in/Test.java",

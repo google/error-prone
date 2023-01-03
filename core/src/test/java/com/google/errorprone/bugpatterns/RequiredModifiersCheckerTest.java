@@ -55,7 +55,7 @@ public class RequiredModifiersCheckerTest {
   JavaFileObject publicAndFinalRequired;
 
   @Test
-  public void testAnnotationWithRequiredModifiersMissingOnClassFails() {
+  public void annotationWithRequiredModifiersMissingOnClassFails() {
     compilationHelper
         .addSourceLines(
             "test/RequiredModifiersTestCase.java",
@@ -69,7 +69,7 @@ public class RequiredModifiersCheckerTest {
   }
 
   @Test
-  public void testAnnotationWithRequiredModifiersMissingOnFieldFails1() {
+  public void annotationWithRequiredModifiersMissingOnFieldFails1() {
     compilationHelper
         .addSourceLines(
             "test/RequiredModifiersTestCase.java",
@@ -84,7 +84,7 @@ public class RequiredModifiersCheckerTest {
   }
 
   @Test
-  public void testAnnotationWithRequiredModifiersMissingOnFieldFails2() {
+  public void annotationWithRequiredModifiersMissingOnFieldFails2() {
     compilationHelper
         .addSourceLines(
             "test/RequiredModifiersTestCase.java",
@@ -99,7 +99,7 @@ public class RequiredModifiersCheckerTest {
   }
 
   @Test
-  public void testAnnotationWithRequiredModifiersMissingOnFieldFails3() {
+  public void annotationWithRequiredModifiersMissingOnFieldFails3() {
     compilationHelper
         .addSourceLines(
             "test/RequiredModifiersTestCase.java",
@@ -114,7 +114,7 @@ public class RequiredModifiersCheckerTest {
   }
 
   @Test
-  public void testAnnotationWithRequiredModifiersMissingOnMethodFails1() {
+  public void annotationWithRequiredModifiersMissingOnMethodFails1() {
     compilationHelper
         .addSourceLines(
             "test/RequiredModifiersTestCase.java",
@@ -129,7 +129,7 @@ public class RequiredModifiersCheckerTest {
   }
 
   @Test
-  public void testAnnotationWithRequiredModifiersMissingOnMethodFails2() {
+  public void annotationWithRequiredModifiersMissingOnMethodFails2() {
     compilationHelper
         .addSourceLines(
             "test/RequiredModifiersTestCase.java",
@@ -144,7 +144,7 @@ public class RequiredModifiersCheckerTest {
   }
 
   @Test
-  public void testAnnotationWithRequiredModifiersMissingOnMethodFails3() {
+  public void annotationWithRequiredModifiersMissingOnMethodFails3() {
     compilationHelper
         .addSourceLines(
             "test/RequiredModifiersTestCase.java",
@@ -159,7 +159,7 @@ public class RequiredModifiersCheckerTest {
   }
 
   @Test
-  public void testHasRequiredModifiersSucceeds() {
+  public void hasRequiredModifiersSucceeds() {
     compilationHelper
         .addSourceLines(
             "test/RequiredModifiersTestCase.java",

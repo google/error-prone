@@ -37,24 +37,24 @@ public class ShouldHaveEvenArgsTest {
   }
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper.addSourceFile("ShouldHaveEvenArgsPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("ShouldHaveEvenArgsNegativeCases.java").doTest();
   }
 
   @org.junit.Ignore("Public truth doesn't contain this method")
   @Test
-  public void testPositiveCase_multimap() {
+  public void positiveCase_multimap() {
     compilationHelper.addSourceFile("ShouldHaveEvenArgsMultimapPositiveCases.java").doTest();
   }
 
   @org.junit.Ignore("Public truth doesn't contain this method")
   @Test
-  public void testNegativeCase_multimap() {
+  public void negativeCase_multimap() {
     compilationHelper.addSourceFile("ShouldHaveEvenArgsMultimapNegativeCases.java").doTest();
   }
 }
