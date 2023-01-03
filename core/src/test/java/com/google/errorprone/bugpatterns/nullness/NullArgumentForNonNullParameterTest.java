@@ -112,6 +112,53 @@ public class NullArgumentForNonNullParameterTest {
   }
 
   @Test
+  public void positiveGuavaImmutableSetOf() {
+    conservativeHelper
+        .addSourceLines(
+            "Foo.java",
+            "import com.google.common.collect.ImmutableSet;",
+            "class Foo {",
+            "  void foo() {",
+            "    // BUG: Diagnostic contains: ",
+            "    ImmutableSet.of(null);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void positiveGuavaImmutableSetBuilderAdd() {
+    conservativeHelper
+        .addSourceLines(
+            "Foo.java",
+            "import com.google.common.collect.ImmutableSet;",
+            "class Foo {",
+            "  void foo(boolean b) {",
+            "    // BUG: Diagnostic contains: ",
+            // We use a ternary to avoid:
+            // "non-varargs call of varargs method with inexact argument type for last parameter"
+            "    ImmutableSet.builder().add(b ? 1 : null);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void positiveArgumentCaptorForClass() {
+    conservativeHelper
+        .addSourceLines(
+            "Foo.java",
+            "import org.mockito.ArgumentCaptor;",
+            "class Foo {",
+            "  void foo() {",
+            "    // BUG: Diagnostic contains: ",
+            "    ArgumentCaptor.forClass(null);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void negativeNullMarkedComGoogleCommonButNullable() {
     conservativeHelper
         .addSourceLines(
@@ -163,10 +210,10 @@ public class NullArgumentForNonNullParameterTest {
     aggressiveHelper
         .addSourceLines(
             "Foo.java",
-            "import com.google.common.collect.ImmutableSet;",
+            "import com.google.common.collect.ConcurrentHashMultiset;",
             "class Foo {",
             "  void foo() {",
-            "    ImmutableSet.of(null);",
+            "    ConcurrentHashMultiset.create().add(null);",
             "  }",
             "}")
         .doTest();

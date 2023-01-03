@@ -57,7 +57,15 @@ public final class NullArgumentForNonNullParameter extends BugChecker
   private static final Supplier<Type> JAVA_OPTIONAL_TYPE = typeFromString("java.util.Optional");
   private static final Supplier<Type> GUAVA_OPTIONAL_TYPE =
       typeFromString("com.google.common.base.Optional");
+  private static final Supplier<Type> ARGUMENT_CAPTOR_CLASS =
+      typeFromString("org.mockito.ArgumentCaptor");
   private static final Supplier<Name> OF_NAME = memoize(state -> state.getName("of"));
+  private static final Supplier<Name> FOR_CLASS_NAME = memoize(state -> state.getName("forClass"));
+  private static final Supplier<Name> BUILDER_NAME = memoize(state -> state.getName("Builder"));
+  private static final Supplier<Name> GUAVA_COLLECT_IMMUTABLE_PREFIX =
+      memoize(state -> state.getName("com.google.common.collect.Immutable"));
+  private static final Supplier<Name> GUAVA_GRAPH_IMMUTABLE_PREFIX =
+      memoize(state -> state.getName("com.google.common.graph.Immutable"));
   private static final Supplier<Name> COM_GOOGLE_COMMON_PREFIX_NAME =
       memoize(state -> state.getName("com.google.common."));
 
@@ -79,10 +87,6 @@ public final class NullArgumentForNonNullParameter extends BugChecker
 
   private Description match(
       MethodSymbol methodSymbol, List<? extends ExpressionTree> args, VisitorState state) {
-    if (state.errorProneOptions().isTestOnlyTarget()) {
-      return NO_MATCH; // The tests of `foo` often invoke `foo(null)` to verify that it NPEs.
-    }
-
     if (hasExtraParameterForEnclosingInstance(methodSymbol)) {
       // TODO(b/232103314): Figure out the right way to handle the implicit outer `this` parameter.
       return NO_MATCH;
@@ -123,6 +127,24 @@ public final class NullArgumentForNonNullParameter extends BugChecker
   }
 
   private boolean argumentMustBeNonNull(VarSymbol sym, VisitorState state) {
+    // We hardcode checking of one test method, ArgumentCaptor.forClass, which throws as of
+    // https://github.com/mockito/mockito/commit/fe1cb2de0923e78bf7d7ae46cbab792dd4e94136#diff-8d274a9bda2d871524d15bbfcd6272bd893a47e6b1a0b460d82a8845615f26daR31
+    // For discussion of hardcoding in general, see below.
+    if (sym.owner.name.equals(FOR_CLASS_NAME.get(state))
+        && isParameterOfMethodOnType(sym, ARGUMENT_CAPTOR_CLASS, state)) {
+      return true;
+    }
+
+    if (state.errorProneOptions().isTestOnlyTarget()) {
+      return false; // The tests of `foo` often invoke `foo(null)` to verify that it NPEs.
+      /*
+       * TODO(cpovirk): But consider still matching *some* cases. For example, we might check
+       * primitives, since it would be strange to test that `foo(int i)` throws NPE if you call
+       * `foo((Integer) null)`. And tests that *use* a class like `Optional` (as opposed to
+       * *testing* Optional) could benefit from checking that they use `Optional.of` correctly.
+       */
+    }
+
     if (sym.asType().isPrimitive()) {
       return true;
     }
@@ -132,13 +154,28 @@ public final class NullArgumentForNonNullParameter extends BugChecker
      * obstacles to relying purely on them, including around type variables (see comments below)—not
      * to mention that there are no annotations on JDK classes.
      *
-     * As a workaround, we can hardcode specific APIs that feel worth the effort. For now, the only
-     * ones we hardcode are the two Optional.of methods. Those just happen to be the ones that I
-     * thought of and found hits for in our codebase.
+     * As a workaround, we can hardcode specific APIs that feel worth the effort. Most of the
+     * hardcoding is below, but one bit is at the top of this method.
      */
+
+    // Hardcoding #1: Optional.of
     if (sym.owner.name.equals(OF_NAME.get(state))
         && (isParameterOfMethodOnType(sym, JAVA_OPTIONAL_TYPE, state)
             || isParameterOfMethodOnType(sym, GUAVA_OPTIONAL_TYPE, state))) {
+      return true;
+    }
+
+    // Hardcoding #2: Immutable*.of
+    if (sym.owner.name.equals(OF_NAME.get(state))
+        && (isParameterOfMethodOnTypeStartingWith(sym, GUAVA_COLLECT_IMMUTABLE_PREFIX, state)
+            || isParameterOfMethodOnTypeStartingWith(sym, GUAVA_GRAPH_IMMUTABLE_PREFIX, state))) {
+      return true;
+    }
+
+    // Hardcoding #3: Immutable*.Builder.*
+    if (sym.enclClass().name.equals(BUILDER_NAME.get(state))
+        && (isParameterOfMethodOnTypeStartingWith(sym, GUAVA_COLLECT_IMMUTABLE_PREFIX, state)
+            || isParameterOfMethodOnTypeStartingWith(sym, GUAVA_GRAPH_IMMUTABLE_PREFIX, state))) {
       return true;
     }
 
@@ -186,6 +223,11 @@ public final class NullArgumentForNonNullParameter extends BugChecker
       VarSymbol sym, Supplier<Type> typeSupplier, VisitorState state) {
     Type target = typeSupplier.get(state);
     return target != null && state.getTypes().isSameType(sym.enclClass().type, target);
+  }
+
+  private static boolean isParameterOfMethodOnTypeStartingWith(
+      VarSymbol sym, Supplier<Name> nameSupplier, VisitorState state) {
+    return sym.enclClass().fullname.startsWith(nameSupplier.get(state));
   }
 
   private boolean enclosingAnnotationDefaultsNonTypeVariablesToNonNull(
