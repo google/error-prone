@@ -1222,6 +1222,9 @@ Prefer &#96;asSubclass&#96; instead of casting the result of &#96;newInstance&#9
 __[UnsynchronizedOverridesSynchronized](bugpattern/UnsynchronizedOverridesSynchronized)__<br>
 Unsynchronized method overrides a synchronized method.
 
+__[UnusedLabel](bugpattern/UnusedLabel)__<br>
+This label is unused.
+
 __[UnusedMethod](bugpattern/UnusedMethod)__<br>
 Unused.
 
