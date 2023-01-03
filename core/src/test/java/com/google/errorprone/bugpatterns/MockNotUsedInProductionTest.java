@@ -49,6 +49,25 @@ public final class MockNotUsedInProductionTest {
   }
 
   @Test
+  public void neverUsed_butInitializedSeparately() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "import static org.mockito.Mockito.mock;",
+            "import static org.mockito.Mockito.when;",
+            "class Test {",
+            "  private Test test;",
+            "  public Object test() {",
+            "    // BUG: Diagnostic contains:",
+            "    test = mock(Test.class);",
+            "    when(test.test()).thenCallRealMethod();",
+            "    return null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void spyNeverUsed() {
     helper
         .addSourceLines(

@@ -89,6 +89,11 @@ public final class MockNotUsedInProduction extends BugChecker
       }
 
       @Override
+      public Void visitAssignment(AssignmentTree tree, Void unused) {
+        return scan(tree.getExpression(), null);
+      }
+
+      @Override
       public Void visitMemberSelect(MemberSelectTree memberSelect, Void unused) {
         handle(memberSelect);
         return super.visitMemberSelect(memberSelect, null);
