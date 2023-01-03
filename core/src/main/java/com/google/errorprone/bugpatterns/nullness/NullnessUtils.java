@@ -29,6 +29,7 @@ import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.stripParentheses;
+import static com.sun.source.tree.Tree.Kind.ANNOTATED_TYPE;
 import static com.sun.source.tree.Tree.Kind.ARRAY_TYPE;
 import static com.sun.source.tree.Tree.Kind.IDENTIFIER;
 import static com.sun.source.tree.Tree.Kind.NULL_LITERAL;
@@ -204,10 +205,18 @@ class NullnessUtils {
     }
     switch (typeTree.getKind()) {
       case ARRAY_TYPE:
-        Tree beforeBrackets;
-        for (beforeBrackets = typeTree;
-            beforeBrackets.getKind() == ARRAY_TYPE;
-            beforeBrackets = ((ArrayTypeTree) beforeBrackets).getType()) {}
+        Tree beforeBrackets = typeTree;
+        while (true) {
+          Tree pastAnnotations =
+              beforeBrackets.getKind() == ANNOTATED_TYPE
+                  ? ((AnnotatedTypeTree) beforeBrackets).getUnderlyingType()
+                  : beforeBrackets;
+          if (pastAnnotations.getKind() == ARRAY_TYPE) {
+            beforeBrackets = ((ArrayTypeTree) pastAnnotations).getType();
+          } else {
+            break;
+          }
+        }
         // For an explanation of "int @Foo [][] f," etc., see JLS 4.11.
         return nullableAnnotationToUse.fixPostfixingOnto(
             beforeBrackets, state, suppressionToRemove);

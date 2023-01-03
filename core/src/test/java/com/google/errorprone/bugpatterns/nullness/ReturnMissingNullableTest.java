@@ -355,14 +355,46 @@ public class ReturnMissingNullableTest {
 
   @Test
   public void testTypeAnnotatedArrayElement() {
-    createAggressiveCompilationTestHelper()
-        .addSourceLines(
+    createRefactoringTestHelper()
+        .addInputLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
             "package com.google.errorprone.bugpatterns.nullness;",
             "import org.checkerframework.checker.nullness.qual.Nullable;",
             "public class LiteralNullReturnTest {",
             "  @Nullable String[] getMessage(boolean b, String[] s) {",
-            "    // BUG: Diagnostic contains: @Nullable",
+            "    return b ? s : null;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "import org.checkerframework.checker.nullness.qual.Nullable;",
+            "public class LiteralNullReturnTest {",
+            "  @Nullable String @Nullable [] getMessage(boolean b, String[] s) {",
+            "    return b ? s : null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void testTypeAnnotatedMultidimensionalArrayElement() {
+    createRefactoringTestHelper()
+        .addInputLines(
+            "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "import org.checkerframework.checker.nullness.qual.Nullable;",
+            "public class LiteralNullReturnTest {",
+            "  String [] @Nullable [] getMessage(boolean b, String[][] s) {",
+            "    return b ? s : null;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "import org.checkerframework.checker.nullness.qual.Nullable;",
+            "public class LiteralNullReturnTest {",
+            "  String @Nullable [] @Nullable [] getMessage(boolean b, String[][] s) {",
             "    return b ? s : null;",
             "  }",
             "}")
