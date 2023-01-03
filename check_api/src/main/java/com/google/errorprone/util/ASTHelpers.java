@@ -42,7 +42,6 @@ import com.google.common.collect.SetMultimap;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Streams;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.annotations.InlineMe;
 import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
 import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnalysis;
 import com.google.errorprone.matchers.JUnitMatchers;
@@ -1001,17 +1000,6 @@ public class ASTHelpers {
    */
   public static boolean hasDirectAnnotationWithSimpleName(Tree tree, String simpleName) {
     return hasDirectAnnotationWithSimpleName(getDeclaredSymbol(tree), simpleName);
-  }
-
-  /**
-   * @deprecated use {@link #shouldKeep} instead
-   */
-  @Deprecated
-  @InlineMe(
-      replacement = "ASTHelpers.shouldKeep(tree)",
-      imports = "com.google.errorprone.util.ASTHelpers")
-  public static boolean isUsedReflectively(Tree tree) {
-    return shouldKeep(tree);
   }
 
   /**
