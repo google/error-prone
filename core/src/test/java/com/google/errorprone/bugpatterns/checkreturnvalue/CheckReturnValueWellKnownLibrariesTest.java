@@ -47,7 +47,7 @@ public class CheckReturnValueWellKnownLibrariesTest {
   public void ignoreCRVOnMockito() {
     compilationHelper
         .addSourceLines(
-            "Test.java",
+            "lib/Test.java",
             "package lib;",
             "public class Test {",
             "  @com.google.errorprone.annotations.CheckReturnValue",
@@ -418,7 +418,7 @@ public class CheckReturnValueWellKnownLibrariesTest {
   public void autoValueBuilderSetterMethods() {
     compilationHelper
         .addSourceLines(
-            "Animal.java",
+            "com/google/frobber/Animal.java",
             "package com.google.frobber;",
             "import com.google.auto.value.AutoValue;",
             "import com.google.errorprone.annotations.CheckReturnValue;",
@@ -438,7 +438,7 @@ public class CheckReturnValueWellKnownLibrariesTest {
             "  }",
             "}")
         .addSourceLines(
-            "AnimalCaller.java",
+            "com/google/frobber/AnimalCaller.java",
             "package com.google.frobber;",
             "public final class AnimalCaller {",
             "  static void testAnimal() {",
@@ -456,7 +456,7 @@ public class CheckReturnValueWellKnownLibrariesTest {
   public void autoValueBuilderSetterMethodsOnInterface() {
     compilationHelper
         .addSourceLines(
-            "Animal.java",
+            "com/google/frobber/Animal.java",
             "package com.google.frobber;",
             "import com.google.auto.value.AutoValue;",
             "import com.google.errorprone.annotations.CheckReturnValue;",
@@ -479,7 +479,7 @@ public class CheckReturnValueWellKnownLibrariesTest {
             "  }",
             "}")
         .addSourceLines(
-            "AnimalCaller.java",
+            "com/google/frobber/AnimalCaller.java",
             "package com.google.frobber;",
             "public final class AnimalCaller {",
             "  static void testAnimal() {",
@@ -499,7 +499,7 @@ public class CheckReturnValueWellKnownLibrariesTest {
   public void autoValueGetterMethods() {
     compilationHelper
         .addSourceLines(
-            "Animal.java",
+            "com/google/frobber/Animal.java",
             "package com.google.frobber;",
             "import com.google.auto.value.AutoValue;",
             "@AutoValue",
@@ -508,7 +508,7 @@ public class CheckReturnValueWellKnownLibrariesTest {
             "  abstract int numberOfLegs();",
             "}")
         .addSourceLines(
-            "AnimalCaller.java",
+            "com/google/frobber/AnimalCaller.java",
             "package com.google.frobber;",
             "public final class AnimalCaller {",
             "  static void testAnimal() {",
@@ -529,13 +529,13 @@ public class CheckReturnValueWellKnownLibrariesTest {
   public void autoBuilderSetterMethods() {
     compilationHelper
         .addSourceLines(
-            "Person.java",
+            "com/google/frobber/Person.java",
             "package com.google.frobber;",
             "public final class Person {",
             "  public Person(String name, int id) {}",
             "}")
         .addSourceLines(
-            "PersonBuilder.java",
+            "com/google/frobber/PersonBuilder.java",
             "package com.google.frobber;",
             "import com.google.auto.value.AutoBuilder;",
             "import com.google.errorprone.annotations.CheckReturnValue;",
@@ -550,7 +550,7 @@ public class CheckReturnValueWellKnownLibrariesTest {
             "  Person build();",
             "}")
         .addSourceLines(
-            "PersonCaller.java",
+            "com/google/frobber/PersonCaller.java",
             "package com.google.frobber;",
             "public final class PersonCaller {",
             "  static void testPersonBuilder() {",
@@ -574,14 +574,14 @@ public class CheckReturnValueWellKnownLibrariesTest {
   public void autoBuilderSetterMethods_withInterface() {
     compilationHelper
         .addSourceLines(
-            "LogUtil.java",
+            "com/google/frobber/LogUtil.java",
             "package com.google.frobber;",
             "import java.util.logging.Level;",
             "public class LogUtil {",
             "  public static void log(Level severity, String message) {}",
             "}")
         .addSourceLines(
-            "Caller.java",
+            "com/google/frobber/Caller.java",
             "package com.google.frobber;",
             "import com.google.auto.value.AutoBuilder;",
             "import java.util.logging.Level;",
@@ -597,7 +597,7 @@ public class CheckReturnValueWellKnownLibrariesTest {
             "  void call(); // calls: LogUtil.log(severity, message)",
             "}")
         .addSourceLines(
-            "LogCaller.java",
+            "com/google/frobber/LogCaller.java",
             "package com.google.frobber;",
             "import java.util.logging.Level;",
             "public final class LogCaller {",
