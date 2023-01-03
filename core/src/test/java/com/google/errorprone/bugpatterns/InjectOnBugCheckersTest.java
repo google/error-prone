@@ -51,4 +51,19 @@ public final class InjectOnBugCheckersTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void alreadyAnnotated_noFinding() {
+    compilationTestHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.ErrorProneFlags;",
+            "import com.google.errorprone.bugpatterns.BugChecker;",
+            "import javax.inject.Inject;",
+            "public class Test extends BugChecker {",
+            "  @Inject",
+            "  public Test(ErrorProneFlags f) {}",
+            "}")
+        .doTest();
+  }
 }
