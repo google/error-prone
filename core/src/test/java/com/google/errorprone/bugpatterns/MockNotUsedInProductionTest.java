@@ -128,7 +128,6 @@ public final class MockNotUsedInProductionTest {
             "Test.java",
             "import static org.mockito.Mockito.mock;",
             "import static org.mockito.Mockito.when;",
-            "import com.google.inject.testing.fieldbinder.Bind;",
             "import org.mockito.Mock;",
             "class Test {",
             "  @Mock public Test test;",
@@ -147,7 +146,6 @@ public final class MockNotUsedInProductionTest {
             "Test.java",
             "import static org.mockito.Mockito.mock;",
             "import static org.mockito.Mockito.when;",
-            "import com.google.inject.testing.fieldbinder.Bind;",
             "import org.mockito.Mock;",
             "class Test {",
             "  @Mock private Test test;",
@@ -165,7 +163,6 @@ public final class MockNotUsedInProductionTest {
             "Test.java",
             "import static org.mockito.Mockito.mock;",
             "import static org.mockito.Mockito.when;",
-            "import com.google.inject.testing.fieldbinder.Bind;",
             "import org.mockito.Mock;",
             "class Test {",
             "  // BUG: Diagnostic contains:",
@@ -185,7 +182,6 @@ public final class MockNotUsedInProductionTest {
             "Test.java",
             "import static org.mockito.Mockito.mock;",
             "import static org.mockito.Mockito.when;",
-            "import com.google.inject.testing.fieldbinder.Bind;",
             "import org.mockito.InjectMocks;",
             "import org.mockito.Mock;",
             "class Test {",
@@ -206,7 +202,6 @@ public final class MockNotUsedInProductionTest {
             "Test.java",
             "import static org.mockito.Mockito.mock;",
             "import static org.mockito.Mockito.when;",
-            "import com.google.inject.testing.fieldbinder.Bind;",
             "import org.mockito.Mock;",
             "class Test {",
             "  @SuppressWarnings(\"MockNotUsedInProduction\")",
@@ -226,7 +221,6 @@ public final class MockNotUsedInProductionTest {
             "Test.java",
             "import static org.mockito.Mockito.mock;",
             "import static org.mockito.Mockito.when;",
-            "import com.google.inject.testing.fieldbinder.Bind;",
             "import org.mockito.Mock;",
             "class Test {",
             "  @Mock private Test test;",
@@ -239,7 +233,37 @@ public final class MockNotUsedInProductionTest {
             "Test.java",
             "import static org.mockito.Mockito.mock;",
             "import static org.mockito.Mockito.when;",
-            "import com.google.inject.testing.fieldbinder.Bind;",
+            "import org.mockito.Mock;",
+            "class Test {",
+            "  public Object test() {",
+            "    return null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void refactoringNested() {
+    refactoring
+        .addInputLines(
+            "Test.java",
+            "import static org.mockito.Mockito.doAnswer;",
+            "import static org.mockito.Mockito.mock;",
+            "import static org.mockito.Mockito.when;",
+            "import org.mockito.Mock;",
+            "class Test {",
+            "  @Mock private Test test;",
+            "  public Object test() {",
+            "    doAnswer(a -> { when(test.test()).thenReturn(null); return null;"
+                + " }).when(test).test();",
+            "    return null;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import static org.mockito.Mockito.doAnswer;",
+            "import static org.mockito.Mockito.mock;",
+            "import static org.mockito.Mockito.when;",
             "import org.mockito.Mock;",
             "class Test {",
             "  public Object test() {",

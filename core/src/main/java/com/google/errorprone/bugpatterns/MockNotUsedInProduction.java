@@ -16,18 +16,24 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.collect.Range.closedOpen;
 import static com.google.common.collect.Streams.stream;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.hasAnnotation;
+import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.canBeRemoved;
+import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static java.util.stream.Stream.concat;
 import static javax.lang.model.element.ElementKind.FIELD;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableRangeSet;
+import com.google.common.collect.Range;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
@@ -117,9 +123,8 @@ public final class MockNotUsedInProduction extends BugChecker
    * generating a fix.
    */
   private static SuggestedFix generateFix(VarSymbol sym, VisitorState state) {
-    SuggestedFix.Builder fix = SuggestedFix.builder();
+    ImmutableList.Builder<Range<Integer>> deletions = ImmutableList.builder();
     new TreePathScanner<Void, Void>() {
-
       @Override
       public Void scan(Tree tree, Void unused) {
         if (Objects.equals(getSymbol(tree), sym)) {
@@ -127,11 +132,16 @@ public final class MockNotUsedInProduction extends BugChecker
           concat(Stream.of(tree), stream(getCurrentPath()))
               .filter(t -> t instanceof ExpressionStatementTree || t instanceof VariableTree)
               .findFirst()
-              .ifPresent(fix::delete);
+              .ifPresent(
+                  t -> deletions.add(closedOpen(getStartPosition(t), state.getEndPosition(t))));
         }
         return super.scan(tree, null);
       }
     }.scan(state.getPath().getCompilationUnit(), null);
+    var fix = SuggestedFix.builder();
+    for (Range<Integer> range : ImmutableRangeSet.unionOf(deletions.build()).asRanges()) {
+      fix.replace(range.lowerEndpoint(), range.upperEndpoint(), "");
+    }
     return fix.build();
   }
 
@@ -189,5 +199,7 @@ public final class MockNotUsedInProduction extends BugChecker
       hasAnnotation("org.mockito.InjectMocks");
 
   private static final Matcher<ExpressionTree> WHEN_OR_VERIFY =
-      staticMethod().anyClass().namedAnyOf("when", "verify");
+      anyOf(
+          staticMethod().anyClass().namedAnyOf("when", "verify"),
+          instanceMethod().onDescendantOf("org.mockito.stubbing.Stubber").namedAnyOf("when"));
 }
