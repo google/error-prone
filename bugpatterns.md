@@ -796,6 +796,9 @@ Invalid use of @inheritDoc.
 __[InjectInvalidTargetingOnScopingAnnotation](bugpattern/InjectInvalidTargetingOnScopingAnnotation)__<br>
 A scoping annotation&#39;s Target should include TYPE and METHOD.
 
+__[InjectOnBugCheckers](bugpattern/InjectOnBugCheckers)__<br>
+BugChecker constructors should be marked @Inject.
+
 __[InjectOnConstructorOfAbstractClass](bugpattern/InjectOnConstructorOfAbstractClass)__<br>
 Constructors on abstract classes are never directly @Inject&#39;ed, only the constructors of their subclasses can be @Inject&#39;ed.
 
