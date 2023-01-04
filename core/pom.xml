@@ -361,6 +361,12 @@
       <version>${jspecify.version}</version>
       <scope>test</scope>
     </dependency>
+      <!-- Apache 2.0 -->
+    <dependency>
+      <groupId>javax.inject</groupId>
+      <artifactId>javax.inject</artifactId>
+      <version>1</version>
+    </dependency>
   </dependencies>
 
   <build>

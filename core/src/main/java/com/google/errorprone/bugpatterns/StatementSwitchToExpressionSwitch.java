@@ -56,6 +56,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
+import javax.inject.Inject;
 
 /** Checks for statement switches that can be expressed as an equivalent expression switch. */
 @BugPattern(
@@ -79,6 +80,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
 
   private final boolean enableDirectConversion;
 
+  @Inject
   public StatementSwitchToExpressionSwitch(ErrorProneFlags flags) {
     this.enableDirectConversion =
         flags.getBoolean("StatementSwitchToExpressionSwitch:EnableDirectConversion").orElse(false);
