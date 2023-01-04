@@ -709,6 +709,21 @@ public class UnusedVariableTest {
   }
 
   @Test
+  public void unusedInjectConstructorParameter() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "package unusedvars;",
+            "import javax.inject.Inject;",
+            "public class Test {",
+            "  @Inject Test(",
+            "    // BUG: Diagnostic contains:",
+            "    String foo) {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void unusedInject_notByDefault() {
     helper
         .addSourceLines(
