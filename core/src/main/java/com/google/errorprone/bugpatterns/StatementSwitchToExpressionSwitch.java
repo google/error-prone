@@ -124,7 +124,12 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
 
       List<? extends StatementTree> statements = caseTree.getStatements();
       CaseFallThru caseFallThru = CaseFallThru.MAYBE_FALLS_THRU;
-      if (statements == null || statements.isEmpty()) {
+      if (statements == null) {
+        // This case must be of kind CaseTree.CaseKind.RULE, and thus this is already an expression
+        // switch; no need to continue analysis.
+        return AnalysisResult.of(
+            /* canConvertDirectlyToExpressionSwitch= */ false, ImmutableList.of());
+      } else if (statements.isEmpty()) {
         // If the code for this case is just an empty block, then it must fall thru
         caseFallThru = CaseFallThru.DEFINITELY_DOES_FALL_THRU;
         // Can group with the next case (unless this is the last case)

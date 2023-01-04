@@ -1017,7 +1017,7 @@ public final class StatementSwitchToExpressionSwitchTest {
   }
 
   @Test
-  public void emptySwitchCases_noMatch() {
+  public void emptyExpressionSwitchCases_noMatch() {
     assumeTrue(RuntimeVersion.isAtLeast14());
     helper
         .addSourceLines(
@@ -1027,6 +1027,23 @@ public final class StatementSwitchToExpressionSwitchTest {
             "    switch (value) {",
             "      case 0 -> {}",
             "      default -> {}",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void nonEmptyExpressionSwitchCases_noMatch() {
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void foo(int value) { ",
+            "    switch (value) {",
+            "      case 0 -> System.out.println(\"zero\");",
+            "      default -> {System.out.println(\"non-zero\");}",
             "    }",
             "  }",
             "}")
