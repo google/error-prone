@@ -164,7 +164,7 @@ public class MemoizeConstantVisitorStateLookupsTest {
   }
 
   @Test
-  public void testSuppressWarnings() {
+  public void respectSuppressWarnings() {
     compilationTestHelper
         .addSourceLines(
             "Test.java",
