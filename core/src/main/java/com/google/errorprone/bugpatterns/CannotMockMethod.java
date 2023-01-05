@@ -19,6 +19,7 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static java.lang.String.format;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -32,10 +33,10 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 
 /** A BugPattern; see the summary */
 @BugPattern(
-    summary = "Mockito cannot mock final methods, and can't detect this at runtime",
-    altNames = {"MockitoBadFinalMethod"},
+    summary = "Mockito cannot mock final or static methods, and can't detect this at runtime",
+    altNames = {"MockitoBadFinalMethod", "CannotMockFinalMethod"},
     severity = WARNING)
-public final class CannotMockFinalMethod extends BugChecker implements MethodInvocationTreeMatcher {
+public final class CannotMockMethod extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final Matcher<ExpressionTree> WHEN =
       staticMethod().onClass("org.mockito.Mockito").named("when");
@@ -60,6 +61,19 @@ public final class CannotMockFinalMethod extends BugChecker implements MethodInv
   }
 
   private Description describe(MethodInvocationTree tree, MethodSymbol methodSymbol) {
-    return (methodSymbol.flags() & Flags.FINAL) == 0 ? NO_MATCH : describeMatch(tree);
+    if (methodSymbol.isStatic()) {
+      return buildDescription(tree, "static");
+    }
+    if ((methodSymbol.flags() & Flags.FINAL) == Flags.FINAL) {
+      return buildDescription(tree, "final");
+    }
+    return NO_MATCH;
+  }
+
+  private Description buildDescription(MethodInvocationTree tree, String issue) {
+    return buildDescription(tree)
+        .setMessage(
+            format("Mockito cannot mock %s methods, and can't detect this at runtime", issue))
+        .build();
   }
 }

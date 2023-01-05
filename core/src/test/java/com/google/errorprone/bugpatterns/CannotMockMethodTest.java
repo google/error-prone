@@ -22,9 +22,9 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 @RunWith(JUnit4.class)
-public final class CannotMockFinalMethodTest {
+public final class CannotMockMethodTest {
   private final CompilationTestHelper compilationHelper =
-      CompilationTestHelper.newInstance(CannotMockFinalMethod.class, getClass());
+      CompilationTestHelper.newInstance(CannotMockMethod.class, getClass());
 
   @Test
   public void whenCall_flagged() {
@@ -39,6 +39,24 @@ public final class CannotMockFinalMethodTest {
             "  void test() {",
             "    // BUG: Diagnostic contains:",
             "    when(this.foo());",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void whenCall_forStaticMethod_flagged() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import static org.mockito.Mockito.when;",
+            "class Test {",
+            "  static Integer foo() {",
+            "    return 1;",
+            "  }",
+            "  void test() {",
+            "    // BUG: Diagnostic contains:",
+            "    when(foo());",
             "  }",
             "}")
         .doTest();

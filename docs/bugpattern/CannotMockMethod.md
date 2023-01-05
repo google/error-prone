@@ -1,5 +1,5 @@
-Mockito cannot mock `final` methods, and cannot tell at runtime that this is
-attempted and fail with an error (as mocking `final` classes does).
+Mockito cannot mock `final` or `static` methods, and cannot tell at runtime that
+this is attempted and fail with an error (as mocking `final` classes does).
 
 `when(mock.finalMethod())` will invoke the real implementation of `finalMethod`.
 In some cases, this may wind up accidentally doing what's intended:
