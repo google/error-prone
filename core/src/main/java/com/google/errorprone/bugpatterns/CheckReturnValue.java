@@ -84,6 +84,7 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.processing.JavacProcessingEnvironment;
 import java.util.Optional;
 import java.util.stream.Stream;
+import javax.inject.Inject;
 import javax.lang.model.element.ElementKind;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -139,6 +140,7 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
   private final MessageTrailerStyle messageTrailerStyle;
   private final ResultUsePolicyEvaluator<VisitorState, Symbol, MethodSymbol> evaluator;
 
+  @Inject
   public CheckReturnValue(ErrorProneFlags flags) {
     super(flags);
     this.messageTrailerStyle =

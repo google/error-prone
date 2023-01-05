@@ -31,6 +31,7 @@ import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
+import javax.inject.Inject;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
@@ -43,6 +44,7 @@ import com.sun.tools.javac.code.Type;
 public final class BoxedPrimitiveEquality extends AbstractReferenceEquality {
   private final boolean handleNumber;
 
+  @Inject
   public BoxedPrimitiveEquality(ErrorProneFlags flags) {
     this.handleNumber = flags.getBoolean("BoxedPrimitiveEquality:HandleNumber").orElse(true);
   }

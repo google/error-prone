@@ -40,6 +40,7 @@ import com.sun.tools.javac.code.Types;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import javax.inject.Inject;
 
 /**
  * Checker for calling Object-accepting methods with types that don't match the type arguments of
@@ -73,6 +74,7 @@ public class CollectionIncompatibleType extends BugChecker
   private final FixType fixType;
   private final TypeCompatibilityUtils typeCompatibilityUtils;
 
+  @Inject
   public CollectionIncompatibleType(ErrorProneFlags flags) {
     this.fixType =
         flags.getEnum("CollectionIncompatibleType:FixType", FixType.class).orElse(FixType.NONE);

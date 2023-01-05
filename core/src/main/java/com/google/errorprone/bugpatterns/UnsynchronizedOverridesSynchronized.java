@@ -45,6 +45,7 @@ import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
+import javax.inject.Inject;
 import javax.lang.model.element.Modifier;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
@@ -60,6 +61,7 @@ public class UnsynchronizedOverridesSynchronized extends BugChecker implements M
     this(ErrorProneFlags.empty());
   }
 
+  @Inject
   public UnsynchronizedOverridesSynchronized(ErrorProneFlags flags) {
     this.constantExpressions = ConstantExpressions.fromFlags(flags);
   }

@@ -50,6 +50,7 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.HashSet;
 import java.util.Set;
+import javax.inject.Inject;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /** Bugpattern to find conditions which are checked more than once. */
@@ -58,6 +59,7 @@ public final class AlreadyChecked extends BugChecker implements CompilationUnitT
 
   private final ConstantExpressions constantExpressions;
 
+  @Inject
   public AlreadyChecked(ErrorProneFlags flags) {
     this.constantExpressions = ConstantExpressions.fromFlags(flags);
   }

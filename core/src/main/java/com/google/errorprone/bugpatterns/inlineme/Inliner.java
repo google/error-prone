@@ -59,6 +59,7 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
+import javax.inject.Inject;
 
 /**
  * Checker that performs the inlining at call-sites (where the invoked APIs are annotated as
@@ -88,6 +89,7 @@ public final class Inliner extends BugChecker
   private final boolean skipCallsitesWithComments;
   private final boolean checkFixCompiles;
 
+  @Inject
   public Inliner(ErrorProneFlags flags) {
     this.apiPrefixes =
         ImmutableSet.copyOf(flags.getSet(PREFIX_FLAG).orElse(ImmutableSet.<String>of()));

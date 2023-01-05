@@ -47,6 +47,7 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import java.util.regex.Pattern;
+import javax.inject.Inject;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.Name;
 
@@ -419,6 +420,7 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
     this.matcher = anyOf(ALL_MATCHERS);
   }
 
+  @Inject
   public ReturnValueIgnored(ErrorProneFlags flags) {
     super(flags);
     this.matcher = createMatcher(flags);

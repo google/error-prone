@@ -70,6 +70,7 @@ import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
+import javax.inject.Inject;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
@@ -200,6 +201,7 @@ public class DefaultCharset extends BugChecker
 
   private final boolean byteArrayOutputStreamToString;
 
+  @Inject
   public DefaultCharset(ErrorProneFlags flags) {
     this.byteArrayOutputStreamToString =
         flags.getBoolean("DefaultCharset:ByteArrayOutputStreamToString").orElse(true);

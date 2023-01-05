@@ -54,6 +54,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import javax.inject.Inject;
 import javax.lang.model.element.Modifier;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
@@ -65,6 +66,7 @@ import javax.lang.model.element.Modifier;
 public class MethodCanBeStatic extends BugChecker implements CompilationUnitTreeMatcher {
   private final FindingOutputStyle findingOutputStyle;
 
+  @Inject
   public MethodCanBeStatic(ErrorProneFlags flags) {
     boolean findingPerSite = flags.getBoolean("MethodCanBeStatic:FindingPerSite").orElse(false);
     this.findingOutputStyle =

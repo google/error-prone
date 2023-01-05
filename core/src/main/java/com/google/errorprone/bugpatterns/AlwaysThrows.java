@@ -48,6 +48,7 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 import java.lang.reflect.InvocationTargetException;
 import java.util.UUID;
 import java.util.function.Consumer;
+import javax.inject.Inject;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
@@ -136,6 +137,7 @@ public class AlwaysThrows extends BugChecker implements MethodInvocationTreeMatc
 
   private final ConstantExpressions constantExpressions;
 
+  @Inject
   public AlwaysThrows(ErrorProneFlags flags) {
     this.constantExpressions = ConstantExpressions.fromFlags(flags);
   }

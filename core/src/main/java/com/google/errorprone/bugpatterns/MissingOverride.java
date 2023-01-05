@@ -30,6 +30,7 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.MethodTree;
+import javax.inject.Inject;
 import javax.lang.model.element.Modifier;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
@@ -42,6 +43,7 @@ public class MissingOverride extends BugChecker implements MethodTreeMatcher {
   /** if true, don't warn on missing {@code @Override} annotations inside interfaces */
   private final boolean ignoreInterfaceOverrides;
 
+  @Inject
   public MissingOverride(ErrorProneFlags flags) {
     this.ignoreInterfaceOverrides =
         flags.getBoolean("MissingOverride:IgnoreInterfaceOverrides").orElse(false);

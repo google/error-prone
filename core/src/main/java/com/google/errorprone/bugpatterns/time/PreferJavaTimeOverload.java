@@ -64,6 +64,7 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 
 /** This check suggests the use of {@code java.time}-based APIs, when available. */
 @BugPattern(
@@ -135,6 +136,7 @@ public final class PreferJavaTimeOverload extends BugChecker
 
   private final boolean hasJava8LibSupport;
 
+  @Inject
   public PreferJavaTimeOverload(ErrorProneFlags flags) {
     this.hasJava8LibSupport = flags.getBoolean("Android:Java8Libs").orElse(false);
   }

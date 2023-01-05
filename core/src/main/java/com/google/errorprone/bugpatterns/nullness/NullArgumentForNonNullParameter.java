@@ -49,6 +49,7 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.util.Name;
 import java.util.List;
+import javax.inject.Inject;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(summary = "Null is not permitted for this parameter.", severity = ERROR)
@@ -71,6 +72,7 @@ public final class NullArgumentForNonNullParameter extends BugChecker
 
   private final boolean beingConservative;
 
+  @Inject
   public NullArgumentForNonNullParameter(ErrorProneFlags flags) {
     this.beingConservative = nullnessChecksShouldBeConservative(flags);
   }

@@ -57,6 +57,7 @@ import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import java.util.List;
+import javax.inject.Inject;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
@@ -66,6 +67,7 @@ public final class ParameterMissingNullable extends BugChecker
     implements BinaryTreeMatcher, MethodInvocationTreeMatcher, NewClassTreeMatcher {
   private final boolean beingConservative;
 
+  @Inject
   public ParameterMissingNullable(ErrorProneFlags flags) {
     this.beingConservative = nullnessChecksShouldBeConservative(flags);
   }

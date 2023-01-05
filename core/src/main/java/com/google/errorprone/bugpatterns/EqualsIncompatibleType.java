@@ -44,6 +44,7 @@ import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Type;
+import javax.inject.Inject;
 
 /**
  * @author avenet@google.com (Arnaud J. Venet)
@@ -66,6 +67,7 @@ public class EqualsIncompatibleType extends BugChecker
 
   private final TypeCompatibilityUtils typeCompatibilityUtils;
 
+  @Inject
   public EqualsIncompatibleType(ErrorProneFlags flags) {
     this.typeCompatibilityUtils = TypeCompatibilityUtils.fromFlags(flags);
   }

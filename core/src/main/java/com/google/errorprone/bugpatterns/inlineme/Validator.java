@@ -44,6 +44,7 @@ import java.util.EnumSet;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import javax.inject.Inject;
 
 /** Checker that ensures the {@code @InlineMe} annotation is used correctly. */
 @BugPattern(
@@ -57,6 +58,7 @@ public final class Validator extends BugChecker implements MethodTreeMatcher {
 
   private final boolean cleanupInlineMes;
 
+  @Inject
   public Validator(ErrorProneFlags flags) {
     this.cleanupInlineMes = flags.getBoolean(CLEANUP_INLINE_ME_FLAG).orElse(false);
   }

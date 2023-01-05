@@ -30,6 +30,7 @@ import com.google.protobuf.ExtensionRegistry;
 import com.sun.source.tree.ExpressionTree;
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import javax.inject.Inject;
 
 /**
  * Checks for uses of classes, fields, or methods that are not compatible with legacy Android
@@ -63,6 +64,7 @@ public class AndroidJdkLibsChecker extends ApiDiffChecker {
 
   private final boolean allowJava8;
 
+  @Inject
   public AndroidJdkLibsChecker(ErrorProneFlags flags) {
     this(flags.getBoolean("Android:Java8Libs").orElse(false));
   }

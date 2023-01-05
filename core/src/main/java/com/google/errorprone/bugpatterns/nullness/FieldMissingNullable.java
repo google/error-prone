@@ -44,6 +44,7 @@ import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Symbol;
+import javax.inject.Inject;
 import javax.lang.model.element.Name;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
@@ -56,6 +57,7 @@ public class FieldMissingNullable extends BugChecker
     implements BinaryTreeMatcher, AssignmentTreeMatcher, VariableTreeMatcher {
   private final boolean beingConservative;
 
+  @Inject
   public FieldMissingNullable(ErrorProneFlags flags) {
     this.beingConservative = nullnessChecksShouldBeConservative(flags);
   }

@@ -36,6 +36,7 @@ import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
+import javax.inject.Inject;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
@@ -44,6 +45,7 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 public class EqualsMissingNullable extends BugChecker implements MethodTreeMatcher {
   private final boolean beingConservative;
 
+  @Inject
   public EqualsMissingNullable(ErrorProneFlags flags) {
     this.beingConservative = nullnessChecksShouldBeConservative(flags);
   }

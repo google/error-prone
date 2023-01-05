@@ -40,6 +40,7 @@ import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import java.util.Collections;
 import java.util.Optional;
+import javax.inject.Inject;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
@@ -59,6 +60,7 @@ public class ImmutableAnnotationChecker extends BugChecker implements ClassTreeM
 
   private final WellKnownMutability wellKnownMutability;
 
+  @Inject
   public ImmutableAnnotationChecker(ErrorProneFlags flags) {
     this.wellKnownMutability = WellKnownMutability.fromFlags(flags);
   }

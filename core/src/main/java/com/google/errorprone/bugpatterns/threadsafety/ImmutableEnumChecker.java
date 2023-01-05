@@ -40,6 +40,7 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import java.util.Optional;
 import java.util.stream.Stream;
+import javax.inject.Inject;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
@@ -55,6 +56,7 @@ public class ImmutableEnumChecker extends BugChecker implements ClassTreeMatcher
 
   private final WellKnownMutability wellKnownMutability;
 
+  @Inject
   public ImmutableEnumChecker(ErrorProneFlags flags) {
     this.wellKnownMutability = WellKnownMutability.fromFlags(flags);
   }

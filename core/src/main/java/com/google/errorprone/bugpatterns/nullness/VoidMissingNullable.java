@@ -55,6 +55,7 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
+import javax.inject.Inject;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(summary = "The type Void is not annotated @Nullable", severity = SUGGESTION)
@@ -62,6 +63,7 @@ public class VoidMissingNullable extends BugChecker
     implements ParameterizedTypeTreeMatcher, MethodTreeMatcher, VariableTreeMatcher {
   private final boolean beingConservative;
 
+  @Inject
   public VoidMissingNullable(ErrorProneFlags flags) {
     this.beingConservative = nullnessChecksShouldBeConservative(flags);
   }

@@ -109,6 +109,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.Name;
@@ -169,6 +170,7 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
 
   private final boolean reportInjectedFields;
 
+  @Inject
   public UnusedVariable(ErrorProneFlags flags) {
     ImmutableSet.Builder<String> methodAnnotationsExemptingParameters =
         ImmutableSet.<String>builder().add("org.robolectric.annotation.Implementation");

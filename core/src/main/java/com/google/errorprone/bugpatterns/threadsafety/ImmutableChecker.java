@@ -82,6 +82,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import javax.inject.Inject;
 import javax.lang.model.element.ElementKind;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -106,6 +107,7 @@ public class ImmutableChecker extends BugChecker
     this(ErrorProneFlags.empty(), immutableAnnotations);
   }
 
+  @Inject
   public ImmutableChecker(ErrorProneFlags flags) {
     this(flags, ImmutableSet.of(Immutable.class.getName()));
   }

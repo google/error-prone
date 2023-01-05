@@ -61,6 +61,7 @@ import com.sun.tools.javac.util.Name;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
+import javax.inject.Inject;
 import javax.lang.model.element.NestingKind;
 
 /** Finds fields which can be safely made static. */
@@ -81,6 +82,7 @@ public final class FieldCanBeStatic extends BugChecker implements VariableTreeMa
   private final WellKnownMutability wellKnownMutability;
   private final ConstantExpressions constantExpressions;
 
+  @Inject
   public FieldCanBeStatic(ErrorProneFlags flags) {
     this.wellKnownMutability = WellKnownMutability.fromFlags(flags);
     this.constantExpressions = ConstantExpressions.fromFlags(flags);

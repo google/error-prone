@@ -42,6 +42,7 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import java.util.stream.Stream;
+import javax.inject.Inject;
 
 /**
  * @author mariasam@google.com (Maria Sam)
@@ -59,6 +60,7 @@ public final class OptionalNotPresent extends BugChecker implements CompilationU
 
   private final ConstantExpressions constantExpressions;
 
+  @Inject
   public OptionalNotPresent(ErrorProneFlags flags) {
     this.constantExpressions = ConstantExpressions.fromFlags(flags);
   }

@@ -71,6 +71,7 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import java.util.List;
 import java.util.stream.Stream;
+import javax.inject.Inject;
 import javax.lang.model.element.Name;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
@@ -194,6 +195,7 @@ public class ReturnMissingNullable extends BugChecker implements CompilationUnit
 
   private final boolean beingConservative;
 
+  @Inject
   public ReturnMissingNullable(ErrorProneFlags flags) {
     this.beingConservative = nullnessChecksShouldBeConservative(flags);
   }

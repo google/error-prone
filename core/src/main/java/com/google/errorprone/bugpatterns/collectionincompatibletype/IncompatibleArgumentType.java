@@ -46,6 +46,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.lang.model.element.Parameterizable;
 import javax.lang.model.element.TypeParameterElement;
 
@@ -59,6 +60,7 @@ public class IncompatibleArgumentType extends BugChecker implements MethodInvoca
 
   private final TypeCompatibilityUtils typeCompatibilityUtils;
 
+  @Inject
   public IncompatibleArgumentType(ErrorProneFlags flags) {
     this.typeCompatibilityUtils = TypeCompatibilityUtils.fromFlags(flags);
   }

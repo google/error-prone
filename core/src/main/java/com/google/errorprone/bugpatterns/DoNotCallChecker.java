@@ -68,6 +68,7 @@ import com.sun.tools.javac.code.Types;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
+import javax.inject.Inject;
 import javax.lang.model.element.Modifier;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
@@ -77,6 +78,7 @@ public class DoNotCallChecker extends BugChecker
   private final boolean checkNewGetClassMethods;
   private final boolean checkThreadRun;
 
+  @Inject
   public DoNotCallChecker(ErrorProneFlags flags) {
     checkNewGetClassMethods =
         flags.getBoolean("DoNotCallChecker:CheckNewGetClassMethods").orElse(true);

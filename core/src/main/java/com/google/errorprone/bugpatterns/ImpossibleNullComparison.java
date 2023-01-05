@@ -69,6 +69,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 
 /** Matches comparison of proto fields to {@code null}. */
 @BugPattern(
@@ -145,6 +146,7 @@ public final class ImpossibleNullComparison extends BugChecker
   private final boolean matchTestAssertions;
   private final boolean matchOptionalAndMultimap;
 
+  @Inject
   public ImpossibleNullComparison(ErrorProneFlags flags) {
     this.matchTestAssertions =
         flags.getBoolean("ProtoFieldNullComparison:MatchTestAssertions").orElse(true);

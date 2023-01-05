@@ -56,6 +56,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
+import javax.inject.Inject;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
@@ -68,6 +69,7 @@ public class ParameterName extends BugChecker
 
   private final ImmutableList<String> exemptPackages;
 
+  @Inject
   public ParameterName(ErrorProneFlags errorProneFlags) {
     this.exemptPackages =
         errorProneFlags

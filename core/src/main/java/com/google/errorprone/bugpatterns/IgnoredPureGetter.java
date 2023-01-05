@@ -40,6 +40,7 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import java.util.Optional;
+import javax.inject.Inject;
 
 /** Flags ignored return values from pure getters. */
 @BugPattern(
@@ -61,6 +62,7 @@ public final class IgnoredPureGetter extends AbstractReturnValueIgnored {
     this(ErrorProneFlags.empty());
   }
 
+  @Inject
   public IgnoredPureGetter(ErrorProneFlags flags) {
     super(flags);
   }

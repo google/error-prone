@@ -30,6 +30,7 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.MethodTree;
+import javax.inject.Inject;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
@@ -60,6 +61,7 @@ public class TooManyParameters extends BugChecker implements MethodTreeMatcher {
 
   private final int limit;
 
+  @Inject
   public TooManyParameters(ErrorProneFlags flags) {
     this.limit = flags.getInteger(TOO_MANY_PARAMETERS_FLAG_NAME).orElse(DEFAULT_LIMIT);
     checkArgument(limit > 0, "%s (%s) must be > 0", TOO_MANY_PARAMETERS_FLAG_NAME, limit);

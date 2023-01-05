@@ -72,6 +72,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import javax.inject.Inject;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.NestingKind;
 
@@ -140,6 +141,7 @@ public final class FloggerRequiredModifiers extends BugChecker
    * values check only a subset of the Flogger best practices, and are designed to generate a more
    * fine grained adjustments.
    */
+  @Inject
   public FloggerRequiredModifiers(ErrorProneFlags flags) {
     this(flags.getEnum("FloggerRequiredModifiers:Goal", Goal.class).orElse(Goal.DEFAULT_ALL_GOALS));
   }

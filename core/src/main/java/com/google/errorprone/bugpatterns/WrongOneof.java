@@ -48,6 +48,7 @@ import com.sun.source.util.TreePath;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import javax.inject.Inject;
 
 /** Matches always-default expressions in oneof switches. */
 @BugPattern(
@@ -59,6 +60,7 @@ public final class WrongOneof extends BugChecker implements SwitchTreeMatcher {
 
   private final ConstantExpressions constantExpressions;
 
+  @Inject
   public WrongOneof(ErrorProneFlags flags) {
     this.constantExpressions = ConstantExpressions.fromFlags(flags);
   }

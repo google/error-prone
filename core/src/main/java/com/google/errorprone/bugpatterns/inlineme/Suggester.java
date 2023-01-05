@@ -33,6 +33,7 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.MethodTree;
+import javax.inject.Inject;
 import javax.lang.model.element.Modifier;
 
 /** Checker that recommends using {@code @InlineMe} on single-statement deprecated APIs. */
@@ -47,6 +48,7 @@ public final class Suggester extends BugChecker implements MethodTreeMatcher {
 
   private final String inlineMe;
 
+  @Inject
   public Suggester(ErrorProneFlags errorProneFlags) {
     inlineMe =
         errorProneFlags

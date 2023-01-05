@@ -31,6 +31,7 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
+import javax.inject.Inject;
 
 /** Bans calls to {@code Period#plus/minus(TemporalAmount)} where the argument is a Duration. */
 @BugPattern(
@@ -49,6 +50,7 @@ public final class PeriodTimeMath extends BugChecker implements MethodInvocation
   private static final Matcher<ExpressionTree> DURATION = isSameType("java.time.Duration");
   private static final Matcher<ExpressionTree> PERIOD = isSameType("java.time.Period");
 
+  @Inject
   public PeriodTimeMath(ErrorProneFlags flags) {
     boolean requireStrictCompatibility =
         flags.getBoolean("PeriodTimeMath:RequireStaticPeriodArgument").orElse(false);
