@@ -1349,8 +1349,8 @@ Methods that always &#39;return this&#39; should be annotated with @com.google.e
 __[CannotMockFinalClass](bugpattern/CannotMockFinalClass)__<br>
 Mockito cannot mock final classes
 
-__[CannotMockFinalMethod](bugpattern/CannotMockFinalMethod)__<br>
-Mockito cannot mock final methods, and can&#39;t detect this at runtime
+__[CannotMockMethod](bugpattern/CannotMockMethod)__<br>
+Mockito cannot mock final or static methods, and can&#39;t detect this at runtime
 
 __[CatchingUnchecked](bugpattern/CatchingUnchecked)__<br>
 This catch block catches &#96;Exception&#96;, but can only catch unchecked exceptions. Consider catching RuntimeException (or something more specific) instead so it is more apparent that no checked exceptions are being handled.
