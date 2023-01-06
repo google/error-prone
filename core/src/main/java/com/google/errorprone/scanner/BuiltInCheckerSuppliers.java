@@ -412,6 +412,7 @@ import com.google.errorprone.bugpatterns.WildcardImport;
 import com.google.errorprone.bugpatterns.WithSignatureDiscouraged;
 import com.google.errorprone.bugpatterns.WrongOneof;
 import com.google.errorprone.bugpatterns.XorPower;
+import com.google.errorprone.bugpatterns.YodaCondition;
 import com.google.errorprone.bugpatterns.android.BinderIdentityRestoredDangerously;
 import com.google.errorprone.bugpatterns.android.BundleDeserializationCast;
 import com.google.errorprone.bugpatterns.android.FragmentInjection;
@@ -1164,7 +1165,8 @@ public class BuiltInCheckerSuppliers {
           VarChecker.class,
           Varifier.class,
           VoidMissingNullable.class,
-          WildcardImport.class
+          WildcardImport.class,
+          YodaCondition.class
           // keep-sorted end
           );
 
