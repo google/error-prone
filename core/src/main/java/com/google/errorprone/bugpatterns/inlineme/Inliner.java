@@ -130,11 +130,11 @@ public final class Inliner extends BugChecker
     ExpressionTree methodSelectTree = tree.getMethodSelect();
     if (methodSelectTree != null) {
       String methodSelect = state.getSourceForNode(methodSelectTree);
-      if ("super".equals(methodSelect)) {
+      if (methodSelect.equals("super")) {
         receiverString = methodSelect;
       }
       // TODO(kak): Can we omit the `this` case? The getReceiver() call above handles `this`
-      if ("this".equals(methodSelect)) {
+      if (methodSelect.equals("this")) {
         receiverString = methodSelect;
       }
     }

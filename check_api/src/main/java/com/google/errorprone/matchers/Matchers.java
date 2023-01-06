@@ -298,7 +298,7 @@ public class Matchers {
         return ASTHelpers.sameVariable(fieldAccess.getExpression(), arg);
       } else if (methodSelect instanceof JCIdent) {
         // A bare method call: "equals(foo)".  Receiver is implicitly "this".
-        return "this".equals(arg.toString());
+        return arg.toString().equals("this");
       }
 
       return false;
@@ -990,7 +990,7 @@ public class Matchers {
    * constant, parameter to a method, etc.
    */
   public static Matcher<VariableTree> isField() {
-    return (variableTree, state) -> ElementKind.FIELD == getSymbol(variableTree).getKind();
+    return (variableTree, state) -> getSymbol(variableTree).getKind() == ElementKind.FIELD;
   }
 
   /** Matches if a {@link ClassTree} is an enum declaration. */

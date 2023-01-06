@@ -152,11 +152,11 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
         } else {
           allCasesHaveDefiniteControlFlow &=
               !fallsIntoDefaultCase
-                  && CaseFallThru.DEFINITELY_DOES_NOT_FALL_THRU.equals(caseFallThru);
+                  && caseFallThru.equals(CaseFallThru.DEFINITELY_DOES_NOT_FALL_THRU);
         }
       } else {
         // Cases other than default
-        allCasesHaveDefiniteControlFlow &= !CaseFallThru.MAYBE_FALLS_THRU.equals(caseFallThru);
+        allCasesHaveDefiniteControlFlow &= !caseFallThru.equals(CaseFallThru.MAYBE_FALLS_THRU);
       }
     }
 
@@ -248,7 +248,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
         // If block is just space or a single "break;" with no explanatory comments, then remove
         // it to eliminate redundancy and improve readability
         if (trimmedTransformedBlockSource.isEmpty()
-            || "break;".equals(trimmedTransformedBlockSource)) {
+            || trimmedTransformedBlockSource.equals("break;")) {
           replacementCodeBuilder.append("{}");
         } else {
           replacementCodeBuilder.append("{").append(transformedBlockSource).append("\n}");
@@ -319,7 +319,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
   private static ImmutableList<StatementTree> filterOutRedundantBreak(CaseTree caseTree) {
     boolean caseEndsWithUnlabelledBreak =
         Streams.findLast(caseTree.getStatements().stream())
-            .filter(statement -> BREAK.equals(statement.getKind()))
+            .filter(statement -> statement.getKind().equals(BREAK))
             .filter(breakTree -> ((BreakTree) breakTree).getLabel() == null)
             .isPresent();
     return caseEndsWithUnlabelledBreak

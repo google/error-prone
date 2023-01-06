@@ -217,7 +217,7 @@ public class LambdaFunctionalInterface extends BugChecker implements MethodTreeM
 
     for (MethodInvocationTree methodInvocationTree : methodCallMap.values()) {
       if (methodInvocationTree.getArguments().stream()
-          .filter(a -> Kind.LAMBDA_EXPRESSION.equals(a.getKind()))
+          .filter(a -> a.getKind().equals(Kind.LAMBDA_EXPRESSION))
           .filter(a -> hasFunctionAsArg(a, state))
           .noneMatch(
               a ->
