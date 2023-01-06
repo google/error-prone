@@ -24,6 +24,7 @@ import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.hasExtraP
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.nullnessChecksShouldBeConservative;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.suppliers.Suppliers.typeFromString;
+import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.enclosingPackage;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
@@ -175,7 +176,7 @@ public final class NullArgumentForNonNullParameter extends BugChecker
     }
 
     // Hardcoding #3: Immutable*.Builder.*
-    if (sym.enclClass().name.equals(BUILDER_NAME.get(state))
+    if (enclosingClass(sym).name.equals(BUILDER_NAME.get(state))
         && (isParameterOfMethodOnTypeStartingWith(sym, GUAVA_COLLECT_IMMUTABLE_PREFIX, state)
             || isParameterOfMethodOnTypeStartingWith(sym, GUAVA_GRAPH_IMMUTABLE_PREFIX, state))) {
       return true;
@@ -224,12 +225,12 @@ public final class NullArgumentForNonNullParameter extends BugChecker
   private static boolean isParameterOfMethodOnType(
       VarSymbol sym, Supplier<Type> typeSupplier, VisitorState state) {
     Type target = typeSupplier.get(state);
-    return target != null && state.getTypes().isSameType(sym.enclClass().type, target);
+    return target != null && state.getTypes().isSameType(enclosingClass(sym).type, target);
   }
 
   private static boolean isParameterOfMethodOnTypeStartingWith(
       VarSymbol sym, Supplier<Name> nameSupplier, VisitorState state) {
-    return sym.enclClass().fullname.startsWith(nameSupplier.get(state));
+    return enclosingClass(sym).fullname.startsWith(nameSupplier.get(state));
   }
 
   private boolean enclosingAnnotationDefaultsNonTypeVariablesToNonNull(
