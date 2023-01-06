@@ -326,7 +326,7 @@
       <!-- Apache 2.0 -->
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
-      <version>3.22.0</version>
+      <version>3.24.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
