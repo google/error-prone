@@ -45,6 +45,23 @@ public final class BadImportTest {
   }
 
   @Test
+  public void positive_identifiers() {
+    compilationTestHelper
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.errorprone.CompilationTestHelper.newInstance;",
+            "import com.google.errorprone.CompilationTestHelper;",
+            "import com.google.errorprone.bugpatterns.BugChecker;",
+            "",
+            "class Test {",
+            "  private final CompilationTestHelper compilationTestHelper =",
+            "      // BUG: Diagnostic contains: CompilationTestHelper.newInstance",
+            "      newInstance(BugChecker.class, getClass());",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void msg() {
     compilationTestHelper
         .addSourceLines(
