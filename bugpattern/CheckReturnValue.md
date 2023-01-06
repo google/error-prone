@@ -126,5 +126,3 @@ from having to use either an `unused` variable or `@SuppressWarnings`):
 [j9jsr305]: https://blog.codefx.org/java/jsr-305-java-9/
 [jsr305]: https://jcp.org/en/jsr/detail?id=305
 
-## Suppression
-Suppress false positives by adding the suppression annotation `@SuppressWarnings("CheckReturnValue")` to the enclosing element.
