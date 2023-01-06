@@ -94,6 +94,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 @BugPattern(
     altNames = {"ResultOfMethodCallIgnored", "ReturnValueIgnored"},
     summary = "The result of this call must be used",
+    documentSuppression = false, // We prefer `var unused`, as covered in CheckReturnValue.md.
     severity = ERROR)
 public class CheckReturnValue extends AbstractReturnValueIgnored
     implements MethodTreeMatcher, ClassTreeMatcher {
