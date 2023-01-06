@@ -51,6 +51,21 @@ public class InfiniteRecursionTest {
   }
 
   @Test
+  public void positiveMultipleStatements() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  Test f() {",
+            "    // BUG: Diagnostic contains:",
+            "    f();",
+            "    return this;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void positiveStatic() {
     compilationHelper
         .addSourceLines(
@@ -97,6 +112,22 @@ public class InfiniteRecursionTest {
             "  }",
             "  int g(int x) {",
             "    return x == 0 ? g() : g(x - 1);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void negativeForNowMultipleStatements() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  Test f() {",
+            "    new Test();",
+            // TODO(b/264529494): Match this.
+            "    f();",
+            "    return this;",
             "  }",
             "}")
         .doTest();

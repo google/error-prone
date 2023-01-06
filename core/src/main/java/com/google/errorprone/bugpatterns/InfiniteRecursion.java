@@ -16,11 +16,11 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
@@ -37,6 +37,7 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.TypeCastTree;
 import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import javax.inject.Inject;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
@@ -44,12 +45,29 @@ import org.checkerframework.checker.nullness.qual.Nullable;
     summary = "This method always recurses, and will cause a StackOverflowError",
     severity = ERROR)
 public class InfiniteRecursion extends BugChecker implements BugChecker.MethodTreeMatcher {
+  private final boolean matchFirstOfMultipleStatements;
+
+  @Inject
+  public InfiniteRecursion(ErrorProneFlags flags) {
+    // TODO(b/264529494): Remove flag.
+    matchFirstOfMultipleStatements =
+        flags.getBoolean("InfiniteRecursion:MatchFirstOfMultipleStatements").orElse(true);
+  }
+
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
-    if (tree.getBody() == null || tree.getBody().getStatements().size() != 1) {
+    if (tree.getBody() == null || tree.getBody().getStatements().isEmpty()) {
       return NO_MATCH;
     }
-    Tree statement = getOnlyElement(tree.getBody().getStatements());
+    if (!matchFirstOfMultipleStatements && tree.getBody().getStatements().size() > 1) {
+      return NO_MATCH;
+    }
+    /*
+     * TODO(b/264529494): Match statements after the first as long as they're executed
+     * unconditionally. And match more than just `return` and method-invocation expression
+     * statements, too.
+     */
+    Tree statement = tree.getBody().getStatements().get(0);
     MethodInvocationTree invocation =
         statement.accept(
             new SimpleTreeVisitor<MethodInvocationTree, Void>() {
