@@ -1514,6 +1514,9 @@ Non-constant variable missing @Var annotation
 __[Varifier](bugpattern/Varifier)__<br>
 Consider using &#96;var&#96; here to avoid boilerplate.
 
+__[YodaCondition](bugpattern/YodaCondition)__<br>
+The non-constant portion of an equals check generally comes first.
+
 ## Experimental : SUGGESTION
 
 __[AnnotationMirrorToString](bugpattern/AnnotationMirrorToString)__<br>
