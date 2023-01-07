@@ -15,7 +15,7 @@
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":10,"i1":9,"i2":9,"i3":6,"i4":10,"i5":6,"i6":10,"i7":10,"i8":10};
+<script type="text/javascript">var data = {"i0":10,"i1":9,"i2":9,"i3":9,"i4":6,"i5":10,"i6":6,"i7":6,"i8":10,"i9":10};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -176,36 +176,44 @@ D&nbsp;data)</code></th>
 </tr>
 <tr class="alt-color" id="i2">
 <td class="col-first"><code>static <a href="UMethodInvocation.html" title="class in com.google.errorprone.refaster">UMethodInvocation</a></code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#create(com.google.errorprone.refaster.UExpression,java.util.List)">create</a></span>&#8203;(<a href="UExpression.html" title="class in com.google.errorprone.refaster">UExpression</a>&nbsp;methodSelect,
-<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="UExpression.html" title="class in com.google.errorprone.refaster">UExpression</a>&gt;&nbsp;arguments)</code></th>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#create(java.util.List,com.google.errorprone.refaster.UExpression,com.google.errorprone.refaster.UExpression...)">create</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;? extends <a href="UExpression.html" title="class in com.google.errorprone.refaster">UExpression</a>&gt;&nbsp;typeArguments,
+<a href="UExpression.html" title="class in com.google.errorprone.refaster">UExpression</a>&nbsp;methodSelect,
+<a href="UExpression.html" title="class in com.google.errorprone.refaster">UExpression</a>...&nbsp;arguments)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="row-color" id="i3">
+<td class="col-first"><code>static <a href="UMethodInvocation.html" title="class in com.google.errorprone.refaster">UMethodInvocation</a></code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#create(java.util.List,com.google.errorprone.refaster.UExpression,java.util.List)">create</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;? extends <a href="UExpression.html" title="class in com.google.errorprone.refaster">UExpression</a>&gt;&nbsp;typeArguments,
+<a href="UExpression.html" title="class in com.google.errorprone.refaster">UExpression</a>&nbsp;methodSelect,
+<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="UExpression.html" title="class in com.google.errorprone.refaster">UExpression</a>&gt;&nbsp;arguments)</code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="alt-color" id="i4">
 <td class="col-first"><code>abstract com.google.common.collect.ImmutableList&lt;<a href="UExpression.html" title="class in com.google.errorprone.refaster">UExpression</a>&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getArguments()">getArguments</a></span>()</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i4">
+<tr class="row-color" id="i5">
 <td class="col-first"><code>com.sun.source.tree.Tree.Kind</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getKind()">getKind</a></span>()</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i5">
+<tr class="alt-color" id="i6">
 <td class="col-first"><code>abstract <a href="UExpression.html" title="class in com.google.errorprone.refaster">UExpression</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getMethodSelect()">getMethodSelect</a></span>()</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i6">
-<td class="col-first"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="UTree.html" title="class in com.google.errorprone.refaster">UTree</a>&lt;?&gt;&gt;</code></td>
+<tr class="row-color" id="i7">
+<td class="col-first"><code>abstract com.google.common.collect.ImmutableList&lt;<a href="UExpression.html" title="class in com.google.errorprone.refaster">UExpression</a>&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getTypeArguments()">getTypeArguments</a></span>()</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="row-color" id="i7">
+<tr class="alt-color" id="i8">
 <td class="col-first"><code>com.sun.tools.javac.tree.JCTree.JCMethodInvocation</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#inline(com.google.errorprone.refaster.Inliner)">inline</a></span>&#8203;(<a href="Inliner.html" title="class in com.google.errorprone.refaster">Inliner</a>&nbsp;inliner)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i8">
+<tr class="row-color" id="i9">
 <td class="col-first"><code><a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;<a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#visitMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.refaster.Unifier)">visitMethodInvocation</a></span>&#8203;(com.sun.source.tree.MethodInvocationTree&nbsp;methodInvocation,
 <a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;unifier)</code></th>
@@ -253,10 +261,19 @@ D&nbsp;data)</code></th>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="create(com.google.errorprone.refaster.UExpression,java.util.List)">
+<section class="detail" id="create(java.util.List,com.google.errorprone.refaster.UExpression,java.util.List)">
 <h3>create</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="UMethodInvocation.html" title="class in com.google.errorprone.refaster">UMethodInvocation</a></span>&nbsp;<span class="member-name">create</span>&#8203;(<span class="parameters"><a href="UExpression.html" title="class in com.google.errorprone.refaster">UExpression</a>&nbsp;methodSelect,
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="UMethodInvocation.html" title="class in com.google.errorprone.refaster">UMethodInvocation</a></span>&nbsp;<span class="member-name">create</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;? extends <a href="UExpression.html" title="class in com.google.errorprone.refaster">UExpression</a>&gt;&nbsp;typeArguments,
+<a href="UExpression.html" title="class in com.google.errorprone.refaster">UExpression</a>&nbsp;methodSelect,
 <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="UExpression.html" title="class in com.google.errorprone.refaster">UExpression</a>&gt;&nbsp;arguments)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="create(java.util.List,com.google.errorprone.refaster.UExpression,com.google.errorprone.refaster.UExpression...)">
+<h3>create</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="UMethodInvocation.html" title="class in com.google.errorprone.refaster">UMethodInvocation</a></span>&nbsp;<span class="member-name">create</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;? extends <a href="UExpression.html" title="class in com.google.errorprone.refaster">UExpression</a>&gt;&nbsp;typeArguments,
+<a href="UExpression.html" title="class in com.google.errorprone.refaster">UExpression</a>&nbsp;methodSelect,
+<a href="UExpression.html" title="class in com.google.errorprone.refaster">UExpression</a>...&nbsp;arguments)</span></div>
 </section>
 </li>
 <li>
@@ -264,6 +281,16 @@ D&nbsp;data)</code></th>
 <h3>create</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="UMethodInvocation.html" title="class in com.google.errorprone.refaster">UMethodInvocation</a></span>&nbsp;<span class="member-name">create</span>&#8203;(<span class="parameters"><a href="UExpression.html" title="class in com.google.errorprone.refaster">UExpression</a>&nbsp;methodSelect,
 <a href="UExpression.html" title="class in com.google.errorprone.refaster">UExpression</a>...&nbsp;arguments)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="getTypeArguments()">
+<h3>getTypeArguments</h3>
+<div class="member-signature"><span class="modifiers">public abstract</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableList&lt;<a href="UExpression.html" title="class in com.google.errorprone.refaster">UExpression</a>&gt;</span>&nbsp;<span class="member-name">getTypeArguments</span>()</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code>getTypeArguments</code>&nbsp;in interface&nbsp;<code>com.sun.source.tree.MethodInvocationTree</code></dd>
+</dl>
 </section>
 </li>
 <li>
@@ -320,16 +347,6 @@ D&nbsp;data)</span></div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code>getKind</code>&nbsp;in interface&nbsp;<code>com.sun.source.tree.Tree</code></dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="getTypeArguments()">
-<h3>getTypeArguments</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="UTree.html" title="class in com.google.errorprone.refaster">UTree</a>&lt;?&gt;&gt;</span>&nbsp;<span class="member-name">getTypeArguments</span>()</div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code>getTypeArguments</code>&nbsp;in interface&nbsp;<code>com.sun.source.tree.MethodInvocationTree</code></dd>
 </dl>
 </section>
 </li>
