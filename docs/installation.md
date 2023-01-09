@@ -91,8 +91,8 @@ file which are required on JDK 16 and newer due to
 --add-opens jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED
 ```
 
-See the [flags documentation](http://errorprone.info/docs/flags#maven) for details on
-how to customize the plugin's behavior.
+See the [flags documentation](http://errorprone.info/docs/flags#maven) for
+details on how to customize the plugin's behavior.
 
 ## Gradle
 
@@ -103,8 +103,10 @@ The gradle plugin is an external contribution. The documentation and code is at
 
 Download the following artifacts from maven:
 
-*   `error_prone_core-${EP_VERSION?}-with-dependencies.jar` from https://repo1.maven.org/maven2/com/google/errorprone/error_prone_core/
-*   [dataflow-errorprone-3.15.0.jar](https://repo1.maven.org/maven2/org/checkerframework/dataflow-errorprone/3.15.0/dataflow-errorprone-3.15.0.jar)
+*   `error_prone_core-${EP_VERSION?}-with-dependencies.jar` from
+    [https://repo1.maven.org/maven2/com/google/errorprone/error_prone_core/](https://repo1.maven.org/maven2/com/google/errorprone/error_prone_core/)
+*   `dataflow-errorprone-${EP_VERSION}.jar` from
+    [https://repo1.maven.org/maven2/org/checkerframework/dataflow-errorprone/](https://repo1.maven.org/maven2/org/checkerframework/dataflow-errorprone/)
 
 and add the following javac task to your project's `build.xml` file:
 
