@@ -43,8 +43,6 @@ import com.sun.tools.javac.code.TypeTag;
  */
 @BugPattern(
     summary = "This expression can be implicitly boxed.",
-    explanation =
-        "It is unnecessary for this assignment or return expression to be boxed explicitly.",
     severity = SeverityLevel.SUGGESTION)
 public class UnnecessaryBoxedAssignment extends BugChecker
     implements AssignmentTreeMatcher, ReturnTreeMatcher, VariableTreeMatcher {
