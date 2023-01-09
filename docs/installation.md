@@ -105,7 +105,7 @@ Download the following artifacts from maven:
 
 *   `error_prone_core-${EP_VERSION?}-with-dependencies.jar` from
     [https://repo1.maven.org/maven2/com/google/errorprone/error_prone_core/](https://repo1.maven.org/maven2/com/google/errorprone/error_prone_core/)
-*   `dataflow-errorprone-${EP_VERSION}.jar` from
+*   `dataflow-errorprone-${DATAFLOW_VERSION}.jar` from
     [https://repo1.maven.org/maven2/org/checkerframework/dataflow-errorprone/](https://repo1.maven.org/maven2/org/checkerframework/dataflow-errorprone/)
 
 and add the following javac task to your project's `build.xml` file:
