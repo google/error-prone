@@ -80,6 +80,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
+import javax.inject.Inject;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.Name;
 
@@ -153,6 +154,7 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
 
   private final ImmutableSet<String> additionalExemptingMethodAnnotations;
 
+  @Inject
   public UnusedMethod(ErrorProneFlags errorProneFlags) {
     this.additionalExemptingMethodAnnotations =
         errorProneFlags
