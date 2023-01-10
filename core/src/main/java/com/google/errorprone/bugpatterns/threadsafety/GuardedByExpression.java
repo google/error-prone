@@ -134,6 +134,15 @@ public abstract class GuardedByExpression {
     public static Select create(GuardedByExpression base, Symbol sym, Type type) {
       return new AutoValue_GuardedByExpression_Select(Kind.SELECT, sym, type, base);
     }
+
+    /** Finds this {@link Select}'s nearest non-Select ancestor. */
+    public GuardedByExpression root() {
+      GuardedByExpression exp = this.base();
+      while (exp.kind() == Kind.SELECT) {
+        exp = ((Select) exp).base();
+      }
+      return exp;
+    }
   }
 
   /** Makes {@link GuardedByExpression}s. */

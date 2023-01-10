@@ -64,4 +64,140 @@ public class GuardedByLockMethodTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void guardedBy_staticMethodWithParameter_succeeds() {
+    compilationHelper
+        .addSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "import com.google.errorprone.annotations.concurrent.LockMethod;",
+            "import com.google.errorprone.annotations.concurrent.UnlockMethod;",
+            "import java.util.concurrent.locks.Lock;",
+            "class Utils {",
+            "  @GuardedBy(\"foo\")",
+            "  static void mutateFoo(Lock foo) {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void guardedBy_staticMethodWithParameterMember_succeeds() {
+    compilationHelper
+        .addSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "import com.google.errorprone.annotations.concurrent.LockMethod;",
+            "import com.google.errorprone.annotations.concurrent.UnlockMethod;",
+            "import java.util.concurrent.locks.Lock;",
+            "class Foo {",
+            "  Lock lock;",
+            "}",
+            "class Utils {",
+            "  @GuardedBy(\"foo.lock\")",
+            "  static void mutateFoo(Foo foo) {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void guardedBy_staticMethodWithParameterInstanceMethod_succeeds() {
+    compilationHelper
+        .addSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "import com.google.errorprone.annotations.concurrent.LockMethod;",
+            "import com.google.errorprone.annotations.concurrent.UnlockMethod;",
+            "import java.util.concurrent.locks.Lock;",
+            "class IndirectFoo {",
+            "  Lock getLock() {",
+            "    return null;",
+            "  }",
+            "}",
+            "class Foo {",
+            "  IndirectFoo indirectFoo;",
+            "}",
+            "class Utils {",
+            "  @GuardedBy(\"foo.indirectFoo.getLock()\")",
+            "  static void mutateFoo(Foo foo) {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void guardedBy_staticMethodWithIndirectParameterInstanceMethod_succeeds() {
+    compilationHelper
+        .addSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "import com.google.errorprone.annotations.concurrent.LockMethod;",
+            "import com.google.errorprone.annotations.concurrent.UnlockMethod;",
+            "import java.util.concurrent.locks.Lock;",
+            "class IndirectFoo {",
+            "  Lock getLock() {",
+            "    return null;",
+            "  }",
+            "}",
+            "class Foo {",
+            "  IndirectFoo getIndirectFoo() {",
+            "    return new IndirectFoo();",
+            "  }",
+            "}",
+            "class Utils {",
+            "  @GuardedBy(\"foo.getIndirectFoo().getLock()\")",
+            "  static void mutateFoo(Foo foo) {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void guardedBy_staticMethodWithIndirectParameterInstanceMember_succeeds() {
+    compilationHelper
+        .addSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "import com.google.errorprone.annotations.concurrent.LockMethod;",
+            "import com.google.errorprone.annotations.concurrent.UnlockMethod;",
+            "import java.util.concurrent.locks.Lock;",
+            "class IndirectFoo {",
+            "  Lock lock;",
+            "}",
+            "class Foo {",
+            "  IndirectFoo getIndirectFoo() {",
+            "    return new IndirectFoo();",
+            "  }",
+            "}",
+            "class Utils {",
+            "  @GuardedBy(\"foo.getIndirectFoo().lock\")",
+            "  static void mutateFoo(Foo foo) {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void guardedBy_staticMethodWithInstanceMethod_fails() {
+    compilationHelper
+        .addSourceLines(
+            "threadsafety/Test.java",
+            "package threadsafety;",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "import com.google.errorprone.annotations.concurrent.LockMethod;",
+            "import com.google.errorprone.annotations.concurrent.UnlockMethod;",
+            "import java.util.concurrent.locks.Lock;",
+            "class Utils {",
+            "  @GuardedBy(\"getLock()\")",
+            "  // BUG: Diagnostic contains:",
+            "  // static member guarded by instance",
+            "  static void m() {}",
+            "  Lock getLock() {",
+            "    return null;",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
