@@ -43,7 +43,6 @@ import javax.lang.model.element.NestingKind;
     tags = {StandardTags.STYLE, StandardTags.PERFORMANCE})
 public class ClassCanBeStatic extends BugChecker implements ClassTreeMatcher {
 
-  private static final String JUNIT_NESTED_ANNOTATION = "org.junit.jupiter.api.Nested";
   private static final String REFASTER_ANNOTATION =
       "com.google.errorprone.refaster.annotation.BeforeTemplate";
 
@@ -78,7 +77,7 @@ public class ClassCanBeStatic extends BugChecker implements ClassTreeMatcher {
     if (CanBeStaticAnalyzer.referencesOuter(tree, currentClass, state)) {
       return NO_MATCH;
     }
-    if (hasAnnotation(currentClass, JUNIT_NESTED_ANNOTATION, state)) {
+    if (ASTHelpers.shouldKeep(tree)) {
       return NO_MATCH;
     }
     if (tree.getMembers().stream().anyMatch(m -> hasAnnotation(m, REFASTER_ANNOTATION, state))) {
