@@ -34,6 +34,7 @@ import com.google.common.truth.Subject;
 import com.google.errorprone.BugCheckerInfo;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.ErrorProneJavaCompilerTest;
 import com.google.errorprone.ErrorProneJavaCompilerTest.UnsuppressibleArrayEquals;
 import com.google.errorprone.ErrorProneOptions;
@@ -623,6 +624,21 @@ public class ScannerSupplierTest {
     final MapSubject flagsMap() {
       return check("getFlags().getFlagsMap()").that(actual.getFlags().getFlagsMap());
     }
+  }
+
+  /** A check missing `@Inject`. */
+  @SuppressWarnings("InjectOnBugCheckers") // intentional for testing
+  @BugPattern(summary = "", severity = ERROR)
+  public static class MissingInject extends BugChecker {
+    public MissingInject(ErrorProneFlags flags) {}
+  }
+
+  @Test
+  public void missingInject_stillProvisioned() {
+    ScannerSupplier ss1 = ScannerSupplier.fromBugCheckerClasses(MissingInject.class);
+
+    // We're only testing that this doesn't fail.
+    var unused = ss1.get();
   }
 
   private static ScannerSupplierSubject assertScanner(ScannerSupplier scannerSupplier) {

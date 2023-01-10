@@ -27,6 +27,9 @@ import com.google.errorprone.BugCheckerInfo;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.bugpatterns.BugChecker;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.ProvisionException;
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.util.Arrays;
@@ -42,6 +45,8 @@ class ScannerSupplierImpl extends ScannerSupplier implements Serializable {
   private final ImmutableMap<String, SeverityLevel> severities;
   private final ImmutableSet<String> disabled;
   private final ErrorProneFlags flags;
+  // Lazily initialized to make serialization easy.
+  private transient Injector injector;
 
   ScannerSupplierImpl(
       ImmutableBiMap<String, BugCheckerInfo> checks,
@@ -61,6 +66,20 @@ class ScannerSupplierImpl extends ScannerSupplier implements Serializable {
   }
 
   private BugChecker instantiateChecker(BugCheckerInfo checker) {
+    if (injector == null) {
+      injector =
+          Guice.createInjector(binder -> binder.bind(ErrorProneFlags.class).toInstance(flags));
+    }
+    try {
+      return injector.getInstance(checker.checkerClass());
+    } catch (ProvisionException | com.google.inject.ConfigurationException e) {
+      // Fall back to the old path for external checks.
+      // TODO(b/263227221): Consider stripping this internally after careful testing.
+      return instantiateCheckerOldPath(checker);
+    }
+  }
+
+  private BugChecker instantiateCheckerOldPath(BugCheckerInfo checker) {
     // Invoke BugChecker(ErrorProneFlags) constructor, if it exists.
     @SuppressWarnings("unchecked")
     /* getConstructors() actually returns Constructor<BugChecker>[], though the return type is
