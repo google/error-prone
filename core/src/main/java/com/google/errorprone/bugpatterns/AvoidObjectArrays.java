@@ -19,30 +19,18 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.fixes.SuggestedFixes.prettyType;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
-import static com.google.errorprone.matchers.Matchers.allOf;
-import static com.google.errorprone.matchers.Matchers.hasModifier;
-import static com.google.errorprone.matchers.Matchers.isSameType;
-import static com.google.errorprone.matchers.Matchers.methodHasArity;
-import static com.google.errorprone.matchers.Matchers.methodHasParameters;
-import static com.google.errorprone.matchers.Matchers.methodHasVisibility;
-import static com.google.errorprone.matchers.Matchers.methodIsNamed;
-import static com.google.errorprone.matchers.Matchers.methodReturns;
-import static com.google.errorprone.matchers.MethodVisibility.Visibility.PUBLIC;
+import static com.google.errorprone.matchers.Matchers.MAIN_METHOD;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
-import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.google.errorprone.util.ASTHelpers.methodIsPublicAndNotAnOverride;
 import static java.util.function.Predicate.isEqual;
-import static javax.lang.model.element.Modifier.STATIC;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.suppliers.Suppliers;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
@@ -65,16 +53,6 @@ public class AvoidObjectArrays extends BugChecker implements MethodTreeMatcher {
           "org.junit.runners.Parameterized.Parameters",
           "org.junit.experimental.theories.DataPoints",
           "junitparams.Parameters");
-
-  // copied from SystemExitOutsideMain
-  private static final Matcher<MethodTree> MAIN_METHOD =
-      allOf(
-          methodHasArity(1),
-          methodHasVisibility(PUBLIC),
-          hasModifier(STATIC),
-          methodReturns(Suppliers.VOID_TYPE),
-          methodIsNamed("main"),
-          methodHasParameters(isSameType(Suppliers.arrayOf(Suppliers.STRING_TYPE))));
 
   @Override
   public Description matchMethod(MethodTree method, VisitorState state) {

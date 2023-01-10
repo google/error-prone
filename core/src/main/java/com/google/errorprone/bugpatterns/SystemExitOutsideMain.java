@@ -16,26 +16,17 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.matchers.Matchers.MAIN_METHOD;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.enclosingMethod;
-import static com.google.errorprone.matchers.Matchers.hasModifier;
-import static com.google.errorprone.matchers.Matchers.isSameType;
-import static com.google.errorprone.matchers.Matchers.methodHasArity;
-import static com.google.errorprone.matchers.Matchers.methodHasParameters;
-import static com.google.errorprone.matchers.Matchers.methodHasVisibility;
-import static com.google.errorprone.matchers.Matchers.methodIsNamed;
-import static com.google.errorprone.matchers.Matchers.methodReturns;
 import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
-import static com.google.errorprone.matchers.MethodVisibility.Visibility.PUBLIC;
-import static javax.lang.model.element.Modifier.STATIC;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.suppliers.Suppliers;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
@@ -53,15 +44,6 @@ import java.util.Optional;
 public class SystemExitOutsideMain extends BugChecker implements MethodInvocationTreeMatcher {
   private static final Matcher<ExpressionTree> CALLS_TO_SYSTEM_EXIT =
       staticMethod().onClass("java.lang.System").named("exit");
-
-  private static final Matcher<MethodTree> MAIN_METHOD =
-      allOf(
-          methodHasArity(1),
-          methodHasVisibility(PUBLIC),
-          hasModifier(STATIC),
-          methodReturns(Suppliers.VOID_TYPE),
-          methodIsNamed("main"),
-          methodHasParameters(isSameType(Suppliers.arrayOf(Suppliers.STRING_TYPE))));
 
   private static final Matcher<ExpressionTree> CALLS_TO_SYSTEM_EXIT_OUTSIDE_MAIN =
       allOf(CALLS_TO_SYSTEM_EXIT, not(enclosingMethod(MAIN_METHOD)));

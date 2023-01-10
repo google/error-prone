@@ -20,6 +20,7 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.common.collect.Streams.stream;
+import static com.google.errorprone.matchers.MethodVisibility.Visibility.PUBLIC;
 import static com.google.errorprone.suppliers.Suppliers.BOOLEAN_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.INT_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.JAVA_LANG_BOOLEAN_TYPE;
@@ -31,6 +32,7 @@ import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.google.errorprone.util.ASTHelpers.stripParentheses;
 import static java.util.Objects.requireNonNull;
+import static javax.lang.model.element.Modifier.STATIC;
 
 import com.google.common.base.VerifyException;
 import com.google.common.collect.ImmutableList;
@@ -47,6 +49,7 @@ import com.google.errorprone.matchers.method.MethodMatchers.InstanceMethodMatche
 import com.google.errorprone.matchers.method.MethodMatchers.StaticMethodMatcher;
 import com.google.errorprone.predicates.TypePredicate;
 import com.google.errorprone.suppliers.Supplier;
+import com.google.errorprone.suppliers.Suppliers;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.AssertTree;
@@ -1437,6 +1440,15 @@ public class Matchers {
     return (Matcher<T>) INSTANCE_EQUALS;
   }
 
+  public static final Matcher<MethodTree> MAIN_METHOD =
+      allOf(
+          methodHasArity(1),
+          methodHasVisibility(PUBLIC),
+          hasModifier(STATIC),
+          methodReturns(Suppliers.VOID_TYPE),
+          methodIsNamed("main"),
+          methodHasParameters(isSameType(Suppliers.arrayOf(STRING_TYPE))));
+
   private static final Matcher<ExpressionTree> INSTANCE_HASHCODE =
       allOf(instanceMethod().anyClass().named("hashCode").withNoParameters(), isSameType(INT_TYPE));
 
@@ -1474,7 +1486,7 @@ public class Matchers {
   private static final Matcher<MethodTree> EQUALS_DECLARATION =
       allOf(
           methodIsNamed("equals"),
-          methodHasVisibility(Visibility.PUBLIC),
+          methodHasVisibility(PUBLIC),
           methodHasParameters(variableType(isSameType("java.lang.Object"))),
           anyOf(methodReturns(BOOLEAN_TYPE), methodReturns(JAVA_LANG_BOOLEAN_TYPE)));
 
@@ -1486,7 +1498,7 @@ public class Matchers {
   private static final Matcher<MethodTree> TO_STRING_DECLARATION =
       allOf(
           methodIsNamed("toString"),
-          methodHasVisibility(Visibility.PUBLIC),
+          methodHasVisibility(PUBLIC),
           methodHasNoParameters(),
           methodReturns(STRING_TYPE));
 
@@ -1498,7 +1510,7 @@ public class Matchers {
   private static final Matcher<MethodTree> HASH_CODE_DECLARATION =
       allOf(
           methodIsNamed("hashCode"),
-          methodHasVisibility(Visibility.PUBLIC),
+          methodHasVisibility(PUBLIC),
           methodHasNoParameters(),
           methodReturns(INT_TYPE));
 
@@ -1511,7 +1523,7 @@ public class Matchers {
   private static final Matcher<MethodTree> COMPARABLE_METHOD_MATCHER =
       allOf(
           methodIsNamed("compareTo"),
-          methodHasVisibility(Visibility.PUBLIC),
+          methodHasVisibility(PUBLIC),
           methodReturns(INT_TYPE),
           methodHasArity(1));
 
