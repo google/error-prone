@@ -26,6 +26,7 @@ import static com.google.errorprone.util.ASTHelpers.annotationsAmong;
 import static com.google.errorprone.util.ASTHelpers.findSuperMethod;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasDirectAnnotationWithSimpleName;
+import static com.google.errorprone.util.ASTHelpers.isSubtype;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
@@ -91,6 +92,14 @@ public final class UnnecessarilyVisible extends BugChecker implements MethodTree
     }
     Set<Modifier> badModifiers = intersection(tree.getModifiers().getFlags(), VISIBILITY_MODIFIERS);
     if (badModifiers.isEmpty()) {
+      return NO_MATCH;
+    }
+    // TODO(b/263227221): Remove this once migration to guice is complete
+    if (symbol.isConstructor()
+        && isSubtype(
+            symbol.enclClass().asType(),
+            state.getTypeFromString("com.google.errorprone.bugpatterns.BugChecker"),
+            state)) {
       return NO_MATCH;
     }
     return buildDescription(tree)
