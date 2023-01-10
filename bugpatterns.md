@@ -1344,7 +1344,7 @@ __[BuilderReturnThis](bugpattern/BuilderReturnThis)__<br>
 Builder instance method does not return &#39;this&#39;
 
 __[CanIgnoreReturnValueSuggester](bugpattern/CanIgnoreReturnValueSuggester)__<br>
-Methods that always &#39;return this&#39; should be annotated with @com.google.errorprone.annotations.CanIgnoreReturnValue
+Methods with ignorable return values (including methods that always &#39;return this&#39;) should be annotated with @com.google.errorprone.annotations.CanIgnoreReturnValue
 
 __[CannotMockFinalClass](bugpattern/CannotMockFinalClass)__<br>
 Mockito cannot mock final classes
