@@ -679,4 +679,30 @@ public class CanIgnoreReturnValueSuggesterTest {
         .expectUnchanged()
         .doTest();
   }
+
+  @Test
+  public void immutableBuilder_b265049495() {
+    helper
+        .addInputLines(
+            "Animal.java",
+            "package com.google.frobber;",
+            "import com.google.auto.value.AutoValue;",
+            "@AutoValue",
+            "abstract class AnimalBuilder {",
+            "  abstract String name();",
+            "  public AnimalBuilder withName(String name) {",
+            "    return builder().setName(name).build();",
+            "  }",
+            "  static Builder builder() {",
+            "    return null;",
+            "  }",
+            "  @AutoValue.Builder",
+            "  abstract static class Builder {",
+            "    abstract Builder setName(String value);",
+            "    abstract AnimalBuilder build();",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
 }

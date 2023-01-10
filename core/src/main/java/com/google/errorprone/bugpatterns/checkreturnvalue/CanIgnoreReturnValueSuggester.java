@@ -57,14 +57,17 @@ import com.sun.tools.javac.code.Type;
 
 /**
  * Checker that recommends annotating a method with {@code @CanIgnoreReturnValue} if the method
- * returns {@code this} (or other methods that are likely to also just return {@code this}).
+ * returns {@code this} (or it looks like a builder method that is likely to return {@code this}).
  */
 @BugPattern(
     summary =
-        "Methods that always 'return this' should be annotated with"
-            + " @com.google.errorprone.annotations.CanIgnoreReturnValue",
+        "Methods with ignorable return values (including methods that always 'return this') should"
+            + " be annotated with @com.google.errorprone.annotations.CanIgnoreReturnValue",
     severity = WARNING)
 public final class CanIgnoreReturnValueSuggester extends BugChecker implements MethodTreeMatcher {
+
+  private static final String AUTO_VALUE = "com.google.auto.value.AutoValue";
+  private static final String IMMUTABLE = "com.google.errorprone.annotations.Immutable";
   private static final String CRV = "com.google.errorprone.annotations.CheckReturnValue";
   private static final String CIRV = "com.google.errorprone.annotations.CanIgnoreReturnValue";
 
@@ -108,7 +111,8 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
     }
 
     // if the method looks like a builder, or if it always returns `this`, then make it @CIRV
-    if (methodLooksLikeBuilder(methodSymbol) || methodReturnsIgnorableValues(methodTree, state)) {
+    if (methodLooksLikeBuilder(methodSymbol, state)
+        || methodReturnsIgnorableValues(methodTree, state)) {
       SuggestedFix.Builder fix = SuggestedFix.builder();
 
       // if the method is annotated with @RIU, we need to remove it before adding @CIRV
@@ -134,17 +138,21 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
     // TODO(kak): use ResultEvaluator instead of duplicating _some_ of the logic (right now we only
     // exclude @AutoValue.Builder's and @AutoBuilder's)
     return isAbstract(methodSymbol)
-        && (hasAnnotation(owner, "com.google.auto.value.AutoValue.Builder", state)
+        && (hasAnnotation(owner, AUTO_VALUE + ".Builder", state)
             || hasAnnotation(owner, "com.google.auto.value.AutoBuilder", state));
   }
 
   private static final ImmutableSet<String> BUILDER_METHOD_PREFIXES =
       ImmutableSet.of("add", "set", "with", "clear");
 
-  private static boolean methodLooksLikeBuilder(MethodSymbol methodSymbol) {
+  private static boolean methodLooksLikeBuilder(MethodSymbol methodSymbol, VisitorState state) {
+    boolean enclosingTypeIsImmutable =
+        hasAnnotation(methodSymbol.owner, IMMUTABLE, state)
+            || hasAnnotation(methodSymbol.owner, AUTO_VALUE, state);
     String methodName = methodSymbol.getSimpleName().toString();
     return methodSymbol.owner.getSimpleName().toString().contains("Builder")
-        && BUILDER_METHOD_PREFIXES.stream().anyMatch(methodName::startsWith);
+        && BUILDER_METHOD_PREFIXES.stream().anyMatch(methodName::startsWith)
+        && !enclosingTypeIsImmutable;
   }
 
   private static boolean isSimpleReturnThisMethod(MethodTree methodTree) {
