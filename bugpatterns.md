@@ -1515,7 +1515,7 @@ __[Varifier](bugpattern/Varifier)__<br>
 Consider using &#96;var&#96; here to avoid boilerplate.
 
 __[YodaCondition](bugpattern/YodaCondition)__<br>
-The non-constant portion of an equals check generally comes first.
+The non-constant portion of an equals check generally comes first. Prefer e.equals(CONSTANT) if e is non-null or Objects.equals(e, CONSTANT) if e may be
 
 ## Experimental : SUGGESTION
 

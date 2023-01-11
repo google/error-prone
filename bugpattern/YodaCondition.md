@@ -1,6 +1,7 @@
 ---
 title: YodaCondition
-summary: The non-constant portion of an equals check generally comes first.
+summary: The non-constant portion of an equals check generally comes first. Prefer
+  e.equals(CONSTANT) if e is non-null or Objects.equals(e, CONSTANT) if e may be
 layout: bugpattern
 tags: ''
 severity: WARNING
