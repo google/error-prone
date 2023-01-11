@@ -89,7 +89,7 @@ public final class YodaConditionTest {
   }
 
   @Test
-  public void nullUnsafeFix() {
+  public void nullIntolerantFix() {
     refactoring
         .addInputLines("E.java", "enum E {A, B}")
         .expectUnchanged()
@@ -107,11 +107,12 @@ public final class YodaConditionTest {
             "    return a.equals(E.A);",
             "  }",
             "}")
+        .setFixChooser(FixChoosers.SECOND)
         .doTest();
   }
 
   @Test
-  public void nullSafeFix() {
+  public void nullTolerantFix() {
     refactoring
         .addInputLines("E.java", "enum E {A, B}")
         .expectUnchanged()
@@ -130,7 +131,34 @@ public final class YodaConditionTest {
             "    return Objects.equals(a, E.A);",
             "  }",
             "}")
-        .setFixChooser(FixChoosers.SECOND)
+        .doTest();
+  }
+
+  @Test
+  public void provablyNonNull_nullIntolerantFix() {
+    refactoring
+        .addInputLines("E.java", "enum E {A, B}")
+        .expectUnchanged()
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  boolean yoda(E a) {",
+            "    if (a != null) {",
+            "      return E.A.equals(a);",
+            "    }",
+            "    return true;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  boolean yoda(E a) {",
+            "    if (a != null) {",
+            "      return a.equals(E.A);",
+            "    }",
+            "    return true;",
+            "  }",
+            "}")
         .doTest();
   }
 }
