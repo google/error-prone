@@ -22,6 +22,7 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.instanceEqualsInvocation;
 import static com.google.errorprone.matchers.Matchers.staticEqualsInvocation;
 import static com.google.errorprone.util.ASTHelpers.constValue;
+import static com.google.errorprone.util.ASTHelpers.getNullnessValue;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static java.lang.String.format;
@@ -30,9 +31,12 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
+import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
+import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnalysis;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.BinaryTree;
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
@@ -40,7 +44,9 @@ import java.util.Objects;
 
 /** See the summary. */
 @BugPattern(
-    summary = "The non-constant portion of an equals check generally comes first.",
+    summary =
+        "The non-constant portion of an equals check generally comes first. Prefer"
+            + " e.equals(CONSTANT) if e is non-null or Objects.equals(e, CONSTANT) if e may be",
     severity = WARNING)
 public final class YodaCondition extends BugChecker
     implements BinaryTreeMatcher, MethodInvocationTreeMatcher {
@@ -82,10 +88,16 @@ public final class YodaCondition extends BugChecker
   }
 
   private Description fix(
-      Tree tree, Tree lhs, Tree rhs, boolean provideNullSafeFix, VisitorState state) {
+      Tree tree,
+      ExpressionTree lhs,
+      ExpressionTree rhs,
+      boolean provideNullSafeFix,
+      VisitorState state) {
     if (seemsConstant(lhs) && !seemsConstant(rhs)) {
-      var description = buildDescription(lhs).addFix(SuggestedFix.swap(lhs, rhs));
-      if (provideNullSafeFix) {
+      var description = buildDescription(lhs);
+      if (provideNullSafeFix
+          && !getNullnessValue(rhs, state, NullnessAnalysis.instance(state.context))
+              .equals(Nullness.NONNULL)) {
         var fix = SuggestedFix.builder().setShortDescription("null-safe fix");
         description.addFix(
             fix.replace(
@@ -97,7 +109,7 @@ public final class YodaCondition extends BugChecker
                         state.getSourceForNode(lhs)))
                 .build());
       }
-      return description.build();
+      return description.addFix(SuggestedFix.swap(lhs, rhs)).build();
     }
     return NO_MATCH;
   }
