@@ -1,4 +1,4 @@
-Per the [style guide](style-guide), `TYPE_USE` annotations should appear
+Per the [style guide][style-guide], `TYPE_USE` annotations should appear
 immediately before the type being annotated, and after any modifiers:
 
 ```java
