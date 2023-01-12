@@ -28,6 +28,7 @@ import static com.google.errorprone.util.SideEffectAnalysis.hasSideEffect;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
@@ -37,6 +38,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
+import javax.inject.Inject;
 
 /** Highlights cases where a proto's build method has its return value ignored. */
 @BugPattern(
@@ -69,6 +71,11 @@ public final class ProtoBuilderReturnValueIgnored extends AbstractReturnValueIgn
           instanceMethod()
               .onDescendantOf("com.google.protobuf.MessageLite")
               .namedAnyOf("toBuilder"));
+
+  @Inject
+  ProtoBuilderReturnValueIgnored(ConstantExpressions constantExpressions) {
+    super(constantExpressions);
+  }
 
   @Override
   public Matcher<? super ExpressionTree> specializedMatcher() {

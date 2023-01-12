@@ -32,7 +32,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Multiset;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions;
@@ -138,8 +137,8 @@ public class AlwaysThrows extends BugChecker implements MethodInvocationTreeMatc
   private final ConstantExpressions constantExpressions;
 
   @Inject
-  public AlwaysThrows(ErrorProneFlags flags) {
-    this.constantExpressions = ConstantExpressions.fromFlags(flags);
+  public AlwaysThrows(ConstantExpressions constantExpressions) {
+    this.constantExpressions = constantExpressions;
   }
 
   @Override

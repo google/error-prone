@@ -27,6 +27,7 @@ import static com.google.errorprone.util.ASTHelpers.streamSuperMethods;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
+import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
@@ -39,6 +40,7 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
+import javax.inject.Inject;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} for details. */
 @BugPattern(
@@ -103,6 +105,11 @@ public final class RxReturnValueIgnored extends AbstractReturnValueIgnored {
               anyOf(
                   RxReturnValueIgnored::hasCirvAnnotation,
                   RxReturnValueIgnored::isExemptedMethod)));
+
+  @Inject
+  RxReturnValueIgnored(ConstantExpressions constantExpressions) {
+    super(constantExpressions);
+  }
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {

@@ -24,7 +24,6 @@ import static com.google.errorprone.util.ASTHelpers.isSameType;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.StandardTags;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions;
@@ -54,16 +53,11 @@ import javax.lang.model.element.Modifier;
     severity = WARNING,
     tags = StandardTags.FRAGILE_CODE)
 public class UnsynchronizedOverridesSynchronized extends BugChecker implements MethodTreeMatcher {
-
   private final ConstantExpressions constantExpressions;
 
-  public UnsynchronizedOverridesSynchronized() {
-    this(ErrorProneFlags.empty());
-  }
-
   @Inject
-  public UnsynchronizedOverridesSynchronized(ErrorProneFlags flags) {
-    this.constantExpressions = ConstantExpressions.fromFlags(flags);
+  public UnsynchronizedOverridesSynchronized(ConstantExpressions constantExpressions) {
+    this.constantExpressions = constantExpressions;
   }
 
   @Override

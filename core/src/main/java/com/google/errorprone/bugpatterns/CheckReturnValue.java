@@ -61,6 +61,7 @@ import com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicy;
 import com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicyEvaluator;
 import com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicyEvaluator.MethodInfo;
 import com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule.RuleScope;
+import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
@@ -142,8 +143,8 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
   private final ResultUsePolicyEvaluator<VisitorState, Symbol, MethodSymbol> evaluator;
 
   @Inject
-  public CheckReturnValue(ErrorProneFlags flags) {
-    super(flags);
+  public CheckReturnValue(ErrorProneFlags flags, ConstantExpressions constantExpressions) {
+    super(constantExpressions);
     this.messageTrailerStyle =
         flags
             .getEnum("CheckReturnValue:MessageTrailerStyle", MessageTrailerStyle.class)

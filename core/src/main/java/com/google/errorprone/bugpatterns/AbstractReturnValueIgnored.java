@@ -137,12 +137,13 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
 
   private final ConstantExpressions constantExpressions;
 
+  // TODO(ghm): Remove once possible.
   protected AbstractReturnValueIgnored() {
-    this(ErrorProneFlags.empty());
+    this(ConstantExpressions.fromFlags(ErrorProneFlags.empty()));
   }
 
-  protected AbstractReturnValueIgnored(ErrorProneFlags flags) {
-    this.constantExpressions = ConstantExpressions.fromFlags(flags);
+  protected AbstractReturnValueIgnored(ConstantExpressions constantExpressions) {
+    this.constantExpressions = constantExpressions;
   }
 
   @Override

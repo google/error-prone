@@ -29,20 +29,20 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javax.inject.Inject;
 
 /** A collection of types with known thread safety. */
 public final class WellKnownThreadSafety implements ThreadSafety.KnownTypes {
-
-  private WellKnownThreadSafety(
-      List<String> knownThreadSafe, WellKnownMutability wellKnownMutability) {
-    knownThreadSafeClasses = buildThreadSafeClasses(knownThreadSafe, wellKnownMutability);
-    knownUnsafeClasses = wellKnownMutability.getKnownMutableClasses();
+  @Inject
+  public WellKnownThreadSafety(ErrorProneFlags flags, WellKnownMutability wellKnownMutability) {
+    List<String> knownThreadSafe =
+        flags.getList("ThreadSafe:KnownThreadSafe").orElse(ImmutableList.of());
+    this.knownThreadSafeClasses = buildThreadSafeClasses(knownThreadSafe, wellKnownMutability);
+    this.knownUnsafeClasses = wellKnownMutability.getKnownMutableClasses();
   }
 
   public static WellKnownThreadSafety fromFlags(ErrorProneFlags flags) {
-    List<String> threadsafe =
-        flags.getList("ThreadSafe:KnownThreadSafe").orElse(ImmutableList.of());
-    return new WellKnownThreadSafety(threadsafe, WellKnownMutability.fromFlags(flags));
+    return new WellKnownThreadSafety(flags, WellKnownMutability.fromFlags(flags));
   }
 
   public Map<String, AnnotationInfo> getKnownThreadSafeClasses() {

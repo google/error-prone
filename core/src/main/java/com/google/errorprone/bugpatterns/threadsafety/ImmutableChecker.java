@@ -40,7 +40,6 @@ import com.google.common.collect.SetMultimap;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Sets.SetView;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.Immutable;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -103,17 +102,14 @@ public class ImmutableChecker extends BugChecker
   private final WellKnownMutability wellKnownMutability;
   private final ImmutableSet<String> immutableAnnotations;
 
-  ImmutableChecker(ImmutableSet<String> immutableAnnotations) {
-    this(ErrorProneFlags.empty(), immutableAnnotations);
-  }
-
   @Inject
-  public ImmutableChecker(ErrorProneFlags flags) {
-    this(flags, ImmutableSet.of(Immutable.class.getName()));
+  public ImmutableChecker(WellKnownMutability wellKnownMutability) {
+    this(wellKnownMutability, ImmutableSet.of(Immutable.class.getName()));
   }
 
-  private ImmutableChecker(ErrorProneFlags flags, ImmutableSet<String> immutableAnnotations) {
-    this.wellKnownMutability = WellKnownMutability.fromFlags(flags);
+  ImmutableChecker(
+      WellKnownMutability wellKnownMutability, ImmutableSet<String> immutableAnnotations) {
+    this.wellKnownMutability = wellKnownMutability;
     this.immutableAnnotations = immutableAnnotations;
   }
 

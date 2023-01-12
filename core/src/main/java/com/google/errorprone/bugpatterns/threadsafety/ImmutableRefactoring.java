@@ -36,6 +36,7 @@ import com.sun.tools.javac.code.Symbol;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import javax.inject.Inject;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
@@ -43,11 +44,18 @@ import java.util.Set;
     summary = "Refactors uses of the JSR 305 @Immutable to Error Prone's annotation",
     severity = SUGGESTION)
 public class ImmutableRefactoring extends BugChecker implements CompilationUnitTreeMatcher {
+  private final WellKnownMutability wellKnownMutability;
+
+  @Inject
+  ImmutableRefactoring(WellKnownMutability wellKnownMutability) {
+    this.wellKnownMutability = wellKnownMutability;
+  }
 
   @Override
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
     ImmutableChecker immutableChecker =
         new ImmutableChecker(
+            wellKnownMutability,
             ImmutableSet.of(
                 javax.annotation.concurrent.Immutable.class.getName(),
                 com.google.errorprone.annotations.Immutable.class.getName()));

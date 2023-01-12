@@ -33,7 +33,6 @@ import static javax.lang.model.element.Modifier.STATIC;
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.Immutable;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
@@ -83,9 +82,10 @@ public final class FieldCanBeStatic extends BugChecker implements VariableTreeMa
   private final ConstantExpressions constantExpressions;
 
   @Inject
-  public FieldCanBeStatic(ErrorProneFlags flags) {
-    this.wellKnownMutability = WellKnownMutability.fromFlags(flags);
-    this.constantExpressions = ConstantExpressions.fromFlags(flags);
+  public FieldCanBeStatic(
+      WellKnownMutability wellKnownMutability, ConstantExpressions constantExpressions) {
+    this.wellKnownMutability = wellKnownMutability;
+    this.constantExpressions = constantExpressions;
   }
 
   @Override

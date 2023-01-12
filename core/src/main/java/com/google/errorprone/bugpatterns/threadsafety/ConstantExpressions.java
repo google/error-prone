@@ -66,6 +66,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
+import javax.inject.Inject;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /** Helper for establishing whether expressions correspond to a constant expression. */
@@ -73,7 +74,8 @@ public final class ConstantExpressions {
   private final Matcher<ExpressionTree> pureMethods;
   private final Supplier<ThreadSafety> threadSafety;
 
-  public ConstantExpressions(WellKnownMutability wellKnownMutability) {
+  @Inject
+  ConstantExpressions(WellKnownMutability wellKnownMutability) {
     this.pureMethods =
         anyOf(
             basePureMethods,
@@ -91,8 +93,7 @@ public final class ConstantExpressions {
   }
 
   public static ConstantExpressions fromFlags(ErrorProneFlags flags) {
-    WellKnownMutability wellKnownMutability = WellKnownMutability.fromFlags(flags);
-    return new ConstantExpressions(wellKnownMutability);
+    return new ConstantExpressions(WellKnownMutability.fromFlags(flags));
   }
 
   /** Represents sets of things known to be true and false if a boolean statement evaluated true. */
