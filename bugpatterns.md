@@ -449,7 +449,7 @@ Return value of android.graphics.Rect.intersect() must be checked
 __[RequiredModifiers](bugpattern/RequiredModifiers)__<br>
 This annotation is missing required modifiers as specified by its @RequiredModifiers annotation
 
-__[RestrictedApiChecker](bugpattern/RestrictedApiChecker)__<br>
+__[RestrictedApi](bugpattern/RestrictedApi)__<br>
 Check for non-allowlisted callers to RestrictedApiChecker.
 
 __[ReturnValueIgnored](bugpattern/ReturnValueIgnored)__<br>

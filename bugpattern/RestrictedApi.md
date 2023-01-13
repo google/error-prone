@@ -1,5 +1,5 @@
 ---
-title: RestrictedApiChecker
+title: RestrictedApi
 summary: Check for non-allowlisted callers to RestrictedApiChecker.
 layout: bugpattern
 tags: ''
@@ -17,4 +17,4 @@ Calls to APIs marked @RestrictedApi are prohibited without a corresponding
 allowlist annotation.
 
 ## Suppression
-Suppress false positives by adding the suppression annotation `@SuppressWarnings("RestrictedApiChecker")` to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("RestrictedApi")` to the enclosing element.
