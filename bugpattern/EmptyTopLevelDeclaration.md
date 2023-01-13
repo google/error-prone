@@ -3,7 +3,7 @@ title: EmptyTopLevelDeclaration
 summary: Empty top-level type declarations should be omitted
 layout: bugpattern
 tags: ''
-severity: ERROR
+severity: WARNING
 ---
 
 <!--

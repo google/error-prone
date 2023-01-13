@@ -143,9 +143,6 @@ Duration APIs only work for DAYS or exact durations.
 __[DurationToLongTimeUnit](bugpattern/DurationToLongTimeUnit)__<br>
 Unit mismatch when decomposing a Duration or Instant to call a &lt;long, TimeUnit&gt; API
 
-__[EmptyTopLevelDeclaration](bugpattern/EmptyTopLevelDeclaration)__<br>
-Empty top-level type declarations should be omitted
-
 __[EqualsHashCode](bugpattern/EqualsHashCode)__<br>
 Classes that override equals should also override hashCode.
 
@@ -699,6 +696,9 @@ Caught exceptions should not be ignored
 
 __[EmptySetMultibindingContributions](bugpattern/EmptySetMultibindingContributions)__<br>
 @Multibinds is a more efficient and declarative mechanism for ensuring that a set multibinding is present in the graph.
+
+__[EmptyTopLevelDeclaration](bugpattern/EmptyTopLevelDeclaration)__<br>
+Empty top-level type declarations should be omitted
 
 __[EqualsGetClass](bugpattern/EqualsGetClass)__<br>
 Prefer instanceof to getClass when implementing Object#equals.
