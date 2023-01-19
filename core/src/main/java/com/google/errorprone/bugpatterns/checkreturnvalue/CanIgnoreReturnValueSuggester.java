@@ -142,8 +142,8 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
             || hasAnnotation(owner, "com.google.auto.value.AutoBuilder", state));
   }
 
-  private static final ImmutableSet<String> BUILDER_METHOD_PREFIXES =
-      ImmutableSet.of("add", "set", "with", "clear");
+  private static final ImmutableSet<String> BANNED_BUILDER_METHOD_PREFIXES =
+      ImmutableSet.of("new", "clone", "copy");
 
   private static boolean methodLooksLikeBuilder(MethodSymbol methodSymbol, VisitorState state) {
     boolean enclosingTypeIsImmutable =
@@ -151,7 +151,7 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
             || hasAnnotation(methodSymbol.owner, AUTO_VALUE, state);
     String methodName = methodSymbol.getSimpleName().toString();
     return methodSymbol.owner.getSimpleName().toString().contains("Builder")
-        && BUILDER_METHOD_PREFIXES.stream().anyMatch(methodName::startsWith)
+        && BANNED_BUILDER_METHOD_PREFIXES.stream().noneMatch(methodName::startsWith)
         && !enclosingTypeIsImmutable;
   }
 

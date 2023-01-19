@@ -154,8 +154,10 @@ public class CanIgnoreReturnValueSuggesterTest {
             "package com.google.frobber;",
             "public abstract class Builder {",
             "  public abstract Builder setName(String name);",
+            "  public abstract Builder enableDeathStar();",
             "  public abstract Builder clone();",
             "  public abstract Builder copy();",
+            "  public abstract Builder newBuilder();",
             "}")
         .addOutputLines(
             "Builder.java",
@@ -164,8 +166,11 @@ public class CanIgnoreReturnValueSuggesterTest {
             "public abstract class Builder {",
             "  @CanIgnoreReturnValue",
             "  public abstract Builder setName(String name);",
+            "  @CanIgnoreReturnValue",
+            "  public abstract Builder enableDeathStar();",
             "  public abstract Builder clone();",
             "  public abstract Builder copy();",
+            "  public abstract Builder newBuilder();",
             "}")
         .doTest();
   }
@@ -178,8 +183,10 @@ public class CanIgnoreReturnValueSuggesterTest {
             "package com.google.frobber;",
             "public interface Builder {",
             "  Builder setName(String name);",
+            "  Builder enableDeathStar();",
             "  Builder copy();",
             "  Builder clone();",
+            "  Builder newBuilder();",
             "}")
         .addOutputLines(
             "Builder.java",
@@ -188,8 +195,11 @@ public class CanIgnoreReturnValueSuggesterTest {
             "public interface Builder {",
             "  @CanIgnoreReturnValue",
             "  Builder setName(String name);",
+            "  @CanIgnoreReturnValue",
+            "  Builder enableDeathStar();",
             "  Builder copy();",
             "  Builder clone();",
+            "  Builder newBuilder();",
             "}")
         .doTest();
   }
