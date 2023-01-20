@@ -2,7 +2,7 @@
 title: InvalidThrows
 summary: The documented method doesn't actually throw this checked exception.
 layout: bugpattern
-tags: Style
+tags: ''
 severity: WARNING
 ---
 
