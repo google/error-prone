@@ -22,7 +22,6 @@ import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
@@ -44,7 +43,6 @@ import javax.lang.model.element.Element;
 @BugPattern(
     summary = "The documented method doesn't actually throw this checked exception.",
     severity = WARNING,
-    tags = StandardTags.STYLE,
     documentSuppression = false)
 public final class InvalidThrows extends BugChecker implements MethodTreeMatcher {
 
