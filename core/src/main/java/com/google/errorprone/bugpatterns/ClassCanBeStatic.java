@@ -77,6 +77,9 @@ public class ClassCanBeStatic extends BugChecker implements ClassTreeMatcher {
     if (CanBeStaticAnalyzer.referencesOuter(tree, currentClass, state)) {
       return NO_MATCH;
     }
+    if (ASTHelpers.shouldKeep(tree)) {
+      return NO_MATCH;
+    }
     if (tree.getMembers().stream().anyMatch(m -> hasAnnotation(m, REFASTER_ANNOTATION, state))) {
       return NO_MATCH;
     }

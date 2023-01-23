@@ -1041,7 +1041,8 @@ public class ASTHelpers {
    * though they are.
    */
   private static final ImmutableSet<String> ANNOTATIONS_CONSIDERED_KEEP =
-      ImmutableSet.of("org.apache.beam.sdk.transforms.DoFn.ProcessElement");
+      ImmutableSet.of(
+          "org.apache.beam.sdk.transforms.DoFn.ProcessElement", "org.junit.jupiter.api.Nested");
 
   private static final String USED_REFLECTIVELY = "UsedReflectively";
 
