@@ -182,15 +182,24 @@ public final class DirectInvocationOnMock extends BugChecker implements Compilat
               .withParametersOfType(ImmutableList.of(arrayOf(OBJECT_TYPE))));
 
   private static final Matcher<MethodInvocationTree> DO_CALL_REAL_METHOD =
-      allOf(
-          instanceMethod().onDescendantOf("org.mockito.stubbing.Stubber").named("when"),
-          receiverOfInvocation(
-              staticMethod().onClass("org.mockito.Mockito").named("doCallRealMethod")));
+      anyOf(
+          allOf(
+              instanceMethod().onDescendantOf("org.mockito.stubbing.Stubber").named("when"),
+              receiverOfInvocation(
+                  staticMethod().onClass("org.mockito.Mockito").named("doCallRealMethod"))),
+          allOf(
+              instanceMethod().onDescendantOf("org.mockito.BDDMockito.BDDStubber").named("given"),
+              receiverOfInvocation(
+                  staticMethod().onClass("org.mockito.BDDMockito").named("willCallRealMethod"))));
 
-  private static final Matcher<ExpressionTree> WHEN = anyMethod().anyClass().named("when");
+  private static final Matcher<ExpressionTree> WHEN = anyMethod().anyClass().namedAnyOf("when", "given");
 
   private static final Matcher<ExpressionTree> THEN_CALL_REAL_METHOD =
-      instanceMethod()
-          .onDescendantOf("org.mockito.stubbing.OngoingStubbing")
-          .named("thenCallRealMethod");
+      anyOf(
+          instanceMethod()
+              .onDescendantOf("org.mockito.stubbing.OngoingStubbing")
+              .named("thenCallRealMethod"),
+          instanceMethod()
+              .onDescendantOf("org.mockito.BDDMockito.BDDMyOngoingStubbing")
+              .named("willCallRealMethod"));
 }

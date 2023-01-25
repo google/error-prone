@@ -156,6 +156,23 @@ public final class DirectInvocationOnMockTest {
   }
 
   @Test
+  public void directInvocationOnMock_withinGiven_noFinding() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "import static org.mockito.Mockito.mock;",
+            "import static org.mockito.BDDMockito.given;",
+            "class Test {",
+            "  public Object test() {",
+            "    Test test = mock(Test.class);",
+            "    given(test.test()).willReturn(null);",
+            "    return null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void directInvocationOnMock_setUpToCallRealMethod_noFinding() {
     helper
         .addSourceLines(
@@ -173,6 +190,23 @@ public final class DirectInvocationOnMockTest {
   }
 
   @Test
+  public void directInvocationOnMock_setUpToCallRealMethodUsingGiven_noFinding() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "import static org.mockito.Mockito.mock;",
+            "import static org.mockito.BDDMockito.given;",
+            "class Test {",
+            "  public Object test() {",
+            "    Test test = mock(Test.class);",
+            "    given(test.test()).willCallRealMethod();",
+            "    return test.test();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void directInvocationOnMock_setUpWithDoCallRealMethod_noFinding() {
     helper
         .addSourceLines(
@@ -183,6 +217,23 @@ public final class DirectInvocationOnMockTest {
             "  public Object test() {",
             "    Test test = mock(Test.class);",
             "    doCallRealMethod().when(test).test();",
+            "    return test.test();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void directInvocationOnMock_setUpWithDoCallRealMethodUsingGiven_noFinding() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "import static org.mockito.Mockito.mock;",
+            "import static org.mockito.BDDMockito.willCallRealMethod;",
+            "class Test {",
+            "  public Object test() {",
+            "    Test test = mock(Test.class);",
+            "    willCallRealMethod().given(test).test();",
             "    return test.test();",
             "  }",
             "}")
@@ -210,6 +261,26 @@ public final class DirectInvocationOnMockTest {
   }
 
   @Test
+  public void directInvocationOnMock_withinCustomGiven_noFinding() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "import static org.mockito.Mockito.mock;",
+            "import org.mockito.BDDMockito.BDDMyOngoingStubbing;",
+            "class Test {",
+            "  public <T> BDDMyOngoingStubbing<T> given(T t) {",
+            "    return org.mockito.BDDMockito.given(t);",
+            "  }",
+            "  public Object test() {",
+            "    Test test = mock(Test.class);",
+            "    given(test.test()).willReturn(null);",
+            "    return null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void directInvocationOnMock_withinWhenWithCast_noFinding() {
     helper
         .addSourceLines(
@@ -220,6 +291,23 @@ public final class DirectInvocationOnMockTest {
             "  public Object test() {",
             "    Test test = mock(Test.class);",
             "    when((Object) test.test()).thenReturn(null);",
+            "    return null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void directInvocationOnMock_withinGivenWithCast_noFinding() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "import static org.mockito.Mockito.mock;",
+            "import static org.mockito.BDDMockito.given;",
+            "class Test {",
+            "  public Object test() {",
+            "    Test test = mock(Test.class);",
+            "    given((Object) test.test()).willReturn(null);",
             "    return null;",
             "  }",
             "}")

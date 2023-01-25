@@ -12,6 +12,8 @@ Both of these are rarely what you want:
     reader will expect the test to succeed only because the code under test
     called `bar()`, not because the test itself did.
 
+Similar patterns are enforced for [BDD] style tests using `BDDMockito.given(...).willReturn(...)` mocking.
+
 Sometimes, test authors, especially those familiar with other mocking frameworks
 (like EasyMock), will call a method on a mock for one of two reasons:
 
@@ -46,3 +48,4 @@ will have other effects. Both kinds of effects can be confusing, so prefer to
 avoid such calls when possible.
 
 [mocks]: https://site.mockito.org/
+[bdd]: https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/BDDMockito.html
