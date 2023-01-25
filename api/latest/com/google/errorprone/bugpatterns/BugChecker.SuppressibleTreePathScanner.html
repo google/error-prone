@@ -74,27 +74,32 @@ loadScripts(document, 'script');</script>
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
 <div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">com.google.errorprone.bugpatterns</a></div>
-<h1 title="Class BugChecker.SuppressibleTreePathScanner" class="title">Class BugChecker.SuppressibleTreePathScanner&lt;A,&#8203;B&gt;</h1>
+<h1 title="Class BugChecker.SuppressibleTreePathScanner" class="title">Class BugChecker.SuppressibleTreePathScanner&lt;R,&#8203;P&gt;</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
 <div class="inheritance">com.sun.source.util.TreeScanner&lt;R,&#8203;P&gt;
-<div class="inheritance">com.sun.source.util.TreePathScanner&lt;A,&#8203;B&gt;
-<div class="inheritance">com.google.errorprone.bugpatterns.BugChecker.SuppressibleTreePathScanner&lt;A,&#8203;B&gt;</div>
+<div class="inheritance">com.sun.source.util.TreePathScanner&lt;R,&#8203;P&gt;
+<div class="inheritance">com.google.errorprone.bugpatterns.BugChecker.SuppressibleTreePathScanner&lt;R,&#8203;P&gt;</div>
 </div>
 </div>
 </div>
 <section class="description">
 <dl class="notes">
+<dt>Type Parameters:</dt>
+<dd><code>R</code> - the type returned by each scanner method</dd>
+<dd><code>P</code> - the type of the parameter passed to each scanner method</dd>
+</dl>
+<dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code>com.sun.source.tree.TreeVisitor&lt;A,&#8203;B&gt;</code></dd>
+<dd><code>com.sun.source.tree.TreeVisitor&lt;R,&#8203;P&gt;</code></dd>
 </dl>
 <dl class="notes">
 <dt>Enclosing class:</dt>
 <dd><a href="BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a></dd>
 </dl>
 <hr>
-<pre>protected class <span class="type-name-label">BugChecker.SuppressibleTreePathScanner&lt;A,&#8203;B&gt;</span>
-extends com.sun.source.util.TreePathScanner&lt;A,&#8203;B&gt;</pre>
+<pre>protected class <span class="type-name-label">BugChecker.SuppressibleTreePathScanner&lt;R,&#8203;P&gt;</span>
+extends com.sun.source.util.TreePathScanner&lt;R,&#8203;P&gt;</pre>
 <div class="block">A <code>TreePathScanner</code> which skips trees which are suppressed for this check.</div>
 </section>
 <section class="summary">
@@ -164,15 +169,15 @@ extends com.sun.source.util.TreePathScanner&lt;A,&#8203;B&gt;</pre>
 </thead>
 <tbody>
 <tr class="alt-color" id="i0">
-<td class="col-first"><code><a href="BugChecker.SuppressibleTreePathScanner.html" title="type parameter in BugChecker.SuppressibleTreePathScanner">A</a></code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#scan(com.sun.source.tree.Tree,B)">scan</a></span>&#8203;(com.sun.source.tree.Tree&nbsp;tree,
-<a href="BugChecker.SuppressibleTreePathScanner.html" title="type parameter in BugChecker.SuppressibleTreePathScanner">B</a>&nbsp;b)</code></th>
+<td class="col-first"><code><a href="BugChecker.SuppressibleTreePathScanner.html" title="type parameter in BugChecker.SuppressibleTreePathScanner">R</a></code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#scan(com.sun.source.tree.Tree,P)">scan</a></span>&#8203;(com.sun.source.tree.Tree&nbsp;tree,
+<a href="BugChecker.SuppressibleTreePathScanner.html" title="type parameter in BugChecker.SuppressibleTreePathScanner">P</a>&nbsp;param)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="row-color" id="i1">
-<td class="col-first"><code><a href="BugChecker.SuppressibleTreePathScanner.html" title="type parameter in BugChecker.SuppressibleTreePathScanner">A</a></code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#scan(com.sun.source.util.TreePath,B)">scan</a></span>&#8203;(com.sun.source.util.TreePath&nbsp;treePath,
-<a href="BugChecker.SuppressibleTreePathScanner.html" title="type parameter in BugChecker.SuppressibleTreePathScanner">B</a>&nbsp;b)</code></th>
+<td class="col-first"><code><a href="BugChecker.SuppressibleTreePathScanner.html" title="type parameter in BugChecker.SuppressibleTreePathScanner">R</a></code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#scan(com.sun.source.util.TreePath,P)">scan</a></span>&#8203;(com.sun.source.util.TreePath&nbsp;treePath,
+<a href="BugChecker.SuppressibleTreePathScanner.html" title="type parameter in BugChecker.SuppressibleTreePathScanner">P</a>&nbsp;param)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
 </tbody>
@@ -228,24 +233,24 @@ extends com.sun.source.util.TreePathScanner&lt;A,&#8203;B&gt;</pre>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="scan(com.sun.source.tree.Tree,B)">
+<section class="detail" id="scan(com.sun.source.tree.Tree,P)">
 <h3 id="scan(com.sun.source.tree.Tree,java.lang.Object)">scan</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="BugChecker.SuppressibleTreePathScanner.html" title="type parameter in BugChecker.SuppressibleTreePathScanner">A</a></span>&nbsp;<span class="member-name">scan</span>&#8203;(<span class="parameters">com.sun.source.tree.Tree&nbsp;tree,
-<a href="BugChecker.SuppressibleTreePathScanner.html" title="type parameter in BugChecker.SuppressibleTreePathScanner">B</a>&nbsp;b)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="BugChecker.SuppressibleTreePathScanner.html" title="type parameter in BugChecker.SuppressibleTreePathScanner">R</a></span>&nbsp;<span class="member-name">scan</span>&#8203;(<span class="parameters">com.sun.source.tree.Tree&nbsp;tree,
+<a href="BugChecker.SuppressibleTreePathScanner.html" title="type parameter in BugChecker.SuppressibleTreePathScanner">P</a>&nbsp;param)</span></div>
 <dl class="notes">
 <dt>Overrides:</dt>
-<dd><code>scan</code>&nbsp;in class&nbsp;<code>com.sun.source.util.TreePathScanner&lt;<a href="BugChecker.SuppressibleTreePathScanner.html" title="type parameter in BugChecker.SuppressibleTreePathScanner">A</a>,&#8203;<a href="BugChecker.SuppressibleTreePathScanner.html" title="type parameter in BugChecker.SuppressibleTreePathScanner">B</a>&gt;</code></dd>
+<dd><code>scan</code>&nbsp;in class&nbsp;<code>com.sun.source.util.TreePathScanner&lt;<a href="BugChecker.SuppressibleTreePathScanner.html" title="type parameter in BugChecker.SuppressibleTreePathScanner">R</a>,&#8203;<a href="BugChecker.SuppressibleTreePathScanner.html" title="type parameter in BugChecker.SuppressibleTreePathScanner">P</a>&gt;</code></dd>
 </dl>
 </section>
 </li>
 <li>
-<section class="detail" id="scan(com.sun.source.util.TreePath,B)">
+<section class="detail" id="scan(com.sun.source.util.TreePath,P)">
 <h3 id="scan(com.sun.source.util.TreePath,java.lang.Object)">scan</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="BugChecker.SuppressibleTreePathScanner.html" title="type parameter in BugChecker.SuppressibleTreePathScanner">A</a></span>&nbsp;<span class="member-name">scan</span>&#8203;(<span class="parameters">com.sun.source.util.TreePath&nbsp;treePath,
-<a href="BugChecker.SuppressibleTreePathScanner.html" title="type parameter in BugChecker.SuppressibleTreePathScanner">B</a>&nbsp;b)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="BugChecker.SuppressibleTreePathScanner.html" title="type parameter in BugChecker.SuppressibleTreePathScanner">R</a></span>&nbsp;<span class="member-name">scan</span>&#8203;(<span class="parameters">com.sun.source.util.TreePath&nbsp;treePath,
+<a href="BugChecker.SuppressibleTreePathScanner.html" title="type parameter in BugChecker.SuppressibleTreePathScanner">P</a>&nbsp;param)</span></div>
 <dl class="notes">
 <dt>Overrides:</dt>
-<dd><code>scan</code>&nbsp;in class&nbsp;<code>com.sun.source.util.TreePathScanner&lt;<a href="BugChecker.SuppressibleTreePathScanner.html" title="type parameter in BugChecker.SuppressibleTreePathScanner">A</a>,&#8203;<a href="BugChecker.SuppressibleTreePathScanner.html" title="type parameter in BugChecker.SuppressibleTreePathScanner">B</a>&gt;</code></dd>
+<dd><code>scan</code>&nbsp;in class&nbsp;<code>com.sun.source.util.TreePathScanner&lt;<a href="BugChecker.SuppressibleTreePathScanner.html" title="type parameter in BugChecker.SuppressibleTreePathScanner">R</a>,&#8203;<a href="BugChecker.SuppressibleTreePathScanner.html" title="type parameter in BugChecker.SuppressibleTreePathScanner">P</a>&gt;</code></dd>
 </dl>
 </section>
 </li>
