@@ -18,14 +18,29 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.methodCanBeOverridden;
+import static com.sun.source.tree.Tree.Kind.CONDITIONAL_AND;
+import static com.sun.source.tree.Tree.Kind.CONDITIONAL_OR;
+import static com.sun.source.tree.Tree.Kind.IDENTIFIER;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
+import com.sun.source.tree.BinaryTree;
+import com.sun.source.tree.CaseTree;
+import com.sun.source.tree.CatchTree;
+import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.ConditionalExpressionTree;
+import com.sun.source.tree.EnhancedForLoopTree;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.ForLoopTree;
 import com.sun.source.tree.IdentifierTree;
+import com.sun.source.tree.IfTree;
+import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
@@ -34,8 +49,11 @@ import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.TypeCastTree;
+import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.util.SimpleTreeVisitor;
+import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import javax.inject.Inject;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
@@ -43,16 +61,197 @@ import org.checkerframework.checker.nullness.qual.Nullable;
     summary = "This method always recurses, and will cause a StackOverflowError",
     severity = ERROR)
 public class InfiniteRecursion extends BugChecker implements BugChecker.MethodTreeMatcher {
+  private final boolean checkOnlySimpleFirstStatement;
+
+  @Inject
+  public InfiniteRecursion(ErrorProneFlags flags) {
+    checkOnlySimpleFirstStatement =
+        flags.getBoolean("InfiniteRecursion:CheckOnlySimpleFirstStatement").orElse(false);
+  }
+
   @Override
-  public Description matchMethod(MethodTree tree, VisitorState state) {
+  public Description matchMethod(MethodTree declaration, VisitorState state) {
+    return checkOnlySimpleFirstStatement
+        ? oldMatchMethod(declaration, state)
+        : newMatchMethod(declaration, state);
+  }
+
+  private Description newMatchMethod(MethodTree declaration, VisitorState state) {
+    if (declaration.getBody() == null) {
+      return NO_MATCH;
+    }
+    MethodSymbol declaredSymbol = getSymbol(declaration);
+    new SuppressibleTreePathScanner<Void, Boolean>(state) {
+      /*
+       * Once we hit a `return`, we know that any code afterward is not necessarily always executed.
+       * So we track that and stop reporting infinite recursion afterward.
+       */
+
+      boolean mayHaveReturned;
+
+      @Override
+      public Void visitReturn(ReturnTree tree, Boolean underConditional) {
+        super.visitReturn(tree, underConditional);
+        mayHaveReturned = true;
+        return null;
+      }
+
+      /*
+       * Some other code is executed only conditionally. We need to scan such code to look for
+       * `return` statements, but we don't report infinite recursion for any self-calls there. We
+       * track this sort of conditional-ness through the scanner's Boolean parameter.
+       *
+       * Since we're scanning such code only for `return` statements, there's no need to scan any
+       * code that contains only expressions (e.g., for a ternary, getTrueExpression()
+       * and getFalseExpression()).
+       */
+
+      @Override
+      public Void visitBinary(BinaryTree tree, Boolean underConditional) {
+        scan(tree.getLeftOperand(), underConditional);
+        if (tree.getKind() != CONDITIONAL_AND && tree.getKind() != CONDITIONAL_OR) {
+          scan(tree.getRightOperand(), underConditional);
+        } // otherwise, no need to conditionally visit getRightOperand() expression
+        return null;
+      }
+
+      @Override
+      public Void visitCase(CaseTree tree, Boolean underConditional) {
+        return super.visitCase(tree, /*underConditional*/ true);
+      }
+
+      @Override
+      public Void visitCatch(CatchTree tree, Boolean underConditional) {
+        return super.visitCatch(tree, /*underConditional*/ true);
+      }
+
+      @Override
+      public Void visitConditionalExpression(
+          ConditionalExpressionTree tree, Boolean underConditional) {
+        scan(tree.getCondition(), underConditional);
+        // no need to conditionally visit getTrueExpression() and getFalseExpression() expressions
+        return null;
+      }
+
+      @Override
+      public Void visitEnhancedForLoop(EnhancedForLoopTree tree, Boolean underConditional) {
+        scan(tree.getExpression(), underConditional);
+        scan(tree.getStatement(), /*underConditional*/ true);
+        return null;
+      }
+
+      @Override
+      public Void visitForLoop(ForLoopTree tree, Boolean underConditional) {
+        scan(tree.getInitializer(), underConditional);
+        scan(tree.getCondition(), underConditional);
+        scan(tree.getStatement(), /*underConditional*/ true);
+        // no need to conditionally visit getUpdate() expressions
+        return null;
+      }
+
+      @Override
+      public Void visitIf(IfTree tree, Boolean underConditional) {
+        scan(tree.getCondition(), underConditional);
+        scan(tree.getThenStatement(), /*underConditional*/ true);
+        scan(tree.getElseStatement(), /*underConditional*/ true);
+        return null;
+      }
+
+      @Override
+      public Void visitWhileLoop(WhileLoopTree tree, Boolean underConditional) {
+        scan(tree.getCondition(), underConditional);
+        scan(tree.getStatement(), /*underConditional*/ true);
+        return null;
+      }
+
+      /*
+       * Don't descend into classes and lambdas at all, but resume checking afterward.
+       *
+       * We neither want to report supposedly "recursive" calls inside them nor scan them for
+       * `return` (which would cause us to stop scanning entirely).
+       */
+
+      @Override
+      public Void visitClass(ClassTree tree, Boolean underConditional) {
+        return null;
+      }
+
+      @Override
+      public Void visitLambdaExpression(LambdaExpressionTree tree, Boolean underConditional) {
+        return null;
+      }
+
+      // Finally, the thing we're actually looking for:
+
+      @Override
+      public Void visitMethodInvocation(MethodInvocationTree tree, Boolean underConditional) {
+        checkInvocation(tree, underConditional);
+        return super.visitMethodInvocation(tree, underConditional);
+      }
+
+      void checkInvocation(MethodInvocationTree invocation, boolean underConditional) {
+        if (mayHaveReturned || underConditional) {
+          return;
+        }
+        if (!declaredSymbol.equals(getSymbol(invocation))) {
+          return;
+        }
+        /*
+         * We have provably infinite recursion if the call goes to the same implementation code that
+         * we're analyzing. We already know that we're looking at the same MethodSymbol, so now we
+         * just need to make sure that the call isn't a virtual call that may resolve to a different
+         * implementation. Specifically, we can resolve the call as triggering infinite recursion in
+         * the case of any non-overridable method (including a static method) and of any call on
+         * this object.
+         */
+        if (!methodCanBeOverridden(declaredSymbol) || isCallOnThisObject(invocation)) {
+          state.reportMatch(describeMatch(invocation));
+        }
+      }
+
+      boolean isCallOnThisObject(MethodInvocationTree invocation) {
+        ExpressionTree select = invocation.getMethodSelect();
+        return select.getKind() == IDENTIFIER
+            || isThis(((MemberSelectTree) select).getExpression());
+      }
+    }.scan(new TreePath(state.getPath(), declaration.getBody()), /*underConditional*/ false);
+
+    return NO_MATCH; // We reported any matches through state.reportMatch.
+  }
+
+  private static boolean isThis(ExpressionTree input) {
+    return new SimpleTreeVisitor<Boolean, Void>() {
+      @Override
+      public Boolean visitParenthesized(ParenthesizedTree tree, Void unused) {
+        return visit(tree.getExpression(), null);
+      }
+
+      @Override
+      public Boolean visitTypeCast(TypeCastTree tree, Void unused) {
+        return visit(tree.getExpression(), null);
+      }
+
+      @Override
+      public Boolean visitMemberSelect(MemberSelectTree tree, Void unused) {
+        return tree.getIdentifier().contentEquals("this");
+      }
+
+      @Override
+      public Boolean visitIdentifier(IdentifierTree tree, Void unused) {
+        return tree.getName().contentEquals("this");
+      }
+
+      @Override
+      protected Boolean defaultAction(Tree tree, Void unused) {
+        return false;
+      }
+    }.visit(input, null);
+  }
+
+  private Description oldMatchMethod(MethodTree tree, VisitorState state) {
     if (tree.getBody() == null || tree.getBody().getStatements().isEmpty()) {
       return NO_MATCH;
     }
-    /*
-     * TODO(b/264529494): Match statements after the first as long as they're executed
-     * unconditionally. And match more than just `return` and method-invocation expression
-     * statements, too.
-     */
     Tree statement = tree.getBody().getStatements().get(0);
     MethodInvocationTree invocation =
         statement.accept(
