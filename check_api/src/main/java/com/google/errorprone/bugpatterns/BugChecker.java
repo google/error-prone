@@ -551,8 +551,13 @@ public abstract class BugChecker implements Suppressible, Serializable {
         customSuppressionAnnotations());
   }
 
-  /** A {@link TreePathScanner} which skips trees which are suppressed for this check. */
-  protected class SuppressibleTreePathScanner<A, B> extends TreePathScanner<A, B> {
+  /**
+   * A {@link TreePathScanner} which skips trees which are suppressed for this check.
+   *
+   * @param <R> the type returned by each scanner method
+   * @param <P> the type of the parameter passed to each scanner method
+   */
+  protected class SuppressibleTreePathScanner<R, P> extends TreePathScanner<R, P> {
 
     protected final VisitorState state;
 
@@ -561,13 +566,13 @@ public abstract class BugChecker implements Suppressible, Serializable {
     }
 
     @Override
-    public A scan(Tree tree, B b) {
-      return suppressed(tree) ? null : super.scan(tree, b);
+    public R scan(Tree tree, P param) {
+      return suppressed(tree) ? null : super.scan(tree, param);
     }
 
     @Override
-    public A scan(TreePath treePath, B b) {
-      return suppressed(treePath.getLeaf()) ? null : super.scan(treePath, b);
+    public R scan(TreePath treePath, P param) {
+      return suppressed(treePath.getLeaf()) ? null : super.scan(treePath, param);
     }
 
     private boolean suppressed(Tree tree) {
