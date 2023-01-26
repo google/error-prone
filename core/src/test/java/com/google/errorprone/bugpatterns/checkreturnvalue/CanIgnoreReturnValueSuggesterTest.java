@@ -95,7 +95,107 @@ public class CanIgnoreReturnValueSuggesterTest {
             "    return name;",
             "  }",
             "}")
+        .addOutputLines(
+            "Client.java",
+            "package com.google.frobber;",
+            "import com.google.errorprone.annotations.CanIgnoreReturnValue;",
+            "public final class Client {",
+            "  @CanIgnoreReturnValue",
+            "  public String method(String name) {",
+            "    return name;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void returnsInputParam_intParam() {
+    helper
+        .addInputLines(
+            "Client.java",
+            "package com.google.frobber;",
+            "public final class Client {",
+            "  public int method(int value) {",
+            "    value = 42;",
+            "    return value;",
+            "  }",
+            "}")
+        // make sure we don't fire if the value has been re-assigned!
         .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void returnsInputParam_withParens() {
+    helper
+        .addInputLines(
+            "Client.java",
+            "package com.google.frobber;",
+            "public final class Client {",
+            "  public String method(String name) {",
+            "    return (name);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Client.java",
+            "package com.google.frobber;",
+            "import com.google.errorprone.annotations.CanIgnoreReturnValue;",
+            "public final class Client {",
+            "  @CanIgnoreReturnValue",
+            "  public String method(String name) {",
+            "    return (name);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void returnInputParams_multipleParams() {
+    helper
+        .addInputLines(
+            "ReturnInputParam.java",
+            "package com.google.frobber;",
+            "public final class ReturnInputParam {",
+            "  public static StringBuilder append(StringBuilder input, String name) {",
+            "    return input;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "ReturnInputParam.java",
+            "package com.google.frobber;",
+            "import com.google.errorprone.annotations.CanIgnoreReturnValue;",
+            "public final class ReturnInputParam {",
+            "  @CanIgnoreReturnValue",
+            "  public static StringBuilder append(StringBuilder input, String name) {",
+            "    return input;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void returnInputParams_moreComplex() {
+    helper
+        .addInputLines(
+            "ReturnInputParam.java",
+            "package com.google.frobber;",
+            "public final class ReturnInputParam {",
+            "  public static StringBuilder append(StringBuilder input, String name) {",
+            "    input.append(\"name = \").append(name);",
+            "    return input;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "ReturnInputParam.java",
+            "package com.google.frobber;",
+            "import com.google.errorprone.annotations.CanIgnoreReturnValue;",
+            "public final class ReturnInputParam {",
+            "  @CanIgnoreReturnValue",
+            "  public static StringBuilder append(StringBuilder input, String name) {",
+            "    input.append(\"name = \").append(name);",
+            "    return input;",
+            "  }",
+            "}")
         .doTest();
   }
 

@@ -37,6 +37,7 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.suppliers.Supplier;
+import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
@@ -54,10 +55,13 @@ import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Checker that recommends annotating a method with {@code @CanIgnoreReturnValue} if the method
- * returns {@code this} (or it looks like a builder method that is likely to return {@code this}).
+ * returns {@code this}, returns an effectively final input param, or if it looks like a builder
+ * method (that is likely to return {@code this}).
  */
 @BugPattern(
     summary =
@@ -74,11 +78,19 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
   private static final Supplier<Type> PROTO_BUILDER =
       VisitorState.memoize(s -> s.getTypeFromString("com.google.protobuf.MessageLite.Builder"));
 
-  // TODO(kak): catch places where an input parameter is always returned
-
   @Override
   public Description matchMethod(MethodTree methodTree, VisitorState state) {
     MethodSymbol methodSymbol = getSymbol(methodTree);
+
+    // if the method is already directly annotated w/ @CRV or @CIRV, bail out
+    if (hasAnnotation(methodTree, CRV, state) || hasAnnotation(methodSymbol, CIRV, state)) {
+      return Description.NO_MATCH;
+    }
+
+    // if the method always returns input params, make it CIRV
+    if (methodAlwaysReturnsInputParam(methodTree)) {
+      return annotateWithCanIgnoreReturnValue(methodTree, state);
+    }
 
     // We have a number of preconditions we can check early to ensure that this method could
     // possibly be @CIRV-suggestible, before attempting a deeper scan of the method.
@@ -100,11 +112,6 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
       return Description.NO_MATCH;
     }
 
-    // if the method is already directly annotated w/ @CRV or @CIRV, bail out
-    if (hasAnnotation(methodTree, CRV, state) || hasAnnotation(methodSymbol, CIRV, state)) {
-      return Description.NO_MATCH;
-    }
-
     // skip @AutoValue and @AutoBuilder methods
     if (isAbstractAutoValueOrAutoBuilderMethod(methodSymbol, state)) {
       return Description.NO_MATCH;
@@ -113,23 +120,27 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
     // if the method looks like a builder, or if it always returns `this`, then make it @CIRV
     if (methodLooksLikeBuilder(methodSymbol, state)
         || methodReturnsIgnorableValues(methodTree, state)) {
-      SuggestedFix.Builder fix = SuggestedFix.builder();
-
-      // if the method is annotated with @RIU, we need to remove it before adding @CIRV
-      AnnotationTree riuAnnotation =
-          getAnnotationWithSimpleName(
-              methodTree.getModifiers().getAnnotations(), "ResultIgnorabilityUnspecified");
-      if (riuAnnotation != null) {
-        fix.delete(riuAnnotation);
-      }
-
-      // now annotate it with @CanIgnoreReturnValue
-      fix.prefixWith(methodTree, "@" + qualifyType(state, fix, CIRV) + "\n");
-
-      return describeMatch(methodTree, fix.build());
+      return annotateWithCanIgnoreReturnValue(methodTree, state);
     }
 
     return Description.NO_MATCH;
+  }
+
+  private Description annotateWithCanIgnoreReturnValue(MethodTree methodTree, VisitorState state) {
+    SuggestedFix.Builder fix = SuggestedFix.builder();
+
+    // if the method is annotated with @RIU, we need to remove it before adding @CIRV
+    AnnotationTree riuAnnotation =
+        getAnnotationWithSimpleName(
+            methodTree.getModifiers().getAnnotations(), "ResultIgnorabilityUnspecified");
+    if (riuAnnotation != null) {
+      fix.delete(riuAnnotation);
+    }
+
+    // now annotate it with @CanIgnoreReturnValue
+    fix.prefixWith(methodTree, "@" + qualifyType(state, fix, CIRV) + "\n");
+
+    return describeMatch(methodTree, fix.build());
   }
 
   private static boolean isAbstractAutoValueOrAutoBuilderMethod(
@@ -274,5 +285,44 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
     var scanner = new ReturnValuesFromMethodAreIgnorable(state, getSymbol(tree));
     scanner.scan(tree, null);
     return scanner.atLeastOneReturn && scanner.allReturnsIgnorable;
+  }
+
+  private static boolean methodAlwaysReturnsInputParam(MethodTree methodTree) {
+    // short-circuit if the method has no parameters
+    if (methodTree.getParameters().isEmpty()) {
+      return false;
+    }
+    class AllReturnsAreInputParams extends TreeScanner<Void, Void> {
+      private final Set<Symbol> returnedSymbols = new HashSet<>();
+
+      @Override
+      public Void visitReturn(ReturnTree returnTree, Void unused) {
+        // even for cases where getExpression() or getSymbol() returns null, we still want to add
+        // those to the returnedSymbols set (that's important if there's > 1 returns)
+        returnedSymbols.add(getSymbol(stripParentheses(returnTree.getExpression())));
+        return null;
+      }
+
+      @Override
+      public Void visitLambdaExpression(LambdaExpressionTree node, Void unused) {
+        // don't descend into lambdas
+        return null;
+      }
+
+      @Override
+      public Void visitNewClass(NewClassTree node, Void unused) {
+        // don't descend into declarations of anonymous classes
+        return null;
+      }
+    }
+
+    AllReturnsAreInputParams scanner = new AllReturnsAreInputParams();
+    scanner.scan(methodTree, null);
+    // there must be only 1 symbol returned and it must be a method parameter symbol
+    return (scanner.returnedSymbols.size() == 1)
+        && methodTree.getParameters().stream()
+            .map(ASTHelpers::getSymbol)
+            .filter(ASTHelpers::isConsideredFinal)
+            .anyMatch(sym -> sym.equals(scanner.returnedSymbols.iterator().next()));
   }
 }
