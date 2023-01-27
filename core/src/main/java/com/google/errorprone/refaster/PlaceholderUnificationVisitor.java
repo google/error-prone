@@ -676,14 +676,16 @@ abstract class PlaceholderUnificationVisitor
             TreeMaker.class
                 .getMethod(
                     "Case",
-                    Class.forName("com.sun.source.tree.CaseTree.CaseKind"),
+                    Class.forName("com.sun.source.tree.CaseTree$CaseKind"),
                     List.class,
                     List.class,
                     JCTree.class)
                 .invoke(
                     maker(),
                     caseKind,
-                    List.of((JCExpression) node.getExpression()),
+                    RuntimeVersion.isAtLeast17()
+                        ? CaseTree.class.getMethod("getLabels").invoke(node)
+                        : List.of((JCExpression) node.getExpression()),
                     stmts,
                     /* body */ null);
       } else {
