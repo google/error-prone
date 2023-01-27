@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.util.ASTHelpers.enclosingPackage;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isStatic;
@@ -63,6 +64,12 @@ public final class BoxedPrimitiveEquality extends AbstractReferenceEquality {
 
   private boolean isRelevantType(Type type, VisitorState state) {
     if (handleNumber && isSubtype(type, JAVA_LANG_NUMBER.get(state), state)) {
+      if (enclosingPackage(type.tsym)
+          .getQualifiedName()
+          .contentEquals("java.util.concurrent.atomic")) {
+        // atomics don't implement value equality
+        return false;
+      }
       return true;
     }
     switch (state.getTypes().unboxedType(type).getTag()) {

@@ -116,4 +116,18 @@ public class BoxedPrimitiveEqualityTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void atomic() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.concurrent.atomic.AtomicInteger;",
+            "class Test {",
+            "  boolean f(AtomicInteger a, AtomicInteger b) {",
+            "    return a == b;",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
