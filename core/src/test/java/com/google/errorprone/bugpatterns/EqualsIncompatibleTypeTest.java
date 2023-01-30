@@ -244,4 +244,52 @@ public class EqualsIncompatibleTypeTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void predicateIsEqual_incompatible() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import static java.util.function.Predicate.isEqual;",
+            "import java.util.stream.Stream;",
+            "class Test {",
+            "  boolean test(Stream<Long> xs) {",
+            "    // BUG: Diagnostic contains:",
+            "    return xs.allMatch(isEqual(1));",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void predicateIsEqual_compatible() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import static java.util.function.Predicate.isEqual;",
+            "import java.util.stream.Stream;",
+            "class Test {",
+            "  boolean test(Stream<Long> xs) {",
+            "    return xs.allMatch(isEqual(1L));",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void predicateIsEqual_methodRef() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.function.Function;",
+            "import java.util.function.Predicate;",
+            "import java.util.stream.Stream;",
+            "class Test {",
+            "  boolean test(Function<Long, Predicate<Integer>> fn) {",
+            "    // BUG: Diagnostic contains:",
+            "    return test(Predicate::isEqual);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
