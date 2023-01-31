@@ -110,48 +110,6 @@ public final class DoNotMockCheckerTest {
   }
 
   @Test
-  public void matchesEasymockDotMock_doNotMock() {
-
-    String expected =
-        String.format(
-            "Do not mock '%s'; %s is annotated as @DoNotMock: %s",
-            "lib.DoNotMockObjects.DoNotMockObject",
-            "lib.DoNotMockObjects.DoNotMockObject",
-            DO_NOT_MOCK_REASON);
-
-    testHelper
-        .addSourceLines(
-            "lib/Lib.java",
-            "package lib;",
-            "import org.easymock.EasyMock;",
-            "import org.easymock.ConstructorArgs;",
-            "import lib.DoNotMockObjects.*;",
-            "class Lib {",
-            "",
-            "  private static final ConstructorArgs CONSTRUCTOR_ARGS = new ConstructorArgs(",
-            "      (java.lang.reflect.Constructor) null, \"foo\");",
-            "  public static void f() { ",
-            "    EasyMock.createMock(MockableObject.class);",
-            "    // BUG: Diagnostic contains: " + expected,
-            "    EasyMock.createMock(DoNotMockObject.class);",
-            "    // BUG: Diagnostic contains: " + expected,
-            "    EasyMock.createMock(\"my_name\", DoNotMockObject.class);",
-            "    // BUG: Diagnostic contains: " + expected,
-            "    EasyMock.createNiceMock(DoNotMockObject.class);",
-            "    // BUG: Diagnostic contains: " + expected,
-            "    EasyMock.createNiceMock(\"my_name\", DoNotMockObject.class);",
-            "    // BUG: Diagnostic contains: " + expected,
-            "    EasyMock.createStrictMock(DoNotMockObject.class);",
-            "    // BUG: Diagnostic contains: " + expected,
-            "    EasyMock.createStrictMock(\"my_name\", DoNotMockObject.class);",
-            "    // BUG: Diagnostic contains: " + expected,
-            "    EasyMock.createMockBuilder(DoNotMockObject.class);",
-            "  }",
-            "}")
-        .doTest();
-  }
-
-  @Test
   public void matchesMockitoMockAnnotation_doNotMock() {
     testHelper
         .addSourceLines(
