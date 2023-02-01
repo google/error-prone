@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns.checkreturnvalue;
 
 import static com.google.common.base.MoreObjects.firstNonNull;
+import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.fixes.SuggestedFixes.qualifyType;
 import static com.google.errorprone.util.ASTHelpers.getAnnotationWithSimpleName;
@@ -87,8 +88,8 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
       return Description.NO_MATCH;
     }
 
-    // if the method always returns input params, make it CIRV
-    if (methodAlwaysReturnsInputParam(methodTree)) {
+    // if the method always return a single input param (of the same type), make it CIRV
+    if (methodAlwaysReturnsInputParam(methodTree, state)) {
       return annotateWithCanIgnoreReturnValue(methodTree, state);
     }
 
@@ -287,7 +288,7 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
     return scanner.atLeastOneReturn && scanner.allReturnsIgnorable;
   }
 
-  private static boolean methodAlwaysReturnsInputParam(MethodTree methodTree) {
+  private static boolean methodAlwaysReturnsInputParam(MethodTree methodTree, VisitorState state) {
     // short-circuit if the method has no parameters
     if (methodTree.getParameters().isEmpty()) {
       return false;
@@ -318,11 +319,18 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
 
     AllReturnsAreInputParams scanner = new AllReturnsAreInputParams();
     scanner.scan(methodTree, null);
-    // there must be only 1 symbol returned and it must be a method parameter symbol
-    return (scanner.returnedSymbols.size() == 1)
-        && methodTree.getParameters().stream()
-            .map(ASTHelpers::getSymbol)
+    // if we have more than 1 returned symbol, then the value isn't ignorable
+    if (scanner.returnedSymbols.size() != 1) {
+      return false;
+    }
+    Symbol returnedSymbol = getOnlyElement(scanner.returnedSymbols);
+    if (returnedSymbol == null) {
+      return false;
+    }
+    MethodSymbol methodSymbol = getSymbol(methodTree);
+    return isSameType(returnedSymbol.type, methodSymbol.getReturnType(), state)
+        && methodSymbol.getParameters().stream()
             .filter(ASTHelpers::isConsideredFinal)
-            .anyMatch(sym -> sym.equals(scanner.returnedSymbols.iterator().next()));
+            .anyMatch(returnedSymbol::equals);
   }
 }

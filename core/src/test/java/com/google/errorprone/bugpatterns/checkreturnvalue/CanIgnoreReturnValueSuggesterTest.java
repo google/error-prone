@@ -815,4 +815,19 @@ public class CanIgnoreReturnValueSuggesterTest {
         .expectUnchanged()
         .doTest();
   }
+
+  @Test
+  public void providesMethod_b267362954() {
+    helper
+        .addInputLines(
+            "Example.java",
+            "package com.google.frobber;",
+            "public final class Example {",
+            "  static CharSequence provideName(String name) {",
+            "    return name;",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
 }
