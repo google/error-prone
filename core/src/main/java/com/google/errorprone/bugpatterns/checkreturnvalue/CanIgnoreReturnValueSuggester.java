@@ -28,6 +28,7 @@ import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isAbstract;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
+import static com.google.errorprone.util.ASTHelpers.shouldKeep;
 import static com.google.errorprone.util.ASTHelpers.stripParentheses;
 
 import com.google.common.collect.ImmutableSet;
@@ -84,7 +85,12 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
     MethodSymbol methodSymbol = getSymbol(methodTree);
 
     // if the method is already directly annotated w/ @CRV or @CIRV, bail out
-    if (hasAnnotation(methodTree, CRV, state) || hasAnnotation(methodSymbol, CIRV, state)) {
+    if (hasAnnotation(methodSymbol, CRV, state) || hasAnnotation(methodSymbol, CIRV, state)) {
+      return Description.NO_MATCH;
+    }
+
+    // if the method is annotated with an annotation that is @Keep, bail out
+    if (shouldKeep(methodTree)) {
       return Description.NO_MATCH;
     }
 
