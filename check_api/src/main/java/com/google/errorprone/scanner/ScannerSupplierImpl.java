@@ -27,13 +27,7 @@ import com.google.errorprone.BugCheckerInfo;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.bugpatterns.BugChecker;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.google.inject.ProvisionException;
 import java.io.Serializable;
-import java.lang.reflect.Constructor;
-import java.util.Arrays;
-import java.util.Optional;
 
 /**
  * An implementation of a {@link ScannerSupplier}, abstracted as a set of all known {@link
@@ -46,7 +40,7 @@ class ScannerSupplierImpl extends ScannerSupplier implements Serializable {
   private final ImmutableSet<String> disabled;
   private final ErrorProneFlags flags;
   // Lazily initialized to make serialization easy.
-  private transient Injector injector;
+  private transient ErrorProneInjector injector;
 
   ScannerSupplierImpl(
       ImmutableBiMap<String, BugCheckerInfo> checks,
@@ -67,50 +61,9 @@ class ScannerSupplierImpl extends ScannerSupplier implements Serializable {
 
   private BugChecker instantiateChecker(BugCheckerInfo checker) {
     if (injector == null) {
-      injector =
-          Guice.createInjector(binder -> binder.bind(ErrorProneFlags.class).toInstance(flags));
+      injector = ErrorProneInjector.create().addBinding(ErrorProneFlags.class, flags);
     }
-    try {
-      return injector.getInstance(checker.checkerClass());
-    } catch (ProvisionException | com.google.inject.ConfigurationException e) {
-      // Fall back to the old path for external checks.
-      // TODO(b/263227221): Consider stripping this internally after careful testing.
-      return instantiateCheckerOldPath(checker);
-    }
-  }
-
-  private BugChecker instantiateCheckerOldPath(BugCheckerInfo checker) {
-    // Invoke BugChecker(ErrorProneFlags) constructor, if it exists.
-    @SuppressWarnings("unchecked")
-    /* getConstructors() actually returns Constructor<BugChecker>[], though the return type is
-     * Constructor<?>[]. See getConstructors() javadoc for more info. */
-    Optional<Constructor<BugChecker>> flagsConstructor =
-        Arrays.stream((Constructor<BugChecker>[]) checker.checkerClass().getConstructors())
-            .filter(
-                c -> Arrays.equals(c.getParameterTypes(), new Class<?>[] {ErrorProneFlags.class}))
-            .findFirst();
-    if (flagsConstructor.isPresent()) {
-      try {
-        return flagsConstructor.get().newInstance(getFlags());
-      } catch (ReflectiveOperationException e) {
-        throw new LinkageError("Could not instantiate BugChecker.", e);
-      }
-    }
-
-    // If no flags constructor, invoke default constructor.
-    Class<? extends BugChecker> checkerClass = checker.checkerClass();
-    try {
-      return checkerClass.getConstructor().newInstance();
-    } catch (NoSuchMethodException | IllegalAccessException e) {
-      throw new LinkageError(
-          String.format(
-              "Could not instantiate BugChecker %s: Are both the class and the zero-arg"
-                  + " constructor public?",
-              checkerClass),
-          e);
-    } catch (ReflectiveOperationException e) {
-      throw new LinkageError("Could not instantiate BugChecker.", e);
-    }
+    return injector.getInstance(checker.checkerClass());
   }
 
   @Override
