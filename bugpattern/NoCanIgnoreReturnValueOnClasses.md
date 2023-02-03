@@ -15,5 +15,3 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 
 
 
-## Suppression
-Suppress false positives by adding the suppression annotation `@SuppressWarnings("NoCanIgnoreReturnValueOnClasses")` to the enclosing element.
