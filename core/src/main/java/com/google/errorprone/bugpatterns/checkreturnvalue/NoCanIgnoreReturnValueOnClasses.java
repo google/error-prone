@@ -68,6 +68,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
         "@CanIgnoreReturnValue should not be applied to classes as it almost always overmatches (as"
             + " it applies to constructors and all methods), and the CIRVness isn't conferred to"
             + " its subclasses.",
+    documentSuppression = false,
+    suppressionAnnotations = {},
     severity = ERROR)
 public final class NoCanIgnoreReturnValueOnClasses extends BugChecker implements ClassTreeMatcher {
   private static final String CRV = "com.google.errorprone.annotations.CheckReturnValue";
