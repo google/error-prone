@@ -45,21 +45,7 @@ public class BoxedPrimitiveEqualityTest {
   }
 
   @Test
-  public void positive_forNumber() {
-    compilationHelper
-        .addSourceLines(
-            "Test.java",
-            "class Test {",
-            "  boolean f(Number a, Number b) {",
-            "    // BUG: Diagnostic contains:",
-            "    return a == b;",
-            "  }",
-            "}")
-        .doTest();
-  }
-
-  @Test
-  public void number_flagOff_noFinding() {
+  public void negative_forNumber() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -68,7 +54,6 @@ public class BoxedPrimitiveEqualityTest {
             "    return a == b;",
             "  }",
             "}")
-        .setArgs("-XepOpt:BoxedPrimitiveEquality:HandleNumber=false")
         .doTest();
   }
 
@@ -79,6 +64,9 @@ public class BoxedPrimitiveEqualityTest {
             "Test.java",
             "class Test {",
             "  boolean f(boolean a, boolean b) {",
+            "    return a == b;",
+            "  }",
+            "  boolean g(String a, String b) {",
             "    return a == b;",
             "  }",
             "}")
