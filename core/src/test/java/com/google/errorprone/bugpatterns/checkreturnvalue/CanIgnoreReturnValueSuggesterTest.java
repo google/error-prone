@@ -257,6 +257,7 @@ public class CanIgnoreReturnValueSuggesterTest {
             "  public abstract Builder enableDeathStar();",
             "  public abstract Builder clone();",
             "  public abstract Builder copy();",
+            "  public abstract Builder getCopy();",
             "  public abstract Builder newBuilder();",
             "}")
         .addOutputLines(
@@ -270,6 +271,7 @@ public class CanIgnoreReturnValueSuggesterTest {
             "  public abstract Builder enableDeathStar();",
             "  public abstract Builder clone();",
             "  public abstract Builder copy();",
+            "  public abstract Builder getCopy();",
             "  public abstract Builder newBuilder();",
             "}")
         .doTest();

@@ -80,6 +80,9 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
   private static final Supplier<Type> PROTO_BUILDER =
       VisitorState.memoize(s -> s.getTypeFromString("com.google.protobuf.MessageLite.Builder"));
 
+  private static final ImmutableSet<String> BANNED_METHOD_PREFIXES =
+      ImmutableSet.of("get", "is", "has", "new", "clone", "copy");
+
   @Override
   public Description matchMethod(MethodTree methodTree, VisitorState state) {
     MethodSymbol methodSymbol = getSymbol(methodTree);
@@ -91,6 +94,13 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
 
     // if the method is annotated with an annotation that is @Keep, bail out
     if (shouldKeep(methodTree)) {
+      return Description.NO_MATCH;
+    }
+
+    // if the method looks like an accessor, bail out
+    String methodName = methodSymbol.getSimpleName().toString();
+    // TODO(kak): we also may want to check if methodSymbol.getParameters().isEmpty()
+    if (BANNED_METHOD_PREFIXES.stream().anyMatch(methodName::startsWith)) {
       return Description.NO_MATCH;
     }
 
@@ -125,7 +135,7 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
     }
 
     // if the method looks like a builder, or if it always returns `this`, then make it @CIRV
-    if (methodLooksLikeBuilder(methodSymbol, state)
+    if (classLooksLikeBuilder(methodSymbol.owner, state)
         || methodReturnsIgnorableValues(methodTree, state)) {
       return annotateWithCanIgnoreReturnValue(methodTree, state);
     }
@@ -160,17 +170,10 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
             || hasAnnotation(owner, "com.google.auto.value.AutoBuilder", state));
   }
 
-  private static final ImmutableSet<String> BANNED_BUILDER_METHOD_PREFIXES =
-      ImmutableSet.of("new", "clone", "copy");
-
-  private static boolean methodLooksLikeBuilder(MethodSymbol methodSymbol, VisitorState state) {
-    boolean enclosingTypeIsImmutable =
-        hasAnnotation(methodSymbol.owner, IMMUTABLE, state)
-            || hasAnnotation(methodSymbol.owner, AUTO_VALUE, state);
-    String methodName = methodSymbol.getSimpleName().toString();
-    return methodSymbol.owner.getSimpleName().toString().contains("Builder")
-        && BANNED_BUILDER_METHOD_PREFIXES.stream().noneMatch(methodName::startsWith)
-        && !enclosingTypeIsImmutable;
+  private static boolean classLooksLikeBuilder(Symbol owner, VisitorState state) {
+    boolean classIsImmutable =
+        hasAnnotation(owner, IMMUTABLE, state) || hasAnnotation(owner, AUTO_VALUE, state);
+    return owner.getSimpleName().toString().endsWith("Builder") && !classIsImmutable;
   }
 
   private static boolean isSimpleReturnThisMethod(MethodTree methodTree) {
