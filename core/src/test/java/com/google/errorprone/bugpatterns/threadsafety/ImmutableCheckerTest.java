@@ -2993,4 +2993,62 @@ public class ImmutableCheckerTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void switchExpressionsYieldStatement_doesNotThrow() {
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.function.Supplier;",
+            "class Test {",
+            "  String test(String mode) {",
+            "    return switch (mode) {",
+            "      case \"random\" -> {",
+            "        yield \"foo\";",
+            "      }",
+            "      default -> throw new IllegalArgumentException();",
+            "    };",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void switchExpressionsMethodReference_doesNotThrow() {
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.function.Supplier;",
+            "class Test {",
+            "  Supplier<Double> test(String mode) {",
+            "    return switch (mode) {",
+            "      case \"random\" -> Math::random;",
+            "      default -> throw new IllegalArgumentException();",
+            "    };",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void switchExpressionsYieldStatementMethodReference_doesNotThrow() {
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.function.Supplier;",
+            "class Test {",
+            "  Supplier<Double> test(String mode) {",
+            "    return switch (mode) {",
+            "      case \"random\" -> {",
+            "        yield Math::random;",
+            "      }",
+            "      default -> throw new IllegalArgumentException();",
+            "    };",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
