@@ -82,6 +82,7 @@ public class BadImport extends BugChecker implements ImportTreeMatcher {
           "getDefaultInstance",
           "INSTANCE",
           "newBuilder",
+          "newInstance",
           "of",
           "valueOf");
 
