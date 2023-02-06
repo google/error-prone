@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 The Error Prone Authors.
+ * Copyright 2023 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -789,6 +789,7 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void switchInSwitch_error() {
+    // Only the outer "switch" should generate a finding
     assumeTrue(RuntimeVersion.isAtLeast14());
     helper
         .addSourceLines(
@@ -802,7 +803,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "    // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]",
             "    switch(side) {",
             "       case HEART:",
-            "           // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]",
             "           switch(side) {",
             "             case HEART: ",
             "             case SPADE: ",
@@ -1067,6 +1067,1565 @@ public final class StatementSwitchToExpressionSwitchTest {
             "}")
         .setArgs(
             ImmutableList.of("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion"))
+        .doTest();
+  }
+
+  /**********************************
+   *
+   * Return switch test cases
+   *
+   **********************************/
+
+  @Test
+  public void switchByEnum_returnSwitch_error() {
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public int invoke() {",
+            "    return 123;",
+            "  }",
+            "  public int foo(Side side) { ",
+            "    // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]",
+            "    switch(side) {",
+            "       case HEART:",
+            "       case DIAMOND:",
+            "          return invoke();",
+            "       case SPADE:",
+            "         throw new RuntimeException();",
+            "       default:",
+            "         throw new NullPointerException();",
+            "    }",
+            "  }",
+            "}")
+        .setArgs(
+            ImmutableList.of(
+                "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion"))
+        .doTest();
+
+    // Check correct generated code
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public int invoke() {",
+            "    return 123;",
+            "  }",
+            "  public int foo(Side side) { ",
+            "    switch(side) {",
+            "       case HEART:",
+            "       case DIAMOND:",
+            "          return invoke();",
+            "       case SPADE:",
+            "         throw new RuntimeException();",
+            "       default:",
+            "         throw new NullPointerException();",
+            "    }",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public int invoke() {",
+            "    return 123;",
+            "  }",
+            "  public int foo(Side side) { ",
+            "    return switch(side) {",
+            "       case HEART, DIAMOND -> invoke();",
+            "       case SPADE -> throw new RuntimeException();",
+            "       default -> throw new NullPointerException();",
+            "    };",
+            "  }",
+            "}")
+        .setArgs(
+            ImmutableList.of(
+                "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion"))
+        .doTest();
+  }
+
+  @Test
+  public void switchByEnum_returnSwitchWithShouldNeverHappen_error() {
+    assumeTrue(RuntimeVersion.isAtLeast14());
+
+    // Check correct generated code
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public int invoke() {",
+            "    return 123;",
+            "  }",
+            "  public int foo(Side side) { ",
+            "    switch(side) {",
+            "       case HEART:",
+            "       case DIAMOND:",
+            "          return invoke();",
+            "       case SPADE:",
+            "         throw new RuntimeException();",
+            "       case CLUB:",
+            "         throw new NullPointerException();",
+            "    }",
+            "    // This should never happen",
+            "    int z = invoke();",
+            "    z++;",
+            "    throw new RuntimeException(\"Switch was not exhaustive at runtime \" + z);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public int invoke() {",
+            "    return 123;",
+            "  }",
+            "  public int foo(Side side) { ",
+            "    return switch(side) {",
+            "       case HEART, DIAMOND -> invoke();",
+            "       case SPADE -> throw new RuntimeException();",
+            "       case CLUB -> throw new NullPointerException();",
+            "    };",
+            "  }",
+            "}")
+        .setArgs(
+            ImmutableList.of(
+                "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion"))
+        .doTest();
+  }
+
+  @Test
+  public void switchByEnum_switchInReturnSwitchWithShouldNeverHappen_error() {
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    // No error because the inner switch is the only fixable one
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public int invoke() {",
+            "    return 123;",
+            "  }",
+            "  public int foo(Side side) { ",
+            "    switch(side) {",
+            "      case HEART:",
+            "      System.out.println(\"hi\");",
+            "      switch(side) {",
+            "        case HEART:",
+            "        case DIAMOND:",
+            "          return invoke();",
+            "        case SPADE:",
+            "         throw new RuntimeException();",
+            "         case CLUB:",
+            "         throw new NullPointerException();",
+            "      }",
+            "      // This should never happen",
+            "      int z = invoke();",
+            "      z++;",
+            "      throw new RuntimeException(\"Switch was not exhaustive at runtime \" + z);",
+            "  ",
+            "   default: ",
+            "     System.out.println(\"default\");",
+            "     return 0;",
+            "    }",
+            "  }",
+            "}")
+        .setArgs(
+            ImmutableList.of(
+                "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion"))
+        .doTest();
+  }
+
+  @Test
+  public void switchByEnum_exhaustiveWithDefault_error() {
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public int invoke() {",
+            "    return 123;",
+            "  }",
+            "  public int foo(Side side) { ",
+            "    String z = \"dkfj\";",
+            "    // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]",
+            "    switch(z) {",
+            "       case \"\":",
+            "       case \"DIAMOND\":",
+            "         // Custom comment",
+            "       case \"SPADE\":",
+            "         return invoke();",
+            "       default:",
+            "         return 2;",
+            "    }",
+            "  }",
+            "}")
+        .setArgs(
+            ImmutableList.of(
+                "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion"))
+        .doTest();
+
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public int invoke() {",
+            "    return 123;",
+            "  }",
+            "  public int foo(Side side) { ",
+            "    String z = \"dkfj\";",
+            "    switch(z) {",
+            "       case \"\":",
+            "       case \"DIAMOND\":",
+            "         // Custom comment",
+            "       case \"SPADE\":",
+            "         return invoke();",
+            "       default:",
+            "         return 2;",
+            "    }",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public int invoke() {",
+            "    return 123;",
+            "  }",
+            "  public int foo(Side side) { ",
+            "    String z = \"dkfj\";",
+            "    return switch(z) {",
+            "       case \"\", \"DIAMOND\", \"SPADE\" ->",
+            "         // Custom comment",
+            "         invoke();",
+            "       default -> 2;",
+            "    };",
+            "  }",
+            "}")
+        .setArgs(
+            ImmutableList.of(
+                "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion"))
+        .doTest();
+  }
+
+  @Test
+  public void switchByEnum_defaultFallThru_noError() {
+    // No error because default doesn't return anything within its block
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public int invoke() {",
+            "    return 123;",
+            "  }",
+            "  public int foo(Side side) { ",
+            "    switch(side) {",
+            "       case HEART:",
+            "       case DIAMOND:",
+            "          return invoke();",
+            "       case SPADE:",
+            "         throw new RuntimeException();",
+            "       default:",
+            "         // Fall through",
+            "    }",
+            "    return -2;",
+            "  }",
+            "}")
+        .setArgs(
+            ImmutableList.of(
+                "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion"))
+        .doTest();
+  }
+
+  @Test
+  public void switchByEnum_alwaysThrows_noError() {
+    // Every case throws, thus no type for return switch
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public int invoke() {",
+            "    return 123;",
+            "  }",
+            "  public int foo(Side side) { ",
+            "    switch(side) {",
+            "       case HEART:",
+            "       case DIAMOND:",
+            "         throw new NullPointerException();",
+            "       case SPADE:",
+            "         throw new RuntimeException();",
+            "       default:",
+            "         throw new NullPointerException();",
+            "    }",
+            "  }",
+            "}")
+        .setArgs(
+            ImmutableList.of(
+                "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion"))
+        .doTest();
+  }
+
+  @Test
+  public void switchByEnum_returnSwitchWithShouldNeverHappen_errorAndRemoveShouldNeverHappen() {
+    // The switch has a case for each enum and "should never happen" error handling
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public int invoke() {",
+            "    return 123;",
+            "  }",
+            "  public int foo(Side side) { ",
+            "    System.out.println(\"don't delete 0\");",
+            "    if (invoke() > 0) {",
+            "      System.out.println(\"don't delete 1\");",
+            "      // Preceding comment",
+            "      // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]",
+            "      switch(side) {",
+            "        case HEART:",
+            "          // Fall through",
+            "        case DIAMOND:",
+            "          return invoke();",
+            "        case SPADE:",
+            "          throw new RuntimeException();",
+            "        case CLUB:",
+            "          throw new NullPointerException();",
+            "      }",
+            "      // Custom comment - should never happen",
+            "      int z = invoke(/* block comment 0 */);",
+            "      {z++;}",
+            "      throw new RuntimeException(\"Switch was not exhaustive at runtime \" + z);",
+            "    }",
+            "    System.out.println(\"don't delete 2\");",
+            "    return 0;",
+            "  }",
+            "}")
+        .setArgs(
+            ImmutableList.of(
+                "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion"))
+        .doTest();
+
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public int invoke() {",
+            "    return 123;",
+            "  }",
+            "  public int foo(Side side) { ",
+            "    System.out.println(\"don't delete 0\");",
+            "    if (invoke() > 0) {",
+            "      System.out.println(\"don't delete 1\");",
+            "      // Preceding comment",
+            "      switch(side) {",
+            "        case HEART /* lhs comment */: // rhs comment",
+            "          // Fall through",
+            "        case DIAMOND:",
+            "          return invoke();",
+            "        case SPADE:",
+            "          throw new RuntimeException();",
+            "        case CLUB:",
+            "          throw new NullPointerException();",
+            "      }",
+            "      // Custom comment - should never happen",
+            "      int z = invoke(/* block comment 0 */);",
+            "      {z++;}",
+            "      throw new RuntimeException(\"Switch was not exhaustive at runtime \" + z);",
+            "    }",
+            "    System.out.println(\"don't delete 2\");",
+            "    return 0;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public int invoke() {",
+            "    return 123;",
+            "  }",
+            "  public int foo(Side side) { ",
+            "    System.out.println(\"don't delete 0\");",
+            "    if (invoke() > 0) {",
+            "      System.out.println(\"don't delete 1\");",
+            "      // Preceding comment",
+            "      return switch(side) {",
+            "        case HEART, DIAMOND -> ",
+            "        /* lhs comment */",
+            "        // rhs comment",
+            "        invoke();",
+            "        case SPADE -> throw new RuntimeException();",
+            "        case CLUB -> throw new NullPointerException();",
+            "      };",
+            "      // Custom comment - should never happen",
+            "    }",
+            "    System.out.println(\"don't delete 2\");",
+            "    return 0;",
+            "  }",
+            "}")
+        .setArgs(
+            ImmutableList.of(
+                "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion"))
+        .doTest();
+  }
+
+  @Test
+  public void switchByEnum_returnSwitchNoFollowingStatementsInBlock_errorAndNoRemoval() {
+    // The switch is exhaustive but doesn't have any statements immediately following it in the
+    // lowest ancestor statement block
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public int invoke() {",
+            "    return 123;",
+            "  }",
+            "  public int foo(Side side) { ",
+            "    System.out.println(\"don't delete 0\");",
+            "    if (invoke() > 0) {",
+            "      System.out.println(\"don't delete 1\");",
+            "      // Preceding comment",
+            "      // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]",
+            "      switch(side) {",
+            "        case HEART /* lhs comment */: // rhs comment",
+            "          // Fall through",
+            "        case DIAMOND:",
+            "          return invoke();",
+            "        case SPADE:",
+            "          throw new RuntimeException();",
+            "        case CLUB:",
+            "          throw new NullPointerException();",
+            "      }",
+            "    }",
+            "    // Custom comment - should never happen because invoke returns 123",
+            "    int z = invoke(/* block comment 0 */);",
+            "    {z++;}",
+            "    throw new RuntimeException(\"Invoke <= 0 at runtime \");",
+            "  }",
+            "}")
+        .setArgs(
+            ImmutableList.of(
+                "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion"))
+        .doTest();
+
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public int invoke() {",
+            "    return 123;",
+            "  }",
+            "  public int foo(Side side) { ",
+            "    System.out.println(\"don't delete 0\");",
+            "    if (invoke() > 0) {",
+            "      System.out.println(\"don't delete 1\");",
+            "      // Preceding comment",
+            "      switch(side) {",
+            "        case HEART /* lhs comment */: // rhs comment",
+            "          // Fall through",
+            "        case DIAMOND:",
+            "          return invoke();",
+            "        case SPADE:",
+            "          throw new RuntimeException();",
+            "        case CLUB:",
+            "          throw new NullPointerException();",
+            "      }",
+            "    }",
+            "    // Custom comment - should never happen because invoke returns 123",
+            "    int z = invoke(/* block comment 0 */);",
+            "    {z++;}",
+            "    throw new RuntimeException(\"Invoke <= 0 at runtime \");",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public int invoke() {",
+            "    return 123;",
+            "  }",
+            "  public int foo(Side side) { ",
+            "    System.out.println(\"don't delete 0\");",
+            "    if (invoke() > 0) {",
+            "      System.out.println(\"don't delete 1\");",
+            "      // Preceding comment",
+            "      return switch(side) {",
+            "        case HEART, DIAMOND -> ",
+            "        /* lhs comment */",
+            "        // rhs comment",
+            "        invoke();",
+            "        case SPADE -> throw new RuntimeException();",
+            "        case CLUB -> throw new NullPointerException();",
+            "      };",
+            "    }",
+            "    // Custom comment - should never happen because invoke returns 123",
+            "    int z = invoke(/* block comment 0 */);",
+            "    {z++;}",
+            "    throw new RuntimeException(\"Invoke <= 0 at runtime \");",
+            "  }",
+            "}")
+        .setArgs(
+            ImmutableList.of(
+                "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion"))
+        .doTest();
+  }
+
+  @Test
+  public void
+      switchByEnum_returnSwitchWithShouldNeverHappenInLambda_errorAndRemoveShouldNeverHappen() {
+    // Conversion to return switch within a lambda
+    assumeTrue(RuntimeVersion.isAtLeast14());
+
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.function.Supplier;",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public int invoke() {",
+            "    return 123;",
+            "  }",
+            "  public int foo(Side side) { ",
+            "    Supplier<Integer> lambda = () -> {",
+            "      // Preceding comment",
+            "      switch(side) {",
+            "        case HEART :",
+            "          // Fall through",
+            "        case DIAMOND:",
+            "          return invoke();",
+            "        case SPADE:",
+            "          throw new RuntimeException();",
+            "        case CLUB:",
+            "          throw new NullPointerException();",
+            "      }",
+            "      // Custom comment - should never happen",
+            "      int z = invoke(/* block comment 0 */);",
+            "      z++;",
+            "      throw new RuntimeException(\"Switch was not exhaustive at runtime \" + z);",
+            "    };",
+            "    System.out.println(\"don't delete 2\");",
+            "    return lambda.get();",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import java.util.function.Supplier;",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public int invoke() {",
+            "    return 123;",
+            "  }",
+            "  public int foo(Side side) { ",
+            "    Supplier<Integer> lambda = () -> {",
+            "      // Preceding comment",
+            "      return switch(side) {",
+            "        case HEART, DIAMOND -> invoke();",
+            "        case SPADE -> throw new RuntimeException();",
+            "        case CLUB -> throw new NullPointerException();",
+            "      };",
+            "      // Custom comment - should never happen",
+            "    };",
+            "    System.out.println(\"don't delete 2\");",
+            "    return lambda.get();",
+            "  }",
+            "}")
+        .setArgs(
+            ImmutableList.of(
+                "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion"))
+        .doTest();
+  }
+
+  @Test
+  public void switchByEnum_returnSwitchVoid_noError() {
+    // A void cannot be converted to a return switch
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public void foo(Side side) { ",
+            "    switch(side) {",
+            "       case HEART:",
+            "          // Fall through",
+            "       case DIAMOND:",
+            "          return;",
+            "       case SPADE:",
+            "         throw new RuntimeException();",
+            "       default:",
+            "         throw new NullPointerException();",
+            "    }",
+            "  }",
+            "}")
+        .setArgs(
+            ImmutableList.of(
+                "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion"))
+        .doTest();
+  }
+
+  @Test
+  public void switchByEnum_returnLabelledContinue_noError() {
+    // Control jumps outside the switch for HEART
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public int foo(Side side) { ",
+            "    before:",
+            "    for(;;) {",
+            "      switch(side) {",
+            "         case HEART:",
+            "            continue before;",
+            "         case DIAMOND:",
+            "            return 3;",
+            "         case SPADE:",
+            "           throw new RuntimeException();",
+            "         default:",
+            "           throw new NullPointerException();",
+            "      }",
+            "    }",
+            "  }",
+            "}")
+        .setArgs(
+            ImmutableList.of(
+                "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion"))
+        .doTest();
+  }
+
+  @Test
+  public void switchByEnum_returnUnlabelledContinue_noError() {
+    // Control jumps outside the switch for HEART
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public int foo(Side side) { ",
+            "    before:",
+            "    for(;;) {",
+            "      switch(side) {",
+            "         case HEART:",
+            "            continue;",
+            "         case DIAMOND:",
+            "            return 3;",
+            "         case SPADE:",
+            "           throw new RuntimeException();",
+            "         default:",
+            "           throw new NullPointerException();",
+            "      }",
+            "    }",
+            "  }",
+            "}")
+        .setArgs(
+            ImmutableList.of(
+                "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion"))
+        .doTest();
+  }
+
+  @Test
+  public void switchByEnum_returnLabelledBreak_noError() {
+    // Control jumps outside the switch for HEART
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public int foo(Side side) { ",
+            "    before:",
+            "    for(;;) {",
+            "      switch(side) {",
+            "         case HEART:",
+            "            break before;",
+            "         case DIAMOND:",
+            "            return 3;",
+            "         case SPADE:",
+            "           throw new RuntimeException();",
+            "         default:",
+            "           throw new NullPointerException();",
+            "      }",
+            "    }",
+            "    return 0;",
+            "  }",
+            "}")
+        .setArgs(
+            ImmutableList.of(
+                "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion"))
+        .doTest();
+  }
+
+  @Test
+  public void switchByEnum_returnYield_noError() {
+    // Does not attempt to convert "yield" expressions
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public int foo(Side side) { ",
+            "    return switch(side) {",
+            "         case HEART:",
+            "            yield 2;",
+            "         case DIAMOND:",
+            "            yield 3;",
+            "         case SPADE:",
+            "           // Fall through",
+            "         default:",
+            "           throw new NullPointerException();",
+            "    };",
+            "  }",
+            "}")
+        .setArgs(
+            ImmutableList.of(
+                "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion"))
+        .doTest();
+  }
+
+  /**********************************
+   *
+   * Assignment switch test cases
+   *
+   **********************************/
+
+  @Test
+  public void switchByEnum_assignmentSwitchToLocalHasDefault_error() {
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public int foo(Side side) { ",
+            "    int x = 0;",
+            "    // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]",
+            "    switch(side) {",
+            "       case HEART:",
+            "       case DIAMOND:",
+            "          x = (((x+1) * (x*x)) << 1);",
+            "          break;",
+            "       case SPADE:",
+            "         throw new RuntimeException();",
+            "       default:",
+            "         throw new NullPointerException();",
+            "    }",
+            "  return x;",
+            "  }",
+            "}")
+        .setArgs(
+            ImmutableList.of(
+                "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion"))
+        .doTest();
+
+    // Check correct generated code
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public int foo(Side side) { ",
+            "    int x = 0;",
+            "    switch(side) {",
+            "       case HEART:",
+            "       case DIAMOND:",
+            "          x = ((x+1) * (x*x)) << 1;",
+            "          break;",
+            "       case SPADE:",
+            "         throw new RuntimeException();",
+            "       default:",
+            "         throw new NullPointerException();",
+            "    }",
+            "  return x;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public int foo(Side side) { ",
+            "    int x = 0;",
+            "    x = switch(side) {",
+            "       case HEART, DIAMOND ->",
+            "           ((x+1) * (x*x)) << 1;",
+            "       case SPADE ->",
+            "         throw new RuntimeException();",
+            "       default ->",
+            "         throw new NullPointerException();",
+            "    };",
+            "  return x;",
+            "  }",
+            "}")
+        .setArgs(
+            ImmutableList.of(
+                "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion"))
+        .doTest();
+  }
+
+  @Test
+  public void switchByEnum_assignmentSwitchMixedReferences_error() {
+    // Must deduce that "x" and "this.x" refer to same thing
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  int x;",
+            "  public Test(int foo) {",
+            "    x = -1;",
+            "  }",
+            " ",
+            "  public int foo(Side side) { ",
+            "    // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]",
+            "    switch(side) {",
+            "       case /* LHS comment */ HEART:",
+            "          // Inline comment",
+            "          x <<= 2;",
+            "          break;",
+            "       case DIAMOND:",
+            "          this.x <<= (((x+1) * (x*x)) << 1);",
+            "          break;",
+            "       case SPADE:",
+            "         throw new RuntimeException();",
+            "       default:",
+            "         throw new NullPointerException();",
+            "    }",
+            "  return x;",
+            "  }",
+            "}")
+        .setArgs(
+            ImmutableList.of(
+                "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion"))
+        .doTest();
+
+    // Check correct generated code.
+    // Note that suggested fix uses the style of the first case (in source order).
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  int x;",
+            "  public Test(int foo) {",
+            "    x = -1;",
+            "  }",
+            " ",
+            "  public int foo(Side side) { ",
+            "    switch(side) {",
+            "       case /* LHS comment */ HEART:",
+            "          // Inline comment",
+            "          this.x <<= 2;",
+            "          break;",
+            "       case DIAMOND:",
+            "          x <<= (((x+1) * (x*x)) << 1);",
+            "          break;",
+            "       case SPADE:",
+            "         throw new RuntimeException();",
+            "       default:",
+            "         throw new NullPointerException();",
+            "    }",
+            "    return x;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  int x;",
+            "  public Test(int foo) {",
+            "    x = -1;",
+            "  }",
+            " ",
+            "  public int foo(Side side) { ",
+            "    this.x <<= switch(side) {",
+            "       case HEART ->  /* LHS comment */",
+            "          // Inline comment",
+            "          2;",
+            "       case DIAMOND -> (((x+1) * (x*x)) << 1);",
+            "       case SPADE -> throw new RuntimeException();",
+            "       default -> throw new NullPointerException();",
+            "    };",
+            "    return x;",
+            "  }",
+            "}")
+        .setArgs(
+            ImmutableList.of(
+                "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion"))
+        .doTest();
+  }
+
+  @Test
+  public void switchByEnum_assignmentSwitchMixedReferences_noError() {
+    // Must deduce that "x" and "this.y" refer to different things
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  int x, y;",
+            "  public Test(int foo) {",
+            "    x = -1;",
+            "    y = -1;",
+            "  }",
+            " ",
+            "  public int foo(Side side) { ",
+            "    switch(side) {",
+            "       case HEART:",
+            "          x = 2;",
+            "          break;",
+            "       case DIAMOND:",
+            "          this.y = (((x+1) * (x*x)) << 1);",
+            "          break;",
+            "       case SPADE:",
+            "         throw new RuntimeException();",
+            "       default:",
+            "         throw new NullPointerException();",
+            "    }",
+            "  return x;",
+            "  }",
+            "}")
+        .setArgs(
+            ImmutableList.of(
+                "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion"))
+        .doTest();
+  }
+
+  @Test
+  public void switchByEnum_assignmentSwitchTwoAssignments_noError() {
+    // Can't convert multiple assignments, even if redundant
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  int x;",
+            "  public Test(int foo) {",
+            "    x = -1;",
+            "  }",
+            " ",
+            "  public int foo(Side side) { ",
+            "    switch(side) {",
+            "       case HEART:",
+            "          x = 2;",
+            "          x = 3;",
+            "          break;",
+            "       case DIAMOND:",
+            "          this.x = (((x+1) * (x*x)) << 1);",
+            "          break;",
+            "       case SPADE:",
+            "         throw new RuntimeException();",
+            "       default:",
+            "         throw new NullPointerException();",
+            "    }",
+            "  return x;",
+            "  }",
+            "}")
+        .setArgs(
+            ImmutableList.of(
+                "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion"))
+        .doTest();
+  }
+
+  @Test
+  public void switchByEnum_assignmentSwitchMixedKinds_noError() {
+    // Different assignment types ("=" versus "+=").  The check does not attempt to alter the
+    // assignments to make the assignment types match (e.g. does not change to "x = x + 2")
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  int x;",
+            "  public Test(int foo) {",
+            "    x = -1;",
+            "  }",
+            " ",
+            "  public int foo(Side side) { ",
+            "    switch(side) {",
+            "       case HEART:",
+            "          x += 2;",
+            "          break;",
+            "       case DIAMOND:",
+            "          x = (((x+1) * (x*x)) << 1);",
+            "          break;",
+            "       case SPADE:",
+            "         throw new RuntimeException();",
+            "       default:",
+            "         throw new NullPointerException();",
+            "    }",
+            "  return x;",
+            "  }",
+            "}")
+        .setArgs(
+            ImmutableList.of(
+                "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion"))
+        .doTest();
+  }
+
+  @Test
+  public void switchByEnum_assignmentLabelledContinue_noError() {
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  int x;",
+            "  public Test(int foo) {",
+            "    x = -1;",
+            "  }",
+            " ",
+            "  public int foo(Side side) { ",
+            "    before:",
+            "    for(;;) {",
+            "      switch(side) {",
+            "         case HEART:",
+            "            x = 2;",
+            "            break;",
+            "         case DIAMOND:",
+            "            x = (((x+1) * (x*x)) << 1);",
+            "            break;",
+            "         case SPADE:",
+            "           continue before;",
+            "         default:",
+            "           throw new NullPointerException();",
+            "       }",
+            "      break;",
+            "    }",
+            "    after:",
+            "    return x;",
+            "  }",
+            "}")
+        .setArgs(
+            ImmutableList.of(
+                "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion"))
+        .doTest();
+  }
+
+  @Test
+  public void switchByEnum_assignmentLabelledBreak_noError() {
+    // Can't convert because of "break before"
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  int x;",
+            "  public Test(int foo) {",
+            "    x = -1;",
+            "  }",
+            " ",
+            "  public int foo(Side side) { ",
+            "    before:",
+            "    for(;;) {",
+            "      switch(side) {",
+            "         case HEART:",
+            "           x = 2;",
+            "           break;",
+            "         case DIAMOND:",
+            "           x = (((x+1) * (x*x)) << 1);",
+            "           break;",
+            "         case SPADE:",
+            "           break before;",
+            "         default:",
+            "           throw new NullPointerException();",
+            "       }",
+            "      break;",
+            "    }",
+            "    after:",
+            "    return x;",
+            "  }",
+            "}")
+        .setArgs(
+            ImmutableList.of(
+                "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion"))
+        .doTest();
+  }
+
+  @Test
+  public void switchByEnum_assignmentLabelledBreak2_noError() {
+    // Can't convert because of "break before" as the second statement in its block
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  int x;",
+            "  public Test(int foo) {",
+            "    x = -1;",
+            "  }",
+            " ",
+            "  public int foo(Side side) { ",
+            "    before:",
+            "    for(;;) {",
+            "      switch(side) {",
+            "         case HEART:",
+            "           x = 2;",
+            "           break;",
+            "         case DIAMOND:",
+            "           x = (((x+1) * (x*x)) << 1);",
+            "           break;",
+            "         case SPADE:",
+            "           x = 3;",
+            "           break before;",
+            "         default:",
+            "           throw new NullPointerException();",
+            "       }",
+            "      break;",
+            "    }",
+            "    after:",
+            "    return x;",
+            "  }",
+            "}")
+        .setArgs(
+            ImmutableList.of(
+                "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion"))
+        .doTest();
+  }
+
+  @Test
+  public void switchByEnum_assignmentUnlabelledContinue_noError() {
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  int x;",
+            "  public Test(int foo) {",
+            "    x = -1;",
+            "  }",
+            " ",
+            "  public int foo(Side side) { ",
+            "    before:",
+            "    for(;;) {",
+            "      switch(side) {",
+            "         case HEART:",
+            "            x = 2;",
+            "            break;",
+            "         case DIAMOND:",
+            "            x = (((x+1) * (x*x)) << 1);",
+            "            break;",
+            "         case SPADE:",
+            "           continue;",
+            "         default:",
+            "           throw new NullPointerException();",
+            "       }",
+            "      break;",
+            "    }",
+            "    after:",
+            "    return x;",
+            "  }",
+            "}")
+        .setArgs(
+            ImmutableList.of(
+                "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion"))
+        .doTest();
+  }
+
+  @Test
+  public void switchByEnum_assignmentYield_noError() {
+    // Does not attempt to convert "yield" expressions
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public int foo(Side side) { ",
+            "    int x = switch(side) {",
+            "         case HEART:",
+            "            yield 2;",
+            "         case DIAMOND:",
+            "            yield 3;",
+            "         case SPADE:",
+            "           // Fall through",
+            "         default:",
+            "           throw new NullPointerException();",
+            "    };",
+            "    x <<= 1;",
+            "    return x;",
+            "  }",
+            "}")
+        .setArgs(
+            ImmutableList.of(
+                "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion"))
+        .doTest();
+  }
+
+  @Test
+  public void switchByEnum_exhaustiveAssignmentSwitch_error() {
+    // Transformation can change error handling.  Here, if the enum is not exhaustive at runtime
+    // (say there is a new JOKER suit), then nothing would happen.  But the transformed source,
+    // would throw.
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public int foo(Side side) { ",
+            "    int x = 0;",
+            "    // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]",
+            "    switch(side) {",
+            "       case HEART:",
+            "         // Heart comment",
+            "         // Fall through",
+            "       case DIAMOND:",
+            "          x = (((x+1) * (x*x)) << 1);",
+            "          break;",
+            "       case SPADE:",
+            "         throw new RuntimeException();",
+            "       case CLUB:",
+            "         throw new NullPointerException();",
+            "    }",
+            "    return x;",
+            "  }",
+            "}")
+        .setArgs(
+            ImmutableList.of(
+                "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion"))
+        .doTest();
+
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public int foo(Side side) { ",
+            "    int x = 0;",
+            "    switch(side) {",
+            "       case HEART:",
+            "         // Heart comment",
+            "         // Fall through",
+            "       case DIAMOND:",
+            "          x = (((x+1) * (x*x)) << 2);",
+            "          break;",
+            "       case SPADE:",
+            "         throw new RuntimeException();",
+            "       case CLUB:",
+            "         throw new NullPointerException();",
+            "    }",
+            "    return x;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public int foo(Side side) { ",
+            "    int x = 0;",
+            "    x = switch(side) {",
+            "       case HEART, DIAMOND -> ",
+            "         // Heart comment",
+            "         (((x+1) * (x*x)) << 2);",
+            "       case SPADE -> throw new RuntimeException();",
+            "       case CLUB -> throw new NullPointerException();",
+            "    };",
+            "    return x;",
+            "  }",
+            "}")
+        .setArgs(
+            ImmutableList.of(
+                "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion"))
+        .doTest();
+  }
+
+  @Test
+  public void switchByEnum_exhaustiveCompoundAssignmentSwitch_error() {
+    // Verify compound assignments (here, +=)
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public int foo(Side side) { ",
+            "    int x = 0;",
+            "    // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]",
+            "    switch(side) {",
+            "       case HEART:",
+            "       case DIAMOND:",
+            "          x += (((x+1) * (x*x)) << 1);",
+            "          break;",
+            "       case SPADE:",
+            "         throw new RuntimeException();",
+            "       case CLUB:",
+            "         throw new NullPointerException();",
+            "    }",
+            "    return x;",
+            "  }",
+            "}")
+        .setArgs(
+            ImmutableList.of(
+                "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion"))
+        .doTest();
+
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public int foo(Side side) { ",
+            "    int x = 0;",
+            "    switch(side) {",
+            "       case HEART:",
+            "       case DIAMOND:",
+            "          x += (((x+1) * (x*x)) << 1);",
+            "          break;",
+            "       case SPADE:",
+            "         throw new RuntimeException();",
+            "       case CLUB:",
+            "         throw new NullPointerException();",
+            "    }",
+            "    return x;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public int foo(Side side) { ",
+            "    int x = 0;",
+            "    x += switch(side) {",
+            "       case HEART, DIAMOND -> (((x+1) * (x*x)) << 1);",
+            "       case SPADE -> throw new RuntimeException();",
+            "       case CLUB -> throw new NullPointerException();",
+            "    };",
+            "    return x;",
+            "  }",
+            "}")
+        .setArgs(
+            ImmutableList.of(
+                "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion"))
+        .doTest();
+  }
+
+  @Test
+  public void switchByEnum_exhaustiveAssignmentSwitchCaseList_error() {
+    // Statement switch has cases with multiple values
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public int foo(Side side) { ",
+            "    int x = 0;",
+            "    // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]",
+            "    switch(side) {",
+            "       case HEART, DIAMOND:",
+            "          x = (((x+1) * (x*x)) << 1);",
+            "          break;",
+            "       case SPADE, CLUB:",
+            "         throw new NullPointerException();",
+            "    }",
+            "    return x;",
+            "  }",
+            "}")
+        .setArgs(
+            ImmutableList.of(
+                "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion"))
+        .doTest();
+
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public int foo(Side side) { ",
+            "    int x = 0;",
+            "    switch(side) {",
+            "       case HEART, DIAMOND:",
+            "          x = (((x+1) * (x*x)) << 1);",
+            "          break;",
+            "       case SPADE, CLUB:",
+            "         throw new NullPointerException();",
+            "    }",
+            "    return x;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public int foo(Side side) { ",
+            "    int x = 0;",
+            "    x = switch(side) {",
+            "       case HEART, DIAMOND -> (((x+1) * (x*x)) << 1);",
+            "       case SPADE, CLUB -> throw new NullPointerException();",
+            "    };",
+            "    return x;",
+            "  }",
+            "}")
+        .setArgs(
+            ImmutableList.of(
+                "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion"))
+        .doTest();
+  }
+
+  @Test
+  public void switchByEnum_nonExhaustiveAssignmentSwitch_noError() {
+    // No HEART case
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public int foo(Side side) { ",
+            "    int x = 0;",
+            "    switch(side) {",
+            "       case DIAMOND:",
+            "          x = (((x+1) * (x*x)) << 1);",
+            "          break;",
+            "       case SPADE:",
+            "         throw new RuntimeException();",
+            "       case CLUB:",
+            "         throw new NullPointerException();",
+            "    }",
+            "    return x;",
+            "  }",
+            "}")
+        .setArgs(
+            ImmutableList.of(
+                "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion"))
         .doTest();
   }
 }

@@ -26,8 +26,10 @@ bugs.
 
 ### Examples
 
+#### 1. Eliminate fall through
+
 ``` {.bad}
-enum Suit {HEARTS, CLUBS, SPADES, DIAMONDS}
+enum Suit {HEARTS, CLUBS, SPADES, DIAMONDS};
 
 private void foo(Suit suit) {
   switch(suit) {
@@ -47,7 +49,7 @@ System.out.println("Red diamonds");
 Which can be simplified into the following expression `switch`:
 
 ``` {.good}
-enum Suit {HEARTS, CLUBS, SPADES, DIAMONDS}
+enum Suit {HEARTS, CLUBS, SPADES, DIAMONDS};
 
 private void foo(Suit suit) {
   switch(suit) {
@@ -61,11 +63,107 @@ private void foo(Suit suit) {
 }
 ```
 
+#### 2. Return switch
+
+Sometimes `switch` is used with `return`. Below, even though a `case` is
+specified for each possible value of the `enum`, note that we nevertheless need
+a "should never happen" clause:
+
+``` {.bad}
+enum SideOfCoin {OBVERSE, REVERSE};
+
+private String foo(SideOfCoin sideOfCoin) {
+  switch(sideOfCoin) {
+    case OBVERSE:
+      return "Heads";
+    case REVERSE:
+      return "Tails";
+    }
+    // This should never happen, but removing this will cause a compile-time error
+    throw new RuntimeException("Unknown side of coin");
+}
+```
+
+Using an expression switch simplifies the code and removes the need for an
+explicit "should never happen" clause.
+
+```
+enum SideOfCoin {OBVERSE, REVERSE};
+
+private String foo(SideOfCoin sideOfCoin) {
+  return switch(sideOfCoin) {
+    case OBVERSE -> "Heads";
+    case REVERSE -> "Tails";
+  };
+}
+```
+
+If you nevertheless wish to have an explicit "should never happen" clause, this
+can be accomplished by placing the logic under a `default` case. For example:
+
+```
+
+enum SideOfCoin {OBVERSE, REVERSE};
+
+private String foo(SideOfCoin sideOfCoin) {
+  return switch(sideOfCoin) {
+    case OBVERSE -> "Heads";
+    case REVERSE -> "Tails";
+    default -> {
+      // This should never happen
+      throw new RuntimeException("Unknown side of coin");
+    }
+  };
+}
+```
+
+#### 3. Assignment switch
+
+If every branch of a `switch` is making an assignment to the same variable, it
+can be re-written as an assignment switch:
+
+``` {.bad}
+enum Suit {HEARTS, CLUBS, SPADES, DIAMONDS};
+
+int score = 0;
+
+private void updateScore(Suit suit) {
+  switch(suit) {
+    case HEARTS:
+      // Fall thru
+    case DIAMONDS:
+      score += -1;
+    case SPADES:
+      score += 2;
+    case CLUBS:
+      score += 3;
+    }
+}
+```
+
+This can be simplified as follows:
+
+```
+enum Suit {HEARTS, CLUBS, SPADES, DIAMONDS};
+
+int score = 0;
+
+private void updateScore(Suit suit) {
+  score += switch(suit) {
+    case HEARTS, DIAMONDS -> 1;
+    case SPADES -> 2;
+    case CLUBS -> 3;
+    };
+}
+```
+
+#### 4. Complex control flows
+
 Here's an example of a complex statement `switch` with conditional fall-through
 and complex control flows. How many potential execution paths can you spot?
 
 ``` {.bad}
-enum Suit {HEARTS, CLUBS, SPADES, DIAMONDS}
+enum Suit {HEARTS, CLUBS, SPADES, DIAMONDS};
 
 private int foo(Suit suit){
   switch(suit) {
