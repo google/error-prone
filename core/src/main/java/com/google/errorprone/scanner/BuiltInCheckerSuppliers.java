@@ -387,6 +387,7 @@ import com.google.errorprone.bugpatterns.UnnecessaryOptionalGet;
 import com.google.errorprone.bugpatterns.UnnecessaryParentheses;
 import com.google.errorprone.bugpatterns.UnnecessarySetDefault;
 import com.google.errorprone.bugpatterns.UnnecessaryStaticImport;
+import com.google.errorprone.bugpatterns.UnnecessaryTestMethodPrefix;
 import com.google.errorprone.bugpatterns.UnnecessaryTypeArgument;
 import com.google.errorprone.bugpatterns.UnqualifiedYield;
 import com.google.errorprone.bugpatterns.UnsafeFinalization;
@@ -1157,6 +1158,7 @@ public class BuiltInCheckerSuppliers {
           UnnecessaryOptionalGet.class,
           UnnecessarySetDefault.class,
           UnnecessaryStaticImport.class,
+          UnnecessaryTestMethodPrefix.class,
           UnsafeLocaleUsage.class,
           UnusedException.class,
           UrlInSee.class,
