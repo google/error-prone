@@ -1241,7 +1241,7 @@ __[UseBinds](bugpattern/UseBinds)__<br>
 @Binds is a more efficient and declarative mechanism for delegating a binding.
 
 __[UseCorrectAssertInTests](bugpattern/UseCorrectAssertInTests)__<br>
-Java assert is used in test. For testing purposes Assert.* matchers should be used.
+Java assert is used in testing code. For testing purposes, prefer using Truth-based assertions.
 
 __[VariableNameSameAsType](bugpattern/VariableNameSameAsType)__<br>
 variableName and type with the same name would refer to the static field instead of the class
