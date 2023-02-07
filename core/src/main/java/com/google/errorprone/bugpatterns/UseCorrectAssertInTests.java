@@ -46,7 +46,9 @@ import com.sun.tools.javac.tree.TreeInfo;
  * @author galitch@google.com (Anton Galitch)
  */
 @BugPattern(
-    summary = "Java assert is used in test. For testing purposes Assert.* matchers should be used.",
+    summary =
+        "Java assert is used in testing code. For testing purposes, prefer using Truth-based"
+            + " assertions.",
     severity = SeverityLevel.WARNING)
 public class UseCorrectAssertInTests extends BugChecker implements MethodTreeMatcher {
   private static final String STATIC_ASSERT_THAT_IMPORT =
