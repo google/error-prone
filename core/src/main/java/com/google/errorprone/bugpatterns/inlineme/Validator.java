@@ -18,9 +18,11 @@ package com.google.errorprone.bugpatterns.inlineme;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.util.ASTHelpers.findSuperMethods;
+import static com.google.errorprone.util.ASTHelpers.getAnnotationWithSimpleName;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.hasDirectAnnotationWithSimpleName;
+import static com.google.errorprone.util.ASTHelpers.shouldKeep;
 
 import com.google.common.base.CharMatcher;
 import com.google.common.collect.ImmutableList;
@@ -33,12 +35,10 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.ErrorProneToken;
 import com.google.errorprone.util.ErrorProneTokens;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.MethodTree;
-import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.util.Context;
 import java.util.EnumSet;
 import java.util.Set;
@@ -65,32 +65,32 @@ public final class Validator extends BugChecker implements MethodTreeMatcher {
 
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
-    MethodSymbol symbol = getSymbol(tree);
     if (cleanupInlineMes) {
-      return shouldDelete(symbol, state)
+      return shouldDelete(tree, state)
           // TODO(b/216312289): maybe use SuggestedFixes.delete(tree)?
           ? describeMatch(tree, SuggestedFixes.replaceIncludingComments(state.getPath(), "", state))
           : Description.NO_MATCH;
     } else {
-      return InlineMeData.createFromSymbol(symbol)
+      return InlineMeData.createFromSymbol(getSymbol(tree))
           .map(data -> match(data, tree, state))
           .orElse(Description.NO_MATCH);
     }
   }
 
   /** Whether or not the API should be deleted when run in cleanup mode. */
-  private static boolean shouldDelete(MethodSymbol symbol, VisitorState state) {
-    // Clean up (delete) the API if
-    //   * it's @InlineMe'd
-    //   * it isn't @InlineMeValidationDisabled (this prevents us from deleting default methods)
-    //   * it isn't an @Override (since the code would likely no longer compile, or it would start
-    //     inheriting behavior from the supertype).
+  private static boolean shouldDelete(MethodTree tree, VisitorState state) {
+    // We don't delete @InlineMe APIs that are:
+    //   * annotated with @InlineMeValidationDisabled (this stops us from deleting default methods)
+    //   * annotated with @Override (since the code would likely no longer compile, or it would
+    //     start inheriting behavior from the supertype).
+    //   * annotated with @Keep or an annotation that is @Keep (e.g., an @Inject API)
 
     // TODO(kak): it would be nice if we could query to see if there are still any existing
     // usages of the API before unilaterally deleting it.
-    return hasDirectAnnotationWithSimpleName(symbol, "InlineMe")
-        && !hasAnnotation(symbol, "java.lang.Override", state)
-        && findSuperMethods(symbol, state.getTypes()).isEmpty();
+    return hasDirectAnnotationWithSimpleName(tree, "InlineMe")
+        && !shouldKeep(tree)
+        && !hasAnnotation(tree, "java.lang.Override", state)
+        && findSuperMethods(getSymbol(tree), state.getTypes()).isEmpty();
   }
 
   private Description match(InlineMeData existingAnnotation, MethodTree tree, VisitorState state) {
@@ -121,7 +121,7 @@ public final class Validator extends BugChecker implements MethodTreeMatcher {
   }
 
   private static AnnotationTree getInlineMeAnnotationTree(MethodTree tree) {
-    return ASTHelpers.getAnnotationWithSimpleName(tree.getModifiers().getAnnotations(), "InlineMe");
+    return getAnnotationWithSimpleName(tree.getModifiers().getAnnotations(), "InlineMe");
   }
 
   private static String renderInlineMeMismatch(
