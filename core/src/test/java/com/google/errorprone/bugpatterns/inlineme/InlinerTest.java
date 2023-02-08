@@ -1190,6 +1190,46 @@ public class InlinerTest {
         .doTest();
   }
 
+  @Test
+  public void varArgs_b268215956() {
+    refactoringTestHelper
+        .addInputLines(
+            "Client.java",
+            "package com.google.foo;",
+            "import com.google.errorprone.annotations.InlineMe;",
+            "public final class Client {",
+            "  @InlineMe(",
+            "      replacement = \"Client.execute2(format, args)\",",
+            "      imports = {\"com.google.foo.Client\"})",
+            "  public static void execute1(String format, Object... args) {",
+            "    execute2(format, args);",
+            "  }",
+            "  public static void execute2(String format, Object... args) {",
+            "    // do nothing",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "Caller.java",
+            "import com.google.foo.Client;",
+            "public final class Caller {",
+            "  public void doTest() {",
+            "    Client.execute1(\"hi %s\");",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Caller.java",
+            "import com.google.foo.Client;",
+            "public final class Caller {",
+            "  public void doTest() {",
+            // TODO(b/268215956): fix this bug (trailing ', ')!
+            "    Client.execute2(\"hi %s\", );",
+            "  }",
+            "}")
+        .allowBreakingChanges()
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+  }
+
   private BugCheckerRefactoringTestHelper bugCheckerWithPrefixFlag(String prefix) {
     return BugCheckerRefactoringTestHelper.newInstance(Inliner.class, getClass())
         .setArgs("-XepOpt:" + PREFIX_FLAG + "=" + prefix);
