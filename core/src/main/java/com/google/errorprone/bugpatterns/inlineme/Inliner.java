@@ -240,11 +240,10 @@ public final class Inliner extends BugChecker
       // If caller passes 0 args in the varargs position, we want to remove the preceding comma to
       // make this.bar(a) (as opposed to "this.bar(a, )"
       boolean terminalVarargsReplacement = varargsWithEmptyArguments && i == varNames.size() - 1;
-      String capturePrefixForVarargs = terminalVarargsReplacement ? "(?:,\\s*)?" : "";
+      String capturePrefixForVarargs = terminalVarargsReplacement ? "(?:,\\s*)?" : "\\b";
       // We want to avoid replacing a method invocation with the same name as the method.
       var extractArgAndNextToken =
-          Pattern.compile(
-              "\\b" + capturePrefixForVarargs + Pattern.quote(varNames.get(i)) + "\\b([^(])");
+          Pattern.compile(capturePrefixForVarargs + Pattern.quote(varNames.get(i)) + "\\b([^(])");
       String replacementResult =
           Matcher.quoteReplacement(terminalVarargsReplacement ? "" : callingVars.get(i)) + "$1";
       Matcher matcher = extractArgAndNextToken.matcher(replacement);

@@ -1222,12 +1222,10 @@ public class InlinerTest {
             "import com.google.foo.Client;",
             "public final class Caller {",
             "  public void doTest() {",
-            // TODO(b/268215956): fix this bug (trailing ', ')!
-            "    Client.execute2(\"hi %s\", );",
+            "    Client.execute2(\"hi %s\");",
             "  }",
             "}")
-        .allowBreakingChanges()
-        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   private BugCheckerRefactoringTestHelper bugCheckerWithPrefixFlag(String prefix) {
