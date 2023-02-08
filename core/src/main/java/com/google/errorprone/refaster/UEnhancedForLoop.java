@@ -30,6 +30,7 @@ import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCStatement;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import com.sun.tools.javac.tree.TreeMaker;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 
 /**
@@ -133,21 +134,25 @@ abstract class UEnhancedForLoop extends USimpleStatement implements EnhancedForL
         getStatement().inline(inliner));
   }
 
-  private static JCEnhancedForLoop makeForeachLoop(
+  private static final Method treeMakerForeachLoopMethod = treeMakerForeachLoopMethod();
+
+  private static Method treeMakerForeachLoopMethod() {
+    try {
+      return RuntimeVersion.isAtLeast20()
+          ? TreeMaker.class.getMethod(
+              "ForeachLoop", JCTree.class, JCExpression.class, JCStatement.class)
+          : TreeMaker.class.getMethod(
+              "ForeachLoop", JCVariableDecl.class, JCExpression.class, JCStatement.class);
+    } catch (ReflectiveOperationException e) {
+      throw new LinkageError(e.getMessage(), e);
+    }
+  }
+
+  static JCEnhancedForLoop makeForeachLoop(
       TreeMaker maker, JCVariableDecl variable, JCExpression expression, JCStatement statement) {
     try {
-      if (RuntimeVersion.isAtLeast20()) {
-        return (JCEnhancedForLoop)
-            TreeMaker.class
-                .getMethod("ForeachLoop", JCTree.class, JCExpression.class, JCStatement.class)
-                .invoke(maker, variable, expression, statement);
-      } else {
-        return (JCEnhancedForLoop)
-            TreeMaker.class
-                .getMethod(
-                    "ForeachLoop", JCVariableDecl.class, JCExpression.class, JCStatement.class)
-                .invoke(maker, variable, expression, statement);
-      }
+      return (JCEnhancedForLoop)
+          treeMakerForeachLoopMethod.invoke(maker, variable, expression, statement);
     } catch (ReflectiveOperationException e) {
       throw new LinkageError(e.getMessage(), e);
     }
