@@ -15,7 +15,7 @@
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":10,"i1":10};
+<script type="text/javascript">var data = {"i0":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -90,10 +90,8 @@ loadScripts(document, 'script');</script>
 <pre>public class <span class="type-name-label">ComparisonOutOfRange</span>
 extends <a href="BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>
 implements <a href="BugChecker.BinaryTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.BinaryTreeMatcher</a></pre>
+<div class="block">A <a href="BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 <dl class="notes">
-<dt>Author:</dt>
-<dd>bill.pugh@gmail.com (Bill Pugh), eaftan@google.com (Eddie Aftandilian)
-     <p>TODO(eaftan): Support other types of comparisons? Are there likely to be errors in those?</dd>
 <dt>See Also:</dt>
 <dd><a href="../../../../serialized-form.html#com.google.errorprone.bugpatterns.ComparisonOutOfRange">Serialized Form</a></dd>
 </dl>
@@ -150,14 +148,6 @@ implements <a href="BugChecker.BinaryTreeMatcher.html" title="interface in com.g
 <tbody>
 <tr class="alt-color" id="i0">
 <td class="col-first"><code><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#describe(com.sun.source.tree.BinaryTree,com.google.errorprone.VisitorState)">describe</a></span>&#8203;(com.sun.source.tree.BinaryTree&nbsp;tree,
-<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
-<td class="col-last">
-<div class="block">Suggested fixes are as follows.</div>
-</td>
-</tr>
-<tr class="row-color" id="i1">
-<td class="col-first"><code><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#matchBinary(com.sun.source.tree.BinaryTree,com.google.errorprone.VisitorState)">matchBinary</a></span>&#8203;(com.sun.source.tree.BinaryTree&nbsp;tree,
 <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></th>
 <td class="col-last">&nbsp;</td>
@@ -209,19 +199,6 @@ implements <a href="BugChecker.BinaryTreeMatcher.html" title="interface in com.g
 <dt>Specified by:</dt>
 <dd><code><a href="BugChecker.BinaryTreeMatcher.html#matchBinary(com.sun.source.tree.BinaryTree,com.google.errorprone.VisitorState)">matchBinary</a></code>&nbsp;in interface&nbsp;<code><a href="BugChecker.BinaryTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.BinaryTreeMatcher</a></code></dd>
 </dl>
-</section>
-</li>
-<li>
-<section class="detail" id="describe(com.sun.source.tree.BinaryTree,com.google.errorprone.VisitorState)">
-<h3>describe</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></span>&nbsp;<span class="member-name">describe</span>&#8203;(<span class="parameters">com.sun.source.tree.BinaryTree&nbsp;tree,
-<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
-<div class="block">Suggested fixes are as follows. For the byte case, convert the literal to its byte
- representation. For example, "255" becomes "-1. For the character case, replace the comparison
- with "true"/"false" since it's not clear what was intended and that is semantically equivalent.
-
- <p>TODO(eaftan): Suggested fixes don't handle side-effecting expressions, such as (d =
- reader.read()) == -1. Maybe add special case handling for assignments.</div>
 </section>
 </li>
 </ul>
