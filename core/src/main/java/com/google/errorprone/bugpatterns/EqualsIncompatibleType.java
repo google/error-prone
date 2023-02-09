@@ -70,12 +70,10 @@ public class EqualsIncompatibleType extends BugChecker
               staticMethod().anyClass().named("assertFalse")));
 
   private final TypeCompatibilityUtils typeCompatibilityUtils;
-  private final boolean matchPredicate;
 
   @Inject
   public EqualsIncompatibleType(ErrorProneFlags flags) {
     this.typeCompatibilityUtils = TypeCompatibilityUtils.fromFlags(flags);
-    this.matchPredicate = flags.getBoolean("EqualsIncompatibleType:MatchPredicate").orElse(true);
   }
 
   @Override
@@ -95,7 +93,7 @@ public class EqualsIncompatibleType extends BugChecker
           getType(invocationTree.getArguments().get(0)),
           state);
     }
-    if (matchPredicate && IS_EQUAL_MATCHER.matches(invocationTree, state)) {
+    if (IS_EQUAL_MATCHER.matches(invocationTree, state)) {
       Type targetType = ASTHelpers.targetType(state).type();
       if (targetType.getTypeArguments().size() != 1) {
         return NO_MATCH;
@@ -120,7 +118,7 @@ public class EqualsIncompatibleType extends BugChecker
       Type type = state.getTypes().findDescriptorType(getType(tree));
       return match(tree, getType(getReceiver(tree)), type.getParameterTypes().get(0), state);
     }
-    if (matchPredicate && IS_EQUAL_MATCHER.matches(tree, state)) {
+    if (IS_EQUAL_MATCHER.matches(tree, state)) {
       Type type = state.getTypes().findDescriptorType(getType(tree));
       if (type.getReturnType().getTypeArguments().size() != 1) {
         return NO_MATCH;
