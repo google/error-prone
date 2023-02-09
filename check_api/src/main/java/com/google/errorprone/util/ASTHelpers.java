@@ -246,7 +246,7 @@ public class ASTHelpers {
    * the wrong type, if {@code tree} is null, or if the symbol cannot be found due to a compilation
    * error.
    */
-  // TODO(eaftan): refactor other code that accesses symbols to use this method
+  @Nullable
   public static Symbol getSymbol(Tree tree) {
     if (tree instanceof AnnotationTree) {
       return getSymbol(((AnnotationTree) tree).getAnnotationType());
