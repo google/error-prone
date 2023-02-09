@@ -15,7 +15,7 @@
 <script type="text/javascript" src="../../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10};
+<script type="text/javascript">var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -136,17 +136,24 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </tr>
 <tr class="alt-color" id="i4">
 <td class="col-first"><code><a href="ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a></code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#containerOfAnnotation(java.util.Set)">containerOfAnnotation</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;containerOfAnnotation)</code></th>
+<td class="col-last">
+<div class="block">An annotation which marks a generic parameter as a container type.</div>
+</td>
+</tr>
+<tr class="row-color" id="i5">
+<td class="col-first"><code><a href="ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#knownTypes(com.google.errorprone.bugpatterns.threadsafety.ThreadSafety.KnownTypes)">knownTypes</a></span>&#8203;(<a href="ThreadSafety.KnownTypes.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.KnownTypes</a>&nbsp;knownTypes)</code></th>
 <td class="col-last">
 <div class="block">Information about known types and whether they're known to be safe or unsafe.</div>
 </td>
 </tr>
-<tr class="row-color" id="i5">
+<tr class="alt-color" id="i6">
 <td class="col-first"><code><a href="ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#markerAnnotations(com.google.common.collect.ImmutableSet)">markerAnnotations</a></span>&#8203;(com.google.common.collect.ImmutableSet&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;markerAnnotations)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color" id="i6">
+<tr class="row-color" id="i7">
 <td class="col-first"><code><a href="ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#markerAnnotations(java.util.Set)">markerAnnotations</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;markerAnnotations)</code></th>
 <td class="col-last">
@@ -154,23 +161,38 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
  example, when testing a class for immutability, this should be @Immutable.</div>
 </td>
 </tr>
-<tr class="row-color" id="i7">
+<tr class="alt-color" id="i8">
 <td class="col-first"><code><a href="ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#setPurpose(com.google.errorprone.bugpatterns.threadsafety.ThreadSafety.Purpose)">setPurpose</a></span>&#8203;(<a href="ThreadSafety.Purpose.html" title="enum in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Purpose</a>&nbsp;purpose)</code></th>
 <td class="col-last">
 <div class="block">See <a href="ThreadSafety.Purpose.html" title="enum in com.google.errorprone.bugpatterns.threadsafety"><code>ThreadSafety.Purpose</code></a>.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i8">
+<tr class="row-color" id="i9">
 <td class="col-first"><code><a href="ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#suppressAnnotation(java.lang.Class)">suppressAnnotation</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;&nbsp;suppressAnnotation)</code></th>
 <td class="col-last">
 <div class="block">An annotation which, when found on a class, should suppress the test</div>
 </td>
 </tr>
-<tr class="row-color" id="i9">
+<tr class="alt-color" id="i10">
+<td class="col-first"><code><a href="ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a></code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#suppressAnnotation(java.util.Set)">suppressAnnotation</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;suppressAnnotation)</code></th>
+<td class="col-last">
+<div class="block">An annotation which, when found on a class, should suppress the test</div>
+</td>
+</tr>
+<tr class="row-color" id="i11">
 <td class="col-first"><code><a href="ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#typeParameterAnnotation(java.lang.Class)">typeParameterAnnotation</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;&nbsp;typeParameterAnnotation)</code></th>
+<td class="col-last">
+<div class="block">An annotation which, when found on a type parameter, indicates that the type parameter may
+ only be instantiated with thread-safe types.</div>
+</td>
+</tr>
+<tr class="alt-color" id="i12">
+<td class="col-first"><code><a href="ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a></code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#typeParameterAnnotation(java.util.Set)">typeParameterAnnotation</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;typeParameterAnnotation)</code></th>
 <td class="col-last">
 <div class="block">An annotation which, when found on a type parameter, indicates that the type parameter may
  only be instantiated with thread-safe types.</div>
@@ -253,6 +275,14 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </section>
 </li>
 <li>
+<section class="detail" id="containerOfAnnotation(java.util.Set)">
+<h3>containerOfAnnotation</h3>
+<div class="member-signature"><span class="annotations"><a href="../../annotations/CanIgnoreReturnValue.html" title="annotation in com.google.errorprone.annotations">@CanIgnoreReturnValue</a>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a></span>&nbsp;<span class="member-name">containerOfAnnotation</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;containerOfAnnotation)</span></div>
+<div class="block">An annotation which marks a generic parameter as a container type.</div>
+</section>
+</li>
+<li>
 <section class="detail" id="suppressAnnotation(java.lang.Class)">
 <h3>suppressAnnotation</h3>
 <div class="member-signature"><span class="annotations"><a href="../../annotations/CanIgnoreReturnValue.html" title="annotation in com.google.errorprone.annotations">@CanIgnoreReturnValue</a>
@@ -261,10 +291,27 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </section>
 </li>
 <li>
+<section class="detail" id="suppressAnnotation(java.util.Set)">
+<h3>suppressAnnotation</h3>
+<div class="member-signature"><span class="annotations"><a href="../../annotations/CanIgnoreReturnValue.html" title="annotation in com.google.errorprone.annotations">@CanIgnoreReturnValue</a>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a></span>&nbsp;<span class="member-name">suppressAnnotation</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;suppressAnnotation)</span></div>
+<div class="block">An annotation which, when found on a class, should suppress the test</div>
+</section>
+</li>
+<li>
 <section class="detail" id="typeParameterAnnotation(java.lang.Class)">
 <h3>typeParameterAnnotation</h3>
 <div class="member-signature"><span class="annotations"><a href="../../annotations/CanIgnoreReturnValue.html" title="annotation in com.google.errorprone.annotations">@CanIgnoreReturnValue</a>
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a></span>&nbsp;<span class="member-name">typeParameterAnnotation</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;&nbsp;typeParameterAnnotation)</span></div>
+<div class="block">An annotation which, when found on a type parameter, indicates that the type parameter may
+ only be instantiated with thread-safe types.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="typeParameterAnnotation(java.util.Set)">
+<h3>typeParameterAnnotation</h3>
+<div class="member-signature"><span class="annotations"><a href="../../annotations/CanIgnoreReturnValue.html" title="annotation in com.google.errorprone.annotations">@CanIgnoreReturnValue</a>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a></span>&nbsp;<span class="member-name">typeParameterAnnotation</span>&#8203;(<span class="parameters"><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;typeParameterAnnotation)</span></div>
 <div class="block">An annotation which, when found on a type parameter, indicates that the type parameter may
  only be instantiated with thread-safe types.</div>
 </section>

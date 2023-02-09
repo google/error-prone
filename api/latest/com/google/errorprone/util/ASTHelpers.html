@@ -986,7 +986,8 @@ com.sun.source.tree.ExpressionTree&nbsp;expr2)</span></div>
 <li>
 <section class="detail" id="getSymbol(com.sun.source.tree.Tree)">
 <h3>getSymbol</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.sun.tools.javac.code.Symbol</span>&nbsp;<span class="member-name">getSymbol</span>&#8203;(<span class="parameters">com.sun.source.tree.Tree&nbsp;tree)</span></div>
+<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html" title="class or interface in javax.annotation" class="external-link">@Nullable</a>
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.sun.tools.javac.code.Symbol</span>&nbsp;<span class="member-name">getSymbol</span>&#8203;(<span class="parameters">com.sun.source.tree.Tree&nbsp;tree)</span></div>
 <div class="block">Gets the symbol for a tree. Returns null if this tree does not have a symbol because it is of
  the wrong type, if <code>tree</code> is null, or if the symbol cannot be found due to a compilation
  error.</div>
