@@ -25,17 +25,15 @@ import static com.sun.source.tree.Tree.Kind.CONDITIONAL_OR;
 import static com.sun.source.tree.Tree.Kind.IDENTIFIER;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.CatchTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.EnhancedForLoopTree;
-import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.ForLoopTree;
 import com.sun.source.tree.IdentifierTree;
@@ -47,36 +45,19 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.TypeCastTree;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import javax.inject.Inject;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
     summary = "This method always recurses, and will cause a StackOverflowError",
     severity = ERROR)
-public class InfiniteRecursion extends BugChecker implements BugChecker.MethodTreeMatcher {
-  private final boolean checkOnlySimpleFirstStatement;
-
-  @Inject
-  public InfiniteRecursion(ErrorProneFlags flags) {
-    checkOnlySimpleFirstStatement =
-        flags.getBoolean("InfiniteRecursion:CheckOnlySimpleFirstStatement").orElse(false);
-  }
-
+public class InfiniteRecursion extends BugChecker implements MethodTreeMatcher {
   @Override
   public Description matchMethod(MethodTree declaration, VisitorState state) {
-    return checkOnlySimpleFirstStatement
-        ? oldMatchMethod(declaration, state)
-        : newMatchMethod(declaration, state);
-  }
-
-  private Description newMatchMethod(MethodTree declaration, VisitorState state) {
     if (declaration.getBody() == null) {
       return NO_MATCH;
     }
@@ -122,6 +103,13 @@ public class InfiniteRecursion extends BugChecker implements BugChecker.MethodTr
 
       @Override
       public Void visitCatch(CatchTree tree, Boolean underConditional) {
+        /*
+         * We mostly ignore exceptions. Notably, if a loop would be infinite *except* that it throws
+         * an exception, we still report it as an infinite loop. But we do want to consider `catch`
+         * blocks to be conditionally executed, since it would be reasonable for a method to
+         * delegate to itself (on another object or with a different argument) in case of an
+         * exception. For example, `toString(COMPLEX)` might fall back to `toString(SIMPLE)`.
+         */
         return super.visitCatch(tree, /*underConditional*/ true);
       }
 
@@ -189,6 +177,8 @@ public class InfiniteRecursion extends BugChecker implements BugChecker.MethodTr
         return super.visitMethodInvocation(tree, underConditional);
       }
 
+      // Handling constructors doesn't appear worthwhile: See b/264529494#comment11 and afterward.
+
       void checkInvocation(MethodInvocationTree invocation, boolean underConditional) {
         if (mayHaveReturned || underConditional) {
           return;
@@ -208,17 +198,17 @@ public class InfiniteRecursion extends BugChecker implements BugChecker.MethodTr
           state.reportMatch(describeMatch(invocation));
         }
       }
-
-      boolean isCallOnThisObject(MethodInvocationTree invocation) {
-        ExpressionTree select = invocation.getMethodSelect();
-        return select.getKind() == IDENTIFIER
-            || isThis(((MemberSelectTree) select).getExpression());
-      }
     }.scan(new TreePath(state.getPath(), declaration.getBody()), /*underConditional*/ false);
 
     return NO_MATCH; // We reported any matches through state.reportMatch.
   }
 
+  private static boolean isCallOnThisObject(MethodInvocationTree invocation) {
+    ExpressionTree select = invocation.getMethodSelect();
+    return select.getKind() == IDENTIFIER || isThis(((MemberSelectTree) select).getExpression());
+  }
+
+  // TODO(b/236055787): Share code with various checks that look for "return this."
   private static boolean isThis(ExpressionTree input) {
     return new SimpleTreeVisitor<Boolean, Void>() {
       @Override
@@ -233,6 +223,10 @@ public class InfiniteRecursion extends BugChecker implements BugChecker.MethodTr
 
       @Override
       public Boolean visitMemberSelect(MemberSelectTree tree, Void unused) {
+        /*
+         * The caller has already checked that the MethodSymbol is from this class, so we don't need
+         * to disambiguate between ThisClass.this and SomeOtherEnclosingClass.this.
+         */
         return tree.getIdentifier().contentEquals("this");
       }
 
@@ -246,68 +240,5 @@ public class InfiniteRecursion extends BugChecker implements BugChecker.MethodTr
         return false;
       }
     }.visit(input, null);
-  }
-
-  private Description oldMatchMethod(MethodTree tree, VisitorState state) {
-    if (tree.getBody() == null || tree.getBody().getStatements().isEmpty()) {
-      return NO_MATCH;
-    }
-    Tree statement = tree.getBody().getStatements().get(0);
-    MethodInvocationTree invocation =
-        statement.accept(
-            new SimpleTreeVisitor<MethodInvocationTree, Void>() {
-              @Override
-              public MethodInvocationTree visitExpressionStatement(
-                  ExpressionStatementTree tree, Void unused) {
-                return visit(tree.getExpression(), null);
-              }
-
-              @Override
-              public MethodInvocationTree visitParenthesized(ParenthesizedTree tree, Void unused) {
-                return visit(tree.getExpression(), null);
-              }
-
-              @Override
-              public MethodInvocationTree visitReturn(ReturnTree tree, Void unused) {
-                return visit(tree.getExpression(), null);
-              }
-
-              @Override
-              public MethodInvocationTree visitTypeCast(TypeCastTree tree, Void unused) {
-                return visit(tree.getExpression(), null);
-              }
-
-              @Override
-              protected @Nullable MethodInvocationTree defaultAction(Tree tree, Void unused) {
-                return tree instanceof MethodInvocationTree ? (MethodInvocationTree) tree : null;
-              }
-            },
-            null);
-    if (invocation == null) {
-      return NO_MATCH;
-    }
-    ExpressionTree select = invocation.getMethodSelect();
-    MethodSymbol sym = ASTHelpers.getSymbol(tree);
-    if (!sym.equals(ASTHelpers.getSymbol(invocation))) {
-      return NO_MATCH;
-    }
-    if (!sym.isStatic()) {
-      switch (select.getKind()) {
-        case IDENTIFIER:
-          break;
-        case MEMBER_SELECT:
-          ExpressionTree receiver = ((MemberSelectTree) select).getExpression();
-          if (receiver.getKind() != Kind.IDENTIFIER) {
-            return NO_MATCH;
-          }
-          if (!((IdentifierTree) receiver).getName().contentEquals("this")) {
-            return NO_MATCH;
-          }
-          break;
-        default:
-          return NO_MATCH;
-      }
-    }
-    return describeMatch(statement);
   }
 }
