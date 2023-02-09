@@ -59,4 +59,8 @@ public class ComparisonOutOfRangeNegativeCases {
     int d;
     result = (d = reader.read()) == -1;
   }
+
+  String binaryTreeMixingByteWithNonNumeric(byte b) {
+    return "value is: " + b;
+  }
 }

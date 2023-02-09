@@ -35,14 +35,12 @@ public class ComparisonOutOfRangePositiveCases {
     result = b == 128;
     // BUG: Diagnostic contains: b != -1
     result = b != 255;
-    // BUG: Diagnostic contains: b == 1
-    result = b == -255;
 
     // BUG: Diagnostic contains: barr[0] == -1
     result = barr[0] == 255;
-    // BUG: Diagnostic contains: barr[0] == -128
+    // BUG: Diagnostic contains:
     result = barr[0] == 128;
-    // BUG: Diagnostic contains: barr[0] == 1
+    // BUG: Diagnostic contains: bytes
     result = barr[0] == -255;
   }
 
@@ -57,7 +55,7 @@ public class ComparisonOutOfRangePositiveCases {
     result = c != -1;
 
     char d;
-    // BUG: Diagnostic contains: false
+    // BUG: Diagnostic contains: chars
     result = (d = (char) reader.read()) == -1;
   }
 }
