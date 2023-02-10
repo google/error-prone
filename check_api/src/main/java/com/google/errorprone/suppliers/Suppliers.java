@@ -181,6 +181,14 @@ public final class Suppliers {
         }
       };
 
+  public static final Supplier<Type> SHORT_TYPE =
+      new Supplier<Type>() {
+        @Override
+        public Type get(VisitorState state) {
+          return state.getSymtab().shortType;
+        }
+      };
+
   public static final Supplier<Type> INT_TYPE =
       new Supplier<Type>() {
         @Override
