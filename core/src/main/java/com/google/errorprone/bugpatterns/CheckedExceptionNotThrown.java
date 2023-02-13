@@ -64,8 +64,8 @@ import javax.lang.model.element.Element;
 /** Flags checked exceptions which are claimed to be thrown, but are not. */
 @BugPattern(
     summary =
-        "This method cannot throw a checked exception that it claims to. This may cause consumers"
-            + " of the API to incorrectly attempt to handle, or propagate, this exception.",
+        "This method is non-overridable and will never throw one or more of the checked exceptions it claims to."
+            + " This may cause consumers of the API to incorrectly attempt to handle or propagate these exceptions.",
     severity = WARNING)
 public final class CheckedExceptionNotThrown extends BugChecker implements MethodTreeMatcher {
   @Override
