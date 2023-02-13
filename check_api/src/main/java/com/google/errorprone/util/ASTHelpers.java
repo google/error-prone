@@ -1724,13 +1724,15 @@ public class ASTHelpers {
 
     Type type = new TargetTypeVisitor(current, state, parent).visit(parent.getLeaf(), null);
     if (type == null) {
-      if (CONSTANT_CASE_LABEL_TREE != null
+      Tree actualTree = null;
+      if (YIELD_TREE != null && YIELD_TREE.isAssignableFrom(parent.getLeaf().getClass())) {
+        actualTree = parent.getParentPath().getParentPath().getParentPath().getLeaf();
+      } else if (CONSTANT_CASE_LABEL_TREE != null
           && CONSTANT_CASE_LABEL_TREE.isAssignableFrom(parent.getLeaf().getClass())) {
-        type =
-            getType(
-                TargetTypeVisitor.getSwitchExpression(
-                    parent.getParentPath().getParentPath().getLeaf()));
+        actualTree = parent.getParentPath().getParentPath().getLeaf();
       }
+
+      type = getType(TargetTypeVisitor.getSwitchExpression(actualTree));
       if (type == null) {
         return null;
       }
@@ -1739,11 +1741,21 @@ public class ASTHelpers {
   }
 
   @Nullable private static final Class<?> CONSTANT_CASE_LABEL_TREE = constantCaseLabelTree();
+  @Nullable private static final Class<?> YIELD_TREE = yieldTree();
 
   @Nullable
   private static Class<?> constantCaseLabelTree() {
     try {
       return Class.forName("com.sun.source.tree.ConstantCaseLabelTree");
+    } catch (ClassNotFoundException e) {
+      return null;
+    }
+  }
+
+  @Nullable
+  private static Class<?> yieldTree() {
+    try {
+      return Class.forName("com.sun.source.tree.YieldTree");
     } catch (ClassNotFoundException e) {
       return null;
     }
@@ -1831,7 +1843,11 @@ public class ASTHelpers {
     }
 
     @Nullable
-    private static ExpressionTree getSwitchExpression(Tree tree) {
+    private static ExpressionTree getSwitchExpression(@Nullable Tree tree) {
+      if (tree == null) {
+        return null;
+      }
+
       if (tree instanceof SwitchTree) {
         return ((SwitchTree) tree).getExpression();
       }
