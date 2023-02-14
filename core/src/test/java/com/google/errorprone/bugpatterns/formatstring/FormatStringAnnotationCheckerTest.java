@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns.formatstring;
 
 import com.google.errorprone.CompilationTestHelper;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -208,7 +207,6 @@ public class FormatStringAnnotationCheckerTest {
         .doTest();
   }
 
-  @Ignore("b/267385060")
   @Test
   public void matches_failsForNonFinalParametersOrNonMatchingFinalParameters() {
     compilationHelper
