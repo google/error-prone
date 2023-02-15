@@ -458,16 +458,6 @@ public final class ThreadSafety {
   }
 
   /**
-   * @deprecated use {@link #isThreadSafeType(boolean, Set, Type)} instead.
-   */
-  // TODO(ghm): Delete after a JB release.
-  @Deprecated
-  public Violation isThreadSafeType(Set<String> containerTypeParameters, Type type) {
-    return isThreadSafeType(
-        /* allowContainerTypeParameters= */ true, containerTypeParameters, type);
-  }
-
-  /**
    * Returns an {@link Violation} explaining whether the type is threadsafe.
    *
    * @param allowContainerTypeParameters true when checking the instantiation of an {@code
