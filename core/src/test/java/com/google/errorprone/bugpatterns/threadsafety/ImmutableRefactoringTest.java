@@ -16,6 +16,8 @@
 
 package com.google.errorprone.bugpatterns.threadsafety;
 
+import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
+
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,8 +25,7 @@ import org.junit.runners.JUnit4;
 
 /** {@link ImmutableRefactoring}Test */
 @RunWith(JUnit4.class)
-public class ImmutableRefactoringTest {
-
+public final class ImmutableRefactoringTest {
   private final BugCheckerRefactoringTestHelper compilationHelper =
       BugCheckerRefactoringTestHelper.newInstance(ImmutableRefactoring.class, getClass());
 
@@ -49,6 +50,33 @@ public class ImmutableRefactoringTest {
   }
 
   @Test
+  public void someImmutableSomeNot() {
+    compilationHelper
+        .addInputLines(
+            "Test.java",
+            "import javax.annotation.concurrent.Immutable;",
+            "@Immutable class Test {",
+            "  int a = 42;",
+            "  @Immutable static class Inner {",
+            "    final int a = 43;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "// This class was annotated with javax.annotation.concurrent.Immutable, but didn't"
+                + " seem to be provably immutable.",
+            "class Test {",
+            "  int a = 42;",
+            "  @Immutable ",
+            "  static class Inner {",
+            "    final int a = 43;",
+            "  }",
+            "}")
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
   public void negative() {
     compilationHelper
         .addInputLines(
@@ -57,7 +85,42 @@ public class ImmutableRefactoringTest {
             "@Immutable class Test {",
             "  int a = 42;",
             "}")
-        .expectUnchanged()
-        .doTest();
+        .addOutputLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "// This class was annotated with javax.annotation.concurrent.Immutable, but didn't"
+                + " seem to be provably immutable.",
+            "class Test {",
+            "  int a = 42;",
+            "}")
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
+  public void negative_multipleClasses() {
+    compilationHelper
+        .addInputLines(
+            "Test.java",
+            "import javax.annotation.concurrent.Immutable;",
+            "@Immutable class Test {",
+            "  int a = 42;",
+            "  @Immutable static class Inner {",
+            "    int a = 43;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "// This class was annotated with javax.annotation.concurrent.Immutable, but didn't"
+                + " seem to be provably immutable.",
+            "class Test {",
+            "  int a = 42;",
+            "  // This class was annotated with javax.annotation.concurrent.Immutable, but didn't"
+                + " seem to be provably immutable.",
+            "  static class Inner {",
+            "    int a = 43;",
+            "  }",
+            "}")
+        .doTest(TEXT_MATCH);
   }
 }
