@@ -21,6 +21,7 @@ import static com.google.errorprone.fixes.SuggestedFixes.qualifyType;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.hasDirectAnnotationWithSimpleName;
 import static com.google.errorprone.util.ASTHelpers.isGeneratedConstructor;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
@@ -49,7 +50,8 @@ public final class InjectOnBugCheckers extends BugChecker implements MethodTreeM
       return NO_MATCH;
     }
     if (!isSubtype(
-        symbol.owner.type, state.getTypeFromString(BugChecker.class.getCanonicalName()), state)) {
+            symbol.owner.type, state.getTypeFromString(BugChecker.class.getCanonicalName()), state)
+        || !hasAnnotation(symbol.owner, BugPattern.class, state)) {
       return NO_MATCH;
     }
     if (tree.getParameters().isEmpty()
