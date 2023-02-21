@@ -52,6 +52,8 @@ jobs:
         shell: bash
         run: mvn test -B
       - name: 'Javadoc'
+        # only generate javadoc on JDKs with the fix for https://bugs.openjdk.org/browse/JDK-8241780
+        if: ${{ matrix.java >= 15 }}
         shell: bash
         run: mvn -P '!examples' javadoc:aggregate
 
