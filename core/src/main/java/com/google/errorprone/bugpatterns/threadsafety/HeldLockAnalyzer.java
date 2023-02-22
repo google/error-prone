@@ -481,16 +481,16 @@ public final class HeldLockAnalyzer {
      *
      * <p>For example:
      *
-     * <pre><code>
+     * <pre>{@code
      * class MyClass {
      *   final Object mu = new Object();
-     *   {@literal @}GuardedBy("mu")
+     *   @GuardedBy("mu")
      *   int x;
      * }
      * void m(MyClass myClass) {
      *   myClass.x++;
      * }
-     * </code></pre>
+     * }</pre>
      *
      * To determine the lock that must be held when accessing myClass.x, from is called with
      * "myClass.x" and "mu", and returns "myClass.mu".
