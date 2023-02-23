@@ -469,18 +469,17 @@ public class ImmutableChecker extends BugChecker
 
     ImmutableSet<String> typarams =
         immutableTypeParametersInScope(getSymbol(lambdaOrAnonymousClass), state, analysis);
-    variablesClosed.stream()
-        .map(
-            closedVariable ->
-                checkClosedVariable(closedVariable, lambdaOrAnonymousClass, typarams, analysis))
-        .filter(Violation::isPresent)
-        .forEachOrdered(
-            v -> {
-              String message =
-                  formAnonymousReason(lambdaOrAnonymousClass, lambdaType) + ", but " + v.message();
-              state.reportMatch(
-                  buildDescription(lambdaOrAnonymousClass).setMessage(message).build());
-            });
+    for (VarSymbol closedVariable : variablesClosed) {
+      Violation v = checkClosedVariable(closedVariable, lambdaOrAnonymousClass, typarams, analysis);
+      if (!v.isPresent()) {
+        continue;
+      }
+      String message =
+          format(
+              "%s, but closes over '%s', which is not @Immutable because %s",
+              formAnonymousReason(lambdaOrAnonymousClass, lambdaType), closedVariable, v.message());
+      state.reportMatch(buildDescription(lambdaOrAnonymousClass).setMessage(message).build());
+    }
     for (var entry : typesClosed.asMap().entrySet()) {
       var classSymbol = entry.getKey();
       var methods = entry.getValue();

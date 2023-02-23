@@ -410,7 +410,8 @@ public class ImmutableCheckerTest {
             "  void test() {",
             "    List<Integer> xs = new ArrayList<>();",
             "    @Immutable",
-            "    // BUG: Diagnostic contains: but 'List' is mutable",
+            "    // BUG: Diagnostic contains: This anonymous class implements @Immutable interface"
+                + " 'B', but closes over 'xs', which is not @Immutable because 'List' is mutable",
             "    class C implements B {",
             "      @Override",
             "      public int get() {",
@@ -2677,9 +2678,9 @@ public class ImmutableCheckerTest {
                 + " is not @Immutable",
             "    test(x -> mutable(x));",
             "    // BUG: Diagnostic contains: This lambda implements @Immutable interface"
-                + " 'ImmutableFunction', but 'Test' has field 'this' of type 'Test', the"
-                + " declaration of type 'Test' is not annotated with"
-                + " @com.google.errorprone.annotations.Immutable",
+                + " 'ImmutableFunction', but closes over 'this', which is not @Immutable because"
+                + " 'Test' has field 'this' of type 'Test', the declaration of type 'Test' is not"
+                + " annotated with @com.google.errorprone.annotations.Immutable",
             "    test(x -> this.mutable(x));",
             "  }",
             "}")
