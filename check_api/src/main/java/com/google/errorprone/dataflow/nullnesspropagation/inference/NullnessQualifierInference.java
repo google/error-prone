@@ -18,16 +18,15 @@ package com.google.errorprone.dataflow.nullnesspropagation.inference;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
+import com.github.benmanes.caffeine.cache.CacheLoader;
+import com.github.benmanes.caffeine.cache.Caffeine;
+import com.github.benmanes.caffeine.cache.LoadingCache;
 import com.google.auto.value.AutoValue;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Streams;
 import com.google.common.graph.GraphBuilder;
 import com.google.common.graph.MutableGraph;
-import com.google.common.util.concurrent.UncheckedExecutionException;
 import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
 import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnnotations;
 import com.sun.source.tree.ArrayAccessTree;
@@ -64,6 +63,7 @@ import java.util.ArrayDeque;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletionException;
 import java.util.function.Consumer;
 import javax.annotation.Nullable;
 import javax.lang.model.type.TypeVariable;
@@ -78,7 +78,7 @@ import javax.lang.model.type.TypeVariable;
 public class NullnessQualifierInference extends TreeScanner<Void, Void> {
 
   private static final LoadingCache<Tree, InferredNullability> inferenceCache =
-      CacheBuilder.newBuilder()
+      Caffeine.newBuilder()
           .maximumSize(1)
           .build(
               new CacheLoader<Tree, InferredNullability>() {
@@ -100,8 +100,8 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
         "Tree `%s` is not a lambda, initializer, or method.",
         methodOrInitializerOrLambda);
     try {
-      return inferenceCache.getUnchecked(methodOrInitializerOrLambda);
-    } catch (UncheckedExecutionException e) {
+      return inferenceCache.get(methodOrInitializerOrLambda);
+    } catch (CompletionException e) {
       throw e.getCause() instanceof CompletionFailure ? (CompletionFailure) e.getCause() : e;
     }
   }

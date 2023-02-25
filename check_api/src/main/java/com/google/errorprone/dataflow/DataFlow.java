@@ -16,12 +16,11 @@
 
 package com.google.errorprone.dataflow;
 
+import com.github.benmanes.caffeine.cache.CacheLoader;
+import com.github.benmanes.caffeine.cache.Caffeine;
+import com.github.benmanes.caffeine.cache.LoadingCache;
 import com.google.auto.value.AutoValue;
 import com.google.common.base.Preconditions;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
-import com.google.common.util.concurrent.UncheckedExecutionException;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
@@ -45,6 +44,8 @@ import org.checkerframework.errorprone.dataflow.analysis.TransferFunction;
 import org.checkerframework.errorprone.dataflow.cfg.ControlFlowGraph;
 import org.checkerframework.errorprone.dataflow.cfg.UnderlyingAST;
 import org.checkerframework.errorprone.dataflow.cfg.builder.CFGBuilder;
+
+import java.util.concurrent.CompletionException;
 
 /**
  * Provides a wrapper around {@link org.checkerframework.errorprone.dataflow.analysis.Analysis}.
@@ -73,7 +74,7 @@ public final class DataFlow {
    * TODO(b/158869538): Write a test that checks these assumptions
    */
   private static final LoadingCache<AnalysisParams, Analysis<?, ?, ?>> analysisCache =
-      CacheBuilder.newBuilder()
+      Caffeine.newBuilder()
           .build(
               new CacheLoader<AnalysisParams, Analysis<?, ?, ?>>() {
                 @Override
@@ -89,7 +90,7 @@ public final class DataFlow {
               });
 
   private static final LoadingCache<CfgParams, ControlFlowGraph> cfgCache =
-      CacheBuilder.newBuilder()
+      Caffeine.newBuilder()
           .maximumSize(1)
           .build(
               new CacheLoader<CfgParams, ControlFlowGraph>() {
@@ -173,13 +174,13 @@ public final class DataFlow {
 
     ControlFlowGraph cfg;
     try {
-      cfg = cfgCache.getUnchecked(CfgParams.create(methodPath, env));
-    } catch (UncheckedExecutionException e) {
+      cfg = cfgCache.get(CfgParams.create(methodPath, env));
+    } catch (CompletionException e) {
       throw e.getCause() instanceof CompletionFailure ? (CompletionFailure) e.getCause() : e;
     }
     AnalysisParams aparams = AnalysisParams.create(transfer, cfg, env);
     @SuppressWarnings("unchecked")
-    Analysis<A, S, T> analysis = (Analysis<A, S, T>) analysisCache.getUnchecked(aparams);
+    Analysis<A, S, T> analysis = (Analysis<A, S, T>) analysisCache.get(aparams);
 
     return new Result<A, S, T>() {
       @Override
