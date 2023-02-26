@@ -40,6 +40,8 @@ public interface Fix {
     return "";
   }
 
+  Replacements.CoalescePolicy getCoalescePolicy();
+
   Set<Replacement> getReplacements(EndPosTable endPositions);
 
   Collection<String> getImportsToAdd();
