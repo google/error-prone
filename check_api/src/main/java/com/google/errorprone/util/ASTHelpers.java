@@ -1469,7 +1469,30 @@ public class ASTHelpers {
     if (compound == null) {
       return null;
     }
-    return TypeAnnotations.instance(state.context).annotationTargetType(compound, target);
+    return annotationTargetType(TypeAnnotations.instance(state.context), anno, compound, target);
+  }
+
+  private static AnnotationType annotationTargetType(
+      TypeAnnotations typeAnnotations,
+      AnnotationTree tree,
+      Compound compound,
+      @Nullable Symbol target) {
+    try {
+      try {
+        // the JCTree argument was added in JDK 21
+        return (AnnotationType)
+            TypeAnnotations.class
+                .getMethod("annotationTargetType", JCTree.class, Compound.class, Symbol.class)
+                .invoke(typeAnnotations, tree, compound, target);
+      } catch (NoSuchMethodException e1) {
+        return (AnnotationType)
+            TypeAnnotations.class
+                .getMethod("annotationTargetType", Compound.class, Symbol.class)
+                .invoke(typeAnnotations, compound, target);
+      }
+    } catch (ReflectiveOperationException e) {
+      throw new LinkageError(e.getMessage(), e);
+    }
   }
 
   /**
