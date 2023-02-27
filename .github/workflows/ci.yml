@@ -30,6 +30,9 @@ jobs:
           - os: ubuntu-latest
             java: 20-ea
             experimental: true
+          - os: ubuntu-latest
+            java: 21-ea
+            experimental: true
     runs-on: ${{ matrix.os }}
     continue-on-error: ${{ matrix.experimental }}
     steps:
