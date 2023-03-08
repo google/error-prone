@@ -165,15 +165,9 @@ public final class ThreadSafety {
      * example, when testing a class for immutability, this should be @Immutable.
      */
     @CanIgnoreReturnValue
-    public Builder markerAnnotations(Set<String> markerAnnotations) {
-      return markerAnnotations(ImmutableSet.copyOf(markerAnnotations));
-    }
-
-    // TODO(ringwalt): Remove this constructor. We need it for binary compatibility.
-    @CanIgnoreReturnValue
-    public Builder markerAnnotations(ImmutableSet<String> markerAnnotations) {
+    public Builder markerAnnotations(Iterable<String> markerAnnotations) {
       checkNotNull(markerAnnotations);
-      this.markerAnnotations = markerAnnotations;
+      this.markerAnnotations = ImmutableSet.copyOf(markerAnnotations);
       return this;
     }
 
@@ -184,15 +178,9 @@ public final class ThreadSafety {
      * thread-safe.
      */
     @CanIgnoreReturnValue
-    public Builder acceptedAnnotations(Set<String> acceptedAnnotations) {
-      return acceptedAnnotations(ImmutableSet.copyOf(acceptedAnnotations));
-    }
-
-    // TODO(ringwalt): Remove this constructor. We need it for binary compatibility.
-    @CanIgnoreReturnValue
-    public Builder acceptedAnnotations(ImmutableSet<String> acceptedAnnotations) {
+    public Builder acceptedAnnotations(Iterable<String> acceptedAnnotations) {
       checkNotNull(acceptedAnnotations);
-      this.acceptedAnnotations = acceptedAnnotations;
+      this.acceptedAnnotations = ImmutableSet.copyOf(acceptedAnnotations);
       return this;
     }
 
@@ -206,7 +194,7 @@ public final class ThreadSafety {
 
     /** An annotation which marks a generic parameter as a container type. */
     @CanIgnoreReturnValue
-    public Builder containerOfAnnotation(Set<String> containerOfAnnotation) {
+    public Builder containerOfAnnotation(Iterable<String> containerOfAnnotation) {
       checkNotNull(containerOfAnnotation);
       this.containerOfAnnotation = ImmutableSet.copyOf(containerOfAnnotation);
       return this;
@@ -222,7 +210,7 @@ public final class ThreadSafety {
 
     /** An annotation which, when found on a class, should suppress the test */
     @CanIgnoreReturnValue
-    public Builder suppressAnnotation(Set<String> suppressAnnotation) {
+    public Builder suppressAnnotation(Iterable<String> suppressAnnotation) {
       checkNotNull(suppressAnnotation);
       this.suppressAnnotation = ImmutableSet.copyOf(suppressAnnotation);
       return this;
@@ -248,7 +236,7 @@ public final class ThreadSafety {
      * only be instantiated with thread-safe types.
      */
     @CanIgnoreReturnValue
-    public Builder typeParameterAnnotation(Set<String> typeParameterAnnotation) {
+    public Builder typeParameterAnnotation(Iterable<String> typeParameterAnnotation) {
       checkNotNull(typeParameterAnnotation);
       this.typeParameterAnnotation = ImmutableSet.copyOf(typeParameterAnnotation);
       return this;
