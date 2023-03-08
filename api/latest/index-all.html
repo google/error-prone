@@ -173,9 +173,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/refaster/UVariableDecl.html#accept(com.sun.source.tree.TreeVisitor,D)">accept(TreeVisitor&lt;R, D&gt;, D)</a></span> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UVariableDecl.html" title="class in com.google.errorprone.refaster">UVariableDecl</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html#acceptedAnnotations(com.google.common.collect.ImmutableSet)">acceptedAnnotations(ImmutableSet&lt;String&gt;)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html#acceptedAnnotations(java.util.Set)">acceptedAnnotations(Set&lt;String&gt;)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a></dt>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html#acceptedAnnotations(java.lang.Iterable)">acceptedAnnotations(Iterable&lt;String&gt;)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a></dt>
 <dd>
 <div class="block">Annotations that do *not* cause a class to be tested, but which are treated as valid
  annotations to pass the test; for example, if @ThreadSafe is the marker
@@ -2405,7 +2403,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">An annotation which marks a generic parameter as a container type.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html#containerOfAnnotation(java.util.Set)">containerOfAnnotation(Set&lt;String&gt;)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a></dt>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html#containerOfAnnotation(java.lang.Iterable)">containerOfAnnotation(Iterable&lt;String&gt;)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a></dt>
 <dd>
 <div class="block">An annotation which marks a generic parameter as a container type.</div>
 </dd>
@@ -7495,9 +7493,7 @@ loadScripts(document, 'script');</script>
 <div class="block">Returns a <a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUseRule</code></a> that maps annotations with the given <code>simpleName</code> to the
  given <code>policy</code>.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html#markerAnnotations(com.google.common.collect.ImmutableSet)">markerAnnotations(ImmutableSet&lt;String&gt;)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html#markerAnnotations(java.util.Set)">markerAnnotations(Set&lt;String&gt;)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a></dt>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html#markerAnnotations(java.lang.Iterable)">markerAnnotations(Iterable&lt;String&gt;)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a></dt>
 <dd>
 <div class="block">Annotations that will cause a class to be tested with this <a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><code>ThreadSafety</code></a> instance; for
  example, when testing a class for immutability, this should be @Immutable.</div>
@@ -12326,7 +12322,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">An annotation which, when found on a class, should suppress the test</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html#suppressAnnotation(java.util.Set)">suppressAnnotation(Set&lt;String&gt;)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a></dt>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html#suppressAnnotation(java.lang.Iterable)">suppressAnnotation(Iterable&lt;String&gt;)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a></dt>
 <dd>
 <div class="block">An annotation which, when found on a class, should suppress the test</div>
 </dd>
@@ -12965,7 +12961,7 @@ loadScripts(document, 'script');</script>
 <div class="block">An annotation which, when found on a type parameter, indicates that the type parameter may
  only be instantiated with thread-safe types.</div>
 </dd>
-<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html#typeParameterAnnotation(java.util.Set)">typeParameterAnnotation(Set&lt;String&gt;)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a></dt>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html#typeParameterAnnotation(java.lang.Iterable)">typeParameterAnnotation(Iterable&lt;String&gt;)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a></dt>
 <dd>
 <div class="block">An annotation which, when found on a type parameter, indicates that the type parameter may
  only be instantiated with thread-safe types.</div>
