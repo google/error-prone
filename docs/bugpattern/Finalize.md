@@ -13,3 +13,12 @@ The [Google Java Style Guide §6.4][style] states:
 
 [ej3e-8]: https://books.google.com/books?id=BIpDDwAAQBAJ
 [style]: https://google.github.io/styleguide/javaguide.html#s6.4-finalizers
+
+## Suppression
+
+Suppress false positives by adding the suppression annotation to the enclosing
+element:
+
+```java
+@SuppressWarnings("Finalize") // TODO(user): remove overrides of finalize
+```
