@@ -74,7 +74,7 @@ public final class StringCaseLocaleUsage extends BugChecker implements MethodInv
         .build();
   }
 
-  // TODO: Consider creating a helper method in `SuggestedFixes`.
+  // TODO: Consider making this a helper method in `SuggestedFixes`.
   private static int getClosingParenPosition(MethodInvocationTree tree, VisitorState state) {
     int startPosition = ASTHelpers.getStartPosition(tree);
     if (startPosition == Position.NOPOS) {
