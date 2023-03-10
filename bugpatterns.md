@@ -1129,6 +1129,9 @@ Streams that encapsulate a closeable resource should be closed using try-with-re
 __[StreamToIterable](bugpattern/StreamToIterable)__<br>
 Using stream::iterator creates a one-shot Iterable, which may cause surprising failures.
 
+__[StringCaseLocaleUsage](bugpattern/StringCaseLocaleUsage)__<br>
+Specify a &#96;Locale&#96; when calling &#96;String#to{Lower,Upper}Case&#96;
+
 __[StringSplitter](bugpattern/StringSplitter)__<br>
 String.split(String) has surprising behavior
 
