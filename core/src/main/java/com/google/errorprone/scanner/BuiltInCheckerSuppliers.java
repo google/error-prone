@@ -327,6 +327,7 @@ import com.google.errorprone.bugpatterns.StreamResourceLeak;
 import com.google.errorprone.bugpatterns.StreamToIterable;
 import com.google.errorprone.bugpatterns.StreamToString;
 import com.google.errorprone.bugpatterns.StringBuilderInitWithChar;
+import com.google.errorprone.bugpatterns.StringCaseLocaleUsage;
 import com.google.errorprone.bugpatterns.StringSplitter;
 import com.google.errorprone.bugpatterns.StronglyTypeByteString;
 import com.google.errorprone.bugpatterns.SubstringOfZero;
@@ -987,6 +988,7 @@ public class BuiltInCheckerSuppliers {
           StaticMockMember.class,
           StreamResourceLeak.class,
           StreamToIterable.class,
+          StringCaseLocaleUsage.class,
           StringSplitter.class,
           Suggester.class,
           SwigMemoryLeak.class,
