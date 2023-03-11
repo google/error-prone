@@ -695,36 +695,25 @@ public final class ThreadSafety {
   @Nullable
   private AnnotationInfo getAnnotation(
       Symbol sym, ImmutableSet<String> annotationsToCheck, VisitorState state) {
-    for (String annotation : annotationsToCheck) {
-      AnnotationInfo info = getAnnotation(sym, state, annotation, containerOfAnnotation);
-      if (info != null) {
-        return info;
-      }
-    }
-    return null;
-  }
-
-  @Nullable
-  private AnnotationInfo getAnnotation(
-      Symbol sym, VisitorState state, String annotation, ImmutableSet<String> elementAnnotation) {
     if (sym == null) {
       return null;
     }
     Optional<Compound> attr =
         sym.getRawAttributes().stream()
-            .filter(a -> a.type.tsym.getQualifiedName().contentEquals(annotation))
+            .filter(a -> annotationsToCheck.contains(a.type.tsym.getQualifiedName().toString()))
             .findAny();
     if (attr.isPresent()) {
       ImmutableList<String> containerElements = containerOf(state, attr.get());
-      if (!elementAnnotation.isEmpty() && containerElements.isEmpty()) {
-
+      if (!containerOfAnnotation.isEmpty() && containerElements.isEmpty()) {
         containerElements =
             sym.getTypeParameters().stream()
                 .filter(
                     p ->
                         p.getAnnotationMirrors().stream()
                             .anyMatch(
-                                a -> elementAnnotation.contains(a.type.tsym.flatName().toString())))
+                                a ->
+                                    containerOfAnnotation.contains(
+                                        a.type.tsym.flatName().toString())))
                 .map(p -> p.getSimpleName().toString())
                 .collect(toImmutableList());
       }
