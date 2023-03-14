@@ -636,12 +636,15 @@ public class CheckReturnValueTest {
         .doTest();
   }
 
+  // In the following test methods, we define parallel skeletons of classes like java.util.List,
+  // because the real java.util.List may have had @CanIgnoreReturnValue annotations inserted.
+
   @Test
   public void allMethods_withExternallyConfiguredIgnoreList() {
-    compileWithExternalApis("java.util.List#add(java.lang.Object)")
+    compileWithExternalApis("my.java.util.List#add(java.lang.Object)")
         .addSourceLines(
             "Test.java",
-            "import java.util.List;",
+            "import my.java.util.List;",
             "class Test {",
             "  public static void foo(List<Integer> x) {",
             "    x.add(42);",
@@ -649,16 +652,23 @@ public class CheckReturnValueTest {
             "    x.get(0);",
             "  }",
             "}")
+        .addSourceLines(
+            "my/java/util/List.java",
+            "package my.java.util;",
+            "public interface List<E> {",
+            "  boolean add(E e);",
+            "  E get(int index);",
+            "}")
         .doTest();
   }
 
   @Test
   public void packagesRule() {
-    compilationHelperWithPackagePatterns("java.util")
+    compilationHelperWithPackagePatterns("my.java.util")
         .addSourceLines(
             "Test.java",
-            "import java.util.List;",
-            "import java.util.regex.Pattern;",
+            "import my.java.util.List;",
+            "import my.java.util.regex.Pattern;",
             "class Test {",
             "  public static void foo(List<Integer> list, Pattern pattern) {",
             "    // BUG: Diagnostic contains: CheckReturnValue",
@@ -667,22 +677,46 @@ public class CheckReturnValueTest {
             "    pattern.matcher(\"blah\");",
             "  }",
             "}")
+        .addSourceLines(
+            "my/java/util/List.java",
+            "package my.java.util;",
+            "public interface List<E> {",
+            "  E get(int index);",
+            "}")
+        .addSourceLines(
+            "my/java/util/regex/Pattern.java",
+            "package my.java.util.regex;",
+            "public interface Pattern {",
+            "  String matcher(CharSequence input);",
+            "}")
         .doTest();
   }
 
   @Test
   public void packagesRule_negativePattern() {
-    compilationHelperWithPackagePatterns("java.util", "-java.util.regex")
+    compilationHelperWithPackagePatterns("my.java.util", "-my.java.util.regex")
         .addSourceLines(
             "Test.java",
-            "import java.util.List;",
-            "import java.util.regex.Pattern;",
+            "import my.java.util.List;",
+            "import my.java.util.regex.Pattern;",
             "class Test {",
             "  public static void foo(List<Integer> list, Pattern pattern) {",
             "    // BUG: Diagnostic contains: CheckReturnValue",
             "    list.get(0);",
             "    pattern.matcher(\"blah\");",
             "  }",
+            "}")
+        .addSourceLines(
+            "my/java/util/List.java",
+            "package my.java.util;",
+            "public interface List<E> {",
+            "  E get(int index);",
+            "}")
+        .addSourceLines(
+            "my/java/util/regex/Pattern.java",
+            "package my.java.util.regex;",
+            "public interface Pattern {",
+            "  String matcher(CharSequence input);",
             "}")
         .doTest();
   }
@@ -692,12 +726,12 @@ public class CheckReturnValueTest {
     // A negative pattern just makes the packages rule itself not apply to that package and its
     // subpackages if it otherwise would because of a positive pattern on a superpackage. It doesn't
     // make APIs in that package CIRV.
-    compilationHelperWithPackagePatterns("java.util", "-java.util.regex")
+    compilationHelperWithPackagePatterns("my.java.util", "-my.java.util.regex")
         .addSourceLines(
             "Test.java",
-            "import java.util.List;",
-            "import java.util.regex.Pattern;",
-            "import java.util.regex.PatternSyntaxException;",
+            "import my.java.util.List;",
+            "import my.java.util.regex.Pattern;",
+            "import my.java.util.regex.PatternSyntaxException;",
             "class Test {",
             "  public static void foo(List<Integer> list, Pattern pattern) {",
             "    // BUG: Diagnostic contains: CheckReturnValue",
@@ -706,6 +740,24 @@ public class CheckReturnValueTest {
             "    // BUG: Diagnostic contains: CheckReturnValue",
             "    new PatternSyntaxException(\"\", \"\", 0);",
             "  }",
+            "}")
+        .addSourceLines(
+            "my/java/util/List.java",
+            "package my.java.util;",
+            "public interface List<E> {",
+            "  E get(int index);",
+            "}")
+        .addSourceLines(
+            "my/java/util/regex/Pattern.java",
+            "package my.java.util.regex;",
+            "public interface Pattern {",
+            "  String matcher(CharSequence input);",
+            "}")
+        .addSourceLines(
+            "my/java/util/regex/PatternSyntaxException.java",
+            "package my.java.util.regex;",
+            "public class PatternSyntaxException extends IllegalArgumentException {",
+            "  public PatternSyntaxException(String desc, String regex, int index) {}",
             "}")
         .doTest();
   }

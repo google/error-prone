@@ -32,10 +32,18 @@ public final class RedundantOverrideTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
+            "class Test extends foo.Bar {",
             "  // BUG: Diagnostic contains:",
-            "  @Override public boolean equals(Object o) {",
-            "    return super.equals(o);",
+            "  @Override public boolean frob(Object o) {",
+            "    return super.frob(o);",
+            "  }",
+            "}")
+        .addSourceLines(
+            "foo/Bar.java",
+            "package foo;",
+            "public class Bar {",
+            "  public boolean frob(Object o) {",
+            "    return false;",
             "  }",
             "}")
         .doTest();
@@ -46,10 +54,18 @@ public final class RedundantOverrideTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
+            "class Test extends foo.Bar {",
             "  /** Adding javadoc. */",
-            "  @Override public boolean equals(Object o) {",
-            "    return super.equals(o);",
+            "  @Override public boolean frob(Object o) {",
+            "    return super.frob(o);",
+            "  }",
+            "}")
+        .addSourceLines(
+            "foo/Bar.java",
+            "package foo;",
+            "public class Bar {",
+            "  public boolean frob(Object o) {",
+            "    return false;",
             "  }",
             "}")
         .doTest();
@@ -60,10 +76,18 @@ public final class RedundantOverrideTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  @Override public boolean equals(Object o) {",
+            "class Test extends foo.Bar {",
+            "  @Override public boolean frob(Object o) {",
             "    // TODO..",
-            "    return super.equals(o);",
+            "    return super.frob(o);",
+            "  }",
+            "}")
+        .addSourceLines(
+            "foo/Bar.java",
+            "package foo;",
+            "public class Bar {",
+            "  public boolean frob(Object o) {",
+            "    return false;",
             "  }",
             "}")
         .doTest();
