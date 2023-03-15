@@ -38,7 +38,7 @@ import java.util.function.Predicate;
  * it allows injecting only non-generic classes, and treats everything as a singleton within a given
  * compilation.
  */
-final class ErrorProneInjector {
+public final class ErrorProneInjector {
   private final ClassToInstanceMap<Object> instances = MutableClassToInstanceMap.create();
 
   public static ErrorProneInjector create() {
