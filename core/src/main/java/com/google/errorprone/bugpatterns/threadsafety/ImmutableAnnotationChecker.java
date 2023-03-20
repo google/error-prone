@@ -25,7 +25,6 @@ import static com.google.errorprone.util.ASTHelpers.getType;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.StandardTags;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.Immutable;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -61,8 +60,8 @@ public class ImmutableAnnotationChecker extends BugChecker implements ClassTreeM
   private final WellKnownMutability wellKnownMutability;
 
   @Inject
-  public ImmutableAnnotationChecker(ErrorProneFlags flags) {
-    this.wellKnownMutability = WellKnownMutability.fromFlags(flags);
+  public ImmutableAnnotationChecker(WellKnownMutability wellKnownMutability) {
+    this.wellKnownMutability = wellKnownMutability;
   }
 
   @Override

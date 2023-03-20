@@ -39,6 +39,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
+import javax.inject.Inject;
 
 /** A collection of types with known mutability. */
 @Immutable
@@ -50,12 +51,8 @@ public final class WellKnownMutability implements ThreadSafety.KnownTypes {
   /** Types that are known to be mutable. */
   private final ImmutableSet<String> knownMutableClasses;
 
-  private WellKnownMutability(List<String> knownImmutable, List<String> knownUnsafe) {
-    this.knownImmutableClasses = buildImmutableClasses(knownImmutable);
-    this.knownMutableClasses = buildMutableClasses(knownUnsafe);
-  }
-
-  public static WellKnownMutability fromFlags(ErrorProneFlags flags) {
+  @Inject
+  public WellKnownMutability(ErrorProneFlags flags) {
     List<String> immutable = flags.getList("Immutable:KnownImmutable").orElse(ImmutableList.of());
     ImmutableList<String> mutable =
         // Please use "KnownMutable", as it's a bit clearer what we mean. "KnownUnsafe" is kept
@@ -63,7 +60,12 @@ public final class WellKnownMutability implements ThreadSafety.KnownTypes {
         Stream.of("Immutable:KnownMutable", "Immutable:KnownUnsafe")
             .flatMap(f -> flags.getList(f).orElse(ImmutableList.of()).stream())
             .collect(toImmutableList());
-    return new WellKnownMutability(immutable, mutable);
+    this.knownImmutableClasses = buildImmutableClasses(immutable);
+    this.knownMutableClasses = buildMutableClasses(mutable);
+  }
+
+  public static WellKnownMutability fromFlags(ErrorProneFlags flags) {
+    return new WellKnownMutability(flags);
   }
 
   public Map<String, AnnotationInfo> getKnownImmutableClasses() {

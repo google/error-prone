@@ -26,8 +26,8 @@ import static javax.lang.model.element.Modifier.ABSTRACT;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
@@ -58,13 +58,9 @@ public final class IgnoredPureGetter extends AbstractReturnValueIgnored {
       VisitorState.memoize(
           state -> state.getTypeFromString("com.google.protobuf.MutableMessageLite"));
 
-  public IgnoredPureGetter() {
-    this(ErrorProneFlags.empty());
-  }
-
   @Inject
-  public IgnoredPureGetter(ErrorProneFlags flags) {
-    super(flags);
+  public IgnoredPureGetter(ConstantExpressions constantExpressions) {
+    super(constantExpressions);
   }
 
   @Override

@@ -24,7 +24,6 @@ import static com.google.errorprone.util.ASTHelpers.getType;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.Immutable;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -57,8 +56,8 @@ public class ImmutableEnumChecker extends BugChecker implements ClassTreeMatcher
   private final WellKnownMutability wellKnownMutability;
 
   @Inject
-  public ImmutableEnumChecker(ErrorProneFlags flags) {
-    this.wellKnownMutability = WellKnownMutability.fromFlags(flags);
+  public ImmutableEnumChecker(WellKnownMutability wellKnownMutability) {
+    this.wellKnownMutability = wellKnownMutability;
   }
 
   @Override

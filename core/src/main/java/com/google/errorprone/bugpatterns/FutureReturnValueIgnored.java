@@ -26,6 +26,7 @@ import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
+import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.suppliers.Suppliers;
@@ -37,6 +38,7 @@ import com.sun.tools.javac.code.Type;
 import java.util.Optional;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.ForkJoinTask;
+import javax.inject.Inject;
 
 /** See BugPattern annotation. */
 @BugPattern(
@@ -125,6 +127,11 @@ public final class FutureReturnValueIgnored extends AbstractReturnValueIgnored
               ASTHelpers.getUpperBound(returnType, state.getTypes()), futureType, state);
         }
       };
+
+  @Inject
+  FutureReturnValueIgnored(ConstantExpressions constantExpressions) {
+    super(constantExpressions);
+  }
 
   @Override
   public Matcher<ExpressionTree> specializedMatcher() {
