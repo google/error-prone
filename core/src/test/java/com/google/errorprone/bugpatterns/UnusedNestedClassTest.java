@@ -44,6 +44,17 @@ public class UnusedNestedClassTest {
   }
 
   @Test
+  public void exemptedByUnusedPrefix() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java", //
+            "class A {",
+            "  private class UnusedClass {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void nonPrivateNestedClass_noWarning() {
     compilationHelper
         .addSourceLines(
