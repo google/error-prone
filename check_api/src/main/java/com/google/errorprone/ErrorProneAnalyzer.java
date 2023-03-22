@@ -135,7 +135,7 @@ public class ErrorProneAnalyzer implements TaskListener {
         descriptionListenerFactory.getDescriptionListener(log, compilation);
     DescriptionListener countingDescriptionListener =
         d -> {
-          if (d.severity == SeverityLevel.ERROR) {
+          if (d.severity() == SeverityLevel.ERROR) {
             errorProneErrors++;
           }
           descriptionListener.onDescribed(d);

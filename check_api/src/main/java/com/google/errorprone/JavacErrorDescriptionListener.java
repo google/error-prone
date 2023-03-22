@@ -113,7 +113,7 @@ public class JavacErrorDescriptionListener implements DescriptionListener {
       JCDiagnostic.Factory factory = JCDiagnostic.Factory.instance(context);
       JCDiagnostic.DiagnosticType type = JCDiagnostic.DiagnosticType.ERROR;
       DiagnosticPosition pos = description.position;
-      switch (description.severity) {
+      switch (description.severity()) {
         case ERROR:
           if (dontUseErrors) {
             type = JCDiagnostic.DiagnosticType.WARNING;

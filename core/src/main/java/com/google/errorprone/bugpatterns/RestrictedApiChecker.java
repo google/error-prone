@@ -26,7 +26,6 @@ import static com.google.errorprone.util.ASTHelpers.streamSuperMethods;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.RestrictedApi;
 import com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
@@ -61,7 +60,6 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 import java.util.stream.Stream;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
 
 /** Check for non-allowlisted callers to RestrictedApiChecker. */
 @BugPattern(
@@ -73,14 +71,6 @@ public class RestrictedApiChecker extends BugChecker
         NewClassTreeMatcher,
         AnnotationTreeMatcher,
         MemberReferenceTreeMatcher {
-
-  private final boolean emitWarningsAsErrors;
-
-  @Inject
-  RestrictedApiChecker(ErrorProneFlags flags) {
-    this.emitWarningsAsErrors =
-        flags.getBoolean("RestrictedApiChecker:EmitWarningsAsErrors").orElse(false);
-  }
 
   /**
    * Validates a {@code @RestrictedApi} annotation and that the declared restriction makes sense.
@@ -255,11 +245,8 @@ public class RestrictedApiChecker extends BugChecker
       return NO_MATCH;
     }
     SeverityLevel level = warn ? SeverityLevel.WARNING : SeverityLevel.ERROR;
-    if (level != SeverityLevel.ERROR && !emitWarningsAsErrors) {
-      return NO_MATCH;
-    }
-
-    Description.Builder description = buildDescription(where).setMessage(restriction.explanation());
+    Description.Builder description =
+        buildDescription(where).setMessage(restriction.explanation()).overrideSeverity(level);
     return description.build();
   }
 
