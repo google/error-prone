@@ -77,6 +77,22 @@ public class AvoidObjectArraysTest {
   }
 
   @Test
+  public void methodParam_instanceMethods_withIterableOverload() {
+    compilationHelper
+        .addSourceLines(
+            "IterableSubject.java",
+            "public class IterableSubject {",
+            "  public final void containsAnyIn(Iterable<?> expected) {",
+            "  }",
+            // TODO(b/273948064): we shouldn't fire here because there's an Iterable overload
+            "  // BUG: Diagnostic contains: consider an Iterable<Object> instead",
+            "  public final void containsAnyIn(Object[] expected) {",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void returnType_instanceMethods() {
     compilationHelper
         .addSourceLines(
