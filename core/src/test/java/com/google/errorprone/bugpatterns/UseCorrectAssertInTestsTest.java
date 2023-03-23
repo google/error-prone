@@ -16,6 +16,9 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static java.util.Arrays.stream;
+import static java.util.stream.Collectors.joining;
+
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
@@ -29,9 +32,9 @@ import org.junit.runners.JUnit4;
 public final class UseCorrectAssertInTestsTest {
 
   private static final String ASSERT_THAT_IMPORT =
-      "static com.google.common.truth.Truth.assertThat;";
+      "import static com.google.common.truth.Truth.assertThat;";
   private static final String ASSERT_WITH_MESSAGE_IMPORT =
-      "static com.google.common.truth.Truth.assertWithMessage;";
+      "import static com.google.common.truth.Truth.assertWithMessage;";
   private static final String INPUT = "in/FooTest.java";
   private static final String OUTPUT = "out/FooTest.java";
 
@@ -46,7 +49,10 @@ public final class UseCorrectAssertInTestsTest {
   public void correctAssertInTest() {
     refactoringHelper
         .addInputLines(
-            INPUT, inputWithExpressionAndImport("assertThat(true).isTrue();", ASSERT_THAT_IMPORT))
+            INPUT,
+            inputWithExpressionsAndImport(
+                ASSERT_THAT_IMPORT, //
+                "assertThat(true).isTrue();"))
         .expectUnchanged()
         .doTest();
   }
@@ -54,7 +60,7 @@ public final class UseCorrectAssertInTestsTest {
   @Test
   public void noAssertInTestsFound() {
     refactoringHelper
-        .addInputLines(INPUT, inputWithExpression("int a = 1;"))
+        .addInputLines(INPUT, inputWithExpressions("int a = 1;"))
         .expectUnchanged()
         .doTest();
   }
@@ -93,7 +99,7 @@ public final class UseCorrectAssertInTestsTest {
             "}")
         .addOutputLines(
             OUTPUT,
-            "import static com.google.common.truth.Truth.assertThat;",
+            ASSERT_THAT_IMPORT,
             "import org.junit.runner.RunWith;",
             "import org.junit.runners.JUnit4;",
             "@RunWith(JUnit4.class)",
@@ -117,7 +123,7 @@ public final class UseCorrectAssertInTestsTest {
             "}")
         .addOutputLines(
             OUTPUT,
-            "import static com.google.common.truth.Truth.assertThat;",
+            ASSERT_THAT_IMPORT,
             "public class FooTest {",
             "  void foo() {",
             "    assertThat(true).isTrue();",
@@ -144,30 +150,36 @@ public final class UseCorrectAssertInTestsTest {
   @Test
   public void wrongAssertInTestWithParentheses() {
     refactoringHelper
-        .addInputLines(INPUT, inputWithExpression("assert (true);"))
+        .addInputLines(INPUT, inputWithExpressions("assert (true);"))
         .addOutputLines(
-            OUTPUT, inputWithExpressionAndImport("assertThat(true).isTrue();", ASSERT_THAT_IMPORT))
+            OUTPUT,
+            inputWithExpressionsAndImport(
+                ASSERT_THAT_IMPORT, //
+                "assertThat(true).isTrue();"))
         .doTest();
   }
 
   @Test
   public void wrongAssertInTestWithoutParentheses() {
     refactoringHelper
-        .addInputLines(INPUT, inputWithExpression("assert true;"))
+        .addInputLines(INPUT, inputWithExpressions("assert true;"))
         .addOutputLines(
-            OUTPUT, inputWithExpressionAndImport("assertThat(true).isTrue();", ASSERT_THAT_IMPORT))
+            OUTPUT,
+            inputWithExpressionsAndImport(
+                ASSERT_THAT_IMPORT, //
+                "assertThat(true).isTrue();"))
         .doTest();
   }
 
   @Test
   public void wrongAssertInTestWithDetailString() {
     refactoringHelper
-        .addInputLines(INPUT, inputWithExpression("assert (true) : \"description\";"))
+        .addInputLines(INPUT, inputWithExpressions("assert (true) : \"description\";"))
         .addOutputLines(
             OUTPUT,
-            inputWithExpressionAndImport(
-                "assertWithMessage(\"description\").that(true).isTrue();",
-                ASSERT_WITH_MESSAGE_IMPORT))
+            inputWithExpressionsAndImport(
+                ASSERT_WITH_MESSAGE_IMPORT, //
+                "assertWithMessage(\"description\").that(true).isTrue();"))
         .doTest();
   }
 
@@ -175,26 +187,33 @@ public final class UseCorrectAssertInTestsTest {
   public void wrongAssertInTestWithDetailStringVariable() {
     refactoringHelper
         .addInputLines(
-            INPUT, inputWithExpressions("String desc = \"description\";", "assert (true) : desc;"))
+            INPUT,
+            inputWithExpressions(
+                "String desc = \"description\";", //
+                "assert (true) : desc;"))
         .addOutputLines(
             OUTPUT,
             inputWithExpressionsAndImport(
+                ASSERT_WITH_MESSAGE_IMPORT, //
                 "String desc = \"description\";",
-                "assertWithMessage(desc).that(true).isTrue();",
-                ASSERT_WITH_MESSAGE_IMPORT))
+                "assertWithMessage(desc).that(true).isTrue();"))
         .doTest();
   }
 
   @Test
   public void wrongAssertInTestWithDetailNonStringVariable() {
     refactoringHelper
-        .addInputLines(INPUT, inputWithExpressions("Integer desc = 1;", "assert (true) : desc;"))
+        .addInputLines(
+            INPUT,
+            inputWithExpressions(
+                "Integer desc = 1;", //
+                "assert (true) : desc;"))
         .addOutputLines(
             OUTPUT,
             inputWithExpressionsAndImport(
+                ASSERT_WITH_MESSAGE_IMPORT, //
                 "Integer desc = 1;",
-                "assertWithMessage(desc.toString()).that(true).isTrue();",
-                ASSERT_WITH_MESSAGE_IMPORT))
+                "assertWithMessage(desc.toString()).that(true).isTrue();"))
         .doTest();
   }
 
@@ -209,7 +228,9 @@ public final class UseCorrectAssertInTestsTest {
         .addOutputLines(
             OUTPUT,
             inputWithExpressionsAndImport(
-                "boolean a = false;", "assertThat(a).isFalse();", ASSERT_THAT_IMPORT))
+                ASSERT_THAT_IMPORT, //
+                "boolean a = false;",
+                "assertThat(a).isFalse();"))
         .doTest();
   }
 
@@ -224,7 +245,9 @@ public final class UseCorrectAssertInTestsTest {
         .addOutputLines(
             OUTPUT,
             inputWithExpressionsAndImport(
-                "String a = \"test\";", "assertThat(a).isEqualTo(\"test\");", ASSERT_THAT_IMPORT))
+                ASSERT_THAT_IMPORT, //
+                "String a = \"test\";",
+                "assertThat(a).isEqualTo(\"test\");"))
         .doTest();
   }
 
@@ -239,9 +262,9 @@ public final class UseCorrectAssertInTestsTest {
         .addOutputLines(
             OUTPUT,
             inputWithExpressionsAndImport(
-                "Integer a = null;", //
-                "assertThat(a).isNull();",
-                ASSERT_THAT_IMPORT))
+                ASSERT_THAT_IMPORT, //
+                "Integer a = null;",
+                "assertThat(a).isNull();"))
         .doTest();
   }
 
@@ -256,9 +279,9 @@ public final class UseCorrectAssertInTestsTest {
         .addOutputLines(
             OUTPUT,
             inputWithExpressionsAndImport(
-                "Integer a = null;", //
-                "assertThat(a).isNull();",
-                ASSERT_THAT_IMPORT))
+                ASSERT_THAT_IMPORT, //
+                "Integer a = null;",
+                "assertThat(a).isNull();"))
         .doTest();
   }
 
@@ -273,9 +296,9 @@ public final class UseCorrectAssertInTestsTest {
         .addOutputLines(
             OUTPUT,
             inputWithExpressionsAndImport(
+                ASSERT_WITH_MESSAGE_IMPORT, //
                 "Integer a = null;",
-                "assertWithMessage(\"detail\").that(a).isNull();",
-                ASSERT_WITH_MESSAGE_IMPORT))
+                "assertWithMessage(\"detail\").that(a).isNull();"))
         .doTest();
   }
 
@@ -290,9 +313,9 @@ public final class UseCorrectAssertInTestsTest {
         .addOutputLines(
             OUTPUT,
             inputWithExpressionsAndImport(
-                "Integer a = 1;", //
-                "assertThat(a).isNotNull();",
-                ASSERT_THAT_IMPORT))
+                ASSERT_THAT_IMPORT, //
+                "Integer a = 1;",
+                "assertThat(a).isNotNull();"))
         .doTest();
   }
 
@@ -307,9 +330,9 @@ public final class UseCorrectAssertInTestsTest {
         .addOutputLines(
             OUTPUT,
             inputWithExpressionsAndImport(
-                "Integer a = 1;", //
-                "assertThat(a).isSameInstanceAs(1);",
-                ASSERT_THAT_IMPORT))
+                ASSERT_THAT_IMPORT, //
+                "Integer a = 1;",
+                "assertThat(a).isSameInstanceAs(1);"))
         .doTest();
   }
 
@@ -324,9 +347,9 @@ public final class UseCorrectAssertInTestsTest {
         .addOutputLines(
             OUTPUT,
             inputWithExpressionsAndImport(
-                "Integer a = 1;", //
-                "assertThat(a).isSameInstanceAs(1);",
-                ASSERT_THAT_IMPORT))
+                ASSERT_THAT_IMPORT, //
+                "Integer a = 1;",
+                "assertThat(a).isSameInstanceAs(1);"))
         .doTest();
   }
 
@@ -341,9 +364,9 @@ public final class UseCorrectAssertInTestsTest {
         .addOutputLines(
             OUTPUT,
             inputWithExpressionsAndImport(
-                "Integer a = 1;", //
-                "assertThat(a).isNotSameInstanceAs(1);",
-                ASSERT_THAT_IMPORT))
+                ASSERT_THAT_IMPORT, //
+                "Integer a = 1;",
+                "assertThat(a).isNotSameInstanceAs(1);"))
         .doTest();
   }
 
@@ -358,20 +381,16 @@ public final class UseCorrectAssertInTestsTest {
         .addOutputLines(
             OUTPUT,
             inputWithExpressionsAndImport(
+                ASSERT_WITH_MESSAGE_IMPORT, //
                 "int a = 1;",
-                "assertWithMessage(\"detail\").that(a).isSameInstanceAs(1);",
-                ASSERT_WITH_MESSAGE_IMPORT))
+                "assertWithMessage(\"detail\").that(a).isSameInstanceAs(1);"))
         .doTest();
   }
 
-  private static String[] inputWithExpressionAndImport(String expr, String importPath) {
-    return inputWithExpressionsAndImport(expr, "", importPath);
-  }
+  private static String[] inputWithExpressionsAndImport(String importStatement, String... body) {
 
-  private static String[] inputWithExpressionsAndImport(
-      String expr1, String expr2, String importPath) {
     return new String[] {
-      importPath.isEmpty() ? "" : String.format("import %s", importPath),
+      importStatement,
       "import org.junit.Test;",
       "import org.junit.runner.RunWith;",
       "import org.junit.runners.JUnit4;",
@@ -379,18 +398,13 @@ public final class UseCorrectAssertInTestsTest {
       "public class FooTest {",
       "  @Test",
       "  void foo() {",
-      String.format("    %s", expr1),
-      expr2.isEmpty() ? "" : String.format("    %s", expr2),
+      stream(body).map(line -> String.format("    %s", line)).collect(joining("\n")),
       "  }",
       "}"
     };
   }
 
-  private static String[] inputWithExpression(String expr) {
-    return inputWithExpressionAndImport(expr, "");
-  }
-
-  private static String[] inputWithExpressions(String expr1, String expr2) {
-    return inputWithExpressionsAndImport(expr1, expr2, "");
+  private static String[] inputWithExpressions(String... expr) {
+    return inputWithExpressionsAndImport("", expr);
   }
 }
