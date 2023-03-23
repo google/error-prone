@@ -38,6 +38,7 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.SetMultimap;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Streams;
@@ -2632,6 +2633,58 @@ public class ASTHelpers {
   /** Returns {@code true} if this symbol was declared in Kotlin source. */
   public static boolean isKotlin(Symbol symbol, VisitorState state) {
     return hasAnnotation(symbol.enclClass(), "kotlin.Metadata", state);
+  }
+
+  /**
+   * Returns whether {@code existingMethod} has an overload (or "nearly" an overload) with the given
+   * {@code targetMethodName}, and only a single parameter of type {@code onlyParameterType}.
+   */
+  public static boolean hasOverloadWithOnlyOneParameter(
+      MethodSymbol existingMethod,
+      Name targetMethodName,
+      Type onlyParameterType,
+      VisitorState state) {
+    @Nullable MethodTree t = state.findEnclosing(MethodTree.class);
+    @Nullable MethodSymbol enclosingMethod = t == null ? null : getSymbol(t);
+
+    return hasMatchingMethods(
+        targetMethodName,
+        input ->
+            !input.equals(existingMethod)
+                // Make sure we're not currently *inside* that overload, to avoid
+                // creating an infinite loop.
+                && !input.equals(enclosingMethod)
+                && (enclosingMethod == null
+                    || !enclosingMethod.overrides(
+                        input, (TypeSymbol) input.owner, state.getTypes(), true))
+                && input.isStatic() == existingMethod.isStatic()
+                && input.getParameters().size() == 1
+                && isSameType(input.getParameters().get(0).asType(), onlyParameterType, state)
+                && isSameType(input.getReturnType(), existingMethod.getReturnType(), state),
+        enclosingClass(existingMethod).asType(),
+        state.getTypes());
+  }
+
+  // Adapted from findMatchingMethods(); but this short-circuits
+  private static boolean hasMatchingMethods(
+      Name name, Predicate<MethodSymbol> predicate, Type startClass, Types types) {
+    Predicate<Symbol> matchesMethodPredicate =
+        sym -> sym instanceof MethodSymbol && predicate.test((MethodSymbol) sym);
+
+    // Iterate over all classes and interfaces that startClass inherits from.
+    for (Type superClass : types.closure(startClass)) {
+      // Iterate over all the methods declared in superClass.
+      TypeSymbol superClassSymbol = superClass.tsym;
+      Scope superClassSymbols = superClassSymbol.members();
+      if (superClassSymbols != null) { // Can be null if superClass is a type variable
+        if (!Iterables.isEmpty(
+            scope(superClassSymbols)
+                .getSymbolsByName(name, matchesMethodPredicate, NON_RECURSIVE))) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   private ASTHelpers() {}

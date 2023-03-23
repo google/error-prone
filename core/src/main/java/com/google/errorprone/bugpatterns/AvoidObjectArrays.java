@@ -23,6 +23,7 @@ import static com.google.errorprone.matchers.Matchers.MAIN_METHOD;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
+import static com.google.errorprone.util.ASTHelpers.hasOverloadWithOnlyOneParameter;
 import static com.google.errorprone.util.ASTHelpers.methodIsPublicAndNotAnOverride;
 import static java.util.function.Predicate.isEqual;
 
@@ -63,12 +64,20 @@ public class AvoidObjectArrays extends BugChecker implements MethodTreeMatcher {
             createDescription(method.getReturnType(), state, "returning", "ImmutableList"));
       }
 
+      MethodSymbol methodSymbol = getSymbol(method);
+
       // check each method parameter
       for (int i = 0; i < method.getParameters().size(); i++) {
         VariableTree varTree = method.getParameters().get(i);
         if (isObjectArray(varTree)) {
-          // we allow an object array if it's the last parameter and it's var args
-          if (getSymbol(method).isVarArgs() && i == method.getParameters().size() - 1) {
+          // we allow an Object[] param if it's the last parameter and it's var args
+          if (methodSymbol.isVarArgs() && i == method.getParameters().size() - 1) {
+            continue;
+          }
+
+          // we allow an Object[] param if there's also an overload with an Iterable param
+          if (hasOverloadWithOnlyOneParameter(
+              methodSymbol, methodSymbol.name, state.getSymtab().iterableType, state)) {
             continue;
           }
 

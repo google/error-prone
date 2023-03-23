@@ -22,9 +22,9 @@ import static com.google.errorprone.matchers.method.MethodMatchers.instanceMetho
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.hasOverloadWithOnlyOneParameter;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
-import static com.sun.tools.javac.code.Scope.LookupKind.NON_RECURSIVE;
 import static java.util.concurrent.TimeUnit.DAYS;
 import static java.util.concurrent.TimeUnit.HOURS;
 import static java.util.concurrent.TimeUnit.MICROSECONDS;
@@ -34,7 +34,6 @@ import static java.util.concurrent.TimeUnit.NANOSECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
@@ -48,22 +47,14 @@ import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
-import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
-import com.sun.tools.javac.code.Scope;
-import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.code.Types;
-import com.sun.tools.javac.util.Name;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Predicate;
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 /** This check suggests the use of {@code java.time}-based APIs, when available. */
@@ -161,10 +152,10 @@ public final class PreferJavaTimeOverload extends BugChecker
     // foo(String, long, TimeUnit, Frobber) -> foo(String, Duration, Frobber)
 
     if (isNumericMethodCall(tree, state)) {
-      if (hasJavaTimeOverload(tree, state, JAVA_DURATION)) {
+      if (hasJavaTimeOverload(tree, JAVA_DURATION_TYPE.get(state), state)) {
         return buildDescriptionForNumericPrimitive(tree, state, arguments, "Duration");
       }
-      if (hasJavaTimeOverload(tree, state, JAVA_INSTANT)) {
+      if (hasJavaTimeOverload(tree, JAVA_INSTANT_TYPE.get(state), state)) {
         return buildDescriptionForNumericPrimitive(tree, state, arguments, "Instant");
       }
     }
@@ -172,7 +163,7 @@ public final class PreferJavaTimeOverload extends BugChecker
     if (isLongTimeUnitMethodCall(tree, state)) {
       Optional<TimeUnit> optionalTimeUnit = DurationToLongTimeUnit.getTimeUnit(arguments.get(1));
       if (optionalTimeUnit.isPresent()) {
-        if (hasJavaTimeOverload(tree, state, JAVA_DURATION)) {
+        if (hasJavaTimeOverload(tree, JAVA_DURATION_TYPE.get(state), state)) {
           String durationFactory = TIMEUNIT_TO_DURATION_FACTORY.get(optionalTimeUnit.get());
           if (durationFactory != null) {
             SuggestedFix.Builder fix = SuggestedFix.builder();
@@ -187,7 +178,7 @@ public final class PreferJavaTimeOverload extends BugChecker
               if (JAVA_DURATION_DECOMPOSITION_MATCHER.matches(maybeDurationDecomposition, state)) {
                 if (isSameType(
                     ASTHelpers.getReceiverType(maybeDurationDecomposition),
-                    JAVA_TIME_DURATION.get(state),
+                    JAVA_DURATION_TYPE.get(state),
                     state)) {
                   replacement =
                       state.getSourceForNode(ASTHelpers.getReceiver(maybeDurationDecomposition));
@@ -221,7 +212,7 @@ public final class PreferJavaTimeOverload extends BugChecker
 
     if (isMethodCallWithSingleParameter(tree, state, "org.joda.time.ReadableDuration")) {
       ExpressionTree arg0 = arguments.get(0);
-      if (hasJavaTimeOverload(tree, state, JAVA_DURATION)) {
+      if (hasJavaTimeOverload(tree, JAVA_DURATION_TYPE.get(state), state)) {
         SuggestedFix.Builder fix = SuggestedFix.builder();
         // TODO(kak): Maybe only emit a match if Duration doesn't have to be fully qualified?
         String qualifiedDuration = SuggestedFixes.qualifyType(state, fix, JAVA_DURATION);
@@ -272,7 +263,7 @@ public final class PreferJavaTimeOverload extends BugChecker
 
     if (isMethodCallWithSingleParameter(tree, state, "org.joda.time.ReadableInstant")) {
       ExpressionTree arg0 = arguments.get(0);
-      if (hasJavaTimeOverload(tree, state, JAVA_INSTANT)) {
+      if (hasJavaTimeOverload(tree, JAVA_INSTANT_TYPE.get(state), state)) {
         SuggestedFix.Builder fix = SuggestedFix.builder();
         // TODO(kak): Maybe only emit a match if Instant doesn't have to be fully qualified?
         String qualifiedInstant = SuggestedFixes.qualifyType(state, fix, JAVA_INSTANT);
@@ -345,7 +336,7 @@ public final class PreferJavaTimeOverload extends BugChecker
 
   private static boolean isLongTimeUnitMethodCall(MethodInvocationTree tree, VisitorState state) {
     Type longType = state.getSymtab().longType;
-    Type timeUnitType = JAVA_UTIL_CONCURRENT_TIMEUNIT.get(state);
+    Type timeUnitType = TIME_UNIT_TYPE.get(state);
     List<VarSymbol> params = getSymbol(tree).getParameters();
     if (params.size() == 2) {
       return isSameType(params.get(0).asType(), longType, state)
@@ -355,68 +346,27 @@ public final class PreferJavaTimeOverload extends BugChecker
   }
 
   private static boolean hasJavaTimeOverload(
-      MethodInvocationTree tree, VisitorState state, String typeName) {
+      MethodInvocationTree tree, Type type, VisitorState state) {
     MethodSymbol calledMethod = getSymbol(tree);
-    return hasJavaTimeOverload(state, typeName, calledMethod, calledMethod.name);
-  }
-
-  private static boolean hasJavaTimeOverload(
-      VisitorState state, String typeName, MethodSymbol calledMethod, Name methodName) {
-
-    MethodTree t = state.findEnclosing(MethodTree.class);
-    @Nullable MethodSymbol enclosingMethod = t == null ? null : getSymbol(t);
-
-    Type type = state.getTypeFromString(typeName);
-    return hasMatchingMethods(
-        methodName,
-        input ->
-            !input.equals(calledMethod)
-                // Make sure we're not currently *inside* that overload, to avoid
-                // creating an infinite loop.
-                && !input.equals(enclosingMethod)
-                && (enclosingMethod == null
-                    || !enclosingMethod.overrides(
-                        input, (TypeSymbol) input.owner, state.getTypes(), true))
-                && input.isStatic() == calledMethod.isStatic()
-                && input.getParameters().size() == 1
-                && isSameType(input.getParameters().get(0).asType(), type, state)
-                && isSameType(input.getReturnType(), calledMethod.getReturnType(), state),
-        ASTHelpers.enclosingClass(calledMethod).asType(),
-        state.getTypes());
+    return hasOverloadWithOnlyOneParameter(calledMethod, calledMethod.name, type, state);
   }
 
   private static boolean hasTimeSourceMethod(MethodInvocationTree tree, VisitorState state) {
     MethodSymbol calledMethod = getSymbol(tree);
     String timeSourceBasedName = calledMethod.name.toString().replace("Clock", "TimeSource");
-    return hasJavaTimeOverload(
-        state, TIME_SOURCE, calledMethod, state.getName(timeSourceBasedName));
+    return hasOverloadWithOnlyOneParameter(
+        calledMethod, state.getName(timeSourceBasedName), TIME_SOURCE_TYPE.get(state), state);
   }
 
-  // Adapted from ASTHelpers.findMatchingMethods(); but this short-circuits
-  private static boolean hasMatchingMethods(
-      Name name, Predicate<MethodSymbol> predicate, Type startClass, Types types) {
-    Predicate<Symbol> matchesMethodPredicate =
-        sym -> sym instanceof MethodSymbol && predicate.test((MethodSymbol) sym);
-
-    // Iterate over all classes and interfaces that startClass inherits from.
-    for (Type superClass : types.closure(startClass)) {
-      // Iterate over all the methods declared in superClass.
-      TypeSymbol superClassSymbol = superClass.tsym;
-      Scope superClassSymbols = superClassSymbol.members();
-      if (superClassSymbols != null) { // Can be null if superClass is a type variable
-        if (!Iterables.isEmpty(
-            ASTHelpers.scope(superClassSymbols)
-                .getSymbolsByName(name, matchesMethodPredicate, NON_RECURSIVE))) {
-          return true;
-        }
-      }
-    }
-    return false;
-  }
-
-  private static final Supplier<Type> JAVA_TIME_DURATION =
+  private static final Supplier<Type> JAVA_DURATION_TYPE =
       VisitorState.memoize(state -> state.getTypeFromString(JAVA_DURATION));
 
-  private static final Supplier<Type> JAVA_UTIL_CONCURRENT_TIMEUNIT =
+  private static final Supplier<Type> JAVA_INSTANT_TYPE =
+      VisitorState.memoize(state -> state.getTypeFromString(JAVA_INSTANT));
+
+  private static final Supplier<Type> TIME_UNIT_TYPE =
       VisitorState.memoize(state -> state.getTypeFromString("java.util.concurrent.TimeUnit"));
+
+  private static final Supplier<Type> TIME_SOURCE_TYPE =
+      VisitorState.memoize(state -> state.getTypeFromString(TIME_SOURCE));
 }
