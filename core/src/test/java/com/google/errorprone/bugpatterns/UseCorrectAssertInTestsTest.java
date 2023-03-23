@@ -326,13 +326,15 @@ public final class UseCorrectAssertInTestsTest {
             INPUT,
             inputWithExpressions(
                 "Integer a = 1;", //
-                "assert a == 1;"))
+                "Integer b = 1;",
+                "assert a == b;"))
         .addOutputLines(
             OUTPUT,
             inputWithExpressionsAndImport(
                 ASSERT_THAT_IMPORT, //
                 "Integer a = 1;",
-                "assertThat(a).isSameInstanceAs(1);"))
+                "Integer b = 1;",
+                "assertThat(a).isSameInstanceAs(b);"))
         .doTest();
   }
 
@@ -343,18 +345,56 @@ public final class UseCorrectAssertInTestsTest {
             INPUT,
             inputWithExpressions(
                 "Integer a = 1;", //
-                "assert (a == 1);"))
+                "Integer b = 1;",
+                "assert (a == b);"))
         .addOutputLines(
             OUTPUT,
             inputWithExpressionsAndImport(
                 ASSERT_THAT_IMPORT, //
                 "Integer a = 1;",
-                "assertThat(a).isSameInstanceAs(1);"))
+                "Integer b = 1;",
+                "assertThat(a).isSameInstanceAs(b);"))
         .doTest();
   }
 
   @Test
   public void wrongAssertReferenceNotSameCase() {
+    refactoringHelper
+        .addInputLines(
+            INPUT,
+            inputWithExpressions(
+                "Integer a = 1;", //
+                "Integer b = 1;",
+                "assert a != b;"))
+        .addOutputLines(
+            OUTPUT,
+            inputWithExpressionsAndImport(
+                ASSERT_THAT_IMPORT, //
+                "Integer a = 1;",
+                "Integer b = 1;",
+                "assertThat(a).isNotSameInstanceAs(b);"))
+        .doTest();
+  }
+
+  @Test
+  public void wrongAssertEqualsPrimitiveCase() {
+    refactoringHelper
+        .addInputLines(
+            INPUT,
+            inputWithExpressions(
+                "Integer a = 1;", //
+                "assert a == 1;"))
+        .addOutputLines(
+            OUTPUT,
+            inputWithExpressionsAndImport(
+                ASSERT_THAT_IMPORT, //
+                "Integer a = 1;",
+                "assertThat(a).isEqualTo(1);"))
+        .doTest();
+  }
+
+  @Test
+  public void wrongAssertNotEqualsPrimitiveCase() {
     refactoringHelper
         .addInputLines(
             INPUT,
@@ -366,7 +406,7 @@ public final class UseCorrectAssertInTestsTest {
             inputWithExpressionsAndImport(
                 ASSERT_THAT_IMPORT, //
                 "Integer a = 1;",
-                "assertThat(a).isNotSameInstanceAs(1);"))
+                "assertThat(a).isNotEqualTo(1);"))
         .doTest();
   }
 
@@ -383,7 +423,7 @@ public final class UseCorrectAssertInTestsTest {
             inputWithExpressionsAndImport(
                 ASSERT_WITH_MESSAGE_IMPORT, //
                 "int a = 1;",
-                "assertWithMessage(\"detail\").that(a).isSameInstanceAs(1);"))
+                "assertWithMessage(\"detail\").that(a).isEqualTo(1);"))
         .doTest();
   }
 
