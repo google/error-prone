@@ -31,7 +31,7 @@ import java.io.ObjectInputStream;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -259,7 +259,7 @@ public class ErrorProneOptions {
     private boolean isTestOnlyTarget = false;
     private boolean ignoreSuppressionAnnotations = false;
     private boolean ignoreLargeCodeGenerators = true;
-    private Map<String, Severity> severityMap = new HashMap<>();
+    private final Map<String, Severity> severityMap = new LinkedHashMap<>();
     private final ErrorProneFlags.Builder flagsBuilder = ErrorProneFlags.builder();
     private final PatchingOptions.Builder patchingOptionsBuilder = PatchingOptions.builder();
     private Pattern excludedPattern;
