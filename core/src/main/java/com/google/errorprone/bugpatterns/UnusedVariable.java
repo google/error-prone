@@ -617,6 +617,13 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
           if (variableTree.getName().contentEquals("this")) {
             return null;
           }
+          // Ignore if parameter is part of canonical record constructor; tree does not seem
+          // to contain usage in that case, but parameter is always used implicitly
+          // For compact canonical constructor parameters don't have record flag so need to
+          // check constructor flags (`symbol.owner`) instead
+          if (hasRecordFlag(symbol) || hasRecordFlag(symbol.owner)) {
+            return null;
+          }
           unusedElements.put(symbol, getCurrentPath());
           if (!isParameterSubjectToAnalysis(symbol)) {
             onlyCheckForReassignments.add(symbol);
@@ -639,13 +646,17 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
           && ASTHelpers.hasDirectAnnotationWithSimpleName(variableTree, "Inject")) {
         return true;
       }
-      if ((symbol.flags() & RECORD_FLAG) == RECORD_FLAG) {
+      if (hasRecordFlag(symbol)) {
         return false;
       }
       return canBeRemoved(symbol) && !SPECIAL_FIELDS.contains(symbol.getSimpleName().toString());
     }
 
     private static final long RECORD_FLAG = 1L << 61;
+
+    private boolean hasRecordFlag(Symbol symbol) {
+      return (symbol.flags() & RECORD_FLAG) == RECORD_FLAG;
+    }
 
     /** Returns whether {@code sym} can be removed without updating call sites in other files. */
     private boolean isParameterSubjectToAnalysis(Symbol sym) {
