@@ -27,9 +27,9 @@ import org.junit.runners.JUnit4;
 /** Tests for {@link StringCaseLocaleUsage}. */
 @RunWith(JUnit4.class)
 public final class StringCaseLocaleUsageTest {
-  CompilationTestHelper compilationTestHelper =
+  private final CompilationTestHelper compilationTestHelper =
       CompilationTestHelper.newInstance(StringCaseLocaleUsage.class, getClass());
-  BugCheckerRefactoringTestHelper refactoringTestHelper =
+  private final BugCheckerRefactoringTestHelper refactoringTestHelper =
       BugCheckerRefactoringTestHelper.newInstance(StringCaseLocaleUsage.class, getClass());
 
   @Test
@@ -110,7 +110,7 @@ public final class StringCaseLocaleUsageTest {
 
   @Test
   public void replacementSecondSuggestedFix() {
-    BugCheckerRefactoringTestHelper.newInstance(StringCaseLocaleUsage.class, getClass())
+    refactoringTestHelper
         .setFixChooser(FixChoosers.SECOND)
         .addInputLines(
             "A.java",
@@ -145,5 +145,29 @@ public final class StringCaseLocaleUsageTest {
             "  }",
             "}")
         .doTest(TestMode.TEXT_MATCH);
+  }
+
+  @Test
+  public void replacementThirdSuggestedFix() {
+    refactoringTestHelper
+        .setFixChooser(FixChoosers.THIRD)
+        .addInputLines(
+            "A.java",
+            "class A {",
+            "  void m() {",
+            "    \"a\".toLowerCase();",
+            "    \"c\".toLowerCase().toString();",
+            "  }",
+            "}")
+        .addOutputLines(
+            "A.java",
+            "import com.google.common.base.Ascii;",
+            "class A {",
+            "  void m() {",
+            "    Ascii.toLowerCase(\"a\");",
+            "    Ascii.toLowerCase(\"c\").toString();",
+            "  }",
+            "}")
+        .doTest();
   }
 }
