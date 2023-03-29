@@ -188,7 +188,7 @@ public abstract class BugChecker implements Suppressible, Serializable {
    */
   @CheckReturnValue
   public Description.Builder buildDescription(Tree node) {
-    return Description.builder(node, canonicalName(), linkUrl(), defaultSeverity(), message());
+    return Description.builder(node, canonicalName(), linkUrl(), message());
   }
 
   /**
@@ -197,7 +197,7 @@ public abstract class BugChecker implements Suppressible, Serializable {
    */
   @CheckReturnValue
   public Description.Builder buildDescription(DiagnosticPosition position) {
-    return Description.builder(position, canonicalName(), linkUrl(), defaultSeverity(), message());
+    return Description.builder(position, canonicalName(), linkUrl(), message());
   }
 
   /**
@@ -207,7 +207,7 @@ public abstract class BugChecker implements Suppressible, Serializable {
   // This overload exists purely to disambiguate for JCTree.
   @CheckReturnValue
   public Description.Builder buildDescription(JCTree tree) {
-    return Description.builder(tree, canonicalName(), linkUrl(), defaultSeverity(), message());
+    return Description.builder(tree, canonicalName(), linkUrl(), message());
   }
 
   @Override
