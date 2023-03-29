@@ -15,7 +15,7 @@
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":10,"i1":9,"i2":9,"i3":9,"i4":10,"i5":10,"i6":10,"i7":10};
+<script type="text/javascript">var data = {"i0":10,"i1":9,"i2":9,"i3":9,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -162,13 +162,6 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <div class="block">The position of the match.</div>
 </td>
 </tr>
-<tr class="alt-color">
-<td class="col-first"><code><a href="../BugPattern.SeverityLevel.html" title="enum in com.google.errorprone">BugPattern.SeverityLevel</a></code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#severity">severity</a></span></code></th>
-<td class="col-last">
-<div class="block">Is this a warning, error, etc.?</div>
-</td>
-</tr>
 </tbody>
 </table>
 </div>
@@ -199,10 +192,9 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </tr>
 <tr class="row-color" id="i1">
 <td class="col-first"><code>static <a href="Description.Builder.html" title="class in com.google.errorprone.matchers">Description.Builder</a></code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#builder(com.sun.source.tree.Tree,java.lang.String,java.lang.String,com.google.errorprone.BugPattern.SeverityLevel,java.lang.String)">builder</a></span>&#8203;(com.sun.source.tree.Tree&nbsp;node,
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#builder(com.sun.source.tree.Tree,java.lang.String,java.lang.String,java.lang.String)">builder</a></span>&#8203;(com.sun.source.tree.Tree&nbsp;node,
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name,
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;link,
-<a href="../BugPattern.SeverityLevel.html" title="enum in com.google.errorprone">BugPattern.SeverityLevel</a>&nbsp;severity,
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;message)</code></th>
 <td class="col-last">
 <div class="block">Returns a new builder for <a href="Description.html" title="class in com.google.errorprone.matchers"><code>Description</code></a>s.</div>
@@ -210,10 +202,9 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </tr>
 <tr class="alt-color" id="i2">
 <td class="col-first"><code>static <a href="Description.Builder.html" title="class in com.google.errorprone.matchers">Description.Builder</a></code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#builder(com.sun.tools.javac.tree.JCTree,java.lang.String,java.lang.String,com.google.errorprone.BugPattern.SeverityLevel,java.lang.String)">builder</a></span>&#8203;(com.sun.tools.javac.tree.JCTree&nbsp;tree,
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#builder(com.sun.tools.javac.tree.JCTree,java.lang.String,java.lang.String,java.lang.String)">builder</a></span>&#8203;(com.sun.tools.javac.tree.JCTree&nbsp;tree,
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name,
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;link,
-<a href="../BugPattern.SeverityLevel.html" title="enum in com.google.errorprone">BugPattern.SeverityLevel</a>&nbsp;severity,
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;message)</code></th>
 <td class="col-last">
 <div class="block">Returns a new builder for <a href="Description.html" title="class in com.google.errorprone.matchers"><code>Description</code></a>s.</div>
@@ -221,10 +212,9 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </tr>
 <tr class="row-color" id="i3">
 <td class="col-first"><code>static <a href="Description.Builder.html" title="class in com.google.errorprone.matchers">Description.Builder</a></code></td>
-<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#builder(com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition,java.lang.String,java.lang.String,com.google.errorprone.BugPattern.SeverityLevel,java.lang.String)">builder</a></span>&#8203;(com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition&nbsp;position,
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#builder(com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition,java.lang.String,java.lang.String,java.lang.String)">builder</a></span>&#8203;(com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition&nbsp;position,
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name,
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;link,
-<a href="../BugPattern.SeverityLevel.html" title="enum in com.google.errorprone">BugPattern.SeverityLevel</a>&nbsp;severity,
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;message)</code></th>
 <td class="col-last">
 <div class="block">Returns a new builder for <a href="Description.html" title="class in com.google.errorprone.matchers"><code>Description</code></a>s.</div>
@@ -257,6 +247,11 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <td class="col-last">
 <div class="block">Returns the raw message, not including a link or check name.</div>
 </td>
+</tr>
+<tr class="alt-color" id="i8">
+<td class="col-first"><code><a href="../BugPattern.SeverityLevel.html" title="enum in com.google.errorprone">BugPattern.SeverityLevel</a></code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#severity()">severity</a></span>()</code></th>
+<td class="col-last">&nbsp;</td>
 </tr>
 </tbody>
 </table>
@@ -305,13 +300,6 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
  order of decreasing preference, from most preferred to least preferred.</div>
 </section>
 </li>
-<li>
-<section class="detail" id="severity">
-<h3>severity</h3>
-<div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type"><a href="../BugPattern.SeverityLevel.html" title="enum in com.google.errorprone">BugPattern.SeverityLevel</a></span>&nbsp;<span class="member-name">severity</span></div>
-<div class="block">Is this a warning, error, etc.?</div>
-</section>
-</li>
 </ul>
 </section>
 </li>
@@ -320,6 +308,12 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <section class="method-details" id="method.detail">
 <h2>Method Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="severity()">
+<h3>severity</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../BugPattern.SeverityLevel.html" title="enum in com.google.errorprone">BugPattern.SeverityLevel</a></span>&nbsp;<span class="member-name">severity</span>()</div>
+</section>
+</li>
 <li>
 <section class="detail" id="getMessage()">
 <h3>getMessage</h3>
@@ -355,41 +349,38 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <h3>applySeverityOverride</h3>
 <div class="member-signature"><span class="annotations"><a href="../annotations/CheckReturnValue.html" title="annotation in com.google.errorprone.annotations">@CheckReturnValue</a>
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Description.html" title="class in com.google.errorprone.matchers">Description</a></span>&nbsp;<span class="member-name">applySeverityOverride</span>&#8203;(<span class="parameters"><a href="../BugPattern.SeverityLevel.html" title="enum in com.google.errorprone">BugPattern.SeverityLevel</a>&nbsp;severity)</span></div>
-<div class="block">Internal-only. Has no effect if applied to a Description within a BugChecker.</div>
+<div class="block">Internal-only.</div>
 </section>
 </li>
 <li>
-<section class="detail" id="builder(com.sun.source.tree.Tree,java.lang.String,java.lang.String,com.google.errorprone.BugPattern.SeverityLevel,java.lang.String)">
+<section class="detail" id="builder(com.sun.source.tree.Tree,java.lang.String,java.lang.String,java.lang.String)">
 <h3>builder</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Description.Builder.html" title="class in com.google.errorprone.matchers">Description.Builder</a></span>&nbsp;<span class="member-name">builder</span>&#8203;(<span class="parameters">com.sun.source.tree.Tree&nbsp;node,
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name,
 <a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html" title="class or interface in javax.annotation" class="external-link">@Nullable</a>
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;link,
-<a href="../BugPattern.SeverityLevel.html" title="enum in com.google.errorprone">BugPattern.SeverityLevel</a>&nbsp;severity,
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;message)</span></div>
 <div class="block">Returns a new builder for <a href="Description.html" title="class in com.google.errorprone.matchers"><code>Description</code></a>s.</div>
 </section>
 </li>
 <li>
-<section class="detail" id="builder(com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition,java.lang.String,java.lang.String,com.google.errorprone.BugPattern.SeverityLevel,java.lang.String)">
+<section class="detail" id="builder(com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition,java.lang.String,java.lang.String,java.lang.String)">
 <h3>builder</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Description.Builder.html" title="class in com.google.errorprone.matchers">Description.Builder</a></span>&nbsp;<span class="member-name">builder</span>&#8203;(<span class="parameters">com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition&nbsp;position,
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name,
 <a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html" title="class or interface in javax.annotation" class="external-link">@Nullable</a>
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;link,
-<a href="../BugPattern.SeverityLevel.html" title="enum in com.google.errorprone">BugPattern.SeverityLevel</a>&nbsp;severity,
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;message)</span></div>
 <div class="block">Returns a new builder for <a href="Description.html" title="class in com.google.errorprone.matchers"><code>Description</code></a>s.</div>
 </section>
 </li>
 <li>
-<section class="detail" id="builder(com.sun.tools.javac.tree.JCTree,java.lang.String,java.lang.String,com.google.errorprone.BugPattern.SeverityLevel,java.lang.String)">
+<section class="detail" id="builder(com.sun.tools.javac.tree.JCTree,java.lang.String,java.lang.String,java.lang.String)">
 <h3>builder</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Description.Builder.html" title="class in com.google.errorprone.matchers">Description.Builder</a></span>&nbsp;<span class="member-name">builder</span>&#8203;(<span class="parameters">com.sun.tools.javac.tree.JCTree&nbsp;tree,
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name,
 <a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html" title="class or interface in javax.annotation" class="external-link">@Nullable</a>
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;link,
-<a href="../BugPattern.SeverityLevel.html" title="enum in com.google.errorprone">BugPattern.SeverityLevel</a>&nbsp;severity,
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;message)</span></div>
 <div class="block">Returns a new builder for <a href="Description.html" title="class in com.google.errorprone.matchers"><code>Description</code></a>s.</div>
 </section>
