@@ -72,7 +72,7 @@ public class EqualsIncompatibleType extends BugChecker
   private final TypeCompatibilityUtils typeCompatibilityUtils;
 
   @Inject
-  public EqualsIncompatibleType(ErrorProneFlags flags) {
+  EqualsIncompatibleType(ErrorProneFlags flags) {
     this.typeCompatibilityUtils = TypeCompatibilityUtils.fromFlags(flags);
   }
 

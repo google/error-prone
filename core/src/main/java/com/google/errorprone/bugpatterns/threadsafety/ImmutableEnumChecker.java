@@ -56,7 +56,7 @@ public class ImmutableEnumChecker extends BugChecker implements ClassTreeMatcher
   private final WellKnownMutability wellKnownMutability;
 
   @Inject
-  public ImmutableEnumChecker(WellKnownMutability wellKnownMutability) {
+  ImmutableEnumChecker(WellKnownMutability wellKnownMutability) {
     this.wellKnownMutability = wellKnownMutability;
   }
 

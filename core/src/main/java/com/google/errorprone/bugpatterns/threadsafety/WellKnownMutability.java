@@ -52,7 +52,7 @@ public final class WellKnownMutability implements ThreadSafety.KnownTypes {
   private final ImmutableSet<String> knownMutableClasses;
 
   @Inject
-  public WellKnownMutability(ErrorProneFlags flags) {
+  WellKnownMutability(ErrorProneFlags flags) {
     List<String> immutable = flags.getList("Immutable:KnownImmutable").orElse(ImmutableList.of());
     ImmutableList<String> mutable =
         // Please use "KnownMutable", as it's a bit clearer what we mean. "KnownUnsafe" is kept

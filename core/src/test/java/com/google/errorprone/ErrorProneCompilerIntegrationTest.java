@@ -600,7 +600,7 @@ public class ErrorProneCompilerIntegrationTest {
     private final String forbiddenString;
 
     @Inject
-    public ForbiddenString(ErrorProneFlags flags) {
+    ForbiddenString(ErrorProneFlags flags) {
       forbiddenString = flags.get("Forbidden").orElse("default");
     }
 

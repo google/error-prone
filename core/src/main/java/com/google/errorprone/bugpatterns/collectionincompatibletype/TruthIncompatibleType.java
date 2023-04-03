@@ -147,7 +147,7 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
   private final TypeCompatibilityUtils typeCompatibilityUtils;
 
   @Inject
-  public TruthIncompatibleType(ErrorProneFlags flags) {
+  TruthIncompatibleType(ErrorProneFlags flags) {
     this.typeCompatibilityUtils = TypeCompatibilityUtils.fromFlags(flags);
   }
 

@@ -58,7 +58,7 @@ public class FieldMissingNullable extends BugChecker
   private final boolean beingConservative;
 
   @Inject
-  public FieldMissingNullable(ErrorProneFlags flags) {
+  FieldMissingNullable(ErrorProneFlags flags) {
     this.beingConservative = nullnessChecksShouldBeConservative(flags);
   }
 

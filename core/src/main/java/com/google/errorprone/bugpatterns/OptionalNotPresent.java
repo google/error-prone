@@ -60,7 +60,7 @@ public final class OptionalNotPresent extends BugChecker implements CompilationU
   private final ConstantExpressions constantExpressions;
 
   @Inject
-  public OptionalNotPresent(ConstantExpressions constantExpressions) {
+  OptionalNotPresent(ConstantExpressions constantExpressions) {
     this.constantExpressions = constantExpressions;
   }
 

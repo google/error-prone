@@ -143,7 +143,7 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
   private final ResultUsePolicyEvaluator<VisitorState, Symbol, MethodSymbol> evaluator;
 
   @Inject
-  public CheckReturnValue(ErrorProneFlags flags, ConstantExpressions constantExpressions) {
+  CheckReturnValue(ErrorProneFlags flags, ConstantExpressions constantExpressions) {
     super(constantExpressions);
     this.messageTrailerStyle =
         flags

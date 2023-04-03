@@ -188,7 +188,7 @@ public class ReturnMissingNullable extends BugChecker implements CompilationUnit
   private final boolean beingConservative;
 
   @Inject
-  public ReturnMissingNullable(ErrorProneFlags flags) {
+  ReturnMissingNullable(ErrorProneFlags flags) {
     this.beingConservative = nullnessChecksShouldBeConservative(flags);
   }
 

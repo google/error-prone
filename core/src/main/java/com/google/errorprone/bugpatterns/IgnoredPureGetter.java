@@ -59,7 +59,7 @@ public final class IgnoredPureGetter extends AbstractReturnValueIgnored {
           state -> state.getTypeFromString("com.google.protobuf.MutableMessageLite"));
 
   @Inject
-  public IgnoredPureGetter(ConstantExpressions constantExpressions) {
+  IgnoredPureGetter(ConstantExpressions constantExpressions) {
     super(constantExpressions);
   }
 

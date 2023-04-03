@@ -83,7 +83,7 @@ public final class NullArgumentForNonNullParameter extends BugChecker
   private final boolean beingConservative;
 
   @Inject
-  public NullArgumentForNonNullParameter(ErrorProneFlags flags) {
+  NullArgumentForNonNullParameter(ErrorProneFlags flags) {
     this.beingConservative = nullnessChecksShouldBeConservative(flags);
   }
 

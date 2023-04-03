@@ -102,7 +102,7 @@ public class TooManyParametersTest {
             "  }",
             "  public ConstructorTest(int a, int b, int c) {",
             "  }",
-            "  @Inject public ConstructorTest(int a, int b, int c, int d) {",
+            "  @Inject ConstructorTest(int a, int b, int c, int d) {",
             "  }",
             "}")
         .doTest();

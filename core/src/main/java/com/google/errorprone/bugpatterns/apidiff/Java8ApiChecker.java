@@ -72,7 +72,7 @@ public class Java8ApiChecker extends ApiDiffChecker {
   private static final String CHECKSUM = "java/util/zip/Checksum";
 
   @Inject
-  public Java8ApiChecker(ErrorProneFlags errorProneFlags) {
+  Java8ApiChecker(ErrorProneFlags errorProneFlags) {
     super(loadApiDiff(errorProneFlags));
   }
 }

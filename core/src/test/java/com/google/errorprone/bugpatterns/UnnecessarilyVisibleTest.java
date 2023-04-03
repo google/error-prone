@@ -175,18 +175,4 @@ public final class UnnecessarilyVisibleTest {
         .expectUnchanged()
         .doTest();
   }
-
-  @Test
-  public void negativeBugchecker() {
-    compilationHelper
-        .addSourceLines(
-            "Test.java",
-            "import com.google.errorprone.bugpatterns.BugChecker;",
-            "import javax.inject.Inject;",
-            "class MyBugChecker extends BugChecker {",
-            "  @Inject",
-            "  public MyBugChecker() {}",
-            "}")
-        .doTest();
-  }
 }

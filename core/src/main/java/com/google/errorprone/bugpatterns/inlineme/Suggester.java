@@ -49,7 +49,7 @@ public final class Suggester extends BugChecker implements MethodTreeMatcher {
   private final String inlineMe;
 
   @Inject
-  public Suggester(ErrorProneFlags errorProneFlags) {
+  Suggester(ErrorProneFlags errorProneFlags) {
     inlineMe =
         errorProneFlags
             .get("InlineMe:annotation")

@@ -60,7 +60,7 @@ public class ImmutableAnnotationChecker extends BugChecker implements ClassTreeM
   private final WellKnownMutability wellKnownMutability;
 
   @Inject
-  public ImmutableAnnotationChecker(WellKnownMutability wellKnownMutability) {
+  ImmutableAnnotationChecker(WellKnownMutability wellKnownMutability) {
     this.wellKnownMutability = wellKnownMutability;
   }
 

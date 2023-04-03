@@ -59,7 +59,7 @@ public final class AlreadyChecked extends BugChecker implements CompilationUnitT
   private final ConstantExpressions constantExpressions;
 
   @Inject
-  public AlreadyChecked(ConstantExpressions constantExpressions) {
+  AlreadyChecked(ConstantExpressions constantExpressions) {
     this.constantExpressions = constantExpressions;
   }
 

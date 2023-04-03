@@ -65,7 +65,7 @@ public class AndroidJdkLibsChecker extends ApiDiffChecker {
   private final boolean allowJava8;
 
   @Inject
-  public AndroidJdkLibsChecker(ErrorProneFlags flags) {
+  AndroidJdkLibsChecker(ErrorProneFlags flags) {
     this(flags.getBoolean("Android:Java8Libs").orElse(false));
   }
 

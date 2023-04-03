@@ -68,7 +68,7 @@ public final class ParameterMissingNullable extends BugChecker
   private final boolean beingConservative;
 
   @Inject
-  public ParameterMissingNullable(ErrorProneFlags flags) {
+  ParameterMissingNullable(ErrorProneFlags flags) {
     this.beingConservative = nullnessChecksShouldBeConservative(flags);
   }
 

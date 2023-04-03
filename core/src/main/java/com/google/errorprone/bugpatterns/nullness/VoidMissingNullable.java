@@ -64,7 +64,7 @@ public class VoidMissingNullable extends BugChecker
   private final boolean beingConservative;
 
   @Inject
-  public VoidMissingNullable(ErrorProneFlags flags) {
+  VoidMissingNullable(ErrorProneFlags flags) {
     this.beingConservative = nullnessChecksShouldBeConservative(flags);
   }
 

@@ -75,7 +75,7 @@ public class CollectionIncompatibleType extends BugChecker
   private final TypeCompatibilityUtils typeCompatibilityUtils;
 
   @Inject
-  public CollectionIncompatibleType(ErrorProneFlags flags) {
+  CollectionIncompatibleType(ErrorProneFlags flags) {
     this.fixType =
         flags.getEnum("CollectionIncompatibleType:FixType", FixType.class).orElse(FixType.NONE);
     this.typeCompatibilityUtils = TypeCompatibilityUtils.fromFlags(flags);

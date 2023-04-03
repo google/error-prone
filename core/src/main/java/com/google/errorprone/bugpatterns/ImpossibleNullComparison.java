@@ -147,7 +147,7 @@ public final class ImpossibleNullComparison extends BugChecker
   private final boolean matchOptionalAndMultimap;
 
   @Inject
-  public ImpossibleNullComparison(ErrorProneFlags flags) {
+  ImpossibleNullComparison(ErrorProneFlags flags) {
     this.matchTestAssertions =
         flags.getBoolean("ProtoFieldNullComparison:MatchTestAssertions").orElse(true);
     this.matchOptionalAndMultimap =

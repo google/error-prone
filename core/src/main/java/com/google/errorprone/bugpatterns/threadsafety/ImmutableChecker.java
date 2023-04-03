@@ -103,7 +103,7 @@ public class ImmutableChecker extends BugChecker
   private final ImmutableSet<String> immutableAnnotations;
 
   @Inject
-  public ImmutableChecker(WellKnownMutability wellKnownMutability) {
+  ImmutableChecker(WellKnownMutability wellKnownMutability) {
     this(wellKnownMutability, ImmutableSet.of(Immutable.class.getName()));
   }
 

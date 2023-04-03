@@ -59,7 +59,7 @@ public final class Validator extends BugChecker implements MethodTreeMatcher {
   private final boolean cleanupInlineMes;
 
   @Inject
-  public Validator(ErrorProneFlags flags) {
+  Validator(ErrorProneFlags flags) {
     this.cleanupInlineMes = flags.getBoolean(CLEANUP_INLINE_ME_FLAG).orElse(false);
   }
 

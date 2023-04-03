@@ -60,7 +60,7 @@ public final class WrongOneof extends BugChecker implements SwitchTreeMatcher {
   private final ConstantExpressions constantExpressions;
 
   @Inject
-  public WrongOneof(ConstantExpressions constantExpressions) {
+  WrongOneof(ConstantExpressions constantExpressions) {
     this.constantExpressions = constantExpressions;
   }
 
