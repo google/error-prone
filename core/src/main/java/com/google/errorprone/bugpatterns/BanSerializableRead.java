@@ -66,7 +66,22 @@ public final class BanSerializableRead extends BugChecker implements MethodInvoc
 
               // because in the next part we exempt readObject functions, here we
               // check for calls to those functions
-              instanceMethod().onDescendantOf("java.io.Serializable").named("readObject")),
+              instanceMethod().onDescendantOf("java.io.Serializable").named("readObject"),
+
+              // we need to ban java.io.ObjectInput.readObject too, but most of the time it's called
+              // inside java.io.Externalizable.readExternal. Also ban direct calls of readExternal,
+              // unless it's inside another readExternal
+              allOf(
+                  anyOf(
+                      instanceMethod().onDescendantOf("java.io.ObjectInput").named("readObject"),
+                      instanceMethod()
+                          .onDescendantOf("java.io.Externalizable")
+                          .named("readExternal")),
+                  // skip banning things inside readExternal implementation
+                  not(
+                      allOf(
+                          enclosingMethod(methodIsNamed("readExternal")),
+                          enclosingClass(isSubtypeOf("java.io.Externalizable")))))),
 
           // Java lets you override or add to the default deserialization behaviour
           // by defining a 'readObject' on your class. In this case, it's super common
