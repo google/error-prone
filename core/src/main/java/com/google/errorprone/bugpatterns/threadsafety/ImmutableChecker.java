@@ -214,7 +214,8 @@ public class ImmutableChecker extends BugChecker
   }
 
   private ImmutableAnalysis createImmutableAnalysis(VisitorState state) {
-    return new ImmutableAnalysis(this, state, wellKnownMutability, immutableAnnotations);
+    return new ImmutableAnalysis(
+        this::isSuppressed, state, wellKnownMutability, immutableAnnotations);
   }
 
   private void checkInvocation(

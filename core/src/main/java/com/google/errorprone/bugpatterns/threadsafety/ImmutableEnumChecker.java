@@ -84,7 +84,10 @@ public class ImmutableEnumChecker extends BugChecker implements ClassTreeMatcher
 
     Violation info =
         new ImmutableAnalysis(
-                this, state, wellKnownMutability, ImmutableSet.of(Immutable.class.getName()))
+                this::isSuppressed,
+                state,
+                wellKnownMutability,
+                ImmutableSet.of(Immutable.class.getName()))
             .checkForImmutability(
                 Optional.of(tree), ImmutableSet.of(), getType(tree), this::describe);
 
