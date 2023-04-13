@@ -15,7 +15,7 @@
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9};
+<script type="text/javascript">var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -167,6 +167,16 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </td>
 </tr>
 <tr class="alt-color" id="i8">
+<td class="col-first"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html" title="class or interface in java.util.stream" class="external-link">Stream</a>&lt;com.sun.tools.javac.code.Attribute.TypeCompound&gt;</code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getTopLevelTypeAttributes(com.sun.tools.javac.code.Symbol)">getTopLevelTypeAttributes</a></span>&#8203;(com.sun.tools.javac.code.Symbol&nbsp;sym)</code></th>
+<td class="col-last">
+<div class="block">Returns "top-level" type annotations of the given symbol, including:
+
+ 
+   Type annotations of the return type of a method.</div>
+</td>
+</tr>
+<tr class="row-color" id="i9">
 <td class="col-first"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;com.sun.tools.javac.code.Attribute&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getValue(com.sun.tools.javac.code.Attribute.Compound,java.lang.String)">getValue</a></span>&#8203;(com.sun.tools.javac.code.Attribute.Compound&nbsp;attribute,
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name)</code></th>
@@ -208,6 +218,22 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
  <p>One might expect this to be equivalent to information returned by <code>Type.getAnnotationMirrors()</code>, but javac doesn't associate type
  annotation information with types for symbols completed from class files, so that approach
  doesn't work across compilation boundaries.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getTopLevelTypeAttributes(com.sun.tools.javac.code.Symbol)">
+<h3>getTopLevelTypeAttributes</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html" title="class or interface in java.util.stream" class="external-link">Stream</a>&lt;com.sun.tools.javac.code.Attribute.TypeCompound&gt;</span>&nbsp;<span class="member-name">getTopLevelTypeAttributes</span>&#8203;(<span class="parameters">com.sun.tools.javac.code.Symbol&nbsp;sym)</span></div>
+<div class="block">Returns "top-level" type annotations of the given symbol, including:
+
+ <ul>
+   <li>Type annotations of the return type of a method.
+   <li>Type annotations on the type of a formal parameter or field.
+ </ul>
+
+ <p>These annotations are not always included in those returned by <code>Type.getAnnotationMirrors()</code> because javac doesn't associate type
+ annotation information with types for symbols completed from class files. These type
+ annotations won't be included when the symbol is not in the current compilation.</div>
 </section>
 </li>
 <li>
