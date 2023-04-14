@@ -282,6 +282,7 @@ public final class WellKnownMutability implements ThreadSafety.KnownTypes {
         .add("kotlin.Unit")
         .add("kotlin.Pair", "A", "B")
         .add("kotlin.Triple", "A", "B", "C")
+        .add("kotlin.time.Duration")
         .add("org.threeten.bp.Duration")
         .add("org.threeten.bp.Instant")
         .add("org.threeten.bp.LocalDate")
