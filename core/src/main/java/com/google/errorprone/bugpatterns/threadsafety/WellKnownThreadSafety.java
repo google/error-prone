@@ -169,6 +169,7 @@ public final class WellKnownThreadSafety implements ThreadSafety.KnownTypes {
             .add("com.google.common.util.concurrent.ListeningScheduledExecutorService")
             .add("com.google.common.util.concurrent.RateLimiter")
             .add("com.google.common.util.concurrent.RateObserver")
+            .add("com.google.common.util.concurrent.SettableFuture", "V")
             .add("com.google.common.util.concurrent.Striped", "L")
             .add("com.google.common.cache.LoadingCache", "K", "V")
             .add("com.google.common.cache.AsyncLoadingCache", "K", "V")
