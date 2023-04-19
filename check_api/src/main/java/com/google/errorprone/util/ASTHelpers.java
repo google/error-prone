@@ -43,6 +43,7 @@ import com.google.common.collect.SetMultimap;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Streams;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.annotations.InlineMe;
 import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
 import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnalysis;
 import com.google.errorprone.matchers.JUnitMatchers;
@@ -856,7 +857,14 @@ public class ASTHelpers {
    * Check for the presence of an annotation, considering annotation inheritance.
    *
    * @return true if the symbol is annotated with given type.
+   * @deprecated prefer {@link #hasAnnotation(Symbol, String, VisitorState)} to avoid needing a
+   *     runtime dependency on the annotation class, and to prevent issues if there is skew between
+   *     the definition of the annotation on the runtime and compile-time classpaths
    */
+  @InlineMe(
+      replacement = "ASTHelpers.hasAnnotation(sym, annotationClass.getName(), state)",
+      imports = {"com.google.errorprone.util.ASTHelpers"})
+  @Deprecated
   public static boolean hasAnnotation(
       Symbol sym, Class<? extends Annotation> annotationClass, VisitorState state) {
     return hasAnnotation(sym, annotationClass.getName(), state);
@@ -878,7 +886,14 @@ public class ASTHelpers {
    * Check for the presence of an annotation, considering annotation inheritance.
    *
    * @return true if the tree is annotated with given type.
+   * @deprecated prefer {@link #hasAnnotation(Symbol, String, VisitorState)} to avoid needing a
+   *     runtime dependency on the annotation class, and to prevent issues if there is skew between
+   *     the definition of the annotation on the runtime and compile-time classpaths
    */
+  @InlineMe(
+      replacement = "ASTHelpers.hasAnnotation(tree, annotationClass.getName(), state)",
+      imports = {"com.google.errorprone.util.ASTHelpers"})
+  @Deprecated
   public static boolean hasAnnotation(
       Tree tree, Class<? extends Annotation> annotationClass, VisitorState state) {
     return hasAnnotation(tree, annotationClass.getName(), state);
