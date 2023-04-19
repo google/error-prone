@@ -40,6 +40,9 @@ import java.util.Arrays;
  */
 @AutoValue
 abstract class UEnhancedForLoop extends USimpleStatement implements EnhancedForLoopTree {
+
+  private static final long serialVersionUID = 0;
+
   public static UEnhancedForLoop create(
       UVariableDecl variable, UExpression elements, UStatement statement) {
     // On JDK 20 and above the `EnhancedForLoopTree` interface contains a additional method
