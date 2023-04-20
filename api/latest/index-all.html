@@ -5556,7 +5556,11 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/util/ASTHelpers.html#hasAnnotation(com.sun.source.tree.Tree,java.lang.Class,com.google.errorprone.VisitorState)">hasAnnotation(Tree, Class&lt;? extends Annotation&gt;, VisitorState)</a></span> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
 <dd>
-<div class="block">Check for the presence of an annotation, considering annotation inheritance.</div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">prefer <a href="com/google/errorprone/util/ASTHelpers.html#hasAnnotation(com.sun.tools.javac.code.Symbol,java.lang.String,com.google.errorprone.VisitorState)"><code>ASTHelpers.hasAnnotation(Symbol, String, VisitorState)</code></a> to avoid needing a
+     runtime dependency on the annotation class, and to prevent issues if there is skew between
+     the definition of the annotation on the runtime and compile-time classpaths</div>
+</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/util/ASTHelpers.html#hasAnnotation(com.sun.source.tree.Tree,java.lang.String,com.google.errorprone.VisitorState)">hasAnnotation(Tree, String, VisitorState)</a></span> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
 <dd>
@@ -5564,7 +5568,11 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/util/ASTHelpers.html#hasAnnotation(com.sun.tools.javac.code.Symbol,java.lang.Class,com.google.errorprone.VisitorState)">hasAnnotation(Symbol, Class&lt;? extends Annotation&gt;, VisitorState)</a></span> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
 <dd>
-<div class="block">Check for the presence of an annotation, considering annotation inheritance.</div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">prefer <a href="com/google/errorprone/util/ASTHelpers.html#hasAnnotation(com.sun.tools.javac.code.Symbol,java.lang.String,com.google.errorprone.VisitorState)"><code>ASTHelpers.hasAnnotation(Symbol, String, VisitorState)</code></a> to avoid needing a
+     runtime dependency on the annotation class, and to prevent issues if there is skew between
+     the definition of the annotation on the runtime and compile-time classpaths</div>
+</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/util/ASTHelpers.html#hasAnnotation(com.sun.tools.javac.code.Symbol,java.lang.String,com.google.errorprone.VisitorState)">hasAnnotation(Symbol, String, VisitorState)</a></span> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
 <dd>
