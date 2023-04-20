@@ -543,4 +543,66 @@ public final class AnnotationPositionTest {
         .expectUnchanged()
         .doTest(TEXT_MATCH);
   }
+
+  @Test
+  public void interspersedJavadoc_enum() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java", //
+            "enum Test {",
+            "  @NonTypeUse",
+            "  /** Javadoc! */",
+            "  ONE;",
+            "}")
+        .addOutputLines(
+            "Test.java", //
+            "enum Test {",
+            "  /** Javadoc! */",
+            "  @NonTypeUse",
+            "  ONE;",
+            "}")
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
+  public void interspersedJavadoc_variableNoModifiers() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java", //
+            "class Test {",
+            "  @NonTypeUse",
+            "  /** Javadoc! */",
+            "  int x;",
+            "}")
+        .addOutputLines(
+            "Test.java", //
+            "class Test {",
+            "  /** Javadoc! */",
+            "  @NonTypeUse",
+            "  int x;",
+            "}")
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
+  public void variable_genericType_modifiers() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.List;",
+            "class Test {",
+            "  @TypeUse private List<?> x;",
+            "  @EitherUse private List<?> y;",
+            "  @NonTypeUse private List<?> z;",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import java.util.List;",
+            "class Test {",
+            "  private @TypeUse List<?> x;",
+            "  private @EitherUse List<?> y;",
+            "  @NonTypeUse private List<?> z;",
+            "}")
+        .doTest(TEXT_MATCH);
+  }
 }
