@@ -73,13 +73,44 @@ loadScripts(document, 'script');</script>
 <pre><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Retention.html" title="class or interface in java.lang.annotation" class="external-link">@Retention</a>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/RetentionPolicy.html#CLASS" title="class or interface in java.lang.annotation" class="external-link">CLASS</a>)
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Target.html" title="class or interface in java.lang.annotation" class="external-link">@Target</a>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/ElementType.html#METHOD" title="class or interface in java.lang.annotation" class="external-link">METHOD</a>)
 public @interface <span class="type-name-label">DoNotCall</span></pre>
-<div class="block">The method to which this annotation is applied cannot be called.
+<div class="block">Indicates that the annotated method should not be called under any normal circumstances, yet is
+ either <i>impossible</i> to remove, or <i>should not</i> ever be removed. Example:
 
- <p>The annotation is applied to methods that are required to satisfy the contract of an
- interface, but that are not supported. One example is the implementation of <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html#add(E)" title="class or interface in java.util" class="external-link"><code>Collection.add(E)</code></a> in an immutable collection implementation.
+ <pre><code>
+ public class ImmutableList&lt;E&gt; implements List&lt;E&gt; {
+   @DoNotCall("guaranteed to throw an exception")
+   @Override public add(E e) {
+     throw new UnsupportedOperationException();
+   }
+ }
+ </code></pre>
 
- <p>Marking methods annotated with <code>@DoNotCall</code> as <code>@Deprecated</code> is recommended, since
- it provides IDE users with more immediate feedback.</div>
+ By the demands of the <code>List</code> interface, this method can never be removed. However, since it
+ should always throw an exception, there can be no valid reason to call it except in the rarest of
+ circumstances. Although this information can only benefit users who have a reference of type
+ <code>ImmutableList</code> (not <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link"><code>List</code></a>), it's a good start.
+
+ <p>If the typical caller's best remedy is to "inline" the method, <a href="InlineMe.html" title="annotation in com.google.errorprone.annotations"><code>InlineMe</code></a> is probably a
+ better option; read there for more information. Using both annotations together is probably
+ unnecessary.
+
+ <p><b>Note on testing:</b> A <code>@DoNotCall</code> method should still have unit tests.
+
+ <h2><code>@DoNotCall</code> and deprecation</h2>
+
+ <p>Deprecation may feel inappropriate or misleading in cases where there is no intention to ever
+ remove the method. It might create the impression of a "blemish" on your API; something that
+ should be fixed. Moreover, it's generally hard to enforce deprecation warnings as strongly as a
+ <code>@DoNotCall</code> violation should be.
+
+ <p>But, when choosing the <code>@DoNotCall</code> option, consider adding <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link"><code>Deprecated</code></a> as well
+ anyway, so that any tools that don't support <code>@DoNotCall</code> can still do something reasonable
+ to discourage usage. This practice does have some cost; for example, suppression would require
+ <code>@SuppressWarnings({"DoNotCall", "deprecation"})</code>.
+
+ <h2>Tool support</h2>
+
+ Error Prone supports this annotation via its <a href="https://errorprone.info/bugpattern/DoNotCall">DoNotCall</a> pattern.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
