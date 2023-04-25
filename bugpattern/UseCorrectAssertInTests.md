@@ -4,7 +4,7 @@ summary: Java assert is used in testing code. For testing purposes, prefer using
   assertions.
 layout: bugpattern
 tags: ''
-severity: WARNING
+severity: ERROR
 ---
 
 <!--

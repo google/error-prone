@@ -25,7 +25,7 @@ proto3 however does not generate `hasField()` methods for primitive types
 (including `string` and `bytes`). In those cases you will need to wrap your
 field in `google.protobuf.StringValue` or similar.
 
-NOTE: This check applies to normal (server) protos and Lite protos. The
+NOTE - protos and Lite protos. The
 deprecated nano runtime does produce objects which use `null` values to indicate
 field absence.
 
