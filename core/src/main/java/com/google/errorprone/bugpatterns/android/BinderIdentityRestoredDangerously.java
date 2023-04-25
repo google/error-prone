@@ -62,7 +62,7 @@ public class BinderIdentityRestoredDangerously extends BugChecker
     // if both Binder.clearCallingIdentity() and Binder.restoreCallingIdentity() were in the same
     // finally {} block. But in practice it should work well for the large majority of existing
     // code.
-    // TODO: Also detect when a clearCallingIdentity() call is not followed by
+    // TODO - call is not followed by
     // restoreCallingIdentity().
     TryTree enclosingTry = findEnclosingNode(state.getPath(), TryTree.class);
     if (enclosingTry == null) {

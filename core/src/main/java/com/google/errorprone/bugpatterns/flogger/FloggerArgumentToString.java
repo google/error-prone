@@ -314,7 +314,7 @@ public class FloggerArgumentToString extends BugChecker implements MethodInvocat
     StringBuilder sb = new StringBuilder();
     int idx = 0;
     boolean fixed = false;
-    // NOTE: Not only must we find() a next term, the match must start at our current position
+    // NOTE - a next term, the match must start at our current position
     // otherwise we can unexpectedly match things like "%%s" (by skipping the first '%').
     while (matcher.find() && matcher.start() == start) {
       String term = matcher.group(1);
