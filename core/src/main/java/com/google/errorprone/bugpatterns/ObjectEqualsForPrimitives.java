@@ -56,7 +56,7 @@ public class ObjectEqualsForPrimitives extends BugChecker implements MethodInvoc
     String arg1 = state.getSourceForNode(tree.getArguments().get(0));
     String arg2 = state.getSourceForNode(tree.getArguments().get(1));
 
-    // TODO -
+    // TODO: Rewrite to a != b if the original code has a negation (e.g. !Object.equals)
     Fix fix = SuggestedFix.builder().replace(tree, "(" + arg1 + " == " + arg2 + ")").build();
     return describeMatch(tree, fix);
   }

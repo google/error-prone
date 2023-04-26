@@ -39,8 +39,9 @@ import javax.lang.model.element.Modifier;
 @BugPattern(
     name = "InlineMeSuggester",
     summary =
-        "This deprecated API looks inlineable. If you'd like the body of the API to be inlined to"
-            + " its callers, please annotate it with @InlineMe.",
+        "This deprecated API looks inlineable. If you'd like the body of the API to be"
+            + " automatically inlined to its callers, please annotate it with @InlineMe."
+            + " NOTE: the suggested fix makes the method final if it was not already.",
     severity = WARNING)
 public final class Suggester extends BugChecker implements MethodTreeMatcher {
   private static final String INLINE_ME = "com.google.errorprone.annotations.InlineMe";
