@@ -506,6 +506,7 @@ import com.google.errorprone.bugpatterns.javadoc.InvalidThrows;
 import com.google.errorprone.bugpatterns.javadoc.InvalidThrowsLink;
 import com.google.errorprone.bugpatterns.javadoc.MalformedInlineTag;
 import com.google.errorprone.bugpatterns.javadoc.MissingSummary;
+import com.google.errorprone.bugpatterns.javadoc.NotJavadoc;
 import com.google.errorprone.bugpatterns.javadoc.ReturnFromVoid;
 import com.google.errorprone.bugpatterns.javadoc.UnescapedEntity;
 import com.google.errorprone.bugpatterns.javadoc.UnrecognisedJavadocTag;
@@ -949,6 +950,7 @@ public class BuiltInCheckerSuppliers {
           NonAtomicVolatileUpdate.class,
           NonCanonicalType.class,
           NonOverridingEquals.class,
+          NotJavadoc.class,
           NullOptional.class,
           NullableConstructor.class,
           NullablePrimitive.class,
