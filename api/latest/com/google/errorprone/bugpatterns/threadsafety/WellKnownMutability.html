@@ -47,7 +47,7 @@ loadScripts(document, 'script');</script>
 <div>
 <ul class="sub-nav-list">
 <li>Summary:&nbsp;</li>
-<li>Nested&nbsp;|&nbsp;</li>
+<li><a href="#nested.class.summary">Nested</a>&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li>Constr&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
@@ -93,6 +93,15 @@ implements <a href="ThreadSafety.KnownTypes.html" title="interface in com.google
 </section>
 <section class="summary">
 <ul class="summary-list">
+<!-- ======== NESTED CLASS SUMMARY ======== -->
+<li>
+<section class="nested-class-summary" id="nested.class.summary">
+<h2>Nested Class Summary</h2>
+<div class="inherited-list">
+<h2 id="nested.classes.inherited.from.class.com.google.errorprone.bugpatterns.threadsafety.ThreadSafety.KnownTypes">Nested classes/interfaces inherited from interface&nbsp;com.google.errorprone.bugpatterns.threadsafety.<a href="ThreadSafety.KnownTypes.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.KnownTypes</a></h2>
+<code><a href="ThreadSafety.KnownTypes.MapBuilder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.KnownTypes.MapBuilder</a></code></div>
+</section>
+</li>
 <!-- ========== METHOD SUMMARY =========== -->
 <li>
 <section class="method-summary" id="method.summary">
@@ -115,7 +124,7 @@ implements <a href="ThreadSafety.KnownTypes.html" title="interface in com.google
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="row-color" id="i1">
-<td class="col-first"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,&#8203;<a href="AnnotationInfo.html" title="class in com.google.errorprone.bugpatterns.threadsafety">AnnotationInfo</a>&gt;</code></td>
+<td class="col-first"><code>com.google.common.collect.ImmutableMap&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,&#8203;<a href="AnnotationInfo.html" title="class in com.google.errorprone.bugpatterns.threadsafety">AnnotationInfo</a>&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getKnownImmutableClasses()">getKnownImmutableClasses</a></span>()</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
@@ -125,7 +134,7 @@ implements <a href="ThreadSafety.KnownTypes.html" title="interface in com.google
 <td class="col-last">&nbsp;</td>
 </tr>
 <tr class="row-color" id="i3">
-<td class="col-first"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,&#8203;<a href="AnnotationInfo.html" title="class in com.google.errorprone.bugpatterns.threadsafety">AnnotationInfo</a>&gt;</code></td>
+<td class="col-first"><code>com.google.common.collect.ImmutableMap&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,&#8203;<a href="AnnotationInfo.html" title="class in com.google.errorprone.bugpatterns.threadsafety">AnnotationInfo</a>&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getKnownSafeClasses()">getKnownSafeClasses</a></span>()</code></th>
 <td class="col-last">
 <div class="block"><span class="deprecated-label">Deprecated.</span>
@@ -135,7 +144,7 @@ implements <a href="ThreadSafety.KnownTypes.html" title="interface in com.google
 </td>
 </tr>
 <tr class="alt-color" id="i4">
-<td class="col-first"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></td>
+<td class="col-first"><code>com.google.common.collect.ImmutableSet&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#getKnownUnsafeClasses()">getKnownUnsafeClasses</a></span>()</code></th>
 <td class="col-last">
 <div class="block"><span class="deprecated-label">Deprecated.</span>
@@ -196,14 +205,14 @@ com.sun.tools.javac.code.Type&nbsp;type)</code></th>
 <li>
 <section class="detail" id="getKnownImmutableClasses()">
 <h3>getKnownImmutableClasses</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,&#8203;<a href="AnnotationInfo.html" title="class in com.google.errorprone.bugpatterns.threadsafety">AnnotationInfo</a>&gt;</span>&nbsp;<span class="member-name">getKnownImmutableClasses</span>()</div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableMap&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,&#8203;<a href="AnnotationInfo.html" title="class in com.google.errorprone.bugpatterns.threadsafety">AnnotationInfo</a>&gt;</span>&nbsp;<span class="member-name">getKnownImmutableClasses</span>()</div>
 </section>
 </li>
 <li>
 <section class="detail" id="getKnownSafeClasses()">
 <h3>getKnownSafeClasses</h3>
 <div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,&#8203;<a href="AnnotationInfo.html" title="class in com.google.errorprone.bugpatterns.threadsafety">AnnotationInfo</a>&gt;</span>&nbsp;<span class="member-name">getKnownSafeClasses</span>()</div>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableMap&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,&#8203;<a href="AnnotationInfo.html" title="class in com.google.errorprone.bugpatterns.threadsafety">AnnotationInfo</a>&gt;</span>&nbsp;<span class="member-name">getKnownSafeClasses</span>()</div>
 <div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
 <div class="deprecation-comment"><a href="#getKnownImmutableClasses()"><code>getKnownImmutableClasses()</code></a> is clearer if you're dealing with this specific
      class.</div>
@@ -226,7 +235,7 @@ com.sun.tools.javac.code.Type&nbsp;type)</code></th>
 <section class="detail" id="getKnownUnsafeClasses()">
 <h3>getKnownUnsafeClasses</h3>
 <div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="member-name">getKnownUnsafeClasses</span>()</div>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableSet&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="member-name">getKnownUnsafeClasses</span>()</div>
 <div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
 <div class="deprecation-comment"><a href="#getKnownMutableClasses()"><code>getKnownMutableClasses()</code></a> is clearer if you're dealing with this specific
      class.</div>
@@ -291,7 +300,7 @@ com.sun.tools.javac.code.Type&nbsp;type)</span></div>
 <div>
 <ul class="sub-nav-list">
 <li>Summary:&nbsp;</li>
-<li>Nested&nbsp;|&nbsp;</li>
+<li><a href="#nested.class.summary">Nested</a>&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li>Constr&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
