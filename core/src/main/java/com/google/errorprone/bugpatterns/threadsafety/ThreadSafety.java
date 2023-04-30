@@ -21,6 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.errorprone.util.ASTHelpers.isStatic;
 
+import com.google.async.threadsafety.annotations.ThreadSafe;
 import com.google.auto.value.AutoValue;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
@@ -33,6 +34,7 @@ import com.google.common.collect.Sets.SetView;
 import com.google.common.collect.Streams;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
+import com.google.errorprone.annotations.Immutable;
 import com.google.errorprone.bugpatterns.CanBeStaticAnalyzer;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
@@ -87,6 +89,29 @@ public final class ThreadSafety {
 
   public static Builder builder() {
     return new Builder();
+  }
+
+  public static ThreadSafety.Builder threadSafeBuilder(
+      WellKnownThreadSafety wellKnownThreadSafety) {
+    return ThreadSafety.builder()
+        .setPurpose(Purpose.FOR_THREAD_SAFE_CHECKER)
+        .knownTypes(wellKnownThreadSafety)
+        .markerAnnotations(
+            ImmutableSet.of(
+                ThreadSafe.class.getName(), "com.google.errorprone.annotations.ThreadSafe"))
+        .acceptedAnnotations(ImmutableSet.of(Immutable.class.getName()))
+        .containerOfAnnotation(
+            ImmutableSet.of(
+                ThreadSafe.Element.class.getName(),
+                "com.google.errorprone.annotations.ThreadSafe$Element"))
+        .typeParameterAnnotation(
+            ImmutableSet.of(
+                ThreadSafe.TypeParameter.class.getName(),
+                "com.google.errorprone.annotations.ThreadSafe$TypeParameter"))
+        .suppressAnnotation(
+            ImmutableSet.of(
+                ThreadSafe.Suppress.class.getName(),
+                "com.google.errorprone.annotations.ThreadSafe$Suppress"));
   }
 
   /**
