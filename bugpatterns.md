@@ -1326,6 +1326,9 @@ A static variable or method should be qualified with a class name, not expressio
 __[SystemExitOutsideMain](bugpattern/SystemExitOutsideMain)__<br>
 Code that contains System.exit() is untestable.
 
+__[ThreadSafe](bugpattern/ThreadSafe)__<br>
+Type declaration annotated with @ThreadSafe is not thread safe
+
 ## Experimental : WARNING
 
 __[AnnotationPosition](bugpattern/AnnotationPosition)__<br>

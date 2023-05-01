@@ -15,7 +15,7 @@
 <script type="text/javascript" src="../../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
-<script type="text/javascript">var data = {"i0":9,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10};
+<script type="text/javascript">var data = {"i0":9,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":9,"i12":10,"i13":10};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "alt-color";
 var rowColor = "row-color";
@@ -241,6 +241,11 @@ com.sun.tools.javac.code.Type.ClassType&nbsp;type)</code></th>
 </td>
 </tr>
 <tr class="row-color" id="i11">
+<td class="col-first"><code>static <a href="ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a></code></td>
+<th class="col-second" scope="row"><code><span class="member-name-link"><a href="#threadSafeBuilder(com.google.errorprone.bugpatterns.threadsafety.WellKnownThreadSafety)">threadSafeBuilder</a></span>&#8203;(<a href="WellKnownThreadSafety.html" title="class in com.google.errorprone.bugpatterns.threadsafety">WellKnownThreadSafety</a>&nbsp;wellKnownThreadSafety)</code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="alt-color" id="i12">
 <td class="col-first"><code><a href="ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a></code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#threadSafeInstantiation(java.util.Set,com.google.errorprone.bugpatterns.threadsafety.AnnotationInfo,com.sun.tools.javac.code.Type)">threadSafeInstantiation</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;containerTypeParameters,
 <a href="AnnotationInfo.html" title="class in com.google.errorprone.bugpatterns.threadsafety">AnnotationInfo</a>&nbsp;annotation,
@@ -250,7 +255,7 @@ com.sun.tools.javac.code.Type&nbsp;type)</code></th>
  type arguments where required by its annotation's containerOf element.</div>
 </td>
 </tr>
-<tr class="alt-color" id="i12">
+<tr class="row-color" id="i13">
 <td class="col-first"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></td>
 <th class="col-second" scope="row"><code><span class="member-name-link"><a href="#threadSafeTypeParametersInScope(com.sun.tools.javac.code.Symbol)">threadSafeTypeParametersInScope</a></span>&#8203;(com.sun.tools.javac.code.Symbol&nbsp;sym)</code></th>
 <td class="col-last">
@@ -279,6 +284,12 @@ com.sun.tools.javac.code.Type&nbsp;type)</code></th>
 <section class="detail" id="builder()">
 <h3>builder</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a></span>&nbsp;<span class="member-name">builder</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="threadSafeBuilder(com.google.errorprone.bugpatterns.threadsafety.WellKnownThreadSafety)">
+<h3>threadSafeBuilder</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a></span>&nbsp;<span class="member-name">threadSafeBuilder</span>&#8203;(<span class="parameters"><a href="WellKnownThreadSafety.html" title="class in com.google.errorprone.bugpatterns.threadsafety">WellKnownThreadSafety</a>&nbsp;wellKnownThreadSafety)</span></div>
 </section>
 </li>
 <li>

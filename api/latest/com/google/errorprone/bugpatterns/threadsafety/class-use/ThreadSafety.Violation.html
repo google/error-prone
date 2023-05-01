@@ -111,21 +111,42 @@ com.sun.tools.javac.code.Type.ClassType&nbsp;type,
 </tr>
 <tr class="alt-color">
 <td class="col-first"><code><a href="../ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">ThreadSafeAnalysis.</span><code><span class="member-name-link"><a href="../ThreadSafeAnalysis.html#checkForThreadSafety(java.util.Optional,com.google.common.collect.ImmutableSet,com.sun.tools.javac.code.Type.ClassType)">checkForThreadSafety</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;com.sun.source.tree.ClassTree&gt;&nbsp;tree,
+com.google.common.collect.ImmutableSet&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;threadSafeTypeParams,
+com.sun.tools.javac.code.Type.ClassType&nbsp;type)</code></th>
+<td class="col-last">
+<div class="block">Check that an <code>@ThreadSafe</code>-annotated class:
+
+ 
+   does not declare or inherit any fields which are not thread safe,
+   any threadsafe supertypes are instantiated with threadsafe type arguments as required by
+       their containerOf spec, and
+   any enclosing instances are threadsafe.</div>
+</td>
+</tr>
+<tr class="row-color">
+<td class="col-first"><code><a href="../ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a></code></td>
 <th class="col-second" scope="row"><span class="type-name-label">ThreadSafety.</span><code><span class="member-name-link"><a href="../ThreadSafety.html#checkInstantiation(com.sun.tools.javac.code.Symbol.TypeVariableSymbol,java.util.Collection)">checkInstantiation</a></span>&#8203;(com.sun.tools.javac.code.Symbol.TypeVariableSymbol&nbsp;typeParameter,
 <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;instantiations)</code></th>
 <td class="col-last">
 <div class="block">Checks that any thread-safe type parameters are instantiated with thread-safe types.</div>
 </td>
 </tr>
-<tr class="row-color">
+<tr class="alt-color">
 <td class="col-first"><code><a href="../ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a></code></td>
 <th class="col-second" scope="row"><span class="type-name-label">ThreadSafety.</span><code><span class="member-name-link"><a href="../ThreadSafety.html#checkInstantiation(java.util.Collection,java.util.Collection)">checkInstantiation</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;com.sun.tools.javac.code.Symbol.TypeVariableSymbol&gt;&nbsp;typeParameters,
 <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;typeArguments)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>
-<tr class="alt-color">
+<tr class="row-color">
 <td class="col-first"><code><a href="../ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a></code></td>
 <th class="col-second" scope="row"><span class="type-name-label">ImmutableAnalysis.</span><code><span class="member-name-link"><a href="../ImmutableAnalysis.html#checkInvocation(com.sun.tools.javac.code.Type,com.sun.tools.javac.code.Symbol)">checkInvocation</a></span>&#8203;(com.sun.tools.javac.code.Type&nbsp;methodType,
+com.sun.tools.javac.code.Symbol&nbsp;symbol)</code></th>
+<td class="col-last">&nbsp;</td>
+</tr>
+<tr class="alt-color">
+<td class="col-first"><code><a href="../ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a></code></td>
+<th class="col-second" scope="row"><span class="type-name-label">ThreadSafeAnalysis.</span><code><span class="member-name-link"><a href="../ThreadSafeAnalysis.html#checkInvocation(com.sun.tools.javac.code.Type,com.sun.tools.javac.code.Symbol)">checkInvocation</a></span>&#8203;(com.sun.tools.javac.code.Type&nbsp;methodType,
 com.sun.tools.javac.code.Symbol&nbsp;symbol)</code></th>
 <td class="col-last">&nbsp;</td>
 </tr>

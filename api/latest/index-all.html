@@ -1772,6 +1772,16 @@ loadScripts(document, 'script');</script>
        their containerOf spec, and
    any enclosing instances are immutable.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafeAnalysis.html#checkForThreadSafety(java.util.Optional,com.google.common.collect.ImmutableSet,com.sun.tools.javac.code.Type.ClassType)">checkForThreadSafety(Optional&lt;ClassTree&gt;, ImmutableSet&lt;String&gt;, Type.ClassType)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafeAnalysis.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafeAnalysis</a></dt>
+<dd>
+<div class="block">Check that an <code>@ThreadSafe</code>-annotated class:
+
+ 
+   does not declare or inherit any fields which are not thread safe,
+   any threadsafe supertypes are instantiated with threadsafe type arguments as required by
+       their containerOf spec, and
+   any enclosing instances are threadsafe.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByChecker.html#checkGuardedAccess(com.sun.source.tree.Tree,com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression,com.google.errorprone.bugpatterns.threadsafety.HeldLockSet,com.google.errorprone.VisitorState)">checkGuardedAccess(Tree, GuardedByExpression, HeldLockSet, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByChecker.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByChecker</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/IllegalGuardedBy.html#checkGuardedBy(boolean,java.lang.String)">checkGuardedBy(boolean, String)</a></span> - Static method in exception com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/IllegalGuardedBy.html" title="class in com.google.errorprone.bugpatterns.threadsafety">IllegalGuardedBy</a></dt>
@@ -1789,6 +1799,8 @@ loadScripts(document, 'script');</script>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#checkInstantiation(java.util.Collection,java.util.Collection)">checkInstantiation(Collection&lt;Symbol.TypeVariableSymbol&gt;, Collection&lt;Type&gt;)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableAnalysis.html#checkInvocation(com.sun.tools.javac.code.Type,com.sun.tools.javac.code.Symbol)">checkInvocation(Type, Symbol)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableAnalysis.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ImmutableAnalysis</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafeAnalysis.html#checkInvocation(com.sun.tools.javac.code.Type,com.sun.tools.javac.code.Symbol)">checkInvocation(Type, Symbol)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafeAnalysis.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafeAnalysis</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#checkInvocation(com.sun.tools.javac.code.Type,com.sun.tools.javac.code.Symbol)">checkInvocation(Type, Symbol)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety</a></dt>
 <dd>
@@ -7820,6 +7832,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableEnumChecker.html#matchClass(com.sun.source.tree.ClassTree,com.google.errorprone.VisitorState)">matchClass(ClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableEnumChecker.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ImmutableEnumChecker</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafeChecker.html#matchClass(com.sun.source.tree.ClassTree,com.google.errorprone.VisitorState)">matchClass(ClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafeChecker.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafeChecker</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/TypeNameShadowing.html#matchClass(com.sun.source.tree.ClassTree,com.google.errorprone.VisitorState)">matchClass(ClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/TypeNameShadowing.html" title="class in com.google.errorprone.bugpatterns">TypeNameShadowing</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/TypeParameterShadowing.html#matchClass(com.sun.source.tree.ClassTree,com.google.errorprone.VisitorState)">matchClass(ClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/TypeParameterShadowing.html" title="class in com.google.errorprone.bugpatterns">TypeParameterShadowing</a></dt>
@@ -8173,6 +8187,8 @@ loadScripts(document, 'script');</script>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByChecker.html#matchMemberReference(com.sun.source.tree.MemberReferenceTree,com.google.errorprone.VisitorState)">matchMemberReference(MemberReferenceTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByChecker.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByChecker</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableChecker.html#matchMemberReference(com.sun.source.tree.MemberReferenceTree,com.google.errorprone.VisitorState)">matchMemberReference(MemberReferenceTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableChecker.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ImmutableChecker</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafeChecker.html#matchMemberReference(com.sun.source.tree.MemberReferenceTree,com.google.errorprone.VisitorState)">matchMemberReference(MemberReferenceTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafeChecker.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafeChecker</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/UnnecessaryMethodReference.html#matchMemberReference(com.sun.source.tree.MemberReferenceTree,com.google.errorprone.VisitorState)">matchMemberReference(MemberReferenceTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/UnnecessaryMethodReference.html" title="class in com.google.errorprone.bugpatterns">UnnecessaryMethodReference</a></dt>
 <dd>&nbsp;</dd>
@@ -8725,6 +8741,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadPriorityCheck.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadPriorityCheck.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadPriorityCheck</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafeChecker.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafeChecker.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafeChecker</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/ThreeLetterTimeZoneID.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ThreeLetterTimeZoneID.html" title="class in com.google.errorprone.bugpatterns">ThreeLetterTimeZoneID</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/ThrowIfUncheckedKnownChecked.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ThrowIfUncheckedKnownChecked.html" title="class in com.google.errorprone.bugpatterns">ThrowIfUncheckedKnownChecked</a></dt>
@@ -8909,6 +8927,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableChecker.html#matchNewClass(com.sun.source.tree.NewClassTree,com.google.errorprone.VisitorState)">matchNewClass(NewClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableChecker.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ImmutableChecker</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafeChecker.html#matchNewClass(com.sun.source.tree.NewClassTree,com.google.errorprone.VisitorState)">matchNewClass(NewClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafeChecker.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafeChecker</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/ThrowSpecificExceptions.html#matchNewClass(com.sun.source.tree.NewClassTree,com.google.errorprone.VisitorState)">matchNewClass(NewClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ThrowSpecificExceptions.html" title="class in com.google.errorprone.bugpatterns">ThrowSpecificExceptions</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/time/DateChecker.html#matchNewClass(com.sun.source.tree.NewClassTree,com.google.errorprone.VisitorState)">matchNewClass(NewClassTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.time.<a href="com/google/errorprone/bugpatterns/time/DateChecker.html" title="class in com.google.errorprone.bugpatterns.time">DateChecker</a></dt>
@@ -9050,6 +9070,8 @@ loadScripts(document, 'script');</script>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/JavaLangClash.html#matchTypeParameter(com.sun.source.tree.TypeParameterTree,com.google.errorprone.VisitorState)">matchTypeParameter(TypeParameterTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/JavaLangClash.html" title="class in com.google.errorprone.bugpatterns">JavaLangClash</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/nullness/ExtendsObject.html#matchTypeParameter(com.sun.source.tree.TypeParameterTree,com.google.errorprone.VisitorState)">matchTypeParameter(TypeParameterTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.nullness.<a href="com/google/errorprone/bugpatterns/nullness/ExtendsObject.html" title="class in com.google.errorprone.bugpatterns.nullness">ExtendsObject</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafeChecker.html#matchTypeParameter(com.sun.source.tree.TypeParameterTree,com.google.errorprone.VisitorState)">matchTypeParameter(TypeParameterTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafeChecker.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafeChecker</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/TypeParameterNaming.html#matchTypeParameter(com.sun.source.tree.TypeParameterTree,com.google.errorprone.VisitorState)">matchTypeParameter(TypeParameterTree, VisitorState)</a></span> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/TypeParameterNaming.html" title="class in com.google.errorprone.bugpatterns">TypeParameterNaming</a></dt>
 <dd>&nbsp;</dd>
@@ -12574,6 +12596,22 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadPriorityCheck.html#%3Cinit%3E()">ThreadPriorityCheck()</a></span> - Constructor for class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadPriorityCheck.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadPriorityCheck</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/annotations/ThreadSafe.html" title="annotation in com.google.errorprone.annotations"><span class="type-name-link">ThreadSafe</span></a> - Annotation Type in <a href="com/google/errorprone/annotations/package-summary.html">com.google.errorprone.annotations</a></dt>
+<dd>
+<div class="block">This annotation indicates that the class/interface it is applied to is thread safe</div>
+</dd>
+<dt><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafeAnalysis.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><span class="type-name-link">ThreadSafeAnalysis</span></a> - Class in <a href="com/google/errorprone/bugpatterns/threadsafety/package-summary.html">com.google.errorprone.bugpatterns.threadsafety</a></dt>
+<dd>
+<div class="block">Analyzes types for deep thread safety.</div>
+</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafeAnalysis.html#%3Cinit%3E(com.google.errorprone.bugpatterns.BugChecker,com.google.errorprone.VisitorState,com.google.errorprone.bugpatterns.threadsafety.WellKnownThreadSafety)">ThreadSafeAnalysis(BugChecker, VisitorState, WellKnownThreadSafety)</a></span> - Constructor for class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafeAnalysis.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafeAnalysis</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#threadSafeBuilder(com.google.errorprone.bugpatterns.threadsafety.WellKnownThreadSafety)">threadSafeBuilder(WellKnownThreadSafety)</a></span> - Static method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafeChecker.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><span class="type-name-link">ThreadSafeChecker</span></a> - Class in <a href="com/google/errorprone/bugpatterns/threadsafety/package-summary.html">com.google.errorprone.bugpatterns.threadsafety</a></dt>
+<dd>
+<div class="block">A <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="com/google/errorprone/BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#threadSafeInstantiation(java.util.Set,com.google.errorprone.bugpatterns.threadsafety.AnnotationInfo,com.sun.tools.javac.code.Type)">threadSafeInstantiation(Set&lt;String&gt;, AnnotationInfo, Type)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety</a></dt>
 <dd>
 <div class="block">Check that a type-use of an <code>@ThreadSafe</code>-annotated type is instantiated with threadsafe
@@ -12604,6 +12642,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">A human-friendly explanation of a thread safety violations.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafeAnalysis.html#threadSafeTypeParametersInScope(com.sun.tools.javac.code.Symbol)">threadSafeTypeParametersInScope(Symbol)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafeAnalysis.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafeAnalysis</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#threadSafeTypeParametersInScope(com.sun.tools.javac.code.Symbol)">threadSafeTypeParametersInScope(Symbol)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety</a></dt>
 <dd>
 <div class="block">Gets the set of in-scope threadsafe type parameters from the containerOf specs on annotations.</div>
