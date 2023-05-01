@@ -33,6 +33,8 @@ import com.google.common.collect.Sets.SetView;
 import com.google.common.collect.Streams;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
+import com.google.errorprone.annotations.Immutable;
+import com.google.errorprone.annotations.ThreadSafe;
 import com.google.errorprone.bugpatterns.CanBeStaticAnalyzer;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
@@ -87,6 +89,17 @@ public final class ThreadSafety {
 
   public static Builder builder() {
     return new Builder();
+  }
+
+  public static ThreadSafety.Builder threadSafeBuilder(
+      WellKnownThreadSafety wellKnownThreadSafety) {
+    ThreadSafety.Builder builder =
+        ThreadSafety.builder()
+            .setPurpose(Purpose.FOR_THREAD_SAFE_CHECKER)
+            .knownTypes(wellKnownThreadSafety)
+            .markerAnnotations(ImmutableSet.of(ThreadSafe.class.getName()))
+            .acceptedAnnotations(ImmutableSet.of(Immutable.class.getName()));
+    return builder;
   }
 
   /**
