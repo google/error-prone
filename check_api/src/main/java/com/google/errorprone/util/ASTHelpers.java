@@ -2547,9 +2547,12 @@ public class ASTHelpers {
   }
 
   public static EnumSet<Flags.Flag> asFlagSet(long flags) {
-    flags &= ~(Flags.ANONCONSTR_BASED | Flags.POTENTIALLY_AMBIGUOUS);
+    flags &= ~(Flags.ANONCONSTR_BASED | POTENTIALLY_AMBIGUOUS);
     return Flags.asFlagSet(flags);
   }
+
+  // Removed in JDK 21 by JDK-8026369
+  public static final long POTENTIALLY_AMBIGUOUS = 1L << 48;
 
   /** Returns true if the given source code contains comments. */
   public static boolean stringContainsComments(CharSequence source, Context context) {
