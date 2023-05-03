@@ -238,7 +238,8 @@ public class CompileTimeConstantChecker extends BugChecker
     if (assignedSymbol == null || assignedSymbol.owner == null) {
       return Description.NO_MATCH;
     }
-    if (assignedSymbol.owner.getKind() != ElementKind.CLASS) {
+    if (assignedSymbol.owner.getKind() != ElementKind.CLASS
+        && assignedSymbol.owner.getKind() != ElementKind.ENUM) {
       return Description.NO_MATCH;
     }
     if (!hasCompileTimeConstantAnnotation(state, assignedSymbol)) {

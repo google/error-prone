@@ -571,6 +571,76 @@ public class CompileTimeConstantCheckerTest {
   }
 
   @Test
+  public void reportsDiagnostic_whenConstantEnumFieldDeclaredWithoutFinal() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.CompileTimeConstant;",
+            "public enum Test {",
+            "  A(\"A\");",
+            "  // BUG: Diagnostic contains: . Did you mean to make 's' final?",
+            "  @CompileTimeConstant String s;",
+            "  Test(@CompileTimeConstant String s) {",
+            "    this.s = s;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void noDiagnostic_whenConstantEnumFieldDeclaredFinal() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.CompileTimeConstant;",
+            "public enum Test {",
+            "  A(\"A\");",
+            "  @CompileTimeConstant final String s;",
+            "  Test(@CompileTimeConstant String s) {",
+            "    this.s = s;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void reportsDiagnostic_whenInitialisingFinalEnumFieldWithNonConstant() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.CompileTimeConstant;",
+            "public enum Test {",
+            "  A(\"A\");",
+            "  @CompileTimeConstant final String s;",
+            "  Test(String s) {",
+            "    // BUG: Diagnostic contains: Non-compile-time constant expression",
+            "    this.s = s;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void noDiagnostic_whenInvokingMethodWithFinalEnumField() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.CompileTimeConstant;",
+            "public enum Test {",
+            "  A(\"A\");",
+            "  @CompileTimeConstant final String s;",
+            "  Test(@CompileTimeConstant String s) {",
+            "    this.s = s;",
+            "  }",
+            "  void invokeCTCMethod() {",
+            "    ctcMethod(s);",
+            "  }",
+            "  void ctcMethod(@CompileTimeConstant String s) {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void nonConstantField_positive() {
     compilationHelper
         .addSourceLines(
