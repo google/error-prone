@@ -14,12 +14,10 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
-
 /**
  * This tests the case where there is a chain of method overrides where the varargs constraint is
- * not met, and the root is a varargs parameter.
- * TODO(cushon): The original implementation tried to be clever and make this consistent, but
- * didn't handle multiple interface inheritance.
+ * not met, and the root is a varargs parameter. TODO(cushon): The original implementation tried to
+ * be clever and make this consistent, but didn't handle multiple interface inheritance.
  *
  * @author cushon@google.com (Liam Miller-Cushon)
  */

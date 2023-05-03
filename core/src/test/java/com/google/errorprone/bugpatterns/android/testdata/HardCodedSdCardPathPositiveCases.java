@@ -16,7 +16,9 @@
 
 package com.google.errorprone.bugpatterns.android.testdata;
 
-/** @author avenet@google.com (Arnaud J. Venet) */
+/**
+ * @author avenet@google.com (Arnaud J. Venet)
+ */
 public class HardCodedSdCardPathPositiveCases {
   // BUG: Diagnostic contains: Environment
   static final String PATH1 = "/sdcard";

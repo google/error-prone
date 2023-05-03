@@ -40,7 +40,7 @@ class BadImportPositiveCases {
   }
 
   @Nullable
-  Builder<@Nullable Builder<@Nullable String>> parameterizedWithTypeUseAnnotationMethod() {
+      Builder<@Nullable Builder<@Nullable String>> parameterizedWithTypeUseAnnotationMethod() {
     return null;
   }
 

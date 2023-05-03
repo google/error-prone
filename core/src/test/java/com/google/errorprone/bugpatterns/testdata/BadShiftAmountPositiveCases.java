@@ -16,7 +16,9 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
-/** @author Bill Pugh (bill.pugh@gmail.com) */
+/**
+ * @author Bill Pugh (bill.pugh@gmail.com)
+ */
 public class BadShiftAmountPositiveCases {
 
   public void foo() {

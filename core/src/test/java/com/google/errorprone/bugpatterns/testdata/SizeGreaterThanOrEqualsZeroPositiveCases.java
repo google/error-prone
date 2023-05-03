@@ -27,7 +27,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-/** @author glorioso@google.com (Nick Glorioso) */
+/**
+ * @author glorioso@google.com (Nick Glorioso)
+ */
 public class SizeGreaterThanOrEqualsZeroPositiveCases {
   private List<Integer> intList = new ArrayList<>();
   private Set<Integer> intSet = new HashSet<>();

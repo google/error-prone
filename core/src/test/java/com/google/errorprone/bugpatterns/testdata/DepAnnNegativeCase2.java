@@ -16,7 +16,9 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
-/** @deprecated */
+/**
+ * @deprecated
+ */
 @Deprecated
 public class DepAnnNegativeCase2 {
 
@@ -24,10 +26,14 @@ public class DepAnnNegativeCase2 {
     class SummaryRowKey<P> {}
 
     @Deprecated
-    /** @deprecated use {@link Selector.Builder#withSummary()} */
+    /**
+     * @deprecated use {@link Selector.Builder#withSummary()}
+     */
     public abstract void withSummaryRowKeys(int summaryRowKeys);
 
-    /** @deprecated use {@link Selector.Builder#withSummary()} */
+    /**
+     * @deprecated use {@link Selector.Builder#withSummary()}
+     */
     @Deprecated
     public abstract void m1();
 

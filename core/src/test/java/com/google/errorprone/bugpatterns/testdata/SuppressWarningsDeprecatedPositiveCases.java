@@ -49,13 +49,15 @@ public class SuppressWarningsDeprecatedPositiveCases {
   public static void positiveCase6() {
     // BUG: Diagnostic contains: @SuppressWarnings("deprecation")
     @SuppressWarnings("deprecated")
-    class Foo {};
+    class Foo {}
+    ;
   }
 
   public static void positiveCase7() {
     // BUG: Diagnostic contains: @SuppressWarnings({"deprecation", "foobarbaz"})
     @SuppressWarnings({"deprecated", "foobarbaz"})
-    class Foo {};
+    class Foo {}
+    ;
   }
 
   // BUG: Diagnostic contains: @SuppressWarnings(value = "deprecation")

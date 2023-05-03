@@ -18,7 +18,9 @@ package com.google.errorprone.bugpatterns.testdata;
 
 import com.google.common.base.Objects;
 
-/** @author eaftan@google.com (Eddie Aftandilian) */
+/**
+ * @author eaftan@google.com (Eddie Aftandilian)
+ */
 public class ArrayHashCodeNegativeCases {
 
   private Object[] objArray = {1, 2, 3};

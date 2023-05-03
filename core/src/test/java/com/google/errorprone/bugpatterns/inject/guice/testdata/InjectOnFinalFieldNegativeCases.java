@@ -18,7 +18,9 @@ package com.google.errorprone.bugpatterns.inject.guice.testdata;
 
 import com.google.inject.Inject;
 
-/** @author sgoldfeder@google.com (Steven Goldfeder) */
+/**
+ * @author sgoldfeder@google.com (Steven Goldfeder)
+ */
 public class InjectOnFinalFieldNegativeCases {
 
   /** Class has no final fields or @Inject annotations. */

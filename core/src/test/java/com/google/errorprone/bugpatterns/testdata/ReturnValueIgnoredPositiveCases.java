@@ -24,7 +24,9 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Locale;
 
-/** @author alexeagle@google.com (Alex Eagle) */
+/**
+ * @author alexeagle@google.com (Alex Eagle)
+ */
 public class ReturnValueIgnoredPositiveCases {
   String a = "thing";
 

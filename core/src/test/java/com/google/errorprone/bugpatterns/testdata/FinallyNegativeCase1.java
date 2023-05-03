@@ -16,7 +16,9 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
-/** @author eaftan@google.com (Eddie Aftandilian) */
+/**
+ * @author eaftan@google.com (Eddie Aftandilian)
+ */
 public class FinallyNegativeCase1 {
 
   public static void test1() {

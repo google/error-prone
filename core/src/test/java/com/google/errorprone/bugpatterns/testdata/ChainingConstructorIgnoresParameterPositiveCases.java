@@ -18,7 +18,9 @@ package com.google.errorprone.bugpatterns.testdata;
 
 import static com.google.errorprone.bugpatterns.testdata.ChainingConstructorIgnoresParameterPositiveCases.Location.TEST_TARGET;
 
-/** @author cpovirk@google.com (Chris Povirk) */
+/**
+ * @author cpovirk@google.com (Chris Povirk)
+ */
 public class ChainingConstructorIgnoresParameterPositiveCases {
   static class MissileLauncher {
     MissileLauncher(Location target, boolean askForConfirmation) {}

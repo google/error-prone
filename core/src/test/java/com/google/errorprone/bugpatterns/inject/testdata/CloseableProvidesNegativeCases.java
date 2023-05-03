@@ -19,7 +19,9 @@ package com.google.errorprone.bugpatterns.inject.testdata;
 import com.google.inject.Provides;
 import javax.inject.Singleton;
 
-/** @author bhagwani@google.com (Sumit Bhagwani) */
+/**
+ * @author bhagwani@google.com (Sumit Bhagwani)
+ */
 public class CloseableProvidesNegativeCases {
 
   static class DoesNotImplementsClosable {

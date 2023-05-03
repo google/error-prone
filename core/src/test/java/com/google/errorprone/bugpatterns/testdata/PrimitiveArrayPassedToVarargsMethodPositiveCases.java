@@ -18,7 +18,9 @@ package com.google.errorprone.bugpatterns.testdata;
 
 import java.util.Arrays;
 
-/** @author eaftan@google.com (Eddie Aftandilian) */
+/**
+ * @author eaftan@google.com (Eddie Aftandilian)
+ */
 public class PrimitiveArrayPassedToVarargsMethodPositiveCases {
 
   public void objectVarargsMethod(Object... objs) {}

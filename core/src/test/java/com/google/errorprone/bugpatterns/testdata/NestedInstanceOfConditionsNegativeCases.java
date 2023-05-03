@@ -92,11 +92,14 @@ public class NestedInstanceOfConditionsNegativeCases {
   }
 
   /** test class */
-  public static class SuperClass {};
+  public static class SuperClass {}
+  ;
 
   /** test class */
-  public static class SubClass extends SuperClass {};
+  public static class SubClass extends SuperClass {}
+  ;
 
   /** test class */
-  public static class DisjointClass {};
+  public static class DisjointClass {}
+  ;
 }

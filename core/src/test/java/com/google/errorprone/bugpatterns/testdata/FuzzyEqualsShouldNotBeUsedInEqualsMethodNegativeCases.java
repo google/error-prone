@@ -17,7 +17,9 @@ package com.google.errorprone.bugpatterns.testdata;
 
 import com.google.common.math.DoubleMath;
 
-/** @author sulku@google.com (Marsela Sulku) */
+/**
+ * @author sulku@google.com (Marsela Sulku)
+ */
 public class FuzzyEqualsShouldNotBeUsedInEqualsMethodNegativeCases {
   public boolean equals() {
     return true;

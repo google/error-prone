@@ -18,7 +18,9 @@ package com.google.errorprone.bugpatterns.testdata;
 
 import java.util.Iterator;
 
-/** @author jsjeon@google.com (Jinseong Jeon) */
+/**
+ * @author jsjeon@google.com (Jinseong Jeon)
+ */
 public class IterableAndIteratorNegativeCases {
 
   /** Test Node */

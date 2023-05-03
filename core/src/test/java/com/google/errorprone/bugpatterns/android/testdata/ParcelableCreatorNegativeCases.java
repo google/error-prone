@@ -20,7 +20,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.Parcelable.ClassLoaderCreator;
 
-/** @author bhagwani@google.com (Sumit Bhagwani) */
+/**
+ * @author bhagwani@google.com (Sumit Bhagwani)
+ */
 public class ParcelableCreatorNegativeCases {
 
   public abstract static class PublicAbstractParcelableClass implements Parcelable {

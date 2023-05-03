@@ -15,7 +15,9 @@
  */
 package com.google.errorprone.bugpatterns.testdata;
 
-/** @author mariasam@google.com (Maria Sam) */
+/**
+ * @author mariasam@google.com (Maria Sam)
+ */
 public class IncrementInForLoopAndHeaderPositiveCases {
 
   public void basicTest() {

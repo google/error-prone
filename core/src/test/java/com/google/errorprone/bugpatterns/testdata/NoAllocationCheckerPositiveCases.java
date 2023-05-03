@@ -18,7 +18,9 @@ package com.google.errorprone.bugpatterns.testdata;
 
 import com.google.errorprone.annotations.NoAllocation;
 
-/** @author agoode@google.com (Adam Goode) */
+/**
+ * @author agoode@google.com (Adam Goode)
+ */
 public class NoAllocationCheckerPositiveCases {
   // Trigger on new array.
   @NoAllocation

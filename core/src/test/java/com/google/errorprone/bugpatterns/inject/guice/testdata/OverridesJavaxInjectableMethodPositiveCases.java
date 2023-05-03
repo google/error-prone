@@ -16,7 +16,9 @@
 
 package com.google.errorprone.bugpatterns.inject.guice.testdata;
 
-/** @author sgoldfeder@google.com (Steven Goldfeder) */
+/**
+ * @author sgoldfeder@google.com (Steven Goldfeder)
+ */
 public class OverridesJavaxInjectableMethodPositiveCases {
 
   /** Class with foo() */
@@ -41,7 +43,7 @@ public class OverridesJavaxInjectableMethodPositiveCases {
     // BUG: Diagnostic contains: @Inject
     public void foo() {}
   }
-  
+
   /**
    * Class with a method foo() that is not annotated, but overrides a method that in turn overrides
    * a method that is annotated with @javax.inject.Inject.

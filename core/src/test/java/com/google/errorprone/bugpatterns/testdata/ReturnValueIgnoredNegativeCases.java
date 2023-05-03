@@ -22,7 +22,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-/** @author alexeagle@google.com (Alex Eagle) */
+/**
+ * @author alexeagle@google.com (Alex Eagle)
+ */
 public class ReturnValueIgnoredNegativeCases {
 
   private String a = "thing";

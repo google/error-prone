@@ -19,7 +19,9 @@ package com.google.errorprone.bugpatterns.testdata;
 import com.google.errorprone.annotations.CheckReturnValue;
 import org.junit.rules.ExpectedException;
 
-/** @author eaftan@google.com (Eddie Aftandilian) */
+/**
+ * @author eaftan@google.com (Eddie Aftandilian)
+ */
 public class CheckReturnValuePositiveCases {
 
   IntValue intValue = new IntValue(0);

@@ -18,7 +18,9 @@ package com.google.errorprone.bugpatterns.flogger.testdata;
 
 import com.google.common.flogger.FluentLogger;
 
-/** @author mariasam@google.com (Maria Sam) */
+/**
+ * @author mariasam@google.com (Maria Sam)
+ */
 class FloggerRedundantIsEnabledPositiveCases {
 
   public void basicCase(FluentLogger logger) {

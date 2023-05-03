@@ -462,9 +462,11 @@ public class MissingFailNegativeCases extends TestCase {
 
   private static class Logger {
 
-    void log() {};
+    void log() {}
+    ;
 
-    void info() {};
+    void info() {}
+    ;
   }
 
   private static class Dummy {

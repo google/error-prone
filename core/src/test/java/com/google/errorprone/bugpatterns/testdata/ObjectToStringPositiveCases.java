@@ -16,7 +16,9 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
-/** @author bhagwani@google.com (Sumit Bhagwani) */
+/**
+ * @author bhagwani@google.com (Sumit Bhagwani)
+ */
 public class ObjectToStringPositiveCases {
 
   public static final class FinalObjectClassWithoutToString {}

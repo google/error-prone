@@ -16,7 +16,9 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
-/** @author hanuszczak@google.com (Łukasz Hanuszczak) */
+/**
+ * @author hanuszczak@google.com (Łukasz Hanuszczak)
+ */
 public class UngroupedOverloadsPositiveCasesCoveringOnlyOnFirst {
 
   // BUG: Diagnostic contains: Constructors and methods with the same name should appear
