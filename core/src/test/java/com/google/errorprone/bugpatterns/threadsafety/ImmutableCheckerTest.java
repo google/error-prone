@@ -3052,4 +3052,17 @@ public class ImmutableCheckerTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void enumBound() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "@Immutable class Test<E extends Enum<E>> {",
+            "  private final E e;",
+            "  Test(E e) { this.e = e; }",
+            "}")
+        .doTest();
+  }
 }

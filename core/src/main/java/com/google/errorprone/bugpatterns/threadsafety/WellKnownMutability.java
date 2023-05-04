@@ -154,6 +154,7 @@ public final class WellKnownMutability implements ThreadSafety.KnownTypes {
         .add("com.ibm.icu.util.Currency")
         .add("com.ibm.icu.util.ULocale")
         .add(java.lang.Class.class)
+        .add(java.lang.Enum.class, "E")
         .add(java.lang.String.class)
         .add(java.lang.annotation.Annotation.class)
         .add(java.math.BigDecimal.class)
