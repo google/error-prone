@@ -63,6 +63,10 @@ public class ThreadSafeAnalysis {
     return threadSafety.hasThreadSafeTypeParameterAnnotation(sym);
   }
 
+  boolean hasThreadSafeElementAnnotation(TypeVariableSymbol sym) {
+    return threadSafety.hasThreadSafeElementAnnotation(sym);
+  }
+
   Violation checkInstantiation(
       Collection<TypeVariableSymbol> classTypeParameters, Collection<Type> typeArguments) {
     return threadSafety.checkInstantiation(classTypeParameters, typeArguments);

@@ -25,6 +25,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Sets.SetView;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.Immutable;
 import com.google.errorprone.annotations.ThreadSafe;
@@ -75,11 +76,12 @@ public class ThreadSafeChecker extends BugChecker
         MemberReferenceTreeMatcher {
 
   private final WellKnownThreadSafety wellKnownThreadSafety;
+  private final boolean checkElementUsage;
 
-  // Used reflectively
   @Inject
-  ThreadSafeChecker(WellKnownThreadSafety wellKnownThreadSafety) {
+  ThreadSafeChecker(WellKnownThreadSafety wellKnownThreadSafety, ErrorProneFlags flags) {
     this.wellKnownThreadSafety = wellKnownThreadSafety;
+    this.checkElementUsage = flags.getBoolean("ThreadSafeChecker:CheckElementUsage").orElse(true);
   }
 
   // check instantiations of `@ThreadSafe`s in method references
@@ -129,21 +131,26 @@ public class ThreadSafeChecker extends BugChecker
     if (sym == null) {
       return NO_MATCH;
     }
-    ThreadSafeAnalysis analysis = new ThreadSafeAnalysis(this, state, wellKnownThreadSafety);
-    if (!analysis.hasThreadSafeTypeParameterAnnotation((TypeVariableSymbol) sym)) {
-      return NO_MATCH;
-    }
     switch (sym.owner.getKind()) {
       case METHOD:
       case CONSTRUCTOR:
         return NO_MATCH;
       default: // fall out
     }
-    AnnotationInfo info = analysis.getThreadSafeAnnotation(sym.owner, state);
-    if (info == null) {
-      return buildDescription(tree)
-          .setMessage("@ThreadSafe is only supported on threadsafe classes")
-          .build();
+    ThreadSafeAnalysis analysis = new ThreadSafeAnalysis(this, state, wellKnownThreadSafety);
+    if (analysis.hasThreadSafeTypeParameterAnnotation((TypeVariableSymbol) sym)) {
+      if (analysis.getThreadSafeAnnotation(sym.owner, state) == null) {
+        return buildDescription(tree)
+            .setMessage("@ThreadSafe.TypeParameter is only supported on threadsafe classes")
+            .build();
+      }
+    }
+    if (checkElementUsage && analysis.hasThreadSafeElementAnnotation((TypeVariableSymbol) sym)) {
+      if (analysis.getThreadSafeAnnotation(sym.owner, state) == null) {
+        return buildDescription(tree)
+            .setMessage("@ThreadSafe.Element is only supported on threadsafe classes")
+            .build();
+      }
     }
     return NO_MATCH;
   }

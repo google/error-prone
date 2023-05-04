@@ -634,13 +634,22 @@ public final class ThreadSafety {
   }
 
   /**
-   * Returns true if the given type parameter's declaration is annotated with {@link
-   * #typeParameterAnnotation} indicated it will only ever be instantiated with thread-safe types.
+   * Returns whether the given type parameter's declaration is annotated with {@link
+   * #typeParameterAnnotation} indicating it will only ever be instantiated with thread-safe types.
    */
   public boolean hasThreadSafeTypeParameterAnnotation(TypeVariableSymbol symbol) {
-    return typeParameterAnnotation != null
-        && symbol.getAnnotationMirrors().stream()
-            .anyMatch(t -> typeParameterAnnotation.contains(t.type.tsym.flatName().toString()));
+    return symbol.getAnnotationMirrors().stream()
+        .anyMatch(t -> typeParameterAnnotation.contains(t.type.tsym.flatName().toString()));
+  }
+
+  /**
+   * Returns whether the given type parameter's declaration is annotated with {@link
+   * #containerOfAnnotation} indicating its type-safety determines the type-safety of the outer
+   * class.
+   */
+  public boolean hasThreadSafeElementAnnotation(TypeVariableSymbol symbol) {
+    return symbol.getAnnotationMirrors().stream()
+        .anyMatch(t -> containerOfAnnotation.contains(t.type.tsym.flatName().toString()));
   }
 
   /**
