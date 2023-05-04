@@ -5777,9 +5777,14 @@ loadScripts(document, 'script');</script>
 <div class="block">Checks if a method, or any overridden method, is annotated with any annotation from the
  org.testng package.</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#hasThreadSafeElementAnnotation(com.sun.tools.javac.code.Symbol.TypeVariableSymbol)">hasThreadSafeElementAnnotation(Symbol.TypeVariableSymbol)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety</a></dt>
+<dd>
+<div class="block">Returns whether the given type parameter's declaration is annotated with <code>ThreadSafety.containerOfAnnotation</code> indicating its type-safety determines the type-safety of the outer
+ class.</div>
+</dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#hasThreadSafeTypeParameterAnnotation(com.sun.tools.javac.code.Symbol.TypeVariableSymbol)">hasThreadSafeTypeParameterAnnotation(Symbol.TypeVariableSymbol)</a></span> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety</a></dt>
 <dd>
-<div class="block">Returns true if the given type parameter's declaration is annotated with <code>ThreadSafety.typeParameterAnnotation</code> indicated it will only ever be instantiated with thread-safe types.</div>
+<div class="block">Returns whether the given type parameter's declaration is annotated with <code>ThreadSafety.typeParameterAnnotation</code> indicating it will only ever be instantiated with thread-safe types.</div>
 </dd>
 <dt><span class="member-name-link"><a href="com/google/errorprone/dataflow/AccessPathStore.html#heap()">heap()</a></span> - Method in class com.google.errorprone.dataflow.<a href="com/google/errorprone/dataflow/AccessPathStore.html" title="class in com.google.errorprone.dataflow">AccessPathStore</a></dt>
 <dd>&nbsp;</dd>
