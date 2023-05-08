@@ -42,7 +42,7 @@
     <flogger.version>0.7.4</flogger.version>
     <maven-javadoc-plugin.version>3.3.1</maven-javadoc-plugin.version>
     <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
-    <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
+    <nexus-staging-maven-plugin.version>1.6.13</nexus-staging-maven-plugin.version>
     <protobuf.version>3.19.2</protobuf.version>
     <grpc.version>1.43.2</grpc.version>
     <jspecify.version>0.2.0</jspecify.version>
