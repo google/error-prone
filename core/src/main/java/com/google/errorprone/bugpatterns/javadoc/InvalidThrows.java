@@ -33,6 +33,7 @@ import com.sun.source.util.DocTreePath;
 import com.sun.source.util.DocTreePathScanner;
 import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.code.TypeTag;
 import javax.lang.model.element.Element;
 
 /**
@@ -84,7 +85,8 @@ public final class InvalidThrows extends BugChecker implements MethodTreeMatcher
     }
 
     private boolean isCheckedException(Type type) {
-      return !state.getTypes().isAssignable(type, state.getSymtab().errorType)
+      return type.hasTag(TypeTag.CLASS)
+          && !state.getTypes().isAssignable(type, state.getSymtab().errorType)
           && !state.getTypes().isAssignable(type, state.getSymtab().runtimeExceptionType);
     }
   }

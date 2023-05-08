@@ -84,4 +84,20 @@ public final class InvalidThrowsTest {
         .expectUnchanged()
         .doTest(TestMode.TEXT_MATCH);
   }
+
+  @Test
+  public void throwsInvalidType() {
+    refactoring
+        .addInputLines(
+            "Test.java",
+            "interface Test {",
+            "  /**",
+            "   * @throws bar when failed",
+            "   */",
+            "  void foo();",
+            "  void bar();",
+            "}")
+        .expectUnchanged()
+        .doTest(TestMode.TEXT_MATCH);
+  }
 }
