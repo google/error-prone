@@ -36,7 +36,7 @@ import java.lang.annotation.Target;
  * <ul>
  *   <li>For humans: it indicates that the class/interface (and subclasses) is thread-safe
  *   <li>For machines: it causes the annotated class/interface -- and all of its subtypes -- to be
- *       validated by the {@link com.google.errorprone.bugpatterns.threadsafety.ThreadSafeChecker}
+ *       validated by the {@code com.google.errorprone.bugpatterns.threadsafety.ThreadSafeChecker}
  *       {@code BugChecker}.
  * </ul>
  *
@@ -53,8 +53,8 @@ import java.lang.annotation.Target;
  * keeping it thread-safe is even more so.
  *
  * <p>The remainder of this javadoc describes the heuristics enforced by {@code ThreadSafeChecker}
- * and the related {@link com.google.errorprone.bugpatterns.threadsafety.GuardedByChecker} and
- * {@link com.google.errorprone.bugpatterns.threadsafety.ImmutableChecker} on which the former
+ * and the related {@code com.google.errorprone.bugpatterns.threadsafety.GuardedByChecker} and
+ * {@code com.google.errorprone.bugpatterns.threadsafety.ImmutableChecker} on which the former
  * relies.
  *
  * <p>The {@code ThreadSafeChecker} heuristics enforce that every field meets at least one of these
@@ -73,10 +73,10 @@ import java.lang.annotation.Target;
  * requirement is that it meets at least one of these four conditions:
  *
  * <ul>
- *   <li>it is listed as a well-known immutable type in {@link
+ *   <li>it is listed as a well-known immutable type in {@code
  *       com.google.errorprone.bugpatterns.threadsafety.WellKnownMutability} (e.g. a field of type
  *       {@link String}); and/or
- *   <li>it is listed as a well-known thread-safe type in {@link
+ *   <li>it is listed as a well-known thread-safe type in {@code
  *       com.google.errorprone.bugpatterns.threadsafety.WellKnownThreadSafety} (e.g. a field of type
  *       {@link java.util.concurrent.atomic.AtomicBoolean}); and/or
  *   <li>it is annotated with {@link Immutable}; and/or
@@ -85,7 +85,7 @@ import java.lang.annotation.Target;
  *
  * <p>This first requirement means the type is at least inherently shallowly thread-safe.
  *
- * <p>Fields annotated with {@link javax.annotation.concurrent.GuardedBy} are likely the meat of a
+ * <p>Fields annotated with {@code javax.annotation.concurrent.GuardedBy} are likely the meat of a
  * mutable thread-safe class: these are things that need to be mutated, but should be done so in a
  * safe manner -- i.e., (most likely) in critical sections of code that protect their access by
  * means of a lock. See more information in that annotation's javadoc.
