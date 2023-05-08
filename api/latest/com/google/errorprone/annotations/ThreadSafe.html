@@ -86,7 +86,7 @@ public @interface <span class="type-name-label">ThreadSafe</span></pre>
  <ul>
    <li>For humans: it indicates that the class/interface (and subclasses) is thread-safe
    <li>For machines: it causes the annotated class/interface -- and all of its subtypes -- to be
-       validated by the <a href="../bugpatterns/threadsafety/ThreadSafeChecker.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><code>ThreadSafeChecker</code></a>
+       validated by the <code>com.google.errorprone.bugpatterns.threadsafety.ThreadSafeChecker</code>
        <code>BugChecker</code>.
  </ul>
 
@@ -103,8 +103,8 @@ public @interface <span class="type-name-label">ThreadSafe</span></pre>
  keeping it thread-safe is even more so.
 
  <p>The remainder of this javadoc describes the heuristics enforced by <code>ThreadSafeChecker</code>
- and the related <a href="../bugpatterns/threadsafety/GuardedByChecker.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><code>GuardedByChecker</code></a> and
- <a href="../bugpatterns/threadsafety/ImmutableChecker.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><code>ImmutableChecker</code></a> on which the former
+ and the related <code>com.google.errorprone.bugpatterns.threadsafety.GuardedByChecker</code> and
+ <code>com.google.errorprone.bugpatterns.threadsafety.ImmutableChecker</code> on which the former
  relies.
 
  <p>The <code>ThreadSafeChecker</code> heuristics enforce that every field meets at least one of these
@@ -123,9 +123,11 @@ public @interface <span class="type-name-label">ThreadSafe</span></pre>
  requirement is that it meets at least one of these four conditions:
 
  <ul>
-   <li>it is listed as a well-known immutable type in <a href="../bugpatterns/threadsafety/WellKnownMutability.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><code>WellKnownMutability</code></a> (e.g. a field of type
+   <li>it is listed as a well-known immutable type in <code>
+       com.google.errorprone.bugpatterns.threadsafety.WellKnownMutability</code> (e.g. a field of type
        <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link"><code>String</code></a>); and/or
-   <li>it is listed as a well-known thread-safe type in <a href="../bugpatterns/threadsafety/WellKnownThreadSafety.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><code>WellKnownThreadSafety</code></a> (e.g. a field of type
+   <li>it is listed as a well-known thread-safe type in <code>
+       com.google.errorprone.bugpatterns.threadsafety.WellKnownThreadSafety</code> (e.g. a field of type
        <a href="https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/atomic/AtomicBoolean.html" title="class or interface in java.util.concurrent.atomic" class="external-link"><code>AtomicBoolean</code></a>); and/or
    <li>it is annotated with <a href="Immutable.html" title="annotation in com.google.errorprone.annotations"><code>Immutable</code></a>; and/or
    <li>it is annotated with <a href="ThreadSafe.html" title="annotation in com.google.errorprone.annotations"><code>ThreadSafe</code></a>.
@@ -133,7 +135,7 @@ public @interface <span class="type-name-label">ThreadSafe</span></pre>
 
  <p>This first requirement means the type is at least inherently shallowly thread-safe.
 
- <p>Fields annotated with <code>GuardedBy</code> are likely the meat of a
+ <p>Fields annotated with <code>javax.annotation.concurrent.GuardedBy</code> are likely the meat of a
  mutable thread-safe class: these are things that need to be mutated, but should be done so in a
  safe manner -- i.e., (most likely) in critical sections of code that protect their access by
  means of a lock. See more information in that annotation's javadoc.
