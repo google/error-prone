@@ -812,6 +812,26 @@ public class ImmutableCheckerTest {
   }
 
   @Test
+  public void mutableWildcardInstantiation_immutableTypeParameter() {
+    compilationHelper
+        .addSourceLines(
+            "A.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
+            "@Immutable",
+            "class A<@ImmutableTypeParameter T> {}")
+        .addSourceLines(
+            "B.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "@Immutable",
+            "class B {",
+            "  private final A<?> a;",
+            "  public B(A<?> a) { this.a = a; }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void mutableRawType() {
     compilationHelper
         .addSourceLines(

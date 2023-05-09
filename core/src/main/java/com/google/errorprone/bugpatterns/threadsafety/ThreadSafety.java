@@ -429,6 +429,11 @@ public final class ThreadSafety {
                   getPrettyName(type.tsym), typaram));
         }
         Type tyarg = type.getTypeArguments().get(i);
+        // Don't check whether wildcard types' erasure is safe. Wildcards can only be used where
+        // the type isn't being instantiated, and we can rely on instantiations all being checked.
+        if (immutableTypeParameter && tyarg instanceof WildcardType) {
+          continue;
+        }
         if (suppressAnnotation != null
             && tyarg.getAnnotationMirrors().stream()
                 .anyMatch(
