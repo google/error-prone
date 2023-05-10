@@ -131,7 +131,7 @@ public final class CompilationBuilderHelpers {
                   diagnosticCollector,
                   javacopts,
                   /* classes= */ Collections.<String>emptyList(),
-                  fileManager.getJavaFileObjectsFromPaths(sources))
+                  fileManager.getJavaFileObjects(sources.toArray(new Path[0])))
               .call();
 
       return CompilationResult.create(

@@ -1141,9 +1141,17 @@ public class ASTHelpers {
     return constructors;
   }
 
+  /**
+   * A wrapper for {@link Symbol#getEnclosedElements} to avoid binary compatibility issues for
+   * covariant overrides in subtypes of {@link Symbol}.
+   */
+  public static List<Symbol> getEnclosedElements(Symbol symbol) {
+    return symbol.getEnclosedElements();
+  }
+
   /** Returns the list of all constructors defined in the class. */
   public static ImmutableList<MethodSymbol> getConstructors(ClassSymbol classSymbol) {
-    return classSymbol.getEnclosedElements().stream()
+    return getEnclosedElements(classSymbol).stream()
         .filter(Symbol::isConstructor)
         .map(e -> (MethodSymbol) e)
         .collect(toImmutableList());
