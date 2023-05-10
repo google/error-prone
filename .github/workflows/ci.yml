@@ -23,10 +23,13 @@ jobs:
         include:
           - os: macos-latest
             java: 20
+            experimental: false
           - os: windows-latest
             java: 20
+            experimental: false
           - os: ubuntu-latest
             java: 20
+            experimental: false
           - os: ubuntu-latest
             java: 21-ea
             experimental: true
