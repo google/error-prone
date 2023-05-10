@@ -20,7 +20,6 @@ import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.argument;
 import static com.google.errorprone.matchers.Matchers.classLiteral;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
-import static com.google.errorprone.util.ASTHelpers.getEnclosedElements;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
@@ -124,7 +123,7 @@ public final class FuturesGetCheckedIllegalExceptionType extends BugChecker
                 return true;
               }
 
-              for (Symbol enclosedSymbol : getEnclosedElements(classSymbol)) {
+              for (Symbol enclosedSymbol : classSymbol.getEnclosedElements()) {
                 if (!enclosedSymbol.isConstructor()) {
                   continue;
                 }

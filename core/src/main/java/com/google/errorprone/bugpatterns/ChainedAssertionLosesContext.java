@@ -25,7 +25,6 @@ import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.getDeclaredSymbol;
-import static com.google.errorprone.util.ASTHelpers.getEnclosedElements;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.sun.source.tree.Tree.Kind.CLASS;
@@ -213,9 +212,9 @@ public final class ChainedAssertionLosesContext extends BugChecker
     ImmutableSet<MethodSymbol> factories =
         concat(
                 // The class that assertThat is declared in:
-                getEnclosedElements(assertThatSymbol.owner).stream(),
+                assertThatSymbol.owner.getEnclosedElements().stream(),
                 // The Subject class (possibly the same; if so, toImmutableSet() will deduplicate):
-                getEnclosedElements(assertThatSymbol.getReturnType().asElement()).stream())
+                assertThatSymbol.getReturnType().asElement().getEnclosedElements().stream())
             .filter(s -> s instanceof MethodSymbol)
             .map(s -> (MethodSymbol) s)
             .filter(
