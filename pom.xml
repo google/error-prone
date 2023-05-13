@@ -137,9 +137,36 @@
         </executions>
       </plugin>
       <plugin>
+        <groupId>biz.aQute.bnd</groupId>
+        <artifactId>bnd-maven-plugin</artifactId>
+        <version>6.4.0</version>
+        <executions>
+          <execution>
+            <id>generate-OSGi-manifest</id>
+            <goals>
+              <goal>bnd-process</goal>
+            </goals>
+            <configuration>
+              <bnd><![CDATA[
+                Bundle-SymbolicName: com.google.$<replacestring;$<replacestring;${project.artifactId};^error_prone;errorprone>;_;.>
+                Automatic-Module-Name: $<Bundle-SymbolicName>
+                -exportcontents: com.google.errorprone*
+                -noextraheaders: true
+                -removeheaders: Private-Package
+              ]]></bnd>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
         <version>3.2.2</version>
+        <configuration>
+          <archive>
+            <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+          </archive>
+        </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
