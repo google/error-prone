@@ -137,7 +137,7 @@ public class Description {
    */
   @Nullable
   private static String linkTextForDiagnostic(String linkUrl) {
-    return isNullOrEmpty(linkUrl) ? null : "  (see " + linkUrl + ")";
+    return isNullOrEmpty(linkUrl) ? null : "  (see " + linkUrl + " )";
   }
 
   /** Returns a new builder for {@link Description}s. */
