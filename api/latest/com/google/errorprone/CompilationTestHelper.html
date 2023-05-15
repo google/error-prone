@@ -115,8 +115,8 @@ loadScripts(document, 'script');</script>
 <div class="block">Performs a compilation and checks that the diagnostics and result match the expectations.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#expectErrorMessage(java.lang.String,com.google.common.base.Predicate)" class="member-name-link">expectErrorMessage</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;key,
- com.google.common.base.Predicate&lt;? super <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;matcher)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#expectErrorMessage(java.lang.String,java.util.function.Predicate)" class="member-name-link">expectErrorMessage</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;key,
+ <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html" title="class or interface in java.util.function" class="external-link">Predicate</a>&lt;? super <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;matcher)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Expects an error message matching <code>matcher</code> at the line below a comment matching the key.</div>
 </div>
@@ -312,11 +312,11 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="expectErrorMessage(java.lang.String,com.google.common.base.Predicate)">
+<section class="detail" id="expectErrorMessage(java.lang.String,java.util.function.Predicate)">
 <h3>expectErrorMessage</h3>
 <div class="member-signature"><span class="annotations"><a href="annotations/CanIgnoreReturnValue.html" title="annotation in com.google.errorprone.annotations">@CanIgnoreReturnValue</a>
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a></span>&nbsp;<span class="element-name">expectErrorMessage</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;key,
- com.google.common.base.Predicate&lt;? super <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;matcher)</span></div>
+ <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html" title="class or interface in java.util.function" class="external-link">Predicate</a>&lt;? super <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;matcher)</span></div>
 <div class="block">Expects an error message matching <code>matcher</code> at the line below a comment matching the key.
  For example, given the source
 

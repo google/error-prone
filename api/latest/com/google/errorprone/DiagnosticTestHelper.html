@@ -157,13 +157,13 @@ loadScripts(document, 'script');</script>
  long&nbsp;line)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static org.hamcrest.Matcher&lt;<a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/Diagnostic.html" title="class or interface in javax.tools" class="external-link">Diagnostic</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/JavaFileObject.html" title="class or interface in javax.tools" class="external-link">JavaFileObject</a>&gt;&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#diagnosticOnLine(java.net.URI,long,com.google.common.base.Predicate)" class="member-name-link">diagnosticOnLine</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/net/URI.html" title="class or interface in java.net" class="external-link">URI</a>&nbsp;fileURI,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#diagnosticOnLine(java.net.URI,long,java.util.function.Predicate)" class="member-name-link">diagnosticOnLine</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/net/URI.html" title="class or interface in java.net" class="external-link">URI</a>&nbsp;fileURI,
  long&nbsp;line,
- com.google.common.base.Predicate&lt;? super <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;matcher)</code></div>
+ <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html" title="class or interface in java.util.function" class="external-link">Predicate</a>&lt;? super <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;matcher)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#expectErrorMessage(java.lang.String,com.google.common.base.Predicate)" class="member-name-link">expectErrorMessage</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;key,
- com.google.common.base.Predicate&lt;? super <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;matcher)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#expectErrorMessage(java.lang.String,java.util.function.Predicate)" class="member-name-link">expectErrorMessage</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;key,
+ <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html" title="class or interface in java.util.function" class="external-link">Predicate</a>&lt;? super <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;matcher)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Expects an error message matching <code>matcher</code> at the line below a comment matching the key.</div>
 </div>
@@ -272,11 +272,11 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="diagnosticOnLine(java.net.URI,long,com.google.common.base.Predicate)">
+<section class="detail" id="diagnosticOnLine(java.net.URI,long,java.util.function.Predicate)">
 <h3>diagnosticOnLine</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">org.hamcrest.Matcher&lt;<a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/Diagnostic.html" title="class or interface in javax.tools" class="external-link">Diagnostic</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/JavaFileObject.html" title="class or interface in javax.tools" class="external-link">JavaFileObject</a>&gt;&gt;</span>&nbsp;<span class="element-name">diagnosticOnLine</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/javase/8/docs/api/java/net/URI.html" title="class or interface in java.net" class="external-link">URI</a>&nbsp;fileURI,
  long&nbsp;line,
- com.google.common.base.Predicate&lt;? super <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;matcher)</span></div>
+ <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html" title="class or interface in java.util.function" class="external-link">Predicate</a>&lt;? super <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;matcher)</span></div>
 </section>
 </li>
 <li>
@@ -286,10 +286,10 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="expectErrorMessage(java.lang.String,com.google.common.base.Predicate)">
+<section class="detail" id="expectErrorMessage(java.lang.String,java.util.function.Predicate)">
 <h3>expectErrorMessage</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">expectErrorMessage</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;key,
- com.google.common.base.Predicate&lt;? super <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;matcher)</span></div>
+ <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html" title="class or interface in java.util.function" class="external-link">Predicate</a>&lt;? super <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;matcher)</span></div>
 <div class="block">Expects an error message matching <code>matcher</code> at the line below a comment matching the key.
  For example, given the source
 
