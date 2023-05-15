@@ -23,7 +23,6 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasItem;
 import static org.junit.Assert.fail;
 
-import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
 import com.google.common.io.CharSource;
@@ -38,6 +37,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import javax.tools.Diagnostic;
 import javax.tools.DiagnosticListener;
@@ -195,7 +195,7 @@ public class DiagnosticTestHelper {
           return false;
         }
 
-        if (!matcher.apply(item.getMessage(Locale.getDefault()))) {
+        if (!matcher.test(item.getMessage(Locale.getDefault()))) {
           mismatchDescription.appendText("diagnostic does not match ").appendValue(matcher);
           return false;
         }
@@ -400,7 +400,7 @@ public class DiagnosticTestHelper {
     }
 
     @Override
-    public boolean apply(String input) {
+    public boolean test(String input) {
       return input.contains(pattern);
     }
 
