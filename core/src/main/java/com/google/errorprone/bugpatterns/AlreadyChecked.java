@@ -115,7 +115,7 @@ public final class AlreadyChecked extends BugChecker implements CompilationUnitT
 
     private void handleMethodExitingStatement() {
       TreePath ifPath = getCurrentPath().getParentPath();
-      Tree previous = null;
+      Tree previous = getCurrentPath().getLeaf();
       while (ifPath != null && ifPath.getLeaf() instanceof BlockTree) {
         previous = ifPath.getLeaf();
         ifPath = ifPath.getParentPath();
