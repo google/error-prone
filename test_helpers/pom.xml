@@ -57,7 +57,7 @@
     </dependency>
     <dependency>
       <!-- GPLv2 with Classpath Exception -->
-      <groupId>org.checkerframework</groupId>
+      <groupId>io.github.eisop</groupId>
       <artifactId>dataflow-errorprone</artifactId>
       <version>${dataflow.version}</version>
     </dependency>

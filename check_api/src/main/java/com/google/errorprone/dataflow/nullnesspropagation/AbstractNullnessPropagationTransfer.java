@@ -53,6 +53,7 @@ import org.checkerframework.errorprone.dataflow.cfg.node.ConditionalOrNode;
 import org.checkerframework.errorprone.dataflow.cfg.node.DoubleLiteralNode;
 import org.checkerframework.errorprone.dataflow.cfg.node.EqualToNode;
 import org.checkerframework.errorprone.dataflow.cfg.node.ExplicitThisNode;
+import org.checkerframework.errorprone.dataflow.cfg.node.ExpressionStatementNode;
 import org.checkerframework.errorprone.dataflow.cfg.node.FieldAccessNode;
 import org.checkerframework.errorprone.dataflow.cfg.node.FloatLiteralNode;
 import org.checkerframework.errorprone.dataflow.cfg.node.FloatingDivisionNode;
@@ -1017,6 +1018,13 @@ abstract class AbstractNullnessPropagationTransfer
 
   Nullness visitClassDeclaration() {
     return NULLABLE;
+  }
+
+  @Override
+  public final TransferResult<Nullness, AccessPathStore<Nullness>> visitExpressionStatement(
+      ExpressionStatementNode node,
+      TransferInput<Nullness, AccessPathStore<Nullness>> input) {
+    return noStoreChanges(NONNULL, input);
   }
 
   private static final class ReadableUpdates implements Updates {
