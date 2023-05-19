@@ -49,112 +49,112 @@ public class FormatStringTest {
   }
 
   @Test
-  public void testDuplicateFormatFlags() throws Exception {
+  public void duplicateFormatFlags() throws Exception {
     testFormat("duplicate format flags: +", "String.format(\"e = %++10.4f\", Math.E);");
   }
 
   @Test
-  public void testFormatFlagsConversionMismatch() throws Exception {
+  public void formatFlagsConversionMismatch() throws Exception {
     testFormat(
         "format specifier '%b' is not compatible with the given flag(s): #",
         "String.format(\"%#b\", Math.E);");
   }
 
   @Test
-  public void testIllegalFormatCodePoint() throws Exception {
+  public void illegalFormatCodePoint() throws Exception {
     testFormat("invalid Unicode code point: 110000", "String.format(\"%c\", 0x110000);");
   }
 
   @Test
-  public void testIllegalFormatConversion() throws Exception {
+  public void illegalFormatConversion() throws Exception {
     testFormat(
         "illegal format conversion: 'java.lang.String' cannot be formatted using '%f'",
         "String.format(\"%f\", \"abcd\");");
   }
 
   @Test
-  public void testIllegalFormatFlags() throws Exception {
+  public void illegalFormatFlags() throws Exception {
     testFormat("illegal format flags: -0", "String.format(\"%-010d\", 5);");
   }
 
   @Test
-  public void testIllegalFormatPrecision() throws Exception {
+  public void illegalFormatPrecision() throws Exception {
     testFormat("illegal format precision: 1", "String.format(\"%.1c\", 'c');");
   }
 
   @Test
-  public void testIllegalFormatWidth() throws Exception {
+  public void illegalFormatWidth() throws Exception {
     testFormat("illegal format width: 1", "String.format(\"%1n\");");
   }
 
   @Test
-  public void testMissingFormatArgument() throws Exception {
+  public void missingFormatArgument() throws Exception {
     testFormat("missing argument for format specifier '%<s'", "String.format(\"%<s\", \"test\");");
   }
 
   @Test
-  public void testMissingFormatWidth() throws Exception {
+  public void missingFormatWidth() throws Exception {
     testFormat("missing format width: %-f", "String.format(\"e = %-f\", Math.E);");
   }
 
   @Test
-  public void testUnknownFormatConversion() throws Exception {
+  public void unknownFormatConversion() throws Exception {
     testFormat("unknown format conversion: 'r'", "String.format(\"%r\", \"hello\");");
   }
 
   @Test
-  public void testCStyleLongConversion() throws Exception {
+  public void cStyleLongConversion() throws Exception {
     testFormat("use %d to format integral types", "String.format(\"%l\", 42);");
   }
 
   @Test
-  public void testCStyleLongConversion2() throws Exception {
+  public void cStyleLongConversion2() throws Exception {
     testFormat("use %d to format integral types", "String.format(\"%ld\", 42);");
   }
 
   @Test
-  public void testCStyleLongConversion3() throws Exception {
+  public void cStyleLongConversion3() throws Exception {
     testFormat("use %d to format integral types", "String.format(\"%lld\", 42);");
   }
 
   @Test
-  public void testCStyleLongConversion4() throws Exception {
+  public void cStyleLongConversion4() throws Exception {
     testFormat("%f, %g or %e to format floating point types", "String.format(\"%lf\", 42);");
   }
 
   @Test
-  public void testCStyleLongConversion5() throws Exception {
+  public void cStyleLongConversion5() throws Exception {
     testFormat("%f, %g or %e to format floating point types", "String.format(\"%llf\", 42);");
   }
 
   @Test
-  public void testConditionalExpression() throws Exception {
+  public void conditionalExpression() throws Exception {
     testFormat(
         "missing argument for format specifier '%s'", "String.format(true ? \"\" : \"%s\");");
   }
 
   @Test
-  public void testConditionalExpression2() throws Exception {
+  public void conditionalExpression2() throws Exception {
     testFormat(
         "missing argument for format specifier '%s'", "String.format(true ? \"%s\" : \"\");");
   }
 
   @Test
-  public void testConditionalExpression3() throws Exception {
+  public void conditionalExpression3() throws Exception {
     testFormat(
         "extra format arguments: used 1, provided 2",
         "String.format(true ? \"%s\" : \"%s\", 1, 2);");
   }
 
   @Test
-  public void testConditionalExpression4() throws Exception {
+  public void conditionalExpression4() throws Exception {
     testFormat(
         "extra format arguments: used 1, provided 2",
         "String.format(true ? \"%s\" : \"%s\", 1, 2);");
   }
 
   @Test
-  public void testConditionalExpression5() throws Exception {
+  public void conditionalExpression5() throws Exception {
     testFormat(
         "missing argument for format specifier '%s'",
         "String.format(true ? \"%s\" : true ? \"%s\" : \"\");");
@@ -219,73 +219,73 @@ public class FormatStringTest {
   }
 
   @Test
-  public void testPrintfMethods_StringFormat() throws Exception {
+  public void printfMethods_stringFormat() throws Exception {
     testFormat("", "String.format(\"%d\", \"hello\");");
   }
 
   @Test
-  public void testPrintfMethods_StringFormatWithLocale() throws Exception {
+  public void printfMethods_stringFormatWithLocale() throws Exception {
     testFormat("", "String.format(Locale.ENGLISH, \"%d\", \"hello\");");
   }
 
   @Test
-  public void testPrintfMethods_PrintWriterFormat() throws Exception {
+  public void printfMethods_printWriterFormat() throws Exception {
     testFormat("", "new PrintWriter(System.err).format(\"%d\", \"hello\");");
   }
 
   @Test
-  public void testPrintfMethods_PrintWriterFormatWithLocale() throws Exception {
+  public void printfMethods_printWriterFormatWithLocale() throws Exception {
     testFormat("", "new PrintWriter(System.err).format(Locale.ENGLISH, \"%d\", \"hello\");");
   }
 
   @Test
-  public void testPrintfMethods_PrintWriterPrintf() throws Exception {
+  public void printfMethods_printWriterPrintf() throws Exception {
     testFormat("", "new PrintWriter(System.err).printf(\"%d\", \"hello\");");
   }
 
   @Test
-  public void testPrintfMethods_PrintWriterPrintfWithLocale() throws Exception {
+  public void printfMethods_printWriterPrintfWithLocale() throws Exception {
     testFormat("", "new PrintWriter(System.err).printf(Locale.ENGLISH, \"%d\", \"hello\");");
   }
 
   @Test
-  public void testPrintfMethods_PrintStreamFormat() throws Exception {
+  public void printfMethods_printStreamFormat() throws Exception {
     testFormat("", "new PrintStream(System.err).format(\"%d\", \"hello\");");
   }
 
   @Test
-  public void testPrintfMethods_PrintStreamFormatWithLocale() throws Exception {
+  public void printfMethods_printStreamFormatWithLocale() throws Exception {
     testFormat("", "new PrintStream(System.err).format(Locale.ENGLISH, \"%d\", \"hello\");");
   }
 
   @Test
-  public void testPrintfMethods_PrintStreamPrintf() throws Exception {
+  public void printfMethods_printStreamPrintf() throws Exception {
     testFormat("", "new PrintStream(System.err).printf(\"%d\", \"hello\");");
   }
 
   @Test
-  public void testPrintfMethods_PrintStreamPrintfWithLocale() throws Exception {
+  public void printfMethods_printStreamPrintfWithLocale() throws Exception {
     testFormat("", "new PrintStream(System.err).printf(Locale.ENGLISH, \"%d\", \"hello\");");
   }
 
   @Test
-  public void testPrintfMethods_FormatterFormatWithLocale() throws Exception {
+  public void printfMethods_formatterFormatWithLocale() throws Exception {
     testFormat(
         "", "new java.util.Formatter(System.err).format(Locale.ENGLISH, \"%d\", \"hello\");");
   }
 
   @Test
-  public void testPrintfMethods_ConsolePrintf() throws Exception {
+  public void printfMethods_consolePrintf() throws Exception {
     testFormat("", "System.console().printf(\"%d\", \"hello\");");
   }
 
   @Test
-  public void testPrintfMethods_ConsoleFormat() throws Exception {
+  public void printfMethods_consoleFormat() throws Exception {
     testFormat("", "System.console().format(\"%d\", \"hello\");");
   }
 
   @Test
-  public void testPrintfMethods_ConsoleFormat_noErrorsWithEmptyArgs() throws Exception {
+  public void printfMethods_consoleFormat_noErrorsWithEmptyArgs() throws Exception {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -298,12 +298,12 @@ public class FormatStringTest {
   }
 
   @Test
-  public void testPrintfMethods_ConsoleReadline() throws Exception {
+  public void printfMethods_consoleReadline() throws Exception {
     testFormat("", "System.console().readLine(\"%d\", \"hello\");");
   }
 
   @Test
-  public void testPrintfMethods_ConsoleReadPassword() throws Exception {
+  public void printfMethods_consoleReadPassword() throws Exception {
     testFormat("", "System.console().readPassword(\"%d\", \"hello\");");
   }
 

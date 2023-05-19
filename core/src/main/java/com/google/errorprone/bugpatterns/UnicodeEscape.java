@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.base.Suppliers.memoize;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
@@ -26,8 +27,8 @@ import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.fixes.FixedPosition;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.suppliers.Supplier;
 import com.sun.source.tree.CompilationUnitTree;
+import java.util.function.Supplier;
 
 /** Replaces printable ASCII unicode escapes with the literal version. */
 @BugPattern(
@@ -36,9 +37,6 @@ import com.sun.source.tree.CompilationUnitTree;
             + " potentially dangerous.",
     severity = WARNING)
 public final class UnicodeEscape extends BugChecker implements CompilationUnitTreeMatcher {
-  private final Supplier<ImmutableRangeSet<Integer>> suppressedRegions =
-      VisitorState.memoize(this::suppressedRegions);
-
   @Override
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
     new UnicodeScanner(state.getSourceCode().toString(), state).scan();
@@ -48,6 +46,8 @@ public final class UnicodeEscape extends BugChecker implements CompilationUnitTr
   private final class UnicodeScanner {
     private final String source;
     private final VisitorState state;
+    private final Supplier<ImmutableRangeSet<Integer>> suppressedRegions =
+        memoize(() -> suppressedRegions(getState()));
 
     private int position = 0;
     private char currentCharacter = 0;
@@ -66,7 +66,7 @@ public final class UnicodeEscape extends BugChecker implements CompilationUnitTr
           if (currentCharacter == '\\' && peek() == 'u') {
             continue;
           }
-          if (suppressedRegions.get(state).contains(position)) {
+          if (suppressedRegions.get().contains(position)) {
             continue;
           }
           state.reportMatch(
@@ -111,6 +111,10 @@ public final class UnicodeEscape extends BugChecker implements CompilationUnitTr
     /** Returns the next character, or {@code 0} if we're at the end of the file. */
     private char peek() {
       return position + 1 < source.length() ? source.charAt(position + 1) : 0;
+    }
+
+    private VisitorState getState() {
+      return state;
     }
   }
 

@@ -45,7 +45,7 @@ public class JodaInstantWithMillisTest {
             "TestClass.java",
             "import org.joda.time.Instant;",
             "public class TestClass {",
-            "  // BUG: Diagnostic contains: new Instant(42);",
+            "  // BUG: Diagnostic contains: Instant.ofEpochMilli(42);",
             "  private static final Instant INSTANT = Instant.now().withMillis(42);",
             "}")
         .doTest();
@@ -58,7 +58,7 @@ public class JodaInstantWithMillisTest {
             "TestClass.java",
             "import org.joda.time.Instant;",
             "public class TestClass {",
-            "  // BUG: Diagnostic contains: new Instant(42L);",
+            "  // BUG: Diagnostic contains: Instant.ofEpochMilli(42L);",
             "  private static final Instant INSTANT = Instant.now().withMillis(42L);",
             "}")
         .doTest();
@@ -72,7 +72,7 @@ public class JodaInstantWithMillisTest {
             "import org.joda.time.Instant;",
             "public class TestClass {",
             "  private static final Instant INSTANT1 = new Instant(42);",
-            "  // BUG: Diagnostic contains: new Instant(44);",
+            "  // BUG: Diagnostic contains: Instant.ofEpochMilli(44);",
             "  private static final Instant INSTANT2 = INSTANT1.withMillis(44);",
             "}")
         .doTest();
@@ -110,7 +110,7 @@ public class JodaInstantWithMillisTest {
             "import java.time.Instant;",
             "public class TestClass {",
             "  private static final org.joda.time.Instant INSTANT = ",
-            "      // BUG: Diagnostic contains: new org.joda.time.Instant(42L);",
+            "      // BUG: Diagnostic contains: org.joda.time.Instant.ofEpochMilli(42L);",
             "      org.joda.time.Instant.now().withMillis(42L);",
             "}")
         .doTest();

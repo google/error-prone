@@ -33,7 +33,7 @@ public final class StaticOrDefaultInterfaceMethodTest {
           .setArgs(ImmutableList.of("-XDandroidCompatible=true"));
 
   @Test
-  public void testPositiveCaseDefault() {
+  public void positiveCaseDefault() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -45,7 +45,7 @@ public final class StaticOrDefaultInterfaceMethodTest {
   }
 
   @Test
-  public void testPositiveCaseStatic() {
+  public void positiveCaseStatic() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -57,12 +57,12 @@ public final class StaticOrDefaultInterfaceMethodTest {
   }
 
   @Test
-  public void testNegativeCaseNoBody() {
+  public void negativeCaseNoBody() {
     compilationHelper.addSourceLines("Test.java", "interface Test { void test(); }").doTest();
   }
 
   @Test
-  public void testNegativeCaseClass() {
+  public void negativeCaseClass() {
     compilationHelper
         .addSourceLines("Test.java", "class Test {  static void test() { System.out.println(); } }")
         .doTest();

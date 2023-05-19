@@ -29,6 +29,7 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.isSameType;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.isStatic;
 import static com.sun.source.tree.Tree.Kind.BLOCK;
 import static com.sun.source.tree.Tree.Kind.EMPTY_STATEMENT;
 import static com.sun.source.tree.Tree.Kind.METHOD;
@@ -112,7 +113,7 @@ public class TryFailThrowable extends BugChecker implements TryTreeMatcher {
           if (!(sym instanceof MethodSymbol)) {
             throw new IllegalArgumentException("not a method call");
           }
-          if (!sym.isStatic()) {
+          if (!isStatic(sym)) {
             return false;
           }
 

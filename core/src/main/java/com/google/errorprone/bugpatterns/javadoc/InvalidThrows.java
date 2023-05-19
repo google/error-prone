@@ -22,7 +22,6 @@ import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
@@ -34,6 +33,7 @@ import com.sun.source.util.DocTreePath;
 import com.sun.source.util.DocTreePathScanner;
 import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.code.TypeTag;
 import javax.lang.model.element.Element;
 
 /**
@@ -44,7 +44,6 @@ import javax.lang.model.element.Element;
 @BugPattern(
     summary = "The documented method doesn't actually throw this checked exception.",
     severity = WARNING,
-    tags = StandardTags.STYLE,
     documentSuppression = false)
 public final class InvalidThrows extends BugChecker implements MethodTreeMatcher {
 
@@ -86,7 +85,8 @@ public final class InvalidThrows extends BugChecker implements MethodTreeMatcher
     }
 
     private boolean isCheckedException(Type type) {
-      return !state.getTypes().isAssignable(type, state.getSymtab().errorType)
+      return type.hasTag(TypeTag.CLASS)
+          && !state.getTypes().isAssignable(type, state.getSymtab().errorType)
           && !state.getTypes().isAssignable(type, state.getSymtab().runtimeExceptionType);
     }
   }

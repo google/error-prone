@@ -136,6 +136,21 @@ public final class InvalidBlockTagTest {
   }
 
   @Test
+  public void parameterBlockTag_finding() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "interface Test {",
+            "  /**",
+            "   // BUG: Diagnostic contains: {@code a}",
+            "   * @a blah",
+            "   */",
+            "  void foo(int a);",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void inheritDoc() {
     refactoring
         .addInputLines(

@@ -25,9 +25,7 @@ import javax.inject.Inject;
  */
 public class AssistedParametersPositiveCases {
 
-  /**
-   * Class has constructor with two @Assisted parameters of the same type.
-   */
+  /** Class has constructor with two @Assisted parameters of the same type. */
   public class TestClass1 {
     @Inject
     // BUG: Diagnostic contains: java.lang.String: x, y
@@ -42,18 +40,14 @@ public class AssistedParametersPositiveCases {
         @Assisted("baz") String z) {}
   }
 
-  /**
-   * Class has constructor with two @Assisted parameters of the same type and same value.
-   */
+  /** Class has constructor with two @Assisted parameters of the same type and same value. */
   public class TestClass2 {
     @Inject
     // BUG: Diagnostic contains: int, @Assisted("foo"): x, y
     public TestClass2(int n, @Assisted("foo") int x, @Assisted("foo") int y, String z) {}
   }
 
-  /**
-   * Class has constructor with two @Assisted parameters of the same parameterized type.
-   */
+  /** Class has constructor with two @Assisted parameters of the same parameterized type. */
   public class TestClass3 {
     private static final String FOO = "foo";
 

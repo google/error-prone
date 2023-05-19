@@ -16,7 +16,15 @@
 
 package com.google.errorprone.util;
 
-/** JDK version string utilities. */
+/**
+ * JDK runtime version utilities.
+ *
+ * <p>These methods are generally used when deciding which method to call reflectively. Bug checkers
+ * that rely on support for specific source code constructs should consult {@link SourceVersion}
+ * instead.
+ *
+ * @see SourceVersion
+ */
 public final class RuntimeVersion {
 
   private static final int FEATURE = Runtime.version().feature();
@@ -54,6 +62,21 @@ public final class RuntimeVersion {
   /** Returns true if the current runtime is JDK 18 or newer. */
   public static boolean isAtLeast18() {
     return FEATURE >= 18;
+  }
+
+  /** Returns true if the current runtime is JDK 19 or newer. */
+  public static boolean isAtLeast19() {
+    return FEATURE >= 19;
+  }
+
+  /** Returns true if the current runtime is JDK 20 or newer. */
+  public static boolean isAtLeast20() {
+    return FEATURE >= 20;
+  }
+
+  /** Returns true if the current runtime is JDK 21 or newer. */
+  public static boolean isAtLeast21() {
+    return FEATURE >= 21;
   }
 
   /**

@@ -30,12 +30,12 @@ public class InsecureCipherModeTest {
       CompilationTestHelper.newInstance(InsecureCipherMode.class, getClass());
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper.addSourceFile("InsecureCipherModePositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("InsecureCipherModeNegativeCases.java").doTest();
   }
 }

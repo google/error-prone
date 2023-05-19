@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.bugpatterns.SerializableReads.BANNED_OBJECT_INPUT_STREAM_METHODS;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.enclosingClass;
@@ -25,7 +26,6 @@ import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
 import static com.google.errorprone.matchers.Matchers.methodIsNamed;
 import static com.google.errorprone.matchers.Matchers.not;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.VisitorState;
@@ -40,28 +40,6 @@ import com.sun.source.tree.MethodInvocationTree;
     summary = "Deserializing user input via the `Serializable` API is extremely dangerous",
     severity = SeverityLevel.ERROR)
 public final class BanSerializableRead extends BugChecker implements MethodInvocationTreeMatcher {
-
-  private static final ImmutableSet<String> BANNED_OBJECT_INPUT_STREAM_METHODS =
-      ImmutableSet.of(
-          // Prevent reading objects unsafely into memory
-          "readObject",
-
-          // This is the same, the default value
-          "defaultReadObject",
-
-          // This is for trusted subclasses
-          "readObjectOverride",
-
-          // Ultimately, a lot of the safety worries come
-          // from being able to construct arbitrary classes via
-          // reading in class descriptors. I don't think anyone
-          // will bother calling this directly, but I don't see
-          // any reason not to block it.
-          "readClassDescriptor",
-
-          // These are basically the same as above
-          "resolveClass",
-          "resolveObject");
 
   private static final Matcher<ExpressionTree> EXEMPT =
       anyOf(
@@ -88,7 +66,22 @@ public final class BanSerializableRead extends BugChecker implements MethodInvoc
 
               // because in the next part we exempt readObject functions, here we
               // check for calls to those functions
-              instanceMethod().onDescendantOf("java.io.Serializable").named("readObject")),
+              instanceMethod().onDescendantOf("java.io.Serializable").named("readObject"),
+
+              // we need to ban java.io.ObjectInput.readObject too, but most of the time it's called
+              // inside java.io.Externalizable.readExternal. Also ban direct calls of readExternal,
+              // unless it's inside another readExternal
+              allOf(
+                  anyOf(
+                      instanceMethod().onDescendantOf("java.io.ObjectInput").named("readObject"),
+                      instanceMethod()
+                          .onDescendantOf("java.io.Externalizable")
+                          .named("readExternal")),
+                  // skip banning things inside readExternal implementation
+                  not(
+                      allOf(
+                          enclosingMethod(methodIsNamed("readExternal")),
+                          enclosingClass(isSubtypeOf("java.io.Externalizable")))))),
 
           // Java lets you override or add to the default deserialization behaviour
           // by defining a 'readObject' on your class. In this case, it's super common

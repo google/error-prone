@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns.threadsafety;
 
+import static com.google.errorprone.util.ASTHelpers.isStatic;
 import static com.google.errorprone.util.ASTHelpers.stripParentheses;
 
 import com.google.common.collect.LinkedHashMultimap;
@@ -54,7 +55,7 @@ public class StaticGuardedByInstance extends BugChecker implements SynchronizedT
     if (!(lock instanceof VarSymbol)) {
       return Description.NO_MATCH;
     }
-    if (lock.isStatic()) {
+    if (isStatic(lock)) {
       return Description.NO_MATCH;
     }
     Multimap<VarSymbol, Tree> writes = WriteVisitor.scan(tree.getBlock());

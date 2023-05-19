@@ -21,6 +21,7 @@ import static com.google.errorprone.bugpatterns.inject.dagger.DaggerAnnotations.
 import static com.google.errorprone.util.ASTHelpers.createPrivateConstructor;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.isStatic;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
@@ -71,7 +72,7 @@ public final class InterfaceWithOnlyStatics extends BugChecker implements ClassT
       if (memberSymbol == null) {
         return Description.NO_MATCH;
       }
-      if (memberSymbol.isStatic()) {
+      if (isStatic(memberSymbol)) {
         staticMembers++;
       } else {
         nonStaticMembers++;

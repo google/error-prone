@@ -19,7 +19,9 @@ package com.google.errorprone.bugpatterns.inject.testdata;
 import com.google.inject.Inject;
 import java.beans.ConstructorProperties;
 
-/** @author sgoldfeder@google.com(Steven Goldfeder) */
+/**
+ * @author sgoldfeder@google.com(Steven Goldfeder)
+ */
 public class MoreThanOneInjectableConstructorPositiveCases {
 
   /** Class has 2 constructors, both are injectable */

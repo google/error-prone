@@ -18,7 +18,9 @@ package com.google.errorprone.bugpatterns.inject.testdata;
 
 import com.google.inject.assistedinject.AssistedInject;
 
-/** @author sgoldfeder@google.com (Steven Goldfeder) */
+/**
+ * @author sgoldfeder@google.com (Steven Goldfeder)
+ */
 public class AssistedInjectAndInjectOnConstructorsNegativeCases {
   /** Class has a single constructor with no annotation. */
   public class TestClass1 {

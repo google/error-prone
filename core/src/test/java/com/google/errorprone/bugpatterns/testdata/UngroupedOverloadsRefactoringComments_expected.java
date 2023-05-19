@@ -16,7 +16,9 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
-/** @author hanuszczak@google.com (Łukasz Hanuszczak) */
+/**
+ * @author hanuszczak@google.com (Łukasz Hanuszczak)
+ */
 class UngroupedOverloadsRefactoringComments {
 
   private void bar() {}

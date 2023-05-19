@@ -99,7 +99,7 @@ public class MethodHasParametersTest extends CompilerBasedAbstractTest {
   }
 
   @Test
-  public void testMultipleParameters() {
+  public void multipleParameters() {
     writeFile(
         "A.java",
         "package com.google;",

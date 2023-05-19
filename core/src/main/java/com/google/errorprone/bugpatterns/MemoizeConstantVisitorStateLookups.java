@@ -42,7 +42,6 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
-import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
@@ -157,9 +156,9 @@ public class MemoizeConstantVisitorStateLookups extends BugChecker
     }
   }
 
-  private static ImmutableList<CallSite> findConstantLookups(ClassTree tree, VisitorState state) {
+  private ImmutableList<CallSite> findConstantLookups(ClassTree tree, VisitorState state) {
     ImmutableList.Builder<CallSite> result = ImmutableList.builder();
-    new TreeScanner<Void, Void>() {
+    new SuppressibleTreePathScanner<Void, Void>(state) {
       @Override
       public Void visitMethodInvocation(MethodInvocationTree tree, Void unused) {
         if (CONSTANT_LOOKUP.matches(tree, state)) {
@@ -186,7 +185,7 @@ public class MemoizeConstantVisitorStateLookups extends BugChecker
           }
         }
       }
-    }.scan(tree, null);
+    }.scan(state.getPath(), null);
     return result.build();
   }
 

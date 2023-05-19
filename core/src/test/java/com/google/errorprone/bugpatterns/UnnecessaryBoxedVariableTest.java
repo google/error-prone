@@ -33,7 +33,7 @@ public class UnnecessaryBoxedVariableTest {
       CompilationTestHelper.newInstance(UnnecessaryBoxedVariable.class, getClass());
 
   @Test
-  public void testCases() {
+  public void cases() {
     helper
         .addInput("testdata/UnnecessaryBoxedVariableCases.java")
         .addOutput("testdata/UnnecessaryBoxedVariableCases_expected.java")

@@ -27,21 +27,21 @@ public class PrivateSecurityContractProtoAccessTest {
       CompilationTestHelper.newInstance(PrivateSecurityContractProtoAccess.class, getClass());
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper
         .addSourceFile("PrivateSecurityContractProtoAccessPositiveCases.java")
         .doTest();
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper
         .addSourceFile("PrivateSecurityContractProtoAccessNegativeCases.java")
         .doTest();
   }
 
   @Test
-  public void testSafeHtmlAccessWithinPackage() {
+  public void safeHtmlAccessWithinPackage() {
     compilationHelper
         .addSourceLines(
             "Test.java",

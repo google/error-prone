@@ -43,8 +43,7 @@ public class ModifySourceCollectionInStreamPositiveCases {
         // BUG: Diagnostic contains:
         .forEach(mutableValues::remove);
 
-    getMutableValues()
-        .parallelStream()
+    getMutableValues().parallelStream()
         .map(x -> x + 1)
         .filter(x -> x < 5)
         // BUG: Diagnostic contains:

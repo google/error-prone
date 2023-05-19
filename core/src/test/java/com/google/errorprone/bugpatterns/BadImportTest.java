@@ -45,7 +45,24 @@ public final class BadImportTest {
   }
 
   @Test
-  public void testMsg() {
+  public void positive_identifiers() {
+    compilationTestHelper
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.errorprone.CompilationTestHelper.newInstance;",
+            "import com.google.errorprone.CompilationTestHelper;",
+            "import com.google.errorprone.bugpatterns.BugChecker;",
+            "",
+            "class Test {",
+            "  private final CompilationTestHelper compilationTestHelper =",
+            "      // BUG: Diagnostic contains: CompilationTestHelper.newInstance",
+            "      newInstance(BugChecker.class, getClass());",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void msg() {
     compilationTestHelper
         .addSourceLines(
             "Test.java",
@@ -206,7 +223,7 @@ public final class BadImportTest {
   }
 
   @Test
-  public void test_nested_fixes() {
+  public void nestedFixes() {
     refactoringTestHelper
         .addInput("BadImportPositiveCases.java")
         .addOutput("BadImportPositiveCases_expected.java")
@@ -214,7 +231,7 @@ public final class BadImportTest {
   }
 
   @Test
-  public void test_nested_typeUseAnnotation() {
+  public void nestedTypeUseAnnotation() {
     refactoringTestHelper
         .addInputLines(
             "input/TypeUseAnnotation.java",

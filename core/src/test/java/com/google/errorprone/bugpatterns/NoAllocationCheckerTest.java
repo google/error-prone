@@ -31,12 +31,12 @@ public class NoAllocationCheckerTest {
       CompilationTestHelper.newInstance(NoAllocationChecker.class, getClass());
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper.addSourceFile("NoAllocationCheckerPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("NoAllocationCheckerNegativeCases.java").doTest();
   }
 }

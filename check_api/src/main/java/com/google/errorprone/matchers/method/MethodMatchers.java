@@ -178,7 +178,6 @@ public final class MethodMatchers {
 
     /** Match methods whose formal parameters have the given types. */
     ParameterMatcher withParameters(String first, String... rest);
-    /** Match methods whose formal parameters have the given types. */
 
     /** Match methods whose formal parameters have the given types. */
     ParameterMatcher withParameters(Iterable<String> parameters);

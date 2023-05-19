@@ -46,6 +46,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.lang.model.element.Parameterizable;
 import javax.lang.model.element.TypeParameterElement;
 
@@ -59,7 +60,8 @@ public class IncompatibleArgumentType extends BugChecker implements MethodInvoca
 
   private final TypeCompatibilityUtils typeCompatibilityUtils;
 
-  public IncompatibleArgumentType(ErrorProneFlags flags) {
+  @Inject
+  IncompatibleArgumentType(ErrorProneFlags flags) {
     this.typeCompatibilityUtils = TypeCompatibilityUtils.fromFlags(flags);
   }
 
@@ -225,6 +227,7 @@ public class IncompatibleArgumentType extends BugChecker implements MethodInvoca
     return requiredType;
   }
 
+  @Nullable
   private static RequiredType resolveTypeFromGenericMethod(
       Type calledMethodType, MethodSymbol declaredMethod, String typeArgName) {
     int tyargIndex = findTypeArgInList(declaredMethod, typeArgName);
@@ -236,6 +239,7 @@ public class IncompatibleArgumentType extends BugChecker implements MethodInvoca
 
   // Plumb through a type which is supposed to be a Types.Subst, then find the replacement
   // type that the compiler resolved.
+  @Nullable
   private static Type getTypeFromTypeMapping(
       Type m, MethodSymbol declaredMethod, String namedTypeArg) {
     ImmutableListMultimap<TypeVariableSymbol, Type> substitutions =

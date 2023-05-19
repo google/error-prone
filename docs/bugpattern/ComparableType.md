@@ -13,7 +13,7 @@ not this:
 
 ```java
 class Foo implements Comparable<Bar> {
-  public int compareTo(Foo other) { ... }
+  public int compareTo(Bar other) { ... }
 }
 ```
 

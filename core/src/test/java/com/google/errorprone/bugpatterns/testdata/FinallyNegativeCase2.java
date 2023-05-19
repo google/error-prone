@@ -18,7 +18,9 @@ package com.google.errorprone.bugpatterns.testdata;
 
 import java.io.IOException;
 
-/** @author cushon@google.com (Liam Miller-Cushon) */
+/**
+ * @author cushon@google.com (Liam Miller-Cushon)
+ */
 public class FinallyNegativeCase2 {
   public void test1(boolean flag) {
     try {

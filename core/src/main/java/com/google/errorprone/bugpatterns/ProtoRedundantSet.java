@@ -41,6 +41,7 @@ import com.sun.tools.javac.code.Type;
 import java.util.Collection;
 import java.util.Map;
 import java.util.regex.Pattern;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Checks that protocol buffers built with chained builders don't set the same field twice.
@@ -167,7 +168,7 @@ public final class ProtoRedundantSet extends BugChecker implements MethodInvocat
   enum FieldType {
     SINGLE {
       @Override
-      FieldWithValue match(String name, MethodInvocationTree tree) {
+      @Nullable FieldWithValue match(String name, MethodInvocationTree tree) {
         if (name.startsWith("set") && tree.getArguments().size() == 1) {
           return FieldWithValue.of(SingleField.of(name), tree, tree.getArguments().get(0));
         }
@@ -176,7 +177,7 @@ public final class ProtoRedundantSet extends BugChecker implements MethodInvocat
     },
     REPEATED {
       @Override
-      FieldWithValue match(String name, MethodInvocationTree tree) {
+      @Nullable FieldWithValue match(String name, MethodInvocationTree tree) {
         if (name.startsWith("set") && tree.getArguments().size() == 2) {
           Integer index = ASTHelpers.constValue(tree.getArguments().get(0), Integer.class);
           if (index != null) {
@@ -189,7 +190,7 @@ public final class ProtoRedundantSet extends BugChecker implements MethodInvocat
     },
     MAP {
       @Override
-      FieldWithValue match(String name, MethodInvocationTree tree) {
+      @Nullable FieldWithValue match(String name, MethodInvocationTree tree) {
         if (name.startsWith("put") && tree.getArguments().size() == 2) {
           Object key = ASTHelpers.constValue(tree.getArguments().get(0), Object.class);
           if (key != null) {

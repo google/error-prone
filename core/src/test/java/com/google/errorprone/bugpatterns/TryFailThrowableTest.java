@@ -30,12 +30,12 @@ public class TryFailThrowableTest {
       CompilationTestHelper.newInstance(TryFailThrowable.class, getClass());
 
   @Test
-  public void testPositiveCases() {
+  public void positiveCases() {
     compilationHelper.addSourceFile("TryFailThrowablePositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCases() {
+  public void negativeCases() {
     compilationHelper.addSourceFile("TryFailThrowableNegativeCases.java").doTest();
   }
 }

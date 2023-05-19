@@ -34,7 +34,7 @@ public class DurationFromTest {
 
   @SuppressWarnings("DurationFrom")
   @Test
-  public void testFailures() {
+  public void failures() {
     assertThrows(UnsupportedTemporalTypeException.class, () -> Duration.from(Period.ZERO));
     assertThrows(UnsupportedTemporalTypeException.class, () -> Duration.from(Period.ofDays(1)));
     assertThrows(UnsupportedTemporalTypeException.class, () -> Duration.from(Period.ofDays(-1)));

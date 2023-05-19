@@ -16,8 +16,11 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static java.util.stream.Collectors.joining;
+
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
+import java.util.stream.IntStream;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -191,6 +194,27 @@ public class DistinctVarargsCheckerTest {
             "    ImmutableSet.of(first, second);",
             "    ImmutableSortedSet.of(first);",
             "    ImmutableSortedSet.of(first, second);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void negative_quadratic() {
+
+    String large =
+        IntStream.range(0, 7000)
+            .mapToObj(x -> String.format("\"%s\"", x))
+            .collect(joining(", ", "ImmutableSet.of(", ", \"0\");"));
+
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableSet;",
+            "public class Test {",
+            "  void testFunction() {",
+            "    // BUG: Diagnostic contains: DistinctVarargsChecker",
+            large,
             "  }",
             "}")
         .doTest();

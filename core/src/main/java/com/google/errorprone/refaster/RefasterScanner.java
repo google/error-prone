@@ -112,12 +112,8 @@ abstract class RefasterScanner<M extends TemplateMatch, T extends Template<M>>
           }
         }
         Description.Builder builder =
-            Description.builder(
-                match.getLocation(),
-                rule().qualifiedTemplateClass(),
-                "",
-                SeverityLevel.WARNING,
-                "");
+            Description.builder(match.getLocation(), rule().qualifiedTemplateClass(), "", "")
+                .overrideSeverity(SeverityLevel.WARNING);
 
         if (rule().afterTemplates().isEmpty()) {
           builder.addFix(SuggestedFix.prefixWith(match.getLocation(), "/* match found */ "));

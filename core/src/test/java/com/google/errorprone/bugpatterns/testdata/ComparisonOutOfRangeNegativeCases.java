@@ -19,10 +19,12 @@ package com.google.errorprone.bugpatterns.testdata;
 import java.io.IOException;
 import java.io.Reader;
 
-/** @author Bill Pugh (bill.pugh@gmail.com) */
-public class ComparisonOutOfRangeNegativeCases {
+/**
+ * @author Bill Pugh (bill.pugh@gmail.com)
+ */
+class ComparisonOutOfRangeNegativeCases {
 
-  public void testByteEquality() {
+  void byteEquality() {
     boolean result;
     byte b = 0;
     byte[] barr = {1, 2, 3};
@@ -44,7 +46,7 @@ public class ComparisonOutOfRangeNegativeCases {
     result = barr[0] == -128;
   }
 
-  public void testCharEquality() throws IOException {
+  void charEquality() throws IOException {
     boolean result;
     char c = 'A';
     Reader reader = null;
@@ -58,5 +60,59 @@ public class ComparisonOutOfRangeNegativeCases {
 
     int d;
     result = (d = reader.read()) == -1;
+  }
+
+  void shorts(short s) {
+    boolean result;
+
+    result = s == Short.MAX_VALUE;
+    result = s == Short.MIN_VALUE;
+
+    result = s != Short.MAX_VALUE;
+    result = s != Short.MIN_VALUE;
+
+    result = s > Short.MAX_VALUE - 1;
+    result = s > Short.MIN_VALUE;
+
+    result = s >= Short.MAX_VALUE;
+    result = s >= Short.MIN_VALUE + 1;
+
+    result = s < Short.MIN_VALUE + 1;
+    result = s < Short.MAX_VALUE;
+
+    result = s <= Short.MIN_VALUE;
+    result = s <= Short.MAX_VALUE - 1;
+  }
+
+  void shortsReversed(short s) {
+    boolean result;
+
+    result = Short.MAX_VALUE - 1 < s;
+    result = Short.MIN_VALUE < s;
+
+    result = Short.MAX_VALUE <= s;
+    result = Short.MIN_VALUE + 1 <= s;
+
+    result = Short.MIN_VALUE + 1 > s;
+    result = Short.MAX_VALUE > s;
+
+    result = Short.MIN_VALUE >= s;
+    result = Short.MAX_VALUE - 1 >= s;
+  }
+
+  void ints(int i) {
+    boolean result;
+
+    result = i == (long) Integer.MAX_VALUE;
+  }
+
+  void longs(long l) {
+    boolean result;
+
+    result = l == (double) Long.MIN_VALUE;
+  }
+
+  String binaryTreeMixingByteWithNonNumeric(byte b) {
+    return "value is: " + b;
   }
 }

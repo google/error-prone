@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.base.Ascii.toLowerCase;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.canBeRemoved;
@@ -91,7 +92,9 @@ public final class UnusedNestedClass extends BugChecker implements CompilationUn
     }
 
     private boolean ignoreUnusedClass(ClassTree classTree, VisitorState state) {
-      return isSuppressed(classTree, state) || shouldKeep(classTree);
+      return isSuppressed(classTree, state)
+          || shouldKeep(classTree)
+          || toLowerCase(classTree.getSimpleName().toString()).startsWith("unused");
     }
   }
 

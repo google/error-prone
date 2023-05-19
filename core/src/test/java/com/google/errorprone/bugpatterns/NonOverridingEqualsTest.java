@@ -31,7 +31,7 @@ public class NonOverridingEqualsTest {
   // Positive cases
 
   @Test
-  public void testFlagsSimpleCovariantEqualsMethod() {
+  public void flagsSimpleCovariantEqualsMethod() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -47,7 +47,7 @@ public class NonOverridingEqualsTest {
   // The following two tests are really to help debug the construction of the suggested fixes.
 
   @Test
-  public void testFlagsComplicatedCovariantEqualsMethod() {
+  public void flagsComplicatedCovariantEqualsMethod() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -65,7 +65,7 @@ public class NonOverridingEqualsTest {
   }
 
   @Test
-  public void testFlagsAnotherComplicatedCovariantEqualsMethod() {
+  public void flagsAnotherComplicatedCovariantEqualsMethod() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -82,7 +82,7 @@ public class NonOverridingEqualsTest {
   }
 
   @Test
-  public void testFlagsAbstractCovariantEqualsMethod() {
+  public void flagsAbstractCovariantEqualsMethod() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -94,7 +94,7 @@ public class NonOverridingEqualsTest {
   }
 
   @Test
-  public void testFlagsNativeCovariantEqualsMethod() {
+  public void flagsNativeCovariantEqualsMethod() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -106,7 +106,7 @@ public class NonOverridingEqualsTest {
   }
 
   @Test
-  public void testFlagsIfMethodTakesUnrelatedType() {
+  public void flagsIfMethodTakesUnrelatedType() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -120,7 +120,7 @@ public class NonOverridingEqualsTest {
   }
 
   @Test
-  public void testFlagsBoxedBooleanReturnType() {
+  public void flagsBoxedBooleanReturnType() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -134,7 +134,7 @@ public class NonOverridingEqualsTest {
   }
 
   @Test
-  public void testFlagsCovariantEqualsMethodInEnum() {
+  public void flagsCovariantEqualsMethodInEnum() {
     compilationHelper
         .addSourceLines(
             "Planet.java",
@@ -158,7 +158,7 @@ public class NonOverridingEqualsTest {
   }
 
   @Test
-  public void testFlagsPrivateEqualsMethod() {
+  public void flagsPrivateEqualsMethod() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -172,7 +172,7 @@ public class NonOverridingEqualsTest {
   }
 
   @Test
-  public void testFlagsEvenIfAnotherMethodOverridesEquals() {
+  public void flagsEvenIfAnotherMethodOverridesEquals() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -194,7 +194,7 @@ public class NonOverridingEqualsTest {
    * single-argument static equals method...
    */
   @Test
-  public void testFlagsStaticEqualsMethod() {
+  public void flagsStaticEqualsMethod() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -210,7 +210,7 @@ public class NonOverridingEqualsTest {
   // Negative cases
 
   @Test
-  public void testDontFlagMethodThatOverridesEquals() {
+  public void dontFlagMethodThatOverridesEquals() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -223,7 +223,7 @@ public class NonOverridingEqualsTest {
   }
 
   @Test
-  public void testDontFlagEqualsMethodWithMoreThanOneParameter() {
+  public void dontFlagEqualsMethodWithMoreThanOneParameter() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -236,7 +236,7 @@ public class NonOverridingEqualsTest {
   }
 
   @Test
-  public void testDontFlagIfWrongReturnType() {
+  public void dontFlagIfWrongReturnType() {
     compilationHelper
         .addSourceLines(
             "Test.java",

@@ -17,12 +17,15 @@
 package com.google.errorprone.bugpatterns.testdata;
 
 import com.google.errorprone.annotations.MustBeClosed;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
+@SuppressWarnings({"UnusedNestedClass", "UnusedVariable"})
 class MustBeClosedCheckerPositiveCases {
 
   class DoesNotImplementAutoCloseable {
     @MustBeClosed
+    // BUG: Diagnostic contains: MustBeClosed should only annotate constructors of AutoCloseables.
     DoesNotImplementAutoCloseable() {}
 
     @MustBeClosed
@@ -50,7 +53,7 @@ class MustBeClosedCheckerPositiveCases {
 
     void sameClass() {
       // BUG: Diagnostic contains:
-      try (Closeable closeable = mustBeClosedAnnotatedMethod()) {}
+      try (var closeable = mustBeClosedAnnotatedMethod()) {}
     }
   }
 
@@ -61,19 +64,13 @@ class MustBeClosedCheckerPositiveCases {
 
     void sameClass() {
       // BUG: Diagnostic contains:
-      try (MustBeClosedAnnotatedConstructor mustBeClosedAnnotatedConstructor =
-          new MustBeClosedAnnotatedConstructor()) {}
+      try (var mustBeClosedAnnotatedConstructor = new MustBeClosedAnnotatedConstructor()) {}
     }
-  }
-
-  interface Lambda {
-
-    Closeable expression();
   }
 
   void positiveCase1() {
     // BUG: Diagnostic contains:
-    try (Closeable closeable = new Foo().mustBeClosedAnnotatedMethod()) {}
+    try (var closeable = new Foo().mustBeClosedAnnotatedMethod()) {}
   }
 
   void positiveCase2() {
@@ -84,7 +81,7 @@ class MustBeClosedCheckerPositiveCases {
   void positiveCase3() {
     try {
       // BUG: Diagnostic contains:
-      try (Closeable closeable = new Foo().mustBeClosedAnnotatedMethod()) {}
+      try (var closeable = new Foo().mustBeClosedAnnotatedMethod()) {}
     } finally {
     }
   }
@@ -92,14 +89,13 @@ class MustBeClosedCheckerPositiveCases {
   void positiveCase4() {
     try (Closeable c = new Foo().mustBeClosedAnnotatedMethod()) {
       // BUG: Diagnostic contains:
-      try (Closeable closeable = new Foo().mustBeClosedAnnotatedMethod()) {}
+      try (var closeable = new Foo().mustBeClosedAnnotatedMethod()) {}
     }
   }
 
   void positiveCase5() {
     // BUG: Diagnostic contains:
-    try (MustBeClosedAnnotatedConstructor mustBeClosedAnnotatedConstructor =
-        new MustBeClosedAnnotatedConstructor()) {}
+    try (var mustBeClosedAnnotatedConstructor = new MustBeClosedAnnotatedConstructor()) {}
   }
 
   @MustBeClosed
@@ -114,16 +110,50 @@ class MustBeClosedCheckerPositiveCases {
     return new Foo().mustBeClosedAnnotatedMethod();
   }
 
-  void positiveCase8() {
-    // Lambda has a fixless finding because no reasonable fix can be suggested
-    Lambda expression =
+  int existingDeclarationUsesVar() {
+    // Bug: Diagnostic contains:
+    try (var result = new Foo().mustBeClosedAnnotatedMethod()) {
+      return 0;
+    }
+  }
+
+  boolean twoCloseablesInOneExpression() {
+    // BUG: Diagnostic contains:
+    try (var closeable = new Foo().mustBeClosedAnnotatedMethod()) {
+      try (var closeable2 = new Foo().mustBeClosedAnnotatedMethod()) {
+        return closeable == closeable2;
+      }
+    }
+  }
+
+  void voidLambda() {
+    // Lambda has a fixless finding because no reasonable fix can be suggested.
+    // BUG: Diagnostic contains:
+    Runnable runnable = () -> new Foo().mustBeClosedAnnotatedMethod();
+  }
+
+  void expressionLambda() {
+    Supplier<Closeable> supplier =
+        () ->
+            // BUG: Diagnostic contains:
+            new Foo().mustBeClosedAnnotatedMethod();
+  }
+
+  void statementLambda() {
+    Supplier<Closeable> supplier =
         () -> {
           // BUG: Diagnostic contains:
           return new Foo().mustBeClosedAnnotatedMethod();
         };
   }
 
-  void positiveCase9() {
+  void methodReference() {
+    Supplier<Closeable> supplier =
+        // TODO(b/218377318): BUG: Diagnostic contains:
+        new Foo()::mustBeClosedAnnotatedMethod;
+  }
+
+  void anonymousClass() {
     new Foo() {
       @MustBeClosed
       @Override
@@ -134,9 +164,25 @@ class MustBeClosedCheckerPositiveCases {
     };
   }
 
-  int expressionDeclaredVariable() {
+  void subexpression() {
+    // BUG: Diagnostic contains:
+    try (var closeable = new Foo().mustBeClosedAnnotatedMethod()) {
+      closeable.method();
+    }
+  }
+
+  void ternary(boolean condition) {
+    // BUG: Diagnostic contains:
     int result;
-    try (Closeable closeable = new Foo().mustBeClosedAnnotatedMethod()) {
+    try (var closeable = new Foo().mustBeClosedAnnotatedMethod()) {
+      result = condition ? closeable.method() : 0;
+    }
+  }
+
+  int variableDeclaration() {
+    // BUG: Diagnostic contains:
+    int result;
+    try (var closeable = new Foo().mustBeClosedAnnotatedMethod()) {
       result = closeable.method();
     }
     return result;

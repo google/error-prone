@@ -17,13 +17,17 @@
 package com.google.errorprone.bugpatterns.javadoc;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
+import static com.google.common.collect.MoreCollectors.onlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.bugpatterns.javadoc.Utils.diagnosticPosition;
 import static com.google.errorprone.bugpatterns.javadoc.Utils.getBestMatch;
 import static com.google.errorprone.bugpatterns.javadoc.Utils.getDocComment;
 import static com.google.errorprone.bugpatterns.javadoc.Utils.getDocTreePath;
 import static com.google.errorprone.bugpatterns.javadoc.Utils.replace;
+import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.names.LevenshteinEditDistance.getEditDistance;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.isRecord;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
@@ -74,14 +78,21 @@ public final class InvalidParam extends BugChecker implements ClassTreeMatcher, 
   public Description matchClass(ClassTree classTree, VisitorState state) {
     DocTreePath path = getDocTreePath(state);
     if (path != null) {
-      ImmutableSet<String> parameters = ImmutableSet.of();
+      ImmutableSet<String> parameters =
+          isRecord(getSymbol((Tree) classTree))
+              ? getCanonicalRecordConstructor(classTree).getParameters().stream()
+                  .map(p -> p.getName().toString())
+                  .collect(toImmutableSet())
+              : ImmutableSet.of();
+
       ImmutableSet<String> typeParameters =
           classTree.getTypeParameters().stream()
               .map(t -> t.getName().toString())
               .collect(toImmutableSet());
+
       new ParamsChecker(state, classTree, parameters, typeParameters).scan(path, null);
     }
-    return Description.NO_MATCH;
+    return NO_MATCH;
   }
 
   @Override
@@ -98,7 +109,15 @@ public final class InvalidParam extends BugChecker implements ClassTreeMatcher, 
               .collect(toImmutableSet());
       new ParamsChecker(state, methodTree, parameters, typeParameters).scan(path, null);
     }
-    return Description.NO_MATCH;
+    return NO_MATCH;
+  }
+
+  private static MethodTree getCanonicalRecordConstructor(ClassTree classTree) {
+    return classTree.getMembers().stream()
+        .filter(MethodTree.class::isInstance)
+        .map(MethodTree.class::cast)
+        .filter(tree -> isRecord(getSymbol((Tree) tree)))
+        .collect(onlyElement());
   }
 
   /** Checks that documented parameters match the method's parameter list. */

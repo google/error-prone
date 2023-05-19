@@ -16,14 +16,14 @@
 
 package com.google.errorprone.bugpatterns.threadsafety;
 
+import static com.google.errorprone.util.ASTHelpers.isStatic;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.CheckReturnValue;
-import com.google.errorprone.annotations.Immutable;
 import com.google.errorprone.annotations.ImmutableTypeParameter;
 import com.google.errorprone.annotations.concurrent.LazyInit;
-import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.threadsafety.ThreadSafety.Purpose;
 import com.google.errorprone.bugpatterns.threadsafety.ThreadSafety.Violation;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -43,25 +43,27 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.type.TypeKind;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /** Analyzes types for deep immutability. */
-public class ImmutableAnalysis {
+public final class ImmutableAnalysis {
 
-  private final BugChecker bugChecker;
+  private final BiPredicate<Symbol, VisitorState> suppressionChecker;
   private final VisitorState state;
   private final WellKnownMutability wellKnownMutability;
   private final ThreadSafety threadSafety;
 
   ImmutableAnalysis(
-      BugChecker bugChecker,
+      BiPredicate<Symbol, VisitorState> suppressionChecker,
       VisitorState state,
       WellKnownMutability wellKnownMutability,
       ImmutableSet<String> immutableAnnotations) {
-    this.bugChecker = bugChecker;
+    this.suppressionChecker = suppressionChecker;
     this.state = state;
     this.wellKnownMutability = wellKnownMutability;
     this.threadSafety =
@@ -71,11 +73,6 @@ public class ImmutableAnalysis {
             .markerAnnotations(immutableAnnotations)
             .typeParameterAnnotation(ImmutableTypeParameter.class)
             .build(state);
-  }
-
-  public ImmutableAnalysis(
-      BugChecker bugChecker, VisitorState state, WellKnownMutability wellKnownMutability) {
-    this(bugChecker, state, wellKnownMutability, ImmutableSet.of(Immutable.class.getName()));
   }
 
   Violation isThreadSafeType(
@@ -137,11 +134,11 @@ public class ImmutableAnalysis {
       if (interfaceAnnotation == null) {
         continue;
       }
-      info =
+      Violation superInfo =
           threadSafety.checkSuperInstantiation(
               immutableTyParams, interfaceAnnotation, interfaceType);
-      if (info.isPresent()) {
-        return info.plus(
+      if (superInfo.isPresent()) {
+        return superInfo.plus(
             String.format(
                 "'%s' extends '%s'",
                 threadSafety.getPrettyName(type.tsym),
@@ -151,14 +148,14 @@ public class ImmutableAnalysis {
 
     if (!type.asElement().isEnum()) {
       // don't check enum super types here to avoid double-reporting errors
-      info = checkSuper(immutableTyParams, type);
-      if (info.isPresent()) {
-        return info;
+      Violation superInfo = checkSuper(immutableTyParams, type, reporter);
+      if (superInfo.isPresent()) {
+        return superInfo;
       }
     }
     Type mutableEnclosing = threadSafety.mutableEnclosingInstance(tree, type);
     if (mutableEnclosing != null) {
-      return info.plus(
+      return Violation.of(
           String.format(
               "'%s' has mutable enclosing instance '%s'",
               threadSafety.getPrettyName(type.tsym), mutableEnclosing));
@@ -166,7 +163,8 @@ public class ImmutableAnalysis {
     return Violation.absent();
   }
 
-  private Violation checkSuper(ImmutableSet<String> immutableTyParams, ClassType type) {
+  private Violation checkSuper(
+      ImmutableSet<String> immutableTyParams, ClassType type, ViolationReporter reporter) {
     ClassType superType = (ClassType) state.getTypes().supertype(type);
     if (superType.getKind() == TypeKind.NONE
         || state.getTypes().isSameType(state.getSymtab().objectType, superType)) {
@@ -195,18 +193,7 @@ public class ImmutableAnalysis {
 
     // Recursive case: check if the supertype is 'effectively' immutable.
     Violation info =
-        checkForImmutability(
-            Optional.<ClassTree>empty(),
-            immutableTyParams,
-            superType,
-            new ViolationReporter() {
-              @Override
-              public Description.Builder describe(Tree tree, Violation info) {
-                return bugChecker
-                    .buildDescription(tree)
-                    .setMessage(info.plus(info.message()).message());
-              }
-            });
+        checkForImmutability(Optional.<ClassTree>empty(), immutableTyParams, superType, reporter);
     if (!info.isPresent()) {
       return Violation.absent();
     }
@@ -229,7 +216,7 @@ public class ImmutableAnalysis {
       return Violation.absent();
     }
     Predicate<Symbol> instanceFieldFilter =
-        symbol -> symbol.getKind() == ElementKind.FIELD && !symbol.isStatic();
+        symbol -> symbol.getKind() == ElementKind.FIELD && !isStatic(symbol);
     Map<Symbol, Tree> declarations = new HashMap<>();
     if (tree.isPresent()) {
       for (Tree member : tree.get().getMembers()) {
@@ -264,7 +251,7 @@ public class ImmutableAnalysis {
       ClassType classType,
       VarSymbol var,
       ViolationReporter reporter) {
-    if (bugChecker.isSuppressed(var, state)) {
+    if (suppressionChecker.test(var, state)) {
       return Violation.absent();
     }
     if (!var.getModifiers().contains(Modifier.FINAL)
@@ -323,7 +310,7 @@ public class ImmutableAnalysis {
    * Gets the {@link Tree}'s {@code @Immutable} annotation info, either from an annotation on the
    * symbol or from the list of well-known immutable types.
    */
-  AnnotationInfo getImmutableAnnotation(Tree tree, VisitorState state) {
+  @Nullable AnnotationInfo getImmutableAnnotation(Tree tree, VisitorState state) {
     Symbol sym = ASTHelpers.getSymbol(tree);
     return sym == null ? null : threadSafety.getMarkerOrAcceptedAnnotation(sym, state);
   }

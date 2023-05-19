@@ -58,7 +58,7 @@ public final class NextStatementTest {
   // If a statement is inside an if statement with no block braces, the NextStatement should return
   // false, since there's no other statement inside the block.
   @Test
-  public void testSingleStatementBlock() {
+  public void singleStatementBlock() {
     CompilationTestHelper.newInstance(CompoundBeforeAnythingChecker.class, getClass())
         .addSourceLines(
             "B.java",
@@ -74,7 +74,7 @@ public final class NextStatementTest {
   }
 
   @Test
-  public void testNextStatementInBlock() {
+  public void nextStatementInBlock() {
     CompilationTestHelper.newInstance(CompoundBeforeAnythingChecker.class, getClass())
         .addSourceLines(
             "A.java",

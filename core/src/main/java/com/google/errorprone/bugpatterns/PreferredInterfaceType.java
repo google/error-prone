@@ -39,6 +39,7 @@ import static com.google.errorprone.util.ASTHelpers.getUpperBound;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.google.errorprone.util.ASTHelpers.methodCanBeOverridden;
+import static com.google.errorprone.util.ASTHelpers.shouldKeep;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ArrayListMultimap;
@@ -67,10 +68,11 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
+import java.util.Deque;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Stack;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.type.TypeKind;
 
@@ -92,8 +94,7 @@ public final class PreferredInterfaceType extends BugChecker implements Compilat
               "com.google.common.collect.ImmutableSet",
               "com.google.common.collect.ImmutableCollection",
               "java.util.List",
-              "java.util.Set",
-              "java.util.Collection"),
+              "java.util.Set"),
           BetterTypes.of(isDescendantOf("java.util.Map"), "com.google.common.collect.ImmutableMap"),
           BetterTypes.of(
               isDescendantOf("com.google.common.collect.Table"),
@@ -110,7 +111,8 @@ public final class PreferredInterfaceType extends BugChecker implements Compilat
               "com.google.common.collect.ImmutableSetMultimap",
               "com.google.common.collect.ImmutableMultimap",
               "com.google.common.collect.ListMultimap",
-              "com.google.common.collect.SetMultimap"));
+              "com.google.common.collect.SetMultimap"),
+          BetterTypes.of(isDescendantOf("java.lang.CharSequence"), "java.lang.String"));
 
   private static final Matcher<Tree> INTERESTING_TYPE =
       anyOf(
@@ -130,14 +132,14 @@ public final class PreferredInterfaceType extends BugChecker implements Compilat
     ListMultimap<Symbol, Type> symbolsToType = ArrayListMultimap.create();
 
     new TreePathScanner<Void, Void>() {
-      private final Stack<Symbol> currentMethod = new Stack<>();
+      private final Deque<Symbol> currentMethod = new LinkedList<>();
 
       @Override
       public Void visitMethod(MethodTree node, Void unused) {
         MethodSymbol methodSymbol = getSymbol(node);
-        currentMethod.push(methodSymbol);
+        currentMethod.addLast(methodSymbol);
         super.visitMethod(node, null);
-        currentMethod.pop();
+        currentMethod.removeLast();
         return null;
       }
 
@@ -160,17 +162,18 @@ public final class PreferredInterfaceType extends BugChecker implements Compilat
 
       @Override
       public Void visitReturn(ReturnTree node, Void unused) {
-        if (!currentMethod.isEmpty() && currentMethod.peek() != null) {
-          symbolsToType.put(currentMethod.peek(), getType(node.getExpression()));
+        var method = currentMethod.peekLast();
+        if (method != null) {
+          symbolsToType.put(method, getType(node.getExpression()));
         }
         return super.visitReturn(node, unused);
       }
 
       @Override
       public Void visitLambdaExpression(LambdaExpressionTree node, Void unused) {
-        currentMethod.push(null);
+        currentMethod.addLast(null);
         super.visitLambdaExpression(node, unused);
-        currentMethod.pop();
+        currentMethod.removeLast();
         return null;
       }
     }.scan(state.getPath(), null);
@@ -198,6 +201,10 @@ public final class PreferredInterfaceType extends BugChecker implements Compilat
         if (symbol.getKind() == ElementKind.PARAMETER) {
           return false;
         }
+        if (shouldKeep(tree)) {
+          return false;
+        }
+        // TODO(ghm): Open source @Keep on the elements in SHOULD_IGNORE, and remove this.
         if (SHOULD_IGNORE.matches(tree, state)) {
           return false;
         }

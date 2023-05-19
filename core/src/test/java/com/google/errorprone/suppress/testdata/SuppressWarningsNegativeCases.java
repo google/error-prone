@@ -27,7 +27,8 @@ public class SuppressWarningsNegativeCases {
   @SuppressWarnings({"EmptyIf", "EmptyStatement"})
   public void testEmptyIf() {
     int i = 0;
-    if (i == 10) ;
+    if (i == 10)
+      ;
     {
       System.out.println("foo");
     }

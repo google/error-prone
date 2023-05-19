@@ -86,7 +86,8 @@ public final class FieldCanBeLocal extends BugChecker implements CompilationUnit
         if (symbol.getKind() == ElementKind.FIELD
             && symbol.isPrivate()
             && canBeLocal(variableTree)
-            && !shouldKeep(variableTree)) {
+            && !shouldKeep(variableTree)
+            && !symbol.getSimpleName().toString().startsWith("unused")) {
           potentialFields.put(symbol, getCurrentPath());
         }
         return null;

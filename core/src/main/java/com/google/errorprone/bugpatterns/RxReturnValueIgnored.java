@@ -22,10 +22,12 @@ import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
 import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
+import static com.google.errorprone.util.ASTHelpers.streamSuperMethods;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
+import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
@@ -38,6 +40,7 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
+import javax.inject.Inject;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} for details. */
 @BugPattern(
@@ -66,7 +69,7 @@ public final class RxReturnValueIgnored extends AbstractReturnValueIgnored {
     // if the super-type returned the exact same type. This lets us catch issues where a
     // superclass was annotated with @CanIgnoreReturnValue but the parent did not intend to
     // return an Rx type
-    return ASTHelpers.findSuperMethods(sym, state.getTypes()).stream()
+    return streamSuperMethods(sym, state.getTypes())
         .anyMatch(
             superSym ->
                 hasAnnotation(superSym, CanIgnoreReturnValue.class, state)
@@ -102,6 +105,11 @@ public final class RxReturnValueIgnored extends AbstractReturnValueIgnored {
               anyOf(
                   RxReturnValueIgnored::hasCirvAnnotation,
                   RxReturnValueIgnored::isExemptedMethod)));
+
+  @Inject
+  RxReturnValueIgnored(ConstantExpressions constantExpressions) {
+    super(constantExpressions);
+  }
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {

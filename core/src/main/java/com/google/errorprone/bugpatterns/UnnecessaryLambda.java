@@ -28,6 +28,7 @@ import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.isStatic;
 import static com.sun.tools.javac.util.Position.NOPOS;
 import static java.util.stream.Collectors.joining;
 
@@ -66,6 +67,7 @@ import java.util.Objects;
 import java.util.function.Predicate;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
@@ -87,7 +89,7 @@ public class UnnecessaryLambda extends BugChecker
       return NO_MATCH;
     }
     MethodSymbol sym = getSymbol(tree);
-    if (!ASTHelpers.canBeRemoved(sym, state)) {
+    if (!ASTHelpers.canBeRemoved(sym, state) || ASTHelpers.shouldKeep(tree)) {
       return NO_MATCH;
     }
     SuggestedFix.Builder fix = SuggestedFix.builder();
@@ -139,7 +141,7 @@ public class UnnecessaryLambda extends BugChecker
     }
     SuggestedFix.Builder fix = SuggestedFix.builder();
     String name =
-        sym.isStatic()
+        isStatic(sym)
             ? UPPER_UNDERSCORE.converterTo(LOWER_CAMEL).convert(tree.getName().toString())
             : tree.getName().toString();
     new TreePathScanner<Void, Void>() {
@@ -190,11 +192,32 @@ public class UnnecessaryLambda extends BugChecker
     class Scanner extends TreePathScanner<Void, Void> {
 
       boolean fixable = true;
+      boolean inInitializer = false;
 
       @Override
       public Void visitMethodInvocation(MethodInvocationTree node, Void unused) {
         check(node);
         return super.visitMethodInvocation(node, null);
+      }
+
+      @Override
+      public Void visitVariable(VariableTree node, Void unused) {
+        boolean wasInInitializer = inInitializer;
+        if (sym.equals(getSymbol(node))) {
+          inInitializer = true;
+        }
+        super.visitVariable(node, null);
+        inInitializer = wasInInitializer;
+        return null;
+      }
+
+      @Override
+      public Void visitMemberSelect(MemberSelectTree node, Void unused) {
+        if (inInitializer && sym.equals(getSymbol(node))) {
+          // We're not smart enough to rewrite a recursive lambda.
+          fixable = false;
+        }
+        return super.visitMemberSelect(node, unused);
       }
 
       private void check(MethodInvocationTree node) {
@@ -267,10 +290,13 @@ public class UnnecessaryLambda extends BugChecker
           (receiver != null ? "." : "") + newName);
     } else {
       Symbol sym = getSymbol(node);
-      fix.replace(
-          node,
-          String.format(
-              "%s::%s", sym.isStatic() ? sym.owner.enclClass().getSimpleName() : "this", newName));
+      String receiverCode;
+      if (node instanceof MethodInvocationTree && getReceiver(node) != null) {
+        receiverCode = state.getSourceForNode(getReceiver(node));
+      } else {
+        receiverCode = isStatic(sym) ? sym.owner.enclClass().getSimpleName().toString() : "this";
+      }
+      fix.replace(node, String.format("%s::%s", receiverCode, newName));
     }
   }
 
@@ -282,7 +308,7 @@ public class UnnecessaryLambda extends BugChecker
         }
 
         @Override
-        public LambdaExpressionTree visitBlock(BlockTree node, Void unused) {
+        public @Nullable LambdaExpressionTree visitBlock(BlockTree node, Void unused) {
           // when processing a method body, only consider methods with a single `return` statement
           // that returns a method
           return node.getStatements().size() == 1
@@ -291,7 +317,7 @@ public class UnnecessaryLambda extends BugChecker
         }
 
         @Override
-        public LambdaExpressionTree visitReturn(ReturnTree node, Void unused) {
+        public @Nullable LambdaExpressionTree visitReturn(ReturnTree node, Void unused) {
           return node.getExpression() != null ? node.getExpression().accept(this, null) : null;
         }
 

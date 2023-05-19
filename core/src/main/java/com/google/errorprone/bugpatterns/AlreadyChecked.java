@@ -26,7 +26,6 @@ import static java.lang.String.format;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions;
@@ -50,6 +49,7 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.HashSet;
 import java.util.Set;
+import javax.inject.Inject;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /** Bugpattern to find conditions which are checked more than once. */
@@ -58,8 +58,9 @@ public final class AlreadyChecked extends BugChecker implements CompilationUnitT
 
   private final ConstantExpressions constantExpressions;
 
-  public AlreadyChecked(ErrorProneFlags flags) {
-    this.constantExpressions = ConstantExpressions.fromFlags(flags);
+  @Inject
+  AlreadyChecked(ConstantExpressions constantExpressions) {
+    this.constantExpressions = constantExpressions;
   }
 
   @Override

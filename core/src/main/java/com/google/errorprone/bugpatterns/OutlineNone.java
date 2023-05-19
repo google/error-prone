@@ -33,6 +33,7 @@ import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 /** Check for the a11y antipattern of setting CSS outline attributes to none or 0. */
@@ -92,7 +93,7 @@ public class OutlineNone extends BugChecker
      */
     if (GWT_SET_PROPERTY.matches(tree, state)
         && args.size() >= 2
-        && "outline".equals(constValue(args.get(0), String.class))
+        && Objects.equals(constValue(args.get(0), String.class), "outline")
         && constantNoneOrZero(args.get(1))) {
       return describeMatch(tree);
     }

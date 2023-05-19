@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns.argumentselectiondefects;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.util.function.Function;
 
 /**
@@ -58,6 +59,7 @@ abstract class ArgumentChangeFinder {
      * eliminating spurious findings. Heuristics are applied in order so add more expensive checks
      * last.
      */
+    @CanIgnoreReturnValue
     Builder addHeuristic(Heuristic heuristic) {
       heuristicsBuilder().add(heuristic);
       return this;

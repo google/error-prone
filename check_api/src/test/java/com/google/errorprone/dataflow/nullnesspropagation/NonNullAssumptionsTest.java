@@ -43,7 +43,7 @@ import org.junit.runners.JUnit4;
 public class NonNullAssumptionsTest {
 
   @Test
-  public void testClassesWithNonNullStaticFields() throws Exception {
+  public void classesWithNonNullStaticFields() throws Exception {
     for (String classname : NullnessPropagationTransfer.CLASSES_WITH_NON_NULL_CONSTANTS) {
       int found = 0;
       Class<?> clazz = loadClass(classname);
@@ -59,7 +59,7 @@ public class NonNullAssumptionsTest {
   }
 
   @Test
-  public void testNullImpliesTrueParameters() throws Exception {
+  public void nullImpliesTrueParameters() throws Exception {
     for (MemberName member : NullnessPropagationTransfer.NULL_IMPLIES_TRUE_PARAMETERS.keySet()) {
       ImmutableSet<Integer> nullParameters =
           NullnessPropagationTransfer.NULL_IMPLIES_TRUE_PARAMETERS.get(member);
@@ -86,7 +86,7 @@ public class NonNullAssumptionsTest {
   }
 
   @Test
-  public void testRequiredNonNullParameters() throws Exception {
+  public void requiredNonNullParameters() throws Exception {
     for (MemberName member : NullnessPropagationTransfer.REQUIRED_NON_NULL_PARAMETERS.keySet()) {
       ImmutableSet<Integer> nonNullParameters =
           NullnessPropagationTransfer.REQUIRED_NON_NULL_PARAMETERS.get(member);
@@ -116,7 +116,7 @@ public class NonNullAssumptionsTest {
   }
 
   @Test
-  public void testEqualsParameters() throws Exception {
+  public void equalsParameters() throws Exception {
     int found = 0;
     for (Method method : loadClass("java.lang.Object").getMethods()) {
       if (!method.getName().equals("equals")) {

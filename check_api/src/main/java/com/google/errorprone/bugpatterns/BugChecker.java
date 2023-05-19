@@ -88,6 +88,7 @@ import com.sun.source.tree.UnionTypeTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.tree.WildcardTree;
+import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
@@ -188,7 +189,7 @@ public abstract class BugChecker implements Suppressible, Serializable {
    */
   @CheckReturnValue
   public Description.Builder buildDescription(Tree node) {
-    return Description.builder(node, canonicalName(), linkUrl(), defaultSeverity(), message());
+    return Description.builder(node, canonicalName(), linkUrl(), message());
   }
 
   /**
@@ -197,7 +198,7 @@ public abstract class BugChecker implements Suppressible, Serializable {
    */
   @CheckReturnValue
   public Description.Builder buildDescription(DiagnosticPosition position) {
-    return Description.builder(position, canonicalName(), linkUrl(), defaultSeverity(), message());
+    return Description.builder(position, canonicalName(), linkUrl(), message());
   }
 
   /**
@@ -207,7 +208,7 @@ public abstract class BugChecker implements Suppressible, Serializable {
   // This overload exists purely to disambiguate for JCTree.
   @CheckReturnValue
   public Description.Builder buildDescription(JCTree tree) {
-    return Description.builder(tree, canonicalName(), linkUrl(), defaultSeverity(), message());
+    return Description.builder(tree, canonicalName(), linkUrl(), message());
   }
 
   @Deprecated
@@ -216,7 +217,6 @@ public abstract class BugChecker implements Suppressible, Serializable {
         Preconditions.checkNotNull(node),
         checker.canonicalName(),
         checker.linkUrl(),
-        checker.defaultSeverity(),
         checker.message());
   }
 
@@ -566,36 +566,34 @@ public abstract class BugChecker implements Suppressible, Serializable {
         customSuppressionAnnotations());
   }
 
-  /** A {@link TreePathScanner} which skips trees which are suppressed for this check. */
-  protected class SuppressibleTreePathScanner<A, B> extends TreePathScanner<A, B> {
+  /**
+   * A {@link TreePathScanner} which skips trees which are suppressed for this check.
+   *
+   * @param <R> the type returned by each scanner method
+   * @param <P> the type of the parameter passed to each scanner method
+   */
+  protected class SuppressibleTreePathScanner<R, P> extends TreePathScanner<R, P> {
 
-    // TODO(cushon): make this protected once it is required; currently it would shadow
-    // other variables named state and break checks that pass the deprecated constructor
-    private final VisitorState state;
+    protected final VisitorState state;
 
     public SuppressibleTreePathScanner(VisitorState state) {
       this.state = state;
     }
 
-    /**
-     * @deprecated use {@link #SuppressibleTreePathScanner(VisitorState)} instead
-     */
-    @Deprecated
-    public SuppressibleTreePathScanner() {
-      this(null);
+    @Override
+    public R scan(Tree tree, P param) {
+      return suppressed(tree) ? null : super.scan(tree, param);
     }
 
     @Override
-    public A scan(Tree tree, B b) {
+    public R scan(TreePath treePath, P param) {
+      return suppressed(treePath.getLeaf()) ? null : super.scan(treePath, param);
+    }
+
+    private boolean suppressed(Tree tree) {
       boolean isSuppressible =
           tree instanceof ClassTree || tree instanceof MethodTree || tree instanceof VariableTree;
-      if (isSuppressible) {
-        boolean suppressed = state != null ? isSuppressed(tree, state) : isSuppressed(tree);
-        if (suppressed) {
-          return null;
-        }
-      }
-      return super.scan(tree, b);
+      return isSuppressible && isSuppressed(tree, state);
     }
   }
 }

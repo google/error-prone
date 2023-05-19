@@ -117,6 +117,56 @@ public class MemberNameTest {
   }
 
   @Test
+  public void resourceVariable_renamed() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import java.io.ByteArrayOutputStream;",
+            "import java.io.IOException;",
+            "class Test {",
+            "  void run() throws IOException {",
+            "    try (var output_stream = new ByteArrayOutputStream()) {}",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import java.io.ByteArrayOutputStream;",
+            "import java.io.IOException;",
+            "class Test {",
+            "  void run() throws IOException {",
+            "    try (var outputStream = new ByteArrayOutputStream()) {}",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void exceptionParameter_renamed() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  void run() {",
+            "    try {",
+            "      run();",
+            "    } catch (StackOverflowError stack_overflow) {",
+            "    }",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  void run() {",
+            "    try {",
+            "      run();",
+            "    } catch (StackOverflowError stackOverflow) {",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void nameWithUnderscores_public_notRenamed() {
     refactoringHelper
         .addInputLines(

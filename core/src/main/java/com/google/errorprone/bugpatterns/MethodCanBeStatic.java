@@ -24,6 +24,7 @@ import static com.google.errorprone.matchers.Matchers.SERIALIZATION_METHODS;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static java.util.Collections.disjoint;
 import static javax.lang.model.element.Modifier.ABSTRACT;
+import static javax.lang.model.element.Modifier.DEFAULT;
 import static javax.lang.model.element.Modifier.NATIVE;
 import static javax.lang.model.element.Modifier.SYNCHRONIZED;
 
@@ -53,17 +54,20 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import javax.inject.Inject;
 import javax.lang.model.element.Modifier;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
     altNames = "static-method",
     summary = "A private method that does not reference the enclosing instance can be static",
-    severity = SUGGESTION)
+    severity = SUGGESTION,
+    documentSuppression = false)
 public class MethodCanBeStatic extends BugChecker implements CompilationUnitTreeMatcher {
   private final FindingOutputStyle findingOutputStyle;
 
-  public MethodCanBeStatic(ErrorProneFlags flags) {
+  @Inject
+  MethodCanBeStatic(ErrorProneFlags flags) {
     boolean findingPerSite = flags.getBoolean("MethodCanBeStatic:FindingPerSite").orElse(false);
     this.findingOutputStyle =
         findingPerSite ? FindingOutputStyle.FINDING_PER_SITE : FindingOutputStyle.ONE_FINDING;
@@ -250,7 +254,7 @@ public class MethodCanBeStatic extends BugChecker implements CompilationUnitTree
   }
 
   private static final ImmutableSet<Modifier> EXCLUDED_MODIFIERS =
-      immutableEnumSet(NATIVE, SYNCHRONIZED, ABSTRACT);
+      immutableEnumSet(NATIVE, SYNCHRONIZED, ABSTRACT, DEFAULT);
 
   /** Information about a {@link MethodSymbol} and whether it can be made static. */
   private static final class MethodDetails {

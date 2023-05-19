@@ -552,4 +552,183 @@ public class DoNotCallCheckerTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void positive_stackWalkerGetClass() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test{",
+            " void f(StackWalker w) {",
+            "   // BUG: Diagnostic contains: getCallerClass",
+            "   w.getClass();",
+            " }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void positive_stackFrameGetClass() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.lang.StackWalker.StackFrame;",
+            "class Test{",
+            " void f(StackFrame f) {",
+            "   // BUG: Diagnostic contains: getClassName",
+            "   f.getClass();",
+            " }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void positive_constructorGetClass() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.lang.reflect.Constructor;",
+            "class Test{",
+            " void f(Constructor<?> c) {",
+            "   // BUG: Diagnostic contains: getDeclaringClass",
+            "   c.getClass();",
+            " }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void positive_fieldGetClass() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.lang.reflect.Field;",
+            "class Test{",
+            " void f(Field f) {",
+            "   // BUG: Diagnostic contains: getDeclaringClass",
+            "   f.getClass();",
+            " }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void positive_methodGetClass() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.lang.reflect.Method;",
+            "class Test{",
+            " void f(Method m) {",
+            "   // BUG: Diagnostic contains: getDeclaringClass",
+            "   m.getClass();",
+            " }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void positive_beanDescriptorGetClass() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.beans.BeanDescriptor;",
+            "class Test{",
+            " void f(BeanDescriptor b) {",
+            "   // BUG: Diagnostic contains: getBeanClass",
+            "   b.getClass();",
+            " }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void positive_lockInfoGetClass() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.lang.management.LockInfo;",
+            "import java.lang.management.MonitorInfo;",
+            "class Test{",
+            " void f(LockInfo l, MonitorInfo m) {",
+            "   // BUG: Diagnostic contains: getClassName",
+            "   l.getClass();",
+            "   // BUG: Diagnostic contains: getClassName",
+            "   m.getClass();",
+            " }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void positive_parameterizedTypeGetClass() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.lang.reflect.ParameterizedType;",
+            "class Test{",
+            " void f(ParameterizedType t) {",
+            "   // BUG: Diagnostic contains: getRawType",
+            "   t.getClass();",
+            " }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void positive_classInfoGetClass() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.reflect.ClassPath.ClassInfo;",
+            "class Test{",
+            " void f(ClassInfo i) {",
+            "   // BUG: Diagnostic contains: getName",
+            "   i.getClass();",
+            " }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void positive_typeTokenGetClass() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.reflect.TypeToken;",
+            "class Test{",
+            " void f(TypeToken<?> t) {",
+            "   // BUG: Diagnostic contains: getRawType",
+            "   t.getClass();",
+            " }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void positive_threadRun() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            " void f(Thread t) {",
+            "   // BUG: Diagnostic contains: start",
+            "   t.run();",
+            " }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void negative_threadSuperRun() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test extends Thread {",
+            " @Override public void run() {",
+            "   super.run();",
+            " }",
+            "}")
+        .doTest();
+  }
 }

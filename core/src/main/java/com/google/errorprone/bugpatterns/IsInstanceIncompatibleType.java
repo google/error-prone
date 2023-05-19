@@ -38,6 +38,7 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Type;
 import java.util.List;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * @author cushon@google.com (Liam Miller-Cushon)
@@ -84,7 +85,7 @@ public final class IsInstanceIncompatibleType extends BugChecker
         : buildMessage(argumentType, receiverType, tree, state);
   }
 
-  private static Type classTypeArgument(ExpressionTree tree) {
+  private static @Nullable Type classTypeArgument(ExpressionTree tree) {
     ExpressionTree receiver = getReceiver(tree);
     if (receiver == null) {
       return null;

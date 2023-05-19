@@ -142,12 +142,12 @@ public class ArgumentSelectionDefectChecker extends BugChecker
           String normalizedTarget =
               NamingConventions.convertToLowerUnderscore(pair.actual().name());
           return NeedlemanWunschEditDistance.getNormalizedEditDistance(
-              /*source=*/ normalizedSource,
-              /*target=*/ normalizedTarget,
-              /*caseSensitive=*/ false,
-              /*changeCost=*/ 8,
-              /*openGapCost=*/ 8,
-              /*continueGapCost=*/ 1);
+              /* source= */ normalizedSource,
+              /* target= */ normalizedTarget,
+              /* caseSensitive= */ false,
+              /* changeCost= */ 8,
+              /* openGapCost= */ 8,
+              /* continueGapCost= */ 1);
         }
 
         return pair.formal().index() == pair.actual().index() ? 0.0 : Double.POSITIVE_INFINITY;

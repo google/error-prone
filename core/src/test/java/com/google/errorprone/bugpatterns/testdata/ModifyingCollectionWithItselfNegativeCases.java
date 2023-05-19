@@ -19,7 +19,9 @@ package com.google.errorprone.bugpatterns.testdata;
 import java.util.ArrayList;
 import java.util.List;
 
-/** @author scottjohnson@google.com (Scott Johnson) */
+/**
+ * @author scottjohnson@google.com (Scott Johnson)
+ */
 public class ModifyingCollectionWithItselfNegativeCases {
 
   List<Integer> a = new ArrayList<Integer>();

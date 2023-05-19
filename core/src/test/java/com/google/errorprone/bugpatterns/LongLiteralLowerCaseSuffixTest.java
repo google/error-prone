@@ -34,23 +34,23 @@ public class LongLiteralLowerCaseSuffixTest {
       CompilationTestHelper.newInstance(LongLiteralLowerCaseSuffix.class, getClass());
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper.addSourceFile("LongLiteralLowerCaseSuffixPositiveCase1.java").doTest();
   }
 
   /** Test for Java 7 integer literals that include underscores. */
   @Test
-  public void testJava7PositiveCase() {
+  public void java7PositiveCase() {
     compilationHelper.addSourceFile("LongLiteralLowerCaseSuffixPositiveCase2.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("LongLiteralLowerCaseSuffixNegativeCases.java").doTest();
   }
 
   @Test
-  public void testDisableable() {
+  public void disableable() {
     compilationHelper
         .setArgs(ImmutableList.of("-Xep:LongLiteralLowerCaseSuffix:OFF"))
         .expectNoDiagnostics()

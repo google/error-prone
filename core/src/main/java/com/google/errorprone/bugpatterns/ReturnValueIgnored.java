@@ -40,6 +40,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions;
 import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.Tree.Kind;
@@ -47,6 +48,7 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import java.util.regex.Pattern;
+import javax.inject.Inject;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.Name;
 
@@ -407,20 +409,14 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
           // keep-sorted end
           );
 
-  private static final ImmutableSet<Matcher<? super ExpressionTree>> ALL_MATCHERS =
-      ImmutableSet.of(SPECIALIZED_MATCHER, CLASS_METHODS);
-
   private static final ImmutableBiMap<String, Matcher<ExpressionTree>> FLAG_MATCHERS =
       ImmutableBiMap.of("ReturnValueIgnored:ClassMethods", CLASS_METHODS);
 
   private final Matcher<ExpressionTree> matcher;
 
-  public ReturnValueIgnored() {
-    this.matcher = anyOf(ALL_MATCHERS);
-  }
-
-  public ReturnValueIgnored(ErrorProneFlags flags) {
-    super(flags);
+  @Inject
+  ReturnValueIgnored(ErrorProneFlags flags, ConstantExpressions constantExpressions) {
+    super(constantExpressions);
     this.matcher = createMatcher(flags);
   }
 

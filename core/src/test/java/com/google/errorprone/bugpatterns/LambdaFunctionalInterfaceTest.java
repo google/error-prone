@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.FixChoosers;
 import com.google.errorprone.CompilationTestHelper;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -27,29 +26,24 @@ import org.junit.runners.JUnit4;
 /** {@link LambdaFunctionalInterface}Test */
 @RunWith(JUnit4.class)
 public class LambdaFunctionalInterfaceTest {
-  CompilationTestHelper compilationHelper;
+  private final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(LambdaFunctionalInterface.class, getClass());
 
   private final BugCheckerRefactoringTestHelper refactoringHelper =
       BugCheckerRefactoringTestHelper.newInstance(LambdaFunctionalInterface.class, getClass());
 
-  @Before
-  public void setUp() {
-    compilationHelper =
-        CompilationTestHelper.newInstance(LambdaFunctionalInterface.class, getClass());
-  }
-
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper.addSourceFile("LambdaFunctionalInterfacePositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("LambdaFunctionalInterfaceNegativeCases.java").doTest();
   }
 
   @Test
-  public void testRefactoringTwo() {
+  public void refactoringTwo() {
     refactoringHelper
         .addInputLines(
             "in/TwoLambdaFunctions.java",
@@ -90,7 +84,7 @@ public class LambdaFunctionalInterfaceTest {
   }
 
   @Test
-  public void testRefactoringInteger() {
+  public void refactoringInteger() {
     refactoringHelper
         .addInputLines(
             "in/TwoLambdaFunctions.java",
@@ -131,7 +125,7 @@ public class LambdaFunctionalInterfaceTest {
   }
 
   @Test
-  public void testRefactoringPrimitiveToGeneric() {
+  public void refactoringPrimitiveToGeneric() {
     refactoringHelper
         .addInputLines(
             "in/NumbertoT.java",
@@ -187,7 +181,7 @@ public class LambdaFunctionalInterfaceTest {
   }
 
   @Test
-  public void testRefactoringGenericToPrimitive() {
+  public void refactoringGenericToPrimitive() {
     refactoringHelper
         .addInputLines(
             "in/NumbertoT.java",
@@ -213,6 +207,20 @@ public class LambdaFunctionalInterfaceTest {
             "    } ",
             "  }")
         .setFixChooser(FixChoosers.FIRST)
+        .doTest();
+  }
+
+  @Test
+  public void onEnum() {
+    compilationHelper
+        .addSourceLines(
+            "E.java",
+            "import java.util.function.Function;",
+            "public enum E {",
+            "  VALUE(String::length);",
+            "  // BUG: Diagnostic contains:",
+            "  E(Function<String, Integer> func) {}",
+            "}")
         .doTest();
   }
 }

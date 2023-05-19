@@ -30,12 +30,12 @@ public class OverridesGuiceInjectableMethodTest {
       CompilationTestHelper.newInstance(OverridesGuiceInjectableMethod.class, getClass());
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper.addSourceFile("OverridesGuiceInjectableMethodPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("OverridesGuiceInjectableMethodNegativeCases.java").doTest();
   }
 }

@@ -97,12 +97,12 @@ public class TreeToStringTest {
   }
 
   @Test
-  public void testPositiveCases() {
+  public void positiveCases() {
     testHelper.addSourceFile("TreeToStringPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCases() {
+  public void negativeCases() {
     testHelper
         .addSourceFile("TreeToStringNegativeCases.java")
         .addModules(

@@ -20,6 +20,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.VisitorState;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A heuristic for checking if a formal parameter matches a predefined set of words which have been
@@ -58,7 +59,7 @@ class LowInformationNameHeuristic implements Heuristic {
    * Return the first regular expression from the list of overloaded words which matches the
    * parameter name.
    */
-  protected String findMatch(Parameter parameter) {
+  protected @Nullable String findMatch(Parameter parameter) {
     for (String regex : overloadedNamesRegexs) {
       if (parameter.name().matches(regex)) {
         return regex;

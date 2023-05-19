@@ -162,4 +162,31 @@ public class MemoizeConstantVisitorStateLookupsTest {
         .expectUnchanged()
         .doTest();
   }
+
+  @Test
+  public void testSuppressWarnings() {
+    compilationTestHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.VisitorState;",
+            "import com.sun.tools.javac.code.Type;",
+            "import com.sun.tools.javac.util.Name;",
+            "class Test {",
+            "  @SuppressWarnings(\"MemoizeConstantVisitorStateLookups\")",
+            "  public Test(VisitorState state) {",
+            "    Name className = state.getName(\"java.lang.Class\");",
+            "  }",
+            "  @SuppressWarnings(\"MemoizeConstantVisitorStateLookups\")",
+            "  public void testMethod(VisitorState state) {",
+            "    Name className = state.getName(\"java.lang.Class\");",
+            "  }",
+            "  @SuppressWarnings(\"MemoizeConstantVisitorStateLookups\")",
+            "  class InnerClass {",
+            "    void innerMethod(VisitorState state) {",
+            "      Name className = state.getName(\"java.lang.Class\");",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

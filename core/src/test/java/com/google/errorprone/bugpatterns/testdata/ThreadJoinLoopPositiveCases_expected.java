@@ -17,7 +17,9 @@ package com.google.errorprone.bugpatterns.testdata;
 
 import com.google.common.util.concurrent.Uninterruptibles;
 
-/** @author mariasam@google.com (Maria Sam) on 7/10/17. */
+/**
+ * @author mariasam@google.com (Maria Sam) on 7/10/17.
+ */
 class ThreadJoinLoopPositiveCases {
 
   public void basicCase(Thread thread) {

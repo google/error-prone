@@ -16,6 +16,7 @@
 package com.google.errorprone.bugpatterns.time;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.fixes.SuggestedFixes.qualifyType;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 
 import com.google.common.collect.Iterables;
@@ -24,7 +25,6 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
@@ -34,11 +34,11 @@ import com.sun.source.tree.MethodInvocationTree;
 /** Check for calls to {@code instant.withMillis(long)}. */
 @BugPattern(
     summary =
-        "Use of instant.withMillis(long) is not allowed. Please use new Instant(long) instead.",
+        "Use of instant.withMillis(long) is not allowed. Use Instant.ofEpochMilli(long) instead.",
     explanation =
         "Joda-Time's 'instant.withMillis(long)' method is often a source of bugs because it "
             + "doesn't mutate the current instance but rather returns a new immutable Instant "
-            + "instance. Please use new Instant(long) instead.",
+            + "instance. Please use Instant.ofEpochMilli(long) instead.",
     severity = WARNING)
 public final class JodaInstantWithMillis extends BugChecker implements MethodInvocationTreeMatcher {
   private static final Matcher<ExpressionTree> MATCHER =
@@ -57,8 +57,7 @@ public final class JodaInstantWithMillis extends BugChecker implements MethodInv
     }
 
     SuggestedFix.Builder builder = SuggestedFix.builder();
-    String replacement =
-        "new " + SuggestedFixes.qualifyType(state, builder, "org.joda.time.Instant") + "(";
+    String replacement = qualifyType(state, builder, "org.joda.time.Instant") + ".ofEpochMilli(";
     ExpressionTree millisArg = Iterables.getOnlyElement(tree.getArguments());
 
     builder.replace(getStartPosition(tree), getStartPosition(millisArg), replacement);

@@ -24,7 +24,9 @@ import com.google.common.truth.FailureMetadata;
 import com.google.common.truth.Subject;
 import com.google.common.truth.Truth;
 
-/** @author cpovirk@google.com (Chris Povirk) */
+/**
+ * @author cpovirk@google.com (Chris Povirk)
+ */
 public class ChainedAssertionLosesContextPositiveCases {
   static final class FooSubject extends Subject {
     private final Foo actual;

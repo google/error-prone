@@ -38,7 +38,7 @@ public class AnnotationHasArgumentWithValueTest extends CompilerBasedAbstractTes
   }
 
   @Test
-  public void testMatches() {
+  public void matches() {
     writeFile("A.java", "@Thing(stuff=\"y\")", "public class A {}");
     assertCompiles(
         annotationMatches(
@@ -47,7 +47,7 @@ public class AnnotationHasArgumentWithValueTest extends CompilerBasedAbstractTes
   }
 
   @Test
-  public void testMatchesExtraParentheses() {
+  public void matchesExtraParentheses() {
     writeFile("Thing2.java", "public @interface Thing2 {", "  String value();", "}");
     writeFile("A.java", "@Thing2((\"y\"))", "public class A {}");
     assertCompiles(

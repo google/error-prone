@@ -17,7 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
-import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
 import com.google.common.collect.ImmutableList;
@@ -30,7 +30,7 @@ import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.Tree;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
-@BugPattern(summary = "Empty top-level type declarations should be omitted", severity = ERROR)
+@BugPattern(summary = "Empty top-level type declarations should be omitted", severity = WARNING)
 public final class EmptyTopLevelDeclaration extends BugChecker
     implements CompilationUnitTreeMatcher {
 

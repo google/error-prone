@@ -77,7 +77,7 @@ public class MutablePublicArrayTest {
   }
 
   @Test
-  public void privateStaticFinal_Negative() {
+  public void privateStaticFinal_negative() {
     compilationHelper
         .addSourceLines(
             "Test.java", //
@@ -88,7 +88,7 @@ public class MutablePublicArrayTest {
   }
 
   @Test
-  public void privateStaticFinalEmptyInlineInitializer_Negative() {
+  public void privateStaticFinalEmptyInlineInitializer_negative() {
     compilationHelper
         .addSourceLines(
             "Test.java", //
@@ -99,7 +99,7 @@ public class MutablePublicArrayTest {
   }
 
   @Test
-  public void privateFinal_Negative() {
+  public void privateFinal_negative() {
     compilationHelper
         .addSourceLines(
             "Test.java", //
@@ -110,7 +110,7 @@ public class MutablePublicArrayTest {
   }
 
   @Test
-  public void staticFinal_Negative() {
+  public void staticFinal_negative() {
     compilationHelper
         .addSourceLines(
             "Test.java", //
@@ -121,7 +121,7 @@ public class MutablePublicArrayTest {
   }
 
   @Test
-  public void zeroSizeOneDimensionArray_Negative() {
+  public void zeroSizeOneDimensionArray_negative() {
     compilationHelper
         .addSourceLines(
             "Test.java", //
@@ -132,7 +132,7 @@ public class MutablePublicArrayTest {
   }
 
   @Test
-  public void zeroSizeMultiDimensionArray_Negative() {
+  public void zeroSizeMultiDimensionArray_negative() {
     compilationHelper
         .addSourceLines(
             "Test.java",

@@ -168,10 +168,13 @@ public abstract class AbstractMockChecker<T extends Annotation> extends BugCheck
   public static TypeExtractor<MethodInvocationTree> extractFirstArg(
       Matcher<MethodInvocationTree> m) {
     return (tree, state) -> {
-      if (m.matches(tree, state)) {
+      if (!m.matches(tree, state)) {
+        return Optional.empty();
+      }
+      if (tree.getArguments().size() >= 1) {
         return Optional.ofNullable(ASTHelpers.getType(tree.getArguments().get(0)));
       }
-      return Optional.empty();
+      return Optional.ofNullable(ASTHelpers.targetType(state)).map(t -> t.type());
     };
   }
 

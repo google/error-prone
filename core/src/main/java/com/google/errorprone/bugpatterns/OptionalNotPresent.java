@@ -25,7 +25,6 @@ import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions;
@@ -42,14 +41,15 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import java.util.stream.Stream;
+import javax.inject.Inject;
 
 /**
  * @author mariasam@google.com (Maria Sam)
  */
 @BugPattern(
     summary =
-        "This Optional has been confirmed to be empty at this point, so the call to `get` will"
-            + " throw.",
+        "This Optional has been confirmed to be empty at this point, so the call to `get()` or"
+            + " `orElseThrow()` will always throw.",
     severity = WARNING)
 public final class OptionalNotPresent extends BugChecker implements CompilationUnitTreeMatcher {
   private static final Matcher<ExpressionTree> OPTIONAL_GET =
@@ -59,8 +59,9 @@ public final class OptionalNotPresent extends BugChecker implements CompilationU
 
   private final ConstantExpressions constantExpressions;
 
-  public OptionalNotPresent(ErrorProneFlags flags) {
-    this.constantExpressions = ConstantExpressions.fromFlags(flags);
+  @Inject
+  OptionalNotPresent(ConstantExpressions constantExpressions) {
+    this.constantExpressions = constantExpressions;
   }
 
   @Override

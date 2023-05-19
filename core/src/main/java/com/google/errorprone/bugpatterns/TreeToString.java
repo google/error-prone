@@ -40,6 +40,7 @@ import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import java.util.Optional;
+import javax.inject.Inject;
 
 /**
  * Flags {@code com.sun.source.tree.Tree#toString} usage in {@link BugChecker}s.
@@ -67,7 +68,8 @@ public class TreeToString extends AbstractToString {
 
   private final boolean transitiveEnclosingBugchecker;
 
-  public TreeToString(ErrorProneFlags errorProneFlags) {
+  @Inject
+  TreeToString(ErrorProneFlags errorProneFlags) {
     this.transitiveEnclosingBugchecker =
         errorProneFlags.getBoolean("TreeToString:transitiveEnclosingBugchecker").orElse(true);
   }

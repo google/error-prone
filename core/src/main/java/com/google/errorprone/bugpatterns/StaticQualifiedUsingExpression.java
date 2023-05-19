@@ -20,6 +20,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.fixes.SuggestedFixes.qualifyType;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.isStatic;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.StandardTags;
@@ -63,7 +64,7 @@ public class StaticQualifiedUsingExpression extends BugChecker implements Member
         // fall through
       case ENUM_CONSTANT:
       case METHOD:
-        if (!sym.isStatic()) {
+        if (!isStatic(sym)) {
           return NO_MATCH;
         }
         break; // continue below

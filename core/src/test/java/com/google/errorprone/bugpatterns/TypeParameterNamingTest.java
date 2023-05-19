@@ -244,7 +244,7 @@ public class TypeParameterNamingTest {
   }
 
   @Test
-  public void refactoring_TSuffixes() {
+  public void refactoring_tSuffixes() {
     refactoring
         .addInputLines(
             "in/Test.java",

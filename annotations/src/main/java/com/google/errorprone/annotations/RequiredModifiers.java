@@ -26,16 +26,16 @@ import java.lang.annotation.Target;
  * Annotation declaring that the target annotation requires all the specified modifiers. For
  * example, an annotation declared as:
  *
- * <pre>
- * {@literal @}RequiredModifiers(modifier = Modifier.PUBLIC)
- * {@literal @}interface MyAnnotation {}
- * </pre>
+ * <pre>{@code
+ * @RequiredModifiers(modifier = Modifier.PUBLIC)
+ * @interface MyAnnotation {}
+ * }</pre>
  *
  * <p>will be considered illegal when used on non-public elements such as:
  *
- * <pre>
- * {@literal @}MyAnnotation void foo() {}
- * </pre>
+ * <pre>{@code
+ * @MyAnnotation void foo() {}
+ * }</pre>
  *
  * @author benyu@google.com (Jige Yu)
  */

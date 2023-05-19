@@ -33,12 +33,12 @@ public class ArrayToStringTest {
       BugCheckerRefactoringTestHelper.newInstance(ArrayToString.class, getClass());
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper.addSourceFile("ArrayToStringPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("ArrayToStringNegativeCases.java").doTest();
   }
 
@@ -167,22 +167,22 @@ public class ArrayToStringTest {
   }
 
   @Test
-  public void testPositiveCompoundAssignment() {
+  public void positiveCompoundAssignment() {
     compilationHelper.addSourceFile("ArrayToStringCompoundAssignmentPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCompoundAssignment() {
+  public void negativeCompoundAssignment() {
     compilationHelper.addSourceFile("ArrayToStringCompoundAssignmentNegativeCases.java").doTest();
   }
 
   @Test
-  public void testPositiveConcat() {
+  public void positiveConcat() {
     compilationHelper.addSourceFile("ArrayToStringConcatenationPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeConcat() {
+  public void negativeConcat() {
     compilationHelper.addSourceFile("ArrayToStringConcatenationNegativeCases.java").doTest();
   }
 }

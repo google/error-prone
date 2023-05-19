@@ -28,6 +28,8 @@ import static com.google.errorprone.util.ASTHelpers.canBeRemoved;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
+import static com.google.errorprone.util.ASTHelpers.isStatic;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.google.errorprone.util.ASTHelpers.shouldKeep;
 import static com.google.errorprone.util.SideEffectAnalysis.hasSideEffect;
@@ -107,6 +109,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.Name;
@@ -140,6 +143,16 @@ public class UnusedVariable extends BugChecker implements CompilationUnitTreeMat
           "org.apache.beam.sdk.transforms.DoFn.TimerId",
           "org.apache.beam.sdk.transforms.DoFn.StateId");
 
+  // TODO(ghm): Find a sensible place to dedupe this with UnnecessarilyVisible.
+  private static final ImmutableSet<String> ANNOTATIONS_INDICATING_PARAMETERS_SHOULD_BE_CHECKED =
+      ImmutableSet.of(
+          "com.google.inject.Inject",
+          "com.google.inject.Provides",
+          "com.google.inject.multibindings.ProvidesIntoMap",
+          "com.google.inject.multibindings.ProvidesIntoSet",
+          "dagger.Provides",
+          "javax.inject.Inject");
+
   private final ImmutableSet<String> methodAnnotationsExemptingParameters;
 
   /** The set of types exempting a type that is extending or implementing them. */
@@ -157,7 +170,8 @@ public class UnusedVariable extends BugChecker implements CompilationUnitTreeMat
 
   private final boolean reportInjectedFields;
 
-  public UnusedVariable(ErrorProneFlags flags) {
+  @Inject
+  UnusedVariable(ErrorProneFlags flags) {
     ImmutableSet.Builder<String> methodAnnotationsExemptingParameters =
         ImmutableSet.<String>builder().add("org.robolectric.annotation.Implementation");
     flags
@@ -399,7 +413,7 @@ public class UnusedVariable extends BugChecker implements CompilationUnitTreeMat
             String newContent =
                 String.format(
                     "%s{ %s; }",
-                    varSymbol.isStatic() ? "static " : "", state.getSourceForNode(initializer));
+                    isStatic(varSymbol) ? "static " : "", state.getSourceForNode(initializer));
             keepSideEffectsFix.merge(
                 SuggestedFixes.replaceIncludingComments(usagePath, newContent, state));
             removeSideEffectsFix.replace(statement, "");
@@ -648,9 +662,14 @@ public class UnusedVariable extends BugChecker implements CompilationUnitTreeMat
       Symbol enclosingMethod = sym.owner;
 
       for (String annotationName : methodAnnotationsExemptingParameters) {
-        if (ASTHelpers.hasAnnotation(enclosingMethod, annotationName, state)) {
+        if (hasAnnotation(enclosingMethod, annotationName, state)) {
           return false;
         }
+      }
+
+      if (ANNOTATIONS_INDICATING_PARAMETERS_SHOULD_BE_CHECKED.stream()
+          .anyMatch(a -> hasAnnotation(enclosingMethod, a, state))) {
+        return true;
       }
 
       return enclosingMethod.getModifiers().contains(Modifier.PRIVATE);

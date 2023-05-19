@@ -34,7 +34,7 @@ public class JUnit3TestNotRunTest {
       BugCheckerRefactoringTestHelper.newInstance(JUnit3TestNotRun.class, getClass());
 
   @Test
-  public void testPositiveCases() {
+  public void positiveCases() {
     compilationHelper.addSourceFile("JUnit3TestNotRunPositiveCases.java").doTest();
   }
 
@@ -238,27 +238,27 @@ public class JUnit3TestNotRunTest {
   }
 
   @Test
-  public void testNegativeCase1() {
+  public void negativeCase1() {
     compilationHelper.addSourceFile("JUnit3TestNotRunNegativeCase1.java").doTest();
   }
 
   @Test
-  public void testNegativeCase2() {
+  public void negativeCase2() {
     compilationHelper.addSourceFile("JUnit3TestNotRunNegativeCase2.java").doTest();
   }
 
   @Test
-  public void testNegativeCase3() {
+  public void negativeCase3() {
     compilationHelper.addSourceFile("JUnit3TestNotRunNegativeCase3.java").doTest();
   }
 
   @Test
-  public void testNegativeCase4() {
+  public void negativeCase4() {
     compilationHelper.addSourceFile("JUnit3TestNotRunNegativeCase4.java").doTest();
   }
 
   @Test
-  public void testNegativeCase5() {
+  public void negativeCase5() {
     compilationHelper
         .addSourceFile("JUnit3TestNotRunNegativeCase3.java") // needed as a dependency
         .addSourceFile("JUnit3TestNotRunNegativeCase5.java")

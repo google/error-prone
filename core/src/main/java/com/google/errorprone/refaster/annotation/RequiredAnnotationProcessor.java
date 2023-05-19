@@ -34,6 +34,7 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.SimpleAnnotationValueVisitor7;
 import javax.tools.Diagnostic.Kind;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Enforces {@code @RequiredAnnotation} as an annotation processor.
@@ -51,7 +52,8 @@ public final class RequiredAnnotationProcessor extends AbstractProcessor {
     return false;
   }
 
-  private AnnotationMirror getAnnotationMirror(Element element, TypeMirror annotationType) {
+  private @Nullable AnnotationMirror getAnnotationMirror(
+      Element element, TypeMirror annotationType) {
     for (AnnotationMirror mirror : element.getAnnotationMirrors()) {
       if (processingEnv.getTypeUtils().isSameType(mirror.getAnnotationType(), annotationType)) {
         return mirror;
@@ -60,7 +62,7 @@ public final class RequiredAnnotationProcessor extends AbstractProcessor {
     return null;
   }
 
-  private AnnotationValue getAnnotationValue(AnnotationMirror mirror, String key) {
+  private @Nullable AnnotationValue getAnnotationValue(AnnotationMirror mirror, String key) {
     for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> entry :
         mirror.getElementValues().entrySet()) {
       if (entry.getKey().getSimpleName().contentEquals(key)) {

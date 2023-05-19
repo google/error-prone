@@ -32,7 +32,7 @@ public class ComputeIfAbsentAmbiguousReferenceTest {
       CompilationTestHelper.newInstance(ComputeIfAbsentAmbiguousReference.class, getClass());
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper
         .addSourceLines(
             "in/Test.java",
@@ -52,7 +52,7 @@ public class ComputeIfAbsentAmbiguousReferenceTest {
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper
         .addSourceLines(
             "in/Test.java",
@@ -91,7 +91,7 @@ public class ComputeIfAbsentAmbiguousReferenceTest {
   }
 
   @Test
-  public void testNegativeCase_parameterNameMatch() {
+  public void negativeCase_parameterNameMatch() {
     compilationHelper
         .addSourceLines(
             "in/Test.java",

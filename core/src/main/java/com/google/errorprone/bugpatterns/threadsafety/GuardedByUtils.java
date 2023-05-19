@@ -18,10 +18,12 @@ package com.google.errorprone.bugpatterns.threadsafety;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.isStatic;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression.Select;
 import com.google.errorprone.util.MoreAnnotations;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Attribute;
@@ -34,6 +36,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
+import javax.lang.model.element.ElementKind;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * @author cushon@google.com (Liam Miller-Cushon)
@@ -126,10 +130,16 @@ public final class GuardedByUtils {
     }
 
     for (GuardedByExpression boundGuard : boundGuards) {
+      GuardedByExpression boundGuardRoot =
+          boundGuard.kind() == GuardedByExpression.Kind.SELECT
+              ? ((Select) boundGuard).root()
+              : boundGuard;
+      boolean parameterGuard =
+          boundGuardRoot.sym() != null && boundGuardRoot.sym().getKind() == ElementKind.PARAMETER;
       boolean staticGuard =
           boundGuard.kind() == GuardedByExpression.Kind.CLASS_LITERAL
-              || (boundGuard.sym() != null && boundGuard.sym().isStatic());
-      if (treeSym.isStatic() && !staticGuard) {
+              || (boundGuard.sym() != null && isStatic(boundGuard.sym()));
+      if (isStatic(treeSym) && !staticGuard && !parameterGuard) {
         return GuardedByValidationResult.invalid("static member guarded by instance");
       }
     }
@@ -137,7 +147,7 @@ public final class GuardedByUtils {
     return GuardedByValidationResult.ok();
   }
 
-  public static Symbol bindGuardedByString(
+  public static @Nullable Symbol bindGuardedByString(
       Tree tree, String guard, VisitorState visitorState, GuardedByFlags flags) {
     Optional<GuardedByExpression> bound =
         GuardedByBinder.bindString(guard, GuardedBySymbolResolver.from(tree, visitorState), flags);

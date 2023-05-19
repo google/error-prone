@@ -16,11 +16,14 @@
 
 package com.google.errorprone.bugpatterns.threadsafety;
 
+import static org.junit.Assume.assumeTrue;
+
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.annotations.Immutable;
 import com.google.errorprone.annotations.concurrent.LazyInit;
+import com.google.errorprone.util.RuntimeVersion;
 import java.util.Arrays;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -133,9 +136,8 @@ public class ImmutableCheckerTest {
         .addSourceLines(
             "MyTest.java",
             "import java.lang.annotation.Annotation;",
-            "// BUG: Diagnostic contains:",
-            "// extends @Immutable type Test, but is not annotated as immutable",
             "final class MyTest implements Test {",
+            "  // BUG: Diagnostic contains: non-final field 'xs'",
             "  public Object[] xs = {};",
             "  public Class<? extends Annotation> annotationType() {",
             "    return null;",
@@ -371,6 +373,53 @@ public class ImmutableCheckerTest {
             "import com.google.errorprone.annotations.Immutable;",
             "  // BUG: Diagnostic contains: instantiated with mutable type for 'A'",
             "@Immutable public class SubClass extends SuperMost<List<String>> {}")
+        .doTest();
+  }
+
+  @Test
+  public void withinMutableClass() {
+    compilationHelper
+        .addSourceLines(
+            "A.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "import java.util.ArrayList;",
+            "import java.util.List;",
+            "class A {",
+            "  List<Integer> xs = new ArrayList<>();",
+            "  // BUG: Diagnostic contains: has mutable enclosing instance",
+            "  @Immutable class B {",
+            "    int get() {",
+            "      return xs.get(0);",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void localClassCapturingMutableState() {
+    compilationHelper
+        .addSourceLines(
+            "A.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "import java.util.ArrayList;",
+            "import java.util.List;",
+            "@Immutable",
+            "class A {",
+            "  @Immutable interface B { int get(); }",
+            "  void test() {",
+            "    List<Integer> xs = new ArrayList<>();",
+            "    @Immutable",
+            "    // BUG: Diagnostic contains: This anonymous class implements @Immutable interface"
+                + " 'B', but closes over 'xs', which is not @Immutable because 'List' is mutable",
+            "    class C implements B {",
+            "      @Override",
+            "      public int get() {",
+            "        return xs.get(0);",
+            "      }",
+            "    }",
+            "  }",
+            "}")
         .doTest();
   }
 
@@ -763,6 +812,26 @@ public class ImmutableCheckerTest {
   }
 
   @Test
+  public void mutableWildcardInstantiation_immutableTypeParameter() {
+    compilationHelper
+        .addSourceLines(
+            "A.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
+            "@Immutable",
+            "class A<@ImmutableTypeParameter T> {}")
+        .addSourceLines(
+            "B.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "@Immutable",
+            "class B {",
+            "  private final A<?> a;",
+            "  public B(A<?> a) { this.a = a; }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void mutableRawType() {
     compilationHelper
         .addSourceLines(
@@ -783,7 +852,7 @@ public class ImmutableCheckerTest {
   }
 
   @Test
-  public void testImmutableListImplementation() {
+  public void immutableListImplementation() {
     compilationHelper
         .addSourceLines(
             "com/google/common/collect/ImmutableList.java",
@@ -1016,14 +1085,13 @@ public class ImmutableCheckerTest {
         .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
-            "// BUG: Diagnostic contains: extends @Immutable",
             "class Test implements J {",
+            "  // BUG: Diagnostic contains: non-final field 'x'",
             "  public int x = 0;",
             "}")
         .addSourceLines(
             "threadsafety/J.java", //
             "package threadsafety;",
-            "// BUG: Diagnostic contains: extends @Immutable",
             "interface J extends I {",
             "}")
         .doTest();
@@ -2526,6 +2594,25 @@ public class ImmutableCheckerTest {
   }
 
   @Test
+  public void lambda_cannotCloseAroundMutableFieldQualifiedWithThis() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "import java.util.ArrayList;",
+            "import java.util.List;",
+            "class Test {",
+            "  @Immutable interface ImmutableFunction<A, B> { A apply(B b); }",
+            "  private int b = 1;",
+            "  void test(ImmutableFunction<Integer, Integer> f) {",
+            "    // BUG: Diagnostic contains:",
+            "    test(x -> this.b);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void lambda_cannotCloseAroundMutableLocal() {
     compilationHelper
         .addSourceLines(
@@ -2611,9 +2698,9 @@ public class ImmutableCheckerTest {
                 + " is not @Immutable",
             "    test(x -> mutable(x));",
             "    // BUG: Diagnostic contains: This lambda implements @Immutable interface"
-                + " 'ImmutableFunction', but 'Test' has field 'this' of type 'Test', the"
-                + " declaration of type 'Test' is not annotated with"
-                + " @com.google.errorprone.annotations.Immutable",
+                + " 'ImmutableFunction', but closes over 'this', which is not @Immutable because"
+                + " 'Test' has field 'this' of type 'Test', the declaration of type 'Test' is not"
+                + " annotated with @com.google.errorprone.annotations.Immutable",
             "    test(x -> this.mutable(x));",
             "  }",
             "}")
@@ -2806,6 +2893,195 @@ public class ImmutableCheckerTest {
             "    // BUG: Diagnostic contains:",
             "    test(() -> new ArrayList<>());",
             "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void chainedGettersAreAcceptable() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "import java.util.ArrayList;",
+            "import java.util.List;",
+            "class Test {",
+            "  final Test t = null;",
+            "  final List<String> xs = new ArrayList<>();",
+            "  final List<String> getXs() {",
+            "    return xs;",
+            "  }",
+            "  @Immutable interface ImmutableFunction { String apply(String b); }",
+            "  void test(ImmutableFunction f) {",
+            "    test(x -> {",
+            "      Test t = new Test();",
+            "      return t.xs.get(0) + t.getXs().get(0) + t.t.t.xs.get(0);",
+            "    });",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void anonymousClass_cannotCloseAroundMutableLocal() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "import java.util.List;",
+            "import java.util.ArrayList;",
+            "class Test {",
+            "  @Immutable interface ImmutableFunction<A, B> { A apply(B b); }",
+            "  void test(ImmutableFunction<Integer, Integer> f) {",
+            "    List<Integer> xs = new ArrayList<>();",
+            "    // BUG: Diagnostic contains:",
+            "    test(new ImmutableFunction<>() {",
+            "      @Override public Integer apply(Integer x) {",
+            "        return xs.get(x);",
+            "      }",
+            "    });",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void anonymousClass_hasMutableFieldSuppressed_noWarningAtUsageSite() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "import java.util.List;",
+            "import java.util.ArrayList;",
+            "class Test {",
+            "  @Immutable interface ImmutableFunction<A, B> { A apply(B b); }",
+            "  void test(ImmutableFunction<Integer, Integer> f) {",
+            "    test(new ImmutableFunction<>() {",
+            "      @Override public Integer apply(Integer x) {",
+            "        return xs.get(x);",
+            "      }",
+            "      @SuppressWarnings(\"Immutable\")",
+            "      List<Integer> xs = new ArrayList<>();",
+            "    });",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void anonymousClass_canCallSuperMethodOnNonImmutableSuperClass() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "import java.util.List;",
+            "import java.util.ArrayList;",
+            "class Test {",
+            "  interface Function<A, B> { default void foo() {} }",
+            "  @Immutable interface ImmutableFunction<A, B> extends Function<A, B> { A apply(B b);"
+                + " }",
+            "  void test(ImmutableFunction<Integer, Integer> f) {",
+            "    test(new ImmutableFunction<>() {",
+            "      @Override public Integer apply(Integer x) {",
+            "        foo();",
+            "        return 0;",
+            "      }",
+            "    });",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void switchExpressionsResultingInGenericTypes_doesNotThrow() {
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    compilationHelper
+        .addSourceLines(
+            "Kind.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "@Immutable enum Kind { A, B; }")
+        .addSourceLines(
+            "Test.java",
+            "import java.util.Optional;",
+            "import java.util.function.Supplier;",
+            "class Test {",
+            "  Supplier<Optional<String>> test(Kind kind) {",
+            "    return switch (kind) {",
+            "      case A -> Optional::empty;",
+            "      case B -> () -> Optional.of(\"\");",
+            "    };",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void switchExpressionsYieldStatement_doesNotThrow() {
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.function.Supplier;",
+            "class Test {",
+            "  String test(String mode) {",
+            "    return switch (mode) {",
+            "      case \"random\" -> {",
+            "        yield \"foo\";",
+            "      }",
+            "      default -> throw new IllegalArgumentException();",
+            "    };",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void switchExpressionsMethodReference_doesNotThrow() {
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.function.Supplier;",
+            "class Test {",
+            "  Supplier<Double> test(String mode) {",
+            "    return switch (mode) {",
+            "      case \"random\" -> Math::random;",
+            "      default -> throw new IllegalArgumentException();",
+            "    };",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void switchExpressionsYieldStatementMethodReference_doesNotThrow() {
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.function.Supplier;",
+            "class Test {",
+            "  Supplier<Double> test(String mode) {",
+            "    return switch (mode) {",
+            "      case \"random\" -> {",
+            "        yield Math::random;",
+            "      }",
+            "      default -> throw new IllegalArgumentException();",
+            "    };",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void enumBound() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "@Immutable class Test<E extends Enum<E>> {",
+            "  private final E e;",
+            "  Test(E e) { this.e = e; }",
             "}")
         .doTest();
   }

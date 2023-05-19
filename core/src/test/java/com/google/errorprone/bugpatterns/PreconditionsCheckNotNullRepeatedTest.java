@@ -37,7 +37,7 @@ public class PreconditionsCheckNotNullRepeatedTest {
       CompilationTestHelper.newInstance(PreconditionsCheckNotNullRepeated.class, getClass());
 
   @Test
-  public void testPositiveMatchesWithReplacement() {
+  public void positiveMatchesWithReplacement() {
     testHelper
         .addInputLines(
             "in/Test.java",
@@ -87,7 +87,7 @@ public class PreconditionsCheckNotNullRepeatedTest {
   }
 
   @Test
-  public void testNegativeCases() {
+  public void negativeCases() {
     compilationHelper
         .addSourceLines(
             "out/Test.java",

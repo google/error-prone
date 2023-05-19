@@ -16,6 +16,8 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.util.ASTHelpers.isStatic;
+
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.VisitorState;
@@ -73,7 +75,7 @@ public class CanBeStaticAnalyzer extends TreeScanner {
     if (sym == null) {
       return;
     }
-    if (sym.isStatic()) {
+    if (isStatic(sym)) {
       return;
     }
     switch (sym.getKind()) {

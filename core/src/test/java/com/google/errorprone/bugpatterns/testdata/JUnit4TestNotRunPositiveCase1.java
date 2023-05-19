@@ -19,7 +19,9 @@ package com.google.errorprone.bugpatterns.testdata;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** @author eaftan@google.com (Eddie Aftandilian) */
+/**
+ * @author eaftan@google.com (Eddie Aftandilian)
+ */
 @RunWith(JUnit4.class)
 public class JUnit4TestNotRunPositiveCase1 {
   // BUG: Diagnostic contains: @Test

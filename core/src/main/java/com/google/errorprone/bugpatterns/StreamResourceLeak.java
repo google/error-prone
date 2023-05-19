@@ -17,12 +17,11 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
-import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
@@ -36,6 +35,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
@@ -43,6 +43,7 @@ import com.sun.source.util.TreePath;
 import com.sun.source.util.TreeScanner;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
@@ -51,8 +52,7 @@ import java.util.Objects;
         "Streams that encapsulate a closeable resource should be closed using"
             + " try-with-resources",
     severity = WARNING)
-public class StreamResourceLeak extends AbstractMustBeClosedChecker
-    implements MethodInvocationTreeMatcher {
+public class StreamResourceLeak extends AbstractMustBeClosedChecker implements MethodTreeMatcher {
 
   public static final Matcher<ExpressionTree> MATCHER =
       MethodMatchers.staticMethod()
@@ -60,19 +60,16 @@ public class StreamResourceLeak extends AbstractMustBeClosedChecker
           .namedAnyOf("lines", "newDirectoryStream", "list", "walk", "find");
 
   @Override
-  public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    if (!MATCHER.matches(tree, state)) {
-      return NO_MATCH;
-    }
-    return matchNewClassOrMethodInvocation(tree, state, findingPerSite());
+  public Description matchMethod(MethodTree tree, VisitorState state) {
+    return scanEntireMethodFor(MATCHER, tree, state);
   }
 
   @Override
-  protected void addFix(
-      Description.Builder description,
-      ExpressionTree tree,
-      VisitorState state,
-      FixAggregator aggregator) {
+  protected Optional<Change> fix(ExpressionTree tree, VisitorState state, NameSuggester suggester) {
+    return Change.of(definiteFix(tree, state));
+  }
+
+  private static SuggestedFix definiteFix(ExpressionTree tree, VisitorState state) {
     TreePath parentPath = state.getPath().getParentPath();
     Tree parent = parentPath.getLeaf();
     SuggestedFix.Builder fix = SuggestedFix.builder();
@@ -102,13 +99,13 @@ public class StreamResourceLeak extends AbstractMustBeClosedChecker
       }
       fix.replace(tree, "stream");
       fix.postfixWith(statement, "}");
-      description.addFix(fix.build());
+      return fix.build();
     } else if (parent instanceof VariableTree) {
       // If the stream is assigned to a variable, wrap the variable in a try-with-resources
       // that includes all statements in the same block that reference the variable.
       Tree grandParent = parentPath.getParentPath().getLeaf();
       if (!(grandParent instanceof BlockTree)) {
-        return;
+        return SuggestedFix.emptyFix();
       }
       List<? extends StatementTree> statements = ((BlockTree) grandParent).getStatements();
       int idx = statements.indexOf(parent);
@@ -138,7 +135,7 @@ public class StreamResourceLeak extends AbstractMustBeClosedChecker
           state.getEndPosition(parent),
           ") {");
       fix.postfixWith(statements.get(lastUse), "}");
-      description.addFix(fix.build());
+      return fix.build();
     } else if (parent instanceof EnhancedForLoopTree) {
       // If the stream is used in a loop (e.g. directory streams), wrap the loop in
       // try-with-resources.
@@ -147,20 +144,21 @@ public class StreamResourceLeak extends AbstractMustBeClosedChecker
           String.format("try (%s stream = %s) {\n", streamType, state.getSourceForNode(tree)));
       fix.replace(tree, "stream");
       fix.postfixWith(parent, "}");
-      description.addFix(fix.build());
+      return fix.build();
     } else if (parent instanceof MethodInvocationTree) {
       // If the stream is used in a method that is called in an expression statement, wrap it in
       // try-with-resources.
       Tree grandParent = parentPath.getParentPath().getLeaf();
       if (!(grandParent instanceof ExpressionStatementTree)) {
-        return;
+        return SuggestedFix.emptyFix();
       }
       fix.prefixWith(
           parent,
           String.format("try (%s stream = %s) {\n", streamType, state.getSourceForNode(tree)));
       fix.replace(tree, "stream");
       fix.postfixWith(grandParent, "}");
-      description.addFix(fix.build());
+      return fix.build();
     }
+    return SuggestedFix.emptyFix();
   }
 }

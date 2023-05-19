@@ -30,12 +30,12 @@ public class NullablePrimitiveTest {
       CompilationTestHelper.newInstance(NullablePrimitive.class, getClass());
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper.addSourceFile("NullablePrimitivePositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("NullablePrimitiveNegativeCases.java").doTest();
   }
 

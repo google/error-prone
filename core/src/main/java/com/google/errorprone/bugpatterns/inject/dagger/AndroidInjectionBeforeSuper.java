@@ -42,6 +42,7 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.SimpleTreeVisitor;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * @author Ron Shapiro
@@ -127,7 +128,7 @@ public final class AndroidInjectionBeforeSuper extends BugChecker implements Met
     private boolean foundSuper = false;
 
     @Override
-    public Description visitMethodInvocation(MethodInvocationTree node, Void unused) {
+    public @Nullable Description visitMethodInvocation(MethodInvocationTree node, Void unused) {
       if (foundSuper && matchType.injectMethodMatcher.matches(node, state)) {
         return buildDescription(node)
             .setMessage(

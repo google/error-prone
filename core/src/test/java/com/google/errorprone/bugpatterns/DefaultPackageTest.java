@@ -32,7 +32,7 @@ public class DefaultPackageTest {
       CompilationTestHelper.newInstance(DefaultPackage.class, getClass());
 
   @Test
-  public void testPositiveCases() {
+  public void positiveCases() {
     compilationHelper
         .addSourceLines(
             "Test.java", //
@@ -43,7 +43,7 @@ public class DefaultPackageTest {
   }
 
   @Test
-  public void testNegativeCases_classWithGenerated() {
+  public void negativeCases_classWithGenerated() {
     compilationHelper
         .addSourceLines(
             "Test.java", //
@@ -55,7 +55,7 @@ public class DefaultPackageTest {
   }
 
   @Test
-  public void testNegativeCases_classWithWarningSuppressed() {
+  public void negativeCases_classWithWarningSuppressed() {
     compilationHelper
         .addSourceLines(
             "in/Test.java", //
@@ -66,7 +66,7 @@ public class DefaultPackageTest {
   }
 
   @Test
-  public void testNegativeCases_classWithPackage() {
+  public void negativeCases_classWithPackage() {
     compilationHelper
         .addSourceLines(
             "in/Test.java", //

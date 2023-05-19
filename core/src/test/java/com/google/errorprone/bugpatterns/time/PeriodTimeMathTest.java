@@ -34,7 +34,7 @@ public class PeriodTimeMathTest {
 
   @SuppressWarnings("PeriodTimeMath")
   @Test
-  public void testFailures() {
+  public void failures() {
     Period p = Period.ZERO;
     assertThrows(DateTimeException.class, () -> p.plus(Duration.ZERO));
     assertThrows(DateTimeException.class, () -> p.minus(Duration.ZERO));

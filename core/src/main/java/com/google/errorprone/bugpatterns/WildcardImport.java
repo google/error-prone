@@ -32,6 +32,7 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.CompilationUnitTree;
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.ImportTree;
 import com.sun.source.tree.MemberSelectTree;
@@ -43,10 +44,15 @@ import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
 import com.sun.tools.javac.tree.TreeScanner;
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.lang.model.element.ElementKind;
 
@@ -59,6 +65,7 @@ import javax.lang.model.element.ElementKind;
     tags = StandardTags.STYLE,
     link = "https://google.github.io/styleguide/javaguide.html?cl=head#s3.3.1-wildcard-imports")
 public class WildcardImport extends BugChecker implements CompilationUnitTreeMatcher {
+  private static final Logger logger = Logger.getLogger(WildcardImport.class.getName());
 
   /** Maximum number of members to import before switching to qualified names. */
   public static final int MAX_MEMBER_IMPORTS = 20;
@@ -213,6 +220,24 @@ public class WildcardImport extends BugChecker implements CompilationUnitTreeMat
     return fix.build();
   }
 
+  private static final MethodHandle CONSTANT_CASE_LABEL_TREE_GET_EXPRESSION;
+
+  static {
+    MethodHandle h;
+    try {
+      Class<?> constantCaseLabelTree = Class.forName("com.sun.source.tree.ConstantCaseLabelTree");
+      h =
+          MethodHandles.lookup()
+              .findVirtual(
+                  constantCaseLabelTree,
+                  "getConstantExpression",
+                  MethodType.methodType(ExpressionTree.class));
+    } catch (ReflectiveOperationException e) {
+      h = null;
+    }
+    CONSTANT_CASE_LABEL_TREE_GET_EXPRESSION = h;
+  }
+
   /**
    * Add an import for {@code owner}, and qualify all on demand imported references to members of
    * owner by owner's simple name.
@@ -228,11 +253,27 @@ public class WildcardImport extends BugChecker implements CompilationUnitTreeMat
           return null;
         }
         Tree parent = getCurrentPath().getParentPath().getLeaf();
-        if (parent.getKind() == Tree.Kind.CASE
-            && ((CaseTree) parent).getExpression().equals(tree)
-            && sym.owner.getKind() == ElementKind.ENUM) {
-          // switch cases can refer to enum constants by simple name without importing them
-          return null;
+        if (sym.owner.getKind() == ElementKind.ENUM) {
+          if (parent.getKind() == Tree.Kind.CASE
+              && ((CaseTree) parent).getExpression().equals(tree)) {
+            // switch cases can refer to enum constants by simple name without importing them
+            return null;
+          }
+          // In JDK 19, the tree representation of enum case-labels changes. We can't reference the
+          // relevant API directly because then this code wouldn't compile on earlier JDK versions.
+          // So instead we use method handles. The straightforward code would be:
+          //   if (parent.getKind() == Tree.Kind.CONSTANT_CASE_LABEL
+          //       && tree.equals(((ConstantCaseLabelTree) parent).getConstantExpression())) {...}
+          if (parent.getKind().name().equals("CONSTANT_CASE_LABEL")) {
+            try {
+              if (tree.equals(CONSTANT_CASE_LABEL_TREE_GET_EXPRESSION.invoke(parent))) {
+                return null;
+              }
+            } catch (Throwable e) {
+              // MethodHandle.invoke obliges us to catch Throwable here.
+              logger.log(Level.SEVERE, "Could not compare trees", e);
+            }
+          }
         }
         if (sym.owner.equals(owner) && unit.starImportScope.includes(sym)) {
           fix.prefixWith(tree, owner.getSimpleName() + ".");

@@ -36,12 +36,12 @@ public class SizeGreaterThanOrEqualsZeroTest {
   }
 
   @Test
-  public void testCollectionSizePositiveCases() {
+  public void collectionSizePositiveCases() {
     compilationHelper.addSourceFile("SizeGreaterThanOrEqualsZeroPositiveCases.java").doTest();
   }
 
   @Test
-  public void testCollectionSizeNegativeCases() {
+  public void collectionSizeNegativeCases() {
     compilationHelper.addSourceFile("SizeGreaterThanOrEqualsZeroNegativeCases.java").doTest();
   }
 }

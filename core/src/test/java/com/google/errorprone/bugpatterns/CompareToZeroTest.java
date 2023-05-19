@@ -89,7 +89,7 @@ public final class CompareToZeroTest {
   }
 
   @Test
-  public void testStringConcat_ignored() {
+  public void stringConcat_ignored() {
     compilationHelper
         .addSourceLines(
             "Test.java",

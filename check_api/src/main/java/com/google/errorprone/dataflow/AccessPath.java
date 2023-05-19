@@ -129,7 +129,7 @@ public abstract class AccessPath {
 
       if (tree.getKind() == Kind.IDENTIFIER) {
         // Implicit `this` receiver
-        return AccessPath.create(/*base=*/ null, pathBuilder.build());
+        return AccessPath.create(/* base= */ null, pathBuilder.build());
       }
 
       tree = ((MemberSelectTree) tree).getExpression();
@@ -138,7 +138,7 @@ public abstract class AccessPath {
     // Explicit `this` receiver
     if (tree.getKind() == Kind.IDENTIFIER
         && ((IdentifierTree) tree).getName().contentEquals("this")) {
-      return AccessPath.create(/*base=*/ null, pathBuilder.build());
+      return AccessPath.create(/* base= */ null, pathBuilder.build());
     }
 
     // Local variable receiver

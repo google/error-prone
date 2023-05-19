@@ -24,106 +24,106 @@ import java.io.IOException;
 public class FinallyPositiveCase2 {
   public void completeWithReturn(boolean flag) {
     try {
-      
+
     } finally {
-      // BUG: Diagnostic contains: 
+      // BUG: Diagnostic contains:
       return;
     }
   }
-  
+
   public void completeWithThrow(boolean flag) throws Exception {
     try {
-    
+
     } finally {
-      // BUG: Diagnostic contains: 
+      // BUG: Diagnostic contains:
       throw new Exception();
     }
   }
-   
+
   public void unreachableThrow(boolean flag) throws Exception {
     try {
-    
+
     } finally {
       if (flag) {
-        // BUG: Diagnostic contains: 
-        throw new Exception(); 
+        // BUG: Diagnostic contains:
+        throw new Exception();
       }
     }
   }
-  
+
   public void nestedBlocks(int i, boolean flag) throws Exception {
     try {
-    
+
     } finally {
       switch (i) {
         default:
-        {
-          while (flag) {
-            do {
-              if (flag) {
-              } else {
-                // BUG: Diagnostic contains: 
-                throw new Exception();
-              }
-            } while (flag);
+          {
+            while (flag) {
+              do {
+                if (flag) {
+                } else {
+                  // BUG: Diagnostic contains:
+                  throw new Exception();
+                }
+              } while (flag);
+            }
           }
-        }
       }
     }
   }
-  
+
   public void nestedFinally() throws Exception {
     try {
-    
+
     } finally {
       try {
       } finally {
-        // BUG: Diagnostic contains: 
+        // BUG: Diagnostic contains:
         throw new IOException();
       }
     }
   }
-  
+
   public void returnFromTryNestedInFinally() {
     try {
     } finally {
       try {
-        // BUG: Diagnostic contains: 
+        // BUG: Diagnostic contains:
         return;
       } finally {
       }
     }
   }
-  
+
   public void returnFromCatchNestedInFinally() {
     try {
     } finally {
       try {
       } catch (Exception e) {
-        // BUG: Diagnostic contains: 
+        // BUG: Diagnostic contains:
         return;
       } finally {
       }
     }
   }
-  
+
   public void throwUncaughtFromNestedTryInFinally() throws Exception {
     try {
     } finally {
       try {
-        // BUG: Diagnostic contains: 
+        // BUG: Diagnostic contains:
         throw new Exception();
       } finally {
       }
     }
   }
-  
+
   public void throwFromNestedCatchInFinally() throws Exception {
     try {
     } finally {
       try {
       } catch (Exception e) {
-        // BUG: Diagnostic contains: 
+        // BUG: Diagnostic contains:
         throw new Exception();
       } finally {
       }

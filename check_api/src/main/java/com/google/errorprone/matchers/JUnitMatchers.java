@@ -37,8 +37,8 @@ import static com.google.errorprone.matchers.Matchers.methodReturns;
 import static com.google.errorprone.matchers.Matchers.nestingKind;
 import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.suppliers.Suppliers.VOID_TYPE;
-import static com.google.errorprone.util.ASTHelpers.findSuperMethods;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.streamSuperMethods;
 import static javax.lang.model.element.NestingKind.TOP_LEVEL;
 
 import com.google.common.collect.ImmutableList;
@@ -86,8 +86,7 @@ public final class JUnitMatchers {
     if (hasJUnitAttr(methodSym)) {
       return true;
     }
-    return findSuperMethods(methodSym, state.getTypes()).stream()
-        .anyMatch(JUnitMatchers::hasJUnitAttr);
+    return streamSuperMethods(methodSym, state.getTypes()).anyMatch(JUnitMatchers::hasJUnitAttr);
   }
 
   /** Checks if a method symbol has any attribute from the org.junit package. */

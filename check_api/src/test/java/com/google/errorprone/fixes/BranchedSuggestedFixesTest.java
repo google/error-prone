@@ -27,7 +27,7 @@ import org.junit.runners.JUnit4;
 public class BranchedSuggestedFixesTest {
 
   @Test
-  public void testCombinesBranchWithFirst() {
+  public void combinesBranchWithFirst() {
     ImmutableList<SuggestedFix> fixes =
         BranchedSuggestedFixes.builder()
             .startWith(SuggestedFix.builder().addImport("A").build())
@@ -43,7 +43,7 @@ public class BranchedSuggestedFixesTest {
   }
 
   @Test
-  public void testEmptyIfNoProgress() {
+  public void emptyIfNoProgress() {
     ImmutableList<SuggestedFix> fixes =
         BranchedSuggestedFixes.builder()
             .startWith(SuggestedFix.builder().addImport("A").build())
@@ -55,7 +55,7 @@ public class BranchedSuggestedFixesTest {
   }
 
   @Test
-  public void testEmptyIfResumedProgress() {
+  public void emptyIfResumedProgress() {
     ImmutableList<SuggestedFix> fixes =
         BranchedSuggestedFixes.builder()
             .startWith(SuggestedFix.builder().addImport("A").build())

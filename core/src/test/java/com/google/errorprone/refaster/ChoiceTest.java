@@ -33,7 +33,7 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class ChoiceTest {
   @Test
-  public void testNone() {
+  public void none() {
     assertThat(Choice.none().first()).isAbsent();
     assertThat(Choice.none().condition(true)).isSameInstanceAs(Choice.none());
     assertThat(Choice.none().condition(Predicates.alwaysTrue())).isSameInstanceAs(Choice.none());
@@ -42,7 +42,7 @@ public class ChoiceTest {
   }
 
   @Test
-  public void testThenOption() {
+  public void thenOption() {
     assertThat(
             Choice.from(ImmutableList.of(1, 2, 3))
                 .thenOption(
@@ -53,7 +53,7 @@ public class ChoiceTest {
   }
 
   @Test
-  public void testThenChoose() {
+  public void thenChoose() {
     assertThat(
             Choice.from(ImmutableList.of(1, 2, 3))
                 .thenChoose(
@@ -63,7 +63,7 @@ public class ChoiceTest {
   }
 
   @Test
-  public void testOr() {
+  public void or() {
     assertThat(Choice.of(2).or(Choice.from(ImmutableList.of(1, 3))).asIterable())
         .containsExactly(2, 1, 3)
         .inOrder();

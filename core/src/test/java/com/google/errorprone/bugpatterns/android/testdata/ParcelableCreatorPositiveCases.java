@@ -19,7 +19,9 @@ package com.google.errorprone.bugpatterns.android.testdata;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-/** @author bhagwani@google.com (Sumit Bhagwani) */
+/**
+ * @author bhagwani@google.com (Sumit Bhagwani)
+ */
 public class ParcelableCreatorPositiveCases {
 
   // BUG: Diagnostic contains: ParcelableCreator

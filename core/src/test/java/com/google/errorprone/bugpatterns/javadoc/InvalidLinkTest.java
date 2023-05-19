@@ -85,6 +85,19 @@ public final class InvalidLinkTest {
   }
 
   @Test
+  public void badMethodLink_erasureHint() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "interface Test<T> {",
+            "  // BUG: Diagnostic contains: erasure",
+            "  /** {@link #bar(Test<String>)} */",
+            "  void foo(Test<String> foo);",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void validLinks() {
     helper
         .addSourceLines(

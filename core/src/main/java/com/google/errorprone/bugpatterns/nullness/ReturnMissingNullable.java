@@ -23,7 +23,9 @@ import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.VisitorState.memoize;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.fixByAddingNullableAnnotationToReturnType;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.hasDefinitelyNullBranch;
+import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.isAlreadyAnnotatedNullable;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.isVoid;
+import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.nullnessChecksShouldBeConservative;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.varsProvenNullByParentIf;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.anyMethod;
@@ -33,9 +35,11 @@ import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.constValue;
 import static com.google.errorprone.util.ASTHelpers.findEnclosingMethod;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 import static com.google.errorprone.util.ASTHelpers.methodCanBeOverridden;
 import static com.sun.source.tree.Tree.Kind.NULL_LITERAL;
+import static com.sun.source.tree.Tree.Kind.THROW;
 import static java.lang.Boolean.FALSE;
 import static java.util.regex.Pattern.compile;
 import static javax.lang.model.type.TypeKind.TYPEVAR;
@@ -46,8 +50,6 @@ import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
-import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
-import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnnotations;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
@@ -69,6 +71,7 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import java.util.List;
 import java.util.stream.Stream;
+import javax.inject.Inject;
 import javax.lang.model.element.Name;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
@@ -184,8 +187,9 @@ public class ReturnMissingNullable extends BugChecker implements CompilationUnit
 
   private final boolean beingConservative;
 
-  public ReturnMissingNullable(ErrorProneFlags flags) {
-    this.beingConservative = flags.getBoolean("Nullness:Conservative").orElse(true);
+  @Inject
+  ReturnMissingNullable(ErrorProneFlags flags) {
+    this.beingConservative = nullnessChecksShouldBeConservative(flags);
   }
 
   @Override
@@ -268,8 +272,18 @@ public class ReturnMissingNullable extends BugChecker implements CompilationUnit
          * codebase).
          */
 
-        if (NullnessAnnotations.fromAnnotationsOn(possibleOverride).orElse(null)
-            == Nullness.NULLABLE) {
+        if (isAlreadyAnnotatedNullable(possibleOverride)) {
+          return;
+        }
+
+        if (tree.getBody() != null
+            && tree.getBody().getStatements().size() == 1
+            && getOnlyElement(tree.getBody().getStatements()).getKind() == THROW) {
+          return;
+        }
+
+        if (hasAnnotation(
+            tree, "com.google.errorprone.annotations.DoNotCall", stateForCompilationUnit)) {
           return;
         }
 
@@ -282,7 +296,13 @@ public class ReturnMissingNullable extends BugChecker implements CompilationUnit
                 fixByAddingNullableAnnotationToReturnType(
                     stateForCompilationUnit.withPath(getCurrentPath()), tree);
             if (!fix.isEmpty()) {
-              stateForCompilationUnit.reportMatch(describeMatch(tree, fix));
+              stateForCompilationUnit.reportMatch(
+                  buildDescription(tree)
+                      .setMessage(
+                          "Nearly all implementations of this method must return null, but it is"
+                              + " not annotated @Nullable")
+                      .addFix(fix)
+                      .build());
             }
           }
         }
@@ -346,7 +366,7 @@ public class ReturnMissingNullable extends BugChecker implements CompilationUnit
           return;
         }
 
-        if (NullnessAnnotations.fromAnnotationsOn(method).orElse(null) == Nullness.NULLABLE) {
+        if (isAlreadyAnnotatedNullable(method)) {
           return;
         }
 

@@ -72,10 +72,16 @@ public class ProvidesNull extends BugChecker implements ReturnTreeMatcher {
     }
     MethodSymbol enclosingMethodSym = ASTHelpers.getSymbol(enclosingMethod);
 
-    if (!ASTHelpers.hasAnnotation(enclosingMethodSym, "dagger.Provides", state)
-        || ASTHelpers.hasDirectAnnotationWithSimpleName(enclosingMethodSym, "Nullable")) {
+    // Method is not annotated as Provides -> No match
+    if (!ASTHelpers.hasAnnotation(enclosingMethodSym, "dagger.Provides", state)) {
       return Description.NO_MATCH;
     }
+    // Method is annotated as Nullable -> No match
+    if (ASTHelpers.hasDirectAnnotationWithSimpleName(enclosingMethodSym, "Nullable")) {
+      return Description.NO_MATCH;
+    }
+    // Type-use annotations do *NOT* work with Dagger. See b/117251022
+    // You must use *any* non-type-use Nullable annotation.
 
     Fix addNullableFix =
         SuggestedFix.builder()

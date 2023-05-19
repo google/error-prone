@@ -35,10 +35,7 @@ import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getResultType;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
-import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
-import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.google.errorprone.util.ASTHelpers.isVoidType;
-import static javax.lang.model.element.Modifier.ABSTRACT;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -57,7 +54,6 @@ import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Symbol;
-import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.MethodType;
@@ -80,12 +76,7 @@ public final class UnusedReturnValueMatcher implements Matcher<ExpressionTree> {
           AllowReason.EXCEPTION_TESTING,
           UnusedReturnValueMatcher::exceptionTesting,
           AllowReason.RETURNS_JAVA_LANG_VOID,
-          UnusedReturnValueMatcher::returnsJavaLangVoid,
-          // TODO(kak): this exclusion really doesn't belong here, since the context of the calling
-          // code doesn't matter; known builder setters are _always_ treated as CIRV, and the
-          // surrounding context doesn't matter.
-          AllowReason.KNOWN_BUILDER_SETTER,
-          UnusedReturnValueMatcher::isKnownBuilderSetter);
+          UnusedReturnValueMatcher::returnsJavaLangVoid);
 
   private static final ImmutableSet<AllowReason> DISALLOW_EXCEPTION_TESTING =
       Sets.immutableEnumSet(
@@ -156,44 +147,6 @@ public final class UnusedReturnValueMatcher implements Matcher<ExpressionTree> {
   public Stream<AllowReason> getAllowReasons(ExpressionTree tree, VisitorState state) {
     return validAllowReasons.stream()
         .filter(reason -> ALLOW_MATCHERS.get(reason).matches(tree, state));
-  }
-
-  /**
-   * Returns {@code true} if the given tree is a method call to an abstract setter method inside of
-   * a known builder class.
-   */
-  private static boolean isKnownBuilderSetter(ExpressionTree tree, VisitorState state) {
-    Symbol symbol = getSymbol(tree);
-    if (!(symbol instanceof MethodSymbol)) {
-      return false;
-    }
-
-    // Avoid matching static Builder factory methods, like `static Builder newBuilder()`
-    if (!symbol.getModifiers().contains(ABSTRACT)) {
-      return false;
-    }
-
-    MethodSymbol method = (MethodSymbol) symbol;
-    ClassSymbol enclosingClass = method.enclClass();
-
-    // Setters always have exactly 1 param
-    if (method.getParameters().size() != 1) {
-      return false;
-    }
-
-    // If the enclosing class is not a known builder type, return false.
-    if (!hasAnnotation(enclosingClass, "com.google.auto.value.AutoValue.Builder", state)
-        && !hasAnnotation(enclosingClass, "com.google.auto.value.AutoBuilder", state)) {
-      return false;
-    }
-
-    // If the method return type is not the same as the enclosing type (the builder itself),
-    // e.g., the abstract `build()` method on the Builder, return false.
-    if (!isSameType(method.getReturnType(), enclosingClass.asType(), state)) {
-      return false;
-    }
-
-    return true;
   }
 
   private static boolean returnsJavaLangVoid(ExpressionTree tree, VisitorState state) {

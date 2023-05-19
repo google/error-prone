@@ -32,17 +32,17 @@ public class BanJNDITest {
       BugCheckerRefactoringTestHelper.newInstance(BanJNDI.class, getClass());
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper.addSourceFile("BanJNDIPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("BanJNDINegativeCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCaseUnchanged() {
+  public void negativeCaseUnchanged() {
     refactoringHelper
         .addInput("BanJNDINegativeCases.java")
         .expectUnchanged()

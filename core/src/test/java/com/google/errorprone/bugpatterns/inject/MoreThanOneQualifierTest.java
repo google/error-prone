@@ -31,12 +31,12 @@ public class MoreThanOneQualifierTest {
       CompilationTestHelper.newInstance(MoreThanOneQualifier.class, getClass());
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper.addSourceFile("MoreThanOneQualifierPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("MoreThanOneQualifierNegativeCases.java").doTest();
   }
 }

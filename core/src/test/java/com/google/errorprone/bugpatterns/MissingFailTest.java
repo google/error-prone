@@ -34,32 +34,32 @@ public class MissingFailTest {
       BugCheckerRefactoringTestHelper.newInstance(MissingFail.class, getClass());
 
   @Test
-  public void testPositiveCases() {
+  public void positiveCases() {
     compilationHelper.addSourceFile("MissingFailPositiveCases.java").doTest();
   }
 
   @Test
-  public void testPositiveCases2() {
+  public void positiveCases2() {
     compilationHelper.addSourceFile("MissingFailPositiveCases2.java").doTest();
   }
 
   @Test
-  public void testPositiveCases3() {
+  public void positiveCases3() {
     compilationHelper.addSourceFile("MissingFailPositiveCases3.java").doTest();
   }
 
   @Test
-  public void testNegativeCases() {
+  public void negativeCases() {
     compilationHelper.addSourceFile("MissingFailNegativeCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCases2() {
+  public void negativeCases2() {
     compilationHelper.addSourceFile("MissingFailNegativeCases2.java").doTest();
   }
 
   @Test
-  public void testFailImport() {
+  public void failImport() {
     BugCheckerRefactoringTestHelper.newInstance(MissingFail.class, getClass())
         .addInputLines(
             "test/A.java",
@@ -90,7 +90,7 @@ public class MissingFailTest {
   }
 
   @Test
-  public void testFailMessageMultiCatch() {
+  public void failMessageMultiCatch() {
     BugCheckerRefactoringTestHelper.newInstance(MissingFail.class, getClass())
         .addInputLines(
             "test/A.java",
@@ -122,7 +122,7 @@ public class MissingFailTest {
 
   // verify that exceptions not named 'expected' are ignored
   @Test
-  public void testToleratedException() {
+  public void toleratedException() {
     compilationHelper
         .addSourceLines(
             "test/A.java",
@@ -140,7 +140,7 @@ public class MissingFailTest {
 
   // verify that exceptions not named 'expected' are ignored
   @Test
-  public void testToleratedExceptionWithAssert() {
+  public void toleratedExceptionWithAssert() {
     compilationHelper
         .addSourceLines(
             "test/A.java",

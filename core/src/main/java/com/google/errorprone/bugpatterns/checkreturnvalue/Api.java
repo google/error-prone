@@ -17,57 +17,43 @@ package com.google.errorprone.bugpatterns.checkreturnvalue;
 
 import static com.google.common.base.CharMatcher.whitespace;
 import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.collect.ImmutableList.toImmutableList;
-import static com.google.common.collect.ImmutableSet.toImmutableSet;
-import static com.google.errorprone.matchers.Matchers.anyMethod;
-import static com.google.errorprone.matchers.Matchers.anyOf;
-import static com.google.errorprone.matchers.Matchers.constructor;
 import static java.lang.Character.isJavaIdentifierPart;
 import static java.lang.Character.isJavaIdentifierStart;
 
 import com.google.auto.value.AutoValue;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
-import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
-import com.google.errorprone.matchers.Matcher;
-import com.sun.source.tree.ExpressionTree;
-import java.util.List;
+import com.google.errorprone.annotations.CompileTimeConstant;
 
 /**
- * Represents a Java method or constructor. Provides a method to parse an API from a string format,
- * and another method to create an ErrorProne {@link Matcher} for the API.
+ * Represents a Java method or constructor.
+ *
+ * <p>Provides a method to parse an API from a string format, and emit an API as the same sting.
  */
 // TODO(kak): do we want to be able to represent classes in addition to methods/constructors?
 // TODO(kak): if not, then consider renaming to `MethodSignature` or something
 @AutoValue
 public abstract class Api {
 
-  // TODO(b/223668437): use this (or something other than the Matcher<> API)
-  static Matcher<ExpressionTree> createMatcherFromApis(List<String> apis) {
-    return anyOf(apis.stream().map(Api::parse).map(Api::matcher).collect(toImmutableList()));
-  }
-
-  static ImmutableSet<Api> createSetFromApis(List<String> apis) {
-    return apis.stream().map(Api::parse).collect(toImmutableSet());
-  }
+  private static final Joiner COMMA_JOINER = Joiner.on(',');
 
   /** Returns the fully qualified type that contains the given method/constructor. */
-  abstract String className();
+  public abstract String className();
 
   /**
    * Returns the simple name of the method. If the API is a constructor (i.e., {@code
    * isConstructor() == true}), then {@code "<init>"} is returned.
    */
-  abstract String methodName();
+  public abstract String methodName();
 
   /** Returns the list of fully qualified parameter types for the given method/constructor. */
-  abstract ImmutableList<String> parameterTypes();
+  public abstract ImmutableList<String> parameterTypes();
 
   @Override
   public final String toString() {
     return String.format(
-        "%s#%s(%s)", className(), methodName(), Joiner.on(',').join(parameterTypes()));
+        "%s#%s(%s)", className(), methodName(), COMMA_JOINER.join(parameterTypes()));
   }
 
   /** Returns whether this API represents a constructor or not. */
@@ -75,17 +61,45 @@ public abstract class Api {
     return methodName().equals("<init>");
   }
 
-  private Matcher<ExpressionTree> matcher() {
-    return isConstructor()
-        ? constructor().forClass(className()).withParameters(parameterTypes())
-        : anyMethod()
-            .onClass(className())
-            .named(methodName())
-            // TODO(b/219754967): what about arrays
-            .withParameters(parameterTypes());
+  /**
+   * Parses an API string into an {@link Api}, ignoring trailing or inner whitespace between names.
+   *
+   * <p>Example API strings are:
+   *
+   * <ul>
+   *   <li>a constructor (e.g., {@code java.net.URI#<init>(java.lang.String)})
+   *   <li>a static method (e.g., {@code java.net.URI#create(java.lang.String)})
+   *   <li>an instance method (e.g., {@code java.util.List#get(int)})
+   *   <li>an instance method with types erased (e.g., {@code java.util.List#add(java.lang.Object)})
+   * </ul>
+   *
+   * @throws IllegalArgumentException when {@code api} is not well-formed
+   */
+  @VisibleForTesting
+  public static Api parse(String api) {
+    return parse(api, false);
   }
 
-  private static final Splitter PARAM_SPLITTER = Splitter.on(',');
+  /**
+   * Parses an API string that was already known to not include any leading, trailing, or inner
+   * whitespace.
+   *
+   * <p>If the API string contains whitespace, this method may produce an API object with extraneous
+   * spaces attached, or may treat it as malformed (and throw an exception).
+   *
+   * @throws IllegalArgumentException when {@code api} is not well-formed
+   */
+  // TODO(glorioso): Refactoring has shown the folly of this method. It's probably not useful, since
+  //   if we're _parsing_ into API objects, there's not as much of a performance concern for
+  //   touching whitespaces. If we use bare string identifiers instead, whitespaces are problematic,
+  //   but this code wouldn't be involved.
+  static Api parseFromStringWithoutWhitespace(String api) {
+    return parse(api, true);
+  }
+
+  static Api internalCreate(String className, String methodName, ImmutableList<String> params) {
+    return new AutoValue_Api(className, methodName, params);
+  }
 
   /**
    * Parses an API string into an {@link Api}. Example API strings are:
@@ -97,115 +111,229 @@ public abstract class Api {
    *   <li>an instance method with types erased (e.g., {@code java.util.List#add(java.lang.Object)})
    * </ul>
    */
-  static Api parse(String apiWithWhitespace) {
-    // TODO(kak): consider removing whitespace from the String as we step through the String
-    String api = whitespace().removeFrom(apiWithWhitespace);
+  private static Api parse(String api, boolean assumeNoWhitespace) {
+    Parser p = new Parser(api, assumeNoWhitespace);
 
-    boolean isConstructor = false;
-    int hashIndex = -1;
-    int openParenIndex = -1;
-    int closeParenIndex = -1;
-    int lessThanIndex = -1;
-    int greaterThanIndex = -1;
-    for (int i = 0; i < api.length(); i++) {
-      char ch = api.charAt(i);
-      switch (ch) {
-        case '#':
-          check(hashIndex == -1, api, "it contains more than one '#'");
-          hashIndex = i;
-          break;
-        case '(':
-          check(openParenIndex == -1, api, "it contains more than one '('");
-          openParenIndex = i;
-          break;
-        case ')':
-          check(closeParenIndex == -1, api, "it contains more than one ')'");
-          closeParenIndex = i;
-          break;
-        case '<':
-          check(lessThanIndex == -1, api, "it contains more than one '<'");
-          lessThanIndex = i;
-          isConstructor = true;
-          break;
-        case '>':
-          check(greaterThanIndex == -1, api, "it contains more than one '>'");
-          greaterThanIndex = i;
-          isConstructor = true;
-          break;
-        case ',': // for separating parameters
-        case '.': // for package names and fully qualified parameter names
-          break;
-        default:
-          check(isJavaIdentifierPart(ch), api, "'" + ch + "' is not a valid identifier");
+    // Let's parse this in 3 parts:
+    //   * Fully-qualified owning name, followed by #
+    //   * method name, or "<init>", followed by (
+    //   * Any number of parameter types, all but the last followed by a ',', Finishing with )
+    //   * and nothing at the end.
+
+    String className = p.owningType();
+    String methodName = p.methodName();
+    ImmutableList<String> paramList = p.parameters();
+    p.ensureNoMoreCharacters();
+
+    return internalCreate(className, methodName, paramList);
+  }
+
+  private static final class Parser {
+    private final String api;
+    private final boolean assumeNoWhitespace;
+    private int position = -1;
+
+    Parser(String api, boolean assumeNoWhitespace) {
+      this.api = api;
+      this.assumeNoWhitespace = assumeNoWhitespace;
+    }
+
+    String owningType() {
+      StringBuilder buffer = new StringBuilder(api.length());
+      token:
+      do {
+        char next = nextLookingFor('#');
+        switch (next) {
+          case '#':
+            // We've hit the end of the leading type, break out.
+            break token;
+          case '.':
+            // OK, separator
+            break;
+          case '-':
+            // OK, used in Kotlin JvmName to prevent Java users.
+            break;
+          default:
+            checkArgument(
+                isJavaIdentifierPart(next),
+                "Unable to parse '%s' because '%s' is not a valid identifier",
+                api,
+                next);
+        }
+        buffer.append(next);
+      } while (true);
+      String type = buffer.toString();
+
+      check(!type.isEmpty(), api, "class name cannot be empty");
+      check(
+          isJavaIdentifierStart(type.charAt(0)),
+          api,
+          "the class name must start with a valid character");
+      return type;
+    }
+
+    String methodName() {
+      StringBuilder buffer = new StringBuilder(api.length() - position);
+      boolean isConstructor = false;
+      boolean finishedConstructor = false;
+      // match "<init>", or otherwise a normal method name
+      token:
+      do {
+        char next = nextLookingFor('(');
+        switch (next) {
+          case '(':
+            // We've hit the end of the method name, break out.
+            break token;
+          case '<':
+            // Starting a constructor
+            check(!isConstructor, api, "Only one '<' is allowed");
+            check(buffer.length() == 0, api, "'<' must come directly after '#'");
+            isConstructor = true;
+            break;
+          case '>':
+            check(isConstructor, api, "'<' must come before '>'");
+            check(!finishedConstructor, api, "Only one '>' is allowed");
+            finishedConstructor = true;
+            break;
+          default:
+            checkArgument(
+                isJavaIdentifierPart(next),
+                "Unable to parse '%s' because '%s' is not a valid identifier",
+                api,
+                next);
+        }
+        buffer.append(next);
+      } while (true);
+
+      String methodName = buffer.toString();
+      if (isConstructor) {
+        check(finishedConstructor, api, "found '<' without closing '>");
+
+        // Must be "<init>" exactly
+        checkArgument(
+            methodName.equals("<init>"),
+            "Unable to parse '%s' because %s is an invalid method name",
+            api,
+            methodName);
+      } else {
+        check(!methodName.isEmpty(), api, "method name cannot be empty");
+        check(
+            isJavaIdentifierStart(methodName.charAt(0)),
+            api,
+            "the method name must start with a valid character");
       }
+
+      return methodName;
     }
 
-    // make sure we've seen a hash, open paren, and close paren
-    check(hashIndex != -1, api, "it must contain a '#'");
-    check(openParenIndex != -1, api, "it must contain a '('");
-    check(closeParenIndex == api.length() - 1, api, "it must end with ')'");
+    ImmutableList<String> parameters() {
+      // Text until the next ',' or ')' represents the parameter type.
+      // If the first token is ')', then we have an empty parameter list.
+      StringBuilder buffer = new StringBuilder(api.length() - position);
+      ImmutableList.Builder<String> paramBuilder = ImmutableList.builder();
+      boolean emptyList = true;
+      paramList:
+      do {
+        char next = nextLookingFor(')');
+        switch (next) {
+          case ')':
+            if (emptyList) {
+              return ImmutableList.of();
+            }
+            // We've hit the end of the whole list, bail out.
+            paramBuilder.add(consumeParam(buffer));
+            break paramList;
+          case ',':
+            // We've hit the middle of a parameter, consume it
+            paramBuilder.add(consumeParam(buffer));
+            break;
 
-    // make sure they came in the correct order: <sometext>#<sometext>(<sometext>)
-    check(hashIndex < openParenIndex, api, "'#' must come before '('");
-    check(openParenIndex < closeParenIndex, api, "'(' must come before ')'");
+          case '[':
+          case ']':
+          case '.':
+            // . characters are separators, [ and ] are array characters, they're checked @ the end
+            buffer.append(next);
+            break;
 
-    if (isConstructor) {
-      // make sure that if we've seen a < or >, we also have seen the matching one
-      check(lessThanIndex != -1, api, "must contain both '<' and '>'");
-      check(greaterThanIndex != -1, api, "must contain both '<' and '>'");
-
-      // make sure the < comes directly after the #
-      check(lessThanIndex == hashIndex + 1, api, "'<' must come directly after '#'");
-
-      // make sure that the < comes before the >
-      check(lessThanIndex < greaterThanIndex, api, "'<' must come before '>'");
-
-      // make sure that the > comes directly before the (
-      check(greaterThanIndex == openParenIndex - 1, api, "'>' must come directly before '('");
-
-      // make sure the only thing between the < and > is exactly "init"
-      String constructorName = api.substring(lessThanIndex + 1, greaterThanIndex);
-      check(constructorName.equals("init"), api, "invalid method name: " + constructorName);
+          default:
+            checkArgument(
+                isJavaIdentifierPart(next),
+                "Unable to parse '%s' because '%s' is not a valid identifier",
+                api,
+                next);
+            emptyList = false;
+            buffer.append(next);
+        }
+      } while (true);
+      return paramBuilder.build();
     }
 
-    String className = api.substring(0, hashIndex);
-    String methodName = api.substring(hashIndex + 1, openParenIndex);
-    String parameters = api.substring(openParenIndex + 1, closeParenIndex);
-
-    ImmutableList<String> paramList =
-        parameters.isEmpty()
-            ? ImmutableList.of()
-            : PARAM_SPLITTER.splitToStream(parameters).collect(toImmutableList());
-
-    // make sure the class name, method name, and parameter names are not empty
-    check(!className.isEmpty(), api, "the class name cannot be empty");
-    check(!methodName.isEmpty(), api, "the method name cannot be empty");
-    for (String parameter : paramList) {
+    private String consumeParam(StringBuilder buffer) {
+      String parameter = buffer.toString();
+      buffer.setLength(0); // reset the buffer
       check(!parameter.isEmpty(), api, "parameters cannot be empty");
 
       check(
           isJavaIdentifierStart(parameter.charAt(0)),
           api,
           "parameters must start with a valid character");
+
+      // Array specs must be in balanced pairs at the *end* of the parameter.
+      boolean parsingArrayStart = false;
+      boolean hasArraySpecifiers = false;
+      for (int k = 1; k < parameter.length(); k++) {
+        char c = parameter.charAt(k);
+        switch (c) {
+          case '[':
+            check(!parsingArrayStart, api, "multiple consecutive [");
+            hasArraySpecifiers = true;
+            parsingArrayStart = true;
+            break;
+          case ']':
+            check(parsingArrayStart, api, "unbalanced ] in array type");
+            parsingArrayStart = false;
+            break;
+          default:
+            check(
+                !hasArraySpecifiers,
+                api,
+                "types with array specifiers should end in those specifiers");
+        }
+      }
+      check(!parsingArrayStart, api, "[ without closing ] at the end of a parameter type");
+      return parameter;
     }
-    // make sure the class name starts with a valid Java identifier character
-    check(
-        isJavaIdentifierStart(className.charAt(0)),
-        api,
-        "the class name must start with a valid character");
 
-    if (!isConstructor) {
-      // make sure the method name starts with a valid Java identifier character
-      check(
-          isJavaIdentifierStart(methodName.charAt(0)),
-          api,
-          "the method name must start with a valid character");
+    // skip whitespace characters and give the next non-whitespace character. If we hit the end
+    // without a non-whitespace character, throw expecting the delimiter.
+    private char nextLookingFor(char delimiter) {
+      char next;
+      do {
+        position++;
+        checkArgument(
+            position < api.length(),
+            "Could not parse '%s' as it must contain an '%s'",
+            api,
+            delimiter);
+        next = api.charAt(position);
+      } while (!assumeNoWhitespace && whitespace().matches(next));
+      return next;
     }
 
-    return new AutoValue_Api(className, methodName, paramList);
-  }
+    void ensureNoMoreCharacters() {
+      if (assumeNoWhitespace) {
+        return;
+      }
 
-  private static void check(boolean condition, String api, String reason) {
-    checkArgument(condition, "Unable to parse '%s' because %s", api, reason);
+      while (++position < api.length()) {
+        check(whitespace().matches(api.charAt(position)), api, "it should end in ')'");
+      }
+    }
+
+    // The @CompileTimeConstant is for performance - reason should be constant and not eagerly
+    // constructed.
+    private static void check(boolean condition, String api, @CompileTimeConstant String reason) {
+      checkArgument(condition, "Unable to parse '%s' because %s", api, reason);
+    }
   }
 }

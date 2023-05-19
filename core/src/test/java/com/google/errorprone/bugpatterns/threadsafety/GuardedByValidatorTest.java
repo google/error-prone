@@ -28,7 +28,7 @@ public class GuardedByValidatorTest {
       CompilationTestHelper.newInstance(GuardedByChecker.class, getClass());
 
   @Test
-  public void testPositive() {
+  public void positive() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -46,7 +46,7 @@ public class GuardedByValidatorTest {
   }
 
   @Test
-  public void testNegative() {
+  public void negative() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -70,7 +70,7 @@ public class GuardedByValidatorTest {
   }
 
   @Test
-  public void testItself() {
+  public void itself() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -83,7 +83,7 @@ public class GuardedByValidatorTest {
   }
 
   @Test
-  public void testBadInstanceAccess() {
+  public void badInstanceAccess() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -99,7 +99,7 @@ public class GuardedByValidatorTest {
   }
 
   @Test
-  public void testClassName() {
+  public void className() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -174,7 +174,7 @@ public class GuardedByValidatorTest {
   }
 
   @Test
-  public void testStaticGuardedByInstance() {
+  public void staticGuardedByInstance() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -189,7 +189,7 @@ public class GuardedByValidatorTest {
   }
 
   @Test
-  public void testStaticGuardedByInstanceMethod() {
+  public void staticGuardedByInstanceMethod() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -206,7 +206,7 @@ public class GuardedByValidatorTest {
   }
 
   @Test
-  public void testStaticGuardedByStatic() {
+  public void staticGuardedByStatic() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -219,7 +219,7 @@ public class GuardedByValidatorTest {
   }
 
   @Test
-  public void testNonExistantMethod() {
+  public void nonExistantMethod() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",

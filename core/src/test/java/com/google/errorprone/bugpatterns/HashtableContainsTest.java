@@ -28,7 +28,7 @@ public class HashtableContainsTest {
       CompilationTestHelper.newInstance(HashtableContains.class, getClass());
 
   @Test
-  public void positive_CHM() {
+  public void positive_cHM() {
     compilationHelper
         .addSourceLines(
             "test/Test.java",
@@ -44,7 +44,7 @@ public class HashtableContainsTest {
   }
 
   @Test
-  public void positive_Hashtable() {
+  public void positive_hashtable() {
     compilationHelper
         .addSourceLines(
             "test/Test.java",

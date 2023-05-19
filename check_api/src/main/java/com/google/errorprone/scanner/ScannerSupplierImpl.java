@@ -28,9 +28,6 @@ import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.bugpatterns.BugChecker;
 import java.io.Serializable;
-import java.lang.reflect.Constructor;
-import java.util.Arrays;
-import java.util.Optional;
 
 /**
  * An implementation of a {@link ScannerSupplier}, abstracted as a set of all known {@link
@@ -42,6 +39,8 @@ class ScannerSupplierImpl extends ScannerSupplier implements Serializable {
   private final ImmutableMap<String, SeverityLevel> severities;
   private final ImmutableSet<String> disabled;
   private final ErrorProneFlags flags;
+  // Lazily initialized to make serialization easy.
+  private transient ErrorProneInjector injector;
 
   ScannerSupplierImpl(
       ImmutableBiMap<String, BugCheckerInfo> checks,
@@ -61,37 +60,10 @@ class ScannerSupplierImpl extends ScannerSupplier implements Serializable {
   }
 
   private BugChecker instantiateChecker(BugCheckerInfo checker) {
-    // Invoke BugChecker(ErrorProneFlags) constructor, if it exists.
-    @SuppressWarnings("unchecked")
-    /* getConstructors() actually returns Constructor<BugChecker>[], though the return type is
-     * Constructor<?>[]. See getConstructors() javadoc for more info. */
-    Optional<Constructor<BugChecker>> flagsConstructor =
-        Arrays.stream((Constructor<BugChecker>[]) checker.checkerClass().getConstructors())
-            .filter(
-                c -> Arrays.equals(c.getParameterTypes(), new Class<?>[] {ErrorProneFlags.class}))
-            .findFirst();
-    if (flagsConstructor.isPresent()) {
-      try {
-        return flagsConstructor.get().newInstance(getFlags());
-      } catch (ReflectiveOperationException e) {
-        throw new LinkageError("Could not instantiate BugChecker.", e);
-      }
+    if (injector == null) {
+      injector = ErrorProneInjector.create().addBinding(ErrorProneFlags.class, flags);
     }
-
-    // If no flags constructor, invoke default constructor.
-    Class<? extends BugChecker> checkerClass = checker.checkerClass();
-    try {
-      return checkerClass.getConstructor().newInstance();
-    } catch (NoSuchMethodException | IllegalAccessException e) {
-      throw new LinkageError(
-          String.format(
-              "Could not instantiate BugChecker %s: Are both the class and the zero-arg"
-                  + " constructor public?",
-              checkerClass),
-          e);
-    } catch (ReflectiveOperationException e) {
-      throw new LinkageError("Could not instantiate BugChecker.", e);
-    }
+    return injector.getInstance(checker.checkerClass());
   }
 
   @Override

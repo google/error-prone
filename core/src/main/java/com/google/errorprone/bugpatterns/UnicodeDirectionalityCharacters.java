@@ -40,30 +40,28 @@ public final class UnicodeDirectionalityCharacters extends BugChecker
 
     for (int i = 0; i < source.length(); ++i) {
       char c = source.charAt(i);
-      if (isDangerous(c)) {
-        state.reportMatch(
-            describeMatch(
-                new FixedPosition(tree, i),
-                SuggestedFix.replace(i, i + 1, String.format("\\u%04x", (int) c))));
+      // Do not extract this switch to a method. It's ugly as-is, but profiling suggests this
+      // checker is expensive for large files, and also that the method-call overhead would
+      // double the time spent in this loop.
+      switch (c) {
+        case 0x202A: // Left-to-Right Embedding
+        case 0x202B: // Right-to-Left Embedding
+        case 0x202C: // Pop Directional Formatting
+        case 0x202D: // Left-to-Right Override
+        case 0x202E: // Right-to-Left Override
+        case 0x2066: // Left-to-Right Isolate
+        case 0x2067: // Right-to-Left Isolate
+        case 0x2068: // First Strong Isolate
+        case 0x2069: // Pop Directional Isolate
+          state.reportMatch(
+              describeMatch(
+                  new FixedPosition(tree, i),
+                  SuggestedFix.replace(i, i + 1, String.format("\\u%04x", (int) c))));
+          break;
+        default:
+          break;
       }
     }
     return NO_MATCH;
-  }
-
-  private static boolean isDangerous(char c) {
-    switch (c) {
-      case 0x202A: // Left-to-Right Embedding
-      case 0x202B: // Right-to-Left Embedding
-      case 0x202C: // Pop Directional Formatting
-      case 0x202D: // Left-to-Right Override
-      case 0x202E: // Right-to-Left Override
-      case 0x2066: // Left-to-Right Isolate
-      case 0x2067: // Right-to-Left Isolate
-      case 0x2068: // First Strong Isolate
-      case 0x2069: // Pop Directional Isolate
-        return true;
-      default:
-        return false;
-    }
   }
 }

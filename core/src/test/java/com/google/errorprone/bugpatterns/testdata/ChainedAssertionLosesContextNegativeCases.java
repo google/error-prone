@@ -22,7 +22,9 @@ import static com.google.common.truth.Truth.assertThat;
 import com.google.common.truth.FailureMetadata;
 import com.google.common.truth.Subject;
 
-/** @author cpovirk@google.com (Chris Povirk) */
+/**
+ * @author cpovirk@google.com (Chris Povirk)
+ */
 public class ChainedAssertionLosesContextNegativeCases {
   static final class FooSubject extends Subject {
     private final Foo actual;

@@ -84,8 +84,8 @@ public class LogicalAssignment extends BugChecker
             SuggestedFix.builder().prefixWith(condition, "(").postfixWith(condition, ")").build())
         .addFix(
             SuggestedFix.replace(
-                /*startPos=*/ state.getEndPosition(assign.getVariable()),
-                /*endPos=*/ getStartPosition(assign.getExpression()),
+                /* startPos= */ state.getEndPosition(assign.getVariable()),
+                /* endPos= */ getStartPosition(assign.getExpression()),
                 " == "))
         .build();
   }

@@ -43,7 +43,7 @@ public class ForOverrideCheckerTest {
               "}");
 
   @Test
-  public void testCanApplyForOverrideToProtectedMethod() {
+  public void canApplyForOverrideToProtectedMethod() {
     compilationHelper
         .addSourceLines(
             "test/Test.java",
@@ -56,7 +56,7 @@ public class ForOverrideCheckerTest {
   }
 
   @Test
-  public void testCanApplyForOverrideToPackagePrivateMethod() {
+  public void canApplyForOverrideToPackagePrivateMethod() {
     compilationHelper
         .addSourceLines(
             "test/Test.java",
@@ -69,7 +69,7 @@ public class ForOverrideCheckerTest {
   }
 
   @Test
-  public void testCannotApplyForOverrideToPublicMethod() {
+  public void cannotApplyForOverrideToPublicMethod() {
     compilationHelper
         .addSourceLines(
             "test/Test.java",
@@ -84,7 +84,7 @@ public class ForOverrideCheckerTest {
   }
 
   @Test
-  public void testCannotApplyForOverrideToPrivateMethod() {
+  public void cannotApplyForOverrideToPrivateMethod() {
     compilationHelper
         .addSourceLines(
             "test/Test.java",
@@ -99,7 +99,7 @@ public class ForOverrideCheckerTest {
   }
 
   @Test
-  public void testCannotApplyForOverrideToInterfaceMethod() {
+  public void cannotApplyForOverrideToInterfaceMethod() {
     compilationHelper
         .addSourceLines(
             "test/Test.java",
@@ -114,7 +114,7 @@ public class ForOverrideCheckerTest {
   }
 
   @Test
-  public void testUserCanCallAppropriateMethod() {
+  public void userCanCallAppropriateMethod() {
     compilationHelper
         .addSourceLines(
             "test/Test.java",
@@ -128,7 +128,7 @@ public class ForOverrideCheckerTest {
   }
 
   @Test
-  public void testUserInSamePackageCannotCallMethod() {
+  public void userInSamePackageCannotCallMethod() {
     compilationHelper
         .addSourceLines(
             "test/Test.java",
@@ -144,7 +144,7 @@ public class ForOverrideCheckerTest {
   }
 
   @Test
-  public void testUserCannotCallDefault() {
+  public void userCannotCallDefault() {
     compilationHelper
         .addSourceLines(
             "test/Test.java",
@@ -159,7 +159,7 @@ public class ForOverrideCheckerTest {
   }
 
   @Test
-  public void testUserCannotCallOverridden() {
+  public void userCannotCallOverridden() {
     compilationHelper
         .addSourceLines(
             "test/Test.java",
@@ -179,7 +179,7 @@ public class ForOverrideCheckerTest {
   }
 
   @Test
-  public void testUserCanCallSuperFromOverridden() {
+  public void userCanCallSuperFromOverridden() {
     compilationHelper
         .addSourceLines(
             "test/Test.java",
@@ -194,7 +194,7 @@ public class ForOverrideCheckerTest {
   }
 
   @Test
-  public void testUserCanCallSuperFromOverridden_explicitQualification() {
+  public void userCanCallSuperFromOverridden_explicitQualification() {
     compilationHelper
         .addSourceLines(
             "test/Test.java",
@@ -210,7 +210,7 @@ public class ForOverrideCheckerTest {
   }
 
   @Test
-  public void testUserCannotCallSuperFromNonOverriddenMethod() {
+  public void userCannotCallSuperFromNonOverriddenMethod() {
     compilationHelper
         .addSourceLines(
             "test/Test.java",
@@ -225,7 +225,7 @@ public class ForOverrideCheckerTest {
   }
 
   @Test
-  public void testUserCannotCallSuperFromFieldInitializer() {
+  public void userCannotCallSuperFromFieldInitializer() {
     compilationHelper
         .addSourceLines(
             "test/Test.java",
@@ -238,7 +238,7 @@ public class ForOverrideCheckerTest {
   }
 
   @Test
-  public void testUserCannotCallSuperFromAnonymousInnerClassInOverride() {
+  public void userCannotCallSuperFromAnonymousInnerClassInOverride() {
     compilationHelper
         .addSourceLines(
             "test/Test.java",
@@ -261,7 +261,7 @@ public class ForOverrideCheckerTest {
   }
 
   @Test
-  public void testUserCannotMakeMethodPublic() {
+  public void userCannotMakeMethodPublic() {
     compilationHelper
         .addSourceLines(
             "test/Test.java",
@@ -280,7 +280,7 @@ public class ForOverrideCheckerTest {
   }
 
   @Test
-  public void testDefinerCanCallFromInnerClass() {
+  public void definerCanCallFromInnerClass() {
     compilationHelper
         .addSourceLines(
             "test/OuterClass.java",
@@ -299,7 +299,7 @@ public class ForOverrideCheckerTest {
   }
 
   @Test
-  public void testDefinerCanCallFromAnonymousInnerClass() {
+  public void definerCanCallFromAnonymousInnerClass() {
     compilationHelper
         .addSourceLines(
             "test/OuterClass.java",

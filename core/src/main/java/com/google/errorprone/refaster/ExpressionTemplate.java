@@ -33,6 +33,7 @@ import com.google.errorprone.refaster.annotation.UseImportPolicy;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreeScanner;
+import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.TypeTag;
 import com.sun.tools.javac.code.Types;
@@ -248,7 +249,8 @@ public abstract class ExpressionTemplate extends Template<ExpressionTemplateMatc
    */
   private static int getPrecedence(JCTree leaf, Context context) {
     JCCompilationUnit comp = context.get(JCCompilationUnit.class);
-    JCTree parent = TreeInfo.pathFor(leaf, comp).get(1);
+    JCTree parent =
+        (JCTree) JavacTrees.instance(context).getPath(comp, leaf).getParentPath().getLeaf();
 
     // In general, this should match the logic in com.sun.tools.javac.tree.Pretty.
     //

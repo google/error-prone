@@ -24,6 +24,7 @@ import static com.google.errorprone.matchers.Matchers.instanceEqualsInvocation;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.isStatic;
 
 import com.google.common.base.Ascii;
 import com.google.common.collect.ImmutableMap;
@@ -213,7 +214,7 @@ public final class InconsistentHashCode extends BugChecker implements ClassTreeM
     private void handleSymbol(Symbol symbol) {
       if (symbol != null
           && symbol.getKind() == ElementKind.FIELD
-          && !symbol.isStatic()
+          && !isStatic(symbol)
           && symbol.owner.equals(classSymbol)) {
         String name = symbol.name.toString();
         if (name.equals("this") || name.equals("super")) {

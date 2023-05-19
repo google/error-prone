@@ -69,15 +69,11 @@ public final class FormatStringValidation {
   /** Description of an incorrect format method call. */
   @AutoValue
   public abstract static class ValidationResult {
-    /** The exception thrown by {@code String.format}. */
-    @Nullable
-    public abstract Exception exception();
-
     /** A human-readable diagnostic message. */
     public abstract String message();
 
-    public static ValidationResult create(@Nullable Exception exception, String message) {
-      return new AutoValue_FormatStringValidation_ValidationResult(exception, message);
+    public static ValidationResult create(String message) {
+      return new AutoValue_FormatStringValidation_ValidationResult(message);
     }
   }
 
@@ -246,44 +242,42 @@ public final class FormatStringValidation {
     try {
       String unused = String.format(formatString, arguments);
     } catch (DuplicateFormatFlagsException e) {
-      return ValidationResult.create(e, String.format("duplicate format flags: %s", e.getFlags()));
+      return ValidationResult.create(String.format("duplicate format flags: %s", e.getFlags()));
     } catch (FormatFlagsConversionMismatchException e) {
       return ValidationResult.create(
-          e,
           String.format(
               "format specifier '%%%s' is not compatible with the given flag(s): %s",
               e.getConversion(), e.getFlags()));
     } catch (IllegalFormatCodePointException e) {
       return ValidationResult.create(
-          e, String.format("invalid Unicode code point: %x", e.getCodePoint()));
+          String.format("invalid Unicode code point: %x", e.getCodePoint()));
     } catch (IllegalFormatConversionException e) {
       return ValidationResult.create(
-          e,
           String.format(
               "illegal format conversion: '%s' cannot be formatted using '%%%s'",
               e.getArgumentClass().getName(), e.getConversion()));
     } catch (IllegalFormatFlagsException e) {
-      return ValidationResult.create(e, String.format("illegal format flags: %s", e.getFlags()));
+      return ValidationResult.create(String.format("illegal format flags: %s", e.getFlags()));
     } catch (IllegalFormatPrecisionException e) {
       return ValidationResult.create(
-          e, String.format("illegal format precision: %d", e.getPrecision()));
+          String.format("illegal format precision: %d", e.getPrecision()));
     } catch (IllegalFormatWidthException e) {
-      return ValidationResult.create(e, String.format("illegal format width: %s", e.getWidth()));
+      return ValidationResult.create(String.format("illegal format width: %s", e.getWidth()));
     } catch (MissingFormatArgumentException e) {
       return ValidationResult.create(
-          e, String.format("missing argument for format specifier '%s'", e.getFormatSpecifier()));
+          String.format("missing argument for format specifier '%s'", e.getFormatSpecifier()));
     } catch (MissingFormatWidthException e) {
       return ValidationResult.create(
-          e, String.format("missing format width: %s", e.getFormatSpecifier()));
+          String.format("missing format width: %s", e.getFormatSpecifier()));
     } catch (UnknownFormatConversionException e) {
-      return ValidationResult.create(e, unknownFormatConversion(e.getConversion()));
+      return ValidationResult.create(unknownFormatConversion(e.getConversion()));
     } catch (UnknownFormatFlagsException e) {
       // TODO(cushon): I don't think the implementation ever throws this.
-      return ValidationResult.create(e, String.format("unknown format flag(s): %s", e.getFlags()));
+      return ValidationResult.create(String.format("unknown format flag(s): %s", e.getFlags()));
     } catch (IllegalFormatException e) {
       // Fall back for other invalid format strings, e.g. IllegalFormatArgumentIndexException that
       // was added in JDK 16
-      return ValidationResult.create(e, e.getMessage());
+      return ValidationResult.create(e.getMessage());
     }
     return extraFormatArguments(formatString, asList(arguments));
   }
@@ -300,7 +294,6 @@ public final class FormatStringValidation {
       return null;
     }
     return ValidationResult.create(
-        /* exception= */ null,
         String.format("extra format arguments: used %d, provided %d", used, arguments.size()));
   }
 

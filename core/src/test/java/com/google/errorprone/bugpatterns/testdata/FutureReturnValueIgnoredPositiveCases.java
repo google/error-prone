@@ -24,7 +24,9 @@ import com.google.common.util.concurrent.ListenableFuture;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Future;
 
-/** @author eaftan@google.com (Eddie Aftandilian) */
+/**
+ * @author eaftan@google.com (Eddie Aftandilian)
+ */
 public class FutureReturnValueIgnoredPositiveCases {
 
   IntValue intValue = new IntValue(0);

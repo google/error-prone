@@ -19,7 +19,9 @@ package com.google.errorprone.bugpatterns.testdata;
 import com.google.errorprone.annotations.CheckReturnValue;
 import java.util.function.Supplier;
 
-/** @author eaftan@google.com (Eddie Aftandilian) */
+/**
+ * @author eaftan@google.com (Eddie Aftandilian)
+ */
 public class CheckReturnValueNegativeCases {
 
   public void test1() {
@@ -34,6 +36,10 @@ public class CheckReturnValueNegativeCases {
   @CheckReturnValue
   private int mustCheck() {
     return 5;
+  }
+
+  private int nothingToCheck() {
+    return 42;
   }
 
   private void callRunnable(Runnable runnable) {
@@ -51,11 +57,13 @@ public class CheckReturnValueNegativeCases {
     supplier.get();
   }
 
-  public void testResolvedToVoidLambda() {
+  public void testResolvedToIntLambda(boolean predicate) {
     callSupplier(() -> mustCheck());
+    callSupplier(predicate ? () -> mustCheck() : () -> nothingToCheck());
   }
 
-  public void testMethodReference() {
+  public void testMethodReference(boolean predicate) {
     callSupplier(this::mustCheck);
+    callSupplier(predicate ? this::mustCheck : this::nothingToCheck);
   }
 }

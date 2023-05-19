@@ -19,14 +19,13 @@ package com.google.errorprone.bugpatterns.testdata;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Slightly funky test case with a custom After annotation)
- */
+/** Slightly funky test case with a custom After annotation) */
 @RunWith(JUnit4.class)
 public class JUnit4TearDownNotRunPositiveCaseCustomAfter {
   // This will compile-fail and suggest the import of org.junit.After
   // BUG: Diagnostic contains: @After
-  @After public void tearDown() {}
+  @After
+  public void tearDown() {}
 }
 
 @interface After {}

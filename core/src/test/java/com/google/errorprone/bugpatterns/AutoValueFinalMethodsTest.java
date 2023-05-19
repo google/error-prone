@@ -35,7 +35,7 @@ public class AutoValueFinalMethodsTest {
       CompilationTestHelper.newInstance(AutoValueFinalMethods.class, getClass());
 
   @Test
-  public void testFinalAdditionToEqHcTs() {
+  public void finalAdditionToEqHcTs() {
     testHelper
         .addInputLines(
             "in/Test.java",
@@ -87,7 +87,7 @@ public class AutoValueFinalMethodsTest {
   }
 
   @Test
-  public void testNegativeCases() {
+  public void negativeCases() {
     compilationHelper
         .addSourceLines(
             "out/Test.java",
@@ -125,7 +125,7 @@ public class AutoValueFinalMethodsTest {
   }
 
   @Test
-  public void testAbstractMemoizedNegativeCase() {
+  public void abstractMemoizedNegativeCase() {
     compilationHelper
         .addSourceLines(
             "out/Test.java",
@@ -144,7 +144,7 @@ public class AutoValueFinalMethodsTest {
   }
 
   @Test
-  public void testDiagnosticString() {
+  public void diagnosticString() {
     compilationHelper
         .addSourceLines(
             "out/Test.java",
@@ -165,7 +165,7 @@ public class AutoValueFinalMethodsTest {
   }
 
   @Test
-  public void testDiagnosticStringWithMultipleMethodMatches() {
+  public void diagnosticStringWithMultipleMethodMatches() {
     compilationHelper
         .addSourceLines(
             "out/Test.java",

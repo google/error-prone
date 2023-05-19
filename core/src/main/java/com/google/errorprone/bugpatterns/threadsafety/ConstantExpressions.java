@@ -31,6 +31,7 @@ import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
+import static com.google.errorprone.util.ASTHelpers.isStatic;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.joining;
 import static javax.lang.model.element.Modifier.ABSTRACT;
@@ -65,6 +66,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
+import javax.inject.Inject;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /** Helper for establishing whether expressions correspond to a constant expression. */
@@ -72,7 +74,8 @@ public final class ConstantExpressions {
   private final Matcher<ExpressionTree> pureMethods;
   private final Supplier<ThreadSafety> threadSafety;
 
-  public ConstantExpressions(WellKnownMutability wellKnownMutability) {
+  @Inject
+  ConstantExpressions(WellKnownMutability wellKnownMutability) {
     this.pureMethods =
         anyOf(
             basePureMethods,
@@ -90,8 +93,7 @@ public final class ConstantExpressions {
   }
 
   public static ConstantExpressions fromFlags(ErrorProneFlags flags) {
-    WellKnownMutability wellKnownMutability = WellKnownMutability.fromFlags(flags);
-    return new ConstantExpressions(wellKnownMutability);
+    return new ConstantExpressions(WellKnownMutability.fromFlags(flags));
   }
 
   /** Represents sets of things known to be true and false if a boolean statement evaluated true. */
@@ -320,7 +322,7 @@ public final class ConstantExpressions {
         return receiver + symbol().getSimpleName();
       }
       return receiver
-          + (symbol().isStatic() ? symbol().owner.getSimpleName() + "." : "")
+          + (isStatic(symbol()) ? symbol().owner.getSimpleName() + "." : "")
           + symbol().getSimpleName()
           + arguments().stream().map(Object::toString).collect(joining(", ", "(", ")"));
     }
@@ -353,7 +355,7 @@ public final class ConstantExpressions {
 
     Symbol symbol = getSymbol(tree);
     Optional<ConstantExpression> receiverConstant;
-    if (receiver == null || (symbol != null && symbol.isStatic())) {
+    if (receiver == null || (symbol != null && isStatic(symbol))) {
       receiverConstant = Optional.empty();
     } else {
       receiverConstant = constantExpression(receiver, state);

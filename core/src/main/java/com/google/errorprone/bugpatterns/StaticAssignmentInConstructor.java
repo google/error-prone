@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.isStatic;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -65,7 +66,7 @@ public final class StaticAssignmentInConstructor extends BugChecker implements M
       @Override
       public Void visitAssignment(AssignmentTree assignmentTree, Void unused) {
         Symbol symbol = getSymbol(assignmentTree.getVariable());
-        if (symbol != null && symbol.isStatic() && shouldEmitFinding(assignmentTree)) {
+        if (symbol != null && isStatic(symbol) && shouldEmitFinding(assignmentTree)) {
           state.reportMatch(describeMatch(assignmentTree));
         }
         return super.visitAssignment(assignmentTree, null);

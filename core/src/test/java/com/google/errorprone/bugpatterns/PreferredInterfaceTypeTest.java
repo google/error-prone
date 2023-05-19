@@ -72,6 +72,22 @@ public final class PreferredInterfaceTypeTest {
   }
 
   @Test
+  public void referringToCollectionAsIterable_noFinding() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.Collection;",
+            "import java.util.HashSet;",
+            "class Test {",
+            "  Collection<Integer> test() {",
+            "    Iterable<Integer> foo = test();",
+            "    return null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void alreadyTightenedType() {
     testHelper
         .addSourceLines(
@@ -867,6 +883,32 @@ public final class PreferredInterfaceTypeTest {
             "class Test {",
             "  private final Deque<String> foos = new LinkedList<>();",
             "}")
+        .doTest();
+  }
+
+  @Test
+  public void charSequences() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  // BUG: Diagnostic contains: String",
+            "  private final CharSequence a = \"foo\";",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void obeysKeep() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Keep;",
+            "import java.util.ArrayList;",
+            "class Test {",
+            "  @Keep private static final Iterable<Integer> FOO = new ArrayList<>();",
+            "}")
+        .expectUnchanged()
         .doTest();
   }
 }

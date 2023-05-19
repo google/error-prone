@@ -59,7 +59,7 @@ public final class JavaInstantGetSecondsGetNano extends BugChecker
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     if (GET_NANO.matches(tree, state)) {
       if (!containsCallToSameReceiverNearby(
-          tree, GET_EPOCH_SECOND, state, /*checkProtoChains=*/ false)) {
+          tree, GET_EPOCH_SECOND, state, /* checkProtoChains= */ false)) {
         return describeMatch(tree);
       }
     }

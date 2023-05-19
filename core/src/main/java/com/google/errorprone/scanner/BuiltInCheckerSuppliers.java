@@ -21,6 +21,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Streams;
 import com.google.errorprone.BugCheckerInfo;
+import com.google.errorprone.bugpatterns.ASTHelpersSuggestions;
 import com.google.errorprone.bugpatterns.AlreadyChecked;
 import com.google.errorprone.bugpatterns.AlwaysThrows;
 import com.google.errorprone.bugpatterns.AmbiguousMethodReference;
@@ -43,6 +44,7 @@ import com.google.errorprone.bugpatterns.AutoValueBuilderDefaultsInConstructor;
 import com.google.errorprone.bugpatterns.AutoValueFinalMethods;
 import com.google.errorprone.bugpatterns.AutoValueImmutableFields;
 import com.google.errorprone.bugpatterns.AutoValueSubclassLeaked;
+import com.google.errorprone.bugpatterns.AvoidObjectArrays;
 import com.google.errorprone.bugpatterns.BadAnnotationImplementation;
 import com.google.errorprone.bugpatterns.BadComparable;
 import com.google.errorprone.bugpatterns.BadImport;
@@ -61,6 +63,7 @@ import com.google.errorprone.bugpatterns.BugPatternNaming;
 import com.google.errorprone.bugpatterns.ByteBufferBackingArray;
 import com.google.errorprone.bugpatterns.CacheLoaderNull;
 import com.google.errorprone.bugpatterns.CannotMockFinalClass;
+import com.google.errorprone.bugpatterns.CannotMockMethod;
 import com.google.errorprone.bugpatterns.CanonicalDuration;
 import com.google.errorprone.bugpatterns.CatchAndPrintStackTrace;
 import com.google.errorprone.bugpatterns.CatchFail;
@@ -100,6 +103,7 @@ import com.google.errorprone.bugpatterns.DefaultPackage;
 import com.google.errorprone.bugpatterns.DepAnn;
 import com.google.errorprone.bugpatterns.DeprecatedVariable;
 import com.google.errorprone.bugpatterns.DifferentNameButSame;
+import com.google.errorprone.bugpatterns.DirectInvocationOnMock;
 import com.google.errorprone.bugpatterns.DiscardedPostfixExpression;
 import com.google.errorprone.bugpatterns.DistinctVarargsChecker;
 import com.google.errorprone.bugpatterns.DoNotCallChecker;
@@ -130,6 +134,7 @@ import com.google.errorprone.bugpatterns.FallThrough;
 import com.google.errorprone.bugpatterns.FieldCanBeFinal;
 import com.google.errorprone.bugpatterns.FieldCanBeLocal;
 import com.google.errorprone.bugpatterns.FieldCanBeStatic;
+import com.google.errorprone.bugpatterns.Finalize;
 import com.google.errorprone.bugpatterns.Finally;
 import com.google.errorprone.bugpatterns.FloatCast;
 import com.google.errorprone.bugpatterns.FloatingPointAssertionWithinEpsilon;
@@ -153,6 +158,7 @@ import com.google.errorprone.bugpatterns.IgnoredPureGetter;
 import com.google.errorprone.bugpatterns.ImmutableMemberCollection;
 import com.google.errorprone.bugpatterns.ImmutableSetForContains;
 import com.google.errorprone.bugpatterns.ImplementAssertionWithChaining;
+import com.google.errorprone.bugpatterns.ImpossibleNullComparison;
 import com.google.errorprone.bugpatterns.Incomparable;
 import com.google.errorprone.bugpatterns.IncompatibleModifiersChecker;
 import com.google.errorprone.bugpatterns.InconsistentCapitalization;
@@ -163,12 +169,14 @@ import com.google.errorprone.bugpatterns.IndexOfChar;
 import com.google.errorprone.bugpatterns.InexactVarargsConditional;
 import com.google.errorprone.bugpatterns.InfiniteRecursion;
 import com.google.errorprone.bugpatterns.InitializeInline;
+import com.google.errorprone.bugpatterns.InjectOnBugCheckers;
 import com.google.errorprone.bugpatterns.InputStreamSlowMultibyteRead;
 import com.google.errorprone.bugpatterns.InsecureCipherMode;
 import com.google.errorprone.bugpatterns.InstanceOfAndCastMatchWrongType;
 import com.google.errorprone.bugpatterns.IntLongMath;
 import com.google.errorprone.bugpatterns.InterfaceWithOnlyStatics;
 import com.google.errorprone.bugpatterns.InterruptedExceptionSwallowed;
+import com.google.errorprone.bugpatterns.Interruption;
 import com.google.errorprone.bugpatterns.InvalidPatternSyntax;
 import com.google.errorprone.bugpatterns.InvalidTimeZoneID;
 import com.google.errorprone.bugpatterns.InvalidZoneId;
@@ -190,7 +198,9 @@ import com.google.errorprone.bugpatterns.JUnitParameterMethodNotFound;
 import com.google.errorprone.bugpatterns.JavaLangClash;
 import com.google.errorprone.bugpatterns.JavaUtilDateChecker;
 import com.google.errorprone.bugpatterns.JdkObsolete;
+import com.google.errorprone.bugpatterns.LabelledBreakTarget;
 import com.google.errorprone.bugpatterns.LambdaFunctionalInterface;
+import com.google.errorprone.bugpatterns.LenientFormatStringValidation;
 import com.google.errorprone.bugpatterns.LiteByteStringUtf8;
 import com.google.errorprone.bugpatterns.LiteEnumValueOf;
 import com.google.errorprone.bugpatterns.LiteProtoToString;
@@ -203,7 +213,7 @@ import com.google.errorprone.bugpatterns.LongLiteralLowerCaseSuffix;
 import com.google.errorprone.bugpatterns.LoopConditionChecker;
 import com.google.errorprone.bugpatterns.LoopOverCharArray;
 import com.google.errorprone.bugpatterns.LossyPrimitiveCompare;
-import com.google.errorprone.bugpatterns.MathAbsoluteRandom;
+import com.google.errorprone.bugpatterns.MathAbsoluteNegative;
 import com.google.errorprone.bugpatterns.MathRoundIntLong;
 import com.google.errorprone.bugpatterns.MemberName;
 import com.google.errorprone.bugpatterns.MemoizeConstantVisitorStateLookups;
@@ -221,6 +231,7 @@ import com.google.errorprone.bugpatterns.MisusedWeekYear;
 import com.google.errorprone.bugpatterns.MixedArrayDimensions;
 import com.google.errorprone.bugpatterns.MixedDescriptors;
 import com.google.errorprone.bugpatterns.MixedMutabilityReturnType;
+import com.google.errorprone.bugpatterns.MockNotUsedInProduction;
 import com.google.errorprone.bugpatterns.MockitoUsage;
 import com.google.errorprone.bugpatterns.ModifiedButNotUsed;
 import com.google.errorprone.bugpatterns.ModifyCollectionInEnhancedForLoop;
@@ -237,6 +248,7 @@ import com.google.errorprone.bugpatterns.NarrowCalculation;
 import com.google.errorprone.bugpatterns.NarrowingCompoundAssignment;
 import com.google.errorprone.bugpatterns.NegativeCharLiteral;
 import com.google.errorprone.bugpatterns.NestedInstanceOfConditions;
+import com.google.errorprone.bugpatterns.NewFileSystem;
 import com.google.errorprone.bugpatterns.NoAllocationChecker;
 import com.google.errorprone.bugpatterns.NonAtomicVolatileUpdate;
 import com.google.errorprone.bugpatterns.NonCanonicalStaticImport;
@@ -248,6 +260,7 @@ import com.google.errorprone.bugpatterns.NonRuntimeAnnotation;
 import com.google.errorprone.bugpatterns.NullOptional;
 import com.google.errorprone.bugpatterns.NullTernary;
 import com.google.errorprone.bugpatterns.NullableConstructor;
+import com.google.errorprone.bugpatterns.NullableOnContainingClass;
 import com.google.errorprone.bugpatterns.NullablePrimitive;
 import com.google.errorprone.bugpatterns.NullablePrimitiveArray;
 import com.google.errorprone.bugpatterns.NullableVoid;
@@ -278,7 +291,6 @@ import com.google.errorprone.bugpatterns.PrivateConstructorForUtilityClass;
 import com.google.errorprone.bugpatterns.PrivateSecurityContractProtoAccess;
 import com.google.errorprone.bugpatterns.ProtectedMembersInFinalClass;
 import com.google.errorprone.bugpatterns.ProtoBuilderReturnValueIgnored;
-import com.google.errorprone.bugpatterns.ProtoFieldNullComparison;
 import com.google.errorprone.bugpatterns.ProtoRedundantSet;
 import com.google.errorprone.bugpatterns.ProtoStringFieldReferenceEquality;
 import com.google.errorprone.bugpatterns.ProtoTruthMixedDescriptors;
@@ -299,12 +311,14 @@ import com.google.errorprone.bugpatterns.ReturnsNullCollection;
 import com.google.errorprone.bugpatterns.RobolectricShadowDirectlyOn;
 import com.google.errorprone.bugpatterns.RxReturnValueIgnored;
 import com.google.errorprone.bugpatterns.SameNameButDifferent;
+import com.google.errorprone.bugpatterns.SelfAlwaysReturnsThis;
 import com.google.errorprone.bugpatterns.SelfAssignment;
 import com.google.errorprone.bugpatterns.SelfComparison;
 import com.google.errorprone.bugpatterns.SelfEquals;
 import com.google.errorprone.bugpatterns.ShortCircuitBoolean;
 import com.google.errorprone.bugpatterns.ShouldHaveEvenArgs;
 import com.google.errorprone.bugpatterns.SizeGreaterThanOrEqualsZero;
+import com.google.errorprone.bugpatterns.StatementSwitchToExpressionSwitch;
 import com.google.errorprone.bugpatterns.StaticAssignmentInConstructor;
 import com.google.errorprone.bugpatterns.StaticAssignmentOfThrowable;
 import com.google.errorprone.bugpatterns.StaticMockMember;
@@ -313,6 +327,7 @@ import com.google.errorprone.bugpatterns.StreamResourceLeak;
 import com.google.errorprone.bugpatterns.StreamToIterable;
 import com.google.errorprone.bugpatterns.StreamToString;
 import com.google.errorprone.bugpatterns.StringBuilderInitWithChar;
+import com.google.errorprone.bugpatterns.StringCaseLocaleUsage;
 import com.google.errorprone.bugpatterns.StringSplitter;
 import com.google.errorprone.bugpatterns.StronglyTypeByteString;
 import com.google.errorprone.bugpatterns.SubstringOfZero;
@@ -373,7 +388,9 @@ import com.google.errorprone.bugpatterns.UnnecessaryOptionalGet;
 import com.google.errorprone.bugpatterns.UnnecessaryParentheses;
 import com.google.errorprone.bugpatterns.UnnecessarySetDefault;
 import com.google.errorprone.bugpatterns.UnnecessaryStaticImport;
+import com.google.errorprone.bugpatterns.UnnecessaryTestMethodPrefix;
 import com.google.errorprone.bugpatterns.UnnecessaryTypeArgument;
+import com.google.errorprone.bugpatterns.UnqualifiedYield;
 import com.google.errorprone.bugpatterns.UnsafeFinalization;
 import com.google.errorprone.bugpatterns.UnsafeLocaleUsage;
 import com.google.errorprone.bugpatterns.UnsafeReflectiveConstructionCast;
@@ -381,8 +398,10 @@ import com.google.errorprone.bugpatterns.UnsynchronizedOverridesSynchronized;
 import com.google.errorprone.bugpatterns.UnusedAnonymousClass;
 import com.google.errorprone.bugpatterns.UnusedCollectionModifiedInPlace;
 import com.google.errorprone.bugpatterns.UnusedException;
+import com.google.errorprone.bugpatterns.UnusedLabel;
 import com.google.errorprone.bugpatterns.UnusedMethod;
 import com.google.errorprone.bugpatterns.UnusedNestedClass;
+import com.google.errorprone.bugpatterns.UnusedTypeParameter;
 import com.google.errorprone.bugpatterns.UnusedVariable;
 import com.google.errorprone.bugpatterns.UseCorrectAssertInTests;
 import com.google.errorprone.bugpatterns.UseEnumSwitch;
@@ -395,6 +414,7 @@ import com.google.errorprone.bugpatterns.WildcardImport;
 import com.google.errorprone.bugpatterns.WithSignatureDiscouraged;
 import com.google.errorprone.bugpatterns.WrongOneof;
 import com.google.errorprone.bugpatterns.XorPower;
+import com.google.errorprone.bugpatterns.YodaCondition;
 import com.google.errorprone.bugpatterns.android.BinderIdentityRestoredDangerously;
 import com.google.errorprone.bugpatterns.android.BundleDeserializationCast;
 import com.google.errorprone.bugpatterns.android.FragmentInjection;
@@ -412,6 +432,10 @@ import com.google.errorprone.bugpatterns.apidiff.Java8ApiChecker;
 import com.google.errorprone.bugpatterns.argumentselectiondefects.ArgumentSelectionDefectChecker;
 import com.google.errorprone.bugpatterns.argumentselectiondefects.AssertEqualsArgumentOrderChecker;
 import com.google.errorprone.bugpatterns.argumentselectiondefects.AutoValueConstructorOrderChecker;
+import com.google.errorprone.bugpatterns.checkreturnvalue.BuilderReturnThis;
+import com.google.errorprone.bugpatterns.checkreturnvalue.CanIgnoreReturnValueSuggester;
+import com.google.errorprone.bugpatterns.checkreturnvalue.NoCanIgnoreReturnValueOnClasses;
+import com.google.errorprone.bugpatterns.checkreturnvalue.UnnecessarilyUsedValue;
 import com.google.errorprone.bugpatterns.checkreturnvalue.UsingJsr305CheckReturnValue;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.CollectionIncompatibleType;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.CollectionUndefinedEquality;
@@ -482,16 +506,20 @@ import com.google.errorprone.bugpatterns.javadoc.InvalidThrows;
 import com.google.errorprone.bugpatterns.javadoc.InvalidThrowsLink;
 import com.google.errorprone.bugpatterns.javadoc.MalformedInlineTag;
 import com.google.errorprone.bugpatterns.javadoc.MissingSummary;
+import com.google.errorprone.bugpatterns.javadoc.NotJavadoc;
 import com.google.errorprone.bugpatterns.javadoc.ReturnFromVoid;
 import com.google.errorprone.bugpatterns.javadoc.UnescapedEntity;
 import com.google.errorprone.bugpatterns.javadoc.UnrecognisedJavadocTag;
 import com.google.errorprone.bugpatterns.javadoc.UrlInSee;
 import com.google.errorprone.bugpatterns.nullness.EqualsBrokenForNull;
 import com.google.errorprone.bugpatterns.nullness.EqualsMissingNullable;
+import com.google.errorprone.bugpatterns.nullness.ExtendsObject;
 import com.google.errorprone.bugpatterns.nullness.FieldMissingNullable;
+import com.google.errorprone.bugpatterns.nullness.NullArgumentForNonNullParameter;
 import com.google.errorprone.bugpatterns.nullness.ParameterMissingNullable;
 import com.google.errorprone.bugpatterns.nullness.ReturnMissingNullable;
 import com.google.errorprone.bugpatterns.nullness.UnnecessaryCheckNotNull;
+import com.google.errorprone.bugpatterns.nullness.UnsafeWildcard;
 import com.google.errorprone.bugpatterns.nullness.VoidMissingNullable;
 import com.google.errorprone.bugpatterns.overloading.InconsistentOverloads;
 import com.google.errorprone.bugpatterns.threadsafety.DoubleCheckedLocking;
@@ -500,11 +528,9 @@ import com.google.errorprone.bugpatterns.threadsafety.ImmutableAnnotationChecker
 import com.google.errorprone.bugpatterns.threadsafety.ImmutableChecker;
 import com.google.errorprone.bugpatterns.threadsafety.ImmutableEnumChecker;
 import com.google.errorprone.bugpatterns.threadsafety.ImmutableRefactoring;
-import com.google.errorprone.bugpatterns.threadsafety.LockMethodChecker;
 import com.google.errorprone.bugpatterns.threadsafety.StaticGuardedByInstance;
 import com.google.errorprone.bugpatterns.threadsafety.SynchronizeOnNonFinalField;
 import com.google.errorprone.bugpatterns.threadsafety.ThreadPriorityCheck;
-import com.google.errorprone.bugpatterns.threadsafety.UnlockMethodChecker;
 import com.google.errorprone.bugpatterns.time.DateChecker;
 import com.google.errorprone.bugpatterns.time.DurationFrom;
 import com.google.errorprone.bugpatterns.time.DurationGetTemporalUnit;
@@ -630,7 +656,6 @@ public class BuiltInCheckerSuppliers {
           DurationGetTemporalUnit.class,
           DurationTemporalUnit.class,
           DurationToLongTimeUnit.class,
-          EmptyTopLevelDeclaration.class,
           EqualsHashCode.class,
           EqualsNaN.class,
           EqualsNull.class,
@@ -653,8 +678,8 @@ public class BuiltInCheckerSuppliers {
           HashtableContains.class,
           IdentityBinaryExpression.class,
           IdentityHashMapBoxing.class,
-          IgnoredPureGetter.class,
           ImmutableChecker.class,
+          ImpossibleNullComparison.class,
           Incomparable.class,
           IncompatibleArgumentType.class,
           IncompatibleModifiersChecker.class,
@@ -681,6 +706,7 @@ public class BuiltInCheckerSuppliers {
           JUnitParameterMethodNotFound.class,
           JavaxInjectOnAbstractMethod.class,
           JodaToSelf.class,
+          LenientFormatStringValidation.class,
           LiteByteStringUtf8.class,
           LocalDateTemporalAmount.class,
           LockOnBoxedPrimitive.class,
@@ -700,10 +726,13 @@ public class BuiltInCheckerSuppliers {
           MoreThanOneScopeAnnotationOnClass.class,
           MustBeClosedChecker.class,
           NCopiesOfChar.class,
+          NoCanIgnoreReturnValueOnClasses.class,
           NonCanonicalStaticImport.class,
           NonFinalCompileTimeConstant.class,
           NonRuntimeAnnotation.class,
+          NullArgumentForNonNullParameter.class,
           NullTernary.class,
+          NullableOnContainingClass.class,
           OptionalEquality.class,
           OptionalMapUnusedValue.class,
           OptionalOfRedundantMethod.class,
@@ -718,7 +747,6 @@ public class BuiltInCheckerSuppliers {
           PreconditionsInvalidPlaceholder.class,
           PrivateSecurityContractProtoAccess.class,
           ProtoBuilderReturnValueIgnored.class,
-          ProtoFieldNullComparison.class,
           ProtoStringFieldReferenceEquality.class,
           ProtoTruthMixedDescriptors.class,
           ProtocolBufferOrdinal.class,
@@ -752,8 +780,10 @@ public class BuiltInCheckerSuppliers {
           UnicodeInCode.class,
           UnnecessaryCheckNotNull.class,
           UnnecessaryTypeArgument.class,
+          UnsafeWildcard.class,
           UnusedAnonymousClass.class,
           UnusedCollectionModifiedInPlace.class,
+          UseCorrectAssertInTests.class,
           Validator.class,
           VarTypeName.class,
           WrongOneof.class,
@@ -766,6 +796,7 @@ public class BuiltInCheckerSuppliers {
   public static final ImmutableSet<BugCheckerInfo> ENABLED_WARNINGS =
       getSuppliers(
           // keep-sorted start
+          ASTHelpersSuggestions.class,
           AlmostJavadoc.class,
           AlreadyChecked.class,
           AmbiguousMethodReference.class,
@@ -789,7 +820,6 @@ public class BuiltInCheckerSuppliers {
           BugPatternNaming.class,
           ByteBufferBackingArray.class,
           CacheLoaderNull.class,
-          CannotMockFinalClass.class,
           CanonicalDuration.class,
           CatchAndPrintStackTrace.class,
           CatchFail.class,
@@ -808,6 +838,7 @@ public class BuiltInCheckerSuppliers {
           DefaultCharset.class,
           DefaultPackage.class,
           DeprecatedVariable.class,
+          DirectInvocationOnMock.class,
           DistinctVarargsChecker.class,
           DoNotCallSuggester.class,
           DoNotClaimAnnotations.class,
@@ -816,6 +847,7 @@ public class BuiltInCheckerSuppliers {
           EmptyBlockTag.class,
           EmptyCatch.class,
           EmptySetMultibindingContributions.class,
+          EmptyTopLevelDeclaration.class,
           EqualsGetClass.class,
           EqualsIncompatibleType.class,
           EqualsUnsafeCast.class,
@@ -824,7 +856,9 @@ public class BuiltInCheckerSuppliers {
           ErroneousThreadPoolConstructorChecker.class,
           EscapedEntity.class,
           ExtendingJUnitAssert.class,
+          ExtendsObject.class,
           FallThrough.class,
+          Finalize.class,
           Finally.class,
           FloatCast.class,
           FloatingPointAssertionWithinEpsilon.class,
@@ -837,6 +871,7 @@ public class BuiltInCheckerSuppliers {
           GetClassOnEnum.class,
           HidingField.class,
           IdentityHashMapUsage.class,
+          IgnoredPureGetter.class,
           ImmutableAnnotationChecker.class,
           ImmutableEnumChecker.class,
           InconsistentCapitalization.class,
@@ -844,6 +879,7 @@ public class BuiltInCheckerSuppliers {
           IncorrectMainMethod.class,
           IncrementInForLoopAndHeader.class,
           InheritDoc.class,
+          InjectOnBugCheckers.class,
           InjectOnConstructorOfAbstractClass.class,
           InjectedConstructorAnnotations.class,
           InlineFormatString.class,
@@ -882,6 +918,7 @@ public class BuiltInCheckerSuppliers {
           JodaPlusMinusLong.class,
           JodaTimeConverterManager.class,
           JodaWithDurationAddedLong.class,
+          LabelledBreakTarget.class,
           LiteEnumValueOf.class,
           LiteProtoToString.class,
           LockNotBeforeTry.class,
@@ -890,7 +927,7 @@ public class BuiltInCheckerSuppliers {
           LongFloatConversion.class,
           LoopOverCharArray.class,
           MalformedInlineTag.class,
-          MathAbsoluteRandom.class,
+          MathAbsoluteNegative.class,
           MemoizeConstantVisitorStateLookups.class,
           MissingCasesInEnumSwitch.class,
           MissingFail.class,
@@ -898,6 +935,7 @@ public class BuiltInCheckerSuppliers {
           MissingOverride.class,
           MissingSummary.class,
           MixedMutabilityReturnType.class,
+          MockNotUsedInProduction.class,
           ModifiedButNotUsed.class,
           ModifyCollectionInEnhancedForLoop.class,
           ModifySourceCollectionInStream.class,
@@ -908,9 +946,11 @@ public class BuiltInCheckerSuppliers {
           NarrowingCompoundAssignment.class,
           NegativeCharLiteral.class,
           NestedInstanceOfConditions.class,
+          NewFileSystem.class,
           NonAtomicVolatileUpdate.class,
           NonCanonicalType.class,
           NonOverridingEquals.class,
+          NotJavadoc.class,
           NullOptional.class,
           NullableConstructor.class,
           NullablePrimitive.class,
@@ -943,6 +983,7 @@ public class BuiltInCheckerSuppliers {
           RxReturnValueIgnored.class,
           SameNameButDifferent.class,
           ScopeAnnotationOnInterfaceOrAbstractClass.class,
+          SelfAlwaysReturnsThis.class,
           ShortCircuitBoolean.class,
           StaticAssignmentInConstructor.class,
           StaticAssignmentOfThrowable.class,
@@ -950,6 +991,7 @@ public class BuiltInCheckerSuppliers {
           StaticMockMember.class,
           StreamResourceLeak.class,
           StreamToIterable.class,
+          StringCaseLocaleUsage.class,
           StringSplitter.class,
           Suggester.class,
           SwigMemoryLeak.class,
@@ -970,7 +1012,6 @@ public class BuiltInCheckerSuppliers {
           TypeParameterUnusedInFormals.class,
           URLEqualsHashCode.class,
           UndefinedEquals.class,
-          UnescapedEntity.class,
           UnicodeEscape.class,
           UnnecessaryAssignment.class,
           UnnecessaryLambda.class,
@@ -978,15 +1019,17 @@ public class BuiltInCheckerSuppliers {
           UnnecessaryMethodInvocationMatcher.class,
           UnnecessaryMethodReference.class,
           UnnecessaryParentheses.class,
+          UnqualifiedYield.class,
           UnrecognisedJavadocTag.class,
           UnsafeFinalization.class,
           UnsafeReflectiveConstructionCast.class,
           UnsynchronizedOverridesSynchronized.class,
+          UnusedLabel.class,
           UnusedMethod.class,
           UnusedNestedClass.class,
+          UnusedTypeParameter.class,
           UnusedVariable.class,
           UseBinds.class,
-          UseCorrectAssertInTests.class,
           VariableNameSameAsType.class,
           WaitNotInLoop.class,
           WakelockReleasedDangerously.class,
@@ -1005,10 +1048,15 @@ public class BuiltInCheckerSuppliers {
           AssertFalse.class,
           AssistedInjectAndInjectOnConstructors.class,
           AutoFactoryAtInject.class,
+          AvoidObjectArrays.class,
           BanSerializableRead.class,
           BinderIdentityRestoredDangerously.class, // TODO: enable this by default.
           BindingToUnqualifiedCommonType.class,
           BooleanParameter.class,
+          BuilderReturnThis.class,
+          CanIgnoreReturnValueSuggester.class,
+          CannotMockFinalClass.class,
+          CannotMockMethod.class,
           CatchingUnchecked.class,
           CheckedExceptionNotThrown.class,
           ClassName.class,
@@ -1047,11 +1095,11 @@ public class BuiltInCheckerSuppliers {
           InsecureCipherMode.class,
           InterfaceWithOnlyStatics.class,
           InterruptedExceptionSwallowed.class,
+          Interruption.class,
           IterablePathParameter.class,
           Java7ApiChecker.class,
           Java8ApiChecker.class,
           LambdaFunctionalInterface.class,
-          LockMethodChecker.class,
           LongLiteralLowerCaseSuffix.class,
           MemberName.class,
           MethodCanBeStatic.class,
@@ -1081,6 +1129,7 @@ public class BuiltInCheckerSuppliers {
           ReturnsNullCollection.class,
           ScopeOnModule.class,
           ScopeOrQualifierAnnotationRetention.class,
+          StatementSwitchToExpressionSwitch.class,
           StaticOrDefaultInterfaceMethod.class,
           StaticQualifiedUsingExpression.class,
           StronglyTypeByteString.class,
@@ -1100,9 +1149,10 @@ public class BuiltInCheckerSuppliers {
           TryWithResourcesVariable.class,
           TypeParameterNaming.class,
           TypeToString.class,
+          UnescapedEntity.class, // TODO(b/263817298): re-enable
           UngroupedOverloads.class,
-          UnlockMethodChecker.class,
           UnnecessarilyFullyQualified.class,
+          UnnecessarilyUsedValue.class,
           UnnecessarilyVisible.class,
           UnnecessaryAnonymousClass.class,
           UnnecessaryBoxedAssignment.class,
@@ -1112,6 +1162,7 @@ public class BuiltInCheckerSuppliers {
           UnnecessaryOptionalGet.class,
           UnnecessarySetDefault.class,
           UnnecessaryStaticImport.class,
+          UnnecessaryTestMethodPrefix.class,
           UnsafeLocaleUsage.class,
           UnusedException.class,
           UrlInSee.class,
@@ -1120,7 +1171,8 @@ public class BuiltInCheckerSuppliers {
           VarChecker.class,
           Varifier.class,
           VoidMissingNullable.class,
-          WildcardImport.class
+          WildcardImport.class,
+          YodaCondition.class
           // keep-sorted end
           );
 

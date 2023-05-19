@@ -30,7 +30,6 @@ import static com.google.errorprone.util.Reachability.canCompleteNormally;
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.SwitchTreeMatcher;
 import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions;
@@ -48,6 +47,7 @@ import com.sun.source.util.TreePath;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import javax.inject.Inject;
 
 /** Matches always-default expressions in oneof switches. */
 @BugPattern(
@@ -59,8 +59,9 @@ public final class WrongOneof extends BugChecker implements SwitchTreeMatcher {
 
   private final ConstantExpressions constantExpressions;
 
-  public WrongOneof(ErrorProneFlags flags) {
-    this.constantExpressions = ConstantExpressions.fromFlags(flags);
+  @Inject
+  WrongOneof(ConstantExpressions constantExpressions) {
+    this.constantExpressions = constantExpressions;
   }
 
   @Override

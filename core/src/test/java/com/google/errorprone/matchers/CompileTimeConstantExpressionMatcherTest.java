@@ -175,7 +175,7 @@ public class CompileTimeConstantExpressionMatcherTest {
   // and assignments to such variables are compile-time-constant.
   // For now, the annotation's target is restricted to ElementType.PARAMETER.
   @Test
-  public void testCompileTimeConstantAnnotationOnlyAllowedOnParameterOrField() {
+  public void compileTimeConstantAnnotationOnlyAllowedOnParameterOrField() {
     assertThat(CompileTimeConstant.class.getAnnotation(Target.class).value())
         .isEqualTo(new ElementType[] {ElementType.PARAMETER, ElementType.FIELD});
   }
@@ -200,6 +200,21 @@ public class CompileTimeConstantExpressionMatcherTest {
   }
 
   @Test
+  public void parentheses() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.CompileTimeConstant;",
+            "abstract class Test {",
+            "  public void m(@CompileTimeConstant String ctc) {",
+            "    // BUG: Diagnostic contains: true",
+            "    String a = (ctc);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void concatenatedStrings() {
     testHelper
         .addSourceLines(
@@ -216,6 +231,12 @@ public class CompileTimeConstantExpressionMatcherTest {
             "    String c = nonCtc + \"foo\";",
             "    // BUG: Diagnostic contains: false",
             "    String d = nonCtc + ctc;",
+            "    // BUG: Diagnostic contains: true",
+            "    String e = \"foo\" + (ctc == null ? \"\" : \"\");",
+            "    // BUG: Diagnostic contains: true",
+            "    String f = \"foo\" + 1;",
+            "    // BUG: Diagnostic contains: true",
+            "    String g = \"foo\" + 3.14;",
             "  }",
             "}")
         .doTest();

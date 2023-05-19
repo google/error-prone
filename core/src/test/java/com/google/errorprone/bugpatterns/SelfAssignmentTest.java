@@ -31,17 +31,17 @@ public class SelfAssignmentTest {
       CompilationTestHelper.newInstance(SelfAssignment.class, getClass());
 
   @Test
-  public void testPositiveCases1() {
+  public void positiveCases1() {
     compilationHelper.addSourceFile("SelfAssignmentPositiveCases1.java").doTest();
   }
 
   @Test
-  public void testPositiveCases2() {
+  public void positiveCases2() {
     compilationHelper.addSourceFile("SelfAssignmentPositiveCases2.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("SelfAssignmentNegativeCases.java").doTest();
   }
 }

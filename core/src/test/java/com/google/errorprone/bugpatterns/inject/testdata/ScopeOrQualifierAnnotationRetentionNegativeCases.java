@@ -28,7 +28,9 @@ import java.lang.annotation.Target;
 import javax.inject.Qualifier;
 import javax.inject.Scope;
 
-/** @author sgoldfeder@google.com (Steven Goldfeder) */
+/**
+ * @author sgoldfeder@google.com (Steven Goldfeder)
+ */
 public class ScopeOrQualifierAnnotationRetentionNegativeCases {
   /** A scoping (@Scope) annotation with runtime retention */
   @Scope

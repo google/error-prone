@@ -70,7 +70,7 @@ public class DiagnosticKindTest {
   }
 
   @Test
-  public void testError() {
+  public void error() {
     compilerBuilder.report(ScannerSupplier.fromBugCheckerClasses(ErrorChecker.class));
     ErrorProneTestCompiler compiler = compilerBuilder.build();
     Result result = compiler.compile(Arrays.asList(forSourceLines("Test.java", TEST_CODE)));
@@ -93,7 +93,7 @@ public class DiagnosticKindTest {
   }
 
   @Test
-  public void testWarning() {
+  public void warning() {
     compilerBuilder.report(ScannerSupplier.fromBugCheckerClasses(WarningChecker.class));
     ErrorProneTestCompiler compiler = compilerBuilder.build();
     Result result = compiler.compile(Arrays.asList(forSourceLines("Test.java", TEST_CODE)));
@@ -117,7 +117,7 @@ public class DiagnosticKindTest {
   }
 
   @Test
-  public void testSuggestion() {
+  public void suggestion() {
     compilerBuilder.report(ScannerSupplier.fromBugCheckerClasses(SuggestionChecker.class));
     ErrorProneTestCompiler compiler = compilerBuilder.build();
     Result result = compiler.compile(Arrays.asList(forSourceLines("Test.java", TEST_CODE)));

@@ -18,7 +18,9 @@ package com.google.errorprone.bugpatterns.testdata;
 
 import java.math.BigDecimal;
 
-/** @author eaftan@google.com (Eddie Aftandilian) */
+/**
+ * @author eaftan@google.com (Eddie Aftandilian)
+ */
 class MyClass {
 
   static int STATIC_FIELD = 42;

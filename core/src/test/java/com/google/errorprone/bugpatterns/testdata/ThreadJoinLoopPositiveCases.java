@@ -15,7 +15,9 @@
  */
 package com.google.errorprone.bugpatterns.testdata;
 
-/** @author mariasam@google.com (Maria Sam) on 7/10/17. */
+/**
+ * @author mariasam@google.com (Maria Sam) on 7/10/17.
+ */
 class ThreadJoinLoopPositiveCases {
 
   public void basicCase(Thread thread) {
@@ -49,7 +51,9 @@ class ThreadJoinLoopPositiveCases {
     try {
       // BUG: Diagnostic contains: Uninterruptibles.joinUninterruptibly(thread)
       thread.join();
-    } catch (Exception e) {;;
+    } catch (Exception e) {
+      ;
+      ;
     }
   }
 

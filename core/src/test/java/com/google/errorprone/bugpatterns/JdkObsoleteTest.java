@@ -161,6 +161,28 @@ public class JdkObsoleteTest {
         .doTest();
   }
 
+  @Test
+  public void stringBufferRefactoringTest_usingVar() {
+    BugCheckerRefactoringTestHelper.newInstance(JdkObsolete.class, getClass())
+        .addInputLines(
+            "in/Test.java", //
+            "class Test {",
+            "  String f() {",
+            "    var sb = new StringBuffer();",
+            "    return sb.append(42).toString();",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java", //
+            "class Test {",
+            "  String f() {",
+            "    var sb = new StringBuilder();",
+            "    return sb.append(42).toString();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
   /** A test input. */
   public interface Lib {
     Enumeration<Integer> foos();

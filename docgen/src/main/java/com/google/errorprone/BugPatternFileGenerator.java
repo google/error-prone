@@ -39,6 +39,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 import org.yaml.snakeyaml.DumperOptions;
+import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.SafeConstructor;
 import org.yaml.snakeyaml.representer.Representer;
@@ -127,7 +128,11 @@ class BugPatternFileGenerator implements LineProcessor<List<BugPatternInstance>>
                 .buildOrThrow();
         DumperOptions options = new DumperOptions();
         options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
-        Yaml yaml = new Yaml(new SafeConstructor(), new Representer(), options);
+        Yaml yaml =
+            new Yaml(
+                new SafeConstructor(new LoaderOptions()),
+                new Representer(new DumperOptions()),
+                options);
         Writer yamlWriter = new StringWriter();
         yamlWriter.write("---\n");
         yaml.dump(frontmatterData, yamlWriter);

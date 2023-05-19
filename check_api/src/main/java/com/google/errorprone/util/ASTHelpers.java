@@ -38,6 +38,7 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.SetMultimap;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Streams;
@@ -247,7 +248,7 @@ public class ASTHelpers {
    * the wrong type, if {@code tree} is null, or if the symbol cannot be found due to a compilation
    * error.
    */
-  // TODO(eaftan): refactor other code that accesses symbols to use this method
+  @Nullable
   public static Symbol getSymbol(Tree tree) {
     if (tree instanceof AnnotationTree) {
       return getSymbol(((AnnotationTree) tree).getAnnotationType());
@@ -356,7 +357,7 @@ public class ASTHelpers {
   }
 
   /** Returns whether this symbol or any of its owners are private. */
-  private static boolean isEffectivelyPrivate(Symbol symbol) {
+  public static boolean isEffectivelyPrivate(Symbol symbol) {
     return enclosingElements(symbol).anyMatch(Symbol::isPrivate);
   }
 
@@ -693,7 +694,7 @@ public class ASTHelpers {
     Scope scope = superType.tsym.members();
     for (Symbol sym : scope.getSymbolsByName(methodSymbol.name)) {
       if (sym != null
-          && !sym.isStatic()
+          && !isStatic(sym)
           && ((sym.flags() & Flags.SYNTHETIC) == 0)
           && methodSymbol.overrides(
               sym, (TypeSymbol) methodSymbol.owner, types, /* checkResult= */ true)) {
@@ -703,9 +704,18 @@ public class ASTHelpers {
     return null;
   }
 
+  /**
+   * Finds supermethods of {@code methodSymbol}, not including {@code methodSymbol} itself, and
+   * including interfaces.
+   */
   public static Set<MethodSymbol> findSuperMethods(MethodSymbol methodSymbol, Types types) {
     return findSuperMethods(methodSymbol, types, /* skipInterfaces= */ false)
         .collect(toCollection(LinkedHashSet::new));
+  }
+
+  /** See {@link #findSuperMethods(MethodSymbol, Types)}. */
+  public static Stream<MethodSymbol> streamSuperMethods(MethodSymbol methodSymbol, Types types) {
+    return findSuperMethods(methodSymbol, types, /* skipInterfaces= */ false);
   }
 
   private static Stream<MethodSymbol> findSuperMethods(
@@ -799,6 +809,21 @@ public class ASTHelpers {
   }
 
   /**
+   * Flag for record types, canonical record constructors and type members that are part of a
+   * record's state vector. Can be replaced by {@code com.sun.tools.javac.code.Flags.RECORD} once
+   * the minimum JDK version is 14.
+   */
+  private static final long RECORD_FLAG = 1L << 61;
+
+  /**
+   * Returns whether the given {@link Symbol} is a record, a record's canonical constructor or a
+   * member that is part of a record's state vector.
+   */
+  public static boolean isRecord(Symbol symbol) {
+    return (symbol.flags() & RECORD_FLAG) == RECORD_FLAG;
+  }
+
+  /**
    * Determines whether a symbol has an annotation of the given type. This includes annotations
    * inherited from superclasses due to {@code @Inherited}.
    *
@@ -832,7 +857,14 @@ public class ASTHelpers {
    * Check for the presence of an annotation, considering annotation inheritance.
    *
    * @return true if the symbol is annotated with given type.
+   * @deprecated prefer {@link #hasAnnotation(Symbol, String, VisitorState)} to avoid needing a
+   *     runtime dependency on the annotation class, and to prevent issues if there is skew between
+   *     the definition of the annotation on the runtime and compile-time classpaths
    */
+  @InlineMe(
+      replacement = "ASTHelpers.hasAnnotation(sym, annotationClass.getName(), state)",
+      imports = {"com.google.errorprone.util.ASTHelpers"})
+  @Deprecated
   public static boolean hasAnnotation(
       Symbol sym, Class<? extends Annotation> annotationClass, VisitorState state) {
     return hasAnnotation(sym, annotationClass.getName(), state);
@@ -854,7 +886,14 @@ public class ASTHelpers {
    * Check for the presence of an annotation, considering annotation inheritance.
    *
    * @return true if the tree is annotated with given type.
+   * @deprecated prefer {@link #hasAnnotation(Symbol, String, VisitorState)} to avoid needing a
+   *     runtime dependency on the annotation class, and to prevent issues if there is skew between
+   *     the definition of the annotation on the runtime and compile-time classpaths
    */
+  @InlineMe(
+      replacement = "ASTHelpers.hasAnnotation(tree, annotationClass.getName(), state)",
+      imports = {"com.google.errorprone.util.ASTHelpers"})
+  @Deprecated
   public static boolean hasAnnotation(
       Tree tree, Class<? extends Annotation> annotationClass, VisitorState state) {
     return hasAnnotation(tree, annotationClass.getName(), state);
@@ -980,17 +1019,6 @@ public class ASTHelpers {
   }
 
   /**
-   * @deprecated use {@link #shouldKeep} instead
-   */
-  @Deprecated
-  @InlineMe(
-      replacement = "ASTHelpers.shouldKeep(tree)",
-      imports = "com.google.errorprone.util.ASTHelpers")
-  public static boolean isUsedReflectively(Tree tree) {
-    return shouldKeep(tree);
-  }
-
-  /**
    * Returns true if any of the given tree is a declaration annotated with an annotation with the
    * simple name {@code @UsedReflectively} or {@code @Keep}, or any annotations meta-annotated with
    * an annotation with that simple name.
@@ -1013,6 +1041,9 @@ public class ASTHelpers {
           || tsym.getSimpleName().contentEquals(KEEP)) {
         return true;
       }
+      if (ANNOTATIONS_CONSIDERED_KEEP.contains(tsym.getQualifiedName().toString())) {
+        return true;
+      }
       if (hasDirectAnnotationWithSimpleName(tsym, USED_REFLECTIVELY)
           || hasDirectAnnotationWithSimpleName(tsym, KEEP)) {
         return true;
@@ -1020,6 +1051,14 @@ public class ASTHelpers {
     }
     return false;
   }
+
+  /**
+   * Additional annotations which can't be annotated with {@code @Keep}, but should be treated as
+   * though they are.
+   */
+  private static final ImmutableSet<String> ANNOTATIONS_CONSIDERED_KEEP =
+      ImmutableSet.of(
+          "org.apache.beam.sdk.transforms.DoFn.ProcessElement", "org.junit.jupiter.api.Nested");
 
   private static final String USED_REFLECTIVELY = "UsedReflectively";
 
@@ -1102,9 +1141,17 @@ public class ASTHelpers {
     return constructors;
   }
 
+  /**
+   * A wrapper for {@link Symbol#getEnclosedElements} to avoid binary compatibility issues for
+   * covariant overrides in subtypes of {@link Symbol}.
+   */
+  public static List<Symbol> getEnclosedElements(Symbol symbol) {
+    return symbol.getEnclosedElements();
+  }
+
   /** Returns the list of all constructors defined in the class. */
   public static ImmutableList<MethodSymbol> getConstructors(ClassSymbol classSymbol) {
-    return classSymbol.getEnclosedElements().stream()
+    return getEnclosedElements(classSymbol).stream()
         .filter(Symbol::isConstructor)
         .map(e -> (MethodSymbol) e)
         .collect(toImmutableList());
@@ -1446,7 +1493,30 @@ public class ASTHelpers {
     if (compound == null) {
       return null;
     }
-    return TypeAnnotations.instance(state.context).annotationTargetType(compound, target);
+    return annotationTargetType(TypeAnnotations.instance(state.context), anno, compound, target);
+  }
+
+  private static AnnotationType annotationTargetType(
+      TypeAnnotations typeAnnotations,
+      AnnotationTree tree,
+      Compound compound,
+      @Nullable Symbol target) {
+    try {
+      try {
+        // the JCTree argument was added in JDK 21
+        return (AnnotationType)
+            TypeAnnotations.class
+                .getMethod("annotationTargetType", JCTree.class, Compound.class, Symbol.class)
+                .invoke(typeAnnotations, tree, compound, target);
+      } catch (NoSuchMethodException e1) {
+        return (AnnotationType)
+            TypeAnnotations.class
+                .getMethod("annotationTargetType", Compound.class, Symbol.class)
+                .invoke(typeAnnotations, compound, target);
+      }
+    } catch (ReflectiveOperationException e) {
+      throw new LinkageError(e.getMessage(), e);
+    }
   }
 
   /**
@@ -1584,6 +1654,34 @@ public class ASTHelpers {
     }
   }
 
+  /**
+   * Attempts to detect whether we're in a static-initializer-like context: that includes direct
+   * assignments to static fields, assignments to enum fields, being contained within an expression
+   * which is ultimately assigned to a static field.
+   *
+   * <p>This is very much a heuristic, and not fool-proof.
+   */
+  public static boolean isInStaticInitializer(VisitorState state) {
+    return stream(state.getPath())
+        .anyMatch(
+            tree ->
+                (tree instanceof VariableTree && variableIsStaticFinal((VarSymbol) getSymbol(tree)))
+                    || (tree instanceof AssignmentTree
+                        && getSymbol(((AssignmentTree) tree).getVariable()) instanceof VarSymbol
+                        && variableIsStaticFinal(
+                            (VarSymbol) getSymbol(((AssignmentTree) tree).getVariable()))));
+  }
+
+  /**
+   * Whether the variable is (or should be regarded as) static final.
+   *
+   * <p>We regard instance fields within enums as "static final", as they will only have a finite
+   * number of instances tied to an (effectively) static final enum value.
+   */
+  public static boolean variableIsStaticFinal(VarSymbol var) {
+    return (var.isStatic() || var.owner.isEnum()) && var.getModifiers().contains(Modifier.FINAL);
+  }
+
   /** An expression's target type, see {@link #targetType}. */
   @AutoValue
   public abstract static class TargetType {
@@ -1673,9 +1771,41 @@ public class ASTHelpers {
 
     Type type = new TargetTypeVisitor(current, state, parent).visit(parent.getLeaf(), null);
     if (type == null) {
-      return null;
+      Tree actualTree = null;
+      if (YIELD_TREE != null && YIELD_TREE.isAssignableFrom(parent.getLeaf().getClass())) {
+        actualTree = parent.getParentPath().getParentPath().getParentPath().getLeaf();
+      } else if (CONSTANT_CASE_LABEL_TREE != null
+          && CONSTANT_CASE_LABEL_TREE.isAssignableFrom(parent.getLeaf().getClass())) {
+        actualTree = parent.getParentPath().getParentPath().getLeaf();
+      }
+
+      type = getType(TargetTypeVisitor.getSwitchExpression(actualTree));
+      if (type == null) {
+        return null;
+      }
     }
     return TargetType.create(type, parent);
+  }
+
+  @Nullable private static final Class<?> CONSTANT_CASE_LABEL_TREE = constantCaseLabelTree();
+  @Nullable private static final Class<?> YIELD_TREE = yieldTree();
+
+  @Nullable
+  private static Class<?> constantCaseLabelTree() {
+    try {
+      return Class.forName("com.sun.source.tree.ConstantCaseLabelTree");
+    } catch (ClassNotFoundException e) {
+      return null;
+    }
+  }
+
+  @Nullable
+  private static Class<?> yieldTree() {
+    try {
+      return Class.forName("com.sun.source.tree.YieldTree");
+    } catch (ClassNotFoundException e) {
+      return null;
+    }
   }
 
   private static boolean canHaveTargetType(Tree tree) {
@@ -1752,16 +1882,37 @@ public class ASTHelpers {
       return null;
     }
 
+    @Nullable
     @Override
     public Type visitCase(CaseTree tree, Void unused) {
-      Tree t = parent.getParentPath().getLeaf();
-      // JDK 12+, t can be SwitchExpressionTree
-      if (t instanceof SwitchTree) {
-        SwitchTree switchTree = (SwitchTree) t;
-        return getType(switchTree.getExpression());
+      Tree switchTree = parent.getParentPath().getLeaf();
+      return getType(getSwitchExpression(switchTree));
+    }
+
+    @Nullable
+    private static ExpressionTree getSwitchExpression(@Nullable Tree tree) {
+      if (tree == null) {
+        return null;
       }
-      // TODO(b/176098078): When the ErrorProne project switches to JDK 12, we should check
-      // for SwitchExpressionTree.
+
+      if (tree instanceof SwitchTree) {
+        return ((SwitchTree) tree).getExpression();
+      }
+      // Reflection is required for JDK < 12
+      try {
+        Class<?> switchExpression = Class.forName("com.sun.source.tree.SwitchExpressionTree");
+        Class<?> clazz = tree.getClass();
+        if (switchExpression.isAssignableFrom(clazz)) {
+          try {
+            Method method = clazz.getMethod("getExpression");
+            return (ExpressionTree) method.invoke(tree);
+          } catch (ReflectiveOperationException e) {
+            throw new LinkageError(e.getMessage(), e);
+          }
+        }
+      } catch (ClassNotFoundException e) {
+        // continue below
+      }
       return null;
     }
 
@@ -1787,7 +1938,7 @@ public class ASTHelpers {
           break;
         case PLUS_ASSIGNMENT:
           Type stringType = state.getSymtab().stringType;
-          if (types.isSameType(stringType, variableType)) {
+          if (types.isSuperType(variableType, stringType)) {
             return stringType;
           }
           break;
@@ -1856,6 +2007,7 @@ public class ASTHelpers {
       throw new AssertionError("return not enclosed by method or lambda");
     }
 
+    @Nullable
     @Override
     public Type visitSynchronized(SynchronizedTree node, Void unused) {
       // The null occurs if you've asked for the type of the parentheses around the expression.
@@ -2146,7 +2298,6 @@ public class ASTHelpers {
 
   /** Scanner for determining what types are thrown by a tree. */
   public static final class ScanThrownTypes extends TreeScanner<Void, Void> {
-    boolean inResources = false;
     ArrayDeque<Set<Type>> thrownTypes = new ArrayDeque<>();
     SetMultimap<VarSymbol, Type> thrownTypesByVariable = HashMultimap.create();
 
@@ -2183,16 +2334,25 @@ public class ASTHelpers {
       for (CatchTree catchTree : tree.getCatches()) {
         Type type = getType(catchTree.getParameter());
 
-        Set<Type> matchingTypes = new HashSet<>();
+        Set<Type> caughtTypes = new HashSet<>();
+        Set<Type> capturedTypes = new HashSet<>();
         for (Type unionMember : extractTypes(type)) {
           for (Type thrownType : getThrownTypes()) {
+            // If the thrown type is a subtype of the caught type, we caught it, and it doesn't flow
+            // through to any subsequent catches.
             if (types.isSubtype(thrownType, unionMember)) {
-              matchingTypes.add(thrownType);
+              caughtTypes.add(thrownType);
+              capturedTypes.add(thrownType);
+            }
+            // If our caught type is a subtype of a thrown type, we caught something, but didn't
+            // remove it from the list of things the try {} block throws.
+            if (types.isSubtype(unionMember, thrownType)) {
+              capturedTypes.add(unionMember);
             }
           }
         }
-        getThrownTypes().removeAll(matchingTypes);
-        thrownTypesByVariable.putAll(getSymbol(catchTree.getParameter()), matchingTypes);
+        getThrownTypes().removeAll(caughtTypes);
+        thrownTypesByVariable.putAll(getSymbol(catchTree.getParameter()), capturedTypes);
       }
       for (CatchTree catchTree : tree.getCatches()) {
         scan(catchTree.getBlock(), null);
@@ -2204,9 +2364,15 @@ public class ASTHelpers {
     }
 
     public void scanResources(TryTree tree) {
-      inResources = true;
+      for (Tree resource : tree.getResources()) {
+        Symbol symbol = getType(resource).tsym;
+
+        if (symbol instanceof ClassSymbol) {
+          getCloseMethod((ClassSymbol) symbol, state)
+              .ifPresent(methodSymbol -> getThrownTypes().addAll(methodSymbol.getThrownTypes()));
+        }
+      }
       scan(tree.getResources(), null);
-      inResources = false;
     }
 
     @Override
@@ -2224,22 +2390,12 @@ public class ASTHelpers {
 
     @Override
     public Void visitNewClass(NewClassTree tree, Void unused) {
-      MethodSymbol symbol = getSymbol(tree);
-      if (symbol != null) {
-        getThrownTypes().addAll(symbol.getThrownTypes());
-      }
+      getThrownTypes().addAll(getSymbol(tree).getThrownTypes());
       return super.visitNewClass(tree, null);
     }
 
     @Override
     public Void visitVariable(VariableTree tree, Void unused) {
-      if (inResources) {
-        Symbol symbol = getSymbol(tree.getType());
-        if (symbol instanceof ClassSymbol) {
-          getCloseMethod((ClassSymbol) symbol, state)
-              .ifPresent(methodSymbol -> getThrownTypes().addAll(methodSymbol.getThrownTypes()));
-        }
-      }
       return super.visitVariable(tree, null);
     }
 
@@ -2340,7 +2496,7 @@ public class ASTHelpers {
 
   /**
    * Returns true if the symbol is directly or indirectly local to a method or variable initializer;
-   * see [@code Symbol#isLocal} or {@code Symbol#isDirectlyOrIndirectlyLocal}.
+   * see {@code Symbol#isLocal} or {@code Symbol#isDirectlyOrIndirectlyLocal}.
    */
   public static boolean isLocal(Symbol symbol) {
     try {
@@ -2350,18 +2506,61 @@ public class ASTHelpers {
     }
   }
 
+  /** Returns true if the symbol is static. Returns {@code false} for module symbols. */
+  @SuppressWarnings("ASTHelpersSuggestions")
+  public static boolean isStatic(Symbol symbol) {
+    switch (symbol.getKind()) {
+      case MODULE:
+        return false;
+      default:
+        return symbol.isStatic();
+    }
+  }
+
+  /**
+   * Returns true if the given method symbol is public (both the method and the enclosing class) and
+   * does <i>not</i> have a super-method (i.e., it is not an {@code @Override}).
+   *
+   * <p>This method is useful (in part) for determining whether to suggest API improvements or not.
+   */
+  public static boolean methodIsPublicAndNotAnOverride(MethodSymbol method, VisitorState state) {
+    // don't match non-public APIs
+    Symbol symbol = method;
+    while (symbol != null && !(symbol instanceof PackageSymbol)) {
+      if (!symbol.getModifiers().contains(Modifier.PUBLIC)) {
+        return false;
+      }
+      symbol = symbol.owner;
+    }
+
+    // don't match overrides (even "effective overrides")
+    if (!findSuperMethods(method, state.getTypes()).isEmpty()) {
+      return false;
+    }
+    return true;
+  }
+
+  /**
+   * Returns true if the given method symbol is abstract.
+   *
+   * <p><b>Note:</b> this API does not consider interface {@code default} methods to be abstract.
+   */
+  public static boolean isAbstract(MethodSymbol method) {
+    return method.getModifiers().contains(Modifier.ABSTRACT);
+  }
+
   /** Returns a compatibility adapter around {@link Scope}. */
   public static ErrorProneScope scope(Scope scope) {
     return new ErrorProneScope(scope);
   }
 
   public static EnumSet<Flags.Flag> asFlagSet(long flags) {
-    flags &= ~(ANONCONSTR_BASED | Flags.POTENTIALLY_AMBIGUOUS);
+    flags &= ~(Flags.ANONCONSTR_BASED | POTENTIALLY_AMBIGUOUS);
     return Flags.asFlagSet(flags);
   }
 
-  // TODO(cushon): replace with Flags.ANONCONSTR_BASED once we're on JDK >= 10
-  static final long ANONCONSTR_BASED = 1L << 57;
+  // Removed in JDK 21 by JDK-8026369
+  public static final long POTENTIALLY_AMBIGUOUS = 1L << 48;
 
   /** Returns true if the given source code contains comments. */
   public static boolean stringContainsComments(CharSequence source, Context context) {
@@ -2449,12 +2648,69 @@ public class ASTHelpers {
   public static boolean hasNoExplicitType(VariableTree tree, VisitorState state) {
     /*
      * We detect the absence of an explicit type by looking for an absent start position for the
-     * type tree. But under javac8, the nonexistent type tree still has a start position. So, if
-     * we see a start position, we then also look for an end position, which *is* absent for
-     * lambda parameters, even under javac8. Possibly we could get by looking *only* for the end
-     * position, but I'm keeping both checks now that I have something that appears to work.
+     * type tree.
+     *
+     * Note that the .isImplicitlyTyped() method on JCVariableDecl returns the wrong answer after
+     * type attribution has occurred.
      */
-    return getStartPosition(tree.getType()) == -1 || state.getEndPosition(tree.getType()) == -1;
+    return getStartPosition(tree.getType()) == -1;
+  }
+
+  /** Returns {@code true} if this symbol was declared in Kotlin source. */
+  public static boolean isKotlin(Symbol symbol, VisitorState state) {
+    return hasAnnotation(symbol.enclClass(), "kotlin.Metadata", state);
+  }
+
+  /**
+   * Returns whether {@code existingMethod} has an overload (or "nearly" an overload) with the given
+   * {@code targetMethodName}, and only a single parameter of type {@code onlyParameterType}.
+   */
+  public static boolean hasOverloadWithOnlyOneParameter(
+      MethodSymbol existingMethod,
+      Name targetMethodName,
+      Type onlyParameterType,
+      VisitorState state) {
+    @Nullable MethodTree t = state.findEnclosing(MethodTree.class);
+    @Nullable MethodSymbol enclosingMethod = t == null ? null : getSymbol(t);
+
+    return hasMatchingMethods(
+        targetMethodName,
+        input ->
+            !input.equals(existingMethod)
+                // Make sure we're not currently *inside* that overload, to avoid
+                // creating an infinite loop.
+                && !input.equals(enclosingMethod)
+                && (enclosingMethod == null
+                    || !enclosingMethod.overrides(
+                        input, (TypeSymbol) input.owner, state.getTypes(), true))
+                && input.isStatic() == existingMethod.isStatic()
+                && input.getParameters().size() == 1
+                && isSameType(input.getParameters().get(0).asType(), onlyParameterType, state)
+                && isSameType(input.getReturnType(), existingMethod.getReturnType(), state),
+        enclosingClass(existingMethod).asType(),
+        state.getTypes());
+  }
+
+  // Adapted from findMatchingMethods(); but this short-circuits
+  private static boolean hasMatchingMethods(
+      Name name, Predicate<MethodSymbol> predicate, Type startClass, Types types) {
+    Predicate<Symbol> matchesMethodPredicate =
+        sym -> sym instanceof MethodSymbol && predicate.test((MethodSymbol) sym);
+
+    // Iterate over all classes and interfaces that startClass inherits from.
+    for (Type superClass : types.closure(startClass)) {
+      // Iterate over all the methods declared in superClass.
+      TypeSymbol superClassSymbol = superClass.tsym;
+      Scope superClassSymbols = superClassSymbol.members();
+      if (superClassSymbols != null) { // Can be null if superClass is a type variable
+        if (!Iterables.isEmpty(
+            scope(superClassSymbols)
+                .getSymbolsByName(name, matchesMethodPredicate, NON_RECURSIVE))) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   private ASTHelpers() {}

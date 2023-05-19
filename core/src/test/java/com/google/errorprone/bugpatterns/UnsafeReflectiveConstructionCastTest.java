@@ -36,7 +36,7 @@ public class UnsafeReflectiveConstructionCastTest {
       CompilationTestHelper.newInstance(UnsafeReflectiveConstructionCast.class, getClass());
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     testHelper
         .addInputLines(
             "in/Test.java",
@@ -50,16 +50,37 @@ public class UnsafeReflectiveConstructionCastTest {
             "out/Test.java",
             "class Test {",
             "  private String newInstanceOnGetDeclaredConstructorChained() throws Exception {",
-            "    return ",
-            "     "
-                + " Class.forName(\"java.lang.String\").asSubclass(String.class).getDeclaredConstructor().newInstance();",
+            "    return Class.forName(\"java.lang.String\")",
+            "        .asSubclass(String.class).getDeclaredConstructor().newInstance();",
             "  }",
             "}")
         .doTest();
   }
 
   @Test
-  public void testPositiveCaseWithErasure() {
+  public void positiveCaseConstructor() {
+    testHelper
+        .addInputLines(
+            "in/Test.java",
+            "class Test {",
+            "  private String newInstanceOnGetConstructorChained() throws Exception {",
+            "    return (String) ",
+            "      Class.forName(\"java.lang.String\").getConstructor().newInstance();",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "class Test {",
+            "  private String newInstanceOnGetConstructorChained() throws Exception {",
+            "    return Class.forName(\"java.lang.String\")",
+            "        .asSubclass(String.class).getConstructor().newInstance();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void positiveCaseWithErasure() {
     testHelper
         .addInputLines(
             "in/Test.java",
@@ -74,15 +95,15 @@ public class UnsafeReflectiveConstructionCastTest {
             "class Test {",
             "  class Fn<T> {};",
             "  private Fn<String> newInstanceOnGetDeclaredConstructorChained() throws Exception {",
-            "    return (Fn<String>)"
-                + " Class.forName(\"Fn\").asSubclass(Fn.class).getDeclaredConstructor().newInstance();",
+            "    return (Fn<String>) Class.forName(\"Fn\")",
+            "        .asSubclass(Fn.class).getDeclaredConstructor().newInstance();",
             "  }",
             "}")
         .doTest();
   }
 
   @Test
-  public void testNegativeCaseWithIntersection() {
+  public void negativeCaseWithIntersection() {
     compilationHelper
         .addSourceLines(
             "in/Test.java",
@@ -98,7 +119,7 @@ public class UnsafeReflectiveConstructionCastTest {
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("UnsafeReflectiveConstructionCastNegativeCases.java").doTest();
   }
 }

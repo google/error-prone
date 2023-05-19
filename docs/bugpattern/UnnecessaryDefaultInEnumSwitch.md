@@ -51,10 +51,10 @@ This check should be used together with `MissingCasesInEnumSwitch` in
 environments where that kind of binary incompatibility is very unlikely. For
 example, if your build system accurately tracks changes to dependencies and you
 are deploying an application (instead of a library), the risk of skew between
-compile-time and runtime is minimal. One the other hand, if you are a library
-author and your code switches on an enum in a different library, you want want
-to include 'defensive' default cases to handle the situation where a user
-deploys your code together with an incompatible version of the other library.
+compile-time and runtime is minimal. On the other hand, if you are a library
+author and your code switches on an enum in a different library, you want to
+include 'defensive' default cases to handle the situation where a user deploys
+your code together with an incompatible version of the other library.
 
 [JLS §14.21]: https://docs.oracle.com/javase/specs/jls/se10/html/jls-14.html#jls-14.21
 [JLS §13.4.26]: https://docs.oracle.com/javase/specs/jls/se10/html/jls-13.html#jls-13.4.26
@@ -137,9 +137,12 @@ boolean isOn(State state) {
 
 ## Cases with UNRECOGNIZED
 
-When a switch statement handles all values of a proto-generated enum except for
-UNRECOGNIZED, the UNRECOGNIZED case should be explicitly handled and the default
-should be removed. This is preferred so that `MissingCasesInEnumSwitch` will
+proto3 enums implicitly add an UNRECOGNIZED value to all enums. If a switch
+statement handles all values of a proto-generated enum except for UNRECOGNIZED,
+and has a default cause, we assume this is an attempt to exhaustively cover all
+cases. But in the future, if a new enum value is added, that case will be
+silently caught up in the default case. To avoid this, remove the default case
+and handle UNRECOGNIZED explicitly. This way, `MissingCasesInEnumSwitch` will
 catch unexpected enum types at compile-time instead of runtime.
 
 If the switch statement cannot [complete normally], the default should be

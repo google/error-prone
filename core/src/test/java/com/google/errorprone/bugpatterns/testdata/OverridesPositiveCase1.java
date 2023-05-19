@@ -14,18 +14,17 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
-
 /**
- * This tests that the a bug is reported when a method override changes the type of a parameter
- * from varargs to array, or array to varargs. It also ensures that the implementation can
- * handles cases with multiple parameters, and whitespaces between the square brackets for
- * array types.
- * 
+ * This tests that the a bug is reported when a method override changes the type of a parameter from
+ * varargs to array, or array to varargs. It also ensures that the implementation can handles cases
+ * with multiple parameters, and whitespaces between the square brackets for array types.
+ *
  * @author cushon@google.com (Liam Miller-Cushon)
  */
 public class OverridesPositiveCase1 {
   abstract class Base {
     abstract void varargsMethod(Object... xs);
+
     abstract void arrayMethod(int x, Object[] xs);
   }
 
@@ -34,66 +33,70 @@ public class OverridesPositiveCase1 {
     // BUG: Diagnostic contains: abstract void arrayMethod(int x, Object[] newNames);
     abstract void arrayMethod(int x, Object... newNames);
   }
-  
+
   abstract class Child2 extends Base {
     @Override
     // BUG: Diagnostic contains: abstract void varargsMethod(Object... xs);
     abstract void varargsMethod(Object[] xs);
   }
-  
+
   abstract class Child3 extends Base {
     @Override
     // BUG: Diagnostic contains: abstract void varargsMethod(Object... xs);
-    abstract void varargsMethod(Object[  ] xs);
+    abstract void varargsMethod(Object[] xs);
   }
 
   abstract class Child4 extends Base {
     @Override
     // BUG: Diagnostic contains: abstract void varargsMethod(Object... xs);
-    abstract void varargsMethod(Object[                           ] xs);
+    abstract void varargsMethod(Object[] xs);
   }
 
   abstract class Child5 extends Base {
     @Override
     // BUG: Diagnostic contains: Varargs
-    abstract void varargsMethod(Object[/**/                       ] xs);
+    abstract void varargsMethod(Object[ /**/] xs);
   }
-  
+
   interface Interface {
     void varargsMethod(Object... xs);
+
     void arrayMethod(Object[] xs);
   }
-  
+
   abstract class ImplementsInterface implements Interface {
     @Override
-    // BUG: Diagnostic contains: 
+    // BUG: Diagnostic contains:
     public abstract void varargsMethod(Object[] xs);
+
     @Override
-    // BUG: Diagnostic contains: 
+    // BUG: Diagnostic contains:
     public abstract void arrayMethod(Object... xs);
   }
- 
+
   abstract class MyBase {
     abstract void f(Object... xs);
+
     abstract void g(Object[] xs);
   }
-  
+
   interface MyInterface {
     void f(Object[] xs);
+
     void g(Object... xs);
   }
-  
+
   abstract class ImplementsAndExtends extends MyBase implements MyInterface {
-    // BUG: Diagnostic contains: 
+    // BUG: Diagnostic contains:
     public abstract void f(Object... xs);
-    // BUG: Diagnostic contains: 
+    // BUG: Diagnostic contains:
     public abstract void g(Object[] xs);
   }
-  
+
   abstract class ImplementsAndExtends2 extends MyBase implements MyInterface {
-    // BUG: Diagnostic contains: 
+    // BUG: Diagnostic contains:
     public abstract void f(Object[] xs);
-    // BUG: Diagnostic contains: 
+    // BUG: Diagnostic contains:
     public abstract void g(Object... xs);
   }
 }

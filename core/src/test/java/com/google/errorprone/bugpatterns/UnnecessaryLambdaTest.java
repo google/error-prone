@@ -316,4 +316,76 @@ public class UnnecessaryLambdaTest {
         .expectUnchanged()
         .doTest();
   }
+
+  @Test
+  public void recursiveLambda_ignored() {
+    testHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.function.Predicate;",
+            "class Test {",
+            "  private static final Predicate<String> F = x -> Test.F.test(x);",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void producesIgnored() {
+    testHelper
+        .addInputLines(
+            "Produces.java", //
+            "@interface Produces {",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "Test.java",
+            "import javax.inject.Provider;",
+            "class Test {",
+            "  private class A {",
+            "    @Produces",
+            "    public Provider<String> foo() {",
+            "      return () -> \"hello \";",
+            "    }",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void e() {
+    testHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.function.Predicate;",
+            "class Test {",
+            "  private void foo(Predicate<Object> p) {}",
+            "  public void test() {",
+            "    foo(E.ELEM.pred());",
+            "  }",
+            "  private enum E {",
+            "    ELEM;",
+            "    Predicate<Object> pred() {",
+            "      return o -> true;",
+            "    }",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import java.util.function.Predicate;",
+            "class Test {",
+            "  private void foo(Predicate<Object> p) {}",
+            "  public void test() {",
+            "    foo(E.ELEM::pred);",
+            "  }",
+            "  private enum E {",
+            "    ELEM;",
+            "    boolean pred(Object o) {",
+            "      return true;",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

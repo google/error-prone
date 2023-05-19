@@ -28,7 +28,7 @@ public class SynchronizeOnNonFinalFieldTest {
       CompilationTestHelper.newInstance(SynchronizeOnNonFinalField.class, getClass());
 
   @Test
-  public void testPositive1() {
+  public void positive1() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -44,7 +44,7 @@ public class SynchronizeOnNonFinalFieldTest {
   }
 
   @Test
-  public void testPositive2() {
+  public void positive2() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -61,7 +61,7 @@ public class SynchronizeOnNonFinalFieldTest {
   }
 
   @Test
-  public void testPositive3() {
+  public void positive3() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -77,7 +77,7 @@ public class SynchronizeOnNonFinalFieldTest {
   }
 
   @Test
-  public void testNegative() {
+  public void negative() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -108,7 +108,7 @@ public class SynchronizeOnNonFinalFieldTest {
   }
 
   @Test
-  public void negative_Writer() {
+  public void negative_writer() {
     compilationHelper
         .addSourceLines(
             "Test.java",

@@ -16,7 +16,9 @@
 
 package com.google.errorprone.bugpatterns.inject.guice.testdata;
 
-/** @author sgoldfeder@google.com (Steven Goldfeder) */
+/**
+ * @author sgoldfeder@google.com (Steven Goldfeder)
+ */
 public class OverridesGuiceInjectableMethodNegativeCases {
 
   /** Class with a method foo() annotated with @com.google.inject.Inject. */

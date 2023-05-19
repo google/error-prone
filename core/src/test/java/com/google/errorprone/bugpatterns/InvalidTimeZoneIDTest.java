@@ -31,7 +31,7 @@ public class InvalidTimeZoneIDTest {
       CompilationTestHelper.newInstance(InvalidTimeZoneID.class, getClass());
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper
         .addSourceLines(
             "a/A.java",
@@ -70,7 +70,7 @@ public class InvalidTimeZoneIDTest {
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper
         .addSourceLines(
             "a/A.java",

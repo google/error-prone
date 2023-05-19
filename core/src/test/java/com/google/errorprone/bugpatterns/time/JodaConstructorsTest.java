@@ -186,8 +186,10 @@ public class JodaConstructorsTest {
             "TestClass.java",
             "import org.joda.time.Instant;",
             "public class TestClass {",
-            "  // BUG: Diagnostic contains: Instant NOW = Instant.now();",
-            "  private static final Instant NOW = new Instant();",
+            "  // BUG: Diagnostic contains: Instant I1 = Instant.now();",
+            "  private static final Instant I1 = new Instant();",
+            "  // BUG: Diagnostic contains: Instant I2 = Instant.ofEpochMilli(42);",
+            "  private static final Instant I2 = new Instant(42);",
             "}")
         .doTest();
   }
@@ -198,8 +200,10 @@ public class JodaConstructorsTest {
         .addSourceLines(
             "TestClass.java",
             "public class TestClass {",
-            "  // BUG: Diagnostic contains: NOW = org.joda.time.Instant.now();",
-            "  private static final org.joda.time.Instant NOW = new org.joda.time.Instant();",
+            "  // BUG: Diagnostic contains: I1 = org.joda.time.Instant.now();",
+            "  private static final org.joda.time.Instant I1 = new org.joda.time.Instant();",
+            "  // BUG: Diagnostic contains: I2 = org.joda.time.Instant.ofEpochMilli(42);",
+            "  private static final org.joda.time.Instant I2 = new org.joda.time.Instant(42);",
             "}")
         .doTest();
   }

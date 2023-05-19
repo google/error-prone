@@ -220,4 +220,15 @@ public class AndroidJdkLibsCheckerTest extends Java7ApiCheckerTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void moduleInfo() {
+    compilationHelper
+        .addSourceLines(
+            "module-info.java", //
+            "module testmodule {",
+            "  requires java.base;",
+            "}")
+        .doTest();
+  }
 }

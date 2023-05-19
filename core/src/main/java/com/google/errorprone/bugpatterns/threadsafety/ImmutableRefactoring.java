@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns.threadsafety;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
+import static com.google.errorprone.util.ASTHelpers.getAnnotationsWithSimpleName;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -32,7 +33,10 @@ import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ImportTree;
 import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Symbol;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
+import javax.inject.Inject;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
@@ -40,11 +44,18 @@ import java.util.Optional;
     summary = "Refactors uses of the JSR 305 @Immutable to Error Prone's annotation",
     severity = SUGGESTION)
 public class ImmutableRefactoring extends BugChecker implements CompilationUnitTreeMatcher {
+  private final WellKnownMutability wellKnownMutability;
+
+  @Inject
+  ImmutableRefactoring(WellKnownMutability wellKnownMutability) {
+    this.wellKnownMutability = wellKnownMutability;
+  }
 
   @Override
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
     ImmutableChecker immutableChecker =
         new ImmutableChecker(
+            wellKnownMutability,
             ImmutableSet.of(
                 javax.annotation.concurrent.Immutable.class.getName(),
                 com.google.errorprone.annotations.Immutable.class.getName()));
@@ -61,34 +72,44 @@ public class ImmutableRefactoring extends BugChecker implements CompilationUnitT
     if (!immutableImport.isPresent()) {
       return Description.NO_MATCH;
     }
-    boolean[] ok = {true};
+    Set<ClassTree> notOk = new HashSet<>();
     new TreePathScanner<Void, Void>() {
       @Override
       public Void visitClass(ClassTree node, Void unused) {
-        if (immutableChecker.matchClass(node, createVisitorState().withPath(getCurrentPath()))
-            != Description.NO_MATCH) {
-          ok[0] = false;
+        if (!ASTHelpers.hasAnnotation(
+            node, javax.annotation.concurrent.Immutable.class.getName(), state)) {
+          return super.visitClass(node, null);
+        }
+        boolean violator =
+            immutableChecker.matchClass(
+                    node,
+                    VisitorState.createConfiguredForCompilation(
+                            state.context,
+                            description -> notOk.add(node),
+                            ImmutableMap.of(),
+                            state.errorProneOptions())
+                        .withPath(getCurrentPath()))
+                != Description.NO_MATCH;
+        if (violator) {
+          notOk.add(node);
         }
         return super.visitClass(node, null);
       }
-
-      private VisitorState createVisitorState() {
-        return VisitorState.createConfiguredForCompilation(
-            state.context,
-            description -> ok[0] = false,
-            ImmutableMap.of(),
-            state.errorProneOptions());
-      }
     }.scan(state.getPath(), null);
-    if (!ok[0]) {
-      // TODO(cushon): replace non-compliant @Immutable annotations with javadoc
-      return Description.NO_MATCH;
-    }
-    return describeMatch(
-        immutableImport.get(),
+
+    SuggestedFix.Builder fixBuilder =
         SuggestedFix.builder()
             .removeImport(javax.annotation.concurrent.Immutable.class.getName())
-            .addImport(com.google.errorprone.annotations.Immutable.class.getName())
-            .build());
+            .addImport(com.google.errorprone.annotations.Immutable.class.getName());
+    for (ClassTree classTree : notOk) {
+      getAnnotationsWithSimpleName(classTree.getModifiers().getAnnotations(), "Immutable")
+          .forEach(fixBuilder::delete);
+      fixBuilder.prefixWith(
+          classTree,
+          "// This class was annotated with javax.annotation.concurrent.Immutable, but didn't seem"
+              + " to be provably immutable."
+              + "\n");
+    }
+    return describeMatch(immutableImport.get(), fixBuilder.build());
   }
 }

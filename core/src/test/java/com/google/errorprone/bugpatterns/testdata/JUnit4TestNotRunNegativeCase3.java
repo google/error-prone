@@ -20,7 +20,9 @@ import org.junit.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** @author eaftan@google.com (Eddie Aftandilian) */
+/**
+ * @author eaftan@google.com (Eddie Aftandilian)
+ */
 @RunWith(JUnit4.class)
 public class JUnit4TestNotRunNegativeCase3 {
   // Doesn't begin with "test", and doesn't contain any assertion-like method invocations.

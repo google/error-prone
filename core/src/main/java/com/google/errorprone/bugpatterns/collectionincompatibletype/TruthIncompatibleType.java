@@ -56,6 +56,7 @@ import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.ArrayType;
 import java.util.stream.Stream;
+import javax.inject.Inject;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(summary = "Argument is not compatible with the subject's type.", severity = WARNING)
@@ -145,7 +146,8 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
 
   private final TypeCompatibilityUtils typeCompatibilityUtils;
 
-  public TruthIncompatibleType(ErrorProneFlags flags) {
+  @Inject
+  TruthIncompatibleType(ErrorProneFlags flags) {
     this.typeCompatibilityUtils = TypeCompatibilityUtils.fromFlags(flags);
   }
 

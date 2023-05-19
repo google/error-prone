@@ -31,12 +31,12 @@ public class CloseableProvidesTest {
       CompilationTestHelper.newInstance(CloseableProvides.class, getClass());
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper.addSourceFile("CloseableProvidesPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("CloseableProvidesNegativeCases.java").doTest();
   }
 }

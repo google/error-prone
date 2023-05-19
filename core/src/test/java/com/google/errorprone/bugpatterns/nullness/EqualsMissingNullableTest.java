@@ -27,14 +27,18 @@ import org.junit.runners.JUnit4;
 /** {@link EqualsMissingNullable}Test */
 @RunWith(JUnit4.class)
 public class EqualsMissingNullableTest {
-  private final CompilationTestHelper helper =
+  private final CompilationTestHelper conservativeHelper =
       CompilationTestHelper.newInstance(EqualsMissingNullable.class, getClass());
-  private final BugCheckerRefactoringTestHelper refactoringHelper =
-      BugCheckerRefactoringTestHelper.newInstance(EqualsMissingNullable.class, getClass());
+  private final CompilationTestHelper aggressiveHelper =
+      CompilationTestHelper.newInstance(EqualsMissingNullable.class, getClass())
+          .setArgs("-XepOpt:Nullness:Conservative=false");
+  private final BugCheckerRefactoringTestHelper aggressiveRefactoringHelper =
+      BugCheckerRefactoringTestHelper.newInstance(EqualsMissingNullable.class, getClass())
+          .setArgs("-XepOpt:Nullness:Conservative=false");
 
   @Test
-  public void testPositive() {
-    helper
+  public void positive() {
+    aggressiveHelper
         .addSourceLines(
             "Foo.java",
             "abstract class Foo {",
@@ -45,8 +49,8 @@ public class EqualsMissingNullableTest {
   }
 
   @Test
-  public void testDeclarationAnnotatedLocation() {
-    refactoringHelper
+  public void declarationAnnotatedLocation() {
+    aggressiveRefactoringHelper
         .addInputLines(
             "in/Foo.java",
             "import javax.annotation.Nullable;",
@@ -63,8 +67,8 @@ public class EqualsMissingNullableTest {
   }
 
   @Test
-  public void testTypeAnnotatedLocation() {
-    refactoringHelper
+  public void typeAnnotatedLocation() {
+    aggressiveRefactoringHelper
         .addInputLines(
             "in/Foo.java",
             "import org.checkerframework.checker.nullness.qual.Nullable;",
@@ -81,8 +85,8 @@ public class EqualsMissingNullableTest {
   }
 
   @Test
-  public void testNegativeAlreadyAnnotated() {
-    helper
+  public void negativeAlreadyAnnotated() {
+    aggressiveHelper
         .addSourceLines(
             "Foo.java",
             "import javax.annotation.Nullable;",
@@ -93,12 +97,50 @@ public class EqualsMissingNullableTest {
   }
 
   @Test
-  public void testNegativeNotObjectEquals() {
-    helper
+  public void negativeAlreadyAnnotatedWithProtobufAnnotation() {
+    aggressiveHelper
+        .addSourceLines(
+            "ProtoMethodAcceptsNullParameter.java", "@interface ProtoMethodAcceptsNullParameter {}")
+        .addSourceLines(
+            "Foo.java",
+            "abstract class Foo {",
+            "  public abstract boolean equals(@ProtoMethodAcceptsNullParameter Object o);",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void negativeNotObjectEquals() {
+    aggressiveHelper
         .addSourceLines(
             "Foo.java",
             "abstract class Foo {",
             "  public abstract boolean equals(String s, int i);",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void positiveConservativeNullMarked() {
+    conservativeHelper
+        .addSourceLines(
+            "Foo.java",
+            "import org.jspecify.nullness.NullMarked;",
+            "@NullMarked",
+            "abstract class Foo {",
+            "  // BUG: Diagnostic contains: @Nullable",
+            "  public abstract boolean equals(Object o);",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void negativeConservativeNotNullMarked() {
+    conservativeHelper
+        .addSourceLines(
+            "Foo.java", //
+            "abstract class Foo {",
+            "  public abstract boolean equals(Object o);",
             "}")
         .doTest();
   }

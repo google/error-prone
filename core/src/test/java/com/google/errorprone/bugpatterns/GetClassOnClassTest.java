@@ -31,12 +31,12 @@ public class GetClassOnClassTest {
       CompilationTestHelper.newInstance(GetClassOnClass.class, getClass());
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper.addSourceFile("GetClassOnClassPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("GetClassOnClassNegativeCases.java").doTest();
   }
 }

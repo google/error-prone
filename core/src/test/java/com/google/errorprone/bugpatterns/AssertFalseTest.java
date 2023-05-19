@@ -31,12 +31,12 @@ public class AssertFalseTest {
       CompilationTestHelper.newInstance(AssertFalse.class, getClass());
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("AssertFalseNegativeCases.java").doTest();
   }
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper.addSourceFile("AssertFalsePositiveCases.java").doTest();
   }
 }

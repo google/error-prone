@@ -16,11 +16,9 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
-/**
- * Positive cases for {@link LongLiteralLowerCaseSuffix}.
- */
+/** Positive cases for {@link LongLiteralLowerCaseSuffix}. */
 public class LongLiteralLowerCaseSuffixPositiveCase2 {
-  
+
   // This constant string includes non-ASCII characters to make sure that we're not confusing
   // bytes and chars:
   @SuppressWarnings("unused")

@@ -49,6 +49,7 @@ import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * TODO(eaftan): Consider cases where the parent is not a statement or there is no parent?
@@ -122,7 +123,7 @@ public class SelfAssignment extends BugChecker
       }
 
       @Override
-      protected ExpressionTree defaultAction(Tree node, Void unused) {
+      protected @Nullable ExpressionTree defaultAction(Tree node, Void unused) {
         return node instanceof ExpressionTree ? (ExpressionTree) node : null;
       }
     }.visit(expression, null);

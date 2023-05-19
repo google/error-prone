@@ -16,7 +16,9 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
-/** @author alexloh@google.com (Alex Loh) */
+/**
+ * @author alexloh@google.com (Alex Loh)
+ */
 public class ClassCanBeStaticPositiveCase2 {
 
   int outerVar1;

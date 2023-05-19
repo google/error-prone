@@ -16,6 +16,7 @@
 
 package com.google.errorprone;
 
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.scanner.ScannerSupplier;
 import com.sun.tools.javac.main.Main.Result;
 import java.io.PrintWriter;
@@ -40,16 +41,19 @@ public class ErrorProneTestCompiler {
       return new ErrorProneTestCompiler(listener, scannerSupplier, printWriter);
     }
 
+    @CanIgnoreReturnValue
     public Builder listenToDiagnostics(DiagnosticListener<? super JavaFileObject> listener) {
       this.listener = listener;
       return this;
     }
 
+    @CanIgnoreReturnValue
     public Builder report(ScannerSupplier scannerSupplier) {
       this.scannerSupplier = scannerSupplier;
       return this;
     }
 
+    @CanIgnoreReturnValue
     public Builder redirectOutputTo(PrintWriter printWriter) {
       this.printWriter = printWriter;
       return this;

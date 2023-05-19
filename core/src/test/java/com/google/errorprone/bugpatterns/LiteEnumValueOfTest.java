@@ -43,7 +43,7 @@ public final class LiteEnumValueOfTest {
               "}");
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -59,7 +59,7 @@ public final class LiteEnumValueOfTest {
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper
         .addSourceLines(
             "Usage.java",
@@ -73,7 +73,7 @@ public final class LiteEnumValueOfTest {
   }
 
   @Test
-  public void testNegativeCaseJDK9OrAbove() {
+  public void negativeCaseJDK9OrAbove() {
     compilationHelper
         .addSourceLines(
             "ProtoLiteEnum.java",

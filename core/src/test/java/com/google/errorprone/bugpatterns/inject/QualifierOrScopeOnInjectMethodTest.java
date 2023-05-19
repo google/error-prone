@@ -34,7 +34,7 @@ public class QualifierOrScopeOnInjectMethodTest {
       BugCheckerRefactoringTestHelper.newInstance(QualifierOrScopeOnInjectMethod.class, getClass());
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper
         .addSourceLines(
             "Foo.java",
@@ -48,7 +48,7 @@ public class QualifierOrScopeOnInjectMethodTest {
   }
 
   @Test
-  public void testPositiveCase_InjectConstructor() {
+  public void positiveCase_injectConstructor() {
     refactoringHelper
         .addInputLines(
             "in/Foo.java",
@@ -70,7 +70,7 @@ public class QualifierOrScopeOnInjectMethodTest {
   }
 
   @Test
-  public void testNegativeNotInject() {
+  public void negativeNotInject() {
     compilationHelper
         .addSourceLines(
             "Foo.java",

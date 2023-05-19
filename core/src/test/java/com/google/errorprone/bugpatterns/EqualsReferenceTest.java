@@ -30,12 +30,12 @@ public class EqualsReferenceTest {
       CompilationTestHelper.newInstance(EqualsReference.class, getClass());
 
   @Test
-  public void testPositiveCases() {
+  public void positiveCases() {
     compilationTestHelper.addSourceFile("EqualsReferencePositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCases() {
+  public void negativeCases() {
     compilationTestHelper.addSourceFile("EqualsReferenceNegativeCases.java").doTest();
   }
 }

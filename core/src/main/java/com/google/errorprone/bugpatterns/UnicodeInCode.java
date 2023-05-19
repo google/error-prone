@@ -21,22 +21,22 @@ import static com.google.common.collect.Streams.concat;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ErrorProneTokens.getTokens;
+import static com.google.errorprone.util.SourceCodeEscapers.javaCharEscaper;
 import static java.lang.String.format;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableRangeSet;
 import com.google.common.collect.Range;
+import com.google.common.collect.RangeSet;
+import com.google.common.collect.TreeRangeSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.fixes.FixedPosition;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ErrorProneToken;
-import com.google.errorprone.util.SourceCodeEscapers;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.tools.javac.parser.Tokens.TokenKind;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 /** Bans using non-ASCII Unicode characters outside string literals and comments. */
 @BugPattern(
@@ -47,17 +47,12 @@ import java.util.Map;
 public final class UnicodeInCode extends BugChecker implements CompilationUnitTreeMatcher {
   @Override
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
-    ImmutableRangeSet<Integer> commentsAndLiterals = commentsAndLiterals(state);
-
-    Map<Integer, Character> violations = new LinkedHashMap<>();
-
-    CharSequence sourceCode = state.getSourceCode();
+    RangeSet<Integer> violations = TreeRangeSet.create();
+    String sourceCode = state.getSourceCode().toString();
 
     for (int i = 0; i < sourceCode.length(); ++i) {
-      char c = sourceCode.charAt(i);
-
-      if (!isAcceptableAscii(c) && !commentsAndLiterals.contains(i)) {
-        violations.put(i, c);
+      if (!isAcceptableAscii(sourceCode, i)) {
+        violations.add(Range.closedOpen(i, i + 1));
       }
     }
 
@@ -65,32 +60,46 @@ public final class UnicodeInCode extends BugChecker implements CompilationUnitTr
       return NO_MATCH;
     }
 
-    ImmutableRangeSet<Integer> suppressedRegions = suppressedRegions(state);
+    ImmutableRangeSet<Integer> permissibleUnicodeRegions =
+        suppressedRegions(state).union(commentsAndLiterals(state, sourceCode));
 
-    for (var e : violations.entrySet()) {
-      int violatingLocation = e.getKey();
-      char c = e.getValue();
-      if (!suppressedRegions.contains(violatingLocation)) {
+    for (var range : violations.asDescendingSetOfRanges()) {
+      if (!permissibleUnicodeRegions.encloses(range)) {
         state.reportMatch(
-            buildDescription(new FixedPosition(tree, violatingLocation))
+            buildDescription(new FixedPosition(tree, range.lowerEndpoint()))
                 .setMessage(
                     format(
                         "Avoid using non-ASCII Unicode character (%s) outside of comments and"
                             + " literals, as they can be confusing.",
-                        SourceCodeEscapers.javaCharEscaper().escape(Character.toString(c))))
+                        javaCharEscaper()
+                            .escape(
+                                sourceCode.substring(
+                                    range.lowerEndpoint(), range.upperEndpoint()))))
                 .build());
       }
     }
     return NO_MATCH;
   }
 
+  private static boolean isAcceptableAscii(String sourceCode, int i) {
+    char c = sourceCode.charAt(i);
+    if (isAcceptableAscii(c)) {
+      return true;
+    }
+    if (c == 0x1a && i == sourceCode.length() - 1) {
+      // javac inserts ASCII_SUB characters at the end of the input, see:
+      // https://github.com/google/error-prone/issues/3092
+      return true;
+    }
+    return false;
+  }
+
   private static boolean isAcceptableAscii(char c) {
     return (c >= 0x20 && c <= 0x7E) || c == '\n' || c == '\r' || c == '\t';
   }
 
-  private static ImmutableRangeSet<Integer> commentsAndLiterals(VisitorState state) {
-    ImmutableList<ErrorProneToken> tokens =
-        getTokens(state.getSourceCode().toString(), state.context);
+  private static ImmutableRangeSet<Integer> commentsAndLiterals(VisitorState state, String source) {
+    ImmutableList<ErrorProneToken> tokens = getTokens(source, state.context);
     return ImmutableRangeSet.unionOf(
         concat(
                 tokens.stream()

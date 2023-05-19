@@ -16,13 +16,18 @@
 
 package com.google.errorprone;
 
+import static com.google.common.collect.ImmutableList.toImmutableList;
+import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertThrows;
 
+import com.google.common.collect.Collections2;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.ErrorProneOptions.Severity;
 import com.google.errorprone.apply.ImportOrganizer;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.regex.Pattern;
 import org.junit.Test;
@@ -275,5 +280,20 @@ public class ErrorProneOptionsTest {
     assertThrows(
         InvalidCommandLineOptionException.class,
         () -> ErrorProneOptions.processArgs(new String[] {"-XepNoSuchFlag"}));
+  }
+
+  @Test
+  public void severityOrder() {
+    for (Collection<String> permutation :
+        Collections2.permutations(ImmutableList.of("A", "B", "C"))) {
+      ImmutableMap<String, Severity> severityMap =
+          permutation.stream().collect(toImmutableMap(x -> x, x -> Severity.ERROR));
+      ErrorProneOptions options =
+          ErrorProneOptions.processArgs(
+              permutation.stream()
+                  .map(x -> String.format("-Xep:%s:ERROR", x))
+                  .collect(toImmutableList()));
+      assertThat(options.getSeverityMap()).containsExactlyEntriesIn(severityMap).inOrder();
+    }
   }
 }

@@ -235,6 +235,11 @@ public class TemplateIntegrationTest extends CompilerBasedTest {
   }
 
   @Test
+  public void voidExpressionPlaceholder() throws IOException {
+    runTest("VoidExpressionPlaceholderTemplate");
+  }
+
+  @Test
   public void expressionPlaceholderAllowsAnonymousClasses() throws IOException {
     runTest("PlaceholderSupportsAnonymousClassTemplate");
   }
@@ -368,5 +373,10 @@ public class TemplateIntegrationTest extends CompilerBasedTest {
   @Test
   public void suppressWarnings() throws IOException {
     runTest("SuppressWarningsTemplate");
+  }
+
+  @Test
+  public void typeArgumentsMethodInvocation() throws IOException {
+    runTest("TypeArgumentsMethodInvocationTemplate");
   }
 }

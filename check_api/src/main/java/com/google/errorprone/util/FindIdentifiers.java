@@ -19,6 +19,7 @@ package com.google.errorprone.util;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
+import static com.google.errorprone.util.ASTHelpers.isStatic;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -132,7 +133,7 @@ public final class FindIdentifiers {
       return (ClassTree) treePath.getLeaf();
     }
 
-    while (treePath != null) {
+    while (true) {
       TreePath parent = treePath.getParentPath();
       if (parent == null) {
         return null;
@@ -144,7 +145,6 @@ public final class FindIdentifiers {
       }
       treePath = parent;
     }
-    return null;
   }
 
   /**
@@ -407,7 +407,7 @@ public final class FindIdentifiers {
               path,
               (curr, unused) -> {
                 Symbol sym = ASTHelpers.getSymbol(curr);
-                return sym != null && sym.isStatic();
+                return sym != null && isStatic(sym);
               },
               (curr, unused) ->
                   curr instanceof ClassTree && ASTHelpers.getSymbol(curr).equals(var.owner))) {
@@ -471,7 +471,7 @@ public final class FindIdentifiers {
     for (Tree tree : path) {
       switch (tree.getKind()) {
         case METHOD:
-          return ASTHelpers.getSymbol(tree).isStatic();
+          return isStatic(ASTHelpers.getSymbol(tree));
         case BLOCK: // static initializer
           if (((BlockTree) tree).isStatic()) {
             return true;
@@ -486,12 +486,6 @@ public final class FindIdentifiers {
           break;
         case METHOD_INVOCATION: // JLS 8.8.7.1 explicit constructor invocation
           MethodSymbol methodSym = ASTHelpers.getSymbol((MethodInvocationTree) tree);
-          if (methodSym == null) {
-            // sometimes javac can't resolve the symbol. In this case just assume that we are
-            // in a static context - this is a safe approximation in our context (checking
-            // visibility)
-            return true;
-          }
           if (methodSym.isConstructor()
               && (Objects.equals(methodSym.owner, enclosingClass)
                   || Objects.equals(methodSym.owner, directSuperClass))) {
