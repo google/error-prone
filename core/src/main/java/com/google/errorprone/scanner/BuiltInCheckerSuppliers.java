@@ -50,6 +50,7 @@ import com.google.errorprone.bugpatterns.BadComparable;
 import com.google.errorprone.bugpatterns.BadImport;
 import com.google.errorprone.bugpatterns.BadInstanceof;
 import com.google.errorprone.bugpatterns.BadShiftAmount;
+import com.google.errorprone.bugpatterns.BanClassLoader;
 import com.google.errorprone.bugpatterns.BanJNDI;
 import com.google.errorprone.bugpatterns.BanSerializableRead;
 import com.google.errorprone.bugpatterns.BareDotMetacharacter;
@@ -1049,6 +1050,7 @@ public class BuiltInCheckerSuppliers {
           AssistedInjectAndInjectOnConstructors.class,
           AutoFactoryAtInject.class,
           AvoidObjectArrays.class,
+          BanClassLoader.class,
           BanSerializableRead.class,
           BinderIdentityRestoredDangerously.class, // TODO: enable this by default.
           BindingToUnqualifiedCommonType.class,
