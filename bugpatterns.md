@@ -1269,6 +1269,9 @@ Use of class, field, or method that is not compatible with legacy Android device
 __[AutoFactoryAtInject](bugpattern/AutoFactoryAtInject)__<br>
 @AutoFactory and @Inject should not be used in the same type.
 
+__[BanClassLoader](bugpattern/BanClassLoader)__<br>
+Using dangerous ClassLoader APIs may deserialize untrusted user input into bytecode, leading to remote code execution vulnerabilities
+
 __[BanSerializableRead](bugpattern/BanSerializableRead)__<br>
 Deserializing user input via the &#96;Serializable&#96; API is extremely dangerous
 
