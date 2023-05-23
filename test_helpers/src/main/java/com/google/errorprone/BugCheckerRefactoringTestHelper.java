@@ -300,13 +300,13 @@ public class BugCheckerRefactoringTestHelper {
                 context);
     Iterable<? extends CompilationUnitTree> trees = task.parse();
     task.analyze();
-    ImmutableMap<URI, ? extends CompilationUnitTree> byURI =
+    ImmutableMap<URI, ? extends CompilationUnitTree> byUri =
         stream(trees).collect(toImmutableMap(t -> t.getSourceFile().toUri(), t -> t));
-    URI inputURI = input.toUri();
+    URI inputUri = input.toUri();
     assertWithMessage(out + Joiner.on('\n').join(diagnosticsCollector.getDiagnostics()))
-        .that(byURI)
-        .containsKey(inputURI);
-    JCCompilationUnit tree = (JCCompilationUnit) byURI.get(inputURI);
+        .that(byUri)
+        .containsKey(inputUri);
+    JCCompilationUnit tree = (JCCompilationUnit) byUri.get(inputUri);
     Iterable<Diagnostic<? extends JavaFileObject>> errorDiagnostics =
         Iterables.filter(
             diagnosticsCollector.getDiagnostics(), d -> d.getKind() == Diagnostic.Kind.ERROR);
