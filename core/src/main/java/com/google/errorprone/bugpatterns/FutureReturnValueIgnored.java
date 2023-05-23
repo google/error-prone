@@ -129,7 +129,7 @@ public class FutureReturnValueIgnored extends AbstractReturnValueIgnored
       };
 
   @Inject
-  FutureReturnValueIgnored(ConstantExpressions constantExpressions) {
+  public FutureReturnValueIgnored(ConstantExpressions constantExpressions) {
     super(constantExpressions);
   }
 
