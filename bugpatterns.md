@@ -1379,6 +1379,9 @@ Variables initialized with Pattern#compile calls on constants can be constants
 __[DifferentNameButSame](bugpattern/DifferentNameButSame)__<br>
 This type is referred to in different ways within this file, which may be confusing.
 
+__[DoNotUseRuleChain](bugpattern/DoNotUseRuleChain)__<br>
+Do not use RuleChain
+
 __[EqualsBrokenForNull](bugpattern/EqualsBrokenForNull)__<br>
 equals() implementation may throw NullPointerException when given null
 
