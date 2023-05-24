@@ -931,6 +931,9 @@ toString() on lite protos will not generate a useful representation of the proto
 __[LockNotBeforeTry](bugpattern/LockNotBeforeTry)__<br>
 Calls to Lock#lock should be immediately followed by a try block which releases the lock.
 
+__[LockOnNonEnclosingClassLiteral](bugpattern/LockOnNonEnclosingClassLiteral)__<br>
+Lock on the class other than the enclosing class of the code block can unintentionally prevent the locked class being used properly.
+
 __[LogicalAssignment](bugpattern/LogicalAssignment)__<br>
 Assignment where a boolean expression was expected; use &#61;&#61; if this assignment wasn&#39;t expected or add parentheses for clarity.
 
