@@ -124,4 +124,15 @@ public final class NotJavadocTest {
         .expectUnchanged()
         .doTest(TEXT_MATCH);
   }
+
+  @Test
+  public void moduleLevel() {
+    helper
+        .addInputLines(
+            "module-info.java", //
+            "/** Module javadoc */",
+            "module foo {}")
+        .expectUnchanged()
+        .doTest(TEXT_MATCH);
+  }
 }

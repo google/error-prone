@@ -37,6 +37,7 @@ import com.google.errorprone.util.ErrorProneToken;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.ModuleTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.PackageTree;
 import com.sun.source.tree.Tree;
@@ -118,6 +119,12 @@ public final class NotJavadoc extends BugChecker implements CompilationUnitTreeM
           }
         }
         return super.visitVariable(variableTree, null);
+      }
+
+      @Override
+      public Void visitModule(ModuleTree moduleTree, Void unused) {
+        javadoccablePositions.put(getStartPosition(moduleTree), moduleTree);
+        return super.visitModule(moduleTree, null);
       }
     }.scan(tree, null);
     return ImmutableMap.copyOf(javadoccablePositions);
