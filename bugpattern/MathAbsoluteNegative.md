@@ -1,7 +1,7 @@
 ---
 title: MathAbsoluteNegative
-summary: Math.abs does not always give a positive result. Please consider other methods
-  for positive numbers.
+summary: Math.abs does not always give a non-negative result. Please consider other
+  methods for positive numbers.
 layout: bugpattern
 tags: ''
 severity: WARNING
