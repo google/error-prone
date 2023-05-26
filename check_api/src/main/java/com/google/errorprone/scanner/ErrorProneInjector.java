@@ -106,8 +106,10 @@ public final class ErrorProneInjector {
                 findConstructorMatching(
                     clazz,
                     c ->
-                        stream(c.getParameters())
-                            .allMatch(p -> p.getType().equals(ErrorProneFlags.class))));
+                        c.getParameters().length != 0
+                            && stream(c.getParameters())
+                                .allMatch(p -> p.getType().equals(ErrorProneFlags.class))))
+        .or(() -> findConstructorMatching(clazz, c -> c.getParameters().length == 0));
   }
 
   @SuppressWarnings("unchecked")
