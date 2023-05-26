@@ -43,8 +43,10 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
+import com.google.errorprone.bugpatterns.argumentselectiondefects.NamedParameterComment;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.suppliers.Supplier;
+import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Symbol;
@@ -140,6 +142,21 @@ public final class MemberName extends BugChecker implements MethodTreeMatcher, V
   public Description matchVariable(VariableTree tree, VisitorState state) {
     VarSymbol symbol = getSymbol(tree);
     String name = tree.getName().toString();
+    if (symbol.owner instanceof MethodSymbol && symbol.getKind().equals(ElementKind.PARAMETER)) {
+      var methodSymbol = (MethodSymbol) symbol.owner;
+      int index = methodSymbol.getParameters().indexOf(symbol);
+      var maybeSuper = ASTHelpers.streamSuperMethods(methodSymbol, state.getTypes()).findFirst();
+      if (maybeSuper.isPresent()) {
+        var superMethod = maybeSuper.get();
+        if (NamedParameterComment.containsSyntheticParameterName(superMethod)) {
+          return NO_MATCH;
+        }
+        if (index < superMethod.getParameters().size()
+            && superMethod.getParameters().get(index).getSimpleName().contentEquals(name)) {
+          return NO_MATCH;
+        }
+      }
+    }
     // Try to avoid dual-matching with ConstantCaseForConstants.
     if (UPPER_UNDERSCORE_PATTERN.matcher(name).matches() && !symbol.isStatic()) {
       return NO_MATCH;
