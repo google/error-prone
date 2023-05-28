@@ -46,7 +46,12 @@ public class Description {
   /** Describes the sentinel value of the case where the match failed. */
   public static final Description NO_MATCH =
       new Description(
-          null, "<no match>", "<no match>", "<no match>", ImmutableList.<Fix>of(), SUGGESTION);
+          null,
+          "<no match>",
+          "<no match>",
+          "<no match>",
+          ImmutableList.<Fix>of(),
+          Optional.of(SUGGESTION));
 
   /** The position of the match. */
   public final DiagnosticPosition position;
@@ -67,7 +72,11 @@ public class Description {
   public final ImmutableList<Fix> fixes;
 
   /** Is this a warning, error, etc.? */
-  public final BugPattern.SeverityLevel severity;
+  private final Optional<BugPattern.SeverityLevel> severity;
+
+  public BugPattern.SeverityLevel severity() {
+    return severity.get();
+  }
 
   /**
    * Returns the message to be printed by the compiler when a match is found in interactive use.
@@ -101,7 +110,7 @@ public class Description {
       String rawMessage,
       @Nullable String linkUrl,
       List<Fix> fixes,
-      SeverityLevel severity) {
+      Optional<SeverityLevel> severity) {
     this.position = position;
     this.checkName = checkName;
     this.rawMessage = rawMessage;
@@ -110,10 +119,16 @@ public class Description {
     this.severity = severity;
   }
 
-  /** Internal-only. Has no effect if applied to a Description within a BugChecker. */
+  /** Internal-only. */
   @CheckReturnValue
   public Description applySeverityOverride(SeverityLevel severity) {
-    return new Description(position, checkName, rawMessage, linkUrl, fixes, severity);
+    return new Description(
+        position,
+        checkName,
+        rawMessage,
+        linkUrl,
+        fixes,
+        Optional.of(this.severity.orElse(severity)));
   }
 
   /**
@@ -127,44 +142,36 @@ public class Description {
 
   /** Returns a new builder for {@link Description}s. */
   @RestrictedApi(
-      explanation = "Please use describeMatch or buildDescription on BugChecker instead.",
+      explanation = "Use describeMatch or buildDescription on BugChecker instead.",
       link = "",
       allowedOnPath =
-          ".*/java/com/google/devtools/staticanalysis/errorprone/RestrictedInheritanceChecker.java"
-              + "|.*/java/com/google/devtools/staticanalysis/errorprone/pluggabletype/LatticeAdapter.java"
+          ".*/java/com/google/devtools/staticanalysis/errorprone/pluggabletype/LatticeAdapter.java"
               + "|.*/java/com/google/devtools/staticanalysis/errorprone/pluggabletype/LatticeInfo.java"
-              + "|.*/java/com/google/devtools/javatools/staticanalysis/xlang/java/BugCheckerUsingXlang.java"
               + "|.*/third_party/java_src/error_prone/project/check_api/src/main/java/com/google/errorprone/bugpatterns/BugChecker.java")
-  public static Builder builder(
-      Tree node, String name, @Nullable String link, SeverityLevel severity, String message) {
-    return new Builder((DiagnosticPosition) node, name, link, severity, message);
+  public static Builder builder(Tree node, String name, @Nullable String link, String message) {
+    return new Builder((DiagnosticPosition) node, name, link, message);
   }
 
   /** Returns a new builder for {@link Description}s. */
   @RestrictedApi(
-      explanation = "Please use describeMatch or buildDescription on BugChecker instead.",
+      explanation = "Use describeMatch or buildDescription on BugChecker instead.",
       link = "",
       allowedOnPath =
           ".*/third_party/java_src/error_prone/project/check_api/src/main/java/com/google/errorprone/bugpatterns/BugChecker.java")
   public static Builder builder(
-      DiagnosticPosition position,
-      String name,
-      @Nullable String link,
-      SeverityLevel severity,
-      String message) {
-    return new Builder(position, name, link, severity, message);
+      DiagnosticPosition position, String name, @Nullable String link, String message) {
+    return new Builder(position, name, link, message);
   }
 
   /** Returns a new builder for {@link Description}s. */
   @RestrictedApi(
-      explanation = "Please use describeMatch or buildDescription on BugChecker instead.",
+      explanation = "Use describeMatch or buildDescription on BugChecker instead.",
       link = "",
       allowedOnPath =
           ".*/third_party/java_src/error_prone/project/check_api/src/main/java/com/google/errorprone/bugpatterns/BugChecker.java"
               + "|.*/third_party/java_src/error_prone/project/core/src/main/java/com/google/errorprone/refaster/RefasterScanner.java")
-  public static Builder builder(
-      JCTree tree, String name, @Nullable String link, SeverityLevel severity, String message) {
-    return new Builder(tree, name, link, severity, message);
+  public static Builder builder(JCTree tree, String name, @Nullable String link, String message) {
+    return new Builder(tree, name, link, message);
   }
 
   /** Builder for {@code Description}s. */
@@ -172,20 +179,15 @@ public class Description {
     private final DiagnosticPosition position;
     private final String name;
     private String linkUrl;
-    private final SeverityLevel severity;
+    private Optional<SeverityLevel> severity = Optional.empty();
     private final ImmutableList.Builder<Fix> fixListBuilder = ImmutableList.builder();
     private String rawMessage;
 
     private Builder(
-        DiagnosticPosition position,
-        String name,
-        @Nullable String linkUrl,
-        SeverityLevel severity,
-        String rawMessage) {
+        DiagnosticPosition position, String name, @Nullable String linkUrl, String rawMessage) {
       this.position = Preconditions.checkNotNull(position);
       this.name = Preconditions.checkNotNull(name);
       this.linkUrl = linkUrl;
-      this.severity = Preconditions.checkNotNull(severity);
       this.rawMessage = Preconditions.checkNotNull(rawMessage);
     }
 
@@ -257,6 +259,26 @@ public class Description {
     public Builder setLinkUrl(String linkUrl) {
       checkNotNull(linkUrl, "linkUrl must not be null");
       this.linkUrl = linkUrl;
+      return this;
+    }
+
+    @RestrictedApi(
+        explanation =
+            "Prefer to set a single default severity using @BugPattern. Overriding the severity for"
+                + " individual Descriptions causes any command line options to be ignored, which is"
+                + " potentially very confusing.",
+        link = "",
+        allowedOnPath =
+            ".*/third_party/java_src/error_prone/project/check_api/src/main/java/com/google/errorprone/matchers/Description.java$|"
+                + ".*/java/com/google/devtools/javatools/staticanalysis/xlang/java/BugCheckerUsingXlang.java$|"
+                + ".*/java/com/google/devtools/staticanalysis/errorprone/RestrictedInheritanceChecker.java$|"
+                + ".*/java/com/google/devtools/staticanalysis/errorprone/pluggabletype/LatticeAdapter.java$|"
+                + ".*/third_party/java_src/error_prone/project/core/src/main/java/com/google/errorprone/bugpatterns/RestrictedApiChecker.java$|"
+                + ".*/third_party/java_src/error_prone/project/core/src/main/java/com/google/errorprone/refaster/RefasterScanner.java$")
+    @CanIgnoreReturnValue
+    public Builder overrideSeverity(SeverityLevel severity) {
+      checkNotNull(severity, "severity must not be null");
+      this.severity = Optional.of(severity);
       return this;
     }
 

@@ -202,7 +202,7 @@ public class DefaultCharset extends BugChecker
   private final boolean byteArrayOutputStreamToString;
 
   @Inject
-  public DefaultCharset(ErrorProneFlags flags) {
+  DefaultCharset(ErrorProneFlags flags) {
     this.byteArrayOutputStreamToString =
         flags.getBoolean("DefaultCharset:ByteArrayOutputStreamToString").orElse(true);
   }

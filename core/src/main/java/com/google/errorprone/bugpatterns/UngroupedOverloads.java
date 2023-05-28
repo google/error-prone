@@ -59,7 +59,7 @@ public class UngroupedOverloads extends BugChecker implements ClassTreeMatcher {
   private final Boolean batchFindings;
 
   @Inject
-  public UngroupedOverloads(ErrorProneFlags flags) {
+  UngroupedOverloads(ErrorProneFlags flags) {
     batchFindings = flags.getBoolean("UngroupedOverloads:BatchFindings").orElse(false);
   }
 

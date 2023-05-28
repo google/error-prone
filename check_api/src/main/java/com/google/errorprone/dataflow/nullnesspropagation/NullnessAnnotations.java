@@ -42,7 +42,7 @@ public class NullnessAnnotations {
   private static final Predicate<String> ANNOTATION_RELEVANT_TO_NULLNESS =
       Pattern.compile(
               ".*\\b("
-                  + "(Recently)?NotNull|NonNull(Decl|Type)?|Nonnull|"
+                  + "(Recently)?NonNull(Decl|Type)?|NotNull|Nonnull|"
                   + "(Recently)?Nullable(Decl|Type)?|CheckForNull|PolyNull|MonotonicNonNull(Decl)?|"
                   + "ProtoMethodMayReturnNull|ProtoMethodAcceptsNullParameter|"
                   + "ProtoPassThroughNullness"

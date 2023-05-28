@@ -20,7 +20,9 @@ import com.google.common.collect.ImmutableList.Builder;
 import java.util.function.BiConsumer;
 import java.util.stream.Collector;
 
-/** @author sulku@google.com (Marsela Sulku) */
+/**
+ * @author sulku@google.com (Marsela Sulku)
+ */
 public class CollectorShouldNotUseStateNegativeCases {
   public void test() {
     Collector.of(

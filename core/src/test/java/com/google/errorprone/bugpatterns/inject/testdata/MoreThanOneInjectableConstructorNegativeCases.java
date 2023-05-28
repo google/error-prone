@@ -18,7 +18,9 @@ package com.google.errorprone.bugpatterns.inject.testdata;
 
 import com.google.inject.Inject;
 
-/** @author sgoldfeder@google.com(Steven Goldfeder) */
+/**
+ * @author sgoldfeder@google.com(Steven Goldfeder)
+ */
 public class MoreThanOneInjectableConstructorNegativeCases {
 
   /** Class has a single non-injectable constructor. */

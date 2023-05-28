@@ -60,7 +60,7 @@ public class ImmutableAnnotationChecker extends BugChecker implements ClassTreeM
   private final WellKnownMutability wellKnownMutability;
 
   @Inject
-  public ImmutableAnnotationChecker(WellKnownMutability wellKnownMutability) {
+  ImmutableAnnotationChecker(WellKnownMutability wellKnownMutability) {
     this.wellKnownMutability = wellKnownMutability;
   }
 
@@ -90,7 +90,10 @@ public class ImmutableAnnotationChecker extends BugChecker implements ClassTreeM
 
     Violation info =
         new ImmutableAnalysis(
-                this, state, wellKnownMutability, ImmutableSet.of(Immutable.class.getName()))
+                this::isSuppressed,
+                state,
+                wellKnownMutability,
+                ImmutableSet.of(Immutable.class.getName()))
             .checkForImmutability(
                 Optional.of(tree), ImmutableSet.of(), getType(tree), this::describeClass);
 

@@ -142,7 +142,7 @@ public final class FloggerRequiredModifiers extends BugChecker
    * fine grained adjustments.
    */
   @Inject
-  public FloggerRequiredModifiers(ErrorProneFlags flags) {
+  FloggerRequiredModifiers(ErrorProneFlags flags) {
     this(flags.getEnum("FloggerRequiredModifiers:Goal", Goal.class).orElse(Goal.DEFAULT_ALL_GOALS));
   }
 

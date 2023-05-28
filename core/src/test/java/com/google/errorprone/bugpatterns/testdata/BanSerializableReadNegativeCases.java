@@ -17,8 +17,11 @@
 package com.google.errorprone.bugpatterns.testdata;
 
 import com.google.errorprone.bugpatterns.BanSerializableReadTest;
+import java.io.Externalizable;
 import java.io.IOException;
+import java.io.ObjectInput;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
@@ -29,8 +32,9 @@ import java.io.Serializable;
  *
  * @author tshadwell@google.com (Thomas Shadwell)
  */
-public class BanSerializableReadNegativeCases implements Serializable {
+public class BanSerializableReadNegativeCases implements Serializable, Externalizable {
   public final String hi = "hi";
+  public Integer testField;
 
   // mostly a smoke test
   public static void noCrimesHere() {
@@ -127,6 +131,22 @@ public class BanSerializableReadNegativeCases implements Serializable {
       // Calling readObjectOverride is banned by the checker; therefore, overrides can
       // call other banned methods without added risk.
       return super.readObject();
+    }
+  }
+
+  @Override
+  public void readExternal(ObjectInput in) {
+    try {
+      testField = (Integer) in.readObject();
+    } catch (IOException | ClassNotFoundException e) {
+    }
+  }
+
+  @Override
+  public void writeExternal(ObjectOutput out) {
+    try {
+      out.writeObject(testField);
+    } catch (IOException e) {
     }
   }
 }

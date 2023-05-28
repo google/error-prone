@@ -41,7 +41,7 @@ import javax.inject.Inject;
 public final class BoxedPrimitiveEquality extends AbstractReferenceEquality {
 
   @Inject
-  public BoxedPrimitiveEquality() {}
+  BoxedPrimitiveEquality() {}
 
   @Override
   protected boolean matchArgument(ExpressionTree tree, VisitorState state) {

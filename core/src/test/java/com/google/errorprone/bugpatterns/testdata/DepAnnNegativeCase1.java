@@ -16,28 +16,40 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
-/** @deprecated */
+/**
+ * @deprecated
+ */
 @Deprecated
 public class DepAnnNegativeCase1 {
 
-  /** @deprecated */
+  /**
+   * @deprecated
+   */
   @Deprecated
   public DepAnnNegativeCase1() {}
 
-  /** @deprecated */
+  /**
+   * @deprecated
+   */
   @Deprecated int myField;
 
-  /** @deprecated */
+  /**
+   * @deprecated
+   */
   @Deprecated
   enum Enum {
     VALUE,
   }
 
-  /** @deprecated */
+  /**
+   * @deprecated
+   */
   @Deprecated
   interface Interface {}
 
-  /** @deprecated */
+  /**
+   * @deprecated
+   */
   @Deprecated
   public void deprecatedMethood() {}
 
@@ -47,7 +59,9 @@ public class DepAnnNegativeCase1 {
   /** deprecated */
   public void deprecatedMethodWithMalformedComment() {}
 
-  /** @deprecated */
+  /**
+   * @deprecated
+   */
   @SuppressWarnings("dep-ann")
   public void suppressed() {}
 

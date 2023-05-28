@@ -131,11 +131,12 @@ public class CompileTimeConstantExpressionMatcher implements Matcher<ExpressionT
               Symbol.VarSymbol varSymbol = (Symbol.VarSymbol) getSymbol(node);
               Symbol owner = varSymbol.owner;
               ElementKind ownerKind = owner.getKind();
-              // Check that the identifier is a formal method/constructor parameter or a class
+              // Check that the identifier is a formal method/constructor parameter, or a class/enum
               // field.
               if (ownerKind != ElementKind.METHOD
                   && ownerKind != ElementKind.CONSTRUCTOR
-                  && ownerKind != ElementKind.CLASS) {
+                  && ownerKind != ElementKind.CLASS
+                  && ownerKind != ElementKind.ENUM) {
                 return false;
               }
               // Check that the symbol is final

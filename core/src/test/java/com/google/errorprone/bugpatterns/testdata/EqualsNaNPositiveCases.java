@@ -16,7 +16,9 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
-/** @author lowasser@google.com (Louis Wasserman) */
+/**
+ * @author lowasser@google.com (Louis Wasserman)
+ */
 public class EqualsNaNPositiveCases {
 
   // BUG: Diagnostic contains: Double.isNaN(0.0)

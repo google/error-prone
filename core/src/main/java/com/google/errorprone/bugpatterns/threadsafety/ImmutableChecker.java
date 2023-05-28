@@ -103,7 +103,7 @@ public class ImmutableChecker extends BugChecker
   private final ImmutableSet<String> immutableAnnotations;
 
   @Inject
-  public ImmutableChecker(WellKnownMutability wellKnownMutability) {
+  ImmutableChecker(WellKnownMutability wellKnownMutability) {
     this(wellKnownMutability, ImmutableSet.of(Immutable.class.getName()));
   }
 
@@ -214,7 +214,8 @@ public class ImmutableChecker extends BugChecker
   }
 
   private ImmutableAnalysis createImmutableAnalysis(VisitorState state) {
-    return new ImmutableAnalysis(this, state, wellKnownMutability, immutableAnnotations);
+    return new ImmutableAnalysis(
+        this::isSuppressed, state, wellKnownMutability, immutableAnnotations);
   }
 
   private void checkInvocation(

@@ -19,7 +19,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
-/** @author mariasam@google.com (Maria Sam) on 6/27/17. */
+/**
+ * @author mariasam@google.com (Maria Sam) on 6/27/17.
+ */
 public class CollectionToArraySafeParameterNegativeCases {
 
   private void basicCase() {

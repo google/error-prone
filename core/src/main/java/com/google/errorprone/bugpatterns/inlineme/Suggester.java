@@ -23,7 +23,6 @@ import static com.google.errorprone.util.ASTHelpers.hasDirectAnnotationWithSimpl
 import static com.google.errorprone.util.ASTHelpers.shouldKeep;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.DoNotCall;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -40,21 +39,15 @@ import javax.lang.model.element.Modifier;
 @BugPattern(
     name = "InlineMeSuggester",
     summary =
-        "This deprecated API looks inlineable. If you'd like the body of the API to be inlined to"
-            + " its callers, please annotate it with @InlineMe.",
+        "This deprecated API looks inlineable. If you'd like the body of the API to be"
+            + " automatically inlined to its callers, please annotate it with @InlineMe."
+            + " NOTE: the suggested fix makes the method final if it was not already.",
     severity = WARNING)
 public final class Suggester extends BugChecker implements MethodTreeMatcher {
-  private static final String INLINE_ME = "InlineMe";
-
-  private final String inlineMe;
+  private static final String INLINE_ME = "com.google.errorprone.annotations.InlineMe";
 
   @Inject
-  public Suggester(ErrorProneFlags errorProneFlags) {
-    inlineMe =
-        errorProneFlags
-            .get("InlineMe:annotation")
-            .orElse("com.google.errorprone.annotations.InlineMe");
-  }
+  Suggester() {}
 
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
@@ -64,7 +57,7 @@ public final class Suggester extends BugChecker implements MethodTreeMatcher {
     }
 
     // if the API is already annotated with @InlineMe, then return no match
-    if (hasDirectAnnotationWithSimpleName(tree, INLINE_ME)) {
+    if (hasDirectAnnotationWithSimpleName(tree, "InlineMe")) {
       return Description.NO_MATCH;
     }
 
@@ -87,7 +80,7 @@ public final class Suggester extends BugChecker implements MethodTreeMatcher {
     // We attempt to actually build the annotation as a SuggestedFix.
     SuggestedFix.Builder fixBuilder =
         SuggestedFix.builder()
-            .addImport(inlineMe)
+            .addImport(INLINE_ME)
             .prefixWith(
                 tree,
                 InlineMeData.buildExpectedInlineMeAnnotation(state, inlinabilityResult.body())

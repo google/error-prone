@@ -21,7 +21,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-/** @author mariasam@google.com (Maria Sam) */
+/**
+ * @author mariasam@google.com (Maria Sam)
+ */
 public class FloggerRedundantIsEnabledNegativeCases {
 
   public void basicCase(FluentLogger logger) {

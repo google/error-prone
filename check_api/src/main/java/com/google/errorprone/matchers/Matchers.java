@@ -1368,7 +1368,8 @@ public class Matchers {
     }
   }
 
-  private static <T extends Tree> Matcher<T> packageMatches(Predicate<String> predicate) {
+  /** Matches an AST node whose compilation unit's package name matches the given predicate. */
+  public static <T extends Tree> Matcher<T> packageMatches(Predicate<String> predicate) {
     return (tree, state) -> predicate.test(getPackageFullName(state));
   }
 

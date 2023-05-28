@@ -51,7 +51,7 @@ public final class PeriodTimeMath extends BugChecker implements MethodInvocation
   private static final Matcher<ExpressionTree> PERIOD = isSameType("java.time.Period");
 
   @Inject
-  public PeriodTimeMath(ErrorProneFlags flags) {
+  PeriodTimeMath(ErrorProneFlags flags) {
     boolean requireStrictCompatibility =
         flags.getBoolean("PeriodTimeMath:RequireStaticPeriodArgument").orElse(false);
     matcherToCheck =

@@ -44,7 +44,7 @@ public class MissingOverride extends BugChecker implements MethodTreeMatcher {
   private final boolean ignoreInterfaceOverrides;
 
   @Inject
-  public MissingOverride(ErrorProneFlags flags) {
+  MissingOverride(ErrorProneFlags flags) {
     this.ignoreInterfaceOverrides =
         flags.getBoolean("MissingOverride:IgnoreInterfaceOverrides").orElse(false);
   }

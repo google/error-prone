@@ -16,7 +16,9 @@
 
 package com.google.errorprone.bugpatterns;
 
-/** @author yuan@ece.toronto.edu (Ding Yuan) */
+/**
+ * @author yuan@ece.toronto.edu (Ding Yuan)
+ */
 public class EmptyCatchPositiveCases {
   public void error() throws IllegalArgumentException {
     throw new IllegalArgumentException("Fake exception.");

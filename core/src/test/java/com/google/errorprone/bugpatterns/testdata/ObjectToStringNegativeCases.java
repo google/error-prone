@@ -18,7 +18,9 @@ package com.google.errorprone.bugpatterns.testdata;
 
 import org.joda.time.Duration;
 
-/** @author bhagwani@google.com (Sumit Bhagwani) */
+/**
+ * @author bhagwani@google.com (Sumit Bhagwani)
+ */
 public class ObjectToStringNegativeCases {
 
   public static final class FinalObjectClassWithoutToString {}

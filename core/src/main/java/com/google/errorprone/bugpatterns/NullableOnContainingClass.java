@@ -20,7 +20,8 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
-import static java.util.Arrays.stream;
+import static java.lang.annotation.ElementType.TYPE_PARAMETER;
+import static java.lang.annotation.ElementType.TYPE_USE;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
@@ -75,7 +76,7 @@ public final class NullableOnContainingClass extends BugChecker
     int endOfOuterType = state.getEndPosition(((MemberSelectTree) type).getExpression());
 
     for (AnnotationTree annotation : annotations) {
-      if (!isTypeAnnotation(getSymbol(annotation))) {
+      if (!isOnlyTypeAnnotation(getSymbol(annotation))) {
         continue;
       }
       if (NULLABLE_ANNOTATION_NAMES.contains(getType(annotation).tsym.getSimpleName().toString())) {
@@ -95,14 +96,19 @@ public final class NullableOnContainingClass extends BugChecker
     return NO_MATCH;
   }
 
-  private static boolean isTypeAnnotation(Symbol anno) {
+  /**
+   * True if this annotation is only {@link TYPE_USE}, or only {@link TYPE_USE} and {@link
+   * TYPE_PARAMETER}.
+   */
+  private static boolean isOnlyTypeAnnotation(Symbol anno) {
     Target target = anno.getAnnotation(Target.class);
-    if (target == null) {
-      return false;
-    }
-    return stream(target.value()).anyMatch(t -> t.equals(ElementType.TYPE_USE));
+    ImmutableSet<ElementType> elementTypes =
+        target == null ? ImmutableSet.of() : ImmutableSet.copyOf(target.value());
+    return elementTypes.contains(TYPE_USE) && TYPE_USE_OR_TYPE_PARAMETER.containsAll(elementTypes);
   }
 
   private static final ImmutableSet<String> NULLABLE_ANNOTATION_NAMES =
       ImmutableSet.of("Nullable", "NonNull", "NullableType");
+  private static final ImmutableSet<ElementType> TYPE_USE_OR_TYPE_PARAMETER =
+      ImmutableSet.of(TYPE_USE, TYPE_PARAMETER);
 }

@@ -20,7 +20,6 @@ import static com.google.errorprone.refaster.Unifier.unifications;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.base.VerifyException;
-import com.google.errorprone.util.RuntimeVersion;
 import com.sun.source.tree.EnhancedForLoopTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TreeVisitor;
@@ -40,6 +39,9 @@ import java.util.Arrays;
  */
 @AutoValue
 abstract class UEnhancedForLoop extends USimpleStatement implements EnhancedForLoopTree {
+
+  private static final long serialVersionUID = 0;
+
   public static UEnhancedForLoop create(
       UVariableDecl variable, UExpression elements, UStatement statement) {
     // On JDK 20 and above the `EnhancedForLoopTree` interface contains a additional method
@@ -138,13 +140,16 @@ abstract class UEnhancedForLoop extends USimpleStatement implements EnhancedForL
 
   private static Method treeMakerForeachLoopMethod() {
     try {
-      return RuntimeVersion.isAtLeast20()
-          ? TreeMaker.class.getMethod(
-              "ForeachLoop", JCTree.class, JCExpression.class, JCStatement.class)
-          : TreeMaker.class.getMethod(
-              "ForeachLoop", JCVariableDecl.class, JCExpression.class, JCStatement.class);
-    } catch (ReflectiveOperationException e) {
-      throw new LinkageError(e.getMessage(), e);
+      return TreeMaker.class.getMethod(
+          "ForeachLoop", JCTree.class, JCExpression.class, JCStatement.class);
+    } catch (ReflectiveOperationException e1) {
+      try {
+        return TreeMaker.class.getMethod(
+            "ForeachLoop", JCVariableDecl.class, JCExpression.class, JCStatement.class);
+      } catch (ReflectiveOperationException e2) {
+        e2.addSuppressed(e1);
+        throw new LinkageError(e2.getMessage(), e2);
+      }
     }
   }
 

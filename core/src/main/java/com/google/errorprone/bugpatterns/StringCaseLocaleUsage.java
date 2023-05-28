@@ -19,14 +19,16 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.BugPattern.StandardTags.FRAGILE_CODE;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
+import static com.google.errorprone.util.ASTHelpers.getReceiver;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.sun.tools.javac.parser.Tokens.TokenKind.RPAREN;
 
 import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
-import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
@@ -40,7 +42,10 @@ import com.sun.tools.javac.util.Position;
  * String#toUpperCase()}, as these methods implicitly rely on the environment's default locale.
  */
 @BugPattern(
-    summary = "Specify a `Locale` when calling `String#to{Lower,Upper}Case`",
+    summary =
+        "Specify a `Locale` when calling `String#to{Lower,Upper}Case`. (Note: there are multiple"
+            + " suggested fixes; the third may be most appropriate if you're dealing with ASCII"
+            + " Strings.)",
     severity = WARNING,
     tags = FRAGILE_CODE)
 public final class StringCaseLocaleUsage extends BugChecker implements MethodInvocationTreeMatcher {
@@ -64,14 +69,33 @@ public final class StringCaseLocaleUsage extends BugChecker implements MethodInv
     return buildDescription(tree)
         .addFix(suggestLocale(closingParenPosition, "Locale.ROOT"))
         .addFix(suggestLocale(closingParenPosition, "Locale.getDefault()"))
+        .addFix(suggestAscii(tree, state))
         .build();
   }
 
-  private static Fix suggestLocale(int insertPosition, String locale) {
+  private static SuggestedFix suggestLocale(int insertPosition, String locale) {
     return SuggestedFix.builder()
         .addImport("java.util.Locale")
         .replace(insertPosition, insertPosition, locale)
         .build();
+  }
+
+  private static SuggestedFix suggestAscii(MethodInvocationTree tree, VisitorState state) {
+    ExpressionTree receiver = getReceiver(tree);
+    if (receiver == null) {
+      return SuggestedFix.emptyFix();
+    }
+    var fix =
+        SuggestedFix.builder()
+            .setShortDescription(
+                "Replace with Ascii.toLower/UpperCase; this changes behaviour for non-ASCII"
+                    + " Strings");
+    String ascii = SuggestedFixes.qualifyType(state, fix, "com.google.common.base.Ascii");
+    fix.replace(
+        tree,
+        String.format(
+            "%s.%s(%s)", ascii, getSymbol(tree).getSimpleName(), state.getSourceForNode(receiver)));
+    return fix.build();
   }
 
   // TODO: Consider making this a helper method in `SuggestedFixes`.

@@ -82,7 +82,7 @@ public final class FieldCanBeStatic extends BugChecker implements VariableTreeMa
   private final ConstantExpressions constantExpressions;
 
   @Inject
-  public FieldCanBeStatic(
+  FieldCanBeStatic(
       WellKnownMutability wellKnownMutability, ConstantExpressions constantExpressions) {
     this.wellKnownMutability = wellKnownMutability;
     this.constantExpressions = constantExpressions;

@@ -67,7 +67,7 @@ public class MethodCanBeStatic extends BugChecker implements CompilationUnitTree
   private final FindingOutputStyle findingOutputStyle;
 
   @Inject
-  public MethodCanBeStatic(ErrorProneFlags flags) {
+  MethodCanBeStatic(ErrorProneFlags flags) {
     boolean findingPerSite = flags.getBoolean("MethodCanBeStatic:FindingPerSite").orElse(false);
     this.findingOutputStyle =
         findingPerSite ? FindingOutputStyle.FINDING_PER_SITE : FindingOutputStyle.ONE_FINDING;

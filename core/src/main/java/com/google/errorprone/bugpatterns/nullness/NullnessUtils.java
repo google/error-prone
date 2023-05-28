@@ -375,6 +375,9 @@ class NullnessUtils {
       case "libcore.util.Nullable":
       case "org.checkerframework.checker.nullness.compatqual.NullableType":
       case "org.checkerframework.checker.nullness.qual.Nullable":
+      case "org.jspecify.annotations.NonNull":
+      case "org.jspecify.annotations.Nullable":
+      case "org.jspecify.nullness.NonNull":
       case "org.jspecify.nullness.Nullable":
         return true;
       default:

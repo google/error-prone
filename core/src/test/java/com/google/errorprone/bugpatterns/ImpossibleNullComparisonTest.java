@@ -463,21 +463,6 @@ public final class ImpossibleNullComparisonTest {
   }
 
   @Test
-  public void optionalGet_notMatchedWithFlagOff() {
-    compilationHelper
-        .addSourceLines(
-            "Test.java",
-            "import java.util.Optional;",
-            "public class Test {",
-            "  public boolean o(Optional<String> o) {",
-            "    return o.get() == null;",
-            "  }",
-            "}")
-        .setArgs("-XepOpt:ImpossibleNullComparison:MatchOptionalAndMultimap=false")
-        .doTest();
-  }
-
-  @Test
   public void tables() {
     compilationHelper
         .addSourceLines(

@@ -69,7 +69,7 @@ public class TreeToString extends AbstractToString {
   private final boolean transitiveEnclosingBugchecker;
 
   @Inject
-  public TreeToString(ErrorProneFlags errorProneFlags) {
+  TreeToString(ErrorProneFlags errorProneFlags) {
     this.transitiveEnclosingBugchecker =
         errorProneFlags.getBoolean("TreeToString:transitiveEnclosingBugchecker").orElse(true);
   }

@@ -339,4 +339,39 @@ public class MemberNameTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void nonConformantOverride_nameMatchesSuper_ignored() {
+    helper
+        .addSourceLines(
+            "Base.java",
+            "interface Base {",
+            "  // BUG: Diagnostic contains:",
+            "  void foo(int a_b);",
+            "}")
+        .addSourceLines(
+            "Test.java", //
+            "class Test implements Base {",
+            "  public void foo(int a_b) {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void nonConformantOverride_nameDoesNotMatchSuper_flagged() {
+    helper
+        .addSourceLines(
+            "Base.java",
+            "interface Base {",
+            "  // BUG: Diagnostic contains:",
+            "  void foo(int a_b);",
+            "}")
+        .addSourceLines(
+            "Test.java",
+            "class Test implements Base {",
+            "  // BUG: Diagnostic contains:",
+            "  public void foo(int a_b_c) {}",
+            "}")
+        .doTest();
+  }
 }

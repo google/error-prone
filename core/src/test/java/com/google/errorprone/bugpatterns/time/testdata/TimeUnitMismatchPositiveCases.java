@@ -20,7 +20,9 @@ import static java.util.concurrent.TimeUnit.NANOSECONDS;
 
 import java.util.Optional;
 
-/** @author cpovirk@google.com (Chris Povirk) */
+/**
+ * @author cpovirk@google.com (Chris Povirk)
+ */
 public class TimeUnitMismatchPositiveCases {
   int startMicros;
   int stopMillis;

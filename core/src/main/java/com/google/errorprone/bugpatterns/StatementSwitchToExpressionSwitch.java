@@ -129,7 +129,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
   private final boolean enableAssignmentSwitchConversion;
 
   @Inject
-  public StatementSwitchToExpressionSwitch(ErrorProneFlags flags) {
+  StatementSwitchToExpressionSwitch(ErrorProneFlags flags) {
     this.enableDirectConversion =
         flags.getBoolean("StatementSwitchToExpressionSwitch:EnableDirectConversion").orElse(false);
     this.enableReturnSwitchConversion =

@@ -18,7 +18,9 @@ package com.google.errorprone.bugpatterns.testdata;
 
 import javax.annotation.Nullable;
 
-/** @author sebastian.h.monte@gmail.com (Sebastian Monte) */
+/**
+ * @author sebastian.h.monte@gmail.com (Sebastian Monte)
+ */
 public class NullablePrimitiveNegativeCases {
   @Nullable Integer a;
 

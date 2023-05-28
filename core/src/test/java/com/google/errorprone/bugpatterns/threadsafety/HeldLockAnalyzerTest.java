@@ -201,47 +201,6 @@ public class HeldLockAnalyzerTest {
         .doTest();
   }
 
-  @Test
-  public void lockMethodEnclosingAccess() {
-    compilationHelper
-        .addSourceLines(
-            "threadsafety/Test.java",
-            "package threadsafety;",
-            "import javax.annotation.concurrent.GuardedBy;",
-            "import com.google.errorprone.annotations.concurrent.LockMethod;",
-            "import com.google.errorprone.annotations.concurrent.UnlockMethod;",
-            "import java.util.concurrent.locks.Lock;",
-            "class Outer {",
-            "  Lock lock;",
-            "  class Inner {",
-            "    @GuardedBy(\"lock\")",
-            "    int x;",
-            "    ",
-            "    @LockMethod(\"lock\")",
-            "    void lock() {",
-            "      lock.lock();",
-            "    }",
-            "    ",
-            "    @UnlockMethod(\"lock\")",
-            "    void unlock() {",
-            "      lock.unlock();",
-            "    }",
-            "    ",
-            "    void m(Inner i) {",
-            "      i.lock();",
-            "      try {",
-            "        // BUG: Diagnostic contains:",
-            "        // [(SELECT (SELECT (LOCAL_VARIABLE i) outer$threadsafety.Outer) lock)]",
-            "        i.x++;",
-            "      } finally {",
-            "        i.unlock();",
-            "      }",
-            "    }",
-            "  }",
-            "}")
-        .doTest();
-  }
-
   /** A customized {@link GuardedByChecker} that prints more test-friendly diagnostics. */
   @BugPattern(name = "GuardedByLockSet", summary = "", explanation = "", severity = ERROR)
   public static class GuardedByLockSetAnalyzer extends GuardedByChecker {

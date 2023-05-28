@@ -302,6 +302,7 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
         }
       }
     }
+    boolean considerBlanketFixes = true;
     if (resultType != null && resultType.getKind() == TypeKind.BOOLEAN) {
       // Fix by calling either assertThat(...).isTrue() or verify(...).
       if (state.errorProneOptions().isTestOnlyTarget()) {
@@ -328,6 +329,7 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
                 state.getTypes())
             .anyMatch(m -> true)) {
       fixes.put("Assert that the result is true", postfixWith(invocationTree, ".isTrue()"));
+      considerBlanketFixes = false;
     }
     if (identifierExpr != null
         && symbol != null
@@ -344,7 +346,8 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
      * this a constructor call or build() call?"
      */
     if (parent.getKind() == EXPRESSION_STATEMENT
-        && !constantExpressions.constantExpression(invocationTree, state).isPresent()) {
+        && !constantExpressions.constantExpression(invocationTree, state).isPresent()
+        && considerBlanketFixes) {
       ImmutableSet<String> identifiersInScope =
           findAllIdents(state).stream().map(v -> v.name.toString()).collect(toImmutableSet());
       concat(Stream.of("unused"), range(2, 10).mapToObj(i -> "unused" + i))
@@ -358,7 +361,7 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
                       "Suppress error by assigning to a variable",
                       prefixWith(parent, format("var %s = ", n))));
     }
-    if (parent.getKind() == EXPRESSION_STATEMENT) {
+    if (parent.getKind() == EXPRESSION_STATEMENT && considerBlanketFixes) {
       if (constantExpressions.constantExpression(invocationTree, state).isPresent()) {
         fixes.put("Delete call", delete(parent));
       } else {

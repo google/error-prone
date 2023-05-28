@@ -14,7 +14,9 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
-/** @author cushon@google.com (Liam Miller-Cushon) */
+/**
+ * @author cushon@google.com (Liam Miller-Cushon)
+ */
 public class OverridesNegativeCase3 {
   abstract class Base {
     abstract void arrayMethod(Object[] xs);

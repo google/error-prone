@@ -155,7 +155,7 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
   private final ImmutableSet<String> additionalExemptingMethodAnnotations;
 
   @Inject
-  public UnusedMethod(ErrorProneFlags errorProneFlags) {
+  UnusedMethod(ErrorProneFlags errorProneFlags) {
     this.additionalExemptingMethodAnnotations =
         errorProneFlags
             .getList("UnusedMethod:ExemptingMethodAnnotations")

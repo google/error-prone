@@ -23,6 +23,7 @@ import com.google.common.base.MoreObjects;
 import com.google.common.collect.Streams;
 import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Attribute.Compound;
+import com.sun.tools.javac.code.Attribute.TypeCompound;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.TargetType;
@@ -56,6 +57,28 @@ public final class MoreAnnotations {
    * doesn't work across compilation boundaries.
    */
   public static Stream<Compound> getDeclarationAndTypeAttributes(Symbol sym) {
+    return Streams.concat(sym.getRawAttributes().stream(), getTopLevelTypeAttributes(sym))
+        .collect(
+            groupingBy(c -> c.type.asElement().getQualifiedName(), LinkedHashMap::new, toList()))
+        .values()
+        .stream()
+        .map(c -> c.get(0));
+  }
+
+  /**
+   * Returns "top-level" type annotations of the given symbol, including:
+   *
+   * <ul>
+   *   <li>Type annotations of the return type of a method.
+   *   <li>Type annotations on the type of a formal parameter or field.
+   * </ul>
+   *
+   * <p>These annotations are not always included in those returned by {@link
+   * com.sun.tools.javac.code.Type#getAnnotationMirrors} because javac doesn't associate type
+   * annotation information with types for symbols completed from class files. These type
+   * annotations won't be included when the symbol is not in the current compilation.
+   */
+  public static Stream<TypeCompound> getTopLevelTypeAttributes(Symbol sym) {
     Symbol typeAnnotationOwner;
     switch (sym.getKind()) {
       case PARAMETER:
@@ -64,15 +87,8 @@ public final class MoreAnnotations {
       default:
         typeAnnotationOwner = sym;
     }
-    return Streams.concat(
-            sym.getRawAttributes().stream(),
-            typeAnnotationOwner.getRawTypeAttributes().stream()
-                .filter(anno -> isAnnotationOnType(sym, anno.position)))
-        .collect(
-            groupingBy(c -> c.type.asElement().getQualifiedName(), LinkedHashMap::new, toList()))
-        .values()
-        .stream()
-        .map(c -> c.get(0));
+    return typeAnnotationOwner.getRawTypeAttributes().stream()
+        .filter(anno -> isAnnotationOnType(sym, anno.position));
   }
 
   private static boolean isAnnotationOnType(Symbol sym, TypeAnnotationPosition position) {

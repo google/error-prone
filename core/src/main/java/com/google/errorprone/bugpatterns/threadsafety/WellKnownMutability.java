@@ -22,22 +22,15 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Sets;
-import com.google.common.collect.Sets.SetView;
 import com.google.common.primitives.Primitives;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.annotations.Immutable;
 import com.google.errorprone.bugpatterns.ImmutableCollections;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.suppliers.Suppliers;
 import com.sun.tools.javac.code.Type;
-import java.lang.reflect.TypeVariable;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.stream.Stream;
 import javax.inject.Inject;
 
@@ -52,7 +45,7 @@ public final class WellKnownMutability implements ThreadSafety.KnownTypes {
   private final ImmutableSet<String> knownMutableClasses;
 
   @Inject
-  public WellKnownMutability(ErrorProneFlags flags) {
+  WellKnownMutability(ErrorProneFlags flags) {
     List<String> immutable = flags.getList("Immutable:KnownImmutable").orElse(ImmutableList.of());
     ImmutableList<String> mutable =
         // Please use "KnownMutable", as it's a bit clearer what we mean. "KnownUnsafe" is kept
@@ -68,7 +61,7 @@ public final class WellKnownMutability implements ThreadSafety.KnownTypes {
     return new WellKnownMutability(flags);
   }
 
-  public Map<String, AnnotationInfo> getKnownImmutableClasses() {
+  public ImmutableMap<String, AnnotationInfo> getKnownImmutableClasses() {
     return knownImmutableClasses;
   }
 
@@ -78,7 +71,7 @@ public final class WellKnownMutability implements ThreadSafety.KnownTypes {
    */
   @Override
   @Deprecated
-  public Map<String, AnnotationInfo> getKnownSafeClasses() {
+  public ImmutableMap<String, AnnotationInfo> getKnownSafeClasses() {
     return getKnownImmutableClasses();
   }
 
@@ -92,66 +85,16 @@ public final class WellKnownMutability implements ThreadSafety.KnownTypes {
    */
   @Override
   @Deprecated
-  public Set<String> getKnownUnsafeClasses() {
+  public ImmutableSet<String> getKnownUnsafeClasses() {
     return getKnownMutableClasses();
-  }
-
-  static class Builder {
-    final ImmutableMap.Builder<String, AnnotationInfo> mapBuilder = ImmutableMap.builder();
-
-    @CanIgnoreReturnValue
-    public Builder addClasses(Set<Class<?>> clazzs) {
-      for (Class<?> clazz : clazzs) {
-        add(clazz);
-      }
-      return this;
-    }
-
-    @CanIgnoreReturnValue
-    public Builder addStrings(List<String> classNames) {
-      for (String className : classNames) {
-        add(className);
-      }
-      return this;
-    }
-
-    @CanIgnoreReturnValue
-    public Builder add(Class<?> clazz, String... containerOf) {
-      ImmutableSet<String> containerTyParams = ImmutableSet.copyOf(containerOf);
-      HashSet<String> actualTyParams = new HashSet<>();
-      for (TypeVariable<?> x : clazz.getTypeParameters()) {
-        actualTyParams.add(x.getName());
-      }
-      SetView<String> difference = Sets.difference(containerTyParams, actualTyParams);
-      if (!difference.isEmpty()) {
-        throw new AssertionError(
-            String.format(
-                "For %s, please update the type parameter(s) from %s to %s",
-                clazz, difference, actualTyParams));
-      }
-      mapBuilder.put(
-          clazz.getName(),
-          AnnotationInfo.create(clazz.getName(), ImmutableList.copyOf(containerOf)));
-      return this;
-    }
-
-    @CanIgnoreReturnValue
-    public Builder add(String className, String... containerOf) {
-      mapBuilder.put(
-          className, AnnotationInfo.create(className, ImmutableList.copyOf(containerOf)));
-      return this;
-    }
-
-    public ImmutableMap<String, AnnotationInfo> build() {
-      return mapBuilder.buildOrThrow();
-    }
   }
 
   // TODO(b/35724557): share this list with other code analyzing types for immutability
   // TODO(cushon): generate this at build-time to get type-safety without added compile-time deps
+  @SuppressWarnings("UnnecessarilyFullyQualified") // intentional
   private static ImmutableMap<String, AnnotationInfo> buildImmutableClasses(
       List<String> extraKnownImmutables) {
-    return new Builder()
+    return new MapBuilder()
         .addStrings(extraKnownImmutables)
         .addClasses(Primitives.allPrimitiveTypes())
         .addClasses(Primitives.allWrapperTypes())
@@ -211,6 +154,7 @@ public final class WellKnownMutability implements ThreadSafety.KnownTypes {
         .add("com.ibm.icu.util.Currency")
         .add("com.ibm.icu.util.ULocale")
         .add(java.lang.Class.class)
+        .add(java.lang.Enum.class, "E")
         .add(java.lang.String.class)
         .add(java.lang.annotation.Annotation.class)
         .add(java.math.BigDecimal.class)
@@ -282,6 +226,7 @@ public final class WellKnownMutability implements ThreadSafety.KnownTypes {
         .add("kotlin.Unit")
         .add("kotlin.Pair", "A", "B")
         .add("kotlin.Triple", "A", "B", "C")
+        .add("kotlin.time.Duration")
         .add("org.threeten.bp.Duration")
         .add("org.threeten.bp.Instant")
         .add("org.threeten.bp.LocalDate")

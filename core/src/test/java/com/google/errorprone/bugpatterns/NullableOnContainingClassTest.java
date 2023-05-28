@@ -45,6 +45,39 @@ public final class NullableOnContainingClassTest {
   }
 
   @Test
+  public void annotationNotExclusivelyTypeUse_noFinding() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "import static java.lang.annotation.ElementType.PARAMETER;",
+            "import static java.lang.annotation.ElementType.TYPE_USE;",
+            "import java.lang.annotation.Target;",
+            "class A {",
+            "  @Target({PARAMETER, TYPE_USE})",
+            "  @interface Nullable {}",
+            "  static class B {}",
+            "  void test(@Nullable A.B x) {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void annotationParameterOnly_noFinding() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "import static java.lang.annotation.ElementType.PARAMETER;",
+            "import java.lang.annotation.Target;",
+            "class A {",
+            "  @Target(PARAMETER)",
+            "  @interface Nullable {}",
+            "  class B {}",
+            "  void test(@Nullable A.B x) {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void annotationNamedNullable_annotatingOuterClass() {
     helper
         .addSourceLines(
@@ -54,6 +87,27 @@ public final class NullableOnContainingClassTest {
             "import java.util.List;",
             "class A {",
             "  @Target(TYPE_USE)",
+            "  @interface Nullable {}",
+            "  class B {}",
+            "  // BUG: Diagnostic contains: A.@Nullable B",
+            "  void test(@Nullable A.B x) {}",
+            "  // BUG: Diagnostic contains: List< A.@Nullable B>",
+            "  void test2(List<@Nullable A.B> x) {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void annotationNamedNullable_annotatingOuterClass_canAnnotateTypeParameter() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "import static java.lang.annotation.ElementType.TYPE_PARAMETER;",
+            "import static java.lang.annotation.ElementType.TYPE_USE;",
+            "import java.lang.annotation.Target;",
+            "import java.util.List;",
+            "class A {",
+            "  @Target({TYPE_USE, TYPE_PARAMETER})",
             "  @interface Nullable {}",
             "  class B {}",
             "  // BUG: Diagnostic contains: A.@Nullable B",

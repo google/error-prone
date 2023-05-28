@@ -21,9 +21,7 @@ package com.google.errorprone.bugpatterns.inject.guice.testdata;
  */
 public class OverridesGuiceInjectableMethodPositiveCases {
 
-  /**
-   * Class with a method foo() annotated with @com.google.inject.Inject.
-   */
+  /** Class with a method foo() annotated with @com.google.inject.Inject. */
   public class TestClass1 {
     @com.google.inject.Inject
     public void foo() {}

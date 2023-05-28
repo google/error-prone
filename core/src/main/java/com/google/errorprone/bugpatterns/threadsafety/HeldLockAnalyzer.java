@@ -24,7 +24,6 @@ import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.annotations.concurrent.UnlockMethod;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression.Kind;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression.Select;
 import com.google.errorprone.matchers.Matcher;
@@ -308,9 +307,6 @@ public final class HeldLockAnalyzer {
     /** The fully-qualified name of the lock class. */
     abstract String className();
 
-    /** The method that acquires the lock. */
-    abstract String lockMethod();
-
     /** The method that releases the lock. */
     abstract String unlockMethod();
 
@@ -318,21 +314,17 @@ public final class HeldLockAnalyzer {
       return instanceMethod().onDescendantOf(className()).named(unlockMethod());
     }
 
-    public Matcher<ExpressionTree> createLockMatcher() {
-      return instanceMethod().onDescendantOf(className()).named(lockMethod());
-    }
-
-    static LockResource create(String className, String lockMethod, String unlockMethod) {
-      return new AutoValue_HeldLockAnalyzer_LockResource(className, lockMethod, unlockMethod);
+    static LockResource create(String className, String unlockMethod) {
+      return new AutoValue_HeldLockAnalyzer_LockResource(className, unlockMethod);
     }
   }
 
   /** The set of supported lock classes. */
   private static final ImmutableList<LockResource> LOCK_RESOURCES =
       ImmutableList.of(
-          LockResource.create("java.util.concurrent.locks.Lock", "lock", "unlock"),
-          LockResource.create("com.google.common.util.concurrent.Monitor", "enter", "leave"),
-          LockResource.create("java.util.concurrent.Semaphore", "acquire", "release"));
+          LockResource.create("java.util.concurrent.locks.Lock", "unlock"),
+          LockResource.create("com.google.common.util.concurrent.Monitor", "leave"),
+          LockResource.create("java.util.concurrent.Semaphore", "release"));
 
   private static class LockOperationFinder extends TreeScanner<Void, Void> {
 
@@ -373,7 +365,6 @@ public final class HeldLockAnalyzer {
     @Override
     public Void visitMethodInvocation(MethodInvocationTree tree, Void unused) {
       handleReleasedLocks(tree);
-      handleUnlockAnnotatedMethods(tree);
       return null;
     }
 
@@ -406,19 +397,6 @@ public final class HeldLockAnalyzer {
         }
       }
     }
-
-    /** Checks {@link UnlockMethod}-annotated methods. */
-    private void handleUnlockAnnotatedMethods(MethodInvocationTree tree) {
-      UnlockMethod annotation = ASTHelpers.getAnnotation(tree, UnlockMethod.class);
-      if (annotation == null) {
-        return;
-      }
-      for (String lockString : annotation.value()) {
-        GuardedByBinder.bindString(lockString, GuardedBySymbolResolver.from(tree, state), flags)
-            .flatMap(guard -> ExpectedLockCalculator.from((JCExpression) tree, guard, state, flags))
-            .ifPresent(locks::add);
-      }
-    }
   }
 
   /**
@@ -441,28 +419,6 @@ public final class HeldLockAnalyzer {
     }
 
     private ReleasedLockFinder() {}
-  }
-
-  /**
-   * Find the locks that are acquired in the given tree. (e.g. the body of a @LockMethod-annotated
-   * method.)
-   */
-  static final class AcquiredLockFinder {
-
-    /** Matcher for methods that acquire lock resources. */
-    private static final Matcher<ExpressionTree> LOCK_MATCHER =
-        Matchers.<ExpressionTree>anyOf(unlockMatchers());
-
-    private static Iterable<Matcher<ExpressionTree>> unlockMatchers() {
-      return Iterables.transform(LOCK_RESOURCES, LockResource::createLockMatcher);
-    }
-
-    static Collection<GuardedByExpression> find(
-        Tree tree, VisitorState state, GuardedByFlags flags) {
-      return LockOperationFinder.find(tree, state, LOCK_MATCHER, flags);
-    }
-
-    private AcquiredLockFinder() {}
   }
 
   /**

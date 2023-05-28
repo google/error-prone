@@ -17,7 +17,9 @@ package com.google.errorprone.bugpatterns.testdata;
 
 import java.io.IOException;
 
-/** @author yulissa@google.com (Yulissa Arroyo-Paredes) */
+/**
+ * @author yulissa@google.com (Yulissa Arroyo-Paredes)
+ */
 public class ThrowsUncheckedExceptionPositiveCases {
   // BUG: Diagnostic contains: 'public void doSomething() {'
   public void doSomething() throws IllegalArgumentException {

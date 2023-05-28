@@ -76,6 +76,21 @@ class BanSerializableReadPositiveCases implements Serializable {
     self.readObject(deserializer);
   }
 
+  /**
+   * The checker has a special allowlist that allows classes to define methods called readExternal.
+   * Java accepts these as an override to the default serialization behaviour. While we want to
+   * allow such methods to be defined, we don't want to allow these methods to be called.
+   */
+  @SuppressWarnings("BanSerializableRead")
+  public static final void directCall2() throws IOException {
+    PipedInputStream in = new PipedInputStream();
+    ObjectInputStream deserializer = new ObjectInputStream(in);
+
+    BanSerializableReadNegativeCases neg = new BanSerializableReadNegativeCases();
+    // BUG: Diagnostic contains: BanSerializableRead
+    neg.readExternal(deserializer);
+  }
+
   public void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException {
     ois.defaultReadObject();
   }

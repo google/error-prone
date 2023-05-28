@@ -16,7 +16,9 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
-/** @author adgar@google.com (Mike Edgar) */
+/**
+ * @author adgar@google.com (Mike Edgar)
+ */
 public class ArrayToStringConcatenationNegativeCases {
   public void notArray() {
     Object a = new Object();

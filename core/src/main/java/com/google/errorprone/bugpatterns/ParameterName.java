@@ -70,7 +70,7 @@ public class ParameterName extends BugChecker
   private final ImmutableList<String> exemptPackages;
 
   @Inject
-  public ParameterName(ErrorProneFlags errorProneFlags) {
+  ParameterName(ErrorProneFlags errorProneFlags) {
     this.exemptPackages =
         errorProneFlags
             .getList("ParameterName:exemptPackagePrefixes")

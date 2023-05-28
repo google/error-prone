@@ -25,12 +25,16 @@ import com.google.auto.value.AutoValue;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableListMultimap;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
+import com.google.common.collect.Sets.SetView;
 import com.google.common.collect.Streams;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
+import com.google.errorprone.annotations.Immutable;
+import com.google.errorprone.annotations.ThreadSafe;
 import com.google.errorprone.bugpatterns.CanBeStaticAnalyzer;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
@@ -53,11 +57,11 @@ import com.sun.tools.javac.util.Name;
 import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
+import java.lang.reflect.TypeVariable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -85,6 +89,17 @@ public final class ThreadSafety {
 
   public static Builder builder() {
     return new Builder();
+  }
+
+  public static ThreadSafety.Builder threadSafeBuilder(
+      WellKnownThreadSafety wellKnownThreadSafety) {
+    ThreadSafety.Builder builder =
+        ThreadSafety.builder()
+            .setPurpose(Purpose.FOR_THREAD_SAFE_CHECKER)
+            .knownTypes(wellKnownThreadSafety)
+            .markerAnnotations(ImmutableSet.of(ThreadSafe.class.getName()))
+            .acceptedAnnotations(ImmutableSet.of(Immutable.class.getName()));
+    return builder;
   }
 
   /**
@@ -281,10 +296,64 @@ public final class ThreadSafety {
     /**
      * Types that are known to be safe even if they're not annotated with an expected annotation.
      */
-    Map<String, AnnotationInfo> getKnownSafeClasses();
+    ImmutableMap<String, AnnotationInfo> getKnownSafeClasses();
 
     /** Types that are known to be unsafe and don't need testing. */
-    Set<String> getKnownUnsafeClasses();
+    ImmutableSet<String> getKnownUnsafeClasses();
+
+    /** Helper for building maps of classes to {@link AnnotationInfo}. */
+    final class MapBuilder {
+      final ImmutableMap.Builder<String, AnnotationInfo> mapBuilder = ImmutableMap.builder();
+
+      @CanIgnoreReturnValue
+      public MapBuilder addClasses(Set<Class<?>> clazzs) {
+        clazzs.forEach(this::add);
+        return this;
+      }
+
+      @CanIgnoreReturnValue
+      public MapBuilder addStrings(List<String> classNames) {
+        classNames.forEach(this::add);
+        return this;
+      }
+
+      @CanIgnoreReturnValue
+      public MapBuilder addAll(ImmutableMap<String, AnnotationInfo> map) {
+        mapBuilder.putAll(map);
+        return this;
+      }
+
+      @CanIgnoreReturnValue
+      public MapBuilder add(Class<?> clazz, String... containerOf) {
+        ImmutableSet<String> containerTyParams = ImmutableSet.copyOf(containerOf);
+        HashSet<String> actualTyParams = new HashSet<>();
+        for (TypeVariable<?> x : clazz.getTypeParameters()) {
+          actualTyParams.add(x.getName());
+        }
+        SetView<String> difference = Sets.difference(containerTyParams, actualTyParams);
+        if (!difference.isEmpty()) {
+          throw new AssertionError(
+              String.format(
+                  "For %s, please update the type parameter(s) from %s to %s",
+                  clazz, difference, actualTyParams));
+        }
+        mapBuilder.put(
+            clazz.getName(),
+            AnnotationInfo.create(clazz.getName(), ImmutableList.copyOf(containerOf)));
+        return this;
+      }
+
+      @CanIgnoreReturnValue
+      public MapBuilder add(String className, String... containerOf) {
+        mapBuilder.put(
+            className, AnnotationInfo.create(className, ImmutableList.copyOf(containerOf)));
+        return this;
+      }
+
+      public ImmutableMap<String, AnnotationInfo> build() {
+        return mapBuilder.buildKeepingLast();
+      }
+    }
   }
 
   /**
@@ -360,6 +429,11 @@ public final class ThreadSafety {
                   getPrettyName(type.tsym), typaram));
         }
         Type tyarg = type.getTypeArguments().get(i);
+        // Don't check whether wildcard types' erasure is safe. Wildcards can only be used where
+        // the type isn't being instantiated, and we can rely on instantiations all being checked.
+        if (immutableTypeParameter && tyarg instanceof WildcardType) {
+          continue;
+        }
         if (suppressAnnotation != null
             && tyarg.getAnnotationMirrors().stream()
                 .anyMatch(
@@ -565,13 +639,22 @@ public final class ThreadSafety {
   }
 
   /**
-   * Returns true if the given type parameter's declaration is annotated with {@link
-   * #typeParameterAnnotation} indicated it will only ever be instantiated with thread-safe types.
+   * Returns whether the given type parameter's declaration is annotated with {@link
+   * #typeParameterAnnotation} indicating it will only ever be instantiated with thread-safe types.
    */
   public boolean hasThreadSafeTypeParameterAnnotation(TypeVariableSymbol symbol) {
-    return typeParameterAnnotation != null
-        && symbol.getAnnotationMirrors().stream()
-            .anyMatch(t -> typeParameterAnnotation.contains(t.type.tsym.flatName().toString()));
+    return symbol.getAnnotationMirrors().stream()
+        .anyMatch(t -> typeParameterAnnotation.contains(t.type.tsym.flatName().toString()));
+  }
+
+  /**
+   * Returns whether the given type parameter's declaration is annotated with {@link
+   * #containerOfAnnotation} indicating its type-safety determines the type-safety of the outer
+   * class.
+   */
+  public boolean hasThreadSafeElementAnnotation(TypeVariableSymbol symbol) {
+    return symbol.getAnnotationMirrors().stream()
+        .anyMatch(t -> containerOfAnnotation.contains(t.type.tsym.flatName().toString()));
   }
 
   /**

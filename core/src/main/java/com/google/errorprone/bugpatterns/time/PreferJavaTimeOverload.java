@@ -128,7 +128,7 @@ public final class PreferJavaTimeOverload extends BugChecker
   private final boolean hasJava8LibSupport;
 
   @Inject
-  public PreferJavaTimeOverload(ErrorProneFlags flags) {
+  PreferJavaTimeOverload(ErrorProneFlags flags) {
     this.hasJava8LibSupport = flags.getBoolean("Android:Java8Libs").orElse(false);
   }
 

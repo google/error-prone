@@ -415,7 +415,7 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
   private final Matcher<ExpressionTree> matcher;
 
   @Inject
-  public ReturnValueIgnored(ErrorProneFlags flags, ConstantExpressions constantExpressions) {
+  ReturnValueIgnored(ErrorProneFlags flags, ConstantExpressions constantExpressions) {
     super(constantExpressions);
     this.matcher = createMatcher(flags);
   }

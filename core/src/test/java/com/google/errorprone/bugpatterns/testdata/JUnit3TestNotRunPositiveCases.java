@@ -18,7 +18,9 @@ package com.google.errorprone.bugpatterns.testdata;
 
 import junit.framework.TestCase;
 
-/** @author rburny@google.com (Radoslaw Burny) */
+/**
+ * @author rburny@google.com (Radoslaw Burny)
+ */
 public class JUnit3TestNotRunPositiveCases extends TestCase {
   // BUG: Diagnostic contains: JUnit3TestNotRun
   public static void tesNameStatic() {}

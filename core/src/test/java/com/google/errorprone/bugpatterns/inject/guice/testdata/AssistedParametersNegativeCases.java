@@ -23,9 +23,7 @@ import javax.inject.Inject;
  */
 public class AssistedParametersNegativeCases {
 
-  /**
-   * Class has constructor with two @Assisted parameters of different types.
-   */
+  /** Class has constructor with two @Assisted parameters of different types. */
   public class TestClass1 {
     @Inject
     public TestClass1(@Assisted int x, @Assisted String y, long z) {}

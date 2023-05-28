@@ -46,7 +46,7 @@ public class EqualsMissingNullable extends BugChecker implements MethodTreeMatch
   private final boolean beingConservative;
 
   @Inject
-  public EqualsMissingNullable(ErrorProneFlags flags) {
+  EqualsMissingNullable(ErrorProneFlags flags) {
     this.beingConservative = nullnessChecksShouldBeConservative(flags);
   }
 

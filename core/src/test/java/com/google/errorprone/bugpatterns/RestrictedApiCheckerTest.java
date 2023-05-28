@@ -245,8 +245,7 @@ public class RestrictedApiCheckerTest {
             "    m.accept(m::restrictedMethod);",
             "  }",
             "}")
-        .expectResult(Result.ERROR)
-        .setArgs("-XepOpt:RestrictedApiChecker:EmitWarningsAsErrors=true")
+        .expectResult(Result.OK)
         .doTest();
   }
 

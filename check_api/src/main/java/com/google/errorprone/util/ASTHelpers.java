@@ -43,6 +43,7 @@ import com.google.common.collect.SetMultimap;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Streams;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.annotations.InlineMe;
 import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
 import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnalysis;
 import com.google.errorprone.matchers.JUnitMatchers;
@@ -856,7 +857,14 @@ public class ASTHelpers {
    * Check for the presence of an annotation, considering annotation inheritance.
    *
    * @return true if the symbol is annotated with given type.
+   * @deprecated prefer {@link #hasAnnotation(Symbol, String, VisitorState)} to avoid needing a
+   *     runtime dependency on the annotation class, and to prevent issues if there is skew between
+   *     the definition of the annotation on the runtime and compile-time classpaths
    */
+  @InlineMe(
+      replacement = "ASTHelpers.hasAnnotation(sym, annotationClass.getName(), state)",
+      imports = {"com.google.errorprone.util.ASTHelpers"})
+  @Deprecated
   public static boolean hasAnnotation(
       Symbol sym, Class<? extends Annotation> annotationClass, VisitorState state) {
     return hasAnnotation(sym, annotationClass.getName(), state);
@@ -878,7 +886,14 @@ public class ASTHelpers {
    * Check for the presence of an annotation, considering annotation inheritance.
    *
    * @return true if the tree is annotated with given type.
+   * @deprecated prefer {@link #hasAnnotation(Symbol, String, VisitorState)} to avoid needing a
+   *     runtime dependency on the annotation class, and to prevent issues if there is skew between
+   *     the definition of the annotation on the runtime and compile-time classpaths
    */
+  @InlineMe(
+      replacement = "ASTHelpers.hasAnnotation(tree, annotationClass.getName(), state)",
+      imports = {"com.google.errorprone.util.ASTHelpers"})
+  @Deprecated
   public static boolean hasAnnotation(
       Tree tree, Class<? extends Annotation> annotationClass, VisitorState state) {
     return hasAnnotation(tree, annotationClass.getName(), state);
@@ -1126,9 +1141,17 @@ public class ASTHelpers {
     return constructors;
   }
 
+  /**
+   * A wrapper for {@link Symbol#getEnclosedElements} to avoid binary compatibility issues for
+   * covariant overrides in subtypes of {@link Symbol}.
+   */
+  public static List<Symbol> getEnclosedElements(Symbol symbol) {
+    return symbol.getEnclosedElements();
+  }
+
   /** Returns the list of all constructors defined in the class. */
   public static ImmutableList<MethodSymbol> getConstructors(ClassSymbol classSymbol) {
-    return classSymbol.getEnclosedElements().stream()
+    return getEnclosedElements(classSymbol).stream()
         .filter(Symbol::isConstructor)
         .map(e -> (MethodSymbol) e)
         .collect(toImmutableList());
@@ -2532,9 +2555,12 @@ public class ASTHelpers {
   }
 
   public static EnumSet<Flags.Flag> asFlagSet(long flags) {
-    flags &= ~(Flags.ANONCONSTR_BASED | Flags.POTENTIALLY_AMBIGUOUS);
+    flags &= ~(Flags.ANONCONSTR_BASED | POTENTIALLY_AMBIGUOUS);
     return Flags.asFlagSet(flags);
   }
+
+  // Removed in JDK 21 by JDK-8026369
+  public static final long POTENTIALLY_AMBIGUOUS = 1L << 48;
 
   /** Returns true if the given source code contains comments. */
   public static boolean stringContainsComments(CharSequence source, Context context) {

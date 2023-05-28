@@ -19,7 +19,9 @@ package com.google.errorprone.bugpatterns.testdata;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-/** @author scottjohnson@google.com (Scott Johnsson) */
+/**
+ * @author scottjohnson@google.com (Scott Johnsson)
+ */
 @NonRuntimeAnnotationPositiveCases.NotSpecified
 @NonRuntimeAnnotationPositiveCases.NonRuntime
 public class NonRuntimeAnnotationPositiveCases {

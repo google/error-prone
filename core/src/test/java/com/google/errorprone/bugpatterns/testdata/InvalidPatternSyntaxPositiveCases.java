@@ -18,7 +18,9 @@ package com.google.errorprone.bugpatterns.testdata;
 
 import java.util.regex.Pattern;
 
-/** @author mdempsky@google.com (Matthew Dempsky) */
+/**
+ * @author mdempsky@google.com (Matthew Dempsky)
+ */
 public class InvalidPatternSyntaxPositiveCases {
   public static final String INVALID = "*";
 

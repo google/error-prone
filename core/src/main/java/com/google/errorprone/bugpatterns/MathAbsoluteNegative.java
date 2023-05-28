@@ -35,7 +35,7 @@ import com.sun.source.tree.MethodInvocationTree;
  */
 @BugPattern(
     summary =
-        "Math.abs does not always give a positive result. Please consider other "
+        "Math.abs does not always give a non-negative result. Please consider other "
             + "methods for positive numbers.",
     severity = WARNING,
     altNames = "MathAbsoluteRandom")

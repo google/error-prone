@@ -167,6 +167,13 @@ public class ErrorProneOptionsTest {
   }
 
   @Test
+  public void recognizesCompilingPubliclyVisibleCode() {
+    ErrorProneOptions options =
+        ErrorProneOptions.processArgs(new String[] {"-XepCompilingPubliclyVisibleCode"});
+    assertThat(options.isPubliclyVisibleTarget()).isTrue();
+  }
+
+  @Test
   public void recognizesDisableAllWarnings() {
     ErrorProneOptions options =
         ErrorProneOptions.processArgs(new String[] {"-XepDisableAllWarnings"});

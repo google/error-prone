@@ -56,7 +56,7 @@ public class UnsynchronizedOverridesSynchronized extends BugChecker implements M
   private final ConstantExpressions constantExpressions;
 
   @Inject
-  public UnsynchronizedOverridesSynchronized(ConstantExpressions constantExpressions) {
+  UnsynchronizedOverridesSynchronized(ConstantExpressions constantExpressions) {
     this.constantExpressions = constantExpressions;
   }
 

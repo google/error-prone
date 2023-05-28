@@ -345,8 +345,12 @@ public class BugCheckerRefactoringTestHelper {
       return Iterators.getOnlyElement(types).sym.getQualifiedName().toString();
     }
 
-    // Fallback: if no class is declared, then assume we're looking at a `package-info.java`.
-    return tree.getPackage().packge.package_info.toString();
+    // Fallback: if no class is declared, then assume we're looking at a `package-info.java`..
+    if (tree.getPackage() != null) {
+      return tree.getPackage().packge.package_info.toString();
+    }
+    // ..or a `module-info.java`.
+    return tree.getModuleDecl().sym.getQualifiedName().toString();
   }
 
   /** To assert the proper {@code .addInput().addOutput()} chain. */

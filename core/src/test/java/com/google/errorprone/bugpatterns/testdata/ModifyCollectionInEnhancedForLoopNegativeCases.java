@@ -22,7 +22,9 @@ import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-/** @author anishvisaria98@gmail.com (Anish Visaria) */
+/**
+ * @author anishvisaria98@gmail.com (Anish Visaria)
+ */
 public class ModifyCollectionInEnhancedForLoopNegativeCases {
 
   public static void testBasic(ArrayList<Integer> arr, HashSet<Integer> set) {

@@ -22,7 +22,9 @@ import static org.junit.Assert.fail;
 import junit.framework.TestCase;
 import org.junit.Assert;
 
-/** @author adamwos@google.com (Adam Wos) */
+/**
+ * @author adamwos@google.com (Adam Wos)
+ */
 public class TryFailThrowableNegativeCases {
 
   public static void withoutFail() {

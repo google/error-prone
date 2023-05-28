@@ -137,7 +137,7 @@ public class AlwaysThrows extends BugChecker implements MethodInvocationTreeMatc
   private final ConstantExpressions constantExpressions;
 
   @Inject
-  public AlwaysThrows(ConstantExpressions constantExpressions) {
+  AlwaysThrows(ConstantExpressions constantExpressions) {
     this.constantExpressions = constantExpressions;
   }
 

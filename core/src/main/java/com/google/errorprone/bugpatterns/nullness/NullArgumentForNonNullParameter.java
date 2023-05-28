@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns.nullness;
 
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.Streams.forEachPair;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.VisitorState.memoize;
@@ -28,6 +29,7 @@ import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.enclosingPackage;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
+import static java.util.Arrays.stream;
 import static javax.lang.model.type.TypeKind.TYPEVAR;
 
 import com.google.common.collect.ImmutableSet;
@@ -68,13 +70,20 @@ public final class NullArgumentForNonNullParameter extends BugChecker
       memoize(state -> state.getName("com.google.common.collect.Immutable"));
   private static final Supplier<Name> GUAVA_GRAPH_IMMUTABLE_PREFIX =
       memoize(state -> state.getName("com.google.common.graph.Immutable"));
-  private static final Supplier<Name> COM_GOOGLE_COMMON_PREFIX_NAME =
-      memoize(state -> state.getName("com.google.common."));
+  private static final Supplier<ImmutableSet<Name>> NULL_MARKED_PACKAGES_WE_TRUST =
+      memoize(
+          state ->
+              stream(
+                      new String[] {
+                        "com.google.common",
+                      })
+                  .map(state::getName)
+                  .collect(toImmutableSet()));
 
   private final boolean beingConservative;
 
   @Inject
-  public NullArgumentForNonNullParameter(ErrorProneFlags flags) {
+  NullArgumentForNonNullParameter(ErrorProneFlags flags) {
     this.beingConservative = nullnessChecksShouldBeConservative(flags);
   }
 
@@ -239,23 +248,35 @@ public final class NullArgumentForNonNullParameter extends BugChecker
       if (hasAnnotation(sym, "com.google.protobuf.Internal$ProtoNonnullApi", state)) {
         return true;
       }
-      /*
-       * Similar to @NonNull (discussed above), the "default to non-null" annotation @NullMarked is
-       * sometimes used on code that hasn't had @Nullable annotations added to it where necessary.
-       * To avoid false positives, our conservative mode trusts @NullMarked only when it appears in
-       * com.google.common.
-       *
-       * TODO(cpovirk): Expand the list of packages that our conservative mode trusts @NullMarked
-       * on. We might be able to identify some packages that would be safe to trust today. For
-       * others, we could use ParameterMissingNullable, which adds missing annotations in situations
-       * similar to the ones identified by this check. (But note that ParameterMissingNullable
-       * doesn't help with calls that cross file boundaries.)
-       */
       if (hasAnnotation(sym, "org.jspecify.nullness.NullMarked", state)
-          && (!beingConservative
-              || enclosingPackage(sym)
-                  .fullname
-                  .startsWith(COM_GOOGLE_COMMON_PREFIX_NAME.get(state)))) {
+          && weTrustNullMarkedOn(sym, state)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private boolean weTrustNullMarkedOn(Symbol sym, VisitorState state) {
+    /*
+     * Similar to @NonNull (discussed above), the "default to non-null" annotation @NullMarked is
+     * sometimes used on code that hasn't had @Nullable annotations added to it where necessary. To
+     * avoid false positives, our conservative mode trusts @NullMarked only when it appears in a
+     * package from a list that we maintain in this checker.
+     *
+     * TODO(cpovirk): Expand the list of packages that our conservative mode trusts @NullMarked on.
+     * We might be able to identify some packages that would be safe to trust today. For others, we
+     * could use ParameterMissingNullable, which adds missing annotations in situations similar to
+     * the ones identified by this check. (But note that ParameterMissingNullable doesn't help with
+     * calls that cross file boundaries.)
+     */
+
+    if (!beingConservative) {
+      return true;
+    }
+
+    ImmutableSet<Name> packagesWeTrust = NULL_MARKED_PACKAGES_WE_TRUST.get(state);
+    for (sym = enclosingPackage(sym); sym != null; sym = sym.owner) {
+      if (packagesWeTrust.contains(sym.getQualifiedName())) {
         return true;
       }
     }

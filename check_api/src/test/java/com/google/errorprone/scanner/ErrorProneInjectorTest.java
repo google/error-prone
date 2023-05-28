@@ -19,7 +19,8 @@ package com.google.errorprone.scanner;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertThrows;
 
-import com.google.inject.ProvisionException;
+import com.google.errorprone.ErrorProneFlags;
+import com.google.errorprone.scanner.ErrorProneInjector.ProvisionException;
 import javax.inject.Inject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -59,6 +60,16 @@ public final class ErrorProneInjectorTest {
   }
 
   @Test
+  public void errorProneFlags_favouredOverZeroArg() {
+    var injector =
+        ErrorProneInjector.create().addBinding(ErrorProneFlags.class, ErrorProneFlags.empty());
+
+    var obj = injector.getInstance(ErrorProneFlagsAndZeroArgsConstructor.class);
+
+    assertThat(obj.x).isEqualTo(1);
+  }
+
+  @Test
   public void pathInError() {
     var injector = ErrorProneInjector.create();
 
@@ -87,6 +98,18 @@ public final class ErrorProneInjectorTest {
 
     InjectConstructorAndZeroArgConstructor() {
       this.x = 0;
+    }
+  }
+
+  public static final class ErrorProneFlagsAndZeroArgsConstructor {
+    final int x;
+
+    ErrorProneFlagsAndZeroArgsConstructor() {
+      this.x = 0;
+    }
+
+    ErrorProneFlagsAndZeroArgsConstructor(ErrorProneFlags flags) {
+      this.x = 1;
     }
   }
 }

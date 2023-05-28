@@ -21,7 +21,9 @@ import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import com.google.inject.servlet.RequestScoped;
 
-/** @author eaftan@google.com (Eddie Aftandilian) */
+/**
+ * @author eaftan@google.com (Eddie Aftandilian)
+ */
 public class AssistedInjectScopingPositiveCases {
 
   // BUG: Diagnostic contains: remove this line

@@ -49,7 +49,7 @@ import com.sun.tools.javac.tree.TreeInfo;
     summary =
         "Java assert is used in testing code. For testing purposes, prefer using Truth-based"
             + " assertions.",
-    severity = SeverityLevel.WARNING)
+    severity = SeverityLevel.ERROR)
 public class UseCorrectAssertInTests extends BugChecker implements MethodTreeMatcher {
   private static final String STATIC_ASSERT_THAT_IMPORT =
       "static com.google.common.truth.Truth.assertThat";

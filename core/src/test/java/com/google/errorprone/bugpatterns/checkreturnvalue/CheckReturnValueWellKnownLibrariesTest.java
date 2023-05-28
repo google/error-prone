@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns.checkreturnvalue;
 import com.google.auto.value.processor.AutoBuilderProcessor;
 import com.google.auto.value.processor.AutoValueProcessor;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.bugpatterns.CheckReturnValue;
@@ -273,6 +274,7 @@ public class CheckReturnValueWellKnownLibrariesTest {
             "    assertThat(b).isTrue();",
             "  }",
             "}")
+        .setFixChooser(Iterables::getOnlyElement)
         .doTest();
   }
 

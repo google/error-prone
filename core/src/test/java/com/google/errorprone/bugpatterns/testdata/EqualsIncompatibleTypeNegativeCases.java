@@ -21,7 +21,9 @@ import com.google.common.collect.ImmutableSet;
 import java.util.List;
 import java.util.Set;
 
-/** @author avenet@google.com (Arnaud J. Venet) */
+/**
+ * @author avenet@google.com (Arnaud J. Venet)
+ */
 public class EqualsIncompatibleTypeNegativeCases {
   class A {
     public boolean equals(Object o) {

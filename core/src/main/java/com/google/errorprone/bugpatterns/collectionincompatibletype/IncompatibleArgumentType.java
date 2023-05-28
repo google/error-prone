@@ -61,7 +61,7 @@ public class IncompatibleArgumentType extends BugChecker implements MethodInvoca
   private final TypeCompatibilityUtils typeCompatibilityUtils;
 
   @Inject
-  public IncompatibleArgumentType(ErrorProneFlags flags) {
+  IncompatibleArgumentType(ErrorProneFlags flags) {
     this.typeCompatibilityUtils = TypeCompatibilityUtils.fromFlags(flags);
   }
 

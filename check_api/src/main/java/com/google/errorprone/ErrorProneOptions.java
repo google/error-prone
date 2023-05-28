@@ -62,6 +62,7 @@ public class ErrorProneOptions {
   private static final String DISABLE_WARNINGS_IN_GENERATED_CODE_FLAG =
       "-XepDisableWarningsInGeneratedCode";
   private static final String COMPILING_TEST_ONLY_CODE = "-XepCompilingTestOnlyCode";
+  private static final String COMPILING_PUBLICLY_VISIBLE_CODE = "-XepCompilingPubliclyVisibleCode";
 
   /** see {@link javax.tools.OptionChecker#isSupportedOption(String)} */
   public static int isSupportedOption(String option) {
@@ -78,6 +79,7 @@ public class ErrorProneOptions {
             || option.equals(DISABLE_ALL_CHECKS)
             || option.equals(IGNORE_SUPPRESSION_ANNOTATIONS)
             || option.equals(COMPILING_TEST_ONLY_CODE)
+            || option.equals(COMPILING_PUBLICLY_VISIBLE_CODE)
             || option.equals(DISABLE_ALL_WARNINGS);
     return isSupported ? 0 : -1;
   }
@@ -164,6 +166,7 @@ public class ErrorProneOptions {
   private final boolean enableAllChecksAsWarnings;
   private final boolean disableAllChecks;
   private final boolean isTestOnlyTarget;
+  private final boolean isPubliclyVisibleTarget;
   private final ErrorProneFlags flags;
   private final PatchingOptions patchingOptions;
   private final Pattern excludedPattern;
@@ -180,6 +183,7 @@ public class ErrorProneOptions {
       boolean enableAllChecksAsWarnings,
       boolean disableAllChecks,
       boolean isTestOnlyTarget,
+      boolean isPubliclyVisibleTarget,
       ErrorProneFlags flags,
       PatchingOptions patchingOptions,
       Pattern excludedPattern,
@@ -194,6 +198,7 @@ public class ErrorProneOptions {
     this.enableAllChecksAsWarnings = enableAllChecksAsWarnings;
     this.disableAllChecks = disableAllChecks;
     this.isTestOnlyTarget = isTestOnlyTarget;
+    this.isPubliclyVisibleTarget = isPubliclyVisibleTarget;
     this.flags = flags;
     this.patchingOptions = patchingOptions;
     this.excludedPattern = excludedPattern;
@@ -229,6 +234,10 @@ public class ErrorProneOptions {
     return isTestOnlyTarget;
   }
 
+  public boolean isPubliclyVisibleTarget() {
+    return isPubliclyVisibleTarget;
+  }
+
   public boolean isIgnoreSuppressionAnnotations() {
     return ignoreSuppressionAnnotations;
   }
@@ -257,6 +266,7 @@ public class ErrorProneOptions {
     private boolean enableAllChecksAsWarnings = false;
     private boolean disableAllChecks = false;
     private boolean isTestOnlyTarget = false;
+    private boolean isPubliclyVisibleTarget = false;
     private boolean ignoreSuppressionAnnotations = false;
     private boolean ignoreLargeCodeGenerators = true;
     private final Map<String, Severity> severityMap = new LinkedHashMap<>();
@@ -338,6 +348,10 @@ public class ErrorProneOptions {
       this.isTestOnlyTarget = isTestOnlyTarget;
     }
 
+    public void setPubliclyVisibleTarget(boolean isPubliclyVisibleTarget) {
+      this.isPubliclyVisibleTarget = isPubliclyVisibleTarget;
+    }
+
     public PatchingOptions.Builder patchingOptionsBuilder() {
       return patchingOptionsBuilder;
     }
@@ -353,6 +367,7 @@ public class ErrorProneOptions {
           enableAllChecksAsWarnings,
           disableAllChecks,
           isTestOnlyTarget,
+          isPubliclyVisibleTarget,
           flagsBuilder.build(),
           patchingOptionsBuilder.build(),
           excludedPattern,
@@ -413,6 +428,9 @@ public class ErrorProneOptions {
           break;
         case COMPILING_TEST_ONLY_CODE:
           builder.setTestOnlyTarget(true);
+          break;
+        case COMPILING_PUBLICLY_VISIBLE_CODE:
+          builder.setPubliclyVisibleTarget(true);
           break;
         case DISABLE_ALL_WARNINGS:
           builder.setDisableAllWarnings(true);

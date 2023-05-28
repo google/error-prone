@@ -50,6 +50,7 @@ import com.google.errorprone.bugpatterns.BadComparable;
 import com.google.errorprone.bugpatterns.BadImport;
 import com.google.errorprone.bugpatterns.BadInstanceof;
 import com.google.errorprone.bugpatterns.BadShiftAmount;
+import com.google.errorprone.bugpatterns.BanClassLoader;
 import com.google.errorprone.bugpatterns.BanJNDI;
 import com.google.errorprone.bugpatterns.BanSerializableRead;
 import com.google.errorprone.bugpatterns.BareDotMetacharacter;
@@ -111,6 +112,7 @@ import com.google.errorprone.bugpatterns.DoNotCallSuggester;
 import com.google.errorprone.bugpatterns.DoNotClaimAnnotations;
 import com.google.errorprone.bugpatterns.DoNotMockAutoValue;
 import com.google.errorprone.bugpatterns.DoNotMockChecker;
+import com.google.errorprone.bugpatterns.DoNotUseRuleChain;
 import com.google.errorprone.bugpatterns.DoubleBraceInitialization;
 import com.google.errorprone.bugpatterns.DuplicateMapKeys;
 import com.google.errorprone.bugpatterns.EmptyCatch;
@@ -206,6 +208,7 @@ import com.google.errorprone.bugpatterns.LiteEnumValueOf;
 import com.google.errorprone.bugpatterns.LiteProtoToString;
 import com.google.errorprone.bugpatterns.LockNotBeforeTry;
 import com.google.errorprone.bugpatterns.LockOnBoxedPrimitive;
+import com.google.errorprone.bugpatterns.LockOnNonEnclosingClassLiteral;
 import com.google.errorprone.bugpatterns.LogicalAssignment;
 import com.google.errorprone.bugpatterns.LongDoubleConversion;
 import com.google.errorprone.bugpatterns.LongFloatConversion;
@@ -506,6 +509,7 @@ import com.google.errorprone.bugpatterns.javadoc.InvalidThrows;
 import com.google.errorprone.bugpatterns.javadoc.InvalidThrowsLink;
 import com.google.errorprone.bugpatterns.javadoc.MalformedInlineTag;
 import com.google.errorprone.bugpatterns.javadoc.MissingSummary;
+import com.google.errorprone.bugpatterns.javadoc.NotJavadoc;
 import com.google.errorprone.bugpatterns.javadoc.ReturnFromVoid;
 import com.google.errorprone.bugpatterns.javadoc.UnescapedEntity;
 import com.google.errorprone.bugpatterns.javadoc.UnrecognisedJavadocTag;
@@ -782,6 +786,7 @@ public class BuiltInCheckerSuppliers {
           UnsafeWildcard.class,
           UnusedAnonymousClass.class,
           UnusedCollectionModifiedInPlace.class,
+          UseCorrectAssertInTests.class,
           Validator.class,
           VarTypeName.class,
           WrongOneof.class,
@@ -920,6 +925,7 @@ public class BuiltInCheckerSuppliers {
           LiteEnumValueOf.class,
           LiteProtoToString.class,
           LockNotBeforeTry.class,
+          LockOnNonEnclosingClassLiteral.class,
           LogicalAssignment.class,
           LongDoubleConversion.class,
           LongFloatConversion.class,
@@ -948,6 +954,7 @@ public class BuiltInCheckerSuppliers {
           NonAtomicVolatileUpdate.class,
           NonCanonicalType.class,
           NonOverridingEquals.class,
+          NotJavadoc.class,
           NullOptional.class,
           NullableConstructor.class,
           NullablePrimitive.class,
@@ -1027,7 +1034,6 @@ public class BuiltInCheckerSuppliers {
           UnusedTypeParameter.class,
           UnusedVariable.class,
           UseBinds.class,
-          UseCorrectAssertInTests.class,
           VariableNameSameAsType.class,
           WaitNotInLoop.class,
           WakelockReleasedDangerously.class,
@@ -1047,6 +1053,7 @@ public class BuiltInCheckerSuppliers {
           AssistedInjectAndInjectOnConstructors.class,
           AutoFactoryAtInject.class,
           AvoidObjectArrays.class,
+          BanClassLoader.class,
           BanSerializableRead.class,
           BinderIdentityRestoredDangerously.class, // TODO: enable this by default.
           BindingToUnqualifiedCommonType.class,
@@ -1065,6 +1072,7 @@ public class BuiltInCheckerSuppliers {
           DeduplicateConstants.class,
           DepAnn.class,
           DifferentNameButSame.class,
+          DoNotUseRuleChain.class,
           EmptyIfStatement.class,
           EqualsBrokenForNull.class,
           EqualsMissingNullable.class,
