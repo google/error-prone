@@ -1,6 +1,8 @@
 ---
 title: DoNotUseRuleChain
-summary: Do not use RuleChain
+summary: Prefer using `@Rule` with an explicit order over declaring a `RuleChain`.
+  RuleChain was the only way to declare ordered rules before JUnit 4.13. Newer versions
+  should use the cleaner individual `@Rule(order = n)` option.
 layout: bugpattern
 tags: Refactoring
 severity: WARNING
