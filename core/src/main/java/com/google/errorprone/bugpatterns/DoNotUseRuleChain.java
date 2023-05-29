@@ -49,7 +49,10 @@ import javax.lang.model.element.ElementKind;
  */
 @BugPattern(
     tags = {StandardTags.REFACTORING},
-    summary = "Do not use RuleChain",
+    summary =
+        "Prefer using `@Rule` with an explicit order over declaring a `RuleChain`. "
+            + "RuleChain was the only way to declare ordered rules before JUnit 4.13. Newer "
+            + "versions should use the cleaner individual `@Rule(order = n)` option.",
     severity = WARNING)
 public class DoNotUseRuleChain extends BugChecker implements VariableTreeMatcher {
 
@@ -126,6 +129,7 @@ public class DoNotUseRuleChain extends BugChecker implements VariableTreeMatcher
       replacement += extractRuleFromExpression(expression, i, tree, state);
     }
 
+    fix.removeImport(JUNIT_RULE_CHAIN_IMPORT_PATH);
     fix.replace(tree, replacement);
     return fix.build();
   }
