@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns.javadoc;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
-import static com.google.errorprone.BugPattern.StandardTags.STYLE;
 import static com.google.errorprone.bugpatterns.javadoc.Utils.getDiagnosticPosition;
 import static com.google.errorprone.fixes.SuggestedFix.replace;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
@@ -52,7 +51,6 @@ import javax.lang.model.element.ElementKind;
 @BugPattern(
     summary = "Avoid using /** for comments which aren't actually Javadoc.",
     severity = WARNING,
-    tags = STYLE,
     documentSuppression = false)
 public final class NotJavadoc extends BugChecker implements CompilationUnitTreeMatcher {
   @Override
