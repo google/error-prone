@@ -2,7 +2,7 @@
 title: NotJavadoc
 summary: Avoid using /** for comments which aren't actually Javadoc.
 layout: bugpattern
-tags: Style
+tags: ''
 severity: WARNING
 ---
 
