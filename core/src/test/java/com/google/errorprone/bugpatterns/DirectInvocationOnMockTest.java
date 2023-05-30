@@ -159,7 +159,7 @@ public final class DirectInvocationOnMockTest {
 
   @Test
   public void directInvocationOnMock_withinGiven_noFinding() {
-    assumeTrue(isBDDMockitoAvailable());
+    assumeTrue(isBddMockitoAvailable());
     helper
         .addSourceLines(
             "Test.java",
@@ -194,7 +194,7 @@ public final class DirectInvocationOnMockTest {
 
   @Test
   public void directInvocationOnMock_setUpToCallRealMethodUsingGiven_noFinding() {
-    assumeTrue(isBDDMockitoAvailable());
+    assumeTrue(isBddMockitoAvailable());
     helper
         .addSourceLines(
             "Test.java",
@@ -229,7 +229,7 @@ public final class DirectInvocationOnMockTest {
 
   @Test
   public void directInvocationOnMock_setUpWithDoCallRealMethodUsingGiven_noFinding() {
-    assumeTrue(isBDDMockitoAvailable());
+    assumeTrue(isBddMockitoAvailable());
     helper
         .addSourceLines(
             "Test.java",
@@ -267,7 +267,7 @@ public final class DirectInvocationOnMockTest {
 
   @Test
   public void directInvocationOnMock_withinCustomGiven_noFinding() {
-    assumeTrue(isBDDMockitoAvailable());
+    assumeTrue(isBddMockitoAvailable());
     helper
         .addSourceLines(
             "Test.java",
@@ -305,7 +305,7 @@ public final class DirectInvocationOnMockTest {
 
   @Test
   public void directInvocationOnMock_withinGivenWithCast_noFinding() {
-    assumeTrue(isBDDMockitoAvailable());
+    assumeTrue(isBddMockitoAvailable());
     helper
         .addSourceLines(
             "Test.java",
@@ -336,7 +336,7 @@ public final class DirectInvocationOnMockTest {
         .doTest();
   }
 
-  private static boolean isBDDMockitoAvailable() {
+  private static boolean isBddMockitoAvailable() {
     try {
       Class.forName("org.mockito.BDDMockito");
       return true;
