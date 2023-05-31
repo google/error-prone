@@ -374,4 +374,43 @@ public class MemberNameTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void initialismsInMethodNames_partOfCamelCase() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "interface Test {",
+            "  // BUG: Diagnostic contains: getRpcPolicy",
+            "  int getRPCPolicy();",
+            "  // BUG: Diagnostic contains: getRpc",
+            "  int getRPC();",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void initialismsInVariableNames_partOfCamelCase() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  // BUG: Diagnostic contains: getRpcPolicy",
+            "  int getRPCPolicy;",
+            "  // BUG: Diagnostic contains: getRpc",
+            "  int getRPC;",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void initialismsInVariableNames_magicNamesExempt() {
+    helper
+        .addSourceLines(
+            "Test.java", //
+            "class Test {",
+            "  private static final long serialVersionUID = 0;",
+            "}")
+        .doTest();
+  }
 }
