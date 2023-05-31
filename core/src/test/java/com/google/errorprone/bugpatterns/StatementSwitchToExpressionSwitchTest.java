@@ -1070,6 +1070,83 @@ public final class StatementSwitchToExpressionSwitchTest {
         .doTest();
   }
 
+  @Test
+  public void switchByEnum_exampleInDocumentation_error() {
+    // This code appears as an example in the documentation (added surrounding class)
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  enum Suit {HEARTS, CLUBS, SPADES, DIAMONDS};",
+            "  public Test() {}",
+            "  private void foo(Suit suit) {",
+            "    // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]",
+            "    switch(suit) {",
+            "      case HEARTS:",
+            "        System.out.println(\"Red hearts\");",
+            "        break;",
+            "      case DIAMONDS:",
+            "        System.out.println(\"Red diamonds\");",
+            "        break;",
+            "      case SPADES:",
+            "        // Fall through",
+            "      case CLUBS:",
+            "        bar();",
+            "        System.out.println(\"Black suit\");",
+            "    }",
+            "  }",
+            "  private void bar() {}",
+            "}")
+        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
+        .doTest();
+
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  enum Suit {HEARTS, CLUBS, SPADES, DIAMONDS};",
+            "  public Test() {}",
+            "  private void foo(Suit suit) {",
+            "    switch(suit) {",
+            "      case HEARTS:",
+            "        System.out.println(\"Red hearts\");",
+            "        break;",
+            "      case DIAMONDS:",
+            "        System.out.println(\"Red diamonds\");",
+            "        break;",
+            "      case SPADES:",
+            "        // Fall through",
+            "      case CLUBS:",
+            "        bar();",
+            "        System.out.println(\"Black suit\");",
+            "    }",
+            "  }",
+            "  private void bar() {}",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  enum Suit {HEARTS, CLUBS, SPADES, DIAMONDS};",
+            "  public Test() {}",
+            "  private void foo(Suit suit) {",
+            "    switch(suit) {",
+            "      case HEARTS ->",
+            "        System.out.println(\"Red hearts\");",
+            "      case DIAMONDS ->",
+            "        System.out.println(\"Red diamonds\");",
+            "      case SPADES, CLUBS -> {",
+            "        bar();",
+            "        System.out.println(\"Black suit\");",
+            "       }",
+            "    }",
+            "  }",
+            "  private void bar() {}",
+            "}")
+        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
+        .doTest();
+  }
+
   /**********************************
    *
    * Return switch test cases

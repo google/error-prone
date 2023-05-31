@@ -34,12 +34,14 @@ enum Suit {HEARTS, CLUBS, SPADES, DIAMONDS};
 private void foo(Suit suit) {
   switch(suit) {
     case HEARTS:
-System.out.println("Red hearts");
+      System.out.println("Red hearts");
+      break;
     case DIAMONDS:
-System.out.println("Red diamonds");
+      System.out.println("Red diamonds");
+      break;
     case SPADES:
       // Fall through
-    case DIAMONDS:
+    case CLUBS:
       bar();
       System.out.println("Black suit");
     }
@@ -55,7 +57,7 @@ private void foo(Suit suit) {
   switch(suit) {
     case HEARTS -> System.out.println("Red hearts");
     case DIAMONDS -> System.out.println("Red diamonds");
-    case CLUBS, SPADES -> {
+    case SPADES, CLUBS -> {
       bar();
       System.out.println("Black suit");
     }
