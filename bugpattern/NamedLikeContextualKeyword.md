@@ -1,7 +1,7 @@
 ---
-title: UnqualifiedYield
-summary: In recent versions of Java, 'yield' is a contextual keyword, and calling
-  an unqualified method with that name is an error.
+title: NamedLikeContextualKeyword
+summary: Avoid naming of classes and methods that is similar to contextual keywords.  When
+  invoking such a method, qualify it.
 layout: bugpattern
 tags: ''
 severity: WARNING
@@ -14,6 +14,35 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 
 
 ## The problem
+The problem we're trying to prevent is clashes between the names of
+classes/methods and contextual keywords. Clashes can occur when (1.) naming a
+class/method, or (2.) when invoking.
+
+# When naming
+
+Change problematic names for classes and methods.
+
+```java
+class Foo {
+  ...
+  // This can clash with the contextual keyboard "yield"
+  void yield() {
+    ...
+  }
+}
+```
+
+Another example:
+
+```java
+// This can clash with Java modules (JPMS)
+static class module {
+  ...
+}
+```
+
+# When invoking
+
 In recent versions of Java, `yield` is a restricted identifier:
 
 ```java
@@ -66,4 +95,4 @@ class T {
 ```
 
 ## Suppression
-Suppress false positives by adding the suppression annotation `@SuppressWarnings("UnqualifiedYield")` to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("NamedLikeContextualKeyword")` to the enclosing element.

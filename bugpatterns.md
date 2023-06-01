@@ -994,6 +994,9 @@ Avoid having multiple unary operators acting on the same variable in a method ca
 __[MutablePublicArray](bugpattern/MutablePublicArray)__<br>
 Non-empty arrays are mutable, so this &#96;public static final&#96; array is not a constant and can be modified by clients of this class.  Prefer an ImmutableList, or provide an accessor method that returns a defensive copy.
 
+__[NamedLikeContextualKeyword](bugpattern/NamedLikeContextualKeyword)__<br>
+Avoid naming of classes and methods that is similar to contextual keywords.  When invoking such a method, qualify it.
+
 __[NarrowCalculation](bugpattern/NarrowCalculation)__<br>
 This calculation may lose precision compared to its target type.
 
@@ -1218,9 +1221,6 @@ This method reference is unnecessary, and can be replaced with the variable itse
 
 __[UnnecessaryParentheses](bugpattern/UnnecessaryParentheses)__<br>
 These grouping parentheses are unnecessary; it is unlikely the code will be misinterpreted without them
-
-__[UnqualifiedYield](bugpattern/UnqualifiedYield)__<br>
-In recent versions of Java, &#39;yield&#39; is a contextual keyword, and calling an unqualified method with that name is an error.
 
 __[UnrecognisedJavadocTag](bugpattern/UnrecognisedJavadocTag)__<br>
 This Javadoc tag wasn&#39;t recognised by the parser. Is it malformed somehow, perhaps with mismatched braces?
