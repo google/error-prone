@@ -1,3 +1,32 @@
+The problem we're trying to prevent is clashes between the names of
+classes/methods and contextual keywords. Clashes can occur when (1.) naming a
+class/method, or (2.) when invoking.
+
+# When naming
+
+Change problematic names for classes and methods.
+
+```java
+class Foo {
+  ...
+  // This can clash with the contextual keyboard "yield"
+  void yield() {
+    ...
+  }
+}
+```
+
+Another example:
+
+```java
+// This can clash with Java modules (JPMS)
+static class module {
+  ...
+}
+```
+
+# When invoking
+
 In recent versions of Java, `yield` is a restricted identifier:
 
 ```java

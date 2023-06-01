@@ -247,6 +247,7 @@ import com.google.errorprone.bugpatterns.MultipleUnaryOperatorsInMethodCall;
 import com.google.errorprone.bugpatterns.MustBeClosedChecker;
 import com.google.errorprone.bugpatterns.MutablePublicArray;
 import com.google.errorprone.bugpatterns.NCopiesOfChar;
+import com.google.errorprone.bugpatterns.NamedLikeContextualKeyword;
 import com.google.errorprone.bugpatterns.NarrowCalculation;
 import com.google.errorprone.bugpatterns.NarrowingCompoundAssignment;
 import com.google.errorprone.bugpatterns.NegativeCharLiteral;
@@ -393,7 +394,6 @@ import com.google.errorprone.bugpatterns.UnnecessarySetDefault;
 import com.google.errorprone.bugpatterns.UnnecessaryStaticImport;
 import com.google.errorprone.bugpatterns.UnnecessaryTestMethodPrefix;
 import com.google.errorprone.bugpatterns.UnnecessaryTypeArgument;
-import com.google.errorprone.bugpatterns.UnqualifiedYield;
 import com.google.errorprone.bugpatterns.UnsafeFinalization;
 import com.google.errorprone.bugpatterns.UnsafeLocaleUsage;
 import com.google.errorprone.bugpatterns.UnsafeReflectiveConstructionCast;
@@ -946,6 +946,7 @@ public class BuiltInCheckerSuppliers {
           MultipleParallelOrSequentialCalls.class,
           MultipleUnaryOperatorsInMethodCall.class,
           MutablePublicArray.class,
+          NamedLikeContextualKeyword.class,
           NarrowCalculation.class,
           NarrowingCompoundAssignment.class,
           NegativeCharLiteral.class,
@@ -1023,7 +1024,6 @@ public class BuiltInCheckerSuppliers {
           UnnecessaryMethodInvocationMatcher.class,
           UnnecessaryMethodReference.class,
           UnnecessaryParentheses.class,
-          UnqualifiedYield.class,
           UnrecognisedJavadocTag.class,
           UnsafeFinalization.class,
           UnsafeReflectiveConstructionCast.class,
