@@ -585,6 +585,22 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
+  public void emptyToNull() {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "import static com.google.common.base.Strings.emptyToNull;",
+            "class LiteralNullReturnTest {",
+            "  public String getMessage(String s) {",
+            "    // BUG: Diagnostic contains: @Nullable",
+            "    return emptyToNull(s);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void implementsMap() {
     createCompilationTestHelper()
         .addSourceLines(
