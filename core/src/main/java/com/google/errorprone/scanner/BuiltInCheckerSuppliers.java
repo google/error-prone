@@ -254,6 +254,7 @@ import com.google.errorprone.bugpatterns.NegativeCharLiteral;
 import com.google.errorprone.bugpatterns.NestedInstanceOfConditions;
 import com.google.errorprone.bugpatterns.NewFileSystem;
 import com.google.errorprone.bugpatterns.NoAllocationChecker;
+import com.google.errorprone.bugpatterns.NonApiType;
 import com.google.errorprone.bugpatterns.NonAtomicVolatileUpdate;
 import com.google.errorprone.bugpatterns.NonCanonicalStaticImport;
 import com.google.errorprone.bugpatterns.NonCanonicalStaticMemberImport;
@@ -952,6 +953,7 @@ public class BuiltInCheckerSuppliers {
           NegativeCharLiteral.class,
           NestedInstanceOfConditions.class,
           NewFileSystem.class,
+          NonApiType.class,
           NonAtomicVolatileUpdate.class,
           NonCanonicalType.class,
           NonOverridingEquals.class,

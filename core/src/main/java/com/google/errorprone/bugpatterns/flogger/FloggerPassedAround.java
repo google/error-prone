@@ -41,6 +41,7 @@ import com.sun.tools.javac.code.Type;
     linkType = LinkType.CUSTOM,
     link = "https://google.github.io/flogger/best_practice#one-per-class",
     severity = WARNING)
+// TODO: b/282765027 - consider deleting this in favor of NonApiType
 public final class FloggerPassedAround extends BugChecker implements MethodTreeMatcher {
   private static final TypePredicate LOGGER_TYPE =
       anyOf(
