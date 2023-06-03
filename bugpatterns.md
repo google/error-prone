@@ -1012,6 +1012,9 @@ Nested instanceOf conditions of disjoint types create blocks of code that never 
 __[NewFileSystem](bugpattern/NewFileSystem)__<br>
 Starting in JDK 13, this call is ambiguous with FileSystem.newFileSystem(Path,Map)
 
+__[NonApiType](bugpattern/NonApiType)__<br>
+Certain types should not be passed across public API boundaries.
+
 __[NonAtomicVolatileUpdate](bugpattern/NonAtomicVolatileUpdate)__<br>
 This update of a volatile variable is non-atomic
 
