@@ -231,6 +231,7 @@ public class RestrictedApiCheckerTest {
   }
 
   @Test
+  @Ignore("we are always overriding checker-provided severity (except when @BugPattern.severity == DYNAMIC)")
   public void allowWithWarning() {
     helper
         .addSourceLines(

@@ -149,7 +149,7 @@ public class Description {
         rawMessage,
         linkUrl,
         fixes,
-        Optional.of(this.severity.orElse(severity)), metadata);
+        Optional.ofNullable(severity), metadata);
   }
 
   /**
