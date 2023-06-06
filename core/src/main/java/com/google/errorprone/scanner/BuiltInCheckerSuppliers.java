@@ -515,6 +515,7 @@ import com.google.errorprone.bugpatterns.javadoc.ReturnFromVoid;
 import com.google.errorprone.bugpatterns.javadoc.UnescapedEntity;
 import com.google.errorprone.bugpatterns.javadoc.UnrecognisedJavadocTag;
 import com.google.errorprone.bugpatterns.javadoc.UrlInSee;
+import com.google.errorprone.bugpatterns.nullness.DereferenceWithNullBranch;
 import com.google.errorprone.bugpatterns.nullness.EqualsBrokenForNull;
 import com.google.errorprone.bugpatterns.nullness.EqualsMissingNullable;
 import com.google.errorprone.bugpatterns.nullness.ExtendsObject;
@@ -651,6 +652,7 @@ public class BuiltInCheckerSuppliers {
           DangerousLiteralNullChecker.class,
           DeadException.class,
           DeadThread.class,
+          DereferenceWithNullBranch.class,
           DiscardedPostfixExpression.class,
           DoNotCallChecker.class,
           DoNotMockChecker.class,
