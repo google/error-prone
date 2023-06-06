@@ -2603,6 +2603,77 @@ public final class StatementSwitchToExpressionSwitchTest {
   }
 
   @Test
+  public void switchByEnum_compoundAssignmentExampleInDocumentation_error() {
+    // This code appears as an example in the documentation (added surrounding class)
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  enum Suit {HEARTS, CLUBS, SPADES, DIAMONDS};",
+            "  int score = 0;",
+            "  public Test() {}",
+            "  private void updateScore(Suit suit) {",
+            "    // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]",
+            "    switch(suit) {",
+            "      case HEARTS:",
+            "        // Fall thru",
+            "      case DIAMONDS:",
+            "        score += -1;",
+            "        break;",
+            "      case SPADES:",
+            "        score += 2;",
+            "        break;",
+            "      case CLUBS:",
+            "        score += 3;",
+            "        break;",
+            "      }",
+            "  }",
+            "}")
+        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion")
+        .doTest();
+
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  enum Suit {HEARTS, CLUBS, SPADES, DIAMONDS};",
+            "  int score = 0;",
+            "  public Test() {}",
+            "  private void updateScore(Suit suit) {",
+            "    switch(suit) {",
+            "      case HEARTS:",
+            "        // Fall thru",
+            "      case DIAMONDS:",
+            "        score += -1;",
+            "        break;",
+            "      case SPADES:",
+            "        score += 2;",
+            "        break;",
+            "      case CLUBS:",
+            "        score += 3;",
+            "      }",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  enum Suit {HEARTS, CLUBS, SPADES, DIAMONDS};",
+            "  int score = 0;",
+            "  public Test() {}",
+            "  private void updateScore(Suit suit) {",
+            "    score += switch(suit) {",
+            "      case HEARTS, DIAMONDS -> -1;",
+            "      case SPADES -> 2;",
+            "      case CLUBS -> 3;",
+            "    };",
+            "  }",
+            "}")
+        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion")
+        .doTest();
+  }
+
+  @Test
   public void switchByEnum_exhaustiveAssignmentSwitchCaseList_error() {
     // Statement switch has cases with multiple values
     assumeTrue(RuntimeVersion.isAtLeast14());
