@@ -116,6 +116,9 @@ Exception created but not thrown
 __[DeadThread](bugpattern/DeadThread)__<br>
 Thread created but not started
 
+__[DereferenceWithNullBranch](bugpattern/DereferenceWithNullBranch)__<br>
+Dereference of an expression with a null branch
+
 __[DiscardedPostfixExpression](bugpattern/DiscardedPostfixExpression)__<br>
 The result of this unary operation on a lambda parameter is discarded
 
