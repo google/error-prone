@@ -48,13 +48,13 @@ public final class NonApiType extends BugChecker implements MethodTreeMatcher {
   // TODO(kak): consider creating an annotation (e.g., `@NonApiType` or `@NotForPublicApi`) that
   // users could apply to their own types.
 
-  private static String floggerLink = "";
-  private static String typeGeneralityLink = "";
-  private static String interfacesNotImpls = "";
-  private static String primitiveArraysLink = "";
-  private static String protoTimeSerializationLink = "";
-  private static String optionalAsParamLink = "";
-  private static String preferJdkOptionalLink = "";
+  private static final String FLOGGER_LINK = "";
+  private static final String TYPE_GENERALITY_LINK = "";
+  private static final String INTERFACES_NOT_IMPLS_LINK = "";
+  private static final String PRIMITIVE_ARRAYS_LINK = "";
+  private static final String PROTO_TIME_SERIALIZATION_LINK = "";
+  private static final String OPTIONAL_AS_PARAM_LINK = "";
+  private static final String PREFER_JDK_OPTIONAL_LINK = "";
 
   private static final ImmutableSet<TypeToCheck> NON_API_TYPES =
       ImmutableSet.of(
@@ -63,102 +63,102 @@ public final class NonApiType extends BugChecker implements MethodTreeMatcher {
               anyOf(
                   (t, s) -> isSameType(t, s.getTypes().makeArrayType(s.getSymtab().intType), s),
                   (t, s) -> isSameType(t, makeArrayType("java.lang.Integer", s), s)),
-              "Prefer an ImmutableIntArray instead. " + primitiveArraysLink,
+              "Prefer an ImmutableIntArray instead. " + PRIMITIVE_ARRAYS_LINK,
               ApiElementType.ANY),
           withPublicVisibility(
               anyOf(
                   (t, s) -> isSameType(t, s.getTypes().makeArrayType(s.getSymtab().doubleType), s),
                   (t, s) -> isSameType(t, makeArrayType("java.lang.Double", s), s)),
-              "Prefer an ImmutableDoubleArray instead. " + primitiveArraysLink,
+              "Prefer an ImmutableDoubleArray instead. " + PRIMITIVE_ARRAYS_LINK,
               ApiElementType.ANY),
           withPublicVisibility(
               anyOf(
                   (t, s) -> isSameType(t, s.getTypes().makeArrayType(s.getSymtab().longType), s),
                   (t, s) -> isSameType(t, makeArrayType("java.lang.Long", s), s)),
-              "Prefer an ImmutableLongArray instead. " + primitiveArraysLink,
+              "Prefer an ImmutableLongArray instead. " + PRIMITIVE_ARRAYS_LINK,
               ApiElementType.ANY),
 
           // Optionals
           withPublicVisibility(
               isExactType("java.util.Optional"),
-              "Avoid Optional parameters. " + optionalAsParamLink,
+              "Avoid Optional parameters. " + OPTIONAL_AS_PARAM_LINK,
               ApiElementType.PARAMETER),
           withPublicVisibility(
               isExactType("com.google.common.base.Optional"),
-              "Prefer a java.util.Optional instead. " + preferJdkOptionalLink,
+              "Prefer a java.util.Optional instead. " + PREFER_JDK_OPTIONAL_LINK,
               ApiElementType.ANY),
 
           // ImmutableFoo as params
           withPublicVisibility(
               isExactType("com.google.common.collect.ImmutableCollection"),
               "Consider accepting a java.util.Collection or Iterable instead. "
-                  + typeGeneralityLink,
+                  + TYPE_GENERALITY_LINK,
               ApiElementType.PARAMETER),
           withPublicVisibility(
               isExactType("com.google.common.collect.ImmutableList"),
-              "Consider accepting a java.util.List or Iterable instead. " + typeGeneralityLink,
+              "Consider accepting a java.util.List or Iterable instead. " + TYPE_GENERALITY_LINK,
               ApiElementType.PARAMETER),
           withPublicVisibility(
               isExactType("com.google.common.collect.ImmutableSet"),
-              "Consider accepting a java.util.Set or Iterable instead. " + typeGeneralityLink,
+              "Consider accepting a java.util.Set or Iterable instead. " + TYPE_GENERALITY_LINK,
               ApiElementType.PARAMETER),
           withPublicVisibility(
               isExactType("com.google.common.collect.ImmutableMap"),
-              "Consider accepting a java.util.Map instead. " + typeGeneralityLink,
+              "Consider accepting a java.util.Map instead. " + TYPE_GENERALITY_LINK,
               ApiElementType.PARAMETER),
 
           // collection implementation classes
           withAnyVisibility(
               anyOf(isExactType("java.util.ArrayList"), isExactType("java.util.LinkedList")),
-              "Prefer a java.util.List instead. " + interfacesNotImpls,
+              "Prefer a java.util.List instead. " + INTERFACES_NOT_IMPLS_LINK,
               ApiElementType.ANY),
           withAnyVisibility(
               anyOf(
                   isExactType("java.util.HashSet"),
                   isExactType("java.util.LinkedHashSet"),
                   isExactType("java.util.TreeSet")),
-              "Prefer a java.util.Set instead. " + interfacesNotImpls,
+              "Prefer a java.util.Set instead. " + INTERFACES_NOT_IMPLS_LINK,
               ApiElementType.ANY),
           withAnyVisibility(
               anyOf(
                   isExactType("java.util.HashMap"),
                   isExactType("java.util.LinkedHashMap"),
                   isExactType("java.util.TreeMap")),
-              "Prefer a java.util.Map instead. " + interfacesNotImpls,
+              "Prefer a java.util.Map instead. " + INTERFACES_NOT_IMPLS_LINK,
               ApiElementType.ANY),
 
           // ProtoTime
           withPublicVisibility(
               isExactType("com.google.protobuf.Duration"),
-              "Prefer a java.time.Duration instead. " + protoTimeSerializationLink,
+              "Prefer a java.time.Duration instead. " + PROTO_TIME_SERIALIZATION_LINK,
               ApiElementType.ANY),
           withPublicVisibility(
               isExactType("com.google.protobuf.Timestamp"),
-              "Prefer a java.time.Instant instead. " + protoTimeSerializationLink,
+              "Prefer a java.time.Instant instead. " + PROTO_TIME_SERIALIZATION_LINK,
               ApiElementType.ANY),
           withPublicVisibility(
               isExactType("com.google.type.Date"),
-              "Prefer a java.time.LocalDate instead. " + protoTimeSerializationLink,
+              "Prefer a java.time.LocalDate instead. " + PROTO_TIME_SERIALIZATION_LINK,
               ApiElementType.ANY),
           withPublicVisibility(
               isExactType("com.google.type.DateTime"),
-              "Prefer a java.time.LocalDateTime instead. " + protoTimeSerializationLink,
+              "Prefer a java.time.LocalDateTime instead. " + PROTO_TIME_SERIALIZATION_LINK,
               ApiElementType.ANY),
           withPublicVisibility(
               isExactType("com.google.type.DayOfWeek"),
-              "Prefer a java.time.DayOfWeek instead. " + protoTimeSerializationLink,
+              "Prefer a java.time.DayOfWeek instead. " + PROTO_TIME_SERIALIZATION_LINK,
               ApiElementType.ANY),
           withPublicVisibility(
               isExactType("com.google.type.Month"),
-              "Prefer a java.time.Month instead. " + protoTimeSerializationLink,
+              "Prefer a java.time.Month instead. " + PROTO_TIME_SERIALIZATION_LINK,
               ApiElementType.ANY),
           withPublicVisibility(
               isExactType("com.google.type.TimeOfDay"),
-              "Prefer a java.time.LocalTime instead. " + protoTimeSerializationLink,
+              "Prefer a java.time.LocalTime instead. " + PROTO_TIME_SERIALIZATION_LINK,
               ApiElementType.ANY),
           withPublicVisibility(
               isExactType("com.google.type.TimeZone"),
-              "Prefer a java.time.ZoneId instead. " + protoTimeSerializationLink,
+              "Prefer a java.time.ZoneId instead. " + PROTO_TIME_SERIALIZATION_LINK,
               ApiElementType.ANY),
           // TODO(kak): consider com.google.type.Interval -> Range<Instant>
 
@@ -170,7 +170,7 @@ public final class NonApiType extends BugChecker implements MethodTreeMatcher {
                   isDescendantOf("com.google.common.flogger.android.AndroidFluentLogger")),
               "There is no advantage to passing around a logger rather than declaring one in the"
                   + " class that needs it. "
-                  + floggerLink,
+                  + FLOGGER_LINK,
               ApiElementType.ANY));
 
   private static Type makeArrayType(String typeName, VisitorState state) {
