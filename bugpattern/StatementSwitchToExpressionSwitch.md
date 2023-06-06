@@ -150,8 +150,10 @@ private void updateScore(Suit suit) {
       // Fall thru
     case DIAMONDS:
       score += -1;
+      break;
     case SPADES:
       score += 2;
+      break;
     case CLUBS:
       score += 3;
     }
@@ -167,7 +169,7 @@ int score = 0;
 
 private void updateScore(Suit suit) {
   score += switch(suit) {
-    case HEARTS, DIAMONDS -> 1;
+    case HEARTS, DIAMONDS -> -1;
     case SPADES -> 2;
     case CLUBS -> 3;
     };
