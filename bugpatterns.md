@@ -970,6 +970,9 @@ Classes implementing valid compareTo function should implement Comparable interf
 __[MissingOverride](bugpattern/MissingOverride)__<br>
 method overrides method in supertype; expected @Override
 
+__[MissingRefasterAnnotation](bugpattern/MissingRefasterAnnotation)__<br>
+The Refaster template contains a method without any Refaster annotations
+
 __[MissingSummary](bugpattern/MissingSummary)__<br>
 A summary line is required on public/protected Javadocs.
 
