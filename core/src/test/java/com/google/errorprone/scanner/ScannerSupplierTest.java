@@ -42,12 +42,15 @@ import com.google.errorprone.FileManagers;
 import com.google.errorprone.InvalidCommandLineOptionException;
 import com.google.errorprone.bugpatterns.ArrayEquals;
 import com.google.errorprone.bugpatterns.BadShiftAmount;
+import com.google.errorprone.bugpatterns.BooleanParameter;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.ChainingConstructorIgnoresParameter;
+import com.google.errorprone.bugpatterns.ConstantField;
 import com.google.errorprone.bugpatterns.DepAnn;
 import com.google.errorprone.bugpatterns.EqualsIncompatibleType;
 import com.google.errorprone.bugpatterns.LongLiteralLowerCaseSuffix;
 import com.google.errorprone.bugpatterns.MethodCanBeStatic;
+import com.google.errorprone.bugpatterns.MissingBraces;
 import com.google.errorprone.bugpatterns.PackageLocation;
 import com.google.errorprone.bugpatterns.ReferenceEquality;
 import com.google.errorprone.bugpatterns.StaticQualifiedUsingExpression;
@@ -555,6 +558,30 @@ public class ScannerSupplierTest {
             "ChainingConstructorIgnoresParameter",
             SeverityLevel.WARNING);
     assertScanner(withOverrides).hasSeverities(expectedSeverities);
+  }
+
+  @Test
+  public void allSuggestionsAsWarnings() {
+    ScannerSupplier ss =
+        ScannerSupplier.fromBugCheckerClasses(
+            BooleanParameter.class, ConstantField.class, MissingBraces.class);
+
+    assertScanner(ss)
+        .hasEnabledChecks(BooleanParameter.class, ConstantField.class, MissingBraces.class);
+
+    ErrorProneOptions epOptions =
+        ErrorProneOptions.processArgs(ImmutableList.of("-XepAllSuggestionsAsWarnings"));
+
+    ImmutableMap<String, SeverityLevel> expectedSeverities =
+        ImmutableMap.of(
+            "BooleanParameter",
+            SeverityLevel.WARNING,
+            "ConstantField",
+            SeverityLevel.WARNING,
+            "MissingBraces",
+            SeverityLevel.WARNING);
+
+    assertScanner(ss.applyOverrides(epOptions)).hasSeverities(expectedSeverities);
   }
 
   @Test
