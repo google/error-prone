@@ -27,7 +27,9 @@ import static com.google.errorprone.util.ASTHelpers.findPathFromEnclosingNodeToT
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.streamSuperMethods;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
@@ -81,6 +83,10 @@ public final class NamedLikeContextualKeyword extends BugChecker
           "yield");
   private static final Matcher<MethodTree> DISALLOWED_METHOD_NAME_MATCHER =
       allOf(not(methodIsConstructor()), methodIsNamed("yield"));
+  private static final ImmutableList<String> AUTO_PROCESSORS =
+      ImmutableList.of(
+          "com.google.auto.value.processor.AutoValueProcessor",
+          "com.google.auto.value.processor.AutoOneOfProcessor");
 
   private final boolean enableMethodNames;
   private final boolean enableClassNames;
@@ -88,9 +94,9 @@ public final class NamedLikeContextualKeyword extends BugChecker
   @Inject
   NamedLikeContextualKeyword(ErrorProneFlags flags) {
     this.enableMethodNames =
-        flags.getBoolean("NamedLikeContextualKeyword:EnableMethodNames").orElse(false);
+        true || flags.getBoolean("NamedLikeContextualKeyword:EnableMethodNames").orElse(false);
     this.enableClassNames =
-        flags.getBoolean("NamedLikeContextualKeyword:EnableClassNames").orElse(false);
+        true || flags.getBoolean("NamedLikeContextualKeyword:EnableClassNames").orElse(false);
   }
 
   @Override
@@ -100,6 +106,12 @@ public final class NamedLikeContextualKeyword extends BugChecker
     }
 
     MethodSymbol methodSymbol = ASTHelpers.getSymbol(tree);
+
+    // Don't alert if an @Auto... class (safe since reference always qualified).
+    if (isInGeneratedAutoCode(state)) {
+      return NO_MATCH;
+    }
+
     // Don't alert if method is an override (this includes interfaces)
     if (!streamSuperMethods(methodSymbol, state.getTypes()).findAny().isPresent()
         && DISALLOWED_METHOD_NAME_MATCHER.matches(tree, state)) {
@@ -152,5 +164,9 @@ public final class NamedLikeContextualKeyword extends BugChecker
         return qualifyType(state, fix, enclosingClass) + ".this";
       }
     }
+  }
+
+  private static boolean isInGeneratedAutoCode(VisitorState state) {
+    return Iterables.any(ASTHelpers.getGeneratedBy(state), AUTO_PROCESSORS::contains);
   }
 }

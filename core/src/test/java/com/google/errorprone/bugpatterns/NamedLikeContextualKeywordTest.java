@@ -70,6 +70,46 @@ public final class NamedLikeContextualKeywordTest {
   }
 
   @Test
+  public void autoOneOfMethodName_noError() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "import javax.annotation.processing.Generated;",
+            "@Generated(\"com.google.auto.value.processor.AutoOneOfProcessor\")",
+            "class Test  {",
+            "  static Throwable foo;",
+            "  public Test() {",
+            "  }",
+            " ",
+            "  public static void yield() { ",
+            "    foo = new NullPointerException(\"uh oh\");",
+            "  }",
+            "}")
+        .setArgs(ImmutableList.of("-XepOpt:NamedLikeContextualKeyword:EnableMethodNames"))
+        .doTest();
+  }
+
+  @Test
+  public void autoValueMethodName_noError() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "import javax.annotation.processing.Generated;",
+            "@Generated(\"com.google.auto.value.processor.AutoValueProcessor\")",
+            "class Test  {",
+            "  static Throwable foo;",
+            "  public Test() {",
+            "  }",
+            " ",
+            "  public static void yield() { ",
+            "    foo = new NullPointerException(\"uh oh\");",
+            "  }",
+            "}")
+        .setArgs(ImmutableList.of("-XepOpt:NamedLikeContextualKeyword:EnableMethodNames"))
+        .doTest();
+  }
+
+  @Test
   public void className_error() {
     helper
         .addSourceLines(
