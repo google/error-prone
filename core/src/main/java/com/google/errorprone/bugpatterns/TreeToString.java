@@ -17,13 +17,13 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
+import static com.google.common.collect.Streams.stream;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -66,12 +66,12 @@ public class TreeToString extends AbstractToString {
           .named("Literal")
           .withParameters("java.lang.Object");
 
-  private final boolean transitiveEnclosingBugchecker;
-
   @Inject
-  TreeToString(ErrorProneFlags errorProneFlags) {
-    this.transitiveEnclosingBugchecker =
-        errorProneFlags.getBoolean("TreeToString:transitiveEnclosingBugchecker").orElse(true);
+  TreeToString() {}
+
+  @Override
+  protected TypePredicate typePredicate() {
+    return this::treeToStringInBugChecker;
   }
 
   private boolean treeToStringInBugChecker(Type type, VisitorState state) {
@@ -79,22 +79,8 @@ public class TreeToString extends AbstractToString {
   }
 
   private boolean enclosingBugChecker(VisitorState state) {
-    for (Tree tree : state.getPath()) {
-      if (tree instanceof ClassTree) {
-        if (IS_BUGCHECKER.matches((ClassTree) tree, state)) {
-          return true;
-        }
-        if (!transitiveEnclosingBugchecker) {
-          break;
-        }
-      }
-    }
-    return false;
-  }
-
-  @Override
-  protected TypePredicate typePredicate() {
-    return this::treeToStringInBugChecker;
+    return stream(state.getPath())
+        .anyMatch(t -> t instanceof ClassTree && IS_BUGCHECKER.matches((ClassTree) t, state));
   }
 
   @Override
