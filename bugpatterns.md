@@ -1031,7 +1031,7 @@ __[NonOverridingEquals](bugpattern/NonOverridingEquals)__<br>
 equals method doesn&#39;t override Object.equals
 
 __[NotJavadoc](bugpattern/NotJavadoc)__<br>
-Avoid using /** for comments which aren&#39;t actually Javadoc.
+Avoid using &#96;/**&#96; for comments which aren&#39;t actually Javadoc.
 
 __[NullOptional](bugpattern/NullOptional)__<br>
 Passing a literal null to an Optional parameter is almost certainly a mistake. Did you mean to provide an empty Optional?
