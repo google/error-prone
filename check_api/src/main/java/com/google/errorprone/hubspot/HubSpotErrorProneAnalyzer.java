@@ -16,6 +16,7 @@
 
 package com.google.errorprone.hubspot;
 
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.ErrorProneOptions;
 import com.google.errorprone.hubspot.module.CompilationEndAwareErrorPoneAnalyzer;
 import com.google.errorprone.scanner.ScannerSupplier;
@@ -28,27 +29,26 @@ import com.sun.tools.javac.util.Context;
 @Trusted
 public class HubSpotErrorProneAnalyzer implements TaskListener {
   private final Context context;
-  private final ErrorProneOptions options;
-
   private final CompilationEndAwareErrorPoneAnalyzer compilationEndAwareErrorPoneAnalyzer;
 
 
   public static HubSpotErrorProneAnalyzer create(ScannerSupplier scannerSupplier, ErrorProneOptions options, Context context) {
+    context.put(ErrorProneOptions.class, options);
+    context.put(ErrorProneFlags.class, options.getFlags());
+
     // Note: This analyzer doesn't make any attempt to handle refaster refactorings. We fall back on
     // standard analyzer impl if refaster is requested
     CompilationEndAwareErrorPoneAnalyzer compilationEndAwareErrorPoneAnalyzer = CompilationEndAwareErrorPoneAnalyzer
         .create(scannerSupplier, options, context);
 
-    return new HubSpotErrorProneAnalyzer(context, options, compilationEndAwareErrorPoneAnalyzer);
+    return new HubSpotErrorProneAnalyzer(context, compilationEndAwareErrorPoneAnalyzer);
   }
 
   private HubSpotErrorProneAnalyzer(
       Context context,
-      ErrorProneOptions options,
       CompilationEndAwareErrorPoneAnalyzer compilationEndAwareErrorPoneAnalyzer
   ) {
     this.context = context;
-    this.options = options;
     this.compilationEndAwareErrorPoneAnalyzer = compilationEndAwareErrorPoneAnalyzer;
   }
 
