@@ -49,7 +49,7 @@ import javax.lang.model.element.ElementKind;
 
 /** A BugPattern; see the summary. */
 @BugPattern(
-    summary = "Avoid using /** for comments which aren't actually Javadoc.",
+    summary = "Avoid using `/**` for comments which aren't actually Javadoc.",
     severity = WARNING,
     documentSuppression = false)
 public final class NotJavadoc extends BugChecker implements CompilationUnitTreeMatcher {
