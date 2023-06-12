@@ -19,8 +19,10 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.isSameType;
 
 import com.google.auto.value.AutoValue;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.MultimapBuilder;
 import com.google.errorprone.BugPattern;
@@ -28,7 +30,6 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
@@ -107,6 +108,9 @@ public class InlineTrivialConstant extends BugChecker implements CompilationUnit
     return NO_MATCH;
   }
 
+  private static final ImmutableSet<String> EMPTY_STRING_VARIABLE_NAMES =
+      ImmutableSet.of("EMPTY", "EMPTY_STR", "EMPTY_STRING");
+
   private static Optional<String> isTrivialConstant(
       VariableTree tree, VarSymbol sym, VisitorState state) {
     if (!(sym.getKind().equals(ElementKind.FIELD)
@@ -115,10 +119,10 @@ public class InlineTrivialConstant extends BugChecker implements CompilationUnit
         && sym.getModifiers().contains(Modifier.FINAL))) {
       return Optional.empty();
     }
-    if (!tree.getName().contentEquals("EMPTY_STRING")) {
+    if (!EMPTY_STRING_VARIABLE_NAMES.contains(tree.getName().toString())) {
       return Optional.empty();
     }
-    if (!ASTHelpers.isSameType(sym.asType(), state.getSymtab().stringType, state)) {
+    if (!isSameType(sym.asType(), state.getSymtab().stringType, state)) {
       return Optional.empty();
     }
     ExpressionTree initializer = tree.getInitializer();
