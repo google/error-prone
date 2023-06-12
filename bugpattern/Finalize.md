@@ -38,5 +38,3 @@ element:
 @SuppressWarnings("Finalize") // TODO(user): remove overrides of finalize
 ```
 
-## Suppression
-Suppress false positives by adding the suppression annotation `@SuppressWarnings("Finalize")` to the enclosing element.
