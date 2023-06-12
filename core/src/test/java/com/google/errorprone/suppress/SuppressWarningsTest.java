@@ -51,7 +51,7 @@ public class SuppressWarningsTest {
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     ImmutableList<JavaFileObject> sources =
         forResources(getClass(), "SuppressWarningsNegativeCases.java");
     assertThat(compiler.compile(sources), is(Result.OK));

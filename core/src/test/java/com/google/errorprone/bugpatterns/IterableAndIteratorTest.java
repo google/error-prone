@@ -29,12 +29,12 @@ public class IterableAndIteratorTest {
       CompilationTestHelper.newInstance(IterableAndIterator.class, getClass());
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper.addSourceFile("IterableAndIteratorPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("IterableAndIteratorNegativeCases.java").doTest();
   }
 }

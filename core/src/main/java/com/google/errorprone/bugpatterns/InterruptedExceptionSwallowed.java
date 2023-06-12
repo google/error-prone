@@ -20,14 +20,7 @@ import static com.google.common.collect.Iterables.getLast;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.fixes.SuggestedFixes.qualifyType;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
-import static com.google.errorprone.matchers.Matchers.allOf;
-import static com.google.errorprone.matchers.Matchers.hasModifier;
-import static com.google.errorprone.matchers.Matchers.isSameType;
-import static com.google.errorprone.matchers.Matchers.methodHasParameters;
-import static com.google.errorprone.matchers.Matchers.methodHasVisibility;
-import static com.google.errorprone.matchers.Matchers.methodIsNamed;
-import static com.google.errorprone.matchers.Matchers.methodReturns;
-import static com.google.errorprone.matchers.MethodVisibility.Visibility.PUBLIC;
+import static com.google.errorprone.matchers.Matchers.MAIN_METHOD;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
@@ -36,7 +29,6 @@ import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static java.lang.Boolean.TRUE;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toCollection;
-import static javax.lang.model.element.Modifier.STATIC;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -46,8 +38,6 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.TryTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.suppliers.Suppliers;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.ASTHelpers.ScanThrownTypes;
 import com.sun.source.tree.BlockTree;
@@ -87,14 +77,6 @@ public final class InterruptedExceptionSwallowed extends BugChecker
       "This method can throw InterruptedException but declares that it throws Exception/Throwable."
           + " This makes it difficult for callers to recognize the need to handle interruption"
           + " properly.";
-
-  private static final Matcher<MethodTree> MAIN_METHOD =
-      allOf(
-          methodHasVisibility(PUBLIC),
-          hasModifier(STATIC),
-          methodReturns(Suppliers.VOID_TYPE),
-          methodIsNamed("main"),
-          methodHasParameters(isSameType(Suppliers.arrayOf(Suppliers.STRING_TYPE))));
 
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {

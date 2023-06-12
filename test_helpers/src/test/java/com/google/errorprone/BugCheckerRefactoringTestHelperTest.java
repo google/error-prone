@@ -49,7 +49,7 @@ public class BugCheckerRefactoringTestHelperTest {
   }
 
   @Test
-  public void testNoMatch() {
+  public void noMatch() {
     helper
         .addInputLines("in/Test.java", "public class Test {}")
         .addOutputLines("out/Test.java", "public class Test {}")
@@ -57,7 +57,7 @@ public class BugCheckerRefactoringTestHelperTest {
   }
 
   @Test
-  public void testReplace() {
+  public void replace() {
     helper
         .addInputLines(
             "in/Test.java",
@@ -79,7 +79,7 @@ public class BugCheckerRefactoringTestHelperTest {
   }
 
   @Test
-  public void testReplaceFail() {
+  public void replaceFail() {
     assertThrows(
         AssertionError.class,
         () ->
@@ -104,7 +104,7 @@ public class BugCheckerRefactoringTestHelperTest {
   }
 
   @Test
-  public void testReplaceTextMatch() {
+  public void replaceTextMatch() {
     helper
         .addInputLines(
             "in/Test.java",
@@ -126,7 +126,7 @@ public class BugCheckerRefactoringTestHelperTest {
   }
 
   @Test
-  public void testIgnoreWhitespace() {
+  public void ignoreWhitespace() {
     helper
         .addInputLines(
             "in/Test.java",
@@ -145,7 +145,7 @@ public class BugCheckerRefactoringTestHelperTest {
   }
 
   @Test
-  public void testReplaceTextMatchFail() {
+  public void replaceTextMatchFail() {
     assertThrows(
         AssertionError.class,
         () ->
@@ -184,7 +184,7 @@ public class BugCheckerRefactoringTestHelperTest {
   }
 
   @Test
-  public void testAnnotationFullName() {
+  public void annotationFullName() {
     BugCheckerRefactoringTestHelper.newInstance(RemoveAnnotationRefactoring.class, getClass())
         .addInputLines("bar/Foo.java", "package bar;", "public @interface Foo {", "};")
         .expectUnchanged()

@@ -31,12 +31,12 @@ public class AssistedInjectScopingTest {
       CompilationTestHelper.newInstance(AssistedInjectScoping.class, getClass());
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper.addSourceFile("AssistedInjectScopingPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("AssistedInjectScopingNegativeCases.java").doTest();
   }
 }

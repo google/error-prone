@@ -34,7 +34,7 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class NullnessTest {
   @Test
-  public void testLeastUpperBound() {
+  public void leastUpperBound() {
     assertThat(NULLABLE.leastUpperBound(NULLABLE)).isEqualTo(NULLABLE);
     assertThat(NULLABLE.leastUpperBound(NULL)).isEqualTo(NULLABLE);
     assertThat(NULLABLE.leastUpperBound(NONNULL)).isEqualTo(NULLABLE);
@@ -57,7 +57,7 @@ public class NullnessTest {
   }
 
   @Test
-  public void testGreatestLowerBound() {
+  public void greatestLowerBound() {
     assertThat(NULLABLE.greatestLowerBound(NULLABLE)).isEqualTo(NULLABLE);
     assertThat(NULLABLE.greatestLowerBound(NULL)).isEqualTo(NULL);
     assertThat(NULLABLE.greatestLowerBound(NONNULL)).isEqualTo(NONNULL);
@@ -80,7 +80,7 @@ public class NullnessTest {
   }
 
   @Test
-  public void testDeducedValueWhenNotEqual() {
+  public void deducedValueWhenNotEqual() {
     assertThat(NULLABLE.deducedValueWhenNotEqual()).isEqualTo(NULLABLE);
     assertThat(NULL.deducedValueWhenNotEqual()).isEqualTo(NONNULL);
     assertThat(NONNULL.deducedValueWhenNotEqual()).isEqualTo(NULLABLE);

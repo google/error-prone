@@ -139,6 +139,24 @@ public final class UnusedMethodTest {
   }
 
   @Test
+  public void exemptedByCustomAnnotation() {
+    helper
+        .addSourceLines(
+            "Foo.java", //
+            "package example;",
+            "@interface Foo {}")
+        .addSourceLines(
+            "ExemptedByCustomAnnotation.java",
+            "package example;",
+            "class ExemptedByCustomAnnotation {",
+            "  @Foo",
+            "  private void bar() {}",
+            "}")
+        .setArgs("-XepOpt:UnusedMethod:ExemptingMethodAnnotations=example.Foo")
+        .doTest();
+  }
+
+  @Test
   public void suppressions() {
     helper
         .addSourceLines(
@@ -461,6 +479,37 @@ public final class UnusedMethodTest {
             "    int value();",
             "  }",
             "  @Anno(1) int a;",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void effectivelyPrivateMethodMadeVisible() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  private class A {",
+            "    public void foo() {}",
+            "  }",
+            "  public class B extends A {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void effectivelyPrivateMethodMadeVisible_bySubclassImplementingPublicInterface() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  private static class A {",
+            "    public void a() {}",
+            "  }",
+            "  public interface B {",
+            "    public void a();",
+            "  }",
+            "  public static final class C extends A implements B {}",
             "}")
         .doTest();
   }

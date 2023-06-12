@@ -26,16 +26,16 @@ import java.lang.annotation.Target;
  * Annotation declaring that the target annotation is incompatible with any one of the provided
  * modifiers. For example, an annotation declared as:
  *
- * <pre>
- * {@literal @}IncompatibleModifiers(modifier = Modifier.PUBLIC)
- * {@literal @}interface MyAnnotation {}
+ * <pre>{@code
+ * @IncompatibleModifiers(modifier = Modifier.PUBLIC)
+ * @interface MyAnnotation {}
  * </pre>
  *
  * <p>will be considered illegal when used as:
  *
  * <pre>
- * {@literal @}MyAnnotation public void foo() {}
- * </pre>
+ * @MyAnnotation public void foo() {}
+ * }</pre>
  *
  * @author benyu@google.com (Jige Yu)
  */

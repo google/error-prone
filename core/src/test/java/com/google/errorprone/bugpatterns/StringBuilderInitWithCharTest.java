@@ -31,12 +31,12 @@ public class StringBuilderInitWithCharTest {
       CompilationTestHelper.newInstance(StringBuilderInitWithChar.class, getClass());
 
   @Test
-  public void testPositiveCases() {
+  public void positiveCases() {
     compilationHelper.addSourceFile("StringBuilderInitWithCharPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCases() {
+  public void negativeCases() {
     compilationHelper.addSourceFile("StringBuilderInitWithCharNegativeCases.java").doTest();
   }
 }

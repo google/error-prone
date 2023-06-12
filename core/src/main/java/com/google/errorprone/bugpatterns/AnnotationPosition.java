@@ -159,13 +159,21 @@ public final class AnnotationPosition extends BugChecker
         endPos = getStartPosition(methodTree.getReturnType());
       } else if (!methodTree.getParameters().isEmpty()) {
         endPos = getStartPosition(methodTree.getParameters().get(0));
+        if (endPos < annotationEnd) {
+          endPos = state.getEndPosition(methodTree);
+        }
       } else if (methodTree.getBody() != null && !methodTree.getBody().getStatements().isEmpty()) {
         endPos = getStartPosition(methodTree.getBody().getStatements().get(0));
       } else {
         endPos = state.getEndPosition(methodTree);
       }
     } else if (tree instanceof JCVariableDecl) {
-      endPos = state.getEndPosition(((JCVariableDecl) tree).getModifiers());
+      JCVariableDecl variableTree = (JCVariableDecl) tree;
+      endPos = getStartPosition(variableTree.getType());
+      if (endPos == -1) {
+        // handle 'var'
+        endPos = state.getEndPosition(variableTree.getModifiers());
+      }
     } else if (tree instanceof JCClassDecl) {
       JCClassDecl classTree = (JCClassDecl) tree;
       endPos =

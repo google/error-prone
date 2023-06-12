@@ -20,7 +20,9 @@ import static com.google.common.base.Throwables.throwIfUnchecked;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
-/** @author cpovirk@google.com (Chris Povirk) */
+/**
+ * @author cpovirk@google.com (Chris Povirk)
+ */
 public class ThrowIfUncheckedKnownCheckedTestPositiveCases {
   void simple(IOException e) {
     // BUG: Diagnostic contains: no-op

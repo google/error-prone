@@ -39,7 +39,8 @@ import java.util.List;
     severity = SUGGESTION,
     documentSuppression = false,
     suppressionAnnotations = SuppressPackageLocation.class,
-    tags = StandardTags.STYLE)
+    tags = StandardTags.STYLE,
+    altNames = "PackageName")
 public class PackageLocation extends BugChecker implements CompilationUnitTreeMatcher {
 
   private static final Splitter DOT_SPLITTER = Splitter.on('.');

@@ -24,6 +24,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.matchers.CompilerBasedAbstractTest;
 import com.google.errorprone.scanner.Scanner;
 import com.sun.source.tree.ExpressionStatementTree;
@@ -154,27 +155,27 @@ public class UnnecessaryCheckNotNullTest extends CompilerBasedAbstractTest {
   }
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper.addSourceFile("UnnecessaryCheckNotNullPositiveCase.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("UnnecessaryCheckNotNullNegativeCase.java").doTest();
   }
 
   @Test
-  public void testPrimitivePositiveCases() {
+  public void primitivePositiveCases() {
     compilationHelper.addSourceFile("UnnecessaryCheckNotNullPrimitivePositiveCases.java").doTest();
   }
 
   @Test
-  public void testPrimitiveNegativeCases() {
+  public void primitiveNegativeCases() {
     compilationHelper.addSourceFile("UnnecessaryCheckNotNullPrimitiveNegativeCases.java").doTest();
   }
 
   @Test
-  public void testGetVariableUses() {
+  public void getVariableUses() {
     writeFile("A.java", "public class A {", "  public String b;", "  void foo() {}", "}");
     writeFile(
         "B.java",
@@ -226,6 +227,7 @@ public class UnnecessaryCheckNotNullTest extends CompilerBasedAbstractTest {
     private static class Builder {
       private final ImmutableMap.Builder<String, Match> builder = ImmutableMap.builder();
 
+      @CanIgnoreReturnValue
       public Builder add(String expression, String... expected) {
         builder.put(expression, new Match(expected));
         return this;

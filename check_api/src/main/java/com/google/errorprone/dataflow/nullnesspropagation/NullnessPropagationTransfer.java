@@ -30,8 +30,6 @@ import static org.checkerframework.errorprone.javacutil.TreeUtils.elementFromDec
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 import com.google.common.base.Strings;
 import com.google.common.base.Verify;
 import com.google.common.collect.ImmutableList;
@@ -40,6 +38,7 @@ import com.google.common.collect.ImmutableSetMultimap;
 import com.google.common.io.Files;
 import com.google.common.primitives.UnsignedInteger;
 import com.google.common.primitives.UnsignedLong;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.dataflow.AccessPath;
 import com.google.errorprone.dataflow.AccessPathStore;
 import com.google.errorprone.dataflow.AccessPathValues;
@@ -85,6 +84,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Predicate;
 import javax.annotation.Nullable;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeVariable;
@@ -200,7 +200,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
             String.class.getName());
 
     @Override
-    public boolean apply(MethodInfo methodInfo) {
+    public boolean test(MethodInfo methodInfo) {
       // Any method explicitly annotated is trusted to behave as advertised.
       Optional<Nullness> fromAnnotations =
           NullnessAnnotations.fromAnnotations(methodInfo.annotations());
@@ -308,7 +308,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
    * returning methods.
    */
   public NullnessPropagationTransfer(Predicate<MethodInfo> additionalNonNullReturningMethods) {
-    this(NULLABLE, Predicates.or(new ReturnValueIsNonNull(), additionalNonNullReturningMethods));
+    this(NULLABLE, new ReturnValueIsNonNull().or(additionalNonNullReturningMethods));
   }
 
   /**
@@ -328,6 +328,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
    * Stores the given Javac context to find and analyze field initializers. Set before analyzing a
    * method and reset after.
    */
+  @CanIgnoreReturnValue
   NullnessPropagationTransfer setContext(@Nullable Context context) {
     // This is a best-effort check (similar to ArrayList iterators, for instance), no guarantee
     Preconditions.checkArgument(
@@ -346,6 +347,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
    * unit. Analyzing initializers from other compilation units tends to fail because type
    * information is sometimes missing on nodes returned from {@link Trees}.
    */
+  @CanIgnoreReturnValue
   NullnessPropagationTransfer setCompilationUnit(@Nullable CompilationUnitTree compilationUnit) {
     this.compilationUnit = compilationUnit;
     return this;
@@ -789,7 +791,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
       return NONNULL;
     }
 
-    Nullness assumedNullness = methodReturnsNonNull.apply(callee) ? NONNULL : NULLABLE;
+    Nullness assumedNullness = methodReturnsNonNull.test(callee) ? NONNULL : NULLABLE;
     if (!callee.isGenericResult) {
       // We only care about inference results for methods that return a type variable.
       return assumedNullness;
@@ -834,8 +836,8 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
           CFGBuilder.build(
               initializerPath,
               ast,
-              /*assumeAssertionsEnabled=*/ false,
-              /*assumeAssertionsDisabled=*/ false,
+              /* assumeAssertionsEnabled= */ false,
+              /* assumeAssertionsDisabled= */ false,
               javacEnv);
       Analysis<Nullness, AccessPathStore<Nullness>, NullnessPropagationTransfer> analysis =
           new ForwardAnalysisImpl<>(this);

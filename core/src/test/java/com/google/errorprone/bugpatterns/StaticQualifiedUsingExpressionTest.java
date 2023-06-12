@@ -34,17 +34,17 @@ public class StaticQualifiedUsingExpressionTest {
       BugCheckerRefactoringTestHelper.newInstance(StaticQualifiedUsingExpression.class, getClass());
 
   @Test
-  public void testPositiveCase1() {
+  public void positiveCase1() {
     compilationHelper.addSourceFile("StaticQualifiedUsingExpressionPositiveCase1.java").doTest();
   }
 
   @Test
-  public void testPositiveCase2() {
+  public void positiveCase2() {
     compilationHelper.addSourceFile("StaticQualifiedUsingExpressionPositiveCase2.java").doTest();
   }
 
   @Test
-  public void testNegativeCases() {
+  public void negativeCases() {
     compilationHelper.addSourceFile("StaticQualifiedUsingExpressionNegativeCases.java").doTest();
   }
 

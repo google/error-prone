@@ -16,7 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
@@ -26,8 +26,8 @@ import static javax.lang.model.element.Modifier.ABSTRACT;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
@@ -40,10 +40,11 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import java.util.Optional;
+import javax.inject.Inject;
 
 /** Flags ignored return values from pure getters. */
 @BugPattern(
-    severity = ERROR,
+    severity = WARNING,
     summary =
         "Getters on AutoValues, AutoBuilders, and Protobuf Messages are side-effect free, so there"
             + " is no point in calling them if the return value is ignored. While there are no"
@@ -57,22 +58,14 @@ public final class IgnoredPureGetter extends AbstractReturnValueIgnored {
       VisitorState.memoize(
           state -> state.getTypeFromString("com.google.protobuf.MutableMessageLite"));
 
-  private final boolean checkAllProtos;
-  private final boolean checkAutoBuilders;
-
-  public IgnoredPureGetter() {
-    this(ErrorProneFlags.empty());
-  }
-
-  public IgnoredPureGetter(ErrorProneFlags flags) {
-    super(flags);
-    this.checkAllProtos = flags.getBoolean("IgnoredPureGetter:CheckAllProtos").orElse(true);
-    this.checkAutoBuilders = flags.getBoolean("IgnoredPureGetter:CheckAutoBuilders").orElse(true);
+  @Inject
+  IgnoredPureGetter(ConstantExpressions constantExpressions) {
+    super(constantExpressions);
   }
 
   @Override
   protected Matcher<? super ExpressionTree> specializedMatcher() {
-    return this::isPureGetter;
+    return IgnoredPureGetter::isPureGetter;
   }
 
   @Override
@@ -105,13 +98,11 @@ public final class IgnoredPureGetter extends AbstractReturnValueIgnored {
     return builder.build();
   }
 
-  // TODO(b/222475003): make this static again once the flag is gone
-  private boolean isPureGetter(ExpressionTree tree, VisitorState state) {
+  private static boolean isPureGetter(ExpressionTree tree, VisitorState state) {
     return pureGetterKind(tree, state).isPresent();
   }
 
-  // TODO(b/222475003): make this static again once the flag is gone
-  private Optional<PureGetterKind> pureGetterKind(ExpressionTree tree, VisitorState state) {
+  private static Optional<PureGetterKind> pureGetterKind(ExpressionTree tree, VisitorState state) {
     Symbol rawSymbol = getSymbol(tree);
     if (!(rawSymbol instanceof MethodSymbol)) {
       return Optional.empty();
@@ -126,8 +117,7 @@ public final class IgnoredPureGetter extends AbstractReturnValueIgnored {
       }
       // The return value of any abstract method on an @AutoBuilder (which doesn't return the
       // Builder itself) needs to be used.
-      if (checkAutoBuilders
-          && hasAnnotation(owner, "com.google.auto.value.AutoBuilder", state)
+      if (hasAnnotation(owner, "com.google.auto.value.AutoBuilder", state)
           && !isSameType(symbol.getReturnType(), owner.type, state)) {
         return Optional.of(PureGetterKind.AUTO_BUILDER);
       }
@@ -142,14 +132,7 @@ public final class IgnoredPureGetter extends AbstractReturnValueIgnored {
     try {
       if (isSubtype(owner.type, MESSAGE_LITE.get(state), state)
           && !isSubtype(owner.type, MUTABLE_MESSAGE_LITE.get(state), state)) {
-        String name = symbol.getSimpleName().toString();
-        if ((name.startsWith("get") || name.startsWith("has"))
-            && symbol.getParameters().isEmpty()) {
-          return Optional.of(PureGetterKind.PROTO);
-        }
-        if (checkAllProtos) {
-          return Optional.of(PureGetterKind.PROTO);
-        }
+        return Optional.of(PureGetterKind.PROTO);
       }
     } catch (Symbol.CompletionFailure ignore) {
       // isSubtype may throw this if some supertype's class file isn't found

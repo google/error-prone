@@ -22,7 +22,9 @@ import com.google.inject.BindingAnnotation;
 import java.lang.annotation.Retention;
 import javax.inject.Qualifier;
 
-/** @author sgoldfeder@google.com (Steven Goldfeder) */
+/**
+ * @author sgoldfeder@google.com (Steven Goldfeder)
+ */
 public class MoreThanOneQualifierNegativeCases {
   /** A class in with no annotations on any of its members. */
   public class TestClass1 {

@@ -29,22 +29,43 @@ public class IncompatibleArgumentTypeTest {
       CompilationTestHelper.newInstance(IncompatibleArgumentType.class, getClass());
 
   @Test
-  public void testGenericMethod() {
+  public void genericMethod() {
     compilationHelper.addSourceFile("IncompatibleArgumentTypeGenericMethod.java").doTest();
   }
 
   @Test
-  public void testOwningTypes() {
+  public void owningTypes() {
     compilationHelper.addSourceFile("IncompatibleArgumentTypeEnclosingTypes.java").doTest();
   }
 
   @Test
-  public void testMultimapIntegration() {
+  public void multimapIntegration() {
     compilationHelper.addSourceFile("IncompatibleArgumentTypeMultimapIntegration.java").doTest();
   }
 
   @Test
-  public void testIntersectionTypes() {
+  public void intersectionTypes() {
     compilationHelper.addSourceFile("IncompatibleArgumentTypeIntersectionTypes.java").doTest();
+  }
+
+  @Test
+  public void typeWithinLambda() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableList;",
+            "import com.google.errorprone.annotations.CompatibleWith;",
+            "import java.util.Map;",
+            "import java.util.Optional;",
+            "abstract class Test {",
+            "  abstract <K, V> Optional<V> getOrEmpty(Map<K, V> map, @CompatibleWith(\"K\") Object"
+                + " key);",
+            "  void test(Map<Long, String> map, ImmutableList<Long> xs) {",
+            "    // BUG: Diagnostic contains:",
+            "    getOrEmpty(map, xs);",
+            "    Optional<String> x = Optional.empty().flatMap(k -> getOrEmpty(map, xs));",
+            "  }",
+            "}")
+        .doTest();
   }
 }

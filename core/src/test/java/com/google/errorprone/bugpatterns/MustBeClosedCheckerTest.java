@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -48,6 +49,110 @@ public class MustBeClosedCheckerTest {
         .addInput("MustBeClosedCheckerPositiveCases.java")
         .addOutput("MustBeClosedCheckerPositiveCases_expected.java")
         .allowBreakingChanges() // The fix is best-effort, and some variable names may clash
+        .doTest();
+  }
+
+  @Test
+  public void enumInitializer() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.MustBeClosed;",
+            "import java.io.Closeable;",
+            "enum Test {",
+            "  A;",
+            "  interface Foo extends Closeable {}",
+            "  @MustBeClosed static Foo createResource() {",
+            "    return null;",
+            "  }",
+            "  private final Foo resource;",
+            "  private final Foo resource2 = createResource();",
+            "  Test() {",
+            "    this.resource = createResource();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void forLoop() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.MustBeClosed;",
+            "class Test {",
+            "  class Closeable implements AutoCloseable {",
+            "    @Override",
+            "    public void close() {}",
+            "    public int method() {",
+            "      return 1;",
+            "    }",
+            "  }",
+            "  class Foo {",
+            "    @MustBeClosed",
+            "    Closeable mustBeClosedMethod() {",
+            "      return null;",
+            "    }",
+            "  }",
+            "  void forLoopCondition() {",
+            "    for (int i = 0; i < new Foo().mustBeClosedMethod().method(); ++i) {}",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.MustBeClosed;",
+            "class Test {",
+            "  class Closeable implements AutoCloseable {",
+            "    @Override",
+            "    public void close() {}",
+            "    public int method() {",
+            "      return 1;",
+            "    }",
+            "  }",
+            "  class Foo {",
+            "    @MustBeClosed",
+            "    Closeable mustBeClosedMethod() {",
+            "      return null;",
+            "    }",
+            "  }",
+            "  void forLoopCondition() {",
+            "    try (var closeable = new Foo().mustBeClosedMethod()) {",
+            "      for (int i = 0; i < closeable.method(); ++i) {}",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Ignore("b/236715080")
+  @Test
+  public void forLoopUnfixable() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.MustBeClosed;",
+            "class Test {",
+            "  class Closeable implements AutoCloseable {",
+            "    @Override",
+            "    public void close() {}",
+            "    public int method() {",
+            "      return 1;",
+            "    }",
+            "  }",
+            "  class Foo {",
+            "    @MustBeClosed",
+            "    Closeable mustBeClosedMethod() {",
+            "      return null;",
+            "    }",
+            "  }",
+            "  void forLoopInitialization() {",
+            "    for (int i = new Foo().mustBeClosedMethod().method(); i > 0; --i) { }",
+            "  }",
+            "  void forLoopUpdate() {",
+            "    for (int i = 0; i < 100; i += new Foo().mustBeClosedMethod().method()) {}",
+            "  }",
+            "}")
+        .expectUnchanged()
         .doTest();
   }
 }

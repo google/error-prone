@@ -29,22 +29,22 @@ public class ClassCanBeStaticTest {
       CompilationTestHelper.newInstance(ClassCanBeStatic.class, getClass());
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("ClassCanBeStaticNegativeCases.java").doTest();
   }
 
   @Test
-  public void testPositiveCase1() {
+  public void positiveCase1() {
     compilationHelper.addSourceFile("ClassCanBeStaticPositiveCase1.java").doTest();
   }
 
   @Test
-  public void testPositiveCase2() {
+  public void positiveCase2() {
     compilationHelper.addSourceFile("ClassCanBeStaticPositiveCase2.java").doTest();
   }
 
   @Test
-  public void testPositiveCase3() {
+  public void positiveCase3() {
     compilationHelper.addSourceFile("ClassCanBeStaticPositiveCase3.java").doTest();
   }
 
@@ -397,6 +397,30 @@ public class ClassCanBeStaticTest {
             "public class A {",
             "  class Inner {",
             "    @BeforeTemplate void f() {}",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void junitNestedClass() {
+    compilationHelper
+        .addSourceLines(
+            "Nested.java",
+            "package org.junit.jupiter.api;",
+            "import java.lang.annotation.ElementType;",
+            "import java.lang.annotation.Retention;",
+            "import java.lang.annotation.RetentionPolicy;",
+            "import java.lang.annotation.Target;",
+            "@Target(ElementType.TYPE)",
+            "@Retention(RetentionPolicy.RUNTIME)",
+            "public @interface Nested {}")
+        .addSourceLines(
+            "A.java",
+            "import org.junit.jupiter.api.Nested;",
+            "public class A {",
+            "  @Nested class Inner {",
+            "    void f() {}",
             "  }",
             "}")
         .doTest();

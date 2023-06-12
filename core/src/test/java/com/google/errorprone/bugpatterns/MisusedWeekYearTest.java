@@ -30,22 +30,22 @@ public class MisusedWeekYearTest {
       CompilationTestHelper.newInstance(MisusedWeekYear.class, getClass());
 
   @Test
-  public void testPositiveCases() {
+  public void positiveCases() {
     compilationHelper.addSourceFile("MisusedWeekYearPositiveCases.java").doTest();
   }
 
   @Test
-  public void testPositiveCases2() {
+  public void positiveCases2() {
     compilationHelper.addSourceFile("MisusedWeekYearPositiveCases2.java").doTest();
   }
 
   @Test
-  public void testNegativeCases() {
+  public void negativeCases() {
     compilationHelper.addSourceFile("MisusedWeekYearNegativeCases.java").doTest();
   }
 
   @Test
-  public void testRefactoring() {
+  public void refactoring() {
     BugCheckerRefactoringTestHelper.newInstance(MisusedWeekYear.class, getClass())
         .addInputLines(
             "Test.java",

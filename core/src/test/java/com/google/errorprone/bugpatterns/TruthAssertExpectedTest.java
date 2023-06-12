@@ -32,12 +32,12 @@ public final class TruthAssertExpectedTest {
       CompilationTestHelper.newInstance(TruthAssertExpected.class, getClass());
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper.addSourceFile("TruthAssertExpectedPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("TruthAssertExpectedNegativeCases.java").doTest();
   }
 }

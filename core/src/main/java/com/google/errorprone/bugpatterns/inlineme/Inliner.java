@@ -59,6 +59,7 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
+import javax.inject.Inject;
 
 /**
  * Checker that performs the inlining at call-sites (where the invoked APIs are annotated as
@@ -88,7 +89,8 @@ public final class Inliner extends BugChecker
   private final boolean skipCallsitesWithComments;
   private final boolean checkFixCompiles;
 
-  public Inliner(ErrorProneFlags flags) {
+  @Inject
+  Inliner(ErrorProneFlags flags) {
     this.apiPrefixes =
         ImmutableSet.copyOf(flags.getSet(PREFIX_FLAG).orElse(ImmutableSet.<String>of()));
     this.skipCallsitesWithComments = flags.getBoolean(SKIP_COMMENTS_FLAG).orElse(true);
@@ -128,11 +130,11 @@ public final class Inliner extends BugChecker
     ExpressionTree methodSelectTree = tree.getMethodSelect();
     if (methodSelectTree != null) {
       String methodSelect = state.getSourceForNode(methodSelectTree);
-      if ("super".equals(methodSelect)) {
+      if (methodSelect.equals("super")) {
         receiverString = methodSelect;
       }
       // TODO(kak): Can we omit the `this` case? The getReceiver() call above handles `this`
-      if ("this".equals(methodSelect)) {
+      if (methodSelect.equals("this")) {
         receiverString = methodSelect;
       }
     }
@@ -238,11 +240,10 @@ public final class Inliner extends BugChecker
       // If caller passes 0 args in the varargs position, we want to remove the preceding comma to
       // make this.bar(a) (as opposed to "this.bar(a, )"
       boolean terminalVarargsReplacement = varargsWithEmptyArguments && i == varNames.size() - 1;
-      String capturePrefixForVarargs = terminalVarargsReplacement ? "(?:,\\s*)?" : "";
+      String capturePrefixForVarargs = terminalVarargsReplacement ? "(?:,\\s*)?" : "\\b";
       // We want to avoid replacing a method invocation with the same name as the method.
-      Pattern extractArgAndNextToken =
-          Pattern.compile(
-              "\\b" + capturePrefixForVarargs + Pattern.quote(varNames.get(i)) + "\\b([^(])");
+      var extractArgAndNextToken =
+          Pattern.compile(capturePrefixForVarargs + Pattern.quote(varNames.get(i)) + "\\b([^(])");
       String replacementResult =
           Matcher.quoteReplacement(terminalVarargsReplacement ? "" : callingVars.get(i)) + "$1";
       Matcher matcher = extractArgAndNextToken.matcher(replacement);

@@ -19,14 +19,13 @@ package com.google.errorprone.bugpatterns.testdata;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Slightly funky test case with a custom Before annotation
- */
+/** Slightly funky test case with a custom Before annotation */
 @RunWith(JUnit4.class)
 public class JUnit4SetUpNotRunPositiveCaseCustomBefore {
   // This will compile-fail and suggest the import of org.junit.Before
   // BUG: Diagnostic contains: @Before
-  @Before public void setUp() {}
+  @Before
+  public void setUp() {}
 }
 
 @interface Before {}

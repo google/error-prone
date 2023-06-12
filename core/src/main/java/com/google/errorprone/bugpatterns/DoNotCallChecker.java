@@ -19,6 +19,8 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.collect.Streams.stream;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.matchers.Matchers.allOf;
+import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.findSuperMethods;
@@ -28,6 +30,9 @@ import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
+import static com.sun.source.tree.Tree.Kind.IDENTIFIER;
+import static com.sun.source.tree.Tree.Kind.MEMBER_SELECT;
+import static com.sun.source.tree.Tree.Kind.METHOD_INVOCATION;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableListMultimap;
@@ -45,7 +50,9 @@ import com.google.errorprone.util.MoreAnnotations;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberReferenceTree;
+import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.VariableTree;
@@ -66,6 +73,24 @@ import javax.lang.model.element.Modifier;
 @BugPattern(name = "DoNotCall", summary = "This method should not be called.", severity = ERROR)
 public class DoNotCallChecker extends BugChecker
     implements MethodTreeMatcher, CompilationUnitTreeMatcher {
+  private static final Matcher<ExpressionTree> THREAD_RUN =
+      instanceMethod().onDescendantOf("java.lang.Thread").named("run").withNoParameters();
+
+  private static final Matcher<ExpressionTree> CALL_ON_SUPER =
+      (invocation, state) -> {
+        if (invocation.getKind() != METHOD_INVOCATION) {
+          return false;
+        }
+        ExpressionTree select = ((MethodInvocationTree) invocation).getMethodSelect();
+        if (select.getKind() != MEMBER_SELECT) {
+          return false;
+        }
+        ExpressionTree receiver = ((MemberSelectTree) select).getExpression();
+        if (receiver.getKind() != IDENTIFIER) {
+          return false;
+        }
+        return ((IdentifierTree) receiver).getName().contentEquals("super");
+      };
 
   // If your method cannot be annotated with @DoNotCall (e.g., it's a JDK or thirdparty method),
   // then add it to this Map with an explanation.
@@ -133,6 +158,90 @@ public class DoNotCallChecker extends BugChecker
               "Calling getClass on StackTraceElement returns the Class object for"
                   + " StackTraceElement, you probably meant to retrieve the class containing the"
                   + " execution point represented by this stack trace element using getClassName")
+          .put(
+              instanceMethod().onExactClass("java.lang.StackWalker").named("getClass"),
+              "Calling getClass on StackWalker returns the Class object for StackWalker, you"
+                  + " probably meant to retrieve the class containing the execution point"
+                  + " represented by this StackWalker using getCallerClass")
+          .put(
+              instanceMethod().onExactClass("java.lang.StackWalker$StackFrame").named("getClass"),
+              "Calling getClass on StackFrame returns the Class object for StackFrame, you probably"
+                  + " meant to retrieve the class containing the execution point represented by"
+                  + " this StackFrame using getClassName")
+          .put(
+              instanceMethod().onExactClass("java.lang.reflect.Constructor").named("getClass"),
+              "Calling getClass on Constructor returns the Class object for Constructor, you"
+                  + " probably meant to retrieve the class containing the constructor represented"
+                  + " by this Constructor using getDeclaringClass")
+          .put(
+              instanceMethod().onExactClass("java.lang.reflect.Field").named("getClass"),
+              "Calling getClass on Field returns the Class object for Field, you probably meant to"
+                  + " retrieve the class containing the field represented by this Field using"
+                  + " getDeclaringClass")
+          .put(
+              instanceMethod().onExactClass("java.lang.reflect.Method").named("getClass"),
+              "Calling getClass on Method returns the Class object for Method, you probably meant"
+                  + " to retrieve the class containing the method represented by this Method using"
+                  + " getDeclaringClass")
+          .put(
+              instanceMethod()
+                  .onExactClass("java.lang.reflect.ParameterizedType")
+                  .named("getClass"),
+              "Calling getClass on ParameterizedType returns the Class object for"
+                  + " ParameterizedType, you probably meant to retrieve the class containing the"
+                  + " method represented by this ParameterizedType using getRawType")
+          .put(
+              instanceMethod().onExactClass("java.beans.BeanDescriptor").named("getClass"),
+              "Calling getClass on BeanDescriptor returns the Class object for BeanDescriptor, you"
+                  + " probably meant to retrieve the class described by this BeanDescriptor using"
+                  + " getBeanClass")
+          .put(
+              /*
+               * LockInfo has a publicly visible subclass, MonitorInfo. It seems unlikely that
+               * anyone is using getClass() in an attempt to distinguish the two. (If anyone is,
+               * then it would make more sense to use instanceof, anyway.)
+               */
+              instanceMethod().onDescendantOf("java.lang.management.LockInfo").named("getClass"),
+              "Calling getClass on LockInfo returns the Class object for LockInfo, you probably"
+                  + " meant to retrieve the class of the object that is being locked using"
+                  + " getClassName")
+          /*
+           * These methods are part of Guava, but we have to list them in this "thirdparty" section:
+           * We can't annotate them with @DoNotCall because we can't override getClass.
+           */
+          .put(
+              instanceMethod()
+                  .onExactClass("com.google.common.reflect.ClassPath$ClassInfo")
+                  .named("getClass"),
+              "Calling getClass on ClassInfo returns the Class object for ClassInfo, you probably"
+                  + " meant to retrieve the class described by this ClassInfo using getName or"
+                  + " load")
+          /*
+           * Users of TypeToken have to create a subclass. The static type of their instance is
+           * probably often still "TypeToken," but that may change as we see more usage of `var`. So
+           * let's check subclasses, too. If anyone defines an overload of getClass on such a
+           * subclass, this check will give that person a bad time in one additional way.
+           */
+          .put(
+              instanceMethod()
+                  .onDescendantOf("com.google.common.reflect.TypeToken")
+                  .named("getClass"),
+              "Calling getClass on TypeToken returns the Class object for TypeToken, you probably"
+                  + " meant to retrieve the class described by this TypeToken using getRawType")
+          .put(
+              /*
+               * A call to super.run() from a direct subclass of Thread is a no-op. That could be
+               * worth telling the user about, but it's not as big a deal as "You meant to call
+               * start()," so we ignore it here.
+               *
+               * (And if someone defines a MyThread class with a run() method that does something,
+               * then a call to super.run() from a subclass of *MyThread* would *not* be a no-op,
+               * and we wouldn't want to flag it. Still, *usually* it's likely to be useful to
+               * report a warning even on subclasses of Thread, such as anonymous classes.)
+               */
+              allOf(THREAD_RUN, not(CALL_ON_SUPER)),
+              "Calling run on Thread runs work on this thread, rather than the given thread, you"
+                  + " probably meant to call start")
           .buildOrThrow();
 
   static final String DO_NOT_CALL = "com.google.errorprone.annotations.DoNotCall";

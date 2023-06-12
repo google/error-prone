@@ -16,7 +16,9 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
-/** @author irogers@google.com (Ian Rogers) */
+/**
+ * @author irogers@google.com (Ian Rogers)
+ */
 public class SwigMemoryLeakNegativeCases {
   private long swigCPtr;
   protected boolean swigCMemOwn;

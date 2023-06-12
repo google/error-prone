@@ -51,6 +51,48 @@ public class InfiniteRecursionTest {
   }
 
   @Test
+  public void positiveExplicitThis() {
+    compilationHelper
+        .addSourceLines(
+            "p/Test.java",
+            "package p;",
+            "class Test {",
+            "  void f() {",
+            "    // BUG: Diagnostic contains:",
+            "    this.f();",
+            "  }",
+            "  void g() {",
+            "    // BUG: Diagnostic contains:",
+            "    (this).g();",
+            "  }",
+            "  void h() {",
+            "    // BUG: Diagnostic contains:",
+            "    Test.this.h();",
+            "  }",
+            "  void i() {",
+            "    // BUG: Diagnostic contains:",
+            "    (p.Test.this).i();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void positiveMultipleStatementsFirst() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  Test f() {",
+            "    // BUG: Diagnostic contains:",
+            "    f();",
+            "    return this;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void positiveStatic() {
     compilationHelper
         .addSourceLines(
@@ -103,6 +145,22 @@ public class InfiniteRecursionTest {
   }
 
   @Test
+  public void positiveMultipleStatementsNotFirst() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  Test f() {",
+            "    new Test();",
+            "    // BUG: Diagnostic contains:",
+            "    f();",
+            "    return this;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void negativeDelegate() {
     compilationHelper
         .addSourceLines(
@@ -111,6 +169,119 @@ public class InfiniteRecursionTest {
             "  Test test;",
             "  void f() {",
             "    test.f();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void positiveDelegateCannotBeOverridden() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "final class Test {",
+            "  Test test;",
+            "  void f() {",
+            "    // BUG: Diagnostic contains:",
+            "    test.f();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void negativeAfterReturn() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "final class Test {",
+            "  void f(boolean callAgain) {",
+            "    if (!callAgain) {",
+            "      return;",
+            "    }",
+            "    f(false);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void positiveBeforeReturn() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "final class Test {",
+            "  void f(boolean callAgain) {",
+            "    // BUG: Diagnostic contains:",
+            "    f(false);",
+            "    if (!callAgain) {",
+            "      return;",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void negativeConditional() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "final class Test {",
+            "  void f(boolean callAgain) {",
+            "    if (callAgain) {",
+            "      f(false);",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void negativeNestedClass() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "final class Test {",
+            "  void f() {",
+            "    new Object() {",
+            "      void g() {",
+            "        f();",
+            "      }",
+            "    };",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void positiveAfterNestedClass() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "final class Test {",
+            "  void f() {",
+            "    new Object() {",
+            "      void g() {",
+            "        f();",
+            "        return;",
+            "      }",
+            "    };",
+            "    // BUG: Diagnostic contains:",
+            "    f();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void negativeLambda() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "final class Test {",
+            "  Runnable f() {",
+            "    return () -> f();",
             "  }",
             "}")
         .doTest();
@@ -168,10 +339,10 @@ public class InfiniteRecursionTest {
         .addSourceLines(
             "Test.java",
             "class Test {",
-            "  public void f (String s) {",
+            "  public void f(String s) {",
             "    f((Object) s);",
             "  }",
-            "  public void f (Object o) {",
+            "  public void f(Object o) {",
             "    // BUG: Diagnostic contains:",
             "    f(o);",
             "  }",
@@ -185,7 +356,52 @@ public class InfiniteRecursionTest {
         .addSourceLines(
             "Test.java", //
             "abstract class Test {",
-            "  abstract void f ();",
+            "  abstract void f();",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void positiveBinaryLeftHandSide() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "final class Test {",
+            "  Test next;",
+            "  boolean nextIsCool;",
+            "  boolean isCool(boolean thisIsCool) {",
+            "    // BUG: Diagnostic contains:",
+            "    return next.isCool(nextIsCool) || thisIsCool;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void negativeBinaryRightHandSide() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "final class Test {",
+            "  Test next;",
+            "  boolean nextIsCool;",
+            "  boolean isCool(boolean thisIsCool) {",
+            "    return thisIsCool || next.isCool(thisIsCool);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void positiveBinaryRightHandSideNotConditional() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  String asString() {",
+            "    // BUG: Diagnostic contains:",
+            "    return '{' + asString() + '}';",
+            "  }",
             "}")
         .doTest();
   }

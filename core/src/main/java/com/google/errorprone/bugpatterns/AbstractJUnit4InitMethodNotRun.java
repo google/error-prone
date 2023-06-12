@@ -37,6 +37,7 @@ import com.sun.tools.javac.code.Symbol;
 import java.io.Serializable;
 import java.util.List;
 import javax.lang.model.element.Modifier;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Base class for JUnit4SetUp/TearDown not run. This will take care of the nitty-gritty about
@@ -139,7 +140,7 @@ abstract class AbstractJUnit4InitMethodNotRun extends BugChecker implements Meth
     }
   }
 
-  private Description tryToReplaceAnnotation(
+  private @Nullable Description tryToReplaceAnnotation(
       MethodTree methodTree, VisitorState state, String badAnnotation, String goodAnnotation) {
     String finalName = getUnqualifiedClassName(goodAnnotation);
     if (hasAnnotation(badAnnotation).matches(methodTree, state)) {

@@ -20,7 +20,9 @@ import junit.framework.TestCase;
 import org.junit.Ignore;
 import org.junit.Test;
 
-/** @author rburny@google.com (Radoslaw Burny) */
+/**
+ * @author rburny@google.com (Radoslaw Burny)
+ */
 public class JUnit3TestNotRunNegativeCase1 extends TestCase {
 
   // correctly spelled

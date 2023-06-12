@@ -64,6 +64,9 @@ public final class ErroneousThreadPoolConstructorChecker extends BugChecker
       return Description.NO_MATCH;
     }
     List<? extends ExpressionTree> arguments = tree.getArguments();
+    if (arguments.size() < 2) {
+      return Description.NO_MATCH;
+    }
     Integer corePoolSize = ASTHelpers.constValue(arguments.get(0), Integer.class);
     Integer maximumPoolSize = ASTHelpers.constValue(arguments.get(1), Integer.class);
     if (corePoolSize == null || maximumPoolSize == null || corePoolSize.equals(maximumPoolSize)) {

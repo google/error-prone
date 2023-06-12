@@ -29,12 +29,12 @@ public class CollectionToArraySafeParameterTest {
       CompilationTestHelper.newInstance(CollectionToArraySafeParameter.class, getClass());
 
   @Test
-  public void testPositiveCases() {
+  public void positiveCases() {
     compilationHelper.addSourceFile("CollectionToArraySafeParameterPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCases() {
+  public void negativeCases() {
     compilationHelper.addSourceFile("CollectionToArraySafeParameterNegativeCases.java").doTest();
   }
 

@@ -24,6 +24,7 @@ import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.hasNoExplicitType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.google.errorprone.util.Regexes.convertRegexToLiteral;
 import static java.lang.String.format;
@@ -209,11 +210,8 @@ public class StringSplitter extends BugChecker implements MethodInvocationTreeMa
       }
     }
 
-    // Use of `var` causes the start position of the variable type tree node to be < 0.
-    // Note that the .isImplicitlyTyped() method on JCVariableDecl returns the wrong answer after
-    // type attribution has occurred.
     Tree varType = varTree.getType();
-    boolean isImplicitlyTyped = getStartPosition(varType) < 0;
+    boolean isImplicitlyTyped = hasNoExplicitType(varTree, state); // Is it a use of `var`?
     if (needsList[0]) {
       if (!isImplicitlyTyped) {
         fix.replace(varType, "List<String>").addImport("java.util.List");

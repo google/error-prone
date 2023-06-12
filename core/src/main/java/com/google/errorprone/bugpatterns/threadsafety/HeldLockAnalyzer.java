@@ -16,14 +16,14 @@
 
 package com.google.errorprone.bugpatterns.threadsafety;
 
+import static com.google.errorprone.matchers.Matchers.anyOf;
+import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 
 import com.google.auto.value.AutoValue;
-import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.annotations.concurrent.UnlockMethod;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression.Kind;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression.Select;
 import com.google.errorprone.matchers.Matcher;
@@ -33,6 +33,7 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.LambdaExpressionTree;
+import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
@@ -54,6 +55,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Predicate;
 import javax.lang.model.element.Modifier;
 
 /**
@@ -63,6 +65,29 @@ import javax.lang.model.element.Modifier;
  * @author cushon@google.com (Liam Miller-Cushon)
  */
 public final class HeldLockAnalyzer {
+  /** Methods which invoke lambdas on the same thread. */
+  static final Matcher<ExpressionTree> INVOKES_LAMBDAS_IMMEDIATELY =
+      anyOf(
+          instanceMethod()
+              .onExactClass("java.util.Optional")
+              .namedAnyOf(
+                  "ifPresent",
+                  "ifPresentOrElse",
+                  "filter",
+                  "map",
+                  "flatMap",
+                  "or",
+                  "orElseGet",
+                  "orElseThrow"),
+          instanceMethod()
+              .onDescendantOf("java.util.Map")
+              .namedAnyOf("forEach", "replaceAll", "computeIfAbsent", "computeIfPresent", "merge"),
+          instanceMethod().onDescendantOf("java.util.List").named("replaceAll"),
+          instanceMethod().onDescendantOf("java.util.Iterable").named("forEach"),
+          instanceMethod().onDescendantOf("java.util.Iterator").named("forEachRemaining"),
+          staticMethod()
+              .onClass("com.google.common.collect.Iterables")
+              .namedAnyOf("tryFind", "any", "all", "indexOf"));
 
   /** Listener interface for accesses to guarded members. */
   public interface LockEventListener {
@@ -85,12 +110,10 @@ public final class HeldLockAnalyzer {
       VisitorState state,
       LockEventListener listener,
       Predicate<Tree> isSuppressed,
-      GuardedByFlags flags,
-      boolean reportMissingGuards) {
+      GuardedByFlags flags) {
     HeldLockSet locks = HeldLockSet.empty();
     locks = handleMonitorGuards(state, locks, flags);
-    new LockScanner(state, listener, isSuppressed, flags, reportMissingGuards)
-        .scan(state.getPath(), locks);
+    new LockScanner(state, listener, isSuppressed, flags).scan(state.getPath(), locks);
   }
 
   // Don't use Class#getName() for inner classes, we don't want `Monitor$Guard`
@@ -125,7 +148,6 @@ public final class HeldLockAnalyzer {
     private final LockEventListener listener;
     private final Predicate<Tree> isSuppressed;
     private final GuardedByFlags flags;
-    private final boolean reportMissingGuards;
 
     private static final GuardedByExpression.Factory F = new GuardedByExpression.Factory();
 
@@ -133,18 +155,16 @@ public final class HeldLockAnalyzer {
         VisitorState visitorState,
         LockEventListener listener,
         Predicate<Tree> isSuppressed,
-        GuardedByFlags flags,
-        boolean reportMissingGuards) {
+        GuardedByFlags flags) {
       this.visitorState = visitorState;
       this.listener = listener;
       this.isSuppressed = isSuppressed;
       this.flags = flags;
-      this.reportMissingGuards = reportMissingGuards;
     }
 
     @Override
     public Void visitMethod(MethodTree tree, HeldLockSet locks) {
-      if (isSuppressed.apply(tree)) {
+      if (isSuppressed.test(tree)) {
         return null;
       }
       // Synchronized instance methods hold the 'this' lock; synchronized static methods
@@ -182,13 +202,9 @@ public final class HeldLockAnalyzer {
       // are held for the entirety of the try and catch statements.
       Collection<GuardedByExpression> releasedLocks =
           ReleasedLockFinder.find(tree.getFinallyBlock(), visitorState, flags);
-      if (resources.isEmpty()) {
-        scan(tree.getBlock(), locks.plusAll(releasedLocks));
-      } else {
-        // We don't know what to do with the try-with-resources block.
-        // TODO(cushon) - recognize common try-with-resources patterns. Currently there is no
-        // standard implementation of an AutoCloseable lock resource to detect.
-      }
+      // TODO(cushon) - recognize common try-with-resources patterns. Currently there is no
+      // standard implementation of an AutoCloseable lock resource to detect.
+      scan(tree.getBlock(), locks.plusAll(releasedLocks));
       scan(tree.getCatches(), locks.plusAll(releasedLocks));
       scan(tree.getFinallyBlock(), locks);
       return null;
@@ -228,18 +244,30 @@ public final class HeldLockAnalyzer {
 
     @Override
     public Void visitLambdaExpression(LambdaExpressionTree node, HeldLockSet heldLockSet) {
+      var parent = getCurrentPath().getParentPath().getLeaf();
+      if (parent instanceof MethodInvocationTree
+          && INVOKES_LAMBDAS_IMMEDIATELY.matches((ExpressionTree) parent, visitorState)) {
+        return super.visitLambdaExpression(node, heldLockSet);
+      }
       // Don't descend into lambdas; they will be analyzed separately.
       return null;
     }
 
     @Override
+    public Void visitMemberReference(MemberReferenceTree tree, HeldLockSet locks) {
+      checkMatch(tree, locks);
+      scan(tree.getQualifierExpression(), locks);
+      return null;
+    }
+
+    @Override
     public Void visitVariable(VariableTree node, HeldLockSet locks) {
-      return isSuppressed.apply(node) ? null : super.visitVariable(node, locks);
+      return isSuppressed.test(node) ? null : super.visitVariable(node, locks);
     }
 
     @Override
     public Void visitClass(ClassTree node, HeldLockSet locks) {
-      return isSuppressed.apply(node) ? null : super.visitClass(node, locks);
+      return isSuppressed.test(node) ? null : super.visitClass(node, locks);
     }
 
     private void checkMatch(ExpressionTree tree, HeldLockSet locks) {
@@ -250,9 +278,7 @@ public final class HeldLockAnalyzer {
                 GuardedBySymbolResolver.from(tree, visitorState.withPath(getCurrentPath())),
                 flags);
         if (!guard.isPresent()) {
-          if (reportMissingGuards) {
-            invalidLock(tree, locks, guardString);
-          }
+          invalidLock(tree, locks, guardString);
           continue;
         }
         Optional<GuardedByExpression> boundGuard =
@@ -281,9 +307,6 @@ public final class HeldLockAnalyzer {
     /** The fully-qualified name of the lock class. */
     abstract String className();
 
-    /** The method that acquires the lock. */
-    abstract String lockMethod();
-
     /** The method that releases the lock. */
     abstract String unlockMethod();
 
@@ -291,21 +314,17 @@ public final class HeldLockAnalyzer {
       return instanceMethod().onDescendantOf(className()).named(unlockMethod());
     }
 
-    public Matcher<ExpressionTree> createLockMatcher() {
-      return instanceMethod().onDescendantOf(className()).named(lockMethod());
-    }
-
-    static LockResource create(String className, String lockMethod, String unlockMethod) {
-      return new AutoValue_HeldLockAnalyzer_LockResource(className, lockMethod, unlockMethod);
+    static LockResource create(String className, String unlockMethod) {
+      return new AutoValue_HeldLockAnalyzer_LockResource(className, unlockMethod);
     }
   }
 
   /** The set of supported lock classes. */
   private static final ImmutableList<LockResource> LOCK_RESOURCES =
       ImmutableList.of(
-          LockResource.create("java.util.concurrent.locks.Lock", "lock", "unlock"),
-          LockResource.create("com.google.common.util.concurrent.Monitor", "enter", "leave"),
-          LockResource.create("java.util.concurrent.Semaphore", "acquire", "release"));
+          LockResource.create("java.util.concurrent.locks.Lock", "unlock"),
+          LockResource.create("com.google.common.util.concurrent.Monitor", "leave"),
+          LockResource.create("java.util.concurrent.Semaphore", "release"));
 
   private static class LockOperationFinder extends TreeScanner<Void, Void> {
 
@@ -346,7 +365,6 @@ public final class HeldLockAnalyzer {
     @Override
     public Void visitMethodInvocation(MethodInvocationTree tree, Void unused) {
       handleReleasedLocks(tree);
-      handleUnlockAnnotatedMethods(tree);
       return null;
     }
 
@@ -379,27 +397,6 @@ public final class HeldLockAnalyzer {
         }
       }
     }
-
-    /** Checks {@link UnlockMethod}-annotated methods. */
-    private void handleUnlockAnnotatedMethods(MethodInvocationTree tree) {
-      UnlockMethod annotation = ASTHelpers.getAnnotation(tree, UnlockMethod.class);
-      if (annotation == null) {
-        return;
-      }
-      for (String lockString : annotation.value()) {
-        Optional<GuardedByExpression> guard =
-            GuardedByBinder.bindString(
-                lockString, GuardedBySymbolResolver.from(tree, state), flags);
-        // TODO(cushon): http://docs.oracle.com/javase/8/docs/api/java/util/Optional.html#ifPresent
-        if (guard.isPresent()) {
-          Optional<GuardedByExpression> lock =
-              ExpectedLockCalculator.from((JCExpression) tree, guard.get(), state, flags);
-          if (lock.isPresent()) {
-            locks.add(lock.get());
-          }
-        }
-      }
-    }
   }
 
   /**
@@ -425,28 +422,6 @@ public final class HeldLockAnalyzer {
   }
 
   /**
-   * Find the locks that are acquired in the given tree. (e.g. the body of a @LockMethod-annotated
-   * method.)
-   */
-  static final class AcquiredLockFinder {
-
-    /** Matcher for methods that acquire lock resources. */
-    private static final Matcher<ExpressionTree> LOCK_MATCHER =
-        Matchers.<ExpressionTree>anyOf(unlockMatchers());
-
-    private static Iterable<Matcher<ExpressionTree>> unlockMatchers() {
-      return Iterables.transform(LOCK_RESOURCES, LockResource::createLockMatcher);
-    }
-
-    static Collection<GuardedByExpression> find(
-        Tree tree, VisitorState state, GuardedByFlags flags) {
-      return LockOperationFinder.find(tree, state, LOCK_MATCHER, flags);
-    }
-
-    private AcquiredLockFinder() {}
-  }
-
-  /**
    * Utility for discovering the lock expressions that needs to be held when accessing specific
    * guarded members.
    */
@@ -462,16 +437,16 @@ public final class HeldLockAnalyzer {
      *
      * <p>For example:
      *
-     * <pre><code>
+     * <pre>{@code
      * class MyClass {
      *   final Object mu = new Object();
-     *   {@literal @}GuardedBy("mu")
+     *   @GuardedBy("mu")
      *   int x;
      * }
      * void m(MyClass myClass) {
      *   myClass.x++;
      * }
-     * </code></pre>
+     * }</pre>
      *
      * To determine the lock that must be held when accessing myClass.x, from is called with
      * "myClass.x" and "mu", and returns "myClass.mu".

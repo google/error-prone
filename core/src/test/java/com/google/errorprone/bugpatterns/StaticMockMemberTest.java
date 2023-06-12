@@ -35,7 +35,7 @@ public class StaticMockMemberTest {
       CompilationTestHelper.newInstance(StaticMockMember.class, getClass());
 
   @Test
-  public void testPositiveCases() {
+  public void positiveCases() {
     testHelper
         .addInputLines(
             "in/Test.java",
@@ -61,7 +61,7 @@ public class StaticMockMemberTest {
   }
 
   @Test
-  public void testNegativeCases() {
+  public void negativeCases() {
     compilationHelper
         .addSourceLines(
             "in/Test.java",

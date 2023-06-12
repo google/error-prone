@@ -37,12 +37,12 @@ public final class TruthConstantAssertsTest {
   }
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper.addSourceFile("TruthConstantAssertsPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("TruthConstantAssertsNegativeCases.java").doTest();
   }
 }

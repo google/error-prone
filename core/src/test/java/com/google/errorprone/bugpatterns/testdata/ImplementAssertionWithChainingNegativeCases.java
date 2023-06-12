@@ -19,7 +19,9 @@ package com.google.errorprone.bugpatterns.testdata;
 import com.google.common.truth.FailureMetadata;
 import com.google.common.truth.Subject;
 
-/** @author cpovirk@google.com (Chris Povirk) */
+/**
+ * @author cpovirk@google.com (Chris Povirk)
+ */
 public class ImplementAssertionWithChainingNegativeCases {
   static final class FooSubject extends Subject {
     private final Foo actual;

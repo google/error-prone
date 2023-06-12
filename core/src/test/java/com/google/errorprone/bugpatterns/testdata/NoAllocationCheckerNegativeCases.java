@@ -19,7 +19,9 @@ package com.google.errorprone.bugpatterns.testdata;
 import com.google.errorprone.annotations.NoAllocation;
 import java.util.Arrays;
 
-/** @author agoode@google.com (Adam Goode) */
+/**
+ * @author agoode@google.com (Adam Goode)
+ */
 public class NoAllocationCheckerNegativeCases {
   // Calling safe methods is fine.
   @NoAllocation

@@ -484,4 +484,33 @@ public class MethodCanBeStaticTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void defaultMethodExempted() {
+    testHelper
+        .addSourceLines(
+            "Test.java", //
+            "class Test {",
+            "  private interface Foo { default void foo() {} }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void keepAnnotationsExempted() {
+    testHelper
+        .addSourceLines(
+            "DoFn.java",
+            "package org.apache.beam.sdk.transforms;",
+            "public class DoFn {",
+            "  public @interface ProcessElement {}",
+            "}")
+        .addSourceLines(
+            "Test.java", //
+            "class Test {",
+            "  @org.apache.beam.sdk.transforms.DoFn.ProcessElement",
+            "  private void foo() {}",
+            "}")
+        .doTest();
+  }
 }

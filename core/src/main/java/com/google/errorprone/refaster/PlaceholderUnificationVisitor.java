@@ -570,7 +570,9 @@ abstract class PlaceholderUnificationVisitor
         state,
         s -> unifyExpression(node.getExpression(), s),
         s -> unifyStatement(node.getStatement(), s),
-        (expr, stmt) -> maker().ForeachLoop((JCVariableDecl) node.getVariable(), expr, stmt));
+        (expr, stmt) ->
+            UEnhancedForLoop.makeForeachLoop(
+                maker(), (JCVariableDecl) node.getVariable(), expr, stmt));
   }
 
   @Override
@@ -701,14 +703,16 @@ abstract class PlaceholderUnificationVisitor
             TreeMaker.class
                 .getMethod(
                     "Case",
-                    Class.forName("com.sun.source.tree.CaseTree.CaseKind"),
+                    Class.forName("com.sun.source.tree.CaseTree$CaseKind"),
                     List.class,
                     List.class,
                     JCTree.class)
                 .invoke(
                     maker(),
                     caseKind,
-                    List.of((JCExpression) node.getExpression()),
+                    RuntimeVersion.isAtLeast17()
+                        ? CaseTree.class.getMethod("getLabels").invoke(node)
+                        : List.of((JCExpression) node.getExpression()),
                     stmts,
                     /* body */ null);
       } else {

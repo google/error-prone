@@ -60,6 +60,14 @@ import javax.lang.model.element.Name;
             + "can make the code clearer.",
     severity = WARNING)
 public class BadImport extends BugChecker implements ImportTreeMatcher {
+  /**
+   * Class names which are bad as a direct import if they have an enclosing class.
+   *
+   * <p>The common factor for these names isn't just that they may be vague class names; there are
+   * many more examples of that. What's important is that they are vague <em>and</em> generally
+   * clarified by the name of the outer class (that is, {@code Foo.Builder} is clearer than {@code
+   * Builder}).
+   */
   static final ImmutableSet<String> BAD_NESTED_CLASSES =
       ImmutableSet.of(
           "Builder",
@@ -72,6 +80,7 @@ public class BadImport extends BugChecker implements ImportTreeMatcher {
           "Key",
           "Id",
           "Provider");
+
   private static final ImmutableSet<String> BAD_STATIC_IDENTIFIERS =
       ImmutableSet.of(
           "builder",
@@ -81,6 +90,7 @@ public class BadImport extends BugChecker implements ImportTreeMatcher {
           "getDefaultInstance",
           "INSTANCE",
           "newBuilder",
+          "newInstance",
           "of",
           "valueOf");
 

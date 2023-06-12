@@ -17,8 +17,10 @@
 package com.google.errorprone.bugpatterns.testdata;
 
 import com.google.errorprone.annotations.MustBeClosed;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
+@SuppressWarnings({"UnusedNestedClass", "UnusedVariable"})
 class MustBeClosedCheckerPositiveCases {
 
   class DoesNotImplementAutoCloseable {
@@ -66,11 +68,6 @@ class MustBeClosedCheckerPositiveCases {
     }
   }
 
-  interface Lambda {
-
-    Closeable expression();
-  }
-
   void positiveCase1() {
     // BUG: Diagnostic contains:
     new Foo().mustBeClosedAnnotatedMethod();
@@ -111,15 +108,45 @@ class MustBeClosedCheckerPositiveCases {
     return new Foo().mustBeClosedAnnotatedMethod();
   }
 
-  void positiveCase8() {
-    Lambda expression =
+  int existingDeclarationUsesVar() {
+    // BUG: Diagnostic contains:
+    var result = new Foo().mustBeClosedAnnotatedMethod();
+    return 0;
+  }
+
+  boolean twoCloseablesInOneExpression() {
+    // BUG: Diagnostic contains:
+    return new Foo().mustBeClosedAnnotatedMethod() == new Foo().mustBeClosedAnnotatedMethod();
+  }
+
+  void voidLambda() {
+    // Lambda has a fixless finding because no reasonable fix can be suggested.
+    // BUG: Diagnostic contains:
+    Runnable runnable = () -> new Foo().mustBeClosedAnnotatedMethod();
+  }
+
+  void expressionLambda() {
+    Supplier<Closeable> supplier =
+        () ->
+            // BUG: Diagnostic contains:
+            new Foo().mustBeClosedAnnotatedMethod();
+  }
+
+  void statementLambda() {
+    Supplier<Closeable> supplier =
         () -> {
           // BUG: Diagnostic contains:
           return new Foo().mustBeClosedAnnotatedMethod();
         };
   }
 
-  void positiveCase9() {
+  void methodReference() {
+    Supplier<Closeable> supplier =
+        // TODO(b/218377318): BUG: Diagnostic contains:
+        new Foo()::mustBeClosedAnnotatedMethod;
+  }
+
+  void anonymousClass() {
     new Foo() {
       @Override
       public Closeable mustBeClosedAnnotatedMethod() {
@@ -129,7 +156,17 @@ class MustBeClosedCheckerPositiveCases {
     };
   }
 
-  int expressionDeclaredVariable() {
+  void subexpression() {
+    // BUG: Diagnostic contains:
+    new Foo().mustBeClosedAnnotatedMethod().method();
+  }
+
+  void ternary(boolean condition) {
+    // BUG: Diagnostic contains:
+    int result = condition ? new Foo().mustBeClosedAnnotatedMethod().method() : 0;
+  }
+
+  int variableDeclaration() {
     // BUG: Diagnostic contains:
     int result = new Foo().mustBeClosedAnnotatedMethod().method();
     return result;

@@ -38,14 +38,12 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
-import com.sun.tools.javac.code.Source;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
-import com.sun.tools.javac.util.Context;
 import javax.annotation.Nullable;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
@@ -128,7 +126,6 @@ public class BoxedPrimitiveConstructor extends BugChecker implements NewClassTre
     if (HASH_CODE.matches(parent, state)) {
       // e.g. new Integer($A).hashCode() -> Integer.hashCode($A)
       SuggestedFix.Builder fix = SuggestedFix.builder();
-      String replacement;
 
       String optionalCast = "";
       String optionalSuffix = "";
@@ -145,14 +142,7 @@ public class BoxedPrimitiveConstructor extends BugChecker implements NewClassTre
           break;
       }
 
-      // In JDK8, there are primitive static methods on each type (Long.hashCode($long)). However,
-      // in Java 7, those don't exist, so we suggest Guava
-      if (shouldUseGuavaHashCode(state.context)) {
-        fix.addImport("com.google.common.primitives." + typeName + "s");
-        replacement = String.format("%ss.hashCode(", typeName);
-      } else {
-        replacement = String.format("%s.hashCode(", typeName);
-      }
+      String replacement = String.format("%s.hashCode(", typeName);
       return fix.replace(
               parent.getStartPosition(), arg.getStartPosition(), replacement + optionalCast)
           .replace(state.getEndPosition(arg), state.getEndPosition(parent), optionalSuffix + ")")
@@ -216,10 +206,6 @@ public class BoxedPrimitiveConstructor extends BugChecker implements NewClassTre
         .replace(getStartPosition(tree), arg.getStartPosition(), prefixToArg)
         .postfixWith(arg, suffix)
         .build();
-  }
-
-  private static boolean shouldUseGuavaHashCode(Context context) {
-    return Source.instance(context).compareTo(Source.lookup("1.7")) <= 0; // 7 or below
   }
 
   private static String maybeCast(VisitorState state, Type type, Type argType) {

@@ -31,7 +31,7 @@ public class SuggesterTest {
       BugCheckerRefactoringTestHelper.newInstance(Suggester.class, getClass());
 
   @Test
-  public void testBuildAnnotation_withImports() {
+  public void buildAnnotation_withImports() {
     assertThat(
             InlineMeData.buildAnnotation(
                 "REPLACEMENT",
@@ -43,7 +43,7 @@ public class SuggesterTest {
   }
 
   @Test
-  public void testBuildAnnotation_withSingleImport() {
+  public void buildAnnotation_withSingleImport() {
     assertThat(
             InlineMeData.buildAnnotation(
                 "REPLACEMENT", ImmutableSet.of("java.time.Duration"), ImmutableSet.of()))
@@ -52,7 +52,7 @@ public class SuggesterTest {
   }
 
   @Test
-  public void testInstanceMethodNewImport() {
+  public void instanceMethodNewImport() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -89,7 +89,7 @@ public class SuggesterTest {
   }
 
   @Test
-  public void testStaticMethodInNewClass() {
+  public void staticMethodInNewClass() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -119,7 +119,65 @@ public class SuggesterTest {
   }
 
   @Test
-  public void testProtectedConstructor() {
+  public void unqualifiedStaticFieldReference() {
+    refactoringTestHelper
+        .addInputLines(
+            "Client.java",
+            "package com.google.frobber;",
+            "public final class Client {",
+            "  public static final String STR = \"kurt\";",
+            "  @Deprecated",
+            "  public int stringLength() {",
+            "    return STR.length();",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Client.java",
+            "package com.google.frobber;",
+            "import com.google.errorprone.annotations.InlineMe;",
+            "public final class Client {",
+            "  public static final String STR = \"kurt\";",
+            // TODO(b/234643232): this is a bug; it should be "Client.STR.length()" plus an import
+            "  @InlineMe(replacement = \"STR.length()\")",
+            "  @Deprecated",
+            "  public int stringLength() {",
+            "    return STR.length();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void qualifiedStaticFieldReference() {
+    refactoringTestHelper
+        .addInputLines(
+            "Client.java",
+            "package com.google.frobber;",
+            "public final class Client {",
+            "  public static final String STR = \"kurt\";",
+            "  @Deprecated",
+            "  public int stringLength() {",
+            "    return Client.STR.length();",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Client.java",
+            "package com.google.frobber;",
+            "import com.google.errorprone.annotations.InlineMe;",
+            "public final class Client {",
+            "  public static final String STR = \"kurt\";",
+            "  @InlineMe(replacement = \"Client.STR.length()\", "
+                + "imports = \"com.google.frobber.Client\")",
+            "  @Deprecated",
+            "  public int stringLength() {",
+            "    return Client.STR.length();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void protectedConstructor() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -133,7 +191,7 @@ public class SuggesterTest {
   }
 
   @Test
-  public void testReturnField() {
+  public void returnField() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -161,7 +219,7 @@ public class SuggesterTest {
   }
 
   @Test
-  public void testImplementationSplitOverMultipleLines() {
+  public void implementationSplitOverMultipleLines() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -197,7 +255,7 @@ public class SuggesterTest {
   }
 
   @Test
-  public void testAnonymousClass() {
+  public void anonymousClass() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -218,7 +276,7 @@ public class SuggesterTest {
   }
 
   @Test
-  public void testMethodReference() {
+  public void methodReference() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -249,7 +307,7 @@ public class SuggesterTest {
   }
 
   @Test
-  public void testNewClass() {
+  public void newClass() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -277,7 +335,7 @@ public class SuggesterTest {
   }
 
   @Test
-  public void testNewArray() {
+  public void newArray() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -305,7 +363,7 @@ public class SuggesterTest {
   }
 
   @Test
-  public void testNewNestedClass() {
+  public void newNestedClass() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -334,7 +392,7 @@ public class SuggesterTest {
   }
 
   @Test
-  public void testReturnStringLiteral() {
+  public void returnStringLiteral() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -360,7 +418,7 @@ public class SuggesterTest {
   }
 
   @Test
-  public void testCallMethodWithStringLiteral() {
+  public void callMethodWithStringLiteral() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -392,7 +450,7 @@ public class SuggesterTest {
   }
 
   @Test
-  public void testReturnPrivateVariable() {
+  public void returnPrivateVariable() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -410,7 +468,7 @@ public class SuggesterTest {
   }
 
   @Test
-  public void testReturnPrivateVariable_qualifiedWithThis() {
+  public void returnPrivateVariable_qualifiedWithThis() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -428,7 +486,7 @@ public class SuggesterTest {
   }
 
   @Test
-  public void testSettingPrivateVariable() {
+  public void settingPrivateVariable() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -446,7 +504,7 @@ public class SuggesterTest {
   }
 
   @Test
-  public void testDelegateToParentClass() {
+  public void delegateToParentClass() {
     refactoringTestHelper
         .addInputLines(
             "Parent.java",
@@ -487,7 +545,7 @@ public class SuggesterTest {
   }
 
   @Test
-  public void testWithCast() {
+  public void withCast() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -520,7 +578,7 @@ public class SuggesterTest {
   }
 
   @Test
-  public void testAccessPrivateVariable() {
+  public void accessPrivateVariable() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -538,7 +596,7 @@ public class SuggesterTest {
   }
 
   @Test
-  public void testAccessPrivateMethod() {
+  public void accessPrivateMethod() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -557,7 +615,7 @@ public class SuggesterTest {
   }
 
   @Test
-  public void testTryWithResources() {
+  public void tryWithResources() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -577,7 +635,7 @@ public class SuggesterTest {
   }
 
   @Test
-  public void testIfStatement() {
+  public void ifStatement() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -594,7 +652,7 @@ public class SuggesterTest {
   }
 
   @Test
-  public void testNestedBlock() {
+  public void nestedBlock() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -611,7 +669,7 @@ public class SuggesterTest {
   }
 
   @Test
-  public void testTernaryOverMultipleLines() {
+  public void ternaryOverMultipleLines() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -645,7 +703,7 @@ public class SuggesterTest {
   }
 
   @Test
-  public void testStaticCallingAnotherQualifiedStatic() {
+  public void staticCallingAnotherQualifiedStatic() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -848,47 +906,6 @@ public class SuggesterTest {
   }
 
   @Test
-  public void testCustom() {
-    refactoringTestHelper
-        .addInputLines(
-            "InlineMe.java", //
-            "package bespoke;",
-            "public @interface InlineMe {",
-            "  String replacement();",
-            "  String[] imports() default {};",
-            "  String[] staticImports() default {};",
-            "}")
-        .expectUnchanged()
-        .addInputLines(
-            "Client.java",
-            "package com.google.frobber;",
-            "import java.time.Duration;",
-            "import java.util.Optional;",
-            "public final class Client {",
-            "  @Deprecated",
-            "  public Optional<Duration> silly(Optional<Long> input) {",
-            "    return input.map(Duration::ofMillis);",
-            "  }",
-            "}")
-        .addOutputLines(
-            "Client.java",
-            "package com.google.frobber;",
-            "import bespoke.InlineMe;",
-            "import java.time.Duration;",
-            "import java.util.Optional;",
-            "public final class Client {",
-            "  @InlineMe(replacement = \"input.map(Duration::ofMillis)\", ",
-            "      imports = \"java.time.Duration\")",
-            "  @Deprecated",
-            "  public Optional<Duration> silly(Optional<Long> input) {",
-            "    return input.map(Duration::ofMillis);",
-            "  }",
-            "}")
-        .setArgs("-XepOpt:InlineMe:annotation=bespoke.InlineMe")
-        .doTest();
-  }
-
-  @Test
   public void implementationUsingPublicStaticField() {
     refactoringTestHelper
         .addInputLines(
@@ -949,6 +966,84 @@ public class SuggesterTest {
             "  }",
             "}")
         .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void importStatic_getsCorrectlySuggestedAsStaticImports() {
+    refactoringTestHelper
+        .addInputLines(
+            "KeymasterEncrypter.java",
+            "package com.google.security.keymaster;",
+            "import static java.nio.charset.StandardCharsets.US_ASCII;",
+            "import com.google.errorprone.annotations.InlineMe;",
+            "public final class KeymasterEncrypter {",
+            "  @Deprecated",
+            "  public final byte[] encryptASCII(String plaintext) {",
+            "    return encrypt(plaintext.getBytes(US_ASCII));",
+            "  }",
+            "  public byte[] encrypt(byte[] plaintext) {",
+            "    return plaintext;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "KeymasterEncrypter.java",
+            "package com.google.security.keymaster;",
+            "import static java.nio.charset.StandardCharsets.US_ASCII;",
+            "import com.google.errorprone.annotations.InlineMe;",
+            "public final class KeymasterEncrypter {",
+            "  @InlineMe(",
+            "      replacement = \"this.encrypt(plaintext.getBytes(US_ASCII))\",",
+            "      staticImports =\"java.nio.charset.StandardCharsets.US_ASCII\")",
+            "  @Deprecated",
+            "  public final byte[] encryptASCII(String plaintext) {",
+            "    return encrypt(plaintext.getBytes(US_ASCII));",
+            "  }",
+            "  public byte[] encrypt(byte[] plaintext) {",
+            "    return plaintext;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void importStatic_getsIncorrectlySuggestedAsImportsInsteadOfStaticImports() {
+    refactoringTestHelper
+        .addInputLines(
+            "KeymasterCrypter.java",
+            "package com.google.security.keymaster;",
+            "import static java.nio.charset.StandardCharsets.US_ASCII;",
+            "import com.google.errorprone.annotations.InlineMe;",
+            "public final class KeymasterCrypter {",
+            "  @Deprecated",
+            "  public final String decryptASCII(byte[] ciphertext) {",
+            "    return new String(decrypt(ciphertext), US_ASCII);",
+            "  }",
+            "  public byte[] decrypt(byte[] ciphertext) {",
+            "    return ciphertext;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "KeymasterCrypter.java",
+            "package com.google.security.keymaster;",
+            "import static java.nio.charset.StandardCharsets.US_ASCII;",
+            "import com.google.errorprone.annotations.InlineMe;",
+            "public final class KeymasterCrypter {",
+            // TODO(b/242890437): This line is wrong:
+            "  @InlineMe(replacement = \"new String(this.decrypt(ciphertext), US_ASCII)\", imports"
+                + " = \"US_ASCII\")",
+            // It should be this instead:
+            // "  @InlineMe(",
+            // "      replacement = \"new String(this.decrypt(ciphertext), US_ASCII)\",",
+            // "      staticImports =\"java.nio.charset.StandardCharsets.US_ASCII\")",
+            "  @Deprecated",
+            "  public final String decryptASCII(byte[] ciphertext) {",
+            "    return new String(decrypt(ciphertext), US_ASCII);",
+            "  }",
+            "  public byte[] decrypt(byte[] ciphertext) {",
+            "    return ciphertext;",
+            "  }",
+            "}")
         .doTest();
   }
 }

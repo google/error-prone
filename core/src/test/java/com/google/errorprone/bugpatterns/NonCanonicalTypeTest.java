@@ -105,7 +105,7 @@ public final class NonCanonicalTypeTest {
         .addSourceLines(
             "Test.java",
             "class Test {",
-            // TODO(b/116104523): This should be flagged.
+            "  // BUG: Diagnostic contains: Did you mean 'A.B test() {'",
             "  AString.B test() {",
             "    return null;",
             "  }",
@@ -122,6 +122,21 @@ public final class NonCanonicalTypeTest {
             "class Test {",
             "  void test() {",
             "    Map.Entry<?, ?> entry = null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void qualifiedName_inLambdaParameter_cantFix() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.function.Function;",
+            "class Test {",
+            "  interface Rec extends Function<Rec, Rec> {}\n",
+            "  void run() {",
+            "    Rec f = x -> x.apply(x);",
             "  }",
             "}")
         .doTest();
@@ -148,6 +163,94 @@ public final class NonCanonicalTypeTest {
             "  private B.N f() {",
             "    return null;",
             "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void typeParameter_noFinding() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test<E extends Enum<E>> {",
+            "  E test(Class<E> clazz, String name) {",
+            "    return E.valueOf(clazz, name);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void arrays() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  int len(String[] xs) {",
+            "    return xs.length;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void clazz_noFinding() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void test () {",
+            "    var c = boolean.class;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void method_noFinding() {
+    compilationHelper
+        .addSourceLines("Super.java", "class Super {", "  static void f() {}", "}")
+        .addSourceLines(
+            "Test.java",
+            "class Test extends Super {",
+            "  void test() {",
+            "    Test.f();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  // TODO(cushon): the fix for this should be Super<?>.Inner, not Super.Inner
+  @Test
+  public void innerArray() {
+    compilationHelper
+        .addSourceLines(
+            "Super.java", //
+            "class Super<T> {",
+            "  class Inner {}",
+            "}")
+        .addSourceLines(
+            "Super.java", //
+            "class Sub<T> extends Super<T> {",
+            "}")
+        .addSourceLines(
+            "Test.java", //
+            "class Test {",
+            "  // BUG: Diagnostic contains: `Super.Inner` was referred to by the non-canonical name"
+                + " `Sub.Inner`",
+            "  Sub<?>.Inner[] x;",
+            "}")
+        .doTest();
+  }
+
+  // see https://github.com/google/error-prone/issues/3639
+  @Test
+  public void moduleInfo() {
+    compilationHelper
+        .addSourceLines(
+            "module-info.java", //
+            "module testmodule {",
+            "  requires java.base;",
             "}")
         .doTest();
   }

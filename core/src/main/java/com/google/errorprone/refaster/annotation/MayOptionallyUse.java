@@ -25,23 +25,23 @@ import java.lang.annotation.Target;
  * Indicates that a parameter to a placeholder method is not required to be used in the
  * placeholder's implementation. For example, the pattern
  *
- * <pre><code>
+ * <pre>{@code
  * abstract class Utf8Bytes {
- *  {@literal @}Placeholder abstract void handleException(
- *      {@literal @}MayOptionallyUse UnsupportedEncodingException e);
- *  {@literal @}Placeholder abstract void useString(String str);
- *  {@literal @}BeforeTemplate void before(byte[] array) {
+ *  @Placeholder abstract void handleException(
+ *      @MayOptionallyUse UnsupportedEncodingException e);
+ *  @Placeholder abstract void useString(String str);
+ *  @BeforeTemplate void before(byte[] array) {
  *     try {
  *       useString(new String(array, "UTF_8"));
  *     } catch (UnsupportedEncodingException e) {
  *       handleException(e);
  *     }
  *   }
- *  {@literal @}AfterTemplate void after(byte[] array) {
+ *  @AfterTemplate void after(byte[] array) {
  *     useString(new String(array, StandardCharsets.UTF_8));
  *   }
  * }
- * </code></pre>
+ * }</pre>
  *
  * would match even if the catch statement were empty, or didn't refer to e.
  */

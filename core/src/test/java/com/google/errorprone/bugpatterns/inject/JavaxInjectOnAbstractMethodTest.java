@@ -31,12 +31,12 @@ public class JavaxInjectOnAbstractMethodTest {
       CompilationTestHelper.newInstance(JavaxInjectOnAbstractMethod.class, getClass());
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper.addSourceFile("JavaxInjectOnAbstractMethodPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("JavaxInjectOnAbstractMethodNegativeCases.java").doTest();
   }
 }

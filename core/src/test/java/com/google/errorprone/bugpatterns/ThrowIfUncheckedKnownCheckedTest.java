@@ -28,12 +28,12 @@ public class ThrowIfUncheckedKnownCheckedTest {
       CompilationTestHelper.newInstance(ThrowIfUncheckedKnownChecked.class, getClass());
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper.addSourceFile("ThrowIfUncheckedKnownCheckedTestPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("ThrowIfUncheckedKnownCheckedTestNegativeCases.java").doTest();
   }
 }

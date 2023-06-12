@@ -83,7 +83,7 @@ public class DescriptionTest {
   private static final String URL = "  (see https://errorprone.info/bugpattern/DeadException)";
 
   @Test
-  public void testDescriptionFromBugPattern() {
+  public void descriptionFromBugPattern() {
     Description description = new MyChecker().getDescription();
     assertThat(description.checkName).isEqualTo("DeadException");
     assertThat(description.getMessageWithoutCheckName())
@@ -93,7 +93,7 @@ public class DescriptionTest {
   }
 
   @Test
-  public void testCustomDescription() {
+  public void customDescription() {
     Description description =
         new MyChecker()
             .buildDescription((DiagnosticPosition) new MockTree())
@@ -117,7 +117,7 @@ public class DescriptionTest {
   }
 
   @Test
-  public void testCustomLink() {
+  public void customLink() {
     Description description =
         new CustomLinkChecker()
             .buildDescription((DiagnosticPosition) new MockTree())
@@ -128,7 +128,7 @@ public class DescriptionTest {
   }
 
   @Test
-  public void testCustomLinkOverride() {
+  public void customLinkOverride() {
     Description description =
         new CustomLinkChecker()
             .buildDescription((DiagnosticPosition) new MockTree())

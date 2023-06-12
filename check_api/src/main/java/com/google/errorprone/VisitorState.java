@@ -220,7 +220,12 @@ public class VisitorState {
   }
 
   public VisitorState withPath(TreePath path) {
+    checkNotNull(path);
     return new VisitorState(context, path, suppressedState, sharedState);
+  }
+
+  private VisitorState withNoPathForMemoization() {
+    return new VisitorState(context, null, suppressedState, sharedState);
   }
 
   public VisitorState withSuppression(SuppressedState suppressedState) {
@@ -231,6 +236,13 @@ public class VisitorState {
   }
 
   public TreePath getPath() {
+    if (path == null) {
+      throw new UnsupportedOperationException(
+          "VisitorState.memoize Supplier implementations cannot access the TreePath: The result is"
+              + " cached across multiple CompilationUnitTree instances, which share none of the"
+              + " path. Alternatively, you've managed to call getPath() before the VisitorState's"
+              + " path was initialized.");
+    }
     return path;
   }
 
@@ -676,6 +688,12 @@ public class VisitorState {
 
     @Override
     public synchronized T get(VisitorState state) {
+      /*
+       * Don't let callers rely on the TreePath: The Cache is shared across the whole compilation,
+       * not just the current VisitorState's TreePath's CompilationUnit.
+       */
+      state = state.withNoPathForMemoization();
+
       /* javac is single-threaded, so in principle we don't really need to lock.
       But in practice it's cheap enough to be worth getting peace of mind that this is
       always correct. */
@@ -700,8 +718,11 @@ public class VisitorState {
 
   /**
    * Produces a cache for a function that is expected to return the same result throughout a
-   * compilation, but requires a VisitorState to compute that result. Do not use this method for a
-   * function that depends on the varying state of a VisitorState (e.g. {@link #getPath()}.
+   * compilation, but requires a {@link VisitorState} to compute that result.
+   *
+   * <p><b>Note:</b> Do not use this method for a function that depends on the varying state of a
+   * {@link com.google.errorprone.VisitorState} (e.g. {@link #getPath()}—including the compilation
+   * unit itself!).
    */
   public static <T> Supplier<T> memoize(Supplier<T> f) {
     return new Cache<>(f);

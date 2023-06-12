@@ -28,6 +28,7 @@ import com.google.errorprone.bugpatterns.BugChecker.CompoundAssignmentTreeMatche
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.OperatorPrecedence;
 import com.sun.source.tree.CompoundAssignmentTree;
 import com.sun.source.tree.ConditionalExpressionTree;
@@ -149,6 +150,13 @@ public class NarrowingCompoundAssignment extends BugChecker
       case RIGHT_SHIFT_ASSIGNMENT:
         // narrowing the result of a signed right shift does not lose information
         return Optional.absent();
+      case AND_ASSIGNMENT:
+      case XOR_ASSIGNMENT:
+      case OR_ASSIGNMENT:
+        if (twiddlingConstantBitsOk(tree)) {
+          return Optional.absent();
+        }
+        break;
       default:
         break;
     }
@@ -174,5 +182,26 @@ public class NarrowingCompoundAssignment extends BugChecker
     String castType = getType(tree.getVariable()).toString();
     String replacement = String.format("%s = (%s) (%s %s %s)", var, castType, var, op, expr);
     return Optional.of(SuggestedFix.replace(tree, replacement));
+  }
+
+  private static boolean twiddlingConstantBitsOk(CompoundAssignmentTree tree) {
+    int shift;
+    switch (ASTHelpers.getType(tree.getVariable()).getKind()) {
+      case BYTE:
+        shift = 8;
+        break;
+      case SHORT:
+        shift = 16;
+        break;
+      default:
+        return false;
+    }
+    Object constValue = ASTHelpers.constValue(tree.getExpression());
+    if (!(constValue instanceof Integer || constValue instanceof Long)) {
+      return false;
+    }
+    long constLong = ((Number) constValue).longValue();
+    long shifted = constLong >> shift;
+    return shifted == 0 || shifted == ~0;
   }
 }

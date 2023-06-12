@@ -29,7 +29,7 @@ public class CompatibleWithMisuseTest {
       CompilationTestHelper.newInstance(CompatibleWithMisuse.class, getClass());
 
   @Test
-  public void testOK() {
+  public void oK() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -45,7 +45,7 @@ public class CompatibleWithMisuseTest {
   }
 
   @Test
-  public void testBad() {
+  public void bad() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -81,7 +81,7 @@ public class CompatibleWithMisuseTest {
   }
 
   @Test
-  public void testNoTypeArgs() {
+  public void noTypeArgs() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -106,7 +106,7 @@ public class CompatibleWithMisuseTest {
   }
 
   @Test
-  public void testInnerTypes() {
+  public void innerTypes() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -125,7 +125,7 @@ public class CompatibleWithMisuseTest {
   }
 
   @Test
-  public void testNestedTypes() {
+  public void nestedTypes() {
     compilationHelper
         .addSourceLines(
             "Test.java",

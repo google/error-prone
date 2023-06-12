@@ -22,7 +22,9 @@ import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import javax.inject.Singleton;
 
-/** @author bhagwani@google.com (Sumit Bhagwani) */
+/**
+ * @author bhagwani@google.com (Sumit Bhagwani)
+ */
 public class CloseableProvidesPositiveCases {
 
   static class ImplementsClosable implements Closeable {

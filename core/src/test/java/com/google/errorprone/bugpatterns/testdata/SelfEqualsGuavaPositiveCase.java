@@ -18,7 +18,9 @@ package com.google.errorprone.bugpatterns.testdata;
 
 import com.google.common.base.Objects;
 
-/** @author alexeagle@google.com (Alex Eagle) */
+/**
+ * @author alexeagle@google.com (Alex Eagle)
+ */
 public class SelfEqualsGuavaPositiveCase {
   private String field = "";
 

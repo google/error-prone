@@ -18,7 +18,9 @@ package com.google.errorprone.bugpatterns.testdata;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-/** @author yulissa@google.com (Yulissa Arroyo-Paredes) */
+/**
+ * @author yulissa@google.com (Yulissa Arroyo-Paredes)
+ */
 public class ThrowsUncheckedExceptionNegativeCases {
   public void doSomething() {
     throw new IllegalArgumentException("thrown");

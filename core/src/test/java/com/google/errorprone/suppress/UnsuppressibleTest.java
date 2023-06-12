@@ -73,7 +73,7 @@ public class UnsuppressibleTest {
   }
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     ImmutableList<JavaFileObject> sources =
         forResources(getClass(), "UnsuppressiblePositiveCases.java");
     assertThat(compiler.compile(sources), is(Result.ERROR));

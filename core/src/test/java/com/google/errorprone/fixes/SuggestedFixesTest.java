@@ -303,7 +303,7 @@ public class SuggestedFixesTest {
   }
 
   @Test
-  public void qualifiedName_Object() {
+  public void qualifiedName_object() {
     CompilationTestHelper.newInstance(CastReturn.class, getClass())
         .addSourceLines(
             "Test.java",
@@ -360,7 +360,7 @@ public class SuggestedFixesTest {
   }
 
   @Test
-  public void fullQualifiedName_Object() {
+  public void fullQualifiedName_object() {
     CompilationTestHelper.newInstance(CastReturnFullType.class, getClass())
         .addSourceLines(
             "Test.java",
@@ -979,7 +979,7 @@ public class SuggestedFixesTest {
 
   @Test
   @org.junit.Ignore("There appears to be an issue parsing lambda comments")
-  public void testSuppressWarningsFix() {
+  public void suppressWarningsFix() {
     BugCheckerRefactoringTestHelper refactorTestHelper =
         BugCheckerRefactoringTestHelper.newInstance(SuppressMe.class, getClass());
     refactorTestHelper
@@ -1042,7 +1042,7 @@ public class SuggestedFixesTest {
   }
 
   @Test
-  public void testSuppressWarningsWithCommentFix() {
+  public void suppressWarningsWithCommentFix() {
     BugCheckerRefactoringTestHelper refactorTestHelper =
         BugCheckerRefactoringTestHelper.newInstance(
             new SuppressMeWithComment("b/XXXX: fix me!"), getClass());
@@ -1065,7 +1065,7 @@ public class SuggestedFixesTest {
   }
 
   @Test
-  public void testSuppressWarningsWithCommentFix_existingComment() {
+  public void suppressWarningsWithCommentFix_existingComment() {
     BugCheckerRefactoringTestHelper refactorTestHelper =
         BugCheckerRefactoringTestHelper.newInstance(
             new SuppressMeWithComment("b/XXXX: fix me!"), getClass());
@@ -1094,7 +1094,7 @@ public class SuggestedFixesTest {
   }
 
   @Test
-  public void testSuppressWarningsWithCommentFix_commentHasToBeLineWrapped() {
+  public void suppressWarningsWithCommentFix_commentHasToBeLineWrapped() {
     BugCheckerRefactoringTestHelper refactorTestHelper =
         BugCheckerRefactoringTestHelper.newInstance(
             new SuppressMeWithComment(

@@ -91,13 +91,11 @@ public final class AlmostJavadoc extends BugChecker implements CompilationUnitTr
 
   private static Optional<SuggestedFix> generateFix(Comment comment) {
     String text = comment.getText();
-    if (text.startsWith("/*") && !text.startsWith("/**")) {
-      if (HAS_TAG.matcher(text).find()) {
-        int pos = comment.getSourcePos(1);
-        return Optional.of(SuggestedFix.replace(pos, pos, "*"));
-      }
+    if (text.startsWith("/*") && !text.startsWith("/**") && HAS_TAG.matcher(text).find()) {
+      int pos = comment.getSourcePos(1);
+      return Optional.of(SuggestedFix.replace(pos, pos, "*"));
     }
-    if (text.startsWith("//") && text.endsWith("*/")) {
+    if (text.startsWith("//") && text.endsWith("*/") && HAS_TAG.matcher(text).find()) {
       if (text.startsWith("// /**")) {
         return Optional.of(
             SuggestedFix.replace(comment.getSourcePos(0), comment.getSourcePos(2), ""));

@@ -24,7 +24,9 @@ import io.reactivex.Single;
 import java.util.HashMap;
 import java.util.Map;
 
-/** @author friedj@google.com (Jake Fried) */
+/**
+ * @author friedj@google.com (Jake Fried)
+ */
 public class RxReturnValueIgnoredNegativeCases {
   interface CanIgnoreMethod {
     @CanIgnoreReturnValue

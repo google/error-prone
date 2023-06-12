@@ -17,6 +17,8 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static com.google.common.collect.Streams.findLast;
+import static com.google.common.collect.Streams.stream;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -25,7 +27,6 @@ import static java.util.Optional.ofNullable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
@@ -216,7 +217,7 @@ public class LambdaFunctionalInterface extends BugChecker implements MethodTreeM
 
     for (MethodInvocationTree methodInvocationTree : methodCallMap.values()) {
       if (methodInvocationTree.getArguments().stream()
-          .filter(a -> Kind.LAMBDA_EXPRESSION.equals(a.getKind()))
+          .filter(a -> a.getKind().equals(Kind.LAMBDA_EXPRESSION))
           .filter(a -> hasFunctionAsArg(a, state))
           .noneMatch(
               a ->
@@ -231,11 +232,11 @@ public class LambdaFunctionalInterface extends BugChecker implements MethodTreeM
   }
 
   private static ClassTree getTopLevelClassTree(VisitorState state) {
-    return (ClassTree)
-        Streams.findLast(
-                Streams.stream(state.getPath().iterator())
-                    .filter((Tree t) -> t.getKind() == Kind.CLASS))
-            .orElseThrow(() -> new IllegalArgumentException("No enclosing class found"));
+    return findLast(
+            stream(state.getPath().iterator())
+                .filter(ClassTree.class::isInstance)
+                .map(ClassTree.class::cast))
+        .orElseThrow(() -> new IllegalArgumentException("No enclosing class found"));
   }
 
   private ImmutableMultimap<String, MethodInvocationTree> methodCallsForSymbol(

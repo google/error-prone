@@ -81,21 +81,21 @@ public final class AlmostJavadocTest {
         .addInputLines(
             "Test.java", //
             "interface Test {",
-            "  // Foo. */",
+            "  // Foo. {@link Test} */",
             "  void foo();",
-            "  // ** Bar. */",
+            "  // ** Bar. {@link Test} */",
             "  void bar();",
-            "  // /** Baz. */",
+            "  // /** Baz. {@link Test} */",
             "  void baz();",
             "}")
         .addOutputLines(
             "Test.java", //
             "interface Test {",
-            "  /** Foo. */",
+            "  /** Foo. {@link Test} */",
             "  void foo();",
-            "  /** Bar. */",
+            "  /** Bar. {@link Test} */",
             "  void bar();",
-            "  /** Baz. */",
+            "  /** Baz. {@link Test} */",
             "  void baz();",
             "}")
         .doTest(TEXT_MATCH);
@@ -108,7 +108,15 @@ public final class AlmostJavadocTest {
             "Test.java", //
             "interface Test {",
             "  // */",
+            "  void foo();",
+            "  // bar /* bar */",
             "  void bar();",
+            "  // Baz. */",
+            "  void baz();",
+            "  // ** Foobar. */",
+            "  void foobar();",
+            "  // /** Barbaz. */",
+            "  void barbaz();",
             "}")
         .doTest();
   }

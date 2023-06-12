@@ -21,6 +21,7 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.streamSuperMethods;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
@@ -62,6 +63,7 @@ import javax.annotation.Nullable;
 
 /** Check for non-allowlisted callers to RestrictedApiChecker. */
 @BugPattern(
+    name = "RestrictedApi",
     summary = "Check for non-allowlisted callers to RestrictedApiChecker.",
     severity = SeverityLevel.ERROR)
 public class RestrictedApiChecker extends BugChecker
@@ -69,13 +71,6 @@ public class RestrictedApiChecker extends BugChecker
         NewClassTreeMatcher,
         AnnotationTreeMatcher,
         MemberReferenceTreeMatcher {
-
-  /**
-   * The name to use when reporting findings. It's important that this DOES NOT match {@link
-   * #canonicalName()}, because otherwise changing the severity won't work.
-   */
-  // TODO(b/151087021): rationalize this.
-  private static final String CHECK_NAME = "RestrictedApi";
 
   /**
    * Validates a {@code @RestrictedApi} annotation and that the declared restriction makes sense.
@@ -189,15 +184,14 @@ public class RestrictedApiChecker extends BugChecker
     }
 
     // Try each super method for @RestrictedApi
-    Optional<MethodSymbol> superWithRestrictedApi =
-        ASTHelpers.findSuperMethods(method, state.getTypes()).stream()
-            .filter((t) -> ASTHelpers.hasAnnotation(t, RestrictedApi.class, state))
-            .findFirst();
-    if (!superWithRestrictedApi.isPresent()) {
-      return NO_MATCH;
-    }
-    return checkRestriction(
-        getRestrictedApiAnnotation(superWithRestrictedApi.get(), state), where, state);
+    return streamSuperMethods(method, state.getTypes())
+        .filter((t) -> ASTHelpers.hasAnnotation(t, RestrictedApi.class, state))
+        .findFirst()
+        .map(
+            superWithRestrictedApi ->
+                checkRestriction(
+                    getRestrictedApiAnnotation(superWithRestrictedApi, state), where, state))
+        .orElse(NO_MATCH);
   }
 
   @Nullable
@@ -251,10 +245,8 @@ public class RestrictedApiChecker extends BugChecker
       return NO_MATCH;
     }
     SeverityLevel level = warn ? SeverityLevel.WARNING : SeverityLevel.ERROR;
-
     Description.Builder description =
-        Description.builder(
-            where, CHECK_NAME, restriction.link(), level, restriction.explanation());
+        buildDescription(where).setMessage(restriction.explanation()).overrideSeverity(level);
     return description.build();
   }
 

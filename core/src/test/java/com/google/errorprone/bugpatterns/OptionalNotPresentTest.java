@@ -30,12 +30,12 @@ public class OptionalNotPresentTest {
       CompilationTestHelper.newInstance(OptionalNotPresent.class, getClass());
 
   @Test
-  public void testNegativeCases() {
+  public void negativeCases() {
     compilationTestHelper.addSourceFile("OptionalNotPresentNegativeCases.java").doTest();
   }
 
   @Test
-  public void testPositiveCases() {
+  public void positiveCases() {
     compilationTestHelper.addSourceFile("OptionalNotPresentPositiveCases.java").doTest();
   }
 

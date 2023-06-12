@@ -19,6 +19,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
+import static com.google.errorprone.util.ASTHelpers.enclosingPackage;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.sameVariable;
 
@@ -77,8 +78,7 @@ public class ModifyCollectionInEnhancedForLoop extends BugChecker
     if (state.getTypes().closure(ASTHelpers.getReceiverType(tree)).stream()
         .anyMatch(
             s ->
-                s.asElement()
-                    .packge()
+                enclosingPackage(s.asElement())
                     .getQualifiedName()
                     .toString()
                     .startsWith("java.util.concurrent"))) {

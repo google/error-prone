@@ -29,7 +29,7 @@ public class GuardedByCheckerTest {
       CompilationTestHelper.newInstance(GuardedByChecker.class, getClass());
 
   @Test
-  public void testLocked() {
+  public void locked() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -62,7 +62,7 @@ public class GuardedByCheckerTest {
 
   /** "static synchronized method() { ... }" == "synchronized (MyClass.class) { ... }" */
   @Test
-  public void testStaticLocked() {
+  public void staticLocked() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -80,7 +80,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void testMonitor() {
+  public void monitor() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -110,7 +110,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void testWrongLock() {
+  public void wrongLock() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -137,7 +137,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void testGuardedStaticFieldAccess_1() {
+  public void guardedStaticFieldAccess_1() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -157,7 +157,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void testGuardedStaticFieldAccess_2() {
+  public void guardedStaticFieldAccess_2() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -177,7 +177,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void testGuardedStaticFieldAccess_3() {
+  public void guardedStaticFieldAccess_3() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -197,7 +197,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void testGuardedStaticFieldAccess_EnclosingClass() {
+  public void guardedStaticFieldAccess_enclosingClass() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -214,7 +214,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void testBadStaticFieldAccess() {
+  public void badStaticFieldAccess() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -234,7 +234,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void testBadGuard() {
+  public void badGuard() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -248,7 +248,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void testErrorProneAnnotation() {
+  public void errorProneAnnotation() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -262,7 +262,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void testUnheldInstanceGuard() {
+  public void unheldInstanceGuard() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -283,7 +283,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void testUnheldItselfGuard() {
+  public void unheldItselfGuard() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -348,7 +348,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void testCtor() {
+  public void ctor() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -364,7 +364,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void testBadGuardMethodAccess() {
+  public void badGuardMethodAccess() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -381,7 +381,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void testTransitiveGuardMethodAccess() {
+  public void transitiveGuardMethodAccess() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -398,7 +398,7 @@ public class GuardedByCheckerTest {
 
   @Ignore // TODO(cushon): support read/write lock copies
   @Test
-  public void testReadWriteLockCopy() {
+  public void readWriteLockCopy() {
     compilationHelper
         .addSourceLines(
             "threadsafety.Test",
@@ -432,7 +432,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void testReadWriteLock() {
+  public void readWriteLock() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -464,7 +464,7 @@ public class GuardedByCheckerTest {
 
   // Test that ReadWriteLocks are currently ignored.
   @Test
-  public void testReadWriteLockIsIgnored() {
+  public void readWriteLockIsIgnored() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -485,7 +485,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void testInnerClass_enclosingClassLock() {
+  public void innerClass_enclosingClassLock() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -511,7 +511,7 @@ public class GuardedByCheckerTest {
 
   // notice lexically enclosing owner, use NamedThis!
   @Test
-  public void testInnerClass_thisLock() {
+  public void innerClass_thisLock() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -531,7 +531,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void testAnonymousClass() {
+  public void anonymousClass() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -554,7 +554,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void testInheritedLock() {
+  public void inheritedLock() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -575,7 +575,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void testEnclosingSuperAccess() {
+  public void enclosingSuperAccess() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -599,7 +599,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void testSuperAccess_this() {
+  public void superAccess_this() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -618,7 +618,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void testSuperAccess_lock() {
+  public void superAccess_lock() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -642,7 +642,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void testSuperAccess_staticLock() {
+  public void superAccess_staticLock() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -666,7 +666,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void testOtherClass_bad_staticLock() {
+  public void otherClass_bad_staticLock() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -696,7 +696,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void testOtherClass_bad_staticLock_alsoSub() {
+  public void otherClass_bad_staticLock_alsoSub() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -726,7 +726,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void testOtherClass_staticLock() {
+  public void otherClass_staticLock() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -1043,11 +1043,8 @@ public class GuardedByCheckerTest {
         .doTest();
   }
 
-  // Test that the contents of try-with-resources block are ignored (for now), but the catch and
-  // finally blocks are checked.
-  // TODO(cushon): support try-with-resources block.
   @Test
-  public void tryWithResourcesAreNotFullyUnsupported() {
+  public void tryWithResources_resourceVariables() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -1060,7 +1057,8 @@ public class GuardedByCheckerTest {
             "  int x;",
             "  void m(AutoCloseable c) throws Exception {",
             "    try (AutoCloseable unused = c) {",
-            "      x++;  // should be an error!",
+            "      // BUG: Diagnostic contains:",
+            "      x++;",
             "    } catch (Exception e) {",
             "      // BUG: Diagnostic contains:",
             "      // should be guarded by 'this.lock'",
@@ -1087,7 +1085,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void testLexicalScopingExampleOne() {
+  public void lexicalScopingExampleOne() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -1117,7 +1115,7 @@ public class GuardedByCheckerTest {
 
   // TODO(cushon): allowing @GuardedBy on overridden methods is unsound.
   @Test
-  public void testLexicalScopingExampleTwo() {
+  public void lexicalScopingExampleTwo() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -1146,7 +1144,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void testAliasing() {
+  public void aliasing() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -1169,7 +1167,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void testMonitorGuard() {
+  public void monitorGuard() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -1192,7 +1190,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void testSemaphore() {
+  public void semaphore() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -1656,7 +1654,7 @@ public class GuardedByCheckerTest {
   // Ensure sure outer instance handling doesn't accidentally include enclosing classes of
   // static member classes.
   @Test
-  public void testStaticMemberClass_enclosingInstanceLock() {
+  public void staticMemberClass_enclosingInstanceLock() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -1675,14 +1673,13 @@ public class GuardedByCheckerTest {
             "    }",
             "  }",
             "}")
-        .setArgs("-XepOpt:GuardedByChecker:reportMissingGuards=true")
         .doTest();
   }
 
   // Ensure sure outer instance handling doesn't accidentally include enclosing classes of
   // static member classes.
   @Test
-  public void testStaticMemberClass_staticOuterClassLock() {
+  public void staticMemberClass_staticOuterClassLock() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -1752,7 +1749,7 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void testMissingGuard() {
+  public void missingGuard() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Lib.java",
@@ -1772,7 +1769,6 @@ public class GuardedByCheckerTest {
             "    lib.doSomething();",
             "  }",
             "}")
-        .setArgs("-XepOpt:GuardedByChecker:reportMissingGuards=true")
         .doTest();
   }
 
@@ -1820,7 +1816,6 @@ public class GuardedByCheckerTest {
             "    worker.f(work);",
             "  }",
             "}")
-        .setArgs("-XepOpt:GuardedByChecker:reportMissingGuards=true")
         .doTest();
   }
 
@@ -1848,7 +1843,6 @@ public class GuardedByCheckerTest {
             "    }",
             "  }",
             "}")
-        .setArgs("-XepOpt:GuardedByChecker:reportMissingGuards=true")
         .doTest();
   }
 
@@ -1875,7 +1869,6 @@ public class GuardedByCheckerTest {
             "    }",
             "  }",
             "}")
-        .setArgs("-XepOpt:GuardedByChecker:reportMissingGuards=true")
         .doTest();
   }
 
@@ -1898,7 +1891,76 @@ public class GuardedByCheckerTest {
             "    f(0);",
             "  }",
             "}")
-        .setArgs("-XepOpt:GuardedByChecker:reportMissingGuards=true")
+        .doTest();
+  }
+
+  @Test
+  public void immediateLambdas() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.ArrayList;",
+            "import java.util.List;",
+            "import java.util.Optional;",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "class Test {",
+            "  @GuardedBy(\"this\") private final List<String> xs = new ArrayList<>();",
+            "  @GuardedBy(\"ys\") private final List<String> ys = new ArrayList<>();",
+            "  public synchronized void add(Optional<String> x) {",
+            "    x.ifPresent(y -> xs.add(y));",
+            "    x.ifPresent(xs::add);",
+            "    // BUG: Diagnostic contains:",
+            "    x.ifPresent(y -> ys.add(y));",
+            "    // BUG: Diagnostic contains:",
+            "    x.ifPresent(ys::add);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void methodReferences_shouldBeFlagged() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.ArrayList;",
+            "import java.util.List;",
+            "import java.util.Optional;",
+            "import java.util.function.Predicate;",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "class Test {",
+            "  @GuardedBy(\"this\") private final List<String> xs = new ArrayList<>();",
+            "  private final List<Predicate<String>> preds = new ArrayList<>();",
+            "  public synchronized void test() {",
+            "    // BUG: Diagnostic contains:",
+            "    preds.add(xs::contains);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void methodReference_referencedMethodIsFlagged() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.ArrayList;",
+            "import java.util.List;",
+            "import java.util.Optional;",
+            "import java.util.function.Predicate;",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "class Test {",
+            "  private final List<Predicate<String>> preds = new ArrayList<>();",
+            "  public synchronized void test() {",
+            "    Optional.of(\"foo\").ifPresent(this::frobnicate);",
+            "    // BUG: Diagnostic contains: should be guarded by",
+            "    preds.add(this::frobnicate);",
+            "  }",
+            "  @GuardedBy(\"this\")",
+            "  public boolean frobnicate(String x) {",
+            "    return true;",
+            "  }",
+            "}")
         .doTest();
   }
 }

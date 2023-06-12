@@ -30,12 +30,12 @@ public class InstanceOfAndCastMatchWrongTypeTest {
       CompilationTestHelper.newInstance(InstanceOfAndCastMatchWrongType.class, getClass());
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper.addSourceFile("InstanceOfAndCastMatchWrongTypePositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("InstanceOfAndCastMatchWrongTypeNegativeCases.java").doTest();
   }
 

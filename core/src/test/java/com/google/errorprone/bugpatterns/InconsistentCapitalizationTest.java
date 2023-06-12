@@ -32,7 +32,7 @@ public class InconsistentCapitalizationTest {
       BugCheckerRefactoringTestHelper.newInstance(InconsistentCapitalization.class, getClass());
 
   @Test
-  public void testNegativeCases() {
+  public void negativeCases() {
     compilationHelper.addSourceFile("InconsistentCapitalizationNegativeCases.java").doTest();
   }
 

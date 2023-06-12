@@ -166,6 +166,23 @@ public final class UnnecessaryMethodReferenceTest {
   }
 
   @Test
+  public void positiveCaseViaConvert_viaIntermediateType() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.base.Converter;",
+            "import com.google.common.base.Function;",
+            "class Test {",
+            "  void a(Converter<Integer, String> fn) {",
+            "    // BUG: Diagnostic contains: b(fn)",
+            "    b(fn::convert);",
+            "  }",
+            "  void b(Function<Integer, String> fn) {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void ignoreSuper() {
     helper
         .addSourceLines(
@@ -195,6 +212,40 @@ public final class UnnecessaryMethodReferenceTest {
             "  void g(Consumer<Object> c) {",
             "    f(c::accept);",
             "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void range_isJavaPredicate() {
+    helper
+        .addSourceLines(
+            "T.java",
+            "import com.google.common.collect.Range;",
+            "import java.util.stream.Stream;",
+            "abstract class T {",
+            "  Stream<Long> g(Stream<Long> x, Range<Long> range) {",
+            "    // BUG: Diagnostic contains: filter(range)",
+            "    return x.filter(range::contains);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void range_isGuavaPredicate() {
+    helper
+        .addSourceLines(
+            "T.java",
+            "import com.google.common.base.Predicate;",
+            "import com.google.common.collect.Range;",
+            "import java.util.stream.Stream;",
+            "abstract class T {",
+            "  void g(Range<Long> range) {",
+            "    // BUG: Diagnostic contains: b(range)",
+            "    b(range::contains);",
+            "  }",
+            "  abstract void b(Predicate<Long> p);",
             "}")
         .doTest();
   }

@@ -16,6 +16,8 @@
 
 package com.google.errorprone.matchers;
 
+import static com.google.errorprone.util.ASTHelpers.isStatic;
+
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
@@ -55,7 +57,7 @@ public final class FieldMatchers {
 
       @Override
       boolean fieldSymbolIsAppropriate(Symbol symbol) {
-        return symbol.isStatic() && symbol.getSimpleName().contentEquals(fieldName);
+        return isStatic(symbol) && symbol.getSimpleName().contentEquals(fieldName);
       }
     };
   }
@@ -69,7 +71,7 @@ public final class FieldMatchers {
 
       @Override
       boolean fieldSymbolIsAppropriate(Symbol symbol) {
-        return !symbol.isStatic() && symbol.getSimpleName().contentEquals(fieldName);
+        return !isStatic(symbol) && symbol.getSimpleName().contentEquals(fieldName);
       }
     };
   }

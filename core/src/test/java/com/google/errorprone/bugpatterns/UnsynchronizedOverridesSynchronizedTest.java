@@ -32,7 +32,11 @@ public class UnsynchronizedOverridesSynchronizedTest {
   public void positive() {
     compilationHelper
         .addSourceLines(
-            "test/Super.java", "package test;", "class Super {", "  synchronized void f() {}", "}")
+            "test/Super.java", //
+            "package test;",
+            "class Super {",
+            "  synchronized void f() {}",
+            "}")
         .addSourceLines(
             "test/Test.java",
             "package test;",
@@ -152,6 +156,47 @@ public class UnsynchronizedOverridesSynchronizedTest {
             "    public void f() {",
             "      super.f();",
             "    }",
+            "  }",
+            "  class D extends Lib {",
+            "    public void f() {",
+            "      return;",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void ignoreOverrideThatReturnsThis() {
+    compilationHelper
+        .addSourceLines(
+            "test/Test.java",
+            "package test;",
+            "abstract class Test extends Throwable {",
+            "  @Override",
+            "  public Throwable fillInStackTrace() {",
+            "    return this;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void ignoreOverrideThatReturnsConstant() {
+    compilationHelper
+        .addSourceLines(
+            "A.java", //
+            "class A {",
+            "  synchronized int f() {",
+            "    return -1;",
+            "  }",
+            "}")
+        .addSourceLines(
+            "B.java",
+            "class B extends A {",
+            "  @Override",
+            "  public int f() {",
+            "    return 42;",
             "  }",
             "}")
         .doTest();

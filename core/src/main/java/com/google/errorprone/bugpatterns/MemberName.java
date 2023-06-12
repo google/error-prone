@@ -30,7 +30,11 @@ import static com.google.errorprone.util.ASTHelpers.canBeRemoved;
 import static com.google.errorprone.util.ASTHelpers.findSuperMethods;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
+import static com.google.errorprone.util.ASTHelpers.isStatic;
 import static java.util.stream.Collectors.joining;
+import static javax.lang.model.element.ElementKind.EXCEPTION_PARAMETER;
+import static javax.lang.model.element.ElementKind.LOCAL_VARIABLE;
+import static javax.lang.model.element.ElementKind.RESOURCE_VARIABLE;
 
 import com.google.common.base.CaseFormat;
 import com.google.common.base.Splitter;
@@ -170,8 +174,11 @@ public final class MemberName extends BugChecker implements MethodTreeMatcher, V
   }
 
   private static boolean canBeRenamed(Symbol symbol) {
-    return symbol.isPrivate() || symbol.getKind().equals(ElementKind.LOCAL_VARIABLE);
+    return symbol.isPrivate() || LOCAL_VARIABLE_KINDS.contains(symbol.getKind());
   }
+
+  private static final ImmutableSet<ElementKind> LOCAL_VARIABLE_KINDS =
+      ImmutableSet.of(LOCAL_VARIABLE, RESOURCE_VARIABLE, EXCEPTION_PARAMETER);
 
   private static boolean isConformant(Symbol symbol, String name) {
     if (isStaticVariable(symbol) && UPPER_UNDERSCORE_PATTERN.matcher(name).matches()) {
@@ -181,7 +188,7 @@ public final class MemberName extends BugChecker implements MethodTreeMatcher, V
   }
 
   private static boolean isStaticVariable(Symbol symbol) {
-    return symbol instanceof VarSymbol && symbol.isStatic();
+    return symbol instanceof VarSymbol && isStatic(symbol);
   }
 
   private static final Pattern LOWER_UNDERSCORE_PATTERN = Pattern.compile("[a-z0-9_]+");

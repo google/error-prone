@@ -18,8 +18,8 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
-import static com.google.errorprone.util.ASTHelpers.findSuperMethods;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
+import static com.google.errorprone.util.ASTHelpers.streamSuperMethods;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.StandardTags;
@@ -30,6 +30,7 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.MethodTree;
+import javax.inject.Inject;
 import javax.lang.model.element.Modifier;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
@@ -42,7 +43,8 @@ public class MissingOverride extends BugChecker implements MethodTreeMatcher {
   /** if true, don't warn on missing {@code @Override} annotations inside interfaces */
   private final boolean ignoreInterfaceOverrides;
 
-  public MissingOverride(ErrorProneFlags flags) {
+  @Inject
+  MissingOverride(ErrorProneFlags flags) {
     this.ignoreInterfaceOverrides =
         flags.getBoolean("MissingOverride:IgnoreInterfaceOverrides").orElse(false);
   }
@@ -59,7 +61,7 @@ public class MissingOverride extends BugChecker implements MethodTreeMatcher {
     if (ignoreInterfaceOverrides && sym.enclClass().isInterface()) {
       return NO_MATCH;
     }
-    return findSuperMethods(sym, state.getTypes()).stream()
+    return streamSuperMethods(sym, state.getTypes())
         .findFirst()
         .filter(unused -> ASTHelpers.getGeneratedBy(state).isEmpty())
         // to allow deprecated methods to be removed non-atomically, we permit overrides of

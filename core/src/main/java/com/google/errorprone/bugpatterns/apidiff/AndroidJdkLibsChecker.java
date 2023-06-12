@@ -30,6 +30,7 @@ import com.google.protobuf.ExtensionRegistry;
 import com.sun.source.tree.ExpressionTree;
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import javax.inject.Inject;
 
 /**
  * Checks for uses of classes, fields, or methods that are not compatible with legacy Android
@@ -38,7 +39,7 @@ import java.io.UncheckedIOException;
  */
 @BugPattern(
     name = "AndroidJdkLibsChecker",
-    altNames = {"Java7ApiChecker", "AndroidApiChecker"},
+    altNames = "AndroidApiChecker",
     summary = "Use of class, field, or method that is not compatible with legacy Android devices",
     severity = ERROR)
 // TODO(b/32513850): Allow Android N+ APIs, e.g., by computing API diff using android.jar
@@ -63,7 +64,8 @@ public class AndroidJdkLibsChecker extends ApiDiffChecker {
 
   private final boolean allowJava8;
 
-  public AndroidJdkLibsChecker(ErrorProneFlags flags) {
+  @Inject
+  AndroidJdkLibsChecker(ErrorProneFlags flags) {
     this(flags.getBoolean("Android:Java8Libs").orElse(false));
   }
 

@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.util.ASTHelpers.isStatic;
 
 import com.google.common.base.Ascii;
 import com.google.common.collect.ImmutableMap;
@@ -135,8 +136,7 @@ public class InconsistentCapitalization extends BugChecker implements ClassTreeM
 
   /** Returns true if the given symbol has static modifier and is all upper case. */
   private static boolean isUpperCaseAndStatic(Symbol symbol) {
-    return symbol.isStatic()
-        && symbol.name.contentEquals(Ascii.toUpperCase(symbol.name.toString()));
+    return isStatic(symbol) && symbol.name.contentEquals(Ascii.toUpperCase(symbol.name.toString()));
   }
 
   /**

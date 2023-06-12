@@ -36,7 +36,7 @@ public class BundleDeserializationCastTest {
           .setArgs(ImmutableList.of("-XDandroidCompatible=true"));
 
   @Test
-  public void testPositiveCaseGetCustomList() {
+  public void positiveCaseGetCustomList() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -58,7 +58,7 @@ public class BundleDeserializationCastTest {
   }
 
   @Test
-  public void testPositiveCaseGetCustomMap() {
+  public void positiveCaseGetCustomMap() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -80,7 +80,7 @@ public class BundleDeserializationCastTest {
   }
 
   @Test
-  public void testNegativeCaseGetArrayList() {
+  public void negativeCaseGetArrayList() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -96,7 +96,7 @@ public class BundleDeserializationCastTest {
   }
 
   @Test
-  public void testNegativeCaseGetHashMap() {
+  public void negativeCaseGetHashMap() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -112,7 +112,7 @@ public class BundleDeserializationCastTest {
   }
 
   @Test
-  public void testNegativeCaseGetParcelableList() {
+  public void negativeCaseGetParcelableList() {
     compilationHelper
         .addSourceFile("CustomParcelableList.java")
         .addSourceLines(
@@ -131,7 +131,7 @@ public class BundleDeserializationCastTest {
   }
 
   @Test
-  public void testNegativeCaseNoCast() {
+  public void negativeCaseNoCast() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -146,7 +146,7 @@ public class BundleDeserializationCastTest {
   }
 
   @Test
-  public void testNegativeCaseOtherCast() {
+  public void negativeCaseOtherCast() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -162,7 +162,7 @@ public class BundleDeserializationCastTest {
   }
 
   @Test
-  public void testNegativeCaseGetList() {
+  public void negativeCaseGetList() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -178,7 +178,7 @@ public class BundleDeserializationCastTest {
   }
 
   @Test
-  public void testNegativeCaseGetMap() {
+  public void negativeCaseGetMap() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -194,7 +194,7 @@ public class BundleDeserializationCastTest {
   }
 
   @Test
-  public void testNegativeCaseGetPrimitive() {
+  public void negativeCaseGetPrimitive() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -209,7 +209,7 @@ public class BundleDeserializationCastTest {
   }
 
   @Test
-  public void testNegativeCaseGetPrimitiveArray() {
+  public void negativeCaseGetPrimitiveArray() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -224,7 +224,7 @@ public class BundleDeserializationCastTest {
   }
 
   @Test
-  public void testNegativeCaseGetReferenceArray() {
+  public void negativeCaseGetReferenceArray() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -240,7 +240,7 @@ public class BundleDeserializationCastTest {
   }
 
   @Test
-  public void testPositiveCaseGetCustomCharSequenceArray() {
+  public void positiveCaseGetCustomCharSequenceArray() {
     compilationHelper
         .addSourceLines(
             "CustomCharSequence.java",
@@ -271,7 +271,7 @@ public class BundleDeserializationCastTest {
   }
 
   @Test
-  public void testNegativeCaseGetStringArray() {
+  public void negativeCaseGetStringArray() {
     compilationHelper
         .addSourceLines(
             "Test.java",

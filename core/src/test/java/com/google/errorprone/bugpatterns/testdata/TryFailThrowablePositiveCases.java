@@ -24,7 +24,9 @@ import java.util.Arrays;
 import junit.framework.TestCase;
 import org.junit.Assert;
 
-/** @author adamwos@google.com (Adam Wos) */
+/**
+ * @author adamwos@google.com (Adam Wos)
+ */
 public class TryFailThrowablePositiveCases {
 
   public static void emptyCatch_failNoMessage() {

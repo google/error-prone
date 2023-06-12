@@ -29,12 +29,12 @@ public class InjectedConstructorAnnotationsTest {
       CompilationTestHelper.newInstance(InjectedConstructorAnnotations.class, getClass());
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper.addSourceFile("InjectedConstructorAnnotationsPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("InjectedConstructorAnnotationsNegativeCases.java").doTest();
   }
 }

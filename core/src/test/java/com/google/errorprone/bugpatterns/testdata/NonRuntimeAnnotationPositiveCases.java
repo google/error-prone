@@ -19,13 +19,15 @@ package com.google.errorprone.bugpatterns.testdata;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-/** @author scottjohnson@google.com (Scott Johnsson) */
+/**
+ * @author scottjohnson@google.com (Scott Johnsson)
+ */
 @NonRuntimeAnnotationPositiveCases.NotSpecified
 @NonRuntimeAnnotationPositiveCases.NonRuntime
 public class NonRuntimeAnnotationPositiveCases {
 
   public NonRuntime testAnnotation() {
-    // BUG: Diagnostic contains:
+    // BUG: Diagnostic contains: runtime; NonRuntime
     NonRuntimeAnnotationPositiveCases.class.getAnnotation(
         NonRuntimeAnnotationPositiveCases.NonRuntime.class);
     // BUG: Diagnostic contains:

@@ -30,12 +30,12 @@ public class MoreThanOneScopeAnnotationOnClassTest {
       CompilationTestHelper.newInstance(MoreThanOneScopeAnnotationOnClass.class, getClass());
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper.addSourceFile("MoreThanOneScopeAnnotationOnClassPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("MoreThanOneScopeAnnotationOnClassNegativeCases.java").doTest();
   }
 }

@@ -30,42 +30,42 @@ public class OverridesTest {
       CompilationTestHelper.newInstance(Overrides.class, getClass());
 
   @Test
-  public void testPositiveCase1() {
+  public void positiveCase1() {
     compilationHelper.addSourceFile("OverridesPositiveCase1.java").doTest();
   }
 
   @Test
-  public void testPositiveCase2() {
+  public void positiveCase2() {
     compilationHelper.addSourceFile("OverridesPositiveCase2.java").doTest();
   }
 
   @Test
-  public void testPositiveCase3() {
+  public void positiveCase3() {
     compilationHelper.addSourceFile("OverridesPositiveCase3.java").doTest();
   }
 
   @Test
-  public void testPositiveCase4() {
+  public void positiveCase4() {
     compilationHelper.addSourceFile("OverridesPositiveCase4.java").doTest();
   }
 
   @Test
-  public void testPositiveCase5() {
+  public void positiveCase5() {
     compilationHelper.addSourceFile("OverridesPositiveCase5.java").doTest();
   }
 
   @Test
-  public void testNegativeCase1() {
+  public void negativeCase1() {
     compilationHelper.addSourceFile("OverridesNegativeCase1.java").doTest();
   }
 
   @Test
-  public void testNegativeCase2() {
+  public void negativeCase2() {
     compilationHelper.addSourceFile("OverridesNegativeCase2.java").doTest();
   }
 
   @Test
-  public void testNegativeCase3() {
+  public void negativeCase3() {
     compilationHelper.addSourceFile("OverridesNegativeCase3.java").doTest();
   }
 }

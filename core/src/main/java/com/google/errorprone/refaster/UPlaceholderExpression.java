@@ -147,7 +147,7 @@ public abstract class UPlaceholderExpression extends UExpression {
   @Override
   protected Choice<Unifier> defaultAction(Tree node, Unifier unifier) {
     // for now we only match JCExpressions
-    if (placeholder().returnType().equals(UPrimitiveType.VOID) || !(node instanceof JCExpression)) {
+    if (!(node instanceof JCExpression)) {
       return Choice.none();
     }
     JCExpression expr = (JCExpression) node;

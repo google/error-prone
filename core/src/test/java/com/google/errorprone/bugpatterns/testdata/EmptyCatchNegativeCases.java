@@ -21,7 +21,9 @@ import static org.junit.Assert.fail;
 import java.io.FileNotFoundException;
 import org.junit.Test;
 
-/** @author yuan@ece.toronto.edu (Ding Yuan) */
+/**
+ * @author yuan@ece.toronto.edu (Ding Yuan)
+ */
 public class EmptyCatchNegativeCases {
   public void error() throws IllegalArgumentException {
     throw new IllegalArgumentException("Fake exception.");

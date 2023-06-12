@@ -32,7 +32,7 @@ public class ArrayFillIncompatibleTypeTest {
       CompilationTestHelper.newInstance(ArrayFillIncompatibleType.class, getClass());
 
   @Test
-  public void testPrimitiveBoxingIntoObject() {
+  public void primitiveBoxingIntoObject() {
     assumeFalse(RuntimeVersion.isAtLeast12()); // https://bugs.openjdk.java.net/browse/JDK-8028563
     compilationHelper
         .addSourceLines(
@@ -48,7 +48,7 @@ public class ArrayFillIncompatibleTypeTest {
   }
 
   @Test
-  public void testPositive() {
+  public void positive() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -67,7 +67,7 @@ public class ArrayFillIncompatibleTypeTest {
   }
 
   @Test
-  public void testTernary() {
+  public void ternary() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -85,7 +85,7 @@ public class ArrayFillIncompatibleTypeTest {
   }
 
   @Test
-  public void testBoxing() {
+  public void boxing() {
     compilationHelper
         .addSourceLines(
             "Test.java",

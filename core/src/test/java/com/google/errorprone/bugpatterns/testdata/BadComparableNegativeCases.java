@@ -18,7 +18,9 @@ package com.google.errorprone.bugpatterns.testdata;
 
 import java.util.Comparator;
 
-/** @author irogers@google.com (Ian Rogers) */
+/**
+ * @author irogers@google.com (Ian Rogers)
+ */
 public class BadComparableNegativeCases {
   // The corrected cases of the PositiveCases test.
   static class ComparableTest implements Comparable<ComparableTest> {

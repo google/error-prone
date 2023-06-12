@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Iterables.isEmpty;
+import static com.google.errorprone.util.ASTHelpers.enclosingPackage;
 import static com.google.errorprone.util.ASTHelpers.findMatchingMethods;
 import static com.google.errorprone.util.ASTHelpers.getUpperBound;
 import static com.google.errorprone.util.ASTHelpers.isCastable;
@@ -293,7 +294,7 @@ public final class TypeCompatibilityUtils {
 
   private static String classNamePart(Type type) {
     String fullClassname = type.asElement().getQualifiedName().toString();
-    String packageName = type.asElement().packge().fullname.toString();
+    String packageName = enclosingPackage(type.asElement()).fullname.toString();
     String prefix = fullClassname.substring(packageName.length());
     return prefix.startsWith(".") ? prefix.substring(1) : prefix;
   }

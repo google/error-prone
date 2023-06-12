@@ -37,12 +37,12 @@ public class JUnit4SetUpNotRunTest {
       BugCheckerRefactoringTestHelper.newInstance(JUnit4SetUpNotRun.class, getClass());
 
   @Test
-  public void testPositiveCases() {
+  public void positiveCases() {
     compilationHelper.addSourceFile("JUnit4SetUpNotRunPositiveCases.java").doTest();
   }
 
   @Test
-  public void testPositiveCase_customBefore() {
+  public void positiveCase_customBefore() {
     compilationHelper.addSourceFile("JUnit4SetUpNotRunPositiveCaseCustomBefore.java").doTest();
   }
 
@@ -78,12 +78,12 @@ public class JUnit4SetUpNotRunTest {
   }
 
   @Test
-  public void testPositiveCase_customBeforeDifferentName() {
+  public void positiveCase_customBeforeDifferentName() {
     compilationHelper.addSourceFile("JUnit4SetUpNotRunPositiveCaseCustomBefore2.java").doTest();
   }
 
   @Test
-  public void testNegativeCases() {
+  public void negativeCases() {
     compilationHelper.addSourceFile("JUnit4SetUpNotRunNegativeCases.java").doTest();
   }
 

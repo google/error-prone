@@ -25,7 +25,6 @@ import static com.google.errorprone.suppliers.Suppliers.ANNOTATION_TYPE;
 import static com.sun.source.tree.Tree.Kind.CLASS;
 import static com.sun.source.tree.Tree.Kind.ENUM;
 
-import com.google.common.base.Predicate;
 import com.google.common.base.Verify;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -44,6 +43,7 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.util.Name;
 import java.lang.annotation.Annotation;
+import java.util.function.Predicate;
 import javax.annotation.Nullable;
 
 /**
@@ -83,28 +83,20 @@ public class BadAnnotationImplementation extends BugChecker implements ClassTree
     Types types = state.getTypes();
     Name equalsName = EQUALS.get(state);
     Predicate<MethodSymbol> equalsPredicate =
-        new Predicate<MethodSymbol>() {
-          @Override
-          public boolean apply(MethodSymbol methodSymbol) {
-            return !methodSymbol.isStatic()
+        methodSymbol ->
+            !methodSymbol.isStatic()
                 && ((methodSymbol.flags() & Flags.SYNTHETIC) == 0)
                 && ((methodSymbol.flags() & Flags.ABSTRACT) == 0)
                 && methodSymbol.getParameters().size() == 1
                 && types.isSameType(
                     methodSymbol.getParameters().get(0).type, state.getSymtab().objectType);
-          }
-        };
     Name hashCodeName = HASHCODE.get(state);
     Predicate<MethodSymbol> hashCodePredicate =
-        new Predicate<MethodSymbol>() {
-          @Override
-          public boolean apply(MethodSymbol methodSymbol) {
-            return !methodSymbol.isStatic()
+        methodSymbol ->
+            !methodSymbol.isStatic()
                 && ((methodSymbol.flags() & Flags.SYNTHETIC) == 0)
                 && ((methodSymbol.flags() & Flags.ABSTRACT) == 0)
                 && methodSymbol.getParameters().isEmpty();
-          }
-        };
 
     for (Type sup : types.closure(ASTHelpers.getSymbol(classTree).type)) {
       if (equals == null) {
@@ -134,7 +126,7 @@ public class BadAnnotationImplementation extends BugChecker implements ClassTree
         continue;
       }
       MethodSymbol methodSymbol = (MethodSymbol) sym;
-      if (predicate.apply(methodSymbol)) {
+      if (predicate.test(methodSymbol)) {
         return methodSymbol;
       }
     }

@@ -112,6 +112,7 @@ public class IsLoggableTagLength extends BugChecker implements MethodInvocationT
         .findEnclosing(ClassTree.class)
         .accept(
             new TreeScanner<VariableTree, Void>() {
+              @Nullable
               @Override
               public VariableTree visitVariable(VariableTree node, Void p) {
                 return getSymbol(node).equals(identifierSymbol) ? node : null;

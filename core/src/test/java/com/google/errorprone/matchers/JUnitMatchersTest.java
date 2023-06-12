@@ -54,7 +54,7 @@ public final class JUnitMatchersTest {
   }
 
   @Test
-  public void testAnnotationOnMethod_shouldBeJUnit4() {
+  public void annotationOnMethod_shouldBeJUnit4() {
     compilationHelper
         .addSourceLines(
             "TestAnnotationOnMethod.java",
@@ -147,7 +147,7 @@ public final class JUnitMatchersTest {
   }
 
   @Test
-  public void testCaseDescendant_shouldBeJUnit3() {
+  public void caseDescendant_shouldBeJUnit3() {
     compilationHelper
         .addSourceLines(
             "TestCaseDescendant.java",

@@ -21,7 +21,9 @@ import java.io.IOException;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 
-/** @author cpovirk@google.com (Chris Povirk) */
+/**
+ * @author cpovirk@google.com (Chris Povirk)
+ */
 public class ThrowIfUncheckedKnownCheckedTestNegativeCases {
   void exception(Exception e) {
     throwIfUnchecked(e);

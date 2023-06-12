@@ -29,12 +29,12 @@ public class ModifyCollectionInEnhancedForLoopTest {
       CompilationTestHelper.newInstance(ModifyCollectionInEnhancedForLoop.class, getClass());
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper.addSourceFile("ModifyCollectionInEnhancedForLoopPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("ModifyCollectionInEnhancedForLoopNegativeCases.java").doTest();
   }
 

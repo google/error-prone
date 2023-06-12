@@ -16,11 +16,18 @@
 
 package com.google.errorprone.bugpatterns;
 
-import com.google.auto.value.processor.AutoBuilderProcessor;
-import com.google.auto.value.processor.AutoValueProcessor;
-import com.google.common.collect.ImmutableList;
+import static java.nio.charset.StandardCharsets.UTF_8;
+
+import com.google.common.base.Joiner;
+import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
@@ -33,13 +40,18 @@ public class CheckReturnValueTest {
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(CheckReturnValue.class, getClass());
 
+  private final BugCheckerRefactoringTestHelper refactoringHelper =
+      BugCheckerRefactoringTestHelper.newInstance(CheckReturnValue.class, getClass());
+
+  @Rule public TemporaryFolder temporaryFolder = new TemporaryFolder();
+
   @Test
-  public void testPositiveCases() {
+  public void positiveCases() {
     compilationHelper.addSourceFile("CheckReturnValuePositiveCases.java").doTest();
   }
 
   @Test
-  public void testCustomCheckReturnValueAnnotation() {
+  public void customCheckReturnValueAnnotation() {
     compilationHelper
         .addSourceLines(
             "foo/bar/CheckReturnValue.java",
@@ -55,7 +67,7 @@ public class CheckReturnValueTest {
             "    return \"string\";",
             "  }",
             "  public void doIt() {",
-            "    // BUG: Diagnostic contains:",
+            "    // BUG: Diagnostic contains: CheckReturnValue",
             "    getString();",
             "  }",
             "}")
@@ -63,7 +75,7 @@ public class CheckReturnValueTest {
   }
 
   @Test
-  public void testCustomCanIgnoreReturnValueAnnotation() {
+  public void customCanIgnoreReturnValueAnnotation() {
     compilationHelper
         .addSourceLines(
             "foo/bar/CanIgnoreReturnValue.java",
@@ -87,12 +99,12 @@ public class CheckReturnValueTest {
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("CheckReturnValueNegativeCases.java").doTest();
   }
 
   @Test
-  public void testPackageAnnotation() {
+  public void packageAnnotation() {
     compilationHelper
         .addSourceLines(
             "package-info.java", //
@@ -108,7 +120,7 @@ public class CheckReturnValueTest {
             "Test.java",
             "class Test {",
             "  void m() {",
-            "    // BUG: Diagnostic contains: Ignored return value",
+            "    // BUG: Diagnostic contains: CheckReturnValue",
             "    lib.Lib.f();",
             "  }",
             "}")
@@ -116,7 +128,7 @@ public class CheckReturnValueTest {
   }
 
   @Test
-  public void testClassAnnotation() {
+  public void classAnnotation() {
     compilationHelper
         .addSourceLines(
             "lib/Lib.java",
@@ -129,7 +141,7 @@ public class CheckReturnValueTest {
             "Test.java",
             "class Test {",
             "  void m() {",
-            "    // BUG: Diagnostic contains: Ignored return value",
+            "    // BUG: Diagnostic contains: CheckReturnValue",
             "    lib.Lib.f();",
             "  }",
             "}")
@@ -138,7 +150,7 @@ public class CheckReturnValueTest {
 
   // Don't match void-returning methods in packages with @CRV
   @Test
-  public void testVoidReturningMethodInAnnotatedPackage() {
+  public void voidReturningMethodInAnnotatedPackage() {
     compilationHelper
         .addSourceLines(
             "package-info.java", //
@@ -168,7 +180,7 @@ public class CheckReturnValueTest {
             "package lib;",
             "@com.google.errorprone.annotations.CheckReturnValue",
             "public class Test {",
-            "  // BUG: Diagnostic contains:",
+            "  // BUG: Diagnostic contains: CheckReturnValue",
             "  // @CheckReturnValue may not be applied to void-returning methods",
             "  @com.google.errorprone.annotations.CheckReturnValue public static void f() {}",
             "}")
@@ -183,7 +195,7 @@ public class CheckReturnValueTest {
             "package lib;",
             "@com.google.errorprone.annotations.CheckReturnValue",
             "public class Test {",
-            "  // BUG: Diagnostic contains:",
+            "  // BUG: Diagnostic contains: CheckReturnValue",
             "  // @CheckReturnValue may not be applied to void-returning methods",
             "  @com.google.errorprone.annotations.CheckReturnValue public static Void f() {",
             "    return null;",
@@ -192,38 +204,8 @@ public class CheckReturnValueTest {
         .doTest();
   }
 
-  // Don't match methods invoked through {@link org.mockito.Mockito}.
   @Test
-  public void testIgnoreCRVOnMockito() {
-    compilationHelper
-        .addSourceLines(
-            "Test.java",
-            "package lib;",
-            "public class Test {",
-            "  @com.google.errorprone.annotations.CheckReturnValue",
-            " public int f() {",
-            "    return 0;",
-            "  }",
-            "}")
-        .addSourceLines(
-            "TestCase.java",
-            "import static org.mockito.Mockito.verify;",
-            "import static org.mockito.Mockito.doReturn;",
-            "import org.mockito.Mockito;",
-            "class TestCase {",
-            "  void m() {",
-            "    lib.Test t = new lib.Test();",
-            "    Mockito.verify(t).f();",
-            "    verify(t).f();",
-            "    doReturn(1).when(t).f();",
-            "    Mockito.doReturn(1).when(t).f();",
-            "  }",
-            "}")
-        .doTest();
-  }
-
-  @Test
-  public void testPackageAnnotationButCanIgnoreReturnValue() {
+  public void packageAnnotationButCanIgnoreReturnValue() {
     compilationHelper
         .addSourceLines(
             "package-info.java",
@@ -247,7 +229,7 @@ public class CheckReturnValueTest {
   }
 
   @Test
-  public void testClassAnnotationButCanIgnoreReturnValue() {
+  public void classAnnotationButCanIgnoreReturnValue() {
     compilationHelper
         .addSourceLines(
             "lib/Lib.java",
@@ -275,7 +257,7 @@ public class CheckReturnValueTest {
             "package lib;",
             "@com.google.errorprone.annotations.CheckReturnValue",
             "public class Test {",
-            "  // BUG: Diagnostic contains:",
+            "  // BUG: Diagnostic contains: CheckReturnValue",
             "  // @CanIgnoreReturnValue may not be applied to void-returning methods",
             "  @com.google.errorprone.annotations.CanIgnoreReturnValue public static void f() {}",
             "}")
@@ -283,7 +265,7 @@ public class CheckReturnValueTest {
   }
 
   @Test
-  public void testNestedClassAnnotation() {
+  public void nestedClassAnnotation() {
     compilationHelper
         .addSourceLines(
             "lib/Lib.java",
@@ -300,7 +282,7 @@ public class CheckReturnValueTest {
             "Test.java",
             "class Test {",
             "  void m() {",
-            "    // BUG: Diagnostic contains: Ignored return value",
+            "    // BUG: Diagnostic contains: CheckReturnValue",
             "    lib.Lib.Inner.InnerMost.f();",
             "  }",
             "}")
@@ -308,7 +290,7 @@ public class CheckReturnValueTest {
   }
 
   @Test
-  public void testNestedClassWithCanIgnoreAnnotation() {
+  public void nestedClassWithCanIgnoreAnnotation() {
     compilationHelper
         .addSourceLines(
             "lib/Lib.java",
@@ -333,7 +315,7 @@ public class CheckReturnValueTest {
   }
 
   @Test
-  public void testPackageWithCanIgnoreAnnotation() {
+  public void packageWithCanIgnoreAnnotation() {
     compilationHelper
         .addSourceLines(
             "package-info.java",
@@ -364,7 +346,7 @@ public class CheckReturnValueTest {
             "@com.google.errorprone.annotations.CanIgnoreReturnValue",
             "@com.google.errorprone.annotations.CheckReturnValue",
             "// BUG: Diagnostic contains: @CheckReturnValue and @CanIgnoreReturnValue cannot"
-                + " both be applied to the same class",
+                + " be applied to the same class",
             "class Test {}")
         .doTest();
   }
@@ -378,7 +360,7 @@ public class CheckReturnValueTest {
             "  @com.google.errorprone.annotations.CanIgnoreReturnValue",
             "  @com.google.errorprone.annotations.CheckReturnValue",
             "  // BUG: Diagnostic contains: @CheckReturnValue and @CanIgnoreReturnValue cannot"
-                + " both be applied to the same method",
+                + " be applied to the same method",
             "  void m() {}",
             "}")
         .doTest();
@@ -386,7 +368,7 @@ public class CheckReturnValueTest {
 
   // Don't match Void-returning methods in packages with @CRV
   @Test
-  public void testJavaLangVoidReturningMethodInAnnotatedPackage() {
+  public void javaLangVoidReturningMethodInAnnotatedPackage() {
     compilationHelper
         .addSourceLines(
             "package-info.java",
@@ -405,212 +387,6 @@ public class CheckReturnValueTest {
             "class Test {",
             "  void m() {",
             "    lib.Lib.f();",
-            "  }",
-            "}")
-        .doTest();
-  }
-
-  @Test
-  public void ignoreInTests() {
-    compilationHelper
-        .addSourceLines(
-            "Foo.java",
-            "@com.google.errorprone.annotations.CheckReturnValue",
-            "public class Foo {",
-            "  public int f() {",
-            "    return 42;",
-            "  }",
-            "}")
-        .addSourceLines(
-            "Test.java",
-            "class Test {",
-            "  void f(Foo foo) {",
-            "    try {",
-            "      foo.f();",
-            "      org.junit.Assert.fail();",
-            "    } catch (Exception expected) {}",
-            "    try {",
-            "      foo.f();",
-            "      junit.framework.Assert.fail();",
-            "    } catch (Exception expected) {}",
-            "    try {",
-            "      foo.f();",
-            "      junit.framework.TestCase.fail();",
-            "    } catch (Exception expected) {}",
-            "  }",
-            "}")
-        .doTest();
-  }
-
-  @Test
-  public void ignoreInTestsWithRule() {
-    compilationHelper
-        .addSourceLines(
-            "Foo.java",
-            "@com.google.errorprone.annotations.CheckReturnValue",
-            "public class Foo {",
-            "  public int f() {",
-            "    return 42;",
-            "  }",
-            "}")
-        .addSourceLines(
-            "Test.java",
-            "class Test {",
-            "  private org.junit.rules.ExpectedException exception;",
-            "  void f(Foo foo) {",
-            "    exception.expect(IllegalArgumentException.class);",
-            "    foo.f();",
-            "  }",
-            "}")
-        .doTest();
-  }
-
-  @Test
-  public void ignoreInTestsWithFailureMessage() {
-    compilationHelper
-        .addSourceLines(
-            "Foo.java",
-            "@com.google.errorprone.annotations.CheckReturnValue",
-            "public class Foo {",
-            "  public int f() {",
-            "    return 42;",
-            "  }",
-            "}")
-        .addSourceLines(
-            "Test.java",
-            "class Test {",
-            "  void f(Foo foo) {",
-            "    try {",
-            "      foo.f();",
-            "      org.junit.Assert.fail(\"message\");",
-            "    } catch (Exception expected) {}",
-            "    try {",
-            "      foo.f();",
-            "      junit.framework.Assert.fail(\"message\");",
-            "    } catch (Exception expected) {}",
-            "    try {",
-            "      foo.f();",
-            "      junit.framework.TestCase.fail(\"message\");",
-            "    } catch (Exception expected) {}",
-            "  }",
-            "}")
-        .doTest();
-  }
-
-  @Test
-  public void ignoreInThrowingRunnables() {
-    compilationHelper
-        .addSourceLines(
-            "Foo.java",
-            "@com.google.errorprone.annotations.CheckReturnValue",
-            "public class Foo {",
-            "  public int f() {",
-            "    return 42;",
-            "  }",
-            "}")
-        .addSourceLines(
-            "Test.java",
-            "class Test {",
-            "  void f(Foo foo) {",
-            "   org.junit.Assert.assertThrows(IllegalStateException.class, ",
-            "     new org.junit.function.ThrowingRunnable() {",
-            "       @Override",
-            "       public void run() throws Throwable {",
-            "         foo.f();",
-            "       }",
-            "     });",
-            "   org.junit.Assert.assertThrows(IllegalStateException.class, () -> foo.f());",
-            "   org.junit.Assert.assertThrows(IllegalStateException.class, foo::f);",
-            "   org.junit.Assert.assertThrows(IllegalStateException.class, () -> {",
-            "      int bah = foo.f();",
-            "      foo.f(); ",
-            "   });",
-            "   org.junit.Assert.assertThrows(IllegalStateException.class, () -> { ",
-            "     // BUG: Diagnostic contains: Ignored return value",
-            "     foo.f(); ",
-            "     foo.f(); ",
-            "   });",
-            "   bar(() -> foo.f());",
-            "   org.assertj.core.api.Assertions.assertThatExceptionOfType(IllegalStateException.class)",
-            "      .isThrownBy(() -> foo.f());",
-            "  }",
-            "  void bar(org.junit.function.ThrowingRunnable r) {}",
-            "}")
-        .doTest();
-  }
-
-  @Test
-  public void ignoreTruthFailure() {
-    compilationHelper
-        .addSourceLines(
-            "Foo.java",
-            "@com.google.errorprone.annotations.CheckReturnValue",
-            "public class Foo {",
-            "  public int f() {",
-            "    return 42;",
-            "  }",
-            "}")
-        .addSourceLines(
-            "Test.java",
-            "import static com.google.common.truth.Truth.assert_;",
-            "class Test {",
-            "  void f(Foo foo) {",
-            "    try {",
-            "      foo.f();",
-            "      assert_().fail();",
-            "    } catch (Exception expected) {}",
-            "  }",
-            "}")
-        .doTest();
-  }
-
-  @Test
-  public void onlyIgnoreWithEnclosingTryCatch() {
-    compilationHelper
-        .addSourceLines(
-            "Foo.java",
-            "@com.google.errorprone.annotations.CheckReturnValue",
-            "public class Foo {",
-            "  public int f() {",
-            "    return 42;",
-            "  }",
-            "}")
-        .addSourceLines(
-            "Test.java",
-            "import static org.junit.Assert.fail;",
-            "class Test {",
-            "  void f(Foo foo) {",
-            "    // BUG: Diagnostic contains: Ignored return value",
-            "    foo.f();",
-            "    org.junit.Assert.fail();",
-            "    // BUG: Diagnostic contains: Ignored return value",
-            "    foo.f();",
-            "    junit.framework.Assert.fail();",
-            "    // BUG: Diagnostic contains: Ignored return value",
-            "    foo.f();",
-            "    junit.framework.TestCase.fail();",
-            "  }",
-            "}")
-        .doTest();
-  }
-
-  @Test
-  public void ignoreInOrderVerification() {
-    compilationHelper
-        .addSourceLines(
-            "Lib.java",
-            "public class Lib {",
-            "  @com.google.errorprone.annotations.CheckReturnValue",
-            "  public int f() {",
-            "    return 0;",
-            "  }",
-            "}")
-        .addSourceLines(
-            "Test.java",
-            "import static org.mockito.Mockito.inOrder;",
-            "class Test {",
-            "  void m() {",
-            "    inOrder().verify(new Lib()).f();",
             "  }",
             "}")
         .doTest();
@@ -652,7 +428,7 @@ public class CheckReturnValueTest {
             "Test.java",
             "class Test {",
             "  void m() {",
-            "    // BUG: Diagnostic contains: Ignored return value",
+            "    // BUG: Diagnostic contains: CheckReturnValue",
             "    com.google.errorprone.bugpatterns.CheckReturnValueTest.CRVTest.f();",
             "  }",
             "}")
@@ -669,7 +445,7 @@ public class CheckReturnValueTest {
             "  @com.google.errorprone.annotations.CheckReturnValue",
             "  public Test() {}",
             "  public static void foo() {",
-            "    // BUG: Diagnostic contains: Ignored return value of 'Test'",
+            "    // BUG: Diagnostic contains: CheckReturnValue",
             "    new Test();",
             "  }",
             "}")
@@ -733,7 +509,7 @@ public class CheckReturnValueTest {
             "  @com.google.errorprone.annotations.CheckReturnValue",
             "  public Test() {}",
             "  public static void foo() {",
-            "    // BUG: Diagnostic contains: ",
+            "    // BUG: Diagnostic contains: CheckReturnValue",
             "    new Test() {};",
             "  }",
             "}")
@@ -751,7 +527,7 @@ public class CheckReturnValueTest {
             "    public Inner() {}",
             "  }",
             "  public static void foo() {",
-            "    // BUG: Diagnostic contains: ",
+            "    // BUG: Diagnostic contains: CheckReturnValue",
             "    new Test().new Inner() {};",
             "  }",
             "}")
@@ -767,7 +543,7 @@ public class CheckReturnValueTest {
             "  @com.google.errorprone.annotations.CheckReturnValue",
             "  static class Nested {}",
             "  public static void foo() {",
-            "    // BUG: Diagnostic contains: ",
+            "    // BUG: Diagnostic contains: CheckReturnValue",
             "    new Nested() {};", // The "called" constructor is synthetic, but within @CRV Nested
             "  }",
             "}")
@@ -823,7 +599,7 @@ public class CheckReturnValueTest {
             "Test.java",
             "class Test {",
             "  void f() {",
-            "    // BUG: Diagnostic contains: Ignored return value of 'Foo', which is annotated",
+            "    // BUG: Diagnostic contains: CheckReturnValue",
             "    Runnable ignoresResult = Foo::new;",
             "  }",
             "}")
@@ -838,8 +614,7 @@ public class CheckReturnValueTest {
             "class Test {",
             "  public Test() {}",
             "  public static void foo() {",
-            "    // BUG: Diagnostic contains: Ignored return value of 'Test', which wasn't"
-                + " annotated with @CanIgnoreReturnValue",
+            "    // BUG: Diagnostic contains: CheckReturnValue",
             "    new Test();",
             "  }",
             "}")
@@ -854,164 +629,374 @@ public class CheckReturnValueTest {
             "class Test {",
             "  public int bar() { return 42; }",
             "  public static void foo() {",
-            "    // BUG: Diagnostic contains: Ignored return value of 'bar', which wasn't"
-                + " annotated with @CanIgnoreReturnValue",
+            "    // BUG: Diagnostic contains: CheckReturnValue",
             "    new Test().bar();",
             "  }",
             "}")
         .doTest();
   }
 
+  // In the following test methods, we define parallel skeletons of classes like java.util.List,
+  // because the real java.util.List may have had @CanIgnoreReturnValue annotations inserted.
+
   @Test
-  public void usingElementInTestExpected() {
-    compilationHelperLookingAtAllConstructors()
+  public void allMethods_withExternallyConfiguredIgnoreList() {
+    compileWithExternalApis("my.java.util.List#add(java.lang.Object)")
         .addSourceLines(
-            "Foo.java",
-            "import org.junit.runner.RunWith;",
-            "import org.junit.runners.JUnit4;",
-            "import org.junit.Test;",
-            "@RunWith(JUnit4.class)",
-            "class Foo {",
-            "  @Test(expected = IllegalArgumentException.class) ",
-            "  public void foo() {",
-            "    new Foo();", // OK when it's the only statement
+            "Test.java",
+            "import my.java.util.List;",
+            "class Test {",
+            "  public static void foo(List<Integer> x) {",
+            "    x.add(42);",
+            "    // BUG: Diagnostic contains: CheckReturnValue",
+            "    x.get(0);",
             "  }",
-            "  @Test(expected = IllegalArgumentException.class) ",
-            "  public void fooWith2Statements() {",
-            "    Foo f = new Foo();",
-            "    // BUG: Diagnostic contains: Ignored return value of 'Foo'",
-            "    new Foo();", // Not OK if there is more than one statement in the block.
+            "}")
+        .addSourceLines(
+            "my/java/util/List.java",
+            "package my.java.util;",
+            "public interface List<E> {",
+            "  boolean add(E e);",
+            "  E get(int index);",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void packagesRule() {
+    compilationHelperWithPackagePatterns("my.java.util")
+        .addSourceLines(
+            "Test.java",
+            "import my.java.util.List;",
+            "import my.java.util.regex.Pattern;",
+            "class Test {",
+            "  public static void foo(List<Integer> list, Pattern pattern) {",
+            "    // BUG: Diagnostic contains: CheckReturnValue",
+            "    list.get(0);",
+            "    // BUG: Diagnostic contains: CheckReturnValue",
+            "    pattern.matcher(\"blah\");",
             "  }",
-            "  @Test(expected = Test.None.class) ", // This is a weird way to spell the default
-            "  public void fooWithNone() {",
-            "    // BUG: Diagnostic contains: Ignored return value of 'Foo'",
-            "    new Foo();",
+            "}")
+        .addSourceLines(
+            "my/java/util/List.java",
+            "package my.java.util;",
+            "public interface List<E> {",
+            "  E get(int index);",
+            "}")
+        .addSourceLines(
+            "my/java/util/regex/Pattern.java",
+            "package my.java.util.regex;",
+            "public interface Pattern {",
+            "  String matcher(CharSequence input);",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void packagesRule_negativePattern() {
+    compilationHelperWithPackagePatterns("my.java.util", "-my.java.util.regex")
+        .addSourceLines(
+            "Test.java",
+            "import my.java.util.List;",
+            "import my.java.util.regex.Pattern;",
+            "class Test {",
+            "  public static void foo(List<Integer> list, Pattern pattern) {",
+            "    // BUG: Diagnostic contains: CheckReturnValue",
+            "    list.get(0);",
+            "    pattern.matcher(\"blah\");",
+            "  }",
+            "}")
+        .addSourceLines(
+            "my/java/util/List.java",
+            "package my.java.util;",
+            "public interface List<E> {",
+            "  E get(int index);",
+            "}")
+        .addSourceLines(
+            "my/java/util/regex/Pattern.java",
+            "package my.java.util.regex;",
+            "public interface Pattern {",
+            "  String matcher(CharSequence input);",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void packagesRule_negativePattern_doesNotMakeOptional() {
+    // A negative pattern just makes the packages rule itself not apply to that package and its
+    // subpackages if it otherwise would because of a positive pattern on a superpackage. It doesn't
+    // make APIs in that package CIRV.
+    compilationHelperWithPackagePatterns("my.java.util", "-my.java.util.regex")
+        .addSourceLines(
+            "Test.java",
+            "import my.java.util.List;",
+            "import my.java.util.regex.Pattern;",
+            "import my.java.util.regex.PatternSyntaxException;",
+            "class Test {",
+            "  public static void foo(List<Integer> list, Pattern pattern) {",
+            "    // BUG: Diagnostic contains: CheckReturnValue",
+            "    list.get(0);",
+            "    pattern.matcher(\"blah\");",
+            "    // BUG: Diagnostic contains: CheckReturnValue",
+            "    new PatternSyntaxException(\"\", \"\", 0);",
+            "  }",
+            "}")
+        .addSourceLines(
+            "my/java/util/List.java",
+            "package my.java.util;",
+            "public interface List<E> {",
+            "  E get(int index);",
+            "}")
+        .addSourceLines(
+            "my/java/util/regex/Pattern.java",
+            "package my.java.util.regex;",
+            "public interface Pattern {",
+            "  String matcher(CharSequence input);",
+            "}")
+        .addSourceLines(
+            "my/java/util/regex/PatternSyntaxException.java",
+            "package my.java.util.regex;",
+            "public class PatternSyntaxException extends IllegalArgumentException {",
+            "  public PatternSyntaxException(String desc, String regex, int index) {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void refactoringAssignsToOriginalBasedOnSubstitutedTypes() {
+    refactoringHelper
+        .addInputLines(
+            "Builder.java",
+            "@com.google.errorprone.annotations.CheckReturnValue",
+            "interface Builder<B extends Builder<B>> {",
+            "  B setFoo(String s);",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "SomeBuilder.java", //
+            "interface SomeBuilder extends Builder<SomeBuilder> {}")
+        .expectUnchanged()
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  void f(SomeBuilder builder, String s) {",
+            "    builder.setFoo(s);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  void f(SomeBuilder builder, String s) {",
+            "    builder = builder.setFoo(s);",
             "  }",
             "}")
         .doTest();
   }
 
   @Test
-  public void testAutoValueBuilderSetterMethods() {
-    compilationHelper
-        .addSourceLines(
-            "Animal.java",
-            "package com.google.frobber;",
-            "import com.google.auto.value.AutoValue;",
+  public void suggestCanIgnoreReturnValueForMethodInvocation() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
             "import com.google.errorprone.annotations.CheckReturnValue;",
-            "@AutoValue",
             "@CheckReturnValue",
-            "abstract class Animal {",
-            "  abstract String name();",
-            "  abstract int numberOfLegs();",
-            "  static Builder builder() {",
-            "    return new AutoValue_Animal.Builder();",
+            "class Test {",
+            "  void foo() {",
+            "    makeBarOrThrow();",
             "  }",
-            "  @AutoValue.Builder",
-            "  abstract static class Builder {",
-            "    abstract Builder setName(String value);",
-            "    abstract Builder setNumberOfLegs(int value);",
-            "    abstract Animal build();",
+            "  String makeBarOrThrow() {",
+            "    throw new UnsupportedOperationException();",
             "  }",
             "}")
-        .addSourceLines(
-            "AnimalCaller.java",
-            "package com.google.frobber;",
-            "public final class AnimalCaller {",
-            "  static void testAnimal() {",
-            "    Animal.Builder builder = Animal.builder();",
-            "    builder.setNumberOfLegs(4);", // AutoValue.Builder setters are implicitly @CIRV
-            "    // BUG: Diagnostic contains: Ignored return value of 'build'",
-            "    builder.build();",
+        .addOutputLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.CanIgnoreReturnValue;",
+            "import com.google.errorprone.annotations.CheckReturnValue;",
+            "@CheckReturnValue",
+            "class Test {",
+            "  void foo() {",
+            "    makeBarOrThrow();",
+            "  }",
+            "  @CanIgnoreReturnValue",
+            "  String makeBarOrThrow() {",
+            "    throw new UnsupportedOperationException();",
             "  }",
             "}")
-        .setArgs(ImmutableList.of("-processor", AutoValueProcessor.class.getName()))
         .doTest();
   }
 
   @Test
-  public void testAutoBuilderSetterMethods() {
-    compilationHelper
-        .addSourceLines(
-            "Person.java",
-            "package com.google.frobber;",
-            "public final class Person {",
-            "  public Person(String name, int id) {}",
-            "}")
-        .addSourceLines(
-            "PersonBuilder.java",
-            "package com.google.frobber;",
-            "import com.google.auto.value.AutoBuilder;",
+  public void suggestCanIgnoreReturnValueForMethodReference() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
             "import com.google.errorprone.annotations.CheckReturnValue;",
             "@CheckReturnValue",
-            "@AutoBuilder(ofClass = Person.class)",
-            "abstract class PersonBuilder {",
-            "  static PersonBuilder personBuilder() {",
-            "    return new AutoBuilder_PersonBuilder();",
-            "  }",
-            "  abstract PersonBuilder setName(String name);",
-            "  abstract PersonBuilder setId(int id);",
-            "  abstract Person build();",
-            "}")
-        .addSourceLines(
-            "PersonCaller.java",
-            "package com.google.frobber;",
-            "public final class PersonCaller {",
-            "  static void testPersonBuilder() {",
-            "    // BUG: Diagnostic contains: Ignored return value of 'personBuilder'",
-            "    PersonBuilder.personBuilder();",
-            "    PersonBuilder builder = PersonBuilder.personBuilder();",
-            "    builder.setName(\"kurt\");", // AutoBuilder setters are implicitly @CIRV
-            "    builder.setId(42);", // AutoBuilder setters are implicitly @CIRV
-            "    // BUG: Diagnostic contains: Ignored return value of 'build'",
-            "    builder.build();",
+            "class Test {",
+            "  Runnable r = this::makeBarOrThrow;",
+            "  String makeBarOrThrow() {",
+            "    throw new UnsupportedOperationException();",
             "  }",
             "}")
-        .setArgs(ImmutableList.of("-processor", AutoBuilderProcessor.class.getName()))
+        .addOutputLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.CanIgnoreReturnValue;",
+            "import com.google.errorprone.annotations.CheckReturnValue;",
+            "@CheckReturnValue",
+            "class Test {",
+            "  Runnable r = this::makeBarOrThrow;",
+            "  @CanIgnoreReturnValue",
+            "  String makeBarOrThrow() {",
+            "    throw new UnsupportedOperationException();",
+            "  }",
+            "}")
         .doTest();
   }
 
   @Test
-  public void testAutoBuilderSetterMethods_withInterface() {
-    compilationHelper
-        .addSourceLines(
-            "LogUtil.java",
-            "package com.google.frobber;",
-            "import java.util.logging.Level;",
-            "public class LogUtil {",
-            "  public static void log(Level severity, String message) {}",
-            "}")
-        .addSourceLines(
-            "Caller.java",
-            "package com.google.frobber;",
-            "import com.google.auto.value.AutoBuilder;",
-            "import java.util.logging.Level;",
+  public void suggestCanIgnoreReturnValueForConstructor() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
             "import com.google.errorprone.annotations.CheckReturnValue;",
             "@CheckReturnValue",
-            "@AutoBuilder(callMethod = \"log\", ofClass = LogUtil.class)",
-            "public interface Caller {",
-            "  static Caller logCaller() {",
-            "    return new AutoBuilder_Caller();",
-            "  }",
-            "  Caller setSeverity(Level level);",
-            "  Caller setMessage(String message);",
-            "  void call(); // calls: LogUtil.log(severity, message)",
-            "}")
-        .addSourceLines(
-            "LogCaller.java",
-            "package com.google.frobber;",
-            "import java.util.logging.Level;",
-            "public final class LogCaller {",
-            "  static void testLogCaller() {",
-            "    // BUG: Diagnostic contains: Ignored return value of 'logCaller'",
-            "    Caller.logCaller();",
-            "    Caller caller = Caller.logCaller();",
-            "    caller.setMessage(\"hi\");", // AutoBuilder setters are implicitly @CIRV
-            "    caller.setSeverity(Level.FINE);", // AutoBuilder setters are implicitly @CIRV
-            "    caller.call();",
+            "class Test {",
+            "  Test() {}",
+            "  void run() {",
+            "    new Test();",
             "  }",
             "}")
-        .setArgs(ImmutableList.of("-processor", AutoBuilderProcessor.class.getName()))
+        .addOutputLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.CanIgnoreReturnValue;",
+            "import com.google.errorprone.annotations.CheckReturnValue;",
+            "@CheckReturnValue",
+            "class Test {",
+            "  @CanIgnoreReturnValue",
+            "  Test() {}",
+            "  void run() {",
+            "    new Test();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void suggestCanIgnoreReturnValueAndRemoveCheckReturnValue() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.CheckReturnValue;",
+            "class Test {",
+            "  void foo() {",
+            "    makeBarOrThrow();",
+            "  }",
+            "  @CheckReturnValue",
+            "  String makeBarOrThrow() {",
+            "    throw new UnsupportedOperationException();",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.CanIgnoreReturnValue;",
+            "import com.google.errorprone.annotations.CheckReturnValue;",
+            "class Test {",
+            "  void foo() {",
+            "    makeBarOrThrow();",
+            "  }",
+            "  @CanIgnoreReturnValue",
+            "  String makeBarOrThrow() {",
+            "    throw new UnsupportedOperationException();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void doesNotSuggestCanIgnoreReturnValueForOtherFile() {
+    refactoringHelper
+        .addInputLines(
+            "Lib.java",
+            "import com.google.errorprone.annotations.CheckReturnValue;",
+            "@CheckReturnValue",
+            "class Lib {",
+            "  String makeBarOrThrow() {",
+            "    throw new UnsupportedOperationException();",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.CheckReturnValue;",
+            "@CheckReturnValue",
+            "class Test {",
+            "  void foo(Lib l) {",
+            "    l.makeBarOrThrow();",
+            "  }",
+            "}")
+        // The checker doesn't suggest CIRV, so it applies a different fix instead.
+        .addOutputLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.CheckReturnValue;",
+            "@CheckReturnValue",
+            "class Test {",
+            "  void foo(Lib l) {",
+            "    var unused = l.makeBarOrThrow();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void suggestsVarUnusedForConstructor() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "@com.google.errorprone.annotations.CheckReturnValue",
+            "class Test {",
+            "  void go() {",
+            "    new Test();",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "@com.google.errorprone.annotations.CheckReturnValue",
+            "class Test {",
+            "  void go() {",
+            "    var unused = new Test();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void suggestsVarUnused2() {
+    refactoringHelper
+        .addInputLines(
+            "Lib.java",
+            "import com.google.errorprone.annotations.CheckReturnValue;",
+            "@CheckReturnValue",
+            "interface Lib {",
+            "  int a();",
+            "  int b();",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  void foo(Lib lib) {",
+            "    var unused = lib.a();",
+            "    lib.b();",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  void foo(Lib lib) {",
+            "    var unused = lib.a();",
+            "    var unused2 = lib.b();",
+            "  }",
+            "}")
         .doTest();
   }
 
@@ -1022,5 +1007,24 @@ public class CheckReturnValueTest {
 
   private CompilationTestHelper compilationHelperLookingAtAllMethods() {
     return compilationHelper.setArgs("-XepOpt:" + CheckReturnValue.CHECK_ALL_METHODS + "=true");
+  }
+
+  private CompilationTestHelper compileWithExternalApis(String... apis) {
+    try {
+      Path file = temporaryFolder.newFile().toPath();
+      Files.writeString(file, Joiner.on('\n').join(apis), UTF_8);
+
+      return compilationHelper.setArgs(
+          "-XepOpt:" + CheckReturnValue.CHECK_ALL_METHODS + "=true",
+          "-XepOpt:CheckReturnValue:ApiExclusionList=" + file);
+    } catch (IOException e) {
+      throw new UncheckedIOException(e);
+    }
+  }
+
+  private CompilationTestHelper compilationHelperWithPackagePatterns(String... patterns) {
+    return compilationHelper.setArgs(
+        "-XepOpt:" + CheckReturnValue.CRV_PACKAGES + "=" + Joiner.on(',').join(patterns),
+        "-XepOpt:" + CheckReturnValue.CHECK_ALL_CONSTRUCTORS + "=true");
   }
 }

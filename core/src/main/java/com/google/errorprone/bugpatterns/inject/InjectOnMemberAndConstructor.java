@@ -24,6 +24,7 @@ import static com.google.errorprone.matchers.InjectMatchers.hasInjectAnnotation;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.constructor;
 import static com.google.errorprone.matchers.Matchers.isField;
+import static com.google.errorprone.util.ASTHelpers.isStatic;
 
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
@@ -92,7 +93,7 @@ public class InjectOnMemberAndConstructor extends BugChecker implements ClassTre
       public Void visitAssignment(AssignmentTree tree, Void unused) {
         Symbol symbol = ASTHelpers.getSymbol(tree.getVariable());
         // check if it is instance field.
-        if (symbol != null && symbol.getKind() == ElementKind.FIELD && !symbol.isStatic()) {
+        if (symbol != null && symbol.getKind() == ElementKind.FIELD && !isStatic(symbol)) {
           variablesAssigned.add(symbol);
         }
         return super.visitAssignment(tree, null);

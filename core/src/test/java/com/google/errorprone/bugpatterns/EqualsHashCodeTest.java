@@ -29,12 +29,12 @@ public class EqualsHashCodeTest {
       CompilationTestHelper.newInstance(EqualsHashCode.class, getClass());
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper.addSourceFile("EqualsHashCodeTestPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("EqualsHashCodeTestNegativeCases.java").doTest();
   }
 

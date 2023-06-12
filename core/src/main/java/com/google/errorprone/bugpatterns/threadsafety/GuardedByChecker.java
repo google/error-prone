@@ -17,14 +17,15 @@
 package com.google.errorprone.bugpatterns.threadsafety;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.bugpatterns.threadsafety.HeldLockAnalyzer.INVOKES_LAMBDAS_IMMEDIATELY;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
 import com.google.common.base.Joiner;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.LambdaExpressionTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.MemberReferenceTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression.Kind;
@@ -35,12 +36,15 @@ import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LambdaExpressionTree;
+import com.sun.source.tree.MemberReferenceTree;
+import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
@@ -49,18 +53,14 @@ import com.sun.tools.javac.code.Type;
     summary = "Checks for unguarded accesses to fields and methods with @GuardedBy annotations",
     severity = ERROR)
 public class GuardedByChecker extends BugChecker
-    implements VariableTreeMatcher, MethodTreeMatcher, LambdaExpressionTreeMatcher {
+    implements VariableTreeMatcher,
+        MethodTreeMatcher,
+        LambdaExpressionTreeMatcher,
+        MemberReferenceTreeMatcher {
 
   private static final String JUC_READ_WRITE_LOCK = "java.util.concurrent.locks.ReadWriteLock";
 
   private final GuardedByFlags flags = GuardedByFlags.allOn();
-
-  private final boolean reportMissingGuards;
-
-  public GuardedByChecker(ErrorProneFlags errorProneFlags) {
-    reportMissingGuards =
-        errorProneFlags.getBoolean("GuardedByChecker:reportMissingGuards").orElse(true);
-  }
 
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
@@ -76,18 +76,32 @@ public class GuardedByChecker extends BugChecker
 
   @Override
   public Description matchLambdaExpression(LambdaExpressionTree tree, VisitorState state) {
+    var parent = state.getPath().getParentPath().getLeaf();
+    if (parent instanceof MethodInvocationTree
+        && INVOKES_LAMBDAS_IMMEDIATELY.matches((ExpressionTree) parent, state)) {
+      return NO_MATCH;
+    }
     analyze(state.withPath(new TreePath(state.getPath(), tree.getBody())));
+    return NO_MATCH;
+  }
+
+  @Override
+  public Description matchMemberReference(MemberReferenceTree tree, VisitorState state) {
+    var parent = state.getPath().getParentPath().getLeaf();
+    if (parent instanceof MethodInvocationTree
+        && INVOKES_LAMBDAS_IMMEDIATELY.matches((ExpressionTree) parent, state)) {
+      return NO_MATCH;
+    }
+    analyze(state);
     return NO_MATCH;
   }
 
   private void analyze(VisitorState state) {
     HeldLockAnalyzer.analyze(
         state,
-        (ExpressionTree tree, GuardedByExpression guard, HeldLockSet live) ->
-            report(GuardedByChecker.this.checkGuardedAccess(tree, guard, live, state), state),
-        tree1 -> isSuppressed(tree1, state),
-        flags,
-        reportMissingGuards);
+        (tree, guard, live) -> report(checkGuardedAccess(tree, guard, live, state), state),
+        tree -> isSuppressed(tree, state),
+        flags);
   }
 
   @Override
@@ -171,7 +185,7 @@ public class GuardedByChecker extends BugChecker
     return message.toString();
   }
 
-  private static Select findOuterInstance(GuardedByExpression expr) {
+  private static @Nullable Select findOuterInstance(GuardedByExpression expr) {
     while (expr.kind() == Kind.SELECT) {
       Select select = (Select) expr;
       if (select.sym().name.contentEquals(GuardedByExpression.ENCLOSING_INSTANCE_NAME)) {

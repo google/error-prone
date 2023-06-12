@@ -16,7 +16,9 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
-/** @author sebastian.h.monte@gmail.com (Sebastian Monte) */
+/**
+ * @author sebastian.h.monte@gmail.com (Sebastian Monte)
+ */
 public class AssertFalseNegativeCases {
 
   public void assertTrue() {

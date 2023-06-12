@@ -269,6 +269,39 @@ public class ParameterNameTest {
         .doTest();
   }
 
+  /**
+   * We allow multiple comments if any one of them is right. This helps libraries migrate to a new
+   * parameter name gradually without breaking any builds: update the caller to use both names, then
+   * update the API, then remove the old name.
+   */
+  @Test
+  public void namedParametersChecker_multipleComments_allowedIfAnyMatch() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void test(Object x) {",
+            "    test(/* y= */ /* x= */ x);",
+            "    test(/* x= */ /* y= */ x);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void namedParametersChecker_multipleComments_flaggedIfNoneMatch() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void test(Object x) {",
+            "    // BUG: Diagnostic contains: does not match",
+            "    test(/* y= */ /* z= */ x);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
   @Test
   public void namedParametersChecker_ignoresComment_nonMatchinglineAfter() {
     testHelper
@@ -294,6 +327,22 @@ public class ParameterNameTest {
             "    target(arg1,",
             "    /* ---- param1 <-> param2 ---- */",
             "           arg2);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void namedParametersChecker_ignoresLineComments() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void test(int x) {",
+            "    test(",
+            "      // newX =",
+            "      //   (x ^ 2)",
+            "      x * x);",
             "  }",
             "}")
         .doTest();

@@ -59,6 +59,7 @@ import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import javax.inject.Inject;
 import javax.lang.model.element.Name;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
@@ -598,7 +599,8 @@ public class ErrorProneCompilerIntegrationTest {
   public static class ForbiddenString extends BugChecker implements ReturnTreeMatcher {
     private final String forbiddenString;
 
-    public ForbiddenString(ErrorProneFlags flags) {
+    @Inject
+    ForbiddenString(ErrorProneFlags flags) {
       forbiddenString = flags.get("Forbidden").orElse("default");
     }
 

@@ -31,7 +31,7 @@ public class InvalidZoneIdTest {
       CompilationTestHelper.newInstance(InvalidZoneId.class, getClass());
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper
         .addSourceLines(
             "a/A.java",
@@ -66,7 +66,7 @@ public class InvalidZoneIdTest {
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper
         .addSourceLines(
             "a/A.java",

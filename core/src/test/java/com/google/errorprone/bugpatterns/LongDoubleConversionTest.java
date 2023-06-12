@@ -33,7 +33,7 @@ public class LongDoubleConversionTest {
       BugCheckerRefactoringTestHelper.newInstance(LongDoubleConversion.class, getClass());
 
   @Test
-  public void doesNotCompile() {
+  public void losesPrecision() {
     compilationTestHelper
         .addSourceLines(
             "Test.java", //
@@ -42,6 +42,21 @@ public class LongDoubleConversionTest {
             "  void method(double l) {}",
             "  {",
             "    // BUG: Diagnostic contains:",
+            "    method(9223372036854775806L);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void doesNotActuallyLosePrecision_noFinding() {
+    compilationTestHelper
+        .addSourceLines(
+            "Test.java", //
+            "class Test {",
+            "  void method(Long l) {}",
+            "  void method(double l) {}",
+            "  {",
             "    method(0L);",
             "  }",
             "}")
@@ -49,7 +64,7 @@ public class LongDoubleConversionTest {
   }
 
   @Test
-  public void compiles() {
+  public void explicitlyCastToDouble_noFinding() {
     compilationTestHelper
         .addSourceLines(
             "Test.java", //
@@ -71,7 +86,7 @@ public class LongDoubleConversionTest {
             "  void method(Long l) {}",
             "  void method(double l) {}",
             "  {",
-            "    method(0L);",
+            "    method(9223372036854775806L);",
             "  }",
             "}")
         .addOutputLines(
@@ -80,7 +95,7 @@ public class LongDoubleConversionTest {
             "  void method(Long l) {}",
             "  void method(double l) {}",
             "  {",
-            "    method((double) 0L);",
+            "    method((double) 9223372036854775806L);",
             "  }",
             "}")
         .doTest();
@@ -95,7 +110,7 @@ public class LongDoubleConversionTest {
             "  void method(Long l) {}",
             "  void method(double l) {}",
             "  {",
-            "    method(0L + 1L);",
+            "    method(9223372036854775805L + 1L);",
             "  }",
             "}")
         .addOutputLines(
@@ -104,7 +119,7 @@ public class LongDoubleConversionTest {
             "  void method(Long l) {}",
             "  void method(double l) {}",
             "  {",
-            "    method((double) (0L + 1L));",
+            "    method((double) (9223372036854775805L + 1L));",
             "  }",
             "}")
         .doTest();

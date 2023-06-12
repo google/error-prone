@@ -31,12 +31,12 @@ public class FunctionalInterfaceMethodChangedTest {
       CompilationTestHelper.newInstance(FunctionalInterfaceMethodChanged.class, getClass());
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper.addSourceFile("FunctionalInterfaceMethodChangedPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("FunctionalInterfaceMethodChangedNegativeCases.java").doTest();
   }
 }

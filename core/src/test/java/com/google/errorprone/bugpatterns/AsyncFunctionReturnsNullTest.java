@@ -28,12 +28,12 @@ public class AsyncFunctionReturnsNullTest {
       CompilationTestHelper.newInstance(AsyncFunctionReturnsNull.class, getClass());
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper.addSourceFile("AsyncFunctionReturnsNullPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("AsyncFunctionReturnsNullNegativeCases.java").doTest();
   }
 }

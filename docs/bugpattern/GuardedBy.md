@@ -141,60 +141,6 @@ Note: there are a couple more annotations called `@GuardedBy`, including
 versions of the annotation, but we recommend using
 `com.google.errorprone.annotations.concurrent.GuardedBy`.
 
-#### @LockMethod
-
-com.google.errorprone.bugpatterns.threadsafety.annotations.LockMethod
-
-The method to which this annotation is applied acquires one or more locks. The
-caller will hold the locks when the function finishes execution.
-
-This annotation does not apply to implicit locks, which cannot be acquired
-without being released in the same method.
-
-```java
-final Lock lock = new ReentrantLock();
-
-@LockMethod("lock")
-acquireLock() {}  // error: 'lock' was not acquired
-```
-
-#### @UnlockMethod
-
-com.google.errorprone.bugpatterns.threadsafety.annotations.UnlockMethod
-
-The method to which this annotation is applied releases one or more locks. The
-caller must hold the locks when the function is entered, and will not hold them
-when it completes.
-
-This annotation does not apply to implicit locks, which cannot be released
-without being acquired in the same method.
-
-```java
-final Lock lock = new ReentrantLock();
-
-@GuardedBy("lock")
-int x;
-
-@UnlockMethod("lock")
-void releaseLock() {
-  lock.unlock();
-}
-
-@LockMethod("lock")
-void acquireLock() {
-  lock.lock();
-}
-
-public void increment() {
-  acquireLock();
-  try {
-    x++;  // OK: 'lock' is held
-  } finally {
-    releaseLock();
-  }
-}
-```
-
 #### Limitations
 
 Anonymous classes and lambdas need to re-acquire locks that may be held by an
@@ -216,8 +162,9 @@ class Transaction {
 The analysis is intra-procedural, meaning it doesn't consider the implementation
 of `doSomething`.
 
-The checker doesn't know if `doSomething` immediately calls the provided lambda
-while the lock is still held by the enclosing method `handle`, for example:
+In general, the checker doesn't know if `doSomething` immediately calls the
+provided lambda while the lock is still held by the enclosing method `handle`,
+for example:
 
 ```java
 private void doSomething(Runnable r) {
@@ -234,6 +181,9 @@ private void doSomething(Runnable r) {
   someExecutor.execute(r);
 }
 ```
+
+However, the check does special-case some method calls which are known to
+immediately call the provided lambda or method reference.
 
 #### False negatives with aliasing
 

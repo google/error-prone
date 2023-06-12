@@ -94,7 +94,7 @@ public class ConstructorOfClassTest extends CompilerBasedAbstractTest {
   }
 
   @Test
-  public void testMultipleConstructors() {
+  public void multipleConstructors() {
     writeFile(
         "A.java",
         "package com.google;",

@@ -31,7 +31,7 @@ public class OptionalEqualityTest {
       CompilationTestHelper.newInstance(OptionalEquality.class, getClass());
 
   @Test
-  public void testPositiveCase_equal() {
+  public void positiveCase_equal() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -46,7 +46,7 @@ public class OptionalEqualityTest {
   }
 
   @Test
-  public void testPositiveCase_notEqual() {
+  public void positiveCase_notEqual() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -61,7 +61,7 @@ public class OptionalEqualityTest {
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper
         .addSourceLines(
             "Test.java",

@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.util.ASTHelpers.isStatic;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.MoreCollectors;
@@ -159,7 +160,7 @@ public class TypeParameterShadowing extends BugChecker
   private static List<TypeVariableSymbol> typeVariablesEnclosing(Symbol sym) {
     List<TypeVariableSymbol> typeVarScopes = new ArrayList<>();
     outer:
-    while (!sym.isStatic()) {
+    while (!isStatic(sym)) {
       sym = sym.owner;
       switch (sym.getKind()) {
         case PACKAGE:

@@ -20,17 +20,19 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 
+import com.google.common.collect.ImmutableListMultimap;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  * ErrorProne checker to generate warning when method expecting distinct varargs is invoked with
@@ -72,14 +74,14 @@ public final class DistinctVarargsChecker extends BugChecker
       return checkDistinctArgumentsWithFix(tree, state);
     }
     if (ALL_DISTINCT_ARG_MATCHER.matches(tree, state)) {
-      return checkDistinctArguments(tree, tree.getArguments());
+      return checkDistinctArguments(state, tree.getArguments());
     }
     if (EVEN_PARITY_DISTINCT_ARG_MATCHER.matches(tree, state)) {
       List<ExpressionTree> arguments = new ArrayList<>();
       for (int index = 0; index < tree.getArguments().size(); index += 2) {
         arguments.add(tree.getArguments().get(index));
       }
-      return checkDistinctArguments(tree, arguments);
+      return checkDistinctArguments(state, arguments);
     }
     if (EVEN_AND_ODD_PARITY_DISTINCT_ARG_MATCHER.matches(tree, state)) {
       List<ExpressionTree> evenParityArguments = new ArrayList<>();
@@ -91,29 +93,34 @@ public final class DistinctVarargsChecker extends BugChecker
           oddParityArguments.add(tree.getArguments().get(index));
         }
       }
-      return checkDistinctArguments(tree, evenParityArguments, oddParityArguments);
+      return checkDistinctArguments(state, evenParityArguments, oddParityArguments);
     }
     return Description.NO_MATCH;
   }
 
+  private static ImmutableListMultimap<String, Integer> argumentsByString(
+      VisitorState state, List<? extends ExpressionTree> arguments) {
+    ImmutableListMultimap.Builder<String, Integer> result = ImmutableListMultimap.builder();
+    for (int i = 0; i < arguments.size(); i++) {
+      result.put(state.getSourceForNode(arguments.get(i)), i);
+    }
+    return result.build();
+  }
+
   private Description checkDistinctArgumentsWithFix(MethodInvocationTree tree, VisitorState state) {
     SuggestedFix.Builder suggestedFix = SuggestedFix.builder();
-    for (int index = 1; index < tree.getArguments().size(); index++) {
-      boolean isDistinctArgument = true;
-      for (int prevElementIndex = 0; prevElementIndex < index; prevElementIndex++) {
-        if (ASTHelpers.sameVariable(
-            tree.getArguments().get(index), tree.getArguments().get(prevElementIndex))) {
-          isDistinctArgument = false;
-          break;
-        }
-      }
-      if (!isDistinctArgument) {
-        suggestedFix.merge(
-            SuggestedFix.replace(
-                state.getEndPosition(tree.getArguments().get(index - 1)),
-                state.getEndPosition(tree.getArguments().get(index)),
-                ""));
-      }
+    List<? extends ExpressionTree> arguments = tree.getArguments();
+    ImmutableListMultimap<String, Integer> argumentsByString = argumentsByString(state, arguments);
+    for (Map.Entry<String, Collection<Integer>> entry : argumentsByString.asMap().entrySet()) {
+      entry.getValue().stream()
+          .skip(1)
+          .forEachOrdered(
+              index ->
+                  suggestedFix.merge(
+                      SuggestedFix.replace(
+                          state.getEndPosition(arguments.get(index - 1)),
+                          state.getEndPosition(arguments.get(index)),
+                          "")));
     }
     if (suggestedFix.isEmpty()) {
       return Description.NO_MATCH;
@@ -122,19 +129,14 @@ public final class DistinctVarargsChecker extends BugChecker
   }
 
   private Description checkDistinctArguments(
-      MethodInvocationTree tree, List<? extends ExpressionTree>... argumentsList) {
+      VisitorState state, List<? extends ExpressionTree>... argumentsList) {
     for (List<? extends ExpressionTree> arguments : argumentsList) {
-      for (int firstArgumentIndex = 0;
-          firstArgumentIndex < arguments.size();
-          firstArgumentIndex++) {
-        for (int secondArgumentIndex = firstArgumentIndex + 1;
-            secondArgumentIndex < arguments.size();
-            secondArgumentIndex++) {
-          if (ASTHelpers.sameVariable(
-              arguments.get(firstArgumentIndex), arguments.get(secondArgumentIndex))) {
-            return describeMatch(tree);
-          }
-        }
+      ImmutableListMultimap<String, Integer> argumentsByString =
+          argumentsByString(state, arguments);
+      for (Map.Entry<String, Collection<Integer>> entry : argumentsByString.asMap().entrySet()) {
+        entry.getValue().stream()
+            .skip(1)
+            .forEachOrdered(index -> state.reportMatch(describeMatch(arguments.get(index))));
       }
     }
     return Description.NO_MATCH;

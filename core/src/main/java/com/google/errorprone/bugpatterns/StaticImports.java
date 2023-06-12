@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.util.ASTHelpers.enclosingPackage;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.isStatic;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.base.Optional;
@@ -186,7 +187,7 @@ public final class StaticImports {
     }
 
     for (Symbol member : typeSym.members().getSymbolsByName(identifier)) {
-      if (!member.isStatic()) {
+      if (!isStatic(member)) {
         continue;
       }
       switch ((int) (member.flags() & Flags.AccessFlags)) {

@@ -31,14 +31,14 @@ public class PrimitiveArrayPassedToVarargsMethodTest {
       CompilationTestHelper.newInstance(PrimitiveArrayPassedToVarargsMethod.class, getClass());
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper
         .addSourceFile("PrimitiveArrayPassedToVarargsMethodPositiveCases.java")
         .doTest();
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper
         .addSourceFile("PrimitiveArrayPassedToVarargsMethodNegativeCases.java")
         .doTest();

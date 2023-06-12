@@ -36,7 +36,7 @@ public final class AndroidInjectionBeforeSuperTest {
           .addSourceFile("testdata/stubs/android/os/IBinder.java");
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper
         .addSourceFile("AndroidInjectionBeforeSuperPositiveCases.java")
         .addSourceFile("AndroidInjection.java")
@@ -44,7 +44,7 @@ public final class AndroidInjectionBeforeSuperTest {
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper
         .addSourceFile("AndroidInjectionBeforeSuperNegativeCases.java")
         .addSourceFile("AndroidInjection.java")

@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns.android;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.util.ASTHelpers.isStatic;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableMap;
@@ -70,7 +71,7 @@ public class MislabeledAndroidString extends BugChecker implements MemberSelectT
     if (symbol == null
         || symbol.owner == null
         || symbol.getKind() != ElementKind.FIELD
-        || !symbol.isStatic()
+        || !isStatic(symbol)
         || !R_STRING_CLASSNAME.contentEquals(symbol.owner.getQualifiedName())) {
       return Description.NO_MATCH;
     }

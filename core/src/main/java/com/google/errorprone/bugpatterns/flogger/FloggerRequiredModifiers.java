@@ -21,6 +21,7 @@ import static com.google.errorprone.fixes.SuggestedFixes.addModifiers;
 import static com.google.errorprone.fixes.SuggestedFixes.removeModifiers;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
+import static com.google.errorprone.util.ASTHelpers.isStatic;
 import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.PROTECTED;
@@ -71,6 +72,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import javax.inject.Inject;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.NestingKind;
 
@@ -139,7 +141,8 @@ public final class FloggerRequiredModifiers extends BugChecker
    * values check only a subset of the Flogger best practices, and are designed to generate a more
    * fine grained adjustments.
    */
-  public FloggerRequiredModifiers(ErrorProneFlags flags) {
+  @Inject
+  FloggerRequiredModifiers(ErrorProneFlags flags) {
     this(flags.getEnum("FloggerRequiredModifiers:Goal", Goal.class).orElse(Goal.DEFAULT_ALL_GOALS));
   }
 
@@ -534,7 +537,7 @@ public final class FloggerRequiredModifiers extends BugChecker
       // This may be looking up FluentLogger itself, as a member of its package, or reading a local.
       return NO_MATCH;
     }
-    if (!(sym.isStatic() || tree instanceof IdentifierTree)) {
+    if (!(isStatic(sym) || tree instanceof IdentifierTree)) {
       // We can only be referring to another class's logger statically, or implicitly through a
       // superclass as an identifier. This early exit avoids flagging instance field lookups.
       return NO_MATCH;

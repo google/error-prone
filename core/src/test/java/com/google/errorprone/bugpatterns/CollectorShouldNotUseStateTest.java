@@ -29,12 +29,12 @@ public class CollectorShouldNotUseStateTest {
       CompilationTestHelper.newInstance(CollectorShouldNotUseState.class, getClass());
 
   @Test
-  public void testPositiveCases() {
+  public void positiveCases() {
     compilationHelper.addSourceFile("CollectorShouldNotUseStatePositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCases() {
+  public void negativeCases() {
     compilationHelper.addSourceFile("CollectorShouldNotUseStateNegativeCases.java").doTest();
   }
 }

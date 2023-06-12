@@ -33,7 +33,6 @@ import static javax.lang.model.element.Modifier.STATIC;
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.Immutable;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
@@ -45,6 +44,7 @@ import com.google.errorprone.bugpatterns.threadsafety.WellKnownMutability;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.suppliers.Supplier;
+import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
@@ -60,6 +60,7 @@ import com.sun.tools.javac.util.Name;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
+import javax.inject.Inject;
 import javax.lang.model.element.NestingKind;
 
 /** Finds fields which can be safely made static. */
@@ -80,9 +81,11 @@ public final class FieldCanBeStatic extends BugChecker implements VariableTreeMa
   private final WellKnownMutability wellKnownMutability;
   private final ConstantExpressions constantExpressions;
 
-  public FieldCanBeStatic(ErrorProneFlags flags) {
-    this.wellKnownMutability = WellKnownMutability.fromFlags(flags);
-    this.constantExpressions = ConstantExpressions.fromFlags(flags);
+  @Inject
+  FieldCanBeStatic(
+      WellKnownMutability wellKnownMutability, ConstantExpressions constantExpressions) {
+    this.wellKnownMutability = wellKnownMutability;
+    this.constantExpressions = constantExpressions;
   }
 
   @Override
@@ -184,7 +187,7 @@ public final class FieldCanBeStatic extends BugChecker implements VariableTreeMa
         new ConstantExpressionVisitor() {
           @Override
           public void visitIdentifier(Symbol identifier) {
-            if (!(identifier instanceof ClassSymbol) && !identifier.isStatic()) {
+            if (!(identifier instanceof ClassSymbol) && !ASTHelpers.isStatic(identifier)) {
               staticable.set(false);
             }
           }

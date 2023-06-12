@@ -49,6 +49,21 @@ public final class FieldCanBeLocalTest {
   }
 
   @Test
+  public void suppressedByUnusedPrefix() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  private int unusedA;",
+            "  int foo() {",
+            "    unusedA = 1;",
+            "    return unusedA;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void multipleAssignments() {
     refactoringTestHelper
         .addInputLines(

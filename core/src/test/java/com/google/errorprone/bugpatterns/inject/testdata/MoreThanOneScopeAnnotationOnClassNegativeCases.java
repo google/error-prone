@@ -24,7 +24,9 @@ import dagger.Subcomponent;
 import dagger.producers.ProductionComponent;
 import dagger.producers.ProductionSubcomponent;
 
-/** @author sgoldfeder@google.com(Steven Goldfeder) */
+/**
+ * @author sgoldfeder@google.com(Steven Goldfeder)
+ */
 public class MoreThanOneScopeAnnotationOnClassNegativeCases {
 
   /** Class has no annotation. */

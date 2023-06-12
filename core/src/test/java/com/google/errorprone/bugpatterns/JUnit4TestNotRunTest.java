@@ -36,12 +36,12 @@ public class JUnit4TestNotRunTest {
       BugCheckerRefactoringTestHelper.newInstance(JUnit4TestNotRun.class, getClass());
 
   @Test
-  public void testPositiveCase1() {
+  public void positiveCase1() {
     compilationHelper.addSourceFile("JUnit4TestNotRunPositiveCase1.java").doTest();
   }
 
   @Test
-  public void testPositiveCase2() {
+  public void positiveCase2() {
     compilationHelper.addSourceFile("JUnit4TestNotRunPositiveCase2.java").doTest();
   }
 
@@ -319,7 +319,7 @@ public class JUnit4TestNotRunTest {
   }
 
   @Test
-  public void testFix() {
+  public void fix() {
     refactoringHelper
         .addInputLines(
             "in/TestStuff.java",
@@ -499,27 +499,27 @@ public class JUnit4TestNotRunTest {
   }
 
   @Test
-  public void testNegativeCase1() {
+  public void negativeCase1() {
     compilationHelper.addSourceFile("JUnit4TestNotRunNegativeCase1.java").doTest();
   }
 
   @Test
-  public void testNegativeCase2() {
+  public void negativeCase2() {
     compilationHelper.addSourceFile("JUnit4TestNotRunNegativeCase2.java").doTest();
   }
 
   @Test
-  public void testNegativeCase3() {
+  public void negativeCase3() {
     compilationHelper.addSourceFile("JUnit4TestNotRunNegativeCase3.java").doTest();
   }
 
   @Test
-  public void testNegativeCase4() {
+  public void negativeCase4() {
     compilationHelper.addSourceFile("JUnit4TestNotRunNegativeCase4.java").doTest();
   }
 
   @Test
-  public void testNegativeCase5() {
+  public void negativeCase5() {
     compilationHelper
         .addSourceFile("JUnit4TestNotRunBaseClass.java")
         .addSourceFile("JUnit4TestNotRunNegativeCase5.java")

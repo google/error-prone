@@ -34,22 +34,22 @@ public class EqualsIncompatibleTypeTest {
       CompilationTestHelper.newInstance(EqualsIncompatibleType.class, getClass());
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper.addSourceFile("EqualsIncompatibleTypePositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("EqualsIncompatibleTypeNegativeCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase_recursive() {
+  public void negativeCase_recursive() {
     compilationHelper.addSourceFile("EqualsIncompatibleTypeRecursiveTypes.java").doTest();
   }
 
   @Test
-  public void testPrimitiveBoxingIntoObject() {
+  public void primitiveBoxingIntoObject() {
     assumeFalse(RuntimeVersion.isAtLeast12()); // https://bugs.openjdk.java.net/browse/JDK-8028563
     compilationHelper
         .addSourceLines(
@@ -240,6 +240,54 @@ public class EqualsIncompatibleTypeTest {
             "  @Override",
             "  public boolean equals(Object o) {",
             "    return ((Test) o).b().equals(b());",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void predicateIsEqual_incompatible() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import static java.util.function.Predicate.isEqual;",
+            "import java.util.stream.Stream;",
+            "class Test {",
+            "  boolean test(Stream<Long> xs) {",
+            "    // BUG: Diagnostic contains:",
+            "    return xs.allMatch(isEqual(1));",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void predicateIsEqual_compatible() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import static java.util.function.Predicate.isEqual;",
+            "import java.util.stream.Stream;",
+            "class Test {",
+            "  boolean test(Stream<Long> xs) {",
+            "    return xs.allMatch(isEqual(1L));",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void predicateIsEqual_methodRef() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.function.Function;",
+            "import java.util.function.Predicate;",
+            "import java.util.stream.Stream;",
+            "class Test {",
+            "  boolean test(Function<Long, Predicate<Integer>> fn) {",
+            "    // BUG: Diagnostic contains:",
+            "    return test(Predicate::isEqual);",
             "  }",
             "}")
         .doTest();

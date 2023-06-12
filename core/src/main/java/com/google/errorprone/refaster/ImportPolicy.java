@@ -27,6 +27,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Streams;
 import com.sun.tools.javac.code.Symbol.PackageSymbol;
+import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCImport;
@@ -269,7 +270,15 @@ public enum ImportPolicy {
                 .map(Collection::stream)
                 .orElse(Stream.of())
                 .filter(whichImports::existingImportMatches)
-                .map(imp -> imp.getQualifiedIdentifier().toString()))
+                .map(imp -> getQualifiedIdentifier(imp).toString()))
         .collect(toImmutableSet());
+  }
+
+  private static JCTree getQualifiedIdentifier(JCImport i) {
+    try {
+      return (JCTree) JCImport.class.getMethod("getQualifiedIdentifier").invoke(i);
+    } catch (ReflectiveOperationException e) {
+      throw new LinkageError(e.getMessage(), e);
+    }
   }
 }

@@ -57,7 +57,7 @@ public final class JavaPeriodGetDays extends BugChecker implements MethodInvocat
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     if (PERIOD_GET_DAYS.matches(tree, state)) {
       if (!containsCallToSameReceiverNearby(
-          tree, PERIOD_LOOK_AT_OTHERS, state, /*checkProtoChains=*/ false)) {
+          tree, PERIOD_LOOK_AT_OTHERS, state, /* checkProtoChains= */ false)) {
         return describeMatch(tree);
       }
     }

@@ -19,7 +19,9 @@ package com.google.errorprone.bugpatterns.testdata;
 import com.google.errorprone.annotations.CheckReturnValue;
 import org.junit.rules.ExpectedException;
 
-/** @author eaftan@google.com (Eddie Aftandilian) */
+/**
+ * @author eaftan@google.com (Eddie Aftandilian)
+ */
 public class CheckReturnValuePositiveCases {
 
   IntValue intValue = new IntValue(0);
@@ -31,7 +33,12 @@ public class CheckReturnValuePositiveCases {
 
   public void foo() {
     int i = 1;
-    // BUG: Diagnostic contains:
+    // BUG: Diagnostic contains: The result of `increment(...)` must be used
+    //
+    // If you really don't want to use the result, then assign it to a variable: `var unused = ...`.
+    //
+    // If callers of `increment(...)` shouldn't be required to use its result, then annotate it with
+    // `@CanIgnoreReturnValue`.
     increment(i);
     System.out.println(i);
   }
@@ -52,19 +59,48 @@ public class CheckReturnValuePositiveCases {
   }
 
   public void testResolvedToVoidLambda() {
-    // BUG: Diagnostic contains: Ignored return value
+    // BUG: Diagnostic contains:
     callRunnable(() -> this.intValue.increment());
   }
 
-  public void testResolvedToVoidMethodReference() {
-    // BUG: Diagnostic contains: Ignored return value
+  public void testResolvedToVoidMethodReference(boolean predicate) {
+    // BUG: Diagnostic contains: The result of `increment()` must be used
+    //
+    // `this.intValue::increment` acts as an implementation of `Runnable.run`
+    // -- which is a `void` method, so it doesn't use the result of `increment()`.
+    //
+    // To use the result, you may need to restructure your code.
+    //
+    // If you really don't want to use the result, then switch to a lambda that assigns it to a
+    // variable: `() -> { var unused = ...; }`.
+    //
+    // If callers of `increment()` shouldn't be required to use its result, then annotate it with
+    // `@CanIgnoreReturnValue`.
     callRunnable(this.intValue::increment);
+    // BUG: Diagnostic contains: The result of `increment()` must be used
+    callRunnable(predicate ? this.intValue::increment : this.intValue::increment2);
+  }
+
+  public void testConstructorResolvedToVoidMethodReference() {
+    // BUG: Diagnostic contains: The result of `new MyObject()` must be used
+    //
+    // `MyObject::new` acts as an implementation of `Runnable.run`
+    // -- which is a `void` method, so it doesn't use the result of `new MyObject()`.
+    //
+    // To use the result, you may need to restructure your code.
+    //
+    // If you really don't want to use the result, then switch to a lambda that assigns it to a
+    // variable: `() -> { var unused = ...; }`.
+    //
+    // If callers of `MyObject()` shouldn't be required to use its result, then annotate it with
+    // `@CanIgnoreReturnValue`.
+    callRunnable(MyObject::new);
   }
 
   public void testRegularLambda() {
     callRunnable(
         () -> {
-          // BUG: Diagnostic contains: Ignored return value
+          // BUG: Diagnostic contains:
           this.intValue.increment();
         });
   }
@@ -77,7 +113,7 @@ public class CheckReturnValuePositiveCases {
   }
 
   public void constructor() {
-    // BUG: Diagnostic contains: Ignored return value
+    // BUG: Diagnostic contains: The result of `new MyObject()` must be used
     new MyObject() {};
 
     class MySubObject1 extends MyObject {}
@@ -92,7 +128,12 @@ public class CheckReturnValuePositiveCases {
       }
     }
 
-    // BUG: Diagnostic contains: Ignored return value
+    // BUG: Diagnostic contains: The result of `new MyObject()` must be used
+    //
+    // If you really don't want to use the result, then assign it to a variable: `var unused = ...`.
+    //
+    // If callers of `MyObject()` shouldn't be required to use its result, then annotate it with
+    // `@CanIgnoreReturnValue`.
     new MyObject();
   }
 

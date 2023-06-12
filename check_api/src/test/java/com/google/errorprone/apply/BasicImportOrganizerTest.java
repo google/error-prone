@@ -47,7 +47,7 @@ public class BasicImportOrganizerTest {
           .collect(toImmutableList());
 
   @Test
-  public void testStaticFirstOrdering() {
+  public void staticFirstOrdering() {
     BasicImportOrganizer organizer = new BasicImportOrganizer(StaticOrder.STATIC_FIRST);
     ImportOrganizer.OrganizedImports organized = organizer.organizeImports(IMPORTS);
     assertThat(organized.asImportBlock())
@@ -69,7 +69,7 @@ public class BasicImportOrganizerTest {
   }
 
   @Test
-  public void testStaticLastOrdering() {
+  public void staticLastOrdering() {
     BasicImportOrganizer organizer = new BasicImportOrganizer(StaticOrder.STATIC_LAST);
     ImportOrganizer.OrganizedImports organized = organizer.organizeImports(IMPORTS);
     assertThat(organized.asImportBlock())

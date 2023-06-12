@@ -21,7 +21,7 @@
   <parent>
     <groupId>com.google.errorprone</groupId>
     <artifactId>error_prone_parent</artifactId>
-    <version>HEAD-SNAPSHOT</version>
+    <version>2.19.1</version>
   </parent>
 
   <name>error-prone library</name>
@@ -128,7 +128,7 @@
     </dependency>
     <dependency>
       <!-- Apache 2.0 -->
-      <groupId>com.google.gwt</groupId>
+      <groupId>org.gwtproject</groupId>
       <artifactId>gwt-user</artifactId>
       <version>${gwt.version}</version>
       <scope>test</scope>
@@ -179,7 +179,7 @@
       <!-- Apache 2.0 -->
       <groupId>com.google.inject</groupId>
       <artifactId>guice</artifactId>
-      <version>5.1.0</version>
+      <version>${guice.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -355,6 +355,18 @@
       <version>${flogger.version}</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.jspecify</groupId>
+      <artifactId>jspecify</artifactId>
+      <version>${jspecify.version}</version>
+      <scope>test</scope>
+    </dependency>
+      <!-- Apache 2.0 -->
+    <dependency>
+      <groupId>javax.inject</groupId>
+      <artifactId>javax.inject</artifactId>
+      <version>1</version>
+    </dependency>
   </dependencies>
 
   <build>
@@ -362,7 +374,7 @@
       <extension>
         <groupId>kr.motd.maven</groupId>
         <artifactId>os-maven-plugin</artifactId>
-        <version>1.6.2</version>
+        <version>1.7.0</version>
       </extension>
     </extensions>
     <plugins>

@@ -43,8 +43,8 @@ public class ErrorProneError extends Error {
     super(
         formatMessage(checkName, source, pos, cause),
         cause,
-        /*enableSuppression=*/ true,
-        /*writableStackTrace=*/ false);
+        /* enableSuppression= */ true,
+        /* writableStackTrace= */ false);
     this.checkName = checkName;
     this.cause = cause;
     this.pos = pos;
@@ -98,8 +98,8 @@ public class ErrorProneError extends Error {
 
   private static String formatMessage(
       String checkName, JavaFileObject file, DiagnosticPosition pos, Throwable cause) {
-    DiagnosticSource source = new DiagnosticSource(file, /*log=*/ null);
-    int column = source.getColumnNumber(pos.getStartPosition(), /*expandTabs=*/ true);
+    DiagnosticSource source = new DiagnosticSource(file, /* log= */ null);
+    int column = source.getColumnNumber(pos.getStartPosition(), /* expandTabs= */ true);
     int line = source.getLineNumber(pos.getStartPosition());
     String snippet = source.getLine(pos.getStartPosition());
     StringBuilder sb = new StringBuilder();

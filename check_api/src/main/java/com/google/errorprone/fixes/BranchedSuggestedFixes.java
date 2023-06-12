@@ -16,6 +16,7 @@
 package com.google.errorprone.fixes;
 
 import com.google.common.collect.ImmutableList;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 
 /**
  * Helper class for accumulating a branching tree of alternative fixes designed to help build as set
@@ -64,12 +65,14 @@ public class BranchedSuggestedFixes {
     private ImmutableList.Builder<SuggestedFix> builder = ImmutableList.builder();
     private ImmutableList<SuggestedFix> savedList = ImmutableList.of();
 
+    @CanIgnoreReturnValue
     public Builder startWith(SuggestedFix fix) {
       savedList = ImmutableList.of();
       builder = ImmutableList.<SuggestedFix>builder().add(fix);
       return this;
     }
 
+    @CanIgnoreReturnValue
     public Builder addOption(SuggestedFix fix) {
       if (!savedList.isEmpty()) {
         for (SuggestedFix s : savedList) {
@@ -79,6 +82,7 @@ public class BranchedSuggestedFixes {
       return this;
     }
 
+    @CanIgnoreReturnValue
     public Builder then() {
       savedList = builder.build();
       builder = ImmutableList.builder();

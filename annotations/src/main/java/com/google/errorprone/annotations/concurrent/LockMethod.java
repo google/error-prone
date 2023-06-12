@@ -42,9 +42,12 @@ import java.lang.annotation.Target;
  *   <li><code>method-name()</code>: The lock object is returned by calling the named nullary
  *       method.
  * </ul>
+ *
+ * @deprecated the correctness of this annotation is not enforced; it will soon be removed.
  */
 @Target(METHOD)
 @Retention(CLASS)
+@Deprecated
 public @interface LockMethod {
   String[] value();
 }

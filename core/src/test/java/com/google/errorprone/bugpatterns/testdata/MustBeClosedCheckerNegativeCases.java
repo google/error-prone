@@ -20,8 +20,10 @@ import static org.junit.Assert.fail;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.annotations.MustBeClosed;
 
+@SuppressWarnings({"UnnecessaryCast", "LambdaToMemberReference"})
 public class MustBeClosedCheckerNegativeCases {
 
   class Closeable implements AutoCloseable {
@@ -44,6 +46,16 @@ public class MustBeClosedCheckerNegativeCases {
 
     @MustBeClosed
     MustBeClosedAnnotatedConstructor() {}
+  }
+
+  @SuppressWarnings("MustBeClosedChecker")
+  void respectsSuppressWarnings_onMethod() {
+    new Foo().mustBeClosedAnnotatedMethod();
+  }
+
+  void respectsSuppressWarnings_onLocal() {
+    @SuppressWarnings("MustBeClosedChecker")
+    var unused = new Foo().mustBeClosedAnnotatedMethod();
   }
 
   void negativeCase3() {
@@ -70,7 +82,7 @@ public class MustBeClosedCheckerNegativeCases {
 
   @MustBeClosed
   Closeable positiveCase8() {
-    // This is fine since the caller method is annotatGed.
+    // This is fine since the caller method is annotated.
     return new MustBeClosedAnnotatedConstructor();
   }
 
@@ -78,6 +90,18 @@ public class MustBeClosedCheckerNegativeCases {
   Closeable positiveCase7() {
     // This is fine since the caller method is annotated.
     return new Foo().mustBeClosedAnnotatedMethod();
+  }
+
+  @MustBeClosed
+  Closeable ternary(boolean condition) {
+    return condition ? new Foo().mustBeClosedAnnotatedMethod() : null;
+  }
+
+  @MustBeClosed
+  Closeable cast() {
+    // TODO(b/241012760): remove the following line after the bug is fixed.
+    // BUG: Diagnostic contains:
+    return (Closeable) new Foo().mustBeClosedAnnotatedMethod();
   }
 
   void tryWithResources() {
@@ -137,5 +161,24 @@ public class MustBeClosedCheckerNegativeCases {
         () -> {
           return new MustBeClosedAnnotatedConstructor();
         });
+  }
+
+  void methodReferenceReturningCloseable() {
+    consumeCloseable(MustBeClosedAnnotatedConstructor::new);
+  }
+
+  void ternaryFunctionalExpressionReturningCloseable(boolean condition) {
+    consumeCloseable(
+        condition
+            ? () -> new MustBeClosedAnnotatedConstructor()
+            : MustBeClosedAnnotatedConstructor::new);
+  }
+
+  void inferredFunctionalExpressionReturningCloseable(ResourceFactory factory) {
+    ImmutableList.of(
+            factory,
+            () -> new MustBeClosedAnnotatedConstructor(),
+            MustBeClosedAnnotatedConstructor::new)
+        .forEach(this::consumeCloseable);
   }
 }

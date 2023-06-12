@@ -132,6 +132,7 @@ public final class TruthAssertExpected extends BugChecker implements MethodInvoc
                 return node.getArguments();
               }
 
+              @Nullable
               @Override
               public List<? extends ExpressionTree> visitMethodInvocation(
                   MethodInvocationTree node, Void unused) {

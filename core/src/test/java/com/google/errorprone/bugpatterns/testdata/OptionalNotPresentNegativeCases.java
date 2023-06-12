@@ -18,49 +18,53 @@ package com.google.errorprone.bugpatterns.testdata;
 import java.util.Optional;
 import java.util.function.Predicate;
 
+/** Includes true-negative cases and false-positive cases. */
 public class OptionalNotPresentNegativeCases {
 
   // Test this doesn't trigger NullPointerException
   private final Predicate<Optional<?>> asField = o -> !o.isPresent();
 
-  public void testBasic(Optional<String> optional) {
-    if (optional.get() != null) {
-      String str = optional.get();
-    }
-  }
-
-  public void testNested(Optional<String> optional) {
-    if (7 == 7) {
-      String str = optional.get();
-      if (!optional.isPresent()) {
-        System.out.println("test");
+  // False-positive
+  public String getWhenTestedSafe_referenceEquality(Optional<String> optional) {
+    if (!optional.isPresent()) {
+      if (optional == Optional.of("OK")) { // always false
+        // BUG: Diagnostic contains: Optional
+        return optional.get();
       }
     }
+    return "";
   }
 
-  public void testOptional(Optional<String> optional) {
+  // False-positive
+  public String getWhenTestedSafe_equals(Optional<String> optional) {
+    if (!optional.isPresent()) {
+      if (optional.equals(Optional.of("OK"))) { // always false
+        // BUG: Diagnostic contains: Optional
+        return optional.get();
+      }
+    }
+    return "";
+  }
+
+  public String getWhenPresent_blockReassigned(Optional<String> optional) {
     if (!optional.isPresent()) {
       optional = Optional.of("value");
-      String str = optional.get();
+      return optional.get();
     }
+    return "";
   }
 
-  public void afterIf(Optional<String> optional) {
+  public String getWhenPresent_localReassigned(Optional<String> optional) {
     if (!optional.isPresent()) {
       optional = Optional.of("value");
     }
-    String str = optional.get();
+    return optional.get();
   }
 
-  public void doubleChecked(Optional<String> optional) {
-    if (!optional.isPresent() || 7 == 7) {
-      String foo = optional.isPresent() ? optional.get() : "";
+  public String getWhenPresent_nestedCheck(Optional<String> optional) {
+    if (!optional.isPresent() || true) {
+      return optional.isPresent() ? optional.get() : "";
     }
-  }
-
-  public void checkMultipleInIf(Optional<String> optional) {
-    if (!optional.isPresent() || 7 == 7) {
-      String str = !optional.isPresent() ? optional.get() : "";
-    }
+    return "";
   }
 }

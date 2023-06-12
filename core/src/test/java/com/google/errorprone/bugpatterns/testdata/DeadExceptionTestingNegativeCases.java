@@ -19,7 +19,9 @@ package com.google.errorprone.bugpatterns.testdata;
 import junit.framework.TestCase;
 import org.junit.Test;
 
-/** @author alexeagle@google.com (Alex Eagle) */
+/**
+ * @author alexeagle@google.com (Alex Eagle)
+ */
 public class DeadExceptionTestingNegativeCases extends TestCase {
 
   public void testShouldAllowTestingOfExceptionConstructorSideEffects() {

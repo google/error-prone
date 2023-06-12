@@ -25,7 +25,6 @@ import static com.google.errorprone.util.ASTHelpers.getType;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.StandardTags;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.Immutable;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -40,6 +39,7 @@ import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import java.util.Collections;
 import java.util.Optional;
+import javax.inject.Inject;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
@@ -59,8 +59,9 @@ public class ImmutableAnnotationChecker extends BugChecker implements ClassTreeM
 
   private final WellKnownMutability wellKnownMutability;
 
-  public ImmutableAnnotationChecker(ErrorProneFlags flags) {
-    this.wellKnownMutability = WellKnownMutability.fromFlags(flags);
+  @Inject
+  ImmutableAnnotationChecker(WellKnownMutability wellKnownMutability) {
+    this.wellKnownMutability = wellKnownMutability;
   }
 
   @Override
@@ -89,7 +90,10 @@ public class ImmutableAnnotationChecker extends BugChecker implements ClassTreeM
 
     Violation info =
         new ImmutableAnalysis(
-                this, state, wellKnownMutability, ImmutableSet.of(Immutable.class.getName()))
+                this::isSuppressed,
+                state,
+                wellKnownMutability,
+                ImmutableSet.of(Immutable.class.getName()))
             .checkForImmutability(
                 Optional.of(tree), ImmutableSet.of(), getType(tree), this::describeClass);
 

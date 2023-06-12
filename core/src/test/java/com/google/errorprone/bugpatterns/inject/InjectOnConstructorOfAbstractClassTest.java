@@ -31,7 +31,7 @@ public class InjectOnConstructorOfAbstractClassTest {
       CompilationTestHelper.newInstance(InjectOnConstructorOfAbstractClass.class, getClass());
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper
         .addSourceLines(
             "Foo.java",
@@ -44,7 +44,7 @@ public class InjectOnConstructorOfAbstractClassTest {
   }
 
   @Test
-  public void testGuiceConstructor() {
+  public void guiceConstructor() {
     compilationHelper
         .addSourceLines(
             "Foo.java",
@@ -57,7 +57,7 @@ public class InjectOnConstructorOfAbstractClassTest {
   }
 
   @Test
-  public void testAbstractClassInConcreteClass() {
+  public void abstractClassInConcreteClass() {
     compilationHelper
         .addSourceLines(
             "Foo.java",
@@ -72,7 +72,7 @@ public class InjectOnConstructorOfAbstractClassTest {
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper
         .addSourceLines(
             "Foo.java", //
@@ -84,7 +84,7 @@ public class InjectOnConstructorOfAbstractClassTest {
   }
 
   @Test
-  public void testConcreteClassInAbstractClass() {
+  public void concreteClassInAbstractClass() {
     compilationHelper
         .addSourceLines(
             "Foo.java",

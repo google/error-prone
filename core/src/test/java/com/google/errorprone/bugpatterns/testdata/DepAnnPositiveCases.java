@@ -16,29 +16,41 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
-/** @deprecated */
+/**
+ * @deprecated
+ */
 // BUG: Diagnostic contains: @Deprecated
 public class DepAnnPositiveCases {
 
-  /** @deprecated */
+  /**
+   * @deprecated
+   */
   // BUG: Diagnostic contains: @Deprecated
   public DepAnnPositiveCases() {}
 
-  /** @deprecated */
+  /**
+   * @deprecated
+   */
   // BUG: Diagnostic contains: @Deprecated
   int myField;
 
-  /** @deprecated */
+  /**
+   * @deprecated
+   */
   // BUG: Diagnostic contains: @Deprecated
   enum Enum {
     VALUE,
   }
 
-  /** @deprecated */
+  /**
+   * @deprecated
+   */
   // BUG: Diagnostic contains: @Deprecated
   interface Interface {}
 
-  /** @deprecated */
+  /**
+   * @deprecated
+   */
   // BUG: Diagnostic contains: @Deprecated
   public void deprecatedMethood() {}
 }

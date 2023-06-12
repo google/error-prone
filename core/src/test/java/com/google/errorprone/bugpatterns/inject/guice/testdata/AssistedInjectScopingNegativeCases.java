@@ -20,7 +20,9 @@ import com.google.inject.Singleton;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 
-/** @author eaftan@google.com (Eddie Aftandilian) */
+/**
+ * @author eaftan@google.com (Eddie Aftandilian)
+ */
 public class AssistedInjectScopingNegativeCases {
 
   /** Class is not assisted and has no scoping annotation. */

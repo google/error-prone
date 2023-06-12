@@ -32,17 +32,17 @@ public class CannotMockFinalClassTest {
       CompilationTestHelper.newInstance(CannotMockFinalClass.class, getClass());
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper.addSourceFile("CannotMockFinalClassPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("CannotMockFinalClassNegativeCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase2() {
+  public void negativeCase2() {
     compilationHelper.addSourceFile("CannotMockFinalClassNegativeCases2.java").doTest();
   }
 }

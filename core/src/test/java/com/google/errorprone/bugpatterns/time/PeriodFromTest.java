@@ -34,7 +34,7 @@ public class PeriodFromTest {
 
   @SuppressWarnings("PeriodFrom")
   @Test
-  public void testFailures() {
+  public void failures() {
     assertThrows(DateTimeException.class, () -> Period.from(Duration.ZERO));
     assertThrows(DateTimeException.class, () -> Period.from(Duration.ofNanos(1)));
     assertThrows(DateTimeException.class, () -> Period.from(Duration.ofNanos(-1)));

@@ -22,10 +22,12 @@ import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.AbstractReturnValueIgnored;
+import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
+import javax.inject.Inject;
 
 /**
  * @author avenet@google.com (Arnaud J. Venet)
@@ -34,6 +36,11 @@ import com.sun.source.tree.MethodInvocationTree;
     summary = "Return value of android.graphics.Rect.intersect() must be checked",
     severity = ERROR)
 public final class RectIntersectReturnValueIgnored extends AbstractReturnValueIgnored {
+  @Inject
+  RectIntersectReturnValueIgnored(ConstantExpressions constantExpressions) {
+    super(constantExpressions);
+  }
+
   @Override
   public Matcher<? super ExpressionTree> specializedMatcher() {
     return instanceMethod().onExactClass("android.graphics.Rect").named("intersect");

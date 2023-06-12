@@ -39,7 +39,7 @@ public class DateCheckerTest {
       CompilationTestHelper.newInstance(DateChecker.class, getClass());
 
   @Test
-  public void testBadBehavior() {
+  public void badBehavior() {
     assertThat(toLocalDate(2020, 6, 10)).isEqualTo(LocalDate.of(2020 + 1900, 6 + 1, 10));
 
     assertThat(toLocalDate(120, 0, 20)).isEqualTo(LocalDate.of(2020, JANUARY, 20));

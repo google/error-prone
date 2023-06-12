@@ -71,7 +71,7 @@ public class NullnessInferenceTest {
   }
 
   @Test
-  public void testIdentity() {
+  public void identity() {
     compilationHelper
         .addSourceLines(
             "IdentityTest.java",
@@ -109,7 +109,7 @@ public class NullnessInferenceTest {
   }
 
   @Test
-  public void testAnnotatedGenericMethod() {
+  public void annotatedGenericMethod() {
     compilationHelper
         .addSourceLines(
             "AnnotatedGenericMethodTest.java",
@@ -148,7 +148,7 @@ public class NullnessInferenceTest {
   }
 
   @Test
-  public void testBoundedGenericMethod() {
+  public void boundedGenericMethod() {
     compilationHelper
         .addSourceLines(
             "AnnotatedGenericMethodTest.java",
@@ -180,7 +180,7 @@ public class NullnessInferenceTest {
 
   // Regression test for b/113123074
   @Test
-  public void testUnparameterizedMethodInvocation() {
+  public void unparameterizedMethodInvocation() {
     compilationHelper
         .addSourceLines(
             "IdentityTest.java",
@@ -206,7 +206,7 @@ public class NullnessInferenceTest {
   }
 
   @Test
-  public void testLists() {
+  public void lists() {
     compilationHelper
         .addSourceLines(
             "ListsTest.java",
@@ -254,7 +254,7 @@ public class NullnessInferenceTest {
   }
 
   @Test
-  public void testReturn() {
+  public void returnCase() {
     compilationHelper
         .addSourceLines(
             "ReturnTest.java",
@@ -282,7 +282,7 @@ public class NullnessInferenceTest {
   }
 
   @Test
-  public void testAssignments() {
+  public void assignments() {
     compilationHelper
         .addSourceLines(
             "AssignmentsTest.java",
@@ -314,7 +314,7 @@ public class NullnessInferenceTest {
   }
 
   @Test
-  public void testVarArgs() {
+  public void varArgs() {
     compilationHelper
         .addSourceLines(
             "VarArgsTest.java",
@@ -345,7 +345,7 @@ public class NullnessInferenceTest {
   }
 
   @Test
-  public void testAnnotatedAtGenericTypeUse() {
+  public void annotatedAtGenericTypeUse() {
     compilationHelper
         .addSourceLines(
             "AnnotatedAtGenericTypeUseTest.java",
@@ -397,7 +397,7 @@ public class NullnessInferenceTest {
   }
 
   @Test
-  public void testAnnotatedAtGenericTypeDef() {
+  public void annotatedAtGenericTypeDef() {
     compilationHelper
         .addSourceLines(
             "AnnotatedAtGenericTypeDefTest.java",
@@ -441,7 +441,7 @@ public class NullnessInferenceTest {
   }
 
   @Test
-  public void testBoundedAtGenericTypeUse() {
+  public void boundedAtGenericTypeUse() {
     compilationHelper
         .addSourceLines(
             "BoundedAtGenericTypeUseTest.java",
@@ -466,7 +466,7 @@ public class NullnessInferenceTest {
   }
 
   @Test
-  public void testBoundedAtGenericTypeDef() {
+  public void boundedAtGenericTypeDef() {
     compilationHelper
         .addSourceLines(
             "BoundedAtGenericTypeDefTest.java",
@@ -495,7 +495,7 @@ public class NullnessInferenceTest {
   }
 
   @Test
-  public void testDefaultAnnotation() {
+  public void defaultAnnotation() {
     compilationHelper
         .addSourceLines(
             "DefaultAnnotationTest.java",
@@ -535,7 +535,7 @@ public class NullnessInferenceTest {
   }
 
   @Test
-  public void testIntersectionBounds() {
+  public void intersectionBounds() {
     compilationHelper
         .addSourceLines(
             "IntersectionBoundsTest.java",
@@ -557,7 +557,7 @@ public class NullnessInferenceTest {
   }
 
   @Test
-  public void testAnnotatedMethodTypeParams() {
+  public void annotatedMethodTypeParams() {
     compilationHelper
         .addSourceLines(
             "AnnotatedMethodTypeParamsTest.java",

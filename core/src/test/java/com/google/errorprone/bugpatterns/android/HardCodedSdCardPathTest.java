@@ -51,7 +51,7 @@ public class HardCodedSdCardPathTest {
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper
         .setArgs(ImmutableList.of("-XDandroidCompatible=true"))
         .addSourceFile("HardCodedSdCardPathNegativeCases.java")

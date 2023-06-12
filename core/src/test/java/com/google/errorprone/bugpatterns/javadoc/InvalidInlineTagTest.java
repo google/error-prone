@@ -242,7 +242,7 @@ public final class InvalidInlineTagTest {
   }
 
   @Test
-  public void testInvalidTagMessage() {
+  public void invalidTagMessage() {
     assertEquals(
         "@type is not a valid tag, but is a parameter name. Use {@code type} to refer to parameter"
             + " names inline.",

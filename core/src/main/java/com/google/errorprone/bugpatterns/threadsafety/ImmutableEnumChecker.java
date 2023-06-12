@@ -24,7 +24,6 @@ import static com.google.errorprone.util.ASTHelpers.getType;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.Immutable;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -40,6 +39,7 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import java.util.Optional;
 import java.util.stream.Stream;
+import javax.inject.Inject;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
@@ -55,8 +55,9 @@ public class ImmutableEnumChecker extends BugChecker implements ClassTreeMatcher
 
   private final WellKnownMutability wellKnownMutability;
 
-  public ImmutableEnumChecker(ErrorProneFlags flags) {
-    this.wellKnownMutability = WellKnownMutability.fromFlags(flags);
+  @Inject
+  ImmutableEnumChecker(WellKnownMutability wellKnownMutability) {
+    this.wellKnownMutability = wellKnownMutability;
   }
 
   @Override
@@ -83,7 +84,10 @@ public class ImmutableEnumChecker extends BugChecker implements ClassTreeMatcher
 
     Violation info =
         new ImmutableAnalysis(
-                this, state, wellKnownMutability, ImmutableSet.of(Immutable.class.getName()))
+                this::isSuppressed,
+                state,
+                wellKnownMutability,
+                ImmutableSet.of(Immutable.class.getName()))
             .checkForImmutability(
                 Optional.of(tree), ImmutableSet.of(), getType(tree), this::describe);
 

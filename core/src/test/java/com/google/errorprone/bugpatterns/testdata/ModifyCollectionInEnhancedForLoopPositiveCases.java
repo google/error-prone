@@ -20,7 +20,9 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
 
-/** @author anishvisaria98@gmail.com (Anish Visaria) */
+/**
+ * @author anishvisaria98@gmail.com (Anish Visaria)
+ */
 public class ModifyCollectionInEnhancedForLoopPositiveCases {
 
   public static void testBasic(ArrayList<Integer> arr, HashSet<Integer> set) {

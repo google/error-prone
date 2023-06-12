@@ -19,17 +19,16 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
-import static com.google.errorprone.util.ASTHelpers.isSubtype;
+import static com.google.errorprone.util.ASTHelpers.isStatic;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.suppliers.Supplier;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
+import javax.inject.Inject;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
@@ -40,11 +39,9 @@ import com.sun.tools.javac.code.Type;
     altNames = {"NumericEquality"},
     severity = ERROR)
 public final class BoxedPrimitiveEquality extends AbstractReferenceEquality {
-  private final boolean handleNumber;
 
-  public BoxedPrimitiveEquality(ErrorProneFlags flags) {
-    this.handleNumber = flags.getBoolean("BoxedPrimitiveEquality:HandleNumber").orElse(true);
-  }
+  @Inject
+  BoxedPrimitiveEquality() {}
 
   @Override
   protected boolean matchArgument(ExpressionTree tree, VisitorState state) {
@@ -59,32 +56,14 @@ public final class BoxedPrimitiveEquality extends AbstractReferenceEquality {
   }
 
   private boolean isRelevantType(Type type, VisitorState state) {
-    if (handleNumber && isSubtype(type, JAVA_LANG_NUMBER.get(state), state)) {
-      return true;
-    }
-    switch (state.getTypes().unboxedType(type).getTag()) {
-      case BYTE:
-      case CHAR:
-      case SHORT:
-      case INT:
-      case LONG:
-      case FLOAT:
-      case DOUBLE:
-      case BOOLEAN:
-        return true;
-      default:
-        return false;
-    }
+    return !type.isPrimitive() && state.getTypes().unboxedType(type).isPrimitive();
   }
 
   private static boolean isStaticConstant(Symbol sym) {
-    return sym instanceof VarSymbol && isFinal(sym) && sym.isStatic();
+    return sym instanceof VarSymbol && isFinal(sym) && isStatic(sym);
   }
 
   public static boolean isFinal(Symbol s) {
     return (s.flags() & Flags.FINAL) == Flags.FINAL;
   }
-
-  private static final Supplier<Type> JAVA_LANG_NUMBER =
-      VisitorState.memoize(state -> state.getTypeFromString("java.lang.Number"));
 }

@@ -251,6 +251,7 @@ public class DoubleCheckedLocking extends BugChecker implements IfTreeMatcher {
   /**
    * Matches comparisons to null (e.g. {@code foo == null}) and returns the expression being tested.
    */
+  @Nullable
   private static ExpressionTree getNullCheckedExpression(ExpressionTree condition) {
     condition = stripParentheses(condition);
     if (!(condition instanceof BinaryTree)) {

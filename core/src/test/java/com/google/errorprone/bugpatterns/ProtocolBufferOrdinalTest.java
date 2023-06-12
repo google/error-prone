@@ -33,12 +33,12 @@ public class ProtocolBufferOrdinalTest {
       CompilationTestHelper.newInstance(ProtocolBufferOrdinal.class, getClass());
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper.addSourceFile("ProtocolBufferOrdinalPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper.addSourceFile("ProtocolBufferOrdinalNegativeCases.java").doTest();
   }
 }

@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns.threadsafety;
 
 import static com.google.errorprone.bugpatterns.threadsafety.IllegalGuardedBy.checkGuardedBy;
+import static com.google.errorprone.util.ASTHelpers.isStatic;
 
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression.Kind;
@@ -24,6 +25,7 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
+import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.ParenthesizedTree;
@@ -35,6 +37,7 @@ import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.Names;
 import java.util.Optional;
 import javax.lang.model.element.Name;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A binder from {@code @GuardedBy} annotations to {@link GuardedByExpression}s.
@@ -129,6 +132,8 @@ public final class GuardedByBinder {
 
     Symbol resolveSelect(GuardedByExpression base, MemberSelectTree node);
 
+    Symbol resolveMemberReference(GuardedByExpression base, MemberReferenceTree node);
+
     Symbol resolveTypeLiteral(ExpressionTree expression);
 
     Symbol resolveEnclosingClass(ExpressionTree expression);
@@ -155,6 +160,11 @@ public final class GuardedByBinder {
 
         @Override
         public Symbol resolveSelect(GuardedByExpression base, MemberSelectTree node) {
+          return ASTHelpers.getSymbol(node);
+        }
+
+        @Override
+        public Symbol resolveMemberReference(GuardedByExpression base, MemberReferenceTree node) {
           return ASTHelpers.getSymbol(node);
         }
 
@@ -232,8 +242,18 @@ public final class GuardedByBinder {
           return bindSelect(normalizeBase(context, sym, base), sym);
         }
 
+        @Override
+        public GuardedByExpression visitMemberReference(
+            MemberReferenceTree node, BinderContext context) {
+          GuardedByExpression base = visit(node.getQualifierExpression(), context);
+          checkGuardedBy(base != null, node.getQualifierExpression().toString());
+          Symbol method = context.resolver.resolveMemberReference(base, node);
+          checkGuardedBy(method != null, node.toString());
+          return bindSelect(normalizeBase(context, method, base), method);
+        }
+
         private GuardedByExpression bindSelect(GuardedByExpression base, Symbol sym) {
-          if (base.kind().equals(Kind.TYPE_LITERAL) && !sym.isStatic()) {
+          if (base.kind().equals(Kind.TYPE_LITERAL) && !isStatic(sym)) {
             throw new IllegalGuardedBy("Instance access on static: " + base + ", " + sym);
           }
 
@@ -296,7 +316,7 @@ public final class GuardedByBinder {
          */
         private GuardedByExpression normalizeBase(
             BinderContext context, Symbol symbol, GuardedByExpression base) {
-          if (symbol.isStatic()) {
+          if (isStatic(symbol)) {
             return F.typeLiteral(symbol.owner.enclClass());
           }
 
@@ -320,7 +340,8 @@ public final class GuardedByBinder {
          * Returns the owner if the given member is declared in a lexically enclosing scope, and
          * {@code null} otherwise.
          */
-        private ClassSymbol isEnclosedIn(ClassSymbol startingClass, Symbol member, Types types) {
+        private @Nullable ClassSymbol isEnclosedIn(
+            ClassSymbol startingClass, Symbol member, Types types) {
           for (ClassSymbol scope = startingClass.owner.enclClass();
               scope != null;
               scope = scope.owner.enclClass()) {

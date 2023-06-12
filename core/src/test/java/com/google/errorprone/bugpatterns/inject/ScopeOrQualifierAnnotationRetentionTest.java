@@ -37,21 +37,21 @@ public class ScopeOrQualifierAnnotationRetentionTest {
       CompilationTestHelper.newInstance(ScopeOrQualifierAnnotationRetention.class, getClass());
 
   @Test
-  public void testPositiveCase() {
+  public void positiveCase() {
     compilationHelper
         .addSourceFile("ScopeOrQualifierAnnotationRetentionPositiveCases.java")
         .doTest();
   }
 
   @Test
-  public void testNegativeCase() {
+  public void negativeCase() {
     compilationHelper
         .addSourceFile("ScopeOrQualifierAnnotationRetentionNegativeCases.java")
         .doTest();
   }
 
   @Test
-  public void testRefactoring() {
+  public void refactoring() {
     refactoringTestHelper
         .addInputLines(
             "in/Anno.java",
@@ -94,7 +94,7 @@ public class ScopeOrQualifierAnnotationRetentionTest {
   }
 
   @Test
-  public void testIgnoredOnAndroid() {
+  public void ignoredOnAndroid() {
     compilationHelper
         .setArgs(Collections.singletonList("-XDandroidCompatible=true"))
         .addSourceLines(
@@ -105,7 +105,7 @@ public class ScopeOrQualifierAnnotationRetentionTest {
   }
 
   @Test
-  public void testSourceRetentionStillFiringOnAndroid() {
+  public void sourceRetentionStillFiringOnAndroid() {
     compilationHelper
         .setArgs(Collections.singletonList("-XDandroidCompatible=true"))
         .addSourceLines(

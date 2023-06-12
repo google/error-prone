@@ -70,6 +70,7 @@ import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
+import javax.inject.Inject;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
@@ -200,7 +201,8 @@ public class DefaultCharset extends BugChecker
 
   private final boolean byteArrayOutputStreamToString;
 
-  public DefaultCharset(ErrorProneFlags flags) {
+  @Inject
+  DefaultCharset(ErrorProneFlags flags) {
     this.byteArrayOutputStreamToString =
         flags.getBoolean("DefaultCharset:ByteArrayOutputStreamToString").orElse(true);
   }
@@ -251,14 +253,14 @@ public class DefaultCharset extends BugChecker
     SuggestedFix.Builder fix = SuggestedFix.builder();
     if (parentReceiver != null) {
       fix.replace(
-          /*startPos=*/ state.getEndPosition(parentReceiver),
-          /*endPos=*/ getStartPosition(tree),
-          /*replaceWith=*/ "." + prefix);
+          /* startPos= */ state.getEndPosition(parentReceiver),
+          /* endPos= */ getStartPosition(tree),
+          /* replaceWith= */ "." + prefix);
     } else {
       fix.replace(
-          /*startPos=*/ getStartPosition(parent),
-          /*endPos=*/ getStartPosition(tree),
-          /*replaceWith=*/ prefix);
+          /* startPos= */ getStartPosition(parent),
+          /* endPos= */ getStartPosition(tree),
+          /* replaceWith= */ prefix);
     }
     fix.replace(
         state.getEndPosition(ASTHelpers.getReceiver(tree)), state.getEndPosition(tree), suffix);

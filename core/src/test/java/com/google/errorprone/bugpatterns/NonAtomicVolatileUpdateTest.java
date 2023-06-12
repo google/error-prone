@@ -29,12 +29,12 @@ public class NonAtomicVolatileUpdateTest {
       CompilationTestHelper.newInstance(NonAtomicVolatileUpdate.class, getClass());
 
   @Test
-  public void testPositiveCases() {
+  public void positiveCases() {
     compilationHelper.addSourceFile("NonAtomicVolatileUpdatePositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCases() {
+  public void negativeCases() {
     compilationHelper.addSourceFile("NonAtomicVolatileUpdateNegativeCases.java").doTest();
   }
 }

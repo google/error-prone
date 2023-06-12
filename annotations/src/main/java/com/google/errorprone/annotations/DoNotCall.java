@@ -21,16 +21,48 @@ import static java.lang.annotation.RetentionPolicy.CLASS;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
+import java.util.List;
 
 /**
- * The method to which this annotation is applied cannot be called.
+ * Indicates that the annotated method should not be called under any normal circumstances, yet is
+ * either <i>impossible</i> to remove, or <i>should not</i> ever be removed. Example:
  *
- * <p>The annotation is applied to methods that are required to satisfy the contract of an
- * interface, but that are not supported. One example is the implementation of {@link
- * java.util.Collection#add} in an immutable collection implementation.
+ * <pre>{@code
+ * public class ImmutableList<E> implements List<E> {
+ *   @DoNotCall("guaranteed to throw an exception")
+ *   @Override public add(E e) {
+ *     throw new UnsupportedOperationException();
+ *   }
+ * }
+ * }</pre>
  *
- * <p>Marking methods annotated with {@code @DoNotCall} as {@code @Deprecated} is recommended, since
- * it provides IDE users with more immediate feedback.
+ * By the demands of the {@code List} interface, this method can never be removed. However, since it
+ * should always throw an exception, there can be no valid reason to call it except in the rarest of
+ * circumstances. Although this information can only benefit users who have a reference of type
+ * {@code ImmutableList} (not {@link List}), it's a good start.
+ *
+ * <p>If the typical caller's best remedy is to "inline" the method, {@link InlineMe} is probably a
+ * better option; read there for more information. Using both annotations together is probably
+ * unnecessary.
+ *
+ * <p><b>Note on testing:</b> A {@code @DoNotCall} method should still have unit tests.
+ *
+ * <h2>{@code @DoNotCall} and deprecation</h2>
+ *
+ * <p>Deprecation may feel inappropriate or misleading in cases where there is no intention to ever
+ * remove the method. It might create the impression of a "blemish" on your API; something that
+ * should be fixed. Moreover, it's generally hard to enforce deprecation warnings as strongly as a
+ * {@code @DoNotCall} violation should be.
+ *
+ * <p>But, when choosing the {@code @DoNotCall} option, consider adding {@link Deprecated} as well
+ * anyway, so that any tools that don't support {@code @DoNotCall} can still do something reasonable
+ * to discourage usage. This practice does have some cost; for example, suppression would require
+ * {@code @SuppressWarnings({"DoNotCall", "deprecation"})}.
+ *
+ * <h2>Tool support</h2>
+ *
+ * Error Prone supports this annotation via its <a
+ * href="https://errorprone.info/bugpattern/DoNotCall">DoNotCall</a> pattern.
  */
 @Retention(CLASS)
 @Target(METHOD)

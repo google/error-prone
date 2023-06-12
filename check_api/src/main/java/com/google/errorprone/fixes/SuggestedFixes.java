@@ -306,7 +306,7 @@ public final class SuggestedFixes {
    * <ul>
    *   <li>If the symbol is already in scope, its simple name is used.
    *   <li>If the symbol is a {@link Symbol.TypeSymbol} and an enclosing type is imported, that
-   *       enclosing type is used as a qualified.
+   *       enclosing type is used as a qualifier.
    *   <li>Otherwise the outermost enclosing type is imported and used as a qualifier.
    * </ul>
    */
@@ -567,7 +567,7 @@ public final class SuggestedFixes {
    * parentheses if no elements are left.
    */
   public static SuggestedFix removeElement(
-      ExpressionTree tree, List<? extends ExpressionTree> trees, VisitorState state) {
+      Tree tree, List<? extends Tree> trees, VisitorState state) {
     int indexOf = trees.indexOf(tree);
     checkArgument(indexOf != -1, "trees must contain tree");
     if (trees.size() == 1) {
@@ -926,7 +926,6 @@ public final class SuggestedFixes {
    *
    * @see #addSuppressWarnings(VisitorState, String, String)
    */
-  @Nullable
   public static SuggestedFix addSuppressWarnings(VisitorState state, String warningToSuppress) {
     return addSuppressWarnings(state, warningToSuppress, null);
   }
@@ -942,14 +941,16 @@ public final class SuggestedFixes {
    * <p>In the event that a suppressible element couldn't be found (e.g.: the state is pointing at a
    * CompilationUnit, or some other internal inconsistency has occurred), or the enclosing
    * suppressible element already has a {@code @SuppressWarnings} annotation with {@code
-   * warningToSuppress}, this method will return null.
+   * warningToSuppress}, this method will throw an {@link IllegalArgumentException}.
    */
-  @Nullable
   public static SuggestedFix addSuppressWarnings(
       VisitorState state, String warningToSuppress, @Nullable String lineComment) {
     SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
     addSuppressWarnings(fixBuilder, state, warningToSuppress, lineComment);
-    return fixBuilder.isEmpty() ? null : fixBuilder.build();
+    if (fixBuilder.isEmpty()) {
+      throw new IllegalArgumentException("Couldn't find a node to attach @SuppressWarnings.");
+    }
+    return fixBuilder.build();
   }
 
   /**

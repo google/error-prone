@@ -110,6 +110,7 @@ public class ConstantOverflow extends BugChecker implements BinaryTreeMatcher {
   private static final SimpleTreeVisitor<Number, Void> CONSTANT_VISITOR =
       new SimpleTreeVisitor<Number, Void>() {
 
+        @Nullable
         @Override
         public Number visitConditionalExpression(ConditionalExpressionTree node, Void p) {
           Number ifTrue = node.getTrueExpression().accept(this, null);
@@ -126,6 +127,7 @@ public class ConstantOverflow extends BugChecker implements BinaryTreeMatcher {
           return node.getExpression().accept(this, null);
         }
 
+        @Nullable
         @Override
         public Number visitUnary(UnaryTree node, Void p) {
           Number value = node.getExpression().accept(this, null);
@@ -139,6 +141,7 @@ public class ConstantOverflow extends BugChecker implements BinaryTreeMatcher {
           }
         }
 
+        @Nullable
         @Override
         public Number visitBinary(BinaryTree node, Void p) {
           Number lhs = node.getLeftOperand().accept(this, null);
@@ -170,6 +173,7 @@ public class ConstantOverflow extends BugChecker implements BinaryTreeMatcher {
           }
         }
 
+        @Nullable
         @Override
         public Number visitTypeCast(TypeCastTree node, Void p) {
           Number value = node.getExpression().accept(this, null);
@@ -199,6 +203,7 @@ public class ConstantOverflow extends BugChecker implements BinaryTreeMatcher {
         }
       };
 
+  @Nullable
   private static Long unop(Kind kind, long value) {
     switch (kind) {
       case UNARY_PLUS:
@@ -212,6 +217,7 @@ public class ConstantOverflow extends BugChecker implements BinaryTreeMatcher {
     }
   }
 
+  @Nullable
   private static Integer unop(Kind kind, int value) {
     switch (kind) {
       case UNARY_PLUS:
@@ -225,6 +231,7 @@ public class ConstantOverflow extends BugChecker implements BinaryTreeMatcher {
     }
   }
 
+  @Nullable
   static Long binop(Kind kind, long lhs, long rhs) {
     switch (kind) {
       case MULTIPLY:
@@ -254,6 +261,7 @@ public class ConstantOverflow extends BugChecker implements BinaryTreeMatcher {
     }
   }
 
+  @Nullable
   static Integer binop(Kind kind, int lhs, int rhs) {
     switch (kind) {
       case MULTIPLY:
@@ -283,6 +291,7 @@ public class ConstantOverflow extends BugChecker implements BinaryTreeMatcher {
     }
   }
 
+  @Nullable
   private static Number cast(TypeKind kind, Number value) {
     switch (kind) {
       case SHORT:
@@ -300,6 +309,7 @@ public class ConstantOverflow extends BugChecker implements BinaryTreeMatcher {
     }
   }
 
+  @Nullable
   private static Number getIntegralConstant(Tree node) {
     Number number = ASTHelpers.constValue(node, Number.class);
     if (number instanceof Integer || number instanceof Long) {

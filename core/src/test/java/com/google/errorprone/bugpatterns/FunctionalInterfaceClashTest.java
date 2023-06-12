@@ -369,4 +369,18 @@ public class FunctionalInterfaceClashTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void oneIsMoreSpecific_notAmbiguous() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.function.Consumer;",
+            "public class Test {",
+            "  void foo(Consumer<String> c) {}",
+            "  void foo(SubConsumer<String> c) {}",
+            "  interface SubConsumer<T> extends Consumer<T> {}",
+            "}")
+        .doTest();
+  }
 }

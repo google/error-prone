@@ -33,6 +33,7 @@ public class ReturnsNullCollectionTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
+            "import com.google.common.collect.Multimap;",
             "import java.util.Collection;",
             "import java.util.ArrayList;",
             "import java.util.List;",
@@ -47,6 +48,10 @@ public class ReturnsNullCollectionTest {
             "    return null;",
             "  }",
             "  Map<String, String> methodReturnsNullMap() {",
+            "  // BUG: Diagnostic contains: ReturnsNullCollection",
+            "    return null;",
+            "  }",
+            "  Multimap<String, String> methodReturnsNullMultimap() {",
             "  // BUG: Diagnostic contains: ReturnsNullCollection",
             "    return null;",
             "  }",

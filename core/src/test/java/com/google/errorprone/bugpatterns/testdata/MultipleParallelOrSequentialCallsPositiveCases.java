@@ -19,7 +19,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
 
-/** @author @mariasam (Maria Sam) on 7/6/17. */
+/**
+ * @author @mariasam (Maria Sam) on 7/6/17.
+ */
 class MultipleParallelOrSequentialCallsPositiveCases {
 
   public void basicCaseParallel(List<String> list) {

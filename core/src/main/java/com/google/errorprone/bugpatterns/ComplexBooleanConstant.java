@@ -29,6 +29,7 @@ import com.sun.source.tree.UnaryTree;
 import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.tools.javac.tree.JCTree.JCLiteral;
 import java.util.Objects;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * @author Sumit Bhagwani (bhagwani@google.com)
@@ -53,7 +54,7 @@ public class ComplexBooleanConstant extends BugChecker implements BinaryTreeMatc
         .build();
   }
 
-  Boolean booleanValue(BinaryTree tree) {
+  @Nullable Boolean booleanValue(BinaryTree tree) {
     if (tree.getLeftOperand() instanceof JCLiteral && tree.getRightOperand() instanceof JCLiteral) {
       return ASTHelpers.constValue(tree, Boolean.class);
     }
@@ -62,7 +63,7 @@ public class ComplexBooleanConstant extends BugChecker implements BinaryTreeMatc
     SimpleTreeVisitor<Boolean, Void> boolValue =
         new SimpleTreeVisitor<Boolean, Void>() {
           @Override
-          public Boolean visitLiteral(LiteralTree node, Void unused) {
+          public @Nullable Boolean visitLiteral(LiteralTree node, Void unused) {
             if (node.getValue() instanceof Boolean) {
               return (Boolean) node.getValue();
             }
@@ -70,7 +71,7 @@ public class ComplexBooleanConstant extends BugChecker implements BinaryTreeMatc
           }
 
           @Override
-          public Boolean visitUnary(UnaryTree node, Void unused) {
+          public @Nullable Boolean visitUnary(UnaryTree node, Void unused) {
             Boolean r = node.getExpression().accept(this, null);
             if (r == null) {
               return null;

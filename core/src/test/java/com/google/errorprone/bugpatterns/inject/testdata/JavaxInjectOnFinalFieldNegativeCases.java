@@ -18,7 +18,9 @@ package com.google.errorprone.bugpatterns.inject.testdata;
 
 import javax.inject.Inject;
 
-/** @author sgoldfeder@google.com (Steven Goldfeder) */
+/**
+ * @author sgoldfeder@google.com (Steven Goldfeder)
+ */
 public class JavaxInjectOnFinalFieldNegativeCases {
 
   /** Class has no final fields or @Inject annotations. */

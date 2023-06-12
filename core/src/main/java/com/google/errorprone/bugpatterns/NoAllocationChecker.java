@@ -38,7 +38,7 @@ import static com.google.errorprone.matchers.Matchers.symbolHasAnnotation;
 import static com.google.errorprone.matchers.Matchers.typeCast;
 import static com.google.errorprone.matchers.Matchers.variableInitializer;
 import static com.google.errorprone.matchers.Matchers.variableType;
-import static com.google.errorprone.util.ASTHelpers.findSuperMethods;
+import static com.google.errorprone.util.ASTHelpers.streamSuperMethods;
 import static com.sun.source.tree.Tree.Kind.AND_ASSIGNMENT;
 import static com.sun.source.tree.Tree.Kind.DIVIDE_ASSIGNMENT;
 import static com.sun.source.tree.Tree.Kind.LEFT_SHIFT_ASSIGNMENT;
@@ -393,7 +393,7 @@ public class NoAllocationChecker extends BugChecker
       return NO_MATCH;
     }
     MethodSymbol symbol = ASTHelpers.getSymbol(tree);
-    return findSuperMethods(symbol, state.getTypes()).stream()
+    return streamSuperMethods(symbol, state.getTypes())
         .filter(s -> ASTHelpers.hasAnnotation(s, NoAllocation.class.getName(), state))
         .findAny()
         .map(

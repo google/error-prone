@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.Map;
 import java.util.regex.Pattern;
+import javax.inject.Inject;
 
 /** Checks for uses of classes, fields, or methods that are not compatible with JDK 8 */
 @BugPattern(
@@ -70,7 +71,8 @@ public class Java8ApiChecker extends ApiDiffChecker {
 
   private static final String CHECKSUM = "java/util/zip/Checksum";
 
-  public Java8ApiChecker(ErrorProneFlags errorProneFlags) {
+  @Inject
+  Java8ApiChecker(ErrorProneFlags errorProneFlags) {
     super(loadApiDiff(errorProneFlags));
   }
 }

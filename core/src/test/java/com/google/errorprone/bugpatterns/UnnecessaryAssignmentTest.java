@@ -57,6 +57,20 @@ public final class UnnecessaryAssignmentTest {
   }
 
   @Test
+  public void doubleAnnotation() {
+    testHelper
+        .addSourceLines(
+            "Test.java", //
+            "import com.google.inject.Inject;",
+            "import org.mockito.Mock;",
+            "class Test {",
+            "  // BUG: Diagnostic contains: both",
+            "  @Mock @Inject Object mockObject;",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void refactoring() {
     refactoringHelper
         .addInputLines(

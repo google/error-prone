@@ -39,6 +39,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.TryTree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreeScanner;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Suggests that calls to {@code Lock.lock} must be immediately followed by a {@code try-finally}
@@ -171,7 +172,7 @@ public final class LockNotBeforeTry extends BugChecker implements MethodInvocati
     Boolean released =
         new TreeScanner<Boolean, Void>() {
           @Override
-          public Boolean reduce(Boolean r1, Boolean r2) {
+          public @Nullable Boolean reduce(Boolean r1, Boolean r2) {
             return r1 == null ? r2 : (r2 == null ? null : r1 && r2);
           }
 

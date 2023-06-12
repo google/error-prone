@@ -20,7 +20,6 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.Tree;
@@ -38,7 +37,7 @@ public class HeldLockAnalyzerTest {
       CompilationTestHelper.newInstance(GuardedByLockSetAnalyzer.class, getClass());
 
   @Test
-  public void testInstance() {
+  public void instance() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -62,7 +61,7 @@ public class HeldLockAnalyzerTest {
   }
 
   @Test
-  public void testTwoInstances() {
+  public void twoInstances() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -87,7 +86,7 @@ public class HeldLockAnalyzerTest {
   }
 
   @Test
-  public void testSynchronizedMethod() {
+  public void synchronizedMethod() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -106,7 +105,7 @@ public class HeldLockAnalyzerTest {
   }
 
   @Test
-  public void testSynchronizedThis() {
+  public void synchronizedThis() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -127,7 +126,7 @@ public class HeldLockAnalyzerTest {
   }
 
   @Test
-  public void testSynchronizedField() {
+  public void synchronizedField() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -150,7 +149,7 @@ public class HeldLockAnalyzerTest {
   }
 
   @Test
-  public void testSynchronizedClass() {
+  public void synchronizedClass() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -172,7 +171,7 @@ public class HeldLockAnalyzerTest {
   }
 
   @Test
-  public void testLocked() {
+  public void locked() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -202,55 +201,9 @@ public class HeldLockAnalyzerTest {
         .doTest();
   }
 
-  @Test
-  public void testLockMethodEnclosingAccess() {
-    compilationHelper
-        .addSourceLines(
-            "threadsafety/Test.java",
-            "package threadsafety;",
-            "import javax.annotation.concurrent.GuardedBy;",
-            "import com.google.errorprone.annotations.concurrent.LockMethod;",
-            "import com.google.errorprone.annotations.concurrent.UnlockMethod;",
-            "import java.util.concurrent.locks.Lock;",
-            "class Outer {",
-            "  Lock lock;",
-            "  class Inner {",
-            "    @GuardedBy(\"lock\")",
-            "    int x;",
-            "    ",
-            "    @LockMethod(\"lock\")",
-            "    void lock() {",
-            "      lock.lock();",
-            "    }",
-            "    ",
-            "    @UnlockMethod(\"lock\")",
-            "    void unlock() {",
-            "      lock.unlock();",
-            "    }",
-            "    ",
-            "    void m(Inner i) {",
-            "      i.lock();",
-            "      try {",
-            "        // BUG: Diagnostic contains:",
-            "        // [(SELECT (SELECT (LOCAL_VARIABLE i) outer$threadsafety.Outer) lock)]",
-            "        i.x++;",
-            "      } finally {",
-            "        i.unlock();",
-            "      }",
-            "    }",
-            "  }",
-            "}")
-        .doTest();
-  }
-
   /** A customized {@link GuardedByChecker} that prints more test-friendly diagnostics. */
   @BugPattern(name = "GuardedByLockSet", summary = "", explanation = "", severity = ERROR)
   public static class GuardedByLockSetAnalyzer extends GuardedByChecker {
-
-    public GuardedByLockSetAnalyzer(ErrorProneFlags errorProneFlags) {
-      super(errorProneFlags);
-    }
-
     @Override
     protected Description checkGuardedAccess(
         Tree tree, GuardedByExpression guard, HeldLockSet live, VisitorState state) {

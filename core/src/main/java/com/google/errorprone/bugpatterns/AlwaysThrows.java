@@ -32,7 +32,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Multiset;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions;
@@ -48,6 +47,8 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 import java.lang.reflect.InvocationTargetException;
 import java.util.UUID;
 import java.util.function.Consumer;
+import javax.inject.Inject;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(summary = "Detects calls that will fail at runtime", severity = ERROR)
@@ -135,8 +136,9 @@ public class AlwaysThrows extends BugChecker implements MethodInvocationTreeMatc
 
   private final ConstantExpressions constantExpressions;
 
-  public AlwaysThrows(ErrorProneFlags flags) {
-    this.constantExpressions = ConstantExpressions.fromFlags(flags);
+  @Inject
+  AlwaysThrows(ConstantExpressions constantExpressions) {
+    this.constantExpressions = constantExpressions;
   }
 
   @Override
@@ -219,7 +221,7 @@ public class AlwaysThrows extends BugChecker implements MethodInvocationTreeMatc
     return checkForRepeatedKeys(tree, keys);
   }
 
-  private Object getConstantKey(ExpressionTree key, VisitorState state) {
+  private @Nullable Object getConstantKey(ExpressionTree key, VisitorState state) {
     return constantExpressions.constantExpression(key, state).orElse(null);
   }
 

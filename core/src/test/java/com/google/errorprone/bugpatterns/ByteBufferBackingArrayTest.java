@@ -29,12 +29,12 @@ public class ByteBufferBackingArrayTest {
       CompilationTestHelper.newInstance(ByteBufferBackingArray.class, getClass());
 
   @Test
-  public void testPositiveCases() {
+  public void positiveCases() {
     compilationHelper.addSourceFile("ByteBufferBackingArrayPositiveCases.java").doTest();
   }
 
   @Test
-  public void testNegativeCases() {
+  public void negativeCases() {
     compilationHelper.addSourceFile("ByteBufferBackingArrayNegativeCases.java").doTest();
   }
 

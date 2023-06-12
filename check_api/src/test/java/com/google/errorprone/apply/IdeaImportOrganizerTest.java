@@ -48,7 +48,7 @@ public class IdeaImportOrganizerTest {
           .collect(toImmutableList());
 
   @Test
-  public void testStaticLastOrdering() {
+  public void staticLastOrdering() {
     IdeaImportOrganizer organizer = new IdeaImportOrganizer();
     ImportOrganizer.OrganizedImports organized = organizer.organizeImports(IMPORTS);
     assertThat(organized.asImportBlock())

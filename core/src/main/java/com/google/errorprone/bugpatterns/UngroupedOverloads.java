@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
-import static com.google.errorprone.BugPattern.StandardTags.STYLE;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static java.util.stream.Collectors.joining;
@@ -43,6 +42,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
+import javax.inject.Inject;
 import javax.lang.model.element.Name;
 
 /**
@@ -53,13 +53,13 @@ import javax.lang.model.element.Name;
         "Constructors and methods with the same name should appear sequentially with no other code"
             + " in between, even when modifiers such as static or private differ between the"
             + " methods. Please re-order or re-name methods.",
-    severity = SUGGESTION,
-    tags = STYLE)
+    severity = SUGGESTION)
 public class UngroupedOverloads extends BugChecker implements ClassTreeMatcher {
 
   private final Boolean batchFindings;
 
-  public UngroupedOverloads(ErrorProneFlags flags) {
+  @Inject
+  UngroupedOverloads(ErrorProneFlags flags) {
     batchFindings = flags.getBoolean("UngroupedOverloads:BatchFindings").orElse(false);
   }
 
@@ -98,7 +98,9 @@ public class UngroupedOverloads extends BugChecker implements ClassTreeMatcher {
       Tree member = classTree.getMembers().get(i);
       if (member instanceof MethodTree) {
         MethodTree methodTree = (MethodTree) member;
-        methods.put(OverloadKey.create(methodTree), MemberWithIndex.create(i, methodTree));
+        if (!ASTHelpers.isGeneratedConstructor(methodTree)) {
+          methods.put(OverloadKey.create(methodTree), MemberWithIndex.create(i, methodTree));
+        }
       }
     }
     ImmutableList<Description> descriptions =

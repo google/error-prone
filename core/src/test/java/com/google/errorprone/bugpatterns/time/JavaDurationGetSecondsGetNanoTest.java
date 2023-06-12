@@ -32,7 +32,7 @@ public class JavaDurationGetSecondsGetNanoTest {
       CompilationTestHelper.newInstance(JavaDurationGetSecondsGetNano.class, getClass());
 
   @Test
-  public void testGetSecondsWithGetNanos() {
+  public void getSecondsWithGetNanos() {
     compilationHelper
         .addSourceLines(
             "test/TestCase.java",
@@ -48,7 +48,7 @@ public class JavaDurationGetSecondsGetNanoTest {
   }
 
   @Test
-  public void testGetSecondsWithGetNanosInReturnType() {
+  public void getSecondsWithGetNanosInReturnType() {
     compilationHelper
         .addSourceLines(
             "test/TestCase.java",
@@ -65,7 +65,7 @@ public class JavaDurationGetSecondsGetNanoTest {
   }
 
   @Test
-  public void testGetSecondsWithGetNanosInReturnType2() {
+  public void getSecondsWithGetNanosInReturnType2() {
     compilationHelper
         .addSourceLines(
             "test/TestCase.java",
@@ -82,7 +82,7 @@ public class JavaDurationGetSecondsGetNanoTest {
   }
 
   @Test
-  public void testGetSecondsWithGetNanosDifferentScope() {
+  public void getSecondsWithGetNanosDifferentScope() {
     // Ideally we would also catch cases like this, but it requires scanning "too much" of the class
     compilationHelper
         .addSourceLines(
@@ -102,7 +102,7 @@ public class JavaDurationGetSecondsGetNanoTest {
   }
 
   @Test
-  public void testGetSecondsWithGetNanosInDifferentMethods() {
+  public void getSecondsWithGetNanosInDifferentMethods() {
     compilationHelper
         .addSourceLines(
             "test/TestCase.java",
@@ -121,7 +121,7 @@ public class JavaDurationGetSecondsGetNanoTest {
   }
 
   @Test
-  public void testGetSecondsOnly() {
+  public void getSecondsOnly() {
     compilationHelper
         .addSourceLines(
             "test/TestCase.java",
@@ -136,7 +136,7 @@ public class JavaDurationGetSecondsGetNanoTest {
   }
 
   @Test
-  public void testGetNanoOnly() {
+  public void getNanoOnly() {
     compilationHelper
         .addSourceLines(
             "test/TestCase.java",
@@ -152,7 +152,7 @@ public class JavaDurationGetSecondsGetNanoTest {
   }
 
   @Test
-  public void testGetNanoInMethodGetSecondsInClassVariable() {
+  public void getNanoInMethodGetSecondsInClassVariable() {
     compilationHelper
         .addSourceLines(
             "test/TestCase.java",
@@ -170,7 +170,7 @@ public class JavaDurationGetSecondsGetNanoTest {
   }
 
   @Test
-  public void testGetSecondsOnlyInStaticBlock() {
+  public void getSecondsOnlyInStaticBlock() {
     compilationHelper
         .addSourceLines(
             "test/TestCase.java",
@@ -185,7 +185,7 @@ public class JavaDurationGetSecondsGetNanoTest {
   }
 
   @Test
-  public void testGetNanoOnlyInStaticBlock() {
+  public void getNanoOnlyInStaticBlock() {
     compilationHelper
         .addSourceLines(
             "test/TestCase.java",
@@ -201,7 +201,7 @@ public class JavaDurationGetSecondsGetNanoTest {
   }
 
   @Test
-  public void testGetSecondsOnlyInClassBlock() {
+  public void getSecondsOnlyInClassBlock() {
     compilationHelper
         .addSourceLines(
             "test/TestCase.java",
@@ -215,7 +215,7 @@ public class JavaDurationGetSecondsGetNanoTest {
   }
 
   @Test
-  public void testGetNanoOnlyInClassBlock() {
+  public void getNanoOnlyInClassBlock() {
     compilationHelper
         .addSourceLines(
             "test/TestCase.java",
@@ -229,7 +229,7 @@ public class JavaDurationGetSecondsGetNanoTest {
   }
 
   @Test
-  public void testGetNanoInInnerClassGetSecondsInMethod() {
+  public void getNanoInInnerClassGetSecondsInMethod() {
     compilationHelper
         .addSourceLines(
             "test/TestCase.java",
@@ -251,7 +251,7 @@ public class JavaDurationGetSecondsGetNanoTest {
   }
 
   @Test
-  public void testGetNanoInInnerClassGetSecondsInClassVariable() {
+  public void getNanoInInnerClassGetSecondsInClassVariable() {
     compilationHelper
         .addSourceLines(
             "test/TestCase.java",
@@ -269,7 +269,7 @@ public class JavaDurationGetSecondsGetNanoTest {
   }
 
   @Test
-  public void testGetNanoInMethodGetSecondsInLambda() {
+  public void getNanoInMethodGetSecondsInLambda() {
     compilationHelper
         .addSourceLines(
             "test/TestCase.java",
@@ -287,7 +287,7 @@ public class JavaDurationGetSecondsGetNanoTest {
   }
 
   @Test
-  public void testGetSecondsInLambda() {
+  public void getSecondsInLambda() {
     compilationHelper
         .addSourceLines(
             "test/TestCase.java",
@@ -308,7 +308,7 @@ public class JavaDurationGetSecondsGetNanoTest {
   }
 
   @Test
-  public void testGetNanoInLambda() {
+  public void getNanoInLambda() {
     compilationHelper
         .addSourceLines(
             "test/TestCase.java",

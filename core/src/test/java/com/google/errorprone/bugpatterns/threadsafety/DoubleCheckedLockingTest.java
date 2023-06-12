@@ -117,7 +117,7 @@ public class DoubleCheckedLockingTest {
   }
 
   @Test
-  public void immutable_Integer() {
+  public void immutable_integer() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
@@ -138,7 +138,7 @@ public class DoubleCheckedLockingTest {
   }
 
   @Test
-  public void immutable_String() {
+  public void immutable_string() {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",

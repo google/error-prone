@@ -160,6 +160,7 @@ public abstract class AbstractCollectionIncompatibleTypeMatcher {
     }.visit(tree, null);
   }
 
+  @Nullable
   private MatchResult getMatchResult(
       @Nullable ExpressionTree sourceTree, @Nullable Type sourceType, @Nullable Type targetType) {
     if (sourceTree == null || sourceType == null || targetType == null) {

@@ -27,7 +27,7 @@ import org.junit.runners.JUnit4;
 public class UsingJsr305CheckReturnValueTest {
 
   @Test
-  public void testJsr305Imported() {
+  public void jsr305Imported() {
     BugCheckerRefactoringTestHelper.newInstance(UsingJsr305CheckReturnValue.class, getClass())
         .addInputLines(
             "Client.java",
@@ -53,7 +53,7 @@ public class UsingJsr305CheckReturnValueTest {
   }
 
   @Test
-  public void testJsr305FullyQualified() {
+  public void jsr305FullyQualified() {
     CompilationTestHelper.newInstance(UsingJsr305CheckReturnValue.class, getClass())
         .addSourceLines(
             "Client.java",
@@ -69,7 +69,7 @@ public class UsingJsr305CheckReturnValueTest {
   }
 
   @Test
-  public void testJsr305ImportStar() {
+  public void jsr305ImportStar() {
     CompilationTestHelper.newInstance(UsingJsr305CheckReturnValue.class, getClass())
         .addSourceLines(
             "Client.java",

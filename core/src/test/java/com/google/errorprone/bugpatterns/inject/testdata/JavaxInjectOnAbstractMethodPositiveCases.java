@@ -16,7 +16,9 @@
 
 package com.google.errorprone.bugpatterns.inject.testdata;
 
-/** @author sgoldfeder@google.com (Steven Goldfeder) */
+/**
+ * @author sgoldfeder@google.com (Steven Goldfeder)
+ */
 public class JavaxInjectOnAbstractMethodPositiveCases {
 
   /** Abstract class has an injectable(javax.inject.Inject) abstract method. */
