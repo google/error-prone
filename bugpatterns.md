@@ -823,6 +823,9 @@ Callers of this API should be inlined.
 __[InlineMeSuggester](bugpattern/InlineMeSuggester)__<br>
 This deprecated API looks inlineable. If you&#39;d like the body of the API to be automatically inlined to its callers, please annotate it with @InlineMe. NOTE: the suggested fix makes the method final if it was not already.
 
+__[InlineTrivialConstant](bugpattern/InlineTrivialConstant)__<br>
+Consider inlining this constant
+
 __[InputStreamSlowMultibyteRead](bugpattern/InputStreamSlowMultibyteRead)__<br>
 Please also override int read(byte[], int, int), otherwise multi-byte reads from this input stream are likely to be slow.
 
