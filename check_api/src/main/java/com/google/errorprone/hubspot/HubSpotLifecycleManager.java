@@ -36,6 +36,8 @@ public class HubSpotLifecycleManager {
   private final AtomicBoolean started;
   private final AtomicBoolean stopped;
 
+  private final FileManager fileManager;
+
   public static HubSpotLifecycleManager instance(VisitorState state) {
     return instance(state.context);
   }
@@ -53,6 +55,8 @@ public class HubSpotLifecycleManager {
     this.shutdownListener = new HashSet<>();
     this.started = new AtomicBoolean();
     this.stopped = new AtomicBoolean();
+
+    this.fileManager = FileManager.instance(context);
 
     context.put(timingsKey, this);
   }
@@ -111,7 +115,7 @@ public class HubSpotLifecycleManager {
   }
 
   private Optional<Path> getCanaryPath() {
-    return FileManager.getLifeCycleCanaryPath(String.valueOf(Objects.hash(this)));
+    return fileManager.getLifeCycleCanaryPath(String.valueOf(Objects.hash(this)));
   }
 
   private void runListener(String type, Runnable runnable) {

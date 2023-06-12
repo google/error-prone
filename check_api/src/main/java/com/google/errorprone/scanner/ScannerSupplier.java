@@ -33,6 +33,7 @@ import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.ErrorProneOptions;
 import com.google.errorprone.ErrorProneOptions.Severity;
+import com.google.errorprone.hubspot.HubSpotMetrics;
 import com.google.errorprone.hubspot.HubSpotUtils;
 import com.google.errorprone.InvalidCommandLineOptionException;
 import com.google.errorprone.annotations.CheckReturnValue;

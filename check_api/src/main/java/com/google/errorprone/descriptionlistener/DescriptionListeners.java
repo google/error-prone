@@ -7,6 +7,7 @@ import java.util.function.Supplier;
 
 import com.google.common.base.Suppliers;
 import com.google.errorprone.DescriptionListener;
+import com.google.errorprone.hubspot.HubSpotMetrics;
 import com.google.errorprone.hubspot.HubSpotUtils;
 import com.google.errorprone.matchers.Description;
 import com.sun.tools.javac.util.Context;
@@ -54,7 +55,7 @@ public class DescriptionListeners {
           listener.onDescribed(description);
         } catch (Throwable t) {
           if (handleErrors) {
-            HubSpotUtils.recordListenerDescribeError(listener, t);
+            HubSpotMetrics.instance(resources.getContext()).recordListenerDescribeError(listener, t);
           } else {
             throw t;
           }

@@ -25,33 +25,53 @@ import java.util.Optional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
+import com.google.common.base.Supplier;
+import com.google.errorprone.ErrorProneOptions;
+import com.sun.tools.javac.util.Context;
 
 class FileManager {
   private static final ObjectMapper MAPPER = new ObjectMapper();
   private static final String OVERWATCH_DIR_ENV_VAR = "MAVEN_PROJECTBASEDIR";
   private static final String BLAZAR_DIR_ENV_VAR = "VIEWABLE_BUILD_ARTIFACTS_DIR";
 
-  static Optional<Path> getErrorOutputPath() {
+  public static synchronized FileManager instance(Context context) {
+    FileManager instance = context.get(FileManager.class);
+
+    if (instance == null) {
+      instance = new FileManager(HubSpotUtils.getPhase(context));
+      context.put(FileManager.class, instance);
+    }
+
+    return instance;
+  }
+
+  private final String phase;
+
+  FileManager(String phase) {
+    this.phase = phase;
+  }
+
+  Optional<Path> getErrorOutputPath() {
     return getDataDir(OVERWATCH_DIR_ENV_VAR, "target/overwatch-metadata")
         .map(o -> o.resolve("error-prone-exceptions.json"));
   }
 
-  static Optional<Path> getTimingsOutputPath() {
+  Optional<Path> getTimingsOutputPath() {
     return getDataDir(BLAZAR_DIR_ENV_VAR, "error-prone")
         .map(o -> o.resolve("error-prone-timings.json"));
   }
 
-  static Optional<Path> getLifeCycleCanaryPath(String id) {
+  Optional<Path> getLifeCycleCanaryPath(String id) {
     return getDataDir(OVERWATCH_DIR_ENV_VAR, "target/overwatch-metadata")
         .map(o -> o.resolve(String.format("lifecycle-canary-%s.json", id)));
   }
 
-  static Optional<Path> getUncaughtExceptionPath() {
+  Optional<Path> getUncaughtExceptionPath() {
     return getDataDir(BLAZAR_DIR_ENV_VAR, "error-prone")
         .map(o -> o.resolve("error-prone-exception.log"));
   }
 
-  static void write(Object data, Path path) {
+  void write(Object data, Path path) {
     try (OutputStream stream = Files.newOutputStream(path)) {
       MAPPER.writerWithDefaultPrettyPrinter().writeValue(stream, data);
     } catch (IOException e) {
@@ -61,13 +81,13 @@ class FileManager {
     }
   }
 
-  private static Optional<Path> getDataDir(String envVar, String pathToAppend) {
+  private Optional<Path> getDataDir(String envVar, String pathToAppend) {
     String dir = System.getenv(envVar);
     if (Strings.isNullOrEmpty(dir)) {
       return Optional.empty();
     }
 
-    Path res = Paths.get(dir).resolve(pathToAppend);
+    Path res = Paths.get(dir).resolve(pathToAppend).resolve(phase);
     if (!Files.exists(res)) {
       try {
         Files.createDirectories(res);
