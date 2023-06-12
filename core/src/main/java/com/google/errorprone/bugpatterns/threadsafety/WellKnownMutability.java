@@ -176,6 +176,7 @@ public final class WellKnownMutability implements ThreadSafety.KnownTypes {
         .add("android.net.Uri")
         .add("android.util.Size")
         .add("java.awt.Color")
+        .add("java.lang.invoke.MethodHandle")
         .add("java.util.AbstractMap$SimpleImmutableEntry", "K", "V")
         .add("java.util.Optional", "T")
         .add("java.util.OptionalDouble")
