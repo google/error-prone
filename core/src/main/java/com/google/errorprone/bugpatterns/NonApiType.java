@@ -19,8 +19,10 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.predicates.TypePredicates.anyOf;
+import static com.google.errorprone.predicates.TypePredicates.anything;
 import static com.google.errorprone.predicates.TypePredicates.isDescendantOf;
 import static com.google.errorprone.predicates.TypePredicates.isExactType;
+import static com.google.errorprone.predicates.TypePredicates.not;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
@@ -33,7 +35,6 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.predicates.TypePredicate;
-import com.google.errorprone.predicates.TypePredicates;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Type;
@@ -54,12 +55,13 @@ public final class NonApiType extends BugChecker implements MethodTreeMatcher {
   private static final String INTERFACES_NOT_IMPLS_LINK = "";
   private static final String PRIMITIVE_ARRAYS_LINK = "";
   private static final String PROTO_TIME_SERIALIZATION_LINK = "";
+  private static final String ITERATOR_LINK = "";
+  private static final String STREAM_LINK = "";
   private static final String OPTIONAL_AS_PARAM_LINK = "";
   private static final String PREFER_JDK_OPTIONAL_LINK = "";
 
-  private static final TypePredicate GRAPH_WRAPPER =
-      TypePredicates.not(
-          TypePredicates.isDescendantOf("com.google.apps.framework.producers.GraphWrapper"));
+  private static final TypePredicate NON_GRAPH_WRAPPER =
+      not(isDescendantOf("com.google.apps.framework.producers.GraphWrapper"));
 
   private static final ImmutableSet<TypeToCheck> NON_API_TYPES =
       ImmutableSet.of(
@@ -96,23 +98,23 @@ public final class NonApiType extends BugChecker implements MethodTreeMatcher {
           // ImmutableFoo as params
           withPublicVisibility(
               isExactType("com.google.common.collect.ImmutableCollection"),
-              GRAPH_WRAPPER,
+              NON_GRAPH_WRAPPER,
               "Consider accepting a java.util.Collection or Iterable instead. "
                   + TYPE_GENERALITY_LINK,
               ApiElementType.PARAMETER),
           withPublicVisibility(
               isExactType("com.google.common.collect.ImmutableList"),
-              GRAPH_WRAPPER,
+              NON_GRAPH_WRAPPER,
               "Consider accepting a java.util.List or Iterable instead. " + TYPE_GENERALITY_LINK,
               ApiElementType.PARAMETER),
           withPublicVisibility(
               isExactType("com.google.common.collect.ImmutableSet"),
-              GRAPH_WRAPPER,
+              NON_GRAPH_WRAPPER,
               "Consider accepting a java.util.Set or Iterable instead. " + TYPE_GENERALITY_LINK,
               ApiElementType.PARAMETER),
           withPublicVisibility(
               isExactType("com.google.common.collect.ImmutableMap"),
-              GRAPH_WRAPPER,
+              NON_GRAPH_WRAPPER,
               "Consider accepting a java.util.Map instead. " + TYPE_GENERALITY_LINK,
               ApiElementType.PARAMETER),
 
@@ -135,6 +137,20 @@ public final class NonApiType extends BugChecker implements MethodTreeMatcher {
                   isExactType("java.util.TreeMap")),
               "Prefer a java.util.Map instead. " + INTERFACES_NOT_IMPLS_LINK,
               ApiElementType.ANY),
+
+          // Iterators
+          withPublicVisibility(
+              isDescendantOf("java.util.Iterator"),
+              "Prefer returning a Stream (or collecting to an ImmutableList/ImmutableSet) instead. "
+                  + ITERATOR_LINK,
+              ApiElementType.RETURN_TYPE),
+          // TODO(b/279464660): consider also warning on an Iterator as a ApiElementType.PARAMETER
+
+          // Streams
+          withPublicVisibility(
+              isDescendantOf("java.util.stream.Stream"),
+              "Prefer accepting an Iterable or Collection instead. " + STREAM_LINK,
+              ApiElementType.PARAMETER),
 
           // ProtoTime
           withPublicVisibility(
@@ -242,8 +258,7 @@ public final class NonApiType extends BugChecker implements MethodTreeMatcher {
 
   private static TypeToCheck withPublicVisibility(
       TypePredicate typePredicate, String failureMessage, ApiElementType elementType) {
-    return withPublicVisibility(
-        typePredicate, TypePredicates.anything(), failureMessage, elementType);
+    return withPublicVisibility(typePredicate, anything(), failureMessage, elementType);
   }
 
   private static TypeToCheck withPublicVisibility(
@@ -258,7 +273,7 @@ public final class NonApiType extends BugChecker implements MethodTreeMatcher {
   private static TypeToCheck withAnyVisibility(
       TypePredicate typePredicate, String failureMessage, ApiElementType elementType) {
     return new AutoValue_NonApiType_TypeToCheck(
-        typePredicate, TypePredicates.anything(), failureMessage, ApiVisibility.ANY, elementType);
+        typePredicate, anything(), failureMessage, ApiVisibility.ANY, elementType);
   }
 
   @AutoValue

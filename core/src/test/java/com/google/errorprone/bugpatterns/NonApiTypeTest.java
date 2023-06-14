@@ -235,4 +235,32 @@ public final class NonApiTypeTest {
   }
 
   // Tests below are copied from FloggerPassedAroundTest (so it can be deleted)
+
+  @Test
+  public void streams() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.stream.Stream;",
+            "public class Test {",
+            "  // BUG: Diagnostic contains: NonApiType",
+            "  public Test(Stream<String> iterator) {}",
+            "  // BUG: Diagnostic contains: NonApiType",
+            "  public void methodParam(Stream<String> iterator) {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void iterators() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.Iterator;",
+            "public class Test {",
+            "  // BUG: Diagnostic contains: NonApiType",
+            "  public Iterator<String> returnType() { return null; }",
+            "}")
+        .doTest();
+  }
 }
