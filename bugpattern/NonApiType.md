@@ -1,6 +1,6 @@
 ---
 title: NonApiType
-summary: Certain types should not be passed across public API boundaries.
+summary: Certain types should not be passed across API boundaries.
 layout: bugpattern
 tags: ''
 severity: WARNING

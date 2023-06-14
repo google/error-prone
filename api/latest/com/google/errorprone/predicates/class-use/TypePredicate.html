@@ -181,43 +181,53 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color"><span class="type-name-label">TypePredicates.</span><code><a href="../TypePredicates.html#anyOf(com.google.errorprone.predicates.TypePredicate...)" class="member-name-link">anyOf</a><wbr>(<a href="../TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a>...&nbsp;predicates)</code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static <a href="../TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">TypePredicates.</span><code><a href="../TypePredicates.html#isArray()" class="member-name-link">isArray</a>()</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">TypePredicates.</span><code><a href="../TypePredicates.html#anything()" class="member-name-link">anything</a>()</code></div>
 <div class="col-last even-row-color">
+<div class="block">Matches everything (always <code>true</code>).</div>
+</div>
+<div class="col-first odd-row-color"><code>static <a href="../TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">TypePredicates.</span><code><a href="../TypePredicates.html#isArray()" class="member-name-link">isArray</a>()</code></div>
+<div class="col-last odd-row-color">
 <div class="block">Match arrays.</div>
 </div>
-<div class="col-first odd-row-color"><code>static <a href="../TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">TypePredicates.</span><code><a href="../TypePredicates.html#isDescendantOf(com.google.errorprone.suppliers.Supplier)" class="member-name-link">isDescendantOf</a><wbr>(<a href="../../suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;type)</code></div>
-<div class="col-last odd-row-color">
-<div class="block">Match sub-types of the given type.</div>
-</div>
 <div class="col-first even-row-color"><code>static <a href="../TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">TypePredicates.</span><code><a href="../TypePredicates.html#isDescendantOf(java.lang.String)" class="member-name-link">isDescendantOf</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;type)</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">TypePredicates.</span><code><a href="../TypePredicates.html#isDescendantOf(com.google.errorprone.suppliers.Supplier)" class="member-name-link">isDescendantOf</a><wbr>(<a href="../../suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;type)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Match sub-types of the given type.</div>
 </div>
 <div class="col-first odd-row-color"><code>static <a href="../TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">TypePredicates.</span><code><a href="../TypePredicates.html#isDescendantOfAny(java.lang.Iterable)" class="member-name-link">isDescendantOfAny</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;types)</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">TypePredicates.</span><code><a href="../TypePredicates.html#isDescendantOf(java.lang.String)" class="member-name-link">isDescendantOf</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;type)</code></div>
 <div class="col-last odd-row-color">
+<div class="block">Match sub-types of the given type.</div>
+</div>
+<div class="col-first even-row-color"><code>static <a href="../TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">TypePredicates.</span><code><a href="../TypePredicates.html#isDescendantOfAny(java.lang.Iterable)" class="member-name-link">isDescendantOfAny</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;types)</code></div>
+<div class="col-last even-row-color">
 <div class="block">Match types that are a sub-type of one of the given types.</div>
 </div>
-<div class="col-first even-row-color"><code>static <a href="../TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">TypePredicates.</span><code><a href="../TypePredicates.html#isExactType(com.google.errorprone.suppliers.Supplier)" class="member-name-link">isExactType</a><wbr>(<a href="../../suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;type)</code></div>
-<div class="col-last even-row-color">
-<div class="block">Match types that are exactly equal.</div>
-</div>
 <div class="col-first odd-row-color"><code>static <a href="../TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">TypePredicates.</span><code><a href="../TypePredicates.html#isExactType(java.lang.String)" class="member-name-link">isExactType</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;type)</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">TypePredicates.</span><code><a href="../TypePredicates.html#isExactType(com.google.errorprone.suppliers.Supplier)" class="member-name-link">isExactType</a><wbr>(<a href="../../suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;type)</code></div>
 <div class="col-last odd-row-color">
 <div class="block">Match types that are exactly equal.</div>
 </div>
 <div class="col-first even-row-color"><code>static <a href="../TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">TypePredicates.</span><code><a href="../TypePredicates.html#isExactTypeAny(java.lang.Iterable)" class="member-name-link">isExactTypeAny</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;types)</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">TypePredicates.</span><code><a href="../TypePredicates.html#isExactType(java.lang.String)" class="member-name-link">isExactType</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;type)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Match types that are exactly equal to any of the given types.</div>
+<div class="block">Match types that are exactly equal.</div>
 </div>
 <div class="col-first odd-row-color"><code>static <a href="../TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">TypePredicates.</span><code><a href="../TypePredicates.html#not(com.google.errorprone.predicates.TypePredicate)" class="member-name-link">not</a><wbr>(<a href="../TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a>&nbsp;predicate)</code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-second odd-row-color"><span class="type-name-label">TypePredicates.</span><code><a href="../TypePredicates.html#isExactTypeAny(java.lang.Iterable)" class="member-name-link">isExactTypeAny</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;types)</code></div>
+<div class="col-last odd-row-color">
+<div class="block">Match types that are exactly equal to any of the given types.</div>
+</div>
+<div class="col-first even-row-color"><code>static <a href="../TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">TypePredicates.</span><code><a href="../TypePredicates.html#not(com.google.errorprone.predicates.TypePredicate)" class="member-name-link">not</a><wbr>(<a href="../TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a>&nbsp;predicate)</code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>static <a href="../TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">TypePredicates.</span><code><a href="../TypePredicates.html#nothing()" class="member-name-link">nothing</a>()</code></div>
+<div class="col-last odd-row-color">
+<div class="block">Matches nothing (always <code>false</code>).</div>
+</div>
 </div>
 <div class="caption"><span>Methods in <a href="../package-summary.html">com.google.errorprone.predicates</a> with parameters of type <a href="../TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></span></div>
 <div class="summary-table three-column-summary">
