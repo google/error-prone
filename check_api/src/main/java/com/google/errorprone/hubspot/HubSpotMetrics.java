@@ -44,7 +44,7 @@ public class HubSpotMetrics {
     UNHANDLED_ERRORS
   }
 
-  public static HubSpotMetrics instance(Context context) {
+  public static synchronized HubSpotMetrics instance(Context context) {
     HubSpotMetrics metrics = context.get(HubSpotMetrics.class);
 
     if (metrics == null) {
