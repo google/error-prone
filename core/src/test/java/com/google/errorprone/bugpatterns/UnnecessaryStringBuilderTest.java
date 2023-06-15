@@ -142,4 +142,26 @@ public class UnnecessaryStringBuilderTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void varType() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "abstract class Test {",
+            "  void f() {",
+            "    var sb = new StringBuilder().append(\"hello\");",
+            "    System.err.println(sb);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "abstract class Test {",
+            "  void f() {",
+            "    var sb = \"hello\";",
+            "    System.err.println(sb);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
