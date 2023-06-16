@@ -87,6 +87,28 @@ public final class NotJavadocTest {
   }
 
   @Test
+  public void notJavadocWithLotsOfAsterisks() {
+    helper
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  void test() {",
+            "    /******** Not Javadoc. */",
+            "    class A {}",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  void test() {",
+            "    /* Not Javadoc. */",
+            "    class A {}",
+            "  }",
+            "}")
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
   public void actuallyJavadoc() {
     helper
         .addInputLines(

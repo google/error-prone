@@ -64,10 +64,16 @@ public final class NotJavadoc extends BugChecker implements CompilationUnitTreeM
         if (javadocableTrees.containsKey(token.pos())) {
           continue;
         }
+
+        int endPos = 2;
+        while (comment.getText().charAt(endPos) == '*') {
+          endPos++;
+        }
+
         state.reportMatch(
             describeMatch(
                 getDiagnosticPosition(comment.getSourcePos(0), tree),
-                replace(comment.getSourcePos(1), comment.getSourcePos(2), "")));
+                replace(comment.getSourcePos(1), comment.getSourcePos(endPos - 1), "")));
       }
     }
     return NO_MATCH;
