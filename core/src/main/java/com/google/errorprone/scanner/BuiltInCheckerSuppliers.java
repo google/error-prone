@@ -617,6 +617,14 @@ public class BuiltInCheckerSuppliers {
     return allChecks().filter(Predicates.in(ENABLED_ERRORS));
   }
 
+  /**
+   * Returns a {@link ScannerSupplier} with the {@link BugChecker}s that are in the ENABLED_WARNINGS
+   * list.
+   */
+  public static ScannerSupplier warningChecks() {
+    return allChecks().filter(Predicates.in(ENABLED_WARNINGS));
+  }
+
   /** A list of all checks with severity ERROR that are on by default. */
   public static final ImmutableSet<BugCheckerInfo> ENABLED_ERRORS =
       getSuppliers(
