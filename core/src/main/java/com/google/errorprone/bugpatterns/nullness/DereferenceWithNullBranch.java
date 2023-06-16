@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns.nullness;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.VisitorState.memoize;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.hasDefinitelyNullBranch;
+import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.varsProvenNullByParentTernary;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static javax.lang.model.element.ElementKind.PACKAGE;
@@ -48,11 +49,11 @@ public final class DereferenceWithNullBranch extends BugChecker implements Membe
     if (!hasDefinitelyNullBranch(
         select.getExpression(),
         /*
-         * TODO(cpovirk): Precompute sets of definitelyNullVars and varsProvenNullByParentIf instead
-         * of passing empty sets.
+         * TODO(cpovirk): Precompute sets of definitelyNullVars instead passing an empty set, and
+         * include and varsProvenNullByParentIf alongside varsProvenNullByParentTernary.
          */
         ImmutableSet.of(),
-        ImmutableSet.of(),
+        varsProvenNullByParentTernary(state.getPath()),
         state)) {
       return NO_MATCH;
     }

@@ -43,6 +43,21 @@ public class DereferenceWithNullBranchTest {
   }
 
   @Test
+  public void positiveTernary() {
+    helper
+        .addSourceLines(
+            "Foo.java",
+            "import java.util.Optional;",
+            "class Foo {",
+            "  int foo(String s) {",
+            "    // BUG: Diagnostic contains: ",
+            "    return (s == null) ? s.length() : 0;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void negativeNoNullBranch() {
     helper
         .addSourceLines(

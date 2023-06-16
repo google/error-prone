@@ -32,6 +32,7 @@ import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.stripParentheses;
 import static com.sun.source.tree.Tree.Kind.ANNOTATED_TYPE;
 import static com.sun.source.tree.Tree.Kind.ARRAY_TYPE;
+import static com.sun.source.tree.Tree.Kind.CONDITIONAL_EXPRESSION;
 import static com.sun.source.tree.Tree.Kind.IDENTIFIER;
 import static com.sun.source.tree.Tree.Kind.NULL_LITERAL;
 import static com.sun.source.tree.Tree.Kind.PARAMETERIZED_TYPE;
@@ -640,6 +641,32 @@ class NullnessUtils {
       return ImmutableSet.of();
     }
     return ImmutableSet.of(nullCheck.bareIdentifier());
+  }
+
+  /** Returns x if the path's leaf is inside {@code (x == null) ? ... : ...}. */
+  public static ImmutableSet<Name> varsProvenNullByParentTernary(TreePath path) {
+    Tree child = path.getLeaf();
+    for (Tree tree : path.getParentPath()) {
+      if (!(tree instanceof ExpressionTree)) {
+        break;
+      }
+      if (tree.getKind() == CONDITIONAL_EXPRESSION) {
+        ConditionalExpressionTree ternary = (ConditionalExpressionTree) tree;
+        NullCheck nullCheck = getNullCheck(ternary.getCondition());
+        if (nullCheck == null) {
+          return ImmutableSet.of();
+        }
+        if (child != nullCheck.nullCase(ternary)) {
+          return ImmutableSet.of();
+        }
+        if (nullCheck.bareIdentifier() == null) {
+          return ImmutableSet.of();
+        }
+        return ImmutableSet.of(nullCheck.bareIdentifier());
+      }
+      child = tree;
+    }
+    return ImmutableSet.of();
   }
 
   @Nullable
