@@ -49,6 +49,8 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.Tree;
+import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
@@ -143,7 +145,10 @@ public final class MemberName extends BugChecker implements MethodTreeMatcher, V
   public Description matchVariable(VariableTree tree, VisitorState state) {
     VarSymbol symbol = getSymbol(tree);
     String name = tree.getName().toString();
-    if (symbol.owner instanceof MethodSymbol && symbol.getKind().equals(ElementKind.PARAMETER)) {
+    if (symbol.owner instanceof MethodSymbol
+        && symbol.getKind() == ElementKind.PARAMETER
+        && ASTHelpers.findEnclosingNode(state.getPath(), Tree.class).getKind()
+            != Kind.LAMBDA_EXPRESSION) {
       var methodSymbol = (MethodSymbol) symbol.owner;
       int index = methodSymbol.getParameters().indexOf(symbol);
       var maybeSuper = ASTHelpers.streamSuperMethods(methodSymbol, state.getTypes()).findFirst();

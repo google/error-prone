@@ -413,4 +413,21 @@ public class MemberNameTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void lambdaExpressionParameterInsideOverridingMethod() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.function.Function;",
+            "class Test {",
+            "  @Override",
+            "  public String toString() {",
+            "    // BUG: Diagnostic contains: fooBar",
+            "    Function<String, String> f = foo_bar -> foo_bar;",
+            "    return f.apply(\"foo\");",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
