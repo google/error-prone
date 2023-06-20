@@ -98,6 +98,7 @@ public final class WellKnownThreadSafety implements ThreadSafety.KnownTypes {
         .add(java.util.concurrent.Future.class, "V")
         .add(java.util.concurrent.Semaphore.class)
         .add(java.util.concurrent.ScheduledExecutorService.class)
+        .add(java.util.concurrent.locks.Condition.class)
         .add(java.util.concurrent.locks.Lock.class)
         .add(java.util.concurrent.locks.ReadWriteLock.class)
         .add(java.util.concurrent.locks.ReentrantLock.class)
