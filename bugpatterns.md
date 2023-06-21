@@ -1409,9 +1409,6 @@ Setting the caught exception as the cause of the log message may provide more co
 __[FloggerMessageFormat](bugpattern/FloggerMessageFormat)__<br>
 Invalid message format-style format specifier ({0}), expected printf-style (%s)
 
-__[FloggerPassedAround](bugpattern/FloggerPassedAround)__<br>
-There is no advantage to passing around a logger rather than declaring one in the class that needs it.
-
 __[FloggerRedundantIsEnabled](bugpattern/FloggerRedundantIsEnabled)__<br>
 Logger level check is already implied in the log() call. An explicit at[Level]().isEnabled() check is redundant.
 
