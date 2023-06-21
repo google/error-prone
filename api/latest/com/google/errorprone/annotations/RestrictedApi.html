@@ -144,11 +144,6 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color">
 <div class="block">Explanation why the API is restricted, to be inserted into the compiler output.</div>
 </div>
-<div class="col-first odd-row-color"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color"><code><a href="#link()" class="member-name-link">link</a></code></div>
-<div class="col-last odd-row-color">
-<div class="block">Link explaining why the API is restricted</div>
-</div>
 </div>
 </section>
 </li>
@@ -176,6 +171,11 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color">
 <div class="block">Emit warnings, not errors, on calls to the restricted API for callers with this annotation.</div>
 </div>
+<div class="col-first odd-row-color"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#link()" class="member-name-link">link</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">Optional link explaining why the API is restricted.</div>
+</div>
 </div>
 </section>
 </li>
@@ -195,13 +195,6 @@ loadScripts(document, 'script');</script>
 <div class="block">Explanation why the API is restricted, to be inserted into the compiler output.</div>
 </section>
 </li>
-<li>
-<section class="detail" id="link()">
-<h3>link</h3>
-<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">link</span></div>
-<div class="block">Link explaining why the API is restricted</div>
-</section>
-</li>
 </ul>
 </section>
 </li>
@@ -209,6 +202,17 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="member-details">
 <ul class="member-list">
+<li>
+<section class="detail" id="link()">
+<h3>link</h3>
+<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">link</span></div>
+<div class="block">Optional link explaining why the API is restricted.</div>
+<dl class="notes">
+<dt>Default:</dt>
+<dd>""</dd>
+</dl>
+</section>
+</li>
 <li>
 <section class="detail" id="allowedOnPath()">
 <h3>allowedOnPath</h3>
