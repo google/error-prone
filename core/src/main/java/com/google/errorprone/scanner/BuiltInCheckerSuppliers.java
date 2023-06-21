@@ -455,7 +455,6 @@ import com.google.errorprone.bugpatterns.flogger.FloggerLogString;
 import com.google.errorprone.bugpatterns.flogger.FloggerLogVarargs;
 import com.google.errorprone.bugpatterns.flogger.FloggerLogWithCause;
 import com.google.errorprone.bugpatterns.flogger.FloggerMessageFormat;
-import com.google.errorprone.bugpatterns.flogger.FloggerPassedAround;
 import com.google.errorprone.bugpatterns.flogger.FloggerRedundantIsEnabled;
 import com.google.errorprone.bugpatterns.flogger.FloggerRequiredModifiers;
 import com.google.errorprone.bugpatterns.flogger.FloggerSplitLogStatement;
@@ -1102,7 +1101,6 @@ public class BuiltInCheckerSuppliers {
           FieldMissingNullable.class,
           FloggerLogWithCause.class,
           FloggerMessageFormat.class,
-          FloggerPassedAround.class,
           FloggerRedundantIsEnabled.class,
           FloggerRequiredModifiers.class,
           FloggerWithCause.class,

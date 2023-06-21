@@ -234,8 +234,6 @@ public final class NonApiTypeTest {
         .doTest();
   }
 
-  // Tests below are copied from FloggerPassedAroundTest (so it can be deleted)
-
   @Test
   public void streams() {
     helper
