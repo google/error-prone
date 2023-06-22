@@ -33,6 +33,7 @@ Examples of usage follow:
 There are also a few blanket severity-changing flags:
 
 *   `-XepAllErrorsAsWarnings`
+*   `-XepAllSuggestionsAsWarnings`
 *   `-XepAllDisabledChecksAsWarnings`
 *   `-XepDisableAllChecks`
 *   `-XepDisableAllWarnings`
