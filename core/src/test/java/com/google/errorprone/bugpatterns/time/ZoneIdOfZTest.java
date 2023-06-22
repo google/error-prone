@@ -52,6 +52,19 @@ public class ZoneIdOfZTest {
   }
 
   @Test
+  public void zoneIdOfUtc() {
+    helper
+        .addSourceLines(
+            "TestClass.java",
+            "import java.time.ZoneId;",
+            "public class TestClass {",
+            "  // BUG: Diagnostic contains: private static final ZoneId UTC = ZoneOffset.UTC;",
+            "  private static final ZoneId UTC = ZoneId.of(\"UTC\");",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void zoneIdOfLowerCaseZ() {
     helper
         .addSourceLines(
@@ -59,6 +72,18 @@ public class ZoneIdOfZTest {
             "import java.time.ZoneId;",
             "public class TestClass {",
             "  private static final ZoneId UTC = ZoneId.of(\"z\");",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void zoneIdOfLowerCaseUtc() {
+    helper
+        .addSourceLines(
+            "TestClass.java",
+            "import java.time.ZoneId;",
+            "public class TestClass {",
+            "  private static final ZoneId UTC = ZoneId.of(\"utc\");",
             "}")
         .doTest();
   }
