@@ -1,8 +1,8 @@
 ---
 title: WakelockReleasedDangerously
-summary: A wakelock acquired with a timeout may be released by the system before calling
-  `release`, even after checking `isHeld()`. If so, it will throw a RuntimeException.
-  Please wrap in a try/catch block.
+summary: On Android versions < P, a wakelock acquired with a timeout may be released
+  by the system before calling `release`, even after checking `isHeld()`. If so, it
+  will throw a RuntimeException. Please wrap in a try/catch block.
 layout: bugpattern
 tags: FragileCode
 severity: WARNING
