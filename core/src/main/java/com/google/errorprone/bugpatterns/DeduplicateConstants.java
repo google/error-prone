@@ -59,6 +59,7 @@ public class DeduplicateConstants extends BugChecker implements CompilationUnitT
 
     /** A map from string literals to constant declarations. */
     private final HashMap<String, VarSymbol> values = new HashMap<>();
+
     /** Declarations that are hidden in the current scope. */
     private final Set<Name> hidden = new HashSet<>();
 

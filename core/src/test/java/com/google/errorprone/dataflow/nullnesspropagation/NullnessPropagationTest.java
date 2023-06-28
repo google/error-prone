@@ -116,6 +116,7 @@ public class NullnessPropagationTest {
 
   /** For {@link #testConstantsDefinedInOtherCompilationUnits}. */
   public static final String COMPILE_TIME_CONSTANT = "not null";
+
   /** For {@link #testConstantsDefinedInOtherCompilationUnits} as constant outside compilation. */
   @SuppressWarnings("GoodTime") // false positive
   public static final Integer NOT_COMPILE_TIME_CONSTANT = 421;

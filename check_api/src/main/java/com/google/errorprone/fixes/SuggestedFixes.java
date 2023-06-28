@@ -1047,6 +1047,7 @@ public final class SuggestedFixes {
       fixBuilder.prefixWith(suppressibleNode, replacement);
     }
   }
+
   /**
    * Modifies {@code fixBuilder} to either remove a {@code warningToRemove} warning from the closest
    * {@code SuppressWarning} node or remove the entire {@code SuppressWarning} node if {@code

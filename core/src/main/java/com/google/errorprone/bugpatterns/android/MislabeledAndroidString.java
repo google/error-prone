@@ -45,12 +45,14 @@ import javax.lang.model.element.ElementKind;
 public class MislabeledAndroidString extends BugChecker implements MemberSelectTreeMatcher {
 
   private static final String R_STRING_CLASSNAME = "android.R.string";
+
   /** Maps problematic resources defined in {@value #R_STRING_CLASSNAME} to their replacements. */
   @VisibleForTesting
   static final ImmutableMap<String, String> MISLEADING =
       ImmutableMap.of(
           "yes", "ok",
           "no", "cancel");
+
   /** Maps all resources appearing in {@link #MISLEADING} to an assumed meaning. */
   @VisibleForTesting
   static final ImmutableMap<String, String> ASSUMED_MEANINGS =

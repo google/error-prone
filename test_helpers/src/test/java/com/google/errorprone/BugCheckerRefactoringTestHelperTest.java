@@ -192,6 +192,7 @@ public class BugCheckerRefactoringTestHelperTest {
         .addOutputLines("out/foo/Bar.java", "import bar.Foo;", "public  class Bar {", "}")
         .doTest(TestMode.TEXT_MATCH);
   }
+
   /** Mock {@link BugChecker} for testing only. */
   @BugPattern(
       summary = "Mock refactoring that replaces all returns with 'return null;' statement.",
@@ -203,6 +204,7 @@ public class BugCheckerRefactoringTestHelperTest {
       return describeMatch(tree, SuggestedFix.replace(tree, "return null;"));
     }
   }
+
   /** Mock {@link BugChecker} for testing only. */
   @BugPattern(
       summary = "Mock refactoring that removes all annotations declared in package bar ",

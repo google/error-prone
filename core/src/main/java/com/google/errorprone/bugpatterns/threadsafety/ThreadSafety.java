@@ -246,6 +246,7 @@ public final class ThreadSafety {
       this.typeParameterAnnotation = ImmutableSet.of(typeParameterAnnotation.getName());
       return this;
     }
+
     /**
      * An annotation which, when found on a type parameter, indicates that the type parameter may
      * only be instantiated with thread-safe types.

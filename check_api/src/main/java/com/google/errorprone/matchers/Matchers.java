@@ -1332,6 +1332,7 @@ public class Matchers {
     return CLASSES_CONSIDERED_THROWING.get(state).stream()
         .anyMatch(t -> isSubtype(clazzType, t, state));
   }
+
   /**
    * {@link FunctionalInterface}s that are generally used as a lambda expression for 'a block of
    * code that's going to fail', e.g.:
