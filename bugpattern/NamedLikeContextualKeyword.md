@@ -25,7 +25,7 @@ Change problematic names for classes and methods.
 ```java
 class Foo {
   ...
-  // This can clash with the contextual keyboard "yield"
+  // This can clash with the contextual keyword "yield"
   void yield() {
     ...
   }
