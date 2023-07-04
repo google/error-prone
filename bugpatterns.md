@@ -533,9 +533,6 @@ Instance created but never used
 __[UnusedCollectionModifiedInPlace](bugpattern/UnusedCollectionModifiedInPlace)__<br>
 Collection is modified in place, but the result is not used
 
-__[UseCorrectAssertInTests](bugpattern/UseCorrectAssertInTests)__<br>
-Java assert is used in testing code. For testing purposes, prefer using Truth-based assertions.
-
 __[VarTypeName](bugpattern/VarTypeName)__<br>
 &#96;var&#96; should not be used as a type name.
 
@@ -1349,6 +1346,9 @@ Code that contains System.exit() is untestable.
 
 __[ThreadSafe](bugpattern/ThreadSafe)__<br>
 Type declaration annotated with @ThreadSafe is not thread safe
+
+__[UseCorrectAssertInTests](bugpattern/UseCorrectAssertInTests)__<br>
+Java assert is used in testing code. For testing purposes, prefer using Truth-based assertions.
 
 ## Experimental : WARNING
 
