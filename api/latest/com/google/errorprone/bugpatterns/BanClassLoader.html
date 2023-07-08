@@ -80,12 +80,12 @@ loadScripts(document, 'script');</script>
 <section class="class-description" id="class-description">
 <dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code><a href="BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a></code>, <code><a href="../matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a></code>, <code><a href="https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></code></dd>
+<dd><code><a href="BugChecker.ClassTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.ClassTreeMatcher</a></code>, <code><a href="BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a></code>, <code><a href="BugChecker.NewClassTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.NewClassTreeMatcher</a></code>, <code><a href="../matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a></code>, <code><a href="https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></code></dd>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">BanClassLoader</span>
 <span class="extends-implements">extends <a href="BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>
-implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a></span></div>
+implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a>, <a href="BugChecker.NewClassTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.NewClassTreeMatcher</a>, <a href="BugChecker.ClassTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.ClassTreeMatcher</a></span></div>
 <div class="block">A <a href="BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a> that detects use of the unsafe JNDI API system.</div>
 <dl class="notes">
 <dt>See Also:</dt>
@@ -132,7 +132,15 @@ implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interfac
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethodInvocation</a><wbr>(com.sun.source.tree.MethodInvocationTree&nbsp;tree,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#matchClass(com.sun.source.tree.ClassTree,com.google.errorprone.VisitorState)" class="member-name-link">matchClass</a><wbr>(com.sun.source.tree.ClassTree&nbsp;tree,
+ <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethodInvocation</a><wbr>(com.sun.source.tree.MethodInvocationTree&nbsp;tree,
+ <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#matchNewClass(com.sun.source.tree.NewClassTree,com.google.errorprone.VisitorState)" class="member-name-link">matchNewClass</a><wbr>(com.sun.source.tree.NewClassTree&nbsp;tree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
@@ -180,6 +188,28 @@ implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interfac
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="BugChecker.MethodInvocationTreeMatcher.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">matchMethodInvocation</a></code>&nbsp;in interface&nbsp;<code><a href="BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a></code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="matchNewClass(com.sun.source.tree.NewClassTree,com.google.errorprone.VisitorState)">
+<h3>matchNewClass</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></span>&nbsp;<span class="element-name">matchNewClass</span><wbr><span class="parameters">(com.sun.source.tree.NewClassTree&nbsp;tree,
+ <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="BugChecker.NewClassTreeMatcher.html#matchNewClass(com.sun.source.tree.NewClassTree,com.google.errorprone.VisitorState)">matchNewClass</a></code>&nbsp;in interface&nbsp;<code><a href="BugChecker.NewClassTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.NewClassTreeMatcher</a></code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="matchClass(com.sun.source.tree.ClassTree,com.google.errorprone.VisitorState)">
+<h3>matchClass</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></span>&nbsp;<span class="element-name">matchClass</span><wbr><span class="parameters">(com.sun.source.tree.ClassTree&nbsp;tree,
+ <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="BugChecker.ClassTreeMatcher.html#matchClass(com.sun.source.tree.ClassTree,com.google.errorprone.VisitorState)">matchClass</a></code>&nbsp;in interface&nbsp;<code><a href="BugChecker.ClassTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.ClassTreeMatcher</a></code></dd>
 </dl>
 </section>
 </li>
