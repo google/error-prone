@@ -18,15 +18,24 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.matchers.Matchers.anyMethod;
 import static com.google.errorprone.matchers.Matchers.anyOf;
+import static com.google.errorprone.matchers.Matchers.constructor;
+import static com.google.errorprone.matchers.Matchers.isExtensionOf;
+import static com.google.errorprone.predicates.TypePredicates.allOf;
+import static com.google.errorprone.predicates.TypePredicates.isDescendantOf;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.NewClassTree;
+import com.sun.source.tree.Tree;
 
 /** A {@link BugChecker} that detects use of the unsafe JNDI API system. */
 @BugPattern(
@@ -34,15 +43,12 @@ import com.sun.source.tree.MethodInvocationTree;
         "Using dangerous ClassLoader APIs may deserialize untrusted user input into bytecode,"
             + " leading to remote code execution vulnerabilities",
     severity = SeverityLevel.ERROR)
-public final class BanClassLoader extends BugChecker implements MethodInvocationTreeMatcher {
+public final class BanClassLoader extends BugChecker
+    implements MethodInvocationTreeMatcher, NewClassTreeMatcher, ClassTreeMatcher {
 
-  /** Checks for direct or indirect calls to context.lookup() via the JDK */
-  private static final Matcher<ExpressionTree> MATCHER =
+  private static final Matcher<ExpressionTree> METHOD_MATCHER =
       anyOf(
-          anyMethod()
-              .onDescendantOf("java.lang.ClassLoader")
-              // findClass in ClassLoader is abstract, but in URLClassLoader it's dangerous
-              .namedAnyOf("defineClass", "findClass"),
+          anyMethod().onDescendantOf("java.lang.ClassLoader").named("defineClass"),
           anyMethod().onDescendantOf("java.lang.invoke.MethodHandles.Lookup").named("defineClass"),
           anyMethod()
               .onDescendantOf("java.rmi.server.RMIClassLoader")
@@ -51,14 +57,34 @@ public final class BanClassLoader extends BugChecker implements MethodInvocation
               .onDescendantOf("java.rmi.server.RMIClassLoaderSpi")
               .namedAnyOf("loadClass", "loadProxyClass"));
 
-  @Override
-  public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    if (state.errorProneOptions().isTestOnlyTarget() || !MATCHER.matches(tree, state)) {
+  private static final Matcher<ExpressionTree> CONSTRUCTOR_MATCHER =
+      constructor().forClass(allOf(isDescendantOf("java.net.URLClassLoader")));
+
+  private static final Matcher<ClassTree> EXTEND_CLASS_MATCHER =
+      isExtensionOf("java.net.URLClassLoader");
+
+  private <T extends Tree> Description matchWith(T tree, VisitorState state, Matcher<T> matcher) {
+    if (state.errorProneOptions().isTestOnlyTarget() || !matcher.matches(tree, state)) {
       return Description.NO_MATCH;
     }
 
     Description.Builder description = buildDescription(tree);
 
     return description.build();
+  }
+
+  @Override
+  public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+    return matchWith(tree, state, METHOD_MATCHER);
+  }
+
+  @Override
+  public Description matchNewClass(NewClassTree tree, VisitorState state) {
+    return matchWith(tree, state, CONSTRUCTOR_MATCHER);
+  }
+
+  @Override
+  public Description matchClass(ClassTree tree, VisitorState state) {
+    return matchWith(tree, state, EXTEND_CLASS_MATCHER);
   }
 }

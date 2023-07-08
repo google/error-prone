@@ -1294,6 +1294,12 @@ public class Matchers {
     return new IsDirectImplementationOf(isProvidedType);
   }
 
+  /** Matches any node that is a direct extension of the given class. */
+  public static Matcher<ClassTree> isExtensionOf(String clazz) {
+    Matcher<Tree> isProvidedType = isSameType(clazz);
+    return new IsExtensionOf(isProvidedType);
+  }
+
   @SafeVarargs
   public static Matcher<Tree> hasAnyAnnotation(Class<? extends Annotation>... annotations) {
     ArrayList<Matcher<Tree>> matchers = new ArrayList<>(annotations.length);
@@ -1366,6 +1372,22 @@ public class Matchers {
     @Override
     protected Iterable<? extends Tree> getChildNodes(ClassTree classTree, VisitorState state) {
       return classTree.getImplementsClause();
+    }
+  }
+
+  private static class IsExtensionOf extends ChildMultiMatcher<ClassTree, Tree> {
+    IsExtensionOf(Matcher<Tree> classMatcher) {
+      super(MatchType.AT_LEAST_ONE, classMatcher);
+    }
+
+    @Override
+    protected Iterable<? extends Tree> getChildNodes(ClassTree classTree, VisitorState state) {
+      List<Tree> matched = new ArrayList<>();
+      Tree extendsClause = classTree.getExtendsClause();
+      if (extendsClause != null) {
+        matched.add(extendsClause);
+      }
+      return matched;
     }
   }
 
