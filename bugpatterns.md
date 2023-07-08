@@ -769,6 +769,9 @@ Calling getClass() on an enum may return a subclass of the enum type
 __[HidingField](bugpattern/HidingField)__<br>
 Hiding fields of superclasses may cause confusion and errors
 
+__[ICCProfileGetInstance](bugpattern/ICCProfileGetInstance)__<br>
+This method searches the class path for the given file, prefer to read the file and call getInstance(byte[]) or getInstance(InputStream)
+
 __[IdentityHashMapUsage](bugpattern/IdentityHashMapUsage)__<br>
 IdentityHashMap usage shouldn&#39;t be intermingled with Map
 
