@@ -157,4 +157,19 @@ public final class NotJavadocTest {
         .expectUnchanged()
         .doTest(TEXT_MATCH);
   }
+
+  @Test
+  public void suppression() {
+    helper
+        .addInputLines(
+            "Test.java", //
+            "class Test {",
+            "  @SuppressWarnings(\"NotJavadoc\")",
+            "  void test() {",
+            "    /** Not Javadoc. */",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest(TEXT_MATCH);
+  }
 }
