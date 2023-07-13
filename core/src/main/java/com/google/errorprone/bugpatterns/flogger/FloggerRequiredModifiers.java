@@ -35,7 +35,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.LinkType;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.IdentifierTreeMatcher;
@@ -120,90 +119,11 @@ public final class FloggerRequiredModifiers extends BugChecker
   private static final Matcher<Tree> CONTAINS_INIT_LOGGER =
       Matchers.contains(ExpressionTree.class, INIT_LOGGER);
 
-  /**
-   * Constructs a checker configured by {@code flags}. The only flag this constructor looks at is
-   * {@code "FloggerRequiredModifiers:Goal"}. It expects that flag to have one of the following
-   * values:
-   *
-   * <p>
-   *
-   * <ul>
-   *   <li>{@code REHOME_FOREIGN_LOGGERS}
-   *   <li>{@code HIDE_LOGGERS_IN_INTERFACES}
-   *   <li>{@code HOIST_CONSTANT_EXPRESSIONS}
-   *   <li>{@code ADD_FINAL}
-   *   <li>{@code ADD_STATIC}
-   *   <li>{@code MAKE_PRIVATE}
-   *   <li>{@code DEFAULT_ALL_GOALS}
-   * </ul>
-   *
-   * <p>The default value is {@code DEFAULT_ALL_GOALS}, which enables all features; other legal
-   * values check only a subset of the Flogger best practices, and are designed to generate a more
-   * fine grained adjustments.
-   */
   @Inject
-  FloggerRequiredModifiers(ErrorProneFlags flags) {
-    this(flags.getEnum("FloggerRequiredModifiers:Goal", Goal.class).orElse(Goal.DEFAULT_ALL_GOALS));
-  }
-
-  FloggerRequiredModifiers(Goal goal) {
-    this.goal = goal;
-  }
-
-  enum Goal {
-    REHOME_FOREIGN_LOGGERS,
-    HIDE_LOGGERS_IN_INTERFACES,
-    HOIST_CONSTANT_EXPRESSIONS,
-    ADD_FINAL,
-    ADD_STATIC,
-    MAKE_PRIVATE,
-    /** Combines all other goals to be maximally picky and do a full rewrite at once. */
-    DEFAULT_ALL_GOALS,
-  }
-
-  private final Goal goal;
-
-  private boolean shouldRehomeForeignLoggers() {
-    return goal.equals(Goal.REHOME_FOREIGN_LOGGERS);
-  }
-
-  private boolean shouldHideInterfaceLoggers() {
-    switch (goal) {
-      case HIDE_LOGGERS_IN_INTERFACES:
-      case DEFAULT_ALL_GOALS:
-        return true;
-      default:
-        return false;
-    }
-  }
-
-  private boolean shouldHoistConstantExpressions() {
-    switch (goal) {
-      case DEFAULT_ALL_GOALS:
-      case HOIST_CONSTANT_EXPRESSIONS:
-        return true;
-      default:
-        return false;
-    }
-  }
-
-  private boolean shouldStandardizeModifiers() {
-    switch (goal) {
-      case DEFAULT_ALL_GOALS:
-      case ADD_FINAL:
-      case ADD_STATIC:
-      case MAKE_PRIVATE:
-        return true;
-      default:
-        return false;
-    }
-  }
+  FloggerRequiredModifiers() {}
 
   @Override
   public Description matchVariable(VariableTree tree, VisitorState state) {
-    if (!shouldStandardizeModifiers()) {
-      return NO_MATCH;
-    }
     Type loggerType = LOGGER_TYPE.get(state);
     if (!ASTHelpers.isSameType(loggerType, ASTHelpers.getType(tree), state)) {
       return NO_MATCH;
@@ -216,7 +136,8 @@ public final class FloggerRequiredModifiers extends BugChecker
     // Static fields with no initializer, or fields initialized to a constant FluentLogger
     if (initializer == null
         ? sym.isStatic()
-        : isConstantLogger(initializer, (ClassSymbol) sym.owner, state)) {
+        : isConstantLogger(initializer, (ClassSymbol) sym.owner, state)
+            && !sym.owner.isInterface()) {
       return fixModifier(tree, (ClassTree) state.getPath().getParentPath().getLeaf(), state);
     }
 
@@ -241,9 +162,6 @@ public final class FloggerRequiredModifiers extends BugChecker
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    if (!shouldHoistConstantExpressions()) {
-      return NO_MATCH;
-    }
     if (!INIT_LOGGER.matches(tree, state)) {
       return NO_MATCH;
     }
@@ -252,7 +170,7 @@ public final class FloggerRequiredModifiers extends BugChecker
       return NO_MATCH;
     }
 
-    // An expression should always be inside of a method or a variable (initializer blocks count as
+    // An expression should always be inside a method or a variable (initializer blocks count as
     // a method), but just in case we use class as a final backstop.
     TreePath owner =
         state.findPathToEnclosing(ClassTree.class, MethodTree.class, VariableTree.class);
@@ -288,10 +206,6 @@ public final class FloggerRequiredModifiers extends BugChecker
     return replaceWithFieldLookup(tree, state);
   }
 
-  private boolean modifierChangesInclude(Goal g) {
-    return goal == Goal.DEFAULT_ALL_GOALS || goal == g;
-  }
-
   private Description fixModifier(VariableTree field, ClassTree owningClass, VisitorState state) {
     ModifiersTree modifiers = field.getModifiers();
     Set<Modifier> flags = modifiers.getFlags();
@@ -303,16 +217,10 @@ public final class FloggerRequiredModifiers extends BugChecker
     // We have to add all the modifiers as a single SuggestedFix or they conflict
     ImmutableSet.Builder<Modifier> toAdd = ImmutableSet.builder();
     SuggestedFix.Builder fix = SuggestedFix.builder();
-    if (modifierChangesInclude(Goal.MAKE_PRIVATE)) {
-      removeModifiers(field, state, PUBLIC, PROTECTED).ifPresent(fix::merge);
-      toAdd.add(PRIVATE);
-    }
-    if (modifierChangesInclude(Goal.ADD_FINAL)) {
-      toAdd.add(Modifier.FINAL);
-    }
-    if (modifierChangesInclude(Goal.ADD_STATIC)
-        && (flags.contains(FINAL) || modifierChangesInclude(Goal.ADD_FINAL))
-        && canHaveStaticFields(ASTHelpers.getSymbol(owningClass))) {
+    removeModifiers(field, state, PUBLIC, PROTECTED).ifPresent(fix::merge);
+    toAdd.add(PRIVATE);
+    toAdd.add(Modifier.FINAL);
+    if (flags.contains(FINAL) && canHaveStaticFields(ASTHelpers.getSymbol(owningClass))) {
       // We only add static to fields which are already final, or that we're also making final.
       // It's a bit dangerous to quietly make something static if it might be getting reassigned.
       toAdd.add(STATIC);
@@ -521,9 +429,6 @@ public final class FloggerRequiredModifiers extends BugChecker
    * refer to a logger in this file, defining one if necessary.
    */
   private Description rehomeLogger(ExpressionTree tree, VisitorState state) {
-    if (!shouldRehomeForeignLoggers() && !shouldHideInterfaceLoggers()) {
-      return NO_MATCH;
-    }
     Symbol sym = ASTHelpers.getSymbol(tree);
     if (sym == null) {
       return NO_MATCH;
@@ -545,8 +450,7 @@ public final class FloggerRequiredModifiers extends BugChecker
     /* Loggers owned by public interfaces should be moved regardless of whether they're defined in
     the current file, because fields in interfaces must be public, but loggers should be private.
      */
-    boolean needsMoveFromInterface = shouldHideInterfaceLoggers() && owner.isInterface();
-    boolean local = false;
+    boolean needsMoveFromInterface = owner.isInterface();
     Symbol outermostClassOfLogger = findUltimateOwningClass(owner);
     ClassTree outermostClassOfFile = null;
     for (Tree parent : state.getPath()) {
@@ -556,7 +460,6 @@ public final class FloggerRequiredModifiers extends BugChecker
         if (!needsMoveFromInterface) {
           return NO_MATCH;
         }
-        local = true;
       }
       if (parent instanceof ClassTree) {
         outermostClassOfFile = (ClassTree) parent;
@@ -566,10 +469,6 @@ public final class FloggerRequiredModifiers extends BugChecker
     if (outermostClassOfFile == null) {
       // Impossible, I think?
       state.incrementCounter(this, "error-no-outermost-class");
-      return NO_MATCH;
-    }
-
-    if (!local && !shouldRehomeForeignLoggers()) {
       return NO_MATCH;
     }
 
