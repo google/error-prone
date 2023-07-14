@@ -236,7 +236,11 @@ loadScripts(document, 'script');</script>
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a></span>&nbsp;<span class="element-name">addSourceFile</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;path)</span></div>
 <div class="block">Adds a source file to the test compilation, from an existing resource file.
 
- <p>See <a href="#addSourceLines(java.lang.String,java.lang.String...)"><code>addSourceLines(java.lang.String, java.lang.String...)</code></a> for how expected diagnostics should be specified.</div>
+ <p>See <a href="#addSourceLines(java.lang.String,java.lang.String...)"><code>addSourceLines(java.lang.String, java.lang.String...)</code></a> for how expected diagnostics should be specified.
+
+ <p>For most uses, <a href="#addSourceLines(java.lang.String,java.lang.String...)"><code>addSourceLines(java.lang.String, java.lang.String...)</code></a> is preferred. Using separate source files to denote
+ positive/negative examples tends to bloat individual tests. Prefer writing smaller tests using
+ <a href="#addSourceLines(java.lang.String,java.lang.String...)"><code>addSourceLines(java.lang.String, java.lang.String...)</code></a> which test a single behaviour in isolation.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>path</code> - the path to the source file</dd>
