@@ -193,6 +193,10 @@ public class CompilationTestHelper {
    *
    * <p>See {@link #addSourceLines} for how expected diagnostics should be specified.
    *
+   * <p>For most uses, {@link #addSourceLines} is preferred. Using separate source files to denote
+   * positive/negative examples tends to bloat individual tests. Prefer writing smaller tests using
+   * {@link #addSourceLines} which test a single behaviour in isolation.
+   *
    * @param path the path to the source file
    */
   @CanIgnoreReturnValue
