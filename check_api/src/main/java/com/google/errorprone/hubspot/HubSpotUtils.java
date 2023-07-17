@@ -16,36 +16,30 @@
 
 package com.google.errorprone.hubspot;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
-import java.nio.file.Files;
 import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 
-import com.google.common.base.Strings;
-import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugCheckerInfo;
 import com.google.errorprone.DescriptionListener;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.ErrorProneOptions;
-import com.google.errorprone.ErrorProneTimings;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.descriptionlistener.CustomDescriptionListenerFactory;
 import com.google.errorprone.descriptionlistener.DescriptionListenerResources;
-import com.google.errorprone.matchers.Suppressible;
 import com.google.errorprone.scanner.ScannerSupplier;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.util.JavacTask;
 import com.sun.tools.javac.api.BasicJavacTask;
 import com.sun.tools.javac.util.Context;
+import com.sun.tools.javac.util.Log;
+import com.sun.tools.javac.util.Log.WriterKind;
 
 public class HubSpotUtils {
   private static final String ERROR_REPORTING_FLAG = "hubspot:error-reporting";
@@ -143,11 +137,13 @@ public class HubSpotUtils {
     ErrorProneOptions epOptions = context.get(ErrorProneOptions.class);
     if (epOptions == null) {
       // Happens in some EP tests
-      return  "test-compile";
+      Log.instance(context).printRawLines(WriterKind.STDOUT, "HubSpotUtils::getPhase(context): epOptions was null.");
+      return "test-compile";
     } else {
       return epOptions.isTestOnlyTarget() ? "test-compile" : "compile";
     }
   }
+
   private HubSpotUtils() {
     throw new AssertionError();
   }
