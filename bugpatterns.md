@@ -580,6 +580,9 @@ This assertion throws an AssertionError if it fails, which will be caught by an 
 __[AssistedInjectAndInjectOnSameConstructor](bugpattern/AssistedInjectAndInjectOnSameConstructor)__<br>
 @AssistedInject and @Inject cannot be used on the same constructor.
 
+__[AttemptedNegativeZero](bugpattern/AttemptedNegativeZero)__<br>
+-0 is the same as 0. For the floating-point negative zero, use -0.0.
+
 __[AutoValueFinalMethods](bugpattern/AutoValueFinalMethods)__<br>
 Make toString(), hashCode() and equals() final in AutoValue classes, so it is clear to readers that AutoValue is not overriding them
 
