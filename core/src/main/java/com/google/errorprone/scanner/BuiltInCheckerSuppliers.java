@@ -40,6 +40,7 @@ import com.google.errorprone.bugpatterns.AssertThrowsMultipleStatements;
 import com.google.errorprone.bugpatterns.AssertionFailureIgnored;
 import com.google.errorprone.bugpatterns.AsyncCallableReturnsNull;
 import com.google.errorprone.bugpatterns.AsyncFunctionReturnsNull;
+import com.google.errorprone.bugpatterns.AttemptedNegativeZero;
 import com.google.errorprone.bugpatterns.AutoValueBuilderDefaultsInConstructor;
 import com.google.errorprone.bugpatterns.AutoValueFinalMethods;
 import com.google.errorprone.bugpatterns.AutoValueImmutableFields;
@@ -823,6 +824,7 @@ public class BuiltInCheckerSuppliers {
           AssertThrowsMultipleStatements.class,
           AssertionFailureIgnored.class,
           AssistedInjectAndInjectOnSameConstructor.class,
+          AttemptedNegativeZero.class,
           AutoValueFinalMethods.class,
           AutoValueImmutableFields.class,
           AutoValueSubclassLeaked.class,
