@@ -25,8 +25,6 @@ import java.util.Optional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
-import com.google.common.base.Supplier;
-import com.google.errorprone.ErrorProneOptions;
 import com.sun.tools.javac.util.Context;
 
 class FileManager {
@@ -87,7 +85,7 @@ class FileManager {
       return Optional.empty();
     }
 
-    Path res = Paths.get(dir).resolve(pathToAppend).resolve(phase);
+    Path res = Paths.get(dir).resolve(pathToAppend).resolve("by-phase").resolve(phase);
     if (!Files.exists(res)) {
       try {
         Files.createDirectories(res);
