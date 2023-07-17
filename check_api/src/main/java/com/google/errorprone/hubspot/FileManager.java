@@ -49,6 +49,10 @@ class FileManager {
     this.phase = phase;
   }
 
+  public String getPhase() {
+    return phase;
+  }
+
   Optional<Path> getErrorOutputPath() {
     return getDataDir(OVERWATCH_DIR_ENV_VAR, "target/overwatch-metadata")
         .map(o -> o.resolve("error-prone-exceptions.json"));

@@ -23,8 +23,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Supplier;
 
 import com.google.common.base.Strings;
+import com.google.common.base.Suppliers;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.util.concurrent.AtomicLongMap;
@@ -56,9 +58,7 @@ public class HubSpotMetrics {
   }
 
   private static HubSpotMetrics create(Context context) {
-    FileManager filemanager = FileManager.instance(context);
-
-    HubSpotMetrics metrics = new HubSpotMetrics(filemanager, HubSpotUtils.getPhase(context));
+    HubSpotMetrics metrics = new HubSpotMetrics(Suppliers.memoize(() -> FileManager.instance(context)));
 
     HubSpotLifecycleManager.instance(context).addShutdownListener(metrics::write);
 
@@ -68,14 +68,13 @@ public class HubSpotMetrics {
   private final ConcurrentHashMap<ErrorType, Set<String>> errors;
   private final AtomicLongMap<String> timings;
 
-  private final FileManager fileManager;
-  private final String phase;
+  private final Supplier<FileManager> fileManagerSupplier;
 
-  HubSpotMetrics(FileManager fileManager, String phase) {
+
+  HubSpotMetrics(Supplier<FileManager> fileManagerSupplier) {
     this.errors = new ConcurrentHashMap<>();
     this.timings = AtomicLongMap.create();
-    this.fileManager = fileManager;
-    this.phase = phase;
+    this.fileManagerSupplier = fileManagerSupplier;
   }
 
   public void recordError(Suppressible s) {
@@ -103,7 +102,7 @@ public class HubSpotMetrics {
     errors.computeIfAbsent(ErrorType.UNHANDLED_ERRORS, ignored -> ConcurrentHashMap.newKeySet())
         .add(toErrorMessage(throwable));
 
-    fileManager.getUncaughtExceptionPath().ifPresent(p -> {
+    fileManagerSupplier.get().getUncaughtExceptionPath().ifPresent(p -> {
       // this should only ever be called once so overwriting is fine
       try {
         Files.write(p, Throwables.getStackTraceAsString(throwable).getBytes(StandardCharsets.UTF_8));
@@ -134,7 +133,8 @@ public class HubSpotMetrics {
   }
 
   private void write() {
-    fileManager.getErrorOutputPath().ifPresent(p -> fileManager.write(ImmutableMap.of("error-prone-errors-" + phase, errors), p));
+    FileManager fileManager = fileManagerSupplier.get();
+    fileManager.getErrorOutputPath().ifPresent(p -> fileManager.write(ImmutableMap.of("error-prone-errors-" + fileManager.getPhase(), errors), p));
     fileManager.getTimingsOutputPath().ifPresent(p -> fileManager.write(computeFinalTimings(), p));
   }
 
