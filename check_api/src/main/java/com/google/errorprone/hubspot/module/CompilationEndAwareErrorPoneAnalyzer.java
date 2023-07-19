@@ -26,6 +26,7 @@ import com.google.errorprone.ErrorPronePlugins;
 import com.google.errorprone.InvalidCommandLineOptionException;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.descriptionlistener.DescriptionListeners;
+import com.google.errorprone.hubspot.HubSpotMetrics;
 import com.google.errorprone.hubspot.HubSpotUtils;
 import com.google.errorprone.scanner.ErrorProneScanner;
 import com.google.errorprone.scanner.ErrorProneScannerTransformer;
@@ -152,7 +153,7 @@ public class CompilationEndAwareErrorPoneAnalyzer implements TaskListener {
             );
           } catch (Throwable t) {
             if (HubSpotUtils.isErrorHandlingEnabled(errorProneOptions)) {
-              HubSpotUtils.recordError(bugChecker);
+              HubSpotMetrics.instance(context).recordError(bugChecker);
             } else {
               throw t;
             }

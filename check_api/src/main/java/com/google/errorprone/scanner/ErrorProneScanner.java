@@ -22,6 +22,7 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.ErrorProneError;
 import com.google.errorprone.ErrorProneOptions;
+import com.google.errorprone.hubspot.HubSpotMetrics;
 import com.google.errorprone.hubspot.HubSpotUtils;
 import com.google.errorprone.SuppressionInfo.SuppressedState;
 import com.google.errorprone.VisitorState;
@@ -451,7 +452,11 @@ public class ErrorProneScanner extends Scanner {
               processingFunction.process(matcher, tree, stateWithSuppressionInformation),
               stateWithSuppressionInformation);
         } catch (Exception | AssertionError t) {
-          handleError(matcher, t, errorProneOptions);
+          if (HubSpotUtils.isErrorHandlingEnabled(errorProneOptions)) {
+            HubSpotMetrics.instance(oldState.context).recordError(matcher);
+          } else {
+            handleError(matcher, t);
+          }
         }
       }
     }
@@ -900,14 +905,6 @@ public class ErrorProneScanner extends Scanner {
     VisitorState state =
         processMatchers(wildcardMatchers, tree, WildcardTreeMatcher::matchWildcard, visitorState);
     return super.visitWildcard(tree, state);
-  }
-
-  private void handleError(Suppressible s, Throwable t, ErrorProneOptions options) {
-    if (HubSpotUtils.isErrorHandlingEnabled(options)) {
-      HubSpotUtils.recordError(s);
-    } else {
-      handleError(s, t);
-    }
   }
 
   /**

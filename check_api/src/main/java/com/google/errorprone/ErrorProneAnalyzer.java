@@ -25,6 +25,7 @@ import com.google.common.base.Suppliers;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.descriptionlistener.DescriptionListeners;
 import com.google.errorprone.hubspot.HubSpotLifecycleManager;
+import com.google.errorprone.hubspot.HubSpotMetrics;
 import com.google.errorprone.hubspot.HubSpotUtils;
 import com.google.errorprone.scanner.ErrorProneScannerTransformer;
 import com.google.errorprone.scanner.ScannerSupplier;
@@ -180,7 +181,7 @@ public class ErrorProneAnalyzer implements TaskListener {
       log.error("proc.cant.access", e.sym, getDetailValue(e), getStackTraceAsString(e));
     } finally {
       log.useSource(originalSource);
-      HubSpotUtils.recordTimings(context);
+      HubSpotMetrics.instance(context).recordTimings(context);
     }
   }
 

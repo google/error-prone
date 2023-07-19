@@ -23,7 +23,9 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Supplier;
 
+import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.VisitorState;
 import com.sun.tools.javac.util.Context;
@@ -35,6 +37,8 @@ public class HubSpotLifecycleManager {
   private final Set<Runnable> shutdownListener;
   private final AtomicBoolean started;
   private final AtomicBoolean stopped;
+
+  private final Supplier<FileManager> fileManager;
 
   public static HubSpotLifecycleManager instance(VisitorState state) {
     return instance(state.context);
@@ -53,6 +57,8 @@ public class HubSpotLifecycleManager {
     this.shutdownListener = new HashSet<>();
     this.started = new AtomicBoolean();
     this.stopped = new AtomicBoolean();
+
+    this.fileManager = Suppliers.memoize(() -> FileManager.instance(context));
 
     context.put(timingsKey, this);
   }
@@ -84,7 +90,7 @@ public class HubSpotLifecycleManager {
   }
 
   public void addShutdownListener(Runnable runnable) {
-    shutdownListener.add(runnable) ;
+    shutdownListener.add(runnable);
   }
 
   private void writeCanary() {
@@ -111,7 +117,7 @@ public class HubSpotLifecycleManager {
   }
 
   private Optional<Path> getCanaryPath() {
-    return FileManager.getLifeCycleCanaryPath(String.valueOf(Objects.hash(this)));
+    return fileManager.get().getLifeCycleCanaryPath(String.valueOf(Objects.hash(this)));
   }
 
   private void runListener(String type, Runnable runnable) {
