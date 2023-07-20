@@ -249,6 +249,7 @@ import com.google.errorprone.bugpatterns.MultipleParallelOrSequentialCalls;
 import com.google.errorprone.bugpatterns.MultipleTopLevelClasses;
 import com.google.errorprone.bugpatterns.MultipleUnaryOperatorsInMethodCall;
 import com.google.errorprone.bugpatterns.MustBeClosedChecker;
+import com.google.errorprone.bugpatterns.MutableGuiceModule;
 import com.google.errorprone.bugpatterns.MutablePublicArray;
 import com.google.errorprone.bugpatterns.NCopiesOfChar;
 import com.google.errorprone.bugpatterns.NamedLikeContextualKeyword;
@@ -963,6 +964,7 @@ public class BuiltInCheckerSuppliers {
           ModifySourceCollectionInStream.class,
           MultipleParallelOrSequentialCalls.class,
           MultipleUnaryOperatorsInMethodCall.class,
+          MutableGuiceModule.class,
           MutablePublicArray.class,
           NamedLikeContextualKeyword.class,
           NarrowCalculation.class,
