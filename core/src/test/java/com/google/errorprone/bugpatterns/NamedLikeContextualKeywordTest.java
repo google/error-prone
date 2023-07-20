@@ -70,6 +70,67 @@ public final class NamedLikeContextualKeywordTest {
   }
 
   @Test
+  public void autoOneOfMethodName_noError() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "import javax.annotation.processing.Generated;",
+            "@Generated(\"com.google.auto.value.processor.AutoOneOfProcessor\")",
+            "class Test  {",
+            "  static Throwable foo;",
+            "  public Test() {",
+            "  }",
+            " ",
+            "  public static void yield() { ",
+            "    foo = new NullPointerException(\"uh oh\");",
+            "  }",
+            "}")
+        .setArgs("-XepOpt:NamedLikeContextualKeyword:EnableMethodNames")
+        .doTest();
+  }
+
+  @Test
+  public void autoValueMethodName_noError() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "import javax.annotation.processing.Generated;",
+            "@Generated(\"com.google.auto.value.processor.AutoValueProcessor\")",
+            "class Test  {",
+            "  static Throwable foo;",
+            "  public Test() {",
+            "  }",
+            " ",
+            "  public static void yield() { ",
+            "    foo = new NullPointerException(\"uh oh\");",
+            "  }",
+            "}")
+        .setArgs("-XepOpt:NamedLikeContextualKeyword:EnableMethodNames")
+        .doTest();
+  }
+
+  @Test
+  public void generatedButNotAuto_error() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "import javax.annotation.processing.Generated;",
+            "@Generated(\"com.google.foo.Bar\")",
+            "class Test  {",
+            "  static Throwable foo;",
+            "  public Test() {",
+            "  }",
+            " ",
+            "  // BUG: Diagnostic contains: [NamedLikeContextualKeyword]",
+            "  public static void yield() { ",
+            "    foo = new NullPointerException(\"uh oh\");",
+            "  }",
+            "}")
+        .setArgs("-XepOpt:NamedLikeContextualKeyword:EnableMethodNames")
+        .doTest();
+  }
+
+  @Test
   public void className_error() {
     helper
         .addSourceLines(

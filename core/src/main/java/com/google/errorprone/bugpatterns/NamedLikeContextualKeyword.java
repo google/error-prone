@@ -46,6 +46,7 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import java.util.Collections;
 import javax.inject.Inject;
 
 /**
@@ -81,6 +82,10 @@ public final class NamedLikeContextualKeyword extends BugChecker
           "yield");
   private static final Matcher<MethodTree> DISALLOWED_METHOD_NAME_MATCHER =
       allOf(not(methodIsConstructor()), methodIsNamed("yield"));
+  private static final ImmutableSet<String> AUTO_PROCESSORS =
+      ImmutableSet.of(
+          "com.google.auto.value.processor.AutoValueProcessor",
+          "com.google.auto.value.processor.AutoOneOfProcessor");
 
   private final boolean enableMethodNames;
   private final boolean enableClassNames;
@@ -100,6 +105,12 @@ public final class NamedLikeContextualKeyword extends BugChecker
     }
 
     MethodSymbol methodSymbol = ASTHelpers.getSymbol(tree);
+
+    // Don't alert if an @Auto... class (safe since reference always qualified).
+    if (isInGeneratedAutoCode(state)) {
+      return NO_MATCH;
+    }
+
     // Don't alert if method is an override (this includes interfaces)
     if (!streamSuperMethods(methodSymbol, state.getTypes()).findAny().isPresent()
         && DISALLOWED_METHOD_NAME_MATCHER.matches(tree, state)) {
@@ -152,5 +163,9 @@ public final class NamedLikeContextualKeyword extends BugChecker
         return qualifyType(state, fix, enclosingClass) + ".this";
       }
     }
+  }
+
+  private static boolean isInGeneratedAutoCode(VisitorState state) {
+    return !Collections.disjoint(ASTHelpers.getGeneratedBy(state), AUTO_PROCESSORS);
   }
 }
