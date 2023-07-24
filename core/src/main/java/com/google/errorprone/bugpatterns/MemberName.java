@@ -89,6 +89,10 @@ public final class MemberName extends BugChecker implements MethodTreeMatcher, V
       "Static variables should be named in UPPER_SNAKE_CASE if deeply immutable or lowerCamelCase"
           + " if not.";
 
+  private static final String INITIALISM_DETAIL =
+      ", with acronyms treated as words"
+          + " (https://google.github.io/styleguide/javaguide.html#s5.3-camel-case)";
+
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
     MethodSymbol symbol = getSymbol(tree);
@@ -123,16 +127,19 @@ public final class MemberName extends BugChecker implements MethodTreeMatcher, V
     if (isConformant(symbol, name)) {
       return NO_MATCH;
     }
-    String suggested = fixInitialisms(suggestedRename(symbol, name));
-    return suggested.equals(name) || !canBeRemoved(symbol, state)
-        ? buildDescription(tree)
-            .setMessage(
-                String.format(
-                    "Methods and non-static variables should be named in lowerCamelCase; did you"
-                        + " mean '%s'?",
-                    suggested))
-            .build()
-        : describeMatch(tree, renameMethodWithInvocations(tree, suggested, state));
+    String renamed = suggestedRename(symbol, name);
+    String suggested = fixInitialisms(renamed);
+    boolean fixable = !suggested.equals(name) && canBeRemoved(symbol, state);
+    String diagnostic =
+        "Methods and non-static variables should be named in lowerCamelCase"
+            + (suggested.equals(renamed) ? "" : INITIALISM_DETAIL);
+    return buildDescription(tree)
+        .setMessage(
+            fixable
+                ? diagnostic
+                : diagnostic + String.format("; did you" + " mean '%s'?", suggested))
+        .addFix(fixable ? renameMethodWithInvocations(tree, suggested, state) : emptyFix())
+        .build();
   }
 
   private static boolean hasTestAnnotation(MethodSymbol symbol) {
@@ -171,17 +178,18 @@ public final class MemberName extends BugChecker implements MethodTreeMatcher, V
     if (EXEMPTED_VARIABLE_NAMES.contains(name)) {
       return NO_MATCH;
     }
-    String suggested = fixInitialisms(suggestedRename(symbol, name));
+    String renamed = suggestedRename(symbol, name);
+    String suggested = fixInitialisms(renamed);
     boolean fixable = !suggested.equals(name) && canBeRenamed(symbol);
+    String diagnostic =
+        (isStaticVariable(symbol) ? STATIC_VARIABLE_FINDING : message())
+            + (suggested.equals(renamed) ? "" : INITIALISM_DETAIL);
     return buildDescription(tree)
-        .addFix(fixable ? renameVariable(tree, suggested, state) : emptyFix())
         .setMessage(
-            isStaticVariable(symbol)
-                ? STATIC_VARIABLE_FINDING
-                : message()
-                    + (fixable || suggested.equals(name)
-                        ? ""
-                        : (" Did you mean " + suggested + "?")))
+            fixable
+                ? diagnostic
+                : diagnostic + String.format("; did you" + " mean '%s'?", suggested))
+        .addFix(fixable ? renameVariable(tree, suggested, state) : emptyFix())
         .build();
   }
 

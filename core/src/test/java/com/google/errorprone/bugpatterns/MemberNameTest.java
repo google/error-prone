@@ -53,6 +53,21 @@ public class MemberNameTest {
   }
 
   @Test
+  public void nameWithUnderscores_findingEmphasisesInitialism() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  // BUG: Diagnostic contains: acronyms",
+            "  private int misnamedRPCClient;",
+            "  int get() {",
+            "    return misnamedRPCClient;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void staticFields() {
     refactoringHelper
         .addInputLines(
