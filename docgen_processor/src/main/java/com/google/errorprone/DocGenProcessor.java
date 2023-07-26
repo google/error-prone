@@ -23,9 +23,9 @@ import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.UncheckedIOException;
 import java.util.Set;
 import javax.annotation.processing.AbstractProcessor;
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
@@ -57,22 +57,21 @@ public class DocGenProcessor extends AbstractProcessor {
 
   /** {@inheritDoc} */
   @Override
-  public synchronized void init(ProcessingEnvironment processingEnv) {
-    super.init(processingEnv);
-    try {
-      FileObject manifest =
-          processingEnv
-              .getFiler()
-              .createResource(StandardLocation.SOURCE_OUTPUT, "", "bugPatterns.txt");
-      pw = new PrintWriter(new OutputStreamWriter(manifest.openOutputStream(), UTF_8), true);
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  /** {@inheritDoc} */
-  @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+    // Initializes field pw in the first round instead of the init method to ensure the created
+    // PrintWriter instance is always closed during cleanup.
+    if (pw == null) {
+      try {
+        FileObject manifest =
+            processingEnv
+                .getFiler()
+                .createResource(StandardLocation.SOURCE_OUTPUT, "", "bugPatterns.txt");
+        pw = new PrintWriter(new OutputStreamWriter(manifest.openOutputStream(), UTF_8), true);
+      } catch (IOException e) {
+        cleanup();
+        throw new UncheckedIOException(e);
+      }
+    }
     for (Element element : roundEnv.getElementsAnnotatedWith(BugPattern.class)) {
       gson.toJson(BugPatternInstance.fromElement(element), pw);
       pw.println();
