@@ -316,113 +316,119 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color">
 <div class="block">A bugpattern; see the summary.</div>
 </div>
-<div class="col-first even-row-color"><code>class&nbsp;</code></div>
-<div class="col-second even-row-color"><code><a href="../NullablePrimitive.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">NullablePrimitive</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>class&nbsp;</code></div>
-<div class="col-second odd-row-color"><code><a href="../NullablePrimitiveArray.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">NullablePrimitiveArray</a></code></div>
-<div class="col-last odd-row-color">
-<div class="block">A <a href="../BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
-</div>
-<div class="col-first even-row-color"><code>class&nbsp;</code></div>
-<div class="col-second even-row-color"><code><a href="../NullableVoid.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">NullableVoid</a></code></div>
-<div class="col-last even-row-color">
-<div class="block">A <a href="../BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
-</div>
-<div class="col-first odd-row-color"><code>class&nbsp;</code></div>
-<div class="col-second odd-row-color"><code><a href="../Overrides.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">Overrides</a></code></div>
-<div class="col-last odd-row-color">
-<div class="block">Matches the behaviour of javac's overrides Xlint warning.</div>
-</div>
-<div class="col-first even-row-color"><code>class&nbsp;</code></div>
-<div class="col-second even-row-color"><code><a href="../OverridingMethodInconsistentArgumentNamesChecker.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">OverridingMethodInconsistentArgumentNamesChecker</a></code></div>
-<div class="col-last even-row-color">
-<div class="block">A <a href="../BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
-</div>
-<div class="col-first odd-row-color"><code>class&nbsp;</code></div>
-<div class="col-second odd-row-color"><code><a href="../PublicApiNamedStreamShouldReturnStream.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">PublicApiNamedStreamShouldReturnStream</a></code></div>
-<div class="col-last odd-row-color">
-<div class="block">Checks if public APIs named "stream" returns a type whose name ends with Stream.</div>
-</div>
 <div class="col-first even-row-color"><code>final class&nbsp;</code></div>
-<div class="col-second even-row-color"><code><a href="../RedundantOverride.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">RedundantOverride</a></code></div>
+<div class="col-second even-row-color"><code><a href="../NullableOptional.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">NullableOptional</a></code></div>
 <div class="col-last even-row-color">
-<div class="block">Removes overrides which purely pass through to the method in the super class.</div>
+<div class="block">A Checker that catches <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link"><code>Optional</code></a>/<code>Optional</code> with
+ <code>Nullable</code> annotation.</div>
 </div>
 <div class="col-first odd-row-color"><code>class&nbsp;</code></div>
-<div class="col-second odd-row-color"><code><a href="../RedundantThrows.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">RedundantThrows</a></code></div>
-<div class="col-last odd-row-color">
-<div class="block">A <a href="../BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
-</div>
-<div class="col-first even-row-color"><code>final class&nbsp;</code></div>
-<div class="col-second even-row-color"><code><a href="../SelfAlwaysReturnsThis.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">SelfAlwaysReturnsThis</a></code></div>
-<div class="col-last even-row-color">
-<div class="block">A <a href="../BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
-</div>
-<div class="col-first odd-row-color"><code>final class&nbsp;</code></div>
-<div class="col-second odd-row-color"><code><a href="../StaticAssignmentInConstructor.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">StaticAssignmentInConstructor</a></code></div>
-<div class="col-last odd-row-color">
-<div class="block">Checks for static fields being assigned within constructors.</div>
-</div>
-<div class="col-first even-row-color"><code>final class&nbsp;</code></div>
-<div class="col-second even-row-color"><code><a href="../StaticAssignmentOfThrowable.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">StaticAssignmentOfThrowable</a></code></div>
-<div class="col-last even-row-color">
-<div class="block">Checks for static fields being assigned with <code>Throwable</code>.</div>
-</div>
-<div class="col-first odd-row-color"><code>class&nbsp;</code></div>
-<div class="col-second odd-row-color"><code><a href="../StreamResourceLeak.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">StreamResourceLeak</a></code></div>
-<div class="col-last odd-row-color">
-<div class="block">A <a href="../BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
-</div>
-<div class="col-first even-row-color"><code>class&nbsp;</code></div>
-<div class="col-second even-row-color"><code><a href="../TestExceptionChecker.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">TestExceptionChecker</a></code></div>
-<div class="col-last even-row-color">
-<div class="block">A <a href="../BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
-</div>
-<div class="col-first odd-row-color"><code>class&nbsp;</code></div>
-<div class="col-second odd-row-color"><code><a href="../ThrowsUncheckedException.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">ThrowsUncheckedException</a></code></div>
-<div class="col-last odd-row-color">
-<div class="block">Suggests to remove the unchecked throws clause.</div>
-</div>
-<div class="col-first even-row-color"><code>class&nbsp;</code></div>
-<div class="col-second even-row-color"><code><a href="../TooManyParameters.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">TooManyParameters</a></code></div>
-<div class="col-last even-row-color">
-<div class="block">A <a href="../BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
-</div>
-<div class="col-first odd-row-color"><code>class&nbsp;</code></div>
-<div class="col-second odd-row-color"><code><a href="../ToStringReturnsNull.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">ToStringReturnsNull</a></code></div>
-<div class="col-last odd-row-color">
-<div class="block">ToString should not return null.</div>
-</div>
-<div class="col-first even-row-color"><code>class&nbsp;</code></div>
-<div class="col-second even-row-color"><code><a href="../TypeNameShadowing.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">TypeNameShadowing</a></code></div>
-<div class="col-last even-row-color">
-<div class="block">Warns when a type parameter shadows another type name in scope.</div>
-</div>
-<div class="col-first odd-row-color"><code>class&nbsp;</code></div>
-<div class="col-second odd-row-color"><code><a href="../TypeParameterShadowing.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">TypeParameterShadowing</a></code></div>
+<div class="col-second odd-row-color"><code><a href="../NullablePrimitive.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">NullablePrimitive</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>class&nbsp;</code></div>
-<div class="col-second even-row-color"><code><a href="../TypeParameterUnusedInFormals.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">TypeParameterUnusedInFormals</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>final class&nbsp;</code></div>
-<div class="col-second odd-row-color"><code><a href="../UnnecessarilyVisible.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">UnnecessarilyVisible</a></code></div>
-<div class="col-last odd-row-color">
-<div class="block">Suggests restricting the visibility of methods which should only be called by a framework.</div>
-</div>
-<div class="col-first even-row-color"><code>class&nbsp;</code></div>
-<div class="col-second even-row-color"><code><a href="../UnnecessaryLambda.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">UnnecessaryLambda</a></code></div>
+<div class="col-second even-row-color"><code><a href="../NullablePrimitiveArray.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">NullablePrimitiveArray</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">A <a href="../BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </div>
 <div class="col-first odd-row-color"><code>class&nbsp;</code></div>
-<div class="col-second odd-row-color"><code><a href="../UnsynchronizedOverridesSynchronized.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">UnsynchronizedOverridesSynchronized</a></code></div>
+<div class="col-second odd-row-color"><code><a href="../NullableVoid.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">NullableVoid</a></code></div>
 <div class="col-last odd-row-color">
 <div class="block">A <a href="../BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </div>
 <div class="col-first even-row-color"><code>class&nbsp;</code></div>
-<div class="col-second even-row-color"><code><a href="../UseCorrectAssertInTests.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">UseCorrectAssertInTests</a></code></div>
+<div class="col-second even-row-color"><code><a href="../Overrides.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">Overrides</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">Matches the behaviour of javac's overrides Xlint warning.</div>
+</div>
+<div class="col-first odd-row-color"><code>class&nbsp;</code></div>
+<div class="col-second odd-row-color"><code><a href="../OverridingMethodInconsistentArgumentNamesChecker.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">OverridingMethodInconsistentArgumentNamesChecker</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">A <a href="../BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
+</div>
+<div class="col-first even-row-color"><code>class&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="../PublicApiNamedStreamShouldReturnStream.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">PublicApiNamedStreamShouldReturnStream</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">Checks if public APIs named "stream" returns a type whose name ends with Stream.</div>
+</div>
+<div class="col-first odd-row-color"><code>final class&nbsp;</code></div>
+<div class="col-second odd-row-color"><code><a href="../RedundantOverride.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">RedundantOverride</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">Removes overrides which purely pass through to the method in the super class.</div>
+</div>
+<div class="col-first even-row-color"><code>class&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="../RedundantThrows.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">RedundantThrows</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">A <a href="../BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
+</div>
+<div class="col-first odd-row-color"><code>final class&nbsp;</code></div>
+<div class="col-second odd-row-color"><code><a href="../SelfAlwaysReturnsThis.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">SelfAlwaysReturnsThis</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">A <a href="../BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
+</div>
+<div class="col-first even-row-color"><code>final class&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="../StaticAssignmentInConstructor.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">StaticAssignmentInConstructor</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">Checks for static fields being assigned within constructors.</div>
+</div>
+<div class="col-first odd-row-color"><code>final class&nbsp;</code></div>
+<div class="col-second odd-row-color"><code><a href="../StaticAssignmentOfThrowable.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">StaticAssignmentOfThrowable</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">Checks for static fields being assigned with <code>Throwable</code>.</div>
+</div>
+<div class="col-first even-row-color"><code>class&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="../StreamResourceLeak.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">StreamResourceLeak</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">A <a href="../BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
+</div>
+<div class="col-first odd-row-color"><code>class&nbsp;</code></div>
+<div class="col-second odd-row-color"><code><a href="../TestExceptionChecker.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">TestExceptionChecker</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">A <a href="../BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
+</div>
+<div class="col-first even-row-color"><code>class&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="../ThrowsUncheckedException.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">ThrowsUncheckedException</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">Suggests to remove the unchecked throws clause.</div>
+</div>
+<div class="col-first odd-row-color"><code>class&nbsp;</code></div>
+<div class="col-second odd-row-color"><code><a href="../TooManyParameters.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">TooManyParameters</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">A <a href="../BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
+</div>
+<div class="col-first even-row-color"><code>class&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="../ToStringReturnsNull.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">ToStringReturnsNull</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">ToString should not return null.</div>
+</div>
+<div class="col-first odd-row-color"><code>class&nbsp;</code></div>
+<div class="col-second odd-row-color"><code><a href="../TypeNameShadowing.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">TypeNameShadowing</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">Warns when a type parameter shadows another type name in scope.</div>
+</div>
+<div class="col-first even-row-color"><code>class&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="../TypeParameterShadowing.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">TypeParameterShadowing</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>class&nbsp;</code></div>
+<div class="col-second odd-row-color"><code><a href="../TypeParameterUnusedInFormals.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">TypeParameterUnusedInFormals</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>final class&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="../UnnecessarilyVisible.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">UnnecessarilyVisible</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">Suggests restricting the visibility of methods which should only be called by a framework.</div>
+</div>
+<div class="col-first odd-row-color"><code>class&nbsp;</code></div>
+<div class="col-second odd-row-color"><code><a href="../UnnecessaryLambda.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">UnnecessaryLambda</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">A <a href="../BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
+</div>
+<div class="col-first even-row-color"><code>class&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="../UnsynchronizedOverridesSynchronized.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">UnsynchronizedOverridesSynchronized</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">A <a href="../BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
+</div>
+<div class="col-first odd-row-color"><code>class&nbsp;</code></div>
+<div class="col-second odd-row-color"><code><a href="../UseCorrectAssertInTests.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">UseCorrectAssertInTests</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
 </div>
 </section>
 </li>

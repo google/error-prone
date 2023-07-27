@@ -1045,6 +1045,9 @@ Passing a literal null to an Optional parameter is almost certainly a mistake. D
 __[NullableConstructor](bugpattern/NullableConstructor)__<br>
 Constructors should not be annotated with @Nullable since they cannot return null
 
+__[NullableOptional](bugpattern/NullableOptional)__<br>
+Using an Optional variable which is expected to possibly be null is discouraged. It is best to indicate the absence of the value by assigning it an empty optional.
+
 __[NullablePrimitive](bugpattern/NullablePrimitive)__<br>
 @Nullable should not be used for primitive types since they cannot be null
 
