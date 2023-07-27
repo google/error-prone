@@ -271,6 +271,7 @@ import com.google.errorprone.bugpatterns.NullOptional;
 import com.google.errorprone.bugpatterns.NullTernary;
 import com.google.errorprone.bugpatterns.NullableConstructor;
 import com.google.errorprone.bugpatterns.NullableOnContainingClass;
+import com.google.errorprone.bugpatterns.NullableOptional;
 import com.google.errorprone.bugpatterns.NullablePrimitive;
 import com.google.errorprone.bugpatterns.NullablePrimitiveArray;
 import com.google.errorprone.bugpatterns.NullableVoid;
@@ -979,6 +980,7 @@ public class BuiltInCheckerSuppliers {
           NotJavadoc.class,
           NullOptional.class,
           NullableConstructor.class,
+          NullableOptional.class,
           NullablePrimitive.class,
           NullablePrimitiveArray.class,
           NullableVoid.class,
