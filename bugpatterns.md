@@ -1087,6 +1087,9 @@ Varargs doesn&#39;t agree for overridden method
 __[OverridesGuiceInjectableMethod](bugpattern/OverridesGuiceInjectableMethod)__<br>
 This method is not annotated with @Inject, but it overrides a method that is annotated with @com.google.inject.Inject. Guice will inject this method, and it is recommended to annotate it explicitly.
 
+__[OverridingMethodInconsistentArgumentNamesChecker](bugpattern/OverridingMethodInconsistentArgumentNamesChecker)__<br>
+Arguments of overriding method are inconsistent with overridden method.
+
 __[ParameterName](bugpattern/ParameterName)__<br>
 Detects &#96;/* name&#61; */&#96;-style comments on actual parameters where the name doesn&#39;t match the formal parameter
 
