@@ -287,6 +287,7 @@ import com.google.errorprone.bugpatterns.OrphanedFormatString;
 import com.google.errorprone.bugpatterns.OutlineNone;
 import com.google.errorprone.bugpatterns.OverrideThrowableToString;
 import com.google.errorprone.bugpatterns.Overrides;
+import com.google.errorprone.bugpatterns.OverridingMethodInconsistentArgumentNamesChecker;
 import com.google.errorprone.bugpatterns.PackageInfo;
 import com.google.errorprone.bugpatterns.PackageLocation;
 import com.google.errorprone.bugpatterns.ParameterComment;
@@ -992,6 +993,7 @@ public class BuiltInCheckerSuppliers {
           OverrideThrowableToString.class,
           Overrides.class,
           OverridesGuiceInjectableMethod.class,
+          OverridingMethodInconsistentArgumentNamesChecker.class,
           ParameterName.class,
           PreconditionsCheckNotNullRepeated.class,
           PrimitiveAtomicReference.class,
