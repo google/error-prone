@@ -1003,9 +1003,6 @@ Multiple calls to either parallel or sequential are unnecessary and cause confus
 __[MultipleUnaryOperatorsInMethodCall](bugpattern/MultipleUnaryOperatorsInMethodCall)__<br>
 Avoid having multiple unary operators acting on the same variable in a method call
 
-__[MutableGuiceModule](bugpattern/MutableGuiceModule)__<br>
-Fields in Guice modules should be final
-
 __[MutablePublicArray](bugpattern/MutablePublicArray)__<br>
 Non-empty arrays are mutable, so this &#96;public static final&#96; array is not a constant and can be modified by clients of this class.  Prefer an ImmutableList, or provide an accessor method that returns a defensive copy.
 
@@ -1456,6 +1453,9 @@ Methods and non-static variables should be named in lowerCamelCase.
 
 __[MissingDefault](bugpattern/MissingDefault)__<br>
 The Google Java Style Guide requires that each switch statement includes a default statement group, even if it contains no code. (This requirement is lifted for any switch statement that covers all values of an enum.)
+
+__[MutableGuiceModule](bugpattern/MutableGuiceModule)__<br>
+Fields in Guice modules should be final
 
 __[NonCanonicalStaticMemberImport](bugpattern/NonCanonicalStaticMemberImport)__<br>
 Static import of member uses non-canonical name
