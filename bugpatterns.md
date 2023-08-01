@@ -550,6 +550,9 @@ Use ZoneOffset.UTC instead of ZoneId.of(&quot;Z&quot;).
 __[ASTHelpersSuggestions](bugpattern/ASTHelpersSuggestions)__<br>
 Prefer ASTHelpers instead of calling this API directly
 
+__[AddressSelection](bugpattern/AddressSelection)__<br>
+Prefer InetAddress.getAllName to APIs that convert a hostname to a single IP address
+
 __[AlmostJavadoc](bugpattern/AlmostJavadoc)__<br>
 This comment contains Javadoc or HTML tags, but isn&#39;t started with a double asterisk (/**); is it meant to be Javadoc?
 
