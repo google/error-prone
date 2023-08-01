@@ -35,7 +35,6 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
-import com.sun.source.tree.Tree;
 
 /** A {@link BugChecker} that detects use of the unsafe JNDI API system. */
 @BugPattern(
@@ -43,10 +42,10 @@ import com.sun.source.tree.Tree;
         "Using dangerous ClassLoader APIs may deserialize untrusted user input into bytecode,"
             + " leading to remote code execution vulnerabilities",
     severity = SeverityLevel.ERROR)
-public final class BanClassLoader extends BugChecker
+public final class BanClassLoader extends AbstractBanUnsafeAPIChecker
     implements MethodInvocationTreeMatcher, NewClassTreeMatcher, ClassTreeMatcher {
 
-  private static final Matcher<ExpressionTree> METHOD_MATCHER =
+  private static final Matcher<MethodInvocationTree> METHOD_MATCHER =
       anyOf(
           anyMethod().onDescendantOf("java.lang.ClassLoader").named("defineClass"),
           anyMethod().onDescendantOf("java.lang.invoke.MethodHandles.Lookup").named("defineClass"),
@@ -63,28 +62,18 @@ public final class BanClassLoader extends BugChecker
   private static final Matcher<ClassTree> EXTEND_CLASS_MATCHER =
       isExtensionOf("java.net.URLClassLoader");
 
-  private <T extends Tree> Description matchWith(T tree, VisitorState state, Matcher<T> matcher) {
-    if (state.errorProneOptions().isTestOnlyTarget() || !matcher.matches(tree, state)) {
-      return Description.NO_MATCH;
-    }
-
-    Description.Builder description = buildDescription(tree);
-
-    return description.build();
-  }
-
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    return matchWith(tree, state, METHOD_MATCHER);
+    return matchHelper(tree, state, METHOD_MATCHER);
   }
 
   @Override
   public Description matchNewClass(NewClassTree tree, VisitorState state) {
-    return matchWith(tree, state, CONSTRUCTOR_MATCHER);
+    return matchHelper(tree, state, CONSTRUCTOR_MATCHER);
   }
 
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
-    return matchWith(tree, state, EXTEND_CLASS_MATCHER);
+    return matchHelper(tree, state, EXTEND_CLASS_MATCHER);
   }
 }

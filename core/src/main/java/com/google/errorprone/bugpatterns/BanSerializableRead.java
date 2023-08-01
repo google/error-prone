@@ -32,16 +32,16 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 
 /** A {@link BugChecker} that detects use of the unsafe {@link java.io.Serializable} API. */
 @BugPattern(
     summary = "Deserializing user input via the `Serializable` API is extremely dangerous",
     severity = SeverityLevel.ERROR)
-public final class BanSerializableRead extends BugChecker implements MethodInvocationTreeMatcher {
+public final class BanSerializableRead extends AbstractBanUnsafeAPIChecker
+    implements MethodInvocationTreeMatcher {
 
-  private static final Matcher<ExpressionTree> EXEMPT =
+  private static final Matcher<MethodInvocationTree> EXEMPT =
       anyOf(
           //  This is called through ObjectInputStream; a call further up the callstack will have
           // been exempt.
@@ -56,7 +56,7 @@ public final class BanSerializableRead extends BugChecker implements MethodInvoc
                           methodTree.getName().toString()))));
 
   /** Checks for unsafe deserialization calls on an ObjectInputStream in an ExpressionTree. */
-  private static final Matcher<ExpressionTree> OBJECT_INPUT_STREAM_DESERIALIZE_MATCHER =
+  private static final Matcher<MethodInvocationTree> OBJECT_INPUT_STREAM_DESERIALIZE_MATCHER =
       allOf(
           anyOf(
               // this matches calls to the ObjectInputStream to read some objects
@@ -91,16 +91,11 @@ public final class BanSerializableRead extends BugChecker implements MethodInvoc
           not(EXEMPT));
 
   /** Checks for unsafe uses of the Java deserialization API. */
-  private static final Matcher<ExpressionTree> MATCHER = OBJECT_INPUT_STREAM_DESERIALIZE_MATCHER;
+  private static final Matcher<MethodInvocationTree> MATCHER =
+      OBJECT_INPUT_STREAM_DESERIALIZE_MATCHER;
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    if (state.errorProneOptions().isTestOnlyTarget() || !MATCHER.matches(tree, state)) {
-      return Description.NO_MATCH;
-    }
-
-    Description.Builder description = buildDescription(tree);
-
-    return description.build();
+    return this.matchHelper(tree, state, MATCHER);
   }
 }
