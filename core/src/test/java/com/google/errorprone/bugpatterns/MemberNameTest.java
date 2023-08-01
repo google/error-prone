@@ -463,4 +463,32 @@ public class MemberNameTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void methodNameWithMatchingReturnType() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  private Object Object() {",
+            "    return null;",
+            "  }",
+            "",
+            "  void call() {",
+            "     Object();",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  private Object object() {",
+            "    return null;",
+            "  }",
+            "",
+            "  void call() {",
+            "     object();",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

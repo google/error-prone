@@ -750,8 +750,12 @@ public final class SuggestedFixes {
     int endPos =
         tree.getBody() != null ? getStartPosition(tree.getBody()) : state.getEndPosition(tree);
     List<ErrorProneToken> methodTokens = state.getOffsetTokens(basePos, endPos);
+
+    int returnTypeEndPos = state.getEndPosition(tree.getReturnType());
     for (ErrorProneToken token : methodTokens) {
-      if (token.kind() == TokenKind.IDENTIFIER && token.name().equals(tree.getName())) {
+      if (token.kind() == TokenKind.IDENTIFIER
+          && token.pos() > returnTypeEndPos
+          && token.name().equals(tree.getName())) {
         return SuggestedFix.replace(token.pos(), token.endPos(), replacement);
       }
     }
