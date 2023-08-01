@@ -25,6 +25,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.google.common.base.Strings;
 import com.google.common.base.Suppliers;
 import com.google.common.base.Throwables;
@@ -38,12 +39,23 @@ import com.sun.tools.javac.util.Context;
 public class HubSpotMetrics {
 
   enum ErrorType {
-    EXCEPTIONS,
-    MISSING,
-    INIT_ERRORS,
-    LISTENER_INIT_ERRORS,
-    LISTENER_ON_DESCRIBE_ERROR,
-    UNHANDLED_ERRORS
+    EXCEPTIONS("errorProneExceptions"),
+    MISSING("errorProneMissingChecks"),
+    INIT_ERRORS("errorProneInitErrors"),
+    LISTENER_INIT_ERRORS("errorProneListenerInitErrors"),
+    LISTENER_ON_DESCRIBE_ERROR("errorProneListenerDescribeErrors"),
+    UNHANDLED_ERRORS("errorProneUnhandledErrors");
+
+    final String value;
+
+    ErrorType(String value) {
+      this.value = value;
+    }
+
+    @JsonValue
+    public String getValue() {
+      return value;
+    }
   }
 
   public static synchronized HubSpotMetrics instance(Context context) {
@@ -134,7 +146,7 @@ public class HubSpotMetrics {
 
   private void write() {
     FileManager fileManager = fileManagerSupplier.get();
-    fileManager.getErrorOutputPath().ifPresent(p -> fileManager.write(ImmutableMap.of("error-prone-errors-" + fileManager.getPhase(), errors), p));
+    fileManager.getErrorOutputPath().ifPresent(p -> fileManager.write(errors, p));
     fileManager.getTimingsOutputPath().ifPresent(p -> fileManager.write(computeFinalTimings(), p));
   }
 
