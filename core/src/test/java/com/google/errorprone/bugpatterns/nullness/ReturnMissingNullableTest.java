@@ -1390,6 +1390,22 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
+  public void negativeCases_unreachableFailNonCanonicalImport() {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "import static junit.framework.TestCase.fail;",
+            "class LiteralNullReturnTest {",
+            "  public String getMessage() {",
+            "    fail();",
+            "    return null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void negativeCases_unreachableThrowExceptionMethod() {
     createCompilationTestHelper()
         .addSourceLines(
