@@ -22,6 +22,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Streams;
 import com.google.errorprone.BugCheckerInfo;
 import com.google.errorprone.bugpatterns.ASTHelpersSuggestions;
+import com.google.errorprone.bugpatterns.AddressSelection;
 import com.google.errorprone.bugpatterns.AlreadyChecked;
 import com.google.errorprone.bugpatterns.AlwaysThrows;
 import com.google.errorprone.bugpatterns.AmbiguousMethodReference;
@@ -817,6 +818,7 @@ public class BuiltInCheckerSuppliers {
       getSuppliers(
           // keep-sorted start
           ASTHelpersSuggestions.class,
+          AddressSelection.class,
           AlmostJavadoc.class,
           AlreadyChecked.class,
           AmbiguousMethodReference.class,
