@@ -54,7 +54,7 @@ class FileManager {
   }
 
   Optional<Path> getErrorOutputPath() {
-    return getDataDir(OVERWATCH_DIR_ENV_VAR, "target/overwatch-metadata")
+    return getDataDir(BLAZAR_DIR_ENV_VAR, "error-prone")
         .map(o -> o.resolve("error-prone-exceptions.json"));
   }
 
