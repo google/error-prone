@@ -181,16 +181,21 @@ loadScripts(document, 'script');</script>
 <div class="block">Produces an extractor which, if the tree matches, extracts the type of that tree, as given by
  <a href="../../util/ASTHelpers.html#getType(com.sun.source.tree.Tree)"><code>ASTHelpers.getType(Tree)</code></a>.</div>
 </div>
-<div class="col-first odd-row-color"><code>protected <a href="../Description.html" title="class in com.google.errorprone.matchers">Description</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">AbstractMustBeClosedChecker.</span><code><a href="../../bugpatterns/AbstractMustBeClosedChecker.html#scanEntireMethodFor(com.google.errorprone.matchers.Matcher,com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)" class="member-name-link">scanEntireMethodFor</a><wbr>(<a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;? super com.sun.source.tree.ExpressionTree&gt;&nbsp;matcher,
+<div class="col-first odd-row-color"><code>protected &lt;T extends com.sun.source.tree.Tree&gt;<br><a href="../Description.html" title="class in com.google.errorprone.matchers">Description</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">AbstractBanUnsafeAPIChecker.</span><code><a href="../../bugpatterns/AbstractBanUnsafeAPIChecker.html#matchHelper(T,com.google.errorprone.VisitorState,com.google.errorprone.matchers.Matcher)" class="member-name-link">matchHelper</a><wbr>(T&nbsp;tree,
+ <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
+ <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;T&gt;&nbsp;matcher)</code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>protected <a href="../Description.html" title="class in com.google.errorprone.matchers">Description</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">AbstractMustBeClosedChecker.</span><code><a href="../../bugpatterns/AbstractMustBeClosedChecker.html#scanEntireMethodFor(com.google.errorprone.matchers.Matcher,com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)" class="member-name-link">scanEntireMethodFor</a><wbr>(<a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;? super com.sun.source.tree.ExpressionTree&gt;&nbsp;matcher,
  com.sun.source.tree.MethodTree&nbsp;tree,
  <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
-<div class="col-last odd-row-color">
+<div class="col-last even-row-color">
 <div class="block">Scans a method body for invocations matching <code>matcher</code>, emitting them as a single fix.</div>
 </div>
-<div class="col-first even-row-color"><code>abstract <a href="../../bugpatterns/StronglyType.Builder.html" title="class in com.google.errorprone.bugpatterns">StronglyType.Builder</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">StronglyType.Builder.</span><code><a href="../../bugpatterns/StronglyType.Builder.html#setFactoryMatcher(com.google.errorprone.matchers.Matcher)" class="member-name-link">setFactoryMatcher</a><wbr>(<a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.ExpressionTree&gt;&nbsp;matcher)</code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>abstract <a href="../../bugpatterns/StronglyType.Builder.html" title="class in com.google.errorprone.bugpatterns">StronglyType.Builder</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">StronglyType.Builder.</span><code><a href="../../bugpatterns/StronglyType.Builder.html#setFactoryMatcher(com.google.errorprone.matchers.Matcher)" class="member-name-link">setFactoryMatcher</a><wbr>(<a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.ExpressionTree&gt;&nbsp;matcher)</code></div>
+<div class="col-last odd-row-color">
 <div class="block">Set the matcher used to check if an expression is a factory creating a stronger type.</div>
 </div>
 </div>
