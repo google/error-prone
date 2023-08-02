@@ -445,4 +445,22 @@ public class MemberNameTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void methodReference() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  private void foo_bar() {}",
+            "  private Runnable r = this::foo_bar;",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  private void fooBar() {}",
+            "  private Runnable r = this::fooBar;",
+            "}")
+        .doTest();
+  }
 }

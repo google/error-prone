@@ -67,6 +67,7 @@ import com.sun.source.tree.CompoundAssignmentTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.InstanceOfTree;
+import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
@@ -784,6 +785,17 @@ public final class SuggestedFixes {
               "." + replacement);
         }
         return super.visitMemberSelect(tree, null);
+      }
+
+      @Override
+      public Void visitMemberReference(MemberReferenceTree tree, Void unused) {
+        if (sym.equals(getSymbol(tree))) {
+          fix.replace(
+              state.getEndPosition(tree.getQualifierExpression()),
+              state.getEndPosition(tree),
+              "::" + replacement);
+        }
+        return super.visitMemberReference(tree, unused);
       }
     }.scan(state.getPath().getCompilationUnit(), null);
     return fix.build();
