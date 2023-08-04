@@ -24,6 +24,7 @@ import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import com.google.common.collect.ImmutableRangeSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Range;
+import com.google.common.collect.TreeRangeSet;
 import com.google.errorprone.BugCheckerInfo;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.ErrorProneOptions;
@@ -306,7 +307,7 @@ public abstract class BugChecker implements Suppressible, Serializable {
 
   /** Computes a RangeSet of code regions which are suppressed by this bug checker. */
   public ImmutableRangeSet<Integer> suppressedRegions(VisitorState state) {
-    ImmutableRangeSet.Builder<Integer> suppressedRegions = ImmutableRangeSet.builder();
+    TreeRangeSet<Integer> suppressedRegions = TreeRangeSet.create();
     new TreeScanner<Void, Void>() {
       @Override
       public Void scan(Tree tree, Void unused) {
@@ -318,7 +319,7 @@ public abstract class BugChecker implements Suppressible, Serializable {
         return null;
       }
     }.scan(state.getPath().getCompilationUnit(), null);
-    return suppressedRegions.build();
+    return ImmutableRangeSet.copyOf(suppressedRegions);
   }
 
   public interface AnnotationTreeMatcher extends Suppressible {
