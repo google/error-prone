@@ -48,7 +48,10 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Multimaps;
+import com.google.common.collect.Range;
+import com.google.common.collect.RangeSet;
 import com.google.common.collect.Streams;
+import com.google.common.collect.TreeRangeSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
@@ -475,9 +478,10 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
       Symbol varSymbol, List<TreePath> usagePaths, VisitorState state) {
     MethodSymbol methodSymbol = (MethodSymbol) varSymbol.owner;
     int index = methodSymbol.params.indexOf(varSymbol);
-    SuggestedFix.Builder fix = SuggestedFix.builder();
+    RangeSet<Integer> deletions = TreeRangeSet.create();
     for (TreePath path : usagePaths) {
-      fix.delete(path.getLeaf());
+      deletions.add(
+          Range.closed(getStartPosition(path.getLeaf()), state.getEndPosition(path.getLeaf())));
     }
     new TreePathScanner<Void, Void>() {
       @Override
@@ -507,7 +511,7 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
             // TODO(b/118437729): handle bogus source positions in enum declarations
             return;
           }
-          fix.delete(tree);
+          deletions.add(Range.closed(getStartPosition(tree), state.getEndPosition(tree)));
           return;
         }
         int startPos;
@@ -526,9 +530,11 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
           // TODO(b/118437729): handle bogus source positions in enum declarations
           return;
         }
-        fix.replace(startPos, endPos, "");
+        deletions.add(Range.closed(startPos, endPos));
       }
     }.scan(state.getPath().getCompilationUnit(), null);
+    SuggestedFix.Builder fix = SuggestedFix.builder();
+    deletions.asRanges().forEach(x -> fix.replace(x.lowerEndpoint(), x.upperEndpoint(), ""));
     return ImmutableList.of(fix.build());
   }
 

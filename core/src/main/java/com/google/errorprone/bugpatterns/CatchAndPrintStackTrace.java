@@ -42,7 +42,10 @@ public class CatchAndPrintStackTrace extends BugChecker implements CatchTreeMatc
   private static final Matcher<BlockTree> MATCHER =
       matchSingleStatementBlock(
           expressionStatement(
-              instanceMethod().onDescendantOf("java.lang.Throwable").named("printStackTrace")));
+              instanceMethod()
+                  .onDescendantOf("java.lang.Throwable")
+                  .named("printStackTrace")
+                  .withNoParameters()));
 
   @Override
   public Description matchCatch(CatchTree tree, VisitorState state) {

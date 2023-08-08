@@ -20,6 +20,7 @@ import static org.junit.Assume.assumeTrue;
 
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.util.RuntimeVersion;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -112,6 +113,30 @@ public class FallThroughTest {
             "      case ONE -> {}",
             "      case TWO -> {}",
             "      default -> {}",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Ignore("https://github.com/google/error-prone/issues/2638")
+  @Test
+  public void i2118() {
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  enum Case { ONE, TWO }",
+            "  void m(Case c) {",
+            "    switch (c) {",
+            "      case ONE:",
+            "        switch (c) {",
+            "          case ONE -> m(c);",
+            "          case TWO -> m(c);",
+            "        }",
+            "      default:",
+            "        assert false;",
             "    }",
             "  }",
             "}")

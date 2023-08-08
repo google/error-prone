@@ -16,9 +16,7 @@
 
 package com.google.errorprone.bugpatterns.flogger;
 
-import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
-import com.google.errorprone.bugpatterns.flogger.FloggerRequiredModifiers.Goal;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -26,41 +24,37 @@ import org.junit.runners.JUnit4;
 /** Tests for {@link FloggerRequiredModifiers}. */
 @RunWith(JUnit4.class)
 public class FloggerRequiredModifiersTest {
-  private BugCheckerRefactoringTestHelper refactoringHelper(Goal goal) {
-    return BugCheckerRefactoringTestHelper.newInstance(
-        new FloggerRequiredModifiers(goal), getClass());
+  private BugCheckerRefactoringTestHelper refactoringHelper() {
+    return BugCheckerRefactoringTestHelper.newInstance(FloggerRequiredModifiers.class, getClass());
   }
 
   @Test
   public void negative() {
-    for (Goal goal : Goal.values()) {
-      // Re-initialize the bugchecker so we get a fresh run each time
-      refactoringHelper(goal)
-          .addInputLines(
-              "Holder.java",
-              "import com.google.common.flogger.FluentLogger;",
-              "class Holder {",
-              "  public FluentLogger logger;",
-              "  public FluentLogger get() {return logger;}",
-              "}")
-          .expectUnchanged()
-          .addInputLines(
-              "Test.java",
-              "import com.google.common.flogger.FluentLogger;",
-              "class Test {",
-              "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-              "  public void log(FluentLogger l) {l.atInfo().log(\"bland\");}",
-              "  public void delegate(Holder h) {h.logger.atInfo().log(\"held\");}",
-              "  public void read(Holder h) {h.get().atInfo().log(\"got\");}",
-              "}")
-          .expectUnchanged()
-          .doTest();
-    }
+    refactoringHelper()
+        .addInputLines(
+            "Holder.java",
+            "import com.google.common.flogger.FluentLogger;",
+            "class Holder {",
+            "  public FluentLogger logger;",
+            "  public FluentLogger get() {return logger;}",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "Test.java",
+            "import com.google.common.flogger.FluentLogger;",
+            "class Test {",
+            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
+            "  public void log(FluentLogger l) {l.atInfo().log(\"bland\");}",
+            "  public void delegate(Holder h) {h.logger.atInfo().log(\"held\");}",
+            "  public void read(Holder h) {h.get().atInfo().log(\"got\");}",
+            "}")
+        .expectUnchanged()
+        .doTest();
   }
 
   @Test
   public void positive_addsStatic() {
-    refactoringHelper(Goal.ADD_STATIC)
+    refactoringHelper()
         .addInputLines(
             "in/Test.java",
             "import com.google.common.flogger.FluentLogger;",
@@ -71,27 +65,14 @@ public class FloggerRequiredModifiersTest {
             "out/Test.java",
             "import com.google.common.flogger.FluentLogger;",
             "class Test {",
-            "  static final FluentLogger logger = FluentLogger.forEnclosingClass();",
+            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
             "}")
-        .doTest();
-  }
-
-  @Test
-  public void negative_leavesNonFinalNonStatic() {
-    refactoringHelper(Goal.ADD_STATIC)
-        .addInputLines(
-            "in/Test.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "class Test {",
-            "  private FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "}")
-        .expectUnchanged()
         .doTest();
   }
 
   @Test
   public void positive_extractsExpression() {
-    refactoringHelper(Goal.HOIST_CONSTANT_EXPRESSIONS)
+    refactoringHelper()
         .addInputLines(
             "in/Test.java",
             "import com.google.common.flogger.FluentLogger;",
@@ -110,7 +91,7 @@ public class FloggerRequiredModifiersTest {
 
   @Test
   public void negative_doesntCreateSelfAssignment() {
-    refactoringHelper(Goal.HOIST_CONSTANT_EXPRESSIONS)
+    refactoringHelper()
         .addInputLines(
             "in/Test.java",
             "import com.google.common.flogger.FluentLogger;",
@@ -127,7 +108,7 @@ public class FloggerRequiredModifiersTest {
 
   @Test
   public void negative_doesntIndirectWrappers() {
-    refactoringHelper(Goal.HOIST_CONSTANT_EXPRESSIONS)
+    refactoringHelper()
         .addInputLines(
             "in/Test.java",
             "import com.google.common.flogger.FluentLogger;",
@@ -135,21 +116,28 @@ public class FloggerRequiredModifiersTest {
             "  private static FluentLogger logger = register(FluentLogger.forEnclosingClass());",
             "  private static <T> T register(T t) {return t;}",
             "}")
-        .expectUnchanged()
+        .addOutputLines(
+            "out/Test.java",
+            "import com.google.common.flogger.FluentLogger;",
+            "class Test {",
+            "  private static final FluentLogger logger ="
+                + " register(FluentLogger.forEnclosingClass());",
+            "  private static <T> T register(T t) {return t;}",
+            "}")
         .doTest();
   }
 
   // People who do this generally do it for good reason, and for interfaces it's required.
   @Test
   public void negative_allowsSiblingLoggerUse() {
-    refactoringHelper(Goal.REHOME_FOREIGN_LOGGERS)
+    refactoringHelper()
         .addInputLines(
             "in/Test.java",
             "import com.google.common.flogger.FluentLogger;",
             "class Test {",
             "  static class A { public A() {B.logger.atInfo().log();}}",
             "  static class B {",
-            "    private static FluentLogger logger = FluentLogger.forEnclosingClass();",
+            "    private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
             "  }",
             "}")
         .expectUnchanged()
@@ -158,7 +146,7 @@ public class FloggerRequiredModifiersTest {
 
   @Test
   public void positive_hidesLoggersFromInterfaces() {
-    refactoringHelper(Goal.HIDE_LOGGERS_IN_INTERFACES)
+    refactoringHelper()
         .addInputLines(
             "in/Test.java",
             "import com.google.common.flogger.FluentLogger;",
@@ -183,7 +171,7 @@ public class FloggerRequiredModifiersTest {
 
   @Test
   public void positive_extractsHiddenLoggersForInterfaces() {
-    refactoringHelper(Goal.HOIST_CONSTANT_EXPRESSIONS)
+    refactoringHelper()
         .addInputLines(
             "in/Test.java",
             "import com.google.common.flogger.FluentLogger;",
@@ -207,7 +195,7 @@ public class FloggerRequiredModifiersTest {
 
   @Test
   public void positive_fixesVisibility() {
-    refactoringHelper(Goal.MAKE_PRIVATE)
+    refactoringHelper()
         .addInputLines(
             "in/Test.java",
             "import com.google.common.flogger.FluentLogger;",
@@ -225,7 +213,7 @@ public class FloggerRequiredModifiersTest {
 
   @Test
   public void positive_goalsDontConflict() {
-    refactoringHelper(Goal.DEFAULT_ALL_GOALS)
+    refactoringHelper()
         .addInputLines(
             "in/Test.java",
             "import com.google.common.flogger.FluentLogger;",
@@ -236,26 +224,22 @@ public class FloggerRequiredModifiersTest {
             "out/Test.java",
             "import com.google.common.flogger.FluentLogger;",
             "class Test {",
-            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
+            "  private final FluentLogger logger = FluentLogger.forEnclosingClass();",
             "}")
         .doTest();
   }
 
   @Test
   public void positive_replacesInheritedLogger() {
-    refactoringHelper(Goal.REHOME_FOREIGN_LOGGERS)
+    refactoringHelper()
         .addInputLines(
             "in/Parent.java",
             "import com.google.common.flogger.FluentLogger;",
+            "@SuppressWarnings(\"FloggerRequiredModifiers\")",
             "class Parent {",
             "  protected static final FluentLogger logger = FluentLogger.forEnclosingClass();",
             "}")
-        .addOutputLines(
-            "out/Parent.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "class Parent {",
-            "  protected static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "}")
+        .expectUnchanged()
         .addInputLines(
             "in/Child.java",
             "class Child extends Parent {",
@@ -277,10 +261,11 @@ public class FloggerRequiredModifiersTest {
 
   @Test
   public void positive_doesntCreateSelfReference() {
-    refactoringHelper(Goal.REHOME_FOREIGN_LOGGERS)
+    refactoringHelper()
         .addInputLines(
             "in/Parent.java",
             "import com.google.common.flogger.FluentLogger;",
+            "@SuppressWarnings(\"FloggerRequiredModifiers\")",
             "class Parent {",
             "  protected static final FluentLogger logger = FluentLogger.forEnclosingClass();",
             "}")
@@ -296,7 +281,6 @@ public class FloggerRequiredModifiersTest {
             "out/Child.java",
             "import com.google.common.flogger.FluentLogger;",
             "class Child extends Parent {",
-            // Not an ideal fix, but good enough
             "  private static final FluentLogger flogger = FluentLogger.forEnclosingClass();",
             "  private static final FluentLogger logger = flogger;",
             "  Child() {logger.atInfo().log(\"child\");}",
@@ -306,7 +290,7 @@ public class FloggerRequiredModifiersTest {
 
   @Test
   public void positive_handlesRewritesInMultipleFiles() {
-    refactoringHelper(Goal.HIDE_LOGGERS_IN_INTERFACES)
+    refactoringHelper()
         .addInputLines(
             "in/Parent.java",
             "import com.google.common.flogger.FluentLogger;",
@@ -352,7 +336,7 @@ public class FloggerRequiredModifiersTest {
 
   @Test
   public void negative_allowsSiblingLoggers() {
-    refactoringHelper(Goal.REHOME_FOREIGN_LOGGERS)
+    refactoringHelper()
         .addInputLines(
             "in/Test.java",
             "import com.google.common.flogger.FluentLogger;",
@@ -368,22 +352,19 @@ public class FloggerRequiredModifiersTest {
 
   @Test
   public void negative_doesntNeedlesslyMoveLoggersToInterfaces() {
-    for (Goal goal :
-        ImmutableList.of(Goal.REHOME_FOREIGN_LOGGERS, Goal.HIDE_LOGGERS_IN_INTERFACES)) {
-      refactoringHelper(goal)
-          .addInputLines(
-              "in/Test.java",
-              "import com.google.common.flogger.FluentLogger;",
-              "interface Test {",
-              "  class Inner {",
-              "    private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-              "    private static final class MoreInner {",
-              "      private void go() {logger.atInfo().log();}",
-              "    }",
-              "  }",
-              "}")
-          .expectUnchanged()
-          .doTest();
-    }
+    refactoringHelper()
+        .addInputLines(
+            "in/Test.java",
+            "import com.google.common.flogger.FluentLogger;",
+            "interface Test {",
+            "  class Inner {",
+            "    private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
+            "    private static final class MoreInner {",
+            "      private void go() {logger.atInfo().log();}",
+            "    }",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
   }
 }

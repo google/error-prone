@@ -1563,4 +1563,26 @@ public class UnusedVariableTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void nestedParameterRemoval() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  private int foo(int a, int b) { return b; }",
+            "  void test() {",
+            "    foo(foo(1, 2), 2);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  private int foo(int b) { return b; }",
+            "  void test() {",
+            "    foo(2);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

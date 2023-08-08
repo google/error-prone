@@ -88,8 +88,6 @@ import javax.annotation.Nullable;
 public abstract class Template<M extends TemplateMatch> implements Serializable {
   private static final Logger logger = Logger.getLogger(Template.class.toString());
 
-  public static final boolean AUTOBOXING_DEFAULT = true;
-
   public abstract ImmutableClassToInstanceMap<Annotation> annotations();
 
   public abstract ImmutableList<UTypeVar> templateTypeVariables();

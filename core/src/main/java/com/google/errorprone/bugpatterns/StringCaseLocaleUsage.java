@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
-import static com.google.errorprone.BugPattern.StandardTags.FRAGILE_CODE;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -46,8 +45,7 @@ import com.sun.tools.javac.util.Position;
         "Specify a `Locale` when calling `String#to{Lower,Upper}Case`. (Note: there are multiple"
             + " suggested fixes; the third may be most appropriate if you're dealing with ASCII"
             + " Strings.)",
-    severity = WARNING,
-    tags = FRAGILE_CODE)
+    severity = WARNING)
 public final class StringCaseLocaleUsage extends BugChecker implements MethodInvocationTreeMatcher {
   private static final Matcher<ExpressionTree> DEFAULT_LOCALE_CASE_CONVERSION =
       instanceMethod()

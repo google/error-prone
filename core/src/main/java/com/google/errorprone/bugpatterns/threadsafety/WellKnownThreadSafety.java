@@ -98,6 +98,7 @@ public final class WellKnownThreadSafety implements ThreadSafety.KnownTypes {
         .add(java.util.concurrent.Future.class, "V")
         .add(java.util.concurrent.Semaphore.class)
         .add(java.util.concurrent.ScheduledExecutorService.class)
+        .add(java.util.concurrent.locks.Condition.class)
         .add(java.util.concurrent.locks.Lock.class)
         .add(java.util.concurrent.locks.ReadWriteLock.class)
         .add(java.util.concurrent.locks.ReentrantLock.class)
@@ -127,6 +128,8 @@ public final class WellKnownThreadSafety implements ThreadSafety.KnownTypes {
         .add(Throwable.class) // Unsafe due to initCause, but generally used across threads
         .add("java.lang.ThreadLocal")
         .add("java.lang.invoke.MethodHandle")
+        .add(java.lang.reflect.Method.class)
+        .add(java.lang.reflect.Field.class)
         .add("com.github.benmanes.caffeine.cache.Cache", "K", "V")
         .add("com.github.benmanes.caffeine.cache.LoadingCache", "K", "V")
         .add("com.github.benmanes.caffeine.cache.AsyncLoadingCache", "K", "V")

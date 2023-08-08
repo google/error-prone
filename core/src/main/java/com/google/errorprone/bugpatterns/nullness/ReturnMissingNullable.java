@@ -84,17 +84,14 @@ public class ReturnMissingNullable extends BugChecker implements CompilationUnit
           anyOf(
               anyMethod().anyClass().withNameMatching(compile("throw.*Exception")),
               staticMethod()
-                  .onClassAny(
-                      "org.junit.Assert",
-                      "junit.framework.Assert",
-                      /*
-                       * I'm not sure if TestCase is necessary, as it doesn't define its own fail()
-                       * method, but it commonly appears in lists like this one, so I've included
-                       * it. (Maybe the method was defined on TestCase many versions ago?)
-                       *
-                       * TODO(cpovirk): Confirm need, or remove from everywhere.
-                       */
-                      "junit.framework.TestCase")
+                  /*
+                   * b/285157761: The reason to look at descendants of the listed classes is mostly
+                   * to catch non-canonical static imports: While TestCase doesn't define its own
+                   * fail() method, javac still lets users import it with "import static
+                   * junit.framework.TestCase.fail." And when users do that, javac acts as if fail()
+                   * is a member of TestCase. We still want to cover it here.
+                   */
+                  .onDescendantOfAny("org.junit.Assert", "junit.framework.Assert")
                   .named("fail"),
               staticMethod().onClass("java.lang.System").named("exit")));
 

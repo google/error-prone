@@ -206,6 +206,7 @@ public final class JUnitMatchers {
           isJunit3TestCase,
           hasAnnotation(JUNIT4_TEST_ANNOTATION),
           hasAnnotation(JUNIT4_THEORY_ANNOTATION));
+
   /**
    * A list of test runners that this matcher should look for in the @RunWith annotation. Subclasses
    * of the test runners are also matched.

@@ -25,7 +25,6 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 
 /** A {@link BugChecker} that detects use of the unsafe JNDI API system. */
@@ -34,10 +33,11 @@ import com.sun.source.tree.MethodInvocationTree;
         "Using JNDI may deserialize user input via the `Serializable` API which is extremely"
             + " dangerous",
     severity = SeverityLevel.ERROR)
-public final class BanJNDI extends BugChecker implements MethodInvocationTreeMatcher {
+public final class BanJNDI extends AbstractBanUnsafeAPIChecker
+    implements MethodInvocationTreeMatcher {
 
   /** Checks for direct or indirect calls to context.lookup() via the JDK */
-  private static final Matcher<ExpressionTree> MATCHER =
+  private static final Matcher<MethodInvocationTree> MATCHER =
       anyOf(
           anyMethod()
               .onDescendantOf("javax.naming.directory.DirContext")
@@ -70,12 +70,6 @@ public final class BanJNDI extends BugChecker implements MethodInvocationTreeMat
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    if (state.errorProneOptions().isTestOnlyTarget() || !MATCHER.matches(tree, state)) {
-      return Description.NO_MATCH;
-    }
-
-    Description.Builder description = buildDescription(tree);
-
-    return description.build();
+    return this.matchHelper(tree, state, MATCHER);
   }
 }

@@ -73,9 +73,9 @@ public class DiagnosticTestHelper {
       new ClearableDiagnosticCollector<>();
 
   public static Matcher<Diagnostic<? extends JavaFileObject>> suggestsRemovalOfLine(
-      URI fileURI, int line) {
+      URI fileUri, int line) {
     return allOf(
-        diagnosticOnLine(fileURI, line), diagnosticMessage(containsString("remove this line")));
+        diagnosticOnLine(fileUri, line), diagnosticMessage(containsString("remove this line")));
   }
 
   public List<Diagnostic<? extends JavaFileObject>> getDiagnostics() {
@@ -136,7 +136,7 @@ public class DiagnosticTestHelper {
   }
 
   public static Matcher<Diagnostic<? extends JavaFileObject>> diagnosticOnLine(
-      URI fileURI, long line) {
+      URI fileUri, long line) {
     return new TypeSafeDiagnosingMatcher<Diagnostic<? extends JavaFileObject>>() {
       @Override
       public boolean matchesSafely(
@@ -148,8 +148,8 @@ public class DiagnosticTestHelper {
           return false;
         }
 
-        if (!item.getSource().toUri().equals(fileURI)) {
-          mismatchDescription.appendText("diagnostic not in file ").appendValue(fileURI);
+        if (!item.getSource().toUri().equals(fileUri)) {
+          mismatchDescription.appendText("diagnostic not in file ").appendValue(fileUri);
           return false;
         }
 
@@ -171,7 +171,7 @@ public class DiagnosticTestHelper {
   }
 
   public static Matcher<Diagnostic<? extends JavaFileObject>> diagnosticOnLine(
-      URI fileURI, long line, Predicate<? super String> matcher) {
+      URI fileUri, long line, Predicate<? super String> matcher) {
     return new TypeSafeDiagnosingMatcher<Diagnostic<? extends JavaFileObject>>() {
       @Override
       public boolean matchesSafely(
@@ -183,8 +183,8 @@ public class DiagnosticTestHelper {
           return false;
         }
 
-        if (!item.getSource().toUri().equals(fileURI)) {
-          mismatchDescription.appendText("diagnostic not in file ").appendValue(fileURI);
+        if (!item.getSource().toUri().equals(fileUri)) {
+          mismatchDescription.appendText("diagnostic not in file ").appendValue(fileUri);
           return false;
         }
 

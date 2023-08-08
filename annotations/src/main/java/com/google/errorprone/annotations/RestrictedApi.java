@@ -85,8 +85,8 @@ public @interface RestrictedApi {
   /** Explanation why the API is restricted, to be inserted into the compiler output. */
   String explanation();
 
-  /** Link explaining why the API is restricted */
-  String link();
+  /** Optional link explaining why the API is restricted. */
+  String link() default "";
 
   /**
    * Allow the restricted API on paths matching this regular expression.

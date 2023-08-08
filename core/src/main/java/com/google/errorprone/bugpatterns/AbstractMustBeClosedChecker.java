@@ -91,6 +91,7 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
 
   static final class NameSuggester {
     private final Multiset<String> assignedNamesInThisMethod = HashMultiset.create();
+
     /** Returns basename if there are no conflicts, then basename + "2", then basename + "3"... */
     String uniquifyName(String basename) {
       int numPreviousConflicts = assignedNamesInThisMethod.add(basename, 1);
