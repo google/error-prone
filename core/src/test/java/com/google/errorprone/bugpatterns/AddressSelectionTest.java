@@ -89,6 +89,24 @@ public class AddressSelectionTest {
   }
 
   @Test
+  public void negativeNumeric() throws Exception {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.net.InetAddress;",
+            "import java.net.InetSocketAddress;",
+            "import java.net.Socket;",
+            "class Test {",
+            "  void f() throws Exception {",
+            "    new Socket(\"1.2.3.4\", 80);",
+            "    InetAddress.getByName(\"2001:db8:85a3:8d3:1319:8a2e:370:7348\");",
+            "    new InetSocketAddress(\"::ffff:192.0.2.128\", 80);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void refactor() throws Exception {
     refactoringTestHelper
         .addInputLines(
