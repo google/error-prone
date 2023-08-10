@@ -745,11 +745,12 @@ public final class SuggestedFixes {
 
   /** Be warned, only changes method name at the declaration. */
   public static SuggestedFix renameMethod(MethodTree tree, String replacement, VisitorState state) {
-    // Search tokens from beginning of method tree to beginning of method body.
-    int basePos = getStartPosition(tree);
+    // Search tokens from end of return type tree to beginning of method body.
+    int basePos = state.getEndPosition(tree.getReturnType());
     int endPos =
         tree.getBody() != null ? getStartPosition(tree.getBody()) : state.getEndPosition(tree);
     List<ErrorProneToken> methodTokens = state.getOffsetTokens(basePos, endPos);
+
     for (ErrorProneToken token : methodTokens) {
       if (token.kind() == TokenKind.IDENTIFIER && token.name().equals(tree.getName())) {
         return SuggestedFix.replace(token.pos(), token.endPos(), replacement);
