@@ -25,6 +25,7 @@ import static com.google.errorprone.matchers.method.MethodMatchers.constructor;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.constValue;
 
+import com.google.common.base.CharMatcher;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -37,13 +38,12 @@ import com.google.errorprone.matchers.Matchers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
-import java.util.Objects;
 import java.util.function.Supplier;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
     summary =
-        "Prefer InetAddress.getAllName to APIs that convert a hostname to a single IP address",
+        "Prefer InetAddress.getAllByName to APIs that convert a hostname to a single IP address",
     severity = WARNING)
 public final class AddressSelection extends BugChecker
     implements NewClassTreeMatcher, MethodInvocationTreeMatcher {
@@ -98,13 +98,36 @@ public final class AddressSelection extends BugChecker
   private Description handleMatch(
       ExpressionTree argument, ExpressionTree replacement, Supplier<SuggestedFix> fix) {
     String value = constValue(argument, String.class);
-    if (Objects.equals(value, "localhost")) {
+    // If it's a numeric loopback address, suggest using the method for that.
+    if (LOOPBACK.contains(value)) {
+      return describeMatch(replacement, fix.get());
+    }
+    // If it isn't a constant, or it's "localhost", or it looks like a numeric IP address, then
+    // we don't say anything.
+    if (value == null || value.equals("localhost") || isNumericIp(value)) {
       return NO_MATCH;
     }
-    Description.Builder description = buildDescription(replacement);
-    if (LOOPBACK.contains(value)) {
-      description.addFix(fix.get());
-    }
-    return description.build();
+    // Otherwise flag it but don't suggest a fix.
+    return describeMatch(replacement);
   }
+
+  /**
+   * Returns true if this string looks like it might be a numeric IP address. The matching here is
+   * very approximate. We want every numeric IP address to return true, but it's OK if some strings
+   * return true even though they are not actually valid numeric IP addresses. Actually parsing
+   * numeric IPv6 addresses in all their glory is more than we need here.
+   */
+  private static boolean isNumericIp(String value) {
+    if (value.isEmpty()) {
+      return false;
+    }
+    if (value.contains(":")) {
+      return true; // Every numeric IPv6 address contains a colon and no non-numeric hostname does.
+    }
+    return ASCII_DIGIT.matches(value.charAt(0))
+        && ASCII_DIGIT.matches(value.charAt(value.length() - 1));
+    // Every numeric IPv4 address begins and ends with an ASCII digit.
+  }
+
+  private static final CharMatcher ASCII_DIGIT = CharMatcher.inRange('0', '9');
 }
