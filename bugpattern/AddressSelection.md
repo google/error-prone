@@ -1,6 +1,6 @@
 ---
 title: AddressSelection
-summary: Prefer InetAddress.getAllName to APIs that convert a hostname to a single
+summary: Prefer InetAddress.getAllByName to APIs that convert a hostname to a single
   IP address
 layout: bugpattern
 tags: ''
