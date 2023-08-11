@@ -81,6 +81,7 @@ import com.google.errorprone.bugpatterns.ClassCanBeStatic;
 import com.google.errorprone.bugpatterns.ClassName;
 import com.google.errorprone.bugpatterns.ClassNamedLikeTypeParameter;
 import com.google.errorprone.bugpatterns.ClassNewInstance;
+import com.google.errorprone.bugpatterns.ClosingStandardOutputStreams;
 import com.google.errorprone.bugpatterns.CollectionToArraySafeParameter;
 import com.google.errorprone.bugpatterns.CollectorShouldNotUseState;
 import com.google.errorprone.bugpatterns.ComparableAndComparator;
@@ -851,6 +852,7 @@ public class BuiltInCheckerSuppliers {
           ClassCanBeStatic.class,
           ClassNewInstance.class,
           CloseableProvides.class,
+          ClosingStandardOutputStreams.class,
           CollectionUndefinedEquality.class,
           CollectorShouldNotUseState.class,
           ComparableAndComparator.class,
