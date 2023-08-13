@@ -627,7 +627,7 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
           // to contain usage in that case, but parameter is always used implicitly
           // For compact canonical constructor parameters don't have record flag so need to
           // check constructor flags (`symbol.owner`) instead
-          if (hasRecordFlag(symbol) || hasRecordFlag(symbol.owner)) {
+          if (hasRecordFlag(symbol.owner)) {
             return null;
           }
           unusedElements.put(symbol, getCurrentPath());

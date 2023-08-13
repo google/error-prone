@@ -1385,7 +1385,7 @@ public class UnusedVariableTest {
     assumeTrue(RuntimeVersion.isAtLeast16());
     helper
         .addSourceLines(
-            "SimpleRecord.java",
+            "SimpleRecord.java", //
             "public record SimpleRecord (Integer foo, Long bar) {}")
         .expectNoDiagnostics()
         .doTest();
