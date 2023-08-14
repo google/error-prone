@@ -649,6 +649,9 @@ Class.newInstance() bypasses exception checking; prefer getDeclaredConstructor()
 __[CloseableProvides](bugpattern/CloseableProvides)__<br>
 Providing Closeable resources makes their lifecycle unclear
 
+__[ClosingStandardOutputStreams](bugpattern/ClosingStandardOutputStreams)__<br>
+Don&#39;t use try-with-resources to manage standard output streams, closing the stream will cause subsequent output to standard output or standard error to be lost
+
 __[CollectionUndefinedEquality](bugpattern/CollectionUndefinedEquality)__<br>
 This type does not have well-defined equals behavior.
 
