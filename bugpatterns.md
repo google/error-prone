@@ -1520,6 +1520,9 @@ A large number of parameters on public APIs should be avoided.
 __[TransientMisuse](bugpattern/TransientMisuse)__<br>
 Static fields are implicitly transient, so the explicit modifier is unnecessary
 
+__[TruthContainsExactlyElementsInUsage](bugpattern/TruthContainsExactlyElementsInUsage)__<br>
+containsExactly is preferred over containsExactlyElementsIn when creating new iterables.
+
 __[TryWithResourcesVariable](bugpattern/TryWithResourcesVariable)__<br>
 This variable is unnecessary, the try-with-resources resource can be a reference to a final or effectively final variable
 
