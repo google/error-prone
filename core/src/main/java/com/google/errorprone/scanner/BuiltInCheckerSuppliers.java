@@ -368,6 +368,7 @@ import com.google.errorprone.bugpatterns.TransientMisuse;
 import com.google.errorprone.bugpatterns.TreeToString;
 import com.google.errorprone.bugpatterns.TruthAssertExpected;
 import com.google.errorprone.bugpatterns.TruthConstantAsserts;
+import com.google.errorprone.bugpatterns.TruthContainsExactlyElementsInUsage;
 import com.google.errorprone.bugpatterns.TruthGetOrDefault;
 import com.google.errorprone.bugpatterns.TruthSelfEquals;
 import com.google.errorprone.bugpatterns.TryFailRefactoring;
@@ -1180,6 +1181,7 @@ public class BuiltInCheckerSuppliers {
           TimeUnitMismatch.class,
           TooManyParameters.class,
           TransientMisuse.class,
+          TruthContainsExactlyElementsInUsage.class,
           TryFailRefactoring.class,
           TryWithResourcesVariable.class,
           TypeParameterNaming.class,
