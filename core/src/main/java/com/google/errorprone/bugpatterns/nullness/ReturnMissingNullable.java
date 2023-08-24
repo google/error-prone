@@ -257,6 +257,18 @@ public class ReturnMissingNullable extends BugChecker implements CompilationUnit
       }
 
       void doVisitMethod(MethodTree tree) {
+        if (beingConservative) {
+          /*
+           * In practice, we don't see any of the cases in which a compliant implementation of a
+           * method like Map.get would never return null. But we do see cases in which people have
+           * implemented Map.get to handle non-existent keys by returning "new Foo()" or by throwing
+           * IllegalArgumentException. Presumably, users of such methods would not be thrilled if we
+           * added @Nullable to their return types, given the effort that the types have gone to not
+           * to ever return null. So we avoid making such changes in conservative mode.
+           */
+          return;
+        }
+
         MethodSymbol possibleOverride = getSymbol(tree);
 
         /*

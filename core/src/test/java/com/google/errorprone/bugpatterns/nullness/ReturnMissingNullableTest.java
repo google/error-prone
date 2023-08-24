@@ -585,44 +585,6 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
-  public void emptyToNull() {
-    createCompilationTestHelper()
-        .addSourceLines(
-            "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "import static com.google.common.base.Strings.emptyToNull;",
-            "class LiteralNullReturnTest {",
-            "  public String getMessage(String s) {",
-            "    // BUG: Diagnostic contains: @Nullable",
-            "    return emptyToNull(s);",
-            "  }",
-            "}")
-        .doTest();
-  }
-
-  @Test
-  public void implementsMap() {
-    createCompilationTestHelper()
-        .addSourceLines(
-            "NotMap.java", //
-            "interface NotMap {",
-            "  Integer get(String o);",
-            "}")
-        .addSourceLines(
-            "MyMap.java",
-            "import java.util.Map;",
-            "interface MyMap<K, V> extends Map<K, V>, NotMap {",
-            "  // BUG: Diagnostic contains: @Nullable",
-            "  @Override V get(Object o);",
-            "  // BUG: Diagnostic contains: @Nullable",
-            "  @Override V replace(K k, V v);",
-            "  @Override boolean replace(K k, V expect, V update);",
-            "  @Override Integer get(String o);",
-            "}")
-        .doTest();
-  }
-
-  @Test
   public void implementsMapButAlwaysThrows() {
     createCompilationTestHelper()
         .addSourceLines(
@@ -1666,6 +1628,18 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
+  public void negativeCases_implementsMapButRunningInConservativeMode() {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "MyMap.java",
+            "import java.util.Map;",
+            "interface MyMap<K, V> extends Map<K, V> {",
+            "  @Override V get(Object o);",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void returnSameSymbolDifferentObjectInsideIfNull() {
     createCompilationTestHelper()
         .addSourceLines(
@@ -1990,6 +1964,28 @@ public class ReturnMissingNullableTest {
             "  }",
             "}")
         .doTest(TEXT_MATCH);
+  }
+
+  @Test
+  public void aggressive_implementsMap() {
+    createAggressiveCompilationTestHelper()
+        .addSourceLines(
+            "NotMap.java", //
+            "interface NotMap {",
+            "  Integer get(String o);",
+            "}")
+        .addSourceLines(
+            "MyMap.java",
+            "import java.util.Map;",
+            "interface MyMap<K, V> extends Map<K, V>, NotMap {",
+            "  // BUG: Diagnostic contains: @Nullable",
+            "  @Override V get(Object o);",
+            "  // BUG: Diagnostic contains: @Nullable",
+            "  @Override V replace(K k, V v);",
+            "  @Override boolean replace(K k, V expect, V update);",
+            "  @Override Integer get(String o);",
+            "}")
+        .doTest();
   }
 
   private CompilationTestHelper createCompilationTestHelper() {
