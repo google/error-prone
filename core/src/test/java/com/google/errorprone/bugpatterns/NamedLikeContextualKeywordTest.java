@@ -46,7 +46,6 @@ public final class NamedLikeContextualKeywordTest {
             "    foo = new NullPointerException(\"uh oh\");",
             "  }",
             "}")
-        .setArgs(ImmutableList.of("-XepOpt:NamedLikeContextualKeyword:EnableMethodNames"))
         .doTest();
   }
 
@@ -65,7 +64,6 @@ public final class NamedLikeContextualKeywordTest {
             "    foo = new NullPointerException(\"uh oh\");",
             "  }",
             "}")
-        .setArgs(ImmutableList.of("-XepOpt:NamedLikeContextualKeyword:EnableMethodNames"))
         .doTest();
   }
 
@@ -85,7 +83,6 @@ public final class NamedLikeContextualKeywordTest {
             "    foo = new NullPointerException(\"uh oh\");",
             "  }",
             "}")
-        .setArgs("-XepOpt:NamedLikeContextualKeyword:EnableMethodNames")
         .doTest();
   }
 
@@ -105,7 +102,6 @@ public final class NamedLikeContextualKeywordTest {
             "    foo = new NullPointerException(\"uh oh\");",
             "  }",
             "}")
-        .setArgs("-XepOpt:NamedLikeContextualKeyword:EnableMethodNames")
         .doTest();
   }
 
@@ -126,7 +122,6 @@ public final class NamedLikeContextualKeywordTest {
             "    foo = new NullPointerException(\"uh oh\");",
             "  }",
             "}")
-        .setArgs("-XepOpt:NamedLikeContextualKeyword:EnableMethodNames")
         .doTest();
   }
 
@@ -140,7 +135,6 @@ public final class NamedLikeContextualKeywordTest {
             "  public module() {",
             "  }",
             "}")
-        .setArgs(ImmutableList.of("-XepOpt:NamedLikeContextualKeyword:EnableClassNames"))
         .doTest();
   }
 
@@ -161,10 +155,6 @@ public final class NamedLikeContextualKeywordTest {
             "    };",
             "  }",
             "}")
-        .setArgs(
-            ImmutableList.of(
-                "-XepOpt:NamedLikeContextualKeyword:EnableMethodNames",
-                "-XepOpt:NamedLikeContextualKeyword:EnableClassNames"))
         .doTest();
   }
 
@@ -188,10 +178,6 @@ public final class NamedLikeContextualKeywordTest {
             "  @SuppressWarnings(\"NamedLikeContextualKeyword\")",
             "  void yield();",
             "}")
-        .setArgs(
-            ImmutableList.of(
-                "-XepOpt:NamedLikeContextualKeyword:EnableMethodNames",
-                "-XepOpt:NamedLikeContextualKeyword:EnableClassNames"))
         .doTest();
   }
 
@@ -215,10 +201,6 @@ public final class NamedLikeContextualKeywordTest {
             "  @SuppressWarnings(\"NamedLikeContextualKeyword\")",
             "  void yield() {}",
             "}")
-        .setArgs(
-            ImmutableList.of(
-                "-XepOpt:NamedLikeContextualKeyword:EnableMethodNames",
-                "-XepOpt:NamedLikeContextualKeyword:EnableClassNames"))
         .doTest();
   }
 
@@ -243,10 +225,6 @@ public final class NamedLikeContextualKeywordTest {
             "  @SuppressWarnings(\"NamedLikeContextualKeyword\")",
             "  void yield() {}",
             "}")
-        .setArgs(
-            ImmutableList.of(
-                "-XepOpt:NamedLikeContextualKeyword:EnableMethodNames",
-                "-XepOpt:NamedLikeContextualKeyword:EnableClassNames"))
         .doTest();
   }
 
@@ -263,12 +241,7 @@ public final class NamedLikeContextualKeywordTest {
             "    yield();",
             "  }",
             "}")
-        .setArgs(
-            ImmutableList.of(
-                "--release",
-                "11",
-                "-XepOpt:NamedLikeContextualKeyword:EnableMethodNames",
-                "-XepOpt:NamedLikeContextualKeyword:EnableClassNames"))
+        .setArgs(ImmutableList.of("--release", "11"))
         .doTest();
   }
 
@@ -291,12 +264,7 @@ public final class NamedLikeContextualKeywordTest {
             "    }",
             "  }",
             "}")
-        .setArgs(
-            ImmutableList.of(
-                "--release",
-                "11",
-                "-XepOpt:NamedLikeContextualKeyword:EnableMethodNames",
-                "-XepOpt:NamedLikeContextualKeyword:EnableClassNames"))
+        .setArgs(ImmutableList.of("--release", "11"))
         .doTest();
   }
 
@@ -315,12 +283,7 @@ public final class NamedLikeContextualKeywordTest {
             "    }",
             "  }",
             "}")
-        .setArgs(
-            ImmutableList.of(
-                "--release",
-                "11",
-                "-XepOpt:NamedLikeContextualKeyword:EnableMethodNames",
-                "-XepOpt:NamedLikeContextualKeyword:EnableClassNames"))
+        .setArgs(ImmutableList.of("--release", "11"))
         .doTest();
   }
 }

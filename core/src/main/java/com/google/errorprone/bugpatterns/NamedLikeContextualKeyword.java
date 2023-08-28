@@ -29,7 +29,6 @@ import static com.google.errorprone.util.ASTHelpers.streamSuperMethods;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -47,7 +46,6 @@ import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import java.util.Collections;
-import javax.inject.Inject;
 
 /**
  * Warns on classes or methods being named similarly to contextual keywords, or invoking such
@@ -87,23 +85,8 @@ public final class NamedLikeContextualKeyword extends BugChecker
           "com.google.auto.value.processor.AutoValueProcessor",
           "com.google.auto.value.processor.AutoOneOfProcessor");
 
-  private final boolean enableMethodNames;
-  private final boolean enableClassNames;
-
-  @Inject
-  NamedLikeContextualKeyword(ErrorProneFlags flags) {
-    this.enableMethodNames =
-        flags.getBoolean("NamedLikeContextualKeyword:EnableMethodNames").orElse(false);
-    this.enableClassNames =
-        flags.getBoolean("NamedLikeContextualKeyword:EnableClassNames").orElse(false);
-  }
-
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
-    if (!this.enableMethodNames) {
-      return NO_MATCH;
-    }
-
     MethodSymbol methodSymbol = ASTHelpers.getSymbol(tree);
 
     // Don't alert if an @Auto... class (safe since reference always qualified).
@@ -122,10 +105,6 @@ public final class NamedLikeContextualKeyword extends BugChecker
 
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
-    if (!this.enableClassNames) {
-      return NO_MATCH;
-    }
-
     if (DISALLOWED_CLASS_NAMES.contains(tree.getSimpleName().toString())) {
       return describeMatch(tree);
     }
