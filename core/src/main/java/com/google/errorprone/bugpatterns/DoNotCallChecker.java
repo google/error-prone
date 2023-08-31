@@ -323,7 +323,11 @@ public class DoNotCallChecker extends BugChecker
 
       private void handleDoNotCall(ExpressionTree tree, Symbol symbol, VisitorState state) {
         String doNotCall = getDoNotCallValue(symbol);
-        StringBuilder message = new StringBuilder("This method should not be called");
+        StringBuilder message =
+            new StringBuilder(symbol.owner.toString())
+                .append('.')
+                .append(symbol.toString())
+                .append(" should not be called");
         if (doNotCall.isEmpty()) {
           message.append(", see its documentation for details.");
         } else {
