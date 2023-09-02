@@ -129,7 +129,8 @@ class NullnessUtils {
 
   static boolean isInNullMarkedScope(Symbol sym, VisitorState state) {
     for (; sym != null; sym = sym.getEnclosingElement()) {
-      if (hasAnnotation(sym, "org.jspecify.nullness.NullMarked", state)) {
+      if (hasAnnotation(sym, "org.jspecify.annotations.NullMarked", state)
+          || hasAnnotation(sym, "org.jspecify.nullness.NullMarked", state)) {
         return true;
       }
     }
@@ -353,7 +354,7 @@ class NullnessUtils {
             .orElse(
                 state.isAndroidCompatible()
                     ? "androidx.annotation.Nullable"
-                    : "org.jspecify.nullness.Nullable");
+                    : "org.jspecify.annotations.Nullable");
     if (sym != null) {
       ClassSymbol classSym = (ClassSymbol) sym;
       if (classSym.isAnnotationType()) {
