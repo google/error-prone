@@ -320,6 +320,7 @@ import com.google.errorprone.bugpatterns.RemoveUnusedImports;
 import com.google.errorprone.bugpatterns.RequiredModifiersChecker;
 import com.google.errorprone.bugpatterns.RestrictedApiChecker;
 import com.google.errorprone.bugpatterns.RethrowReflectiveOperationExceptionAsLinkageError;
+import com.google.errorprone.bugpatterns.ReturnAtTheEndOfVoidFunction;
 import com.google.errorprone.bugpatterns.ReturnValueIgnored;
 import com.google.errorprone.bugpatterns.ReturnsNullCollection;
 import com.google.errorprone.bugpatterns.RobolectricShadowDirectlyOn;
@@ -1013,6 +1014,7 @@ public class BuiltInCheckerSuppliers {
           ReachabilityFenceUsage.class,
           ReferenceEquality.class,
           RethrowReflectiveOperationExceptionAsLinkageError.class,
+          ReturnAtTheEndOfVoidFunction.class,
           ReturnFromVoid.class,
           RobolectricShadowDirectlyOn.class,
           RxReturnValueIgnored.class,
