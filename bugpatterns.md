@@ -1132,6 +1132,9 @@ Comparison using reference equality instead of value equality
 __[RethrowReflectiveOperationExceptionAsLinkageError](bugpattern/RethrowReflectiveOperationExceptionAsLinkageError)__<br>
 Prefer LinkageError for rethrowing ReflectiveOperationException as unchecked
 
+__[ReturnAtTheEndOfVoidFunction](bugpattern/ReturnAtTheEndOfVoidFunction)__<br>
+&#96;return;&#96; is unnecessary at the end of void methods and constructors.
+
 __[ReturnFromVoid](bugpattern/ReturnFromVoid)__<br>
 Void methods should not have a @return tag.
 
