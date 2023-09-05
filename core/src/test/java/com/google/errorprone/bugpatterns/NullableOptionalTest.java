@@ -79,7 +79,7 @@ public final class NullableOptionalTest {
         .addSourceLines(
             "Test.java",
             "import java.util.Optional;",
-            "import org.jspecify.nullness.Nullable;",
+            "import org.jspecify.annotations.Nullable;",
             "final class Test {",
             " @Nullable",
             " // BUG: Diagnostic contains:",
@@ -136,7 +136,7 @@ public final class NullableOptionalTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import org.jspecify.nullness.Nullable;",
+            "import org.jspecify.annotations.Nullable;",
             "final class Test {",
             " @Nullable",
             " private Object foo() {",
@@ -151,7 +151,7 @@ public final class NullableOptionalTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import org.jspecify.nullness.Nullable;",
+            "import org.jspecify.annotations.Nullable;",
             "final class Test {",
             " private void foo(@Nullable Object object) {}",
             "}")

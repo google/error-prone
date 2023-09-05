@@ -334,7 +334,7 @@ public class VoidMissingNullableTest {
         .addSourceLines(
             "Test.java",
             "import javax.annotation.Nullable;",
-            "import org.jspecify.nullness.NullMarked;",
+            "import org.jspecify.annotations.NullMarked;",
             "@NullMarked",
             "class Test {",
             "  // BUG: Diagnostic contains: @Nullable",

@@ -248,7 +248,7 @@ public final class NullArgumentForNonNullParameter extends BugChecker
       if (hasAnnotation(sym, "com.google.protobuf.Internal$ProtoNonnullApi", state)) {
         return true;
       }
-      if (hasAnnotation(sym, "org.jspecify.nullness.NullMarked", state)
+      if (hasAnnotation(sym, "org.jspecify.annotations.NullMarked", state)
           && weTrustNullMarkedOn(sym, state)) {
         return true;
       }

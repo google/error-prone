@@ -129,7 +129,7 @@ class NullnessUtils {
 
   static boolean isInNullMarkedScope(Symbol sym, VisitorState state) {
     for (; sym != null; sym = sym.getEnclosingElement()) {
-      if (hasAnnotation(sym, "org.jspecify.nullness.NullMarked", state)) {
+      if (hasAnnotation(sym, "org.jspecify.annotations.NullMarked", state)) {
         return true;
       }
     }
@@ -353,7 +353,7 @@ class NullnessUtils {
             .orElse(
                 state.isAndroidCompatible()
                     ? "androidx.annotation.Nullable"
-                    : "org.jspecify.nullness.Nullable");
+                    : "org.jspecify.annotations.Nullable");
     if (sym != null) {
       ClassSymbol classSym = (ClassSymbol) sym;
       if (classSym.isAnnotationType()) {
@@ -381,8 +381,8 @@ class NullnessUtils {
       case "org.checkerframework.checker.nullness.qual.Nullable":
       case "org.jspecify.annotations.NonNull":
       case "org.jspecify.annotations.Nullable":
-      case "org.jspecify.nullness.NonNull":
-      case "org.jspecify.nullness.Nullable":
+      case "org.jspecify.annotations.NonNull":
+      case "org.jspecify.annotations.Nullable":
         return true;
       default:
         // TODO(cpovirk): Detect type-use-ness from the class symbol if it's available?
