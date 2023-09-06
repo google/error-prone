@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,6 +26,8 @@ import org.junit.runners.JUnit4;
 public final class UnnecessaryAsyncTest {
   private final CompilationTestHelper helper =
       CompilationTestHelper.newInstance(UnnecessaryAsync.class, getClass());
+  private final BugCheckerRefactoringTestHelper refactoring =
+      BugCheckerRefactoringTestHelper.newInstance(UnnecessaryAsync.class, getClass());
 
   @Test
   public void positive() {
@@ -38,6 +41,100 @@ public final class UnnecessaryAsyncTest {
             "    var ai = new AtomicInteger();",
             "    ai.set(1);",
             "    return ai.get();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void refactoringInteger() {
+    refactoring
+        .addInputLines(
+            "Test.java",
+            "import java.util.concurrent.atomic.AtomicInteger;",
+            "class Test {",
+            "  int test() {",
+            "    var ai = new AtomicInteger();",
+            "    ai.set(1);",
+            "    return ai.get();",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import java.util.concurrent.atomic.AtomicInteger;",
+            "class Test {",
+            "  int test() {",
+            "    int ai = 0;",
+            "    ai = 1;",
+            "    return ai;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void refactoringReference() {
+    refactoring
+        .addInputLines(
+            "Test.java",
+            "import java.util.concurrent.atomic.AtomicReference;",
+            "class Test {",
+            "  String test() {",
+            "    var ar = new AtomicReference<String>(null);",
+            "    ar.compareAndSet(null, \"foo\");",
+            "    return ar.get();",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import java.util.concurrent.atomic.AtomicReference;",
+            "class Test {",
+            "  String test() {",
+            "    String ar = null;",
+            "    ar = \"foo\";",
+            "    return ar;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void refactoring_unfixable_noAttempt() {
+    refactoring
+        .addInputLines(
+            "Test.java",
+            "import java.util.concurrent.atomic.AtomicReference;",
+            "class Test {",
+            "  String test() {",
+            "    var ar = new AtomicReference<String>(null);",
+            "    return ar.toString();",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void refactoring_rawType() {
+    refactoring
+        .addInputLines(
+            "Test.java",
+            "import java.util.concurrent.atomic.AtomicReference;",
+            "class Test {",
+            "  Object test() {",
+            "    var ar = new AtomicReference();",
+            "    ar.set(\"foo\");",
+            "    return ar.get();",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import java.util.concurrent.atomic.AtomicReference;",
+            "class Test {",
+            "  Object test() {",
+            "    Object ar = null;",
+            "    ar = \"foo\";",
+            "    return ar;",
             "  }",
             "}")
         .doTest();
