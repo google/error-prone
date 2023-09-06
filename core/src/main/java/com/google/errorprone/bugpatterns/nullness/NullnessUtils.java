@@ -129,7 +129,9 @@ class NullnessUtils {
 
   static boolean isInNullMarkedScope(Symbol sym, VisitorState state) {
     for (; sym != null; sym = sym.getEnclosingElement()) {
-      if (hasAnnotation(sym, "org.jspecify.annotations.NullMarked", state)) {
+      if (hasAnnotation(sym, "org.jspecify.annotations.NullMarked", state)
+          // We break this string to avoid having it rewritten by Copybara.
+          || hasAnnotation(sym, "org.jspecify.null" + "ness.NullMarked", state)) {
         return true;
       }
     }
@@ -381,8 +383,9 @@ class NullnessUtils {
       case "org.checkerframework.checker.nullness.qual.Nullable":
       case "org.jspecify.annotations.NonNull":
       case "org.jspecify.annotations.Nullable":
-      case "org.jspecify.annotations.NonNull":
-      case "org.jspecify.annotations.Nullable":
+        // We break these strings to avoid having them rewritten by Copybara.
+      case "org.jspecify.null" + "ness.NonNull":
+      case "org.jspecify.null" + "ness.Nullable":
         return true;
       default:
         // TODO(cpovirk): Detect type-use-ness from the class symbol if it's available?
