@@ -32,7 +32,9 @@ import static com.google.errorprone.util.ASTHelpers.shouldKeep;
 import static com.google.errorprone.util.ASTHelpers.stripParentheses;
 
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
@@ -59,6 +61,7 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import java.util.HashSet;
 import java.util.Set;
+import javax.inject.Inject;
 
 /**
  * Checker that recommends annotating a method with {@code @CanIgnoreReturnValue} if the method
@@ -74,8 +77,12 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
 
   private static final String AUTO_VALUE = "com.google.auto.value.AutoValue";
   private static final String IMMUTABLE = "com.google.errorprone.annotations.Immutable";
-  private static final String CRV = "com.google.errorprone.annotations.CheckReturnValue";
   private static final String CIRV = "com.google.errorprone.annotations.CanIgnoreReturnValue";
+  private static final ImmutableSet<String> EXEMPTING_METHOD_ANNOTATIONS =
+      ImmutableSet.of(
+          CIRV,
+          "com.google.errorprone.annotations.CheckReturnValue",
+          "com.google.errorprone.refaster.annotation.AfterTemplate");
 
   private static final Supplier<Type> PROTO_BUILDER =
       VisitorState.memoize(s -> s.getTypeFromString("com.google.protobuf.MessageLite.Builder"));
@@ -83,12 +90,26 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
   private static final ImmutableSet<String> BANNED_METHOD_PREFIXES =
       ImmutableSet.of("get", "is", "has", "new", "clone", "copy");
 
+  private final ImmutableSet<String> exemptingMethodAnnotations;
+
+  @Inject
+  public CanIgnoreReturnValueSuggester(ErrorProneFlags errorProneFlags) {
+    this.exemptingMethodAnnotations =
+        Sets.union(
+                EXEMPTING_METHOD_ANNOTATIONS,
+                errorProneFlags
+                    .getSet("CanIgnoreReturnValue:ExemptingMethodAnnotations")
+                    .orElse(ImmutableSet.of()))
+            .immutableCopy();
+  }
+
   @Override
   public Description matchMethod(MethodTree methodTree, VisitorState state) {
     MethodSymbol methodSymbol = getSymbol(methodTree);
 
-    // if the method is already directly annotated w/ @CRV or @CIRV, bail out
-    if (hasAnnotation(methodSymbol, CRV, state) || hasAnnotation(methodSymbol, CIRV, state)) {
+    // If the method has an exempting annotation, then bail out.
+    if (exemptingMethodAnnotations.stream()
+        .anyMatch(annotation -> ASTHelpers.hasAnnotation(methodSymbol, annotation, state))) {
       return Description.NO_MATCH;
     }
 
