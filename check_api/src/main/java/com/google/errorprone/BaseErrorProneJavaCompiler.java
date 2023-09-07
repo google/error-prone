@@ -227,14 +227,12 @@ public class BaseErrorProneJavaCompiler implements JavaCompiler {
             .customRefactorer()
             .or(
                 () -> {
-                  ScannerSupplier toUse =
-                      ErrorPronePlugins.loadPlugins(scannerSupplier, context)
-                          .applyOverrides(epOptions);
+                  ScannerSupplier toUse = ErrorPronePlugins.loadPlugins(scannerSupplier, context);
                   ImmutableSet<String> namedCheckers = epOptions.patchingOptions().namedCheckers();
                   if (!namedCheckers.isEmpty()) {
                     toUse = toUse.filter(bci -> namedCheckers.contains(bci.canonicalName()));
                   }
-                  return ErrorProneScannerTransformer.create(toUse.get());
+                  return ErrorProneScannerTransformer.create(toUse.applyOverrides(epOptions).get());
                 })
             .get();
 
