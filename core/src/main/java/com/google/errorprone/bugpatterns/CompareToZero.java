@@ -20,6 +20,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
+import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.constValue;
 
 import com.google.common.collect.ImmutableMap;
@@ -74,6 +75,31 @@ public final class CompareToZero extends BugChecker implements MethodInvocationT
 
   private static final Matcher<ExpressionTree> COMPARE_TO =
       anyOf(
+          staticMethod()
+              .onClassAny(
+                  "com.google.common.primitives.Booleans",
+                  "com.google.common.primitives.Chars",
+                  "com.google.common.primitives.Doubles",
+                  "com.google.common.primitives.Floats",
+                  "com.google.common.primitives.Ints",
+                  "com.google.common.primitives.Longs",
+                  "com.google.common.primitives.Shorts",
+                  "com.google.common.primitives.SignedBytes",
+                  "com.google.common.primitives.UnsignedBytes",
+                  "com.google.common.primitives.UnsignedInts",
+                  "com.google.common.primitives.UnsignedLongs",
+                  "com.google.protobuf.util.Durations",
+                  "com.google.protobuf.util.Timestamps",
+                  "java.lang.Boolean",
+                  "java.lang.Byte",
+                  "java.lang.Character",
+                  "java.lang.Double",
+                  "java.lang.Float",
+                  "java.lang.Integer",
+                  "java.lang.Long",
+                  "java.lang.Short",
+                  "java.util.Objects")
+              .named("compare"),
           instanceMethod().onDescendantOf("java.lang.Comparable").named("compareTo"),
           instanceMethod().onDescendantOf("java.util.Comparator").named("compare"));
 
