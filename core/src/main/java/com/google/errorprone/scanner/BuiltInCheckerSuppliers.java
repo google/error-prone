@@ -247,6 +247,7 @@ import com.google.errorprone.bugpatterns.ModifyCollectionInEnhancedForLoop;
 import com.google.errorprone.bugpatterns.ModifySourceCollectionInStream;
 import com.google.errorprone.bugpatterns.ModifyingCollectionWithItself;
 import com.google.errorprone.bugpatterns.MultiVariableDeclaration;
+import com.google.errorprone.bugpatterns.MultimapKeys;
 import com.google.errorprone.bugpatterns.MultipleParallelOrSequentialCalls;
 import com.google.errorprone.bugpatterns.MultipleTopLevelClasses;
 import com.google.errorprone.bugpatterns.MultipleUnaryOperatorsInMethodCall;
@@ -971,6 +972,7 @@ public class BuiltInCheckerSuppliers {
           ModifiedButNotUsed.class,
           ModifyCollectionInEnhancedForLoop.class,
           ModifySourceCollectionInStream.class,
+          MultimapKeys.class,
           MultipleParallelOrSequentialCalls.class,
           MultipleUnaryOperatorsInMethodCall.class,
           MutablePublicArray.class,
