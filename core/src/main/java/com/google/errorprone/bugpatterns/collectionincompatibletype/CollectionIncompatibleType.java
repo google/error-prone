@@ -26,8 +26,8 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MemberReferenceTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
-import com.google.errorprone.bugpatterns.TypeCompatibilityUtils;
-import com.google.errorprone.bugpatterns.TypeCompatibilityUtils.TypeCompatibilityReport;
+import com.google.errorprone.bugpatterns.TypeCompatibility;
+import com.google.errorprone.bugpatterns.TypeCompatibility.TypeCompatibilityReport;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.AbstractCollectionIncompatibleTypeMatcher.MatchResult;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
@@ -72,13 +72,13 @@ public class CollectionIncompatibleType extends BugChecker
   }
 
   private final FixType fixType;
-  private final TypeCompatibilityUtils typeCompatibilityUtils;
+  private final TypeCompatibility typeCompatibility;
 
   @Inject
-  CollectionIncompatibleType(ErrorProneFlags flags) {
+  CollectionIncompatibleType(TypeCompatibility typeCompatibility, ErrorProneFlags flags) {
     this.fixType =
         flags.getEnum("CollectionIncompatibleType:FixType", FixType.class).orElse(FixType.NONE);
-    this.typeCompatibilityUtils = TypeCompatibilityUtils.fromFlags(flags);
+    this.typeCompatibility = typeCompatibility;
   }
 
   @Override
@@ -99,8 +99,7 @@ public class CollectionIncompatibleType extends BugChecker
 
     Types types = state.getTypes();
     TypeCompatibilityReport compatibilityReport =
-        typeCompatibilityUtils.compatibilityOfTypes(
-            result.targetType(), result.sourceType(), state);
+        typeCompatibility.compatibilityOfTypes(result.targetType(), result.sourceType(), state);
     if (compatibilityReport.isCompatible()) {
       return NO_MATCH;
     }

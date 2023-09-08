@@ -35,12 +35,11 @@ import static java.util.stream.Stream.concat;
 
 import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
-import com.google.errorprone.bugpatterns.TypeCompatibilityUtils;
-import com.google.errorprone.bugpatterns.TypeCompatibilityUtils.TypeCompatibilityReport;
+import com.google.errorprone.bugpatterns.TypeCompatibility;
+import com.google.errorprone.bugpatterns.TypeCompatibility.TypeCompatibilityReport;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.suppliers.Supplier;
@@ -144,11 +143,11 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
   private static final Supplier<Type> CORRESPONDENCE =
       typeFromString("com.google.common.truth.Correspondence");
 
-  private final TypeCompatibilityUtils typeCompatibilityUtils;
+  private final TypeCompatibility typeCompatibility;
 
   @Inject
-  TruthIncompatibleType(ErrorProneFlags flags) {
-    this.typeCompatibilityUtils = TypeCompatibilityUtils.fromFlags(flags);
+  TruthIncompatibleType(TypeCompatibility typeCompatibility) {
+    this.typeCompatibility = typeCompatibility;
   }
 
   @Override
@@ -419,7 +418,7 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
   private Stream<Description> checkCompatibility(
       ExpressionTree tree, Type targetType, Type sourceType, VisitorState state) {
     TypeCompatibilityReport compatibilityReport =
-        typeCompatibilityUtils.compatibilityOfTypes(targetType, sourceType, state);
+        typeCompatibility.compatibilityOfTypes(targetType, sourceType, state);
     if (compatibilityReport.isCompatible()) {
       return Stream.empty();
     }
