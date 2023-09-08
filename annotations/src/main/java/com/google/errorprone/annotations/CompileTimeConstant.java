@@ -88,7 +88,7 @@ import java.lang.annotation.Target;
  *
  * <pre>{@code
  * public class C {
- *   \@CompileTimeConstant final String S;
+ *   @CompileTimeConstant final String S;
  *   public C(@CompileTimeConstant String s) {
  *     this.S = s;
  *   }
@@ -103,7 +103,7 @@ import java.lang.annotation.Target;
  *
  * <pre>{@code
  * public class C {
- *   \@CompileTimeConstant String S;
+ *   @CompileTimeConstant String S;
  *   public C(@CompileTimeConstant String s) {
  *     this.S = s;
  *   }
@@ -116,7 +116,7 @@ import java.lang.annotation.Target;
  *
  * <pre>{@code
  * public class C {
- *   \@CompileTimeConstant final String S;
+ *   @CompileTimeConstant final String S;
  *   public C(String s) {
  *     this.S = s;
  *   }
