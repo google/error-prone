@@ -150,6 +150,8 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
   // TODO(ghm): Find a sensible place to dedupe this with UnnecessarilyVisible.
   private static final ImmutableSet<String> ANNOTATIONS_INDICATING_PARAMETERS_SHOULD_BE_CHECKED =
       ImmutableSet.of(
+          "com.google.errorprone.refaster.annotation.AfterTemplate",
+          "com.google.errorprone.refaster.annotation.BeforeTemplate",
           "com.google.inject.Inject",
           "com.google.inject.Provides",
           "com.google.inject.multibindings.ProvidesIntoMap",
