@@ -53,10 +53,12 @@ public final class ErrorProneFlagsTest {
             .parseFlag("-XepOpt:Arg1=tRuE")
             .parseFlag("-XepOpt:Arg2=FaLsE")
             .parseFlag("-XepOpt:Arg3=yes")
+            .parseFlag("-XepOpt:Arg4")
             .build();
     assertThat(flags.getBoolean("Arg1")).hasValue(true);
     assertThat(flags.getBoolean("Arg2")).hasValue(false);
     assertThrows(IllegalArgumentException.class, () -> flags.getBoolean("Arg3"));
+    assertThat(flags.getBoolean("Arg4")).hasValue(true);
     assertThat(flags.getBoolean("absent")).isEmpty();
   }
 
