@@ -22,6 +22,7 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Iterables.size;
 import static com.google.common.collect.Multimaps.asMap;
+import static com.google.common.collect.Sets.union;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.fixes.SuggestedFix.emptyFix;
 import static com.google.errorprone.fixes.SuggestedFixes.replaceIncludingComments;
@@ -152,15 +153,17 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
   /** The set of types exempting a type that is extending or implementing them. */
   private static final ImmutableSet<String> EXEMPTING_SUPER_TYPES = ImmutableSet.of();
 
-  private final ImmutableSet<String> additionalExemptingMethodAnnotations;
+  private final ImmutableSet<String> exemptingMethodAnnotations;
 
   @Inject
   UnusedMethod(ErrorProneFlags errorProneFlags) {
-    this.additionalExemptingMethodAnnotations =
-        errorProneFlags
-            .getList("UnusedMethod:ExemptingMethodAnnotations")
-            .map(ImmutableSet::copyOf)
-            .orElseGet(ImmutableSet::of);
+    this.exemptingMethodAnnotations =
+        union(
+                errorProneFlags
+                    .getSet("UnusedMethod:ExemptingMethodAnnotations")
+                    .orElseGet(ImmutableSet::of),
+                EXEMPTING_METHOD_ANNOTATIONS)
+            .immutableCopy();
   }
 
   @Override
@@ -483,8 +486,7 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
       }
       TypeSymbol tsym = annotationType.tsym;
       String annotationName = tsym.getQualifiedName().toString();
-      if (EXEMPTING_METHOD_ANNOTATIONS.contains(annotationName)
-          || additionalExemptingMethodAnnotations.contains(annotationName)) {
+      if (exemptingMethodAnnotations.contains(annotationName)) {
         return true;
       }
     }
