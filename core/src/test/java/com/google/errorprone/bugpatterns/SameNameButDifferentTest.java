@@ -224,7 +224,6 @@ public final class SameNameButDifferentTest {
             "  }",
             "  class Two {",
             "    class Clash {}",
-            "    // BUG: Diagnostic contains:",
             "    Clash a;",
             "    Clash b;",
             "  }",

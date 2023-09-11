@@ -185,15 +185,16 @@ public final class SameNameButDifferent extends BugChecker implements Compilatio
                     .map(t -> t.getQualifiedName().toString())
                     .collect(joining(", ", "[", "]")));
         SuggestedFix fix = fixBuilder.build();
-        for (List<TreePath> treePaths : trimmedTable.row(simpleName).values()) {
-          for (TreePath treePath : treePaths) {
-            state.reportMatch(
-                buildDescription(treePath.getLeaf()).setMessage(message).addFix(fix).build());
-            if (batchFindings) {
-              break;
-            }
-          }
-        }
+        trimmedTable.row(simpleName).values().stream()
+            .flatMap(List::stream)
+            .limit(batchFindings ? 1 : Long.MAX_VALUE)
+            .forEach(
+                treePath ->
+                    state.reportMatch(
+                        buildDescription(treePath.getLeaf())
+                            .setMessage(message)
+                            .addFix(fix)
+                            .build()));
       }
     }
     return NO_MATCH;
