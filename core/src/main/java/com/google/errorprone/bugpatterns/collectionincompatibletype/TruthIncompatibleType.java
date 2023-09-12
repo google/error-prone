@@ -35,6 +35,7 @@ import static java.util.stream.Stream.concat;
 
 import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -95,6 +96,16 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
           .namedAnyOf(
               "contains", "containsExactly", "doesNotContain", "containsAnyOf", "containsNoneOf");
 
+  private static final Matcher<ExpressionTree> IS_ANY_OF =
+      instanceMethod()
+          .onDescendantOf("com.google.common.truth.Subject")
+          .namedAnyOf("isAnyOf", "isNoneOf");
+
+  private static final Matcher<ExpressionTree> IS_IN =
+      instanceMethod()
+          .onDescendantOf("com.google.common.truth.Subject")
+          .namedAnyOf("isIn", "isNotIn");
+
   private static final Matcher<ExpressionTree> VECTOR_CONTAINS =
       instanceMethod()
           .onDescendantOfAny(
@@ -144,16 +155,21 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
       typeFromString("com.google.common.truth.Correspondence");
 
   private final TypeCompatibility typeCompatibility;
+  private final boolean flagMoreCases;
 
   @Inject
-  TruthIncompatibleType(TypeCompatibility typeCompatibility) {
+  TruthIncompatibleType(TypeCompatibility typeCompatibility, ErrorProneFlags flags) {
     this.typeCompatibility = typeCompatibility;
+
+    this.flagMoreCases = flags.getBoolean("TruthIncompatibleType:FlagMoreCases").orElse(true);
   }
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     Streams.concat(
             matchEquality(tree, state),
+            matchIsAnyOf(tree, state),
+            matchIsIn(tree, state),
             matchVectorContains(tree, state),
             matchArrayContains(tree, state),
             matchScalarContains(tree, state),
@@ -190,6 +206,38 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
     if (isNumericType(sourceType, state) && isNumericType(targetType, state)) {
       return Stream.of();
     }
+    return checkCompatibility(getOnlyElement(tree.getArguments()), targetType, sourceType, state);
+  }
+
+  private Stream<Description> matchIsAnyOf(MethodInvocationTree tree, VisitorState state) {
+    if (!flagMoreCases || !IS_ANY_OF.matches(tree, state)) {
+      return Stream.empty();
+    }
+    ExpressionTree receiver = getReceiver(tree);
+    if (!START_OF_ASSERTION.matches(receiver, state)) {
+      return Stream.empty();
+    }
+    Type targetType =
+        getType(ignoringCasts(getOnlyElement(((MethodInvocationTree) receiver).getArguments())));
+    return matchScalarContains(tree, targetType, state);
+  }
+
+  private Stream<Description> matchIsIn(MethodInvocationTree tree, VisitorState state) {
+    if (!flagMoreCases || !IS_IN.matches(tree, state)) {
+      return Stream.empty();
+    }
+    ExpressionTree receiver = getReceiver(tree);
+    if (!START_OF_ASSERTION.matches(receiver, state)) {
+      return Stream.empty();
+    }
+
+    Type targetType =
+        getType(ignoringCasts(getOnlyElement(((MethodInvocationTree) receiver).getArguments())));
+    Type sourceType =
+        getIterableTypeArg(
+            getType(getOnlyElement(tree.getArguments())),
+            getOnlyElement(tree.getArguments()),
+            state);
     return checkCompatibility(getOnlyElement(tree.getArguments()), targetType, sourceType, state);
   }
 
@@ -241,13 +289,16 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
     if (!START_OF_ASSERTION.matches(receiver, state)) {
       return Stream.empty();
     }
-
-    Tree argument = ignoringCasts(getOnlyElement(((MethodInvocationTree) receiver).getArguments()));
     Type targetType =
         getIterableTypeArg(
             getOnlyElement(getSymbol((MethodInvocationTree) receiver).getParameters()).type,
-            argument,
+            ignoringCasts(getOnlyElement(((MethodInvocationTree) receiver).getArguments())),
             state);
+    return matchScalarContains(tree, targetType, state);
+  }
+
+  private Stream<Description> matchScalarContains(
+      MethodInvocationTree tree, Type targetType, VisitorState state) {
     MethodSymbol methodSymbol = getSymbol(tree);
     return Streams.mapWithIndex(
             tree.getArguments().stream(),

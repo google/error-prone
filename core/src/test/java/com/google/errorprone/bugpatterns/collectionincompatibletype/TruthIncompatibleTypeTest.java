@@ -16,13 +16,24 @@
 
 package com.google.errorprone.bugpatterns.collectionincompatibletype;
 
+import static com.google.common.collect.ImmutableList.toImmutableList;
+import static com.google.common.truth.TruthJUnit.assume;
+import static java.lang.String.format;
+import static java.util.Arrays.stream;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.truth.Subject;
 import com.google.errorprone.CompilationTestHelper;
+import com.google.testing.junit.testparameterinjector.TestParameter;
+import com.google.testing.junit.testparameterinjector.TestParameter.TestParameterValuesProvider;
+import com.google.testing.junit.testparameterinjector.TestParameterInjector;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 
 /** {@link TruthIncompatibleType}Test */
-@RunWith(JUnit4.class)
+@RunWith(TestParameterInjector.class)
 public class TruthIncompatibleTypeTest {
 
   private final CompilationTestHelper compilationHelper =
@@ -48,7 +59,7 @@ public class TruthIncompatibleTypeTest {
   }
 
   @Test
-  public void assume() {
+  public void assumeTypeCheck() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -558,5 +569,57 @@ public class TruthIncompatibleTypeTest {
             "  }",
             "}")
         .doTest();
+  }
+
+  @Test
+  public void subjectExhaustiveness(
+      @TestParameter(valuesProvider = SubjectMethods.class) Method method) {
+    // TODO(ghm): isNotSameInstanceAs might be worth flagging, but the check can be even stricter.
+    assume().that(method.getName()).isNoneOf("isSameInstanceAs", "isNotSameInstanceAs");
+
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.truth.Truth.assertThat;",
+            "import com.google.common.collect.ImmutableList;",
+            "class Test {",
+            "  public void test(String a, Long b) {",
+            "    // BUG: Diagnostic contains:",
+            getOffensiveLine(method),
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  private static String getOffensiveLine(Method method) {
+    if (stream(method.getParameterTypes()).allMatch(p -> p.equals(Iterable.class))) {
+      return format("    assertThat(a).%s(ImmutableList.of(b));", method.getName());
+    } else if (stream(method.getParameterTypes()).allMatch(p -> p.equals(Object.class))) {
+      return format("    assertThat(a).%s(b);", method.getName());
+    } else if (stream(method.getParameterTypes())
+        .allMatch(p -> p.equals(Object.class) || p.isArray())) {
+      return format("    assertThat(a).%s(b, b, b);", method.getName());
+    } else if (stream(method.getParameterTypes()).allMatch(Class::isArray)) {
+      return format("    assertThat(a).%s(b);", method.getName());
+    } else {
+      throw new AssertionError();
+    }
+  }
+
+  private static final class SubjectMethods implements TestParameterValuesProvider {
+    @Override
+    public ImmutableList<Method> provideValues() {
+      return stream(Subject.class.getDeclaredMethods())
+          .filter(
+              m ->
+                  Modifier.isPublic(m.getModifiers())
+                      && !m.getName().equals("equals")
+                      && m.getParameterCount() > 0
+                      && (stream(m.getParameterTypes()).allMatch(p -> p.equals(Iterable.class))
+                          || stream(m.getParameterTypes())
+                              .allMatch(p -> p.equals(Object.class) || p.isArray())
+                          || stream(m.getParameterTypes()).allMatch(Class::isArray)))
+          .collect(toImmutableList());
+    }
   }
 }
