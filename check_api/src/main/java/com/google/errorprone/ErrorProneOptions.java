@@ -210,8 +210,8 @@ public class ErrorProneOptions {
     this.ignoreLargeCodeGenerators = ignoreLargeCodeGenerators;
   }
 
-  public String[] getRemainingArgs() {
-    return remainingArgs.toArray(new String[remainingArgs.size()]);
+  public ImmutableList<String> getRemainingArgs() {
+    return remainingArgs;
   }
 
   public ImmutableMap<String, Severity> getSeverityMap() {

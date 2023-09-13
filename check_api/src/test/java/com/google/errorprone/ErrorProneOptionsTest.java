@@ -46,7 +46,7 @@ public class ErrorProneOptionsTest {
   public void nonErrorProneFlagsPlacedInRemainingArgs() {
     String[] args = {"-nonErrorProneFlag", "value"};
     ErrorProneOptions options = ErrorProneOptions.processArgs(args);
-    assertThat(options.getRemainingArgs()).isEqualTo(args);
+    assertThat(options.getRemainingArgs()).containsExactlyElementsIn(args);
   }
 
   @Test
@@ -111,7 +111,7 @@ public class ErrorProneOptionsTest {
     };
     ErrorProneOptions options = ErrorProneOptions.processArgs(args);
     String[] expectedRemainingArgs = {"-classpath", "/this/is/classpath", "-verbose"};
-    assertThat(options.getRemainingArgs()).isEqualTo(expectedRemainingArgs);
+    assertThat(options.getRemainingArgs()).containsExactlyElementsIn(expectedRemainingArgs);
     ImmutableMap<String, Severity> expectedSeverityMap =
         ImmutableMap.<String, Severity>builder()
             .put("Check1", Severity.WARN)

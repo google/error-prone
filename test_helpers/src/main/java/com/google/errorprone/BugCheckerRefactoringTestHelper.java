@@ -294,7 +294,7 @@ public class BugCheckerRefactoringTestHelper {
                 new PrintWriter(out, true),
                 FileManagers.testFileManager(),
                 diagnosticsCollector,
-                ImmutableList.copyOf(errorProneOptions.getRemainingArgs()),
+                errorProneOptions.getRemainingArgs(),
                 /* classes= */ null,
                 files,
                 context);
