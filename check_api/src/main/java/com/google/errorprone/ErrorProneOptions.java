@@ -24,12 +24,14 @@ import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
 import com.google.errorprone.apply.ImportOrganizer;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -469,25 +471,7 @@ public class ErrorProneOptions {
             }
           } else if (arg.startsWith(PATCH_CHECKS_PREFIX)) {
             String remaining = arg.substring(PATCH_CHECKS_PREFIX.length());
-            if (remaining.startsWith("refaster:")) {
-              // Refaster rule, load from InputStream at file
-              builder
-                  .patchingOptionsBuilder()
-                  .customRefactorer(
-                      () -> {
-                        String path = remaining.substring("refaster:".length());
-                        try (InputStream in =
-                                Files.newInputStream(FileSystems.getDefault().getPath(path));
-                            ObjectInputStream ois = new ObjectInputStream(in)) {
-                          return (CodeTransformer) ois.readObject();
-                        } catch (IOException | ClassNotFoundException e) {
-                          throw new RuntimeException("Can't load Refaster rule from " + path, e);
-                        }
-                      });
-            } else {
-              Iterable<String> checks = Splitter.on(',').trimResults().split(remaining);
-              builder.patchingOptionsBuilder().namedCheckers(ImmutableSet.copyOf(checks));
-            }
+            configurePatchChecks(builder, remaining);
           } else if (arg.startsWith(PATCH_IMPORT_ORDER_PREFIX)) {
             String remaining = arg.substring(PATCH_IMPORT_ORDER_PREFIX.length());
             ImportOrganizer importOrganizer = ImportOrderParser.getImportOrganizer(remaining);
@@ -506,6 +490,38 @@ public class ErrorProneOptions {
     }
 
     return builder.build(remainingArgs.build());
+  }
+
+  private static void configurePatchChecks(Builder builder, String arg) {
+    List<Supplier<CodeTransformer>> customCodeTransformers = new ArrayList<>();
+    ImmutableSet.Builder<String> namedCheckers = ImmutableSet.builder();
+    for (String check : Splitter.on(',').trimResults().split(arg)) {
+      if (check.startsWith("refaster:")) {
+        customCodeTransformers.add(
+            createRefasterCodeTransformerLoader(check.substring("refaster:".length())));
+      } else {
+        namedCheckers.add(check);
+      }
+    }
+    builder.patchingOptionsBuilder().namedCheckers(namedCheckers.build());
+    if (!customCodeTransformers.isEmpty())
+      builder
+          .patchingOptionsBuilder()
+          .customRefactorer(
+              () ->
+                  CompositeCodeTransformer.compose(
+                      Iterables.transform(customCodeTransformers, Supplier::get)));
+  }
+
+  private static Supplier<CodeTransformer> createRefasterCodeTransformerLoader(String path) {
+    return () -> {
+      try (InputStream in = Files.newInputStream(FileSystems.getDefault().getPath(path));
+          ObjectInputStream ois = new ObjectInputStream(in)) {
+        return (CodeTransformer) ois.readObject();
+      } catch (IOException | ClassNotFoundException e) {
+        throw new RuntimeException("Can't load Refaster rule from " + path, e);
+      }
+    };
   }
 
   /**
