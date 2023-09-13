@@ -503,7 +503,7 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
 
           @Override
           public Tree visitTypeCast(TypeCastTree node, Void unused) {
-            return node.getExpression().accept(this, null);
+            return getType(node).isPrimitive() ? node : node.getExpression().accept(this, null);
           }
 
           @Override

@@ -572,6 +572,20 @@ public class TruthIncompatibleTypeTest {
   }
 
   @Test
+  public void casts() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.truth.Truth.assertThat;",
+            "public class Test {",
+            "  public void f(int a, long b, long c) {",
+            "    assertThat((long) a).isAnyOf(b, c);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void subjectExhaustiveness(
       @TestParameter(valuesProvider = SubjectMethods.class) Method method) {
     // TODO(ghm): isNotSameInstanceAs might be worth flagging, but the check can be even stricter.
