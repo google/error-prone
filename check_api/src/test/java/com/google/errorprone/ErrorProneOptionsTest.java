@@ -240,9 +240,6 @@ public class ErrorProneOptionsTest {
   public void throwsExceptionWithBadPatchArgs() {
     assertThrows(
         InvalidCommandLineOptionException.class,
-        () -> ErrorProneOptions.processArgs(new String[] {"-XepPatchLocation:IN_PLACE"}));
-    assertThrows(
-        InvalidCommandLineOptionException.class,
         () ->
             ErrorProneOptions.processArgs(new String[] {"-XepPatchChecks:FooBar,MissingOverride"}));
   }
@@ -255,6 +252,24 @@ public class ErrorProneOptionsTest {
     assertThat(options.patchingOptions().doRefactor()).isTrue();
     assertThat(options.patchingOptions().inPlace()).isTrue();
     assertThat(options.patchingOptions().customRefactorer()).isPresent();
+  }
+
+  @Test
+  public void understandsEmptySetOfNamedCheckers() {
+    ErrorProneOptions options =
+        ErrorProneOptions.processArgs(new String[] {"-XepPatchLocation:IN_PLACE"});
+    assertThat(options.patchingOptions().doRefactor()).isTrue();
+    assertThat(options.patchingOptions().inPlace()).isTrue();
+    assertThat(options.patchingOptions().namedCheckers()).isEmpty();
+    assertThat(options.patchingOptions().customRefactorer()).isAbsent();
+
+    options =
+        ErrorProneOptions.processArgs(
+            new String[] {"-XepPatchLocation:IN_PLACE", "-XepPatchChecks:"});
+    assertThat(options.patchingOptions().doRefactor()).isTrue();
+    assertThat(options.patchingOptions().inPlace()).isTrue();
+    assertThat(options.patchingOptions().namedCheckers()).isEmpty();
+    assertThat(options.patchingOptions().customRefactorer()).isAbsent();
   }
 
   @Test
