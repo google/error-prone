@@ -99,6 +99,7 @@ import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.BiPredicate;
@@ -269,8 +270,12 @@ public abstract class BugChecker implements Suppressible, Serializable {
   }
 
   private boolean isSuppressed(SuppressWarnings suppression) {
-    return suppression != null
-        && !Collections.disjoint(Arrays.asList(suppression.value()), allNames());
+    if (suppression == null || !supportsSuppressWarnings()) {
+      return false;
+    }
+
+    List<String> suppressions = Arrays.asList(suppression.value());
+    return suppressions.contains("all") || !Collections.disjoint(suppressions, allNames());
   }
 
   /**

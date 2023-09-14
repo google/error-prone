@@ -85,7 +85,8 @@ public class SuppressionInfo {
       return SuppressedState.SUPPRESSED;
     }
     if (suppressible.supportsSuppressWarnings()
-        && !Collections.disjoint(suppressible.allNames(), suppressWarningsStrings)) {
+        && (suppressWarningsStrings.contains("all")
+            || !Collections.disjoint(suppressible.allNames(), suppressWarningsStrings))) {
       return SuppressedState.SUPPRESSED;
     }
     if (suppressible.suppressedByAnyOf(customSuppressions, state)) {
