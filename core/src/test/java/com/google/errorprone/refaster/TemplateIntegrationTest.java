@@ -374,4 +374,9 @@ public class TemplateIntegrationTest extends CompilerBasedTest {
   public void typeArgumentsMethodInvocation() throws IOException {
     runTest("TypeArgumentsMethodInvocationTemplate");
   }
+
+  @Test
+  public void onlyBeforeSimpleReturnTemplate() throws IOException {
+    runTest("OnlyBeforeSimpleReturnTemplate");
+  }
 }

@@ -28,6 +28,7 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.DoWhileLoopTree;
 import com.sun.source.tree.IfTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.PackageTree;
 import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.SynchronizedTree;
 import com.sun.source.tree.Tree;
@@ -98,7 +99,7 @@ abstract class RefasterScanner<M extends TemplateMatch, T extends Template<M>>
 
   @Override
   public Void scan(Tree tree, Context context) {
-    if (tree == null) {
+    if (tree == null || tree instanceof PackageTree) {
       return null;
     }
     JCCompilationUnit compilationUnit = context.get(JCCompilationUnit.class);
