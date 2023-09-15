@@ -31,6 +31,7 @@ import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.canBeRemoved;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isGeneratedConstructor;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.google.errorprone.util.ASTHelpers.scope;
@@ -150,6 +151,9 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
           "org.junit.jupiter.api.Test",
           "org.junit.jupiter.params.ParameterizedTest");
 
+  /** Class annotations which exempt methods within the annotated class from findings. */
+  private static final ImmutableSet<String> EXEMPTING_CLASS_ANNOTATIONS = ImmutableSet.of();
+
   /** The set of types exempting a type that is extending or implementing them. */
   private static final ImmutableSet<String> EXEMPTING_SUPER_TYPES = ImmutableSet.of();
 
@@ -188,7 +192,8 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
 
       @Override
       public Void visitClass(ClassTree tree, Void unused) {
-        if (exemptedBySuperType(getType(tree), state)) {
+        if (exemptedBySuperType(getType(tree), state)
+            || EXEMPTING_CLASS_ANNOTATIONS.stream().anyMatch(a -> hasAnnotation(tree, a, state))) {
           return null;
         }
         return super.visitClass(tree, null);
