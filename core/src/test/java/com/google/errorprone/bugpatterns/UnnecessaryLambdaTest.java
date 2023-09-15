@@ -388,4 +388,26 @@ public class UnnecessaryLambdaTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void iterable() {
+    testHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.stream.IntStream;",
+            "import java.util.ArrayList;",
+            "import java.util.stream.IntStream;",
+            "class Example {",
+            "  void someLoopyCode() {",
+            "    for (int i : someIterable()) {",
+            "      // Do something.",
+            "    }",
+            "  }",
+            "  private Iterable<Integer> someIterable() {",
+            "    return () -> IntStream.range(0, 42).boxed().iterator();",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
 }
