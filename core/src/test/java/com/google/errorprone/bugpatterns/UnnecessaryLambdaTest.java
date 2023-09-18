@@ -395,8 +395,6 @@ public class UnnecessaryLambdaTest {
         .addInputLines(
             "Test.java",
             "import java.util.stream.IntStream;",
-            "import java.util.ArrayList;",
-            "import java.util.stream.IntStream;",
             "class Example {",
             "  void someLoopyCode() {",
             "    for (int i : someIterable()) {",
