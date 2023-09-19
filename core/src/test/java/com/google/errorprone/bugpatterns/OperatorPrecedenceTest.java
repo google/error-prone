@@ -191,4 +191,42 @@ public class OperatorPrecedenceTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void conditionalBoolean() {
+    helper
+        .addInputLines(
+            "Test.java", //
+            "class Test {",
+            " void f(boolean a, boolean b, boolean c, boolean d) {",
+            "   boolean g = a || b ? c : d;",
+            "   g = a && b ? c : d;",
+            "   g = a == b ? c : d;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java", //
+            "class Test {",
+            " void f(boolean a, boolean b, boolean c, boolean d) {",
+            "   boolean g = (a || b) ? c : d;",
+            "   g = (a && b) ? c : d;",
+            "   g = a == b ? c : d;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void conditionOtherType() {
+    helper
+        .addInputLines(
+            "Test.java", //
+            "class Test {",
+            " void f(boolean a, boolean b, String c, String d) {",
+            "   String g = a || b ? c : d;",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
 }
