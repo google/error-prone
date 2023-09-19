@@ -125,9 +125,9 @@ import javax.lang.model.type.NullType;
     severity = WARNING,
     documentSuppression = false)
 public final class UnusedVariable extends BugChecker implements CompilationUnitTreeMatcher {
-  private static final String EXEMPT_PREFIX = "unused";
+  private final ImmutableSet<String> exemptPrefixes;
 
-  private static final ImmutableSet<String> EXEMPT_NAMES = ImmutableSet.of("ignored");
+  private final ImmutableSet<String> exemptNames;
 
   /**
    * The set of annotation full names which exempt annotated element from being reported as unused.
@@ -185,6 +185,14 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
         .ifPresent(methodAnnotationsExemptingParameters::addAll);
     this.methodAnnotationsExemptingParameters = methodAnnotationsExemptingParameters.build();
     this.reportInjectedFields = flags.getBoolean("Unused:ReportInjectedFields").orElse(false);
+
+    ImmutableSet.Builder<String> exemptNames = ImmutableSet.<String>builder().add("ignored");
+    flags.getList("Unused:exemptNames").ifPresent(exemptNames::addAll);
+    this.exemptNames = exemptNames.build();
+
+    ImmutableSet.Builder<String> exemptPrefixes = ImmutableSet.<String>builder().add("unused");
+    flags.getSet("Unused:exemptPrefixes").ifPresent(exemptPrefixes::addAll);
+    this.exemptPrefixes = exemptPrefixes.build();
   }
 
   @Override
@@ -566,10 +574,11 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
     return false;
   }
 
-  private static boolean exemptedByName(Name name) {
+  private boolean exemptedByName(Name name) {
     String nameString = name.toString();
-    return Ascii.toLowerCase(nameString).startsWith(EXEMPT_PREFIX)
-        || EXEMPT_NAMES.contains(nameString);
+    String nameStringLower = Ascii.toLowerCase(nameString);
+    return exemptPrefixes.stream().anyMatch(nameStringLower::startsWith)
+        || exemptNames.contains(nameString);
   }
 
   private class VariableFinder extends TreePathScanner<Void, Void> {
