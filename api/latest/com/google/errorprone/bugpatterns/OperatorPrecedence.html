@@ -80,12 +80,12 @@ loadScripts(document, 'script');</script>
 <section class="class-description" id="class-description">
 <dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code><a href="BugChecker.BinaryTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.BinaryTreeMatcher</a></code>, <code><a href="../matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a></code>, <code><a href="https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></code></dd>
+<dd><code><a href="BugChecker.BinaryTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.BinaryTreeMatcher</a></code>, <code><a href="BugChecker.ConditionalExpressionTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.ConditionalExpressionTreeMatcher</a></code>, <code><a href="../matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a></code>, <code><a href="https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></code></dd>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">OperatorPrecedence</span>
 <span class="extends-implements">extends <a href="BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>
-implements <a href="BugChecker.BinaryTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.BinaryTreeMatcher</a></span></div>
+implements <a href="BugChecker.BinaryTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.BinaryTreeMatcher</a>, <a href="BugChecker.ConditionalExpressionTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.ConditionalExpressionTreeMatcher</a></span></div>
 <div class="block">A <a href="BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 <dl class="notes">
 <dt>See Also:</dt>
@@ -135,6 +135,10 @@ implements <a href="BugChecker.BinaryTreeMatcher.html" title="interface in com.g
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#matchBinary(com.sun.source.tree.BinaryTree,com.google.errorprone.VisitorState)" class="member-name-link">matchBinary</a><wbr>(com.sun.source.tree.BinaryTree&nbsp;tree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#matchConditionalExpression(com.sun.source.tree.ConditionalExpressionTree,com.google.errorprone.VisitorState)" class="member-name-link">matchConditionalExpression</a><wbr>(com.sun.source.tree.ConditionalExpressionTree&nbsp;tree,
+ <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -180,6 +184,17 @@ implements <a href="BugChecker.BinaryTreeMatcher.html" title="interface in com.g
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="BugChecker.BinaryTreeMatcher.html#matchBinary(com.sun.source.tree.BinaryTree,com.google.errorprone.VisitorState)">matchBinary</a></code>&nbsp;in interface&nbsp;<code><a href="BugChecker.BinaryTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.BinaryTreeMatcher</a></code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="matchConditionalExpression(com.sun.source.tree.ConditionalExpressionTree,com.google.errorprone.VisitorState)">
+<h3>matchConditionalExpression</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></span>&nbsp;<span class="element-name">matchConditionalExpression</span><wbr><span class="parameters">(com.sun.source.tree.ConditionalExpressionTree&nbsp;tree,
+ <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="BugChecker.ConditionalExpressionTreeMatcher.html#matchConditionalExpression(com.sun.source.tree.ConditionalExpressionTree,com.google.errorprone.VisitorState)">matchConditionalExpression</a></code>&nbsp;in interface&nbsp;<code><a href="BugChecker.ConditionalExpressionTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.ConditionalExpressionTreeMatcher</a></code></dd>
 </dl>
 </section>
 </li>
