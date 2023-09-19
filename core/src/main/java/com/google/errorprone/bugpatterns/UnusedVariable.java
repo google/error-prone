@@ -142,6 +142,7 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
           "org.junit.Rule",
           "org.junit.jupiter.api.extension.RegisterExtension",
           "org.openqa.selenium.support.FindAll",
+          "do.not.Submit",
           "org.openqa.selenium.support.FindBy",
           "org.openqa.selenium.support.FindBys",
           "org.apache.beam.sdk.transforms.DoFn.TimerId",
