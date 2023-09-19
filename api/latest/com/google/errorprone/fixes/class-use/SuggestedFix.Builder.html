@@ -172,28 +172,31 @@ loadScripts(document, 'script');</script>
 <div class="block">Replace a tree node with a string, but adjust the start and end positions as well.</div>
 </div>
 <div class="col-first even-row-color"><code><a href="../SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">SuggestedFix.Builder.</span><code><a href="../SuggestedFix.Builder.html#setShortDescription(java.lang.String)" class="member-name-link">setShortDescription</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;shortDescription)</code></div>
-<div class="col-last even-row-color">
+<div class="col-second even-row-color"><span class="type-name-label">SuggestedFix.Builder.</span><code><a href="../SuggestedFix.Builder.html#setCoalescePolicy(com.google.errorprone.fixes.Replacements.CoalescePolicy)" class="member-name-link">setCoalescePolicy</a><wbr>(<a href="../Replacements.CoalescePolicy.html" title="enum in com.google.errorprone.fixes">Replacements.CoalescePolicy</a>&nbsp;coalescePolicy)</code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code><a href="../SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">SuggestedFix.Builder.</span><code><a href="../SuggestedFix.Builder.html#setShortDescription(java.lang.String)" class="member-name-link">setShortDescription</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;shortDescription)</code></div>
+<div class="col-last odd-row-color">
 <div class="block">Sets a custom short description for this fix.</div>
 </div>
-<div class="col-first odd-row-color"><code><a href="../SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">SuggestedFix.Builder.</span><code><a href="../SuggestedFix.Builder.html#swap(com.sun.source.tree.Tree,com.sun.source.tree.Tree)" class="member-name-link">swap</a><wbr>(com.sun.source.tree.Tree&nbsp;node1,
+<div class="col-first even-row-color"><code><a href="../SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">SuggestedFix.Builder.</span><code><a href="../SuggestedFix.Builder.html#swap(com.sun.source.tree.Tree,com.sun.source.tree.Tree)" class="member-name-link">swap</a><wbr>(com.sun.source.tree.Tree&nbsp;node1,
  com.sun.source.tree.Tree&nbsp;node2)</code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>static <a href="../SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../SuggestedFixes.html#updateAnnotationArgumentValues(com.sun.source.tree.AnnotationTree,com.google.errorprone.VisitorState,java.lang.String,java.util.Collection)" class="member-name-link">updateAnnotationArgumentValues</a><wbr>(com.sun.source.tree.AnnotationTree&nbsp;annotation,
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>static <a href="../SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../SuggestedFixes.html#updateAnnotationArgumentValues(com.sun.source.tree.AnnotationTree,com.google.errorprone.VisitorState,java.lang.String,java.util.Collection)" class="member-name-link">updateAnnotationArgumentValues</a><wbr>(com.sun.source.tree.AnnotationTree&nbsp;annotation,
  <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
  <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;parameterName,
  <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;newValues)</code></div>
-<div class="col-last even-row-color">
+<div class="col-last odd-row-color">
 <div class="block">Returns a fix that updates <code>newValues</code> to the <code>parameterName</code> argument for <code>
  annotation</code>, regardless of whether there is already an argument.</div>
 </div>
-<div class="col-first odd-row-color"><code>static <a href="../SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../SuggestedFixes.html#updateAnnotationArgumentValues(com.sun.source.tree.AnnotationTree,java.lang.String,java.util.Collection)" class="member-name-link">updateAnnotationArgumentValues</a><wbr>(com.sun.source.tree.AnnotationTree&nbsp;annotation,
+<div class="col-first even-row-color"><code>static <a href="../SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../SuggestedFixes.html#updateAnnotationArgumentValues(com.sun.source.tree.AnnotationTree,java.lang.String,java.util.Collection)" class="member-name-link">updateAnnotationArgumentValues</a><wbr>(com.sun.source.tree.AnnotationTree&nbsp;annotation,
  <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;parameterName,
  <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;newValues)</code></div>
-<div class="col-last odd-row-color">
+<div class="col-last even-row-color">
 <div class="block"><span class="deprecated-label">Deprecated.</span>
 <div class="deprecation-comment">use <a href="../SuggestedFixes.html#updateAnnotationArgumentValues(com.sun.source.tree.AnnotationTree,com.google.errorprone.VisitorState,java.lang.String,java.util.Collection)"><code>SuggestedFixes.updateAnnotationArgumentValues(AnnotationTree, VisitorState, String, Collection)</code></a> instead</div>
 </div>
