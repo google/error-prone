@@ -99,7 +99,7 @@ public final class DescriptionBasedDiff implements DescriptionListener, Diff {
     importsToRemove.addAll(fix.getImportsToRemove());
     for (Replacement replacement : fix.getReplacements(endPositions)) {
       try {
-        replacements.add(replacement, Replacements.CoalescePolicy.EXISTING_FIRST);
+        replacements.add(replacement, fix.getCoalescePolicy());
       } catch (IllegalArgumentException iae) {
         if (!ignoreOverlappingFixes) {
           throw iae;
