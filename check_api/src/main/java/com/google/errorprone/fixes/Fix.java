@@ -16,6 +16,7 @@
 
 package com.google.errorprone.fixes;
 
+import com.google.errorprone.annotations.RestrictedInheritance;
 import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import java.util.Collection;
@@ -26,6 +27,11 @@ import java.util.Set;
  *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
+@RestrictedInheritance(
+    explanation = "This should only be subclassed within ErrorProne.",
+    allowedOnPath =
+        ".*/third_party/java_src/error_prone/project/check_api/src/main/java/com/google/errorprone/fixes/.*"
+            + "|.*third_party/java_src/error_prone/project/check_api/src/main/java/com/google/errorprone/_javac/check_api/libcheck_api-class_sources/com/google/errorprone/fixes/.*")
 public interface Fix {
 
   String toString(JCCompilationUnit compilationUnit);
