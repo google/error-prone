@@ -85,7 +85,7 @@ public abstract class SuggestedFix implements Fix {
   public abstract int hashCode();
 
   @Override
-  public Set<Replacement> getReplacements(EndPosTable endPositions) {
+  public ImmutableSet<Replacement> getReplacements(EndPosTable endPositions) {
     if (endPositions == null) {
       throw new IllegalArgumentException(
           "Cannot produce correct replacements without endPositions.");

@@ -16,10 +16,9 @@
 
 package com.google.errorprone.fixes;
 
+import com.google.common.collect.ImmutableSet;
 import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
-import java.util.Collection;
-import java.util.Set;
 
 /**
  * Represents a source code transformation, usually used to fix a bug detected by error-prone.
@@ -36,17 +35,15 @@ public interface Fix {
    *
    * <p>Empty string generates the default description.
    */
-  default String getShortDescription() {
-    return "";
-  }
+  String getShortDescription();
 
   Replacements.CoalescePolicy getCoalescePolicy();
 
-  Set<Replacement> getReplacements(EndPosTable endPositions);
+  ImmutableSet<Replacement> getReplacements(EndPosTable endPositions);
 
-  Collection<String> getImportsToAdd();
+  ImmutableSet<String> getImportsToAdd();
 
-  Collection<String> getImportsToRemove();
+  ImmutableSet<String> getImportsToRemove();
 
   boolean isEmpty();
 }
