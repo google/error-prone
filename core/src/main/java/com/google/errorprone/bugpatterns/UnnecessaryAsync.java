@@ -142,7 +142,7 @@ public final class UnnecessaryAsync extends BugChecker implements VariableTreeMa
             getPrimitiveType(symbol.type, state.getTypes()),
             symbol.getSimpleName(),
             constructor.getArguments().isEmpty()
-                ? getDefaultInitializer(symbol)
+                ? getDefaultInitializer(symbol, state.getTypes())
                 : state.getSourceForNode(constructor.getArguments().get(0))));
 
     new TreePathScanner<Void, Void>() {
@@ -217,7 +217,8 @@ public final class UnnecessaryAsync extends BugChecker implements VariableTreeMa
   }
 
   private static String getPrimitiveType(Type type, Types types) {
-    switch (types.erasure(type).toString()) {
+    String name = types.erasure(type).toString();
+    switch (name) {
       case "java.util.concurrent.atomic.AtomicBoolean":
         return "boolean";
       case "java.util.concurrent.atomic.AtomicReference":
@@ -228,13 +229,14 @@ public final class UnnecessaryAsync extends BugChecker implements VariableTreeMa
         return "int";
       case "java.util.concurrent.atomic.AtomicLong":
         return "long";
-      default: // fall out
+      default:
+        throw new AssertionError(name);
     }
-    throw new AssertionError();
   }
 
-  private static String getDefaultInitializer(VarSymbol symbol) {
-    switch (symbol.type.toString()) {
+  private static String getDefaultInitializer(VarSymbol symbol, Types types) {
+    String name = types.erasure(symbol.type).toString();
+    switch (name) {
       case "java.util.concurrent.atomic.AtomicBoolean":
         return "false";
       case "java.util.concurrent.atomic.AtomicReference":
@@ -242,8 +244,8 @@ public final class UnnecessaryAsync extends BugChecker implements VariableTreeMa
       case "java.util.concurrent.atomic.AtomicInteger":
       case "java.util.concurrent.atomic.AtomicLong":
         return "0";
-      default: // fall out
+      default:
+        throw new AssertionError(name);
     }
-    throw new AssertionError();
   }
 }

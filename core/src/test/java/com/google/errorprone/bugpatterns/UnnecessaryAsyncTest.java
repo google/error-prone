@@ -205,4 +205,19 @@ public final class UnnecessaryAsyncTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void atomicReference_unfixable() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.concurrent.atomic.AtomicReference;",
+            "class Test {",
+            "  void f() {",
+            "    // BUG: Diagnostic contains: String result = null;",
+            "    AtomicReference<String> result = new AtomicReference<>();",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
