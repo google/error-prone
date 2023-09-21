@@ -152,9 +152,22 @@ public final class ErrorProneFlags implements Serializable {
    * an {@link Optional}, which is empty if the flag is unset.
    *
    * <p>(note: empty strings included, e.g. {@code "-XepOpt:List=,1,,2," => ["","1","","2",""]})
+   *
+   * @deprecated prefer {@link #getListOrEmpty(String)}
    */
+  @Deprecated
   public Optional<List<String>> getList(String key) {
     return this.get(key).map(v -> ImmutableList.copyOf(Splitter.on(',').split(v)));
+  }
+
+  /**
+   * Gets the flag value for the given key as a comma-separated {@link ImmutableList} of Strings, or
+   * an empty list if the flag is unset.
+   *
+   * <p>(note: empty strings included, e.g. {@code "-XepOpt:List=,1,,2," => ["","1","","2",""]})
+   */
+  public ImmutableList<String> getListOrEmpty(String key) {
+    return getList(key).map(ImmutableList::copyOf).orElse(ImmutableList.of());
   }
 
   /**
@@ -162,9 +175,22 @@ public final class ErrorProneFlags implements Serializable {
    * an {@link Optional}, which is empty if the flag is unset.
    *
    * <p>(note: empty strings included, e.g. {@code "-XepOpt:Set=,1,,1,2," => ["","1","2"]})
+   *
+   * @deprecated prefer {@link #getSetOrEmpty(String)}
    */
+  @Deprecated
   public Optional<Set<String>> getSet(String key) {
     return this.get(key).map(v -> ImmutableSet.copyOf(Splitter.on(',').split(v)));
+  }
+
+  /**
+   * Gets the flag value for the given key as a comma-separated {@link Set} of Strings, or an empty
+   * set if unset.
+   *
+   * <p>(note: empty strings included, e.g. {@code "-XepOpt:Set=,1,,1,2," => ["","1","2"]})
+   */
+  public ImmutableSet<String> getSetOrEmpty(String key) {
+    return getSet(key).map(ImmutableSet::copyOf).orElse(ImmutableSet.of());
   }
 
   /** Whether this Flags object is empty, i.e. no flags have been set. */

@@ -169,9 +169,10 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
 
                 // This is conceptually lower precedence than the above rules.
                 externalIgnoreList());
-    flags
-        .getList(CRV_PACKAGES)
-        .ifPresent(packagePatterns -> builder.addRule(PackagesRule.fromPatterns(packagePatterns)));
+    var crvPackages = flags.getListOrEmpty(CRV_PACKAGES);
+    if (!crvPackages.isEmpty()) {
+      builder.addRule(PackagesRule.fromPatterns(crvPackages));
+    }
     this.evaluator =
         builder
             .addRule(

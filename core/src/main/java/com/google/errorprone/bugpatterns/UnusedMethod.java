@@ -167,9 +167,7 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
   UnusedMethod(ErrorProneFlags errorProneFlags) {
     this.exemptingMethodAnnotations =
         union(
-                errorProneFlags
-                    .getSet("UnusedMethod:ExemptingMethodAnnotations")
-                    .orElseGet(ImmutableSet::of),
+                errorProneFlags.getSetOrEmpty("UnusedMethod:ExemptingMethodAnnotations"),
                 EXEMPTING_METHOD_ANNOTATIONS)
             .immutableCopy();
   }

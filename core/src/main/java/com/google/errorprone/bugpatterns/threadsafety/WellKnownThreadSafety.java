@@ -27,8 +27,7 @@ import javax.inject.Inject;
 public final class WellKnownThreadSafety implements ThreadSafety.KnownTypes {
   @Inject
   WellKnownThreadSafety(ErrorProneFlags flags, WellKnownMutability wellKnownMutability) {
-    List<String> knownThreadSafe =
-        flags.getList("ThreadSafe:KnownThreadSafe").orElse(ImmutableList.of());
+    ImmutableList<String> knownThreadSafe = flags.getListOrEmpty("ThreadSafe:KnownThreadSafe");
     this.knownThreadSafeClasses = buildThreadSafeClasses(knownThreadSafe, wellKnownMutability);
     this.knownUnsafeClasses = wellKnownMutability.getKnownMutableClasses();
   }

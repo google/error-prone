@@ -97,9 +97,7 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
     this.exemptingMethodAnnotations =
         Sets.union(
                 EXEMPTING_METHOD_ANNOTATIONS,
-                errorProneFlags
-                    .getSet("CanIgnoreReturnValue:ExemptingMethodAnnotations")
-                    .orElse(ImmutableSet.of()))
+                errorProneFlags.getSetOrEmpty("CanIgnoreReturnValue:ExemptingMethodAnnotations"))
             .immutableCopy();
   }
 
