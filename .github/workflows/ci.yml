@@ -22,24 +22,21 @@ jobs:
       fail-fast: false
       matrix:
         os: [ ubuntu-latest ]
-        java: [ 20, 17, 11 ]
+        java: [ 21, 17, 11 ]
         experimental: [ false ]
         # Only test on macos and windows with a single recent JDK to avoid a
         # combinatorial explosion of test configurations.
         # Most OS-specific issues are not specific to a particular JDK version.
         include:
           - os: macos-latest
-            java: 20
+            java: 21
             experimental: false
           - os: windows-latest
-            java: 20
+            java: 21
             experimental: false
           - os: ubuntu-latest
-            java: 20
+            java: 21
             experimental: false
-          - os: ubuntu-latest
-            java: 21-ea
-            experimental: true
           - os: ubuntu-latest
             java: 22-ea
             experimental: true
