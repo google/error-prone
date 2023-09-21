@@ -4949,8 +4949,14 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/google/errorprone/ErrorProneFlags.html#getList(java.lang.String)" class="member-name-link">getList(String)</a> - Method in class com.google.errorprone.<a href="com/google/errorprone/ErrorProneFlags.html" title="class in com.google.errorprone">ErrorProneFlags</a></dt>
 <dd>
-<div class="block">Gets the flag value for the given key as a comma-separated <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link"><code>List</code></a> of Strings, wrapped in
- an <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link"><code>Optional</code></a>, which is empty if the flag is unset.</div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">prefer <a href="com/google/errorprone/ErrorProneFlags.html#getListOrEmpty(java.lang.String)"><code>ErrorProneFlags.getListOrEmpty(String)</code></a></div>
+</div>
+</dd>
+<dt><a href="com/google/errorprone/ErrorProneFlags.html#getListOrEmpty(java.lang.String)" class="member-name-link">getListOrEmpty(String)</a> - Method in class com.google.errorprone.<a href="com/google/errorprone/ErrorProneFlags.html" title="class in com.google.errorprone">ErrorProneFlags</a></dt>
+<dd>
+<div class="block">Gets the flag value for the given key as a comma-separated <code>ImmutableList</code> of Strings, or
+ an empty list if the flag is unset.</div>
 </dd>
 <dt><a href="com/google/errorprone/refaster/TemplateMatch.html#getLocation()" class="member-name-link">getLocation()</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/TemplateMatch.html" title="class in com.google.errorprone.refaster">TemplateMatch</a></dt>
 <dd>&nbsp;</dd>
@@ -5281,8 +5287,14 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/ErrorProneFlags.html#getSet(java.lang.String)" class="member-name-link">getSet(String)</a> - Method in class com.google.errorprone.<a href="com/google/errorprone/ErrorProneFlags.html" title="class in com.google.errorprone">ErrorProneFlags</a></dt>
 <dd>
-<div class="block">Gets the flag value for the given key as a comma-separated <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html" title="class or interface in java.util" class="external-link"><code>Set</code></a> of Strings, wrapped in
- an <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link"><code>Optional</code></a>, which is empty if the flag is unset.</div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">prefer <a href="com/google/errorprone/ErrorProneFlags.html#getSetOrEmpty(java.lang.String)"><code>ErrorProneFlags.getSetOrEmpty(String)</code></a></div>
+</div>
+</dd>
+<dt><a href="com/google/errorprone/ErrorProneFlags.html#getSetOrEmpty(java.lang.String)" class="member-name-link">getSetOrEmpty(String)</a> - Method in class com.google.errorprone.<a href="com/google/errorprone/ErrorProneFlags.html" title="class in com.google.errorprone">ErrorProneFlags</a></dt>
+<dd>
+<div class="block">Gets the flag value for the given key as a comma-separated <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html" title="class or interface in java.util" class="external-link"><code>Set</code></a> of Strings, or an empty
+ set if unset.</div>
 </dd>
 <dt><a href="com/google/errorprone/ErrorProneOptions.html#getSeverityMap()" class="member-name-link">getSeverityMap()</a> - Method in class com.google.errorprone.<a href="com/google/errorprone/ErrorProneOptions.html" title="class in com.google.errorprone">ErrorProneOptions</a></dt>
 <dd>&nbsp;</dd>
