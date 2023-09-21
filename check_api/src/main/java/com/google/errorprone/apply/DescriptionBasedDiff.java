@@ -109,7 +109,7 @@ public final class DescriptionBasedDiff implements DescriptionListener, Diff {
   }
 
   @Override
-  public void applyDifferences(SourceFile sourceFile) throws DiffNotApplicableException {
+  public void applyDifferences(SourceFile sourceFile) {
     if (!importsToAdd.isEmpty() || !importsToRemove.isEmpty()) {
       ImportStatements importStatements = ImportStatements.create(compilationUnit, importOrganizer);
       importStatements.addAll(importsToAdd);

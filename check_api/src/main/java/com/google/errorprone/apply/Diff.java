@@ -25,10 +25,6 @@ public interface Diff {
   /** Gets the name of the file this difference applies to */
   String getRelevantFileName();
 
-  /**
-   * Applies this difference to the supplied {@code sourceFile}.
-   *
-   * @throws DiffNotApplicableException if the diff could not be applied to the source file
-   */
+  /** Applies this difference to the supplied {@code sourceFile}. */
   void applyDifferences(SourceFile sourceFile);
 }
