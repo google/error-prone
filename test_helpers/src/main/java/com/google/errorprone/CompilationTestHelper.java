@@ -313,6 +313,11 @@ public class CompilationTestHelper {
         fail(diagnostic.getMessage(Locale.ENGLISH));
       }
     }
+    String stringifiedOutput = outputStream.toString(UTF_8);
+    assertWithMessage("ErrorProne suffered an internal crash: %s", stringifiedOutput)
+        .that(stringifiedOutput)
+        .doesNotContain("An exception has occurred in the compiler");
+
     if (expectNoDiagnostics) {
       List<Diagnostic<? extends JavaFileObject>> diagnostics = diagnosticHelper.getDiagnostics();
       assertWithMessage(
