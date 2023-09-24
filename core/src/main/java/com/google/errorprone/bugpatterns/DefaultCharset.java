@@ -544,7 +544,7 @@ public class DefaultCharset extends BugChecker
           SuggestedFix.builder()
               .postfixWith(
                   getOnlyElement(tree.getArguments()),
-                  String.format(", %s.name()", charsetFix.replacement()));
+                  String.format(", %s", charsetFix.replacement()));
       charsetFix.addImport(fix);
       description.addFix(fix.build());
     }
