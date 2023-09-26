@@ -674,6 +674,24 @@ abstract class PlaceholderUnificationVisitor
         checkState(
             caseKind.name().contentEquals("STATEMENT"),
             "expression switches are not supported yet");
+        if (RuntimeVersion.isAtLeast21()) {
+          return (JCCase)
+              TreeMaker.class
+                  .getMethod(
+                      "Case",
+                      Class.forName("com.sun.source.tree.CaseTree$CaseKind"),
+                      List.class,
+                      JCExpression.class,
+                      List.class,
+                      JCTree.class)
+                  .invoke(
+                      maker(),
+                      caseKind,
+                      CaseTree.class.getMethod("getLabels").invoke(node),
+                      CaseTree.class.getMethod("getGuard").invoke(node),
+                      stmts,
+                      /* body */ null);
+        }
         return (JCCase)
             TreeMaker.class
                 .getMethod(
