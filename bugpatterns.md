@@ -700,6 +700,9 @@ AutoValue classes represent pure data classes, so mocking them should not be nec
 __[DoubleCheckedLocking](bugpattern/DoubleCheckedLocking)__<br>
 Double-checked locking on non-volatile fields is unsafe
 
+__[DuplicateDateFormatField](bugpattern/DuplicateDateFormatField)__<br>
+Reuse of DateFormat fields is most likely unintentional
+
 __[EmptyBlockTag](bugpattern/EmptyBlockTag)__<br>
 A block tag (@param, @return, @throws, @deprecated) has an empty description. Block tags without descriptions don&#39;t add much value for future readers of the code; consider removing the tag entirely or adding a description.
 
