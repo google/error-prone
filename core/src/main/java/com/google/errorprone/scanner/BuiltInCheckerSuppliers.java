@@ -117,6 +117,7 @@ import com.google.errorprone.bugpatterns.DoNotMockAutoValue;
 import com.google.errorprone.bugpatterns.DoNotMockChecker;
 import com.google.errorprone.bugpatterns.DoNotUseRuleChain;
 import com.google.errorprone.bugpatterns.DoubleBraceInitialization;
+import com.google.errorprone.bugpatterns.DuplicateDateFormatField;
 import com.google.errorprone.bugpatterns.DuplicateMapKeys;
 import com.google.errorprone.bugpatterns.EmptyCatch;
 import com.google.errorprone.bugpatterns.EmptyIfStatement;
@@ -874,6 +875,7 @@ public class BuiltInCheckerSuppliers {
           DoNotClaimAnnotations.class,
           DoNotMockAutoValue.class,
           DoubleCheckedLocking.class,
+          DuplicateDateFormatField.class,
           EmptyBlockTag.class,
           EmptyCatch.class,
           EmptySetMultibindingContributions.class,
