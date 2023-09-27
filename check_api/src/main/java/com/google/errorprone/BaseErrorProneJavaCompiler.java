@@ -93,6 +93,7 @@ public class BaseErrorProneJavaCompiler implements JavaCompiler {
   static void addTaskListener(
       JavacTask javacTask, ScannerSupplier scannerSupplier, ErrorProneOptions errorProneOptions) {
     Context context = ((BasicJavacTask) javacTask).getContext();
+    context.put(ErrorProneOptions.class, errorProneOptions);
     checkCompilePolicy(Options.instance(context).get("compilePolicy"));
     setupMessageBundle(context);
     RefactoringCollection[] refactoringCollection = {null};
