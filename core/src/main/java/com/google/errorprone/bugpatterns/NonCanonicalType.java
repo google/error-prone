@@ -20,7 +20,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.fixes.SuggestedFixes.qualifyType;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.enclosingClass;
-import static com.google.errorprone.util.ASTHelpers.getStartPosition;
+import static com.google.errorprone.util.ASTHelpers.hasExplicitSource;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
 import com.google.errorprone.BugPattern;
@@ -67,7 +67,7 @@ public final class NonCanonicalType extends BugChecker implements MemberSelectTr
         return NO_MATCH;
       }
     }
-    if (getStartPosition(tree) == Position.NOPOS) {
+    if (!hasExplicitSource(tree, state)) {
       // Can't suggest changing a synthetic type tree
       return NO_MATCH;
     }

@@ -294,6 +294,20 @@ public class VoidMissingNullableTest {
         .doTest();
   }
 
+  @Test
+  public void negativeGenericLambdaParameterNoType() {
+    aggressiveCompilationHelper
+        .addSourceLines(
+            "Test.java",
+                "import org.jspecify.annotations.Nullable;",
+            "interface Test {",
+            "  void consume(Iterable<@Nullable Void> it);",
+            "",
+            "  Test TEST = it -> {};",
+            "}")
+        .doTest();
+  }
+
   // TODO(cpovirk): Test under Java 11+ with `(var x) -> {}` lambda syntax.
 
   @Test

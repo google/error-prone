@@ -148,6 +148,7 @@ import com.sun.tools.javac.util.FatalError;
 import com.sun.tools.javac.util.Log;
 import com.sun.tools.javac.util.Log.DeferredDiagnosticHandler;
 import com.sun.tools.javac.util.Name;
+import com.sun.tools.javac.util.Position;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -2647,13 +2648,17 @@ public class ASTHelpers {
   /** Returns {@code true} if this is a `var` or a lambda parameter that has no explicit type. */
   public static boolean hasNoExplicitType(VariableTree tree, VisitorState state) {
     /*
-     * We detect the absence of an explicit type by looking for an absent start position for the
-     * type tree.
-     *
      * Note that the .isImplicitlyTyped() method on JCVariableDecl returns the wrong answer after
      * type attribution has occurred.
      */
-    return getStartPosition(tree.getType()) == -1;
+    return !hasExplicitSource(tree.getType(), state);
+  }
+
+  /**
+   * Returns {@code true} if the given tree has an explicit source code representation.
+   */
+  public static boolean hasExplicitSource(Tree tree, VisitorState state) {
+    return getStartPosition(tree) != Position.NOPOS && state.getEndPosition(tree) != Position.NOPOS;
   }
 
   /** Returns {@code true} if this symbol was declared in Kotlin source. */

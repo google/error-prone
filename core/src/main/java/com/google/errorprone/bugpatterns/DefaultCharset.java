@@ -390,7 +390,7 @@ public class DefaultCharset extends BugChecker
         if (!sym.equals(ASTHelpers.getSymbol(node))) {
           return null;
         }
-        if (ASTHelpers.getStartPosition(node.getType()) == -1) {
+        if (ASTHelpers.hasNoExplicitType(node, state)) {
           // ignore synthetic tree nodes for `var`
           return null;
         }

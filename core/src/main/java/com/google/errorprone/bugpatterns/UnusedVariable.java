@@ -29,6 +29,7 @@ import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
+import static com.google.errorprone.util.ASTHelpers.hasExplicitSource;
 import static com.google.errorprone.util.ASTHelpers.isStatic;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.google.errorprone.util.ASTHelpers.shouldKeep;
@@ -522,7 +523,7 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
         }
         if (trees.size() == 1) {
           Tree tree = getOnlyElement(trees);
-          if (getStartPosition(tree) == -1 || state.getEndPosition(tree) == -1) {
+          if (!hasExplicitSource(tree, state)) {
             // TODO(b/118437729): handle bogus source positions in enum declarations
             return;
           }

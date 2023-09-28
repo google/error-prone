@@ -27,6 +27,7 @@ import static com.google.errorprone.util.ASTHelpers.getAnnotationWithSimpleName;
 import static com.google.errorprone.util.ASTHelpers.getModifiers;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.hasNoExplicitType;
 import static com.sun.source.tree.Tree.Kind.ASSIGNMENT;
 import static com.sun.source.tree.Tree.Kind.CONDITIONAL_EXPRESSION;
 import static com.sun.source.tree.Tree.Kind.NEW_ARRAY;
@@ -1018,7 +1019,7 @@ public final class SuggestedFixes {
       @Nullable String lineComment,
       boolean commentOnNewLine) {
     // Find the nearest tree to add @SuppressWarnings to.
-    Tree suppressibleNode = suppressibleNode(state.getPath());
+    Tree suppressibleNode = suppressibleNode(state.getPath(), state);
     if (suppressibleNode == null) {
       return;
     }
@@ -1069,7 +1070,7 @@ public final class SuggestedFixes {
   public static void removeSuppressWarnings(
       SuggestedFix.Builder fixBuilder, VisitorState state, String warningToRemove) {
     // Find the nearest tree to remove @SuppressWarnings from.
-    Tree suppressibleNode = suppressibleNode(state.getPath());
+    Tree suppressibleNode = suppressibleNode(state.getPath(), state);
     if (suppressibleNode == null) {
       return;
     }
@@ -1107,7 +1108,7 @@ public final class SuggestedFixes {
   }
 
   @Nullable
-  private static Tree suppressibleNode(TreePath path) {
+  private static Tree suppressibleNode(TreePath path, VisitorState state) {
     return StreamSupport.stream(path.spliterator(), false)
         .filter(
             tree ->
@@ -1117,7 +1118,7 @@ public final class SuggestedFixes {
                         && ((ClassTree) tree).getSimpleName().length() != 0)
                     // Lambda parameters can't be suppressed unless they have Type decls
                     || (tree instanceof VariableTree
-                        && getStartPosition(((VariableTree) tree).getType()) != -1))
+                        && !hasNoExplicitType((VariableTree) tree, state)))
         .findFirst()
         .orElse(null);
   }
