@@ -299,7 +299,7 @@ public class VoidMissingNullableTest {
     aggressiveCompilationHelper
         .addSourceLines(
             "Test.java",
-                "import org.jspecify.annotations.Nullable;",
+            "import org.jspecify.annotations.Nullable;",
             "interface Test {",
             "  void consume(Iterable<@Nullable Void> it);",
             "",

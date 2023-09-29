@@ -27,7 +27,7 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasExplicitSource;
-import static com.google.errorprone.util.ASTHelpers.hasNoExplicitType;
+import static com.google.errorprone.util.ASTHelpers.hasImplicitType;
 import static com.sun.source.tree.Tree.Kind.METHOD;
 import static javax.lang.model.element.ElementKind.LOCAL_VARIABLE;
 
@@ -147,7 +147,7 @@ public class VoidMissingNullable extends BugChecker
       return NO_MATCH;
     }
 
-    if (hasNoExplicitType(tree, state)) {
+    if (hasImplicitType(tree, state)) {
       /*
        * In the case of `var`, a declaration-annotation @Nullable would be valid. But a type-use
        * @Nullable would not be. But more importantly, we expect that tools will infer the

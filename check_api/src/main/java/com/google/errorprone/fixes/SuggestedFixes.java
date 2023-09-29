@@ -27,7 +27,7 @@ import static com.google.errorprone.util.ASTHelpers.getAnnotationWithSimpleName;
 import static com.google.errorprone.util.ASTHelpers.getModifiers;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
-import static com.google.errorprone.util.ASTHelpers.hasNoExplicitType;
+import static com.google.errorprone.util.ASTHelpers.hasImplicitType;
 import static com.sun.source.tree.Tree.Kind.ASSIGNMENT;
 import static com.sun.source.tree.Tree.Kind.CONDITIONAL_EXPRESSION;
 import static com.sun.source.tree.Tree.Kind.NEW_ARRAY;
@@ -1118,7 +1118,7 @@ public final class SuggestedFixes {
                         && ((ClassTree) tree).getSimpleName().length() != 0)
                     // Lambda parameters can't be suppressed unless they have Type decls
                     || (tree instanceof VariableTree
-                        && !hasNoExplicitType((VariableTree) tree, state)))
+                        && !hasImplicitType((VariableTree) tree, state)))
         .findFirst()
         .orElse(null);
   }
