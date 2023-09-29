@@ -5164,10 +5164,24 @@ loadScripts(document, 'script');</script>
 <div class="block">Determines whether a symbol has an annotation of the given type.</div>
 </div>
 <div class="col-first even-row-color"><code>static boolean</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#hasExplicitSource(com.sun.source.tree.Tree,com.google.errorprone.VisitorState)" class="member-name-link">hasExplicitSource</a><wbr>(com.sun.source.tree.Tree&nbsp;tree,
+ <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
+<div class="col-last even-row-color">
+<div class="block">Returns whether the given tree has an explicit source code representation.</div>
+</div>
+<div class="col-first odd-row-color"><code>static boolean</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#hasImplicitType(com.sun.source.tree.VariableTree,com.google.errorprone.VisitorState)" class="member-name-link">hasImplicitType</a><wbr>(com.sun.source.tree.VariableTree&nbsp;tree,
+ <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
+<div class="col-last odd-row-color">
+<div class="block">Returns whether this is a <code>var</code> or a lambda parameter that has no explicit type.</div>
+</div>
+<div class="col-first even-row-color"><code>static boolean</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#hasNoExplicitType(com.sun.source.tree.VariableTree,com.google.errorprone.VisitorState)" class="member-name-link">hasNoExplicitType</a><wbr>(com.sun.source.tree.VariableTree&nbsp;tree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Returns <code>true</code> if this is a `var` or a lambda parameter that has no explicit type.</div>
+<div class="block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">use <a href="../util/ASTHelpers.html#hasImplicitType(com.sun.source.tree.VariableTree,com.google.errorprone.VisitorState)"><code>ASTHelpers.hasImplicitType(VariableTree, VisitorState)</code></a> instead</div>
+</div>
 </div>
 <div class="col-first odd-row-color"><code>static boolean</code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#hasOverloadWithOnlyOneParameter(com.sun.tools.javac.code.Symbol.MethodSymbol,com.sun.tools.javac.util.Name,com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)" class="member-name-link">hasOverloadWithOnlyOneParameter</a><wbr>(com.sun.tools.javac.code.Symbol.MethodSymbol&nbsp;existingMethod,

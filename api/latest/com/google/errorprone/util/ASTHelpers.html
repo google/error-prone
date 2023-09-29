@@ -527,10 +527,24 @@ loadScripts(document, 'script');</script>
 <div class="block">Check for the presence of an annotation with a specific simple name directly on this symbol.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#hasNoExplicitType(com.sun.source.tree.VariableTree,com.google.errorprone.VisitorState)" class="member-name-link">hasNoExplicitType</a><wbr>(com.sun.source.tree.VariableTree&nbsp;tree,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#hasExplicitSource(com.sun.source.tree.Tree,com.google.errorprone.VisitorState)" class="member-name-link">hasExplicitSource</a><wbr>(com.sun.source.tree.Tree&nbsp;tree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Returns <code>true</code> if this is a `var` or a lambda parameter that has no explicit type.</div>
+<div class="block">Returns whether the given tree has an explicit source code representation.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#hasImplicitType(com.sun.source.tree.VariableTree,com.google.errorprone.VisitorState)" class="member-name-link">hasImplicitType</a><wbr>(com.sun.source.tree.VariableTree&nbsp;tree,
+ <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Returns whether this is a <code>var</code> or a lambda parameter that has no explicit type.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4 method-summary-table-tab6"><code>static boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4 method-summary-table-tab6"><code><a href="#hasNoExplicitType(com.sun.source.tree.VariableTree,com.google.errorprone.VisitorState)" class="member-name-link">hasNoExplicitType</a><wbr>(com.sun.source.tree.VariableTree&nbsp;tree,
+ <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4 method-summary-table-tab6">
+<div class="block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">use <a href="#hasImplicitType(com.sun.source.tree.VariableTree,com.google.errorprone.VisitorState)"><code>hasImplicitType(VariableTree, VisitorState)</code></a> instead</div>
+</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#hasOverloadWithOnlyOneParameter(com.sun.tools.javac.code.Symbol.MethodSymbol,com.sun.tools.javac.util.Name,com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)" class="member-name-link">hasOverloadWithOnlyOneParameter</a><wbr>(com.sun.tools.javac.code.Symbol.MethodSymbol&nbsp;existingMethod,
@@ -1869,9 +1883,28 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="hasNoExplicitType(com.sun.source.tree.VariableTree,com.google.errorprone.VisitorState)">
 <h3>hasNoExplicitType</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">hasNoExplicitType</span><wbr><span class="parameters">(com.sun.source.tree.VariableTree&nbsp;tree,
+<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">hasNoExplicitType</span><wbr><span class="parameters">(com.sun.source.tree.VariableTree&nbsp;tree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
-<div class="block">Returns <code>true</code> if this is a `var` or a lambda parameter that has no explicit type.</div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">use <a href="#hasImplicitType(com.sun.source.tree.VariableTree,com.google.errorprone.VisitorState)"><code>hasImplicitType(VariableTree, VisitorState)</code></a> instead</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="hasImplicitType(com.sun.source.tree.VariableTree,com.google.errorprone.VisitorState)">
+<h3>hasImplicitType</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">hasImplicitType</span><wbr><span class="parameters">(com.sun.source.tree.VariableTree&nbsp;tree,
+ <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
+<div class="block">Returns whether this is a <code>var</code> or a lambda parameter that has no explicit type.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="hasExplicitSource(com.sun.source.tree.Tree,com.google.errorprone.VisitorState)">
+<h3>hasExplicitSource</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">hasExplicitSource</span><wbr><span class="parameters">(com.sun.source.tree.Tree&nbsp;tree,
+ <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
+<div class="block">Returns whether the given tree has an explicit source code representation.</div>
 </section>
 </li>
 <li>
