@@ -18,8 +18,8 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
-import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.hasExplicitSource;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 
 import com.google.common.math.IntMath;
@@ -47,7 +47,6 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.util.Position;
 import javax.annotation.Nullable;
 import javax.lang.model.type.TypeKind;
 
@@ -99,7 +98,7 @@ public class ConstantOverflow extends BugChecker implements BinaryTreeMatcher {
     Tree parent = state.getPath().getParentPath().getLeaf();
     if (parent instanceof VariableTree && isSameType(getType(parent), intType, state)) {
       Tree type = ((VariableTree) parent).getType();
-      if (getStartPosition(type) != Position.NOPOS) {
+      if (hasExplicitSource(type, state)) {
         fix.replace(type, "long");
       }
     }

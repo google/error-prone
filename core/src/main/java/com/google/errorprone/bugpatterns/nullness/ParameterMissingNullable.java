@@ -28,7 +28,7 @@ import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.nullnessC
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
-import static com.google.errorprone.util.ASTHelpers.hasNoExplicitType;
+import static com.google.errorprone.util.ASTHelpers.hasImplicitType;
 import static javax.lang.model.element.ElementKind.PARAMETER;
 import static javax.lang.model.type.TypeKind.TYPEVAR;
 
@@ -143,7 +143,7 @@ public final class ParameterMissingNullable extends BugChecker
     if (param == null) {
       return NO_MATCH; // hopefully impossible: A parameter must come from the same compilation unit
     }
-    if (hasNoExplicitType(param, state)) {
+    if (hasImplicitType(param, state)) {
       return NO_MATCH;
     }
     SuggestedFix fix = fixByAddingNullableAnnotationToType(state, param);
