@@ -38,7 +38,7 @@ jobs:
             java: 21
             experimental: false
           - os: ubuntu-latest
-            java: 22-ea
+            java: EA
             experimental: true
     runs-on: ${{ matrix.os }}
     continue-on-error: ${{ matrix.experimental }}
@@ -49,7 +49,17 @@ jobs:
           access_token: ${{ github.token }}
       - name: 'Check out repository'
         uses: actions/checkout@v3
+      - name: 'Set up JDK ${{ matrix.java }} from jdk.java.net'
+        if: ${{ matrix.java == 'EA' }}
+        uses: oracle-actions/setup-java@v1
+        with:
+          website: jdk.java.net
+          release: |
+            11
+            ${{ matrix.java }}
+          cache: 'maven'
       - name: 'Set up JDK ${{ matrix.java }}'
+        if: ${{ matrix.java != 'EA' }}
         uses: actions/setup-java@v3
         with:
           java-version: |
