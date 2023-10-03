@@ -35,7 +35,6 @@ import static java.util.stream.Stream.concat;
 
 import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -155,13 +154,10 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
       typeFromString("com.google.common.truth.Correspondence");
 
   private final TypeCompatibility typeCompatibility;
-  private final boolean flagMoreCases;
 
   @Inject
-  TruthIncompatibleType(TypeCompatibility typeCompatibility, ErrorProneFlags flags) {
+  TruthIncompatibleType(TypeCompatibility typeCompatibility) {
     this.typeCompatibility = typeCompatibility;
-
-    this.flagMoreCases = flags.getBoolean("TruthIncompatibleType:FlagMoreCases").orElse(true);
   }
 
   @Override
@@ -210,7 +206,7 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
   }
 
   private Stream<Description> matchIsAnyOf(MethodInvocationTree tree, VisitorState state) {
-    if (!flagMoreCases || !IS_ANY_OF.matches(tree, state)) {
+    if (!IS_ANY_OF.matches(tree, state)) {
       return Stream.empty();
     }
     ExpressionTree receiver = getReceiver(tree);
@@ -223,7 +219,7 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
   }
 
   private Stream<Description> matchIsIn(MethodInvocationTree tree, VisitorState state) {
-    if (!flagMoreCases || !IS_IN.matches(tree, state)) {
+    if (!IS_IN.matches(tree, state)) {
       return Stream.empty();
     }
     ExpressionTree receiver = getReceiver(tree);
