@@ -22,6 +22,7 @@ import static java.lang.String.format;
 import static java.util.Arrays.stream;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.truth.IterableSubject;
 import com.google.common.truth.Subject;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.testing.junit.testparameterinjector.TestParameter;
@@ -605,11 +606,30 @@ public class TruthIncompatibleTypeTest {
         .doTest();
   }
 
+  @Test
+  public void iterableSubjectExhaustiveness(
+      @TestParameter(valuesProvider = IterableSubjectMethods.class) Method method) {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.truth.Truth.assertThat;",
+            "import com.google.common.collect.ImmutableList;",
+            "class Test {",
+            "  public void test(Iterable<String> a, Long b) {",
+            "    // BUG: Diagnostic contains:",
+            getOffensiveLine(method),
+            "  }",
+            "}")
+        .doTest();
+  }
+
   private static String getOffensiveLine(Method method) {
     if (stream(method.getParameterTypes()).allMatch(p -> p.equals(Iterable.class))) {
       return format("    assertThat(a).%s(ImmutableList.of(b));", method.getName());
     } else if (stream(method.getParameterTypes()).allMatch(p -> p.equals(Object.class))) {
       return format("    assertThat(a).%s(b);", method.getName());
+    } else if (stream(method.getParameterTypes()).allMatch(p -> p.isArray())) {
+      return format("    assertThat(a).%s(new Long[]{b, b, b});", method.getName());
     } else if (stream(method.getParameterTypes())
         .allMatch(p -> p.equals(Object.class) || p.isArray())) {
       return format("    assertThat(a).%s(b, b, b);", method.getName());
@@ -623,17 +643,28 @@ public class TruthIncompatibleTypeTest {
   private static final class SubjectMethods implements TestParameterValuesProvider {
     @Override
     public ImmutableList<Method> provideValues() {
-      return stream(Subject.class.getDeclaredMethods())
-          .filter(
-              m ->
-                  Modifier.isPublic(m.getModifiers())
-                      && !m.getName().equals("equals")
-                      && m.getParameterCount() > 0
-                      && (stream(m.getParameterTypes()).allMatch(p -> p.equals(Iterable.class))
-                          || stream(m.getParameterTypes())
-                              .allMatch(p -> p.equals(Object.class) || p.isArray())
-                          || stream(m.getParameterTypes()).allMatch(Class::isArray)))
-          .collect(toImmutableList());
+      return getAssertionMethods(Subject.class);
     }
+  }
+
+  private static final class IterableSubjectMethods implements TestParameterValuesProvider {
+    @Override
+    public ImmutableList<Method> provideValues() {
+      return getAssertionMethods(IterableSubject.class);
+    }
+  }
+
+  private static ImmutableList<Method> getAssertionMethods(Class<?> clazz) {
+    return stream(clazz.getDeclaredMethods())
+        .filter(
+            m ->
+                Modifier.isPublic(m.getModifiers())
+                    && !m.getName().equals("equals")
+                    && m.getParameterCount() > 0
+                    && (stream(m.getParameterTypes()).allMatch(p -> p.equals(Iterable.class))
+                        || stream(m.getParameterTypes())
+                            .allMatch(p -> p.equals(Object.class) || p.isArray())
+                        || stream(m.getParameterTypes()).allMatch(Class::isArray)))
+        .collect(toImmutableList());
   }
 }
