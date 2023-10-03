@@ -1508,6 +1508,9 @@ Thrown exception is a subtype of another
 __[StatementSwitchToExpressionSwitch](bugpattern/StatementSwitchToExpressionSwitch)__<br>
 This statement switch can be converted to an equivalent expression switch
 
+__[StringFormatWithLiteral](bugpattern/StringFormatWithLiteral)__<br>
+There is no need to use String.format() when all the arguments are literals.
+
 __[StronglyTypeByteString](bugpattern/StronglyTypeByteString)__<br>
 This primitive byte array is only used to construct ByteStrings. It would be clearer to strongly type the field instead.
 
