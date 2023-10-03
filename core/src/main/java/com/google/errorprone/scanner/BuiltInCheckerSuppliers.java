@@ -346,6 +346,7 @@ import com.google.errorprone.bugpatterns.StreamToString;
 import com.google.errorprone.bugpatterns.StringBuilderInitWithChar;
 import com.google.errorprone.bugpatterns.StringCaseLocaleUsage;
 import com.google.errorprone.bugpatterns.StringCharset;
+import com.google.errorprone.bugpatterns.StringFormatWithLiteral;
 import com.google.errorprone.bugpatterns.StringSplitter;
 import com.google.errorprone.bugpatterns.StronglyTypeByteString;
 import com.google.errorprone.bugpatterns.SubstringOfZero;
@@ -1178,6 +1179,7 @@ public class BuiltInCheckerSuppliers {
           StatementSwitchToExpressionSwitch.class,
           StaticOrDefaultInterfaceMethod.class,
           StaticQualifiedUsingExpression.class,
+          StringFormatWithLiteral.class,
           StronglyTypeByteString.class,
           StronglyTypeTime.class,
           SuppressWarningsWithoutExplanation.class,
