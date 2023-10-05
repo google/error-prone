@@ -731,6 +731,24 @@ public class UnusedVariableTest {
   }
 
   @Test
+  public void unusedInjectMethodParameter() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "package unusedvars;",
+            "import com.google.inject.Provides;",
+            "class Test {",
+            "  @Provides",
+            "  public String test(",
+            "    // BUG: Diagnostic contains:",
+            "    String foo) {",
+            "    return \"test\";",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void unusedInject_notByDefault() {
     helper
         .addSourceLines(
