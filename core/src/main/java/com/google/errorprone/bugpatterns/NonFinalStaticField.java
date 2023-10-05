@@ -18,11 +18,14 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.fixes.SuggestedFix.emptyFix;
+import static com.google.errorprone.fixes.SuggestedFix.merge;
 import static com.google.errorprone.fixes.SuggestedFixes.addModifiers;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.canBeRemoved;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
+import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.google.errorprone.util.ASTHelpers.isStatic;
 import static javax.lang.model.element.ElementKind.FIELD;
 import static javax.lang.model.element.Modifier.FINAL;
@@ -30,6 +33,7 @@ import static javax.lang.model.element.Modifier.FINAL;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
+import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.CompoundAssignmentTree;
@@ -59,7 +63,44 @@ public final class NonFinalStaticField extends BugChecker implements VariableTre
     if (!canBeRemoved(symbol, state) || isEverMutatedInSameCompilationUnit(symbol, state)) {
       return describeMatch(tree);
     }
-    return describeMatch(tree, addModifiers(tree, state, FINAL).orElse(emptyFix()));
+    return describeMatch(
+        tree,
+        merge(
+            addModifiers(tree, state, FINAL).orElse(emptyFix()),
+            addDefaultInitializerIfNecessary(tree, state)));
+  }
+
+  private static SuggestedFix addDefaultInitializerIfNecessary(
+      VariableTree tree, VisitorState state) {
+    if (tree.getInitializer() != null) {
+      return emptyFix();
+    }
+    int pos = state.getEndPosition(tree) - 1;
+    return SuggestedFix.replace(pos, pos, " = " + getDefaultInitializer(tree, state));
+  }
+
+  private static String getDefaultInitializer(VariableTree tree, VisitorState state) {
+    var type = getType(tree);
+    var symtab = state.getSymtab();
+    if (isSameType(type, symtab.booleanType, state)) {
+      return "false";
+    }
+    if (isSameType(type, symtab.shortType, state)) {
+      return "(short) 0";
+    }
+    if (isSameType(type, symtab.byteType, state)) {
+      return "(byte) 0";
+    }
+    if (isSameType(type, symtab.charType, state)) {
+      return "(char) 0";
+    }
+    if (isSameType(type, symtab.longType, state)
+        || isSameType(type, symtab.intType, state)
+        || isSameType(type, symtab.floatType, state)
+        || isSameType(type, symtab.doubleType, state)) {
+      return "0";
+    }
+    return "null";
   }
 
   private static boolean isEverMutatedInSameCompilationUnit(VarSymbol symbol, VisitorState state) {

@@ -119,7 +119,6 @@ public final class NonFinalStaticFieldTest {
         .addInputLines(
             "Test.java", //
             "public class Test {",
-            "  // BUG: Diagnostic contains:",
             "  private static int foo = 0;",
             "  public void increment() {",
             "    foo++;",
@@ -135,13 +134,42 @@ public final class NonFinalStaticFieldTest {
         .addInputLines(
             "Test.java", //
             "public class Test {",
-            "  // BUG: Diagnostic contains:",
             "  private static int foo = 0;",
             "  public void increment() {",
             "    foo += 1;",
             "  }",
             "}")
         .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  // NOTE: this _is_ safe to suggest a fix for, just harder to detect.
+  public void initialisedExactlyOnceInStaticInitializer_noFix() {
+    refactoringTestHelper
+        .addInputLines(
+            "Test.java", //
+            "public class Test {",
+            "  private static int foo;",
+            "  { foo = 1; }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void neverAssigned_getsDefaultInitializer() {
+    refactoringTestHelper
+        .addInputLines(
+            "Test.java", //
+            "public class Test {",
+            "  private static int foo;",
+            "}")
+        .addOutputLines(
+            "Test.java", //
+            "public class Test {",
+            "  private static final int foo = 0;",
+            "}")
         .doTest();
   }
 
