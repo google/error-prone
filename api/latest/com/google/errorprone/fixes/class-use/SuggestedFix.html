@@ -137,105 +137,110 @@ loadScripts(document, 'script');</script>
 <div class="block">Creates an empty <a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes"><code>SuggestedFix</code></a>.</div>
 </div>
 <div class="col-first odd-row-color"><code>static <a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">SuggestedFix.</span><code><a href="../SuggestedFix.html#postfixWith(com.sun.source.tree.Tree,java.lang.String)" class="member-name-link">postfixWith</a><wbr>(com.sun.source.tree.Tree&nbsp;node,
+<div class="col-second odd-row-color"><span class="type-name-label">SuggestedFix.</span><code><a href="../SuggestedFix.html#merge(com.google.errorprone.fixes.SuggestedFix,com.google.errorprone.fixes.SuggestedFix,com.google.errorprone.fixes.SuggestedFix...)" class="member-name-link">merge</a><wbr>(<a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a>&nbsp;first,
+ <a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a>&nbsp;second,
+ <a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a>...&nbsp;more)</code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>static <a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">SuggestedFix.</span><code><a href="../SuggestedFix.html#postfixWith(com.sun.source.tree.Tree,java.lang.String)" class="member-name-link">postfixWith</a><wbr>(com.sun.source.tree.Tree&nbsp;node,
  <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;postfix)</code></div>
-<div class="col-last odd-row-color">
+<div class="col-last even-row-color">
 <div class="block"><a href="../SuggestedFix.Builder.html#postfixWith(com.sun.source.tree.Tree,java.lang.String)"><code>SuggestedFix.Builder.postfixWith(Tree, String)</code></a></div>
 </div>
-<div class="col-first even-row-color"><code>static <a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">SuggestedFix.</span><code><a href="../SuggestedFix.html#prefixWith(com.sun.source.tree.Tree,java.lang.String)" class="member-name-link">prefixWith</a><wbr>(com.sun.source.tree.Tree&nbsp;node,
+<div class="col-first odd-row-color"><code>static <a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">SuggestedFix.</span><code><a href="../SuggestedFix.html#prefixWith(com.sun.source.tree.Tree,java.lang.String)" class="member-name-link">prefixWith</a><wbr>(com.sun.source.tree.Tree&nbsp;node,
  <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;prefix)</code></div>
-<div class="col-last even-row-color">
+<div class="col-last odd-row-color">
 <div class="block"><a href="../SuggestedFix.Builder.html#prefixWith(com.sun.source.tree.Tree,java.lang.String)"><code>SuggestedFix.Builder.prefixWith(Tree, String)</code></a></div>
 </div>
-<div class="col-first odd-row-color"><code>static <a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../SuggestedFixes.html#removeElement(com.sun.source.tree.Tree,java.util.List,com.google.errorprone.VisitorState)" class="member-name-link">removeElement</a><wbr>(com.sun.source.tree.Tree&nbsp;tree,
+<div class="col-first even-row-color"><code>static <a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../SuggestedFixes.html#removeElement(com.sun.source.tree.Tree,java.util.List,com.google.errorprone.VisitorState)" class="member-name-link">removeElement</a><wbr>(com.sun.source.tree.Tree&nbsp;tree,
  <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;? extends com.sun.source.tree.Tree&gt;&nbsp;trees,
  <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
-<div class="col-last odd-row-color">
+<div class="col-last even-row-color">
 <div class="block">Removes <code>tree</code> from <code>trees</code>, assuming that <code>trees</code> represents a
  comma-separated list of expressions containing <code>tree</code>.</div>
 </div>
-<div class="col-first even-row-color"><code>static <a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../SuggestedFixes.html#renameMethod(com.sun.source.tree.MethodTree,java.lang.String,com.google.errorprone.VisitorState)" class="member-name-link">renameMethod</a><wbr>(com.sun.source.tree.MethodTree&nbsp;tree,
- <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;replacement,
- <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
-<div class="col-last even-row-color">
-<div class="block">Be warned, only changes method name at the declaration.</div>
-</div>
 <div class="col-first odd-row-color"><code>static <a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../SuggestedFixes.html#renameMethodInvocation(com.sun.source.tree.MethodInvocationTree,java.lang.String,com.google.errorprone.VisitorState)" class="member-name-link">renameMethodInvocation</a><wbr>(com.sun.source.tree.MethodInvocationTree&nbsp;tree,
+<div class="col-second odd-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../SuggestedFixes.html#renameMethod(com.sun.source.tree.MethodTree,java.lang.String,com.google.errorprone.VisitorState)" class="member-name-link">renameMethod</a><wbr>(com.sun.source.tree.MethodTree&nbsp;tree,
  <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;replacement,
  <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Replaces the name of the method being invoked in <code>tree</code> with <code>replacement</code>.</div>
+<div class="block">Be warned, only changes method name at the declaration.</div>
 </div>
 <div class="col-first even-row-color"><code>static <a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../SuggestedFixes.html#renameMethodWithInvocations(com.sun.source.tree.MethodTree,java.lang.String,com.google.errorprone.VisitorState)" class="member-name-link">renameMethodWithInvocations</a><wbr>(com.sun.source.tree.MethodTree&nbsp;tree,
+<div class="col-second even-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../SuggestedFixes.html#renameMethodInvocation(com.sun.source.tree.MethodInvocationTree,java.lang.String,com.google.errorprone.VisitorState)" class="member-name-link">renameMethodInvocation</a><wbr>(com.sun.source.tree.MethodInvocationTree&nbsp;tree,
  <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;replacement,
  <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color">
+<div class="block">Replaces the name of the method being invoked in <code>tree</code> with <code>replacement</code>.</div>
+</div>
+<div class="col-first odd-row-color"><code>static <a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../SuggestedFixes.html#renameMethodWithInvocations(com.sun.source.tree.MethodTree,java.lang.String,com.google.errorprone.VisitorState)" class="member-name-link">renameMethodWithInvocations</a><wbr>(com.sun.source.tree.MethodTree&nbsp;tree,
+ <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;replacement,
+ <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
+<div class="col-last odd-row-color">
 <div class="block">Renames the given <code>MethodTree</code> and its usages in the current compilation unit to <code>
  replacement</code>.</div>
 </div>
-<div class="col-first odd-row-color"><code>static <a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../SuggestedFixes.html#renameTypeParameter(com.sun.source.tree.TypeParameterTree,com.sun.source.tree.Tree,java.lang.String,com.google.errorprone.VisitorState)" class="member-name-link">renameTypeParameter</a><wbr>(com.sun.source.tree.TypeParameterTree&nbsp;typeParameter,
+<div class="col-first even-row-color"><code>static <a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../SuggestedFixes.html#renameTypeParameter(com.sun.source.tree.TypeParameterTree,com.sun.source.tree.Tree,java.lang.String,com.google.errorprone.VisitorState)" class="member-name-link">renameTypeParameter</a><wbr>(com.sun.source.tree.TypeParameterTree&nbsp;typeParameter,
  com.sun.source.tree.Tree&nbsp;owningTree,
  <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;typeVarReplacement,
  <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
-<div class="col-last odd-row-color">
+<div class="col-last even-row-color">
 <div class="block">Renames a type parameter <code>typeParameter</code> owned by <code>owningTree</code> to <code>
  typeVarReplacement</code>.</div>
 </div>
-<div class="col-first even-row-color"><code>static <a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../SuggestedFixes.html#renameVariable(com.sun.source.tree.VariableTree,java.lang.String,com.google.errorprone.VisitorState)" class="member-name-link">renameVariable</a><wbr>(com.sun.source.tree.VariableTree&nbsp;tree,
+<div class="col-first odd-row-color"><code>static <a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../SuggestedFixes.html#renameVariable(com.sun.source.tree.VariableTree,java.lang.String,com.google.errorprone.VisitorState)" class="member-name-link">renameVariable</a><wbr>(com.sun.source.tree.VariableTree&nbsp;tree,
  <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;replacement,
  <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
-<div class="col-last even-row-color">
+<div class="col-last odd-row-color">
 <div class="block">Renames the given <code>VariableTree</code> and its usages in the current compilation unit to <code>
  replacement</code>.</div>
 </div>
-<div class="col-first odd-row-color"><code>static <a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../SuggestedFixes.html#renameVariableUsages(com.sun.source.tree.VariableTree,java.lang.String,com.google.errorprone.VisitorState)" class="member-name-link">renameVariableUsages</a><wbr>(com.sun.source.tree.VariableTree&nbsp;tree,
+<div class="col-first even-row-color"><code>static <a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../SuggestedFixes.html#renameVariableUsages(com.sun.source.tree.VariableTree,java.lang.String,com.google.errorprone.VisitorState)" class="member-name-link">renameVariableUsages</a><wbr>(com.sun.source.tree.VariableTree&nbsp;tree,
  <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;replacement,
  <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
-<div class="col-last odd-row-color">
+<div class="col-last even-row-color">
 <div class="block">Renames usage of the given <code>VariableTree</code> in the current compilation unit to <code>
  replacement</code>.</div>
 </div>
-<div class="col-first even-row-color"><code>static <a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">SuggestedFix.</span><code><a href="../SuggestedFix.html#replace(int,int,java.lang.String)" class="member-name-link">replace</a><wbr>(int&nbsp;startPos,
+<div class="col-first odd-row-color"><code>static <a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">SuggestedFix.</span><code><a href="../SuggestedFix.html#replace(int,int,java.lang.String)" class="member-name-link">replace</a><wbr>(int&nbsp;startPos,
  int&nbsp;endPos,
  <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;replaceWith)</code></div>
-<div class="col-last even-row-color">
+<div class="col-last odd-row-color">
 <div class="block">Replace the characters from startPos, inclusive, until endPos, exclusive, with the given
  string.</div>
 </div>
-<div class="col-first odd-row-color"><code>static <a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">SuggestedFix.</span><code><a href="../SuggestedFix.html#replace(com.sun.source.tree.Tree,java.lang.String)" class="member-name-link">replace</a><wbr>(com.sun.source.tree.Tree&nbsp;tree,
+<div class="col-first even-row-color"><code>static <a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">SuggestedFix.</span><code><a href="../SuggestedFix.html#replace(com.sun.source.tree.Tree,java.lang.String)" class="member-name-link">replace</a><wbr>(com.sun.source.tree.Tree&nbsp;tree,
  <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;replaceWith)</code></div>
-<div class="col-last odd-row-color">
+<div class="col-last even-row-color">
 <div class="block"><a href="../SuggestedFix.Builder.html#replace(com.sun.source.tree.Tree,java.lang.String)"><code>SuggestedFix.Builder.replace(Tree, String)</code></a></div>
 </div>
-<div class="col-first even-row-color"><code>static <a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">SuggestedFix.</span><code><a href="../SuggestedFix.html#replace(com.sun.source.tree.Tree,java.lang.String,int,int)" class="member-name-link">replace</a><wbr>(com.sun.source.tree.Tree&nbsp;node,
+<div class="col-first odd-row-color"><code>static <a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">SuggestedFix.</span><code><a href="../SuggestedFix.html#replace(com.sun.source.tree.Tree,java.lang.String,int,int)" class="member-name-link">replace</a><wbr>(com.sun.source.tree.Tree&nbsp;node,
  <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;replaceWith,
  int&nbsp;startPosAdjustment,
  int&nbsp;endPosAdjustment)</code></div>
-<div class="col-last even-row-color">
+<div class="col-last odd-row-color">
 <div class="block">Replace a tree node with a string, but adjust the start and end positions as well.</div>
 </div>
-<div class="col-first odd-row-color"><code>static <a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../SuggestedFixes.html#replaceIncludingComments(com.sun.source.util.TreePath,java.lang.String,com.google.errorprone.VisitorState)" class="member-name-link">replaceIncludingComments</a><wbr>(com.sun.source.util.TreePath&nbsp;path,
+<div class="col-first even-row-color"><code>static <a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../SuggestedFixes.html#replaceIncludingComments(com.sun.source.util.TreePath,java.lang.String,com.google.errorprone.VisitorState)" class="member-name-link">replaceIncludingComments</a><wbr>(com.sun.source.util.TreePath&nbsp;path,
  <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;replacement,
  <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
-<div class="col-last odd-row-color">
+<div class="col-last even-row-color">
 <div class="block">Replaces the tree at <code>path</code> along with any Javadocs/associated single-line comments.</div>
 </div>
-<div class="col-first even-row-color"><code>static <a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">SuggestedFix.</span><code><a href="../SuggestedFix.html#swap(com.sun.source.tree.Tree,com.sun.source.tree.Tree)" class="member-name-link">swap</a><wbr>(com.sun.source.tree.Tree&nbsp;node1,
+<div class="col-first odd-row-color"><code>static <a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">SuggestedFix.</span><code><a href="../SuggestedFix.html#swap(com.sun.source.tree.Tree,com.sun.source.tree.Tree)" class="member-name-link">swap</a><wbr>(com.sun.source.tree.Tree&nbsp;node1,
  com.sun.source.tree.Tree&nbsp;node2)</code></div>
-<div class="col-last even-row-color">
+<div class="col-last odd-row-color">
 <div class="block"><a href="../SuggestedFix.Builder.html#swap(com.sun.source.tree.Tree,com.sun.source.tree.Tree)"><code>SuggestedFix.Builder.swap(Tree, Tree)</code></a></div>
 </div>
 </div>
@@ -306,9 +311,14 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color">
 <div class="block">Merges all edits from <code>other</code> into <code>this</code>.</div>
 </div>
-<div class="col-first even-row-color"><code><a href="../BranchedSuggestedFixes.Builder.html" title="class in com.google.errorprone.fixes">BranchedSuggestedFixes.Builder</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">BranchedSuggestedFixes.Builder.</span><code><a href="../BranchedSuggestedFixes.Builder.html#startWith(com.google.errorprone.fixes.SuggestedFix)" class="member-name-link">startWith</a><wbr>(<a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a>&nbsp;fix)</code></div>
+<div class="col-first even-row-color"><code>static <a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">SuggestedFix.</span><code><a href="../SuggestedFix.html#merge(com.google.errorprone.fixes.SuggestedFix,com.google.errorprone.fixes.SuggestedFix,com.google.errorprone.fixes.SuggestedFix...)" class="member-name-link">merge</a><wbr>(<a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a>&nbsp;first,
+ <a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a>&nbsp;second,
+ <a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a>...&nbsp;more)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code><a href="../BranchedSuggestedFixes.Builder.html" title="class in com.google.errorprone.fixes">BranchedSuggestedFixes.Builder</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">BranchedSuggestedFixes.Builder.</span><code><a href="../BranchedSuggestedFixes.Builder.html#startWith(com.google.errorprone.fixes.SuggestedFix)" class="member-name-link">startWith</a><wbr>(<a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a>&nbsp;fix)</code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
