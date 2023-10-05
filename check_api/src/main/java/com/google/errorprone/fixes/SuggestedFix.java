@@ -160,6 +160,14 @@ public abstract class SuggestedFix implements Fix {
     return EMPTY;
   }
 
+  public static SuggestedFix merge(SuggestedFix first, SuggestedFix second, SuggestedFix... more) {
+    var builder = builder().merge(first).merge(second);
+    for (SuggestedFix fix : more) {
+      builder.merge(fix);
+    }
+    return builder.build();
+  }
+
   public static Builder builder() {
     return new Builder();
   }
