@@ -1487,6 +1487,9 @@ Fields in Guice modules should be final
 __[NonCanonicalStaticMemberImport](bugpattern/NonCanonicalStaticMemberImport)__<br>
 Static import of member uses non-canonical name
 
+__[NonFinalStaticField](bugpattern/NonFinalStaticField)__<br>
+Static fields should almost always be final.
+
 __[PreferJavaTimeOverload](bugpattern/PreferJavaTimeOverload)__<br>
 Prefer using java.time-based APIs when available. Note that this checker does not and cannot guarantee that the overloads have equivalent semantics, but that is generally the case with overloaded methods.
 
