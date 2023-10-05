@@ -269,6 +269,7 @@ import com.google.errorprone.bugpatterns.NonCanonicalStaticImport;
 import com.google.errorprone.bugpatterns.NonCanonicalStaticMemberImport;
 import com.google.errorprone.bugpatterns.NonCanonicalType;
 import com.google.errorprone.bugpatterns.NonFinalCompileTimeConstant;
+import com.google.errorprone.bugpatterns.NonFinalStaticField;
 import com.google.errorprone.bugpatterns.NonOverridingEquals;
 import com.google.errorprone.bugpatterns.NonRuntimeAnnotation;
 import com.google.errorprone.bugpatterns.NullOptional;
@@ -1158,6 +1159,7 @@ public class BuiltInCheckerSuppliers {
           MutableGuiceModule.class,
           NoAllocationChecker.class,
           NonCanonicalStaticMemberImport.class,
+          NonFinalStaticField.class, // Intentionally disabled in OSS.
           PackageLocation.class,
           ParameterComment.class,
           ParameterMissingNullable.class,
