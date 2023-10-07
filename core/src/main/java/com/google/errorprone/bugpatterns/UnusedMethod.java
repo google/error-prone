@@ -137,6 +137,8 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
           "javax.persistence.PreUpdate",
           "javax.validation.constraints.AssertFalse",
           "javax.validation.constraints.AssertTrue",
+          "net.bytebuddy.asm.Advice.OnMethodEnter",
+          "net.bytebuddy.asm.Advice.OnMethodExit",
           "org.apache.beam.sdk.transforms.DoFn.ProcessElement",
           "org.aspectj.lang.annotation.Pointcut",
           "org.aspectj.lang.annotation.After",
