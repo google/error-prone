@@ -430,6 +430,7 @@
                   <include>com.google.auto.service:auto-service-annotations</include>
                   <include>com.google.code.findbugs:jsr305</include>
                   <include>com.google.protobuf:protobuf-java</include>
+                  <include>javax.inject:javax.inject</include>
                 </includes>
               </artifactSet>
             </configuration>
