@@ -306,6 +306,17 @@ public class CompilationTestHelper {
   public void doTest() {
     checkState(!sources.isEmpty(), "No source files to compile");
     checkState(!run, "doTest should only be called once");
+
+    String depsForTestInputs = System.getProperty("com.google.errorprone.deps_for_test_inputs");
+    if (depsForTestInputs != null) {
+      extraArgs =
+          ImmutableList.<String>builder()
+              .addAll(extraArgs)
+              .add("-cp")
+              .add(depsForTestInputs)
+              .build();
+    }
+
     this.run = true;
     Result result = compile();
     for (Diagnostic<? extends JavaFileObject> diagnostic : diagnosticHelper.getDiagnostics()) {
