@@ -24,12 +24,14 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.canBeRemoved;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.hasDirectAnnotationWithSimpleName;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.google.errorprone.util.ASTHelpers.isStatic;
 import static javax.lang.model.element.ElementKind.FIELD;
 import static javax.lang.model.element.Modifier.FINAL;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
@@ -48,6 +50,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /** A BugPattern; see the summary. */
 @BugPattern(summary = "Static fields should almost always be final.", severity = WARNING)
 public final class NonFinalStaticField extends BugChecker implements VariableTreeMatcher {
+  private static final ImmutableSet<String> ANNOTATIONS_TO_AVOID =
+      ImmutableSet.of("Captor", "Inject", "Mock", "TestParameter");
+
   @Override
   public Description matchVariable(VariableTree tree, VisitorState state) {
     var symbol = getSymbol(tree);
@@ -58,6 +63,10 @@ public final class NonFinalStaticField extends BugChecker implements VariableTre
       return NO_MATCH;
     }
     if (isConsideredFinal(symbol)) {
+      return NO_MATCH;
+    }
+    if (ANNOTATIONS_TO_AVOID.stream()
+        .anyMatch(anno -> hasDirectAnnotationWithSimpleName(tree, anno))) {
       return NO_MATCH;
     }
     if (!canBeRemoved(symbol, state) || isEverMutatedInSameCompilationUnit(symbol, state)) {

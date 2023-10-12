@@ -183,4 +183,16 @@ public final class NonFinalStaticFieldTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void exemptedAnnotation_noFinding() {
+    compilationTestHelper
+        .addSourceLines(
+            "Test.java", //
+            "import org.mockito.Mock;",
+            "public class Test {",
+            "  @Mock private static String foo;",
+            "}")
+        .doTest();
+  }
 }
