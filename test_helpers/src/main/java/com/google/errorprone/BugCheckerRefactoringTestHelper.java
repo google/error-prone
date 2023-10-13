@@ -244,6 +244,13 @@ public class BugCheckerRefactoringTestHelper {
 
   public void doTest(TestMode testMode) {
     checkState(!run, "doTest should only be called once");
+
+    String depsForTestInputs = System.getProperty("com.google.errorprone.deps_for_test_inputs");
+    if (depsForTestInputs != null) {
+      options =
+          ImmutableList.<String>builder().addAll(options).add("-cp").add(depsForTestInputs).build();
+    }
+
     this.run = true;
     for (Map.Entry<JavaFileObject, JavaFileObject> entry : sources.entrySet()) {
       try {
