@@ -35,7 +35,6 @@ import static java.util.stream.Stream.concat;
 
 import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -89,7 +88,17 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
               .onDescendantOf("com.google.common.truth.extensions.proto.ProtoFluentAssertion"),
           instanceMethod().onDescendantOf("com.google.common.truth.extensions.proto.ProtoSubject"));
 
-  private final Matcher<ExpressionTree> scalarContains;
+  private static final Matcher<ExpressionTree> SCALAR_CONTAINS =
+      instanceMethod()
+          .onDescendantOfAny(
+              "com.google.common.truth.IterableSubject", "com.google.common.truth.StreamSubject")
+          .namedAnyOf(
+              "contains",
+              "containsExactly",
+              "doesNotContain",
+              "containsAnyOf",
+              "containsNoneOf",
+              "containsAtLeast");
 
   private static final Matcher<ExpressionTree> IS_ANY_OF =
       instanceMethod()
@@ -152,31 +161,8 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
   private final TypeCompatibility typeCompatibility;
 
   @Inject
-  TruthIncompatibleType(TypeCompatibility typeCompatibility, ErrorProneFlags flags) {
+  TruthIncompatibleType(TypeCompatibility typeCompatibility) {
     this.typeCompatibility = typeCompatibility;
-    this.scalarContains =
-        flags.getBoolean("TruthIncompatibleType:YetMore").orElse(true)
-            ? instanceMethod()
-                .onDescendantOfAny(
-                    "com.google.common.truth.IterableSubject",
-                    "com.google.common.truth.StreamSubject")
-                .namedAnyOf(
-                    "contains",
-                    "containsExactly",
-                    "doesNotContain",
-                    "containsAnyOf",
-                    "containsNoneOf",
-                    "containsAtLeast")
-            : instanceMethod()
-                .onDescendantOfAny(
-                    "com.google.common.truth.IterableSubject",
-                    "com.google.common.truth.StreamSubject")
-                .namedAnyOf(
-                    "contains",
-                    "containsExactly",
-                    "doesNotContain",
-                    "containsAnyOf",
-                    "containsNoneOf");
   }
 
   @Override
@@ -297,7 +283,7 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
   }
 
   private Stream<Description> matchScalarContains(MethodInvocationTree tree, VisitorState state) {
-    if (!scalarContains.matches(tree, state)) {
+    if (!SCALAR_CONTAINS.matches(tree, state)) {
       return Stream.empty();
     }
     ExpressionTree receiver = getReceiver(tree);
