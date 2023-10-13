@@ -83,7 +83,7 @@ public final class HeldLockAnalyzer {
               .onDescendantOf("java.util.Map")
               .namedAnyOf("forEach", "replaceAll", "computeIfAbsent", "computeIfPresent", "merge"),
           instanceMethod().onDescendantOf("java.util.List").named("replaceAll"),
-          instanceMethod().onDescendantOf("java.util.Iterable").named("forEach"),
+          instanceMethod().onDescendantOf("java.lang.Iterable").named("forEach"),
           instanceMethod().onDescendantOf("java.util.Iterator").named("forEachRemaining"),
           staticMethod()
               .onClass("com.google.common.collect.Iterables")
