@@ -1443,7 +1443,7 @@ __[FloggerMessageFormat](bugpattern/FloggerMessageFormat)__<br>
 Invalid message format-style format specifier ({0}), expected printf-style (%s)
 
 __[FloggerRedundantIsEnabled](bugpattern/FloggerRedundantIsEnabled)__<br>
-Logger level check is already implied in the log() call. An explicit at[Level]().isEnabled() check is redundant.
+Logger level check is already implied in the log() call. An explicit atLEVEL().isEnabled() check is redundant.
 
 __[FloggerRequiredModifiers](bugpattern/FloggerRequiredModifiers)__<br>
 FluentLogger.forEnclosingClass should always be saved to a private static final field.

@@ -1,6 +1,6 @@
 ---
 title: FloggerRedundantIsEnabled
-summary: Logger level check is already implied in the log() call. An explicit at[Level]().isEnabled()
+summary: Logger level check is already implied in the log() call. An explicit atLEVEL().isEnabled()
   check is redundant.
 layout: bugpattern
 tags: ''
