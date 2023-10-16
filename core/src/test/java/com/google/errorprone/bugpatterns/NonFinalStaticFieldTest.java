@@ -195,4 +195,20 @@ public final class NonFinalStaticFieldTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void volatileRemoved() {
+    refactoringTestHelper
+        .addInputLines(
+            "Test.java", //
+            "public class Test {",
+            "  private volatile static String FOO = \"\";",
+            "}")
+        .addOutputLines(
+            "Test.java", //
+            "public class Test {",
+            "  private static final String FOO = \"\";",
+            "}")
+        .doTest();
+  }
 }

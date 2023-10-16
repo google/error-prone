@@ -20,6 +20,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.fixes.SuggestedFix.emptyFix;
 import static com.google.errorprone.fixes.SuggestedFix.merge;
 import static com.google.errorprone.fixes.SuggestedFixes.addModifiers;
+import static com.google.errorprone.fixes.SuggestedFixes.removeModifiers;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.canBeRemoved;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -46,6 +47,7 @@ import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
+import javax.lang.model.element.Modifier;
 
 /** A BugPattern; see the summary. */
 @BugPattern(summary = "Static fields should almost always be final.", severity = WARNING)
@@ -75,7 +77,10 @@ public final class NonFinalStaticField extends BugChecker implements VariableTre
     return describeMatch(
         tree,
         merge(
-            addModifiers(tree, state, FINAL).orElse(emptyFix()),
+            addModifiers(tree, tree.getModifiers(), state, ImmutableSet.of(FINAL))
+                .orElse(emptyFix()),
+            removeModifiers(tree.getModifiers(), state, ImmutableSet.of(Modifier.VOLATILE))
+                .orElse(emptyFix()),
             addDefaultInitializerIfNecessary(tree, state)));
   }
 
