@@ -1186,6 +1186,9 @@ StringCharset
 __[StringSplitter](bugpattern/StringSplitter)__<br>
 String.split(String) has surprising behavior
 
+__[SuperEqualsIsObjectEquals](bugpattern/SuperEqualsIsObjectEquals)__<br>
+&#96;super.equals(obj)&#96; is equivalent to &#96;this &#61;&#61; obj&#96; here
+
 __[SwigMemoryLeak](bugpattern/SwigMemoryLeak)__<br>
 SWIG generated code that can&#39;t call a C++ destructor will leak memory
 
