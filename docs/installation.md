@@ -126,7 +126,6 @@ Download the following artifacts from maven:
     [https://repo1.maven.org/maven2/com/google/errorprone/error_prone_core/](https://repo1.maven.org/maven2/com/google/errorprone/error_prone_core/)
 *   `dataflow-errorprone-${DATAFLOW_VERSION?}.jar` from
     [https://repo1.maven.org/maven2/io/github/eisop/dataflow-errorprone/](https://repo1.maven.org/maven2/io/github/eisop/dataflow-errorprone/)
-*   [`https://repo1.maven.org/maven2/javax/inject/javax.inject/1/javax.inject-1.jar`](https://repo1.maven.org/maven2/javax/inject/javax.inject/1/javax.inject-1.jar)
 
 and add the following javac task to your project's `build.xml` file:
 
@@ -134,7 +133,6 @@ and add the following javac task to your project's `build.xml` file:
     <path id="processorpath.ref">
       <pathelement location="${user.home}/.m2/repository/com/google/errorprone/error_prone_core/${error-prone.version}/error_prone_core-${error-prone.version}-with-dependencies.jar"/>
       <pathelement location="${user.home}/.m2/repository/io/github/eisop/dataflow-errorprone/${dataflow.version}/dataflow-errorprone-${dataflow.version}.jar"/>
-      <pathelement location="${user.home}/.m2/repository/javax/inject/javax.inject/1/javax.inject-1.jar"/>
     </path>
 
     <javac srcdir="src" destdir="build" fork="yes" includeantruntime="no">
@@ -192,7 +190,6 @@ Example:
 ```bash
 wget https://repo1.maven.org/maven2/com/google/errorprone/error_prone_core/${EP_VERSION?}/error_prone_core-${EP_VERSION?}-with-dependencies.jar
 wget https://repo1.maven.org/maven2/io/github/eisop/dataflow-errorprone/${DATAFLOW_VERSION?}/dataflow-errorprone-${DATAFLOW_VERSION?}.jar
-wget https://repo1.maven.org/maven2/javax/inject/javax.inject/1/javax.inject-1.jar
 javac \
   -J--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED \
   -J--add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED \
@@ -205,7 +202,7 @@ javac \
   -J--add-opens=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED \
   -J--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED \
   -XDcompilePolicy=simple \
-  -processorpath error_prone_core-${EP_VERSION?}-with-dependencies.jar:dataflow-errorprone-${DATAFLOW_VERSION?}.jar:javax.inject-1.jar \
+  -processorpath error_prone_core-${EP_VERSION?}-with-dependencies.jar:dataflow-errorprone-${DATAFLOW_VERSION?}.jar \
   '-Xplugin:ErrorProne -XepDisableAllChecks -Xep:CollectionIncompatibleType:ERROR' \
   ShortSet.java
 ```
