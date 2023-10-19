@@ -1186,8 +1186,8 @@ StringCharset
 __[StringSplitter](bugpattern/StringSplitter)__<br>
 String.split(String) has surprising behavior
 
-__[SuperEqualsIsObjectEquals](bugpattern/SuperEqualsIsObjectEquals)__<br>
-&#96;super.equals(obj)&#96; is equivalent to &#96;this &#61;&#61; obj&#96; here
+__[SuperCallToObjectMethod](bugpattern/SuperCallToObjectMethod)__<br>
+&#96;super.equals(obj)&#96; and &#96;super.hashCode()&#96; are often bugs when they call the methods defined in &#96;java.lang.Object&#96;
 
 __[SwigMemoryLeak](bugpattern/SwigMemoryLeak)__<br>
 SWIG generated code that can&#39;t call a C++ destructor will leak memory
