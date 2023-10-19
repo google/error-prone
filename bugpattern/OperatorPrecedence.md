@@ -23,8 +23,24 @@ The [Google Java Style Guide §4.7][style] states:
 
 [style]: https://google.github.io/styleguide/javaguide.html#s4.7-grouping-parentheses
 
-Use grouping parentheses to disambiguate expressions that contain both `||` and
-`&&`, or both shift and arithmetic operators.
+Use grouping parentheses to disambiguate expressions that could be
+misinterpreted.
+
+For example, consider this:
+
+```java
+boolean d = (a && b) || c;",
+boolean e = (a || b) ? c : d;",
+int z = (x + y) << 2;",
+```
+
+Instead of this:
+
+```java
+boolean r = a && b || c;",
+boolean e = a || b ? c : d;",
+int z = x + y << 2;",
+```
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("OperatorPrecedence")` to the enclosing element.
