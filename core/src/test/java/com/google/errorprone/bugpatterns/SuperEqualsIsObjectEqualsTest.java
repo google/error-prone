@@ -126,6 +126,34 @@ public class SuperEqualsIsObjectEqualsTest {
         .doTest();
   }
 
+  @Test
+  public void refactoringNeedsParens() {
+    refactoringHelper()
+        .addInputLines(
+            "Foo.java",
+            "class Foo {",
+            "  int i;",
+            "  boolean notEquals(Object obj) {",
+            "    if (obj instanceof Foo) {",
+            "      return i != ((Foo) obj).i;",
+            "    }",
+            "    return !super.equals(obj);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Foo.java",
+            "class Foo {",
+            "  int i;",
+            "  boolean notEquals(Object obj) {",
+            "    if (obj instanceof Foo) {",
+            "      return i != ((Foo) obj).i;",
+            "    }",
+            "    return !(this == obj);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
   private CompilationTestHelper helper() {
     return CompilationTestHelper.newInstance(SuperEqualsIsObjectEquals.class, getClass());
   }

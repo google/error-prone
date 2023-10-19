@@ -24,6 +24,7 @@ import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.sun.source.tree.Tree.Kind.BLOCK;
 import static com.sun.source.tree.Tree.Kind.IDENTIFIER;
+import static com.sun.source.tree.Tree.Kind.LOGICAL_COMPLEMENT;
 import static com.sun.source.tree.Tree.Kind.MEMBER_SELECT;
 import static com.sun.source.tree.Tree.Kind.METHOD;
 import static com.sun.source.tree.Tree.Kind.RETURN;
@@ -71,9 +72,22 @@ public class SuperEqualsIsObjectEquals extends BugChecker implements MethodInvoc
       return describeMatch(
           tree,
           SuggestedFix.replace(
-              tree, "this == " + state.getSourceForNode(getOnlyElement(tree.getArguments()))));
+              tree,
+              maybeParenthesize(
+                  "this == " + state.getSourceForNode(getOnlyElement(tree.getArguments())),
+                  state)));
     }
     return NO_MATCH;
+  }
+
+  private static String maybeParenthesize(String s, VisitorState state) {
+    /*
+     * TODO(cpovirk): There is no way that this is complete. Compare
+     * ExpressionTemplate.getPrecedence and SuggestedFixes.castTree.
+     */
+    return state.getPath().getParentPath().getLeaf().getKind() == LOGICAL_COMPLEMENT
+        ? "(" + s + ")"
+        : s;
   }
 
   private static boolean methodBodyIsOnlyReturnSuperEquals(VisitorState state) {
