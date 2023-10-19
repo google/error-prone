@@ -351,7 +351,7 @@ import com.google.errorprone.bugpatterns.StringFormatWithLiteral;
 import com.google.errorprone.bugpatterns.StringSplitter;
 import com.google.errorprone.bugpatterns.StronglyTypeByteString;
 import com.google.errorprone.bugpatterns.SubstringOfZero;
-import com.google.errorprone.bugpatterns.SuperEqualsIsObjectEquals;
+import com.google.errorprone.bugpatterns.SuperCallToObjectMethod;
 import com.google.errorprone.bugpatterns.SuppressWarningsDeprecated;
 import com.google.errorprone.bugpatterns.SuppressWarningsWithoutExplanation;
 import com.google.errorprone.bugpatterns.SwigMemoryLeak;
@@ -1040,7 +1040,7 @@ public class BuiltInCheckerSuppliers {
           StringCharset.class,
           StringSplitter.class,
           Suggester.class,
-          SuperEqualsIsObjectEquals.class,
+          SuperCallToObjectMethod.class,
           SwigMemoryLeak.class,
           SynchronizeOnNonFinalField.class,
           ThreadJoinLoop.class,
