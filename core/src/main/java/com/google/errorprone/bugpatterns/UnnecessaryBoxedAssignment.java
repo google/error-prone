@@ -65,7 +65,8 @@ public class UnnecessaryBoxedAssignment extends BugChecker
   }
 
   private Description matchCommon(ExpressionTree expression, VisitorState state) {
-    if (expression == null || !VALUE_OF_MATCHER.matches(expression, state)) {
+    if (!(expression instanceof MethodInvocationTree)
+        || !VALUE_OF_MATCHER.matches(expression, state)) {
       return Description.NO_MATCH;
     }
     MethodInvocationTree methodInvocationTree = (MethodInvocationTree) expression;
