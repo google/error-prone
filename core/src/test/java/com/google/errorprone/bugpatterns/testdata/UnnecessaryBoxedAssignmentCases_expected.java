@@ -16,6 +16,8 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
+import java.util.function.Function;
+
 /**
  * @author awturner@google.com (Andy Turner)
  */
@@ -75,5 +77,9 @@ class UnnecessaryBoxedAssignmentCases {
     Integer a = aInteger;
     a = aInteger;
     return a;
+  }
+
+  void negative_methodReference() {
+    Function<String, Boolean> toBoolean = Boolean::valueOf;
   }
 }
