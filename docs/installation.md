@@ -46,7 +46,7 @@ Edit your `pom.xml` file to add settings to the maven-compiler-plugin:
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.10.1</version>
+        <version>3.11.0</version>
         <configuration>
           <source>8</source>
           <target>8</target>
