@@ -1,6 +1,6 @@
 ---
 title: MemberName
-summary: Methods and non-static variables should be named in lowerCamelCase.
+summary: Methods and non-static variables should be named in lowerCamelCase
 layout: bugpattern
 tags: ''
 severity: WARNING
