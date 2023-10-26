@@ -81,11 +81,24 @@ import java.util.stream.Stream;
 public class ModifiedButNotUsed extends BugChecker
     implements ExpressionStatementTreeMatcher, VariableTreeMatcher {
 
+  // Note: we're only using the Builders of these, and there's a subtype relationship, so, for
+  // example, ImmutableSet.Builder (extends ImmutableCollection.Builder) doesn't need to be
+  // specified.
   private static final ImmutableSet<String> GUAVA_IMMUTABLES =
       ImmutableSet.of(
+          // keep-sorted start
+          "com.google.common.collect.ImmutableClassToInstanceMap",
           "com.google.common.collect.ImmutableCollection",
           "com.google.common.collect.ImmutableMap",
-          "com.google.common.collect.ImmutableMultimap");
+          "com.google.common.collect.ImmutableMultimap",
+          "com.google.common.collect.ImmutableMultiset",
+          "com.google.common.collect.ImmutableRangeMap",
+          "com.google.common.collect.ImmutableRangeSet",
+          "com.google.common.collect.ImmutableSortedMap",
+          "com.google.common.collect.ImmutableSortedSet",
+          "com.google.common.collect.ImmutableTable"
+          // keep-sorted end
+          );
 
   private static final ImmutableSet<String> COLLECTIONS =
       concat(
