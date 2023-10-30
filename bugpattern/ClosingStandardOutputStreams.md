@@ -19,7 +19,7 @@ subsequent standard output to be dropped, including stack traces from exceptions
 that propagate to the top level.
 
 Avoid using try-with-resources to manage `PrintWriter`s or `OutputStream`s that
-wrap `System.out` or `System.err`, since the try-with-resource statemnet will
+wrap `System.out` or `System.err`, since the try-with-resource statement will
 close the underlying streams.
 
 That is, prefer this:
