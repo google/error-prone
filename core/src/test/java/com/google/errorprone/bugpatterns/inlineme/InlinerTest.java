@@ -1228,6 +1228,48 @@ public class InlinerTest {
         .doTest();
   }
 
+  @Test
+  public void paramCast_b308614050() {
+    refactoringTestHelper
+        .addInputLines(
+            "Client.java",
+            "package com.google.foo;",
+            "import com.google.errorprone.annotations.InlineMe;",
+            "public final class Client {",
+            "  @InlineMe(",
+            "      replacement = \"Client.after(value.doubleValue())\",",
+            "      imports = {\"com.google.foo.Client\"})",
+            "  public static void before(Long value) {",
+            "    after(value.doubleValue());",
+            "  }",
+            "  public static void after(double value) {",
+            "    // do nothing",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "Caller.java",
+            "import com.google.foo.Client;",
+            "public final class Caller {",
+            "  public void doTest() {",
+            "    Object value = 42L;",
+            "    Client.before((Long) value);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Caller.java",
+            "import com.google.foo.Client;",
+            "public final class Caller {",
+            "  public void doTest() {",
+            "    Object value = 42L;",
+            // TODO(b/308614050): this is a bug! you can't call doubleValue() on an Object!
+            "    Client.after((Long) value.doubleValue());",
+            "  }",
+            "}")
+        .allowBreakingChanges()
+        .doTest();
+  }
+
   private BugCheckerRefactoringTestHelper bugCheckerWithPrefixFlag(String prefix) {
     return BugCheckerRefactoringTestHelper.newInstance(Inliner.class, getClass())
         .setArgs("-XepOpt:" + PREFIX_FLAG + "=" + prefix);
