@@ -20,10 +20,12 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
+import static com.google.errorprone.util.ASTHelpers.findEnclosingNode;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
+import static com.google.errorprone.util.ASTHelpers.outermostClass;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.BugPattern;
@@ -34,8 +36,10 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.suppliers.Suppliers;
+import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 
@@ -68,6 +72,11 @@ public class ASTHelpersSuggestions extends BugChecker implements MethodInvocatio
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     ExpressionTree receiver = getReceiver(tree);
     if (receiver == null) {
+      return NO_MATCH;
+    }
+    ClassSymbol outermost =
+        outermostClass(getSymbol(findEnclosingNode(state.getPath(), ClassTree.class)));
+    if (outermost.getQualifiedName().contentEquals("com.google.errorprone.util.ASTHelpers")) {
       return NO_MATCH;
     }
     if (SYMBOL.matches(tree, state)) {
