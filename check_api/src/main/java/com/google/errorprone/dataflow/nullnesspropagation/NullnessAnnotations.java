@@ -93,13 +93,11 @@ public class NullnessAnnotations {
      * We try to read annotations in two ways:
      *
      * 1. from the TypeMirror: This is how we "should" always read *type-use* annotations, but
-     * JDK-8225377 prevents it from working across compilation boundaries.
+     * we can't rely on it until the fix for JDK-8225377 is widely available.
      *
      * 2. from getRawAttributes(): This works around the problem across compilation boundaries, and
      * it handles declaration annotations (though there are other ways we could handle declaration
-     * annotations). But it has a bug of its own with type-use annotations on inner classes
-     * (b/203207989). To reduce the chance that we hit the inner-class bug, we apply it only if the
-     * first approach fails.
+     * annotations).
      */
     TypeMirror elementType;
     switch (sym.getKind()) {
