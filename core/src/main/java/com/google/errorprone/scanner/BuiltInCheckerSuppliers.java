@@ -539,6 +539,8 @@ import com.google.errorprone.bugpatterns.nullness.FieldMissingNullable;
 import com.google.errorprone.bugpatterns.nullness.NullArgumentForNonNullParameter;
 import com.google.errorprone.bugpatterns.nullness.NullablePrimitive;
 import com.google.errorprone.bugpatterns.nullness.NullablePrimitiveArray;
+import com.google.errorprone.bugpatterns.nullness.NullableTypeParameter;
+import com.google.errorprone.bugpatterns.nullness.NullableWildcard;
 import com.google.errorprone.bugpatterns.nullness.ParameterMissingNullable;
 import com.google.errorprone.bugpatterns.nullness.ReturnMissingNullable;
 import com.google.errorprone.bugpatterns.nullness.UnnecessaryCheckNotNull;
@@ -998,7 +1000,9 @@ public class BuiltInCheckerSuppliers {
           NullableOptional.class,
           NullablePrimitive.class,
           NullablePrimitiveArray.class,
+          NullableTypeParameter.class,
           NullableVoid.class,
+          NullableWildcard.class,
           ObjectEqualsForPrimitives.class,
           ObjectToString.class,
           ObjectsHashCodePrimitive.class,
