@@ -16,8 +16,10 @@
 
 package com.google.errorprone.dataflow.nullnesspropagation;
 
+import static com.google.common.collect.ImmutableList.toImmutableList;
 import static javax.lang.model.element.ElementKind.TYPE_PARAMETER;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.util.MoreAnnotations;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.IdentifierTree;
@@ -67,6 +69,13 @@ public class NullnessAnnotations {
   public static Optional<Nullness> fromAnnotationMirrors(
       List<? extends AnnotationMirror> annotations) {
     return fromAnnotationStream(annotations.stream());
+  }
+
+  public static ImmutableList<AnnotationTree> annotationsRelevantToNullness(
+      List<? extends AnnotationTree> annotations) {
+    return annotations.stream()
+        .filter(a -> ANNOTATION_RELEVANT_TO_NULLNESS.test(simpleName(a)))
+        .collect(toImmutableList());
   }
 
   private static String simpleName(AnnotationTree annotation) {

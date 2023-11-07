@@ -14,17 +14,20 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.nullness;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.AnnotatedTypeTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
+import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnnotations;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
@@ -40,7 +43,8 @@ import java.util.List;
  * @author sebastian.h.monte@gmail.com (Sebastian Monte)
  */
 @BugPattern(
-    summary = "@Nullable should not be used for primitive types since they cannot be null",
+    summary =
+        "Nullness annotations should not be used for primitive types since they cannot be null",
     severity = WARNING,
     tags = StandardTags.STYLE)
 public class NullablePrimitive extends BugChecker
@@ -70,10 +74,13 @@ public class NullablePrimitive extends BugChecker
     if (!type.isPrimitive()) {
       return NO_MATCH;
     }
-    AnnotationTree annotation = ASTHelpers.getAnnotationWithSimpleName(annotations, "Nullable");
-    if (annotation == null) {
+    ImmutableList<AnnotationTree> annotationsRelevantToNullness =
+        NullnessAnnotations.annotationsRelevantToNullness(annotations);
+    if (annotationsRelevantToNullness.isEmpty()) {
       return NO_MATCH;
     }
-    return describeMatch(annotation, SuggestedFix.delete(annotation));
+    SuggestedFix.Builder fix = SuggestedFix.builder();
+    annotationsRelevantToNullness.forEach(fix::delete);
+    return describeMatch(annotationsRelevantToNullness.get(0), fix.build());
   }
 }
