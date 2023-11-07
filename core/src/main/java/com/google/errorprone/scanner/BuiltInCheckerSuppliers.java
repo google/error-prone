@@ -536,6 +536,7 @@ import com.google.errorprone.bugpatterns.nullness.EqualsBrokenForNull;
 import com.google.errorprone.bugpatterns.nullness.EqualsMissingNullable;
 import com.google.errorprone.bugpatterns.nullness.ExtendsObject;
 import com.google.errorprone.bugpatterns.nullness.FieldMissingNullable;
+import com.google.errorprone.bugpatterns.nullness.MultipleNullnessAnnotations;
 import com.google.errorprone.bugpatterns.nullness.NullArgumentForNonNullParameter;
 import com.google.errorprone.bugpatterns.nullness.NullablePrimitive;
 import com.google.errorprone.bugpatterns.nullness.NullablePrimitiveArray;
@@ -981,6 +982,7 @@ public class BuiltInCheckerSuppliers {
           ModifyCollectionInEnhancedForLoop.class,
           ModifySourceCollectionInStream.class,
           MultimapKeys.class,
+          MultipleNullnessAnnotations.class,
           MultipleParallelOrSequentialCalls.class,
           MultipleUnaryOperatorsInMethodCall.class,
           MutablePublicArray.class,

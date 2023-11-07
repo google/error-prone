@@ -26,6 +26,7 @@ import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -69,6 +70,17 @@ public class NullnessAnnotations {
   public static Optional<Nullness> fromAnnotationMirrors(
       List<? extends AnnotationMirror> annotations) {
     return fromAnnotationStream(annotations.stream());
+  }
+
+  public static boolean annotationsAreAmbiguous(
+      Collection<? extends AnnotationMirror> annotations) {
+    return annotations.stream()
+            .map(a -> simpleName(a).toString())
+            .filter(ANNOTATION_RELEVANT_TO_NULLNESS)
+            .map(NULLABLE_ANNOTATION::test)
+            .distinct()
+            .count()
+        == 2;
   }
 
   public static ImmutableList<AnnotationTree> annotationsRelevantToNullness(
