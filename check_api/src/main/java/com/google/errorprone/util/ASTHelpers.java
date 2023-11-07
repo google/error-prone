@@ -2508,7 +2508,6 @@ public class ASTHelpers {
   }
 
   /** Returns true if the symbol is static. Returns {@code false} for module symbols. */
-  @SuppressWarnings("ASTHelpersSuggestions")
   public static boolean isStatic(Symbol symbol) {
     switch (symbol.getKind()) {
       case MODULE:
