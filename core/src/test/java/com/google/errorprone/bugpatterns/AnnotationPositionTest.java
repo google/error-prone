@@ -605,4 +605,19 @@ public final class AnnotationPositionTest {
             "}")
         .doTest(TEXT_MATCH);
   }
+
+  @Test
+  public void twoNonTypeAnnotation() {
+    helper
+        .addSourceLines(
+            "AnotherNonTypeUse.java", //
+            "@interface AnotherNonTypeUse {}")
+        .addSourceLines(
+            "Test.java", //
+            "interface Test {",
+            "  // BUG: Diagnostic contains: [AnnotationPosition] @AnotherNonTypeUse is not",
+            "  @NonTypeUse public @AnotherNonTypeUse void f();",
+            "}")
+        .doTest();
+  }
 }
