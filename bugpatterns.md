@@ -1061,7 +1061,7 @@ __[NullableOptional](bugpattern/NullableOptional)__<br>
 Using an Optional variable which is expected to possibly be null is discouraged. It is best to indicate the absence of the value by assigning it an empty optional.
 
 __[NullablePrimitive](bugpattern/NullablePrimitive)__<br>
-@Nullable should not be used for primitive types since they cannot be null
+Nullness annotations should not be used for primitive types since they cannot be null
 
 __[NullablePrimitiveArray](bugpattern/NullablePrimitiveArray)__<br>
 @Nullable type annotations should not be used for primitive types since they cannot be null

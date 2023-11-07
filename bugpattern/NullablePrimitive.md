@@ -1,6 +1,7 @@
 ---
 title: NullablePrimitive
-summary: '@Nullable should not be used for primitive types since they cannot be null'
+summary: Nullness annotations should not be used for primitive types since they cannot
+  be null
 layout: bugpattern
 tags: Style
 severity: WARNING
