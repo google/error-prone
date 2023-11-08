@@ -1070,8 +1070,14 @@ public class ASTHelpers {
    *
    * @deprecated If {@code annotationClass} contains a member that is a {@code Class} or an array of
    *     them, attempting to access that member from the Error Prone checker code will result in a
-   *     runtime exception. Instead, operate on {@code sym.getAnnotationMirrors()} to
-   *     meta-syntactically inspect the annotation.
+   *     runtime exception. Instead, operate on {@code getSymbol(tree).getAnnotationMirrors()} to
+   *     meta-syntactically inspect the annotation. Note that this method (and the {@code
+   *     getSymbol}-based replacement suggested above) looks for annotations not just on the given
+   *     tree (such as a {@link MethodTree}) but also on the symbol referred to by the given tree
+   *     (such as on the {@link MethodSymbol} that is being called by the given {@link
+   *     MethodInvocationTree}). If you want to examine annotations only on the given tree, then use
+   *     {@link #getAnnotations} (or a direct call to a {@code getAnnotations} method declared on a
+   *     specific {@link Tree} subclass) instead.
    */
   @Nullable
   @Deprecated
