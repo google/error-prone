@@ -198,8 +198,13 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color">
 <div class="deprecation-comment">If <code>annotationClass</code> contains a member that is a <code>Class</code> or an array of
      them, attempting to access that member from the Error Prone checker code will result in a
-     runtime exception. Instead, operate on <code>sym.getAnnotationMirrors()</code> to
-     meta-syntactically inspect the annotation.</div>
+     runtime exception. Instead, operate on <code>getSymbol(tree).getAnnotationMirrors()</code> to
+     meta-syntactically inspect the annotation. Note that this method (and the <code>
+     getSymbol</code>-based replacement suggested above) looks for annotations not just on the given
+     tree (such as a <code>MethodTree</code>) but also on the symbol referred to by the given tree
+     (such as on the <code>Symbol.MethodSymbol</code> that is being called by the given <code>MethodInvocationTree</code>). If you want to examine annotations only on the given tree, then use
+     <a href="com/google/errorprone/util/ASTHelpers.html#getAnnotations(com.sun.source.tree.Tree)"><code>ASTHelpers.getAnnotations(com.sun.source.tree.Tree)</code></a> (or a direct call to a <code>getAnnotations</code> method declared on a
+     specific <code>Tree</code> subclass) instead.</div>
 </div>
 <div class="col-summary-item-name even-row-color"><a href="com/google/errorprone/util/ASTHelpers.html#getAnnotation(com.sun.tools.javac.code.Symbol,java.lang.Class)">com.google.errorprone.util.ASTHelpers.getAnnotation<wbr>(Symbol, Class&lt;T&gt;)</a></div>
 <div class="col-last even-row-color">
