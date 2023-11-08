@@ -49,23 +49,17 @@ public final class TruthSelfEquals extends BugChecker implements MethodInvocatio
 
   private static final Matcher<MethodInvocationTree> EQUALS_MATCHER =
       allOf(
-          instanceMethod()
-              .onDescendantOf("com.google.common.truth.Subject")
-              .namedAnyOf("isEqualTo", "isSameInstanceAs")
-              .withParameters("java.lang.Object"),
+          instanceMethod().anyClass().namedAnyOf("isEqualTo", "isSameInstanceAs"),
           TruthSelfEquals::receiverSameAsParentsArgument);
 
   private static final Matcher<MethodInvocationTree> NOT_EQUALS_MATCHER =
       allOf(
-          instanceMethod()
-              .onDescendantOf("com.google.common.truth.Subject")
-              .namedAnyOf("isNotEqualTo", "isNotSameInstanceAs")
-              .withParameters("java.lang.Object"),
+          instanceMethod().anyClass().namedAnyOf("isNotEqualTo", "isNotSameInstanceAs"),
           TruthSelfEquals::receiverSameAsParentsArgument);
 
   private static final Matcher<ExpressionTree> ASSERT_THAT =
       anyOf(
-          staticMethod().onClass("com.google.common.truth.Truth").named("assertThat"),
+          staticMethod().anyClass().named("assertThat"),
           instanceMethod().onDescendantOf("com.google.common.truth.TestVerb").named("that"),
           instanceMethod()
               .onDescendantOf("com.google.common.truth.StandardSubjectBuilder")
