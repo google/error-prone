@@ -65,4 +65,20 @@ public class TruthSelfEqualsTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void iterables() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.truth.Truth.assertThat;",
+            "import java.util.List;",
+            "abstract class Test {",
+            "  void test(List<String> xs) {",
+            "    // BUG: Diagnostic contains:",
+            "    assertThat(xs).containsExactlyElementsIn(xs);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

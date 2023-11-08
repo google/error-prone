@@ -57,6 +57,13 @@ public final class TruthSelfEquals extends BugChecker implements MethodInvocatio
           instanceMethod().anyClass().namedAnyOf("isNotEqualTo", "isNotSameInstanceAs"),
           TruthSelfEquals::receiverSameAsParentsArgument);
 
+  private static final Matcher<MethodInvocationTree> OTHER_MATCHER =
+      allOf(
+          instanceMethod()
+              .anyClass()
+              .namedAnyOf("containsExactlyElementsIn", "containsAtLeastElementsIn", "areEqualTo"),
+          TruthSelfEquals::receiverSameAsParentsArgument);
+
   private static final Matcher<ExpressionTree> ASSERT_THAT =
       anyOf(
           staticMethod().anyClass().named("assertThat"),
@@ -66,21 +73,20 @@ public final class TruthSelfEquals extends BugChecker implements MethodInvocatio
               .named("that"));
 
   @Override
-  public Description matchMethodInvocation(
-      MethodInvocationTree methodInvocationTree, VisitorState state) {
-    if (methodInvocationTree.getArguments().isEmpty()) {
+  public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+    if (tree.getArguments().isEmpty()) {
       return NO_MATCH;
     }
-    Description.Builder description = buildDescription(methodInvocationTree);
-    ExpressionTree toReplace = methodInvocationTree.getArguments().get(0);
-    if (EQUALS_MATCHER.matches(methodInvocationTree, state)) {
+    Description.Builder description = buildDescription(tree);
+    ExpressionTree toReplace = tree.getArguments().get(0);
+    if (EQUALS_MATCHER.matches(tree, state)) {
       description
-          .setMessage(
-              generateSummary(getSymbol(methodInvocationTree).getSimpleName().toString(), "passes"))
-          .addFix(suggestEqualsTesterFix(methodInvocationTree, toReplace, state));
-    } else if (NOT_EQUALS_MATCHER.matches(methodInvocationTree, state)) {
-      description.setMessage(
-          generateSummary(getSymbol(methodInvocationTree).getSimpleName().toString(), "fails"));
+          .setMessage(generateSummary(getSymbol(tree).getSimpleName().toString(), "passes"))
+          .addFix(suggestEqualsTesterFix(tree, toReplace, state));
+    } else if (NOT_EQUALS_MATCHER.matches(tree, state)) {
+      description.setMessage(generateSummary(getSymbol(tree).getSimpleName().toString(), "fails"));
+    } else if (OTHER_MATCHER.matches(tree, state)) {
+      description.setMessage(generateSummary(getSymbol(tree).getSimpleName().toString(), "passes"));
     } else {
       return NO_MATCH;
     }
