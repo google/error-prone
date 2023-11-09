@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns.javadoc;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.BugPattern.StandardTags.STYLE;
+import static com.google.errorprone.bugpatterns.javadoc.Utils.getDiagnosticPosition;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -83,7 +84,12 @@ public final class AlmostJavadoc extends BugChecker implements CompilationUnitTr
         }
         generateFix(comment)
             .ifPresent(
-                fix -> state.reportMatch(describeMatch(javadocableTrees.get(token.pos()), fix)));
+                fix ->
+                    state.reportMatch(
+                        describeMatch(
+                            getDiagnosticPosition(
+                                comment.getSourcePos(0), javadocableTrees.get(token.pos())),
+                            fix)));
       }
     }
     return NO_MATCH;

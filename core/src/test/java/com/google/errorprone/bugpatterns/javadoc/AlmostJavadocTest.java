@@ -153,8 +153,8 @@ public final class AlmostJavadocTest {
         .addSourceLines(
             "Test.java", //
             "public class Test {",
-            "  /* Foo <em>Test</em>. */",
             "  // BUG: Diagnostic contains:",
+            "  /* Foo <em>Test</em>. */",
             "  void foo() {}",
             "}")
         .doTest();
@@ -166,8 +166,8 @@ public final class AlmostJavadocTest {
         .addSourceLines(
             "Test.java", //
             "public enum Test {",
-            "  /* Foo <em>Test</em>. */",
             "  // BUG: Diagnostic contains:",
+            "  /* Foo <em>Test</em>. */",
             "  FOO",
             "}")
         .doTest();
@@ -179,8 +179,8 @@ public final class AlmostJavadocTest {
         .addSourceLines(
             "Test.java", //
             "public enum Test {",
-            "  /* Foo <em>Test</em>. */",
             "  // BUG: Diagnostic contains:",
+            "  /* Foo <em>Test</em>. */",
             "  FOO {",
             "    @Override public String toString() {",
             "      return null;",
@@ -196,8 +196,8 @@ public final class AlmostJavadocTest {
         .addSourceLines(
             "Test.java", //
             "public class Test {",
-            "  /* Foo <em>Test</em>. */",
             "  // BUG: Diagnostic contains:",
+            "  /* Foo <em>Test</em>. */",
             "  int x = 1, y = 2;",
             "}")
         .doTest();
