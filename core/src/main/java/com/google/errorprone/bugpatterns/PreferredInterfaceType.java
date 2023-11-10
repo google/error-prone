@@ -112,7 +112,16 @@ public final class PreferredInterfaceType extends BugChecker implements Compilat
               "com.google.common.collect.ImmutableMultimap",
               "com.google.common.collect.ListMultimap",
               "com.google.common.collect.SetMultimap"),
-          BetterTypes.of(isDescendantOf("java.lang.CharSequence"), "java.lang.String"));
+          BetterTypes.of(isDescendantOf("java.lang.CharSequence"), "java.lang.String"),
+          BetterTypes.of(
+              isDescendantOf("com.google.common.graph.Graph"),
+              "com.google.common.graph.ImmutableGraph"),
+          BetterTypes.of(
+              isDescendantOf("com.google.common.graph.ValueGraph"),
+              "com.google.common.graph.ImmutableValueGraph"),
+          BetterTypes.of(
+              isDescendantOf("com.google.common.graph.Network"),
+              "com.google.common.graph.ImmutableNetwork"));
 
   private static final Matcher<Tree> INTERESTING_TYPE =
       anyOf(

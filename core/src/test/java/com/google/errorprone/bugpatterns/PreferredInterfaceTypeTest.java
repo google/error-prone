@@ -35,21 +35,31 @@ public final class PreferredInterfaceTypeTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
+            "import com.google.common.graph.Graph;",
+            "import com.google.common.graph.GraphBuilder;",
+            "import com.google.common.graph.ImmutableGraph;",
             "import java.util.ArrayList;",
             "import java.util.List;",
             "class Test {",
             "  private static final Iterable<Integer> FOO = new ArrayList<>();",
             "  public static final Iterable<Integer> BAR = new ArrayList<>();",
             "  public static final Iterable<Integer> RAW = new ArrayList<>();",
+            "  public static final Graph<Integer> GRAPH ="
+                + " ImmutableGraph.copyOf(GraphBuilder.undirected().build());",
             "}")
         .addOutputLines(
             "Test.java",
+            "import com.google.common.graph.Graph;",
+            "import com.google.common.graph.GraphBuilder;",
+            "import com.google.common.graph.ImmutableGraph;",
             "import java.util.ArrayList;",
             "import java.util.List;",
             "class Test {",
             "  private static final List<Integer> FOO = new ArrayList<>();",
             "  public static final List<Integer> BAR = new ArrayList<>();",
             "  public static final List<Integer> RAW = new ArrayList<>();",
+            "  public static final ImmutableGraph<Integer> GRAPH ="
+                + " ImmutableGraph.copyOf(GraphBuilder.undirected().build());",
             "}")
         .doTest();
   }
