@@ -16,10 +16,10 @@
 
 package com.google.errorprone.bugpatterns.javadoc;
 
+import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
 import static org.junit.Assume.assumeTrue;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
-import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
@@ -53,6 +53,28 @@ public final class InvalidParamTest {
   }
 
   @Test
+  public void badColon() {
+    refactoring
+        .addInputLines(
+            "Test.java",
+            "interface Test {",
+            "  /**",
+            "   * @param c: foo",
+            "   */",
+            "  <T> void foo(int c);",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "interface Test {",
+            "  /**",
+            "   * @param c foo",
+            "   */",
+            "  <T> void foo(int c);",
+            "}")
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
   public void badParameterName() {
     refactoring
         .addInputLines(
@@ -75,7 +97,7 @@ public final class InvalidParamTest {
             "   */",
             "  <T> void foo(int a, int b);",
             "}")
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest(TEXT_MATCH);
   }
 
   @Test
@@ -99,7 +121,7 @@ public final class InvalidParamTest {
             "   */",
             "  <T> void foo(int a);",
             "}")
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest(TEXT_MATCH);
   }
 
   @Test
@@ -121,7 +143,7 @@ public final class InvalidParamTest {
             "   */",
             "  void foo(int foobar);",
             "}")
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest(TEXT_MATCH);
   }
 
   @Test
