@@ -23,17 +23,20 @@ import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
+import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.sameVariable;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
+import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
+import javax.inject.Inject;
 
 /**
  * Points out if an object is tested for equality/inequality to itself using Truth Libraries.
@@ -47,22 +50,22 @@ import com.sun.source.tree.MethodInvocationTree;
     severity = ERROR)
 public final class TruthSelfEquals extends BugChecker implements MethodInvocationTreeMatcher {
 
-  private static final Matcher<MethodInvocationTree> EQUALS_MATCHER =
+  private final Matcher<MethodInvocationTree> equalsMatcher =
       allOf(
           instanceMethod().anyClass().namedAnyOf("isEqualTo", "isSameInstanceAs"),
-          TruthSelfEquals::receiverSameAsParentsArgument);
+          this::receiverSameAsParentsArgument);
 
-  private static final Matcher<MethodInvocationTree> NOT_EQUALS_MATCHER =
+  private final Matcher<MethodInvocationTree> notEqualsMatcher =
       allOf(
           instanceMethod().anyClass().namedAnyOf("isNotEqualTo", "isNotSameInstanceAs"),
-          TruthSelfEquals::receiverSameAsParentsArgument);
+          this::receiverSameAsParentsArgument);
 
-  private static final Matcher<MethodInvocationTree> OTHER_MATCHER =
+  private final Matcher<MethodInvocationTree> otherMatcher =
       allOf(
           instanceMethod()
               .anyClass()
               .namedAnyOf("containsExactlyElementsIn", "containsAtLeastElementsIn", "areEqualTo"),
-          TruthSelfEquals::receiverSameAsParentsArgument);
+          this::receiverSameAsParentsArgument);
 
   private static final Matcher<ExpressionTree> ASSERT_THAT =
       anyOf(
@@ -71,6 +74,12 @@ public final class TruthSelfEquals extends BugChecker implements MethodInvocatio
           instanceMethod()
               .onDescendantOf("com.google.common.truth.StandardSubjectBuilder")
               .named("that"));
+  private final ConstantExpressions constantExpressions;
+
+  @Inject
+  TruthSelfEquals(ConstantExpressions constantExpressions) {
+    this.constantExpressions = constantExpressions;
+  }
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
@@ -79,13 +88,13 @@ public final class TruthSelfEquals extends BugChecker implements MethodInvocatio
     }
     Description.Builder description = buildDescription(tree);
     ExpressionTree toReplace = tree.getArguments().get(0);
-    if (EQUALS_MATCHER.matches(tree, state)) {
+    if (equalsMatcher.matches(tree, state)) {
       description
           .setMessage(generateSummary(getSymbol(tree).getSimpleName().toString(), "passes"))
           .addFix(suggestEqualsTesterFix(tree, toReplace, state));
-    } else if (NOT_EQUALS_MATCHER.matches(tree, state)) {
+    } else if (notEqualsMatcher.matches(tree, state)) {
       description.setMessage(generateSummary(getSymbol(tree).getSimpleName().toString(), "fails"));
-    } else if (OTHER_MATCHER.matches(tree, state)) {
+    } else if (otherMatcher.matches(tree, state)) {
       description.setMessage(generateSummary(getSymbol(tree).getSimpleName().toString(), "passes"));
     } else {
       return NO_MATCH;
@@ -106,20 +115,27 @@ public final class TruthSelfEquals extends BugChecker implements MethodInvocatio
         + "consider using EqualsTester.";
   }
 
-  private static boolean receiverSameAsParentsArgument(MethodInvocationTree t, VisitorState state) {
-    ExpressionTree rec = ASTHelpers.getReceiver(t);
+  private boolean receiverSameAsParentsArgument(MethodInvocationTree tree, VisitorState state) {
+    ExpressionTree rec = getReceiver(tree);
     if (rec == null) {
       return false;
     }
     if (!ASSERT_THAT.matches(rec, state)) {
       return false;
     }
-    if (!ASTHelpers.sameVariable(
-        getOnlyElement(((MethodInvocationTree) rec).getArguments()),
-        getOnlyElement(t.getArguments()))) {
+    if (((MethodInvocationTree) rec).getArguments().size() != 1
+        || tree.getArguments().size() != 1) {
+      // Oops: we over-matched and this doesn't look like a normal assertion.
       return false;
     }
-    return true;
+    ExpressionTree receiverExpression = getOnlyElement(((MethodInvocationTree) rec).getArguments());
+    ExpressionTree invocationExpression = getOnlyElement(tree.getArguments());
+    if (sameVariable(receiverExpression, invocationExpression)) {
+      return true;
+    }
+    var receiverConstant = constantExpressions.constantExpression(receiverExpression, state);
+    var invocationConstant = constantExpressions.constantExpression(invocationExpression, state);
+    return receiverConstant.isPresent() && receiverConstant.equals(invocationConstant);
   }
 
   private static SuggestedFix suggestEqualsTesterFix(

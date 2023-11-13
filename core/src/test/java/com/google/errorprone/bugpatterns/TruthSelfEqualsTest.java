@@ -81,4 +81,37 @@ public class TruthSelfEqualsTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void sameIdentifierWhenNotFinal_stillFlagged() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.truth.Truth.assertThat;",
+            "import java.time.Duration;",
+            "abstract class Test {",
+            "  void test(int x) {",
+            "    x = 2;",
+            "    // BUG: Diagnostic contains:",
+            "    assertThat(x).isEqualTo(x);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void constantExpressions() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.truth.Truth.assertThat;",
+            "import java.time.Duration;",
+            "abstract class Test {",
+            "  void test(int x) {",
+            "    // BUG: Diagnostic contains:",
+            "    assertThat(Duration.ofMillis(x)).isEqualTo(Duration.ofMillis(x));",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
