@@ -10,8 +10,8 @@ To the Checker Framework, this means that the type argument *must* be nullable.
 They use this
 [in `ExecutorService`](https://github.com/typetools/jdk/blob/1973fa0811588dd0bb025fdc99345cdb887b3b52/src/java.base/share/classes/java/util/concurrent/ExecutorService.java#L269).
 
-To Kotlin, this means that the type argument *can* be nullable but need not be
-so.
+To Kotlin, this [has no effect][KT-40498]. That means that the type argument
+*can* be nullable but need not be so.
 
 While Checker Framework users do sometimes want `Foo<@Nullable ?>`, we commonly
 see them use it in places where `Foo<?>` would also be correct and would be more
@@ -25,21 +25,25 @@ The effects of that change would be:
     local or non-local the Checker Framework failures. But it's likely to be a
     desirable change except in the context of `ExecutorService` and the `Future`
     objects that it produces.
-*   `Foo<?>` is probably not a behavior change for Kotlin except *outside* of
-    `@NullMarked`, in which case the way to preserve behavior is to change to
-    `Foo<? extends @Nullable Object>`.
+*   `Foo<?>` is probably not a behavior change for Kotlin.
 
 #### `Foo<@NonNull ?>`
 
-Both tools use this to mean that the type argument must be non-nullable. (See
+To the Checker Framework, this means that the type argument must be
+non-nullable. (See
 [the Checker Framework docs](https://checkerframework.org/manual/#annotations-on-wildcards).)
 
-We still recommend a no-op change to `Foo<? extends @NonNull Object>` (or,
-within the scope of `@NullMarked`, `Foo<? extends Object>`) for consistency
-reasons: In all other cases, an annotation directly on a wildcard or
-[type parameter](NullableTypeParameter.md) can lead to different behavior from
-different tools. (And even today, some lesser used tools treat `Foo<@NonNull ?>`
-differently.)
+To Kotlin, this [has no effect][KT-40498]. That means that the type argument can
+still be nullable.
+
+We recommend a change to `Foo<? extends @NonNull Object>` (or, within the scope
+of `@NullMarked`, `Foo<? extends Object>`).
+
+The effects of that change would be:
+
+*   It is a no-op for the Checker Framework.
+*   It could produce errors for Kotlin users. But these errors are likely to be
+    what was intended all along.
 
 ### JSpecify specification
 
@@ -49,3 +53,5 @@ unrecognized
 [spec](https://jspecify.dev/docs/spec/#recognized-locations-for-type-use-annotations)).
 This specification choice is motivated by the disagreement in tool behavior
 discussed above.
+
+[KT-40498]: https://youtrack.jetbrains.com/issue/KT-40498/Nullability-annotations-on-Java-wildcard-itself
