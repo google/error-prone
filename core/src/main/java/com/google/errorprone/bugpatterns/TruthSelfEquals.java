@@ -26,12 +26,12 @@ import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.sameVariable;
+import static java.lang.String.format;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions;
-import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.ExpressionTree;
@@ -52,19 +52,19 @@ public final class TruthSelfEquals extends BugChecker implements MethodInvocatio
 
   private final Matcher<MethodInvocationTree> equalsMatcher =
       allOf(
-          instanceMethod().anyClass().namedAnyOf("isEqualTo", "isSameInstanceAs"),
+          instanceMethod()
+              .anyClass()
+              .namedAnyOf(
+                  "isEqualTo",
+                  "isSameInstanceAs",
+                  "containsExactlyElementsIn",
+                  "containsAtLeastElementsIn",
+                  "areEqualTo"),
           this::receiverSameAsParentsArgument);
 
   private final Matcher<MethodInvocationTree> notEqualsMatcher =
       allOf(
           instanceMethod().anyClass().namedAnyOf("isNotEqualTo", "isNotSameInstanceAs"),
-          this::receiverSameAsParentsArgument);
-
-  private final Matcher<MethodInvocationTree> otherMatcher =
-      allOf(
-          instanceMethod()
-              .anyClass()
-              .namedAnyOf("containsExactlyElementsIn", "containsAtLeastElementsIn", "areEqualTo"),
           this::receiverSameAsParentsArgument);
 
   private static final Matcher<ExpressionTree> ASSERT_THAT =
@@ -86,33 +86,25 @@ public final class TruthSelfEquals extends BugChecker implements MethodInvocatio
     if (tree.getArguments().isEmpty()) {
       return NO_MATCH;
     }
-    Description.Builder description = buildDescription(tree);
-    ExpressionTree toReplace = tree.getArguments().get(0);
     if (equalsMatcher.matches(tree, state)) {
-      description
+      return buildDescription(tree)
           .setMessage(generateSummary(getSymbol(tree).getSimpleName().toString(), "passes"))
-          .addFix(suggestEqualsTesterFix(tree, toReplace, state));
-    } else if (notEqualsMatcher.matches(tree, state)) {
-      description.setMessage(generateSummary(getSymbol(tree).getSimpleName().toString(), "fails"));
-    } else if (otherMatcher.matches(tree, state)) {
-      description.setMessage(generateSummary(getSymbol(tree).getSimpleName().toString(), "passes"));
-    } else {
-      return NO_MATCH;
+          .build();
     }
-    SuggestedFix fix = SelfEquals.fieldFix(toReplace, state);
-    if (fix != null) {
-      description.addFix(fix);
+    if (notEqualsMatcher.matches(tree, state)) {
+      return buildDescription(tree)
+          .setMessage(generateSummary(getSymbol(tree).getSimpleName().toString(), "fails"))
+          .build();
     }
-    return description.build();
+    return NO_MATCH;
   }
 
   private static String generateSummary(String methodName, String constantOutput) {
-    return "The arguments to the "
-        + methodName
-        + " method are the same object, so it always "
-        + constantOutput
-        + ". Please change the arguments to point to different objects or "
-        + "consider using EqualsTester.";
+    return format(
+        "You are passing identical arguments to the %s method, so this assertion always %s. THIS IS"
+            + " LIKELY A BUG! If you are trying to test the correctness of an equals()"
+            + " implementation, use EqualsTester instead.",
+        methodName, constantOutput);
   }
 
   private boolean receiverSameAsParentsArgument(MethodInvocationTree tree, VisitorState state) {
@@ -136,17 +128,5 @@ public final class TruthSelfEquals extends BugChecker implements MethodInvocatio
     var receiverConstant = constantExpressions.constantExpression(receiverExpression, state);
     var invocationConstant = constantExpressions.constantExpression(invocationExpression, state);
     return receiverConstant.isPresent() && receiverConstant.equals(invocationConstant);
-  }
-
-  private static SuggestedFix suggestEqualsTesterFix(
-      MethodInvocationTree methodInvocationTree, ExpressionTree toReplace, VisitorState state) {
-    String equalsTesterSuggest =
-        "new EqualsTester().addEqualityGroup("
-            + state.getSourceForNode(toReplace)
-            + ").testEquals()";
-    return SuggestedFix.builder()
-        .replace(methodInvocationTree, equalsTesterSuggest)
-        .addImport("com.google.common.testing.EqualsTester")
-        .build();
   }
 }
