@@ -90,8 +90,6 @@ public class ProvidesNullTest {
             "  @Provides",
             "  @Nullable",
             "  public Object providesObject() {",
-            "    // BUG: Diagnostic contains: Did you mean '@Nullable' or 'throw new"
-                + " RuntimeException();'",
             "    return null;",
             "  }",
             "}")
@@ -108,8 +106,6 @@ public class ProvidesNullTest {
             "public class Test {",
             "  @Provides",
             "  public @Nullable Object providesObject() {",
-            "    // BUG: Diagnostic contains: Did you mean '@Nullable' or 'throw new"
-                + " RuntimeException();'",
             "    return null;",
             "  }",
             "}")
@@ -185,6 +181,28 @@ public class ProvidesNullTest {
             "public class Test {",
             "  public void doNothing() {",
             "    return;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void hasOtherTypeUseNullable() {
+    compilationHelper
+        .addSourceLines(
+            "Nullable.java",
+            "import static java.lang.annotation.ElementType.TYPE_USE;",
+            "import java.lang.annotation.Target;",
+            "@Target(TYPE_USE)",
+            "public @interface Nullable {}")
+        .addSourceLines(
+            "Test.java",
+            "import dagger.Provides;",
+            "public class Test {",
+            "  @Provides",
+            "  @Nullable",
+            "  public Object providesObject() {",
+            "    return null;",
             "  }",
             "}")
         .doTest();
