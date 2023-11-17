@@ -16,7 +16,7 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 ## The problem
 Nullness annotations directly on type parameters are interpreted differently by
 different tools.
-— unless you are using the Checker Framework).
+— unless you are using the Checker Framework.
 
 ### Tool interpretations and suggested alternatives
 
