@@ -1,6 +1,6 @@
 Nullness annotations directly on wildcard types are interpreted differently by
 different tools.
-— unless you are using the Checker Framework).
+— unless you are using the Checker Framework.
 
 ### Tool interpretations and suggested alternatives
 
