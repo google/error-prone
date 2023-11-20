@@ -504,7 +504,7 @@ __[TreeToString](bugpattern/TreeToString)__<br>
 Tree#toString shouldn&#39;t be used for Trees deriving from the code being compiled, as it discards whitespace and comments.
 
 __[TruthSelfEquals](bugpattern/TruthSelfEquals)__<br>
-isEqualTo should not be used to test an object for equality with itself; the assertion will never fail.
+This assertion will always fail or succeed.
 
 __[TryFailThrowable](bugpattern/TryFailThrowable)__<br>
 Catching Throwable/Error masks failures from fail() or assert*() in the try block
