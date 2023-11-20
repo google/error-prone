@@ -35,7 +35,6 @@ import static javax.lang.model.element.Modifier.STATIC;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -57,7 +56,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import javax.inject.Inject;
 import javax.lang.model.element.Modifier;
 
 /**
@@ -96,14 +94,6 @@ public class JUnit4TestNotRun extends BugChecker implements ClassTreeMatcher {
       Suppliers.typeFromString("org.junit.experimental.theories.FromDataPoints");
 
   private static final Matcher<Tree> NOT_STATIC = not(hasModifier(STATIC));
-
-  private final boolean underscoreHeuristic;
-
-  @Inject
-  JUnit4TestNotRun(ErrorProneFlags flags) {
-    this.underscoreHeuristic =
-        flags.getBoolean("JUnit4TestNotRun:UnderscoreHeuristic").orElse(true);
-  }
 
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
@@ -170,7 +160,7 @@ public class JUnit4TestNotRun extends BugChecker implements ClassTreeMatcher {
     }
 
     // Method name contains underscores: it's either a test or a style violation.
-    if (underscoreHeuristic && methodTree.getName().toString().contains("_")) {
+    if (methodTree.getName().toString().contains("_")) {
       return Optional.of(describeFixes(methodTree, state));
     }
 
