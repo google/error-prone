@@ -114,4 +114,38 @@ public class TruthSelfEqualsTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void junitPositiveAssertion() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import static org.junit.Assert.assertEquals;",
+            "abstract class Test {",
+            "  void test(int x) {",
+            "    // BUG: Diagnostic contains: pass",
+            "    assertEquals(x, x);",
+            "    // BUG: Diagnostic contains: pass",
+            "    assertEquals(\"foo\", x, x);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void junitNegativeAssertion() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import static org.junit.Assert.assertNotEquals;",
+            "abstract class Test {",
+            "  void test(int x) {",
+            "    // BUG: Diagnostic contains: fail",
+            "    assertNotEquals(x, x);",
+            "    // BUG: Diagnostic contains: fail",
+            "    assertNotEquals(\"foo\", x, x);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
