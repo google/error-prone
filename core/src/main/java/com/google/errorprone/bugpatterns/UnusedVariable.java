@@ -686,10 +686,13 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
       checkArgument(sym.getKind() == ElementKind.PARAMETER);
       Symbol enclosingMethod = sym.owner;
 
-      for (String annotationName : methodAnnotationsExemptingParameters) {
-        if (hasAnnotation(enclosingMethod, annotationName, state)) {
-          return false;
-        }
+      if (!(enclosingMethod instanceof MethodSymbol)) {
+        return false;
+      }
+
+      if (methodAnnotationsExemptingParameters.stream()
+          .anyMatch(anno -> hasAnnotation(enclosingMethod, anno, state))) {
+        return false;
       }
 
       if (ANNOTATIONS_INDICATING_PARAMETERS_SHOULD_BE_CHECKED.stream()
@@ -697,7 +700,7 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
         return true;
       }
 
-      return enclosingMethod.getModifiers().contains(Modifier.PRIVATE);
+      return canBeRemoved(enclosingMethod, state);
     }
 
     @Override
