@@ -63,6 +63,13 @@
     </dependency>
     <dependency>
       <!-- Apache 2.0 -->
+      <groupId>com.google.auto.service</groupId>
+      <artifactId>auto-service</artifactId>
+      <version>1.0-rc4</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <!-- Apache 2.0 -->
       <groupId>com.google.auto.value</groupId>
       <artifactId>auto-value-annotations</artifactId>
       <version>${autovalue.version}</version>
