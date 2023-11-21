@@ -300,7 +300,7 @@ public class DefaultCharset extends BugChecker
           SuggestedFix.builder()
               .postfixWith(
                   getOnlyElement(tree.getArguments()),
-                  String.format(", %s.name()", charsetFix.replacement()));
+                  String.format(", %s", charsetFix.replacement()));
       charsetFix.addImport(fix);
       description.addFix(fix.build());
     }
@@ -390,7 +390,7 @@ public class DefaultCharset extends BugChecker
         if (!sym.equals(ASTHelpers.getSymbol(node))) {
           return null;
         }
-        if (ASTHelpers.getStartPosition(node.getType()) == -1) {
+        if (ASTHelpers.hasImplicitType(node, state)) {
           // ignore synthetic tree nodes for `var`
           return null;
         }
@@ -544,7 +544,7 @@ public class DefaultCharset extends BugChecker
           SuggestedFix.builder()
               .postfixWith(
                   getOnlyElement(tree.getArguments()),
-                  String.format(", %s.name()", charsetFix.replacement()));
+                  String.format(", %s", charsetFix.replacement()));
       charsetFix.addImport(fix);
       description.addFix(fix.build());
     }

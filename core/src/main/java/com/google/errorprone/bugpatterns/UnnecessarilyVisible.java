@@ -56,6 +56,8 @@ public final class UnnecessarilyVisible extends BugChecker implements MethodTree
       VisitorState.memoize(
           s ->
               Stream.of(
+                      "com.google.errorprone.refaster.annotation.AfterTemplate",
+                      "com.google.errorprone.refaster.annotation.BeforeTemplate",
                       "com.google.inject.Inject",
                       "com.google.inject.Provides",
                       "com.google.inject.multibindings.ProvidesIntoMap",

@@ -498,4 +498,22 @@ public final class AlreadyCheckedTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void i3914() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.List;",
+            "class Test {",
+            "  void test(boolean a, boolean b) {",
+            "    if (a && b)",
+            "      return;",
+            "    if (a) {",
+            "    } else if (b) {",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

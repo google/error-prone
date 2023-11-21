@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 The Error Prone Authors.
+ * Copyright 2021 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,19 +14,13 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.apply;
+package com.google.errorprone.refaster.testdata;
 
-/** Exception thrown if a {@link Diff} could not be applied by a {@link DiffApplier} */
-public class DiffNotApplicableException extends RuntimeException {
-  public DiffNotApplicableException(String msg) {
-    super(msg);
-  }
+import java.util.Objects;
 
-  public DiffNotApplicableException(String msg, Throwable cause) {
-    super(msg, cause);
-  }
-
-  public DiffNotApplicableException(Throwable cause) {
-    super(cause);
+/** Test data for {@code MemberSelectAndMethodParameterDisambiguationTemplate}. */
+public class MemberSelectAndMethodParameterDisambiguationTemplateExample {
+  int example(int length) {
+    return Objects.hashCode(length);
   }
 }

@@ -20,9 +20,14 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 import com.google.auto.service.AutoService;
 import com.google.gson.Gson;
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.UncheckedIOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.ProcessingEnvironment;
@@ -51,42 +56,44 @@ public class DocGenProcessor extends AbstractProcessor {
     return SourceVersion.latest();
   }
 
-  private final Gson gson = new Gson();
-
-  private PrintWriter pw;
+  private final Map<String, BugPatternInstance> bugPatterns = new HashMap<>();
 
   /** {@inheritDoc} */
   @Override
   public synchronized void init(ProcessingEnvironment processingEnv) {
     super.init(processingEnv);
-    try {
-      FileObject manifest =
-          processingEnv
-              .getFiler()
-              .createResource(StandardLocation.SOURCE_OUTPUT, "", "bugPatterns.txt");
-      pw = new PrintWriter(new OutputStreamWriter(manifest.openOutputStream(), UTF_8), true);
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
   }
 
   /** {@inheritDoc} */
   @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     for (Element element : roundEnv.getElementsAnnotatedWith(BugPattern.class)) {
-      gson.toJson(BugPatternInstance.fromElement(element), pw);
-      pw.println();
+      BugPatternInstance bugPattern = BugPatternInstance.fromElement(element);
+      bugPatterns.put(bugPattern.name, bugPattern);
     }
 
     if (roundEnv.processingOver()) {
-      // this was the last round, do cleanup
-      cleanup();
+      try {
+        FileObject manifest =
+            processingEnv
+                .getFiler()
+                .createResource(StandardLocation.SOURCE_OUTPUT, "", "bugPatterns.txt");
+        try (OutputStream os = manifest.openOutputStream();
+            PrintWriter pw =
+                new PrintWriter(new BufferedWriter(new OutputStreamWriter(os, UTF_8)))) {
+          Gson gson = new Gson();
+          bugPatterns.entrySet().stream()
+              .sorted(Map.Entry.comparingByKey())
+              .forEachOrdered(
+                  e -> {
+                    gson.toJson(e.getValue(), pw);
+                    pw.println();
+                  });
+        }
+      } catch (IOException e) {
+        throw new UncheckedIOException(e);
+      }
     }
     return false;
-  }
-
-  /** Perform cleanup after last round of annotation processing. */
-  private void cleanup() {
-    pw.close();
   }
 }

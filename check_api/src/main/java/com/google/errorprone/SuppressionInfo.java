@@ -93,7 +93,8 @@ public class SuppressionInfo {
       }
     } else {
       if (suppressible.supportsSuppressWarnings()
-          && !Collections.disjoint(suppressible.allNames(), suppressWarningsStrings)) {
+          && (suppressWarningsStrings.contains("all")
+              || !Collections.disjoint(suppressible.allNames(), suppressWarningsStrings))) {
         return SuppressedState.SUPPRESSED;
       }
     }

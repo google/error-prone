@@ -44,30 +44,26 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.lang.model.type.TypeKind;
 
 /**
- * Logical utility methods to answer the question: Are these two types "compatible" with each other,
- * in the context of an equality check.
+ * Methods to answer the question: are these two types "compatible" with each other, in the context
+ * of an equality check?
  *
- * <p>i.e.: It is possible that an object of one type could be equal to an object of the other type.
+ * <p>That is, based on the types alone, is it possible for them to be equal. In general this
+ * requires a common superclass that overrides {@link Object#equals(Object)}, but there are
+ * complexities and special-cases.
  */
-public final class TypeCompatibilityUtils {
+public final class TypeCompatibility {
   private static final String WITHOUT_EQUALS_REASON =
       ". Though these types are the same, the type doesn't implement equals.";
   private final boolean treatBuildersAsIncomparable;
 
-  public static TypeCompatibilityUtils fromFlags(ErrorProneFlags flags) {
-    return new TypeCompatibilityUtils(
-        flags.getBoolean("TypeCompatibility:TreatBuildersAsIncomparable").orElse(true));
-  }
-
-  public static TypeCompatibilityUtils allOn() {
-    return new TypeCompatibilityUtils(/* treatBuildersAsIncomparable= */ true);
-  }
-
-  private TypeCompatibilityUtils(boolean treatBuildersAsIncomparable) {
-    this.treatBuildersAsIncomparable = treatBuildersAsIncomparable;
+  @Inject
+  TypeCompatibility(ErrorProneFlags flags) {
+    this.treatBuildersAsIncomparable =
+        flags.getBoolean("TypeCompatibility:TreatBuildersAsIncomparable").orElse(true);
   }
 
   public TypeCompatibilityReport compatibilityOfTypes(
@@ -364,7 +360,7 @@ public final class TypeCompatibilityUtils {
   @AutoValue
   public abstract static class TypeCompatibilityReport {
     private static final TypeCompatibilityReport COMPATIBLE =
-        new AutoValue_TypeCompatibilityUtils_TypeCompatibilityReport(true, null, null, null);
+        new AutoValue_TypeCompatibility_TypeCompatibilityReport(true, null, null, null);
 
     public abstract boolean isCompatible();
 
@@ -386,8 +382,7 @@ public final class TypeCompatibilityUtils {
     }
 
     static TypeCompatibilityReport incompatible(Type lhs, Type rhs, String extraReason) {
-      return new AutoValue_TypeCompatibilityUtils_TypeCompatibilityReport(
-          false, lhs, rhs, extraReason);
+      return new AutoValue_TypeCompatibility_TypeCompatibilityReport(false, lhs, rhs, extraReason);
     }
   }
 

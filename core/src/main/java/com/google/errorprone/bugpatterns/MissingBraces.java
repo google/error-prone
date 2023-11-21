@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.fixes.Replacements.CoalescePolicy.KEEP_ONLY_IDENTICAL_INSERTS;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
 import com.google.errorprone.BugPattern;
@@ -93,7 +94,12 @@ public class MissingBraces extends BugChecker
     if (tree != null && !(tree instanceof BlockTree)) {
       state.reportMatch(
           describeMatch(
-              tree, SuggestedFix.builder().prefixWith(tree, "{").postfixWith(tree, "}").build()));
+              tree,
+              SuggestedFix.builder()
+                  .prefixWith(tree, "{")
+                  .postfixWith(tree, "}")
+                  .setCoalescePolicy(KEEP_ONLY_IDENTICAL_INSERTS)
+                  .build()));
     }
   }
 }

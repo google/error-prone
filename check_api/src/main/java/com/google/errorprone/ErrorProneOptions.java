@@ -52,8 +52,8 @@ public class ErrorProneOptions {
   private static final String PATCH_IMPORT_ORDER_PREFIX = "-XepPatchImportOrder:";
   private static final String EXCLUDED_PATHS_PREFIX = "-XepExcludedPaths:";
   private static final String IGNORE_LARGE_CODE_GENERATORS = "-XepIgnoreLargeCodeGenerators:";
-
   private static final String ERRORS_AS_WARNINGS_FLAG = "-XepAllErrorsAsWarnings";
+  private static final String SUGGESTIONS_AS_WARNINGS_FLAG = "-XepAllSuggestionsAsWarnings";
   private static final String ENABLE_ALL_CHECKS = "-XepAllDisabledChecksAsWarnings";
   private static final String IGNORE_SUPPRESSION_ANNOTATIONS = "-XepIgnoreSuppressionAnnotations";
   private static final String DISABLE_ALL_CHECKS = "-XepDisableAllChecks";
@@ -62,6 +62,7 @@ public class ErrorProneOptions {
   private static final String DISABLE_WARNINGS_IN_GENERATED_CODE_FLAG =
       "-XepDisableWarningsInGeneratedCode";
   private static final String COMPILING_TEST_ONLY_CODE = "-XepCompilingTestOnlyCode";
+  private static final String COMPILING_PUBLICLY_VISIBLE_CODE = "-XepCompilingPubliclyVisibleCode";
 
   /** see {@link javax.tools.OptionChecker#isSupportedOption(String)} */
   public static int isSupportedOption(String option) {
@@ -74,10 +75,12 @@ public class ErrorProneOptions {
             || option.equals(IGNORE_UNKNOWN_CHECKS_FLAG)
             || option.equals(DISABLE_WARNINGS_IN_GENERATED_CODE_FLAG)
             || option.equals(ERRORS_AS_WARNINGS_FLAG)
+            || option.equals(SUGGESTIONS_AS_WARNINGS_FLAG)
             || option.equals(ENABLE_ALL_CHECKS)
             || option.equals(DISABLE_ALL_CHECKS)
             || option.equals(IGNORE_SUPPRESSION_ANNOTATIONS)
             || option.equals(COMPILING_TEST_ONLY_CODE)
+            || option.equals(COMPILING_PUBLICLY_VISIBLE_CODE)
             || option.equals(DISABLE_ALL_WARNINGS);
     return isSupported ? 0 : -1;
   }
@@ -139,21 +142,7 @@ public class ErrorProneOptions {
 
       abstract Builder importOrganizer(ImportOrganizer importOrganizer);
 
-      abstract PatchingOptions autoBuild();
-
-      final PatchingOptions build() {
-
-        PatchingOptions patchingOptions = autoBuild();
-
-        // If anything is specified, then (checkers or refaster) and output must be set.
-        if ((!patchingOptions.namedCheckers().isEmpty()
-                || patchingOptions.customRefactorer().isPresent())
-            ^ patchingOptions.doRefactor()) {
-          throw new InvalidCommandLineOptionException(
-              "-XepPatchChecks and -XepPatchLocation must be specified together");
-        }
-        return patchingOptions;
-      }
+      abstract PatchingOptions build();
     }
   }
 
@@ -163,9 +152,11 @@ public class ErrorProneOptions {
   private final boolean disableWarningsInGeneratedCode;
   private final boolean disableAllWarnings;
   private final boolean dropErrorsToWarnings;
+  private final boolean suggestionsAsWarnings;
   private final boolean enableAllChecksAsWarnings;
   private final boolean disableAllChecks;
   private final boolean isTestOnlyTarget;
+  private final boolean isPubliclyVisibleTarget;
   private final ErrorProneFlags flags;
   private final PatchingOptions patchingOptions;
   private final Pattern excludedPattern;
@@ -179,9 +170,11 @@ public class ErrorProneOptions {
       boolean disableWarningsInGeneratedCode,
       boolean disableAllWarnings,
       boolean dropErrorsToWarnings,
+      boolean suggestionsAsWarnings,
       boolean enableAllChecksAsWarnings,
       boolean disableAllChecks,
       boolean isTestOnlyTarget,
+      boolean isPubliclyVisibleTarget,
       ErrorProneFlags flags,
       PatchingOptions patchingOptions,
       Pattern excludedPattern,
@@ -193,9 +186,11 @@ public class ErrorProneOptions {
     this.disableWarningsInGeneratedCode = disableWarningsInGeneratedCode;
     this.disableAllWarnings = disableAllWarnings;
     this.dropErrorsToWarnings = dropErrorsToWarnings;
+    this.suggestionsAsWarnings = suggestionsAsWarnings;
     this.enableAllChecksAsWarnings = enableAllChecksAsWarnings;
     this.disableAllChecks = disableAllChecks;
     this.isTestOnlyTarget = isTestOnlyTarget;
+    this.isPubliclyVisibleTarget = isPubliclyVisibleTarget;
     this.flags = flags;
     this.patchingOptions = patchingOptions;
     this.excludedPattern = excludedPattern;
@@ -203,8 +198,8 @@ public class ErrorProneOptions {
     this.ignoreLargeCodeGenerators = ignoreLargeCodeGenerators;
   }
 
-  public String[] getRemainingArgs() {
-    return remainingArgs.toArray(new String[remainingArgs.size()]);
+  public ImmutableList<String> getRemainingArgs() {
+    return remainingArgs;
   }
 
   public ImmutableMap<String, Severity> getSeverityMap() {
@@ -227,8 +222,16 @@ public class ErrorProneOptions {
     return dropErrorsToWarnings;
   }
 
+  public boolean isSuggestionsAsWarnings() {
+    return suggestionsAsWarnings;
+  }
+
   public boolean isTestOnlyTarget() {
     return isTestOnlyTarget;
+  }
+
+  public boolean isPubliclyVisibleTarget() {
+    return isPubliclyVisibleTarget;
   }
 
   public boolean isIgnoreSuppressionAnnotations() {
@@ -256,9 +259,11 @@ public class ErrorProneOptions {
     private boolean disableAllWarnings = false;
     private boolean disableWarningsInGeneratedCode = false;
     private boolean dropErrorsToWarnings = false;
+    private boolean suggestionsAsWarnings = false;
     private boolean enableAllChecksAsWarnings = false;
     private boolean disableAllChecks = false;
     private boolean isTestOnlyTarget = false;
+    private boolean isPubliclyVisibleTarget = false;
     private boolean ignoreSuppressionAnnotations = false;
     private boolean ignoreLargeCodeGenerators = true;
     private final Map<String, Severity> severityMap = new LinkedHashMap<>();
@@ -311,6 +316,10 @@ public class ErrorProneOptions {
       this.dropErrorsToWarnings = dropErrorsToWarnings;
     }
 
+    public void setSuggestionsAsWarnings(boolean suggestionsAsWarnings) {
+      this.suggestionsAsWarnings = suggestionsAsWarnings;
+    }
+
     public void setDisableAllWarnings(boolean disableAllWarnings) {
       severityMap.entrySet().stream()
           .filter(e -> e.getValue() == Severity.WARN)
@@ -340,6 +349,10 @@ public class ErrorProneOptions {
       this.isTestOnlyTarget = isTestOnlyTarget;
     }
 
+    public void setPubliclyVisibleTarget(boolean isPubliclyVisibleTarget) {
+      this.isPubliclyVisibleTarget = isPubliclyVisibleTarget;
+    }
+
     public PatchingOptions.Builder patchingOptionsBuilder() {
       return patchingOptionsBuilder;
     }
@@ -352,9 +365,11 @@ public class ErrorProneOptions {
           disableWarningsInGeneratedCode,
           disableAllWarnings,
           dropErrorsToWarnings,
+          suggestionsAsWarnings,
           enableAllChecksAsWarnings,
           disableAllChecks,
           isTestOnlyTarget,
+          isPubliclyVisibleTarget,
           flagsBuilder.build(),
           patchingOptionsBuilder.build(),
           excludedPattern,
@@ -392,6 +407,8 @@ public class ErrorProneOptions {
      * You can pass the IGNORE_UNKNOWN_CHECKS_FLAG to opt-out of that checking.  This allows you to
      * use command lines from different versions of error-prone interchangeably.
      */
+    boolean patchLocationSet = false;
+    boolean patchCheckSet = false;
     Builder builder = new Builder();
     for (String arg : args) {
       switch (arg) {
@@ -407,6 +424,9 @@ public class ErrorProneOptions {
         case ERRORS_AS_WARNINGS_FLAG:
           builder.setDropErrorsToWarnings(true);
           break;
+        case SUGGESTIONS_AS_WARNINGS_FLAG:
+          builder.setSuggestionsAsWarnings(true);
+          break;
         case ENABLE_ALL_CHECKS:
           builder.setEnableAllChecksAsWarnings(true);
           break;
@@ -415,6 +435,9 @@ public class ErrorProneOptions {
           break;
         case COMPILING_TEST_ONLY_CODE:
           builder.setTestOnlyTarget(true);
+          break;
+        case COMPILING_PUBLICLY_VISIBLE_CODE:
+          builder.setPubliclyVisibleTarget(true);
           break;
         case DISABLE_ALL_WARNINGS:
           builder.setDisableAllWarnings(true);
@@ -425,6 +448,7 @@ public class ErrorProneOptions {
           } else if (arg.startsWith(ErrorProneFlags.PREFIX)) {
             builder.parseFlag(arg);
           } else if (arg.startsWith(PATCH_OUTPUT_LOCATION)) {
+            patchLocationSet = true;
             String remaining = arg.substring(PATCH_OUTPUT_LOCATION.length());
             if (remaining.equals("IN_PLACE")) {
               builder.patchingOptionsBuilder().inPlace(true);
@@ -435,6 +459,7 @@ public class ErrorProneOptions {
               builder.patchingOptionsBuilder().baseDirectory(remaining);
             }
           } else if (arg.startsWith(PATCH_CHECKS_PREFIX)) {
+            patchCheckSet = true;
             String remaining = arg.substring(PATCH_CHECKS_PREFIX.length());
             if (remaining.startsWith("refaster:")) {
               // Refaster rule, load from InputStream at file
@@ -452,7 +477,8 @@ public class ErrorProneOptions {
                         }
                       });
             } else {
-              Iterable<String> checks = Splitter.on(',').trimResults().split(remaining);
+              Iterable<String> checks =
+                  Splitter.on(',').trimResults().omitEmptyStrings().split(remaining);
               builder.patchingOptionsBuilder().namedCheckers(ImmutableSet.copyOf(checks));
             }
           } else if (arg.startsWith(PATCH_IMPORT_ORDER_PREFIX)) {
@@ -470,6 +496,11 @@ public class ErrorProneOptions {
             remainingArgs.add(arg);
           }
       }
+    }
+
+    if (patchCheckSet && !patchLocationSet) {
+      throw new InvalidCommandLineOptionException(
+          "-XepPatchLocation must be specified when -XepPatchChecks is");
     }
 
     return builder.build(remainingArgs.build());

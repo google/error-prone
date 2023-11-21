@@ -23,6 +23,7 @@ import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.NullableA
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.NullableAnnotationToUse.annotationWithoutImporting;
 import static com.google.errorprone.fixes.SuggestedFix.emptyFix;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
+import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.suppliers.Suppliers.JAVA_LANG_VOID_TYPE;
 import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -31,6 +32,7 @@ import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.stripParentheses;
 import static com.sun.source.tree.Tree.Kind.ANNOTATED_TYPE;
 import static com.sun.source.tree.Tree.Kind.ARRAY_TYPE;
+import static com.sun.source.tree.Tree.Kind.CONDITIONAL_EXPRESSION;
 import static com.sun.source.tree.Tree.Kind.IDENTIFIER;
 import static com.sun.source.tree.Tree.Kind.NULL_LITERAL;
 import static com.sun.source.tree.Tree.Kind.PARAMETERIZED_TYPE;
@@ -95,6 +97,8 @@ class NullnessUtils {
       instanceMethod().onDescendantOf("com.google.common.base.Optional").named("orNull");
   private static final Matcher<ExpressionTree> OPTIONAL_OR_ELSE =
       instanceMethod().onDescendantOf("java.util.Optional").named("orElse");
+  private static final Matcher<ExpressionTree> EMPTY_TO_NULL =
+      staticMethod().onClass("com.google.common.base.Strings").named("emptyToNull");
 
   /**
    * Returns {@code true} if the flags request that we look to add @Nullable annotations only where
@@ -125,7 +129,9 @@ class NullnessUtils {
 
   static boolean isInNullMarkedScope(Symbol sym, VisitorState state) {
     for (; sym != null; sym = sym.getEnclosingElement()) {
-      if (hasAnnotation(sym, "org.jspecify.nullness.NullMarked", state)) {
+      if (hasAnnotation(sym, "org.jspecify.annotations.NullMarked", state)
+          // We break this string to avoid having it rewritten by Copybara.
+          || hasAnnotation(sym, "org.jspecify.null" + "ness.NullMarked", state)) {
         return true;
       }
     }
@@ -349,7 +355,7 @@ class NullnessUtils {
             .orElse(
                 state.isAndroidCompatible()
                     ? "androidx.annotation.Nullable"
-                    : "org.jspecify.nullness.Nullable");
+                    : "org.jspecify.annotations.Nullable");
     if (sym != null) {
       ClassSymbol classSym = (ClassSymbol) sym;
       if (classSym.isAnnotationType()) {
@@ -377,8 +383,9 @@ class NullnessUtils {
       case "org.checkerframework.checker.nullness.qual.Nullable":
       case "org.jspecify.annotations.NonNull":
       case "org.jspecify.annotations.Nullable":
-      case "org.jspecify.nullness.NonNull":
-      case "org.jspecify.nullness.Nullable":
+        // We break these strings to avoid having them rewritten by Copybara.
+      case "org.jspecify.null" + "ness.NonNull":
+      case "org.jspecify.null" + "ness.Nullable":
         return true;
       default:
         // TODO(cpovirk): Detect type-use-ness from the class symbol if it's available?
@@ -514,7 +521,9 @@ class NullnessUtils {
 
       @Override
       public Boolean visitMethodInvocation(MethodInvocationTree tree, Void unused) {
-        return super.visitMethodInvocation(tree, unused) || isOptionalOrNull(tree);
+        return super.visitMethodInvocation(tree, unused)
+            || isOptionalOrNull(tree)
+            || isStringsEmptyToNull(tree);
       }
 
       @Override
@@ -555,6 +564,10 @@ class NullnessUtils {
          * TODO(cpovirk): Instead of checking only for NULL_LITERAL, call hasDefinitelyNullBranch?
          * But consider whether that would interfere with the TODO at the top of that method.
          */
+      }
+
+      boolean isStringsEmptyToNull(MethodInvocationTree tree) {
+        return EMPTY_TO_NULL.matches(tree, stateForCompilationUnit);
       }
 
       boolean isSwitchExpressionWithDefinitelyNullBranch(Tree tree) {
@@ -631,6 +644,32 @@ class NullnessUtils {
       return ImmutableSet.of();
     }
     return ImmutableSet.of(nullCheck.bareIdentifier());
+  }
+
+  /** Returns x if the path's leaf is inside {@code (x == null) ? ... : ...}. */
+  public static ImmutableSet<Name> varsProvenNullByParentTernary(TreePath path) {
+    Tree child = path.getLeaf();
+    for (Tree tree : path.getParentPath()) {
+      if (!(tree instanceof ExpressionTree)) {
+        break;
+      }
+      if (tree.getKind() == CONDITIONAL_EXPRESSION) {
+        ConditionalExpressionTree ternary = (ConditionalExpressionTree) tree;
+        NullCheck nullCheck = getNullCheck(ternary.getCondition());
+        if (nullCheck == null) {
+          return ImmutableSet.of();
+        }
+        if (child != nullCheck.nullCase(ternary)) {
+          return ImmutableSet.of();
+        }
+        if (nullCheck.bareIdentifier() == null) {
+          return ImmutableSet.of();
+        }
+        return ImmutableSet.of(nullCheck.bareIdentifier());
+      }
+      child = tree;
+    }
+    return ImmutableSet.of();
   }
 
   @Nullable

@@ -39,7 +39,7 @@ jobs:
           echo "TARGET_COMMITISH=$(git rev-parse HEAD)" >> $GITHUB_ENV
           git remote set-url origin https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/google/error-prone.git
           
-      - name: Deploy to Sonatype staging
+      - name: Deploy to Sonatype
         env:
           CI_DEPLOY_USERNAME: ${{ secrets.CI_DEPLOY_USERNAME }}
           CI_DEPLOY_PASSWORD: ${{ secrets.CI_DEPLOY_PASSWORD }}

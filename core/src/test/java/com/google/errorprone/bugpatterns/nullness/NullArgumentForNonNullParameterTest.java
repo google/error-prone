@@ -177,7 +177,7 @@ public class NullArgumentForNonNullParameterTest {
     aggressiveHelper
         .addSourceLines(
             "Foo.java",
-            "import org.jspecify.nullness.NullMarked;",
+            "import org.jspecify.annotations.NullMarked;",
             "@NullMarked",
             "class Foo {",
             "  void consume(String s) {}",
@@ -194,7 +194,7 @@ public class NullArgumentForNonNullParameterTest {
     conservativeHelper
         .addSourceLines(
             "Foo.java",
-            "import org.jspecify.nullness.NullMarked;",
+            "import org.jspecify.annotations.NullMarked;",
             "@NullMarked",
             "class Foo {",
             "  void consume(String s) {}",

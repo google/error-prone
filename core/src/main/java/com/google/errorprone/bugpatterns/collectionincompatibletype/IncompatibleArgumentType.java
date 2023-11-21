@@ -22,14 +22,13 @@ import static com.google.errorprone.bugpatterns.collectionincompatibletype.Abstr
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.CheckReturnValue;
 import com.google.errorprone.annotations.CompatibleWith;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
-import com.google.errorprone.bugpatterns.TypeCompatibilityUtils;
-import com.google.errorprone.bugpatterns.TypeCompatibilityUtils.TypeCompatibilityReport;
+import com.google.errorprone.bugpatterns.TypeCompatibility;
+import com.google.errorprone.bugpatterns.TypeCompatibility.TypeCompatibilityReport;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.Signatures;
@@ -58,11 +57,11 @@ import javax.lang.model.element.TypeParameterElement;
     severity = ERROR)
 public class IncompatibleArgumentType extends BugChecker implements MethodInvocationTreeMatcher {
 
-  private final TypeCompatibilityUtils typeCompatibilityUtils;
+  private final TypeCompatibility typeCompatibility;
 
   @Inject
-  IncompatibleArgumentType(ErrorProneFlags flags) {
-    this.typeCompatibilityUtils = TypeCompatibilityUtils.fromFlags(flags);
+  IncompatibleArgumentType(TypeCompatibility typeCompatibility) {
+    this.typeCompatibility = typeCompatibility;
   }
 
   // Nonnull requiredType: The type I need is bound, in requiredType
@@ -134,7 +133,7 @@ public class IncompatibleArgumentType extends BugChecker implements MethodInvoca
       if (requiredType.type() != null) {
         // Report a violation for this type
         TypeCompatibilityReport report =
-            typeCompatibilityUtils.compatibilityOfTypes(requiredType.type(), argType, state);
+            typeCompatibility.compatibilityOfTypes(requiredType.type(), argType, state);
         if (!report.isCompatible()) {
           state.reportMatch(
               describeViolation(argument, argType, requiredType.type(), types, state));

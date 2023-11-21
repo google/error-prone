@@ -20,7 +20,6 @@ import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth8.assertThat;
 import static org.junit.Assert.assertThrows;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import org.junit.Test;
@@ -53,10 +52,12 @@ public final class ErrorProneFlagsTest {
             .parseFlag("-XepOpt:Arg1=tRuE")
             .parseFlag("-XepOpt:Arg2=FaLsE")
             .parseFlag("-XepOpt:Arg3=yes")
+            .parseFlag("-XepOpt:Arg4")
             .build();
     assertThat(flags.getBoolean("Arg1")).hasValue(true);
     assertThat(flags.getBoolean("Arg2")).hasValue(false);
     assertThrows(IllegalArgumentException.class, () -> flags.getBoolean("Arg3"));
+    assertThat(flags.getBoolean("Arg4")).hasValue(true);
     assertThat(flags.getBoolean("absent")).isEmpty();
   }
 
@@ -90,12 +91,12 @@ public final class ErrorProneFlagsTest {
             .parseFlag("-XepOpt:ArgD=7")
             .parseFlag("-XepOpt:ArgE=")
             .build();
-    assertThat(flags.getList("ArgA")).hasValue(ImmutableList.of("1", "2", "3"));
-    assertThat(flags.getList("ArgB")).hasValue(ImmutableList.of("4", ""));
-    assertThat(flags.getList("ArgC")).hasValue(ImmutableList.of("5", "", "", "6"));
-    assertThat(flags.getList("ArgD")).hasValue(ImmutableList.of("7"));
-    assertThat(flags.getList("ArgE")).hasValue(ImmutableList.of(""));
-    assertThat(flags.getList("absent")).isEmpty();
+    assertThat(flags.getListOrEmpty("ArgA")).containsExactly("1", "2", "3").inOrder();
+    assertThat(flags.getListOrEmpty("ArgB")).containsExactly("4", "").inOrder();
+    assertThat(flags.getListOrEmpty("ArgC")).containsExactly("5", "", "", "6").inOrder();
+    assertThat(flags.getListOrEmpty("ArgD")).containsExactly("7");
+    assertThat(flags.getListOrEmpty("ArgE")).containsExactly("");
+    assertThat(flags.getListOrEmpty("absent")).isEmpty();
   }
 
   @Test

@@ -126,7 +126,9 @@ public class NestedInstanceOfConditions extends BugChecker implements IfTreeMatc
                   types.erasure(ASTHelpers.getType(typeTree)));
 
           boolean isSameExpression =
-              instanceOfTree.getExpression().toString().equals(expressionTree.toString());
+              state
+                  .getSourceForNode(instanceOfTree.getExpression())
+                  .equals(state.getSourceForNode(expressionTree));
 
           return isSameExpression && !isCastable;
         }

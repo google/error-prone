@@ -46,7 +46,7 @@ public class ErrorProneOptionsTest {
   public void nonErrorProneFlagsPlacedInRemainingArgs() {
     String[] args = {"-nonErrorProneFlag", "value"};
     ErrorProneOptions options = ErrorProneOptions.processArgs(args);
-    assertThat(options.getRemainingArgs()).isEqualTo(args);
+    assertThat(options.getRemainingArgs()).containsExactlyElementsIn(args);
   }
 
   @Test
@@ -111,7 +111,7 @@ public class ErrorProneOptionsTest {
     };
     ErrorProneOptions options = ErrorProneOptions.processArgs(args);
     String[] expectedRemainingArgs = {"-classpath", "/this/is/classpath", "-verbose"};
-    assertThat(options.getRemainingArgs()).isEqualTo(expectedRemainingArgs);
+    assertThat(options.getRemainingArgs()).containsExactlyElementsIn(expectedRemainingArgs);
     ImmutableMap<String, Severity> expectedSeverityMap =
         ImmutableMap.<String, Severity>builder()
             .put("Check1", Severity.WARN)
@@ -153,6 +153,13 @@ public class ErrorProneOptionsTest {
   }
 
   @Test
+  public void recognizesAllSuggestionsAsWarnings() {
+    ErrorProneOptions options =
+        ErrorProneOptions.processArgs(new String[] {"-XepAllSuggestionsAsWarnings"});
+    assertThat(options.isSuggestionsAsWarnings()).isTrue();
+  }
+
+  @Test
   public void recognizesDisableAllChecks() {
     ErrorProneOptions options =
         ErrorProneOptions.processArgs(new String[] {"-XepDisableAllChecks"});
@@ -164,6 +171,13 @@ public class ErrorProneOptionsTest {
     ErrorProneOptions options =
         ErrorProneOptions.processArgs(new String[] {"-XepCompilingTestOnlyCode"});
     assertThat(options.isTestOnlyTarget()).isTrue();
+  }
+
+  @Test
+  public void recognizesCompilingPubliclyVisibleCode() {
+    ErrorProneOptions options =
+        ErrorProneOptions.processArgs(new String[] {"-XepCompilingPubliclyVisibleCode"});
+    assertThat(options.isPubliclyVisibleTarget()).isTrue();
   }
 
   @Test
@@ -226,9 +240,6 @@ public class ErrorProneOptionsTest {
   public void throwsExceptionWithBadPatchArgs() {
     assertThrows(
         InvalidCommandLineOptionException.class,
-        () -> ErrorProneOptions.processArgs(new String[] {"-XepPatchLocation:IN_PLACE"}));
-    assertThrows(
-        InvalidCommandLineOptionException.class,
         () ->
             ErrorProneOptions.processArgs(new String[] {"-XepPatchChecks:FooBar,MissingOverride"}));
   }
@@ -241,6 +252,24 @@ public class ErrorProneOptionsTest {
     assertThat(options.patchingOptions().doRefactor()).isTrue();
     assertThat(options.patchingOptions().inPlace()).isTrue();
     assertThat(options.patchingOptions().customRefactorer()).isPresent();
+  }
+
+  @Test
+  public void understandsEmptySetOfNamedCheckers() {
+    ErrorProneOptions options =
+        ErrorProneOptions.processArgs(new String[] {"-XepPatchLocation:IN_PLACE"});
+    assertThat(options.patchingOptions().doRefactor()).isTrue();
+    assertThat(options.patchingOptions().inPlace()).isTrue();
+    assertThat(options.patchingOptions().namedCheckers()).isEmpty();
+    assertThat(options.patchingOptions().customRefactorer()).isAbsent();
+
+    options =
+        ErrorProneOptions.processArgs(
+            new String[] {"-XepPatchLocation:IN_PLACE", "-XepPatchChecks:"});
+    assertThat(options.patchingOptions().doRefactor()).isTrue();
+    assertThat(options.patchingOptions().inPlace()).isTrue();
+    assertThat(options.patchingOptions().namedCheckers()).isEmpty();
+    assertThat(options.patchingOptions().customRefactorer()).isAbsent();
   }
 
   @Test

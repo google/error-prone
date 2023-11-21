@@ -41,12 +41,6 @@ public class CatchAndPrintStackTraceTest {
             "      // BUG: Diagnostic contains:",
             "      t.printStackTrace();",
             "    }",
-            "    try {",
-            "      System.err.println();",
-            "    } catch (Throwable t) {",
-            "      // BUG: Diagnostic contains:",
-            "      t.printStackTrace(System.err);",
-            "    }",
             "  }",
             "}")
         .doTest();
@@ -67,6 +61,11 @@ public class CatchAndPrintStackTraceTest {
             "    } catch (Throwable t) {",
             "      t.printStackTrace();",
             "      t.printStackTrace();",
+            "    }",
+            "    try {",
+            "      System.err.println();",
+            "    } catch (Throwable t) {",
+            "      t.printStackTrace(System.err);",
             "    }",
             "  }",
             "}")

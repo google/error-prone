@@ -47,12 +47,13 @@ public class DoNotCallCheckerTest {
             "  @DoNotCall final void g() {}",
             "  void m() {",
             "    // BUG: Diagnostic contains:",
-            "    // This method should not be called: satisfying explanation",
+            "    // Test.f() should not be called: satisfying explanation",
             "    f();",
             "    // BUG: Diagnostic contains:",
-            "    // This method should not be called, see its documentation for details",
+            "    // Test.g() should not be called, see its documentation for details.",
             "    g();",
             "    // BUG: Diagnostic contains:",
+            "    // Test.g() should not be called, see its documentation for details.",
             "    Runnable r = this::g;",
             "  }",
             "}")
@@ -264,7 +265,9 @@ public class DoNotCallCheckerTest {
             "Test.java",
             "class Test {",
             "  void m() {",
-            "    // BUG: Diagnostic contains: This method should not be called",
+            "    // BUG: Diagnostic contains:"
+                + " com.google.errorprone.bugpatterns.DoNotCallCheckerTest.DNCTest.f() should not"
+                + " be called, see its documentation for details.",
             "    com.google.errorprone.bugpatterns.DoNotCallCheckerTest.DNCTest.f();",
             "  }",
             "}")

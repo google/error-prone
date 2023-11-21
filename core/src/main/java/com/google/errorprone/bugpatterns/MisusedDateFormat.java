@@ -114,8 +114,7 @@ public abstract class MisusedDateFormat extends BugChecker
    */
   abstract Optional<String> rewriteTo(String pattern);
 
-  private Description constructDescription(
-      Tree tree, ExpressionTree patternArg, VisitorState state) {
+  Description constructDescription(Tree tree, ExpressionTree patternArg, VisitorState state) {
     return Optional.ofNullable(constValue(patternArg, String.class))
         .flatMap(this::rewriteTo)
         .map(replacement -> describeMatch(tree, replaceArgument(patternArg, replacement, state)))

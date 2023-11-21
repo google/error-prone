@@ -55,7 +55,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 @BugPattern(
     summary =
         "Logger level check is already implied in the log() call. "
-            + "An explicit at[Level]().isEnabled() check is redundant.",
+            + "An explicit atLEVEL().isEnabled() check is redundant.",
     severity = WARNING)
 public class FloggerRedundantIsEnabled extends BugChecker implements IfTreeMatcher {
 

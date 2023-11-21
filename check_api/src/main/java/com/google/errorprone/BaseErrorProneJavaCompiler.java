@@ -40,9 +40,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.nio.charset.Charset;
-import java.util.Arrays;
 import java.util.EnumSet;
-import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -78,8 +76,7 @@ public class BaseErrorProneJavaCompiler implements JavaCompiler {
       Iterable<String> classes,
       Iterable<? extends JavaFileObject> compilationUnits) {
     ErrorProneOptions errorProneOptions = ErrorProneOptions.processArgs(options);
-    List<String> remainingOptions = Arrays.asList(errorProneOptions.getRemainingArgs());
-    ImmutableList<String> javacOpts = ImmutableList.copyOf(remainingOptions);
+    ImmutableList<String> javacOpts = errorProneOptions.getRemainingArgs();
     javacOpts = defaultToLatestSupportedLanguageLevel(javacOpts);
     javacOpts = setCompilePolicyToByFile(javacOpts);
     JavacTask task =

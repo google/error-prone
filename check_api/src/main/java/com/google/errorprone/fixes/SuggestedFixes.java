@@ -27,6 +27,7 @@ import static com.google.errorprone.util.ASTHelpers.getAnnotationWithSimpleName;
 import static com.google.errorprone.util.ASTHelpers.getModifiers;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.hasImplicitType;
 import static com.sun.source.tree.Tree.Kind.ASSIGNMENT;
 import static com.sun.source.tree.Tree.Kind.CONDITIONAL_EXPRESSION;
 import static com.sun.source.tree.Tree.Kind.NEW_ARRAY;
@@ -67,6 +68,7 @@ import com.sun.source.tree.CompoundAssignmentTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.InstanceOfTree;
+import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
@@ -744,11 +746,12 @@ public final class SuggestedFixes {
 
   /** Be warned, only changes method name at the declaration. */
   public static SuggestedFix renameMethod(MethodTree tree, String replacement, VisitorState state) {
-    // Search tokens from beginning of method tree to beginning of method body.
-    int basePos = getStartPosition(tree);
+    // Search tokens from end of return type tree to beginning of method body.
+    int basePos = state.getEndPosition(tree.getReturnType());
     int endPos =
         tree.getBody() != null ? getStartPosition(tree.getBody()) : state.getEndPosition(tree);
     List<ErrorProneToken> methodTokens = state.getOffsetTokens(basePos, endPos);
+
     for (ErrorProneToken token : methodTokens) {
       if (token.kind() == TokenKind.IDENTIFIER && token.name().equals(tree.getName())) {
         return SuggestedFix.replace(token.pos(), token.endPos(), replacement);
@@ -784,6 +787,17 @@ public final class SuggestedFixes {
               "." + replacement);
         }
         return super.visitMemberSelect(tree, null);
+      }
+
+      @Override
+      public Void visitMemberReference(MemberReferenceTree tree, Void unused) {
+        if (sym.equals(getSymbol(tree))) {
+          fix.replace(
+              state.getEndPosition(tree.getQualifierExpression()),
+              state.getEndPosition(tree),
+              "::" + replacement);
+        }
+        return super.visitMemberReference(tree, unused);
       }
     }.scan(state.getPath().getCompilationUnit(), null);
     return fix.build();
@@ -1005,7 +1019,7 @@ public final class SuggestedFixes {
       @Nullable String lineComment,
       boolean commentOnNewLine) {
     // Find the nearest tree to add @SuppressWarnings to.
-    Tree suppressibleNode = suppressibleNode(state.getPath());
+    Tree suppressibleNode = suppressibleNode(state.getPath(), state);
     if (suppressibleNode == null) {
       return;
     }
@@ -1047,6 +1061,7 @@ public final class SuggestedFixes {
       fixBuilder.prefixWith(suppressibleNode, replacement);
     }
   }
+
   /**
    * Modifies {@code fixBuilder} to either remove a {@code warningToRemove} warning from the closest
    * {@code SuppressWarning} node or remove the entire {@code SuppressWarning} node if {@code
@@ -1055,7 +1070,7 @@ public final class SuggestedFixes {
   public static void removeSuppressWarnings(
       SuggestedFix.Builder fixBuilder, VisitorState state, String warningToRemove) {
     // Find the nearest tree to remove @SuppressWarnings from.
-    Tree suppressibleNode = suppressibleNode(state.getPath());
+    Tree suppressibleNode = suppressibleNode(state.getPath(), state);
     if (suppressibleNode == null) {
       return;
     }
@@ -1093,7 +1108,7 @@ public final class SuggestedFixes {
   }
 
   @Nullable
-  private static Tree suppressibleNode(TreePath path) {
+  private static Tree suppressibleNode(TreePath path, VisitorState state) {
     return StreamSupport.stream(path.spliterator(), false)
         .filter(
             tree ->
@@ -1103,7 +1118,7 @@ public final class SuggestedFixes {
                         && ((ClassTree) tree).getSimpleName().length() != 0)
                     // Lambda parameters can't be suppressed unless they have Type decls
                     || (tree instanceof VariableTree
-                        && getStartPosition(((VariableTree) tree).getType()) != -1))
+                        && !hasImplicitType((VariableTree) tree, state)))
         .findFirst()
         .orElse(null);
   }

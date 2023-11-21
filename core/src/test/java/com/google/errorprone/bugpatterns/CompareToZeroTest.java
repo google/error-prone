@@ -45,6 +45,20 @@ public final class CompareToZeroTest {
   }
 
   @Test
+  public void positiveStaticCompare() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  boolean test(boolean x, boolean y) {",
+            "    // BUG: Diagnostic contains: compared",
+            "    return Boolean.compare(x, y) == -1;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void positiveSuggestionForConsistency() {
     compilationHelper
         .addSourceLines(

@@ -37,22 +37,27 @@ import java.lang.annotation.Target;
  *   <li>the expression consists of the literal {@code null}, or
  *   <li>the expression consists of a single identifier, where the identifier is a formal method
  *       parameter or class field that is declared {@code final} and has the {@link
- *       CompileTimeConstant} annotation.
+ *       CompileTimeConstant} annotation, or
+ *   <li>the expression is a {@link String}, and formed from the concatenation of symbols which meet
+ *       these conditions, or
+ *   <li>the expression is a ternary condition, where both branches satisfy these conditions, or
+ *   <li>the expression is an immutable collection with all values known to satisfy these conditions
+ *       (for example, {@code ImmutableSet.of("a", "b", "c")}).
  * </ol>
- *
- * <p>This constraint on call sites of methods or constructors that have one or more formal
- * parameters with this annotation is enforced by <a href="https://errorprone.info">error-prone</a>.
  *
  * <p>For example, the following code snippet is legal:
  *
  * <pre>{@code
  * public class C {
  *   private static final String S = "Hello";
- *   void m(@CompileTimeConstant final String s) { }
+ *   void m(@CompileTimeConstant final String s) {}
  *   void n(@CompileTimeConstant final String t) {
  *     m(S + " World!");
  *     m(null);
  *     m(t);
+ *   }
+ *   void o(boolean enabled) {
+ *     m(enabled ? "on" : "off");
  *   }
  * }
  * }</pre>
@@ -61,7 +66,7 @@ import java.lang.annotation.Target;
  *
  * <pre>{@code
  * public class C {
- *   void m(@CompileTimeConstant final String s) { }
+ *   void m(@CompileTimeConstant final String s) {}
  *   void n(String t) {
  *     m(t);
  *   }
@@ -70,31 +75,19 @@ import java.lang.annotation.Target;
  *
  * <p>When a class field is annotated with the {@link CompileTimeConstant} type annotation, the
  * field must also be declared to be {@code final}, and the corresponding initialised value must be
- * an expression that satisfies one of the following conditions:
- *
- * <ol>
- *   <li>The expression is one for which the Java compiler can determine a constant value at compile
- *       time, or
- *   <li>the expression consists of the literal {@code null}, or
- *   <li>the expression consists of a single identifier, where the identifier is a formal method
- *       parameter or class field that is declared {@code final} and has the {@link
- *       CompileTimeConstant} annotation.
- * </ol>
- *
- * <p>This constraint on fields with this annotation is enforced by <a
- * href="https://errorprone.info">error-prone</a>.
+ * an expression that satisfies the conditions above.
  *
  * <p>For example, the following code snippet is legal:
  *
  * <pre>{@code
  * public class C {
- *   \@CompileTimeConstant final String S;
+ *   @CompileTimeConstant final String s;
  *   public C(@CompileTimeConstant String s) {
- *     this.S = s;
+ *     this.s = s;
  *   }
- *   void m(@CompileTimeConstant final String s) { }
+ *   void m(@CompileTimeConstant final String s) {}
  *   void n() {
- *     m(S);
+ *     m(s);
  *   }
  * }
  * }</pre>
@@ -103,7 +96,7 @@ import java.lang.annotation.Target;
  *
  * <pre>{@code
  * public class C {
- *   \@CompileTimeConstant String S;
+ *   @CompileTimeConstant String S;
  *   public C(@CompileTimeConstant String s) {
  *     this.S = s;
  *   }
@@ -116,7 +109,7 @@ import java.lang.annotation.Target;
  *
  * <pre>{@code
  * public class C {
- *   \@CompileTimeConstant final String S;
+ *   @CompileTimeConstant final String S;
  *   public C(String s) {
  *     this.S = s;
  *   }
@@ -132,6 +125,8 @@ import java.lang.annotation.Target;
  * compile-time-constant values in a collection. APIs will typically accommodate such use cases via
  * domain-specific types that capture domain-specific aspects of trustworthiness that arise from
  * values being under application control.
+ *
+ * <p>These constraints are enforced by <a href="https://errorprone.info">error-prone</a>.
  */
 @Documented
 @Retention(CLASS)

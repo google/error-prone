@@ -21,7 +21,7 @@
   <parent>
     <groupId>com.google.errorprone</groupId>
     <artifactId>error_prone_parent</artifactId>
-    <version>2.19.1</version>
+    <version>2.23.0</version>
   </parent>
 
   <name>error-prone check api</name>
@@ -51,7 +51,7 @@
     </dependency>
     <dependency>
       <!-- GPLv2 with Classpath Exception -->
-      <groupId>org.checkerframework</groupId>
+      <groupId>io.github.eisop</groupId>
       <artifactId>dataflow-errorprone</artifactId>
       <version>${dataflow.version}</version>
     </dependency>
@@ -59,7 +59,7 @@
       <!-- Apache 2.0 -->
       <groupId>io.github.java-diff-utils</groupId>
       <artifactId>java-diff-utils</artifactId>
-      <version>4.0</version>
+      <version>4.12</version>
     </dependency>
     <dependency>
       <!-- Apache 2.0 -->
@@ -67,13 +67,6 @@
       <artifactId>auto-value-annotations</artifactId>
       <version>${autovalue.version}</version>
       <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <!-- Apache 2.0 -->
-      <groupId>com.google.auto.service</groupId>
-      <artifactId>auto-service</artifactId>
-      <version>1.0-rc4</version>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <!-- Apache 2.0 -->

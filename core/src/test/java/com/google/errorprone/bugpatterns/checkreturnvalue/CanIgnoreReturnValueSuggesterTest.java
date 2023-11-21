@@ -610,6 +610,24 @@ public class CanIgnoreReturnValueSuggesterTest {
   }
 
   @Test
+  public void refasterAfterTemplate() {
+    helper
+        .addInputLines(
+            "A.java",
+            "import com.google.errorprone.refaster.annotation.AfterTemplate;",
+            "class A {",
+            "  static final class MethodLacksBeforeTemplateAnnotation {",
+            "    @AfterTemplate",
+            "    String after(String str) {",
+            "      return str;",
+            "    }",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
   public void sometimesThrows() {
     helper
         .addInputLines(
@@ -830,6 +848,28 @@ public class CanIgnoreReturnValueSuggesterTest {
             "  }",
             "}")
         .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void exemptedByCustomAnnotation() {
+    helper
+        .addInputLines("Foo.java", "package example;", "@interface Foo {}")
+        .expectUnchanged()
+        .addInputLines(
+            "ExemptedByCustomAnnotation.java",
+            "package example;",
+            "public final class ExemptedByCustomAnnotation {",
+            "  private String name;",
+            "",
+            "  @Foo",
+            "  public ExemptedByCustomAnnotation setName(String name) {",
+            "    this.name = name;",
+            "    return this;",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .setArgs("-XepOpt:CanIgnoreReturnValue:ExemptingMethodAnnotations=example.Foo")
         .doTest();
   }
 }

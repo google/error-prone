@@ -232,14 +232,19 @@ public class RestrictedApiChecker extends BugChecker
     boolean allow = Matchers.enclosingNode(shouldAllow(attribute)).matches(where, state);
     if (warn && allow) {
       // TODO(bangert): Clarify this message if possible.
-      return buildDescription(where)
-          .setMessage(
-              "The Restricted API ("
-                  + restriction.explanation()
-                  + ") call here is both allowlisted-as-warning and "
-                  + "silently allowlisted. "
-                  + "Please remove one of the conflicting suppression annotations.")
-          .build();
+      var descriptionBuilder =
+          buildDescription(where)
+              .setMessage(
+                  "The Restricted API ("
+                      + restriction.explanation()
+                      + ") call here is both allowlisted-as-warning and "
+                      + "silently allowlisted. "
+                      + "Please remove one of the conflicting suppression annotations.");
+
+      if (!restriction.link().isEmpty()) {
+        descriptionBuilder.setLinkUrl(restriction.link());
+      }
+      return descriptionBuilder.build();
     }
     if (allow) {
       return NO_MATCH;

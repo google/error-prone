@@ -27,6 +27,7 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -48,6 +49,7 @@ import java.util.Deque;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import javax.inject.Inject;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Name;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -57,6 +59,13 @@ import org.checkerframework.checker.nullness.qual.Nullable;
     summary = "This type name shadows another in a way that may be confusing.",
     severity = WARNING)
 public final class SameNameButDifferent extends BugChecker implements CompilationUnitTreeMatcher {
+  private final Boolean batchFindings;
+
+  @Inject
+  SameNameButDifferent(ErrorProneFlags flags) {
+    batchFindings = flags.getBoolean("SameNameButDifferent:BatchFindings").orElse(false);
+  }
+
   @Override
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
     Table<String, TypeSymbol, List<TreePath>> table = HashBasedTable.create();
@@ -176,12 +185,16 @@ public final class SameNameButDifferent extends BugChecker implements Compilatio
                     .map(t -> t.getQualifiedName().toString())
                     .collect(joining(", ", "[", "]")));
         SuggestedFix fix = fixBuilder.build();
-        for (List<TreePath> treePaths : trimmedTable.row(simpleName).values()) {
-          for (TreePath treePath : treePaths) {
-            state.reportMatch(
-                buildDescription(treePath.getLeaf()).setMessage(message).addFix(fix).build());
-          }
-        }
+        trimmedTable.row(simpleName).values().stream()
+            .flatMap(List::stream)
+            .limit(batchFindings ? 1 : Long.MAX_VALUE)
+            .forEach(
+                treePath ->
+                    state.reportMatch(
+                        buildDescription(treePath.getLeaf())
+                            .setMessage(message)
+                            .addFix(fix)
+                            .build()));
       }
     }
     return NO_MATCH;

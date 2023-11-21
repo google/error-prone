@@ -50,7 +50,8 @@ public class ASTHelpersSuggestions extends BugChecker implements MethodInvocatio
       anyOf(
           instanceMethod()
               .onDescendantOf("com.sun.tools.javac.code.Symbol")
-              .namedAnyOf("isDirectlyOrIndirectlyLocal", "isLocal", "packge"),
+              .namedAnyOf(
+                  "isDirectlyOrIndirectlyLocal", "isLocal", "packge", "getEnclosedElements"),
           instanceMethod()
               .onClass((t, s) -> isSubtype(MODULE_SYMBOL.get(s), t, s))
               .namedAnyOf("isStatic"));

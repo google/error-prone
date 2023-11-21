@@ -30,6 +30,16 @@ import com.sun.tools.javac.code.Type;
 /** A collection of {@link TypePredicate}s. */
 public final class TypePredicates {
 
+  /** Matches nothing (always {@code false}). */
+  public static TypePredicate nothing() {
+    return (type, state) -> false;
+  }
+
+  /** Matches everything (always {@code true}). */
+  public static TypePredicate anything() {
+    return (type, state) -> true;
+  }
+
   /** Match arrays. */
   public static TypePredicate isArray() {
     return Array.INSTANCE;
@@ -55,14 +65,14 @@ public final class TypePredicates {
     return new DescendantOf(type);
   }
 
-  /** Match types that are a sub-type of one of the given types. */
-  public static TypePredicate isDescendantOfAny(Iterable<String> types) {
-    return new DescendantOfAny(fromStrings(types));
-  }
-
   /** Match sub-types of the given type. */
   public static TypePredicate isDescendantOf(String type) {
     return isDescendantOf(Suppliers.typeFromString(type));
+  }
+
+  /** Match types that are a sub-type of one of the given types. */
+  public static TypePredicate isDescendantOfAny(Iterable<String> types) {
+    return new DescendantOfAny(fromStrings(types));
   }
 
   public static TypePredicate allOf(TypePredicate... predicates) {

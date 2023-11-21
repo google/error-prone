@@ -24,7 +24,7 @@ import static com.google.errorprone.matchers.method.MethodMatchers.instanceMetho
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
-import static com.google.errorprone.util.ASTHelpers.hasNoExplicitType;
+import static com.google.errorprone.util.ASTHelpers.hasImplicitType;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.google.errorprone.util.ASTHelpers.streamReceivers;
@@ -74,7 +74,7 @@ public final class Varifier extends BugChecker implements VariableTreeMatcher {
     if (!symbol.getKind().equals(LOCAL_VARIABLE)
         || !isConsideredFinal(symbol)
         || initializer == null
-        || hasNoExplicitType(tree, state)) {
+        || hasImplicitType(tree, state)) {
       return NO_MATCH;
     }
     // Foo foo = (Foo) bar;

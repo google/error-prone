@@ -53,6 +53,7 @@ import org.checkerframework.errorprone.dataflow.cfg.node.ConditionalOrNode;
 import org.checkerframework.errorprone.dataflow.cfg.node.DoubleLiteralNode;
 import org.checkerframework.errorprone.dataflow.cfg.node.EqualToNode;
 import org.checkerframework.errorprone.dataflow.cfg.node.ExplicitThisNode;
+import org.checkerframework.errorprone.dataflow.cfg.node.ExpressionStatementNode;
 import org.checkerframework.errorprone.dataflow.cfg.node.FieldAccessNode;
 import org.checkerframework.errorprone.dataflow.cfg.node.FloatLiteralNode;
 import org.checkerframework.errorprone.dataflow.cfg.node.FloatingDivisionNode;
@@ -1017,6 +1018,20 @@ abstract class AbstractNullnessPropagationTransfer
 
   Nullness visitClassDeclaration() {
     return NULLABLE;
+  }
+
+  @Override
+  public final TransferResult<Nullness, AccessPathStore<Nullness>> visitExpressionStatement(
+      ExpressionStatementNode node, TransferInput<Nullness, AccessPathStore<Nullness>> input) {
+    /*
+     * The fact that something is an expression statement is presumably irrelevant to nullness. So
+     * probably no code looks at this result. And if the statement needs to update the store
+     * somehow, that gets handled by the other visit* methods. I think.
+     *
+     * See
+     * https://github.com/eisop/checker-framework/blob/7c5e731da5665cba0612e8c85287d380fd66e924/dataflow/src/main/java/org/checkerframework/dataflow/cfg/node/ExpressionStatementNode.java#L20
+     */
+    return noStoreChanges(NONNULL, input);
   }
 
   private static final class ReadableUpdates implements Updates {

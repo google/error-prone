@@ -43,6 +43,7 @@ import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.BlockTree;
+import com.sun.source.tree.EnhancedForLoopTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.LambdaExpressionTree;
@@ -101,15 +102,26 @@ public class UnnecessaryLambda extends BugChecker
     if (state.isAndroidCompatible()) {
       return NO_MATCH;
     }
+    boolean[] usedInEnhancedForLoop = {false};
     new TreePathScanner<Void, Void>() {
       @Override
       public Void visitMethodInvocation(MethodInvocationTree node, Void unused) {
+
         if (Objects.equals(getSymbol(node), sym)) {
-          replaceUseWithMethodReference(fix, node, name, state.withPath(getCurrentPath()));
+          Tree parent = getCurrentPath().getParentPath().getLeaf();
+          if (parent instanceof EnhancedForLoopTree
+              && ((EnhancedForLoopTree) parent).getExpression().equals(node)) {
+            usedInEnhancedForLoop[0] = true;
+          } else {
+            replaceUseWithMethodReference(fix, node, name, state.withPath(getCurrentPath()));
+          }
         }
         return super.visitMethodInvocation(node, null);
       }
     }.scan(state.getPath().getCompilationUnit(), null);
+    if (usedInEnhancedForLoop[0]) {
+      return NO_MATCH;
+    }
     lambdaToMethod(state, lambda, fix, name, type);
     return describeMatch(tree, fix.build());
   }
@@ -174,6 +186,7 @@ public class UnnecessaryLambda extends BugChecker
           "com.google.errorprone.matchers",
           "java.util.function",
           "java.lang");
+
   /**
    * Check if the only methods invoked on the functional interface type are the descriptor method,
    * e.g. don't rewrite uses of {@link Predicate} in compilation units that call other methods like

@@ -75,7 +75,7 @@ public class MissingDefault extends BugChecker implements SwitchTreeMatcher {
     }
     CaseTree defaultCase = maybeDefault.get();
     List<? extends StatementTree> statements = defaultCase.getStatements();
-    if (statements != null && !statements.isEmpty()) {
+    if (statements == null || !statements.isEmpty()) {
       return NO_MATCH;
     }
     // If `default` case is empty, and last in switch, add `// fall out` comment

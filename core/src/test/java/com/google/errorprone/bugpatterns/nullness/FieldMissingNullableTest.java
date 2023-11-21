@@ -457,7 +457,7 @@ public class FieldMissingNullableTest {
         .addOutputLines(
             "out/Test.java",
             "class T {",
-            "  private final @org.jspecify.nullness.Nullable Object obj2 = null;",
+            "  private final @org.jspecify.annotations.Nullable Object obj2 = null;",
             "  class Nullable {}",
             "}")
         .doTest();

@@ -244,6 +244,13 @@ public class BugCheckerRefactoringTestHelper {
 
   public void doTest(TestMode testMode) {
     checkState(!run, "doTest should only be called once");
+
+    String depsForTestInputs = System.getProperty("com.google.errorprone.deps_for_test_inputs");
+    if (depsForTestInputs != null) {
+      options =
+          ImmutableList.<String>builder().addAll(options).add("-cp").add(depsForTestInputs).build();
+    }
+
     this.run = true;
     for (Map.Entry<JavaFileObject, JavaFileObject> entry : sources.entrySet()) {
       try {
@@ -294,19 +301,19 @@ public class BugCheckerRefactoringTestHelper {
                 new PrintWriter(out, true),
                 FileManagers.testFileManager(),
                 diagnosticsCollector,
-                ImmutableList.copyOf(errorProneOptions.getRemainingArgs()),
+                errorProneOptions.getRemainingArgs(),
                 /* classes= */ null,
                 files,
                 context);
     Iterable<? extends CompilationUnitTree> trees = task.parse();
     task.analyze();
-    ImmutableMap<URI, ? extends CompilationUnitTree> byURI =
+    ImmutableMap<URI, ? extends CompilationUnitTree> byUri =
         stream(trees).collect(toImmutableMap(t -> t.getSourceFile().toUri(), t -> t));
-    URI inputURI = input.toUri();
+    URI inputUri = input.toUri();
     assertWithMessage(out + Joiner.on('\n').join(diagnosticsCollector.getDiagnostics()))
-        .that(byURI)
-        .containsKey(inputURI);
-    JCCompilationUnit tree = (JCCompilationUnit) byURI.get(inputURI);
+        .that(byUri)
+        .containsKey(inputUri);
+    JCCompilationUnit tree = (JCCompilationUnit) byUri.get(inputUri);
     Iterable<Diagnostic<? extends JavaFileObject>> errorDiagnostics =
         Iterables.filter(
             diagnosticsCollector.getDiagnostics(), d -> d.getKind() == Diagnostic.Kind.ERROR);
@@ -345,8 +352,12 @@ public class BugCheckerRefactoringTestHelper {
       return Iterators.getOnlyElement(types).sym.getQualifiedName().toString();
     }
 
-    // Fallback: if no class is declared, then assume we're looking at a `package-info.java`.
-    return tree.getPackage().packge.package_info.toString();
+    // Fallback: if no class is declared, then assume we're looking at a `package-info.java`..
+    if (tree.getPackage() != null) {
+      return tree.getPackage().packge.package_info.toString();
+    }
+    // ..or a `module-info.java`.
+    return tree.getModuleDecl().sym.getQualifiedName().toString();
   }
 
   /** To assert the proper {@code .addInput().addOutput()} chain. */

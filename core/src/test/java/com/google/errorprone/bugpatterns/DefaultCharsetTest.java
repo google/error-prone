@@ -389,8 +389,8 @@ public class DefaultCharsetTest {
             "        new BufferedWriter(new OutputStreamWriter(System.err, UTF_8)), true);",
             "    PrintWriter pw2 = new PrintWriter(",
             "        new BufferedWriter(new OutputStreamWriter(System.err, UTF_8)));",
-            "    PrintWriter pw3 = new PrintWriter(\"test\", UTF_8.name());",
-            "    PrintWriter pw4 = new PrintWriter(new File(\"test\"), UTF_8.name());",
+            "    PrintWriter pw3 = new PrintWriter(\"test\", UTF_8);",
+            "    PrintWriter pw4 = new PrintWriter(new File(\"test\"), UTF_8);",
             "  }",
             "}")
         .doTest();
@@ -494,10 +494,10 @@ public class DefaultCharsetTest {
             "import java.util.Scanner;",
             "class Test {",
             "  void f() throws Exception {",
-            "    new Scanner((InputStream) null, UTF_8.name());",
-            "    new Scanner((File) null, UTF_8.name());",
-            "    new Scanner((Path) null, UTF_8.name());",
-            "    new Scanner((ReadableByteChannel) null, UTF_8.name());",
+            "    new Scanner((InputStream) null, UTF_8);",
+            "    new Scanner((File) null, UTF_8);",
+            "    new Scanner((Path) null, UTF_8);",
+            "    new Scanner((ReadableByteChannel) null, UTF_8);",
             "  }",
             "}")
         .doTest();

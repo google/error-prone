@@ -87,6 +87,28 @@ public final class NotJavadocTest {
   }
 
   @Test
+  public void notJavadocWithLotsOfAsterisks() {
+    helper
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  void test() {",
+            "    /******** Not Javadoc. */",
+            "    class A {}",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  void test() {",
+            "    /* Not Javadoc. */",
+            "    class A {}",
+            "  }",
+            "}")
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
   public void actuallyJavadoc() {
     helper
         .addInputLines(
@@ -121,6 +143,32 @@ public final class NotJavadocTest {
             "package-info.java", //
             "/** Package javadoc */",
             "package foo;")
+        .expectUnchanged()
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
+  public void moduleLevel() {
+    helper
+        .addInputLines(
+            "module-info.java", //
+            "/** Module javadoc */",
+            "module foo {}")
+        .expectUnchanged()
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
+  public void suppression() {
+    helper
+        .addInputLines(
+            "Test.java", //
+            "class Test {",
+            "  @SuppressWarnings(\"NotJavadoc\")",
+            "  void test() {",
+            "    /** Not Javadoc. */",
+            "  }",
+            "}")
         .expectUnchanged()
         .doTest(TEXT_MATCH);
   }

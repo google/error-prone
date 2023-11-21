@@ -16,13 +16,28 @@
 
 package com.google.errorprone.bugpatterns.collectionincompatibletype;
 
+import static com.google.common.collect.ImmutableList.toImmutableList;
+import static com.google.common.truth.Truth.assertThat;
+import static com.google.common.truth.TruthJUnit.assume;
+import static java.lang.String.format;
+import static java.util.Arrays.stream;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.truth.IterableSubject;
+import com.google.common.truth.Subject;
+import com.google.common.truth.extensions.proto.IterableOfProtosSubject;
+import com.google.common.truth.extensions.proto.ProtoSubject;
 import com.google.errorprone.CompilationTestHelper;
+import com.google.testing.junit.testparameterinjector.TestParameter;
+import com.google.testing.junit.testparameterinjector.TestParameter.TestParameterValuesProvider;
+import com.google.testing.junit.testparameterinjector.TestParameterInjector;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 
 /** {@link TruthIncompatibleType}Test */
-@RunWith(JUnit4.class)
+@RunWith(TestParameterInjector.class)
 public class TruthIncompatibleTypeTest {
 
   private final CompilationTestHelper compilationHelper =
@@ -48,7 +63,7 @@ public class TruthIncompatibleTypeTest {
   }
 
   @Test
-  public void assume() {
+  public void assumeTypeCheck() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -558,5 +573,134 @@ public class TruthIncompatibleTypeTest {
             "  }",
             "}")
         .doTest();
+  }
+
+  @Test
+  public void casts() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.truth.Truth.assertThat;",
+            "public class Test {",
+            "  public void f(int a, long b, long c) {",
+            "    assertThat((long) a).isAnyOf(b, c);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void subjectExhaustiveness(
+      @TestParameter(valuesProvider = SubjectMethods.class) Method method) {
+    // TODO(ghm): isNotSameInstanceAs might be worth flagging, but the check can be even stricter.
+    assume().that(method.getName()).isNoneOf("isSameInstanceAs", "isNotSameInstanceAs");
+
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.truth.Truth.assertThat;",
+            "import com.google.common.collect.ImmutableList;",
+            "class Test {",
+            "  public void test(String a, Long b) {",
+            "    // BUG: Diagnostic contains:",
+            getOffensiveLine(method),
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void iterableSubjectExhaustiveness(
+      @TestParameter(valuesProvider = IterableSubjectMethods.class) Method method) {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.truth.Truth.assertThat;",
+            "import com.google.common.collect.ImmutableList;",
+            "class Test {",
+            "  public void test(Iterable<String> a, Long b) {",
+            "    // BUG: Diagnostic contains:",
+            getOffensiveLine(method),
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void protoTruthSubject_exhaustive(
+      @TestParameter(valuesProvider = ProtoTruthSubjectMethods.class) Method method) {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.truth.extensions.proto.ProtoTruth.assertThat;",
+            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;",
+            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
+            "public class Test {",
+            "  public void f(TestProtoMessage a, TestFieldProtoMessage b) {",
+            "    // BUG: Diagnostic contains:",
+            getOffensiveLine(method),
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void protoTruthIterableSubjectExhaustiveness() {
+    // There are no additional methods on IterableOfProtosSubject, otherwise we'd want to test that.
+    // This test just makes sure that remains true.
+    assertThat(getAssertionMethods(IterableOfProtosSubject.class)).isEmpty();
+  }
+
+  private static String getOffensiveLine(Method method) {
+    if (stream(method.getParameterTypes()).allMatch(p -> p.equals(Iterable.class))) {
+      return format("    assertThat(a).%s(ImmutableList.of(b));", method.getName());
+    } else if (stream(method.getParameterTypes()).allMatch(p -> p.equals(Object.class))) {
+      return format("    assertThat(a).%s(b);", method.getName());
+    } else if (stream(method.getParameterTypes()).allMatch(p -> p.isArray())) {
+      return format("    assertThat(a).%s(new Long[]{b, b, b});", method.getName());
+    } else if (stream(method.getParameterTypes())
+        .allMatch(p -> p.equals(Object.class) || p.isArray())) {
+      return format("    assertThat(a).%s(b, b, b);", method.getName());
+    } else if (stream(method.getParameterTypes()).allMatch(Class::isArray)) {
+      return format("    assertThat(a).%s(b);", method.getName());
+    } else {
+      throw new AssertionError();
+    }
+  }
+
+  private static final class SubjectMethods implements TestParameterValuesProvider {
+    @Override
+    public ImmutableList<Method> provideValues() {
+      return getAssertionMethods(Subject.class);
+    }
+  }
+
+  private static final class IterableSubjectMethods implements TestParameterValuesProvider {
+    @Override
+    public ImmutableList<Method> provideValues() {
+      return getAssertionMethods(IterableSubject.class);
+    }
+  }
+
+  private static final class ProtoTruthSubjectMethods implements TestParameterValuesProvider {
+    @Override
+    public ImmutableList<Method> provideValues() {
+      return getAssertionMethods(ProtoSubject.class);
+    }
+  }
+
+  private static ImmutableList<Method> getAssertionMethods(Class<?> clazz) {
+    return stream(clazz.getDeclaredMethods())
+        .filter(
+            m ->
+                Modifier.isPublic(m.getModifiers())
+                    && !m.getName().equals("equals")
+                    && m.getParameterCount() > 0
+                    && !m.getName().startsWith("ignoring")
+                    && (stream(m.getParameterTypes()).allMatch(p -> p.equals(Iterable.class))
+                        || stream(m.getParameterTypes())
+                            .allMatch(p -> p.equals(Object.class) || p.isArray())
+                        || stream(m.getParameterTypes()).allMatch(Class::isArray)))
+        .collect(toImmutableList());
   }
 }
