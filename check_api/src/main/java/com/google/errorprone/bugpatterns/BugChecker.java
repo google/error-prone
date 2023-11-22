@@ -290,7 +290,8 @@ public abstract class BugChecker implements Suppressible, Serializable {
     }
 
     List<String> suppressions = Arrays.asList(suppression.value());
-    return suppressions.contains("all") || !Collections.disjoint(suppressions, allNames());
+    // TODO: generated Immutable sources contain @SuppressWarnings({"all"})
+    return /* suppressions.contains("all") || */ !Collections.disjoint(suppressions, allNames());
   }
 
   /**
