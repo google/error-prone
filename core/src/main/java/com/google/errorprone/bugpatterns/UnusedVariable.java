@@ -179,7 +179,7 @@ public class UnusedVariable extends BugChecker implements CompilationUnitTreeMat
   private final boolean reportInjectedFields;
 
   @Inject
-  UnusedVariable(ErrorProneFlags flags) {
+  public UnusedVariable(ErrorProneFlags flags) {
     this.methodAnnotationsExemptingParameters =
         ImmutableSet.<String>builder()
             .add("org.robolectric.annotation.Implementation")
