@@ -109,7 +109,7 @@ public class HubSpotLifecycleManager {
   private void deleteCanary() {
     getCanaryPath().ifPresent(p -> {
       try {
-        Files.delete(p);
+        Files.deleteIfExists(p);
       } catch (Exception e) {
         throw new RuntimeException("Failed to delete canary!", e);
       }
