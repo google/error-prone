@@ -125,7 +125,7 @@ import javax.lang.model.type.NullType;
     summary = "Unused.",
     severity = WARNING,
     documentSuppression = false)
-public final class UnusedVariable extends BugChecker implements CompilationUnitTreeMatcher {
+public class UnusedVariable extends BugChecker implements CompilationUnitTreeMatcher {
   private final ImmutableSet<String> exemptPrefixes;
 
   private final ImmutableSet<String> exemptNames;
