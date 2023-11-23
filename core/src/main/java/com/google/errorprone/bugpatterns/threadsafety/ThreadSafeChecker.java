@@ -25,7 +25,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Sets.SetView;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.Immutable;
 import com.google.errorprone.annotations.ThreadSafe;
@@ -76,12 +75,10 @@ public class ThreadSafeChecker extends BugChecker
         MemberReferenceTreeMatcher {
 
   private final WellKnownThreadSafety wellKnownThreadSafety;
-  private final boolean checkElementUsage;
 
   @Inject
-  ThreadSafeChecker(WellKnownThreadSafety wellKnownThreadSafety, ErrorProneFlags flags) {
+  ThreadSafeChecker(WellKnownThreadSafety wellKnownThreadSafety) {
     this.wellKnownThreadSafety = wellKnownThreadSafety;
-    this.checkElementUsage = flags.getBoolean("ThreadSafeChecker:CheckElementUsage").orElse(true);
   }
 
   // check instantiations of `@ThreadSafe`s in method references
@@ -145,7 +142,7 @@ public class ThreadSafeChecker extends BugChecker
             .build();
       }
     }
-    if (checkElementUsage && analysis.hasThreadSafeElementAnnotation((TypeVariableSymbol) sym)) {
+    if (analysis.hasThreadSafeElementAnnotation((TypeVariableSymbol) sym)) {
       if (analysis.getThreadSafeAnnotation(sym.owner, state) == null) {
         return buildDescription(tree)
             .setMessage("@ThreadSafe.Element is only supported on threadsafe classes")
