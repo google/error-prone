@@ -76,4 +76,33 @@ public class MissingBracesTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void suggestedFixForNestedProblemsWithOverlappingBracePostfixInsertions() {
+    BugCheckerRefactoringTestHelper.newInstance(MissingBraces.class, getClass())
+        .addInputLines(
+            "Test.java",
+            "import java.util.List;",
+            "class Test {",
+            "  private String findNotNull(List<String> items) {",
+            "    for (String item : items)",
+            "      if (item != null) return item;",
+            "    return null;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import java.util.List;",
+            "class Test {",
+            "  private String findNotNull(List<String> items) {",
+            "    for (String item : items) {",
+            "      if (item != null) {",
+            "        return item;",
+            "      }",
+            "    }",
+            "    return null;",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

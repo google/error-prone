@@ -116,6 +116,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     MAYBE_FALLS_THRU,
     DEFINITELY_DOES_FALL_THRU
   };
+
   // Tri-state to represent whether cases within a single switch statement meet an (unspecified)
   // qualification predicate
   static enum CaseQualifications {
@@ -1084,10 +1085,13 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
   abstract static class AssignmentSwitchAnalysisResult {
     // Whether the statement switch can be converted to an assignment switch
     abstract boolean canConvertToAssignmentSwitch();
+
     // Target of the assignment switch, if any
     abstract Optional<ExpressionTree> assignmentTargetOptional();
+
     // Kind of assignment made by the assignment switch, if any
     abstract Optional<Tree.Kind> assignmentKindOptional();
+
     // Java source code of the assignment switch's operator, e.g. "+="
     abstract Optional<String> assignmentSourceCodeOptional();
 
@@ -1108,10 +1112,13 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
   abstract static class AssignmentSwitchAnalysisState {
     // Overall qualification of the switch statement for conversion to an assignment switch
     abstract CaseQualifications assignmentSwitchCaseQualifications();
+
     // Target of the first assignment seen, if any
     abstract Optional<ExpressionTree> assignmentTargetOptional();
+
     // Kind of the first assignment seen, if any
     abstract Optional<Tree.Kind> assignmentExpressionKindOptional();
+
     // ExpressionTree of the first assignment seen, if any
     abstract Optional<ExpressionTree> assignmentTreeOptional();
 

@@ -263,4 +263,23 @@ public class MissingDefaultTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void arrowComment() {
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void f() {}",
+            "  void m(int i) {",
+            "    switch (i) {",
+            "      case 0 -> f();",
+            "      case 1 -> f();",
+            "      default -> f();",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns.javadoc;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
-import static com.google.errorprone.BugPattern.StandardTags.STYLE;
 import static com.google.errorprone.bugpatterns.javadoc.Utils.getDiagnosticPosition;
 import static com.google.errorprone.fixes.SuggestedFix.replace;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
@@ -27,6 +26,8 @@ import static com.google.errorprone.util.ErrorProneTokens.getTokens;
 import static com.sun.tools.javac.parser.Tokens.Comment.CommentStyle.JAVADOC;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableRangeSet;
+import com.google.common.collect.Range;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -37,10 +38,12 @@ import com.google.errorprone.util.ErrorProneToken;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.ModuleTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.PackageTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
+import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.parser.Tokens.Comment;
 import java.util.HashMap;
@@ -49,14 +52,14 @@ import javax.lang.model.element.ElementKind;
 
 /** A BugPattern; see the summary. */
 @BugPattern(
-    summary = "Avoid using /** for comments which aren't actually Javadoc.",
+    summary = "Avoid using `/**` for comments which aren't actually Javadoc.",
     severity = WARNING,
-    tags = STYLE,
     documentSuppression = false)
 public final class NotJavadoc extends BugChecker implements CompilationUnitTreeMatcher {
   @Override
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
-    ImmutableMap<Integer, Tree> javadocableTrees = getJavadoccableTrees(tree, state);
+    ImmutableMap<Integer, Tree> javadocableTrees = getJavadoccableTrees(tree);
+    ImmutableRangeSet<Integer> suppressedRegions = suppressedRegions(state);
     for (ErrorProneToken token : getTokens(state.getSourceCode().toString(), state.context)) {
       for (Comment comment : token.comments()) {
         if (!comment.getStyle().equals(JAVADOC) || comment.getText().equals("/**/")) {
@@ -65,19 +68,29 @@ public final class NotJavadoc extends BugChecker implements CompilationUnitTreeM
         if (javadocableTrees.containsKey(token.pos())) {
           continue;
         }
+
+        if (suppressedRegions.intersects(
+            Range.closed(
+                comment.getSourcePos(0), comment.getSourcePos(comment.getText().length() - 1)))) {
+          continue;
+        }
+
+        int endPos = 2;
+        while (comment.getText().charAt(endPos) == '*') {
+          endPos++;
+        }
         state.reportMatch(
             describeMatch(
                 getDiagnosticPosition(comment.getSourcePos(0), tree),
-                replace(comment.getSourcePos(1), comment.getSourcePos(2), "")));
+                replace(comment.getSourcePos(1), comment.getSourcePos(endPos - 1), "")));
       }
     }
     return NO_MATCH;
   }
 
-  private ImmutableMap<Integer, Tree> getJavadoccableTrees(
-      CompilationUnitTree tree, VisitorState state) {
+  private ImmutableMap<Integer, Tree> getJavadoccableTrees(CompilationUnitTree tree) {
     Map<Integer, Tree> javadoccablePositions = new HashMap<>();
-    new SuppressibleTreePathScanner<Void, Void>(state) {
+    new TreePathScanner<Void, Void>() {
       @Override
       public Void visitPackage(PackageTree packageTree, Void unused) {
         javadoccablePositions.put(getStartPosition(packageTree), packageTree);
@@ -118,6 +131,12 @@ public final class NotJavadoc extends BugChecker implements CompilationUnitTreeM
           }
         }
         return super.visitVariable(variableTree, null);
+      }
+
+      @Override
+      public Void visitModule(ModuleTree moduleTree, Void unused) {
+        javadoccablePositions.put(getStartPosition(moduleTree), moduleTree);
+        return super.visitModule(moduleTree, null);
       }
     }.scan(tree, null);
     return ImmutableMap.copyOf(javadoccablePositions);

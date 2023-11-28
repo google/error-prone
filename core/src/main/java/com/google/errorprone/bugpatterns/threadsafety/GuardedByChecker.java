@@ -127,7 +127,7 @@ public class GuardedByChecker extends BugChecker
     // members guarded by ReadWriteLocks. We could allow accesses when either the
     // read or write locks are held, but that's not much better than enforcing
     // nothing.
-    if (isRWLock(guard, state)) {
+    if (isRwLock(guard, state)) {
       return NO_MATCH;
     }
 
@@ -210,7 +210,7 @@ public class GuardedByChecker extends BugChecker
    * Returns true if the lock expression corresponds to a {@code
    * java.util.concurrent.locks.ReadWriteLock}.
    */
-  private static boolean isRWLock(GuardedByExpression guard, VisitorState state) {
+  private static boolean isRwLock(GuardedByExpression guard, VisitorState state) {
     Type guardType = guard.type();
     if (guardType == null) {
       return false;

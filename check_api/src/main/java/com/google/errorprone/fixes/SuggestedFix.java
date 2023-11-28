@@ -23,6 +23,7 @@ import com.google.auto.value.extension.memoized.Memoized;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
+import com.google.errorprone.fixes.Replacements.CoalescePolicy;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
@@ -46,6 +47,7 @@ public abstract class SuggestedFix implements Fix {
 
   private static SuggestedFix create(SuggestedFix.Builder builder) {
     return new AutoValue_SuggestedFix(
+        builder.coalescePolicy,
         ImmutableList.copyOf(builder.fixes),
         ImmutableSet.copyOf(builder.importsToAdd),
         ImmutableSet.copyOf(builder.importsToRemove),
@@ -83,15 +85,14 @@ public abstract class SuggestedFix implements Fix {
   public abstract int hashCode();
 
   @Override
-  public Set<Replacement> getReplacements(EndPosTable endPositions) {
+  public ImmutableSet<Replacement> getReplacements(EndPosTable endPositions) {
     if (endPositions == null) {
       throw new IllegalArgumentException(
           "Cannot produce correct replacements without endPositions.");
     }
     Replacements replacements = new Replacements();
     for (FixOperation fix : fixes()) {
-      replacements.add(
-          fix.getReplacement(endPositions), Replacements.CoalescePolicy.EXISTING_FIRST);
+      replacements.add(fix.getReplacement(endPositions), getCoalescePolicy());
     }
     return replacements.ascending();
   }
@@ -159,6 +160,14 @@ public abstract class SuggestedFix implements Fix {
     return EMPTY;
   }
 
+  public static SuggestedFix merge(SuggestedFix first, SuggestedFix second, SuggestedFix... more) {
+    var builder = builder().merge(first).merge(second);
+    for (SuggestedFix fix : more) {
+      builder.merge(fix);
+    }
+    return builder.build();
+  }
+
   public static Builder builder() {
     return new Builder();
   }
@@ -169,6 +178,7 @@ public abstract class SuggestedFix implements Fix {
     private final List<FixOperation> fixes = new ArrayList<>();
     private final Set<String> importsToAdd = new LinkedHashSet<>();
     private final Set<String> importsToRemove = new LinkedHashSet<>();
+    private CoalescePolicy coalescePolicy = CoalescePolicy.EXISTING_FIRST;
     private String shortDescription = "";
 
     protected Builder() {}
@@ -196,6 +206,12 @@ public abstract class SuggestedFix implements Fix {
     @CanIgnoreReturnValue
     public Builder setShortDescription(String shortDescription) {
       this.shortDescription = shortDescription;
+      return this;
+    }
+
+    @CanIgnoreReturnValue
+    public Builder setCoalescePolicy(CoalescePolicy coalescePolicy) {
+      this.coalescePolicy = coalescePolicy;
       return this;
     }
 

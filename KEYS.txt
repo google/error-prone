@@ -1,0 +1,65 @@
+This file contains the PGP and GPG keys used to sign releases of Error Prone.
+
+gpg --list-sigs <your name> && gpg --armor --export <your name>
+
+************************************************************************************************************
+
+pub   rsa4096 2022-01-28 [SC]
+      EE0C A873 0740 92F8 06F5  9B65 D364 ABAA 39A4 7320
+uid           [ultimate] Liam Miller-Cushon (Error Prone releases) <cushon@google.com>
+sig 3        D364ABAA39A47320 2022-01-28  Liam Miller-Cushon (Error Prone releases) <cushon@google.com>
+sub   rsa4096 2022-01-28 [E]
+sig          D364ABAA39A47320 2022-01-28  Liam Miller-Cushon (Error Prone releases) <cushon@google.com>
+
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+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
+pOSpujhmmBPD/tnf58BgT+/Gq6GemXYe8Q==
+=BIwO
+-----END PGP PUBLIC KEY BLOCK-----

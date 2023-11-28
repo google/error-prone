@@ -65,7 +65,7 @@ public abstract class UMemberSelect extends UExpression implements MemberSelectT
   @Override
   public Choice<Unifier> visitIdentifier(IdentifierTree ident, Unifier unifier) {
     Symbol sym = ASTHelpers.getSymbol(ident);
-    if (sym != null && sym.owner.type != null) {
+    if (sym != null && sym.owner.type != null && sym.owner.type.isReference()) {
       JCExpression thisIdent = unifier.thisExpression(sym.owner.type);
       return getIdentifier()
           .unify(ident.getName(), unifier)

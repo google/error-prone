@@ -53,6 +53,21 @@ public class MemberNameTest {
   }
 
   @Test
+  public void nameWithUnderscores_findingEmphasisesInitialism() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  // BUG: Diagnostic contains: acronyms",
+            "  private int misnamedRPCClient;",
+            "  int get() {",
+            "    return misnamedRPCClient;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void staticFields() {
     refactoringHelper
         .addInputLines(
@@ -335,6 +350,143 @@ public class MemberNameTest {
             "  // BUG: Diagnostic contains:",
             "  public int get_more() {",
             "    return 0;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void nonConformantOverride_nameMatchesSuper_ignored() {
+    helper
+        .addSourceLines(
+            "Base.java",
+            "interface Base {",
+            "  // BUG: Diagnostic contains:",
+            "  void foo(int a_b);",
+            "}")
+        .addSourceLines(
+            "Test.java", //
+            "class Test implements Base {",
+            "  public void foo(int a_b) {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void nonConformantOverride_nameDoesNotMatchSuper_flagged() {
+    helper
+        .addSourceLines(
+            "Base.java",
+            "interface Base {",
+            "  // BUG: Diagnostic contains:",
+            "  void foo(int a_b);",
+            "}")
+        .addSourceLines(
+            "Test.java",
+            "class Test implements Base {",
+            "  // BUG: Diagnostic contains:",
+            "  public void foo(int a_b_c) {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void initialismsInMethodNames_partOfCamelCase() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "interface Test {",
+            "  // BUG: Diagnostic contains: getRpcPolicy",
+            "  int getRPCPolicy();",
+            "  // BUG: Diagnostic contains: getRpc",
+            "  int getRPC();",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void initialismsInVariableNames_partOfCamelCase() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  // BUG: Diagnostic contains: getRpcPolicy",
+            "  int getRPCPolicy;",
+            "  // BUG: Diagnostic contains: getRpc",
+            "  int getRPC;",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void initialismsInVariableNames_magicNamesExempt() {
+    helper
+        .addSourceLines(
+            "Test.java", //
+            "class Test {",
+            "  private static final long serialVersionUID = 0;",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void lambdaExpressionParameterInsideOverridingMethod() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.function.Function;",
+            "class Test {",
+            "  @Override",
+            "  public String toString() {",
+            "    // BUG: Diagnostic contains: fooBar",
+            "    Function<String, String> f = foo_bar -> foo_bar;",
+            "    return f.apply(\"foo\");",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void methodReference() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  private void foo_bar() {}",
+            "  private Runnable r = this::foo_bar;",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  private void fooBar() {}",
+            "  private Runnable r = this::fooBar;",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void methodNameWithMatchingReturnType() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  private Object Object() {",
+            "    return null;",
+            "  }",
+            "",
+            "  void call() {",
+            "     Object();",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  private Object object() {",
+            "    return null;",
+            "  }",
+            "",
+            "  void call() {",
+            "     object();",
             "  }",
             "}")
         .doTest();

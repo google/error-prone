@@ -60,9 +60,9 @@ import com.sun.tools.javac.code.Types;
 @BugPattern(
     tags = StandardTags.FRAGILE_CODE,
     summary =
-        "A wakelock acquired with a timeout may be released by the system before calling"
-            + " `release`, even after checking `isHeld()`. If so, it will throw a RuntimeException."
-            + " Please wrap in a try/catch block.",
+        "On Android versions < P, a wakelock acquired with a timeout may be released by the system"
+            + " before calling `release`, even after checking `isHeld()`. If so, it will throw a"
+            + " RuntimeException. Please wrap in a try/catch block.",
     severity = SeverityLevel.WARNING)
 public class WakelockReleasedDangerously extends BugChecker implements MethodInvocationTreeMatcher {
 

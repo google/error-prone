@@ -137,10 +137,13 @@ public class MemoizeConstantVisitorStateLookups extends BugChecker
   private static final class CallSite {
     /** The method on VisitorState being called. */
     final Name method;
+
     /** The compile-time constant value being passed to that method. */
     final String argumentValue;
+
     /** The actual expression with that value: a string literal, or a constant with such a value. */
     final ExpressionTree argumentExpression;
+
     /** The entire invocation of the VisitorState method. */
     final MethodInvocationTree entireTree;
 

@@ -222,6 +222,7 @@ public class TypeParameterNaming extends BugChecker implements TypeParameterTree
 
     return Character.toString(firstLetter);
   }
+
   // T -> T2
   // T2 -> T3
   // T -> T4 (if T2 and T3 already exist)

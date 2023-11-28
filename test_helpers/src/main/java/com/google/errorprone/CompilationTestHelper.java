@@ -28,7 +28,6 @@ import static java.util.Arrays.stream;
 import static org.junit.Assert.fail;
 
 import com.google.common.base.Joiner;
-import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.ByteStreams;
 import com.google.errorprone.DiagnosticTestHelper.LookForCheckNameInDiagnostic;
@@ -52,6 +51,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import javax.annotation.Nullable;
@@ -193,6 +193,10 @@ public class CompilationTestHelper {
    *
    * <p>See {@link #addSourceLines} for how expected diagnostics should be specified.
    *
+   * <p>For most uses, {@link #addSourceLines} is preferred. Using separate source files to denote
+   * positive/negative examples tends to bloat individual tests. Prefer writing smaller tests using
+   * {@link #addSourceLines} which test a single behaviour in isolation.
+   *
    * @param path the path to the source file
    */
   @CanIgnoreReturnValue
@@ -297,6 +301,17 @@ public class CompilationTestHelper {
   public void doTest() {
     checkState(!sources.isEmpty(), "No source files to compile");
     checkState(!run, "doTest should only be called once");
+
+    String depsForTestInputs = System.getProperty("com.google.errorprone.deps_for_test_inputs");
+    if (depsForTestInputs != null) {
+      extraArgs =
+          ImmutableList.<String>builder()
+              .addAll(extraArgs)
+              .add("-cp")
+              .add(depsForTestInputs)
+              .build();
+    }
+
     this.run = true;
     Result result = compile();
     for (Diagnostic<? extends JavaFileObject> diagnostic : diagnosticHelper.getDiagnostics()) {
@@ -304,6 +319,11 @@ public class CompilationTestHelper {
         fail(diagnostic.getMessage(Locale.ENGLISH));
       }
     }
+    String stringifiedOutput = outputStream.toString(UTF_8);
+    assertWithMessage("ErrorProne suffered an internal crash: %s", stringifiedOutput)
+        .that(stringifiedOutput)
+        .doesNotContain("An exception has occurred in the compiler");
+
     if (expectNoDiagnostics) {
       List<Diagnostic<? extends JavaFileObject>> diagnostics = diagnosticHelper.getDiagnostics();
       assertWithMessage(

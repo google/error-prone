@@ -1963,4 +1963,20 @@ public class GuardedByCheckerTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void lambdaMethodInvokedImmediately_shouldNotBeFlagged() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.List;",
+            "import javax.annotation.concurrent.GuardedBy;",
+            "class Test {",
+            "  @GuardedBy(\"this\") private final Object o = new Object();",
+            "  public synchronized void test(List<?> xs) {",
+            "    xs.forEach(x -> o.toString());",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

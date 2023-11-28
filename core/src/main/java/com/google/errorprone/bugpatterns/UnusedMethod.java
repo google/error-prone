@@ -22,6 +22,7 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Iterables.size;
 import static com.google.common.collect.Multimaps.asMap;
+import static com.google.common.collect.Sets.union;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.fixes.SuggestedFix.emptyFix;
 import static com.google.errorprone.fixes.SuggestedFixes.replaceIncludingComments;
@@ -30,6 +31,7 @@ import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.canBeRemoved;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isGeneratedConstructor;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.google.errorprone.util.ASTHelpers.scope;
@@ -138,6 +140,10 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
           "javax.persistence.PrePersist",
           "javax.persistence.PreRemove",
           "javax.persistence.PreUpdate",
+          "javax.validation.constraints.AssertFalse",
+          "javax.validation.constraints.AssertTrue",
+          "net.bytebuddy.asm.Advice.OnMethodEnter",
+          "net.bytebuddy.asm.Advice.OnMethodExit",
           "org.apache.beam.sdk.transforms.DoFn.ProcessElement",
           "org.aspectj.lang.annotation.Before",
           "org.aspectj.lang.annotation.Pointcut",
@@ -158,19 +164,21 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
           "org.junit.jupiter.api.Test",
           "org.junit.jupiter.params.ParameterizedTest");
 
+  /** Class annotations which exempt methods within the annotated class from findings. */
+  private static final ImmutableSet<String> EXEMPTING_CLASS_ANNOTATIONS = ImmutableSet.of();
 
   /** The set of types exempting a type that is extending or implementing them. */
   private static final ImmutableSet<String> EXEMPTING_SUPER_TYPES = ImmutableSet.of();
 
-  private final ImmutableSet<String> additionalExemptingMethodAnnotations;
+  private final ImmutableSet<String> exemptingMethodAnnotations;
 
   @Inject
   UnusedMethod(ErrorProneFlags errorProneFlags) {
-    this.additionalExemptingMethodAnnotations =
-        errorProneFlags
-            .getList("UnusedMethod:ExemptingMethodAnnotations")
-            .map(ImmutableSet::copyOf)
-            .orElseGet(ImmutableSet::of);
+    this.exemptingMethodAnnotations =
+        union(
+                errorProneFlags.getSetOrEmpty("UnusedMethod:ExemptingMethodAnnotations"),
+                EXEMPTING_METHOD_ANNOTATIONS)
+            .immutableCopy();
   }
 
   @Override
@@ -195,7 +203,8 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
 
       @Override
       public Void visitClass(ClassTree tree, Void unused) {
-        if (exemptedBySuperType(getType(tree), state)) {
+        if (exemptedBySuperType(getType(tree), state)
+            || EXEMPTING_CLASS_ANNOTATIONS.stream().anyMatch(a -> hasAnnotation(tree, a, state))) {
           return null;
         }
         return super.visitClass(tree, null);
@@ -493,8 +502,7 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
       }
       TypeSymbol tsym = annotationType.tsym;
       String annotationName = tsym.getQualifiedName().toString();
-      if (EXEMPTING_METHOD_ANNOTATIONS.contains(annotationName)
-          || additionalExemptingMethodAnnotations.contains(annotationName)) {
+      if (exemptingMethodAnnotations.contains(annotationName)) {
         return true;
       }
     }

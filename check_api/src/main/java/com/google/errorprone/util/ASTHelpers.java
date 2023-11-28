@@ -148,6 +148,7 @@ import com.sun.tools.javac.util.FatalError;
 import com.sun.tools.javac.util.Log;
 import com.sun.tools.javac.util.Log.DeferredDiagnosticHandler;
 import com.sun.tools.javac.util.Name;
+import com.sun.tools.javac.util.Position;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -2644,16 +2645,27 @@ public class ASTHelpers {
     return result.build();
   }
 
-  /** Returns {@code true} if this is a `var` or a lambda parameter that has no explicit type. */
+  /**
+   * @deprecated use {@link #hasImplicitType(VariableTree, VisitorState)} instead
+   */
+  @Deprecated
   public static boolean hasNoExplicitType(VariableTree tree, VisitorState state) {
+    return hasImplicitType(tree, state);
+  }
+
+  /** Returns whether this is a {@code var} or a lambda parameter that has no explicit type. */
+  public static boolean hasImplicitType(VariableTree tree, VisitorState state) {
     /*
-     * We detect the absence of an explicit type by looking for an absent start position for the
-     * type tree.
-     *
-     * Note that the .isImplicitlyTyped() method on JCVariableDecl returns the wrong answer after
-     * type attribution has occurred.
+     * For lambda expression parameters without an explicit type, both
+     * `JCVariableDecl#declaredUsingVar()` and `#isImplicitlyTyped()` may be false. So instead we
+     * check whether the variable's type is explicitly represented in the source code.
      */
-    return getStartPosition(tree.getType()) == -1;
+    return !hasExplicitSource(tree.getType(), state);
+  }
+
+  /** Returns whether the given tree has an explicit source code representation. */
+  public static boolean hasExplicitSource(Tree tree, VisitorState state) {
+    return getStartPosition(tree) != Position.NOPOS && state.getEndPosition(tree) != Position.NOPOS;
   }
 
   /** Returns {@code true} if this symbol was declared in Kotlin source. */

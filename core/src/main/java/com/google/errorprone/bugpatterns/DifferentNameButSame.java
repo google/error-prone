@@ -128,6 +128,7 @@ public final class DifferentNameButSame extends BugChecker implements Compilatio
         if (!(symbol instanceof ClassSymbol)) {
           return;
         }
+        @SuppressWarnings("TreeToString") // TODO(ghm): fix
         String name = tree.toString();
         List<TreePath> treePaths = names.get(symbol, name);
         if (treePaths == null) {

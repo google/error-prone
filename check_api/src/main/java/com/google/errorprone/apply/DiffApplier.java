@@ -123,7 +123,7 @@ public class DiffApplier extends AbstractService {
         if (completed % 100 == 0) {
           logger.log(Level.INFO, String.format("Completed %d files in %s", completed, stopwatch));
         }
-      } catch (IOException | DiffNotApplicableException e) {
+      } catch (IOException | RuntimeException e) {
         logger.log(Level.WARNING, "Failed to apply diff to file " + diff.getRelevantFileName(), e);
         diffsFailedPaths.add(diff.getRelevantFileName());
       } finally {

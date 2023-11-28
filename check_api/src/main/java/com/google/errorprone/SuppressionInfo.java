@@ -93,7 +93,9 @@ public class SuppressionInfo {
       }
     } else {
       if (suppressible.supportsSuppressWarnings()
-          && !Collections.disjoint(suppressible.allNames(), suppressWarningsStrings)) {
+          // TODO generated Immutable sources contain @SuppressWarnings({"all"})
+          && (/* suppressWarningsStrings.contains("all") || */
+              !Collections.disjoint(suppressible.allNames(), suppressWarningsStrings))) {
         return SuppressedState.SUPPRESSED;
       }
     }

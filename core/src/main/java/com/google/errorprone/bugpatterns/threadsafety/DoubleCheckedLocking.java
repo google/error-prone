@@ -64,7 +64,7 @@ import javax.lang.model.element.Modifier;
 public class DoubleCheckedLocking extends BugChecker implements IfTreeMatcher {
   @Override
   public Description matchIf(IfTree outerIf, VisitorState state) {
-    DCLInfo info = findDCL(outerIf);
+    DCLInfo info = findDcl(outerIf);
     if (info == null) {
       return Description.NO_MATCH;
     }
@@ -219,7 +219,7 @@ public class DoubleCheckedLocking extends BugChecker implements IfTreeMatcher {
    * null-checks are accepted in either order.
    */
   @Nullable
-  static DCLInfo findDCL(IfTree outerIf) {
+  private static DCLInfo findDcl(IfTree outerIf) {
     // TODO(cushon): Optional.ifPresent...
     ExpressionTree outerIfTest = getNullCheckedExpression(outerIf.getCondition());
     if (outerIfTest == null) {

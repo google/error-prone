@@ -43,7 +43,7 @@ abstract class URepeated extends UExpression {
   @Override
   public JCExpression inline(Inliner inliner) throws CouldNotResolveImportException {
     throw new UnsupportedOperationException(
-        "@CountConstraint variables should be inlined inside method invocations or newArray");
+        "@Repeated variables should be inlined inside method invocations or newArray");
   }
 
   @Override

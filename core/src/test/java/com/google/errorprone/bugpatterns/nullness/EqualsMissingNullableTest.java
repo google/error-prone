@@ -125,7 +125,7 @@ public class EqualsMissingNullableTest {
     conservativeHelper
         .addSourceLines(
             "Foo.java",
-            "import org.jspecify.nullness.NullMarked;",
+            "import org.jspecify.annotations.NullMarked;",
             "@NullMarked",
             "abstract class Foo {",
             "  // BUG: Diagnostic contains: @Nullable",

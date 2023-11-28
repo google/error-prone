@@ -301,23 +301,23 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
     // allow the inference to conclude later that x[0] = m(x)[0, 0], meaning the nullness qualifier
     // for x's <String> is the same as the one for m(x)'s <String>.
     for (TypeVariableSymbol typeVar : callee.getTypeParameters()) {
-      TypeVariableInferenceVar typeVarIV = TypeVariableInferenceVar.create(typeVar, node);
+      TypeVariableInferenceVar typeVarIv = TypeVariableInferenceVar.create(typeVar, node);
       visitUnannotatedTypeVarRefsAndEquateInferredComponents(
-          typeVarIV,
+          typeVarIv,
           callee.getReturnType(),
           callee,
           node,
-          iv -> qualifierConstraints.putEdge(typeVarIV, iv));
+          iv -> qualifierConstraints.putEdge(typeVarIv, iv));
       Streams.forEachPair(
           formalParameters.stream(),
           node.getArguments().stream(),
           (formal, actual) ->
               visitUnannotatedTypeVarRefsAndEquateInferredComponents(
-                  typeVarIV,
+                  typeVarIv,
                   formal.type(),
                   formal.symbol(),
                   actual,
-                  iv -> qualifierConstraints.putEdge(iv, typeVarIV)));
+                  iv -> qualifierConstraints.putEdge(iv, typeVarIv)));
     }
     return super.visitMethodInvocation(node, unused);
   }

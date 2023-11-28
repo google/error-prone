@@ -91,8 +91,7 @@ public final class Inliner extends BugChecker
 
   @Inject
   Inliner(ErrorProneFlags flags) {
-    this.apiPrefixes =
-        ImmutableSet.copyOf(flags.getSet(PREFIX_FLAG).orElse(ImmutableSet.<String>of()));
+    this.apiPrefixes = flags.getSetOrEmpty(PREFIX_FLAG);
     this.skipCallsitesWithComments = flags.getBoolean(SKIP_COMMENTS_FLAG).orElse(true);
     this.checkFixCompiles = flags.getBoolean(CHECK_FIX_COMPILES).orElse(false);
   }

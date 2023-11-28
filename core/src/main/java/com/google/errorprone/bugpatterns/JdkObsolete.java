@@ -60,7 +60,6 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
-import com.sun.tools.javac.util.Position;
 import java.util.Optional;
 import javax.annotation.Nullable;
 
@@ -347,7 +346,7 @@ public class JdkObsolete extends BugChecker
     }
     SuggestedFix.Builder fix =
         SuggestedFix.builder().replace(newClassTree.getIdentifier(), "StringBuilder");
-    if (ASTHelpers.getStartPosition(varTree.getType()) != Position.NOPOS) {
+    if (!ASTHelpers.hasImplicitType(varTree, state)) {
       // If the variable is declared with `var`, there's no declaration type to change
       fix = fix.replace(varTree.getType(), "StringBuilder");
     }

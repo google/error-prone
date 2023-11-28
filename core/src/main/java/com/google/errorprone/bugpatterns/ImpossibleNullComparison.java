@@ -144,14 +144,11 @@ public final class ImpossibleNullComparison extends BugChecker
               "com.google.protobuf.GeneratedMessageLite", "com.google.protobuf.GeneratedMessage");
 
   private final boolean matchTestAssertions;
-  private final boolean matchOptionalAndMultimap;
 
   @Inject
   ImpossibleNullComparison(ErrorProneFlags flags) {
     this.matchTestAssertions =
         flags.getBoolean("ProtoFieldNullComparison:MatchTestAssertions").orElse(true);
-    this.matchOptionalAndMultimap =
-        flags.getBoolean("ImpossibleNullComparison:MatchOptionalAndMultimap").orElse(true);
   }
 
   @Override
@@ -264,7 +261,6 @@ public final class ImpossibleNullComparison extends BugChecker
         return Optional.empty();
       }
       return stream(GetterTypes.values())
-          .filter(x -> matchOptionalAndMultimap || !x.name().contains("GET"))
           .map(type -> type.match(resolvedTree, state))
           .filter(Objects::nonNull)
           .findFirst();

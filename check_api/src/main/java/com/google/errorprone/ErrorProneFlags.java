@@ -25,12 +25,10 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Streams;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.annotations.CheckReturnValue;
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -107,7 +105,9 @@ public final class ErrorProneFlags implements Serializable {
     return this.get(key)
         .map(
             value ->
-                Streams.stream(Splitter.on(',').omitEmptyStrings().split(value))
+                COMMA_SPLITTER
+                    .omitEmptyStrings()
+                    .splitToStream(value)
                     .map(v -> asEnumValue(key, v, clazz))
                     .collect(toImmutableSet()));
   }
@@ -148,24 +148,30 @@ public final class ErrorProneFlags implements Serializable {
   }
 
   /**
-   * Gets the flag value for the given key as a comma-separated {@link List} of Strings, wrapped in
-   * an {@link Optional}, which is empty if the flag is unset.
+   * Gets the flag value for the given key as a comma-separated {@link ImmutableList} of Strings, or
+   * an empty list if the flag is unset.
    *
    * <p>(note: empty strings included, e.g. {@code "-XepOpt:List=,1,,2," => ["","1","","2",""]})
    */
-  public Optional<List<String>> getList(String key) {
-    return this.get(key).map(v -> ImmutableList.copyOf(Splitter.on(',').split(v)));
+  public ImmutableList<String> getListOrEmpty(String key) {
+    return get(key)
+        .map(v -> ImmutableList.copyOf(COMMA_SPLITTER.split(v)))
+        .orElse(ImmutableList.of());
   }
 
   /**
-   * Gets the flag value for the given key as a comma-separated {@link Set} of Strings, wrapped in
-   * an {@link Optional}, which is empty if the flag is unset.
+   * Gets the flag value for the given key as a comma-separated {@link Set} of Strings, or an empty
+   * set if unset.
    *
    * <p>(note: empty strings included, e.g. {@code "-XepOpt:Set=,1,,1,2," => ["","1","2"]})
    */
-  public Optional<Set<String>> getSet(String key) {
-    return this.get(key).map(v -> ImmutableSet.copyOf(Splitter.on(',').split(v)));
+  public ImmutableSet<String> getSetOrEmpty(String key) {
+    return get(key)
+        .map(v -> ImmutableSet.copyOf(COMMA_SPLITTER.split(v)))
+        .orElse(ImmutableSet.of());
   }
+
+  private static final Splitter COMMA_SPLITTER = Splitter.on(',');
 
   /** Whether this Flags object is empty, i.e. no flags have been set. */
   public boolean isEmpty() {

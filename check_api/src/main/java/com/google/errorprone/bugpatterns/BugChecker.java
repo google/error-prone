@@ -25,6 +25,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableRangeSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Range;
+import com.google.common.collect.TreeRangeSet;
 import com.google.errorprone.BugCheckerInfo;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.ErrorProneOptions;
@@ -99,6 +100,7 @@ import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.BiPredicate;
@@ -283,8 +285,13 @@ public abstract class BugChecker implements Suppressible, Serializable {
   }
 
   private boolean isSuppressed(SuppressWarnings suppression) {
-    return suppression != null
-        && !Collections.disjoint(Arrays.asList(suppression.value()), allNames());
+    if (suppression == null || !supportsSuppressWarnings()) {
+      return false;
+    }
+
+    List<String> suppressions = Arrays.asList(suppression.value());
+    // TODO: generated Immutable sources contain @SuppressWarnings({"all"})
+    return /* suppressions.contains("all") || */ !Collections.disjoint(suppressions, allNames());
   }
 
   /**
@@ -321,7 +328,7 @@ public abstract class BugChecker implements Suppressible, Serializable {
 
   /** Computes a RangeSet of code regions which are suppressed by this bug checker. */
   public ImmutableRangeSet<Integer> suppressedRegions(VisitorState state) {
-    ImmutableRangeSet.Builder<Integer> suppressedRegions = ImmutableRangeSet.builder();
+    TreeRangeSet<Integer> suppressedRegions = TreeRangeSet.create();
     new TreeScanner<Void, Void>() {
       @Override
       public Void scan(Tree tree, Void unused) {
@@ -333,7 +340,7 @@ public abstract class BugChecker implements Suppressible, Serializable {
         return null;
       }
     }.scan(state.getPath().getCompilationUnit(), null);
-    return suppressedRegions.build();
+    return ImmutableRangeSet.copyOf(suppressedRegions);
   }
 
   public interface AnnotationTreeMatcher extends Suppressible {

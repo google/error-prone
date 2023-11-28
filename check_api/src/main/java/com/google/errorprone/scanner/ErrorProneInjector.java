@@ -24,7 +24,6 @@ import com.google.common.collect.ClassToInstanceMap;
 import com.google.common.collect.MutableClassToInstanceMap;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
-import com.google.inject.ProvisionException;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +39,17 @@ import java.util.function.Predicate;
  */
 public final class ErrorProneInjector {
   private final ClassToInstanceMap<Object> instances = MutableClassToInstanceMap.create();
+
+  /** Indicates that there was a runtime failure while providing an instance. */
+  public static final class ProvisionException extends RuntimeException {
+    public ProvisionException(String message) {
+      super(message);
+    }
+
+    public ProvisionException(String message, Throwable cause) {
+      super(message, cause);
+    }
+  }
 
   public static ErrorProneInjector create() {
     return new ErrorProneInjector();
@@ -96,8 +106,10 @@ public final class ErrorProneInjector {
                 findConstructorMatching(
                     clazz,
                     c ->
-                        stream(c.getParameters())
-                            .allMatch(p -> p.getType().equals(ErrorProneFlags.class))));
+                        c.getParameters().length != 0
+                            && stream(c.getParameters())
+                                .allMatch(p -> p.getType().equals(ErrorProneFlags.class))))
+        .or(() -> findConstructorMatching(clazz, c -> c.getParameters().length == 0));
   }
 
   @SuppressWarnings("unchecked")

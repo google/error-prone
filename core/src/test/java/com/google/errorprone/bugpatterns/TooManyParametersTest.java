@@ -137,4 +137,40 @@ public class TooManyParametersTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void testJUnitTestMethod() {
+    compilationHelper
+        .addSourceLines(
+            "ExampleWithTestParametersTest.java",
+            "import com.google.common.collect.ImmutableList;",
+            "import com.google.testing.junit.testparameterinjector.TestParameters;",
+            "import org.junit.Test;",
+            "public class ExampleWithTestParametersTest {",
+            "  @Test",
+            "  @TestParameters(valuesProvider = TestArgs.class)",
+            "  public void myTest(",
+            "      String a,",
+            "      String b,",
+            "      String c,",
+            "      String d,",
+            "      String e,",
+            "      String f,",
+            "      String g,",
+            "      String h,",
+            "      String i,",
+            "      String j,",
+            "      String k,",
+            "      String l)",
+            "      throws Exception {",
+            "  }",
+            "  static class TestArgs implements TestParameters.TestParametersValuesProvider {",
+            "    @Override",
+            "    public ImmutableList<TestParameters.TestParametersValues> provideValues() {",
+            "      return ImmutableList.of();",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

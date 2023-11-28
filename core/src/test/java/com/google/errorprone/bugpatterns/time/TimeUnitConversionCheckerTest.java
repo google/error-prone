@@ -168,4 +168,18 @@ public class TimeUnitConversionCheckerTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void receiverExpression() {
+    helper
+        .addSourceLines(
+            "TestClass.java",
+            "import java.util.concurrent.TimeUnit;",
+            "public class TestClass {",
+            "  long f(TimeUnit timeUnit, long time) {",
+            "    return (timeUnit != null ? timeUnit : TimeUnit.MILLISECONDS).toMillis(time);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

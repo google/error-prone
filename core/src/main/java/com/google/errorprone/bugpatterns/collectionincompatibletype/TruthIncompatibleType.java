@@ -35,12 +35,11 @@ import static java.util.stream.Stream.concat;
 
 import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
-import com.google.errorprone.bugpatterns.TypeCompatibilityUtils;
-import com.google.errorprone.bugpatterns.TypeCompatibilityUtils.TypeCompatibilityReport;
+import com.google.errorprone.bugpatterns.TypeCompatibility;
+import com.google.errorprone.bugpatterns.TypeCompatibility.TypeCompatibilityReport;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.suppliers.Supplier;
@@ -94,7 +93,22 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
           .onDescendantOfAny(
               "com.google.common.truth.IterableSubject", "com.google.common.truth.StreamSubject")
           .namedAnyOf(
-              "contains", "containsExactly", "doesNotContain", "containsAnyOf", "containsNoneOf");
+              "contains",
+              "containsExactly",
+              "doesNotContain",
+              "containsAnyOf",
+              "containsNoneOf",
+              "containsAtLeast");
+
+  private static final Matcher<ExpressionTree> IS_ANY_OF =
+      instanceMethod()
+          .onDescendantOf("com.google.common.truth.Subject")
+          .namedAnyOf("isAnyOf", "isNoneOf");
+
+  private static final Matcher<ExpressionTree> IS_IN =
+      instanceMethod()
+          .onDescendantOf("com.google.common.truth.Subject")
+          .namedAnyOf("isIn", "isNotIn");
 
   private static final Matcher<ExpressionTree> VECTOR_CONTAINS =
       instanceMethod()
@@ -144,17 +158,19 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
   private static final Supplier<Type> CORRESPONDENCE =
       typeFromString("com.google.common.truth.Correspondence");
 
-  private final TypeCompatibilityUtils typeCompatibilityUtils;
+  private final TypeCompatibility typeCompatibility;
 
   @Inject
-  TruthIncompatibleType(ErrorProneFlags flags) {
-    this.typeCompatibilityUtils = TypeCompatibilityUtils.fromFlags(flags);
+  TruthIncompatibleType(TypeCompatibility typeCompatibility) {
+    this.typeCompatibility = typeCompatibility;
   }
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     Streams.concat(
             matchEquality(tree, state),
+            matchIsAnyOf(tree, state),
+            matchIsIn(tree, state),
             matchVectorContains(tree, state),
             matchArrayContains(tree, state),
             matchScalarContains(tree, state),
@@ -191,6 +207,38 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
     if (isNumericType(sourceType, state) && isNumericType(targetType, state)) {
       return Stream.of();
     }
+    return checkCompatibility(getOnlyElement(tree.getArguments()), targetType, sourceType, state);
+  }
+
+  private Stream<Description> matchIsAnyOf(MethodInvocationTree tree, VisitorState state) {
+    if (!IS_ANY_OF.matches(tree, state)) {
+      return Stream.empty();
+    }
+    ExpressionTree receiver = getReceiver(tree);
+    if (!START_OF_ASSERTION.matches(receiver, state)) {
+      return Stream.empty();
+    }
+    Type targetType =
+        getType(ignoringCasts(getOnlyElement(((MethodInvocationTree) receiver).getArguments())));
+    return matchScalarContains(tree, targetType, state);
+  }
+
+  private Stream<Description> matchIsIn(MethodInvocationTree tree, VisitorState state) {
+    if (!IS_IN.matches(tree, state)) {
+      return Stream.empty();
+    }
+    ExpressionTree receiver = getReceiver(tree);
+    if (!START_OF_ASSERTION.matches(receiver, state)) {
+      return Stream.empty();
+    }
+
+    Type targetType =
+        getType(ignoringCasts(getOnlyElement(((MethodInvocationTree) receiver).getArguments())));
+    Type sourceType =
+        getIterableTypeArg(
+            getType(getOnlyElement(tree.getArguments())),
+            getOnlyElement(tree.getArguments()),
+            state);
     return checkCompatibility(getOnlyElement(tree.getArguments()), targetType, sourceType, state);
   }
 
@@ -242,13 +290,16 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
     if (!START_OF_ASSERTION.matches(receiver, state)) {
       return Stream.empty();
     }
-
-    Tree argument = ignoringCasts(getOnlyElement(((MethodInvocationTree) receiver).getArguments()));
     Type targetType =
         getIterableTypeArg(
             getOnlyElement(getSymbol((MethodInvocationTree) receiver).getParameters()).type,
-            argument,
+            ignoringCasts(getOnlyElement(((MethodInvocationTree) receiver).getArguments())),
             state);
+    return matchScalarContains(tree, targetType, state);
+  }
+
+  private Stream<Description> matchScalarContains(
+      MethodInvocationTree tree, Type targetType, VisitorState state) {
     MethodSymbol methodSymbol = getSymbol(tree);
     return Streams.mapWithIndex(
             tree.getArguments().stream(),
@@ -419,7 +470,7 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
   private Stream<Description> checkCompatibility(
       ExpressionTree tree, Type targetType, Type sourceType, VisitorState state) {
     TypeCompatibilityReport compatibilityReport =
-        typeCompatibilityUtils.compatibilityOfTypes(targetType, sourceType, state);
+        typeCompatibility.compatibilityOfTypes(targetType, sourceType, state);
     if (compatibilityReport.isCompatible()) {
       return Stream.empty();
     }
@@ -453,7 +504,7 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
 
           @Override
           public Tree visitTypeCast(TypeCastTree node, Void unused) {
-            return node.getExpression().accept(this, null);
+            return getType(node).isPrimitive() ? node : node.getExpression().accept(this, null);
           }
 
           @Override

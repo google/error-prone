@@ -103,6 +103,7 @@ public abstract class AccessPathStore<V extends AbstractValue<V>>
   public String visualize(CFGVisualizer<?, AccessPathStore<V>, ?> cfgVisualizer) {
     throw new UnsupportedOperationException("DOT output not supported");
   }
+
   /**
    * Builder for {@link AccessPathStore} instances. To obtain an instance, obtain a {@link
    * AccessPathStore} (such as {@link AccessPathStore#empty()}), and call {@link

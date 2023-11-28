@@ -29,6 +29,7 @@ import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
+import static com.google.errorprone.util.ASTHelpers.hasExplicitSource;
 import static com.google.errorprone.util.ASTHelpers.isStatic;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.google.errorprone.util.ASTHelpers.shouldKeep;
@@ -48,7 +49,10 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Multimaps;
+import com.google.common.collect.Range;
+import com.google.common.collect.RangeSet;
 import com.google.common.collect.Streams;
+import com.google.common.collect.TreeRangeSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
@@ -122,9 +126,9 @@ import javax.lang.model.type.NullType;
     severity = WARNING,
     documentSuppression = false)
 public class UnusedVariable extends BugChecker implements CompilationUnitTreeMatcher {
-  private static final String EXEMPT_PREFIX = "unused";
+  private final ImmutableSet<String> exemptPrefixes;
 
-  private static final ImmutableSet<String> EXEMPT_NAMES = ImmutableSet.of("ignored");
+  private final ImmutableSet<String> exemptNames;
 
   /**
    * The set of annotation full names which exempt annotated element from being reported as unused.
@@ -137,15 +141,19 @@ public class UnusedVariable extends BugChecker implements CompilationUnitTreeMat
           "javax.persistence.Version",
           "javax.xml.bind.annotation.XmlElement",
           "org.junit.Rule",
+          "org.junit.jupiter.api.extension.RegisterExtension",
           "org.openqa.selenium.support.FindAll",
           "org.openqa.selenium.support.FindBy",
           "org.openqa.selenium.support.FindBys",
           "org.apache.beam.sdk.transforms.DoFn.TimerId",
-          "org.apache.beam.sdk.transforms.DoFn.StateId");
+          "org.apache.beam.sdk.transforms.DoFn.StateId",
+          "org.springframework.boot.test.mock.mockito.MockBean");
 
   // TODO(ghm): Find a sensible place to dedupe this with UnnecessarilyVisible.
   private static final ImmutableSet<String> ANNOTATIONS_INDICATING_PARAMETERS_SHOULD_BE_CHECKED =
       ImmutableSet.of(
+          "com.google.errorprone.refaster.annotation.AfterTemplate",
+          "com.google.errorprone.refaster.annotation.BeforeTemplate",
           "com.google.inject.Inject",
           "com.google.inject.Provides",
           "com.google.inject.multibindings.ProvidesIntoMap",
@@ -172,13 +180,24 @@ public class UnusedVariable extends BugChecker implements CompilationUnitTreeMat
 
   @Inject
   public UnusedVariable(ErrorProneFlags flags) {
-    ImmutableSet.Builder<String> methodAnnotationsExemptingParameters =
-        ImmutableSet.<String>builder().add("org.robolectric.annotation.Implementation");
-    flags
-        .getList("Unused:methodAnnotationsExemptingParameters")
-        .ifPresent(methodAnnotationsExemptingParameters::addAll);
-    this.methodAnnotationsExemptingParameters = methodAnnotationsExemptingParameters.build();
+    this.methodAnnotationsExemptingParameters =
+        ImmutableSet.<String>builder()
+            .add("org.robolectric.annotation.Implementation")
+            .addAll(flags.getListOrEmpty("Unused:methodAnnotationsExemptingParameters"))
+            .build();
     this.reportInjectedFields = flags.getBoolean("Unused:ReportInjectedFields").orElse(false);
+
+    this.exemptNames =
+        ImmutableSet.<String>builder()
+            .add("ignored")
+            .addAll(flags.getListOrEmpty("Unused:exemptNames"))
+            .build();
+
+    this.exemptPrefixes =
+        ImmutableSet.<String>builder()
+            .add("unused")
+            .addAll(flags.getSetOrEmpty("Unused:exemptPrefixes"))
+            .build();
   }
 
   @Override
@@ -484,9 +503,10 @@ public class UnusedVariable extends BugChecker implements CompilationUnitTreeMat
       Symbol varSymbol, List<TreePath> usagePaths, VisitorState state) {
     MethodSymbol methodSymbol = (MethodSymbol) varSymbol.owner;
     int index = methodSymbol.params.indexOf(varSymbol);
-    SuggestedFix.Builder fix = SuggestedFix.builder();
+    RangeSet<Integer> deletions = TreeRangeSet.create();
     for (TreePath path : usagePaths) {
-      fix.delete(path.getLeaf());
+      deletions.add(
+          Range.closed(getStartPosition(path.getLeaf()), state.getEndPosition(path.getLeaf())));
     }
     new TreePathScanner<Void, Void>() {
       @Override
@@ -512,11 +532,11 @@ public class UnusedVariable extends BugChecker implements CompilationUnitTreeMat
         }
         if (trees.size() == 1) {
           Tree tree = getOnlyElement(trees);
-          if (getStartPosition(tree) == -1 || state.getEndPosition(tree) == -1) {
+          if (!hasExplicitSource(tree, state)) {
             // TODO(b/118437729): handle bogus source positions in enum declarations
             return;
           }
-          fix.delete(tree);
+          deletions.add(Range.closed(getStartPosition(tree), state.getEndPosition(tree)));
           return;
         }
         int startPos;
@@ -535,9 +555,11 @@ public class UnusedVariable extends BugChecker implements CompilationUnitTreeMat
           // TODO(b/118437729): handle bogus source positions in enum declarations
           return;
         }
-        fix.replace(startPos, endPos, "");
+        deletions.add(Range.closed(startPos, endPos));
       }
     }.scan(state.getPath().getCompilationUnit(), null);
+    SuggestedFix.Builder fix = SuggestedFix.builder();
+    deletions.asRanges().forEach(x -> fix.replace(x.lowerEndpoint(), x.upperEndpoint(), ""));
     return ImmutableList.of(fix.build());
   }
 
@@ -566,10 +588,11 @@ public class UnusedVariable extends BugChecker implements CompilationUnitTreeMat
     return false;
   }
 
-  private static boolean exemptedByName(Name name) {
+  private boolean exemptedByName(Name name) {
     String nameString = name.toString();
-    return Ascii.toLowerCase(nameString).startsWith(EXEMPT_PREFIX)
-        || EXEMPT_NAMES.contains(nameString);
+    String nameStringLower = Ascii.toLowerCase(nameString);
+    return exemptPrefixes.stream().anyMatch(nameStringLower::startsWith)
+        || exemptNames.contains(nameString);
   }
 
   private class VariableFinder extends TreePathScanner<Void, Void> {
@@ -626,6 +649,13 @@ public class UnusedVariable extends BugChecker implements CompilationUnitTreeMat
           if (variableTree.getName().contentEquals("this")) {
             return null;
           }
+          // Ignore if parameter is part of canonical record constructor; tree does not seem
+          // to contain usage in that case, but parameter is always used implicitly
+          // For compact canonical constructor parameters don't have record flag so need to
+          // check constructor flags (`symbol.owner`) instead
+          if (hasRecordFlag(symbol.owner)) {
+            return null;
+          }
           unusedElements.put(symbol, getCurrentPath());
           if (!isParameterSubjectToAnalysis(symbol)) {
             onlyCheckForReassignments.add(symbol);
@@ -648,13 +678,17 @@ public class UnusedVariable extends BugChecker implements CompilationUnitTreeMat
           && ASTHelpers.hasDirectAnnotationWithSimpleName(variableTree, "Inject")) {
         return true;
       }
-      if ((symbol.flags() & RECORD_FLAG) == RECORD_FLAG) {
+      if (hasRecordFlag(symbol)) {
         return false;
       }
       return canBeRemoved(symbol) && !SPECIAL_FIELDS.contains(symbol.getSimpleName().toString());
     }
 
     private static final long RECORD_FLAG = 1L << 61;
+
+    private boolean hasRecordFlag(Symbol symbol) {
+      return (symbol.flags() & RECORD_FLAG) == RECORD_FLAG;
+    }
 
     /** Returns whether {@code sym} can be removed without updating call sites in other files. */
     private boolean isParameterSubjectToAnalysis(Symbol sym) {

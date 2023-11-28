@@ -72,10 +72,7 @@ public class ParameterName extends BugChecker
   @Inject
   ParameterName(ErrorProneFlags errorProneFlags) {
     this.exemptPackages =
-        errorProneFlags
-            .getList("ParameterName:exemptPackagePrefixes")
-            .orElse(ImmutableList.of())
-            .stream()
+        errorProneFlags.getListOrEmpty("ParameterName:exemptPackagePrefixes").stream()
             // add a trailing '.' so that e.g. com.foo matches as a prefix of com.foo.bar, but not
             // com.foobar
             .map(p -> p.endsWith(".") ? p : p + ".")

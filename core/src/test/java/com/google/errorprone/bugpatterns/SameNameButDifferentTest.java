@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
@@ -205,6 +206,29 @@ public final class SameNameButDifferentTest {
             "  }",
             "  }",
             "}")
+        .doTest();
+  }
+
+  @Test
+  public void ungroupedOverloadsPositiveCasesCoveringOnlyFirstOverload() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.function.Supplier;",
+            "class Test {",
+            "  class One {",
+            "    class Clash {}",
+            "    // BUG: Diagnostic contains:",
+            "    Clash a;",
+            "    Clash b;",
+            "  }",
+            "  class Two {",
+            "    class Clash {}",
+            "    Clash a;",
+            "    Clash b;",
+            "  }",
+            "}")
+        .setArgs(ImmutableList.of("-XepOpt:SameNameButDifferent:BatchFindings"))
         .doTest();
   }
 }

@@ -69,7 +69,7 @@ public class InvalidTimeZoneID extends BugChecker implements MethodInvocationTre
       // Value isn't a compile-time constant, so we can't know if it's unsafe.
       return Description.NO_MATCH;
     }
-    if (isValidID(value)) {
+    if (isValidId(value)) {
       // Value is supported on this JVM.
       return Description.NO_MATCH;
     }
@@ -80,7 +80,7 @@ public class InvalidTimeZoneID extends BugChecker implements MethodInvocationTre
     // Try to see if it's just been mistyped with spaces instead of underscores - if so, offer this
     // as a potential fix.
     String spacesToUnderscores = value.replace(' ', '_');
-    if (isValidID(spacesToUnderscores)) {
+    if (isValidId(spacesToUnderscores)) {
       builder.addFix(
           SuggestedFix.replace(
               tree.getArguments().get(0), String.format("\"%s\"", spacesToUnderscores)));
@@ -89,7 +89,7 @@ public class InvalidTimeZoneID extends BugChecker implements MethodInvocationTre
     return builder.build();
   }
 
-  private static boolean isValidID(String value) {
+  private static boolean isValidId(String value) {
     if (AVAILABLE_IDS.contains(value)) {
       // Value is in TimeZone.getAvailableIDs(), so it's supported on this JVM.
       return true;

@@ -434,7 +434,14 @@ public class UnusedVariableTest {
             "  private int unusedInt;",
             "  private static final int UNUSED_CONSTANT = 5;",
             "  private int ignored;",
+            "  private int customUnused1;",
+            "  private int customUnused2;",
+            "  private int prefixUnused1Field;",
+            "  private int prefixUnused2Field;",
             "}")
+        .setArgs(
+            "-XepOpt:Unused:exemptNames=customUnused1,customUnused2",
+            "-XepOpt:Unused:exemptPrefixes=prefixunused1,prefixunused2")
         .doTest();
   }
 
@@ -719,6 +726,24 @@ public class UnusedVariableTest {
             "  @Inject Test(",
             "    // BUG: Diagnostic contains:",
             "    String foo) {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void unusedInjectMethodParameter() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "package unusedvars;",
+            "import com.google.inject.Provides;",
+            "class Test {",
+            "  @Provides",
+            "  public String test(",
+            "    // BUG: Diagnostic contains:",
+            "    String foo) {",
+            "    return \"test\";",
+            "  }",
             "}")
         .doTest();
   }
@@ -1398,9 +1423,102 @@ public class UnusedVariableTest {
         .addSourceLines(
             "SimpleClass.java",
             "public class SimpleClass {",
-            "   public record SimpleRecord (Integer foo, Long bar) {}",
+            "  public record SimpleRecord (Integer foo, Long bar) {}",
             "}")
         .expectNoDiagnostics()
+        .doTest();
+  }
+
+  @Test
+  public void recordWithStaticFields() {
+    assumeTrue(RuntimeVersion.isAtLeast16());
+    helper
+        .addSourceLines(
+            "SimpleClass.java",
+            "public class SimpleClass {",
+            "  public record MyRecord (int foo) {",
+            "    private static int a = 1;",
+            "    private static int b = 1;",
+            "    // BUG: Diagnostic contains: is never read",
+            "    private static int c = 1;",
+            "    ",
+            "    public MyRecord {",
+            "      foo = Math.max(a, foo);",
+            "    }",
+            "  }",
+            "",
+            "  public int b() {",
+            "    return MyRecord.b;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  // Implicit canonical constructor has same access as record
+  // (https://docs.oracle.com/javase/specs/jls/se17/html/jls-8.html#jls-8.10.4)
+  // Therefore this case is important to test because UnusedVariable treats parameters of private
+  // methods differently
+  @Test
+  public void nestedPrivateRecord() {
+    assumeTrue(RuntimeVersion.isAtLeast16());
+    helper
+        .addSourceLines(
+            "SimpleClass.java",
+            "public class SimpleClass {",
+            "  private record SimpleRecord (Integer foo, Long bar) {}",
+            "}")
+        .expectNoDiagnostics()
+        .doTest();
+  }
+
+  @Test
+  public void nestedPrivateRecordCompactCanonicalConstructor() {
+    assumeTrue(RuntimeVersion.isAtLeast16());
+    helper
+        .addSourceLines(
+            "SimpleClass.java",
+            "public class SimpleClass {",
+            "  private record SimpleRecord (Integer foo, Long bar) {",
+            // Compact canonical constructor implicitly assigns field values at end
+            "    private SimpleRecord {",
+            "      System.out.println(foo);",
+            "    }",
+            "  }",
+            "}")
+        .expectNoDiagnostics()
+        .doTest();
+  }
+
+  @Test
+  public void nestedPrivateRecordNormalCanonicalConstructor() {
+    assumeTrue(RuntimeVersion.isAtLeast16());
+    helper
+        .addSourceLines(
+            "SimpleClass.java",
+            "public class SimpleClass {",
+            "  private record SimpleRecord (Integer foo, Long bar) {",
+            "    private SimpleRecord(Integer foo, Long bar) {",
+            "      this.foo = foo;",
+            "      this.bar = bar;",
+            "    }",
+            "  }",
+            "}")
+        .expectNoDiagnostics()
+        .doTest();
+  }
+
+  @Test
+  public void unusedRecordConstructorParameter() {
+    assumeTrue(RuntimeVersion.isAtLeast16());
+    helper
+        .addSourceLines(
+            "SimpleRecord.java",
+            "public record SimpleRecord (int x) {",
+            "  // BUG: Diagnostic contains: The parameter 'b' is never read",
+            "  private SimpleRecord(int a, int b) {",
+            "    this(a);",
+            "  }",
+            "}")
         .doTest();
   }
 
@@ -1469,6 +1587,28 @@ public class UnusedVariableTest {
             "import android.os.Parcelable;",
             "class Test {",
             "  private static final Parcelable.Creator<Test> CREATOR = null;",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void nestedParameterRemoval() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  private int foo(int a, int b) { return b; }",
+            "  void test() {",
+            "    foo(foo(1, 2), 2);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  private int foo(int b) { return b; }",
+            "  void test() {",
+            "    foo(2);",
+            "  }",
             "}")
         .doTest();
   }
