@@ -40,13 +40,37 @@ Bazel allows annotation processors to be configured using the
 [java_plugin](https://www.bazel.io/docs/be/java.html#java_plugin) rule:
 
 ```
+java_library(
+    name = "demo",
+    srcs = ["java/com/example/Demo.java"],
+    plugins = [":my_custom_check"],
+)
+
 java_plugin(
-    name = "MyCustomCheckPlugin",
-    srcs = ["MyCustomCheck.java"],
+    name = "my_custom_check",
+    srcs = ["java/com/example/MyCustomCheck.java"],
     deps = [
-        "@google_bazel_common//third_party/java/auto_service",
-        "@error_prone//jar",
-        "@guava//jar",
+        ":auto_service",
+        "@maven//:com_google_errorprone_error_prone_annotation",
+        "@maven//:com_google_errorprone_error_prone_check_api",
+    ],
+)
+
+java_library(
+    name = "auto_service",
+    exported_plugins = [
+        ":auto_service_plugin",
+    ],
+    exports = [
+        "@maven//:com_google_auto_service_auto_service_annotations",
+    ],
+)
+
+java_plugin(
+    name = "auto_service_plugin",
+    processor_class = "com.google.auto.service.processor.AutoServiceProcessor",
+    deps = [
+        "@maven//:com_google_auto_service_auto_service",
     ],
 )
 ```
