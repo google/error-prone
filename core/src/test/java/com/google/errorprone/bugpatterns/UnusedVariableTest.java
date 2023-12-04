@@ -612,35 +612,6 @@ public class UnusedVariableTest {
   }
 
   @Test
-  public void usedInLambda() {
-    helper
-        .addSourceLines(
-            "UsedInLambda.java",
-            "package unusedvars;",
-            "import java.util.Arrays;",
-            "import java.util.List;",
-            "import java.util.function.Function;",
-            "import java.util.stream.Collectors;",
-            "/** Method parameters used in lambdas and anonymous classes */",
-            "public class UsedInLambda {",
-            "  private Function<Integer, Integer> usedInLambda() {",
-            "    return x -> 1;",
-            "  }",
-            "  private String print(Object o) {",
-            "    return o.toString();",
-            "  }",
-            "  public List<String> print(List<Object> os) {",
-            "    return os.stream().map(this::print).collect(Collectors.toList());",
-            "  }",
-            "  public static void main(String[] args) {",
-            "    System.err.println(new UsedInLambda().usedInLambda());",
-            "    System.err.println(new UsedInLambda().print(Arrays.asList(1, 2, 3)));",
-            "  }",
-            "}")
-        .doTest();
-  }
-
-  @Test
   public void utf8Handling() {
     helper
         .addSourceLines(
@@ -1616,6 +1587,50 @@ public class UnusedVariableTest {
             "    foo(2);",
             "  }",
             "}")
+        .doTest();
+  }
+
+  @Test
+  public void unusedFunctionalInterfaceParameter() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.Collections;",
+            "import java.util.Comparator;",
+            "import java.util.List;",
+            "class Test {",
+            "  public void test(List<Integer> xs) {",
+            "    // BUG: Diagnostic contains: 'b' is never read",
+            "    Collections.sort(xs, (a, b) -> a > a ? 1 : 0);",
+            "    Collections.sort(xs, new Comparator<Integer>() {",
+            "        // BUG: Diagnostic contains: 'b' is never read",
+            "        @Override public int compare(Integer a, Integer b) { return a; }",
+            "        public void foo(int a, int b) {}",
+            "    });",
+            "    Collections.sort(xs, (a, unused) -> a > a ? 1 : 0);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void unusedFunctionalInterfaceParameter_noFix() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.Collections;",
+            "import java.util.Comparator;",
+            "import java.util.List;",
+            "class Test {",
+            "  public void test(List<Integer> xs) {",
+            "    Collections.sort(xs, (a, b) -> a > a ? 1 : 0);",
+            "    Collections.sort(xs, (a, unused) -> a > a ? 1 : 0);",
+            "    Collections.sort(xs, new Comparator<Integer>() {",
+            "        @Override public int compare(Integer a, Integer b) { return a; }",
+            "    });",
+            "  }",
+            "}")
+        .expectUnchanged()
         .doTest();
   }
 }

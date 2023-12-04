@@ -30,6 +30,7 @@ import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.hasExplicitSource;
+import static com.google.errorprone.util.ASTHelpers.isAbstract;
 import static com.google.errorprone.util.ASTHelpers.isStatic;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.google.errorprone.util.ASTHelpers.shouldKeep;
@@ -95,6 +96,7 @@ import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
@@ -175,6 +177,9 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
           "serialVersionUID",
           // TAG fields are used by convention in Android apps.
           "TAG");
+
+  private static final ImmutableSet<String> FUNCTIONAL_INTERFACE_TYPES_TO_CHECK =
+      ImmutableSet.of("java.util.Comparator");
 
   private final boolean reportInjectedFields;
 
@@ -492,6 +497,12 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
 
   private static ImmutableList<SuggestedFix> buildUnusedParameterFixes(
       Symbol varSymbol, List<TreePath> usagePaths, VisitorState state) {
+    if (!(varSymbol.owner instanceof MethodSymbol)
+        || !((MethodSymbol) varSymbol.owner).params().contains(varSymbol)
+        || !canBeRemoved(varSymbol.owner, state)) {
+      // We're presumably in a lambda. Don't try to generate a fix.
+      return ImmutableList.of();
+    }
     MethodSymbol methodSymbol = (MethodSymbol) varSymbol.owner;
     int index = methodSymbol.params.indexOf(varSymbol);
     RangeSet<Integer> deletions = TreeRangeSet.create();
@@ -608,6 +619,15 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
         return null;
       }
       VarSymbol symbol = getSymbol(variableTree);
+      var parent = getCurrentPath().getParentPath().getLeaf();
+      if (parent instanceof LambdaExpressionTree) {
+        if (FUNCTIONAL_INTERFACE_TYPES_TO_CHECK.stream()
+            .anyMatch(t -> isSubtype(getType(parent), state.getTypeFromString(t), state))) {
+          unusedElements.put(symbol, getCurrentPath());
+          usageSites.put(symbol, getCurrentPath());
+        }
+        return null;
+      }
       if (symbol.getKind() == ElementKind.FIELD
           && symbol.getSimpleName().contentEquals("CREATOR")
           && isSubtype(symbol.type, PARCELABLE_CREATOR.get(state), state)) {
@@ -700,7 +720,27 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
         return true;
       }
 
+      if (enclosingMethod.owner instanceof ClassSymbol
+          && !isAbstract((MethodSymbol) enclosingMethod)
+          && FUNCTIONAL_INTERFACE_TYPES_TO_CHECK.stream()
+              .map(state::getTypeFromString)
+              .anyMatch(
+                  t ->
+                      isSubtype(enclosingMethod.owner.type, t, state)
+                          && isFunctionalInterfaceMethod(t, enclosingMethod, state))) {
+        return true;
+      }
+
       return canBeRemoved(enclosingMethod, state);
+    }
+
+    private boolean isFunctionalInterfaceMethod(
+        Type functionalInterfaceType, Symbol method, VisitorState state) {
+      var functionalInterfaceMethod =
+          state.getTypes().findDescriptorSymbol(functionalInterfaceType.asElement());
+      return method.getSimpleName().contentEquals(functionalInterfaceMethod.getSimpleName())
+          && method.overrides(
+              functionalInterfaceMethod, method.owner.type.tsym, state.getTypes(), true);
     }
 
     @Override
@@ -722,12 +762,6 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
         return null;
       }
       return super.visitClass(tree, null);
-    }
-
-    @Override
-    public Void visitLambdaExpression(LambdaExpressionTree node, Void unused) {
-      // skip lambda parameters
-      return scan(node.getBody(), null);
     }
 
     @Override
