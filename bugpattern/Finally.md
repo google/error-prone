@@ -22,8 +22,8 @@ complete normally.
 
 Consider the following code. In the case where `doWork` throws `SomeException`,
 the finally block will still be executed. If closing the input stream *also*
-fails, then the exception that was thrown in the catch block will be prempted by
-the exception thrown by `close()`, and the first exception will be lost.
+fails, then the exception that was thrown in the catch block will be preempted
+by the exception thrown by `close()`, and the first exception will be lost.
 
 ```java
 InputStream in = openInputStream();
