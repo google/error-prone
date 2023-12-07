@@ -35,7 +35,7 @@
     <autoservice.version>1.0.1</autoservice.version>
     <autovalue.version>1.9</autovalue.version>
     <junit.version>4.13.2</junit.version>
-    <dataflow.version>3.40.0-eisop2</dataflow.version>
+    <dataflow.version>3.41.0-eisop1</dataflow.version>
     <mockito.version>4.9.0</mockito.version>
     <compile.testing.version>0.21.0</compile.testing.version>
     <caffeine.version>3.0.5</caffeine.version>
