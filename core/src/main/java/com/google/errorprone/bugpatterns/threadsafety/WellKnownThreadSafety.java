@@ -102,6 +102,8 @@ public final class WellKnownThreadSafety implements ThreadSafety.KnownTypes {
         .add(java.util.concurrent.locks.ReadWriteLock.class)
         .add(java.util.concurrent.locks.ReentrantLock.class)
         .add(java.util.concurrent.locks.ReentrantReadWriteLock.class)
+        .add(java.security.cert.X509Certificate.class)
+        .add(java.security.cert.TrustAnchor.class)
         .add(java.security.SecureRandom.class)
         .add("com.google.common.time.Clock")
         .add("com.google.common.time.TimeSource")
@@ -138,6 +140,8 @@ public final class WellKnownThreadSafety implements ThreadSafety.KnownTypes {
         .add("kotlinx.coroutines.sync.Mutex")
         .add("kotlinx.coroutines.sync.Semaphore")
         .add("kotlin.Unit")
+        .add("org.bouncycastle.cms.CMSSignedData")
+        .add("org.bouncycastle.pkcs.PKCS10CertificationRequest")
         .build();
   }
 
