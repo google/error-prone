@@ -211,4 +211,20 @@ public final class NonFinalStaticFieldTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void beforeClass() {
+    compilationTestHelper
+        .addSourceLines(
+            "Test.java", //
+            "import org.junit.BeforeClass;",
+            "public class Test {",
+            "  private static String foo;",
+            "  @BeforeClass",
+            "  public static void setup() {",
+            "    foo = \"\";",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

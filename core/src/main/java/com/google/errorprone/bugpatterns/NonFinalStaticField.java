@@ -38,15 +38,16 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.CompoundAssignmentTree;
+import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.UnaryTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicBoolean;
 import javax.lang.model.element.Modifier;
 
 /** A BugPattern; see the summary. */
@@ -71,7 +72,11 @@ public final class NonFinalStaticField extends BugChecker implements VariableTre
         .anyMatch(anno -> hasDirectAnnotationWithSimpleName(tree, anno))) {
       return NO_MATCH;
     }
-    if (!canBeRemoved(symbol, state) || isEverMutatedInSameCompilationUnit(symbol, state)) {
+    IsMutated everMutatedInSameCompilationUnit = isEverMutatedInSameCompilationUnit(symbol, state);
+    if (everMutatedInSameCompilationUnit == IsMutated.IN_BEFORE_METHOD) {
+      return NO_MATCH;
+    }
+    if (!canBeRemoved(symbol, state) || everMutatedInSameCompilationUnit == IsMutated.TRUE) {
       return describeMatch(tree);
     }
     return describeMatch(
@@ -117,45 +122,77 @@ public final class NonFinalStaticField extends BugChecker implements VariableTre
     return "null";
   }
 
-  private static boolean isEverMutatedInSameCompilationUnit(VarSymbol symbol, VisitorState state) {
-    AtomicBoolean seen = new AtomicBoolean(false);
-    new TreeScanner<Void, Void>() {
-      @Override
-      public Void visitAssignment(AssignmentTree tree, Void unused) {
-        if (Objects.equals(getSymbol(tree.getVariable()), symbol)) {
-          seen.set(true);
-        }
-        return super.visitAssignment(tree, null);
-      }
+  enum IsMutated {
+    TRUE,
+    FALSE,
+    IN_BEFORE_METHOD
+  }
 
-      @Override
-      public Void visitCompoundAssignment(CompoundAssignmentTree tree, Void unused) {
-        if (Objects.equals(getSymbol(tree.getVariable()), symbol)) {
-          seen.set(true);
-        }
-        return super.visitCompoundAssignment(tree, null);
-      }
+  private static IsMutated isEverMutatedInSameCompilationUnit(
+      VarSymbol symbol, VisitorState state) {
+    var scanner =
+        new TreeScanner<Void, Void>() {
+          IsMutated isMutated = IsMutated.FALSE;
 
-      @Override
-      public Void visitUnary(UnaryTree tree, Void unused) {
-        if (Objects.equals(getSymbol(tree.getExpression()), symbol) && isMutating(tree.getKind())) {
-          seen.set(true);
-        }
-        return super.visitUnary(tree, null);
-      }
+          boolean inBeforeMethod = false;
 
-      private boolean isMutating(Kind kind) {
-        switch (kind) {
-          case POSTFIX_DECREMENT:
-          case POSTFIX_INCREMENT:
-          case PREFIX_DECREMENT:
-          case PREFIX_INCREMENT:
-            return true;
-          default:
-            return false;
-        }
-      }
-    }.scan(state.getPath().getCompilationUnit(), null);
-    return seen.get();
+          @Override
+          public Void visitAssignment(AssignmentTree tree, Void unused) {
+            if (Objects.equals(getSymbol(tree.getVariable()), symbol)) {
+              isMutated();
+            }
+            return super.visitAssignment(tree, null);
+          }
+
+          @Override
+          public Void visitCompoundAssignment(CompoundAssignmentTree tree, Void unused) {
+            if (Objects.equals(getSymbol(tree.getVariable()), symbol)) {
+              isMutated();
+            }
+            return super.visitCompoundAssignment(tree, null);
+          }
+
+          @Override
+          public Void visitUnary(UnaryTree tree, Void unused) {
+            if (Objects.equals(getSymbol(tree.getExpression()), symbol)
+                && isMutating(tree.getKind())) {
+              isMutated();
+            }
+            return super.visitUnary(tree, null);
+          }
+
+          private void isMutated() {
+            if (inBeforeMethod) {
+              isMutated = IsMutated.IN_BEFORE_METHOD;
+            } else if (isMutated.equals(IsMutated.FALSE)) {
+              isMutated = IsMutated.TRUE;
+            }
+          }
+
+          private boolean isMutating(Kind kind) {
+            switch (kind) {
+              case POSTFIX_DECREMENT:
+              case POSTFIX_INCREMENT:
+              case PREFIX_DECREMENT:
+              case PREFIX_INCREMENT:
+                return true;
+              default:
+                return false;
+            }
+          }
+
+          @Override
+          public Void visitMethod(MethodTree tree, Void unused) {
+            boolean prev = inBeforeMethod;
+            try {
+              inBeforeMethod |= ASTHelpers.hasAnnotation(tree, "org.junit.BeforeClass", state);
+              return super.visitMethod(tree, null);
+            } finally {
+              inBeforeMethod = prev;
+            }
+          }
+        };
+    scanner.scan(state.getPath().getCompilationUnit(), null);
+    return scanner.isMutated;
   }
 }
