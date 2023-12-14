@@ -1617,6 +1617,25 @@ public class UnusedVariableTest {
   }
 
   @Test
+  public void unusedWithinAnotherVariableTree() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.Collections;",
+            "import java.util.Comparator;",
+            "import java.util.List;",
+            "class Test {",
+            "  public void test(List<Integer> xs) {",
+            "    var unusedLocal = ",
+            "        xs.stream().sorted(",
+            "    // BUG: Diagnostic contains: 'b' is never read",
+            "            (a, b) -> a > a ? 1 : 0);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void unusedFunctionalInterfaceParameter_noFix() {
     refactoringHelper
         .addInputLines(

@@ -612,11 +612,16 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
 
     @Override
     public Void visitVariable(VariableTree variableTree, Void unused) {
+      handleVariable(variableTree);
+      return super.visitVariable(variableTree, null);
+    }
+
+    private void handleVariable(VariableTree variableTree) {
       if (exemptedByName(variableTree.getName())) {
-        return null;
+        return;
       }
       if (isSuppressed(variableTree, state)) {
-        return null;
+        return;
       }
       VarSymbol symbol = getSymbol(variableTree);
       var parent = getCurrentPath().getParentPath().getLeaf();
@@ -626,22 +631,22 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
           unusedElements.put(symbol, getCurrentPath());
           usageSites.put(symbol, getCurrentPath());
         }
-        return null;
+        return;
       }
       if (symbol.getKind() == ElementKind.FIELD
           && symbol.getSimpleName().contentEquals("CREATOR")
           && isSubtype(symbol.type, PARCELABLE_CREATOR.get(state), state)) {
-        return null;
+        return;
       }
       if (symbol.getKind() == ElementKind.FIELD
           && exemptedFieldBySuperType(getType(variableTree), state)) {
-        return null;
+        return;
       }
       super.visitVariable(variableTree, null);
       // Return if the element is exempted by an annotation.
       if (exemptedByAnnotation(variableTree.getModifiers().getAnnotations())
           || shouldKeep(variableTree)) {
-        return null;
+        return;
       }
       switch (symbol.getKind()) {
         case FIELD:
@@ -658,14 +663,14 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
         case PARAMETER:
           // ignore the receiver parameter
           if (variableTree.getName().contentEquals("this")) {
-            return null;
+            return;
           }
           // Ignore if parameter is part of canonical record constructor; tree does not seem
           // to contain usage in that case, but parameter is always used implicitly
           // For compact canonical constructor parameters don't have record flag so need to
           // check constructor flags (`symbol.owner`) instead
           if (hasRecordFlag(symbol.owner)) {
-            return null;
+            return;
           }
           unusedElements.put(symbol, getCurrentPath());
           if (!isParameterSubjectToAnalysis(symbol)) {
@@ -675,7 +680,6 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
         default:
           break;
       }
-      return null;
     }
 
     private boolean exemptedFieldBySuperType(Type type, VisitorState state) {
