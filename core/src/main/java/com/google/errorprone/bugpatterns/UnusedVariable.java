@@ -706,7 +706,8 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
       checkArgument(sym.getKind() == ElementKind.PARAMETER);
       Symbol enclosingMethod = sym.owner;
 
-      if (!(enclosingMethod instanceof MethodSymbol)) {
+      if (!(enclosingMethod instanceof MethodSymbol)
+          || isAbstract((MethodSymbol) enclosingMethod)) {
         return false;
       }
 
