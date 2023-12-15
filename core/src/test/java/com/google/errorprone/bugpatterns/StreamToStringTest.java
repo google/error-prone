@@ -82,4 +82,20 @@ public class StreamToStringTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void viaJoiner() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.base.Joiner;",
+            "import java.util.stream.Stream;",
+            "class Test {",
+            "  public String s(Stream<String> xs) {",
+            "    // BUG: Diagnostic contains:",
+            "    return Joiner.on(\"foo\").join(xs, xs);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

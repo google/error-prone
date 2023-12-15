@@ -24,7 +24,9 @@ import static com.google.errorprone.matchers.Matchers.symbolHasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.isSubtype;
 
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.FormatMethod;
 import com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
@@ -115,6 +117,15 @@ public abstract class AbstractToString extends BugChecker
               .named("append")
               .withParameters("java.lang.Object"));
 
+  private static final Matcher<ExpressionTree> JOINER =
+      instanceMethod().onDescendantOf("com.google.common.base.Joiner").named("join");
+
+  private final boolean handleJoiner;
+
+  protected AbstractToString(ErrorProneFlags flags) {
+    this.handleJoiner = flags.getBoolean("AbstractToString:Joiner").orElse(true);
+  }
+
   private static boolean isInVarargsPosition(
       ExpressionTree argTree, MethodInvocationTree methodInvocationTree, VisitorState state) {
     int parameterCount = getSymbol(methodInvocationTree).getParameters().size();
@@ -164,6 +175,14 @@ public abstract class AbstractToString extends BugChecker
     if (FLOGGER_LOG.matches(tree, state)) {
       for (ExpressionTree argTree : tree.getArguments()) {
         handleStringifiedTree(argTree, ToStringKind.FLOGGER, state);
+      }
+    }
+    if (handleJoiner && JOINER.matches(tree, state)) {
+      var symbol = getSymbol(tree);
+      if (!isSubtype(symbol.params().get(0).type, state.getSymtab().iterableType, state)) {
+        for (ExpressionTree argTree : tree.getArguments()) {
+          handleStringifiedTree(argTree, ToStringKind.IMPLICIT, state);
+        }
       }
     }
     return NO_MATCH;
