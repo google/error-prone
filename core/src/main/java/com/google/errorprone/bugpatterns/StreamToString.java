@@ -20,14 +20,12 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.predicates.TypePredicates.isDescendantOf;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.predicates.TypePredicate;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.Tree;
 import java.util.Optional;
-import javax.inject.Inject;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
@@ -36,11 +34,6 @@ import javax.inject.Inject;
 public class StreamToString extends AbstractToString {
 
   private static final TypePredicate STREAM = isDescendantOf("java.util.stream.Stream");
-
-  @Inject
-  StreamToString(ErrorProneFlags flags) {
-    super(flags);
-  }
 
   @Override
   protected TypePredicate typePredicate() {

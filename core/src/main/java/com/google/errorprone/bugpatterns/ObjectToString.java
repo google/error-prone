@@ -20,7 +20,6 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFixes;
@@ -33,7 +32,6 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.util.Names;
 import java.util.Optional;
-import javax.inject.Inject;
 
 /**
  * Warns against calling toString() on Objects which don't have toString() method overridden and
@@ -72,11 +70,6 @@ public class ObjectToString extends AbstractToString {
                 m ->
                     m != toString
                         && m.overrides(toString, type.tsym, types, /* checkResult= */ false)));
-  }
-
-  @Inject
-  ObjectToString(ErrorProneFlags flags) {
-    super(flags);
   }
 
   @Override

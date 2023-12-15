@@ -24,7 +24,6 @@ import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -68,9 +67,7 @@ public class TreeToString extends AbstractToString {
           .withParameters("java.lang.Object");
 
   @Inject
-  TreeToString(ErrorProneFlags flags) {
-    super(flags);
-  }
+  TreeToString() {}
 
   @Override
   protected TypePredicate typePredicate() {

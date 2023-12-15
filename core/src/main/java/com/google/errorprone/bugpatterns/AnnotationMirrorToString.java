@@ -20,7 +20,6 @@ import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.fixes.SuggestedFixes.qualifyType;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -29,7 +28,6 @@ import com.google.errorprone.predicates.TypePredicates;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.Tree;
 import java.util.Optional;
-import javax.inject.Inject;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
@@ -41,11 +39,6 @@ public class AnnotationMirrorToString extends AbstractToString {
 
   private static final TypePredicate TYPE_PREDICATE =
       TypePredicates.isExactType("javax.lang.model.element.AnnotationMirror");
-
-  @Inject
-  AnnotationMirrorToString(ErrorProneFlags flags) {
-    super(flags);
-  }
 
   @Override
   protected TypePredicate typePredicate() {

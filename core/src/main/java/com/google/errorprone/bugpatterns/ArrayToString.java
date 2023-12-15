@@ -20,7 +20,6 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -33,7 +32,6 @@ import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 import java.util.Optional;
-import javax.inject.Inject;
 
 /**
  * @author adgar@google.com (Mike Edgar)
@@ -48,11 +46,6 @@ public class ArrayToString extends AbstractToString {
       instanceMethod().onDescendantOf("java.lang.Throwable").named("getStackTrace");
 
   private static final TypePredicate IS_ARRAY = TypePredicates.isArray();
-
-  @Inject
-  ArrayToString(ErrorProneFlags flags) {
-    super(flags);
-  }
 
   @Override
   protected TypePredicate typePredicate() {
