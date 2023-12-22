@@ -1,6 +1,6 @@
 Guice bindings are keyed by a pair of (optional Annotation, Type).
 
-In most cirumstances, one doesn't need the annotation, as there's really just
+In most circumstances, one doesn't need the annotation, as there's really just
 one active implementation:
 
 ```java

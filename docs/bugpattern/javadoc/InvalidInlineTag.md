@@ -21,7 +21,7 @@ int twoTimes(int n) {
 }
 ```
 
-If the `@` symbol occurrs inside a code excerpt, the fix is to escape the code
+If the `@` symbol occurs inside a code excerpt, the fix is to escape the code
 excerpt using `<pre>{@code ... }</pre>`:
 
 ```java

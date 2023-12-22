@@ -83,7 +83,7 @@ public class ClassNewInstance extends BugChecker implements MethodInvocationTree
     return describeMatch(tree, fix.build());
   }
 
-  // if the match occurrs inside the body of a try statement with existing catch clauses
+  // if the match occurs inside the body of a try statement with existing catch clauses
   // update or add a catch block to handle the new exceptions
   private static boolean fixExceptions(VisitorState state, SuggestedFix.Builder fix) {
     TryTree tryTree = null;
