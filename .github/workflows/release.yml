@@ -14,10 +14,10 @@ jobs:
       contents: write
     steps:          
       - name: Checkout
-        uses: actions/checkout@v2.4.0
+        uses: actions/checkout@v4
 
       - name: Set up JDK
-        uses: actions/setup-java@v2.5.0
+        uses: actions/setup-java@v4
         with:
           java-version: 17
           distribution: 'zulu'
@@ -52,7 +52,7 @@ jobs:
           git push origin "v${{ github.event.inputs.version }}"
           
       - name: Draft Release Entry
-        uses: softprops/action-gh-release@v0.1.14
+        uses: softprops/action-gh-release@v1
         with:
           draft: true
           name: Error Prone ${{ github.event.input.version }} 
