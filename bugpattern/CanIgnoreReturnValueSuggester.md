@@ -1,7 +1,7 @@
 ---
 title: CanIgnoreReturnValueSuggester
-summary: Methods with ignorable return values (including methods that always 'return
-  this') should be annotated with @com.google.errorprone.annotations.CanIgnoreReturnValue
+summary: Methods that always return 'this' (or return an input parameter) should be
+  annotated with @com.google.errorprone.annotations.CanIgnoreReturnValue
 layout: bugpattern
 tags: ''
 severity: WARNING
