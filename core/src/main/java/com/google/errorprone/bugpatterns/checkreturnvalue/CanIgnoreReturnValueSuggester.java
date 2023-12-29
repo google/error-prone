@@ -70,8 +70,8 @@ import javax.inject.Inject;
  */
 @BugPattern(
     summary =
-        "Methods with ignorable return values (including methods that always 'return this') should"
-            + " be annotated with @com.google.errorprone.annotations.CanIgnoreReturnValue",
+        "Methods that always return 'this' (or return an input parameter) should be annotated with"
+            + " @com.google.errorprone.annotations.CanIgnoreReturnValue",
     severity = WARNING)
 public final class CanIgnoreReturnValueSuggester extends BugChecker implements MethodTreeMatcher {
 
