@@ -388,4 +388,63 @@ public final class BadImportTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void badEnclosingTypes() {
+    refactoringTestHelper
+        .setArgs("-XepOpt:BadImport:BadEnclosingTypes=org.immutables.value.Value")
+        .addInputLines(
+            "org/immutables/value/Value.java",
+            "package org.immutables.value;",
+            "",
+            "public @interface Value {",
+            "  @interface Immutable {}",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "Test.java",
+            "import org.immutables.value.Value.Immutable;",
+            "",
+            "@Immutable",
+            "interface Test {}")
+        .addOutputLines(
+            "Test.java",
+            "import org.immutables.value.Value;",
+            "",
+            "@Value.Immutable",
+            "interface Test {}")
+        .doTest();
+  }
+
+  @Test
+  public void badEnclosingTypes_doesNotMatchFullyQualifiedName() {
+    compilationTestHelper
+        .setArgs("-XepOpt:BadImport:BadEnclosingTypes=org.immutables.value.Value")
+        .addSourceLines(
+            "org/immutables/value/Value.java",
+            "package org.immutables.value;",
+            "",
+            "public @interface Value {",
+            "  @interface Immutable {}",
+            "}")
+        .addSourceLines("Test.java", "@org.immutables.value.Value.Immutable", "interface Test {}")
+        .doTest();
+  }
+
+  @Test
+  public void badEnclosingTypes_staticMethod() {
+    compilationTestHelper
+        .setArgs("-XepOpt:BadImport:BadEnclosingTypes=com.google.common.collect.ImmutableList")
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.collect.ImmutableList.toImmutableList;",
+            "import com.google.common.collect.ImmutableList;",
+            "import java.util.stream.Collector;",
+            "",
+            "class Test {",
+            "  // BUG: Diagnostic contains: ImmutableList.toImmutableList()",
+            "  Collector<?, ?, ImmutableList<Object>> immutableList = toImmutableList();",
+            "}")
+        .doTest();
+  }
 }
