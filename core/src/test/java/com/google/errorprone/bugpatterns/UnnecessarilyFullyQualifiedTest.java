@@ -226,7 +226,32 @@ public final class UnnecessarilyFullyQualifiedTest {
   }
 
   @Test
-  public void exemptedTypes() {
+  public void staticNestedClass() {
+    helper
+        .addInputLines(
+            "test/EnclosingType.java",
+            "package test;",
+            "",
+            "public final class EnclosingType {",
+            "  public static final class StaticNestedClass {}",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "Test.java",
+            "interface Test {",
+            "  test.EnclosingType.StaticNestedClass method();",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import test.EnclosingType.StaticNestedClass;",
+            "interface Test {",
+            "  StaticNestedClass method();",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void exemptedEnclosingTypes() {
     helper
         .setArgs("-XepOpt:BadImport:BadEnclosingTypes=org.immutables.value.Value")
         .addInputLines(
@@ -258,7 +283,7 @@ public final class UnnecessarilyFullyQualifiedTest {
   }
 
   @Test
-  public void exemptedTypes_importWouldBeAmbiguous() {
+  public void exemptedEnclosingTypes_importWouldBeAmbiguous() {
     helper
         .setArgs("-XepOpt:BadImport:BadEnclosingTypes=org.immutables.value.Value")
         .addInputLines(

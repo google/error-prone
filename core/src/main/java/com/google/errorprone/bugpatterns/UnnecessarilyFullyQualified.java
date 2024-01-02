@@ -41,6 +41,7 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.ImportTree;
 import com.sun.source.tree.MemberSelectTree;
@@ -85,11 +86,11 @@ public final class UnnecessarilyFullyQualified extends BugChecker
    * org.immutables.value.Value} and using {@code @Value.Immutable} is more favorable than importing
    * {@code org.immutables.value.Value.Immutable} and using {@code @Immutable}.
    */
-  private final ImmutableSet<String> exemptedTypes;
+  private final ImmutableSet<String> exemptedEnclosingTypes;
 
   @Inject
   UnnecessarilyFullyQualified(ErrorProneFlags errorProneFlags) {
-    this.exemptedTypes = errorProneFlags.getSetOrEmpty("BadImport:BadEnclosingTypes");
+    this.exemptedEnclosingTypes = errorProneFlags.getSetOrEmpty("BadImport:BadEnclosingTypes");
   }
 
   @Override
@@ -159,12 +160,8 @@ public final class UnnecessarilyFullyQualified extends BugChecker
         if (!isFullyQualified(tree)) {
           return;
         }
-        if (exemptedTypes.contains(tree.getExpression().toString())
-            || BadImport.BAD_NESTED_CLASSES.contains(tree.getIdentifier().toString())) {
-          if (tree.getExpression() instanceof MemberSelectTree
-              && getSymbol(tree.getExpression()) instanceof ClassSymbol) {
-            handle(new TreePath(path, tree.getExpression()));
-          }
+        if (isBadNestedClass(tree) || isExemptedEnclosingType(tree)) {
+          handle(new TreePath(path, tree.getExpression()));
           return;
         }
         Symbol symbol = getSymbol(tree);
@@ -180,6 +177,23 @@ public final class UnnecessarilyFullyQualified extends BugChecker
           table.put(tree.getIdentifier(), symbol.type.tsym, treePaths);
         }
         treePaths.add(path);
+      }
+
+      private boolean isBadNestedClass(MemberSelectTree tree) {
+        return BadImport.BAD_NESTED_CLASSES.contains(tree.getIdentifier().toString());
+      }
+
+      private boolean isExemptedEnclosingType(MemberSelectTree tree) {
+        ExpressionTree expression = tree.getExpression();
+        if (!(expression instanceof MemberSelectTree)) {
+          return false;
+        }
+        Symbol symbol = getSymbol(expression);
+        if (!(symbol instanceof ClassSymbol)) {
+          return false;
+        }
+
+        return exemptedEnclosingTypes.contains(symbol.getQualifiedName().toString());
       }
 
       private boolean isFullyQualified(MemberSelectTree tree) {
