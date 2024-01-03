@@ -96,7 +96,9 @@ public abstract class AbstractToString extends BugChecker
       symbolHasAnnotation(FormatMethod.class);
 
   private static final Matcher<ExpressionTree> STRING_FORMAT =
-      staticMethod().onClass("java.lang.String").named("format");
+      anyOf(
+          staticMethod().onClass("java.lang.String").named("format"),
+          instanceMethod().onExactClass("java.lang.String").named("formatted"));
 
   private static final Matcher<ExpressionTree> VALUE_OF =
       staticMethod()

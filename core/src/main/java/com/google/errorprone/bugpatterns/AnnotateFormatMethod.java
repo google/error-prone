@@ -20,7 +20,9 @@ import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.MoreCollectors.toOptional;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.BugPattern.StandardTags.FRAGILE_CODE;
+import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
+import static com.google.errorprone.util.ASTHelpers.getReceiver;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -47,9 +49,9 @@ import javax.annotation.Nullable;
  */
 @BugPattern(
     summary =
-        "This method passes a pair of parameters through to String.format, but the enclosing"
-            + " method wasn't annotated @FormatMethod. Doing so gives compile-time rather than"
-            + " run-time protection against malformed format strings.",
+        "This method uses a pair of parameters as a format string and its arguments, but the"
+            + " enclosing method wasn't annotated @FormatMethod. Doing so gives compile-time rather"
+            + " than run-time protection against malformed format strings.",
     tags = FRAGILE_CODE,
     severity = WARNING)
 public final class AnnotateFormatMethod extends BugChecker implements MethodInvocationTreeMatcher {
@@ -60,17 +62,28 @@ public final class AnnotateFormatMethod extends BugChecker implements MethodInvo
 
   private static final Matcher<ExpressionTree> STRING_FORMAT =
       staticMethod().onClass("java.lang.String").named("format");
+  private static final Matcher<ExpressionTree> FORMATTED =
+      instanceMethod().onExactClass("java.lang.String").named("formatted");
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    if (!STRING_FORMAT.matches(tree, state)) {
+    VarSymbol formatString;
+    VarSymbol formatArgs;
+    if (STRING_FORMAT.matches(tree, state)) {
+      if (tree.getArguments().size() != 2) {
+        return Description.NO_MATCH;
+      }
+      formatString = asSymbol(tree.getArguments().get(0));
+      formatArgs = asSymbol(tree.getArguments().get(1));
+    } else if (FORMATTED.matches(tree, state)) {
+      if (tree.getArguments().size() != 1) {
+        return Description.NO_MATCH;
+      }
+      formatString = asSymbol(getReceiver(tree));
+      formatArgs = asSymbol(tree.getArguments().get(0));
+    } else {
       return Description.NO_MATCH;
     }
-    if (tree.getArguments().size() != 2) {
-      return Description.NO_MATCH;
-    }
-    VarSymbol formatString = asSymbol(tree.getArguments().get(0));
-    VarSymbol formatArgs = asSymbol(tree.getArguments().get(1));
     if (formatString == null || formatArgs == null) {
       return Description.NO_MATCH;
     }
