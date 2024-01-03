@@ -1675,8 +1675,6 @@ loadScripts(document, 'script');</script>
  returns <code>this</code>, returns an effectively final input param, or if it looks like a builder
  method (that is likely to return <code>this</code>).</div>
 </dd>
-<dt><a href="com/google/errorprone/bugpatterns/checkreturnvalue/CanIgnoreReturnValueSuggester.html#%3Cinit%3E(com.google.errorprone.ErrorProneFlags)" class="member-name-link">CanIgnoreReturnValueSuggester(ErrorProneFlags)</a> - Constructor for class com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/CanIgnoreReturnValueSuggester.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">CanIgnoreReturnValueSuggester</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/CannotMockFinalClass.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">CannotMockFinalClass</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
 <div class="block">Bug pattern to recognize attempts to mock final types.</div>
@@ -2274,6 +2272,11 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/ComplexBooleanConstant.html#%3Cinit%3E()" class="member-name-link">ComplexBooleanConstant()</a> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ComplexBooleanConstant.html" title="class in com.google.errorprone.bugpatterns">ComplexBooleanConstant</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/checkreturnvalue/DaggerRules.html#componentBuilders()" class="member-name-link">componentBuilders()</a> - Static method in class com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/DaggerRules.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">DaggerRules</a></dt>
+<dd>
+<div class="block">Returns a rule that handles <code>@dagger.Component.Builder</code> types, making their fluent setter
+ methods' results ignorable.</div>
+</dd>
 <dt><a href="com/google/errorprone/CompositeCodeTransformer.html#compose(com.google.errorprone.CodeTransformer...)" class="member-name-link">compose(CodeTransformer...)</a> - Static method in class com.google.errorprone.<a href="com/google/errorprone/CompositeCodeTransformer.html" title="class in com.google.errorprone">CompositeCodeTransformer</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/CompositeCodeTransformer.html#compose(java.lang.Iterable)" class="member-name-link">compose(Iterable&lt;? extends CodeTransformer&gt;)</a> - Static method in class com.google.errorprone.<a href="com/google/errorprone/CompositeCodeTransformer.html" title="class in com.google.errorprone">CompositeCodeTransformer</a></dt>
@@ -2739,6 +2742,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/google/errorprone/bugpatterns/inject/dagger/DaggerAnnotations.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.inject.dagger">DaggerAnnotations</a> - Class in <a href="com/google/errorprone/bugpatterns/inject/dagger/package-summary.html">com.google.errorprone.bugpatterns.inject.dagger</a></dt>
 <dd>
 <div class="block">A utility class for static analysis having to do with Dagger annotations.</div>
+</dd>
+<dt><a href="com/google/errorprone/bugpatterns/checkreturnvalue/DaggerRules.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">DaggerRules</a> - Class in <a href="com/google/errorprone/bugpatterns/checkreturnvalue/package-summary.html">com.google.errorprone.bugpatterns.checkreturnvalue</a></dt>
+<dd>
+<div class="block">Rules for methods on Dagger <code>Component.Builder</code> and <code>Subcomponent.Builder</code> types.</div>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/DangerousLiteralNullChecker.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">DangerousLiteralNullChecker</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
@@ -12507,6 +12514,11 @@ loadScripts(document, 'script');</script>
 <div class="block">This check detects a coding pattern that is valid within the Java language and doesn't
  represent a runtime defect, but is otherwise discouraged for reasons of consistency within a
  project or ease of understanding by other programmers.</div>
+</dd>
+<dt><a href="com/google/errorprone/bugpatterns/checkreturnvalue/DaggerRules.html#subcomponentBuilders()" class="member-name-link">subcomponentBuilders()</a> - Static method in class com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/DaggerRules.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">DaggerRules</a></dt>
+<dd>
+<div class="block">Returns a rule that handles <code>@dagger.Subcomponent.Builder</code> types, making their fluent
+ setter methods' results ignorable.</div>
 </dd>
 <dt><a href="com/google/errorprone/SubContext.html" class="type-name-link" title="class in com.google.errorprone">SubContext</a> - Class in <a href="com/google/errorprone/package-summary.html">com.google.errorprone</a></dt>
 <dd>

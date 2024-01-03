@@ -3025,35 +3025,47 @@ loadScripts(document, 'script');</script>
 <div class="block">Returns a rule for <code>abstract</code> methods on <code>@AutoValue</code> types.</div>
 </div>
 <div class="col-first odd-row-color"><code>static <a href="../bugpatterns/checkreturnvalue/ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a>&lt;<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>,<wbr>com.sun.tools.javac.code.Symbol&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">ExternalCanIgnoreReturnValue.</span><code><a href="../bugpatterns/checkreturnvalue/ExternalCanIgnoreReturnValue.html#externalIgnoreList()" class="member-name-link">externalIgnoreList</a>()</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">DaggerRules.</span><code><a href="../bugpatterns/checkreturnvalue/DaggerRules.html#componentBuilders()" class="member-name-link">componentBuilders</a>()</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Returns a rule using an external list of APIs to ignore.</div>
+<div class="block">Returns a rule that handles <code>@dagger.Component.Builder</code> types, making their fluent setter
+ methods' results ignorable.</div>
 </div>
 <div class="col-first even-row-color"><code>static <a href="../bugpatterns/checkreturnvalue/ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a>&lt;<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>,<wbr>com.sun.tools.javac.code.Symbol&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">Rules.</span><code><a href="../bugpatterns/checkreturnvalue/Rules.html#globalDefault(java.util.Optional,java.util.Optional)" class="member-name-link">globalDefault</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../bugpatterns/checkreturnvalue/ResultUsePolicy.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicy</a>&gt;&nbsp;methodDefault,
- <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../bugpatterns/checkreturnvalue/ResultUsePolicy.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicy</a>&gt;&nbsp;constructorDefault)</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">ExternalCanIgnoreReturnValue.</span><code><a href="../bugpatterns/checkreturnvalue/ExternalCanIgnoreReturnValue.html#externalIgnoreList()" class="member-name-link">externalIgnoreList</a>()</code></div>
 <div class="col-last even-row-color">
+<div class="block">Returns a rule using an external list of APIs to ignore.</div>
+</div>
+<div class="col-first odd-row-color"><code>static <a href="../bugpatterns/checkreturnvalue/ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a>&lt;<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>,<wbr>com.sun.tools.javac.code.Symbol&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">Rules.</span><code><a href="../bugpatterns/checkreturnvalue/Rules.html#globalDefault(java.util.Optional,java.util.Optional)" class="member-name-link">globalDefault</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../bugpatterns/checkreturnvalue/ResultUsePolicy.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicy</a>&gt;&nbsp;methodDefault,
+ <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../bugpatterns/checkreturnvalue/ResultUsePolicy.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicy</a>&gt;&nbsp;constructorDefault)</code></div>
+<div class="col-last odd-row-color">
 <div class="block">Returns a simple global rule that always returns the given defaults for methods and
  constructors.</div>
 </div>
-<div class="col-first odd-row-color"><code>static <a href="../bugpatterns/checkreturnvalue/ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a>&lt;<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>,<wbr>com.sun.tools.javac.code.Symbol&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">Rules.</span><code><a href="../bugpatterns/checkreturnvalue/Rules.html#mapAnnotationSimpleName(java.lang.String,com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicy)" class="member-name-link">mapAnnotationSimpleName</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;simpleName,
+<div class="col-first even-row-color"><code>static <a href="../bugpatterns/checkreturnvalue/ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a>&lt;<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>,<wbr>com.sun.tools.javac.code.Symbol&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">Rules.</span><code><a href="../bugpatterns/checkreturnvalue/Rules.html#mapAnnotationSimpleName(java.lang.String,com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicy)" class="member-name-link">mapAnnotationSimpleName</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;simpleName,
  <a href="../bugpatterns/checkreturnvalue/ResultUsePolicy.html" title="enum in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicy</a>&nbsp;policy)</code></div>
-<div class="col-last odd-row-color">
+<div class="col-last even-row-color">
 <div class="block">Returns a <a href="../bugpatterns/checkreturnvalue/ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUseRule</code></a> that maps annotations with the given <code>simpleName</code> to the
  given <code>policy</code>.</div>
 </div>
-<div class="col-first even-row-color"><code>static <a href="../bugpatterns/checkreturnvalue/ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a>&lt;<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>,<wbr>com.sun.tools.javac.code.Symbol&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">ProtoRules.</span><code><a href="../bugpatterns/checkreturnvalue/ProtoRules.html#mutableProtos()" class="member-name-link">mutableProtos</a>()</code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static <a href="../bugpatterns/checkreturnvalue/ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a>&lt;<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>,<wbr>com.sun.tools.javac.code.Symbol&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">ProtoRules.</span><code><a href="../bugpatterns/checkreturnvalue/ProtoRules.html#mutableProtos()" class="member-name-link">mutableProtos</a>()</code></div>
+<div class="col-last odd-row-color">
 <div class="block">Returns a rule that handles mutable protos, making their fluent setter methods' results
  ignorable.</div>
 </div>
-<div class="col-first odd-row-color"><code>static <a href="../bugpatterns/checkreturnvalue/ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a>&lt;<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>,<wbr>com.sun.tools.javac.code.Symbol&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">ProtoRules.</span><code><a href="../bugpatterns/checkreturnvalue/ProtoRules.html#protoBuilders()" class="member-name-link">protoBuilders</a>()</code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static <a href="../bugpatterns/checkreturnvalue/ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a>&lt;<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>,<wbr>com.sun.tools.javac.code.Symbol&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">ProtoRules.</span><code><a href="../bugpatterns/checkreturnvalue/ProtoRules.html#protoBuilders()" class="member-name-link">protoBuilders</a>()</code></div>
+<div class="col-last even-row-color">
 <div class="block">Returns a rule that handles proto builders, making their fluent setter methods' results
  ignorable.</div>
+</div>
+<div class="col-first odd-row-color"><code>static <a href="../bugpatterns/checkreturnvalue/ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a>&lt;<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>,<wbr>com.sun.tools.javac.code.Symbol&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">DaggerRules.</span><code><a href="../bugpatterns/checkreturnvalue/DaggerRules.html#subcomponentBuilders()" class="member-name-link">subcomponentBuilders</a>()</code></div>
+<div class="col-last odd-row-color">
+<div class="block">Returns a rule that handles <code>@dagger.Subcomponent.Builder</code> types, making their fluent
+ setter methods' results ignorable.</div>
 </div>
 </div>
 <div class="caption"><span>Methods in <a href="../bugpatterns/checkreturnvalue/package-summary.html">com.google.errorprone.bugpatterns.checkreturnvalue</a> with parameters of type <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a></span></div>
