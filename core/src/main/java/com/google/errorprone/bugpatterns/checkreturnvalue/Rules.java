@@ -17,7 +17,9 @@
 package com.google.errorprone.bugpatterns.checkreturnvalue;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.hasDirectAnnotationWithSimpleName;
+import static com.google.errorprone.util.ASTHelpers.isSameType;
 
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule.GlobalRule;
@@ -31,7 +33,10 @@ import java.util.function.BiPredicate;
 /** Factories for common kinds of {@link ResultUseRule}s. */
 public final class Rules {
 
-  private Rules() {}
+  /** Returns true if {@code method} returns the same type as its enclosing class. */
+  static boolean returnsEnclosingType(MethodSymbol method, VisitorState state) {
+    return isSameType(enclosingClass(method).type, method.getReturnType(), state);
+  }
 
   /** A {@link MethodRule} for Error Prone. */
   abstract static class ErrorProneMethodRule
@@ -109,4 +114,6 @@ public final class Rules {
       return symbol.isConstructor() ? constructorDefault : methodDefault;
     }
   }
+
+  private Rules() {}
 }
