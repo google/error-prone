@@ -885,18 +885,7 @@ public class CanIgnoreReturnValueSuggesterTest {
             "  Builder setName(String name);",
             "  String build();",
             "}")
-        .addOutputLines(
-            "Builder.java",
-            "package com.google.frobber;",
-            "import com.google.errorprone.annotations.CanIgnoreReturnValue;",
-            "import dagger.Component;",
-            "@Component.Builder",
-            "interface Builder {",
-            // TODO(b/318407972): we shouldn't suggest @CIRV on Dagger Component.Builder setters
-            "  @CanIgnoreReturnValue",
-            "  Builder setName(String name);",
-            "  String build();",
-            "}")
+        .expectUnchanged()
         .doTest();
   }
 
@@ -912,18 +901,7 @@ public class CanIgnoreReturnValueSuggesterTest {
             "  Builder setName(String name);",
             "  String build();",
             "}")
-        .addOutputLines(
-            "Builder.java",
-            "package com.google.frobber;",
-            "import com.google.errorprone.annotations.CanIgnoreReturnValue;",
-            "import dagger.Subcomponent;",
-            "@Subcomponent.Builder",
-            "interface Builder {",
-            // TODO(b/318407972): we shouldn't suggest @CIRV on Dagger Subcomponent.Builder setters
-            "  @CanIgnoreReturnValue",
-            "  Builder setName(String name);",
-            "  String build();",
-            "}")
+        .expectUnchanged()
         .doTest();
   }
 }

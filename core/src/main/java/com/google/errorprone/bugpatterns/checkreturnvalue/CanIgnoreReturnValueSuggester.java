@@ -84,6 +84,13 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
           "com.google.errorprone.annotations.CheckReturnValue",
           "com.google.errorprone.refaster.annotation.AfterTemplate");
 
+  private static final ImmutableSet<String> EXEMPTING_CLASS_ANNOTATIONS =
+      ImmutableSet.of(
+          "com.google.auto.value.AutoValue.Builder",
+          "com.google.auto.value.AutoBuilder",
+          "dagger.Component.Builder",
+          "dagger.Subcomponent.Builder");
+
   private static final Supplier<Type> PROTO_BUILDER =
       VisitorState.memoize(s -> s.getTypeFromString("com.google.protobuf.MessageLite.Builder"));
 
@@ -93,7 +100,7 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
   private final ImmutableSet<String> exemptingMethodAnnotations;
 
   @Inject
-  public CanIgnoreReturnValueSuggester(ErrorProneFlags errorProneFlags) {
+  CanIgnoreReturnValueSuggester(ErrorProneFlags errorProneFlags) {
     this.exemptingMethodAnnotations =
         Sets.union(
                 EXEMPTING_METHOD_ANNOTATIONS,
@@ -107,7 +114,7 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
 
     // If the method has an exempting annotation, then bail out.
     if (exemptingMethodAnnotations.stream()
-        .anyMatch(annotation -> ASTHelpers.hasAnnotation(methodSymbol, annotation, state))) {
+        .anyMatch(annotation -> hasAnnotation(methodSymbol, annotation, state))) {
       return Description.NO_MATCH;
     }
 
@@ -148,8 +155,8 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
       return Description.NO_MATCH;
     }
 
-    // skip @AutoValue and @AutoBuilder methods
-    if (isAbstractAutoValueOrAutoBuilderMethod(methodSymbol, state)) {
+    // skip builder setter methods defined on "known safe" types
+    if (isKnownSafeBuilderInterface(methodSymbol, state)) {
       return Description.NO_MATCH;
     }
 
@@ -179,14 +186,17 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
     return describeMatch(methodTree, fix.build());
   }
 
-  private static boolean isAbstractAutoValueOrAutoBuilderMethod(
+  private static boolean isKnownSafeBuilderInterface(
       MethodSymbol methodSymbol, VisitorState state) {
-    Symbol owner = methodSymbol.owner;
-    // TODO(kak): use ResultEvaluator instead of duplicating _some_ of the logic (right now we only
-    // exclude @AutoValue.Builder's and @AutoBuilder's)
-    return isAbstract(methodSymbol)
-        && (hasAnnotation(owner, AUTO_VALUE + ".Builder", state)
-            || hasAnnotation(owner, "com.google.auto.value.AutoBuilder", state));
+    // TODO(kak): use ResultEvaluator instead of duplicating logic
+    if (isAbstract(methodSymbol)) {
+      for (String annotation : EXEMPTING_CLASS_ANNOTATIONS) {
+        if (hasAnnotation(methodSymbol.owner, annotation, state)) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   private static boolean classLooksLikeBuilder(Symbol owner, VisitorState state) {
