@@ -194,8 +194,13 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color">
 <div class="deprecation-comment">use <a href="com/google/errorprone/matchers/Matchers.html#isNullUsingDataflow()"><code>Matchers.isNullUsingDataflow()</code></a> instead.</div>
 </div>
-<div class="col-summary-item-name odd-row-color"><a href="com/google/errorprone/util/ASTHelpers.html#getAnnotation(com.sun.source.tree.Tree,java.lang.Class)">com.google.errorprone.util.ASTHelpers.getAnnotation<wbr>(Tree, Class&lt;T&gt;)</a></div>
+<div class="col-summary-item-name odd-row-color"><a href="com/google/errorprone/matchers/method/MethodMatchers.MethodClassMatcher.html#withSignature(java.lang.String)">com.google.errorprone.matchers.method.MethodMatchers.MethodClassMatcher.withSignature<wbr>(String)</a></div>
 <div class="col-last odd-row-color">
+<div class="deprecation-comment">The implementation uses javac internals to pretty-print the signatures, and the
+     signature format is not well-specified.</div>
+</div>
+<div class="col-summary-item-name even-row-color"><a href="com/google/errorprone/util/ASTHelpers.html#getAnnotation(com.sun.source.tree.Tree,java.lang.Class)">com.google.errorprone.util.ASTHelpers.getAnnotation<wbr>(Tree, Class&lt;T&gt;)</a></div>
+<div class="col-last even-row-color">
 <div class="deprecation-comment">If <code>annotationClass</code> contains a member that is a <code>Class</code> or an array of
      them, attempting to access that member from the Error Prone checker code will result in a
      runtime exception. Instead, operate on <code>getSymbol(tree).getAnnotationMirrors()</code> to
@@ -206,27 +211,27 @@ loadScripts(document, 'script');</script>
      <a href="com/google/errorprone/util/ASTHelpers.html#getAnnotations(com.sun.source.tree.Tree)"><code>ASTHelpers.getAnnotations(com.sun.source.tree.Tree)</code></a> (or a direct call to a <code>getAnnotations</code> method declared on a
      specific <code>Tree</code> subclass) instead.</div>
 </div>
-<div class="col-summary-item-name even-row-color"><a href="com/google/errorprone/util/ASTHelpers.html#getAnnotation(com.sun.tools.javac.code.Symbol,java.lang.Class)">com.google.errorprone.util.ASTHelpers.getAnnotation<wbr>(Symbol, Class&lt;T&gt;)</a></div>
-<div class="col-last even-row-color">
+<div class="col-summary-item-name odd-row-color"><a href="com/google/errorprone/util/ASTHelpers.html#getAnnotation(com.sun.tools.javac.code.Symbol,java.lang.Class)">com.google.errorprone.util.ASTHelpers.getAnnotation<wbr>(Symbol, Class&lt;T&gt;)</a></div>
+<div class="col-last odd-row-color">
 <div class="deprecation-comment">If <code>annotationClass</code> contains a member that is a <code>Class</code> or an array of
      them, attempting to access that member from the Error Prone checker code will result in a
      runtime exception. Instead, operate on <code>sym.getAnnotationMirrors()</code> to
      meta-syntactically inspect the annotation.</div>
 </div>
-<div class="col-summary-item-name odd-row-color"><a href="com/google/errorprone/util/ASTHelpers.html#hasAnnotation(com.sun.source.tree.Tree,java.lang.Class,com.google.errorprone.VisitorState)">com.google.errorprone.util.ASTHelpers.hasAnnotation<wbr>(Tree, Class&lt;? extends Annotation&gt;, VisitorState)</a></div>
-<div class="col-last odd-row-color">
-<div class="deprecation-comment">prefer <a href="com/google/errorprone/util/ASTHelpers.html#hasAnnotation(com.sun.tools.javac.code.Symbol,java.lang.String,com.google.errorprone.VisitorState)"><code>ASTHelpers.hasAnnotation(Symbol, String, VisitorState)</code></a> to avoid needing a
-     runtime dependency on the annotation class, and to prevent issues if there is skew between
-     the definition of the annotation on the runtime and compile-time classpaths</div>
-</div>
-<div class="col-summary-item-name even-row-color"><a href="com/google/errorprone/util/ASTHelpers.html#hasAnnotation(com.sun.tools.javac.code.Symbol,java.lang.Class,com.google.errorprone.VisitorState)">com.google.errorprone.util.ASTHelpers.hasAnnotation<wbr>(Symbol, Class&lt;? extends Annotation&gt;, VisitorState)</a></div>
+<div class="col-summary-item-name even-row-color"><a href="com/google/errorprone/util/ASTHelpers.html#hasAnnotation(com.sun.source.tree.Tree,java.lang.Class,com.google.errorprone.VisitorState)">com.google.errorprone.util.ASTHelpers.hasAnnotation<wbr>(Tree, Class&lt;? extends Annotation&gt;, VisitorState)</a></div>
 <div class="col-last even-row-color">
 <div class="deprecation-comment">prefer <a href="com/google/errorprone/util/ASTHelpers.html#hasAnnotation(com.sun.tools.javac.code.Symbol,java.lang.String,com.google.errorprone.VisitorState)"><code>ASTHelpers.hasAnnotation(Symbol, String, VisitorState)</code></a> to avoid needing a
      runtime dependency on the annotation class, and to prevent issues if there is skew between
      the definition of the annotation on the runtime and compile-time classpaths</div>
 </div>
-<div class="col-summary-item-name odd-row-color"><a href="com/google/errorprone/util/ASTHelpers.html#hasNoExplicitType(com.sun.source.tree.VariableTree,com.google.errorprone.VisitorState)">com.google.errorprone.util.ASTHelpers.hasNoExplicitType<wbr>(VariableTree, VisitorState)</a></div>
+<div class="col-summary-item-name odd-row-color"><a href="com/google/errorprone/util/ASTHelpers.html#hasAnnotation(com.sun.tools.javac.code.Symbol,java.lang.Class,com.google.errorprone.VisitorState)">com.google.errorprone.util.ASTHelpers.hasAnnotation<wbr>(Symbol, Class&lt;? extends Annotation&gt;, VisitorState)</a></div>
 <div class="col-last odd-row-color">
+<div class="deprecation-comment">prefer <a href="com/google/errorprone/util/ASTHelpers.html#hasAnnotation(com.sun.tools.javac.code.Symbol,java.lang.String,com.google.errorprone.VisitorState)"><code>ASTHelpers.hasAnnotation(Symbol, String, VisitorState)</code></a> to avoid needing a
+     runtime dependency on the annotation class, and to prevent issues if there is skew between
+     the definition of the annotation on the runtime and compile-time classpaths</div>
+</div>
+<div class="col-summary-item-name even-row-color"><a href="com/google/errorprone/util/ASTHelpers.html#hasNoExplicitType(com.sun.source.tree.VariableTree,com.google.errorprone.VisitorState)">com.google.errorprone.util.ASTHelpers.hasNoExplicitType<wbr>(VariableTree, VisitorState)</a></div>
+<div class="col-last even-row-color">
 <div class="deprecation-comment">use <a href="com/google/errorprone/util/ASTHelpers.html#hasImplicitType(com.sun.source.tree.VariableTree,com.google.errorprone.VisitorState)"><code>ASTHelpers.hasImplicitType(VariableTree, VisitorState)</code></a> instead</div>
 </div>
 </div>

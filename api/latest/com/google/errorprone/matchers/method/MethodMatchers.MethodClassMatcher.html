@@ -135,8 +135,10 @@ extends <a href="MethodMatchers.MethodMatcher.html" title="interface in com.goog
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="MethodMatchers.MethodSignatureMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.MethodSignatureMatcher</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="#withSignature(java.lang.String)" class="member-name-link">withSignature</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;signature)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6">
-<div class="block"><span class="deprecated-label">Deprecated.</span></div>
-<div class="block">Match methods with the given signature.</div>
+<div class="block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">The implementation uses javac internals to pretty-print the signatures, and the
+     signature format is not well-specified.</div>
+</div>
 </div>
 </div>
 </div>
@@ -198,11 +200,13 @@ extends <a href="MethodMatchers.MethodMatcher.html" title="interface in com.goog
 <li>
 <section class="detail" id="withSignature(java.lang.String)">
 <h3>withSignature</h3>
-<div class="member-signature"><span class="return-type"><a href="MethodMatchers.MethodSignatureMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.MethodSignatureMatcher</a></span>&nbsp;<span class="element-name">withSignature</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;signature)</span></div>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span></div>
-<div class="block">Match methods with the given signature. The implementation uses javac internals to
- pretty-print the signatures, and the signature format is not well-specified. This matcher
- should be used with caution.
+<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>
+</span><span class="return-type"><a href="MethodMatchers.MethodSignatureMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.MethodSignatureMatcher</a></span>&nbsp;<span class="element-name">withSignature</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;signature)</span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">The implementation uses javac internals to pretty-print the signatures, and the
+     signature format is not well-specified.</div>
+</div>
+<div class="block">Match methods with the given signature.
 
  <p>Example: <code>format(java.lang.String,java.lang.Object...)</code></div>
 </section>

@@ -14734,8 +14734,10 @@ the order they are declared.</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/matchers/method/MethodMatchers.MethodClassMatcher.html#withSignature(java.lang.String)" class="member-name-link">withSignature(String)</a> - Method in interface com.google.errorprone.matchers.method.<a href="com/google/errorprone/matchers/method/MethodMatchers.MethodClassMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.MethodClassMatcher</a></dt>
 <dd>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span></div>
-<div class="block">Match methods with the given signature.</div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">The implementation uses javac internals to pretty-print the signatures, and the
+     signature format is not well-specified.</div>
+</div>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/WithSignatureDiscouraged.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">WithSignatureDiscouraged</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>

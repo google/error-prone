@@ -71,8 +71,10 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color"><code><a href="../MethodMatchers.MethodSignatureMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.MethodSignatureMatcher</a></code></div>
 <div class="col-second even-row-color"><span class="type-name-label">MethodMatchers.MethodClassMatcher.</span><code><a href="../MethodMatchers.MethodClassMatcher.html#withSignature(java.lang.String)" class="member-name-link">withSignature</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;signature)</code></div>
 <div class="col-last even-row-color">
-<div class="block"><span class="deprecated-label">Deprecated.</span></div>
-<div class="block">Match methods with the given signature.</div>
+<div class="block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">The implementation uses javac internals to pretty-print the signatures, and the
+     signature format is not well-specified.</div>
+</div>
 </div>
 </div>
 </section>
