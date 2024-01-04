@@ -33,7 +33,7 @@ message TestProtoMessage {
   /* Named ending in "builder" to check the Java builder API */
   optional TestFieldProtoMessage foo_builder = 6;
 
-  extensions 100 to 199;
+  extensions 100 to 199 [verification = UNVERIFIED];
 }
 
 message TestOneOfMessage {
