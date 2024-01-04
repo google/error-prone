@@ -19,10 +19,12 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.Iterables.getLast;
+import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.sun.source.tree.Tree.Kind.BLOCK;
 import static com.sun.source.tree.Tree.Kind.BREAK;
 import static com.sun.source.tree.Tree.Kind.EXPRESSION_STATEMENT;
 import static com.sun.source.tree.Tree.Kind.RETURN;
@@ -214,7 +216,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
               .collect(toImmutableSet()));
       boolean isLastCaseInSwitch = caseIndex == cases.size() - 1;
 
-      List<? extends StatementTree> statements = caseTree.getStatements();
+      List<? extends StatementTree> statements = getStatements(caseTree);
       CaseFallThru caseFallThru = CaseFallThru.MAYBE_FALLS_THRU;
       if (statements == null) {
         // This case must be of kind CaseTree.CaseKind.RULE, and thus this is already an expression
@@ -601,7 +603,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
       boolean isDefaultCase = caseTree.getExpression() == null;
 
       String transformedBlockSource =
-          transformReturnOrThrowBlock(caseTree, state, cases, caseIndex, caseTree.getStatements());
+          transformReturnOrThrowBlock(caseTree, state, cases, caseIndex, getStatements(caseTree));
 
       if (firstCaseInGroup) {
         groupedCaseCommentsAccumulator = new StringBuilder();
@@ -794,7 +796,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
       CaseTree caseTree, VisitorState state, ImmutableList<StatementTree> filteredStatements) {
 
     // Was a trailing break removed and some expressions remain?
-    if (caseTree.getStatements().size() > filteredStatements.size()
+    if (getStatements(caseTree).size() > filteredStatements.size()
         && !filteredStatements.isEmpty()) {
       // Extract any comments after what is now the last statement and before the removed
       // break
@@ -803,8 +805,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
               .getSourceCode()
               .subSequence(
                   state.getEndPosition(Iterables.getLast(filteredStatements)),
-                  getStartPosition(
-                      caseTree.getStatements().get(caseTree.getStatements().size() - 1)))
+                  getStartPosition(getStatements(caseTree).get(getStatements(caseTree).size() - 1)))
               .toString()
               .trim();
       if (!commentsAfterNewLastStatement.isEmpty()) {
@@ -820,15 +821,31 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
    */
   private static ImmutableList<StatementTree> filterOutRedundantBreak(CaseTree caseTree) {
     boolean caseEndsWithUnlabelledBreak =
-        Streams.findLast(caseTree.getStatements().stream())
+        Streams.findLast(getStatements(caseTree).stream())
             .filter(statement -> statement.getKind().equals(BREAK))
             .filter(breakTree -> ((BreakTree) breakTree).getLabel() == null)
             .isPresent();
     return caseEndsWithUnlabelledBreak
-        ? caseTree.getStatements().stream()
-            .limit(caseTree.getStatements().size() - 1)
+        ? getStatements(caseTree).stream()
+            .limit(getStatements(caseTree).size() - 1)
             .collect(toImmutableList())
-        : ImmutableList.copyOf(caseTree.getStatements());
+        : ImmutableList.copyOf(getStatements(caseTree));
+  }
+
+  /**
+   * Returns the statements of a {@link CaseTree}. If the only statement is a block statement,
+   * return the block's statements instead.
+   */
+  private static List<? extends StatementTree> getStatements(CaseTree caseTree) {
+    List<? extends StatementTree> statements = caseTree.getStatements();
+    if (statements == null || statements.size() != 1) {
+      return statements;
+    }
+    StatementTree onlyStatement = getOnlyElement(statements);
+    if (!onlyStatement.getKind().equals(BLOCK)) {
+      return statements;
+    }
+    return ((BlockTree) onlyStatement).getStatements();
   }
 
   /** Transforms code for this case into the code under an expression switch. */
@@ -860,9 +877,9 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
 
     int lhsStart = getStartPosition(caseTree);
     int lhsEnd =
-        caseTree.getStatements().isEmpty()
+        getStatements(caseTree).isEmpty()
             ? state.getEndPosition(caseTree)
-            : getStartPosition(caseTree.getStatements().get(0));
+            : getStartPosition(getStatements(caseTree).get(0));
 
     // Accumulate comments into transformed block
     state.getOffsetTokens(lhsStart, lhsEnd).stream()
