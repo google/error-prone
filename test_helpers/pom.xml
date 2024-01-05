@@ -86,7 +86,7 @@
       <!-- Apache 2.0 -->
       <groupId>com.google.googlejavaformat</groupId>
       <artifactId>google-java-format</artifactId>
-      <version>1.13.0</version>
+      <version>1.19.1</version>
     </dependency>
     <dependency>
       <!-- Eclipse Public License 1.0 -->
@@ -130,7 +130,7 @@
       <!-- Apache 2.0 -->
       <groupId>com.google.jimfs</groupId>
       <artifactId>jimfs</artifactId>
-      <version>1.2</version>
+      <version>1.3.0</version>
     </dependency>
     <dependency>
       <!-- Apache 2.0 -->
