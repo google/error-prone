@@ -39,7 +39,7 @@ import com.sun.source.tree.MethodInvocationTree;
             + "methods for positive numbers.",
     severity = WARNING,
     altNames = "MathAbsoluteRandom")
-public final class MathAbsoluteNegative extends BugChecker implements MethodInvocationTreeMatcher {
+public class MathAbsoluteNegative extends BugChecker implements MethodInvocationTreeMatcher {
   private static final Matcher<MethodInvocationTree> POSSIBLY_NEGATIVE_ABS_VAL =
       allOf(
           staticMethod().onClass("java.lang.Math").named("abs"),
