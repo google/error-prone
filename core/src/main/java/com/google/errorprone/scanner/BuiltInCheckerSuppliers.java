@@ -462,6 +462,7 @@ import com.google.errorprone.bugpatterns.collectionincompatibletype.CollectionIn
 import com.google.errorprone.bugpatterns.collectionincompatibletype.CollectionUndefinedEquality;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.CompatibleWithMisuse;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.IncompatibleArgumentType;
+import com.google.errorprone.bugpatterns.collectionincompatibletype.JUnitIncompatibleType;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.TruthIncompatibleType;
 import com.google.errorprone.bugpatterns.flogger.FloggerArgumentToString;
 import com.google.errorprone.bugpatterns.flogger.FloggerFormatString;
@@ -938,6 +939,7 @@ public class BuiltInCheckerSuppliers {
           JUnit3FloatingPointComparisonWithoutDelta.class,
           JUnit4ClassUsedInJUnit3.class,
           JUnitAmbiguousTestClass.class,
+          JUnitIncompatibleType.class,
           JavaDurationGetSecondsGetNano.class,
           JavaDurationWithNanos.class,
           JavaDurationWithSeconds.class,
