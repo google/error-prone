@@ -405,7 +405,7 @@ public class UnusedVariable extends BugChecker implements CompilationUnitTreeMat
     return firstNonNull(path.getParentPath().getLeaf().accept(new Visitor(), null), false);
   }
 
-  private static ImmutableList<SuggestedFix> buildUnusedVarFixes(
+  protected ImmutableList<SuggestedFix> buildUnusedVarFixes(
       Symbol varSymbol, List<TreePath> usagePaths, VisitorState state) {
     // Don't suggest a fix for fields annotated @Inject: we can warn on them, but they *could* be
     // used outside the class.
