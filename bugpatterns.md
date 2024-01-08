@@ -877,6 +877,9 @@ Some JUnit4 construct cannot be used in a JUnit3 context. Convert your class to 
 __[JUnitAmbiguousTestClass](bugpattern/JUnitAmbiguousTestClass)__<br>
 Test class inherits from JUnit 3&#39;s TestCase but has JUnit 4 @Test or @RunWith annotations.
 
+__[JUnitIncompatibleType](bugpattern/JUnitIncompatibleType)__<br>
+The types passed to this assertion are incompatible.
+
 __[JavaDurationGetSecondsGetNano](bugpattern/JavaDurationGetSecondsGetNano)__<br>
 duration.getNano() only accesses the underlying nanosecond adjustment from the whole second.
 
