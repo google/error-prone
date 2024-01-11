@@ -29,6 +29,7 @@ import static com.google.errorprone.util.ASTHelpers.isAbstract;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.google.errorprone.util.ASTHelpers.shouldKeep;
+import static com.google.errorprone.util.ASTHelpers.streamSuperMethods;
 import static com.google.errorprone.util.ASTHelpers.stripParentheses;
 
 import com.google.common.collect.ImmutableSet;
@@ -111,6 +112,11 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
   @Override
   public Description matchMethod(MethodTree methodTree, VisitorState state) {
     MethodSymbol methodSymbol = getSymbol(methodTree);
+    // Don't fire on overrides of methods within anonymous classes.
+    if (streamSuperMethods(methodSymbol, state.getTypes()).findFirst().isPresent()
+        && methodSymbol.owner.isAnonymous()) {
+      return Description.NO_MATCH;
+    }
 
     // If the method has an exempting annotation, then bail out.
     if (exemptingMethodAnnotations.stream()

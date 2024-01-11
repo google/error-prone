@@ -904,4 +904,24 @@ public class CanIgnoreReturnValueSuggesterTest {
         .expectUnchanged()
         .doTest();
   }
+
+  @Test
+  public void anonymous() {
+    helper
+        .addInputLines(
+            "Test.java",
+            "import java.util.function.Function;",
+            "public final class Test {",
+            "  public void setName() {",
+            "    var o = new Function<Function, Function>() {",
+            "      @Override",
+            "      public Function apply(Function in) {",
+            "        return in;",
+            "      }",
+            "    };",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
 }
