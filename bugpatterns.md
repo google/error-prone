@@ -6,9 +6,7 @@ layout: bugpatterns
 
 # Bug patterns
 
-This list is auto-generated from our sources. Each bug pattern includes code
-examples of both positive and negative cases; these examples are used in our
-regression test suite.
+This list is auto-generated from our sources.
 
 Patterns which are marked __Experimental__ will not be evaluated against your
 code, unless you specifically configure Error Prone. The default checks are
