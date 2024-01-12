@@ -33,6 +33,7 @@ import com.google.common.collect.SetMultimap;
 import com.google.common.collect.Table;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -40,6 +41,7 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.ImportTree;
 import com.sun.source.tree.MemberSelectTree;
@@ -60,6 +62,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
+import javax.inject.Inject;
 import javax.lang.model.element.Name;
 
 /** Flags uses of fully qualified names which are not ambiguous if imported. */
@@ -70,6 +73,25 @@ public final class UnnecessarilyFullyQualified extends BugChecker
     implements CompilationUnitTreeMatcher {
 
   private static final ImmutableSet<String> EXEMPTED_NAMES = ImmutableSet.of("Annotation");
+
+  /**
+   * Exempted types that fully qualified name usages are acceptable for their nested types when
+   * importing the enclosing type is ambiguous.
+   *
+   * <p>Some types are meant to provide a namespace; therefore, imports for their nested types can
+   * be confusing.
+   *
+   * <p>For instance, unlike its name suggests, {@code org.immutables.value.Value.Immutable} is used
+   * to generate immutable value types, and its import can be misleading. So, importing {@code
+   * org.immutables.value.Value} and using {@code @Value.Immutable} is more favorable than importing
+   * {@code org.immutables.value.Value.Immutable} and using {@code @Immutable}.
+   */
+  private final ImmutableSet<String> exemptedEnclosingTypes;
+
+  @Inject
+  UnnecessarilyFullyQualified(ErrorProneFlags errorProneFlags) {
+    this.exemptedEnclosingTypes = errorProneFlags.getSetOrEmpty("BadImport:BadEnclosingTypes");
+  }
 
   @Override
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
@@ -138,11 +160,8 @@ public final class UnnecessarilyFullyQualified extends BugChecker
         if (!isFullyQualified(tree)) {
           return;
         }
-        if (BadImport.BAD_NESTED_CLASSES.contains(tree.getIdentifier().toString())) {
-          if (tree.getExpression() instanceof MemberSelectTree
-              && getSymbol(tree.getExpression()) instanceof ClassSymbol) {
-            handle(new TreePath(path, tree.getExpression()));
-          }
+        if (isBadNestedClass(tree) || isExemptedEnclosingType(tree)) {
+          handle(new TreePath(path, tree.getExpression()));
           return;
         }
         Symbol symbol = getSymbol(tree);
@@ -158,6 +177,23 @@ public final class UnnecessarilyFullyQualified extends BugChecker
           table.put(tree.getIdentifier(), symbol.type.tsym, treePaths);
         }
         treePaths.add(path);
+      }
+
+      private boolean isBadNestedClass(MemberSelectTree tree) {
+        return BadImport.BAD_NESTED_CLASSES.contains(tree.getIdentifier().toString());
+      }
+
+      private boolean isExemptedEnclosingType(MemberSelectTree tree) {
+        ExpressionTree expression = tree.getExpression();
+        if (!(expression instanceof MemberSelectTree)) {
+          return false;
+        }
+        Symbol symbol = getSymbol(expression);
+        if (!(symbol instanceof ClassSymbol)) {
+          return false;
+        }
+
+        return exemptedEnclosingTypes.contains(symbol.getQualifiedName().toString());
       }
 
       private boolean isFullyQualified(MemberSelectTree tree) {

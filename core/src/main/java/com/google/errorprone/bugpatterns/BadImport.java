@@ -23,6 +23,7 @@ import static com.google.errorprone.util.ASTHelpers.isSubtype;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ImportTreeMatcher;
 import com.google.errorprone.bugpatterns.StaticImports.StaticImportInfo;
@@ -47,6 +48,7 @@ import java.lang.annotation.Target;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import javax.inject.Inject;
 import javax.lang.model.element.Name;
 
 /**
@@ -98,6 +100,26 @@ public class BadImport extends BugChecker implements ImportTreeMatcher {
       annotations(AT_LEAST_ONE, (t, state) -> isTypeAnnotation(t));
 
   private static final String MESSAGE_LITE = "com.google.protobuf.MessageLite";
+
+  /**
+   * Enclosing types that their nested type imports are vague.
+   *
+   * <p>Some types are meant to provide a namespace; therefore, imports for their nested types can
+   * be confusing.
+   *
+   * <p>For instance, unlike its name suggests, {@code org.immutables.value.Value.Immutable} is used
+   * to generate immutable value types, and its import can be misleading. So, importing {@code
+   * org.immutables.value.Value} and using {@code @Value.Immutable} is more favorable than importing
+   * {@code org.immutables.value.Value.Immutable} and using {@code @Immutable}.
+   *
+   * <p>Note that this does not disallow import an enclosing type but its nested types instead.
+   */
+  private final ImmutableSet<String> badEnclosingTypes;
+
+  @Inject
+  BadImport(ErrorProneFlags errorProneFlags) {
+    this.badEnclosingTypes = errorProneFlags.getSetOrEmpty("BadImport:BadEnclosingTypes");
+  }
 
   @Override
   public Description matchImport(ImportTree tree, VisitorState state) {
@@ -168,9 +190,11 @@ public class BadImport extends BugChecker implements ImportTreeMatcher {
         TreePath.getPath(compilationUnit, ((ClassTree) tree).getMembers().get(0)));
   }
 
-  private static boolean isAcceptableImport(Symbol symbol, Set<String> badNames) {
+  private boolean isAcceptableImport(Symbol symbol, Set<String> badNames) {
+    Name ownerName = symbol.owner.getQualifiedName();
     Name simpleName = symbol.getSimpleName();
-    return badNames.stream().noneMatch(simpleName::contentEquals);
+    return badEnclosingTypes.stream().noneMatch(ownerName::contentEquals)
+        && badNames.stream().noneMatch(simpleName::contentEquals);
   }
 
   private Description buildDescription(

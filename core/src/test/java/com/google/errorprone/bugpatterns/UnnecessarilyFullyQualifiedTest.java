@@ -224,4 +224,95 @@ public final class UnnecessarilyFullyQualifiedTest {
             "package b;")
         .doTest();
   }
+
+  @Test
+  public void staticNestedClass() {
+    helper
+        .addInputLines(
+            "test/EnclosingType.java",
+            "package test;",
+            "",
+            "public final class EnclosingType {",
+            "  public static final class StaticNestedClass {}",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "Test.java",
+            "interface Test {",
+            "  test.EnclosingType.StaticNestedClass method();",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import test.EnclosingType.StaticNestedClass;",
+            "interface Test {",
+            "  StaticNestedClass method();",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void exemptedEnclosingTypes() {
+    helper
+        .setArgs("-XepOpt:BadImport:BadEnclosingTypes=org.immutables.value.Value")
+        .addInputLines(
+            "org/immutables/value/Value.java",
+            "package org.immutables.value;",
+            "",
+            "public @interface Value {",
+            "  @interface Immutable {}",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "Test.java",
+            "import org.immutables.value.Value.Immutable;",
+            "",
+            "class Test {",
+            "  @org.immutables.value.Value.Immutable",
+            "  abstract class AbstractType {}",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import org.immutables.value.Value;",
+            "import org.immutables.value.Value.Immutable;",
+            "",
+            "class Test {",
+            "  @Value.Immutable",
+            "  abstract class AbstractType {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void exemptedEnclosingTypes_importWouldBeAmbiguous() {
+    helper
+        .setArgs("-XepOpt:BadImport:BadEnclosingTypes=org.immutables.value.Value")
+        .addInputLines(
+            "org/immutables/value/Value.java",
+            "package org.immutables.value;",
+            "",
+            "public @interface Value {",
+            "  @interface Immutable {}",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "annotation/Value.java",
+            "package annotation;",
+            "",
+            "public @interface Value {",
+            "  String value();",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "Test.java",
+            "import annotation.Value;",
+            "",
+            "final class Test {",
+            "  Test(@Value(\"test\") String value) {}",
+            "",
+            "  @org.immutables.value.Value.Immutable",
+            "  abstract class AbstractType {}",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
 }
