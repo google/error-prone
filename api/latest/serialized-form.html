@@ -536,6 +536,30 @@ loadScripts(document, 'script');</script>
 <section class="serialized-class-details" id="com.google.errorprone.bugpatterns.BadImport">
 <h3>Class&nbsp;<a href="com/google/errorprone/bugpatterns/BadImport.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.BadImport</a></h3>
 <div class="type-signature">class BadImport extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements <a href="https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></div>
+<ul class="block-list">
+<li>
+<section class="detail">
+<h4>Serialized Fields</h4>
+<ul class="block-list">
+<li class="block-list">
+<h5>badEnclosingTypes</h5>
+<pre>com.google.common.collect.ImmutableSet&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt; badEnclosingTypes</pre>
+<div class="block">Enclosing types that their nested type imports are vague.
+
+ <p>Some types are meant to provide a namespace; therefore, imports for their nested types can
+ be confusing.
+
+ <p>For instance, unlike its name suggests, <code>org.immutables.value.Value.Immutable</code> is used
+ to generate immutable value types, and its import can be misleading. So, importing <code>
+ org.immutables.value.Value</code> and using <code>@Value.Immutable</code> is more favorable than importing
+ <code>org.immutables.value.Value.Immutable</code> and using <code>@Immutable</code>.
+
+ <p>Note that this does not disallow import an enclosing type but its nested types instead.</div>
+</li>
+</ul>
+</section>
+</li>
+</ul>
 </section>
 </li>
 <li>
@@ -2930,6 +2954,29 @@ loadScripts(document, 'script');</script>
 <section class="serialized-class-details" id="com.google.errorprone.bugpatterns.UnnecessarilyFullyQualified">
 <h3>Class&nbsp;<a href="com/google/errorprone/bugpatterns/UnnecessarilyFullyQualified.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.UnnecessarilyFullyQualified</a></h3>
 <div class="type-signature">class UnnecessarilyFullyQualified extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements <a href="https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></div>
+<ul class="block-list">
+<li>
+<section class="detail">
+<h4>Serialized Fields</h4>
+<ul class="block-list">
+<li class="block-list">
+<h5>exemptedEnclosingTypes</h5>
+<pre>com.google.common.collect.ImmutableSet&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt; exemptedEnclosingTypes</pre>
+<div class="block">Exempted types that fully qualified name usages are acceptable for their nested types when
+ importing the enclosing type is ambiguous.
+
+ <p>Some types are meant to provide a namespace; therefore, imports for their nested types can
+ be confusing.
+
+ <p>For instance, unlike its name suggests, <code>org.immutables.value.Value.Immutable</code> is used
+ to generate immutable value types, and its import can be misleading. So, importing <code>
+ org.immutables.value.Value</code> and using <code>@Value.Immutable</code> is more favorable than importing
+ <code>org.immutables.value.Value.Immutable</code> and using <code>@Immutable</code>.</div>
+</li>
+</ul>
+</section>
+</li>
+</ul>
 </section>
 </li>
 <li>
