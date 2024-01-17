@@ -24,16 +24,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Tests for {@link ProtoRedundantSet} bugpattern.
- *
- * @author ghm@google.com (Graeme Morgan)
- */
 @RunWith(JUnit4.class)
 @Ignore("b/130670719")
-public final class ProtoRedundantSetTest {
+public final class RedundantSetterCallTest {
   private final CompilationTestHelper compilationHelper =
-      CompilationTestHelper.newInstance(ProtoRedundantSet.class, getClass());
+      CompilationTestHelper.newInstance(RedundantSetterCall.class, getClass());
 
   @Test
   public void positiveCase() {
@@ -141,7 +136,7 @@ public final class ProtoRedundantSetTest {
 
   @Test
   public void fixes() {
-    BugCheckerRefactoringTestHelper.newInstance(ProtoRedundantSet.class, getClass())
+    BugCheckerRefactoringTestHelper.newInstance(RedundantSetterCall.class, getClass())
         .addInputLines(
             "ProtoRedundantSetPositiveCases.java",
             "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;",
@@ -198,5 +193,34 @@ public final class ProtoRedundantSetTest {
             "  }",
             "}")
         .doTest(TestMode.AST_MATCH);
+  }
+
+  @Test
+  public void autovalue() {
+    compilationHelper
+        .addSourceLines(
+            "Animal.java",
+            "import com.google.auto.value.AutoValue;",
+            "@AutoValue",
+            "abstract class Animal {",
+            "  abstract String name();",
+            "  static Builder builder() { return null; }",
+            "  @AutoValue.Builder",
+            "  abstract static class Builder {",
+            "    abstract Builder setName(String name);",
+            "    public Builder nonAbstractMethod(String foo) { return null; }",
+            "    abstract Animal build();",
+            "  }",
+            "}")
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void test() {",
+            "    // BUG: Diagnostic contains:",
+            "    Animal.builder().setName(\"foo\").setName(\"bar\").build();",
+            "    Animal.builder().nonAbstractMethod(\"foo\").nonAbstractMethod(\"bar\").build();",
+            "  }",
+            "}")
+        .doTest();
   }
 }
