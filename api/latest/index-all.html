@@ -8856,13 +8856,13 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/ProtocolBufferOrdinal.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethodInvocation(MethodInvocationTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ProtocolBufferOrdinal.html" title="class in com.google.errorprone.bugpatterns">ProtocolBufferOrdinal</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/google/errorprone/bugpatterns/ProtoRedundantSet.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethodInvocation(MethodInvocationTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ProtoRedundantSet.html" title="class in com.google.errorprone.bugpatterns">ProtoRedundantSet</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/ProtoTruthMixedDescriptors.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethodInvocation(MethodInvocationTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ProtoTruthMixedDescriptors.html" title="class in com.google.errorprone.bugpatterns">ProtoTruthMixedDescriptors</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/RandomCast.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethodInvocation(MethodInvocationTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/RandomCast.html" title="class in com.google.errorprone.bugpatterns">RandomCast</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/ReachabilityFenceUsage.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethodInvocation(MethodInvocationTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ReachabilityFenceUsage.html" title="class in com.google.errorprone.bugpatterns">ReachabilityFenceUsage</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/RedundantSetterCall.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethodInvocation(MethodInvocationTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/RedundantSetterCall.html" title="class in com.google.errorprone.bugpatterns">RedundantSetterCall</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/RestrictedApiChecker.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethodInvocation(MethodInvocationTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/RestrictedApiChecker.html" title="class in com.google.errorprone.bugpatterns">RestrictedApiChecker</a></dt>
 <dd>&nbsp;</dd>
@@ -11213,12 +11213,6 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/time/ProtoDurationGetSecondsGetNano.html#%3Cinit%3E()" class="member-name-link">ProtoDurationGetSecondsGetNano()</a> - Constructor for class com.google.errorprone.bugpatterns.time.<a href="com/google/errorprone/bugpatterns/time/ProtoDurationGetSecondsGetNano.html" title="class in com.google.errorprone.bugpatterns.time">ProtoDurationGetSecondsGetNano</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/google/errorprone/bugpatterns/ProtoRedundantSet.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">ProtoRedundantSet</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
-<dd>
-<div class="block">Checks that protocol buffers built with chained builders don't set the same field twice.</div>
-</dd>
-<dt><a href="com/google/errorprone/bugpatterns/ProtoRedundantSet.html#%3Cinit%3E()" class="member-name-link">ProtoRedundantSet()</a> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ProtoRedundantSet.html" title="class in com.google.errorprone.bugpatterns">ProtoRedundantSet</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ProtoRules.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ProtoRules</a> - Class in <a href="com/google/errorprone/bugpatterns/checkreturnvalue/package-summary.html">com.google.errorprone.bugpatterns.checkreturnvalue</a></dt>
 <dd>
 <div class="block">Rules for methods on proto messages and builders.</div>
@@ -11410,6 +11404,12 @@ loadScripts(document, 'script');</script>
 <div class="block">Removes overrides which purely pass through to the method in the super class.</div>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/RedundantOverride.html#%3Cinit%3E()" class="member-name-link">RedundantOverride()</a> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/RedundantOverride.html" title="class in com.google.errorprone.bugpatterns">RedundantOverride</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/RedundantSetterCall.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">RedundantSetterCall</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>
+<div class="block">A BugPattern; see the summary.</div>
+</dd>
+<dt><a href="com/google/errorprone/bugpatterns/RedundantSetterCall.html#%3Cinit%3E()" class="member-name-link">RedundantSetterCall()</a> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/RedundantSetterCall.html" title="class in com.google.errorprone.bugpatterns">RedundantSetterCall</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/RedundantThrows.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">RedundantThrows</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>

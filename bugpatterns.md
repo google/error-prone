@@ -1130,9 +1130,6 @@ Protected members in final classes can be package-private
 __[ProtoDurationGetSecondsGetNano](bugpattern/ProtoDurationGetSecondsGetNano)__<br>
 getNanos() only accesses the underlying nanosecond-adjustment of the duration.
 
-__[ProtoRedundantSet](bugpattern/ProtoRedundantSet)__<br>
-A field on a protocol buffer was set twice in the same chained expression.
-
 __[ProtoTimestampGetSecondsGetNano](bugpattern/ProtoTimestampGetSecondsGetNano)__<br>
 getNanos() only accesses the underlying nanosecond-adjustment of the instant.
 
@@ -1141,6 +1138,9 @@ Qualifiers/Scope annotations on @Inject methods don&#39;t have any effect. Move 
 
 __[ReachabilityFenceUsage](bugpattern/ReachabilityFenceUsage)__<br>
 reachabilityFence should always be called inside a finally block
+
+__[RedundantSetterCall](bugpattern/RedundantSetterCall)__<br>
+A field was set twice in the same chained expression.
 
 __[ReferenceEquality](bugpattern/ReferenceEquality)__<br>
 Comparison using reference equality instead of value equality
