@@ -227,4 +227,35 @@ public final class NonFinalStaticFieldTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void beforeAll() {
+    compilationTestHelper
+        .addSourceLines(
+            "org/junit/jupiter/api/BeforeAll.java",
+            "package org.junit.jupiter.api;",
+            "",
+            "import java.lang.annotation.Documented;",
+            "import java.lang.annotation.ElementType;",
+            "import java.lang.annotation.Retention;",
+            "import java.lang.annotation.RetentionPolicy;",
+            "import java.lang.annotation.Target;",
+            "",
+            "@Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })",
+            "@Retention(RetentionPolicy.RUNTIME)",
+            "@Documented",
+            "public @interface BeforeAll {",
+            "}")
+        .addSourceLines(
+            "Test.java", //
+            "import org.junit.jupiter.api.BeforeAll;",
+            "public class Test {",
+            "  private static String foo;",
+            "  @BeforeAll",
+            "  public static void setup() {",
+            "    foo = \"\";",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

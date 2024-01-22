@@ -56,6 +56,9 @@ public final class NonFinalStaticField extends BugChecker implements VariableTre
   private static final ImmutableSet<String> ANNOTATIONS_TO_AVOID =
       ImmutableSet.of("Captor", "Inject", "Mock", "TestParameter");
 
+  private static final ImmutableSet<String> BEFORE_ALL_METHOD_ANNOTATIONS =
+      ImmutableSet.of("org.junit.BeforeClass", "org.junit.jupiter.api.BeforeAll");
+
   @Override
   public Description matchVariable(VariableTree tree, VisitorState state) {
     var symbol = getSymbol(tree);
@@ -185,7 +188,9 @@ public final class NonFinalStaticField extends BugChecker implements VariableTre
           public Void visitMethod(MethodTree tree, Void unused) {
             boolean prev = inBeforeMethod;
             try {
-              inBeforeMethod |= ASTHelpers.hasAnnotation(tree, "org.junit.BeforeClass", state);
+              inBeforeMethod |=
+                  BEFORE_ALL_METHOD_ANNOTATIONS.stream()
+                      .anyMatch(annotation -> ASTHelpers.hasAnnotation(tree, annotation, state));
               return super.visitMethod(tree, null);
             } finally {
               inBeforeMethod = prev;
