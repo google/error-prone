@@ -1,6 +1,7 @@
---------------------------------------------------------------------------------
-
+---
 title: Command-line flags
+layout: documentation
+---
 
 ## layout: documentation
 
