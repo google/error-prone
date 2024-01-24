@@ -1,7 +1,8 @@
----
+--------------------------------------------------------------------------------
+
 title: Command-line flags
-layout: documentation
----
+
+## layout: documentation
 
 ### Severity
 
@@ -152,3 +153,6 @@ the second `<arg>` element above can also be formatted as follows on JDK 9+, but
   -Xep:GuardedBy:OFF
 </arg>
 ```
+
+NOTE: using multi-line `<arg>`s does not work on Windows when `<fork>` is
+enabled, see https://github.com/google/error-prone/issues/4256
