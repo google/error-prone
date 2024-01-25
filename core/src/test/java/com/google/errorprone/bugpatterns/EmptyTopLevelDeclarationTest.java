@@ -43,4 +43,17 @@ public class EmptyTopLevelDeclarationTest {
             "class One {};")
         .doTest();
   }
+
+  // https://github.com/google/error-prone/issues/4245
+  @Test
+  public void noImports() {
+    compilationHelper
+        .addSourceLines(
+            "ReproFile.java", //
+            "package errorpronecrash;",
+            "// BUG: Diagnostic contains: Did you mean to remove this line?",
+            ";",
+            "public class ReproFile {}")
+        .doTest();
+  }
 }

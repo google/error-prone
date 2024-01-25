@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
@@ -44,7 +45,16 @@ public final class EmptyTopLevelDeclaration extends BugChecker
       return NO_MATCH;
     }
     SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
-    toDelete.forEach(fixBuilder::delete);
+    toDelete.forEach(
+        x -> {
+          int start = getStartPosition(x);
+          int end = state.getEndPosition(x);
+          if (end <= start) {
+            // work around https://bugs.openjdk.org/browse/JDK-8324736
+            end = start + 1;
+          }
+          fixBuilder.replace(start, end, "");
+        });
     return describeMatch(toDelete.get(0), fixBuilder.build());
   }
 }
