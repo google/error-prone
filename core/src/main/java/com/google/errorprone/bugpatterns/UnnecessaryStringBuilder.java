@@ -117,6 +117,9 @@ public class UnnecessaryStringBuilder extends BugChecker implements NewClassTree
       }
     }
     ASTHelpers.TargetType target = ASTHelpers.targetType(state.withPath(path));
+    if (target == null) {
+      return NO_MATCH;
+    }
     if (!isUsedAsStringBuilder(state, target)) {
       return describeMatch(
           path.getLeaf(), SuggestedFix.replace(path.getLeaf(), replacement(state, parts)));
