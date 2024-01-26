@@ -91,6 +91,23 @@ public final class BadImportTest {
   }
 
   @Test
+  public void positive_truth8AssertThatTrueFlag() {
+    compilationTestHelper
+        .setArgs("-XepOpt:BadImport:Truth8=true")
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.truth.Truth8.assertThat;",
+            "import java.util.stream.IntStream;",
+            "class Test {",
+            "  void x(IntStream s) {",
+            "    // BUG: Diagnostic contains: usually recommend",
+            "    assertThat(s).isEmpty();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void positive_static_locallyDefinedMethod() {
     refactoringTestHelper
         .addInputLines(
@@ -270,6 +287,36 @@ public final class BadImportTest {
             "  abstract SomeClass.@TypeUseAnnotation Builder method2();",
             "  abstract void method3(SomeClass.@TypeUseAnnotation Builder builder);",
             "  abstract void method4(List<SomeClass.@TypeUseAnnotation Builder> builder);",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void negative_truth8AssertThatFalseFlag() {
+    compilationTestHelper
+        .setArgs("-XepOpt:BadImport:Truth8=false")
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.truth.Truth8.assertThat;",
+            "import java.util.stream.IntStream;",
+            "class Test {",
+            "  void x(IntStream s) {",
+            "    assertThat(s).isEmpty();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void negative_otherAssertThat() {
+    compilationTestHelper
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.truth.Truth.assertThat;",
+            "class Test {",
+            "  void x(Iterable<?> i) {",
+            "    assertThat(i).isEmpty();",
+            "  }",
             "}")
         .doTest();
   }

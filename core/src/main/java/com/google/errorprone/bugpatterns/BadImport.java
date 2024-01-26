@@ -116,15 +116,19 @@ public class BadImport extends BugChecker implements ImportTreeMatcher {
    */
   private final ImmutableSet<String> badEnclosingTypes;
 
+  private final boolean warnAboutTruth8AssertThat;
+
   @Inject
   BadImport(ErrorProneFlags errorProneFlags) {
     this.badEnclosingTypes = errorProneFlags.getSetOrEmpty("BadImport:BadEnclosingTypes");
+    this.warnAboutTruth8AssertThat = errorProneFlags.getBoolean("BadImport:Truth8").orElse(false);
   }
 
   @Override
   public Description matchImport(ImportTree tree, VisitorState state) {
     Symbol symbol;
     ImmutableSet<Symbol> symbols;
+    boolean useTruth8Message = false;
 
     if (!tree.isStatic()) {
       symbol = getSymbol(tree.getQualifiedIdentifier());
@@ -143,7 +147,10 @@ public class BadImport extends BugChecker implements ImportTreeMatcher {
 
       // Pick an arbitrary symbol. They've all got the same simple name, so it doesn't matter which.
       symbol = symbols.iterator().next();
-      if (isAcceptableImport(symbol, BAD_STATIC_IDENTIFIERS)) {
+      if (warnAboutTruth8AssertThat && symbol.owner.name.contentEquals("Truth8")) {
+        useTruth8Message = true;
+        // Now we fall through, which treats the import as an unacceptable.
+      } else if (isAcceptableImport(symbol, BAD_STATIC_IDENTIFIERS)) {
         return Description.NO_MATCH;
       }
     }
@@ -169,7 +176,19 @@ public class BadImport extends BugChecker implements ImportTreeMatcher {
         SuggestedFixes.qualifyType(getCheckState(state), builder, symbol.getEnclosingElement())
             + ".";
 
-    return buildDescription(builder, symbols, replacement, state);
+    String message =
+        useTruth8Message
+            ? "Avoid static import for Truth8.assertThat. While we usually recommend static import"
+                + " for assertThat methods, static imports of Truth8.assertThat prevent us from"
+                + " copying those methods to the main Truth class."
+            : String.format(
+                "Importing nested classes/static methods/static fields with commonly-used names can"
+                    + " make code harder to read, because it may not be clear from the context"
+                    + " exactly which type is being referred to. Qualifying the name with that of"
+                    + " the containing class can make the code clearer. Here we recommend using"
+                    + " qualified class: %s",
+                replacement);
+    return buildDescription(builder, symbols, replacement, state, message);
   }
 
   private static VisitorState getCheckState(VisitorState state) {
@@ -201,7 +220,8 @@ public class BadImport extends BugChecker implements ImportTreeMatcher {
       SuggestedFix.Builder builder,
       Set<Symbol> symbols,
       String enclosingReplacement,
-      VisitorState state) {
+      VisitorState state,
+      String message) {
     CompilationUnitTree compilationUnit = state.getPath().getCompilationUnit();
     TreePath path = TreePath.getPath(compilationUnit, compilationUnit);
     IdentifierTree firstFound =
@@ -263,17 +283,7 @@ public class BadImport extends BugChecker implements ImportTreeMatcher {
       // import fix.
       return Description.NO_MATCH;
     }
-    return buildDescription(firstFound)
-        .setMessage(
-            String.format(
-                "Importing nested classes/static methods/static fields with commonly-used names can"
-                    + " make code harder to read, because it may not be clear from the context"
-                    + " exactly which type is being referred to. Qualifying the name with that of"
-                    + " the containing class can make the code clearer. Here we recommend using"
-                    + " qualified class: %s",
-                enclosingReplacement))
-        .addFix(builder.build())
-        .build();
+    return buildDescription(firstFound).setMessage(message).addFix(builder.build()).build();
   }
 
   private static boolean isTypeAnnotation(AnnotationTree t) {
