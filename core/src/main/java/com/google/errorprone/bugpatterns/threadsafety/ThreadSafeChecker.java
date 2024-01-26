@@ -84,15 +84,17 @@ public class ThreadSafeChecker extends BugChecker
   // check instantiations of `@ThreadSafe`s in method references
   @Override
   public Description matchMemberReference(MemberReferenceTree tree, VisitorState state) {
-    return checkInvocation(
+    checkInvocation(
         tree, ((JCMemberReference) tree).referentType, state, ASTHelpers.getSymbol(tree));
+    return NO_MATCH;
   }
 
   // check instantiations of `@ThreadSafe`s in method invocations
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    return checkInvocation(
+    checkInvocation(
         tree, ASTHelpers.getType(tree.getMethodSelect()), state, ASTHelpers.getSymbol(tree));
+    return NO_MATCH;
   }
 
   @Override
@@ -112,14 +114,12 @@ public class ThreadSafeChecker extends BugChecker
     return NO_MATCH;
   }
 
-  private Description checkInvocation(
-      Tree tree, Type methodType, VisitorState state, Symbol symbol) {
+  private void checkInvocation(Tree tree, Type methodType, VisitorState state, Symbol symbol) {
     ThreadSafeAnalysis analysis = new ThreadSafeAnalysis(this, state, wellKnownThreadSafety);
     Violation info = analysis.checkInvocation(methodType, symbol);
     if (info.isPresent()) {
       state.reportMatch(buildDescription(tree).setMessage(info.message()).build());
     }
-    return NO_MATCH;
   }
 
   @Override
