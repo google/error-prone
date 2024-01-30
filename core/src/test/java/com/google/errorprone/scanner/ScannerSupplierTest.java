@@ -18,7 +18,6 @@ package com.google.errorprone.scanner;
 
 import static com.google.common.truth.Truth.assertAbout;
 import static com.google.common.truth.Truth.assertThat;
-import static com.google.common.truth.Truth8.assertThat;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.scanner.BuiltInCheckerSuppliers.getSuppliers;
 import static org.junit.Assert.assertThrows;
@@ -31,6 +30,7 @@ import com.google.common.jimfs.Jimfs;
 import com.google.common.truth.FailureMetadata;
 import com.google.common.truth.MapSubject;
 import com.google.common.truth.Subject;
+import com.google.common.truth.Truth8;
 import com.google.errorprone.BugCheckerInfo;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
@@ -149,7 +149,7 @@ public class ScannerSupplierTest {
     assertThat(class1).isNotEqualTo(class2);
     ScannerSupplier ss = ss1.plus(ss2);
     assertThat(ss.getAllChecks()).hasSize(2);
-    assertThat(ss.getAllChecks().values().stream().map(c -> c.checkerClass()))
+    Truth8.assertThat(ss.getAllChecks().values().stream().map(c -> c.checkerClass()))
         .containsExactly(ArrayEquals.class, class1);
     assertScanner(ss).hasEnabledChecks(class1);
   }

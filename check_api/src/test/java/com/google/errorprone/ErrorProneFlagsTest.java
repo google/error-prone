@@ -17,11 +17,11 @@
 package com.google.errorprone;
 
 import static com.google.common.truth.Truth.assertThat;
-import static com.google.common.truth.Truth8.assertThat;
 import static org.junit.Assert.assertThrows;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.truth.Truth8;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -38,10 +38,10 @@ public final class ErrorProneFlagsTest {
             .parseFlag("-XepOpt:Other:Arg:More:Parts=Long")
             .parseFlag("-XepOpt:EmptyArg=")
             .build();
-    assertThat(flags.get("SomeArg")).hasValue("SomeValue");
-    assertThat(flags.get("Other:Arg:More:Parts")).hasValue("Long");
-    assertThat(flags.get("EmptyArg")).hasValue("");
-    assertThat(flags.get("absent")).isEmpty();
+    Truth8.assertThat(flags.get("SomeArg")).hasValue("SomeValue");
+    Truth8.assertThat(flags.get("Other:Arg:More:Parts")).hasValue("Long");
+    Truth8.assertThat(flags.get("EmptyArg")).hasValue("");
+    Truth8.assertThat(flags.get("absent")).isEmpty();
   }
 
   @Test
@@ -54,17 +54,17 @@ public final class ErrorProneFlagsTest {
             .parseFlag("-XepOpt:Arg3=yes")
             .parseFlag("-XepOpt:Arg4")
             .build();
-    assertThat(flags.getBoolean("Arg1")).hasValue(true);
-    assertThat(flags.getBoolean("Arg2")).hasValue(false);
+    Truth8.assertThat(flags.getBoolean("Arg1")).hasValue(true);
+    Truth8.assertThat(flags.getBoolean("Arg2")).hasValue(false);
     assertThrows(IllegalArgumentException.class, () -> flags.getBoolean("Arg3"));
-    assertThat(flags.getBoolean("Arg4")).hasValue(true);
-    assertThat(flags.getBoolean("absent")).isEmpty();
+    Truth8.assertThat(flags.getBoolean("Arg4")).hasValue(true);
+    Truth8.assertThat(flags.getBoolean("absent")).isEmpty();
   }
 
   @Test
   public void parseAndGetImplicitTrue() {
     ErrorProneFlags flags = ErrorProneFlags.builder().parseFlag("-XepOpt:SomeArg").build();
-    assertThat(flags.getBoolean("SomeArg")).hasValue(true);
+    Truth8.assertThat(flags.getBoolean("SomeArg")).hasValue(true);
   }
 
   @Test
@@ -75,10 +75,10 @@ public final class ErrorProneFlagsTest {
             .parseFlag("-XepOpt:Arg2=20.6")
             .parseFlag("-XepOpt:Arg3=thirty")
             .build();
-    assertThat(flags.getInteger("Arg1")).hasValue(10);
+    Truth8.assertThat(flags.getInteger("Arg1")).hasValue(10);
     assertThrows(NumberFormatException.class, () -> flags.getInteger("Arg2"));
     assertThrows(NumberFormatException.class, () -> flags.getInteger("Arg3"));
-    assertThat(flags.getInteger("absent")).isEmpty();
+    Truth8.assertThat(flags.getInteger("absent")).isEmpty();
   }
 
   @Test
@@ -145,13 +145,13 @@ public final class ErrorProneFlagsTest {
             .parseFlag("-XepOpt:CaseInsensitiveColours=yellow,green")
             .parseFlag("-XepOpt:EmptyColours=")
             .build();
-    assertThat(flags.getEnum("Colour", Colour.class)).hasValue(Colour.RED);
-    assertThat(flags.getEnumSet("Colours", Colour.class))
+    Truth8.assertThat(flags.getEnum("Colour", Colour.class)).hasValue(Colour.RED);
+    Truth8.assertThat(flags.getEnumSet("Colours", Colour.class))
         .hasValue(ImmutableSet.of(Colour.YELLOW, Colour.GREEN));
-    assertThat(flags.getEnumSet("CaseInsensitiveColours", Colour.class))
+    Truth8.assertThat(flags.getEnumSet("CaseInsensitiveColours", Colour.class))
         .hasValue(ImmutableSet.of(Colour.YELLOW, Colour.GREEN));
-    assertThat(flags.getEnumSet("EmptyColours", Colour.class)).hasValue(ImmutableSet.of());
-    assertThat(flags.getEnumSet("NoSuchColours", Colour.class)).isEmpty();
+    Truth8.assertThat(flags.getEnumSet("EmptyColours", Colour.class)).hasValue(ImmutableSet.of());
+    Truth8.assertThat(flags.getEnumSet("NoSuchColours", Colour.class)).isEmpty();
   }
 
   @Test
