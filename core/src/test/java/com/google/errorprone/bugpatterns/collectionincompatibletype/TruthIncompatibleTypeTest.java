@@ -458,7 +458,7 @@ public class TruthIncompatibleTypeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.truth.Truth8.assertThat;",
+            "import static com.google.common.truth.Truth.assertThat;",
             "import com.google.common.collect.Multimap;",
             "import java.util.stream.Stream;",
             "public class Test {",
