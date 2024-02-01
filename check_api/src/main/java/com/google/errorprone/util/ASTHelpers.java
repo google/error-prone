@@ -267,6 +267,7 @@ public class ASTHelpers {
       return ASTHelpers.getSymbol((NewClassTree) tree);
     }
     if (tree instanceof MemberReferenceTree) {
+      // TODO: b/285157761 - Delegate to the MemberReferenceTree overload.
       return ((JCMemberReference) tree).sym;
     }
     if (tree instanceof JCAnnotatedType) {
@@ -319,7 +320,7 @@ public class ASTHelpers {
       // Defensive. Would only occur if there are errors in the AST.
       throw new IllegalArgumentException(tree.toString());
     }
-    return (MethodSymbol) sym;
+    return (MethodSymbol) sym.baseSymbol();
   }
 
   /** Gets the symbol for a member reference. */
@@ -329,7 +330,7 @@ public class ASTHelpers {
       // Defensive. Would only occur if there are errors in the AST.
       throw new IllegalArgumentException(tree.toString());
     }
-    return (MethodSymbol) sym;
+    return (MethodSymbol) sym.baseSymbol();
   }
 
   /**

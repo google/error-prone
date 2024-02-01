@@ -84,11 +84,26 @@ public class ReturnMissingNullable extends BugChecker implements CompilationUnit
               anyMethod().anyClass().withNameMatching(compile("throw.*Exception")),
               staticMethod()
                   /*
-                   * b/285157761: The reason to look at descendants of the listed classes is mostly
-                   * to catch non-canonical static imports: While TestCase doesn't define its own
-                   * fail() method, javac still lets users import it with "import static
-                   * junit.framework.TestCase.fail." And when users do that, javac acts as if fail()
-                   * is a member of TestCase. We still want to cover it here.
+                   * There are a few reasons to look at *descendants* of the listed classes:
+                   *
+                   * - It enables our listing for junit.framework.Assert.fail to catch the
+                   *   equivalent (but redeclared) junit.framework.TestCase.fail for free. This
+                   *   comes up a good number of times. (Of course, we could also easily handle it
+                   *   by adding an explicit listing for junit.framework.TestCase.fail.)
+                   *
+                   * - It enables our listing for junit.framework.Assert.fail to catch custom "fail"
+                   *   methods in TestCase subclasses. There are admittedly only a handful of such
+                   *   methods, only one of which looks even vaguely relevant to
+                   *   ReturnMissingNullable.
+                   *
+                   * - It enables our listing for junit.framework.Assert.fail to catch non-canonical
+                   *   static imports of it and junit.framework.TestCase.fail (e.g., `import static
+                   *   com.foo.BarTest.fail`). I'm not sure that this ever comes up.
+                   *
+                   * There are two issues that have combined to produce the problem here:
+                   * b/285157761 (which makes getSymbol return the wrong thing, which we've fixed)
+                   * and b/130658266 (which makes MethodMatchers look at the Tree again to extract
+                   * the receiver type, which sidesteps the getSymbol fix).
                    */
                   .onDescendantOfAny("org.junit.Assert", "junit.framework.Assert")
                   .named("fail"),
