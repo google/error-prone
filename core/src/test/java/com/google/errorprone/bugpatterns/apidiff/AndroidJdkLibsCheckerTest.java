@@ -225,4 +225,22 @@ public class AndroidJdkLibsCheckerTest {
             "}")
         .doTest();
   }
+
+  // Parallel streams are not supported by desugar, but are supported natively in 24+
+  // https://developer.android.com/reference/java/util/Collection#parallelStream()
+  @Test
+  public void parallelStream() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java", //
+            "import java.util.Collection;",
+            "import java.util.stream.Stream;",
+            "public class Test {",
+            "  Stream<?> f(Collection<?> xs) {",
+            "    // BUG: Diagnostic contains:",
+            "    return xs.parallelStream().map(x -> x);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
