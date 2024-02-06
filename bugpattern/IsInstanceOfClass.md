@@ -33,7 +33,7 @@ equal to `Class` (i.e. lhs is equal to `Class.class`).
 ```
 
 To test if the type represented by a class literal is a subtype of the type
-reprsented by some other class literal, `isAssignableFrom` should be used
+represented by some other class literal, `isAssignableFrom` should be used
 instead:
 
 ```java
