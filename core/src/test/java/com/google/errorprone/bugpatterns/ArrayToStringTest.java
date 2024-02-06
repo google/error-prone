@@ -185,4 +185,18 @@ public class ArrayToStringTest {
   public void negativeConcat() {
     compilationHelper.addSourceFile("ArrayToStringConcatenationNegativeCases.java").doTest();
   }
+
+  @Test
+  public void arrayPassedToJoiner() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.base.Joiner;",
+            "class Test {",
+            "  String test(Joiner j, Object[] a) {",
+            "    return j.join(a);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
