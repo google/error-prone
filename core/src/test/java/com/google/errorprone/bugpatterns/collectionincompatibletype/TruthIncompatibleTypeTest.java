@@ -29,8 +29,8 @@ import com.google.common.truth.extensions.proto.IterableOfProtosSubject;
 import com.google.common.truth.extensions.proto.ProtoSubject;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.testing.junit.testparameterinjector.TestParameter;
-import com.google.testing.junit.testparameterinjector.TestParameter.TestParameterValuesProvider;
 import com.google.testing.junit.testparameterinjector.TestParameterInjector;
+import com.google.testing.junit.testparameterinjector.TestParameterValuesProvider;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import org.junit.Test;
@@ -668,23 +668,23 @@ public class TruthIncompatibleTypeTest {
     }
   }
 
-  private static final class SubjectMethods implements TestParameterValuesProvider {
+  private static final class SubjectMethods extends TestParameterValuesProvider {
     @Override
-    public ImmutableList<Method> provideValues() {
+    public ImmutableList<Method> provideValues(Context context) {
       return getAssertionMethods(Subject.class);
     }
   }
 
-  private static final class IterableSubjectMethods implements TestParameterValuesProvider {
+  private static final class IterableSubjectMethods extends TestParameterValuesProvider {
     @Override
-    public ImmutableList<Method> provideValues() {
+    public ImmutableList<Method> provideValues(Context context) {
       return getAssertionMethods(IterableSubject.class);
     }
   }
 
-  private static final class ProtoTruthSubjectMethods implements TestParameterValuesProvider {
+  private static final class ProtoTruthSubjectMethods extends TestParameterValuesProvider {
     @Override
-    public ImmutableList<Method> provideValues() {
+    public ImmutableList<Method> provideValues(Context context) {
       return getAssertionMethods(ProtoSubject.class);
     }
   }
