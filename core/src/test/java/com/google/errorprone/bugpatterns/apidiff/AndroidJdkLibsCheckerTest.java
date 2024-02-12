@@ -243,4 +243,18 @@ public class AndroidJdkLibsCheckerTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void base64() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java", //
+            "import java.util.Base64;",
+            "public class Test {",
+            "  String f(byte[] code) {",
+            "    return Base64.getUrlEncoder().encodeToString(code);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
