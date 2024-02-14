@@ -924,4 +924,49 @@ public class CanIgnoreReturnValueSuggesterTest {
         .expectUnchanged()
         .doTest();
   }
+
+  @Test
+  public void returningANewInstance() {
+    helper
+        .addInputLines(
+            "MyBuilder.java",
+            "public final class MyBuilder {",
+            "  MyBuilder() { }",
+            "  MyBuilder(String name) { }",
+            "  MyBuilder(MyBuilder builder) { }",
+            "  public MyBuilder passingParam(String name) {",
+            "    return new MyBuilder(name);",
+            "  }",
+            "  public MyBuilder passingThis() {",
+            "    return new MyBuilder(this);",
+            "  }",
+            "  public MyBuilder notPassing() {",
+            "    return new MyBuilder();",
+            "  }",
+            "}")
+        .addOutputLines(
+            "MyBuilder.java",
+            "import com.google.errorprone.annotations.CanIgnoreReturnValue;",
+            "public final class MyBuilder {",
+            "  MyBuilder() { }",
+            "  MyBuilder(String name) { }",
+            "  MyBuilder(MyBuilder builder) { }",
+            // TODO(b/325282579): this is a bug! we should not recommend @CIRV here!
+            "  @CanIgnoreReturnValue",
+            "  public MyBuilder passingParam(String name) {",
+            "    return new MyBuilder(name);",
+            "  }",
+            // TODO(b/325282579): this is a bug! we should not recommend @CIRV here!
+            "  @CanIgnoreReturnValue",
+            "  public MyBuilder passingThis() {",
+            "    return new MyBuilder(this);",
+            "  }",
+            // TODO(b/325282579): this is a bug! we should not recommend @CIRV here!
+            "  @CanIgnoreReturnValue",
+            "  public MyBuilder notPassing() {",
+            "    return new MyBuilder();",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
