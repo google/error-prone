@@ -1205,6 +1205,9 @@ SWIG generated code that can&#39;t call a C++ destructor will leak memory
 __[SynchronizeOnNonFinalField](bugpattern/SynchronizeOnNonFinalField)__<br>
 Synchronizing on non-final fields is not safe: if the field is ever updated, different threads may end up locking on different objects.
 
+__[SystemConsoleNull](bugpattern/SystemConsoleNull)__<br>
+System.console() no longer returns null in JDK 22 and newer versions
+
 __[ThreadJoinLoop](bugpattern/ThreadJoinLoop)__<br>
 Thread.join needs to be immediately surrounded by a loop until it succeeds. Consider using Uninterruptibles.joinUninterruptibly.
 
