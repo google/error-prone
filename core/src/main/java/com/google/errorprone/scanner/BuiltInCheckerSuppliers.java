@@ -355,6 +355,7 @@ import com.google.errorprone.bugpatterns.SuppressWarningsWithoutExplanation;
 import com.google.errorprone.bugpatterns.SwigMemoryLeak;
 import com.google.errorprone.bugpatterns.SwitchDefault;
 import com.google.errorprone.bugpatterns.SymbolToString;
+import com.google.errorprone.bugpatterns.SystemConsoleNull;
 import com.google.errorprone.bugpatterns.SystemExitOutsideMain;
 import com.google.errorprone.bugpatterns.SystemOut;
 import com.google.errorprone.bugpatterns.TestExceptionChecker;
@@ -1051,6 +1052,7 @@ public class BuiltInCheckerSuppliers {
           SuperCallToObjectMethod.class,
           SwigMemoryLeak.class,
           SynchronizeOnNonFinalField.class,
+          SystemConsoleNull.class,
           ThreadJoinLoop.class,
           ThreadLocalUsage.class,
           ThreadPriorityCheck.class,
