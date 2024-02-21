@@ -713,6 +713,9 @@ __[EmptySetMultibindingContributions](bugpattern/EmptySetMultibindingContributio
 __[EmptyTopLevelDeclaration](bugpattern/EmptyTopLevelDeclaration)__<br>
 Empty top-level type declarations should be omitted
 
+__[EnumOrdinal](bugpattern/EnumOrdinal)__<br>
+You should almost never invoke the Enum.ordinal() method.
+
 __[EqualsGetClass](bugpattern/EqualsGetClass)__<br>
 Prefer instanceof to getClass when implementing Object#equals.
 
