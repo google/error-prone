@@ -63,7 +63,7 @@ public class SystemConsoleNull extends BugChecker
             if (sym.equals(ASTHelpers.getSymbol(tree))) {
               Tree enclosing = getCurrentPath().getParentPath().getLeaf();
               if (isNullCheck(enclosing)) {
-                state.reportMatch(describeMatch(tree, buildFix(enclosing)));
+                state.reportMatch(describeMatch(tree, buildFix(enclosing, tree, state)));
               }
             }
             return null;
@@ -75,6 +75,11 @@ public class SystemConsoleNull extends BugChecker
   }
 
   private static SuggestedFix buildFix(Tree enclosing) {
+    return SuggestedFix.emptyFix();
+  }
+
+  private static SuggestedFix buildFix(
+      Tree enclosing, IdentifierTree identifier, VisitorState state) {
     return SuggestedFix.emptyFix();
   }
 
