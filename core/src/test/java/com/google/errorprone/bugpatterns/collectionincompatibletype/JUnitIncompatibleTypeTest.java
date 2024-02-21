@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns.collectionincompatibletype;
 
 import com.google.errorprone.CompilationTestHelper;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -94,6 +95,21 @@ public final class JUnitIncompatibleTypeTest {
             "final class Test {",
             "  public void test() {",
             "    assertArrayEquals(new long[]{1L}, new long[]{2L});",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Ignore("https://github.com/google/error-prone/issues/4291")
+  @Test
+  public void assertArrayEquals_cast() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import static org.junit.Assert.assertArrayEquals;",
+            "final class Test {",
+            "  public void test(Object o, byte[] b) {",
+            "    assertArrayEquals((byte[]) o, b);",
             "  }",
             "}")
         .doTest();
