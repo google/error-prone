@@ -122,6 +122,7 @@ import com.google.errorprone.bugpatterns.DuplicateMapKeys;
 import com.google.errorprone.bugpatterns.EmptyCatch;
 import com.google.errorprone.bugpatterns.EmptyIfStatement;
 import com.google.errorprone.bugpatterns.EmptyTopLevelDeclaration;
+import com.google.errorprone.bugpatterns.EnumOrdinal;
 import com.google.errorprone.bugpatterns.EqualsGetClass;
 import com.google.errorprone.bugpatterns.EqualsHashCode;
 import com.google.errorprone.bugpatterns.EqualsIncompatibleType;
@@ -888,6 +889,7 @@ public class BuiltInCheckerSuppliers {
           EmptyCatch.class,
           EmptySetMultibindingContributions.class,
           EmptyTopLevelDeclaration.class,
+          EnumOrdinal.class,
           EqualsGetClass.class,
           EqualsIncompatibleType.class,
           EqualsUnsafeCast.class,
