@@ -357,4 +357,22 @@ public final class ModifiedButNotUsedTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void unusedPrefix_noFinding() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.ArrayList;",
+            "import java.util.List;",
+            "class Test {",
+            "  void test() {",
+            "    List<Integer> unusedIntegers = new ArrayList<>();",
+            "    unusedIntegers.add(1);",
+            "    List<Integer> ignored = new ArrayList<>();",
+            "    ignored.add(1);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

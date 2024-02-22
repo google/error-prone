@@ -203,6 +203,10 @@ public class ModifiedButNotUsed extends BugChecker
     if (state.getPath().getParentPath().getLeaf() instanceof ClassTree) {
       return NO_MATCH;
     }
+    var name = symbol.getSimpleName().toString();
+    if (name.startsWith("unused") || name.equals("ignored")) {
+      return NO_MATCH;
+    }
     if (!COLLECTION_TYPE.matches(tree, state) && !PROTO_TYPE.matches(tree, state)) {
       return NO_MATCH;
     }
