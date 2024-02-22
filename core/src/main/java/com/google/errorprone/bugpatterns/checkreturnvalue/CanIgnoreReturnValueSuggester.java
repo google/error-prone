@@ -156,19 +156,19 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
         // overridden in other contexts, and we've decided that these methods shouldn't be annotated
         // automatically.
         || isSimpleReturnThisMethod(methodTree)
-        // TODO(kak): This appears to be a performance optimization for refactoring passes?
-        || isSubtype(methodSymbol.owner.type, PROTO_BUILDER.get(state), state)) {
+        // If this is a method "natively" handled by the CRV logic, don't add CIRV
+        || isMethodHandledByCrvLogic(methodSymbol, state)) {
       return Description.NO_MATCH;
     }
 
-    // skip builder setter methods defined on "known safe" types
-    if (isKnownSafeBuilderInterface(methodSymbol, state)) {
-      return Description.NO_MATCH;
+    // OK, so this method might actually be CIRV-suggestible.
+    if (methodReturnsIgnorableValues(methodTree, state)) {
+      return annotateWithCanIgnoreReturnValue(methodTree, state);
     }
 
-    // if the method looks like a builder, or if it always returns `this`, then make it @CIRV
-    if (classLooksLikeBuilder(methodSymbol.owner, state)
-        || methodReturnsIgnorableValues(methodTree, state)) {
+    // Methods on builder classes that match the above condition are very likely to be CIRV even
+    // if the results they return aren't normally ignorable.
+    if (classLooksLikeBuilder(methodSymbol.owner, state)) {
       return annotateWithCanIgnoreReturnValue(methodTree, state);
     }
 
@@ -192,8 +192,11 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
     return describeMatch(methodTree, fix.build());
   }
 
-  private static boolean isKnownSafeBuilderInterface(
-      MethodSymbol methodSymbol, VisitorState state) {
+  private static boolean isMethodHandledByCrvLogic(MethodSymbol methodSymbol, VisitorState state) {
+    if (isSubtype(methodSymbol.owner.type, PROTO_BUILDER.get(state), state)) {
+      return true;
+    }
+
     // TODO(kak): use ResultEvaluator instead of duplicating logic
     if (isAbstract(methodSymbol)) {
       for (String annotation : EXEMPTING_CLASS_ANNOTATIONS) {
