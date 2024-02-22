@@ -310,104 +310,112 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns an <code>AnnotationTree</code> with the given simple name, or <code>null</code>.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;com.sun.source.tree.MethodTree&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getConstructors(com.sun.source.tree.ClassTree)" class="member-name-link">getConstructors</a><wbr>(com.sun.source.tree.ClassTree&nbsp;classTree)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html" title="class or interface in java.util.stream" class="external-link">Stream</a>&lt;? extends com.sun.source.tree.ExpressionTree&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getCaseExpressions(com.sun.source.tree.CaseTree)" class="member-name-link">getCaseExpressions</a><wbr>(com.sun.source.tree.CaseTree&nbsp;caseTree)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Retrieves a stream containing all case expressions, in order, for a given <code>CaseTree</code>.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;com.sun.source.tree.MethodTree&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getConstructors(com.sun.source.tree.ClassTree)" class="member-name-link">getConstructors</a><wbr>(com.sun.source.tree.ClassTree&nbsp;classTree)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns the list of all constructors defined in the class (including generated ones).</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.google.common.collect.ImmutableList&lt;com.sun.tools.javac.code.Symbol.MethodSymbol&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getConstructors(com.sun.tools.javac.code.Symbol.ClassSymbol)" class="member-name-link">getConstructors</a><wbr>(com.sun.tools.javac.code.Symbol.ClassSymbol&nbsp;classSymbol)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.google.common.collect.ImmutableList&lt;com.sun.tools.javac.code.Symbol.MethodSymbol&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getConstructors(com.sun.tools.javac.code.Symbol.ClassSymbol)" class="member-name-link">getConstructors</a><wbr>(com.sun.tools.javac.code.Symbol.ClassSymbol&nbsp;classSymbol)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns the list of all constructors defined in the class.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html" title="class or interface in java.util.stream" class="external-link">Stream</a>&lt;com.sun.tools.javac.code.Attribute.Compound&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getDeclarationAndTypeAttributes(com.sun.tools.javac.code.Symbol)" class="member-name-link">getDeclarationAndTypeAttributes</a><wbr>(com.sun.tools.javac.code.Symbol&nbsp;sym)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html" title="class or interface in java.util.stream" class="external-link">Stream</a>&lt;com.sun.tools.javac.code.Attribute.Compound&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getDeclarationAndTypeAttributes(com.sun.tools.javac.code.Symbol)" class="member-name-link">getDeclarationAndTypeAttributes</a><wbr>(com.sun.tools.javac.code.Symbol&nbsp;sym)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns declaration annotations of the given symbol, as well as 'top-level' type annotations,
  including :
 
  
    Type annotations of the return type of a method.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.sun.tools.javac.code.Symbol</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getDeclaredSymbol(com.sun.source.tree.Tree)" class="member-name-link">getDeclaredSymbol</a><wbr>(com.sun.source.tree.Tree&nbsp;tree)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.sun.tools.javac.code.Symbol</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getDeclaredSymbol(com.sun.source.tree.Tree)" class="member-name-link">getDeclaredSymbol</a><wbr>(com.sun.source.tree.Tree&nbsp;tree)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Gets the symbol declared by a tree.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;com.sun.tools.javac.code.Symbol&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getEnclosedElements(com.sun.tools.javac.code.Symbol)" class="member-name-link">getEnclosedElements</a><wbr>(com.sun.tools.javac.code.Symbol&nbsp;symbol)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;com.sun.tools.javac.code.Symbol&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getEnclosedElements(com.sun.tools.javac.code.Symbol)" class="member-name-link">getEnclosedElements</a><wbr>(com.sun.tools.javac.code.Symbol&nbsp;symbol)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">A wrapper for <code>Symbol.getEnclosedElements()</code> to avoid binary compatibility issues for
  covariant overrides in subtypes of <code>Symbol</code>.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.sun.source.tree.Tree</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getErasedTypeTree(com.sun.source.tree.Tree)" class="member-name-link">getErasedTypeTree</a><wbr>(com.sun.source.tree.Tree&nbsp;tree)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.sun.source.tree.Tree</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getErasedTypeTree(com.sun.source.tree.Tree)" class="member-name-link">getErasedTypeTree</a><wbr>(com.sun.source.tree.Tree&nbsp;tree)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns the erasure of the given type tree, i.e.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getFileName(com.sun.source.tree.CompilationUnitTree)" class="member-name-link">getFileName</a><wbr>(com.sun.source.tree.CompilationUnitTree&nbsp;tree)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getFileName(com.sun.source.tree.CompilationUnitTree)" class="member-name-link">getFileName</a><wbr>(com.sun.source.tree.CompilationUnitTree&nbsp;tree)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Extract the filename from a <code>CompilationUnitTree</code>, with special handling for jar files.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getFileNameFromUri(java.net.URI)" class="member-name-link">getFileNameFromUri</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/net/URI.html" title="class or interface in java.net" class="external-link">URI</a>&nbsp;uri)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getFileNameFromUri(java.net.URI)" class="member-name-link">getFileNameFromUri</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/net/URI.html" title="class or interface in java.net" class="external-link">URI</a>&nbsp;uri)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Extract the filename from the URI, with special handling for jar files.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.google.common.collect.ImmutableSet&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getGeneratedBy(com.google.errorprone.VisitorState)" class="member-name-link">getGeneratedBy</a><wbr>(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.google.common.collect.ImmutableSet&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getGeneratedBy(com.google.errorprone.VisitorState)" class="member-name-link">getGeneratedBy</a><wbr>(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns the value of the <code>@Generated</code> annotation on enclosing classes, if present.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.google.common.collect.ImmutableSet&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getGeneratedBy(com.sun.tools.javac.code.Symbol,com.google.errorprone.VisitorState)" class="member-name-link">getGeneratedBy</a><wbr>(com.sun.tools.javac.code.Symbol&nbsp;symbol,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.google.common.collect.ImmutableSet&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getGeneratedBy(com.sun.tools.javac.code.Symbol,com.google.errorprone.VisitorState)" class="member-name-link">getGeneratedBy</a><wbr>(com.sun.tools.javac.code.Symbol&nbsp;symbol,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns the values of the given symbol's <code>Generated</code> annotations, if present.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.sun.source.tree.ModifiersTree</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getModifiers(com.sun.source.tree.Tree)" class="member-name-link">getModifiers</a><wbr>(com.sun.source.tree.Tree&nbsp;tree)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.sun.source.tree.ModifiersTree</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getModifiers(com.sun.source.tree.Tree)" class="member-name-link">getModifiers</a><wbr>(com.sun.source.tree.Tree&nbsp;tree)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns the modifiers tree of the given class, method, or variable declaration.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../dataflow/nullnesspropagation/Nullness.html" title="enum in com.google.errorprone.dataflow.nullnesspropagation">Nullness</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getNullnessValue(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState,com.google.errorprone.dataflow.nullnesspropagation.NullnessAnalysis)" class="member-name-link">getNullnessValue</a><wbr>(com.sun.source.tree.ExpressionTree&nbsp;expr,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../dataflow/nullnesspropagation/Nullness.html" title="enum in com.google.errorprone.dataflow.nullnesspropagation">Nullness</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getNullnessValue(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState,com.google.errorprone.dataflow.nullnesspropagation.NullnessAnalysis)" class="member-name-link">getNullnessValue</a><wbr>(com.sun.source.tree.ExpressionTree&nbsp;expr,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
  <a href="../dataflow/nullnesspropagation/NullnessAnalysis.html" title="class in com.google.errorprone.dataflow.nullnesspropagation">NullnessAnalysis</a>&nbsp;nullnessAnalysis)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns the <a href="../dataflow/nullnesspropagation/Nullness.html" title="enum in com.google.errorprone.dataflow.nullnesspropagation"><code>Nullness</code></a> for an expression as determined by the nullness dataflow analysis.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.sun.source.tree.ExpressionTree</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getReceiver(com.sun.source.tree.ExpressionTree)" class="member-name-link">getReceiver</a><wbr>(com.sun.source.tree.ExpressionTree&nbsp;expressionTree)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.sun.source.tree.ExpressionTree</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getReceiver(com.sun.source.tree.ExpressionTree)" class="member-name-link">getReceiver</a><wbr>(com.sun.source.tree.ExpressionTree&nbsp;expressionTree)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns the receiver of an expression.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.sun.tools.javac.code.Type</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getReceiverType(com.sun.source.tree.ExpressionTree)" class="member-name-link">getReceiverType</a><wbr>(com.sun.source.tree.ExpressionTree&nbsp;expressionTree)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.sun.tools.javac.code.Type</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getReceiverType(com.sun.source.tree.ExpressionTree)" class="member-name-link">getReceiverType</a><wbr>(com.sun.source.tree.ExpressionTree&nbsp;expressionTree)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns the type of a receiver of a method call expression.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.sun.tools.javac.code.Type</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getResultType(com.sun.source.tree.ExpressionTree)" class="member-name-link">getResultType</a><wbr>(com.sun.source.tree.ExpressionTree&nbsp;expressionTree)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.sun.tools.javac.code.Type</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getResultType(com.sun.source.tree.ExpressionTree)" class="member-name-link">getResultType</a><wbr>(com.sun.source.tree.ExpressionTree&nbsp;expressionTree)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns the type that this expression tree will evaluate to.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.sun.tools.javac.code.Type</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getReturnType(com.sun.source.tree.ExpressionTree)" class="member-name-link">getReturnType</a><wbr>(com.sun.source.tree.ExpressionTree&nbsp;expressionTree)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.sun.tools.javac.code.Type</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getReturnType(com.sun.source.tree.ExpressionTree)" class="member-name-link">getReturnType</a><wbr>(com.sun.source.tree.ExpressionTree&nbsp;expressionTree)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Gives the return type of an ExpressionTree that represents a method select.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.sun.source.tree.ExpressionTree</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getRootAssignable(com.sun.source.tree.MethodInvocationTree)" class="member-name-link">getRootAssignable</a><wbr>(com.sun.source.tree.MethodInvocationTree&nbsp;methodInvocationTree)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.sun.source.tree.ExpressionTree</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getRootAssignable(com.sun.source.tree.MethodInvocationTree)" class="member-name-link">getRootAssignable</a><wbr>(com.sun.source.tree.MethodInvocationTree&nbsp;methodInvocationTree)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Find the root assignable expression of a chain of field accesses.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getStartPosition(com.sun.source.tree.Tree)" class="member-name-link">getStartPosition</a><wbr>(com.sun.source.tree.Tree&nbsp;tree)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getStartPosition(com.sun.source.tree.Tree)" class="member-name-link">getStartPosition</a><wbr>(com.sun.source.tree.Tree&nbsp;tree)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns the start position of the node.</div>
 </div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;? extends com.sun.source.tree.CaseTree&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getSwitchDefault(com.sun.source.tree.SwitchTree)" class="member-name-link">getSwitchDefault</a><wbr>(com.sun.source.tree.SwitchTree&nbsp;switchTree)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.sun.tools.javac.code.Symbol.ClassSymbol</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getSymbol(com.sun.source.tree.ClassTree)" class="member-name-link">getSymbol</a><wbr>(com.sun.source.tree.ClassTree&nbsp;tree)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
@@ -1950,6 +1958,21 @@ loadScripts(document, 'script');</script>
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <div class="block">Returns whether <code>existingMethod</code> has an overload (or "nearly" an overload) with the given
  <code>targetMethodName</code>, and only a single parameter of type <code>onlyParameterType</code>.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getSwitchDefault(com.sun.source.tree.SwitchTree)">
+<h3>getSwitchDefault</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;? extends com.sun.source.tree.CaseTree&gt;</span>&nbsp;<span class="element-name">getSwitchDefault</span><wbr><span class="parameters">(com.sun.source.tree.SwitchTree&nbsp;switchTree)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="getCaseExpressions(com.sun.source.tree.CaseTree)">
+<h3>getCaseExpressions</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html" title="class or interface in java.util.stream" class="external-link">Stream</a>&lt;? extends com.sun.source.tree.ExpressionTree&gt;</span>&nbsp;<span class="element-name">getCaseExpressions</span><wbr><span class="parameters">(com.sun.source.tree.CaseTree&nbsp;caseTree)</span></div>
+<div class="block">Retrieves a stream containing all case expressions, in order, for a given <code>CaseTree</code>.
+ This method acts as a facade to the <code>CaseTree.getExpressions()</code> API, falling back to
+ legacy APIs when necessary.</div>
 </section>
 </li>
 </ul>
