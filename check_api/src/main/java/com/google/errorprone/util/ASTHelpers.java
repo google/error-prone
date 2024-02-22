@@ -21,6 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Verify.verify;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
+import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.common.collect.Streams.stream;
 import static com.google.errorprone.matchers.JUnitMatchers.JUNIT4_RUN_WITH_ANNOTATION;
 import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
@@ -2752,6 +2753,81 @@ public class ASTHelpers {
       }
     }
     return false;
+  }
+
+  private static final Method CASE_TREE_GET_LABELS = getCaseTreeGetLabelsMethod();
+
+  @Nullable
+  private static Method getCaseTreeGetLabelsMethod() {
+    try {
+      return CaseTree.class.getMethod("getLabels");
+    } catch (NoSuchMethodException e) {
+      return null;
+    }
+  }
+
+  @SuppressWarnings("unchecked") // reflection
+  private static List<? extends Tree> getCaseLabels(CaseTree caseTree) {
+    if (CASE_TREE_GET_LABELS == null) {
+      return ImmutableList.of();
+    }
+    try {
+      return (List<? extends Tree>) CASE_TREE_GET_LABELS.invoke(caseTree);
+    } catch (ReflectiveOperationException e) {
+      throw new LinkageError(e.getMessage(), e);
+    }
+  }
+
+  // getExpression() is being used for compatibility with earlier JDK versions
+  @SuppressWarnings("deprecation")
+  public static Optional<? extends CaseTree> getSwitchDefault(SwitchTree switchTree) {
+    return switchTree.getCases().stream()
+        .filter(
+            (CaseTree c) -> {
+              if (c.getExpression() != null) {
+                return false;
+              }
+              List<? extends Tree> labels = getCaseLabels(c);
+              return labels.isEmpty()
+                  || (labels.size() == 1
+                      && getOnlyElement(labels).getKind().name().equals("DEFAULT_CASE_LABEL"));
+            })
+        .findFirst();
+  }
+
+  private static final Method CASE_TREE_GET_EXPRESSIONS = getCaseTreeGetExpressionsMethod();
+
+  @Nullable
+  private static Method getCaseTreeGetExpressionsMethod() {
+    try {
+      return CaseTree.class.getMethod("getExpressions");
+    } catch (NoSuchMethodException e) {
+      return null;
+    }
+  }
+
+  /**
+   * Retrieves a stream containing all case expressions, in order, for a given {@code CaseTree}.
+   * This method acts as a facade to the {@code CaseTree.getExpressions()} API, falling back to
+   * legacy APIs when necessary.
+   */
+  @SuppressWarnings({
+    "deprecation", // getExpression() is being used for compatibility with earlier JDK versions
+    "unchecked", // reflection
+  })
+  public static Stream<? extends ExpressionTree> getCaseExpressions(CaseTree caseTree) {
+    if (!RuntimeVersion.isAtLeast12()) {
+      // "default" case gives an empty stream
+      return Stream.ofNullable(caseTree.getExpression());
+    }
+    if (CASE_TREE_GET_EXPRESSIONS == null) {
+      return Stream.empty();
+    }
+    try {
+      return ((List<? extends ExpressionTree>) CASE_TREE_GET_EXPRESSIONS.invoke(caseTree)).stream();
+    } catch (ReflectiveOperationException e) {
+      throw new LinkageError(e.getMessage(), e);
+    }
   }
 
   private ASTHelpers() {}

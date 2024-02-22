@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.getSwitchDefault;
 
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
@@ -52,8 +53,7 @@ public class MissingDefault extends BugChecker implements SwitchTreeMatcher {
       // by MissingCasesInEnumSwitch
       return NO_MATCH;
     }
-    Optional<? extends CaseTree> maybeDefault =
-        tree.getCases().stream().filter(c -> c.getExpression() == null).findFirst();
+    Optional<? extends CaseTree> maybeDefault = getSwitchDefault(tree);
     if (!maybeDefault.isPresent()) {
       Description.Builder description = buildDescription(tree);
       if (!tree.getCases().isEmpty()) {
