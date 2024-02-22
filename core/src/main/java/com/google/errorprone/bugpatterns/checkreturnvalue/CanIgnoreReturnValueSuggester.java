@@ -166,9 +166,9 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
       return annotateWithCanIgnoreReturnValue(methodTree, state);
     }
 
-    // Methods on builder classes that match the above condition are very likely to be CIRV even
-    // if the results they return aren't normally ignorable.
-    if (classLooksLikeBuilder(methodSymbol.owner, state)) {
+    // Abstract methods on builder classes that don't run afoul of the previous checks are
+    // probably @CIRV.
+    if (classLooksLikeBuilder(methodSymbol.owner, state) && isAbstract(methodSymbol)) {
       return annotateWithCanIgnoreReturnValue(methodTree, state);
     }
 
