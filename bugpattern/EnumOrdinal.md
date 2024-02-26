@@ -24,16 +24,18 @@ Prefer using enum value directly:
 ImmutableMap<MyEnum, String> MAPPING =
     ImmutableMap.<MyEnum, String>builder()
         .put(MyEnum.FOO, "Foo")
-        .put(MyEnum.BAR, "Bar");
+        .put(MyEnum.BAR, "Bar")
+        .buildOrThrow();
 ```
 
 to this:
 
 ```java
- ImmutableMap<Integer, String> MAPPING =
-    ImmutableMap.<MyEnum, String>builder()
+ImmutableMap<Integer, String> MAPPING =
+    ImmutableMap.<Integer, String>builder()
         .put(MyEnum.FOO.ordinal(), "Foo")
-        .put(MyEnum.BAR.ordinal(), "Bar");
+        .put(MyEnum.BAR.ordinal(), "Bar")
+        .buildOrThrow();
 ```
 
 Or if you need a stable number for serialisation, consider defining an explicit
