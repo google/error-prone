@@ -144,11 +144,13 @@ public final class ImpossibleNullComparison extends BugChecker
               "com.google.protobuf.GeneratedMessageLite", "com.google.protobuf.GeneratedMessage");
 
   private final boolean matchTestAssertions;
+  private final boolean emitEmptyFixes;
 
   @Inject
   ImpossibleNullComparison(ErrorProneFlags flags) {
     this.matchTestAssertions =
         flags.getBoolean("ProtoFieldNullComparison:MatchTestAssertions").orElse(true);
+    this.emitEmptyFixes = flags.getBoolean("ImmutableNullComparison:EmitEmptyFixes").orElse(true);
   }
 
   @Override
@@ -248,7 +250,7 @@ public final class ImpossibleNullComparison extends BugChecker
       }
       getFixer(argument, subState)
           .map(f -> problemType.fix(f, node, subState))
-          .filter(f -> !f.isEmpty())
+          .filter(f -> emitEmptyFixes || !f.isEmpty())
           .map(f -> describeMatch(node, f))
           .ifPresent(state::reportMatch);
 

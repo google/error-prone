@@ -173,12 +173,15 @@ public final class ImpossibleNullComparisonTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
+            "import static org.junit.Assert.assertNotNull;",
             "import com.google.protobuf.ExtensionLite;",
             "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
             "public class Test {",
             "  public void test(TestProtoMessage e, ExtensionLite extensionLite) {",
             "    // BUG: Diagnostic contains:",
             "    boolean a = e.getExtension(extensionLite) == null;",
+            "    // BUG: Diagnostic contains:",
+            "    assertNotNull(e.getExtension(extensionLite));",
             "  }",
             "}")
         .doTest();
