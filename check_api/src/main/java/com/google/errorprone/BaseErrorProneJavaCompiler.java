@@ -228,8 +228,10 @@ public class BaseErrorProneJavaCompiler implements JavaCompiler {
                   ImmutableSet<String> namedCheckers = epOptions.patchingOptions().namedCheckers();
                   if (!namedCheckers.isEmpty()) {
                     toUse = toUse.filter(bci -> namedCheckers.contains(bci.canonicalName()));
+                  } else {
+                    toUse = toUse.applyOverrides(epOptions);
                   }
-                  return ErrorProneScannerTransformer.create(toUse.applyOverrides(epOptions).get());
+                  return ErrorProneScannerTransformer.create(toUse.get());
                 })
             .get();
 

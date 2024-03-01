@@ -106,9 +106,24 @@ public class ScannerTest {
             "}")
         .setArgs(
             "-XepPatchLocation:IN_PLACE",
-            "-XepPatchChecks:ShouldNotUseFoo",
+            "-XepPatchChecks:",
             "-Xep:ShouldNotUseFoo:OFF")
         .doTest();
+  }
+
+  @Test
+  public void dontRunPatchUnlessRequested() {
+    compilationHelper.addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.scanner.ScannerTest.Foo;",
+            "class Test {",
+            "  Foo foo;",
+            "}")
+            .setArgs(
+                    "-XepPatchLocation:IN_PLACE",
+                    "-Xep:ShouldNotUseFoo:WARN",
+                    "-XepPatchChecks:DeadException"
+            ).doTest();
   }
 
   @OkToUseFoo // Foo can use itself. But this shouldn't suppress errors on *usages* of Foo.
