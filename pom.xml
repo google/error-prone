@@ -21,7 +21,7 @@
   <name>Error Prone parent POM</name>
   <groupId>com.google.errorprone</groupId>
   <artifactId>error_prone_parent</artifactId>
-  <version>HEAD-SNAPSHOT</version>
+  <version>1.0-HEAD-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <description>Error Prone is a static analysis tool for Java that catches common programming mistakes at compile-time.</description>
@@ -204,6 +204,16 @@
             <exclude>**/testdata/**</exclude>
           </testExcludes>
         </configuration>
+        <executions>
+          <execution>
+            <id>default-compile</id>
+            <configuration>
+              <compilerArgs combine.children="append">
+                <arg>-Xlint:-options</arg>
+              </compilerArgs>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
