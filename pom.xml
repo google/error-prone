@@ -153,6 +153,7 @@
                 -exportcontents: com.google.errorprone*
                 -noextraheaders: true
                 -removeheaders: Private-Package
+                -fixupmessages: ^Classes found in the wrong directory: .*
               ]]></bnd>
             </configuration>
           </execution>

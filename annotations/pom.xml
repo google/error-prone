@@ -85,6 +85,9 @@
               <Multi-Release>true</Multi-Release>
             </manifestEntries>
           </archive>
+          <excludes>
+            <exclude>/META-INF/versions/9/com/**/*.class</exclude>
+          </excludes>
         </configuration>
       </plugin>
     </plugins>
