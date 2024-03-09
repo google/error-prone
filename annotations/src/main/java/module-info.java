@@ -15,7 +15,6 @@
  */
 
 open module com.google.errorprone.annotation {
-  requires java.base;
   requires java.compiler;
 
   exports com.google.errorprone.annotations;
