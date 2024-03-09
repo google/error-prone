@@ -64,6 +64,9 @@
           </execution>
           <execution>
             <id>compile-java9</id>
+            <goals>
+              <goal>compile</goal>
+            </goals>
             <configuration>
               <source>9</source>
               <target>9</target>
