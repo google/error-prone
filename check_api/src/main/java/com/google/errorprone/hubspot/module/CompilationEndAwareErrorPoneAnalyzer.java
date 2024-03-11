@@ -96,13 +96,12 @@ public class CompilationEndAwareErrorPoneAnalyzer implements TaskListener {
     try {
       delegate.started(e);
     } catch (Throwable t) {
+      hasHadFatalError = true;
       if (HubSpotUtils.isErrorHandlingEnabled(errorProneOptions)) {
         HubSpotUtils.recordUncaughtException(t);
+      } else {
+        throw t;
       }
-
-      hasHadFatalError = true;
-
-      throw t;
     }
   }
 
@@ -110,22 +109,24 @@ public class CompilationEndAwareErrorPoneAnalyzer implements TaskListener {
   public void finished(TaskEvent e) {
     try {
       delegate.finished(e);
+      if (e.getKind() == Kind.COMPILATION) {
+        onModuleFinished();
+      }
     } catch (Throwable t) {
+      hasHadFatalError = true;
       if (HubSpotUtils.isErrorHandlingEnabled(errorProneOptions)) {
         HubSpotUtils.recordUncaughtException(t);
+      } else {
+        throw  t;
       }
-
-      hasHadFatalError = true;
-
-      throw t;
-    }
-
-    if (e.getKind() == Kind.COMPILATION && !hasHadFatalError) {
-      onModuleFinished();
     }
   }
 
-  public void onModuleFinished() {
+  private void onModuleFinished() {
+    if (hasHadFatalError) {
+      return;
+    }
+
     try {
       Scanner scanner = memoizedScanner.get();
       if (!(scanner instanceof ErrorProneScanner)) {
