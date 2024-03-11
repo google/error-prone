@@ -25,6 +25,7 @@ import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.ErrorProneOptions.Severity;
+import com.google.errorprone.apply.CustomImportOrganizer;
 import com.google.errorprone.apply.ImportOrganizer;
 import java.util.Arrays;
 import java.util.Collection;
@@ -302,6 +303,14 @@ public class ErrorProneOptionsTest {
         ErrorProneOptions.processArgs(new String[] {"-XepPatchImportOrder:android-static-last"});
     assertThat(options.patchingOptions().importOrganizer())
         .isSameInstanceAs(ImportOrganizer.ANDROID_STATIC_LAST_ORGANIZER);
+  }
+  
+  @Test
+  public void importOrder_custom() {
+    ErrorProneOptions options =
+        ErrorProneOptions.processArgs(new String[] {"-XepPatchImportOrder:custom:static=first,order=java:javax:OTHER:org"});
+    assertThat(options.patchingOptions().importOrganizer())
+        .isInstanceOf(CustomImportOrganizer.class);
   }
 
   @Test
