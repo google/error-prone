@@ -90,6 +90,40 @@
           </excludes>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>biz.aQute.bnd</groupId>
+        <artifactId>bnd-maven-plugin</artifactId>
+        <version>6.4.0</version>
+        <executions>
+          <execution>
+            <id>generate-OSGi-manifest</id>
+            <phase>none</phase>
+          </execution>
+          <execution>
+            <id>generate-OSGi-manifest-annotations</id>
+            <goals>
+              <goal>bnd-process</goal>
+            </goals>
+            <configuration>
+              <!--
+                The OSGi bundle build is overridden here to allow for MRJAR classes in the
+                versioned class space underneath META-INF.
+
+                The `annotations` module also should not have an `Automatic-Module-Name`.
+                Otherwise, these flags should stay in-sync with the same block in the root
+                `pom.xml`.
+              -->
+              <bnd><![CDATA[
+                Bundle-SymbolicName: com.google.errorprone.annotations
+                -exportcontents: com.google.errorprone*,!META-INF.*
+                -noextraheaders: true
+                -removeheaders: Private-Package
+                -fixupmessages: ^Classes found in the wrong directory: .*
+              ]]></bnd>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
 </project>

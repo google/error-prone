@@ -150,10 +150,9 @@
               <bnd><![CDATA[
                 Bundle-SymbolicName: com.google.$<replacestring;$<replacestring;${project.artifactId};^error_prone;errorprone>;_;.>
                 Automatic-Module-Name: $<Bundle-SymbolicName>
-                -exportcontents: com.google.errorprone*,!META-INF.*
+                -exportcontents: com.google.errorprone*
                 -noextraheaders: true
                 -removeheaders: Private-Package
-                -fixupmessages: ^Classes found in the wrong directory: .*
               ]]></bnd>
             </configuration>
           </execution>
