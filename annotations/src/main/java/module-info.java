@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-open module com.google.errorprone.annotation {
+open module com.google.errorprone.annotations {
   requires java.compiler;
 
   exports com.google.errorprone.annotations;
