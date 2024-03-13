@@ -641,6 +641,9 @@ getNumericValue has unexpected behaviour: it interprets A-Z as base-36 digits wi
 __[ClassCanBeStatic](bugpattern/ClassCanBeStatic)__<br>
 Inner class is non-static but does not reference enclosing class
 
+__[ClassInitializationDeadlock](bugpattern/ClassInitializationDeadlock)__<br>
+Possible class initialization deadlock
+
 __[ClassNewInstance](bugpattern/ClassNewInstance)__<br>
 Class.newInstance() bypasses exception checking; prefer getDeclaredConstructor().newInstance()
 
