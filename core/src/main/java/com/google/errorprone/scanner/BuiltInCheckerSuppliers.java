@@ -78,6 +78,7 @@ import com.google.errorprone.bugpatterns.CheckNotNullMultipleTimes;
 import com.google.errorprone.bugpatterns.CheckReturnValue;
 import com.google.errorprone.bugpatterns.CheckedExceptionNotThrown;
 import com.google.errorprone.bugpatterns.ClassCanBeStatic;
+import com.google.errorprone.bugpatterns.ClassInitializationDeadlock;
 import com.google.errorprone.bugpatterns.ClassName;
 import com.google.errorprone.bugpatterns.ClassNamedLikeTypeParameter;
 import com.google.errorprone.bugpatterns.ClassNewInstance;
@@ -865,6 +866,7 @@ public class BuiltInCheckerSuppliers {
           ChainedAssertionLosesContext.class,
           CharacterGetNumericValue.class,
           ClassCanBeStatic.class,
+          ClassInitializationDeadlock.class,
           ClassNewInstance.class,
           CloseableProvides.class,
           ClosingStandardOutputStreams.class,
