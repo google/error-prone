@@ -47,7 +47,7 @@ import java.util.stream.Collectors;
  *       <ol>
  *         <li>{@code java.}</li>
  *         <li>{@code javax.}</li>
- *         <li>AImports not matching any other specified prefix.</li>
+ *         <li>Imports not matching any other specified prefix.</li>
  *         <li>{@code org.a.}</li>
  *         <li>{@code org.b.}</li>
  *         <li>{@code com.}</li>
@@ -65,6 +65,11 @@ public class CustomImportOrganizer implements ImportOrganizer {
   private StaticOrder staticOrder;
   private ImmutableList<String> roots;
 
+  /**
+   * Creates a custom import organizer according to the provided specification.
+   *
+   * @param spec import order specified as: <code>static={first|last},order={':'-separated prefixes}</code>
+   */
   public CustomImportOrganizer(String spec) {
     for (String keyValue: spec.split(",")) {
       if (keyValue.startsWith(STATIC_PREFIX)) {
