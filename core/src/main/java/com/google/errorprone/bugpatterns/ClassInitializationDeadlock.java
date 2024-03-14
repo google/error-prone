@@ -36,6 +36,7 @@ import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
+import javax.lang.model.element.ElementKind;
 
 /** See the summary. */
 @BugPattern(summary = "Possible class initialization deadlock", severity = WARNING)
@@ -43,6 +44,16 @@ public class ClassInitializationDeadlock extends BugChecker implements BugChecke
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
     ClassSymbol classSymbol = getSymbol(tree);
+    if (classSymbol.isInterface()
+        && !ASTHelpers.scope(classSymbol.members())
+            .anyMatch(ClassInitializationDeadlock::defaultMethod)) {
+      // Interfaces are only recursively initialized by their subtypes if they declare any
+      // non-abstract, non-static (i.e. default) methods, see JVMS 5.5.
+      // This heuristic ignores interfaces that declare default methods directly, to be fully
+      // correct we should consider arbitrary paths between the subtype and the interface that
+      // pass through an intermediate interface with default methods.
+      return NO_MATCH;
+    }
     new SuppressibleTreePathScanner<Void, Void>(state) {
 
       @Override
@@ -143,5 +154,9 @@ public class ClassInitializationDeadlock extends BugChecker implements BugChecke
         }
       }
     }.scan(path, null);
+  }
+
+  private static boolean defaultMethod(Symbol s) {
+    return s.getKind().equals(ElementKind.METHOD) && ((Symbol.MethodSymbol) s).isDefault();
   }
 }

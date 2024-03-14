@@ -121,4 +121,32 @@ public class ClassInitializationDeadlockTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void negativeInterface() {
+    testHelper
+        .addSourceLines(
+            "A.java",
+            "public interface A {",
+            "  Object cycle = new B();",
+            "  public static class B implements A {",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void positiveInterfaceDefaultMethod() {
+    testHelper
+        .addSourceLines(
+            "A.java",
+            "public interface A {",
+            "  // BUG: Diagnostic contains:",
+            "  Object cycle = new B();",
+            "  default void f() {}",
+            "  public static class B implements A {",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
