@@ -149,4 +149,79 @@ public class ClassInitializationDeadlockTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void negativePrivateConstructor() {
+    testHelper
+        .addSourceLines(
+            "A.java",
+            "public class A {",
+            "  private static Object cycle = new B();",
+            "  public static final class B extends A {",
+            "    private B() {}",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void positivePrivateConstructorFactoryMethod() {
+    testHelper
+        .addSourceLines(
+            "A.java",
+            "public class A {",
+            "  // BUG: Diagnostic contains:",
+            "  private static Object cycle = new B();",
+            "  public static final class B extends A {",
+            "    private B() {}",
+            "    public static B create() {",
+            "      return new B();",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void positivePrivateConstructorFactoryMethodNonStatic() {
+    testHelper
+        .addSourceLines(
+            "A.java",
+            "public class A {",
+            "  private static Object cycle = new B();",
+            "  public static final class B extends A {",
+            "    private B() {}",
+            "    public B create() {",
+            "      return new B();",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void negativeNonStaticInner() {
+    testHelper
+        .addSourceLines(
+            "A.java",
+            "public class A {",
+            "  private static Object cycle = new A().new B();",
+            "  public class B extends A {",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void negativeSelf() {
+    testHelper
+        .addSourceLines(
+            "A.java",
+            "public class A {",
+            "  public static class B extends A {",
+            "    private static B self = new B();",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

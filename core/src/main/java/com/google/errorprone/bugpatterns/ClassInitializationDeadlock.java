@@ -20,6 +20,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isEffectivelyPrivate;
+import static com.google.errorprone.util.ASTHelpers.isStatic;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -31,6 +32,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
@@ -58,7 +60,12 @@ public class ClassInitializationDeadlock extends BugChecker implements BugChecke
 
       @Override
       public Void visitClass(ClassTree node, Void unused) {
-        scan(node.getMembers(), null);
+        for (Tree member : node.getMembers()) {
+          if (member.getKind().equals(Tree.Kind.CLASS)) {
+            continue;
+          }
+          scan(member, null);
+        }
         return null;
       }
 
@@ -72,8 +79,9 @@ public class ClassInitializationDeadlock extends BugChecker implements BugChecke
 
       @Override
       public Void visitVariable(VariableTree tree, Void unused) {
-        if (getSymbol(tree).isStatic()) {
-          scanForSubtypes(getCurrentPath(), classSymbol, state);
+        ExpressionTree initializer = tree.getInitializer();
+        if (getSymbol(tree).isStatic() && initializer != null) {
+          scanForSubtypes(new TreePath(getCurrentPath(), initializer), classSymbol, state);
         }
         return null;
       }
@@ -142,6 +150,23 @@ public class ClassInitializationDeadlock extends BugChecker implements BugChecke
           // https://errorprone.info/bugpattern/ClassInitializationDeadlock
           return;
         }
+        if (!ASTHelpers.scope(use.members())
+            .anyMatch(ClassInitializationDeadlock::nonPrivateConstructorOrFactory)) {
+          // If the class can't be instantiated outside the current compilation unit, because it has
+          // no non-private
+          // constructors or static methods (which could be factory methods), it can't be directly
+          // instantiated outside
+          // the current file. Similar to private classes, assume that initializations of it will
+          // first initialize the
+          // enclosing class.
+          return;
+        }
+        if (!isStatic(use)) {
+          // Nested inner classes implicitly take the enclosing instance as a constructor parameter,
+          // and can't be
+          // initialized without first initializing their containing class.
+          return;
+        }
         if (use.isSubClass(classSymbol, state.getTypes())) {
           state.reportMatch(
               buildDescription(tree)
@@ -154,6 +179,13 @@ public class ClassInitializationDeadlock extends BugChecker implements BugChecke
         }
       }
     }.scan(path, null);
+  }
+
+  private static boolean nonPrivateConstructorOrFactory(Symbol symbol) {
+    if (symbol.isPrivate()) {
+      return false;
+    }
+    return symbol.isConstructor() || isStatic(symbol);
   }
 
   private static boolean defaultMethod(Symbol s) {
