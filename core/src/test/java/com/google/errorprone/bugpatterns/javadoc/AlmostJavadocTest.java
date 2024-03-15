@@ -202,4 +202,16 @@ public final class AlmostJavadocTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void doesNotFireOnTemplateParameters() {
+    helper
+        .addSourceLines(
+            "Test.java", //
+            "public class Test {",
+            "  /* Foo<T>. */",
+            "  int x = 1, y = 2;",
+            "}")
+        .doTest();
+  }
 }

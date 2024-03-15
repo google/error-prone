@@ -63,7 +63,7 @@ public final class AlmostJavadoc extends BugChecker implements CompilationUnitTr
   private static final Pattern HAS_TAG =
       Pattern.compile(
           String.format(
-              "<\\w+>|@(%s)",
+              "</(em|b|a|strong|i|pre|code)>|@(%s)",
               Streams.concat(
                       JavadocTag.VALID_CLASS_TAGS.stream(),
                       JavadocTag.VALID_METHOD_TAGS.stream(),
