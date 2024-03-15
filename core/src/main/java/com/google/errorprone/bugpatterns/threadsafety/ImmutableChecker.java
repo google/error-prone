@@ -124,17 +124,12 @@ public class ImmutableChecker extends BugChecker
     if (info.isPresent()) {
       state.reportMatch(buildDescription(tree).setMessage(info.message()).build());
     }
-    if (!hasImmutableAnnotation(lambdaType, state)) {
+    if (!typeOrSuperHasImmutableAnnotation(lambdaType, state)) {
       return NO_MATCH;
     }
     checkClosedTypes(tree, state, lambdaType, analysis);
 
     return NO_MATCH;
-  }
-
-  private boolean hasImmutableAnnotation(TypeSymbol tsym, VisitorState state) {
-    return immutableAnnotations.stream()
-        .anyMatch(annotation -> hasAnnotation(tsym, annotation, state));
   }
 
   @Override
@@ -150,7 +145,7 @@ public class ImmutableChecker extends BugChecker
     if (info.isPresent()) {
       state.reportMatch(buildDescription(tree).setMessage(info.message()).build());
     }
-    if (!hasImmutableAnnotation(memberReferenceType, state)) {
+    if (!typeOrSuperHasImmutableAnnotation(memberReferenceType, state)) {
       return NO_MATCH;
     }
     if (getSymbol(getReceiver(tree)) instanceof ClassSymbol) {
@@ -480,7 +475,7 @@ public class ImmutableChecker extends BugChecker
     for (var entry : typesClosed.asMap().entrySet()) {
       var classSymbol = entry.getKey();
       var methods = entry.getValue();
-      if (!hasImmutableAnnotation(classSymbol.type.tsym, state)) {
+      if (!typeOrSuperHasImmutableAnnotation(classSymbol.type.tsym, state)) {
         String message =
             format(
                 "%s, but accesses instance method(s) '%s' on '%s' which is not @Immutable.",
@@ -585,6 +580,15 @@ public class ImmutableChecker extends BugChecker
       // }
     }
     return null;
+  }
+
+  private boolean hasImmutableAnnotation(TypeSymbol tsym, VisitorState state) {
+    return immutableAnnotations.stream()
+        .anyMatch(annotation -> hasAnnotation(tsym, annotation, state));
+  }
+
+  private boolean typeOrSuperHasImmutableAnnotation(TypeSymbol tsym, VisitorState state) {
+    return hasImmutableAnnotation(tsym, state) || immutableSupertype(tsym, state) != null;
   }
 
   /**
