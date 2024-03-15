@@ -299,7 +299,7 @@ public final class WellKnownMutability implements ThreadSafety.KnownTypes {
         .build();
   }
 
-  private static ImmutableSet<String> buildMutableClasses(List<String> knownMutables) {
+  public static ImmutableSet<String> buildMutableClasses(List<String> knownMutables) {
     return ImmutableSet.<String>builder()
         .addAll(knownMutables)
         .addAll(ImmutableCollections.MUTABLE_TO_IMMUTABLE_CLASS_NAME_MAP.keySet())
@@ -308,7 +308,8 @@ public final class WellKnownMutability implements ThreadSafety.KnownTypes {
         .add(java.util.BitSet.class.getName())
         .add(java.util.Calendar.class.getName())
         .add(java.lang.Iterable.class.getName())
-        .add(java.lang.Object.class.getName())
+        // Everything is a subtype of Object so hack remove it
+        // .add(java.lang.Object.class.getName())
         .add("java.text.DateFormat")
         .add(java.util.ArrayList.class.getName())
         .add(java.util.Collection.class.getName())
