@@ -145,12 +145,14 @@ public final class ImpossibleNullComparison extends BugChecker
 
   private final boolean matchTestAssertions;
   private final boolean emitEmptyFixes;
+  private final boolean checkPrimitives;
 
   @Inject
   ImpossibleNullComparison(ErrorProneFlags flags) {
     this.matchTestAssertions =
         flags.getBoolean("ProtoFieldNullComparison:MatchTestAssertions").orElse(true);
     this.emitEmptyFixes = flags.getBoolean("ImmutableNullComparison:EmitEmptyFixes").orElse(true);
+    this.checkPrimitives = flags.getBoolean("ImmutableNullComparison:CheckPrimitives").orElse(true);
   }
 
   @Override
@@ -263,6 +265,7 @@ public final class ImpossibleNullComparison extends BugChecker
         return Optional.empty();
       }
       return stream(GetterTypes.values())
+          .filter(gt -> !gt.equals(GetterTypes.PRIMITIVE) || checkPrimitives)
           .map(type -> type.match(resolvedTree, state))
           .filter(Objects::nonNull)
           .findFirst();
@@ -271,7 +274,7 @@ public final class ImpossibleNullComparison extends BugChecker
     @Nullable
     private ExpressionTree getEffectiveTree(ExpressionTree tree) {
       return tree.getKind() == Kind.IDENTIFIER
-          ? effectivelyFinalValues.get(ASTHelpers.getSymbol(tree))
+          ? effectivelyFinalValues.getOrDefault(ASTHelpers.getSymbol(tree), tree)
           : tree;
     }
   }
@@ -385,6 +388,14 @@ public final class ImpossibleNullComparison extends BugChecker
                     s.getSourceForNode(getReceiver(tree)),
                     s.getSourceForNode(
                         getOnlyElement(((MethodInvocationTree) tree).getArguments()))));
+      }
+    },
+    PRIMITIVE {
+      @Nullable
+      @Override
+      Fixer match(ExpressionTree tree, VisitorState state) {
+        var type = getType(tree);
+        return type != null && type.isPrimitive() ? GetterTypes::emptyFix : null;
       }
     },
     /** {@code proto.getFoo()} */

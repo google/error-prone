@@ -481,4 +481,20 @@ public final class ImpossibleNullComparisonTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void primitives() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.truth.Truth.assertThat;",
+            "public class Test {",
+            "  public void o(int i, Integer boxed) {",
+            "    // BUG: Diagnostic contains:",
+            "    assertThat(i).isNotNull();",
+            "    assertThat(boxed).isNotNull();",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
