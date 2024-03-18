@@ -48,6 +48,22 @@ public final class DaggerRules {
     return new DaggerRule("dagger.Subcomponent.Builder");
   }
 
+  /**
+   * Returns a rule that handles {@code @dagger.producers.ProductionComponent.Builder} types, making
+   * their fluent setter methods' results ignorable.
+   */
+  public static ResultUseRule<VisitorState, Symbol> productionComponentBuilders() {
+    return new DaggerRule("dagger.producers.ProductionComponent.Builder");
+  }
+
+  /**
+   * Returns a rule that handles {@code @dagger.producers.ProductionSubcomponent.Builder} types,
+   * making their fluent setter methods' results ignorable.
+   */
+  public static ResultUseRule<VisitorState, Symbol> productionSubcomponentBuilders() {
+    return new DaggerRule("dagger.producers.ProductionSubcomponent.Builder");
+  }
+
   /** Rules for methods on Dagger components and subcomponents. */
   private static final class DaggerRule extends ErrorProneMethodRule {
 

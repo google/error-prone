@@ -23,6 +23,8 @@ import static com.google.errorprone.bugpatterns.checkreturnvalue.AutoValueRules.
 import static com.google.errorprone.bugpatterns.checkreturnvalue.AutoValueRules.autoValueBuilders;
 import static com.google.errorprone.bugpatterns.checkreturnvalue.AutoValueRules.autoValues;
 import static com.google.errorprone.bugpatterns.checkreturnvalue.DaggerRules.componentBuilders;
+import static com.google.errorprone.bugpatterns.checkreturnvalue.DaggerRules.productionComponentBuilders;
+import static com.google.errorprone.bugpatterns.checkreturnvalue.DaggerRules.productionSubcomponentBuilders;
 import static com.google.errorprone.bugpatterns.checkreturnvalue.DaggerRules.subcomponentBuilders;
 import static com.google.errorprone.bugpatterns.checkreturnvalue.ErrorMessages.annotationOnVoid;
 import static com.google.errorprone.bugpatterns.checkreturnvalue.ErrorMessages.conflictingAnnotations;
@@ -170,6 +172,8 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
                 autoBuilders(),
                 componentBuilders(),
                 subcomponentBuilders(),
+                productionComponentBuilders(),
+                productionSubcomponentBuilders(),
 
                 // This is conceptually lower precedence than the above rules.
                 externalIgnoreList());
