@@ -224,4 +224,46 @@ public class ClassInitializationDeadlockTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void negativePrivateInterface() {
+    testHelper
+        .addSourceLines(
+            "A.java", //
+            "public class A {",
+            "  private interface I {}",
+            "  static final I i = new I() {};",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void intermediateNonPrivate() {
+    testHelper
+        .addSourceLines(
+            "A.java", //
+            "public class A {",
+            "  // BUG: Diagnostic contains: C is a subclass of the containing class A (via B, which"
+                + " can be initialized from outside the current file)",
+            "  public static final C i = new C();",
+            "  public static class B extends A {}",
+            "  private static class C extends B {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void negativeNonPrivateUnrelatedSuper() {
+    testHelper
+        .addSourceLines(
+            "A.java", //
+            "public class A {",
+            "  public static final C i = new C();",
+            "  public interface B {",
+            "    default void f() {}",
+            "  }",
+            "  private static class C extends A implements B {}",
+            "}")
+        .doTest();
+  }
 }
