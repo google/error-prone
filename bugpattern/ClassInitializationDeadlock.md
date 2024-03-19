@@ -31,6 +31,68 @@ initializing `Bar` requires initializing its supertype `Foo`. If one thread
 starts initializing `Foo` and another thread simultaneously starts initializing
 `Bar`, it will result in a deadlock.
 
+## Suggested fixes
+
+The best solution is to refactor to break the cycle, by defining the constant
+field in a separate class from the supertype of the field.
+
+For example, using this approach to fix the sample above would result in
+something like:
+
+```java
+class Foos {
+  public static final Bar INSTANCE = new Bar();
+  public static class Foo {}
+  public static class Bar extends Foo {}
+}
+```
+
+That refactoring may be too invasive (say the code is part of an API, and there
+are many references to the current structure).
+
+If the subclass is never referenced outside the current file (i.e. `Bar` is
+never used outside of `Foo`, it is only referenced via `Foo.INSTANCE`), making
+`Bar` `private` makes deadlocks less likely (see caveats below in the discussion
+about `private` classes):
+
+```java
+class Foo {
+  public static final Foo INSTANCE = new Bar();
+  private static class Bar extends Foo {}
+}
+```
+
+If the subclass *is* referenced outside the current field, deadlocks can be
+avoided by ensuring that the subclass has only private constructors (or `static`
+factory methods), so that the only way to initialize the subclass is to first
+initialize the containing class:
+
+```java
+class Foo {
+  public static final Foo INSTANCE = new Bar();
+  private static class Bar extends Foo {
+    private Bar() {}
+  }
+}
+```
+
+If the subclass needs to be directly created by code outside the current file, a
+static factory can be added as a member of the outer class, for example:
+
+```java
+class Foo {
+  public static final Foo INSTANCE = new Bar();
+
+  private static class Bar extends Foo {
+    private Bar() {}
+  }
+
+  public static Bar createBar() {
+    return new Bar();
+  }
+}
+```
+
 --------------------------------------------------------------------------------
 
 ## AutoValue
