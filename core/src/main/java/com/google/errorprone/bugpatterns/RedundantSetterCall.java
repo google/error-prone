@@ -16,26 +16,40 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.base.CaseFormat.UPPER_CAMEL;
+import static com.google.common.base.CaseFormat.UPPER_UNDERSCORE;
+import static com.google.common.collect.Streams.stream;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.VisitorState.memoize;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
+import static com.google.errorprone.predicates.TypePredicates.isDescendantOf;
+import static com.google.errorprone.util.ASTHelpers.enumValues;
+import static com.google.errorprone.util.ASTHelpers.getEnclosedElements;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isAbstract;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
+import static com.google.errorprone.util.ASTHelpers.isSubtype;
+import static java.util.stream.Collectors.joining;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.ListMultimap;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.StandardTags;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.predicates.TypePredicate;
+import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MemberSelectTree;
@@ -46,6 +60,7 @@ import com.sun.tools.javac.code.Type;
 import java.util.Collection;
 import java.util.Map;
 import java.util.regex.Pattern;
+import javax.inject.Inject;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /** A BugPattern; see the summary. */
@@ -74,6 +89,9 @@ public final class RedundantSetterCall extends BugChecker implements MethodInvoc
                 && isSameType(symbol.owner.type, symbol.getReturnType(), state);
           });
 
+  private static final TypePredicate ONE_OF_ENUM =
+      isDescendantOf("com.google.protobuf.AbstractMessageLite.InternalOneOfEnum");
+
   /**
    * Matches a terminal setter. That is, a fluent builder method which is either not followed by
    * another method invocation, or by a method invocation which is not a {@link #FLUENT_SETTER}.
@@ -87,12 +105,21 @@ public final class RedundantSetterCall extends BugChecker implements MethodInvoc
                       (ExpressionTree) state.getPath().getParentPath().getParentPath().getLeaf(),
                       state)));
 
+  private final boolean matchOneOfs;
+
+  @Inject
+  RedundantSetterCall(ErrorProneFlags flags) {
+    this.matchOneOfs = flags.getBoolean("RedundantSetterCall:MatchOneOfs").orElse(true);
+  }
+
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     if (!TERMINAL_FLUENT_SETTER.matches(tree, state)) {
       return Description.NO_MATCH;
     }
     ListMultimap<Field, FieldWithValue> setters = ArrayListMultimap.create();
+    ImmutableMap<String, OneOfField> oneOfSetters =
+        matchOneOfs ? scanForOneOfSetters(getType(tree), state) : ImmutableMap.of();
     Type type = ASTHelpers.getReturnType(tree);
     for (ExpressionTree current = tree;
         FLUENT_SETTER.matches(current, state);
@@ -111,7 +138,15 @@ public final class RedundantSetterCall extends BugChecker implements MethodInvoc
       if (methodName.endsWith("Builder")) {
         break;
       }
-      match(method, methodName, setters, state);
+      for (FieldType fieldType : FieldType.values()) {
+        FieldWithValue match = fieldType.match(methodName, method, state);
+        if (match != null) {
+          setters.put(match.getField(), match);
+          if (oneOfSetters.containsKey(methodName)) {
+            setters.put(oneOfSetters.get(methodName), match);
+          }
+        }
+      }
     }
 
     setters.asMap().entrySet().removeIf(entry -> entry.getValue().size() <= 1);
@@ -128,8 +163,32 @@ public final class RedundantSetterCall extends BugChecker implements MethodInvoc
     return Description.NO_MATCH;
   }
 
+  private ImmutableMap<String, OneOfField> scanForOneOfSetters(Type type, VisitorState state) {
+    var owner = type.tsym.owner;
+    if (owner == null || isSubtype(owner.type, GENERATED_MESSAGE_LITE.get(state), state)) {
+      return ImmutableMap.of();
+    }
+    var builder = ImmutableMap.<String, OneOfField>builder();
+    for (Symbol element : getEnclosedElements(owner)) {
+      if (!ONE_OF_ENUM.apply(element.type, state)) {
+        continue;
+      }
+      var oneOfField = OneOfField.of(element.getSimpleName().toString().replaceFirst("Case$", ""));
+      for (String enumName : enumValues(element.type.tsym)) {
+        if (enumName.equals("ONEOF_NOT_SET")) {
+          continue;
+        }
+        builder.put("set" + UPPER_UNDERSCORE.to(UPPER_CAMEL, enumName), oneOfField);
+      }
+    }
+    return builder.buildOrThrow();
+  }
+
+  private static final Supplier<Type> GENERATED_MESSAGE_LITE =
+      memoize(state -> state.getTypeFromString("com.google.protobuf.GeneratedMessageLite"));
+
   private Description describe(
-      Field protoField, Collection<FieldWithValue> locations, VisitorState state) {
+      Field field, Collection<FieldWithValue> locations, VisitorState state) {
     // We flag up all duplicate sets, but only suggest a fix if the setter is given the same
     // argument (based on source code). This is to avoid the temptation to apply the fix in
     // cases like,
@@ -138,9 +197,9 @@ public final class RedundantSetterCall extends BugChecker implements MethodInvoc
     SuggestedFix.Builder fix = SuggestedFix.builder();
     long values =
         locations.stream().map(l -> state.getSourceForNode(l.getArgument())).distinct().count();
-    if (values == 1) {
-      for (FieldWithValue field : Iterables.skip(locations, 1)) {
-        MethodInvocationTree method = field.getMethodInvocation();
+    if (field.identicalValuesShouldBeRemoved() && values == 1) {
+      for (FieldWithValue fieldWithValue : Iterables.skip(locations, 1)) {
+        MethodInvocationTree method = fieldWithValue.getMethodInvocation();
         int startPos = state.getEndPosition(ASTHelpers.getReceiver(method));
         int endPos = state.getEndPosition(method);
         fix.replace(startPos, endPos, "");
@@ -151,24 +210,13 @@ public final class RedundantSetterCall extends BugChecker implements MethodInvoc
             String.format(
                 "%s was called %s with %s. Setting the same field multiple times is redundant, and "
                     + "could mask a bug.",
-                protoField,
+                field.toString(locations),
                 nTimes(locations.size()),
-                values == 1 ? "the same argument" : "different arguments"))
+                field.identicalValuesShouldBeRemoved()
+                    ? (values == 1 ? " with the same argument" : " with different arguments")
+                    : ""))
         .addFix(fix.build())
         .build();
-  }
-
-  private static void match(
-      MethodInvocationTree method,
-      String methodName,
-      ListMultimap<Field, FieldWithValue> setters,
-      VisitorState state) {
-    for (FieldType fieldType : FieldType.values()) {
-      FieldWithValue match = fieldType.match(methodName, method, state);
-      if (match != null) {
-        setters.put(match.getField(), match);
-      }
-    }
   }
 
   private static String nTimes(int n) {
@@ -225,6 +273,10 @@ public final class RedundantSetterCall extends BugChecker implements MethodInvoc
 
     @Override
     int hashCode();
+
+    boolean identicalValuesShouldBeRemoved();
+
+    String toString(Iterable<FieldWithValue> locations);
   }
 
   @AutoValue
@@ -236,8 +288,13 @@ public final class RedundantSetterCall extends BugChecker implements MethodInvoc
     }
 
     @Override
-    public final String toString() {
+    public final String toString(Iterable<FieldWithValue> locations) {
       return String.format("%s(..)", getName());
+    }
+
+    @Override
+    public boolean identicalValuesShouldBeRemoved() {
+      return true;
     }
   }
 
@@ -252,8 +309,13 @@ public final class RedundantSetterCall extends BugChecker implements MethodInvoc
     }
 
     @Override
-    public final String toString() {
+    public final String toString(Iterable<FieldWithValue> locations) {
       return String.format("%s(%s, ..)", getName(), getIndex());
+    }
+
+    @Override
+    public boolean identicalValuesShouldBeRemoved() {
+      return true;
     }
   }
 
@@ -268,8 +330,39 @@ public final class RedundantSetterCall extends BugChecker implements MethodInvoc
     }
 
     @Override
-    public final String toString() {
+    public final String toString(Iterable<FieldWithValue> locations) {
       return String.format("%s(%s, ..)", getName(), getKey());
+    }
+
+    @Override
+    public boolean identicalValuesShouldBeRemoved() {
+      return true;
+    }
+  }
+
+  @AutoValue
+  abstract static class OneOfField implements Field {
+    abstract String oneOfName();
+
+    static OneOfField of(String oneOfName) {
+      return new AutoValue_RedundantSetterCall_OneOfField(oneOfName);
+    }
+
+    @Override
+    public final String toString(Iterable<FieldWithValue> locations) {
+      return String.format(
+          "The oneof `%s` (set via %s)",
+          oneOfName(),
+          stream(locations)
+              .map(l -> getSymbol(l.getMethodInvocation()).getSimpleName().toString())
+              .distinct()
+              .sorted()
+              .collect(joining(", ")));
+    }
+
+    @Override
+    public boolean identicalValuesShouldBeRemoved() {
+      return false;
     }
   }
 
