@@ -106,4 +106,36 @@ public class MultipleNullnessAnnotationsTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void typeParameter() {
+    testHelper
+        .addSourceLines(
+            "T.java",
+            "import org.checkerframework.checker.nullness.compatqual.NullableDecl;",
+            "import org.checkerframework.checker.nullness.qual.NonNull;",
+            "class T<X> {",
+            "  // BUG: Diagnostic contains:",
+            "  @NullableDecl @NonNull X f;",
+            "  // BUG: Diagnostic contains:",
+            "  @NullableDecl @NonNull X g() {",
+            "    return null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void arrayTypeAnnotation() {
+    testHelper
+        .addSourceLines(
+            "T.java",
+            "import javax.annotation.CheckForNull;",
+            "import org.checkerframework.checker.nullness.qual.NonNull;",
+            "class T {",
+            "  // BUG: Diagnostic contains:",
+            "  @CheckForNull Object @NonNull [] f;",
+            "}")
+        .doTest();
+  }
 }

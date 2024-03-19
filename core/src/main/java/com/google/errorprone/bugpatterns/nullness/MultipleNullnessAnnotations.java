@@ -18,6 +18,8 @@ package com.google.errorprone.bugpatterns.nullness;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.getType;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
@@ -28,12 +30,14 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnnotations;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotatedTypeTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.code.Symbol.VarSymbol;
+import com.sun.tools.javac.code.Type;
 import java.util.Collection;
 import javax.lang.model.element.AnnotationMirror;
 
@@ -43,20 +47,22 @@ public class MultipleNullnessAnnotations extends BugChecker
     implements AnnotatedTypeTreeMatcher, MethodTreeMatcher, VariableTreeMatcher {
   @Override
   public Description matchAnnotatedType(AnnotatedTypeTree tree, VisitorState state) {
-    return match(tree, ASTHelpers.getType(tree).getAnnotationMirrors());
+    return match(tree, getType(tree).getAnnotationMirrors());
   }
 
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
-    return match(tree, ASTHelpers.getSymbol(tree), tree.getReturnType());
+    MethodSymbol sym = getSymbol(tree);
+    return match(tree, sym, sym.getReturnType());
   }
 
   @Override
   public Description matchVariable(VariableTree tree, VisitorState state) {
-    return match(tree, ASTHelpers.getSymbol(tree), tree.getType());
+    VarSymbol sym = getSymbol(tree);
+    return match(tree, sym, sym.asType());
   }
 
-  private Description match(Tree tree, Symbol symbol, Tree type) {
+  private Description match(Tree tree, Symbol symbol, Type type) {
     if (type == null) {
       return NO_MATCH;
     }
@@ -64,7 +70,7 @@ public class MultipleNullnessAnnotations extends BugChecker
         tree,
         ImmutableSet.<AnnotationMirror>builder()
             .addAll(symbol.getAnnotationMirrors())
-            .addAll(ASTHelpers.getType(type).getAnnotationMirrors())
+            .addAll(type.getAnnotationMirrors())
             .build());
   }
 
