@@ -678,9 +678,9 @@ public class SuggesterTest {
             "public final class Client {",
             "  @Deprecated",
             "  public Duration getDeadline(Duration deadline) {",
-            "    return deadline.compareTo(Duration.ZERO) > 0",
+            "    return (deadline.compareTo(Duration.ZERO) > 0",
             "        ? Duration.ofSeconds(42)",
-            "        : Duration.ZERO;",
+            "        : Duration.ZERO);",
             "  }",
             "}")
         .addOutputLines(
@@ -689,14 +689,14 @@ public class SuggesterTest {
             "import com.google.errorprone.annotations.InlineMe;",
             "import java.time.Duration;",
             "public final class Client {",
-            "  @InlineMe(replacement = \"deadline.compareTo(Duration.ZERO) > 0 ?"
-                + " Duration.ofSeconds(42) : Duration.ZERO\", ",
+            "  @InlineMe(replacement = \"(deadline.compareTo(Duration.ZERO) > 0 ?"
+                + " Duration.ofSeconds(42) : Duration.ZERO)\", ",
             "imports = \"java.time.Duration\")",
             "  @Deprecated",
             "  public Duration getDeadline(Duration deadline) {",
-            "    return deadline.compareTo(Duration.ZERO) > 0",
+            "    return (deadline.compareTo(Duration.ZERO) > 0",
             "        ? Duration.ofSeconds(42)",
-            "        : Duration.ZERO;",
+            "        : Duration.ZERO);",
             "  }",
             "}")
         .doTest();

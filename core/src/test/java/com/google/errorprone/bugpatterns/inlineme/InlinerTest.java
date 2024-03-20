@@ -1142,55 +1142,6 @@ public class InlinerTest {
   }
 
   @Test
-  public void ternaryInlining_b266848535() {
-    refactoringTestHelper
-        .addInputLines(
-            "Client.java",
-            "import com.google.common.collect.ImmutableList;",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "import java.util.Optional;",
-            "public final class Client {",
-            "  @Deprecated",
-            "  @InlineMe(",
-            "      replacement = ",
-            "\"this.getList().isEmpty() ? Optional.empty() : Optional.of(this.getList().get(0))\",",
-            "      imports = {\"java.util.Optional\"})",
-            "  public Optional<String> getFoo() {",
-            "    return getList().isEmpty() ? Optional.empty() : Optional.of(getList().get(0));",
-            "  }",
-            "  public ImmutableList<String> getList() {",
-            "    return ImmutableList.of();",
-            "  }",
-            "}")
-        .expectUnchanged()
-        .addInputLines(
-            "Caller.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "public final class Caller {",
-            "  public void doTest() {",
-            "    Client client = new Client();",
-            "    assertThat(client.getFoo().get()).isEqualTo(\"hi\");",
-            "  }",
-            "}")
-        .addOutputLines(
-            "out/Caller.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import java.util.Optional;",
-            "public final class Caller {",
-            "  public void doTest() {",
-            "    Client client = new Client();",
-            // TODO(b/266848535): this is a bug; we need to add parens around the ternary
-            "    assertThat(",
-            "            client.getList().isEmpty() ",
-            "                ? Optional.empty()",
-            "                : Optional.of(client.getList().get(0)).get())",
-            "        .isEqualTo(\"hi\");",
-            "  }",
-            "}")
-        .doTest();
-  }
-
-  @Test
   public void varArgs_b268215956() {
     refactoringTestHelper
         .addInputLines(

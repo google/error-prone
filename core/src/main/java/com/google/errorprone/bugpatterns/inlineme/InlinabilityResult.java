@@ -25,6 +25,7 @@ import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.ASTHelpers;
+import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
@@ -36,6 +37,7 @@ import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
 import com.sun.source.util.TreeScanner;
@@ -106,7 +108,7 @@ abstract class InlinabilityResult {
         "InlineMe cannot be applied when the implementation references deprecated or less visible"
             + " API elements:"),
     API_IS_PRIVATE("InlineMe cannot be applied to private APIs."),
-    LAMBDA_CAPTURES_PARAMETER(
+    BODY_WOULD_EVALUATE_DIFFERENTLY(
         "Inlining this method will result in a change in evaluation timing for one or more"
             + " arguments to this method."),
     METHOD_CAN_BE_OVERIDDEN_AND_CANT_BE_FIXED(
@@ -179,14 +181,14 @@ abstract class InlinabilityResult {
 
     // TODO(kak): declare a list of all the types we don't want to allow (e.g., ClassTree) and use
     // contains
-    if (body.toString().contains("{")) {
+    if (body.toString().contains("{") || body.getKind() == Kind.CONDITIONAL_EXPRESSION) {
       return fromError(InlineValidationErrorReason.COMPLEX_STATEMENT, body);
     }
 
-    Symbol usedMultipliedTimes = usesVariablesMultipleTimes(body, methSymbol.params(), state);
-    if (usedMultipliedTimes != null) {
+    Symbol usedMultipleTimes = usesVariablesMultipleTimes(body, methSymbol.params(), state);
+    if (usedMultipleTimes != null) {
       return fromError(
-          InlineValidationErrorReason.REUSE_OF_ARGUMENTS, body, usedMultipliedTimes.toString());
+          InlineValidationErrorReason.REUSE_OF_ARGUMENTS, body, usedMultipleTimes.toString());
     }
 
     Tree privateOrDeprecatedApi =
@@ -198,8 +200,8 @@ abstract class InlinabilityResult {
           state.getSourceForNode(privateOrDeprecatedApi));
     }
 
-    if (hasLambdaCapturingParameters(tree, body)) {
-      return fromError(InlineValidationErrorReason.LAMBDA_CAPTURES_PARAMETER, body);
+    if (hasArgumentInPossiblyNonExecutedPosition(tree, body)) {
+      return fromError(InlineValidationErrorReason.BODY_WOULD_EVALUATE_DIFFERENTLY, body);
     }
 
     if (ASTHelpers.methodCanBeOverridden(methSymbol)) {
@@ -363,19 +365,33 @@ abstract class InlinabilityResult {
     }
   }
 
-  private static boolean hasLambdaCapturingParameters(MethodTree meth, ExpressionTree statement) {
+  private static boolean hasArgumentInPossiblyNonExecutedPosition(
+      MethodTree meth, ExpressionTree statement) {
     AtomicBoolean paramReferred = new AtomicBoolean(false);
     ImmutableSet<VarSymbol> params =
         meth.getParameters().stream().map(ASTHelpers::getSymbol).collect(toImmutableSet());
     new TreeScanner<Void, Void>() {
-      LambdaExpressionTree currentLambdaTree = null;
+      Tree currentContextTree = null;
 
       @Override
       public Void visitLambdaExpression(LambdaExpressionTree lambdaExpressionTree, Void o) {
-        LambdaExpressionTree lastContext = currentLambdaTree;
-        currentLambdaTree = lambdaExpressionTree;
+        Tree lastContext = currentContextTree;
+        currentContextTree = lambdaExpressionTree;
         scan(lambdaExpressionTree.getBody(), null);
-        currentLambdaTree = lastContext;
+        currentContextTree = lastContext;
+        return null;
+      }
+
+      @Override
+      public Void visitConditionalExpression(ConditionalExpressionTree ceTree, Void o) {
+        scan(ceTree.getCondition(), null);
+        // If the variables show up in the left or right side, they may conditionally not be
+        // executed.
+        Tree lastContext = currentContextTree;
+        currentContextTree = ceTree;
+        scan(ceTree.getTrueExpression(), null);
+        scan(ceTree.getFalseExpression(), null);
+        currentContextTree = lastContext;
         return null;
       }
 
@@ -383,7 +399,7 @@ abstract class InlinabilityResult {
       public Void visitIdentifier(IdentifierTree identifierTree, Void aVoid) {
         // If the lambda captures method parameters, inlining the method body can change the
         // timing of the evaluation of the arguments.
-        if (currentLambdaTree != null && params.contains(getSymbol(identifierTree))) {
+        if (currentContextTree != null && params.contains(getSymbol(identifierTree))) {
           paramReferred.set(true);
         }
         return super.visitIdentifier(identifierTree, null);
