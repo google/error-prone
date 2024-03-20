@@ -27,7 +27,6 @@ import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -37,7 +36,6 @@ import com.google.errorprone.matchers.MultiMatcher;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.Tree;
-import javax.inject.Inject;
 
 /** Flags uses of parameters in non-parameterized tests. */
 @BugPattern(
@@ -61,37 +59,25 @@ public final class TestParametersNotInitialized extends BugChecker implements Cl
           AT_LEAST_ONE,
           hasArgumentWithValue("value", isJUnit4TestRunnerOfType(ImmutableSet.of(RUNNER))));
 
-  private final MultiMatcher<ClassTree, AnnotationTree> nonParameterizedRunner;
-
-  @Inject
-  TestParametersNotInitialized(ErrorProneFlags flags) {
-    var moreRunners = flags.getBoolean("TestParametersNotInitialized:MoreRunners").orElse(true);
-    this.nonParameterizedRunner =
-        moreRunners
-            ? annotations(
-                AT_LEAST_ONE,
-                hasArgumentWithValue(
-                    "value",
-                    isJUnit4TestRunnerOfType(
-                        ImmutableSet.of(
-                            // keep-sorted start
-                            "androidx.test.ext.junit.runners.AndroidJUnit4",
-                            "junitparams.JUnitParamsRunner",
-                            "org.junit.experimental.theories.Theories",
-                            "org.junit.runners.JUnit4",
-                            "org.junit.runners.Parameterized"
-                            // keep-sorted end
-                            ))))
-            : annotations(
-                AT_LEAST_ONE,
-                hasArgumentWithValue(
-                    "value",
-                    isJUnit4TestRunnerOfType(ImmutableSet.of("org.junit.runners.JUnit4"))));
-  }
+  private static final MultiMatcher<ClassTree, AnnotationTree> NON_PARAMETERIZED_RUNNER =
+      annotations(
+          AT_LEAST_ONE,
+          hasArgumentWithValue(
+              "value",
+              isJUnit4TestRunnerOfType(
+                  ImmutableSet.of(
+                      // keep-sorted start
+                      "androidx.test.ext.junit.runners.AndroidJUnit4",
+                      "junitparams.JUnitParamsRunner",
+                      "org.junit.experimental.theories.Theories",
+                      "org.junit.runners.JUnit4",
+                      "org.junit.runners.Parameterized"
+                      // keep-sorted end
+                      ))));
 
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
-    if (!nonParameterizedRunner.matches(tree, state)) {
+    if (!NON_PARAMETERIZED_RUNNER.matches(tree, state)) {
       return NO_MATCH;
     }
     if (TEST_PARAMETER_INJECTOR.matches(tree, state)) {
