@@ -456,6 +456,9 @@ Check for non-allowlisted callers to RestrictedApiChecker.
 __[ReturnValueIgnored](bugpattern/ReturnValueIgnored)__<br>
 Return value of this method must be used
 
+__[SelfAssertion](bugpattern/SelfAssertion)__<br>
+This assertion will always fail or succeed.
+
 __[SelfAssignment](bugpattern/SelfAssignment)__<br>
 Variable assigned to itself
 
@@ -500,9 +503,6 @@ Throwing &#39;null&#39; always results in a NullPointerException being thrown.
 
 __[TreeToString](bugpattern/TreeToString)__<br>
 Tree#toString shouldn&#39;t be used for Trees deriving from the code being compiled, as it discards whitespace and comments.
-
-__[TruthSelfEquals](bugpattern/TruthSelfEquals)__<br>
-This assertion will always fail or succeed.
 
 __[TryFailThrowable](bugpattern/TryFailThrowable)__<br>
 Catching Throwable/Error masks failures from fail() or assert*() in the try block

@@ -1,5 +1,5 @@
 ---
-title: TruthSelfEquals
+title: SelfAssertion
 summary: This assertion will always fail or succeed.
 layout: bugpattern
 tags: ''
@@ -11,6 +11,7 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+_Alternate names: TruthSelfEquals_
 
 ## The problem
 If a test subject and the argument to `isEqualTo` are the same instance (e.g.
@@ -27,4 +28,4 @@ To test the implementation of an `equals` method, use
 [javadoc]: http://static.javadoc.io/com.google.guava/guava-testlib/21.0/com/google/common/testing/EqualsTester.html
 
 ## Suppression
-Suppress false positives by adding the suppression annotation `@SuppressWarnings("TruthSelfEquals")` to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("SelfAssertion")` to the enclosing element.
