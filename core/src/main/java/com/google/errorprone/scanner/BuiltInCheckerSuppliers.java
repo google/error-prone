@@ -330,6 +330,7 @@ import com.google.errorprone.bugpatterns.RobolectricShadowDirectlyOn;
 import com.google.errorprone.bugpatterns.RxReturnValueIgnored;
 import com.google.errorprone.bugpatterns.SameNameButDifferent;
 import com.google.errorprone.bugpatterns.SelfAlwaysReturnsThis;
+import com.google.errorprone.bugpatterns.SelfAssertion;
 import com.google.errorprone.bugpatterns.SelfAssignment;
 import com.google.errorprone.bugpatterns.SelfComparison;
 import com.google.errorprone.bugpatterns.SelfEquals;
@@ -378,7 +379,6 @@ import com.google.errorprone.bugpatterns.TruthAssertExpected;
 import com.google.errorprone.bugpatterns.TruthConstantAsserts;
 import com.google.errorprone.bugpatterns.TruthContainsExactlyElementsInUsage;
 import com.google.errorprone.bugpatterns.TruthGetOrDefault;
-import com.google.errorprone.bugpatterns.TruthSelfEquals;
 import com.google.errorprone.bugpatterns.TryFailRefactoring;
 import com.google.errorprone.bugpatterns.TryFailThrowable;
 import com.google.errorprone.bugpatterns.TryWithResourcesVariable;
@@ -797,6 +797,7 @@ public class BuiltInCheckerSuppliers {
           RequiredModifiersChecker.class,
           RestrictedApiChecker.class,
           ReturnValueIgnored.class,
+          SelfAssertion.class,
           SelfAssignment.class,
           SelfComparison.class,
           SelfEquals.class,
@@ -812,7 +813,6 @@ public class BuiltInCheckerSuppliers {
           ThrowIfUncheckedKnownChecked.class,
           ThrowNull.class,
           TreeToString.class,
-          TruthSelfEquals.class,
           TryFailThrowable.class,
           TypeParameterQualifier.class,
           UnicodeDirectionalityCharacters.class,

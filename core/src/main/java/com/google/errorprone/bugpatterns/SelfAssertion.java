@@ -41,9 +41,11 @@ import com.sun.source.tree.MethodInvocationTree;
 import javax.inject.Inject;
 
 /** A {@link BugPattern}; see the summary. */
-// TODO(ghm): Rename to SelfAssertion or something.
-@BugPattern(summary = "This assertion will always fail or succeed.", severity = ERROR)
-public final class TruthSelfEquals extends BugChecker implements MethodInvocationTreeMatcher {
+@BugPattern(
+    summary = "This assertion will always fail or succeed.",
+    altNames = "TruthSelfEquals",
+    severity = ERROR)
+public final class SelfAssertion extends BugChecker implements MethodInvocationTreeMatcher {
 
   private final Matcher<MethodInvocationTree> equalsMatcher =
       anyOf(
@@ -87,7 +89,7 @@ public final class TruthSelfEquals extends BugChecker implements MethodInvocatio
   private final ConstantExpressions constantExpressions;
 
   @Inject
-  TruthSelfEquals(ConstantExpressions constantExpressions) {
+  SelfAssertion(ConstantExpressions constantExpressions) {
     this.constantExpressions = constantExpressions;
   }
 

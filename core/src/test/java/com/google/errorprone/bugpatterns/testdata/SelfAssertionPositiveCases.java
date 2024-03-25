@@ -20,11 +20,11 @@ import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assertWithMessage;
 
 /**
- * Positive test cases for TruthSelfEquals check.
+ * Positive test cases for SelfAssertion check.
  *
  * @author bhagwani@google.com (Sumit Bhagwani)
  */
-public class TruthSelfEqualsPositiveCases {
+public class SelfAssertionPositiveCases {
 
   public void testAssertThatEq() {
     String test = Boolean.TRUE.toString();

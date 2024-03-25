@@ -23,27 +23,27 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 /**
- * Unit tests for {@link TruthSelfEquals} bug pattern.
+ * Unit tests for {@link SelfAssertion} bug pattern.
  *
  * @author bhagwani@google.com (Sumit Bhagwani)
  */
 @RunWith(JUnit4.class)
-public class TruthSelfEqualsTest {
+public class SelfAssertionTest {
   CompilationTestHelper compilationHelper;
 
   @Before
   public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(TruthSelfEquals.class, getClass());
+    compilationHelper = CompilationTestHelper.newInstance(SelfAssertion.class, getClass());
   }
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("TruthSelfEqualsPositiveCases.java").doTest();
+    compilationHelper.addSourceFile("SelfAssertionPositiveCases.java").doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("TruthSelfEqualsNegativeCases.java").doTest();
+    compilationHelper.addSourceFile("SelfAssertionNegativeCases.java").doTest();
   }
 
   // regression test for b/32107126
