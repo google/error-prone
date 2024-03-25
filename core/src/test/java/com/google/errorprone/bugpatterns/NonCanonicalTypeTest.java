@@ -254,4 +254,27 @@ public final class NonCanonicalTypeTest {
             "}")
         .doTest();
   }
+
+  // https://github.com/google/error-prone/issues/4343
+  @Test
+  public void typeAnnotation() {
+    compilationHelper
+        .addSourceLines(
+            "Crash.java",
+            "import java.lang.annotation.ElementType;",
+            "import java.lang.annotation.Target;",
+            "    @Target(ElementType.TYPE_USE)",
+            "    @interface TA {}",
+            "    class Crash {",
+            "      class Nested {",
+            "        class DoublyNested {}",
+            "      }",
+            "      class SubNested extends Nested {",
+            "      }",
+            "      void foo(Crash.@TA Nested.DoublyNested p) {}",
+            "      // BUG: Diagnostic contains: Crash.Nested.DoublyNested",
+            "      void bar(Crash.@TA SubNested.DoublyNested p) {}",
+            "    }")
+        .doTest();
+  }
 }
