@@ -33,6 +33,8 @@ import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.tree.JCTree;
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Optional;
 import javax.lang.model.element.ElementKind;
@@ -55,6 +57,9 @@ public class MissingDefault extends BugChecker implements SwitchTreeMatcher {
     }
     Optional<? extends CaseTree> maybeDefault = getSwitchDefault(tree);
     if (!maybeDefault.isPresent()) {
+      if (isExhaustive(tree)) {
+        return NO_MATCH;
+      }
       Description.Builder description = buildDescription(tree);
       if (!tree.getCases().isEmpty()) {
         // Inserting the default after the last case is easier than finding the closing brace
@@ -94,5 +99,23 @@ public class MissingDefault extends BugChecker implements SwitchTreeMatcher {
         .setMessage("Default case should be documented with a comment")
         .addFix(SuggestedFix.postfixWith(defaultCase, " // fall out"))
         .build();
+  }
+
+  private static final Field IS_EXHAUSTIVE = getIsExhaustive();
+
+  private static Field getIsExhaustive() {
+    try {
+      return JCTree.JCSwitch.class.getField("isExhaustive");
+    } catch (NoSuchFieldException e) {
+      return null;
+    }
+  }
+
+  private static boolean isExhaustive(SwitchTree tree) {
+    try {
+      return IS_EXHAUSTIVE != null && IS_EXHAUSTIVE.getBoolean(tree);
+    } catch (IllegalAccessException e) {
+      throw new LinkageError(e.getMessage(), e);
+    }
   }
 }

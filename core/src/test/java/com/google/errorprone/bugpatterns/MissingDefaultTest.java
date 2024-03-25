@@ -282,4 +282,25 @@ public class MissingDefaultTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void exhaustiveExpressionSwitch() {
+    assumeTrue(RuntimeVersion.isAtLeast21());
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  sealed interface I permits A, B {}",
+            "  abstract static class S {}",
+            "  static final class A extends S implements I {}",
+            "  static final class B extends S implements I {}",
+            "  void f(I i) {",
+            "    switch (i) {",
+            "      case A a -> System.err.println(a);",
+            "      case B b -> System.err.println(b);",
+            "    };",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
