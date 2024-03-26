@@ -28,7 +28,6 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
-import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.suppliers.Supplier;
@@ -80,11 +79,10 @@ public class DateFormatConstant extends BugChecker implements VariableTreeMatche
         .build();
   }
 
-  private static Fix threadLocalFix(
+  private static SuggestedFix threadLocalFix(
       VariableTree tree, VisitorState state, VarSymbol sym, SuggestedFix rename) {
     SuggestedFix.Builder fix =
-        SuggestedFix.builder()
-            .merge(rename)
+        rename.toBuilder()
             .replace(
                 tree.getType(),
                 String.format("ThreadLocal<%s>", state.getSourceForNode(tree.getType())))

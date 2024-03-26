@@ -119,10 +119,9 @@ public final class FieldCanBeStatic extends BugChecker implements VariableTreeMa
       return NO_MATCH;
     }
     SuggestedFix fix =
-        SuggestedFix.builder()
-            .merge(renameVariable(tree, state))
-            .merge(addModifiers(tree, state, STATIC).orElse(SuggestedFix.emptyFix()))
-            .build();
+        SuggestedFix.merge(
+            renameVariable(tree, state),
+            addModifiers(tree, state, STATIC).orElse(SuggestedFix.emptyFix()));
     return describeMatch(tree, fix);
   }
 

@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.fixes.SuggestedFix.emptyFix;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.JUnitMatchers.containsTestMethod;
 import static com.google.errorprone.matchers.JUnitMatchers.isJUnit4TestClass;
@@ -191,23 +192,20 @@ public class JUnit4TestNotRun extends BugChecker implements ClassTreeMatcher {
     Optional<SuggestedFix> removeStatic =
         SuggestedFixes.removeModifiers(methodTree, state, Modifier.STATIC);
     SuggestedFix testFix =
-        SuggestedFix.builder()
-            .merge(removeStatic.orElse(null))
+        removeStatic.orElse(emptyFix()).toBuilder()
             .addImport("org.junit.Test")
             .prefixWith(methodTree, "@Test ")
             .build();
     SuggestedFix ignoreFix =
-        SuggestedFix.builder()
-            .merge(testFix)
+        testFix.toBuilder()
             .addImport("org.junit.Ignore")
             .prefixWith(methodTree, "@Ignore ")
             .build();
 
     SuggestedFix visibilityFix =
-        SuggestedFix.builder()
-            .merge(SuggestedFixes.removeModifiers(methodTree, state, Modifier.PUBLIC).orElse(null))
-            .merge(SuggestedFixes.addModifiers(methodTree, state, Modifier.PRIVATE).orElse(null))
-            .build();
+        SuggestedFix.merge(
+            SuggestedFixes.removeModifiers(methodTree, state, Modifier.PUBLIC).orElse(emptyFix()),
+            SuggestedFixes.addModifiers(methodTree, state, Modifier.PRIVATE).orElse(emptyFix()));
 
     // Suggest @Ignore first if test method is named like a purposely disabled test.
     String methodName = methodTree.getName().toString();

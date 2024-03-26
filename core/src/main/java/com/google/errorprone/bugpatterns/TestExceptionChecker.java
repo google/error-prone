@@ -82,11 +82,7 @@ public class TestExceptionChecker extends BugChecker implements MethodTreeMatche
       MethodTree tree, VisitorState state, JCExpression expectedException, SuggestedFix baseFix) {
     return describeMatch(
         tree,
-        buildFix(
-            state,
-            SuggestedFix.builder().merge(baseFix),
-            expectedException,
-            tree.getBody().getStatements()));
+        buildFix(state, baseFix.toBuilder(), expectedException, tree.getBody().getStatements()));
   }
 
   private static SuggestedFix buildFix(

@@ -282,12 +282,7 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
                       symbol.name))
               .addAllFixes(
                   fixes.stream()
-                      .map(
-                          f ->
-                              SuggestedFix.builder()
-                                  .merge(makeFirstAssignmentDeclaration)
-                                  .merge(f)
-                                  .build())
+                      .map(f -> SuggestedFix.merge(makeFirstAssignmentDeclaration, f))
                       .collect(toImmutableList()))
               .build());
     }

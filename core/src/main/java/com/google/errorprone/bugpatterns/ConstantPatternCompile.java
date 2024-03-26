@@ -196,8 +196,7 @@ public final class ConstantPatternCompile extends BugChecker implements ClassTre
             state.getSourceForNode(tree.getType()),
             name,
             state.getSourceForNode(tree.getInitializer()));
-    return SuggestedFix.builder()
-        .merge(renameVariableUsages(tree, name, state))
+    return renameVariableUsages(tree, name, state).toBuilder()
         .postfixWith(outerMethodTree, replacement)
         .delete(tree)
         .build();

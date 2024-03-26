@@ -92,8 +92,7 @@ public final class TruthContainsExactlyElementsInUsage extends BugChecker
       ImmutableList<ExpressionTree> arguments, MethodInvocationTree tree, VisitorState state) {
     // First we replace the containsExactlyElementsIn method with containsExactly.
     SuggestedFix.Builder fix =
-        SuggestedFix.builder()
-            .merge(SuggestedFixes.renameMethodInvocation(tree, "containsExactly", state));
+        SuggestedFixes.renameMethodInvocation(tree, "containsExactly", state).toBuilder();
     // Finally, we use the arguments from the new iterable to build the containsExactly arguments.
     ExpressionTree expressionToReplace = tree.getArguments().get(0);
     if (!arguments.isEmpty()) {

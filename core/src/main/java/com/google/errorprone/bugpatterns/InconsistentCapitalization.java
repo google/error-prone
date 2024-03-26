@@ -76,8 +76,7 @@ public class InconsistentCapitalization extends BugChecker implements ClassTreeM
       String fieldName = field.getSimpleName().toString();
       VariableTree parameterTree = (VariableTree) parameterPath.getLeaf();
       SuggestedFix.Builder fix =
-          SuggestedFix.builder()
-              .merge(SuggestedFixes.renameVariable(parameterTree, fieldName, state));
+          SuggestedFixes.renameVariable(parameterTree, fieldName, state).toBuilder();
 
       if (parameterPath.getParentPath() != null) {
         String qualifiedName =

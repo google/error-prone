@@ -172,6 +172,10 @@ public abstract class SuggestedFix implements Fix {
     return new Builder();
   }
 
+  public Builder toBuilder() {
+    return SuggestedFix.builder().merge(this);
+  }
+
   /** Builds {@link SuggestedFix}s. */
   public static class Builder {
 
