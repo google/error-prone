@@ -451,7 +451,7 @@ public class ErrorProneScanner extends Scanner {
           reportMatch(
               processingFunction.process(matcher, tree, stateWithSuppressionInformation),
               stateWithSuppressionInformation);
-        } catch (Exception | AssertionError t) {
+        } catch (Throwable t) {
           if (HubSpotUtils.isErrorHandlingEnabled(errorProneOptions)) {
             HubSpotMetrics.instance(oldState.context).recordError(matcher);
           } else {
