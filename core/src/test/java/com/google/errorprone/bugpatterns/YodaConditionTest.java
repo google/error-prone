@@ -54,6 +54,50 @@ public final class YodaConditionTest {
   }
 
   @Test
+  public void boxedBoolean() {
+    refactoring
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  boolean yoda(Boolean a) {",
+            "    return Boolean.TRUE.equals(a);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import java.util.Objects;",
+            "class Test {",
+            "  boolean yoda(Boolean a) {",
+            "    return Objects.equals(a, Boolean.TRUE);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void boxedVsUnboxedBoolean() {
+    refactoring
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  boolean yoda(boolean a) {",
+            "    return Boolean.TRUE.equals(a);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  boolean yoda(boolean a) {",
+            // NOTE: this is a broken fix! We could detect this if it turns out to be an issue in
+            // practice.
+            "    return a.equals(Boolean.TRUE);",
+            "  }",
+            "}")
+        .allowBreakingChanges()
+        .doTest();
+  }
+
+  @Test
   public void enums() {
     refactoring
         .addInputLines(

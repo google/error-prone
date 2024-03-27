@@ -25,6 +25,7 @@ import static com.google.errorprone.util.ASTHelpers.constValue;
 import static com.google.errorprone.util.ASTHelpers.getNullnessValue;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.isStatic;
 import static java.lang.String.format;
 
 import com.google.errorprone.BugPattern;
@@ -41,6 +42,7 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 /** See the summary. */
 @BugPattern(
@@ -119,6 +121,12 @@ public final class YodaCondition extends BugChecker
       return true;
     }
     var symbol = getSymbol(tree);
-    return symbol instanceof VarSymbol && symbol.isEnum();
+    if (!(symbol instanceof VarSymbol)) {
+      return false;
+    }
+    return symbol.isEnum()
+        || (isStatic(symbol) && CONSTANT_CASE.matcher(symbol.getSimpleName().toString()).matches());
   }
+
+  private static final Pattern CONSTANT_CASE = Pattern.compile("[A-Z0-9_]+");
 }
