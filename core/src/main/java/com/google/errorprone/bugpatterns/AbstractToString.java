@@ -201,8 +201,9 @@ public abstract class AbstractToString extends BugChecker
                 argTree,
                 ToStringKind.IMPLICIT,
                 state);
+          } else {
+            handleStringifiedTree(argTree, ToStringKind.IMPLICIT, state);
           }
-          handleStringifiedTree(argTree, ToStringKind.IMPLICIT, state);
         }
       }
     }

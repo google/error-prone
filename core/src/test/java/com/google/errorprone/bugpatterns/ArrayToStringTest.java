@@ -199,4 +199,33 @@ public class ArrayToStringTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void arrayPassedToJoiner_firstSecondRest_negative() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.base.Joiner;",
+            "class Test {",
+            "  String test(Joiner j, Object first, Object second, Object[] rest) {",
+            "    return j.join(first, second, rest);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void arrayPassedToJoiner_firstSecondRest_positive() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.base.Joiner;",
+            "class Test {",
+            "  String test(Joiner j, Object first, Object second, Object third, Object[] rest) {",
+            "    // BUG: Diagnostic contains:",
+            "    return j.join(first, second, third, rest);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
