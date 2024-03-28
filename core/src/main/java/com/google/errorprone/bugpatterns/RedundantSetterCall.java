@@ -19,7 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.base.CaseFormat.UPPER_CAMEL;
 import static com.google.common.base.CaseFormat.UPPER_UNDERSCORE;
 import static com.google.common.collect.Streams.stream;
-import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.VisitorState.memoize;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
@@ -66,7 +66,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /** A BugPattern; see the summary. */
 @BugPattern(
     summary = "A field was set twice in the same chained expression.",
-    severity = WARNING,
+    severity = ERROR,
     altNames = "ProtoRedundantSet",
     tags = StandardTags.FRAGILE_CODE)
 public final class RedundantSetterCall extends BugChecker implements MethodInvocationTreeMatcher {
