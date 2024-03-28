@@ -3,7 +3,7 @@ title: RedundantSetterCall
 summary: A field was set twice in the same chained expression.
 layout: bugpattern
 tags: FragileCode
-severity: WARNING
+severity: ERROR
 ---
 
 <!--
