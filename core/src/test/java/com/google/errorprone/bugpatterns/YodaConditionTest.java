@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.FixChoosers;
+import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -26,6 +27,9 @@ import org.junit.runners.JUnit4;
 public final class YodaConditionTest {
   private final BugCheckerRefactoringTestHelper refactoring =
       BugCheckerRefactoringTestHelper.newInstance(YodaCondition.class, getClass());
+
+  private final CompilationTestHelper testHelper =
+      CompilationTestHelper.newInstance(YodaCondition.class, getClass());
 
   @Test
   public void primitive() {
@@ -201,6 +205,20 @@ public final class YodaConditionTest {
             "      return a.equals(E.A);",
             "    }",
             "    return true;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void nullableConstant() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  private static final String CONST = null;",
+            "  public static boolean f() {",
+            "    return CONST != null;",
             "  }",
             "}")
         .doTest();

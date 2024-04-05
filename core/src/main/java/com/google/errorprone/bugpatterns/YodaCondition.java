@@ -120,6 +120,9 @@ public final class YodaCondition extends BugChecker
     if (constValue(tree) != null) {
       return true;
     }
+    if (tree.getKind().equals(Tree.Kind.NULL_LITERAL)) {
+      return true;
+    }
     var symbol = getSymbol(tree);
     if (!(symbol instanceof VarSymbol)) {
       return false;
