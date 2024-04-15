@@ -401,4 +401,53 @@ public final class ImmutableSetForContainsTest {
         .expectUnchanged()
         .doTest();
   }
+
+  @Test
+  public void bothGetDisallowedAndContainsAllowed_noFinding() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableList;",
+            "class Test {",
+            "  private static final ImmutableList<String> MY_LIST_1 =",
+            "           ImmutableList.of(\"hello\");",
+            "  private void myFunc() {",
+            "    String myString = MY_LIST_1.get(0);",
+            "    boolean myBool1 = MY_LIST_1.contains(\"he\");",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void bothContainsAllowedAndGetDisallowed_noFinding() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableList;",
+            "class Test {",
+            "  private static final ImmutableList<String> MY_LIST_1 =",
+            "           ImmutableList.of(\"hello\");",
+            "  private void myFunc() {",
+            "    boolean myBool1 = MY_LIST_1.contains(\"he\");",
+            "    String myString = MY_LIST_1.get(0);",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void unusedVariable_noFinding() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableList;",
+            "class Test {",
+            "  private static final ImmutableList<String> MY_LIST = ImmutableList.of(\"hello\");",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
 }
