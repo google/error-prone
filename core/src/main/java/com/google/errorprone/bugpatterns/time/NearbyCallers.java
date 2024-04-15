@@ -167,8 +167,7 @@ public class NearbyCallers {
           return ImmutableList.of(parent);
 
         case LAMBDA_EXPRESSION:
-          // if we reach a lambda tree, then don't scan anything since we don't know where/when that
-          // lambda will actually be executed.
+          // if we reach a lambda tree, just scan the lambda body itself
           // TODO(glorioso): for simple expression lambdas, consider looking for use sites and scan
           // *those* sites, but binding the lambda variable to its use site might be rough :(
 
@@ -179,7 +178,7 @@ public class NearbyCallers {
           //   long nanos = NANOS.apply(myDuration) + SECONDS.apply(myDuration) * 1_000_000L;
           //
           // how do we track myDuration through both layers?
-          return ImmutableList.of();
+          return ImmutableList.of(((LambdaExpressionTree) parent).getBody());
 
         case CLASS:
           // if we get all the way up to the class tree, then _only_ scan the other class-level
