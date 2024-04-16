@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns.collectionincompatibletype;
 
 import com.google.errorprone.CompilationTestHelper;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -100,7 +99,6 @@ public final class JUnitIncompatibleTypeTest {
         .doTest();
   }
 
-  @Ignore("https://github.com/google/error-prone/issues/4291")
   @Test
   public void assertArrayEquals_cast() {
     compilationHelper
@@ -110,6 +108,22 @@ public final class JUnitIncompatibleTypeTest {
             "final class Test {",
             "  public void test(Object o, byte[] b) {",
             "    assertArrayEquals((byte[]) o, b);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void seesThroughCasts() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import static org.junit.Assert.assertEquals;",
+            "import static org.junit.Assert.assertNotEquals;",
+            "class Test {",
+            "  public void test() {",
+            "    // BUG: Diagnostic contains:",
+            "    assertEquals((Object) 1, (Object) 2L);",
             "  }",
             "}")
         .doTest();

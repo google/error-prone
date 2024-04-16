@@ -17,11 +17,11 @@
 package com.google.errorprone.bugpatterns.collectionincompatibletype;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.bugpatterns.collectionincompatibletype.IgnoringCasts.ignoringCasts;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
-import static com.google.errorprone.util.ASTHelpers.getType;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -34,10 +34,6 @@ import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.Signatures;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
-import com.sun.source.tree.ParenthesizedTree;
-import com.sun.source.tree.Tree;
-import com.sun.source.tree.TypeCastTree;
-import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.ArrayType;
 import javax.inject.Inject;
@@ -76,14 +72,12 @@ public final class JUnitIncompatibleType extends BugChecker implements MethodInv
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     var arguments = tree.getArguments();
     if (ASSERT_EQUALS.matches(tree, state)) {
-      var typeA = getType(ignoringCasts(arguments.get(arguments.size() - 2)));
-      var typeB = getType(ignoringCasts(arguments.get(arguments.size() - 1)));
+      var typeA = ignoringCasts(arguments.get(arguments.size() - 2), state);
+      var typeB = ignoringCasts(arguments.get(arguments.size() - 1), state);
       return checkCompatibility(tree, typeA, typeB, state);
     } else if (ASSERT_ARRAY_EQUALS.matches(tree, state)) {
-      var typeA =
-          ((ArrayType) getType(ignoringCasts(arguments.get(arguments.size() - 2)))).elemtype;
-      var typeB =
-          ((ArrayType) getType(ignoringCasts(arguments.get(arguments.size() - 1)))).elemtype;
+      var typeA = ((ArrayType) ignoringCasts(arguments.get(arguments.size() - 2), state)).elemtype;
+      var typeB = ((ArrayType) ignoringCasts(arguments.get(arguments.size() - 1), state)).elemtype;
       return checkCompatibility(tree, typeA, typeB, state);
     }
     return NO_MATCH;
@@ -112,26 +106,5 @@ public final class JUnitIncompatibleType extends BugChecker implements MethodInv
                 sourceTypeName,
                 targetTypeName))
         .build();
-  }
-
-  private Tree ignoringCasts(Tree tree) {
-    return tree.accept(
-        new SimpleTreeVisitor<Tree, Void>() {
-          @Override
-          protected Tree defaultAction(Tree node, Void unused) {
-            return node;
-          }
-
-          @Override
-          public Tree visitTypeCast(TypeCastTree node, Void unused) {
-            return getType(node).isPrimitive() ? node : node.getExpression().accept(this, null);
-          }
-
-          @Override
-          public Tree visitParenthesized(ParenthesizedTree node, Void unused) {
-            return node.getExpression().accept(this, null);
-          }
-        },
-        null);
   }
 }
