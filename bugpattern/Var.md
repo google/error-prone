@@ -32,7 +32,7 @@ Since Java 8 can infer whether a local variable or parameter is effectively
 explicitly marking local variables and parameters as `final` is discouraged.
 
 The annotation can also be applied to fields to indicate that the field is
-deliberately non-final, but the use of @Var on fields is not required.
+deliberately non-final, but the use of `@Var` on fields is not required.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("Var")` to the enclosing element.
