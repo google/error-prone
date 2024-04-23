@@ -244,6 +244,7 @@ import com.google.errorprone.bugpatterns.MixedArrayDimensions;
 import com.google.errorprone.bugpatterns.MixedDescriptors;
 import com.google.errorprone.bugpatterns.MixedMutabilityReturnType;
 import com.google.errorprone.bugpatterns.MockNotUsedInProduction;
+import com.google.errorprone.bugpatterns.MockitoDoSetup;
 import com.google.errorprone.bugpatterns.MockitoUsage;
 import com.google.errorprone.bugpatterns.ModifiedButNotUsed;
 import com.google.errorprone.bugpatterns.ModifyCollectionInEnhancedForLoop;
@@ -1169,6 +1170,7 @@ public class BuiltInCheckerSuppliers {
           MissingBraces.class,
           MissingDefault.class,
           MixedArrayDimensions.class,
+          MockitoDoSetup.class,
           MoreThanOneQualifier.class,
           MultiVariableDeclaration.class,
           MultipleTopLevelClasses.class,
