@@ -1503,6 +1503,9 @@ Methods and non-static variables should be named in lowerCamelCase
 __[MissingDefault](bugpattern/MissingDefault)__<br>
 The Google Java Style Guide requires that each switch statement includes a default statement group, even if it contains no code. (This requirement is lifted for any switch statement that covers all values of an enum.)
 
+__[MockitoDoSetup](bugpattern/MockitoDoSetup)__<br>
+Prefer using when/thenReturn over doReturn/when for additional type safety.
+
 __[MutableGuiceModule](bugpattern/MutableGuiceModule)__<br>
 Fields in Guice modules should be final
 
