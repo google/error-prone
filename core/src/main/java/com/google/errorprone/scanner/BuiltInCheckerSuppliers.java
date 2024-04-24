@@ -434,6 +434,7 @@ import com.google.errorprone.bugpatterns.VarChecker;
 import com.google.errorprone.bugpatterns.VarTypeName;
 import com.google.errorprone.bugpatterns.VariableNameSameAsType;
 import com.google.errorprone.bugpatterns.Varifier;
+import com.google.errorprone.bugpatterns.VoidUsed;
 import com.google.errorprone.bugpatterns.WaitNotInLoop;
 import com.google.errorprone.bugpatterns.WildcardImport;
 import com.google.errorprone.bugpatterns.WithSignatureDiscouraged;
@@ -1094,6 +1095,7 @@ public class BuiltInCheckerSuppliers {
           UnusedVariable.class,
           UseBinds.class,
           VariableNameSameAsType.class,
+          VoidUsed.class,
           WaitNotInLoop.class,
           WakelockReleasedDangerously.class,
           WithSignatureDiscouraged.class
