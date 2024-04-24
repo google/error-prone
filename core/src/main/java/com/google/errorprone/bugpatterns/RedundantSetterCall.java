@@ -29,6 +29,7 @@ import static com.google.errorprone.util.ASTHelpers.enumValues;
 import static com.google.errorprone.util.ASTHelpers.getEnclosedElements;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.getUpperBound;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isAbstract;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
@@ -164,7 +165,7 @@ public final class RedundantSetterCall extends BugChecker implements MethodInvoc
   }
 
   private ImmutableMap<String, OneOfField> scanForOneOfSetters(Type type, VisitorState state) {
-    var owner = type.tsym.owner;
+    var owner = getUpperBound(type, state.getTypes()).tsym.owner;
     if (owner == null || isSubtype(owner.type, GENERATED_MESSAGE_LITE.get(state), state)) {
       return ImmutableMap.of();
     }

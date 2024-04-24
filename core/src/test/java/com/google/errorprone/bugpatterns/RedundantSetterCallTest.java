@@ -223,4 +223,19 @@ public final class RedundantSetterCallTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void builderOfWildcardType_noFindings() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.protobuf.Descriptors.FieldDescriptor;",
+            "import com.google.protobuf.GeneratedMessage.Builder;",
+            "class Test {",
+            "  public void clear(final Builder<?> builder, FieldDescriptor fieldDescriptor) {",
+            "    builder.clearField(fieldDescriptor);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
