@@ -1322,6 +1322,9 @@ __[UseBinds](bugpattern/UseBinds)__<br>
 __[VariableNameSameAsType](bugpattern/VariableNameSameAsType)__<br>
 variableName and type with the same name would refer to the static field instead of the class
 
+__[VoidUsed](bugpattern/VoidUsed)__<br>
+Using a Void-typed variable is potentially confusing, and can be replaced with a literal &#96;null&#96;.
+
 __[WaitNotInLoop](bugpattern/WaitNotInLoop)__<br>
 Because of spurious wakeups, Object.wait() and Condition.await() must always be called in a loop
 
