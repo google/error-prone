@@ -30,6 +30,7 @@ import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.hasExplicitSource;
+import static com.google.errorprone.util.ASTHelpers.isAbstract;
 import static com.google.errorprone.util.ASTHelpers.isStatic;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.google.errorprone.util.ASTHelpers.shouldKeep;
@@ -95,6 +96,7 @@ import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
@@ -175,6 +177,9 @@ public class UnusedVariable extends BugChecker implements CompilationUnitTreeMat
           "serialVersionUID",
           // TAG fields are used by convention in Android apps.
           "TAG");
+
+  private static final ImmutableSet<String> FUNCTIONAL_INTERFACE_TYPES_TO_CHECK =
+      ImmutableSet.of("java.util.Comparator");
 
   private final boolean reportInjectedFields;
 
@@ -282,12 +287,7 @@ public class UnusedVariable extends BugChecker implements CompilationUnitTreeMat
                       symbol.name))
               .addAllFixes(
                   fixes.stream()
-                      .map(
-                          f ->
-                              SuggestedFix.builder()
-                                  .merge(makeFirstAssignmentDeclaration)
-                                  .merge(f)
-                                  .build())
+                      .map(f -> SuggestedFix.merge(makeFirstAssignmentDeclaration, f))
                       .collect(toImmutableList()))
               .build());
     }
@@ -501,6 +501,12 @@ public class UnusedVariable extends BugChecker implements CompilationUnitTreeMat
 
   private static ImmutableList<SuggestedFix> buildUnusedParameterFixes(
       Symbol varSymbol, List<TreePath> usagePaths, VisitorState state) {
+    if (!(varSymbol.owner instanceof MethodSymbol)
+        || !((MethodSymbol) varSymbol.owner).params().contains(varSymbol)
+        || !canBeRemoved(varSymbol.owner, state)) {
+      // We're presumably in a lambda. Don't try to generate a fix.
+      return ImmutableList.of();
+    }
     MethodSymbol methodSymbol = (MethodSymbol) varSymbol.owner;
     int index = methodSymbol.params.indexOf(varSymbol);
     RangeSet<Integer> deletions = TreeRangeSet.create();
@@ -610,27 +616,41 @@ public class UnusedVariable extends BugChecker implements CompilationUnitTreeMat
 
     @Override
     public Void visitVariable(VariableTree variableTree, Void unused) {
+      handleVariable(variableTree);
+      return super.visitVariable(variableTree, null);
+    }
+
+    private void handleVariable(VariableTree variableTree) {
       if (exemptedByName(variableTree.getName())) {
-        return null;
+        return;
       }
       if (isSuppressed(variableTree, state)) {
-        return null;
+        return;
       }
       VarSymbol symbol = getSymbol(variableTree);
+      var parent = getCurrentPath().getParentPath().getLeaf();
+      if (parent instanceof LambdaExpressionTree) {
+        if (FUNCTIONAL_INTERFACE_TYPES_TO_CHECK.stream()
+            .anyMatch(t -> isSubtype(getType(parent), state.getTypeFromString(t), state))) {
+          unusedElements.put(symbol, getCurrentPath());
+          usageSites.put(symbol, getCurrentPath());
+        }
+        return;
+      }
       if (symbol.getKind() == ElementKind.FIELD
           && symbol.getSimpleName().contentEquals("CREATOR")
           && isSubtype(symbol.type, PARCELABLE_CREATOR.get(state), state)) {
-        return null;
+        return;
       }
       if (symbol.getKind() == ElementKind.FIELD
           && exemptedFieldBySuperType(getType(variableTree), state)) {
-        return null;
+        return;
       }
       super.visitVariable(variableTree, null);
       // Return if the element is exempted by an annotation.
       if (exemptedByAnnotation(variableTree.getModifiers().getAnnotations())
           || shouldKeep(variableTree)) {
-        return null;
+        return;
       }
       switch (symbol.getKind()) {
         case FIELD:
@@ -647,14 +667,14 @@ public class UnusedVariable extends BugChecker implements CompilationUnitTreeMat
         case PARAMETER:
           // ignore the receiver parameter
           if (variableTree.getName().contentEquals("this")) {
-            return null;
+            return;
           }
           // Ignore if parameter is part of canonical record constructor; tree does not seem
           // to contain usage in that case, but parameter is always used implicitly
           // For compact canonical constructor parameters don't have record flag so need to
           // check constructor flags (`symbol.owner`) instead
           if (hasRecordFlag(symbol.owner)) {
-            return null;
+            return;
           }
           unusedElements.put(symbol, getCurrentPath());
           if (!isParameterSubjectToAnalysis(symbol)) {
@@ -664,7 +684,6 @@ public class UnusedVariable extends BugChecker implements CompilationUnitTreeMat
         default:
           break;
       }
-      return null;
     }
 
     private boolean exemptedFieldBySuperType(Type type, VisitorState state) {
@@ -695,10 +714,14 @@ public class UnusedVariable extends BugChecker implements CompilationUnitTreeMat
       checkArgument(sym.getKind() == ElementKind.PARAMETER);
       Symbol enclosingMethod = sym.owner;
 
-      for (String annotationName : methodAnnotationsExemptingParameters) {
-        if (hasAnnotation(enclosingMethod, annotationName, state)) {
-          return false;
-        }
+      if (!(enclosingMethod instanceof MethodSymbol)
+          || isAbstract((MethodSymbol) enclosingMethod)) {
+        return false;
+      }
+
+      if (methodAnnotationsExemptingParameters.stream()
+          .anyMatch(anno -> hasAnnotation(enclosingMethod, anno, state))) {
+        return false;
       }
 
       if (ANNOTATIONS_INDICATING_PARAMETERS_SHOULD_BE_CHECKED.stream()
@@ -706,7 +729,27 @@ public class UnusedVariable extends BugChecker implements CompilationUnitTreeMat
         return true;
       }
 
-      return enclosingMethod.getModifiers().contains(Modifier.PRIVATE);
+      if (enclosingMethod.owner instanceof ClassSymbol
+          && !isAbstract((MethodSymbol) enclosingMethod)
+          && FUNCTIONAL_INTERFACE_TYPES_TO_CHECK.stream()
+              .map(state::getTypeFromString)
+              .anyMatch(
+                  t ->
+                      isSubtype(enclosingMethod.owner.type, t, state)
+                          && isFunctionalInterfaceMethod(t, enclosingMethod, state))) {
+        return true;
+      }
+
+      return canBeRemoved(enclosingMethod, state);
+    }
+
+    private boolean isFunctionalInterfaceMethod(
+        Type functionalInterfaceType, Symbol method, VisitorState state) {
+      var functionalInterfaceMethod =
+          state.getTypes().findDescriptorSymbol(functionalInterfaceType.asElement());
+      return method.getSimpleName().contentEquals(functionalInterfaceMethod.getSimpleName())
+          && method.overrides(
+              functionalInterfaceMethod, method.owner.type.tsym, state.getTypes(), true);
     }
 
     @Override
@@ -728,12 +771,6 @@ public class UnusedVariable extends BugChecker implements CompilationUnitTreeMat
         return null;
       }
       return super.visitClass(tree, null);
-    }
-
-    @Override
-    public Void visitLambdaExpression(LambdaExpressionTree node, Void unused) {
-      // skip lambda parameters
-      return scan(node.getBody(), null);
     }
 
     @Override

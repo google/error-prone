@@ -86,6 +86,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 import javax.annotation.Nullable;
+import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeVariable;
 import org.checkerframework.errorprone.dataflow.analysis.Analysis;
@@ -203,7 +204,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     public boolean test(MethodInfo methodInfo) {
       // Any method explicitly annotated is trusted to behave as advertised.
       Optional<Nullness> fromAnnotations =
-          NullnessAnnotations.fromAnnotations(methodInfo.annotations());
+          NullnessAnnotations.fromAnnotationMirrors(methodInfo.annotations());
       if (fromAnnotations.isPresent()) {
         return fromAnnotations.get() == NONNULL;
       }
@@ -406,11 +407,8 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
 
   @Override
   Nullness visitTypeCast(TypeCastNode node, SubNodeValues inputs) {
-    ImmutableList<String> annotations =
-        node.getType().getAnnotationMirrors().stream()
-            .map(Object::toString)
-            .collect(toImmutableList());
-    return NullnessAnnotations.fromAnnotations(annotations)
+    List<? extends AnnotationMirror> annotations = node.getType().getAnnotationMirrors();
+    return NullnessAnnotations.fromAnnotationMirrors(annotations)
         .orElseGet(
             () -> hasPrimitiveType(node) ? NONNULL : inputs.valueOfSubNode(node.getOperand()));
   }
@@ -782,7 +780,8 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     if (callee == null) {
       return defaultAssumption;
     }
-    Optional<Nullness> declaredNullness = NullnessAnnotations.fromAnnotations(callee.annotations);
+    Optional<Nullness> declaredNullness =
+        NullnessAnnotations.fromAnnotationMirrors(callee.annotations);
     if (declaredNullness.isPresent()) {
       return declaredNullness.get();
     }
@@ -988,7 +987,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
   static final class ClassAndMethod implements Member, MethodInfo {
     final String clazz;
     final String method;
-    final ImmutableList<String> annotations;
+    final ImmutableList<AnnotationMirror> annotations;
     final boolean isStatic;
     final boolean isPrimitive;
     final boolean isBoolean;
@@ -998,7 +997,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     private ClassAndMethod(
         String clazz,
         String method,
-        ImmutableList<String> annotations,
+        ImmutableList<AnnotationMirror> annotations,
         boolean isStatic,
         boolean isPrimitive,
         boolean isBoolean,
@@ -1016,10 +1015,8 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
 
     static ClassAndMethod make(MethodSymbol methodSymbol, @Nullable Types types) {
       // TODO(b/71812955): consider just wrapping methodSymbol instead of copying everything out.
-      ImmutableList<String> annotations =
-          MoreAnnotations.getDeclarationAndTypeAttributes(methodSymbol)
-              .map(Object::toString)
-              .collect(toImmutableList());
+      ImmutableList<AnnotationMirror> annotations =
+          MoreAnnotations.getDeclarationAndTypeAttributes(methodSymbol).collect(toImmutableList());
 
       ClassSymbol clazzSymbol = (ClassSymbol) methodSymbol.owner;
       return new ClassAndMethod(
@@ -1087,7 +1084,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     }
 
     @Override
-    public ImmutableList<String> annotations() {
+    public ImmutableList<AnnotationMirror> annotations() {
       return annotations;
     }
 

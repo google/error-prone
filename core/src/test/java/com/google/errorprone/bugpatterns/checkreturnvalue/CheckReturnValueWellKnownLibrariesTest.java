@@ -616,6 +616,62 @@ public class CheckReturnValueWellKnownLibrariesTest {
         .doTest();
   }
 
+  @Test
+  public void daggerComponentBuilderSetters() {
+    compilationHelper
+        .addSourceLines(
+            "Builder.java",
+            "package com.google.frobber;",
+            "import com.google.errorprone.annotations.CheckReturnValue;",
+            "import dagger.Component;",
+            "@CheckReturnValue",
+            "@Component.Builder",
+            "interface Builder {",
+            "  Builder setName(String name);",
+            "  String build();",
+            "}")
+        .addSourceLines(
+            "ComponentBuilderCaller.java",
+            "package com.google.frobber;",
+            "public final class ComponentBuilderCaller {",
+            "  static void testSetters(Builder builder) {",
+            // Dagger Component setters are implicitly @CIRV
+            "    builder.setName(\"Kurt\");",
+            "    // BUG: Diagnostic contains: CheckReturnValue",
+            "    builder.build();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void daggerSubcomponentBuilderSetters() {
+    compilationHelper
+        .addSourceLines(
+            "Builder.java",
+            "package com.google.frobber;",
+            "import com.google.errorprone.annotations.CheckReturnValue;",
+            "import dagger.Subcomponent;",
+            "@CheckReturnValue",
+            "@Subcomponent.Builder",
+            "interface Builder {",
+            "  Builder setName(String name);",
+            "  String build();",
+            "}")
+        .addSourceLines(
+            "SubcomponentBuilderCaller.java",
+            "package com.google.frobber;",
+            "public final class SubcomponentBuilderCaller {",
+            "  static void testSetters(Builder builder) {",
+            // Dagger Subcomponent setters are implicitly @CIRV
+            "    builder.setName(\"Kurt\");",
+            "    // BUG: Diagnostic contains: CheckReturnValue",
+            "    builder.build();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
   private CompilationTestHelper compilationHelperLookingAtAllConstructors() {
     return compilationHelper.setArgs(
         "-XepOpt:" + CheckReturnValue.CHECK_ALL_CONSTRUCTORS + "=true");

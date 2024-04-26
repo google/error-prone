@@ -183,7 +183,7 @@ public final class Inliner extends BugChecker
     boolean varargsWithEmptyArguments = false;
     if (symbol.isVarArgs()) {
       // If we're calling a varargs method, its inlining *should* have the varargs parameter in a
-      // reasonable position. If there are are 0 arguments, we'll need to do more surgery
+      // reasonable position. If there are 0 arguments, we'll need to do more surgery
       if (callingVars.size() == varNames.size() - 1) {
         varargsWithEmptyArguments = true;
       } else {

@@ -20,6 +20,7 @@ import static com.google.common.collect.Iterables.getLast;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
+import static com.google.errorprone.util.ASTHelpers.getSwitchDefault;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -44,8 +45,7 @@ public class SwitchDefault extends BugChecker implements SwitchTreeMatcher {
 
   @Override
   public Description matchSwitch(SwitchTree tree, VisitorState state) {
-    Optional<? extends CaseTree> maybeDefault =
-        tree.getCases().stream().filter(c -> c.getExpression() == null).findAny();
+    Optional<? extends CaseTree> maybeDefault = getSwitchDefault(tree);
     if (!maybeDefault.isPresent()) {
       return NO_MATCH;
     }

@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns.nullness;
 
-import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.fixByAddingNullableAnnotationToReturnType;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.fixByAddingNullableAnnotationToType;
@@ -44,8 +43,8 @@ import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
 import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnnotations;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotatedTypeTree;
+import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ParameterizedTypeTree;
@@ -56,6 +55,7 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
+import java.util.List;
 import javax.inject.Inject;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
@@ -184,7 +184,7 @@ public class VoidMissingNullable extends BugChecker
      * TODO(cpovirk): Provide this pair of checks as NullnessAnnotations.fromAnnotationsOn(Tree),
      * which might also be useful for a hypothetical future TypeArgumentMissingNullable?
      */
-    if (NullnessAnnotations.fromAnnotations(annotationsIfAnnotatedTypeTree(tree)).orElse(null)
+    if (NullnessAnnotations.fromAnnotationTrees(annotationsIfAnnotatedTypeTree(tree)).orElse(null)
         == Nullness.NULLABLE) {
       return;
     }
@@ -209,12 +209,9 @@ public class VoidMissingNullable extends BugChecker
         && NullnessAnnotations.fromAnnotationsOn(type).orElse(null) != Nullness.NULLABLE;
   }
 
-  private static ImmutableList<String> annotationsIfAnnotatedTypeTree(Tree tree) {
+  private static List<? extends AnnotationTree> annotationsIfAnnotatedTypeTree(Tree tree) {
     if (tree instanceof AnnotatedTypeTree) {
-      AnnotatedTypeTree annotated = ((AnnotatedTypeTree) tree);
-      return annotated.getAnnotations().stream()
-          .map(ASTHelpers::getAnnotationName)
-          .collect(toImmutableList());
+      return ((AnnotatedTypeTree) tree).getAnnotations();
     }
     return ImmutableList.of();
   }

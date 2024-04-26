@@ -19,10 +19,13 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.Iterables.getLast;
+import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.getCaseExpressions;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.sun.source.tree.Tree.Kind.BLOCK;
 import static com.sun.source.tree.Tree.Kind.BREAK;
 import static com.sun.source.tree.Tree.Kind.EXPRESSION_STATEMENT;
 import static com.sun.source.tree.Tree.Kind.RETURN;
@@ -43,7 +46,6 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.Reachability;
-import com.google.errorprone.util.RuntimeVersion;
 import com.google.errorprone.util.SourceVersion;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BlockTree;
@@ -75,7 +77,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Pattern;
-import java.util.stream.Stream;
 import javax.inject.Inject;
 import javax.lang.model.element.ElementKind;
 
@@ -204,17 +205,17 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     // One-pass scan through each case in switch
     for (int caseIndex = 0; caseIndex < cases.size(); caseIndex++) {
       CaseTree caseTree = cases.get(caseIndex);
-      boolean isDefaultCase = (getExpressions(caseTree).count() == 0);
+      boolean isDefaultCase = (getCaseExpressions(caseTree).count() == 0);
       hasDefaultCase |= isDefaultCase;
       // Accumulate enum values included in this case
       handledEnumValues.addAll(
-          getExpressions(caseTree)
+          getCaseExpressions(caseTree)
               .filter(IdentifierTree.class::isInstance)
               .map(expressionTree -> ((IdentifierTree) expressionTree).getName().toString())
               .collect(toImmutableSet()));
       boolean isLastCaseInSwitch = caseIndex == cases.size() - 1;
 
-      List<? extends StatementTree> statements = caseTree.getStatements();
+      List<? extends StatementTree> statements = getStatements(caseTree);
       CaseFallThru caseFallThru = CaseFallThru.MAYBE_FALLS_THRU;
       if (statements == null) {
         // This case must be of kind CaseTree.CaseKind.RULE, and thus this is already an expression
@@ -601,7 +602,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
       boolean isDefaultCase = caseTree.getExpression() == null;
 
       String transformedBlockSource =
-          transformReturnOrThrowBlock(caseTree, state, cases, caseIndex, caseTree.getStatements());
+          transformReturnOrThrowBlock(caseTree, state, cases, caseIndex, getStatements(caseTree));
 
       if (firstCaseInGroup) {
         groupedCaseCommentsAccumulator = new StringBuilder();
@@ -794,7 +795,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
       CaseTree caseTree, VisitorState state, ImmutableList<StatementTree> filteredStatements) {
 
     // Was a trailing break removed and some expressions remain?
-    if (caseTree.getStatements().size() > filteredStatements.size()
+    if (getStatements(caseTree).size() > filteredStatements.size()
         && !filteredStatements.isEmpty()) {
       // Extract any comments after what is now the last statement and before the removed
       // break
@@ -803,8 +804,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
               .getSourceCode()
               .subSequence(
                   state.getEndPosition(Iterables.getLast(filteredStatements)),
-                  getStartPosition(
-                      caseTree.getStatements().get(caseTree.getStatements().size() - 1)))
+                  getStartPosition(getStatements(caseTree).get(getStatements(caseTree).size() - 1)))
               .toString()
               .trim();
       if (!commentsAfterNewLastStatement.isEmpty()) {
@@ -820,15 +820,31 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
    */
   private static ImmutableList<StatementTree> filterOutRedundantBreak(CaseTree caseTree) {
     boolean caseEndsWithUnlabelledBreak =
-        Streams.findLast(caseTree.getStatements().stream())
+        Streams.findLast(getStatements(caseTree).stream())
             .filter(statement -> statement.getKind().equals(BREAK))
             .filter(breakTree -> ((BreakTree) breakTree).getLabel() == null)
             .isPresent();
     return caseEndsWithUnlabelledBreak
-        ? caseTree.getStatements().stream()
-            .limit(caseTree.getStatements().size() - 1)
+        ? getStatements(caseTree).stream()
+            .limit(getStatements(caseTree).size() - 1)
             .collect(toImmutableList())
-        : ImmutableList.copyOf(caseTree.getStatements());
+        : ImmutableList.copyOf(getStatements(caseTree));
+  }
+
+  /**
+   * Returns the statements of a {@link CaseTree}. If the only statement is a block statement,
+   * return the block's statements instead.
+   */
+  private static List<? extends StatementTree> getStatements(CaseTree caseTree) {
+    List<? extends StatementTree> statements = caseTree.getStatements();
+    if (statements == null || statements.size() != 1) {
+      return statements;
+    }
+    StatementTree onlyStatement = getOnlyElement(statements);
+    if (!onlyStatement.getKind().equals(BLOCK)) {
+      return statements;
+    }
+    return ((BlockTree) onlyStatement).getStatements();
   }
 
   /** Transforms code for this case into the code under an expression switch. */
@@ -860,9 +876,9 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
 
     int lhsStart = getStartPosition(caseTree);
     int lhsEnd =
-        caseTree.getStatements().isEmpty()
+        getStatements(caseTree).isEmpty()
             ? state.getEndPosition(caseTree)
-            : getStartPosition(caseTree.getStatements().get(0));
+            : getStartPosition(getStatements(caseTree).get(0));
 
     // Accumulate comments into transformed block
     state.getOffsetTokens(lhsStart, lhsEnd).stream()
@@ -937,30 +953,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
 
   /** Prints source for all expressions in a given {@code case}, separated by commas. */
   private static String printCaseExpressions(CaseTree caseTree, VisitorState state) {
-    return getExpressions(caseTree).map(state::getSourceForNode).collect(joining(", "));
-  }
-
-  /**
-   * Retrieves a stream containing all case expressions, in order, for a given {@code CaseTree}.
-   * This method acts as a facade to the {@code CaseTree.getExpressions()} API, falling back to
-   * legacy APIs when necessary.
-   */
-  @SuppressWarnings("unchecked")
-  private static Stream<? extends ExpressionTree> getExpressions(CaseTree caseTree) {
-    try {
-      if (RuntimeVersion.isAtLeast12()) {
-        return ((List<? extends ExpressionTree>)
-                CaseTree.class.getMethod("getExpressions").invoke(caseTree))
-            .stream();
-      } else {
-        // "default" case gives an empty stream
-        return caseTree.getExpression() == null
-            ? Stream.empty()
-            : Stream.of(caseTree.getExpression());
-      }
-    } catch (ReflectiveOperationException e) {
-      throw new LinkageError(e.getMessage(), e);
-    }
+    return getCaseExpressions(caseTree).map(state::getSourceForNode).collect(joining(", "));
   }
 
   /**

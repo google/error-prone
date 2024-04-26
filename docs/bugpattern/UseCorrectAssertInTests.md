@@ -1,10 +1,11 @@
-Java assert statements are not run unless targets explicitly opt in via runtime
-flags to the JVM invocation. Tests are typically not run with asserts enabled,
-meaning a test will continue to pass even if a bug is introduced since these
-statements were never executed. To avoid this, use one of the assertion
-libraries that are always enabled, such as JUnit's `org.junit.Assert` or
-Google's Truth library. These will also produce richer contextual failure
-diagnostics to aid and accelerate debugging.
+Java assert statements are not run unless explicitly enabled via runtime flags
+to the JVM invocation.
+
+If asserts are not enabled, then a test using assert would continue to pass even
+if a bug is introduced since these statements will not be executed. To avoid
+this, use one of the assertion libraries that are always enabled, such as
+JUnit's `org.junit.Assert` or Google's Truth library. These will also produce
+richer contextual failure diagnostics to aid and accelerate debugging.
 
 Don't do this:
 

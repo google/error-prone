@@ -369,8 +369,7 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
       }
     }
     return fixes.buildOrThrow().entrySet().stream()
-        .map(
-            e -> SuggestedFix.builder().merge(e.getValue()).setShortDescription(e.getKey()).build())
+        .map(e -> e.getValue().toBuilder().setShortDescription(e.getKey()).build())
         .collect(toImmutableList());
   }
 

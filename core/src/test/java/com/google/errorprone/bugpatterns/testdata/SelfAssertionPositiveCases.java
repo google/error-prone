@@ -20,57 +20,57 @@ import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assertWithMessage;
 
 /**
- * Positive test cases for TruthSelfEquals check.
+ * Positive test cases for SelfAssertion check.
  *
  * @author bhagwani@google.com (Sumit Bhagwani)
  */
-public class TruthSelfEqualsPositiveCases {
+public class SelfAssertionPositiveCases {
 
   public void testAssertThatEq() {
     String test = Boolean.TRUE.toString();
-    // BUG: Diagnostic contains: new EqualsTester().addEqualityGroup(test).testEquals()
+    // BUG: Diagnostic contains:
     assertThat(test).isEqualTo(test);
   }
 
   public void testAssertWithMessageEq() {
     String test = Boolean.TRUE.toString();
-    // BUG: Diagnostic contains: new EqualsTester().addEqualityGroup(test).testEquals()
+    // BUG: Diagnostic contains:
     assertWithMessage("msg").that(test).isEqualTo(test);
   }
 
   public void testAssertThatSame() {
     String test = Boolean.TRUE.toString();
-    // BUG: Diagnostic contains: new EqualsTester().addEqualityGroup(test).testEquals()
+    // BUG: Diagnostic contains:
     assertThat(test).isSameInstanceAs(test);
   }
 
   public void testAssertWithMessageSame() {
     String test = Boolean.TRUE.toString();
-    // BUG: Diagnostic contains: new EqualsTester().addEqualityGroup(test).testEquals()
+    // BUG: Diagnostic contains:
     assertWithMessage("msg").that(test).isSameInstanceAs(test);
   }
 
   public void testAssertThatNeq() {
     String test = Boolean.TRUE.toString();
-    // BUG: Diagnostic contains: isNotEqualTo method are the same object
+    // BUG: Diagnostic contains:
     assertThat(test).isNotEqualTo(test);
   }
 
   public void testAssertThatNotSame() {
     String test = Boolean.TRUE.toString();
-    // BUG: Diagnostic contains: isNotSameInstanceAs method are the same object
+    // BUG: Diagnostic contains:
     assertThat(test).isNotSameInstanceAs(test);
   }
 
   public void testAssertWithMessageNeq() {
     String test = Boolean.TRUE.toString();
-    // BUG: Diagnostic contains: isNotEqualTo method are the same object
+    // BUG: Diagnostic contains:
     assertWithMessage("msg").that(test).isNotEqualTo(test);
   }
 
   public void testAssertWithMessageNotSame() {
     String test = Boolean.TRUE.toString();
-    // BUG: Diagnostic contains: isNotSameInstanceAs method are the same object
+    // BUG: Diagnostic contains:
     assertWithMessage("msg").that(test).isNotSameInstanceAs(test);
   }
 }

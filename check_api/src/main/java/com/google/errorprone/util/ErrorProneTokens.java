@@ -27,6 +27,7 @@ import com.sun.tools.javac.parser.Tokens.Comment.CommentStyle;
 import com.sun.tools.javac.parser.Tokens.TokenKind;
 import com.sun.tools.javac.parser.UnicodeReader;
 import com.sun.tools.javac.util.Context;
+import com.sun.tools.javac.util.Log;
 import com.sun.tools.javac.util.Position.LineMap;
 
 /** A utility for tokenizing and preserving comments. */
@@ -34,6 +35,7 @@ public class ErrorProneTokens {
   private final int offset;
   private final CommentSavingTokenizer commentSavingTokenizer;
   private final ScannerFactory scannerFactory;
+  private final Log log;
 
   public ErrorProneTokens(String source, Context context) {
     this(source, 0, context);
@@ -42,6 +44,7 @@ public class ErrorProneTokens {
   public ErrorProneTokens(String source, int offset, Context context) {
     this.offset = offset;
     scannerFactory = ScannerFactory.instance(context);
+    log = Log.instance(context);
     char[] buffer = source == null ? new char[] {} : source.toCharArray();
     commentSavingTokenizer = new CommentSavingTokenizer(scannerFactory, buffer, buffer.length);
   }
@@ -51,13 +54,18 @@ public class ErrorProneTokens {
   }
 
   public ImmutableList<ErrorProneToken> getTokens() {
-    Scanner scanner = new AccessibleScanner(scannerFactory, commentSavingTokenizer);
-    ImmutableList.Builder<ErrorProneToken> tokens = ImmutableList.builder();
-    do {
-      scanner.nextToken();
-      tokens.add(new ErrorProneToken(scanner.token(), offset));
-    } while (scanner.token().kind != TokenKind.EOF);
-    return tokens.build();
+    Log.DiagnosticHandler diagHandler = new Log.DiscardDiagnosticHandler(log);
+    try {
+      Scanner scanner = new AccessibleScanner(scannerFactory, commentSavingTokenizer);
+      ImmutableList.Builder<ErrorProneToken> tokens = ImmutableList.builder();
+      do {
+        scanner.nextToken();
+        tokens.add(new ErrorProneToken(scanner.token(), offset));
+      } while (scanner.token().kind != TokenKind.EOF);
+      return tokens.build();
+    } finally {
+      log.popDiagnosticHandler(diagHandler);
+    }
   }
 
   /** Returns the tokens for the given source text, including comments. */

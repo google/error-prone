@@ -23,6 +23,7 @@ import static com.google.errorprone.util.ASTHelpers.isSubtype;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ImportTreeMatcher;
 import com.google.errorprone.bugpatterns.StaticImports.StaticImportInfo;
@@ -47,6 +48,7 @@ import java.lang.annotation.Target;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import javax.inject.Inject;
 import javax.lang.model.element.Name;
 
 /**
@@ -99,10 +101,34 @@ public class BadImport extends BugChecker implements ImportTreeMatcher {
 
   private static final String MESSAGE_LITE = "com.google.protobuf.MessageLite";
 
+  /**
+   * Enclosing types that their nested type imports are vague.
+   *
+   * <p>Some types are meant to provide a namespace; therefore, imports for their nested types can
+   * be confusing.
+   *
+   * <p>For instance, unlike its name suggests, {@code org.immutables.value.Value.Immutable} is used
+   * to generate immutable value types, and its import can be misleading. So, importing {@code
+   * org.immutables.value.Value} and using {@code @Value.Immutable} is more favorable than importing
+   * {@code org.immutables.value.Value.Immutable} and using {@code @Immutable}.
+   *
+   * <p>Note that this does not disallow import an enclosing type but its nested types instead.
+   */
+  private final ImmutableSet<String> badEnclosingTypes;
+
+  private final boolean warnAboutTruth8AssertThat;
+
+  @Inject
+  BadImport(ErrorProneFlags errorProneFlags) {
+    this.badEnclosingTypes = errorProneFlags.getSetOrEmpty("BadImport:BadEnclosingTypes");
+    this.warnAboutTruth8AssertThat = errorProneFlags.getBoolean("BadImport:Truth8").orElse(false);
+  }
+
   @Override
   public Description matchImport(ImportTree tree, VisitorState state) {
     Symbol symbol;
     ImmutableSet<Symbol> symbols;
+    boolean useTruth8Message = false;
 
     if (!tree.isStatic()) {
       symbol = getSymbol(tree.getQualifiedIdentifier());
@@ -121,7 +147,10 @@ public class BadImport extends BugChecker implements ImportTreeMatcher {
 
       // Pick an arbitrary symbol. They've all got the same simple name, so it doesn't matter which.
       symbol = symbols.iterator().next();
-      if (isAcceptableImport(symbol, BAD_STATIC_IDENTIFIERS)) {
+      if (warnAboutTruth8AssertThat && symbol.owner.name.contentEquals("Truth8")) {
+        useTruth8Message = true;
+        // Now we fall through, which treats the import as an unacceptable.
+      } else if (isAcceptableImport(symbol, BAD_STATIC_IDENTIFIERS)) {
         return Description.NO_MATCH;
       }
     }
@@ -147,7 +176,19 @@ public class BadImport extends BugChecker implements ImportTreeMatcher {
         SuggestedFixes.qualifyType(getCheckState(state), builder, symbol.getEnclosingElement())
             + ".";
 
-    return buildDescription(builder, symbols, replacement, state);
+    String message =
+        useTruth8Message
+            ? "Avoid static import for Truth8.assertThat. While we usually recommend static import"
+                + " for assertThat methods, static imports of Truth8.assertThat prevent us from"
+                + " copying those methods to the main Truth class."
+            : String.format(
+                "Importing nested classes/static methods/static fields with commonly-used names can"
+                    + " make code harder to read, because it may not be clear from the context"
+                    + " exactly which type is being referred to. Qualifying the name with that of"
+                    + " the containing class can make the code clearer. Here we recommend using"
+                    + " qualified class: %s",
+                replacement);
+    return buildDescription(builder, symbols, replacement, state, message);
   }
 
   private static VisitorState getCheckState(VisitorState state) {
@@ -168,16 +209,19 @@ public class BadImport extends BugChecker implements ImportTreeMatcher {
         TreePath.getPath(compilationUnit, ((ClassTree) tree).getMembers().get(0)));
   }
 
-  private static boolean isAcceptableImport(Symbol symbol, Set<String> badNames) {
+  private boolean isAcceptableImport(Symbol symbol, Set<String> badNames) {
+    Name ownerName = symbol.owner.getQualifiedName();
     Name simpleName = symbol.getSimpleName();
-    return badNames.stream().noneMatch(simpleName::contentEquals);
+    return badEnclosingTypes.stream().noneMatch(ownerName::contentEquals)
+        && badNames.stream().noneMatch(simpleName::contentEquals);
   }
 
   private Description buildDescription(
       SuggestedFix.Builder builder,
       Set<Symbol> symbols,
       String enclosingReplacement,
-      VisitorState state) {
+      VisitorState state,
+      String message) {
     CompilationUnitTree compilationUnit = state.getPath().getCompilationUnit();
     TreePath path = TreePath.getPath(compilationUnit, compilationUnit);
     IdentifierTree firstFound =
@@ -239,17 +283,7 @@ public class BadImport extends BugChecker implements ImportTreeMatcher {
       // import fix.
       return Description.NO_MATCH;
     }
-    return buildDescription(firstFound)
-        .setMessage(
-            String.format(
-                "Importing nested classes/static methods/static fields with commonly-used names can"
-                    + " make code harder to read, because it may not be clear from the context"
-                    + " exactly which type is being referred to. Qualifying the name with that of"
-                    + " the containing class can make the code clearer. Here we recommend using"
-                    + " qualified class: %s",
-                enclosingReplacement))
-        .addFix(builder.build())
-        .build();
+    return buildDescription(firstFound).setMessage(message).addFix(builder.build()).build();
   }
 
   private static boolean isTypeAnnotation(AnnotationTree t) {

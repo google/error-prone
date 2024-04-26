@@ -153,12 +153,14 @@ public final class MethodMatchers {
     MethodNameMatcher withNameMatching(Pattern pattern);
 
     /**
-     * Match methods with the given signature. The implementation uses javac internals to
-     * pretty-print the signatures, and the signature format is not well-specified. This matcher
-     * should be used with caution.
+     * Match methods with the given signature.
      *
      * <p>Example: {@code format(java.lang.String,java.lang.Object...)}
+     *
+     * @deprecated The implementation uses javac internals to pretty-print the signatures, and the
+     *     signature format is not well-specified.
      */
+    @Deprecated
     MethodSignatureMatcher withSignature(String signature);
   }
 

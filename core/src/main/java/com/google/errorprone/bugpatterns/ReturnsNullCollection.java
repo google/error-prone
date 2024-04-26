@@ -54,7 +54,8 @@ public class ReturnsNullCollection extends AbstractMethodReturnsNull {
           anyOf(
               methodReturns(isSubtypeOf("java.util.Collection")),
               methodReturns(isSubtypeOf("java.util.Map")),
-              methodReturns(isSubtypeOf("com.google.common.collect.Multimap"))),
+              methodReturns(isSubtypeOf("com.google.common.collect.Multimap")),
+              methodReturns(isSubtypeOf("com.google.common.collect.Table"))),
           ReturnsNullCollection::methodWithoutNullable);
 
   public ReturnsNullCollection() {

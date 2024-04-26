@@ -25,7 +25,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Sets.SetView;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.Immutable;
 import com.google.errorprone.annotations.ThreadSafe;
@@ -76,26 +75,26 @@ public class ThreadSafeChecker extends BugChecker
         MemberReferenceTreeMatcher {
 
   private final WellKnownThreadSafety wellKnownThreadSafety;
-  private final boolean checkElementUsage;
 
   @Inject
-  ThreadSafeChecker(WellKnownThreadSafety wellKnownThreadSafety, ErrorProneFlags flags) {
+  ThreadSafeChecker(WellKnownThreadSafety wellKnownThreadSafety) {
     this.wellKnownThreadSafety = wellKnownThreadSafety;
-    this.checkElementUsage = flags.getBoolean("ThreadSafeChecker:CheckElementUsage").orElse(true);
   }
 
   // check instantiations of `@ThreadSafe`s in method references
   @Override
   public Description matchMemberReference(MemberReferenceTree tree, VisitorState state) {
-    return checkInvocation(
+    checkInvocation(
         tree, ((JCMemberReference) tree).referentType, state, ASTHelpers.getSymbol(tree));
+    return NO_MATCH;
   }
 
   // check instantiations of `@ThreadSafe`s in method invocations
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    return checkInvocation(
+    checkInvocation(
         tree, ASTHelpers.getType(tree.getMethodSelect()), state, ASTHelpers.getSymbol(tree));
+    return NO_MATCH;
   }
 
   @Override
@@ -115,14 +114,12 @@ public class ThreadSafeChecker extends BugChecker
     return NO_MATCH;
   }
 
-  private Description checkInvocation(
-      Tree tree, Type methodType, VisitorState state, Symbol symbol) {
+  private void checkInvocation(Tree tree, Type methodType, VisitorState state, Symbol symbol) {
     ThreadSafeAnalysis analysis = new ThreadSafeAnalysis(this, state, wellKnownThreadSafety);
     Violation info = analysis.checkInvocation(methodType, symbol);
     if (info.isPresent()) {
       state.reportMatch(buildDescription(tree).setMessage(info.message()).build());
     }
-    return NO_MATCH;
   }
 
   @Override
@@ -145,7 +142,7 @@ public class ThreadSafeChecker extends BugChecker
             .build();
       }
     }
-    if (checkElementUsage && analysis.hasThreadSafeElementAnnotation((TypeVariableSymbol) sym)) {
+    if (analysis.hasThreadSafeElementAnnotation((TypeVariableSymbol) sym)) {
       if (analysis.getThreadSafeAnnotation(sym.owner, state) == null) {
         return buildDescription(tree)
             .setMessage("@ThreadSafe.Element is only supported on threadsafe classes")

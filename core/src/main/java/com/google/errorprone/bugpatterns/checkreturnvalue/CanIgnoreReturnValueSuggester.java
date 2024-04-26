@@ -29,6 +29,7 @@ import static com.google.errorprone.util.ASTHelpers.isAbstract;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.google.errorprone.util.ASTHelpers.shouldKeep;
+import static com.google.errorprone.util.ASTHelpers.streamSuperMethods;
 import static com.google.errorprone.util.ASTHelpers.stripParentheses;
 
 import com.google.common.collect.ImmutableSet;
@@ -70,8 +71,8 @@ import javax.inject.Inject;
  */
 @BugPattern(
     summary =
-        "Methods with ignorable return values (including methods that always 'return this') should"
-            + " be annotated with @com.google.errorprone.annotations.CanIgnoreReturnValue",
+        "Methods that always return 'this' (or return an input parameter) should be annotated with"
+            + " @com.google.errorprone.annotations.CanIgnoreReturnValue",
     severity = WARNING)
 public final class CanIgnoreReturnValueSuggester extends BugChecker implements MethodTreeMatcher {
 
@@ -84,6 +85,13 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
           "com.google.errorprone.annotations.CheckReturnValue",
           "com.google.errorprone.refaster.annotation.AfterTemplate");
 
+  private static final ImmutableSet<String> EXEMPTING_CLASS_ANNOTATIONS =
+      ImmutableSet.of(
+          "com.google.auto.value.AutoValue.Builder",
+          "com.google.auto.value.AutoBuilder",
+          "dagger.Component.Builder",
+          "dagger.Subcomponent.Builder");
+
   private static final Supplier<Type> PROTO_BUILDER =
       VisitorState.memoize(s -> s.getTypeFromString("com.google.protobuf.MessageLite.Builder"));
 
@@ -93,7 +101,7 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
   private final ImmutableSet<String> exemptingMethodAnnotations;
 
   @Inject
-  public CanIgnoreReturnValueSuggester(ErrorProneFlags errorProneFlags) {
+  CanIgnoreReturnValueSuggester(ErrorProneFlags errorProneFlags) {
     this.exemptingMethodAnnotations =
         Sets.union(
                 EXEMPTING_METHOD_ANNOTATIONS,
@@ -104,10 +112,15 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
   @Override
   public Description matchMethod(MethodTree methodTree, VisitorState state) {
     MethodSymbol methodSymbol = getSymbol(methodTree);
+    // Don't fire on overrides of methods within anonymous classes.
+    if (streamSuperMethods(methodSymbol, state.getTypes()).findFirst().isPresent()
+        && methodSymbol.owner.isAnonymous()) {
+      return Description.NO_MATCH;
+    }
 
     // If the method has an exempting annotation, then bail out.
     if (exemptingMethodAnnotations.stream()
-        .anyMatch(annotation -> ASTHelpers.hasAnnotation(methodSymbol, annotation, state))) {
+        .anyMatch(annotation -> hasAnnotation(methodSymbol, annotation, state))) {
       return Description.NO_MATCH;
     }
 
@@ -143,19 +156,19 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
         // overridden in other contexts, and we've decided that these methods shouldn't be annotated
         // automatically.
         || isSimpleReturnThisMethod(methodTree)
-        // TODO(kak): This appears to be a performance optimization for refactoring passes?
-        || isSubtype(methodSymbol.owner.type, PROTO_BUILDER.get(state), state)) {
+        // If this is a method "natively" handled by the CRV logic, don't add CIRV
+        || isMethodHandledByCrvLogic(methodSymbol, state)) {
       return Description.NO_MATCH;
     }
 
-    // skip @AutoValue and @AutoBuilder methods
-    if (isAbstractAutoValueOrAutoBuilderMethod(methodSymbol, state)) {
-      return Description.NO_MATCH;
+    // OK, so this method might actually be CIRV-suggestible.
+    if (methodReturnsIgnorableValues(methodTree, state)) {
+      return annotateWithCanIgnoreReturnValue(methodTree, state);
     }
 
-    // if the method looks like a builder, or if it always returns `this`, then make it @CIRV
-    if (classLooksLikeBuilder(methodSymbol.owner, state)
-        || methodReturnsIgnorableValues(methodTree, state)) {
+    // Abstract methods on builder classes that don't run afoul of the previous checks are
+    // probably @CIRV.
+    if (classLooksLikeBuilder(methodSymbol.owner, state) && isAbstract(methodSymbol)) {
       return annotateWithCanIgnoreReturnValue(methodTree, state);
     }
 
@@ -179,14 +192,20 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
     return describeMatch(methodTree, fix.build());
   }
 
-  private static boolean isAbstractAutoValueOrAutoBuilderMethod(
-      MethodSymbol methodSymbol, VisitorState state) {
-    Symbol owner = methodSymbol.owner;
-    // TODO(kak): use ResultEvaluator instead of duplicating _some_ of the logic (right now we only
-    // exclude @AutoValue.Builder's and @AutoBuilder's)
-    return isAbstract(methodSymbol)
-        && (hasAnnotation(owner, AUTO_VALUE + ".Builder", state)
-            || hasAnnotation(owner, "com.google.auto.value.AutoBuilder", state));
+  private static boolean isMethodHandledByCrvLogic(MethodSymbol methodSymbol, VisitorState state) {
+    if (isSubtype(methodSymbol.owner.type, PROTO_BUILDER.get(state), state)) {
+      return true;
+    }
+
+    // TODO(kak): use ResultEvaluator instead of duplicating logic
+    if (isAbstract(methodSymbol)) {
+      for (String annotation : EXEMPTING_CLASS_ANNOTATIONS) {
+        if (hasAnnotation(methodSymbol.owner, annotation, state)) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   private static boolean classLooksLikeBuilder(Symbol owner, VisitorState state) {

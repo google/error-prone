@@ -207,7 +207,7 @@ public class MethodCanBeStatic extends BugChecker implements CompilationUnitTree
    * `EnclosingClass.foo(...)` and `this::foo` to `EnclosingClass::foo`).
    */
   private SuggestedFix fixQualifiers(VisitorState state, MethodSymbol sym, SuggestedFix f) {
-    SuggestedFix.Builder builder = SuggestedFix.builder().merge(f);
+    SuggestedFix.Builder builder = f.toBuilder();
     new TreeScanner<Void, Void>() {
       @Override
       public Void visitMemberSelect(MemberSelectTree tree, Void unused) {

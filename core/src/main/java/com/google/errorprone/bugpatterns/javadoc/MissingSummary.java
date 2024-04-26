@@ -134,8 +134,7 @@ public final class MissingSummary extends BugChecker
       return NO_MATCH;
     }
     SuggestedFix fix =
-        SuggestedFix.builder()
-            .merge(Utils.replace(returnTree, "", state))
+        Utils.replace(returnTree, "", state).toBuilder()
             .replace(
                 pos,
                 pos,
@@ -156,8 +155,7 @@ public final class MissingSummary extends BugChecker
     SuggestedFix fix =
         replacement.isEmpty()
             ? replacement
-            : SuggestedFix.builder()
-                .merge(replacement)
+            : replacement.toBuilder()
                 .replace(
                     pos,
                     pos,

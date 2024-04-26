@@ -18,15 +18,21 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.matchers.Description.NO_MATCH;
 
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.matchers.Description;
+import com.sun.source.tree.CompilationUnitTree;
+import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import org.junit.Ignore;
+import com.sun.source.util.TreePath;
+import com.sun.source.util.TreePathScanner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -46,17 +52,17 @@ public class BugCheckerTest {
             "    int unsuppressed;",
             "    // BUG: Diagnostic contains: []",
             "    @SuppressWarnings(\"foo\") int unrelatedSuppression;",
-            "    // BUG: Diagnostic contains: [Suppressible]",
+            "    // BUG: Diagnostic contains: [Suppressible, SuppressibleTps, ManualIsSuppressed]",
             "    @SuppressWarnings(\"Suppressible\") int suppressed;",
-            "    // BUG: Diagnostic contains: [Suppressible]",
+            "    // BUG: Diagnostic contains: [Suppressible, SuppressibleTps, ManualIsSuppressed]",
             "    @SuppressWarnings(\"Alternative\") int suppressedWithAlternativeName;",
-            "    // BUG: Diagnostic contains: [Suppressible]",
+            "    // BUG: Diagnostic contains: [Suppressible, SuppressibleTps, ManualIsSuppressed]",
             "    @SuppressWarnings(\"all\") int allSuppressed;",
-            "    // BUG: Diagnostic contains: [Suppressible]",
+            "    // BUG: Diagnostic contains: [Suppressible, SuppressibleTps, ManualIsSuppressed]",
             "    @SuppressWarnings({\"foo\", \"Suppressible\"}) int alsoSuppressed;",
-            "    // BUG: Diagnostic contains: [Suppressible]",
+            "    // BUG: Diagnostic contains: [Suppressible, SuppressibleTps, ManualIsSuppressed]",
             "    @SuppressWarnings({\"all\", \"foo\"}) int redundantlySuppressed;",
-            "    // BUG: Diagnostic contains: [Suppressible]",
+            "    // BUG: Diagnostic contains: [Suppressible, SuppressibleTps, ManualIsSuppressed]",
             "    @SuppressWarnings({\"all\", \"OnlySuppressedInsideDeprecatedCode\"}) int"
                 + " ineffectiveSuppression;",
             "    // BUG: Diagnostic contains: []",
@@ -84,6 +90,14 @@ public class BugCheckerTest {
             "    @SuppressWarnings(\"all\") int allSuppressed;",
             "    @SuppressWarnings({\"foo\", \"Suppressible\"}) int alsoSuppressed;",
             "    @SuppressWarnings({\"all\", \"foo\"}) int redundantlySuppressed;",
+            "    System.out.println(s(() -> {",
+            "      // BUG: Diagnostic contains: ",
+            "      int insideCalToMethodWhoseDeclarationHasASuppression;",
+            "    }));",
+            "  }",
+            "  @SuppressWarnings(\"all\")",
+            "  String s(Runnable r) {",
+            "    return \"\";",
             "  }",
             "}")
         .doTest();
@@ -102,6 +116,64 @@ public class BugCheckerTest {
             "    @SuppressWarnings({\"all\", \"OnlySuppressedInsideDeprecatedCode\"}) int"
                 + " ineffectiveSuppression;",
             "    @Deprecated int suppressed;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void isSuppressed_suppressibleTreePathScanner() {
+    CompilationTestHelper.newInstance(SuppressibleTreePathScannerCheck.class, getClass())
+        .addSourceLines(
+            "A.java",
+            "class A {",
+            "  void m() {",
+            "    // BUG: Diagnostic contains:",
+            "    int unsuppressed;",
+            "    // BUG: Diagnostic contains:",
+            "    @SuppressWarnings(\"foo\") int unrelatedSuppression;",
+            "    @SuppressWarnings(\"Suppressible\") int suppressed;",
+            "    @SuppressWarnings(\"Alternative\") int suppressedWithAlternativeName;",
+            "    @SuppressWarnings(\"all\") int allSuppressed;",
+            "    @SuppressWarnings({\"foo\", \"Suppressible\"}) int alsoSuppressed;",
+            "    @SuppressWarnings({\"all\", \"foo\"}) int redundantlySuppressed;",
+            "    System.out.println(s(() -> {",
+            "      // BUG: Diagnostic contains: ",
+            "      int insideCalToMethodWhoseDeclarationHasASuppression;",
+            "    }));",
+            "  }",
+            "  @SuppressWarnings(\"all\")",
+            "  String s(Runnable r) {",
+            "    return \"\";",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void isSuppressed_manualIsSuppressed() {
+    CompilationTestHelper.newInstance(ManuallySuppressibleCheck.class, getClass())
+        .addSourceLines(
+            "A.java",
+            "class A {",
+            "  void m() {",
+            "    // BUG: Diagnostic contains:",
+            "    int unsuppressed;",
+            "    // BUG: Diagnostic contains:",
+            "    @SuppressWarnings(\"foo\") int unrelatedSuppression;",
+            "    @SuppressWarnings(\"Suppressible\") int suppressed;",
+            "    @SuppressWarnings(\"Alternative\") int suppressedWithAlternativeName;",
+            "    @SuppressWarnings(\"all\") int allSuppressed;",
+            "    @SuppressWarnings({\"foo\", \"Suppressible\"}) int alsoSuppressed;",
+            "    @SuppressWarnings({\"all\", \"foo\"}) int redundantlySuppressed;",
+            "    System.out.println(s(() -> {",
+            "      // BUG: Diagnostic contains: ",
+            "      int insideCalToMethodWhoseDeclarationHasASuppression;",
+            "    }));",
+            "  }",
+            "  @SuppressWarnings(\"all\")",
+            "  String s(Runnable r) {",
+            "    return \"\";",
             "  }",
             "}")
         .doTest();
@@ -147,7 +219,11 @@ public class BugCheckerTest {
   public static final class LegacySuppressionCheck extends BugChecker
       implements VariableTreeMatcher {
     private final ImmutableList<BugChecker> checks =
-        ImmutableList.of(new SuppressibleCheck(), new CustomSuppressibilityCheck());
+        ImmutableList.of(
+            new SuppressibleCheck(),
+            new CustomSuppressibilityCheck(),
+            new SuppressibleTreePathScannerCheck(),
+            new ManuallySuppressibleCheck());
 
     @Override
     @SuppressWarnings("deprecation") // testing deprecated method
@@ -184,6 +260,76 @@ public class BugCheckerTest {
     @Override
     public Description matchVariable(VariableTree tree, VisitorState state) {
       return describeMatch(tree);
+    }
+  }
+
+  @BugPattern(
+      name = "SuppressibleTps",
+      altNames = {"Suppressible", "Alternative"},
+      summary =
+          "Should be suppressible with `@SuppressWarnings` but is implemented with"
+              + " SuppressibleTreePathScanner",
+      severity = ERROR)
+  public static final class SuppressibleTreePathScannerCheck extends BugChecker
+      implements CompilationUnitTreeMatcher {
+    @Override
+    public Description matchCompilationUnit(
+        CompilationUnitTree tree, VisitorState stateForCompilationUnit) {
+      new SuppressibleTreePathScanner<Void, Void>(stateForCompilationUnit) {
+        @Override
+        public Void visitVariable(VariableTree tree, Void unused) {
+          state().reportMatch(describeMatch(tree));
+          return null;
+        }
+
+        private VisitorState state() {
+          return stateForCompilationUnit.withPath(getCurrentPath());
+        }
+      }.scan(tree, null);
+      return NO_MATCH;
+    }
+  }
+
+  @BugPattern(
+      name = "ManualIsSuppressed",
+      altNames = {"Suppressible", "Alternative"},
+      summary =
+          "Should be suppressible with `@SuppressWarnings` but is implemented with manual"
+              + " isSuppressed checks",
+      severity = ERROR)
+  public static final class ManuallySuppressibleCheck extends BugChecker
+      implements CompilationUnitTreeMatcher {
+    @Override
+    public Description matchCompilationUnit(
+        CompilationUnitTree compilationUnit, VisitorState stateForCompilationUnit) {
+      new TreePathScanner<Void, Void>() {
+        @Override
+        public Void scan(Tree tree, Void unused) {
+          if (isSuppressed(tree, state())) {
+            return null;
+          }
+          return super.scan(tree, unused);
+        }
+
+        @Override
+        public Void scan(TreePath path, Void unused) {
+          if (isSuppressed(path.getLeaf(), stateForCompilationUnit.withPath(path))) {
+            return null;
+          }
+          return super.scan(path, unused);
+        }
+
+        @Override
+        public Void visitVariable(VariableTree tree, Void unused) {
+          state().reportMatch(describeMatch(tree));
+          return null;
+        }
+
+        private VisitorState state() {
+          return stateForCompilationUnit.withPath(getCurrentPath());
+        }
+      }.scan(stateForCompilationUnit.getPath(), null);
+      return NO_MATCH;
     }
   }
 }

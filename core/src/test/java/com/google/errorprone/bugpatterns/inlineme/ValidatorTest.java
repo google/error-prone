@@ -201,6 +201,68 @@ public class ValidatorTest {
   }
 
   @Test
+  public void instanceMethod_ternaryExpression_varsInCondition() {
+    helper
+        .addSourceLines(
+            "Client.java",
+            "import com.google.errorprone.annotations.InlineMe;",
+            "public final class Client {",
+            // OK, since x and y are always evaluated
+            "  @InlineMe(replacement = \"this.after(x == y ? true : false)\")",
+            "  @Deprecated",
+            "  public boolean before(int x, int y) {",
+            "    return after(x == y ? true : false);",
+            "  }",
+            "  public boolean after(boolean b) {",
+            "    return !b;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void instanceMethod_ternaryExpression_varsInOtherArms() {
+    helper
+        .addSourceLines(
+            "Client.java",
+            "import com.google.errorprone.annotations.InlineMe;",
+            "public final class Client {",
+            "  @InlineMe(replacement = \"this.after(x > 0 ? y : false)\")",
+            "  @Deprecated",
+            "  // BUG: Diagnostic contains: evaluation timing",
+            "  public boolean before(int x, boolean y) {",
+            "    return after(x > 0 ? y : true);",
+            "  }",
+            "  public boolean after(boolean b) {",
+            "    return !b;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void instanceMethod_topLevelTernary() {
+    helper
+        .addSourceLines(
+            "Client.java",
+            "import com.google.errorprone.annotations.InlineMe;",
+            "public final class Client {",
+            "  @InlineMe(replacement = \"x == y ? this.a() : this.b()\")",
+            "  // BUG: Diagnostic contains: complex statement",
+            "  public boolean before(int x, int y) {",
+            "    return x == y ? a() : b();",
+            "  }",
+            "  public boolean a() {",
+            "    return true;",
+            "  }",
+            "  public boolean b() {",
+            "    return false;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void instanceMethod_withLambdaAndVariable() {
     helper
         .addSourceLines(

@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.fixes.SuggestedFix.emptyFix;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.JUnitMatchers.containsTestMethod;
 import static com.google.errorprone.matchers.JUnitMatchers.isJUnit4TestClass;
@@ -28,10 +29,12 @@ import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.suppliers.Suppliers.VOID_TYPE;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static javax.lang.model.element.Modifier.PUBLIC;
 import static javax.lang.model.element.Modifier.STATIC;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
@@ -65,13 +68,7 @@ import javax.lang.model.element.Modifier;
             + " is a helper method, reduce its visibility.",
     severity = ERROR)
 public class JUnit4TestNotRun extends BugChecker implements ClassTreeMatcher {
-
-  private static final String TEST_CLASS = "org.junit.Test";
-  private static final String IGNORE_CLASS = "org.junit.Ignore";
-  private static final String TEST_ANNOTATION = "@Test ";
-  private static final String IGNORE_ANNOTATION = "@Ignore ";
-
-  private final Matcher<MethodTree> possibleTestMethod =
+  private static final Matcher<MethodTree> POSSIBLE_TEST_METHOD =
       allOf(
           hasModifier(PUBLIC),
           methodReturns(VOID_TYPE),
@@ -83,7 +80,10 @@ public class JUnit4TestNotRun extends BugChecker implements ClassTreeMatcher {
                               .anyMatch(a -> isParameterAnnotation(a, s))),
           not(JUnitMatchers::hasJUnitAnnotation));
 
-  private boolean isParameterAnnotation(AnnotationTree annotation, VisitorState state) {
+  private static final ImmutableSet<String> EXEMPTING_METHOD_ANNOTATIONS =
+      ImmutableSet.of("com.pdsl.runners.PdslTest", "com.pholser.junit.quickcheck.Property");
+
+  private static boolean isParameterAnnotation(AnnotationTree annotation, VisitorState state) {
     Type annotationType = getType(annotation);
     if (isSameType(annotationType, FROM_DATA_POINTS.get(state), state)) {
       return true;
@@ -107,7 +107,7 @@ public class JUnit4TestNotRun extends BugChecker implements ClassTreeMatcher {
         continue;
       }
       MethodTree methodTree = (MethodTree) member;
-      if (possibleTestMethod.matches(methodTree, state) && !isSuppressed(tree, state)) {
+      if (POSSIBLE_TEST_METHOD.matches(methodTree, state) && !isSuppressed(tree, state)) {
         suspiciousMethods.put(getSymbol(methodTree), methodTree);
       }
     }
@@ -150,8 +150,18 @@ public class JUnit4TestNotRun extends BugChecker implements ClassTreeMatcher {
    * annotation; has other {@code @Test} methods, etc).
    */
   private Optional<Description> handleMethod(MethodTree methodTree, VisitorState state) {
+    if (EXEMPTING_METHOD_ANNOTATIONS.stream()
+        .anyMatch(anno -> hasAnnotation(methodTree, anno, state))) {
+      return Optional.empty();
+    }
+
     // Method appears to be a JUnit 3 test case (name prefixed with "test"), probably a test.
     if (isJunit3TestCase.matches(methodTree, state)) {
+      return Optional.of(describeFixes(methodTree, state));
+    }
+
+    // Method name contains underscores: it's either a test or a style violation.
+    if (methodTree.getName().toString().contains("_")) {
       return Optional.of(describeFixes(methodTree, state));
     }
 
@@ -182,23 +192,20 @@ public class JUnit4TestNotRun extends BugChecker implements ClassTreeMatcher {
     Optional<SuggestedFix> removeStatic =
         SuggestedFixes.removeModifiers(methodTree, state, Modifier.STATIC);
     SuggestedFix testFix =
-        SuggestedFix.builder()
-            .merge(removeStatic.orElse(null))
-            .addImport(TEST_CLASS)
-            .prefixWith(methodTree, TEST_ANNOTATION)
+        removeStatic.orElse(emptyFix()).toBuilder()
+            .addImport("org.junit.Test")
+            .prefixWith(methodTree, "@Test ")
             .build();
     SuggestedFix ignoreFix =
-        SuggestedFix.builder()
-            .merge(testFix)
-            .addImport(IGNORE_CLASS)
-            .prefixWith(methodTree, IGNORE_ANNOTATION)
+        testFix.toBuilder()
+            .addImport("org.junit.Ignore")
+            .prefixWith(methodTree, "@Ignore ")
             .build();
 
     SuggestedFix visibilityFix =
-        SuggestedFix.builder()
-            .merge(SuggestedFixes.removeModifiers(methodTree, state, Modifier.PUBLIC).orElse(null))
-            .merge(SuggestedFixes.addModifiers(methodTree, state, Modifier.PRIVATE).orElse(null))
-            .build();
+        SuggestedFix.merge(
+            SuggestedFixes.removeModifiers(methodTree, state, Modifier.PUBLIC).orElse(emptyFix()),
+            SuggestedFixes.addModifiers(methodTree, state, Modifier.PRIVATE).orElse(emptyFix()));
 
     // Suggest @Ignore first if test method is named like a purposely disabled test.
     String methodName = methodTree.getName().toString();

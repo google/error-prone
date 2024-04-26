@@ -91,6 +91,23 @@ public final class BadImportTest {
   }
 
   @Test
+  public void positive_truth8AssertThatTrueFlag() {
+    compilationTestHelper
+        .setArgs("-XepOpt:BadImport:Truth8=true")
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.truth.Truth8.assertThat;",
+            "import java.util.stream.IntStream;",
+            "class Test {",
+            "  void x(IntStream s) {",
+            "    // BUG: Diagnostic contains: usually recommend",
+            "    assertThat(s).isEmpty();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void positive_static_locallyDefinedMethod() {
     refactoringTestHelper
         .addInputLines(
@@ -275,6 +292,36 @@ public final class BadImportTest {
   }
 
   @Test
+  public void negative_truth8AssertThatFalseFlag() {
+    compilationTestHelper
+        .setArgs("-XepOpt:BadImport:Truth8=false")
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.truth.Truth8.assertThat;",
+            "import java.util.stream.IntStream;",
+            "class Test {",
+            "  void x(IntStream s) {",
+            "    assertThat(s).isEmpty();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void negative_otherAssertThat() {
+    compilationTestHelper
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.truth.Truth.assertThat;",
+            "class Test {",
+            "  void x(Iterable<?> i) {",
+            "    assertThat(i).isEmpty();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void suppressed_class() {
     compilationTestHelper
         .addSourceLines(
@@ -385,6 +432,65 @@ public final class BadImportTest {
             "import pkg.ProtoOuterClass.Provider;",
             "class Test {",
             "  public void test(Provider p) {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void badEnclosingTypes() {
+    refactoringTestHelper
+        .setArgs("-XepOpt:BadImport:BadEnclosingTypes=org.immutables.value.Value")
+        .addInputLines(
+            "org/immutables/value/Value.java",
+            "package org.immutables.value;",
+            "",
+            "public @interface Value {",
+            "  @interface Immutable {}",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "Test.java",
+            "import org.immutables.value.Value.Immutable;",
+            "",
+            "@Immutable",
+            "interface Test {}")
+        .addOutputLines(
+            "Test.java",
+            "import org.immutables.value.Value;",
+            "",
+            "@Value.Immutable",
+            "interface Test {}")
+        .doTest();
+  }
+
+  @Test
+  public void badEnclosingTypes_doesNotMatchFullyQualifiedName() {
+    compilationTestHelper
+        .setArgs("-XepOpt:BadImport:BadEnclosingTypes=org.immutables.value.Value")
+        .addSourceLines(
+            "org/immutables/value/Value.java",
+            "package org.immutables.value;",
+            "",
+            "public @interface Value {",
+            "  @interface Immutable {}",
+            "}")
+        .addSourceLines("Test.java", "@org.immutables.value.Value.Immutable", "interface Test {}")
+        .doTest();
+  }
+
+  @Test
+  public void badEnclosingTypes_staticMethod() {
+    compilationTestHelper
+        .setArgs("-XepOpt:BadImport:BadEnclosingTypes=com.google.common.collect.ImmutableList")
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.collect.ImmutableList.toImmutableList;",
+            "import com.google.common.collect.ImmutableList;",
+            "import java.util.stream.Collector;",
+            "",
+            "class Test {",
+            "  // BUG: Diagnostic contains: ImmutableList.toImmutableList()",
+            "  Collector<?, ?, ImmutableList<Object>> immutableList = toImmutableList();",
             "}")
         .doTest();
   }

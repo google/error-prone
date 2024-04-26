@@ -50,6 +50,7 @@ import org.checkerframework.errorprone.dataflow.cfg.node.ClassNameNode;
 import org.checkerframework.errorprone.dataflow.cfg.node.ConditionalAndNode;
 import org.checkerframework.errorprone.dataflow.cfg.node.ConditionalNotNode;
 import org.checkerframework.errorprone.dataflow.cfg.node.ConditionalOrNode;
+import org.checkerframework.errorprone.dataflow.cfg.node.DeconstructorPatternNode;
 import org.checkerframework.errorprone.dataflow.cfg.node.DoubleLiteralNode;
 import org.checkerframework.errorprone.dataflow.cfg.node.EqualToNode;
 import org.checkerframework.errorprone.dataflow.cfg.node.ExplicitThisNode;
@@ -92,7 +93,6 @@ import org.checkerframework.errorprone.dataflow.cfg.node.PrimitiveTypeNode;
 import org.checkerframework.errorprone.dataflow.cfg.node.ReturnNode;
 import org.checkerframework.errorprone.dataflow.cfg.node.ShortLiteralNode;
 import org.checkerframework.errorprone.dataflow.cfg.node.SignedRightShiftNode;
-import org.checkerframework.errorprone.dataflow.cfg.node.StringConcatenateAssignmentNode;
 import org.checkerframework.errorprone.dataflow.cfg.node.StringConcatenateNode;
 import org.checkerframework.errorprone.dataflow.cfg.node.StringConversionNode;
 import org.checkerframework.errorprone.dataflow.cfg.node.StringLiteralNode;
@@ -654,18 +654,6 @@ abstract class AbstractNullnessPropagationTransfer
   }
 
   @Override
-  public final TransferResult<Nullness, AccessPathStore<Nullness>> visitStringConcatenateAssignment(
-      StringConcatenateAssignmentNode node,
-      TransferInput<Nullness, AccessPathStore<Nullness>> input) {
-    Nullness value = visitStringConcatenateAssignment();
-    return noStoreChanges(value, input);
-  }
-
-  Nullness visitStringConcatenateAssignment() {
-    return NULLABLE;
-  }
-
-  @Override
   public final TransferResult<Nullness, AccessPathStore<Nullness>> visitLessThan(
       LessThanNode node, TransferInput<Nullness, AccessPathStore<Nullness>> input) {
     Nullness value = visitLessThan();
@@ -1031,6 +1019,13 @@ abstract class AbstractNullnessPropagationTransfer
      * See
      * https://github.com/eisop/checker-framework/blob/7c5e731da5665cba0612e8c85287d380fd66e924/dataflow/src/main/java/org/checkerframework/dataflow/cfg/node/ExpressionStatementNode.java#L20
      */
+    return noStoreChanges(NONNULL, input);
+  }
+
+  @Override
+  public TransferResult<Nullness, AccessPathStore<Nullness>> visitDeconstructorPattern(
+      DeconstructorPatternNode node, TransferInput<Nullness, AccessPathStore<Nullness>> input) {
+    // TODO(b/307371634): handle DeconstructorPatternNode
     return noStoreChanges(NONNULL, input);
   }
 

@@ -767,7 +767,7 @@ public final class SuggestedFixes {
    */
   public static SuggestedFix renameMethodWithInvocations(
       MethodTree tree, String replacement, VisitorState state) {
-    SuggestedFix.Builder fix = SuggestedFix.builder().merge(renameMethod(tree, replacement, state));
+    SuggestedFix.Builder fix = renameMethod(tree, replacement, state).toBuilder();
     MethodSymbol sym = getSymbol(tree);
     new TreeScanner<Void, Void>() {
       @Override

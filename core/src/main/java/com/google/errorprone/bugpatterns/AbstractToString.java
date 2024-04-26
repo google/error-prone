@@ -25,6 +25,7 @@ import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.FormatMethod;
 import com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
@@ -42,6 +43,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.code.Type.ArrayType;
 import com.sun.tools.javac.code.Type.MethodType;
 import java.util.List;
 import java.util.Optional;
@@ -96,7 +98,9 @@ public abstract class AbstractToString extends BugChecker
       symbolHasAnnotation(FormatMethod.class);
 
   private static final Matcher<ExpressionTree> STRING_FORMAT =
-      staticMethod().onClass("java.lang.String").named("format");
+      anyOf(
+          staticMethod().onClass("java.lang.String").named("format"),
+          instanceMethod().onExactClass("java.lang.String").named("formatted"));
 
   private static final Matcher<ExpressionTree> VALUE_OF =
       staticMethod()
@@ -115,6 +119,15 @@ public abstract class AbstractToString extends BugChecker
               .named("append")
               .withParameters("java.lang.Object"));
 
+  private static final Matcher<ExpressionTree> JOINER =
+      instanceMethod().onDescendantOf("com.google.common.base.Joiner").named("join");
+
+  private final boolean handleJoiner;
+
+  protected AbstractToString(ErrorProneFlags flags) {
+    this.handleJoiner = flags.getBoolean("AbstractToString:Joiner").orElse(true);
+  }
+
   private static boolean isInVarargsPosition(
       ExpressionTree argTree, MethodInvocationTree methodInvocationTree, VisitorState state) {
     int parameterCount = getSymbol(methodInvocationTree).getParameters().size();
@@ -123,6 +136,17 @@ public abstract class AbstractToString extends BugChecker
     // other parameters along with it.
     return (arguments.size() > parameterCount || !state.getTypes().isArray(getType(argTree)))
         && arguments.indexOf(argTree) >= parameterCount - 1;
+  }
+
+  private static boolean isVarargsArray(
+      ExpressionTree argTree, MethodInvocationTree methodInvocationTree, VisitorState state) {
+    int parameterCount = getSymbol(methodInvocationTree).getParameters().size();
+    List<? extends ExpressionTree> arguments = methodInvocationTree.getArguments();
+    // Don't match if we're passing an array into a varargs parameter, but do match if there are
+    // other parameters along with it.
+    return arguments.size() == parameterCount
+        && state.getTypes().isArray(getType(argTree))
+        && arguments.indexOf(argTree) == parameterCount - 1;
   }
 
   @Override
@@ -166,6 +190,23 @@ public abstract class AbstractToString extends BugChecker
         handleStringifiedTree(argTree, ToStringKind.FLOGGER, state);
       }
     }
+    if (handleJoiner && JOINER.matches(tree, state)) {
+      var symbol = getSymbol(tree);
+      if (symbol.isVarArgs()) {
+        for (ExpressionTree argTree : tree.getArguments()) {
+          if (isVarargsArray(argTree, tree, state)) {
+            handleStringifiedTree(
+                ((ArrayType) getType(argTree)).getComponentType(),
+                argTree,
+                argTree,
+                ToStringKind.IMPLICIT,
+                state);
+          } else {
+            handleStringifiedTree(argTree, ToStringKind.IMPLICIT, state);
+          }
+        }
+      }
+    }
     return NO_MATCH;
   }
 
@@ -200,7 +241,11 @@ public abstract class AbstractToString extends BugChecker
 
   private void handleStringifiedTree(
       Tree parent, ExpressionTree tree, ToStringKind toStringKind, VisitorState state) {
-    Type type = type(tree);
+    handleStringifiedTree(type(tree), parent, tree, toStringKind, state);
+  }
+
+  private void handleStringifiedTree(
+      Type type, Tree parent, ExpressionTree tree, ToStringKind toStringKind, VisitorState state) {
     if (type.getKind() == TypeKind.NULL
         || !typePredicate().apply(type, state)
         || allowableToStringKind(toStringKind)) {

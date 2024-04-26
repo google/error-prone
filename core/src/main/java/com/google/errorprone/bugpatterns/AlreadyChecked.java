@@ -32,10 +32,12 @@ import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions;
 import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions.ConstantExpression;
 import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions.Truthiness;
 import com.google.errorprone.matchers.Description;
+import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.IfTree;
 import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -78,11 +80,9 @@ public final class AlreadyChecked extends BugChecker implements CompilationUnitT
 
     private final Multiset<ConstantExpression> truths = HashMultiset.create();
     private final Multiset<ConstantExpression> falsehoods = HashMultiset.create();
-    private final VisitorState state;
 
     private IfScanner(VisitorState state) {
       super(state);
-      this.state = state;
     }
 
     @Override
@@ -210,6 +210,13 @@ public final class AlreadyChecked extends BugChecker implements CompilationUnitT
           || !isSameType(getType(tree), state.getSymtab().booleanType, state)) {
         return super.scan(tree, null);
       }
+
+      if (tree instanceof IdentifierTree
+          && getCurrentPath().getLeaf() instanceof AssignmentTree
+          && ((AssignmentTree) getCurrentPath().getLeaf()).getVariable().equals(tree)) {
+        return super.scan(tree, null);
+      }
+
       constantExpressions
           .constantExpression((ExpressionTree) tree, state)
           .ifPresent(

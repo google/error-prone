@@ -173,12 +173,15 @@ public final class ImpossibleNullComparisonTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
+            "import static org.junit.Assert.assertNotNull;",
             "import com.google.protobuf.ExtensionLite;",
             "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
             "public class Test {",
             "  public void test(TestProtoMessage e, ExtensionLite extensionLite) {",
             "    // BUG: Diagnostic contains:",
             "    boolean a = e.getExtension(extensionLite) == null;",
+            "    // BUG: Diagnostic contains:",
+            "    assertNotNull(e.getExtension(extensionLite));",
             "  }",
             "}")
         .doTest();
@@ -474,6 +477,22 @@ public final class ImpossibleNullComparisonTest {
             "    boolean b1 = t.row(\"foo\") == null;",
             "    // BUG: Diagnostic contains: !t.containsColumn(\"foo\")",
             "    boolean b2 = t.column(\"foo\") == null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void primitives() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.truth.Truth.assertThat;",
+            "public class Test {",
+            "  public void o(int i, Integer boxed) {",
+            "    // BUG: Diagnostic contains:",
+            "    assertThat(i).isNotNull();",
+            "    assertThat(boxed).isNotNull();",
             "  }",
             "}")
         .doTest();

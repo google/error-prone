@@ -7748,9 +7748,6 @@ $jdk/internal/jrtfs/JrtFileAttributes
 
 
 jdk/nashorn/api/tree/Tree
-
-
-java/util/Base64$Decoder
 .
 ,
 *sun/text/resources/ext/CollationData_zh_TW
@@ -10904,9 +10901,6 @@ Rorg/graalvm/compiler/replacements/nodes/arithmetic/IntegerExactArithmeticSplitN
 )
 '
 %jdk/internal/misc/JavaNetSocketAccess
-
-
-java/util/Base64
 9
 7
 5org/graalvm/compiler/nodes/calc/CompareNode$CompareOp
@@ -18014,9 +18008,6 @@ $
 H
 F
 Dorg/graalvm/compiler/hotspot/CompilerConfigurationFactory$BackendMap
-
-
-java/util/Base64$Encoder
 *
 (
 &jdk/internal/loader/BuiltinClassLoader
@@ -36474,7 +36465,7 @@ VT
 
 replaceAll%(Ljava/util/function/UnaryOperator;)V(
 spliterator()Ljava/util/Spliterator;
-ÒÏ
+¸µ
 java/lang/reflect/Method9
 printModifiersIfNonzero(Ljava/lang/StringBuilder;IZ)V?
 getAnnotatedReceiverType#()Ljava/lang/reflect/AnnotatedType;
@@ -36511,8 +36502,7 @@ replaceAll%(Ljava/util/function/UnaryOperator;)V(
 checkAccess7(Ljava/lang/Class;Ljava/lang/Class;Ljava/lang/Class;I)VV
 getAnnotatedReturnType0;(Ljava/lang/reflect/Type;)Ljava/lang/reflect/AnnotatedType;B
 getAnnotatedExceptionTypes$()[Ljava/lang/reflect/AnnotatedType;K
-getGenericInfo9()Lsun/reflect/generics/repository/ConstructorRepository;
-getParameterCount()IM
+getGenericInfo9()Lsun/reflect/generics/repository/ConstructorRepository;M
 getDeclaredAnnotation4(Ljava/lang/Class;)Ljava/lang/annotation/Annotation;/
 getSharedExceptionTypes()[Ljava/lang/Class;/
 getSharedParameterTypes()[Ljava/lang/Class;"
@@ -37542,18 +37532,12 @@ replaceAll%(Ljava/util/function/UnaryOperator;)V
 toArray5(Ljava/util/function/IntFunction;)[Ljava/lang/Object;5
 	elementAt(([Ljava/lang/Object;I)Ljava/lang/Object;(
 spliterator()Ljava/util/Spliterator;
-¶³
+˜•
 *java/util/concurrent/ConcurrentLinkedQueue$
-ITEMLjava/lang/invoke/VarHandle;-
-removeIf!(Ljava/util/function/Predicate;)Z-
-parallelStream()Ljava/util/stream/Stream;%
-stream()Ljava/util/stream/Stream;`
+ITEMLjava/lang/invoke/VarHandle;`
 forEachFromQ(Ljava/util/function/Consumer;Ljava/util/concurrent/ConcurrentLinkedQueue$Node;)V9
-head1Ljava/util/concurrent/ConcurrentLinkedQueue$Node;@
-toArray5(Ljava/util/function/IntFunction;)[Ljava/lang/Object;$
-NEXTLjava/lang/invoke/VarHandle;+
-forEach (Ljava/util/function/Consumer;)V(
-spliterator()Ljava/util/Spliterator;
+head1Ljava/util/concurrent/ConcurrentLinkedQueue$Node;$
+NEXTLjava/lang/invoke/VarHandle;
 ™–
 ;org/jcp/xml/dsig/internal/dom/DOMHMACSignatureMethod$SHA384n
 verifyd(Ljava/security/Key;Ljavax/xml/crypto/dsig/SignedInfo;[BLjavax/xml/crypto/dsig/XMLValidateContext;)Zg
@@ -48421,14 +48405,12 @@ appendSelf@(Lcom/sun/org/apache/xml/internal/security/utils/ElementProxy;)V;
 setElement(Lorg/w3c/dom/Element;)VZ
 createElementForFamilyLocal;(Ljava/lang/String;Ljava/lang/String;)Lorg/w3c/dom/Element;<
 setLocalAttribute'(Ljava/lang/String;Ljava/lang/String;)V
-Œ‰
+b`
 java/io/ByteArrayInputStream
 
 readNBytes([BII)I
 
-readNBytes(I)[B'
-
-transferTo(Ljava/io/OutputStream;)J
+readNBytes(I)[B
 readAllBytes()[B
 fd
 7com/sun/org/apache/xml/internal/utils/res/XResources_it)
@@ -51831,13 +51813,11 @@ vt
 getPosition()I
 	setOpcode(S)V
 	setLength(I)V
-¯¬
+†ƒ
 java/io/InputStream
 
 readNBytes(I)[B
-readAllBytes()[B'
-
-transferTo(Ljava/io/OutputStream;)J*
+readAllBytes()[B*
 nullInputStream()Ljava/io/InputStream;
 
 readNBytes([BII)I
@@ -52668,11 +52648,6 @@ VT
 !javax/xml/transform/FactoryFinder?
 find7(Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/Object;^
 newInstanceO(Ljava/lang/Class;Ljava/lang/String;Ljava/lang/ClassLoader;Z)Ljava/lang/Object;
-Á¾
-java/util/concurrent/TimeUnit"
-convert(Ljava/time/Duration;)J1
-toChronoUnit!()Ljava/time/temporal/ChronoUnit;F
-of@(Ljava/time/temporal/ChronoUnit;)Ljava/util/concurrent/TimeUnit;
 ÷ô
 >com/sun/org/apache/xml/internal/serializer/XSLOutputAttributes;
 getOutputProperty&(Ljava/lang/String;)Ljava/lang/String;B
@@ -56769,10 +56744,6 @@ Icom/sun/org/apache/xalan/internal/xsltc/compiler/util/ErrorMessages_zh_CN)
 rp
 Ccom/sun/org/apache/xalan/internal/xsltc/runtime/ErrorMessages_zh_TW)
 getBaseBundleName()Ljava/lang/String;
-rp
-java/lang/ThreadLocalE
-withInitial6(Ljava/util/function/Supplier;)Ljava/lang/ThreadLocal;
-	isPresent()Z
 [Y
 $sun/security/x509/CRLNumberExtension1
 get*(Ljava/lang/String;)Ljava/math/BigInteger;
@@ -57135,6 +57106,9 @@ PN
 HF
 1com/sun/java/util/jar/pack/ConstantPool$Utf8Entry
 	tagEquals(I)Z
++)
+java/lang/ThreadLocal
+	isPresent()Z
 [Y
 8com/sun/java/swing/plaf/motif/MotifRadioButtonMenuItemUI
 doNotCloseOnMouseClick()Z

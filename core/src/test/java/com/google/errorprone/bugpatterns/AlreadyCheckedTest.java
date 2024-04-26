@@ -516,4 +516,22 @@ public final class AlreadyCheckedTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void b312047923() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void test() {",
+            "    boolean a = true;",
+            "    loop: while (true) {",
+            "      if (false && a) {",
+            "        a = false;",
+            "      } else {}",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

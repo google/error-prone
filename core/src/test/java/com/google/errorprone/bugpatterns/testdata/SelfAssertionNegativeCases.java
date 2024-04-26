@@ -19,11 +19,11 @@ package com.google.errorprone.bugpatterns.testdata;
 import static com.google.common.truth.Truth.assertThat;
 
 /**
- * Negative test cases for TruthSelfEquals check.
+ * Negative test cases for SelfAssertion check.
  *
  * @author bhagwani@google.com (Sumit Bhagwani)
  */
-public class TruthSelfEqualsNegativeCases {
+public class SelfAssertionNegativeCases {
 
   public void testEq() {
     assertThat(Boolean.TRUE.toString()).isEqualTo(Boolean.FALSE.toString());

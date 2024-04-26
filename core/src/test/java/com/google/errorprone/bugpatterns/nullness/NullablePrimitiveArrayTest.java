@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.nullness;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import org.junit.Test;
@@ -34,22 +34,28 @@ public class NullablePrimitiveArrayTest {
         .addInputLines(
             "Test.java",
             "import org.checkerframework.checker.nullness.qual.Nullable;",
+            "import org.checkerframework.checker.nullness.qual.NonNull;",
             "abstract class Test {",
             "  @Nullable abstract byte[] f();",
             "  abstract @Nullable byte[] g();",
             "  abstract void h(@Nullable byte[] x);",
             "  abstract void i(@Nullable byte @Nullable [] x);",
             "  abstract void j(@Nullable byte... x);",
+            "  abstract void k(@Nullable byte[][][] x);",
+            "  abstract void l(@NonNull byte[] x);",
             "}")
         .addOutputLines(
             "Test.java",
             "import org.checkerframework.checker.nullness.qual.Nullable;",
+            "import org.checkerframework.checker.nullness.qual.NonNull;",
             "abstract class Test {",
             "  abstract byte @Nullable [] f();",
             "  abstract byte @Nullable [] g();",
             "  abstract void h(byte @Nullable [] x);",
             "  abstract void i(byte @Nullable [] x);",
             "  abstract void j(byte @Nullable... x);",
+            "  abstract void k(byte @Nullable [][][] x);",
+            "  abstract void l(byte @NonNull [] x);",
             "}")
         .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
@@ -66,6 +72,26 @@ public class NullablePrimitiveArrayTest {
             "  abstract void h(@Nullable Object[] x);",
             "}")
         .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void alreadyAnnotatedForNullness() {
+    testHelper
+        .addInputLines(
+            "Test.java",
+            "import org.checkerframework.checker.nullness.qual.Nullable;",
+            "import org.checkerframework.checker.nullness.qual.NonNull;",
+            "abstract class Test {",
+            "  abstract void f(@Nullable int @NonNull [] x);",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import org.checkerframework.checker.nullness.qual.Nullable;",
+            "import org.checkerframework.checker.nullness.qual.NonNull;",
+            "abstract class Test {",
+            "  abstract void f(int @NonNull [] x);",
+            "}")
         .doTest();
   }
 

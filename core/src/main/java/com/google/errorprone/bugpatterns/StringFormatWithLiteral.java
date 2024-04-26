@@ -16,9 +16,13 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
+import static com.google.errorprone.util.ASTHelpers.getReceiver;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -42,12 +46,30 @@ public final class StringFormatWithLiteral extends BugChecker
   private static final Matcher<ExpressionTree> STRING_FORMAT_METHOD_MATCHER =
       staticMethod().onClass("java.lang.String").named("format");
 
+  private static final Matcher<ExpressionTree> FORMATTED =
+      instanceMethod().onExactClass("java.lang.String").named("formatted");
+
   private static final Pattern SPECIFIER_ALLOW_LIST_REGEX = Pattern.compile("%(d|s|S|c|b|B)");
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    if (STRING_FORMAT_METHOD_MATCHER.matches(tree, state) && shouldRefactorStringFormat(tree)) {
-      return describeMatch(tree, refactor(tree));
+    if (STRING_FORMAT_METHOD_MATCHER.matches(tree, state)) {
+      ImmutableList<ExpressionTree> arguments =
+          tree.getArguments().stream().skip(1).collect(toImmutableList());
+      if (shouldRefactorStringFormat(tree.getArguments().get(0), arguments)) {
+        return describeMatch(
+            tree,
+            SuggestedFix.replace(
+                tree, getFormattedUnifiedString(tree.getArguments().get(0), arguments)));
+      }
+    }
+    if (FORMATTED.matches(tree, state)) {
+      if (shouldRefactorStringFormat(getReceiver(tree), tree.getArguments())) {
+        return describeMatch(
+            tree,
+            SuggestedFix.replace(
+                tree, getFormattedUnifiedString(getReceiver(tree), tree.getArguments())));
+      }
     }
     return Description.NO_MATCH;
   }
@@ -57,15 +79,15 @@ public final class StringFormatWithLiteral extends BugChecker
    * string included). Format strings (first argument) as variables or constants are excluded from
    * refactoring. The refactoring also has an allowlist of "non trivial" formatting specifiers. This
    * is done since there are some instances where the String.format() invocation is justified even
-   * with
+   * with a CONSTANT but non-literal format string.
    */
-  private static boolean shouldRefactorStringFormat(MethodInvocationTree tree) {
-    if (!tree.getArguments().stream()
-        .allMatch(argumentTree -> argumentTree instanceof LiteralTree)) {
+  private static boolean shouldRefactorStringFormat(
+      ExpressionTree formatString, List<? extends ExpressionTree> arguments) {
+    if (!(formatString instanceof LiteralTree)
+        || !arguments.stream().allMatch(argumentTree -> argumentTree instanceof LiteralTree)) {
       return false;
     }
-    LiteralTree formatString = (LiteralTree) tree.getArguments().get(0);
-    return onlyContainsSpecifiersInAllowList((String) formatString.getValue());
+    return onlyContainsSpecifiersInAllowList((String) ((LiteralTree) formatString).getValue());
   }
 
   private static boolean onlyContainsSpecifiersInAllowList(String formatString) {
@@ -74,29 +96,18 @@ public final class StringFormatWithLiteral extends BugChecker
     return !noSpecifierFormatBase.contains("%");
   }
 
-  private static SuggestedFix refactor(MethodInvocationTree tree) {
-    return SuggestedFix.replace(
-        tree, getFormattedUnifiedString(getFormatString(tree), tree.getArguments()));
-  }
-
   /**
    * Formats the string originally on the String.format to be a unified string with all the literal
    * parameters, when available.
    */
   private static String getFormattedUnifiedString(
-      String formatString, List<? extends ExpressionTree> arguments) {
+      ExpressionTree formatString, List<? extends ExpressionTree> arguments) {
     String unescapedFormatString =
         String.format(
-            formatString,
+            (String) ((LiteralTree) formatString).getValue(),
             arguments.stream()
-                .skip(1) // skip the format string argument.
-                .map(literallTree -> ((LiteralTree) literallTree).getValue())
+                .map(literalTree -> ((LiteralTree) literalTree).getValue())
                 .toArray(Object[]::new));
     return '"' + SourceCodeEscapers.javaCharEscaper().escape(unescapedFormatString) + '"';
-  }
-
-  private static String getFormatString(MethodInvocationTree tree) {
-    LiteralTree formatStringTree = (LiteralTree) tree.getArguments().get(0);
-    return formatStringTree.getValue().toString();
   }
 }

@@ -94,7 +94,7 @@ public class SelfEquals extends BugChecker implements MethodInvocationTreeMatche
   }
 
   @Nullable
-  protected static Fix fieldFix(Tree toReplace, VisitorState state) {
+  protected static SuggestedFix fieldFix(Tree toReplace, VisitorState state) {
     TreePath path = state.getPath();
     while (path != null
         && path.getLeaf().getKind() != Kind.CLASS

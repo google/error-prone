@@ -595,4 +595,20 @@ public class JUnit4TestNotRunTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void underscoreInName_mustBeATest() {
+    compilationHelper
+        .addSourceLines(
+            "T.java",
+            "import org.junit.Test;",
+            "import org.junit.runner.RunWith;",
+            "import org.junit.runners.JUnit4;",
+            "@RunWith(JUnit4.class)",
+            "public class T {",
+            "  // BUG: Diagnostic contains:",
+            "  public void givenFoo_thenBar() {}",
+            "}")
+        .doTest();
+  }
 }
