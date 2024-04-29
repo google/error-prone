@@ -136,17 +136,17 @@ public class DateCheckerTest {
             "import java.util.Date;",
             "public class TestClass {",
             "  // BUG: Diagnostic contains: "
-                + "The 1900-based year value (2020) is out of bounds [1..150].  "
+                + "The 1900-based year value (2020) is out of bounds [1..300].  "
                 + "The 0-based month value (13) is out of bounds [0..11].",
             "  Date bad1 = new Date(2020, 13, 31);",
             "  // BUG: Diagnostic contains: "
-                + "The 1900-based year value (2020) is out of bounds [1..150].  "
+                + "The 1900-based year value (2020) is out of bounds [1..300].  "
                 + "The 0-based month value (13) is out of bounds [0..11].  "
                 + "The hours value (-2) is out of bounds [0..23].  "
                 + "The minutes value (61) is out of bounds [0..59].",
             "  Date bad2 = new Date(2020, 13, 31, -2, 61);",
             "  // BUG: Diagnostic contains: "
-                + "The 1900-based year value (2020) is out of bounds [1..150].  "
+                + "The 1900-based year value (2020) is out of bounds [1..300].  "
                 + "The 0-based month value (13) is out of bounds [0..11].  "
                 + "The hours value (-2) is out of bounds [0..23].  "
                 + "The minutes value (61) is out of bounds [0..59].  "
@@ -165,7 +165,7 @@ public class DateCheckerTest {
             "import java.util.Date;",
             "public class TestClass {",
             "  // BUG: Diagnostic contains: "
-                + "The 1900-based year value (2020) is out of bounds [1..150].",
+                + "The 1900-based year value (2020) is out of bounds [1..300].",
             "  Date bad = new Date(2020, JULY, 10);",
             "}")
         .doTest();
@@ -222,7 +222,7 @@ public class DateCheckerTest {
             "  public void foo(Date date) {",
             "    date.setYear(1);",
             "    date.setYear(120);",
-            "    date.setYear(150);",
+            "    date.setYear(300);",
             "    date.setMonth(JANUARY);",
             "    date.setMonth(FEBRUARY);",
             "    date.setMonth(MARCH);",
@@ -261,13 +261,13 @@ public class DateCheckerTest {
             "public class TestClass {",
             "  public void foo(Date date) {",
             "    // BUG: Diagnostic contains: "
-                + "The 1900-based year value (0) is out of bounds [1..150].",
+                + "The 1900-based year value (0) is out of bounds [1..300].",
             "    date.setYear(0);",
             "    // BUG: Diagnostic contains: "
-                + "The 1900-based year value (-1) is out of bounds [1..150].",
+                + "The 1900-based year value (-1) is out of bounds [1..300].",
             "    date.setYear(-1);",
             "    // BUG: Diagnostic contains: "
-                + "The 1900-based year value (2020) is out of bounds [1..150].",
+                + "The 1900-based year value (2020) is out of bounds [1..300].",
             "    date.setYear(2020);",
             "  }",
             "}")

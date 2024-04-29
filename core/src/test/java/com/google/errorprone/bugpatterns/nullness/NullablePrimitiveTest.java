@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.nullness;
 
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
@@ -103,6 +103,20 @@ public class NullablePrimitiveTest {
             "    return 42;",
             "  }",
             "  int @Nullable [] y;",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void positiveNonNull() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.List;",
+            "import org.checkerframework.checker.nullness.qual.NonNull;",
+            "class Test {",
+            "  // BUG: Diagnostic contains:",
+            "  @NonNull int xs;",
             "}")
         .doTest();
   }

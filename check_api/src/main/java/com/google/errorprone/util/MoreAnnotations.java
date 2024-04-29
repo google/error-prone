@@ -27,7 +27,9 @@ import com.sun.tools.javac.code.Attribute.TypeCompound;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.TargetType;
+import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.TypeAnnotationPosition;
+import com.sun.tools.javac.code.TypeTag;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -92,9 +94,38 @@ public final class MoreAnnotations {
   }
 
   private static boolean isAnnotationOnType(Symbol sym, TypeAnnotationPosition position) {
-    if (!position.location.isEmpty()) {
+    if (!position.location.stream()
+        .allMatch(e -> e.tag == TypeAnnotationPosition.TypePathEntryKind.INNER_TYPE)) {
       return false;
     }
+    if (!targetTypeMatches(sym, position)) {
+      return false;
+    }
+    Type type;
+    switch (sym.getKind()) {
+      case METHOD:
+      case CONSTRUCTOR:
+        type = ((MethodSymbol) sym).getReturnType();
+        break;
+      default:
+        type = sym.asType();
+    }
+    return isAnnotationOnType(type, position.location);
+  }
+
+  private static boolean isAnnotationOnType(
+      Type type, com.sun.tools.javac.util.List<TypeAnnotationPosition.TypePathEntry> location) {
+    com.sun.tools.javac.util.List<TypeAnnotationPosition.TypePathEntry> expected =
+        com.sun.tools.javac.util.List.nil();
+    for (Type curr = type.getEnclosingType();
+        curr != null && !curr.hasTag(TypeTag.NONE);
+        curr = curr.getEnclosingType()) {
+      expected = expected.append(TypeAnnotationPosition.TypePathEntry.INNER_TYPE);
+    }
+    return expected.equals(location);
+  }
+
+  private static boolean targetTypeMatches(Symbol sym, TypeAnnotationPosition position) {
     switch (sym.getKind()) {
       case LOCAL_VARIABLE:
         return position.type == TargetType.LOCAL_VARIABLE;

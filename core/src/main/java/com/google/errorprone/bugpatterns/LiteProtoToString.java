@@ -27,6 +27,7 @@ import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.predicates.TypePredicate;
@@ -35,6 +36,7 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Type;
 import java.util.Optional;
+import javax.inject.Inject;
 
 /** Flags calls to {@code toString} on lite protos. */
 @BugPattern(
@@ -68,6 +70,11 @@ public final class LiteProtoToString extends AbstractToString {
           .add("atVerbose", "atFine", "atFiner", "atFinest", "atDebug", "atConfig", "atInfo")
           .add("v", "d", "i")
           .build();
+
+  @Inject
+  LiteProtoToString(ErrorProneFlags flags) {
+    super(flags);
+  }
 
   @Override
   protected TypePredicate typePredicate() {

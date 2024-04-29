@@ -324,4 +324,22 @@ public class JavaDurationGetSecondsGetNanoTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void bothUsedWithinALambda() {
+    compilationHelper
+        .addSourceLines(
+            "test/TestCase.java",
+            "package test;",
+            "import com.google.common.collect.ImmutableMap;",
+            "import java.time.Duration;",
+            "import java.util.function.Supplier;",
+            "public class TestCase {",
+            "  public static Supplier<ImmutableMap<String, Object>> foo(Duration duration) {",
+            "    return () -> ImmutableMap.of(",
+            "        \"seconds\", duration.getSeconds(), \"nanos\", duration.getNano());",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

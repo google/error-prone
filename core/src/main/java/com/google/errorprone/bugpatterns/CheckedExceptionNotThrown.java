@@ -127,8 +127,7 @@ public final class CheckedExceptionNotThrown extends BugChecker implements Metho
                 getStartPosition(tree.getThrows().get(0)),
                 state.getEndPosition(getLast(tree.getThrows())),
                 canActuallyBeThrown.stream().map(state::getSourceForNode).collect(joining(", ")));
-    SuggestedFix fix =
-        SuggestedFix.builder().merge(fixJavadoc(thrownTypes, state)).merge(throwsFix).build();
+    SuggestedFix fix = fixJavadoc(thrownTypes, state).toBuilder().merge(throwsFix).build();
     return buildDescription(tree.getThrows().get(0)).setMessage(description).addFix(fix).build();
   }
 

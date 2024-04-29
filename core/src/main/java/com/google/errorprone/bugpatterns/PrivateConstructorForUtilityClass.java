@@ -90,8 +90,7 @@ public final class PrivateConstructorForUtilityClass extends BugChecker
       return NO_MATCH;
     }
     SuggestedFix.Builder fix =
-        SuggestedFix.builder()
-            .merge(addMembers(classTree, state, createPrivateConstructor(classTree)));
+        addMembers(classTree, state, createPrivateConstructor(classTree)).toBuilder();
     SuggestedFixes.addModifiers(classTree, state, Modifier.FINAL).ifPresent(fix::merge);
     return describeMatch(classTree, fix.build());
   }

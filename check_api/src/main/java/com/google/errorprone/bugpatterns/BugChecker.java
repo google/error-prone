@@ -17,9 +17,9 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
+import static com.google.errorprone.util.ASTHelpers.getDeclaredSymbol;
 import static com.google.errorprone.util.ASTHelpers.getModifiers;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
-import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableRangeSet;
@@ -299,13 +299,28 @@ public abstract class BugChecker implements Suppressible, Serializable {
    * bug checker.
    */
   public boolean isSuppressed(Tree tree, VisitorState state) {
-    Symbol sym = getSymbol(tree);
+    Symbol sym = getDeclaredSymbol(tree);
+    /*
+     * TOOD(cpovirk): At least for @SuppressWarnings, should our suppression checks look for
+     * annotations only on the kinds of trees that are covered by SuppressibleTreePathScanner? Or,
+     * now that @SuppressWarnings has been changed to be applicable to all declaration locations,
+     * should we generalize SuppressibleTreePathScanner to look on all those locations?
+     */
     return sym != null && isSuppressed(sym, state);
   }
 
   /**
    * Returns true if the given symbol is annotated with a {@code @SuppressWarnings} or other
    * annotation that disables this bug checker.
+   */
+  /*
+   * TODO(cpovirk): Would we consider deleting this overload (or at least making it `private`)? Its
+   * callers appear to all have access to a Tree, and callers might accidentally pass
+   * getSymbol(tree) instead of getDeclaredSymbol(tree), resulting in over-suppression. Fortunately,
+   * the Tree probably provides all that we need, at least for looking for @SuppressWarnings. It
+   * does *not* provide all that we need for looking for any @Inherited suppression annotations (if
+   * such annotations are something that we (a) support and (b) want to support), but we can always
+   * call getDeclaredSymbol inside the implementation where necessary.
    */
   public boolean isSuppressed(Symbol sym, VisitorState state) {
     ErrorProneOptions errorProneOptions = state.errorProneOptions();

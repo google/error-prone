@@ -130,5 +130,8 @@ import java.lang.annotation.Target;
  */
 @Documented
 @Retention(CLASS)
+// TODO(xtof): We'd like to eventually support other cases, but I first need to determine with
+// confidence that the checker can ensure all initializations and assignments to such variables are
+// compile-time-constant.
 @Target({ElementType.PARAMETER, ElementType.FIELD})
 public @interface CompileTimeConstant {}

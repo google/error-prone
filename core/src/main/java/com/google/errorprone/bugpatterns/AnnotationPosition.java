@@ -214,15 +214,32 @@ public final class AnnotationPosition extends BugChecker
                 })
             .collect(toImmutableList());
 
-    boolean annotationsInCorrectPlace =
-        shouldBeBefore.stream().allMatch(a -> getStartPosition(a) < firstModifierPos)
-            && shouldBeAfter.stream().allMatch(a -> getStartPosition(a) > lastModifierPos);
+    int lastNonTypeAnnotationOrModifierPosition =
+        Streams.concat(
+                Stream.of(lastModifierPos),
+                shouldBeBefore.stream().map(ASTHelpers::getStartPosition))
+            .max(naturalOrder())
+            .get();
+    int firstTypeAnnotationOrModifierPosition =
+        Stream.concat(
+                Stream.of(firstModifierPos),
+                shouldBeAfter.stream().map(ASTHelpers::getStartPosition))
+            .min(naturalOrder())
+            .get();
+    ImmutableList<AnnotationTree> moveBefore =
+        shouldBeBefore.stream()
+            .filter(a -> getStartPosition(a) > firstTypeAnnotationOrModifierPosition)
+            .collect(toImmutableList());
+    ImmutableList<AnnotationTree> moveAfter =
+        shouldBeAfter.stream()
+            .filter(a -> getStartPosition(a) < lastNonTypeAnnotationOrModifierPosition)
+            .collect(toImmutableList());
 
-    if (annotationsInCorrectPlace && isOrderingIsCorrect(shouldBeBefore, shouldBeAfter)) {
+    if (moveBefore.isEmpty() && moveAfter.isEmpty()) {
       return NO_MATCH;
     }
     SuggestedFix.Builder fix = SuggestedFix.builder();
-    for (AnnotationTree annotation : concat(shouldBeBefore, shouldBeAfter)) {
+    for (AnnotationTree annotation : concat(moveBefore, moveAfter)) {
       fix.delete(annotation);
     }
     String javadoc = danglingJavadoc == null ? "" : removeJavadoc(state, danglingJavadoc, fix);
@@ -230,21 +247,20 @@ public final class AnnotationPosition extends BugChecker
       fix.replace(
           getStartPosition(tree),
           getStartPosition(tree),
-          String.format(
-              "%s%s ", javadoc, joinSource(state, concat(shouldBeBefore, shouldBeAfter))));
+          String.format("%s%s ", javadoc, joinSource(state, concat(moveBefore, moveAfter))));
     } else {
       fix.replace(
               firstModifierPos,
               firstModifierPos,
-              String.format("%s%s ", javadoc, joinSource(state, shouldBeBefore)))
+              String.format("%s%s ", javadoc, joinSource(state, moveBefore)))
           .replace(
               lastModifierPos,
               lastModifierPos,
-              String.format(" %s ", joinSource(state, shouldBeAfter)));
+              String.format(" %s ", joinSource(state, moveAfter)));
     }
     Stream.Builder<String> messages = Stream.builder();
-    if (!shouldBeBefore.isEmpty()) {
-      ImmutableList<String> names = annotationNames(shouldBeBefore);
+    if (!moveBefore.isEmpty()) {
+      ImmutableList<String> names = annotationNames(moveBefore);
       String flattened = String.join(", ", names);
       String isAre =
           names.size() > 1 ? "are not TYPE_USE annotations" : "is not a TYPE_USE annotation";
@@ -253,8 +269,8 @@ public final class AnnotationPosition extends BugChecker
               "%s %s, so should appear before any modifiers and after Javadocs.",
               flattened, isAre));
     }
-    if (!shouldBeAfter.isEmpty()) {
-      ImmutableList<String> names = annotationNames(shouldBeAfter);
+    if (!moveAfter.isEmpty()) {
+      ImmutableList<String> names = annotationNames(moveAfter);
       String flattened = String.join(", ", names);
       String isAre = names.size() > 1 ? "are TYPE_USE annotations" : "is a TYPE_USE annotation";
       messages.add(
@@ -266,18 +282,6 @@ public final class AnnotationPosition extends BugChecker
         .setMessage(messages.build().collect(joining(" ")))
         .addFix(fix.build())
         .build();
-  }
-
-  private static boolean isOrderingIsCorrect(
-      List<AnnotationTree> shouldBeBefore, List<AnnotationTree> shouldBeAfter) {
-    if (shouldBeBefore.isEmpty() || shouldBeAfter.isEmpty()) {
-      return true;
-    }
-    int largestNonTypeAnnotationPosition =
-        shouldBeBefore.stream().map(ASTHelpers::getStartPosition).max(naturalOrder()).get();
-    int smallestTypeAnnotationPosition =
-        shouldBeAfter.stream().map(ASTHelpers::getStartPosition).min(naturalOrder()).get();
-    return largestNonTypeAnnotationPosition < smallestTypeAnnotationPosition;
   }
 
   private static Position annotationPosition(Tree tree, AnnotationType annotationType) {

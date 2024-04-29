@@ -38,6 +38,7 @@ import static com.sun.source.tree.Tree.Kind.NULL_LITERAL;
 import static com.sun.source.tree.Tree.Kind.PARAMETERIZED_TYPE;
 import static com.sun.tools.javac.parser.Tokens.TokenKind.DOT;
 import static java.lang.Boolean.TRUE;
+import static java.util.Objects.requireNonNull;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableSet;
@@ -260,6 +261,7 @@ class NullnessUtils {
       return false;
     }
     ClassSymbol constructedClass = enclosingClass(symbol);
+    requireNonNull(constructedClass, symbol::toString);
     return enclosingClass(constructedClass) != null && !constructedClass.isStatic();
   }
 

@@ -16,19 +16,15 @@
 
 package com.google.errorprone.matchers;
 
-import static com.google.common.truth.Truth.assertThat;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.annotations.CompileTimeConstant;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.sun.source.tree.VariableTree;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Target;
 import javax.lang.model.element.ElementKind;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -168,16 +164,6 @@ public class CompileTimeConstantExpressionMatcherTest {
             "  }",
             "}")
         .doTest();
-  }
-
-  // TODO(xtof): We'd like to eventually support other cases, but I first need
-  // to determine with confidence that the checker can ensure all initializations
-  // and assignments to such variables are compile-time-constant.
-  // For now, the annotation's target is restricted to ElementType.PARAMETER.
-  @Test
-  public void compileTimeConstantAnnotationOnlyAllowedOnParameterOrField() {
-    assertThat(CompileTimeConstant.class.getAnnotation(Target.class).value())
-        .isEqualTo(new ElementType[] {ElementType.PARAMETER, ElementType.FIELD});
   }
 
   @Test

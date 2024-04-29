@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns.apidiff;
 
-import com.google.common.collect.ImmutableList;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,15 +23,10 @@ import org.junit.runners.JUnit4;
 
 /** {@link AndroidJdkLibsChecker}Test. */
 @RunWith(JUnit4.class)
-public class AndroidJdkLibsCheckerTest extends Java7ApiCheckerTest {
+public class AndroidJdkLibsCheckerTest {
 
-  private final CompilationTestHelper allowJava8Helper =
-      CompilationTestHelper.newInstance(AndroidJdkLibsChecker.class, getClass())
-          .setArgs(ImmutableList.of("-XepOpt:Android:Java8Libs"));
-
-  public AndroidJdkLibsCheckerTest() {
-    super(AndroidJdkLibsChecker.class);
-  }
+  protected final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(AndroidJdkLibsChecker.class, getClass());
 
   @Test
   public void repeatedAnnotationAllowed() {
@@ -77,8 +71,6 @@ public class AndroidJdkLibsCheckerTest extends Java7ApiCheckerTest {
             "    }",
             "  }",
             "  void f(A a, B b) {",
-            "    // BUG: Diagnostic contains: java.util.Map#getOrDefault(java.lang.Object,V)"
-                + " is not available in Test.A",
             "    a.getOrDefault(null, null);",
             "    b.getOrDefault(null, null); // OK: overrides getOrDefault",
             "  }",
@@ -107,7 +99,6 @@ public class AndroidJdkLibsCheckerTest extends Java7ApiCheckerTest {
             "import java.util.concurrent.TimeUnit;",
             "public class Test {",
             "  void o() {",
-            "    // BUG: Diagnostic contains:",
             "    Stopwatch.createStarted().elapsed();",
             "    Stopwatch.createStarted().elapsed(TimeUnit.MILLISECONDS);",
             "  }",
@@ -117,7 +108,7 @@ public class AndroidJdkLibsCheckerTest extends Java7ApiCheckerTest {
 
   @Test
   public void allowJava8Flag_packageAllowed() {
-    allowJava8Helper
+    compilationHelper
         .addSourceLines(
             "Test.java",
             "import java.time.Duration;",
@@ -135,7 +126,7 @@ public class AndroidJdkLibsCheckerTest extends Java7ApiCheckerTest {
 
   @Test
   public void allowJava8Flag_memberAllowed() {
-    allowJava8Helper
+    compilationHelper
         .addSourceLines(
             "Test.java",
             "import java.util.Arrays;",
@@ -148,23 +139,8 @@ public class AndroidJdkLibsCheckerTest extends Java7ApiCheckerTest {
   }
 
   @Test
-  public void allowJava8Flag_memberBanned() {
-    allowJava8Helper
-        .addSourceLines(
-            "Test.java",
-            "import java.util.stream.Stream;",
-            "public class Test {",
-            "  public static void test(Stream s) {",
-            "    // BUG: Diagnostic contains: parallel",
-            "    s.parallel();",
-            "  }",
-            "}")
-        .doTest();
-  }
-
-  @Test
   public void allowJava8Flag_getTimeZone() {
-    allowJava8Helper
+    compilationHelper
         .addSourceLines(
             "Test.java",
             "import java.time.ZoneId;",
@@ -180,7 +156,7 @@ public class AndroidJdkLibsCheckerTest extends Java7ApiCheckerTest {
 
   @Test
   public void allowJava8Flag_explicitNestedClass() {
-    allowJava8Helper
+    compilationHelper
         .addSourceLines(
             "Test.java",
             "import java.util.Spliterator;",
@@ -192,23 +168,6 @@ public class AndroidJdkLibsCheckerTest extends Java7ApiCheckerTest {
   @Test
   public void forEach() {
     compilationHelper
-        .addSourceLines(
-            "Test.java",
-            "import java.util.Collection;",
-            "class T {",
-            "  void f(Iterable<?> i, Collection<?> c) {",
-            "    // BUG: Diagnostic contains: java.lang.Iterable#forEach",
-            "    i.forEach(System.err::println);",
-            "    // BUG: Diagnostic contains: java.lang.Iterable#forEach",
-            "    c.forEach(System.err::println);",
-            "  }",
-            "}")
-        .doTest();
-  }
-
-  @Test
-  public void allowJava8Flag_forEach() {
-    allowJava8Helper
         .addSourceLines(
             "Test.java",
             "import java.util.Collection;",
@@ -228,6 +187,73 @@ public class AndroidJdkLibsCheckerTest extends Java7ApiCheckerTest {
             "module-info.java", //
             "module testmodule {",
             "  requires java.base;",
+            "}")
+        .doTest();
+  }
+
+  // A JDK API that is not available on Android < 26
+  @Test
+  public void methodHandle() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java", //
+            "import java.lang.invoke.MethodHandles;",
+            "public class Test {",
+            "  void f() {",
+            "    Object o = MethodHandles.lookup();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  // an Android API that was added in 24
+  @Test
+  public void newAndroidApi() {
+    compilationHelper
+        .addSourceLines(
+            "Tile.java", //
+            "package android.service.quicksettings;",
+            "public class Tile {",
+            "}")
+        .addSourceLines(
+            "Test.java", //
+            "import static java.util.Objects.requireNonNull;",
+            "public class Test {",
+            "  void f() {",
+            "    requireNonNull(android.service.quicksettings.Tile.class);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  // Parallel streams are not supported by desugar, but are supported natively in 24+
+  // https://developer.android.com/reference/java/util/Collection#parallelStream()
+  @Test
+  public void parallelStream() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java", //
+            "import java.util.Collection;",
+            "import java.util.stream.Stream;",
+            "public class Test {",
+            "  Stream<?> f(Collection<?> xs) {",
+            "    // BUG: Diagnostic contains:",
+            "    return xs.parallelStream().map(x -> x);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void base64() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java", //
+            "import java.util.Base64;",
+            "public class Test {",
+            "  String f(byte[] code) {",
+            "    return Base64.getUrlEncoder().encodeToString(code);",
+            "  }",
             "}")
         .doTest();
   }

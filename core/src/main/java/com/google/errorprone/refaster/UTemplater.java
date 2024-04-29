@@ -354,6 +354,13 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
         template(symbol.asType()));
   }
 
+  private UMethodIdent method(Symbol symbol) {
+    return UMethodIdent.create(
+        (ClassSymbol) symbol.getEnclosingElement(),
+        symbol.getSimpleName(),
+        template(symbol.asType()));
+  }
+
   private static final UStaticIdent ANY_OF;
   private static final UStaticIdent IS_INSTANCE;
   private static final UStaticIdent CLAZZ;
@@ -622,6 +629,8 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
     switch (sym.getKind()) {
       case TYPE_PARAMETER:
         return UTypeVarIdent.create(tree.getName());
+      case METHOD:
+        return method(sym);
       default:
         return ULocalVarIdent.create(tree.getName());
     }

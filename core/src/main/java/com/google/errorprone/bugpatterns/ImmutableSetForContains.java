@@ -19,6 +19,9 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
+import static com.google.errorprone.bugpatterns.ImmutableSetForContains.UsageState.ALLOWED_USAGE;
+import static com.google.errorprone.bugpatterns.ImmutableSetForContains.UsageState.DISALLOWED_USAGE;
+import static com.google.errorprone.bugpatterns.ImmutableSetForContains.UsageState.NEVER_USED;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.hasAnnotationWithSimpleName;
@@ -122,7 +125,7 @@ public final class ImmutableSetForContains extends BugChecker implements ClassTr
       if (isSuppressed(var, state)) {
         continue;
       }
-      if (!usageScanner.disallowedVarUsages.get(getSymbol(var))) {
+      if (usageScanner.varUsages.get(getSymbol(var)) == UsageState.ALLOWED_USAGE) {
         firstReplacement = Optional.of(var);
         fix.merge(convertListToSetInit(var, state));
       }
@@ -195,13 +198,13 @@ public final class ImmutableSetForContains extends BugChecker implements ClassTr
 
     // For each ImmutableList usage var, we will keep a map indicating if the var has been used in a
     // way that would prevent us from making it a set.
-    private final Map<Symbol, Boolean> disallowedVarUsages;
+    private final Map<Symbol, UsageState> varUsages;
 
     private ImmutableVarUsageScanner(ImmutableSet<VariableTree> immutableListVar) {
-      this.disallowedVarUsages =
+      this.varUsages =
           immutableListVar.stream()
               .map(ASTHelpers::getSymbol)
-              .collect(toMap(x -> x, x -> Boolean.FALSE));
+              .collect(toMap(x -> x, x -> NEVER_USED));
     }
 
     @Override
@@ -220,11 +223,15 @@ public final class ImmutableSetForContains extends BugChecker implements ClassTr
       if (receiver == null) {
         return false;
       }
-      if (!disallowedVarUsages.containsKey(getSymbol(receiver))) {
+      if (!varUsages.containsKey(getSymbol(receiver))) {
         // Not a function invocation on any of the candidate immutable list vars.
         return false;
       }
-      return ALLOWED_FUNCTIONS_ON_LIST.matches(methodTree, state);
+      boolean allowed = ALLOWED_FUNCTIONS_ON_LIST.matches(methodTree, state);
+      if (allowed && (varUsages.get(getSymbol(receiver)) == NEVER_USED)) {
+        varUsages.put(getSymbol(receiver), ALLOWED_USAGE);
+      }
+      return allowed;
     }
 
     @Override
@@ -240,7 +247,13 @@ public final class ImmutableSetForContains extends BugChecker implements ClassTr
     }
 
     private void recordDisallowedUsage(Symbol symbol) {
-      disallowedVarUsages.computeIfPresent(symbol, (sym, oldVal) -> Boolean.TRUE);
+      varUsages.computeIfPresent(symbol, (sym, oldVal) -> DISALLOWED_USAGE);
     }
+  }
+
+  enum UsageState {
+    NEVER_USED,
+    ALLOWED_USAGE,
+    DISALLOWED_USAGE
   }
 }

@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.FixChoosers;
+import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -26,6 +27,9 @@ import org.junit.runners.JUnit4;
 public final class YodaConditionTest {
   private final BugCheckerRefactoringTestHelper refactoring =
       BugCheckerRefactoringTestHelper.newInstance(YodaCondition.class, getClass());
+
+  private final CompilationTestHelper testHelper =
+      CompilationTestHelper.newInstance(YodaCondition.class, getClass());
 
   @Test
   public void primitive() {
@@ -50,6 +54,50 @@ public final class YodaConditionTest {
             "    return a == 4;",
             "  }",
             "}")
+        .doTest();
+  }
+
+  @Test
+  public void boxedBoolean() {
+    refactoring
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  boolean yoda(Boolean a) {",
+            "    return Boolean.TRUE.equals(a);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import java.util.Objects;",
+            "class Test {",
+            "  boolean yoda(Boolean a) {",
+            "    return Objects.equals(a, Boolean.TRUE);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void boxedVsUnboxedBoolean() {
+    refactoring
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  boolean yoda(boolean a) {",
+            "    return Boolean.TRUE.equals(a);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  boolean yoda(boolean a) {",
+            // NOTE: this is a broken fix! We could detect this if it turns out to be an issue in
+            // practice.
+            "    return a.equals(Boolean.TRUE);",
+            "  }",
+            "}")
+        .allowBreakingChanges()
         .doTest();
   }
 
@@ -157,6 +205,20 @@ public final class YodaConditionTest {
             "      return a.equals(E.A);",
             "    }",
             "    return true;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void nullableConstant() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  private static final String CONST = null;",
+            "  public static boolean f() {",
+            "    return CONST != null;",
             "  }",
             "}")
         .doTest();

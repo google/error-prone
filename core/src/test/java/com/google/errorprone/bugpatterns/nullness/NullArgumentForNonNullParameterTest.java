@@ -218,4 +218,22 @@ public class NullArgumentForNonNullParameterTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void negativePrimitiveButEnclosingClass() {
+    conservativeHelper
+        .addSourceLines(
+            "Foo.java",
+            "import java.util.Optional;",
+            "class Foo {",
+            "  class Bar {",
+            "    Bar(int i) {}",
+            "  }",
+            "  void foo(Optional<Integer> o) {",
+            // It would be nice to catch this, but for now, at least, we don't.
+            "    new Bar(o.orElse(null));",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

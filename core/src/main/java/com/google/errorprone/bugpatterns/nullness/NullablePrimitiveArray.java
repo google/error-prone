@@ -14,21 +14,24 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.nullness;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
-import static com.google.errorprone.util.ASTHelpers.getAnnotationsWithSimpleName;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static java.util.stream.Collectors.joining;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
+import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnnotations;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.MoreAnnotations;
 import com.sun.source.tree.AnnotatedTypeTree;
 import com.sun.source.tree.AnnotationTree;
@@ -37,6 +40,7 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Attribute;
+import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
 import java.util.HashSet;
 import java.util.List;
@@ -83,26 +87,30 @@ public class NullablePrimitiveArray extends BugChecker
     if (!type.isPrimitive()) {
       return NO_MATCH;
     }
-    AnnotationTree annotation = ASTHelpers.getAnnotationWithSimpleName(annotations, "Nullable");
-    if (annotation == null) {
+    ImmutableList<AnnotationTree> annotationsRelevantToNullness =
+        NullnessAnnotations.annotationsRelevantToNullness(annotations);
+    if (annotationsRelevantToNullness.isEmpty()) {
       return NO_MATCH;
     }
-    Attribute.Compound target =
-        ASTHelpers.getSymbol(annotation).attribute(state.getSymtab().annotationTargetType.tsym);
-    if (!isTypeAnnotation(target)) {
+    Symbol target = state.getSymtab().annotationTargetType.tsym;
+    if (annotations.stream()
+        .anyMatch(annotation -> !isTypeAnnotation(getSymbol(annotation).attribute(target)))) {
       return NO_MATCH;
     }
     Tree dims = typeTree;
     while (dims instanceof ArrayTypeTree) {
       dims = ((ArrayTypeTree) dims).getType();
     }
-    SuggestedFix.Builder fix = SuggestedFix.builder().delete(annotation);
+    SuggestedFix.Builder fix = SuggestedFix.builder();
+    annotations.forEach(fix::delete);
     if (!(dims instanceof AnnotatedTypeTree)
-        || getAnnotationsWithSimpleName(((AnnotatedTypeTree) dims).getAnnotations(), "Nullable")
+        || NullnessAnnotations.annotationsRelevantToNullness(
+                ((AnnotatedTypeTree) dims).getAnnotations())
             .isEmpty()) {
-      fix.postfixWith(dims, " " + state.getSourceForNode(annotation) + " ");
+      fix.postfixWith(
+          dims, annotations.stream().map(state::getSourceForNode).collect(joining(" ", " ", " ")));
     }
-    return describeMatch(annotation, fix.build());
+    return describeMatch(annotations.get(0), fix.build());
   }
 
   private static boolean isTypeAnnotation(Attribute.Compound attribute) {

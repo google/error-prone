@@ -112,4 +112,22 @@ public class ASTHelpersSuggestionsTest {
             "jdk.compiler/com.sun.tools.javac.code", "jdk.compiler/com.sun.tools.javac.util")
         .doTest();
   }
+
+  @Test
+  public void selfMatch() {
+    testHelper
+        .addInputLines(
+            "ASTHelpers.java",
+            "package com.google.errorprone.util;",
+            "import com.sun.tools.javac.code.Symbol;",
+            "public final class ASTHelpers {",
+            "  public static boolean isStatic(Symbol symbol) {",
+            "    return symbol.isStatic();",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .addModules(
+            "jdk.compiler/com.sun.tools.javac.code", "jdk.compiler/com.sun.tools.javac.util")
+        .doTest();
+  }
 }

@@ -144,11 +144,13 @@ public final class ImpossibleNullComparison extends BugChecker
               "com.google.protobuf.GeneratedMessageLite", "com.google.protobuf.GeneratedMessage");
 
   private final boolean matchTestAssertions;
+  private final boolean checkPrimitives;
 
   @Inject
   ImpossibleNullComparison(ErrorProneFlags flags) {
     this.matchTestAssertions =
         flags.getBoolean("ProtoFieldNullComparison:MatchTestAssertions").orElse(true);
+    this.checkPrimitives = flags.getBoolean("ImmutableNullComparison:CheckPrimitives").orElse(true);
   }
 
   @Override
@@ -247,9 +249,7 @@ public final class ImpossibleNullComparison extends BugChecker
         return super.visitMethodInvocation(node, null);
       }
       getFixer(argument, subState)
-          .map(f -> problemType.fix(f, node, subState))
-          .filter(f -> !f.isEmpty())
-          .map(f -> describeMatch(node, f))
+          .map(f -> describeMatch(node, problemType.fix(f, node, subState)))
           .ifPresent(state::reportMatch);
 
       return super.visitMethodInvocation(node, null);
@@ -261,6 +261,7 @@ public final class ImpossibleNullComparison extends BugChecker
         return Optional.empty();
       }
       return stream(GetterTypes.values())
+          .filter(gt -> !gt.equals(GetterTypes.PRIMITIVE) || checkPrimitives)
           .map(type -> type.match(resolvedTree, state))
           .filter(Objects::nonNull)
           .findFirst();
@@ -269,7 +270,7 @@ public final class ImpossibleNullComparison extends BugChecker
     @Nullable
     private ExpressionTree getEffectiveTree(ExpressionTree tree) {
       return tree.getKind() == Kind.IDENTIFIER
-          ? effectivelyFinalValues.get(ASTHelpers.getSymbol(tree))
+          ? effectivelyFinalValues.getOrDefault(ASTHelpers.getSymbol(tree), tree)
           : tree;
     }
   }
@@ -383,6 +384,14 @@ public final class ImpossibleNullComparison extends BugChecker
                     s.getSourceForNode(getReceiver(tree)),
                     s.getSourceForNode(
                         getOnlyElement(((MethodInvocationTree) tree).getArguments()))));
+      }
+    },
+    PRIMITIVE {
+      @Nullable
+      @Override
+      Fixer match(ExpressionTree tree, VisitorState state) {
+        var type = getType(tree);
+        return type != null && type.isPrimitive() ? GetterTypes::emptyFix : null;
       }
     },
     /** {@code proto.getFoo()} */

@@ -87,6 +87,25 @@ public class AutoValueFinalMethodsTest {
   }
 
   @Test
+  public void suppression() {
+    compilationHelper
+        .addSourceLines(
+            "in/Test.java",
+            "import com.google.auto.value.AutoValue;",
+            "@AutoValue",
+            "abstract class Test {",
+            "  abstract String valueOne();",
+            "  abstract String valueTwo();",
+            "  @SuppressWarnings(\"AutoValueFinalMethods\")",
+            "  @Override",
+            "  public int hashCode() {",
+            "    return 1;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void negativeCases() {
     compilationHelper
         .addSourceLines(

@@ -291,4 +291,27 @@ public class SwitchDefaultTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void arrowSwitch_noDefault() {
+    assumeTrue(RuntimeVersion.isAtLeast21());
+    compilationHelper
+        .addSourceLines(
+            "Foo.java", //
+            "sealed interface Foo {",
+            "  final class Bar implements Foo {}",
+            "  final class Baz implements Foo {}",
+            "}")
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void f(Foo i) {",
+            "    switch (i) {",
+            "      case Foo.Bar bar -> {}",
+            "      case Foo.Baz baz -> {}",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

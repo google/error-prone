@@ -16,9 +16,15 @@
 
 package com.google.errorprone.dataflow.nullnesspropagation;
 
+import static com.google.common.collect.ImmutableList.toImmutableList;
 import static javax.lang.model.element.ElementKind.TYPE_PARAMETER;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.util.MoreAnnotations;
+import com.sun.source.tree.AnnotationTree;
+import com.sun.source.tree.IdentifierTree;
+import com.sun.source.tree.MemberSelectTree;
+import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol;
 import java.util.Collection;
 import java.util.List;
@@ -27,9 +33,11 @@ import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import javax.annotation.Nullable;
+import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.Name;
 import javax.lang.model.element.Parameterizable;
 import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.type.IntersectionType;
@@ -41,26 +49,60 @@ public class NullnessAnnotations {
   // TODO(kmb): Correctly handle JSR 305 @Nonnull(NEVER) etc.
   private static final Predicate<String> ANNOTATION_RELEVANT_TO_NULLNESS =
       Pattern.compile(
-              ".*\\b("
-                  + "(Recently)?NonNull(Decl|Type)?|NotNull|Nonnull|"
+              "(Recently)?NonNull(Decl|Type)?|NotNull|Nonnull|"
                   + "(Recently)?Nullable(Decl|Type)?|CheckForNull|PolyNull|MonotonicNonNull(Decl)?|"
                   + "ProtoMethodMayReturnNull|ProtoMethodAcceptsNullParameter|"
-                  + "ProtoPassThroughNullness"
-                  + ")$")
-          .asPredicate();
+                  + "ProtoPassThroughNullness")
+          .asMatchPredicate();
   private static final Predicate<String> NULLABLE_ANNOTATION =
       Pattern.compile(
-              ".*\\b("
-                  + "(Recently)?Nullable(Decl|Type)?|CheckForNull|PolyNull|MonotonicNonNull(Decl)?|"
+              "(Recently)?Nullable(Decl|Type)?|CheckForNull|PolyNull|MonotonicNonNull(Decl)?|"
                   + "ProtoMethodMayReturnNull|ProtoMethodAcceptsNullParameter|"
-                  + "ProtoPassThroughNullness"
-                  + ")$")
-          .asPredicate();
+                  + "ProtoPassThroughNullness")
+          .asMatchPredicate();
 
   private NullnessAnnotations() {} // static methods only
 
-  public static Optional<Nullness> fromAnnotations(Collection<String> annotations) {
+  public static Optional<Nullness> fromAnnotationTrees(List<? extends AnnotationTree> annotations) {
+    return fromAnnotationSimpleNames(annotations.stream().map(a -> simpleName(a)));
+  }
+
+  public static Optional<Nullness> fromAnnotationMirrors(
+      List<? extends AnnotationMirror> annotations) {
     return fromAnnotationStream(annotations.stream());
+  }
+
+  public static boolean annotationsAreAmbiguous(
+      Collection<? extends AnnotationMirror> annotations) {
+    return annotations.stream()
+            .map(a -> simpleName(a).toString())
+            .filter(ANNOTATION_RELEVANT_TO_NULLNESS)
+            .map(NULLABLE_ANNOTATION::test)
+            .distinct()
+            .count()
+        == 2;
+  }
+
+  public static ImmutableList<AnnotationTree> annotationsRelevantToNullness(
+      List<? extends AnnotationTree> annotations) {
+    return annotations.stream()
+        .filter(a -> ANNOTATION_RELEVANT_TO_NULLNESS.test(simpleName(a)))
+        .collect(toImmutableList());
+  }
+
+  private static String simpleName(AnnotationTree annotation) {
+    Tree annotationType = annotation.getAnnotationType();
+    if (annotationType instanceof IdentifierTree) {
+      return ((IdentifierTree) annotationType).getName().toString();
+    } else if (annotationType instanceof MemberSelectTree) {
+      return ((MemberSelectTree) annotationType).getIdentifier().toString();
+    } else {
+      throw new AssertionError(annotationType.getKind());
+    }
+  }
+
+  private static Name simpleName(AnnotationMirror annotation) {
+    return annotation.getAnnotationType().asElement().getSimpleName();
   }
 
   public static Optional<Nullness> fromAnnotationsOn(@Nullable Symbol sym) {
@@ -97,13 +139,12 @@ public class NullnessAnnotations {
       return fromElement;
     }
 
-    return fromAnnotationStream(
-        MoreAnnotations.getDeclarationAndTypeAttributes(sym).map(Object::toString));
+    return fromAnnotationStream(MoreAnnotations.getDeclarationAndTypeAttributes(sym));
   }
 
   public static Optional<Nullness> fromAnnotationsOn(@Nullable TypeMirror type) {
     if (type != null) {
-      return fromAnnotationList(type.getAnnotationMirrors());
+      return fromAnnotationStream(type.getAnnotationMirrors().stream());
     }
     return Optional.empty();
   }
@@ -119,8 +160,7 @@ public class NullnessAnnotations {
       // type annotations.  For now we're just using a hard-coded simple name.
       // TODO(b/121272440): Look for existing default annotations
       if (sym.getAnnotationMirrors().stream()
-          .map(Object::toString)
-          .anyMatch(it -> it.endsWith(".DefaultNotNull"))) {
+          .anyMatch(a -> simpleName(a).contentEquals("DefaultNotNull"))) {
         return Optional.of(Nullness.NONNULL);
       }
       sym = sym.getEnclosingElement();
@@ -141,9 +181,7 @@ public class NullnessAnnotations {
       result =
           fromAnnotationStream(
               ((IntersectionType) typeVar.getUpperBound())
-                  .getBounds().stream()
-                      .map(TypeMirror::getAnnotationMirrors)
-                      .map(Object::toString));
+                  .getBounds().stream().flatMap(t -> t.getAnnotationMirrors().stream()));
     } else {
       result = fromAnnotationsOn(typeVar.getUpperBound());
     }
@@ -168,7 +206,7 @@ public class NullnessAnnotations {
                             typeParam.getSimpleName().equals(typeVar.asElement().getSimpleName()))
                     .findFirst()
                     // Annotations at class/interface/method type variable declaration
-                    .flatMap(decl -> fromAnnotationList(decl.getAnnotationMirrors()));
+                    .flatMap(decl -> fromAnnotationStream(decl.getAnnotationMirrors().stream()));
       }
     }
 
@@ -177,11 +215,12 @@ public class NullnessAnnotations {
     return result.isPresent() ? result : fromDefaultAnnotations(typeVar.asElement());
   }
 
-  private static Optional<Nullness> fromAnnotationList(List<?> annotations) {
-    return fromAnnotationStream(annotations.stream().map(Object::toString));
+  private static Optional<Nullness> fromAnnotationStream(
+      Stream<? extends AnnotationMirror> annotations) {
+    return fromAnnotationSimpleNames(annotations.map(a -> simpleName(a).toString()));
   }
 
-  private static Optional<Nullness> fromAnnotationStream(Stream<String> annotations) {
+  private static Optional<Nullness> fromAnnotationSimpleNames(Stream<String> annotations) {
     return annotations
         .filter(ANNOTATION_RELEVANT_TO_NULLNESS)
         .map(annot -> NULLABLE_ANNOTATION.test(annot) ? Nullness.NULLABLE : Nullness.NONNULL)

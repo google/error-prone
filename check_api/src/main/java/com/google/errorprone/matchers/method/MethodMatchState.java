@@ -30,7 +30,7 @@ abstract class MethodMatchState implements MatchState {
 
   @Override
   public Type ownerType() {
-    // TODO(cushon): should this be the symbol's owner type, not the receiver's owner type?
+    // TODO: b/130658266 - should this be the symbol's owner type, not the receiver's owner type?
     return ASTHelpers.getReceiverType(tree());
   }
 

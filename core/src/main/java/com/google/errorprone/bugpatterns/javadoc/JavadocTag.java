@@ -51,7 +51,8 @@ abstract class JavadocTag {
           inlineTag("linkplain"),
           inlineTag("literal"),
           blockTag("see"),
-          blockTag("since"));
+          blockTag("since"),
+          inlineTag("snippet"));
 
   static final ImmutableSet<JavadocTag> VALID_CLASS_TAGS =
       ImmutableSet.<JavadocTag>builder()

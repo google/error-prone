@@ -16,7 +16,10 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static org.junit.Assume.assumeTrue;
+
 import com.google.errorprone.CompilationTestHelper;
+import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -40,6 +43,21 @@ public final class AnnotateFormatMethodTest {
             "  // BUG: Diagnostic contains: FormatMethod",
             "  String formatMe(String formatString, Object... args) {",
             "    return String.format(formatString, args);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void formatted() {
+    assumeTrue(RuntimeVersion.isAtLeast15());
+    compilationHelper
+        .addSourceLines(
+            "AnnotateFormatMethodPositiveCases.java",
+            "class AnnotateFormatMethodPositiveCases {",
+            "  // BUG: Diagnostic contains: FormatMethod",
+            "  String formatMe(String formatString, Object... args) {",
+            "    return formatString.formatted(args);",
             "  }",
             "}")
         .doTest();

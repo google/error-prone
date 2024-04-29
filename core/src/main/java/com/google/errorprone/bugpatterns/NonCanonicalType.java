@@ -29,6 +29,7 @@ import com.google.errorprone.bugpatterns.BugChecker.MemberSelectTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.Visibility;
+import com.sun.source.tree.AnnotatedTypeTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.Tree;
@@ -135,6 +136,8 @@ public final class NonCanonicalType extends BugChecker implements MemberSelectTr
             + memberSelectTree.getIdentifier();
       case PARAMETERIZED_TYPE:
         return getNonCanonicalName(((ParameterizedTypeTree) tree).getType());
+      case ANNOTATED_TYPE:
+        return getNonCanonicalName(((AnnotatedTypeTree) tree).getUnderlyingType());
       default:
         throw new AssertionError(tree.getKind());
     }

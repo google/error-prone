@@ -22,9 +22,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** {@link SuperEqualsIsObjectEquals}Test */
+/** {@link SuperCallToObjectMethod}Test */
 @RunWith(JUnit4.class)
-public class SuperEqualsIsObjectEqualsTest {
+public class SuperCallToObjectMethodTest {
   @Test
   public void positive() {
     helper()
@@ -37,7 +37,7 @@ public class SuperEqualsIsObjectEqualsTest {
             "    if (obj instanceof Foo) {",
             "      return i == ((Foo) obj).i;",
             "    }",
-            "    // BUG: Diagnostic contains: ",
+            "    // BUG: Diagnostic contains: equals",
             "    return super.equals(obj);",
             "  }",
             "}")
@@ -126,11 +126,63 @@ public class SuperEqualsIsObjectEqualsTest {
         .doTest();
   }
 
+  @Test
+  public void refactoringNeedsParens() {
+    refactoringHelper()
+        .addInputLines(
+            "Foo.java",
+            "class Foo {",
+            "  int i;",
+            "  boolean notEquals(Object obj) {",
+            "    if (obj instanceof Foo) {",
+            "      return i != ((Foo) obj).i;",
+            "    }",
+            "    return !super.equals(obj);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Foo.java",
+            "class Foo {",
+            "  int i;",
+            "  boolean notEquals(Object obj) {",
+            "    if (obj instanceof Foo) {",
+            "      return i != ((Foo) obj).i;",
+            "    }",
+            "    return !(this == obj);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void refactoringHashCode() {
+    refactoringHelper()
+        .addInputLines(
+            "Foo.java",
+            "class Foo {",
+            "  int i;",
+            "  @Override",
+            "  public int hashCode() {",
+            "    return super.hashCode() * 31 + i;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Foo.java",
+            "class Foo {",
+            "  int i;",
+            "  @Override",
+            "  public int hashCode() {",
+            "    return System.identityHashCode(this) * 31 + i;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
   private CompilationTestHelper helper() {
-    return CompilationTestHelper.newInstance(SuperEqualsIsObjectEquals.class, getClass());
+    return CompilationTestHelper.newInstance(SuperCallToObjectMethod.class, getClass());
   }
 
   private BugCheckerRefactoringTestHelper refactoringHelper() {
-    return BugCheckerRefactoringTestHelper.newInstance(SuperEqualsIsObjectEquals.class, getClass());
+    return BugCheckerRefactoringTestHelper.newInstance(SuperCallToObjectMethod.class, getClass());
   }
 }

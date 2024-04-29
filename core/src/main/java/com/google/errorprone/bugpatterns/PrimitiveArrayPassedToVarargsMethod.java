@@ -50,9 +50,16 @@ public class PrimitiveArrayPassedToVarargsMethod extends BugChecker
   }
 
   /**
-   * Assuming the argument in the varargs position is a single one of type int[], here is the truth
-   * table: Param type Should return Why int... false Exact type match int[]... false Exact type
-   * match for the array element type T... true Will cause boxing Object... true Will cause boxing
+   * Assuming the argument in the varargs position is a single one of type {@code int[]}, here is
+   * the truth table:
+   *
+   * <pre>
+   *     Param type    Should return     Why
+   *     int...        false             Exact type match
+   *     int[]...      false             Exact type match for the array element type
+   *     T...          true              Will cause boxing
+   *     Object...     true              Will cause boxing
+   * </pre>
    */
   private static boolean isVarargs(MethodInvocationTree tree, VisitorState state) {
     MethodSymbol symbol = ASTHelpers.getSymbol(tree);
@@ -62,7 +69,7 @@ public class PrimitiveArrayPassedToVarargsMethod extends BugChecker
       return false;
     }
 
-    // Last param must be varags
+    // Last param must be varargs
     List<VarSymbol> params = symbol.getParameters();
     int varargsPosition = params.size() - 1;
     ArrayType varargsParamType = (ArrayType) getLast(params).type;

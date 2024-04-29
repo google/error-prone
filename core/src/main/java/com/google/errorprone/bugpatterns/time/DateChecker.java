@@ -84,8 +84,8 @@ public final class DateChecker extends BugChecker
   private static final Matcher<ExpressionTree> SET_SEC =
       instanceMethod().onExactClass(DATE).named("setSeconds");
 
-  // permits years [1901, 2050] which seems ~reasonable
-  private static final Range<Integer> YEAR_RANGE = Range.closed(1, 150);
+  // permits years [1901, 2200] which seems ~reasonable
+  private static final Range<Integer> YEAR_RANGE = Range.closed(1, 300);
   private static final Range<Integer> MONTH_RANGE = Range.closed(0, 11);
   private static final Range<Integer> DAY_RANGE = Range.closed(1, 31);
   private static final Range<Integer> HOUR_RANGE = Range.closed(0, 23);

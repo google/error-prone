@@ -872,4 +872,79 @@ public class CanIgnoreReturnValueSuggesterTest {
         .setArgs("-XepOpt:CanIgnoreReturnValue:ExemptingMethodAnnotations=example.Foo")
         .doTest();
   }
+
+  @Test
+  public void daggerComponentBuilder_b318407972() {
+    helper
+        .addInputLines(
+            "Builder.java",
+            "package com.google.frobber;",
+            "import dagger.Component;",
+            "@Component.Builder",
+            "interface Builder {",
+            "  Builder setName(String name);",
+            "  String build();",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void daggerSubcomponentBuilder_b318407972() {
+    helper
+        .addInputLines(
+            "Builder.java",
+            "package com.google.frobber;",
+            "import dagger.Subcomponent;",
+            "@Subcomponent.Builder",
+            "interface Builder {",
+            "  Builder setName(String name);",
+            "  String build();",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void anonymous() {
+    helper
+        .addInputLines(
+            "Test.java",
+            "import java.util.function.Function;",
+            "public final class Test {",
+            "  public void setName() {",
+            "    var o = new Function<Function, Function>() {",
+            "      @Override",
+            "      public Function apply(Function in) {",
+            "        return in;",
+            "      }",
+            "    };",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void returningANewInstance() {
+    helper
+        .addInputLines(
+            "MyBuilder.java",
+            "public final class MyBuilder {",
+            "  MyBuilder() { }",
+            "  MyBuilder(String name) { }",
+            "  MyBuilder(MyBuilder builder) { }",
+            "  public MyBuilder passingParam(String name) {",
+            "    return new MyBuilder(name);",
+            "  }",
+            "  public MyBuilder passingThis() {",
+            "    return new MyBuilder(this);",
+            "  }",
+            "  public MyBuilder notPassing() {",
+            "    return new MyBuilder();",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
 }

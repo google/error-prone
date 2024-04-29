@@ -164,4 +164,17 @@ public class UnnecessaryStringBuilderTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void unusedReturnValue() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void f() {",
+            "    new StringBuilder().append(\"foo\");",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

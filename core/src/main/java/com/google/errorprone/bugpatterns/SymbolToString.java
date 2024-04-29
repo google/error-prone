@@ -23,6 +23,7 @@ import static com.google.errorprone.predicates.TypePredicates.isDescendantOf;
 import static com.google.errorprone.util.ASTHelpers.isBugCheckerCode;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.matchers.Matcher;
@@ -32,6 +33,7 @@ import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Type;
 import java.util.Optional;
+import javax.inject.Inject;
 
 /**
  * Flags {@code com.sun.tools.javac.code.Symbol#toString} usage in {@link BugChecker}s.
@@ -56,6 +58,11 @@ public class SymbolToString extends AbstractToString {
     }
     Tree parentTree = state.getPath().getParentPath().getLeaf();
     return IS_SYMBOL.apply(type, state) && STRING_EQUALS.matches(parentTree, state);
+  }
+
+  @Inject
+  SymbolToString(ErrorProneFlags flags) {
+    super(flags);
   }
 
   @Override

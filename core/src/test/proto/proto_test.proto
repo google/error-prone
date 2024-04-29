@@ -42,6 +42,10 @@ message TestOneOfMessage {
     string bar = 2;
     string baz = 3;
   }
+  oneof AnotherOneOf {
+    string quux = 4;
+    string frobber = 5;
+  }
 }
 
 message TestMessageContainingOneOfMessage {

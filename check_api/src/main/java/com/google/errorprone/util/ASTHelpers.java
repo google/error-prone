@@ -21,6 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Verify.verify;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
+import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.common.collect.Streams.stream;
 import static com.google.errorprone.matchers.JUnitMatchers.JUNIT4_RUN_WITH_ANNOTATION;
 import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
@@ -267,6 +268,7 @@ public class ASTHelpers {
       return ASTHelpers.getSymbol((NewClassTree) tree);
     }
     if (tree instanceof MemberReferenceTree) {
+      // TODO: b/285157761 - Delegate to the MemberReferenceTree overload.
       return ((JCMemberReference) tree).sym;
     }
     if (tree instanceof JCAnnotatedType) {
@@ -319,7 +321,7 @@ public class ASTHelpers {
       // Defensive. Would only occur if there are errors in the AST.
       throw new IllegalArgumentException(tree.toString());
     }
-    return (MethodSymbol) sym;
+    return (MethodSymbol) sym.baseSymbol();
   }
 
   /** Gets the symbol for a member reference. */
@@ -329,7 +331,7 @@ public class ASTHelpers {
       // Defensive. Would only occur if there are errors in the AST.
       throw new IllegalArgumentException(tree.toString());
     }
-    return (MethodSymbol) sym;
+    return (MethodSymbol) sym.baseSymbol();
   }
 
   /**
@@ -991,20 +993,43 @@ public class ASTHelpers {
   }
 
   /**
-   * Check for the presence of an annotation with a specific simple name directly on this symbol.
-   * Does *not* consider annotation inheritance.
+   * Check for the presence of an annotation with the given simple name directly on this symbol or
+   * its type. (If the given symbol is a method symbol, the type searched for annotations is its
+   * return type.)
    *
-   * @param sym the symbol to check for the presence of the annotation
-   * @param simpleName the simple name of the annotation to look for, e.g. "Nullable" or
-   *     "CheckReturnValue"
+   * <p>This method looks only a annotations that are directly present. It does <b>not</b> consider
+   * annotation inheritance (see JLS 9.6.4.3).
    */
   public static boolean hasDirectAnnotationWithSimpleName(Symbol sym, String simpleName) {
-    for (AnnotationMirror annotation : sym.getAnnotationMirrors()) {
-      if (annotation.getAnnotationType().asElement().getSimpleName().contentEquals(simpleName)) {
-        return true;
-      }
+    if (sym instanceof MethodSymbol) {
+      return hasDirectAnnotationWithSimpleName((MethodSymbol) sym, simpleName);
     }
-    return false;
+    if (sym instanceof VarSymbol) {
+      return hasDirectAnnotationWithSimpleName((VarSymbol) sym, simpleName);
+    }
+    return hasDirectAnnotationWithSimpleName(sym.getAnnotationMirrors().stream(), simpleName);
+  }
+
+  public static boolean hasDirectAnnotationWithSimpleName(MethodSymbol sym, String simpleName) {
+    return hasDirectAnnotationWithSimpleName(
+        Streams.concat(
+            sym.getAnnotationMirrors().stream(),
+            sym.getReturnType().getAnnotationMirrors().stream()),
+        simpleName);
+  }
+
+  public static boolean hasDirectAnnotationWithSimpleName(VarSymbol sym, String simpleName) {
+    return hasDirectAnnotationWithSimpleName(
+        Streams.concat(
+            sym.getAnnotationMirrors().stream(), sym.asType().getAnnotationMirrors().stream()),
+        simpleName);
+  }
+
+  private static boolean hasDirectAnnotationWithSimpleName(
+      Stream<? extends AnnotationMirror> annotations, String simpleName) {
+    return annotations.anyMatch(
+        annotation ->
+            annotation.getAnnotationType().asElement().getSimpleName().contentEquals(simpleName));
   }
 
   /**
@@ -1070,8 +1095,14 @@ public class ASTHelpers {
    *
    * @deprecated If {@code annotationClass} contains a member that is a {@code Class} or an array of
    *     them, attempting to access that member from the Error Prone checker code will result in a
-   *     runtime exception. Instead, operate on {@code sym.getAnnotationMirrors()} to
-   *     meta-syntactically inspect the annotation.
+   *     runtime exception. Instead, operate on {@code getSymbol(tree).getAnnotationMirrors()} to
+   *     meta-syntactically inspect the annotation. Note that this method (and the {@code
+   *     getSymbol}-based replacement suggested above) looks for annotations not just on the given
+   *     tree (such as a {@link MethodTree}) but also on the symbol referred to by the given tree
+   *     (such as on the {@link MethodSymbol} that is being called by the given {@link
+   *     MethodInvocationTree}). If you want to examine annotations only on the given tree, then use
+   *     {@link #getAnnotations} (or a direct call to a {@code getAnnotations} method declared on a
+   *     specific {@link Tree} subclass) instead.
    */
   @Nullable
   @Deprecated
@@ -2508,7 +2539,6 @@ public class ASTHelpers {
   }
 
   /** Returns true if the symbol is static. Returns {@code false} for module symbols. */
-  @SuppressWarnings("ASTHelpersSuggestions")
   public static boolean isStatic(Symbol symbol) {
     switch (symbol.getKind()) {
       case MODULE:
@@ -2723,6 +2753,81 @@ public class ASTHelpers {
       }
     }
     return false;
+  }
+
+  private static final Method CASE_TREE_GET_LABELS = getCaseTreeGetLabelsMethod();
+
+  @Nullable
+  private static Method getCaseTreeGetLabelsMethod() {
+    try {
+      return CaseTree.class.getMethod("getLabels");
+    } catch (NoSuchMethodException e) {
+      return null;
+    }
+  }
+
+  @SuppressWarnings("unchecked") // reflection
+  private static List<? extends Tree> getCaseLabels(CaseTree caseTree) {
+    if (CASE_TREE_GET_LABELS == null) {
+      return ImmutableList.of();
+    }
+    try {
+      return (List<? extends Tree>) CASE_TREE_GET_LABELS.invoke(caseTree);
+    } catch (ReflectiveOperationException e) {
+      throw new LinkageError(e.getMessage(), e);
+    }
+  }
+
+  // getExpression() is being used for compatibility with earlier JDK versions
+  @SuppressWarnings("deprecation")
+  public static Optional<? extends CaseTree> getSwitchDefault(SwitchTree switchTree) {
+    return switchTree.getCases().stream()
+        .filter(
+            (CaseTree c) -> {
+              if (c.getExpression() != null) {
+                return false;
+              }
+              List<? extends Tree> labels = getCaseLabels(c);
+              return labels.isEmpty()
+                  || (labels.size() == 1
+                      && getOnlyElement(labels).getKind().name().equals("DEFAULT_CASE_LABEL"));
+            })
+        .findFirst();
+  }
+
+  private static final Method CASE_TREE_GET_EXPRESSIONS = getCaseTreeGetExpressionsMethod();
+
+  @Nullable
+  private static Method getCaseTreeGetExpressionsMethod() {
+    try {
+      return CaseTree.class.getMethod("getExpressions");
+    } catch (NoSuchMethodException e) {
+      return null;
+    }
+  }
+
+  /**
+   * Retrieves a stream containing all case expressions, in order, for a given {@code CaseTree}.
+   * This method acts as a facade to the {@code CaseTree.getExpressions()} API, falling back to
+   * legacy APIs when necessary.
+   */
+  @SuppressWarnings({
+    "deprecation", // getExpression() is being used for compatibility with earlier JDK versions
+    "unchecked", // reflection
+  })
+  public static Stream<? extends ExpressionTree> getCaseExpressions(CaseTree caseTree) {
+    if (!RuntimeVersion.isAtLeast12()) {
+      // "default" case gives an empty stream
+      return Stream.ofNullable(caseTree.getExpression());
+    }
+    if (CASE_TREE_GET_EXPRESSIONS == null) {
+      return Stream.empty();
+    }
+    try {
+      return ((List<? extends ExpressionTree>) CASE_TREE_GET_EXPRESSIONS.invoke(caseTree)).stream();
+    } catch (ReflectiveOperationException e) {
+      throw new LinkageError(e.getMessage(), e);
+    }
   }
 
   private ASTHelpers() {}

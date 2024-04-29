@@ -886,7 +886,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "  public void foo(Side side) { ",
             "    switch(side) {",
             "       case HEART-> System.out.println(\"heart\");",
-            "       case DIAMOND -> {{ System.out.println(\"nested1\"); break; }}",
+            "       case DIAMOND -> System.out.println(\"nested1\");",
             "       case SPADE, CLUB -> System.out.println(\"everything else\");",
             "    }",
             "  }",
@@ -2775,5 +2775,47 @@ public final class StatementSwitchToExpressionSwitchTest {
             ImmutableList.of(
                 "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion"))
         .doTest();
+  }
+
+  @Test
+  public void i4222() {
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "public class Test {",
+            "  public static void main(String[] args) {",
+            "    switch (args.length) {",
+            "      case 0:",
+            "      {",
+            "        System.out.println(0);",
+            "        break;",
+            "      }",
+            "      case 1:",
+            "        System.out.println(1);",
+            "        break;",
+            "      case 2:",
+            "        System.out.println(2);",
+            "        System.out.println(2);",
+            "        break;",
+            "    }",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "public class Test {",
+            "  public static void main(String[] args) {",
+            "    switch (args.length) {",
+            "      case 0 -> System.out.println(0);",
+            "      case 1 -> System.out.println(1);",
+            "      case 2 -> {",
+            "        System.out.println(2);",
+            "        System.out.println(2);",
+            "      }",
+            "    }",
+            "  }",
+            "}")
+        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=true")
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 }

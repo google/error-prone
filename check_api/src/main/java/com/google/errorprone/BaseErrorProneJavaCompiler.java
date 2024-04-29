@@ -230,12 +230,12 @@ public class BaseErrorProneJavaCompiler implements JavaCompiler {
             .customRefactorer()
             .or(
                 () -> {
-                  ScannerSupplier toUse =
-                      ErrorPronePlugins.loadPlugins(scannerSupplier, epOptions, context)
-                          .applyOverrides(epOptions);
+                  ScannerSupplier toUse = ErrorPronePlugins.loadPlugins(scannerSupplier, epOptions, context);
                   ImmutableSet<String> namedCheckers = epOptions.patchingOptions().namedCheckers();
                   if (!namedCheckers.isEmpty()) {
                     toUse = toUse.filter(bci -> namedCheckers.contains(bci.canonicalName()));
+                  } else {
+                    toUse = toUse.applyOverrides(epOptions);
                   }
                   return ErrorProneScannerTransformer.create(toUse.get());
                 })

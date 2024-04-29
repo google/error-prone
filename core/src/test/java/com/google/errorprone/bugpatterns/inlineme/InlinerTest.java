@@ -1142,55 +1142,6 @@ public class InlinerTest {
   }
 
   @Test
-  public void ternaryInlining_b266848535() {
-    refactoringTestHelper
-        .addInputLines(
-            "Client.java",
-            "import com.google.common.collect.ImmutableList;",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "import java.util.Optional;",
-            "public final class Client {",
-            "  @Deprecated",
-            "  @InlineMe(",
-            "      replacement = ",
-            "\"this.getList().isEmpty() ? Optional.empty() : Optional.of(this.getList().get(0))\",",
-            "      imports = {\"java.util.Optional\"})",
-            "  public Optional<String> getFoo() {",
-            "    return getList().isEmpty() ? Optional.empty() : Optional.of(getList().get(0));",
-            "  }",
-            "  public ImmutableList<String> getList() {",
-            "    return ImmutableList.of();",
-            "  }",
-            "}")
-        .expectUnchanged()
-        .addInputLines(
-            "Caller.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "public final class Caller {",
-            "  public void doTest() {",
-            "    Client client = new Client();",
-            "    assertThat(client.getFoo().get()).isEqualTo(\"hi\");",
-            "  }",
-            "}")
-        .addOutputLines(
-            "out/Caller.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import java.util.Optional;",
-            "public final class Caller {",
-            "  public void doTest() {",
-            "    Client client = new Client();",
-            // TODO(b/266848535): this is a bug; we need to add parens around the ternary
-            "    assertThat(",
-            "            client.getList().isEmpty() ",
-            "                ? Optional.empty()",
-            "                : Optional.of(client.getList().get(0)).get())",
-            "        .isEqualTo(\"hi\");",
-            "  }",
-            "}")
-        .doTest();
-  }
-
-  @Test
   public void varArgs_b268215956() {
     refactoringTestHelper
         .addInputLines(
@@ -1225,6 +1176,48 @@ public class InlinerTest {
             "    Client.execute2(\"hi %s\");",
             "  }",
             "}")
+        .doTest();
+  }
+
+  @Test
+  public void paramCast_b308614050() {
+    refactoringTestHelper
+        .addInputLines(
+            "Client.java",
+            "package com.google.foo;",
+            "import com.google.errorprone.annotations.InlineMe;",
+            "public final class Client {",
+            "  @InlineMe(",
+            "      replacement = \"Client.after(value.doubleValue())\",",
+            "      imports = {\"com.google.foo.Client\"})",
+            "  public static void before(Long value) {",
+            "    after(value.doubleValue());",
+            "  }",
+            "  public static void after(double value) {",
+            "    // do nothing",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "Caller.java",
+            "import com.google.foo.Client;",
+            "public final class Caller {",
+            "  public void doTest() {",
+            "    Object value = 42L;",
+            "    Client.before((Long) value);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Caller.java",
+            "import com.google.foo.Client;",
+            "public final class Caller {",
+            "  public void doTest() {",
+            "    Object value = 42L;",
+            // TODO(b/308614050): this is a bug! you can't call doubleValue() on an Object!
+            "    Client.after((Long) value.doubleValue());",
+            "  }",
+            "}")
+        .allowBreakingChanges()
         .doTest();
   }
 

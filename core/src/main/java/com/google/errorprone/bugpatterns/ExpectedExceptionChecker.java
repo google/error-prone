@@ -253,7 +253,7 @@ public class ExpectedExceptionChecker extends BugChecker implements MethodTreeMa
     return finishFix(fix.build(), exceptionType, newAsserts, suffix, state);
   }
 
-  private static Fix finishFix(
+  private static SuggestedFix finishFix(
       SuggestedFix baseFix,
       Type exceptionType,
       List<String> newAsserts,
@@ -262,7 +262,7 @@ public class ExpectedExceptionChecker extends BugChecker implements MethodTreeMa
     if (throwingStatements.isEmpty()) {
       return baseFix;
     }
-    SuggestedFix.Builder fix = SuggestedFix.builder().merge(baseFix);
+    SuggestedFix.Builder fix = baseFix.toBuilder();
     fix.addStaticImport("org.junit.Assert.assertThrows");
     StringBuilder fixPrefix = new StringBuilder();
     String exceptionTypeName = SuggestedFixes.qualifyType(state, fix, exceptionType);

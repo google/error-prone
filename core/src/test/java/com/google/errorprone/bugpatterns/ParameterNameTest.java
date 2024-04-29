@@ -821,4 +821,18 @@ public class ParameterNameTest {
         .setArgs(ImmutableList.of("-XepOpt:ParameterName:exemptPackagePrefixes=test.a,test.b"))
         .doTest();
   }
+
+  @Test
+  public void nonCanonicalMockitoImport() {
+    testHelper
+        .addSourceLines(
+            "test/a/A.java",
+            "package test.a;",
+            "import static org.mockito.Mockito.eq;",
+            "public class A {",
+            "  // BUG: Diagnostic contains:",
+            "  Object x = eq(/* notValue= */ 1);",
+            "}")
+        .doTest();
+  }
 }

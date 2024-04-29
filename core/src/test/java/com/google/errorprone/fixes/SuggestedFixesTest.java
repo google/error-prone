@@ -19,6 +19,7 @@ package com.google.errorprone.fixes;
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.fixes.SuggestedFix.emptyFix;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.isSameType;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
@@ -1604,10 +1605,9 @@ public class SuggestedFixesTest {
     public Description matchClass(ClassTree tree, VisitorState state) {
       return describeMatch(
           tree,
-          SuggestedFix.builder()
-              .merge(SuggestedFixes.removeModifiers(tree, state, Modifier.PUBLIC).orElse(null))
-              .merge(SuggestedFixes.addModifiers(tree, state, Modifier.ABSTRACT).orElse(null))
-              .build());
+          SuggestedFix.merge(
+              SuggestedFixes.removeModifiers(tree, state, Modifier.PUBLIC).orElse(emptyFix()),
+              SuggestedFixes.addModifiers(tree, state, Modifier.ABSTRACT).orElse(emptyFix())));
     }
   }
 

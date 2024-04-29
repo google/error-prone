@@ -67,6 +67,9 @@ public final class Varifier extends BugChecker implements VariableTreeMatcher {
                 && isSameType(((MethodSymbol) symbol).getReturnType(), symbol.owner.type, s);
           });
 
+  private static final Matcher<ExpressionTree> ASSERT_THROWS =
+      staticMethod().onClass("org.junit.Assert").named("assertThrows");
+
   @Override
   public Description matchVariable(VariableTree tree, VisitorState state) {
     var symbol = getSymbol(tree);
@@ -76,6 +79,14 @@ public final class Varifier extends BugChecker implements VariableTreeMatcher {
         || initializer == null
         || hasImplicitType(tree, state)) {
       return NO_MATCH;
+    }
+    // Foo unused = ...;
+    if (symbol.getSimpleName().contentEquals("unused")) {
+      return fix(tree);
+    }
+    // MyException exception = assertThrows(MyException.class, () -> ...);
+    if (ASSERT_THROWS.matches(initializer, state)) {
+      return fix(tree);
     }
     // Foo foo = (Foo) bar;
     if (initializer instanceof TypeCastTree

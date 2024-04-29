@@ -59,15 +59,25 @@ public final class TestParametersNotInitialized extends BugChecker implements Cl
           AT_LEAST_ONE,
           hasArgumentWithValue("value", isJUnit4TestRunnerOfType(ImmutableSet.of(RUNNER))));
 
-  private static final MultiMatcher<ClassTree, AnnotationTree> JUNIT4_RUNNER =
+  private static final MultiMatcher<ClassTree, AnnotationTree> NON_PARAMETERIZED_RUNNER =
       annotations(
           AT_LEAST_ONE,
           hasArgumentWithValue(
-              "value", isJUnit4TestRunnerOfType(ImmutableSet.of("org.junit.runners.JUnit4"))));
+              "value",
+              isJUnit4TestRunnerOfType(
+                  ImmutableSet.of(
+                      // keep-sorted start
+                      "androidx.test.ext.junit.runners.AndroidJUnit4",
+                      "junitparams.JUnitParamsRunner",
+                      "org.junit.experimental.theories.Theories",
+                      "org.junit.runners.JUnit4",
+                      "org.junit.runners.Parameterized"
+                      // keep-sorted end
+                      ))));
 
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
-    if (!JUNIT4_RUNNER.matches(tree, state)) {
+    if (!NON_PARAMETERIZED_RUNNER.matches(tree, state)) {
       return NO_MATCH;
     }
     if (TEST_PARAMETER_INJECTOR.matches(tree, state)) {

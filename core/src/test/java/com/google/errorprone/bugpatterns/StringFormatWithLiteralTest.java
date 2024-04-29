@@ -16,8 +16,11 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static org.junit.Assume.assumeTrue;
+
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
+import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -196,6 +199,27 @@ public final class StringFormatWithLiteralTest {
   }
 
   @Test
+  public void refactoringFormattedWithNoArguments() {
+    assumeTrue(RuntimeVersion.isAtLeast15());
+    refactoringHelper
+        .addInputLines(
+            "ExampleClass.java",
+            "public class ExampleClass {",
+            "  String test() {",
+            "    return \"Formatting nothing\".formatted();",
+            "  }",
+            "}")
+        .addOutputLines(
+            "ExampleClass.java",
+            "public class ExampleClass {",
+            "  String test() {",
+            "    return \"Formatting nothing\";",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void refactoringStringFormatWithIntegerLiteral() {
     refactoringHelper
         .addInputLines(
@@ -203,6 +227,27 @@ public final class StringFormatWithLiteralTest {
             "public class ExampleClass {",
             "  String test() {",
             "    return String.format(\"Formatting this integer: %d\", 1);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "ExampleClass.java",
+            "public class ExampleClass {",
+            "  String test() {",
+            "    return \"Formatting this integer: 1\";",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void refactoringFormattedWithIntegerLiteral() {
+    assumeTrue(RuntimeVersion.isAtLeast15());
+    refactoringHelper
+        .addInputLines(
+            "ExampleClass.java",
+            "public class ExampleClass {",
+            "  String test() {",
+            "    return \"Formatting this integer: %d\".formatted(1);",
             "  }",
             "}")
         .addOutputLines(

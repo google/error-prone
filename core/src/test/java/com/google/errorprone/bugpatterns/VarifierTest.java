@@ -176,4 +176,50 @@ public final class VarifierTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void varUnused() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  public void trim(String string) {",
+            "    String unused = string.trim();",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  public void trim(String string) {",
+            "    var unused = string.trim();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void assertThrows() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import static org.junit.Assert.assertThrows;",
+            "class Test {",
+            "  public void testFoo() {",
+            "    Object nil = null;",
+            "    NullPointerException thrown = ",
+            "        assertThrows(NullPointerException.class, () -> nil.toString());",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import static org.junit.Assert.assertThrows;",
+            "class Test {",
+            "  public void testFoo() {",
+            "    Object nil = null;",
+            "    var thrown = ",
+            "        assertThrows(NullPointerException.class, () -> nil.toString());",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

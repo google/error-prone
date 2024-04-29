@@ -87,8 +87,7 @@ public final class AddressSelection extends BugChecker
         argument,
         tree,
         () ->
-            SuggestedFix.builder()
-                .merge(renameMethodInvocation(tree, "getLoopbackAddress", state))
+            renameMethodInvocation(tree, "getLoopbackAddress", state).toBuilder()
                 .delete(argument)
                 .build());
   }

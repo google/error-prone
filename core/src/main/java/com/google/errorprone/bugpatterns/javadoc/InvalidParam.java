@@ -36,6 +36,7 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
+import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.sun.source.doctree.DocTree;
 import com.sun.source.doctree.DocTree.Kind;
@@ -47,6 +48,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.util.DocTreePath;
 import com.sun.source.util.DocTreePathScanner;
 import com.sun.tools.javac.tree.DCTree.DCDocComment;
+import com.sun.tools.javac.tree.DCTree.DCText;
 import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -148,8 +150,22 @@ public final class InvalidParam extends BugChecker implements ClassTreeMatcher, 
     @Override
     public Void visitParam(ParamTree paramTree, Void unused) {
       ImmutableSet<String> paramNames = paramTree.isTypeParameter() ? typeParameters : parameters;
+      if (!paramTree.getDescription().isEmpty()) {
+        var firstDescription = paramTree.getDescription().get(0);
+        if (firstDescription instanceof DCText) {
+          if (((DCText) firstDescription).getBody().startsWith(":")) {
+            int colonLocation = Utils.getEndPosition(paramTree.getName(), state);
+            if (state.getSourceCode().charAt(colonLocation) == ':') {
+              state.reportMatch(
+                  describeMatch(
+                      diagnosticPosition(getCurrentPath(), state),
+                      SuggestedFix.replace(colonLocation, colonLocation + 1, "")));
+            }
+          }
+        }
+      }
       if (!paramNames.contains(paramTree.getName().toString())) {
-        ImmutableSet<String> documentedParamNames =
+        var documentedParamNames =
             paramTree.isTypeParameter() ? documentedTypeParameters : documentedParameters;
         Set<String> undocumentedParameters = Sets.difference(paramNames, documentedParamNames);
         Optional<String> bestMatch =

@@ -172,6 +172,10 @@ public abstract class SuggestedFix implements Fix {
     return new Builder();
   }
 
+  public Builder toBuilder() {
+    return SuggestedFix.builder().merge(this);
+  }
+
   /** Builds {@link SuggestedFix}s. */
   public static class Builder {
 
@@ -363,7 +367,7 @@ public abstract class SuggestedFix implements Fix {
     }
 
     /**
-     * Prevent attempts to modify implicit default constructurs, since they are one of the few
+     * Prevent attempts to modify implicit default constructors, since they are one of the few
      * synthetic constructs added to the AST early enough to be visible from Error Prone.
      */
     private static void checkNotSyntheticConstructor(Tree tree) {
