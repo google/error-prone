@@ -19,8 +19,6 @@ package com.google.errorprone.bugpatterns;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.annotations.DoNotMock;
-import com.sun.source.tree.VariableTree;
-import java.util.stream.Stream;
 
 /**
  * Points out if a Mockito or EasyMock mock is mocking an object that would be better off being
@@ -33,12 +31,9 @@ import java.util.stream.Stream;
     severity = SeverityLevel.ERROR,
     summary = "Identifies undesirable mocks.",
     documentSuppression = false)
-public class DoNotMockChecker extends AbstractMockChecker<DoNotMock> {
-
-  private static final TypeExtractor<VariableTree> MOCKED_VAR =
-      fieldAnnotatedWithOneOf(Stream.of("org.mockito.Mock", "org.mockito.Spy"));
+public class DoNotMockChecker extends AbstractAnnotationMockChecker<DoNotMock> {
 
   public DoNotMockChecker() {
-    super(MOCKED_VAR, MOCKING_METHOD, DoNotMock.class, DoNotMock::value);
+    super(MOCKING_ANNOTATION, MOCKING_METHOD, DoNotMock.class, DoNotMock::value);
   }
 }
