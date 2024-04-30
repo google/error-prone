@@ -19,9 +19,9 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
-import static com.google.errorprone.bugpatterns.ImmutableSetForContains.UsageState.ALLOWED_USAGE;
 import static com.google.errorprone.bugpatterns.ImmutableSetForContains.UsageState.DISALLOWED_USAGE;
 import static com.google.errorprone.bugpatterns.ImmutableSetForContains.UsageState.NEVER_USED;
+import static com.google.errorprone.bugpatterns.ImmutableSetForContains.UsageState.ONLY_ALLOWED_USAGE;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.hasAnnotationWithSimpleName;
@@ -125,7 +125,7 @@ public final class ImmutableSetForContains extends BugChecker implements ClassTr
       if (isSuppressed(var, state)) {
         continue;
       }
-      if (usageScanner.varUsages.get(getSymbol(var)) == UsageState.ALLOWED_USAGE) {
+      if (usageScanner.varUsages.get(getSymbol(var)).shouldReport()) {
         firstReplacement = Optional.of(var);
         fix.merge(convertListToSetInit(var, state));
       }
@@ -228,8 +228,9 @@ public final class ImmutableSetForContains extends BugChecker implements ClassTr
         return false;
       }
       boolean allowed = ALLOWED_FUNCTIONS_ON_LIST.matches(methodTree, state);
-      if (allowed && (varUsages.get(getSymbol(receiver)) == NEVER_USED)) {
-        varUsages.put(getSymbol(receiver), ALLOWED_USAGE);
+      if (allowed) {
+        varUsages.computeIfPresent(
+            getSymbol(receiver), (sym, oldVal) -> oldVal.markAllowedUsageDetected());
       }
       return allowed;
     }
@@ -247,13 +248,33 @@ public final class ImmutableSetForContains extends BugChecker implements ClassTr
     }
 
     private void recordDisallowedUsage(Symbol symbol) {
-      varUsages.computeIfPresent(symbol, (sym, oldVal) -> DISALLOWED_USAGE);
+      varUsages.computeIfPresent(symbol, (sym, oldVal) -> oldVal.markDisallowedUsageDetected());
     }
   }
 
   enum UsageState {
+    /** No usage detected. */
     NEVER_USED,
-    ALLOWED_USAGE,
-    DISALLOWED_USAGE
+
+    /** At least one allowed usage detected. No disallowed usage detected. */
+    ONLY_ALLOWED_USAGE,
+
+    /** Disallowed usage detected. Allowed usage is ignored. */
+    DISALLOWED_USAGE;
+
+    UsageState markAllowedUsageDetected() {
+      if (this == DISALLOWED_USAGE) {
+        return DISALLOWED_USAGE;
+      }
+      return ONLY_ALLOWED_USAGE;
+    }
+
+    UsageState markDisallowedUsageDetected() {
+      return DISALLOWED_USAGE;
+    }
+
+    boolean shouldReport() {
+      return this == ONLY_ALLOWED_USAGE;
+    }
   }
 }
