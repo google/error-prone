@@ -157,6 +157,7 @@ import com.google.errorprone.bugpatterns.FuzzyEqualsShouldNotBeUsedInEqualsMetho
 import com.google.errorprone.bugpatterns.GetClassOnAnnotation;
 import com.google.errorprone.bugpatterns.GetClassOnClass;
 import com.google.errorprone.bugpatterns.GetClassOnEnum;
+import com.google.errorprone.bugpatterns.GuiceCreateInjectorWithCombineRefactor;
 import com.google.errorprone.bugpatterns.HashtableContains;
 import com.google.errorprone.bugpatterns.HidingField;
 import com.google.errorprone.bugpatterns.ICCProfileGetInstance;
@@ -916,6 +917,7 @@ public class BuiltInCheckerSuppliers {
           FragmentNotInstantiable.class,
           FutureReturnValueIgnored.class,
           GetClassOnEnum.class,
+          GuiceCreateInjectorWithCombineRefactor.class,
           HidingField.class,
           ICCProfileGetInstance.class,
           IdentityHashMapUsage.class,
