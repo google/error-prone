@@ -87,7 +87,7 @@ public final class UrlInSee extends BugChecker
                 replace(
                     erroneousTree, erroneousTree.getBody().replaceFirst("@see", "See"), state)));
       }
-      return super.visitErroneous(erroneousTree, unused);
+      return super.visitErroneous(erroneousTree, null);
     }
   }
 }

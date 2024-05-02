@@ -769,7 +769,7 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
       if (SERIALIZATION_METHODS.matches(tree, state)) {
         return scan(tree.getBody(), null);
       }
-      return isSuppressed(tree, state) ? null : super.visitMethod(tree, unused);
+      return isSuppressed(tree, state) ? null : super.visitMethod(tree, null);
     }
   }
 

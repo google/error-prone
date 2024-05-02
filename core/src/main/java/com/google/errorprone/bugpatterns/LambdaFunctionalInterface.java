@@ -199,7 +199,7 @@ public class LambdaFunctionalInterface extends BugChecker implements MethodTreeM
                               callTree.getMethodSelect(), receiverSym.name + "." + apply);
                         }
                       }
-                      return super.visitMethodInvocation(callTree, unused);
+                      return super.visitMethodInvocation(callTree, null);
                     }
                   },
                   null);
@@ -250,7 +250,7 @@ public class LambdaFunctionalInterface extends BugChecker implements MethodTreeM
             if (sym.equals(methodSymbol)) {
               methodMap.put(methodSymbol.toString(), callTree);
             }
-            return super.visitMethodInvocation(callTree, unused);
+            return super.visitMethodInvocation(callTree, null);
           }
         },
         null);

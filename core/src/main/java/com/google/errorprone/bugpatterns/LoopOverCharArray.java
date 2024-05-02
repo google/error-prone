@@ -86,7 +86,7 @@ public class LoopOverCharArray extends BugChecker implements BugChecker.Enhanced
         if (node.getName().contentEquals("i")) {
           result[0] = true;
         }
-        return super.visitIdentifier(node, unused);
+        return super.visitIdentifier(node, null);
       }
     }.scan(tree, null);
     return result[0];

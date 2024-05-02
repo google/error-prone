@@ -194,7 +194,7 @@ public class MissingSuperCall extends BugChecker
             ASTHelpers.isSuper(memberSelect.getExpression())
                 && memberSelect.getIdentifier().contentEquals(overridingMethodName);
       }
-      return result || super.visitMethodInvocation(tree, unused);
+      return result || super.visitMethodInvocation(tree, null);
     }
 
     @Override

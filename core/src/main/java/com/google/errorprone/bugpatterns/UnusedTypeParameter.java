@@ -94,7 +94,7 @@ public final class UnusedTypeParameter extends BugChecker implements Compilation
         if (symbol instanceof TypeVariableSymbol) {
           identifiers.add((TypeVariableSymbol) symbol);
         }
-        return super.scan(tree, unused);
+        return super.scan(tree, null);
       }
     }.scan(tree, null);
     return identifiers.build();

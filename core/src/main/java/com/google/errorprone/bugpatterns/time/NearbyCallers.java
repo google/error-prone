@@ -89,7 +89,7 @@ public class NearbyCallers {
 
           @Override
           public Boolean visitMethodInvocation(MethodInvocationTree secondaryMethod, Void unused) {
-            if (super.visitMethodInvocation(secondaryMethod, unused)) {
+            if (super.visitMethodInvocation(secondaryMethod, null)) {
               return true;
             }
             if (secondaryMethod == null

@@ -220,7 +220,7 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
         if (isMethodSymbolEligibleForChecking(tree, classesMadeVisible)) {
           unusedMethods.put(getSymbol(tree), getCurrentPath());
         }
-        return super.visitMethod(tree, unused);
+        return super.visitMethod(tree, null);
       }
 
       private boolean hasJUnitParamsParametersForMethodAnnotation(
@@ -340,7 +340,7 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
       @Override
       public Void visitAssignment(AssignmentTree tree, Void unused) {
         handle(getSymbol(tree.getVariable()));
-        return super.visitAssignment(tree, unused);
+        return super.visitAssignment(tree, null);
       }
 
       private void handle(Symbol symbol) {

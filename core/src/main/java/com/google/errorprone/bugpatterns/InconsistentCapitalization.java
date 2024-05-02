@@ -169,7 +169,7 @@ public class InconsistentCapitalization extends BugChecker implements ClassTreeM
           && ASTHelpers.enclosingClass(symbol).equals(classSymbol)) {
         fields.add(symbol);
       }
-      return super.visitVariable(tree, unused);
+      return super.visitVariable(tree, null);
     }
   }
 
@@ -209,7 +209,7 @@ public class InconsistentCapitalization extends BugChecker implements ClassTreeM
     public Void visitVariable(VariableTree tree, Void unused) {
       Symbol symbol = ASTHelpers.getSymbol(tree);
       if (!symbol.getKind().equals(ElementKind.PARAMETER)) {
-        return super.visitVariable(tree, unused);
+        return super.visitVariable(tree, null);
       }
       String variableName = symbol.toString();
       Symbol matchedField = fields.get(Ascii.toLowerCase(variableName));
@@ -219,7 +219,7 @@ public class InconsistentCapitalization extends BugChecker implements ClassTreeM
           matchedParameters.put(getCurrentPath(), matchedField);
         }
       }
-      return super.visitVariable(tree, unused);
+      return super.visitVariable(tree, null);
     }
   }
 }

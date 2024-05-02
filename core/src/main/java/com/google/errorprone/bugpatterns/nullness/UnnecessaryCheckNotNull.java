@@ -236,7 +236,7 @@ public class UnnecessaryCheckNotNull extends BugChecker implements MethodInvocat
         if (((JCIdent) node).sym instanceof VarSymbol) {
           freeVars.add(node);
         }
-        return super.visitIdentifier(node, v);
+        return super.visitIdentifier(node, null);
       }
     }.scan(tree, null);
 

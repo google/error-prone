@@ -161,13 +161,13 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
       @Override
       public Void visitMethodInvocation(MethodInvocationTree tree, Void unused) {
         visitNewClassOrMethodInvocation(tree);
-        return super.visitMethodInvocation(tree, unused);
+        return super.visitMethodInvocation(tree, null);
       }
 
       @Override
       public Void visitNewClass(NewClassTree tree, Void unused) {
         visitNewClassOrMethodInvocation(tree);
-        return super.visitNewClass(tree, unused);
+        return super.visitNewClass(tree, null);
       }
     }.scan(new TreePath(state.getPath(), body), null);
 

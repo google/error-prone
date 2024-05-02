@@ -111,7 +111,7 @@ public final class NoCanIgnoreReturnValueOnClasses extends BugChecker implements
       @Override
       public Void visitClass(ClassTree classTree, Void unused) {
         // stop descending when we reach a class that's marked @CRV
-        return hasAnnotation(classTree, CRV, state) ? null : super.visitClass(classTree, unused);
+        return hasAnnotation(classTree, CRV, state) ? null : super.visitClass(classTree, null);
       }
 
       @Override

@@ -172,12 +172,12 @@ public final class ImpossibleNullComparison extends BugChecker
 
     @Override
     public Void visitMethod(MethodTree method, Void unused) {
-      return isSuppressed(method, state) ? null : super.visitMethod(method, unused);
+      return isSuppressed(method, state) ? null : super.visitMethod(method, null);
     }
 
     @Override
     public Void visitClass(ClassTree clazz, Void unused) {
-      return isSuppressed(clazz, state) ? null : super.visitClass(clazz, unused);
+      return isSuppressed(clazz, state) ? null : super.visitClass(clazz, null);
     }
 
     @Override

@@ -797,7 +797,7 @@ public final class SuggestedFixes {
               state.getEndPosition(tree),
               "::" + replacement);
         }
-        return super.visitMemberReference(tree, unused);
+        return super.visitMemberReference(tree, null);
       }
     }.scan(state.getPath().getCompilationUnit(), null);
     return fix.build();

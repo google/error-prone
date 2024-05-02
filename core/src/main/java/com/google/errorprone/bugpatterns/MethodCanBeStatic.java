@@ -212,13 +212,13 @@ public class MethodCanBeStatic extends BugChecker implements CompilationUnitTree
       @Override
       public Void visitMemberSelect(MemberSelectTree tree, Void unused) {
         fixQualifier(tree, tree.getExpression());
-        return super.visitMemberSelect(tree, unused);
+        return super.visitMemberSelect(tree, null);
       }
 
       @Override
       public Void visitMemberReference(MemberReferenceTree tree, Void unused) {
         fixQualifier(tree, tree.getQualifierExpression());
-        return super.visitMemberReference(tree, unused);
+        return super.visitMemberReference(tree, null);
       }
 
       private void fixQualifier(Tree tree, ExpressionTree qualifierExpression) {

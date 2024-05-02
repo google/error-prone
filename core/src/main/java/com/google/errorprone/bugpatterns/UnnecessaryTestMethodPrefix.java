@@ -51,16 +51,16 @@ public final class UnnecessaryTestMethodPrefix extends BugChecker
       @Override
       public Void visitMethod(MethodTree tree, Void unused) {
         if (!TEST.matches(tree, state)) {
-          return super.visitMethod(tree, unused);
+          return super.visitMethod(tree, null);
         }
         String name = tree.getName().toString();
         if (!name.startsWith("test") || name.equals("test")) {
-          return super.visitMethod(tree, unused);
+          return super.visitMethod(tree, null);
         }
         var newName = toLowerCase(name.charAt(4)) + name.substring(5);
         fixBuilder.merge(renameMethod(tree, newName, state));
         sites.add(tree);
-        return super.visitMethod(tree, unused);
+        return super.visitMethod(tree, null);
       }
     }.scan(state.getPath(), null);
 

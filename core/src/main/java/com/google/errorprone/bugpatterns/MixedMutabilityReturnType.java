@@ -181,7 +181,7 @@ public final class MixedMutabilityReturnType extends BugChecker
           mutable.add(symbol);
         }
       }
-      return super.visitVariable(variableTree, unused);
+      return super.visitVariable(variableTree, null);
     }
   }
 
@@ -202,7 +202,7 @@ public final class MixedMutabilityReturnType extends BugChecker
     @Override
     public Void visitMethod(MethodTree methodTree, Void unused) {
       if (!RETURNS_COLLECTION.matches(methodTree.getReturnType(), state)) {
-        return super.visitMethod(methodTree, unused);
+        return super.visitMethod(methodTree, null);
       }
       MethodScanner scanner = new MethodScanner();
       scanner.scan(getCurrentPath(), null);
@@ -219,7 +219,7 @@ public final class MixedMutabilityReturnType extends BugChecker
                         state))
                 .build());
       }
-      return super.visitMethod(methodTree, unused);
+      return super.visitMethod(methodTree, null);
     }
 
     private final class MethodScanner extends TreePathScanner<Void, Void> {

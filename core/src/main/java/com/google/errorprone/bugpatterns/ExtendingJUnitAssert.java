@@ -70,7 +70,7 @@ public class ExtendingJUnitAssert extends BugChecker implements ClassTreeMatcher
               String assertType = ASTHelpers.getSymbol(tree).getSimpleName().toString();
               fix.addStaticImport("org.junit.Assert." + assertType);
             }
-            return super.visitMethodInvocation(tree, unused);
+            return super.visitMethodInvocation(tree, null);
           }
         },
         null);

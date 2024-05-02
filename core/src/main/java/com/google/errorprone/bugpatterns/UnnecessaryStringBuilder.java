@@ -159,7 +159,7 @@ public class UnnecessaryStringBuilder extends BugChecker implements NewClassTree
             ok[0] = false;
           }
         }
-        return super.visitIdentifier(tree, unused);
+        return super.visitIdentifier(tree, null);
       }
     }.scan(state.getPath().getCompilationUnit(), null);
     return ok[0];

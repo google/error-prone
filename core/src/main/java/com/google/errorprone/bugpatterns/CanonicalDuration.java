@@ -294,7 +294,7 @@ public class CanonicalDuration extends BugChecker implements MethodInvocationTre
         if (notFirst.get()) {
           return null;
         }
-        return super.scan(node, unused);
+        return super.scan(node, null);
       }
 
       @Override
@@ -308,9 +308,9 @@ public class CanonicalDuration extends BugChecker implements MethodInvocationTre
           }
 
           sameMethodInvocations.add(node);
-          return super.visitMethodInvocation(node, unused);
+          return super.visitMethodInvocation(node, null);
         }
-        return super.visitMethodInvocation(node, unused);
+        return super.visitMethodInvocation(node, null);
       }
     }.scan(expressionPath.getLeaf(), null);
 

@@ -113,7 +113,7 @@ public class ExpectedExceptionChecker extends BugChecker implements MethodTreeMa
                 if (description != NO_MATCH) {
                   state.reportMatch(description);
                 }
-                return super.visitBlock(block, unused);
+                return super.visitBlock(block, null);
               }
             },
             null);

@@ -118,7 +118,7 @@ public class EqualsBrokenForNull extends BugChecker implements MethodTreeMatcher
         if (condition instanceof IdentifierTree && impliesNonNull.contains(getSymbol(condition))) {
           return scan(ifTree.getElseStatement(), null);
         }
-        return super.visitIf(ifTree, unused);
+        return super.visitIf(ifTree, null);
       }
 
       @Override
