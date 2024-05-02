@@ -1130,6 +1130,9 @@ Arguments of overriding method are inconsistent with overridden method.
 __[ParameterName](bugpattern/ParameterName)__<br>
 Detects &#96;/* name&#61; */&#96;-style comments on actual parameters where the name doesn&#39;t match the formal parameter
 
+__[PatternMatchingInstanceof](bugpattern/PatternMatchingInstanceof)__<br>
+This code can be simplified to use a pattern-matching instanceof.
+
 __[PreconditionsCheckNotNullRepeated](bugpattern/PreconditionsCheckNotNullRepeated)__<br>
 Including the first argument of checkNotNull in the failure message is not useful, as it will always be &#96;null&#96;.
 
