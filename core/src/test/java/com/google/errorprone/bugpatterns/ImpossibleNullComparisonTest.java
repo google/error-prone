@@ -497,4 +497,22 @@ public final class ImpossibleNullComparisonTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void valueOf() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.truth.Truth.assertThat;",
+            "import java.util.concurrent.TimeUnit;",
+            "public class Test {",
+            "  public void o(String s) {",
+            "    // BUG: Diagnostic contains:",
+            "    assertThat(TimeUnit.valueOf(s)).isNotNull();",
+            "    // BUG: Diagnostic contains:",
+            "    assertThat(Integer.valueOf(s)).isNotNull();",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

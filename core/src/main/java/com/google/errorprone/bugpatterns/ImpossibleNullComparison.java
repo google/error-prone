@@ -145,12 +145,14 @@ public final class ImpossibleNullComparison extends BugChecker
 
   private final boolean matchTestAssertions;
   private final boolean checkPrimitives;
+  private final boolean checkValueOf;
 
   @Inject
   ImpossibleNullComparison(ErrorProneFlags flags) {
     this.matchTestAssertions =
         flags.getBoolean("ProtoFieldNullComparison:MatchTestAssertions").orElse(true);
     this.checkPrimitives = flags.getBoolean("ImmutableNullComparison:CheckPrimitives").orElse(true);
+    this.checkValueOf = flags.getBoolean("ImpossibleNullComparison:CheckValueOf").orElse(true);
   }
 
   @Override
@@ -262,6 +264,7 @@ public final class ImpossibleNullComparison extends BugChecker
       }
       return stream(GetterTypes.values())
           .filter(gt -> !gt.equals(GetterTypes.PRIMITIVE) || checkPrimitives)
+          .filter(gt -> !gt.equals(GetterTypes.VALUE_OF) || checkValueOf)
           .map(type -> type.match(resolvedTree, state))
           .filter(Objects::nonNull)
           .findFirst();
@@ -310,6 +313,12 @@ public final class ImpossibleNullComparison extends BugChecker
 
   private static final Matcher<ExpressionTree> TABLE_COLUMN_MATCHER =
       instanceMethod().onDescendantOf("com.google.common.collect.Table").named("column");
+
+  private static final Matcher<ExpressionTree> NON_NULL_VALUE_OF =
+      staticMethod()
+          .onDescendantOfAny("java.lang.Enum", "java.lang.Number")
+          .named("valueOf")
+          .withParameters("java.lang.String");
 
   private enum GetterTypes {
     OPTIONAL_GET {
@@ -392,6 +401,17 @@ public final class ImpossibleNullComparison extends BugChecker
       Fixer match(ExpressionTree tree, VisitorState state) {
         var type = getType(tree);
         return type != null && type.isPrimitive() ? GetterTypes::emptyFix : null;
+      }
+    },
+    VALUE_OF {
+      @Nullable
+      @Override
+      Fixer match(ExpressionTree tree, VisitorState state) {
+        if (!NON_NULL_VALUE_OF.matches(tree, state)) {
+          return null;
+        }
+        // TODO(cpovirk): Suggest Enums.getIfPresent, Ints.tryParse, etc.
+        return GetterTypes::emptyFix;
       }
     },
     /** {@code proto.getFoo()} */

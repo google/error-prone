@@ -71,7 +71,7 @@ public class ClassInitializationDeadlock extends BugChecker implements BugChecke
       @Override
       public Void visitClass(ClassTree node, Void unused) {
         for (Tree member : node.getMembers()) {
-          if (member.getKind().equals(Tree.Kind.CLASS)) {
+          if (member instanceof ClassTree) {
             continue;
           }
           scan(member, null);
