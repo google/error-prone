@@ -266,4 +266,34 @@ public class ClassInitializationDeadlockTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void nestedEnum() {
+    testHelper
+        .addSourceLines(
+            "TestInterface.java", //
+            "public interface TestInterface {",
+            "  default Object foo() {",
+            "    return null;",
+            "  }",
+            "  enum TestEnum implements TestInterface {",
+            "    INSTANCE;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void nestedInterface() {
+    testHelper
+        .addSourceLines(
+            "Foo.java", //
+            "interface Foo {",
+            "  default void foo() {}",
+            "  interface Sub extends Foo {",
+            "    final Sub INSTANCE = new Sub() {};",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
