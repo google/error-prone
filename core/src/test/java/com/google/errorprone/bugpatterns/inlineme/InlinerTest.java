@@ -29,9 +29,10 @@ import org.junit.runners.JUnit4;
 /** Tests for the {@link Inliner}. */
 @RunWith(JUnit4.class)
 public class InlinerTest {
-  /* We expect that all @InlineMe annotations we try to use as inlineable targets are valid,
-   so we run both checkers here. If the Validator trips on a method, we'll suggest some
-   replacement which should trip up the checker.
+  /*
+    We expect that all @InlineMe annotations we try to use as inlineable targets are valid,
+    so we run both checkers here. If the Validator trips on a method, we'll suggest some
+    replacement which should trip up the checker.
   */
   private final BugCheckerRefactoringTestHelper refactoringTestHelper =
       BugCheckerRefactoringTestHelper.newInstance(
@@ -912,9 +913,7 @@ public class InlinerTest {
             "public final class Caller {",
             "  public void doTest() {",
             "    Client client = new Client();",
-            // TODO(b/180976346): replacements of the form that terminate in a parameter by itself
-            //  don't work with the new replacement tool, but this is uncommon enough
-            "    int x = client.identity(42);",
+            "    int x = 42;",
             "  }",
             "}")
         .doTest();

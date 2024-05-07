@@ -234,7 +234,17 @@ public final class Inliner extends BugChecker
               "\\b" + Pattern.quote(typeName.getKey()) + "\\b",
               Matcher.quoteReplacement(typeName.getValue()));
     }
+
     for (int i = 0; i < varNames.size(); i++) {
+      // The replacement logic below assumes the existence of another token after the parameter
+      // in the replacement string (ex: a trailing parens, comma, dot, etc.). However, in the case
+      // where the replacement is _just_ one parameter, there isn't a trailing token. We just make
+      // the direct replacement here.
+      if (replacement.equals(varNames.get(i))) {
+        replacement = callingVars.get(i);
+        break;
+      }
+
       // Ex: foo(int a, int... others) -> this.bar(a, others)
       // If caller passes 0 args in the varargs position, we want to remove the preceding comma to
       // make this.bar(a) (as opposed to "this.bar(a, )"
