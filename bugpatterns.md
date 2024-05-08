@@ -785,8 +785,8 @@ Return value of methods returning Future must be checked. Ignoring returned Futu
 __[GetClassOnEnum](bugpattern/GetClassOnEnum)__<br>
 Calling getClass() on an enum may return a subclass of the enum type
 
-__[GuiceCreateInjectorWithCombineRefactor](bugpattern/GuiceCreateInjectorWithCombineRefactor)__<br>
-Nesting Modules.combine() inside Guice.createInjector() is unnecessary.
+__[GuiceNestedCombine](bugpattern/GuiceNestedCombine)__<br>
+Nesting Modules.combine() here is unnecessary.
 
 __[HidingField](bugpattern/HidingField)__<br>
 Hiding fields of superclasses may cause confusion and errors
