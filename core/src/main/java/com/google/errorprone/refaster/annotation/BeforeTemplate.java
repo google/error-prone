@@ -22,8 +22,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Desired "before" version of a refactoring. Corresponds to a matching method annotated with {@link
+ * Desired "before" version of a refactoring. Corresponds to matching methods annotated with {@link
  * AfterTemplate}.
+ *
+ * <p>Multiple {@code @BeforeTemplate}s can be provided to match multiple patterns.
  *
  * @author lowasser@google.com (Louis Wasserman)
  */
