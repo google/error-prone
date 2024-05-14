@@ -18,12 +18,10 @@ package com.google.errorprone;
 
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.DiagnosticTestHelper.diagnosticMessage;
+import static com.google.errorprone.DiagnosticTestHelper.DIAGNOSTIC_CONTAINING;
 import static com.google.errorprone.FileObjects.forResources;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Locale.ENGLISH;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.hasItem;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -56,11 +54,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import javax.lang.model.SourceVersion;
-import javax.tools.Diagnostic;
 import javax.tools.DiagnosticListener;
 import javax.tools.JavaCompiler;
 import javax.tools.JavaFileObject;
-import org.hamcrest.Matcher;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -134,9 +130,9 @@ public class ErrorProneJavaCompilerTest {
             Collections.<String>emptyList(),
             Collections.<Class<? extends BugChecker>>emptyList());
     assertThat(result.succeeded).isFalse();
-    Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
-        hasItem(diagnosticMessage(containsString("[SelfAssignment]")));
-    assertThat(matcher.matches(result.diagnosticHelper.getDiagnostics())).isTrue();
+    assertThat(result.diagnosticHelper.getDiagnostics())
+        .comparingElementsUsing(DIAGNOSTIC_CONTAINING)
+        .contains("[SelfAssignment]");
   }
 
   @Test
@@ -164,10 +160,9 @@ public class ErrorProneJavaCompilerTest {
             Collections.<String>emptyList(),
             Collections.<Class<? extends BugChecker>>emptyList());
     assertThat(result.succeeded).isTrue();
-    assertThat(result.diagnosticHelper.getDiagnostics().size()).isGreaterThan(0);
-    Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
-        hasItem(diagnosticMessage(containsString("[WaitNotInLoop]")));
-    assertThat(matcher.matches(result.diagnosticHelper.getDiagnostics())).isTrue();
+    assertThat(result.diagnosticHelper.getDiagnostics())
+        .comparingElementsUsing(DIAGNOSTIC_CONTAINING)
+        .contains("[WaitNotInLoop]");
 
     result =
         doCompile(
@@ -175,8 +170,9 @@ public class ErrorProneJavaCompilerTest {
             Arrays.asList("-Xep:WaitNotInLoop:ERROR"),
             Collections.<Class<? extends BugChecker>>emptyList());
     assertThat(result.succeeded).isFalse();
-    assertThat(result.diagnosticHelper.getDiagnostics().size()).isGreaterThan(0);
-    assertThat(matcher.matches(result.diagnosticHelper.getDiagnostics())).isTrue();
+    assertThat(result.diagnosticHelper.getDiagnostics())
+        .comparingElementsUsing(DIAGNOSTIC_CONTAINING)
+        .contains("[WaitNotInLoop]");
   }
 
   @Test
@@ -187,10 +183,9 @@ public class ErrorProneJavaCompilerTest {
             Collections.<String>emptyList(),
             Collections.<Class<? extends BugChecker>>emptyList());
     assertThat(result.succeeded).isFalse();
-    assertThat(result.diagnosticHelper.getDiagnostics().size()).isGreaterThan(0);
-    Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
-        hasItem(diagnosticMessage(containsString("[SelfAssignment]")));
-    assertThat(matcher.matches(result.diagnosticHelper.getDiagnostics())).isTrue();
+    assertThat(result.diagnosticHelper.getDiagnostics())
+        .comparingElementsUsing(DIAGNOSTIC_CONTAINING)
+        .contains("[SelfAssignment]");
 
     result =
         doCompile(
@@ -198,8 +193,9 @@ public class ErrorProneJavaCompilerTest {
             Arrays.asList("-Xep:SelfAssignment:WARN"),
             Collections.<Class<? extends BugChecker>>emptyList());
     assertThat(result.succeeded).isTrue();
-    assertThat(result.diagnosticHelper.getDiagnostics().size()).isGreaterThan(0);
-    assertThat(matcher.matches(result.diagnosticHelper.getDiagnostics())).isTrue();
+    assertThat(result.diagnosticHelper.getDiagnostics())
+        .comparingElementsUsing(DIAGNOSTIC_CONTAINING)
+        .contains("[SelfAssignment]");
   }
 
   @Test
@@ -219,9 +215,9 @@ public class ErrorProneJavaCompilerTest {
             Collections.<Class<? extends BugChecker>>emptyList());
     assertThat(result.succeeded).isFalse();
     assertThat(result.diagnosticHelper.getDiagnostics().size()).isGreaterThan(0);
-    Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
-        hasItem(diagnosticMessage(containsString("[EmptyIf]")));
-    assertThat(matcher.matches(result.diagnosticHelper.getDiagnostics())).isTrue();
+    assertThat(result.diagnosticHelper.getDiagnostics())
+        .comparingElementsUsing(DIAGNOSTIC_CONTAINING)
+        .contains("[EmptyIf]");
   }
 
   @Test
@@ -267,9 +263,9 @@ public class ErrorProneJavaCompilerTest {
             Arrays.<Class<? extends BugChecker>>asList(BadShiftAmount.class));
     assertThat(result.succeeded).isFalse();
     assertThat(result.diagnosticHelper.getDiagnostics().size()).isGreaterThan(0);
-    Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
-        hasItem(diagnosticMessage(containsString("[BadShiftAmount]")));
-    assertThat(matcher.matches(result.diagnosticHelper.getDiagnostics())).isTrue();
+    assertThat(result.diagnosticHelper.getDiagnostics())
+        .comparingElementsUsing(DIAGNOSTIC_CONTAINING)
+        .contains("[BadShiftAmount]");
   }
 
   @Test
@@ -306,9 +302,9 @@ public class ErrorProneJavaCompilerTest {
             printWriter, fileManager, diagnosticHelper.collector, args, null, sources);
     boolean succeeded = task.call();
     assertThat(succeeded).isTrue();
-    Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
-        hasItem(diagnosticMessage(containsString("[ChainingConstructorIgnoresParameter]")));
-    assertThat(matcher.matches(diagnosticHelper.getDiagnostics())).isTrue();
+    assertThat(diagnosticHelper.getDiagnostics())
+        .comparingElementsUsing(DIAGNOSTIC_CONTAINING)
+        .contains("[ChainingConstructorIgnoresParameter]");
 
     // reset state between compilations
     diagnosticHelper.clearDiagnostics();
@@ -323,7 +319,9 @@ public class ErrorProneJavaCompilerTest {
             printWriter, fileManager, diagnosticHelper.collector, args, null, sources);
     succeeded = task.call();
     assertThat(succeeded).isFalse();
-    assertThat(matcher.matches(diagnosticHelper.getDiagnostics())).isTrue();
+    assertThat(diagnosticHelper.getDiagnostics())
+        .comparingElementsUsing(DIAGNOSTIC_CONTAINING)
+        .contains("[ChainingConstructorIgnoresParameter]");
   }
 
   @Test
@@ -342,9 +340,9 @@ public class ErrorProneJavaCompilerTest {
             printWriter, null, diagnosticHelper.collector, args, null, sources);
     boolean succeeded = task.call();
     assertThat(succeeded).isFalse();
-    Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
-        hasItem(diagnosticMessage(containsString("[EmptyIf]")));
-    assertThat(matcher.matches(diagnosticHelper.getDiagnostics())).isTrue();
+    assertThat(diagnosticHelper.getDiagnostics())
+        .comparingElementsUsing(DIAGNOSTIC_CONTAINING)
+        .contains("[EmptyIf]");
 
     diagnosticHelper.clearDiagnostics();
     args.remove("-Xep:EmptyIf");
