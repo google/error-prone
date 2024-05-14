@@ -845,31 +845,36 @@ public final class ThreadSafety {
     if (!(sym instanceof ClassSymbol)) {
       return null;
     }
-    Type superClass = ((ClassSymbol) sym).getSuperclass();
-    AnnotationInfo superAnnotation = getInheritedAnnotation(superClass.asElement(), state);
-    if (superAnnotation == null) {
-      return null;
-    }
-    // If an annotated super-type was found, look for any type arguments to the super-type that
-    // are in the super-type's containerOf spec, and where the arguments are type parameters
-    // of the current class.
-    // E.g. for `Foo<X> extends Super<X>` if `Super<Y>` is annotated
-    // `@ThreadSafeContainerAnnotation Y`
-    // then `Foo<X>` is has X implicitly annotated `@ThreadSafeContainerAnnotation X`
-    ImmutableList.Builder<String> containerOf = ImmutableList.builder();
-    for (int i = 0; i < superClass.getTypeArguments().size(); i++) {
-      Type arg = superClass.getTypeArguments().get(i);
-      TypeVariableSymbol formal = superClass.asElement().getTypeParameters().get(i);
-      if (!arg.hasTag(TypeTag.TYPEVAR)) {
+    for (Type superClass : state.getTypes().closure(sym.type)) {
+      if (superClass.tsym.equals(sym)) {
         continue;
       }
-      TypeSymbol argSym = arg.asElement();
-      if (argSym.owner == sym
-          && superAnnotation.containerOf().contains(formal.getSimpleName().toString())) {
-        containerOf.add(argSym.getSimpleName().toString());
+      AnnotationInfo superAnnotation = getInheritedAnnotation(superClass.asElement(), state);
+      if (superAnnotation == null) {
+        continue;
       }
+      // If an annotated super-type was found, look for any type arguments to the super-type that
+      // are in the super-type's containerOf spec, and where the arguments are type parameters
+      // of the current class.
+      // E.g. for `Foo<X> extends Super<X>` if `Super<Y>` is annotated
+      // `@ThreadSafeContainerAnnotation Y`
+      // then `Foo<X>` is has X implicitly annotated `@ThreadSafeContainerAnnotation X`
+      ImmutableList.Builder<String> containerOf = ImmutableList.builder();
+      for (int i = 0; i < superClass.getTypeArguments().size(); i++) {
+        Type arg = superClass.getTypeArguments().get(i);
+        TypeVariableSymbol formal = superClass.asElement().getTypeParameters().get(i);
+        if (!arg.hasTag(TypeTag.TYPEVAR)) {
+          continue;
+        }
+        TypeSymbol argSym = arg.asElement();
+        if (argSym.owner == sym
+            && superAnnotation.containerOf().contains(formal.getSimpleName().toString())) {
+          containerOf.add(argSym.getSimpleName().toString());
+        }
+      }
+      return AnnotationInfo.create(superAnnotation.typeName(), containerOf.build());
     }
-    return AnnotationInfo.create(superAnnotation.typeName(), containerOf.build());
+    return null;
   }
 
   /**

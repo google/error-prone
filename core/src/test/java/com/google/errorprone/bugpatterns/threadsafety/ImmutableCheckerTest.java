@@ -2030,7 +2030,8 @@ public class ImmutableCheckerTest {
             "@Immutable class Test {",
             "  final WithContainerOf<ImmutableInterface> a = null;",
             "  final WithoutContainerOf<ImmutableInterface> b = null;",
-            "  // BUG: Diagnostic contains: field 'c' of type 'WithContainerOf<MutableImpl>'",
+            // Even though MutableImpl is mutable, it extends an @Immutable class, so we believe it
+            // is. (The violation is suppressed at the MutableImpl declaration.)
             "  final WithContainerOf<MutableImpl> c = null;",
             "  final WithoutContainerOf<MutableImpl> d = null;",
             "}")
@@ -2793,6 +2794,25 @@ public class ImmutableCheckerTest {
             "    Map<String, String> map = new HashMap<>();",
             "    // BUG: Diagnostic contains:",
             "    test(map::get);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void methodReference_onSubtypeOfImmutableType() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.Immutable;",
+            "import java.util.HashMap;",
+            "import java.util.Map;",
+            "abstract class Test {",
+            "  @Immutable interface ImmutableFunction { String apply(String b); }",
+            "  interface SubFunction extends ImmutableFunction {}",
+            "  void test(ImmutableFunction f) {",
+            "    SubFunction sf = null;",
+            "    test(sf::apply);",
             "  }",
             "}")
         .doTest();
