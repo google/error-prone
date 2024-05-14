@@ -120,6 +120,11 @@ public class NestedInstanceOfConditions extends BugChecker implements IfTreeMatc
 
           Types types = state.getTypes();
 
+          // Pattern matching instanceofs can have null type.
+          if (instanceOfTree.getType() == null) {
+            return false;
+          }
+
           boolean isCastable =
               types.isCastable(
                   types.erasure(ASTHelpers.getType(instanceOfTree.getType())),
