@@ -99,6 +99,9 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color"><code>final com.google.errorprone.DiagnosticTestHelper.ClearableDiagnosticCollector&lt;<a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/JavaFileObject.html" title="class or interface in javax.tools" class="external-link">JavaFileObject</a>&gt;</code></div>
 <div class="col-second even-row-color"><code><a href="#collector" class="member-name-link">collector</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>static final com.google.common.truth.Correspondence&lt;<a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/Diagnostic.html" title="class or interface in javax.tools" class="external-link">Diagnostic</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/JavaFileObject.html" title="class or interface in javax.tools" class="external-link">JavaFileObject</a>&gt;,<wbr><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second odd-row-color"><code><a href="#DIAGNOSTIC_CONTAINING" class="member-name-link">DIAGNOSTIC_CONTAINING</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
@@ -146,13 +149,6 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#describe()" class="member-name-link">describe</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static org.hamcrest.Matcher&lt;<a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/Diagnostic.html" title="class or interface in javax.tools" class="external-link">Diagnostic</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/JavaFileObject.html" title="class or interface in javax.tools" class="external-link">JavaFileObject</a>&gt;&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#diagnosticLineAndColumn(long,long)" class="member-name-link">diagnosticLineAndColumn</a><wbr>(long&nbsp;line,
- long&nbsp;column)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static org.hamcrest.Matcher&lt;<a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/Diagnostic.html" title="class or interface in javax.tools" class="external-link">Diagnostic</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/JavaFileObject.html" title="class or interface in javax.tools" class="external-link">JavaFileObject</a>&gt;&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#diagnosticMessage(org.hamcrest.Matcher)" class="member-name-link">diagnosticMessage</a><wbr>(org.hamcrest.Matcher&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;matcher)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static org.hamcrest.Matcher&lt;<a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/Diagnostic.html" title="class or interface in javax.tools" class="external-link">Diagnostic</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/JavaFileObject.html" title="class or interface in javax.tools" class="external-link">JavaFileObject</a>&gt;&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#diagnosticOnLine(java.net.URI,long)" class="member-name-link">diagnosticOnLine</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/net/URI.html" title="class or interface in java.net" class="external-link">URI</a>&nbsp;fileUri,
  long&nbsp;line)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
@@ -175,10 +171,6 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the lookup keys that weren't used.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static org.hamcrest.Matcher&lt;<a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/Diagnostic.html" title="class or interface in javax.tools" class="external-link">Diagnostic</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/JavaFileObject.html" title="class or interface in javax.tools" class="external-link">JavaFileObject</a>&gt;&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#suggestsRemovalOfLine(java.net.URI,int)" class="member-name-link">suggestsRemovalOfLine</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/net/URI.html" title="class or interface in java.net" class="external-link">URI</a>&nbsp;fileUri,
- int&nbsp;line)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -200,6 +192,12 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="collector">
 <h3>collector</h3>
 <div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type">com.google.errorprone.DiagnosticTestHelper.ClearableDiagnosticCollector&lt;<a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/JavaFileObject.html" title="class or interface in javax.tools" class="external-link">JavaFileObject</a>&gt;</span>&nbsp;<span class="element-name">collector</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="DIAGNOSTIC_CONTAINING">
+<h3>DIAGNOSTIC_CONTAINING</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">com.google.common.truth.Correspondence&lt;<a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/Diagnostic.html" title="class or interface in javax.tools" class="external-link">Diagnostic</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/JavaFileObject.html" title="class or interface in javax.tools" class="external-link">JavaFileObject</a>&gt;,<wbr><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">DIAGNOSTIC_CONTAINING</span></div>
 </section>
 </li>
 </ul>
@@ -233,13 +231,6 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="suggestsRemovalOfLine(java.net.URI,int)">
-<h3>suggestsRemovalOfLine</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">org.hamcrest.Matcher&lt;<a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/Diagnostic.html" title="class or interface in javax.tools" class="external-link">Diagnostic</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/JavaFileObject.html" title="class or interface in javax.tools" class="external-link">JavaFileObject</a>&gt;&gt;</span>&nbsp;<span class="element-name">suggestsRemovalOfLine</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/javase/8/docs/api/java/net/URI.html" title="class or interface in java.net" class="external-link">URI</a>&nbsp;fileUri,
- int&nbsp;line)</span></div>
-</section>
-</li>
-<li>
 <section class="detail" id="getDiagnostics()">
 <h3>getDiagnostics</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/Diagnostic.html" title="class or interface in javax.tools" class="external-link">Diagnostic</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/JavaFileObject.html" title="class or interface in javax.tools" class="external-link">JavaFileObject</a>&gt;&gt;</span>&nbsp;<span class="element-name">getDiagnostics</span>()</div>
@@ -258,13 +249,6 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="diagnosticLineAndColumn(long,long)">
-<h3>diagnosticLineAndColumn</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">org.hamcrest.Matcher&lt;<a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/Diagnostic.html" title="class or interface in javax.tools" class="external-link">Diagnostic</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/JavaFileObject.html" title="class or interface in javax.tools" class="external-link">JavaFileObject</a>&gt;&gt;</span>&nbsp;<span class="element-name">diagnosticLineAndColumn</span><wbr><span class="parameters">(long&nbsp;line,
- long&nbsp;column)</span></div>
-</section>
-</li>
-<li>
 <section class="detail" id="diagnosticOnLine(java.net.URI,long)">
 <h3>diagnosticOnLine</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">org.hamcrest.Matcher&lt;<a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/Diagnostic.html" title="class or interface in javax.tools" class="external-link">Diagnostic</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/JavaFileObject.html" title="class or interface in javax.tools" class="external-link">JavaFileObject</a>&gt;&gt;</span>&nbsp;<span class="element-name">diagnosticOnLine</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/javase/8/docs/api/java/net/URI.html" title="class or interface in java.net" class="external-link">URI</a>&nbsp;fileUri,
@@ -277,12 +261,6 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">org.hamcrest.Matcher&lt;<a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/Diagnostic.html" title="class or interface in javax.tools" class="external-link">Diagnostic</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/JavaFileObject.html" title="class or interface in javax.tools" class="external-link">JavaFileObject</a>&gt;&gt;</span>&nbsp;<span class="element-name">diagnosticOnLine</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/javase/8/docs/api/java/net/URI.html" title="class or interface in java.net" class="external-link">URI</a>&nbsp;fileUri,
  long&nbsp;line,
  <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html" title="class or interface in java.util.function" class="external-link">Predicate</a>&lt;? super <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;matcher)</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="diagnosticMessage(org.hamcrest.Matcher)">
-<h3>diagnosticMessage</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">org.hamcrest.Matcher&lt;<a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/Diagnostic.html" title="class or interface in javax.tools" class="external-link">Diagnostic</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/javax/tools/JavaFileObject.html" title="class or interface in javax.tools" class="external-link">JavaFileObject</a>&gt;&gt;</span>&nbsp;<span class="element-name">diagnosticMessage</span><wbr><span class="parameters">(org.hamcrest.Matcher&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;matcher)</span></div>
 </section>
 </li>
 <li>
