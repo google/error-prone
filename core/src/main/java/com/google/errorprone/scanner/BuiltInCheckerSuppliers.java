@@ -103,6 +103,7 @@ import com.google.errorprone.bugpatterns.DateFormatConstant;
 import com.google.errorprone.bugpatterns.DeadException;
 import com.google.errorprone.bugpatterns.DeadThread;
 import com.google.errorprone.bugpatterns.DeduplicateConstants;
+import com.google.errorprone.bugpatterns.DeeplyNested;
 import com.google.errorprone.bugpatterns.DefaultCharset;
 import com.google.errorprone.bugpatterns.DefaultPackage;
 import com.google.errorprone.bugpatterns.DepAnn;
@@ -882,6 +883,7 @@ public class BuiltInCheckerSuppliers {
           ComplexBooleanConstant.class,
           DateChecker.class,
           DateFormatConstant.class,
+          DeeplyNested.class,
           DefaultCharset.class,
           DefaultPackage.class,
           DeprecatedVariable.class,
