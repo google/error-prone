@@ -209,7 +209,7 @@ public final class RedundantSetterCall extends BugChecker implements MethodInvoc
     return buildDescription(locations.iterator().next().getArgument())
         .setMessage(
             String.format(
-                "%s was called %s with %s. Setting the same field multiple times is redundant, and "
+                "%s was called %s%s. Setting the same field multiple times is redundant, and "
                     + "could mask a bug.",
                 field.toString(locations),
                 nTimes(locations.size()),
