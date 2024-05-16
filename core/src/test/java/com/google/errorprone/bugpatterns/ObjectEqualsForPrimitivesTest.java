@@ -179,4 +179,64 @@ public class ObjectEqualsForPrimitivesTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void doubles() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.Objects;",
+            "public class Test {",
+            "  private static boolean testDoubles(double a, double b) {",
+            "    return Objects.equals(a, b);",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void doubleAndFloat() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.Objects;",
+            "public class Test {",
+            "  private static boolean testDoubles(double a, float b) {",
+            "    return Objects.equals(a, b);",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void doubleAndLong() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.Objects;",
+            "public class Test {",
+            "  private static boolean testDoubles(double a, long b) {",
+            "    return Objects.equals(a, b);",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void floatAndLong() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "import java.util.Objects;",
+            "public class Test {",
+            "  private static boolean testDoubles(float a, long b) {",
+            "    return Objects.equals(a, b);",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
 }
