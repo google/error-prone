@@ -1,6 +1,7 @@
 ---
 title: TypeToString
-summary: Type#toString shouldn't be used for comparison as it is expensive and fragile.
+summary: TypeMirror#toString shouldn't be used for comparison as it is expensive and
+  fragile.
 layout: bugpattern
 tags: ''
 severity: SUGGESTION

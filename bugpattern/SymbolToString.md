@@ -1,6 +1,7 @@
 ---
 title: SymbolToString
-summary: Symbol#toString shouldn't be used for comparison as it is expensive and fragile.
+summary: Element#toString shouldn't be used for comparison as it is expensive and
+  fragile.
 layout: bugpattern
 tags: ''
 severity: SUGGESTION

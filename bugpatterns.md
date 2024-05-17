@@ -1731,7 +1731,7 @@ __[SwitchDefault](bugpattern/SwitchDefault)__<br>
 The default case of a switch should appear at the end of the last statement group
 
 __[SymbolToString](bugpattern/SymbolToString)__<br>
-Symbol#toString shouldn&#39;t be used for comparison as it is expensive and fragile.
+Element#toString shouldn&#39;t be used for comparison as it is expensive and fragile.
 
 __[ThrowsUncheckedException](bugpattern/ThrowsUncheckedException)__<br>
 Unchecked exceptions do not need to be declared in the method signature.
@@ -1743,7 +1743,7 @@ __[TypeParameterNaming](bugpattern/TypeParameterNaming)__<br>
 Type parameters must be a single letter with an optional numeric suffix, or an UpperCamelCase name followed by the letter &#39;T&#39;.
 
 __[TypeToString](bugpattern/TypeToString)__<br>
-Type#toString shouldn&#39;t be used for comparison as it is expensive and fragile.
+TypeMirror#toString shouldn&#39;t be used for comparison as it is expensive and fragile.
 
 __[UngroupedOverloads](bugpattern/UngroupedOverloads)__<br>
 Constructors and methods with the same name should appear sequentially with no other code in between, even when modifiers such as static or private differ between the methods. Please re-order or re-name methods.
