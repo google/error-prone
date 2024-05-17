@@ -36,16 +36,17 @@ import java.util.Optional;
 import javax.inject.Inject;
 
 /**
- * Flags {@code com.sun.tools.javac.code.Type#toString} usage in {@link BugChecker}s.
+ * Flags {@code javax.lang.model.type.TypeMirror#toString} usage in {@link BugChecker}s.
  *
  * @author bhagwani@google.com (Sumit Bhagwani)
  */
 @BugPattern(
-    summary = "Type#toString shouldn't be used for comparison as it is expensive and fragile.",
+    summary =
+        "TypeMirror#toString shouldn't be used for comparison as it is expensive and fragile.",
     severity = SUGGESTION)
 public class TypeToString extends AbstractToString {
 
-  private static final TypePredicate IS_TYPE = isDescendantOf("com.sun.tools.javac.code.Type");
+  private static final TypePredicate IS_TYPE = isDescendantOf("javax.lang.model.type.TypeMirror");
 
   private static final Matcher<Tree> STRING_EQUALS =
       toType(
@@ -72,7 +73,7 @@ public class TypeToString extends AbstractToString {
 
   @Override
   protected Optional<String> descriptionMessageForDefaultMatch(Type type, VisitorState state) {
-    return Optional.of("Type#toString shouldn't be used as it is expensive and fragile.");
+    return Optional.of("TypeMirror#toString shouldn't be used as it is expensive and fragile.");
   }
 
   @Override
