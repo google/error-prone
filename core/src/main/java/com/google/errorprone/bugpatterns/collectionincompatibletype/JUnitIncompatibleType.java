@@ -22,6 +22,8 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.isSameType;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -72,15 +74,25 @@ public final class JUnitIncompatibleType extends BugChecker implements MethodInv
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     var arguments = tree.getArguments();
     if (ASSERT_EQUALS.matches(tree, state)) {
-      var typeA = ignoringCasts(arguments.get(arguments.size() - 2), state);
-      var typeB = ignoringCasts(arguments.get(arguments.size() - 1), state);
+      int skip = argumentsToSkip(tree, state);
+      var typeA = ignoringCasts(arguments.get(skip), state);
+      var typeB = ignoringCasts(arguments.get(skip + 1), state);
       return checkCompatibility(tree, typeA, typeB, state);
     } else if (ASSERT_ARRAY_EQUALS.matches(tree, state)) {
-      var typeA = ((ArrayType) ignoringCasts(arguments.get(arguments.size() - 2), state)).elemtype;
-      var typeB = ((ArrayType) ignoringCasts(arguments.get(arguments.size() - 1), state)).elemtype;
+      int skip = argumentsToSkip(tree, state);
+      var typeA = ((ArrayType) ignoringCasts(arguments.get(skip), state)).elemtype;
+      var typeB = ((ArrayType) ignoringCasts(arguments.get(skip + 1), state)).elemtype;
       return checkCompatibility(tree, typeA, typeB, state);
     }
     return NO_MATCH;
+  }
+
+  /** Returns the number of arguments to skip so we ignore {@code message} arguments. */
+  private static int argumentsToSkip(MethodInvocationTree tree, VisitorState state) {
+    return isSameType(
+            getSymbol(tree).getParameters().get(0).type, state.getSymtab().stringType, state)
+        ? 1
+        : 0;
   }
 
   private Description checkCompatibility(
