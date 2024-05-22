@@ -223,4 +223,32 @@ public final class YodaConditionTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void nullableYodaCondition() {
+    refactoring
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  private static final String CONST = \"hello\";",
+            "  public static boolean f(String foo) {",
+            "    return null != foo;",
+            "  }",
+            "  public static boolean g() {",
+            "    return null != CONST;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  private static final String CONST = \"hello\";",
+            "  public static boolean f(String foo) {",
+            "    return foo != null;",
+            "  }",
+            "  public static boolean g() {",
+            "    return CONST != null;",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
