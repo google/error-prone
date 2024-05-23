@@ -17,14 +17,13 @@
 package com.google.errorprone.apply;
 
 import com.google.common.base.CharMatcher;
-import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.sun.tools.javac.tree.EndPosTable;
+import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
-import com.sun.tools.javac.tree.JCTree.JCImport;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -64,7 +63,7 @@ public class ImportStatements {
 
   ImportStatements(
       JCExpression packageTree,
-      List<JCImport> importTrees,
+      List<? extends JCTree> importTrees,
       EndPosTable endPositions,
       ImportOrganizer importOrganizer) {
 
@@ -80,7 +79,7 @@ public class ImportStatements {
     } else {
       // process list of imports and find start/end positions
       hasExistingImports = true;
-      for (JCImport importTree : importTrees) {
+      for (JCTree importTree : importTrees) {
         int currStartPos = importTree.getStartPosition();
         int currEndPos = importTree.getEndPosition(endPositions);
 
@@ -99,14 +98,9 @@ public class ImportStatements {
     importStrings.addAll(
         Lists.transform(
             importTrees,
-            new Function<JCImport, String>() {
-              @Override
-              public String apply(JCImport input) {
-                String importExpr = input.toString();
-                return CharMatcher.whitespace()
-                    .or(CharMatcher.is(';'))
-                    .trimTrailingFrom(importExpr);
-              }
+            input -> {
+              String importExpr = input.toString();
+              return CharMatcher.whitespace().or(CharMatcher.is(';')).trimTrailingFrom(importExpr);
             }));
 
     originalImports = ImmutableSet.copyOf(importStrings);
