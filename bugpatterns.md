@@ -1557,6 +1557,9 @@ This primitive byte array is only used to construct ByteStrings. It would be cle
 __[StronglyTypeTime](bugpattern/StronglyTypeTime)__<br>
 This primitive integral type is only used to construct time types. It would be clearer to strongly type the field instead.
 
+__[SunApi](bugpattern/SunApi)__<br>
+Usage of internal proprietary API which may be removed in a future release
+
 __[SuppressWarningsWithoutExplanation](bugpattern/SuppressWarningsWithoutExplanation)__<br>
 Use of @SuppressWarnings should be accompanied by a comment describing why the warning is safe to ignore.
 
