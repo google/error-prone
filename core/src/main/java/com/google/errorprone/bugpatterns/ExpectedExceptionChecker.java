@@ -78,9 +78,15 @@ public class ExpectedExceptionChecker extends BugChecker implements MethodTreeMa
               .withNameMatching(Pattern.compile("expect.*")));
 
   static final Matcher<ExpressionTree> IS_A =
-      staticMethod()
-          .onClassAny("org.hamcrest.Matchers", "org.hamcrest.CoreMatchers", "org.hamcrest.core.Is")
-          .withSignature("<T>isA(java.lang.Class<T>)");
+      anyOf(
+          staticMethod()
+              .onClassAny(
+                  "org.hamcrest.Matchers", "org.hamcrest.CoreMatchers", "org.hamcrest.core.Is")
+              .withSignature("<T>isA(java.lang.Class<T>)"),
+          staticMethod()
+              .onClassAny(
+                  "org.hamcrest.Matchers", "org.hamcrest.CoreMatchers", "org.hamcrest.core.Is")
+              .withSignature("<T>isA(java.lang.Class<?>)"));
 
   static final Matcher<StatementTree> FAIL_MATCHER =
       anyOf(
