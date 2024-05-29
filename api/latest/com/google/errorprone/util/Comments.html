@@ -111,7 +111,7 @@ loadScripts(document, 'script');</script>
 <div class="block">Attach comments to nodes on arguments of constructor calls.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getTextFromComment(com.sun.tools.javac.parser.Tokens.Comment)" class="member-name-link">getTextFromComment</a><wbr>(com.sun.tools.javac.parser.Tokens.Comment&nbsp;comment)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getTextFromComment(com.google.errorprone.util.ErrorProneComment)" class="member-name-link">getTextFromComment</a><wbr>(<a href="ErrorProneComment.html" title="class in com.google.errorprone.util">ErrorProneComment</a>&nbsp;comment)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Extract the text body from a comment.</div>
 </div>
@@ -165,9 +165,9 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="getTextFromComment(com.sun.tools.javac.parser.Tokens.Comment)">
+<section class="detail" id="getTextFromComment(com.google.errorprone.util.ErrorProneComment)">
 <h3>getTextFromComment</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getTextFromComment</span><wbr><span class="parameters">(com.sun.tools.javac.parser.Tokens.Comment&nbsp;comment)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getTextFromComment</span><wbr><span class="parameters">(<a href="ErrorProneComment.html" title="class in com.google.errorprone.util">ErrorProneComment</a>&nbsp;comment)</span></div>
 <div class="block">Extract the text body from a comment.
 
  <p>This currently includes asterisks that start lines in the body of block comments. Do not

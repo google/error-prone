@@ -3485,6 +3485,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">A <code>TaskListener</code> that runs Error Prone over attributed compilation units.</div>
 </dd>
+<dt><a href="com/google/errorprone/util/ErrorProneComment.html" class="type-name-link" title="class in com.google.errorprone.util">ErrorProneComment</a> - Class in <a href="com/google/errorprone/util/package-summary.html">com.google.errorprone.util</a></dt>
+<dd>
+<div class="block">Wraps a <code>Tokens.Comment</code> to allow an offset source position to be reported.</div>
+</dd>
 <dt><a href="com/google/errorprone/ErrorProneError.html" class="type-name-link" title="class in com.google.errorprone">ErrorProneError</a> - Error in <a href="com/google/errorprone/package-summary.html">com.google.errorprone</a></dt>
 <dd>
 <div class="block">Wraps an unrecoverable error that occurs during analysis with the source position that triggered
@@ -4753,6 +4757,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Return the end position of the import statements.</div>
 </dd>
+<dt><a href="com/google/errorprone/util/ErrorProneComment.html#getEndPos()" class="member-name-link">getEndPos()</a> - Method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ErrorProneComment.html" title="class in com.google.errorprone.util">ErrorProneComment</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/VisitorState.html#getEndPosition(com.sun.source.tree.Tree)" class="member-name-link">getEndPosition(Tree)</a> - Method in class com.google.errorprone.<a href="com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a></dt>
 <dd>
 <div class="block">Returns the end position of the node, or -1 if it is not available.</div>
@@ -5247,6 +5253,8 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/google/errorprone/VisitorState.html#getPath()" class="member-name-link">getPath()</a> - Method in class com.google.errorprone.<a href="com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/util/ErrorProneComment.html#getPos()" class="member-name-link">getPos()</a> - Method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ErrorProneComment.html" title="class in com.google.errorprone.util">ErrorProneComment</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/fixes/AdjustedPosition.html#getPreferredPosition()" class="member-name-link">getPreferredPosition()</a> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/AdjustedPosition.html" title="class in com.google.errorprone.fixes">AdjustedPosition</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/fixes/FixedPosition.html#getPreferredPosition()" class="member-name-link">getPreferredPosition()</a> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/FixedPosition.html" title="class in com.google.errorprone.fixes">FixedPosition</a></dt>
@@ -5331,6 +5339,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Gets the original source code that represents the given node.</div>
 </dd>
+<dt><a href="com/google/errorprone/util/ErrorProneComment.html#getSourcePos(int)" class="member-name-link">getSourcePos(int)</a> - Method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ErrorProneComment.html" title="class in com.google.errorprone.util">ErrorProneComment</a></dt>
+<dd>
+<div class="block">Returns the source position of the character at index <code>index</code> in the comment text.</div>
+</dd>
 <dt><a href="com/google/errorprone/apply/SourceFile.html#getSourceText()" class="member-name-link">getSourceText()</a> - Method in class com.google.errorprone.apply.<a href="com/google/errorprone/apply/SourceFile.html" title="class in com.google.errorprone.apply">SourceFile</a></dt>
 <dd>
 <div class="block">Returns a copy of the code as a string.</div>
@@ -5354,6 +5366,8 @@ loadScripts(document, 'script');</script>
 <div class="block">Returns the start position of the node.</div>
 </dd>
 <dt><a href="com/google/errorprone/refaster/Inliner.html#getStaticImportsToAdd()" class="member-name-link">getStaticImportsToAdd()</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Inliner.html" title="class in com.google.errorprone.refaster">Inliner</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/util/ErrorProneComment.html#getStyle()" class="member-name-link">getStyle()</a> - Method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ErrorProneComment.html" title="class in com.google.errorprone.util">ErrorProneComment</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/scanner/BuiltInCheckerSuppliers.html#getSuppliers(java.lang.Class...)" class="member-name-link">getSuppliers(Class&lt;? extends BugChecker&gt;...)</a> - Static method in class com.google.errorprone.scanner.<a href="com/google/errorprone/scanner/BuiltInCheckerSuppliers.html" title="class in com.google.errorprone.scanner">BuiltInCheckerSuppliers</a></dt>
 <dd>&nbsp;</dd>
@@ -5421,7 +5435,9 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/BaseErrorProneJavaCompiler.html#getTask(java.io.Writer,javax.tools.JavaFileManager,javax.tools.DiagnosticListener,java.lang.Iterable,java.lang.Iterable,java.lang.Iterable)" class="member-name-link">getTask(Writer, JavaFileManager, DiagnosticListener&lt;? super JavaFileObject&gt;, Iterable&lt;String&gt;, Iterable&lt;String&gt;, Iterable&lt;? extends JavaFileObject&gt;)</a> - Method in class com.google.errorprone.<a href="com/google/errorprone/BaseErrorProneJavaCompiler.html" title="class in com.google.errorprone">BaseErrorProneJavaCompiler</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/google/errorprone/util/Comments.html#getTextFromComment(com.sun.tools.javac.parser.Tokens.Comment)" class="member-name-link">getTextFromComment(Tokens.Comment)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/Comments.html" title="class in com.google.errorprone.util">Comments</a></dt>
+<dt><a href="com/google/errorprone/util/ErrorProneComment.html#getText()" class="member-name-link">getText()</a> - Method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ErrorProneComment.html" title="class in com.google.errorprone.util">ErrorProneComment</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/util/Comments.html#getTextFromComment(com.google.errorprone.util.ErrorProneComment)" class="member-name-link">getTextFromComment(ErrorProneComment)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/Comments.html" title="class in com.google.errorprone.util">Comments</a></dt>
 <dd>
 <div class="block">Extract the text body from a comment.</div>
 </dd>
@@ -6688,6 +6704,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns whether this checker makes any determination about whether the given expression's
  return value should be used or not.</div>
+</dd>
+<dt><a href="com/google/errorprone/util/ErrorProneComment.html#isDeprecated()" class="member-name-link">isDeprecated()</a> - Method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ErrorProneComment.html" title="class in com.google.errorprone.util">ErrorProneComment</a></dt>
+<dd>
+<div class="block">We don't care about <code>@deprecated</code> javadoc tags (see the DepAnn check).</div>
 </dd>
 <dt><a href="com/google/errorprone/predicates/TypePredicates.html#isDescendantOf(com.google.errorprone.suppliers.Supplier)" class="member-name-link">isDescendantOf(Supplier&lt;Type&gt;)</a> - Static method in class com.google.errorprone.predicates.<a href="com/google/errorprone/predicates/TypePredicates.html" title="class in com.google.errorprone.predicates">TypePredicates</a></dt>
 <dd>
@@ -13160,6 +13180,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/refaster/UTypeVar.TypeWithExpression.html#toString()" class="member-name-link">toString()</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UTypeVar.TypeWithExpression.html" title="class in com.google.errorprone.refaster">UTypeVar.TypeWithExpression</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/util/ErrorProneComment.html#toString()" class="member-name-link">toString()</a> - Method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ErrorProneComment.html" title="class in com.google.errorprone.util">ErrorProneComment</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/util/ErrorProneToken.html#toString()" class="member-name-link">toString()</a> - Method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ErrorProneToken.html" title="class in com.google.errorprone.util">ErrorProneToken</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/fixes/Fix.html#toString(com.sun.tools.javac.tree.JCTree.JCCompilationUnit)" class="member-name-link">toString(JCTree.JCCompilationUnit)</a> - Method in interface com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a></dt>
@@ -14796,6 +14818,8 @@ the order they are declared.</div>
 <div class="deprecation-block"><span class="deprecated-label">Deprecated.</span></div>
 <div class="block">Match methods with no formal parameters.</div>
 </dd>
+<dt><a href="com/google/errorprone/util/ErrorProneComment.html#withOffset(int)" class="member-name-link">withOffset(int)</a> - Method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ErrorProneComment.html" title="class in com.google.errorprone.util">ErrorProneComment</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/matchers/method/MethodMatchers.ConstructorClassMatcher.html#withParameters(java.lang.Iterable)" class="member-name-link">withParameters(Iterable&lt;String&gt;)</a> - Method in interface com.google.errorprone.matchers.method.<a href="com/google/errorprone/matchers/method/MethodMatchers.ConstructorClassMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.ConstructorClassMatcher</a></dt>
 <dd>
 <div class="deprecation-block"><span class="deprecated-label">Deprecated.</span></div>
