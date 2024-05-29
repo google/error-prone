@@ -16,24 +16,23 @@
 
 package com.google.errorprone.util;
 
-import static java.util.stream.Collectors.toList;
+import static com.google.common.collect.ImmutableList.toImmutableList;
 
-import com.google.common.collect.Lists;
-import com.sun.tools.javac.parser.Tokens.Comment;
+import com.google.common.collect.ImmutableList;
 import com.sun.tools.javac.parser.Tokens.Token;
 import com.sun.tools.javac.parser.Tokens.TokenKind;
 import com.sun.tools.javac.util.Name;
-import java.util.Collections;
-import java.util.List;
 
 /** Wraps a javac {@link Token} to return comments in declaration order. */
 public class ErrorProneToken {
-  private final int offset;
   private final Token token;
+  private final int offset;
+  private final ImmutableList<ErrorProneComment> comments;
 
-  ErrorProneToken(Token token, int offset) {
+  ErrorProneToken(Token token, int offset, ImmutableList<ErrorProneComment> comments) {
     this.token = token;
     this.offset = offset;
+    this.comments = comments;
   }
 
   public TokenKind kind() {
@@ -48,17 +47,8 @@ public class ErrorProneToken {
     return offset + token.endPos;
   }
 
-  public List<Comment> comments() {
-    // javac stores the comments in reverse declaration order because appending to linked
-    // lists is expensive
-    if (token.comments == null) {
-      return Collections.emptyList();
-    }
-    if (offset == 0) {
-      return Lists.reverse(token.comments);
-    }
-    return Lists.reverse(
-        token.comments.stream().map(c -> new OffsetComment(c, offset)).collect(toList()));
+  public ImmutableList<ErrorProneComment> comments() {
+    return comments.stream().map(c -> c.withOffset(offset)).collect(toImmutableList());
   }
 
   public boolean hasName() {

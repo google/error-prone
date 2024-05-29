@@ -33,6 +33,7 @@ import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
+import com.google.errorprone.util.ErrorProneComment;
 import com.google.errorprone.util.ErrorProneToken;
 import com.google.errorprone.util.ErrorProneTokens;
 import com.sun.source.tree.ClassTree;
@@ -41,7 +42,6 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
-import com.sun.tools.javac.parser.Tokens.Comment;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -78,7 +78,7 @@ public final class AlmostJavadoc extends BugChecker implements CompilationUnitTr
     ImmutableMap<Integer, Tree> javadocableTrees = getJavadocableTrees(tree, state);
     for (ErrorProneToken token :
         ErrorProneTokens.getTokens(state.getSourceCode().toString(), state.context)) {
-      for (Comment comment : token.comments()) {
+      for (ErrorProneComment comment : token.comments()) {
         if (!javadocableTrees.containsKey(token.pos())) {
           continue;
         }
@@ -95,7 +95,7 @@ public final class AlmostJavadoc extends BugChecker implements CompilationUnitTr
     return NO_MATCH;
   }
 
-  private static Optional<SuggestedFix> generateFix(Comment comment) {
+  private static Optional<SuggestedFix> generateFix(ErrorProneComment comment) {
     String text = comment.getText();
     if (text.startsWith("/*") && !text.startsWith("/**") && HAS_TAG.matcher(text).find()) {
       int pos = comment.getSourcePos(1);

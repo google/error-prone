@@ -25,7 +25,6 @@ import com.google.common.collect.Range;
 import com.google.common.collect.TreeRangeSet;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.Commented.Position;
-import com.google.errorprone.util.ErrorProneTokens.CommentWithTextAndPosition;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
@@ -34,7 +33,6 @@ import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreeScanner;
-import com.sun.tools.javac.parser.Tokens.Comment;
 import com.sun.tools.javac.parser.Tokens.TokenKind;
 import com.sun.tools.javac.util.Position.LineMap;
 import java.util.Iterator;
@@ -92,7 +90,7 @@ public final class Comments {
    *
    * <p>TODO(andrewrice) Update this method to handle block comments properly if we find the need
    */
-  public static String getTextFromComment(Comment comment) {
+  public static String getTextFromComment(ErrorProneComment comment) {
     switch (comment.getStyle()) {
       case BLOCK:
         return comment.getText().replaceAll("^\\s*/\\*\\s*(.*?)\\s*\\*/\\s*", "$1");
@@ -152,29 +150,25 @@ public final class Comments {
       if (tokenTracker.atStartOfLine() && !tokenTracker.wasPreviousLineEmpty()) {
         // if the token is at the start of a line it could still have a comment attached which was
         // on the previous line
-        for (Comment c : token.comments()) {
-          if (!(c instanceof CommentWithTextAndPosition)) {
-            continue;
-          }
-          CommentWithTextAndPosition comment = (CommentWithTextAndPosition) c;
+        for (ErrorProneComment comment : token.comments()) {
           int commentStart = comment.getPos();
           int commentEnd = comment.getEndPos();
           if (exclude.intersects(Range.closedOpen(commentStart, commentEnd))) {
             continue;
           }
-          if (tokenTracker.isCommentOnPreviousLine(c)
+          if (tokenTracker.isCommentOnPreviousLine(comment)
               && token.pos() <= argumentTracker.currentArgumentStartPosition
               && argumentTracker.isPreviousArgumentOnPreviousLine()) {
             // token was on the previous line so therefore we should add it to the previous comment
             // unless the previous argument was not on the previous line with it
-            argumentTracker.addCommentToPreviousArgument(c, Position.ANY);
+            argumentTracker.addCommentToPreviousArgument(comment, Position.ANY);
           } else {
             // if the comment comes after the end of the invocation and it's not on the same line
             // as the final argument then we need to ignore it
             if (commentStart <= invocationEnd
                 || lineMap.getLineNumber(commentStart)
                     <= lineMap.getLineNumber(argumentTracker.currentArgumentEndPosition)) {
-              argumentTracker.addCommentToCurrentArgument(c, Position.ANY);
+              argumentTracker.addCommentToCurrentArgument(comment, Position.ANY);
             }
           }
         }
@@ -366,7 +360,7 @@ public final class Comments {
       }
     }
 
-    boolean isCommentOnPreviousLine(Comment c) {
+    boolean isCommentOnPreviousLine(ErrorProneComment c) {
       int tokenLine = lineMap.getLineNumber(c.getSourcePos(0));
       return tokenLine == currentLineNumber - 1;
     }
@@ -447,15 +441,15 @@ public final class Comments {
           == lineMap.getLineNumber(currentArgumentStartPosition) - 1;
     }
 
-    void addCommentToPreviousArgument(Comment c, Position position) {
+    void addCommentToPreviousArgument(ErrorProneComment c, Position position) {
       previousCommentedResultBuilder.addComment(c, previousArgumentEndPosition, offset, position);
     }
 
-    void addCommentToCurrentArgument(Comment c, Position position) {
+    void addCommentToCurrentArgument(ErrorProneComment c, Position position) {
       currentCommentedResultBuilder.addComment(c, currentArgumentStartPosition, offset, position);
     }
 
-    void addAllCommentsToCurrentArgument(Iterable<Comment> comments, Position position) {
+    void addAllCommentsToCurrentArgument(Iterable<ErrorProneComment> comments, Position position) {
       currentCommentedResultBuilder.addAllComment(
           comments, currentArgumentStartPosition, offset, position);
     }

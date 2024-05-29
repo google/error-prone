@@ -34,6 +34,7 @@ import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
+import com.google.errorprone.util.ErrorProneComment;
 import com.google.errorprone.util.ErrorProneToken;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
@@ -45,7 +46,6 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import com.sun.tools.javac.parser.Tokens.Comment;
 import java.util.HashMap;
 import java.util.Map;
 import javax.lang.model.element.ElementKind;
@@ -61,7 +61,7 @@ public final class NotJavadoc extends BugChecker implements CompilationUnitTreeM
     ImmutableMap<Integer, Tree> javadocableTrees = getJavadoccableTrees(tree);
     ImmutableRangeSet<Integer> suppressedRegions = suppressedRegions(state);
     for (ErrorProneToken token : getTokens(state.getSourceCode().toString(), state.context)) {
-      for (Comment comment : token.comments()) {
+      for (ErrorProneComment comment : token.comments()) {
         if (!comment.getStyle().equals(JAVADOC) || comment.getText().equals("/**/")) {
           continue;
         }

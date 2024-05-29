@@ -36,13 +36,13 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
+import com.google.errorprone.util.ErrorProneComment;
 import com.google.errorprone.util.ErrorProneToken;
 import com.google.errorprone.util.ErrorProneTokens;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.LineMap;
 import com.sun.source.tree.Tree;
-import com.sun.tools.javac.parser.Tokens.Comment;
 
 /**
  * Finds occurrences of {@code @SuppressWarnings} where there is definitely no explanation for why
@@ -115,7 +115,7 @@ public final class SuppressWarningsWithoutExplanation extends BugChecker
     ErrorProneTokens tokens = new ErrorProneTokens(state.getSourceCode().toString(), state.context);
     LineMap lineMap = tokens.getLineMap();
     for (ErrorProneToken token : tokens.getTokens()) {
-      for (Comment comment : token.comments()) {
+      for (ErrorProneComment comment : token.comments()) {
         lines.add(
             Range.closed(
                 lineMap.getLineNumber(comment.getSourcePos(0)),

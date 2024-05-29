@@ -32,13 +32,13 @@ import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.Commented;
+import com.google.errorprone.util.ErrorProneComment;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
-import com.sun.tools.javac.parser.Tokens.Comment;
 import java.util.stream.Stream;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
@@ -78,7 +78,7 @@ public class ParameterComment extends BugChecker
                       getTextFromComment(c).replace(" ", "").equals(param.getSimpleName() + "="))) {
             return;
           }
-          ImmutableList<Comment> comments =
+          ImmutableList<ErrorProneComment> comments =
               commented.afterComments().isEmpty()
                   ? commented.beforeComments()
                   : commented.afterComments();
@@ -90,12 +90,15 @@ public class ParameterComment extends BugChecker
     return fix.isEmpty() ? NO_MATCH : describeMatch(tree, fix.build());
   }
 
-  private static boolean matchingParamComment(Comment c, VarSymbol param) {
+  private static boolean matchingParamComment(ErrorProneComment c, VarSymbol param) {
     return param.getSimpleName().contentEquals(getTextFromComment(c).replaceAll("\\s*=\\s*$", ""));
   }
 
   private static void fixParamComment(
-      SuggestedFix.Builder fix, Commented<ExpressionTree> commented, VarSymbol param, Comment c) {
+      SuggestedFix.Builder fix,
+      Commented<ExpressionTree> commented,
+      VarSymbol param,
+      ErrorProneComment c) {
     fix.prefixWith(commented.tree(), String.format("/* %s= */ ", param.getSimpleName()))
         .replace(c.getSourcePos(0), c.getSourcePos(0) + c.getText().length(), "");
   }

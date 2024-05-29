@@ -42,6 +42,7 @@ import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
+import com.google.errorprone.util.ErrorProneComment;
 import com.google.errorprone.util.ErrorProneToken;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
@@ -52,7 +53,6 @@ import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.TypeAnnotations.AnnotationType;
-import com.sun.tools.javac.parser.Tokens.Comment;
 import com.sun.tools.javac.parser.Tokens.TokenKind;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
@@ -116,7 +116,7 @@ public final class AnnotationPosition extends BugChecker
 
     int treePos = getStartPosition(tree);
     List<ErrorProneToken> tokens = annotationTokens(tree, state, treePos);
-    Comment danglingJavadoc = findOrphanedJavadoc(name, tokens);
+    ErrorProneComment danglingJavadoc = findOrphanedJavadoc(name, tokens);
 
     ImmutableList<ErrorProneToken> modifierTokens =
         tokens.stream().filter(t -> MODIFIERS.contains(t.kind())).collect(toImmutableList());
@@ -190,7 +190,7 @@ public final class AnnotationPosition extends BugChecker
   private Description checkAnnotations(
       Tree tree,
       List<? extends AnnotationTree> annotations,
-      Comment danglingJavadoc,
+      ErrorProneComment danglingJavadoc,
       int firstModifierPos,
       int lastModifierPos,
       VisitorState state) {
@@ -314,7 +314,7 @@ public final class AnnotationPosition extends BugChecker
   }
 
   private static String removeJavadoc(
-      VisitorState state, Comment danglingJavadoc, SuggestedFix.Builder builder) {
+      VisitorState state, ErrorProneComment danglingJavadoc, SuggestedFix.Builder builder) {
     int javadocStart = danglingJavadoc.getSourcePos(0);
     int javadocEnd = javadocStart + danglingJavadoc.getText().length();
     // Capturing an extra newline helps the formatter.
@@ -326,9 +326,9 @@ public final class AnnotationPosition extends BugChecker
   }
 
   @Nullable
-  private static Comment findOrphanedJavadoc(Name name, List<ErrorProneToken> tokens) {
+  private static ErrorProneComment findOrphanedJavadoc(Name name, List<ErrorProneToken> tokens) {
     for (ErrorProneToken token : tokens) {
-      for (Comment comment : token.comments()) {
+      for (ErrorProneComment comment : token.comments()) {
         if (comment.getText().startsWith("/**")) {
           return comment;
         }
