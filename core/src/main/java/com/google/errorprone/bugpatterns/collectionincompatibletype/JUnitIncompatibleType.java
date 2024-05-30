@@ -23,6 +23,7 @@ import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.getUpperBound;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 
 import com.google.errorprone.BugPattern;
@@ -79,10 +80,15 @@ public final class JUnitIncompatibleType extends BugChecker implements MethodInv
       var typeB = ignoringCasts(arguments.get(skip + 1), state);
       return checkCompatibility(tree, typeA, typeB, state);
     } else if (ASSERT_ARRAY_EQUALS.matches(tree, state)) {
+
       int skip = argumentsToSkip(tree, state);
-      var typeA = ((ArrayType) ignoringCasts(arguments.get(skip), state)).elemtype;
-      var typeB = ((ArrayType) ignoringCasts(arguments.get(skip + 1), state)).elemtype;
-      return checkCompatibility(tree, typeA, typeB, state);
+      var expected = getUpperBound(ignoringCasts(arguments.get(skip), state), state.getTypes());
+      var actual = getUpperBound(ignoringCasts(arguments.get(skip + 1), state), state.getTypes());
+      if (!(expected instanceof ArrayType) || !(actual instanceof ArrayType)) {
+        return NO_MATCH;
+      }
+      return checkCompatibility(
+          tree, ((ArrayType) expected).elemtype, ((ArrayType) actual).elemtype, state);
     }
     return NO_MATCH;
   }
