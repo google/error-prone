@@ -23,7 +23,6 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ErrorProneTokens.getTokens;
-import static com.sun.tools.javac.parser.Tokens.Comment.CommentStyle.JAVADOC;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableRangeSet;
@@ -35,6 +34,7 @@ import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.ErrorProneComment;
+import com.google.errorprone.util.ErrorProneComment.ErrorProneCommentStyle;
 import com.google.errorprone.util.ErrorProneToken;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
@@ -62,7 +62,8 @@ public final class NotJavadoc extends BugChecker implements CompilationUnitTreeM
     ImmutableRangeSet<Integer> suppressedRegions = suppressedRegions(state);
     for (ErrorProneToken token : getTokens(state.getSourceCode().toString(), state.context)) {
       for (ErrorProneComment comment : token.comments()) {
-        if (!comment.getStyle().equals(JAVADOC) || comment.getText().equals("/**/")) {
+        if (!comment.getStyle().equals(ErrorProneCommentStyle.JAVADOC_BLOCK)
+            || comment.getText().equals("/**/")) {
           continue;
         }
         if (javadocableTrees.containsKey(token.pos())) {

@@ -30,9 +30,10 @@ public final class ErrorProneComment {
   private final int endPos;
   private final int offset;
   private final Supplier<String> text;
-  private final CommentStyle style;
+  private final ErrorProneCommentStyle style;
 
-  ErrorProneComment(int pos, int endPos, int offset, Supplier<String> text, CommentStyle style) {
+  ErrorProneComment(
+      int pos, int endPos, int offset, Supplier<String> text, ErrorProneCommentStyle style) {
     this.pos = pos;
     this.endPos = endPos;
     this.offset = offset;
@@ -67,7 +68,31 @@ public final class ErrorProneComment {
     return pos + index + offset;
   }
 
-  public CommentStyle getStyle() {
+  /** A compatibility wrapper for {@link CommentStyle}. */
+  public enum ErrorProneCommentStyle {
+    LINE,
+    BLOCK,
+    JAVADOC_LINE,
+    JAVADOC_BLOCK;
+
+    static ErrorProneCommentStyle from(CommentStyle style) {
+      switch (style.name()) {
+        case "LINE":
+          return ErrorProneCommentStyle.LINE;
+        case "BLOCK":
+          return ErrorProneCommentStyle.BLOCK;
+        case "JAVADOC_LINE":
+          return ErrorProneCommentStyle.JAVADOC_LINE;
+        case "JAVADOC":
+        case "JAVADOC_BLOCK":
+          return ErrorProneCommentStyle.JAVADOC_BLOCK;
+        default:
+          throw new AssertionError(style);
+      }
+    }
+  }
+
+  public ErrorProneCommentStyle getStyle() {
     return style;
   }
 

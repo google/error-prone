@@ -22,9 +22,9 @@ import com.google.common.collect.Streams;
 import com.google.errorprone.util.Commented;
 import com.google.errorprone.util.Comments;
 import com.google.errorprone.util.ErrorProneComment;
+import com.google.errorprone.util.ErrorProneComment.ErrorProneCommentStyle;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import com.sun.tools.javac.parser.Tokens.Comment.CommentStyle;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -107,7 +107,8 @@ public final class NamedParameterComment {
   static MatchedComment match(Commented<ExpressionTree> actual, String formal) {
     Optional<ErrorProneComment> lastBlockComment =
         Streams.findLast(
-            actual.beforeComments().stream().filter(c -> c.getStyle() == CommentStyle.BLOCK));
+            actual.beforeComments().stream()
+                .filter(c -> c.getStyle() == ErrorProneCommentStyle.BLOCK));
 
     if (lastBlockComment.isPresent()) {
       Matcher m =

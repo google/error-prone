@@ -118,7 +118,11 @@ public class ErrorProneTokens {
       AccessibleReader reader = new AccessibleReader(fac, buf, buf.length);
       ErrorProneComment errorProneComment =
           new ErrorProneComment(
-              pos, endPos, /* offset= */ 0, () -> new String(reader.getRawCharacters()), style);
+              pos,
+              endPos,
+              /* offset= */ 0,
+              () -> new String(reader.getRawCharacters()),
+              ErrorProneComment.ErrorProneCommentStyle.from(style));
       comments.put(comment, errorProneComment);
       return comment;
     }
