@@ -467,7 +467,10 @@ public class SuggestedFixesTest {
   public void qualifyType_importType() {
     AddAnnotation.testHelper(getClass())
         .addInputLines(
-            "in/AddAnnotation.java", "class AddAnnotation {", "  Void foo() { return null; }", "}")
+            "in/AddAnnotation.java", //
+            "class AddAnnotation {",
+            "  Void foo() { return null; }",
+            "}")
         .addOutputLines(
             "out/AddAnnotation.java",
             "import some.pkg.SomeAnnotation;",
@@ -480,7 +483,9 @@ public class SuggestedFixesTest {
   @Test
   public void qualifyType_someOtherNullable() {
     AddAnnotation.testHelper(getClass())
-        .addInputLines("in/SomeAnnotation.java", "@interface SomeAnnotation {}")
+        .addInputLines(
+            "in/SomeAnnotation.java", //
+            "@interface SomeAnnotation {}")
         .expectUnchanged()
         .addInputLines(
             "in/AddAnnotation.java",
@@ -542,7 +547,9 @@ public class SuggestedFixesTest {
   public void qualifyType_someOtherNullableSomeOtherPackage() {
     AddAnnotation.testHelper(getClass())
         .addInputLines(
-            "in/SomeAnnotation.java", "package foo.bar;", "public @interface SomeAnnotation {}")
+            "in/SomeAnnotation.java", //
+            "package foo.bar;",
+            "public @interface SomeAnnotation {}")
         .expectUnchanged()
         .addInputLines(
             "in/AddAnnotation.java",
@@ -602,6 +609,23 @@ public class SuggestedFixesTest {
   @Test
   public void qualifyType_deeplyNestedType() {
     qualifyDeeplyNestedType(new ReplaceReturnType("pkg.Outer.Inner.Innermost"));
+  }
+
+  @Test
+  public void qualifyType_javaLang_notImported() {
+    BugCheckerRefactoringTestHelper.newInstance(
+            new ReplaceReturnType("java.lang.String"), getClass())
+        .addInputLines(
+            "Test.java", //
+            "class Test {",
+            "  Void foo() { return null; }",
+            "}")
+        .addOutputLines(
+            "Test.java", //
+            "class Test {",
+            "  String foo() { return null; }",
+            "}")
+        .doTest();
   }
 
   /** A test check that replaces all methods' return types with a given type. */
