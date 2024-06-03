@@ -26,7 +26,7 @@ import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.tools.javac.code.Type;
 
 /**
- * A utility for handling types in cast expressions, shraed by {@link JUnitIncompatibleType} and
+ * A utility for handling types in cast expressions, shared by {@link JUnitIncompatibleType} and
  * {@link TruthIncompatibleType}.
  */
 final class IgnoringCasts {
