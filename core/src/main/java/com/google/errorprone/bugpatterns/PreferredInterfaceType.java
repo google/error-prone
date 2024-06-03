@@ -265,7 +265,6 @@ public final class PreferredInterfaceType extends BugChecker implements Compilat
                     builder
                         .replace(
                             getErasedTypeTree(tree), qualifyType(state, builder, type.asElement()))
-                        .addImport(types.erasure(type).toString())
                         .build();
                 state.reportMatch(
                     buildDescription(tree)
