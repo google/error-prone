@@ -148,4 +148,23 @@ public final class PatternMatchingInstanceofTest {
         .expectUnchanged()
         .doTest();
   }
+
+  @Test
+  public void generic() {
+    helper
+        .addInputLines(
+            "Test.java",
+            "import java.util.Map;",
+            "class Test {",
+            "  void test(Object x, String k) {",
+            "    if (x instanceof Map) {",
+            "      @SuppressWarnings(\"unchecked\")",
+            "      Map<String, Integer> m = (Map<String, Integer>) x;",
+            "      System.err.println(m.get(k));",
+            "    }",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
 }
