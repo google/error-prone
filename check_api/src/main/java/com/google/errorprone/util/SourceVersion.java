@@ -45,6 +45,11 @@ public final class SourceVersion {
     return sourceIsAtLeast(context, 21);
   }
 
+  /** Returns true if the compiler source version level supports static inner classes. */
+  public static boolean supportsStaticInnerClass(Context context) {
+    return sourceIsAtLeast(context, 16);
+  }
+
   private static boolean sourceIsAtLeast(Context context, int version) {
     Source lowerBound = Source.lookup(Integer.toString(version));
     return lowerBound != null && Source.instance(context).compareTo(lowerBound) >= 0;

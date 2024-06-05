@@ -285,6 +285,45 @@ public class FieldCanBeStaticTest {
             "    };",
             "  }",
             "}")
+        .setArgs("--release", "11")
+        .doTest();
+  }
+
+  @Test
+  public void inner_static() {
+    assumeTrue(RuntimeVersion.isAtLeast16());
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.time.Duration;",
+            "class Test {",
+            "  class I {",
+            "    // BUG: Diagnostic contains: can be static",
+            "    private final Duration D = Duration.ofMillis(1);",
+            "    // BUG: Diagnostic contains: can be static",
+            "    private final int I = 42;",
+            "  }",
+            "  static class S {",
+            "    // BUG: Diagnostic contains: can be static",
+            "    private final Duration D = Duration.ofMillis(1);",
+            "    // BUG: Diagnostic contains: can be static",
+            "    private final int I = 42;",
+            "  }",
+            "  void f() {",
+            "    class L {",
+            "      // BUG: Diagnostic contains: can be static",
+            "      private final Duration D = Duration.ofMillis(1);",
+            "      // BUG: Diagnostic contains: can be static",
+            "      private final int I = 42;",
+            "    }",
+            "    new Object() {",
+            "      // BUG: Diagnostic contains: can be static",
+            "      private final Duration D = Duration.ofMillis(1);",
+            "      // BUG: Diagnostic contains: can be static",
+            "      private final int I = 42;",
+            "    };",
+            "  }",
+            "}")
         .doTest();
   }
 

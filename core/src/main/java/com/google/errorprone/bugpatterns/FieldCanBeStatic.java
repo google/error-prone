@@ -45,6 +45,7 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
+import com.google.errorprone.util.SourceVersion;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
@@ -102,7 +103,8 @@ public final class FieldCanBeStatic extends BugChecker implements VariableTreeMa
     if (enclClass == null) {
       return NO_MATCH;
     }
-    if (!enclClass.getNestingKind().equals(NestingKind.TOP_LEVEL)
+    if (!SourceVersion.supportsStaticInnerClass(state.context)
+        && !enclClass.getNestingKind().equals(NestingKind.TOP_LEVEL)
         && !enclClass.isStatic()
         && symbol.getConstantValue() == null) {
       // JLS 8.1.3: inner classes cannot declare static members, unless the member is a constant

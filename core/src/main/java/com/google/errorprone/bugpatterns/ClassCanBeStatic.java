@@ -28,6 +28,7 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
+import com.google.errorprone.util.SourceVersion;
 import com.sun.source.tree.ClassTree;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import javax.lang.model.element.Modifier;
@@ -60,12 +61,17 @@ public class ClassCanBeStatic extends BugChecker implements ClassTreeMatcher {
       case TOP_LEVEL:
         break;
       case MEMBER:
-        // class is nested inside an inner class, so it can't be static
-        if (currentClass.owner.enclClass().hasOuterInstance()) {
+        if (!SourceVersion.supportsStaticInnerClass(state.context)
+            && currentClass.owner.enclClass().hasOuterInstance()) {
+          // class is nested inside an inner class, so it can't be static
           return NO_MATCH;
         }
         break;
       case LOCAL:
+        if (!SourceVersion.supportsStaticInnerClass(state.context)) {
+          return NO_MATCH;
+        }
+        break;
       case ANONYMOUS:
         // members of local and anonymous classes can't be static
         return NO_MATCH;
