@@ -144,7 +144,7 @@ public class ClassInitializationDeadlock extends BugChecker implements BugChecke
         if (!use.isSubClass(classSymbol, state.getTypes())) {
           return;
         }
-        if (!isStatic(use)) {
+        if (use.isEnclosedBy(classSymbol) && !isStatic(use)) {
           // Nested inner classes implicitly take the enclosing instance as a constructor parameter,
           // and can't be initialized without first initializing their containing class.
           return;
