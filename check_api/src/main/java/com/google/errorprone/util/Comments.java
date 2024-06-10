@@ -96,9 +96,10 @@ public final class Comments {
         return comment.getText().replaceAll("^\\s*/\\*\\s*(.*?)\\s*\\*/\\s*", "$1");
       case LINE:
         return comment.getText().replaceAll("^\\s*//\\s*", "");
+      case JAVADOC_LINE:
+        return comment.getText().replaceAll("^\\s*///\\s*", "");
       case JAVADOC_BLOCK:
         return comment.getText().replaceAll("^\\s*/\\*\\*\\s*(.*?)\\s*\\*/\\s*", "$1");
-      default:
     }
     throw new AssertionError(comment.getStyle());
   }
