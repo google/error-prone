@@ -296,4 +296,17 @@ public class ClassInitializationDeadlockTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void nonNestedSubclass() {
+    testHelper
+        .addSourceLines(
+            "Foo.java",
+            "class A {",
+            "  // BUG: Diagnostic contains:",
+            "  private static Object cycle = new B();",
+            "}",
+            "class B extends A {}")
+        .doTest();
+  }
 }
