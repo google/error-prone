@@ -1184,6 +1184,9 @@ Non-abstract instance methods named &#39;self()&#39; or &#39;getThis()&#39; that
 __[ShortCircuitBoolean](bugpattern/ShortCircuitBoolean)__<br>
 Prefer the short-circuiting boolean operators &amp;&amp; and || to &amp; and |.
 
+__[StatementSwitchToExpressionSwitch](bugpattern/StatementSwitchToExpressionSwitch)__<br>
+This statement switch can be converted to an equivalent expression switch
+
 __[StaticAssignmentInConstructor](bugpattern/StaticAssignmentInConstructor)__<br>
 This assignment is to a static field. Mutating static state from a constructor is highly error-prone.
 
@@ -1544,9 +1547,6 @@ This overriding method is redundant, and can be removed.
 
 __[RedundantThrows](bugpattern/RedundantThrows)__<br>
 Thrown exception is a subtype of another
-
-__[StatementSwitchToExpressionSwitch](bugpattern/StatementSwitchToExpressionSwitch)__<br>
-This statement switch can be converted to an equivalent expression switch
 
 __[StringFormatWithLiteral](bugpattern/StringFormatWithLiteral)__<br>
 There is no need to use String.format() when all the arguments are literals.
