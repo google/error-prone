@@ -350,10 +350,10 @@ public final class StatementSwitchToExpressionSwitchTest {
             "  public void foo(Side side) { ",
             "    // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]",
             "    switch(side) {",
-            "       case HEART -> {",
+            "       case HEART -> ",
             "          System.out.println(\"heart\");",
             "          // Pre break comment",
-            "       }",
+            "       ",
             "       case DIAMOND -> {",
             "          // Diamond break comment",
             "          break;",
@@ -590,9 +590,9 @@ public final class StatementSwitchToExpressionSwitchTest {
             "          System.out.println(\"diamond\");",
             "          return;",
             "       }",
-            "       default -> { /* comment: */",
+            "       default -> /* comment: */",
             "         System.out.println(\"club\");",
-            "       }",
+            "       ",
             "       case SPADE -> System.out.println(\"spade\");",
             "    }",
             "  }",
@@ -1135,6 +1135,88 @@ public final class StatementSwitchToExpressionSwitchTest {
             "        System.out.println(\"Red hearts\");",
             "      case DIAMONDS ->",
             "        System.out.println(\"Red diamonds\");",
+            "      case SPADES, CLUBS -> {",
+            "        bar();",
+            "        System.out.println(\"Black suit\");",
+            "       }",
+            "    }",
+            "  }",
+            "  private void bar() {}",
+            "}")
+        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
+        .doTest();
+  }
+
+  @Test
+  public void switchByEnum_caseHasOnlyComments_error() {
+    // When a case is solely comments, we should still try to convert the switch using braceless
+    // syntax
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  enum Suit {HEARTS, CLUBS, SPADES, DIAMONDS};",
+            "  public Test() {}",
+            "  private void foo(Suit suit) {",
+            "    // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]",
+            "    switch(suit) {",
+            "      case HEARTS:",
+            "        // A comment here",
+            "        // more comments.",
+            "      case DIAMONDS:",
+            "        // Diamond comment",
+            "        System.out.println(\"Red diamonds\");",
+            "        break;",
+            "      case SPADES:",
+            "        // Fall through",
+            "      case CLUBS:",
+            "        bar();",
+            "        System.out.println(\"Black suit\");",
+            "    }",
+            "  }",
+            "  private void bar() {}",
+            "}")
+        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
+        .doTest();
+
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  enum Suit {HEARTS, CLUBS, SPADES, DIAMONDS};",
+            "  public Test() {}",
+            "  private void foo(Suit suit) {",
+            "    switch(suit) {",
+            "      case HEARTS:",
+            "        // A comment here",
+            "        // more comments.",
+            "      case DIAMONDS:",
+            "        // Diamond comment",
+            "        System.out.println(\"Heart or diamond\");",
+            "        break;",
+            "      case SPADES:",
+            "        // Fall through",
+            "      case CLUBS:",
+            "        bar();",
+            "        System.out.println(\"Black suit\");",
+            "    }",
+            "  }",
+            "  private void bar() {}",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  enum Suit {HEARTS, CLUBS, SPADES, DIAMONDS};",
+            "  public Test() {}",
+            "  private void foo(Suit suit) {",
+            "    switch(suit) {",
+            "      case HEARTS, DIAMONDS -> ",
+            "        // A comment here",
+            "        // more comments.",
+            "        // Diamond comment",
+            "        System.out.println(\"Heart or diamond\");",
+            "      ",
             "      case SPADES, CLUBS -> {",
             "        bar();",
             "        System.out.println(\"Black suit\");",

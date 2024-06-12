@@ -580,8 +580,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
         }
 
         // To improve readability, don't use braces on the rhs if not needed
-        if (shouldTransformCaseWithoutBraces(
-            filteredStatements, transformedBlockSource, filteredStatements.get(0), state)) {
+        if (shouldTransformCaseWithoutBraces(filteredStatements)) {
           // Single statement with no comments - no braces needed
           replacementCodeBuilder.append(transformedBlockSource);
         } else {
@@ -929,10 +928,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
    * arrow symbol without braces, incorporating both language and readabilitiy considerations.
    */
   private static boolean shouldTransformCaseWithoutBraces(
-      ImmutableList<StatementTree> statementTrees,
-      String transformedBlockSource,
-      StatementTree firstStatement,
-      VisitorState state) {
+      ImmutableList<StatementTree> statementTrees) {
 
     if (statementTrees.isEmpty()) {
       // Instead, express as "-> {}"
@@ -941,11 +937,6 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
 
     if (statementTrees.size() > 1) {
       // Instead, express as a code block "-> { ... }"
-      return false;
-    }
-
-    // If code has comments, use braces for readability
-    if (!transformedBlockSource.trim().equals(state.getSourceForNode(firstStatement).trim())) {
       return false;
     }
 
