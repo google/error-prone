@@ -25,6 +25,7 @@ import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.SERIALIZATION_METHODS;
 import static com.google.errorprone.util.ASTHelpers.canBeRemoved;
+import static com.google.errorprone.util.ASTHelpers.findSuperMethods;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
@@ -46,6 +47,7 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.ListMultimap;
@@ -120,6 +122,7 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.Name;
 import javax.lang.model.type.NullType;
+import javax.tools.JavaFileObject;
 
 /** Bugpattern to detect unused declarations. */
 @BugPattern(
@@ -213,7 +216,10 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
       return Description.NO_MATCH;
     }
 
-    VariableFinder variableFinder = new VariableFinder(state);
+    ImmutableMultimap<MethodSymbol, MethodSymbol> superMethodsToOverrides =
+        getSuperMethodsToOverrides(tree, state);
+
+    VariableFinder variableFinder = new VariableFinder(state, superMethodsToOverrides);
     variableFinder.scan(state.getPath(), null);
 
     // Map of symbols to variable declarations. Initially this is a map of all of the local variable
@@ -351,6 +357,23 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
       }
     }.scan(tree, null);
     return hasAnyNativeMethods.get();
+  }
+
+  private static ImmutableMultimap<MethodSymbol, MethodSymbol> getSuperMethodsToOverrides(
+      CompilationUnitTree tree, VisitorState state) {
+    ImmutableMultimap.Builder<MethodSymbol, MethodSymbol> overrides = ImmutableMultimap.builder();
+    JavaFileObject sourceFile = tree.getSourceFile();
+    new TreeScanner<Void, Void>() {
+      @Override
+      public Void visitMethod(MethodTree tree, Void unused) {
+        MethodSymbol sym = getSymbol(tree);
+        findSuperMethods(getSymbol(tree), state.getTypes()).stream()
+            .filter(m -> sourceFile.equals(m.enclClass().sourcefile))
+            .forEach(m -> overrides.put(m, sym));
+        return null;
+      }
+    }.scan(tree, null);
+    return overrides.build();
   }
 
   // https://docs.oracle.com/javase/specs/jls/se11/html/jls-14.html#jls-ExpressionStatement
@@ -600,9 +623,12 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
     private final ListMultimap<Symbol, TreePath> usageSites = ArrayListMultimap.create();
 
     private final VisitorState state;
+    private final ImmutableMultimap<MethodSymbol, MethodSymbol> superMethodsToOverrides;
 
-    private VariableFinder(VisitorState state) {
+    private VariableFinder(
+        VisitorState state, ImmutableMultimap<MethodSymbol, MethodSymbol> superMethodsToOverrides) {
       this.state = state;
+      this.superMethodsToOverrides = superMethodsToOverrides;
     }
 
     @Override
@@ -706,7 +732,8 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
       Symbol enclosingMethod = sym.owner;
 
       if (!(enclosingMethod instanceof MethodSymbol)
-          || isAbstract((MethodSymbol) enclosingMethod)) {
+          || isAbstract((MethodSymbol) enclosingMethod)
+          || superMethodsToOverrides.containsKey(enclosingMethod)) {
         return false;
       }
 

@@ -1656,7 +1656,6 @@ public class UnusedVariableTest {
         .doTest();
   }
 
-  @Ignore("https://github.com/google/error-prone/issues/4409")
   @Test
   public void parameterUsedInOverride() {
     refactoringHelper
