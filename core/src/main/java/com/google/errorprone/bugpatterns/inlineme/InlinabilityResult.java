@@ -229,7 +229,7 @@ abstract class InlinabilityResult {
         if (parameterVariables.contains(usedSymbol) && !usedVariables.add(usedSymbol)) {
           usesVarsTwice.set(usedSymbol);
         }
-        return super.visitIdentifier(identifierTree, aVoid);
+        return super.visitIdentifier(identifierTree, null);
       }
     }.scan(new TreePath(state.getPath(), body), null);
     return usesVarsTwice.get();
@@ -244,7 +244,7 @@ abstract class InlinabilityResult {
       @Override
       public Void visitIdentifier(IdentifierTree identifierTree, Void aVoid) {
         if (!getSymbol(identifierTree).equals(varargsParam)) {
-          return super.visitIdentifier(identifierTree, aVoid);
+          return super.visitIdentifier(identifierTree, null);
         }
         Tree parentNode = getCurrentPath().getParentPath().getLeaf();
         if (!(parentNode instanceof MethodInvocationTree)) {
@@ -262,7 +262,7 @@ abstract class InlinabilityResult {
         List<? extends ExpressionTree> args = mit.getArguments();
         if (args.isEmpty()) {
           // buh! confusing.
-          return super.visitIdentifier(identifierTree, aVoid);
+          return super.visitIdentifier(identifierTree, null);
         }
 
         int indexOfThisTreeUse = args.indexOf(identifierTree);
@@ -272,7 +272,7 @@ abstract class InlinabilityResult {
           return null;
         }
 
-        return super.visitIdentifier(identifierTree, aVoid);
+        return super.visitIdentifier(identifierTree, null);
       }
     }.scan(new TreePath(state.getPath(), expressionTree), null);
     return usesVarargsPoorly.get();
@@ -296,7 +296,7 @@ abstract class InlinabilityResult {
           // short circuit
           return null;
         }
-        return super.visitMemberSelect(memberSelectTree, aVoid);
+        return super.visitMemberSelect(memberSelectTree, null);
       }
 
       @Override
@@ -316,7 +316,7 @@ abstract class InlinabilityResult {
         if (isDeprecatedOrLessVisible(newClassTree, minVisibility)) {
           return null;
         }
-        return super.visitNewClass(newClassTree, aVoid);
+        return super.visitNewClass(newClassTree, null);
       }
 
       @Override

@@ -249,4 +249,21 @@ public final class UnnecessaryMethodReferenceTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void listToIterator() {
+    helper
+        .addSourceLines(
+            "T.java",
+            "import com.google.common.collect.ImmutableList;",
+            "import java.util.List;",
+            "abstract class T {",
+            "  void test() {",
+            "    List<Integer> x = ImmutableList.of(1, 2);",
+            "    // BUG: Diagnostic contains:",
+            "    Iterable<Integer> xi = x::iterator;",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

@@ -40,6 +40,11 @@ public final class SourceVersion {
     return sourceIsAtLeast(context, 8);
   }
 
+  /** Returns whether the compiler supports pattern-matching instanceofs. */
+  public static boolean supportsPatternMatchingInstanceof(Context context) {
+    return sourceIsAtLeast(context, 21);
+  }
+
   private static boolean sourceIsAtLeast(Context context, int version) {
     Source lowerBound = Source.lookup(Integer.toString(version));
     return lowerBound != null && Source.instance(context).compareTo(lowerBound) >= 0;

@@ -86,7 +86,7 @@ public final class UnnecessaryAsync extends BugChecker implements VariableTreeMa
         lambdaDepth++;
         var ret = super.visitMethod(tree, null);
         lambdaDepth--;
-        return ret;
+        return null;
       }
 
       @Override
@@ -94,7 +94,7 @@ public final class UnnecessaryAsync extends BugChecker implements VariableTreeMa
         lambdaDepth++;
         var ret = super.visitLambdaExpression(tree, null);
         lambdaDepth--;
-        return ret;
+        return null;
       }
 
       @Override

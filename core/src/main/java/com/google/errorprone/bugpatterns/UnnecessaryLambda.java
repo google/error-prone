@@ -230,7 +230,7 @@ public class UnnecessaryLambda extends BugChecker
           // We're not smart enough to rewrite a recursive lambda.
           fixable = false;
         }
-        return super.visitMemberSelect(node, unused);
+        return super.visitMemberSelect(node, null);
       }
 
       private void check(MethodInvocationTree node) {

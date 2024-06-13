@@ -95,7 +95,7 @@ public final class YodaCondition extends BugChecker
       ExpressionTree rhs,
       boolean provideNullSafeFix,
       VisitorState state) {
-    if (seemsConstant(lhs) && !seemsConstant(rhs)) {
+    if (yodaCondition(lhs, rhs)) {
       var description = buildDescription(lhs);
       if (provideNullSafeFix
           && !getNullnessValue(rhs, state, NullnessAnalysis.instance(state.context))
@@ -116,19 +116,40 @@ public final class YodaCondition extends BugChecker
     return NO_MATCH;
   }
 
-  private static boolean seemsConstant(Tree tree) {
+  private static boolean yodaCondition(ExpressionTree lhs, ExpressionTree rhs) {
+    ConstantKind l = seemsConstant(lhs);
+    ConstantKind r = seemsConstant(rhs);
+    return l.constness > r.constness;
+  }
+
+  enum ConstantKind {
+    NULL(3),
+    CONSTANT(2),
+    CONSTANT_VARIABLE(1),
+    NON_CONSTANT(0);
+
+    final int constness;
+
+    ConstantKind(int constness) {
+      this.constness = constness;
+    }
+  }
+
+  private static ConstantKind seemsConstant(Tree tree) {
     if (constValue(tree) != null) {
-      return true;
+      return ConstantKind.CONSTANT;
     }
     if (tree.getKind().equals(Tree.Kind.NULL_LITERAL)) {
-      return true;
+      return ConstantKind.NULL;
     }
     var symbol = getSymbol(tree);
-    if (!(symbol instanceof VarSymbol)) {
-      return false;
+    if (symbol instanceof VarSymbol
+        && (symbol.isEnum()
+            || (isStatic(symbol)
+                && CONSTANT_CASE.matcher(symbol.getSimpleName().toString()).matches()))) {
+      return ConstantKind.CONSTANT_VARIABLE;
     }
-    return symbol.isEnum()
-        || (isStatic(symbol) && CONSTANT_CASE.matcher(symbol.getSimpleName().toString()).matches());
+    return ConstantKind.NON_CONSTANT;
   }
 
   private static final Pattern CONSTANT_CASE = Pattern.compile("[A-Z0-9_]+");

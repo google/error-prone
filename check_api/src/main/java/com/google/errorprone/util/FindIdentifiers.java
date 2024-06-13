@@ -355,7 +355,7 @@ public final class FindIdentifiers {
     return new TreeScanner<Void, Void>() {
       @Override
       public Void scan(Tree tree, Void unused) {
-        return Objects.equals(stoppingPoint, tree) ? null : super.scan(tree, unused);
+        return Objects.equals(stoppingPoint, tree) ? null : super.scan(tree, null);
       }
 
       @Override
@@ -370,7 +370,7 @@ public final class FindIdentifiers {
           }
           iterable = builder.build();
         }
-        return super.scan(iterable, unused);
+        return super.scan(iterable, null);
       }
 
       @Override

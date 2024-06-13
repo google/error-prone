@@ -111,7 +111,7 @@ public class LockOnBoxedPrimitive extends BugChecker
         if (lock.equals(getSymbol(expression))) {
           fix.replace(expression, lockName);
         }
-        return super.visitSynchronized(node, aVoid);
+        return super.visitSynchronized(node, null);
       }
     }.scan(state.getPath().getCompilationUnit(), null);
     return fix.build();

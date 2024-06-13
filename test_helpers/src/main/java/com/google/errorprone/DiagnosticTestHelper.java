@@ -18,14 +18,13 @@ package com.google.errorprone;
 
 import static com.google.common.truth.Truth.assertWithMessage;
 import static java.util.Locale.ENGLISH;
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasItem;
 import static org.junit.Assert.fail;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
 import com.google.common.io.CharSource;
+import com.google.common.truth.Correspondence;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
@@ -52,7 +51,6 @@ import org.hamcrest.TypeSafeDiagnosingMatcher;
  * @author alexeagle@google.com (Alex Eagle)
  */
 public class DiagnosticTestHelper {
-
   // When testing a single error-prone check, the name of the check. Used to validate diagnostics.
   // Null if not testing a single error-prone check.
   private final String checkName;
@@ -71,12 +69,6 @@ public class DiagnosticTestHelper {
 
   public final ClearableDiagnosticCollector<JavaFileObject> collector =
       new ClearableDiagnosticCollector<>();
-
-  public static Matcher<Diagnostic<? extends JavaFileObject>> suggestsRemovalOfLine(
-      URI fileUri, int line) {
-    return allOf(
-        diagnosticOnLine(fileUri, line), diagnosticMessage(containsString("remove this line")));
-  }
 
   public List<Diagnostic<? extends JavaFileObject>> getDiagnostics() {
     return collector.getDiagnostics();
@@ -99,40 +91,6 @@ public class DiagnosticTestHelper {
       stringBuilder.append("\n");
     }
     return stringBuilder.toString();
-  }
-
-  public static Matcher<Diagnostic<? extends JavaFileObject>> diagnosticLineAndColumn(
-      long line, long column) {
-    return new TypeSafeDiagnosingMatcher<Diagnostic<? extends JavaFileObject>>() {
-      @Override
-      protected boolean matchesSafely(
-          Diagnostic<? extends JavaFileObject> item, Description mismatchDescription) {
-        if (item.getLineNumber() != line) {
-          mismatchDescription
-              .appendText("diagnostic not on line ")
-              .appendValue(item.getLineNumber());
-          return false;
-        }
-
-        if (item.getColumnNumber() != column) {
-          mismatchDescription
-              .appendText("diagnostic not on column ")
-              .appendValue(item.getColumnNumber());
-          return false;
-        }
-
-        return true;
-      }
-
-      @Override
-      public void describeTo(Description description) {
-        description
-            .appendText("a diagnostic on line:column ")
-            .appendValue(line)
-            .appendText(":")
-            .appendValue(column);
-      }
-    };
   }
 
   public static Matcher<Diagnostic<? extends JavaFileObject>> diagnosticOnLine(
@@ -215,28 +173,11 @@ public class DiagnosticTestHelper {
     };
   }
 
-  public static Matcher<Diagnostic<? extends JavaFileObject>> diagnosticMessage(
-      Matcher<String> matcher) {
-    return new TypeSafeDiagnosingMatcher<Diagnostic<? extends JavaFileObject>>() {
-      @Override
-      public boolean matchesSafely(
-          Diagnostic<? extends JavaFileObject> item, Description mismatchDescription) {
-        if (!matcher.matches(item.getMessage(Locale.getDefault()))) {
-          mismatchDescription
-              .appendText("diagnostic message does not match ")
-              .appendDescriptionOf(matcher);
-          return false;
-        }
-
-        return true;
-      }
-
-      @Override
-      public void describeTo(Description description) {
-        description.appendText("a diagnostic with message ").appendDescriptionOf(matcher);
-      }
-    };
-  }
+  public static final Correspondence<Diagnostic<? extends JavaFileObject>, String>
+      DIAGNOSTIC_CONTAINING =
+          Correspondence.from(
+              (diagnostic, message) -> diagnostic.getMessage(Locale.getDefault()).contains(message),
+              "diagnostic containing");
 
   /**
    * Comment that marks a bug on the next line in a test file. For example, "// BUG: Diagnostic

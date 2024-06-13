@@ -36,16 +36,16 @@ import java.util.Optional;
 import javax.inject.Inject;
 
 /**
- * Flags {@code com.sun.tools.javac.code.Symbol#toString} usage in {@link BugChecker}s.
+ * Flags {@code javax.lang.model.element.Element#toString} usage in {@link BugChecker}s.
  *
  * @author bhagwani@google.com (Sumit Bhagwani)
  */
 @BugPattern(
-    summary = "Symbol#toString shouldn't be used for comparison as it is expensive and fragile.",
+    summary = "Element#toString shouldn't be used for comparison as it is expensive and fragile.",
     severity = SUGGESTION)
 public class SymbolToString extends AbstractToString {
 
-  private static final TypePredicate IS_SYMBOL = isDescendantOf("com.sun.tools.javac.code.Symbol");
+  private static final TypePredicate IS_SYMBOL = isDescendantOf("javax.lang.model.element.Element");
 
   private static final Matcher<Tree> STRING_EQUALS =
       toType(
@@ -72,7 +72,7 @@ public class SymbolToString extends AbstractToString {
 
   @Override
   protected Optional<String> descriptionMessageForDefaultMatch(Type type, VisitorState state) {
-    return Optional.of("Symbol#toString shouldn't be used as it is expensive and fragile.");
+    return Optional.of("Element#toString shouldn't be used as it is expensive and fragile.");
   }
 
   @Override

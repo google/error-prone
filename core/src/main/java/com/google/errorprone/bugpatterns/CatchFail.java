@@ -234,7 +234,7 @@ public class CatchFail extends BugChecker implements TryTreeMatcher {
                 if (Objects.equals(sym, ASTHelpers.getSymbol(node))) {
                   found[0] = true;
                 }
-                return super.visitIdentifier(node, unused);
+                return super.visitIdentifier(node, null);
               }
             },
             null);

@@ -41,7 +41,6 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberReferenceTree.ReferenceMode;
-import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Scope;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
@@ -57,9 +56,6 @@ public final class UnnecessaryMethodReference extends BugChecker
   @Override
   public Description matchMemberReference(MemberReferenceTree tree, VisitorState state) {
     if (!tree.getMode().equals(ReferenceMode.INVOKE)) {
-      return NO_MATCH;
-    }
-    if (!(state.getPath().getParentPath().getLeaf() instanceof MethodInvocationTree)) {
       return NO_MATCH;
     }
     TargetType targetType = targetType(state);

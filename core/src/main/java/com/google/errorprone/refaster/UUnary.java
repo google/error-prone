@@ -91,7 +91,7 @@ abstract class UUnary extends UExpression implements UnaryTree {
           if (t instanceof BinaryTree
               || t instanceof UnaryTree
               || t instanceof ConditionalExpressionTree) {
-            return super.copy(t, v);
+            return super.copy(t, null);
           } else {
             return (T) defaultNegation(t);
           }

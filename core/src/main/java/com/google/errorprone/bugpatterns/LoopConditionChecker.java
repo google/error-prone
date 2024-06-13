@@ -169,25 +169,25 @@ public class LoopConditionChecker extends BugChecker
           break;
         default: // fall out
       }
-      return super.visitUnary(tree, unused);
+      return super.visitUnary(tree, null);
     }
 
     @Override
     public Void visitMethodInvocation(MethodInvocationTree tree, Void unused) {
       check(ASTHelpers.getReceiver(tree));
-      return super.visitMethodInvocation(tree, unused);
+      return super.visitMethodInvocation(tree, null);
     }
 
     @Override
     public Void visitAssignment(AssignmentTree tree, Void unused) {
       check(tree.getVariable());
-      return super.visitAssignment(tree, unused);
+      return super.visitAssignment(tree, null);
     }
 
     @Override
     public Void visitCompoundAssignment(CompoundAssignmentTree tree, Void unused) {
       check(tree.getVariable());
-      return super.visitCompoundAssignment(tree, unused);
+      return super.visitCompoundAssignment(tree, null);
     }
 
     private void check(ExpressionTree expression) {

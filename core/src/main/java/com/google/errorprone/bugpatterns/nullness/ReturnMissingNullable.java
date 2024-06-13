@@ -221,7 +221,7 @@ public class ReturnMissingNullable extends BugChecker implements CompilationUnit
       @Override
       public Void visitVariable(VariableTree tree, Void unused) {
         doVisitVariable(tree);
-        return super.visitVariable(tree, unused);
+        return super.visitVariable(tree, null);
       }
 
       void doVisitVariable(VariableTree tree) {
@@ -267,7 +267,7 @@ public class ReturnMissingNullable extends BugChecker implements CompilationUnit
       @Override
       public Void visitMethod(MethodTree tree, Void unused) {
         doVisitMethod(tree);
-        return super.visitMethod(tree, unused);
+        return super.visitMethod(tree, null);
       }
 
       void doVisitMethod(MethodTree tree) {
@@ -334,7 +334,7 @@ public class ReturnMissingNullable extends BugChecker implements CompilationUnit
       @Override
       public Void visitReturn(ReturnTree tree, Void unused) {
         doVisitReturn(tree);
-        return super.visitReturn(tree, unused);
+        return super.visitReturn(tree, null);
       }
 
       void doVisitReturn(ReturnTree returnTree) {

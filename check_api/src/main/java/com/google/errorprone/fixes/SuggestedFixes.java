@@ -55,6 +55,7 @@ import com.google.errorprone.apply.ImportOrganizer;
 import com.google.errorprone.apply.SourceFile;
 import com.google.errorprone.fixes.SuggestedFixes.FixCompiler.Result;
 import com.google.errorprone.util.ASTHelpers;
+import com.google.errorprone.util.ErrorProneComment;
 import com.google.errorprone.util.ErrorProneToken;
 import com.google.errorprone.util.FindIdentifiers;
 import com.sun.source.doctree.DocTree;
@@ -96,7 +97,6 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types.DefaultTypeVisitor;
 import com.sun.tools.javac.main.Arguments;
 import com.sun.tools.javac.parser.Tokens;
-import com.sun.tools.javac.parser.Tokens.Comment;
 import com.sun.tools.javac.parser.Tokens.TokenKind;
 import com.sun.tools.javac.tree.DCTree;
 import com.sun.tools.javac.tree.DCTree.DCDocComment;
@@ -797,7 +797,7 @@ public final class SuggestedFixes {
               state.getEndPosition(tree),
               "::" + replacement);
         }
-        return super.visitMemberReference(tree, unused);
+        return super.visitMemberReference(tree, null);
       }
     }.scan(state.getPath().getCompilationUnit(), null);
     return fix.build();
@@ -1689,9 +1689,9 @@ public final class SuggestedFixes {
     if (tokens.get(0).comments().isEmpty()) {
       return SuggestedFix.replace(tokens.get(0).pos(), state.getEndPosition(tree), replacement);
     }
-    ImmutableList<Comment> comments =
+    ImmutableList<ErrorProneComment> comments =
         ImmutableList.sortedCopyOf(
-            Comparator.<Comment>comparingInt(c -> c.getSourcePos(0)).reversed(),
+            Comparator.<ErrorProneComment>comparingInt(c -> c.getSourcePos(0)).reversed(),
             tokens.get(0).comments());
     int startPos = getStartPosition(tree);
     // This can happen for desugared expressions like `int a, b;`.
@@ -1700,7 +1700,7 @@ public final class SuggestedFixes {
     }
     // Delete backwards for comments which are not separated from our target by a blank line.
     CharSequence sourceCode = state.getSourceCode();
-    for (Comment comment : comments) {
+    for (ErrorProneComment comment : comments) {
       int endOfCommentPos = comment.getSourcePos(comment.getText().length() - 1);
       CharSequence stringBetweenComments = sourceCode.subSequence(endOfCommentPos, startPos);
       if (stringBetweenComments.chars().filter(c -> c == '\n').count() > 1) {

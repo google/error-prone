@@ -1655,4 +1655,29 @@ public class UnusedVariableTest {
         .expectUnchanged()
         .doTest();
   }
+
+  @Ignore("https://github.com/google/error-prone/issues/4409")
+  @Test
+  public void parameterUsedInOverride() {
+    refactoringHelper
+        .addInputLines(
+            "App.java",
+            "public class App {",
+            "  private static class Base {",
+            "    protected void doStuff(String usedInDescendants) {}",
+            "  }",
+            "  private static class Descendant extends Base {",
+            "    @Override",
+            "    protected void doStuff(String actuallyUsed) {",
+            "      System.out.println(actuallyUsed);",
+            "    }",
+            "  }",
+            "  public static void main(String[] args) {",
+            "    Base b = new Descendant();",
+            "    b.doStuff(\"some string\");",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
 }

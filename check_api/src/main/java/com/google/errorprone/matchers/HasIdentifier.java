@@ -66,7 +66,7 @@ public class HasIdentifier implements Matcher<Tree> {
 
     @Override
     public Boolean visitClass(ClassTree node, Void v) {
-      return firstNonNull(super.visitClass(node, v), false);
+      return firstNonNull(super.visitClass(node, null), false);
     }
   }
 }

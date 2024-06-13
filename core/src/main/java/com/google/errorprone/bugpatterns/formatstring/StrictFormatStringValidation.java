@@ -211,7 +211,7 @@ public class StrictFormatStringValidation {
                       }
                       return validateStringFromAssignment(node, node.getInitializer(), args, state);
                     }
-                    return super.visitVariable(node, unused);
+                    return super.visitVariable(node, null);
                   }
 
                   @Nullable

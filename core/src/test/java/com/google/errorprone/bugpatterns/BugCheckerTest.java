@@ -312,7 +312,7 @@ public class BugCheckerTest {
           if (isSuppressed(tree, state())) {
             return null;
           }
-          return super.scan(tree, unused);
+          return super.scan(tree, null);
         }
 
         @Override
@@ -320,7 +320,7 @@ public class BugCheckerTest {
           if (isSuppressed(path.getLeaf(), stateForCompilationUnit.withPath(path))) {
             return null;
           }
-          return super.scan(path, unused);
+          return super.scan(path, null);
         }
 
         @Override

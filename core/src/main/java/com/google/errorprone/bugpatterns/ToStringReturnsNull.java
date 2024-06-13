@@ -79,7 +79,7 @@ public class ToStringReturnsNull extends BugChecker implements MethodTreeMatcher
             return true;
           case PARENTHESIZED:
           case CONDITIONAL_EXPRESSION:
-            return super.scan(tree, unused);
+            return super.scan(tree, null);
           default:
             return false;
         }
@@ -90,7 +90,7 @@ public class ToStringReturnsNull extends BugChecker implements MethodTreeMatcher
   private abstract static class BooleanScanner extends TreeScanner<Boolean, Void> {
     @Override
     public Boolean scan(Tree tree, Void unused) {
-      return Boolean.TRUE.equals(super.scan(tree, unused));
+      return Boolean.TRUE.equals(super.scan(tree, null));
     }
 
     @Override

@@ -123,7 +123,7 @@ public final class FieldCanBeLocal extends BugChecker implements CompilationUnit
           return null;
         }
         inMethod = false;
-        return super.visitClass(classTree, unused);
+        return super.visitClass(classTree, null);
       }
 
       @Override

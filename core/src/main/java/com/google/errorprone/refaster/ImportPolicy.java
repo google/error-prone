@@ -269,6 +269,8 @@ public enum ImportPolicy {
                 .map(JCCompilationUnit::getImports)
                 .map(Collection::stream)
                 .orElse(Stream.of())
+                .filter(JCImport.class::isInstance)
+                .map(JCImport.class::cast)
                 .filter(whichImports::existingImportMatches)
                 .map(imp -> getQualifiedIdentifier(imp).toString()))
         .collect(toImmutableSet());

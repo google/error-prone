@@ -21,10 +21,10 @@ import com.google.common.base.CharMatcher;
 import com.google.common.collect.Streams;
 import com.google.errorprone.util.Commented;
 import com.google.errorprone.util.Comments;
+import com.google.errorprone.util.ErrorProneComment;
+import com.google.errorprone.util.ErrorProneComment.ErrorProneCommentStyle;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import com.sun.tools.javac.parser.Tokens.Comment;
-import com.sun.tools.javac.parser.Tokens.Comment.CommentStyle;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -67,46 +67,21 @@ public final class NamedParameterComment {
   @AutoValue
   abstract static class MatchedComment {
 
-    abstract Comment comment();
+    abstract Optional<ErrorProneComment> comment();
 
     abstract MatchType matchType();
 
-    static MatchedComment create(Comment comment, MatchType matchType) {
+    static MatchedComment create(Optional<ErrorProneComment> comment, MatchType matchType) {
       return new AutoValue_NamedParameterComment_MatchedComment(comment, matchType);
     }
 
     static MatchedComment notAnnotated() {
       return new AutoValue_NamedParameterComment_MatchedComment(
-          new Comment() {
-            @Override
-            public String getText() {
-              throw new IllegalArgumentException(
-                  "Attempt to call getText on comment when in NOT_ANNOTATED state");
-            }
-
-            @Override
-            public int getSourcePos(int i) {
-              throw new IllegalArgumentException(
-                  "Attempt to call getText on comment when in NOT_ANNOTATED state");
-            }
-
-            @Override
-            public CommentStyle getStyle() {
-              throw new IllegalArgumentException(
-                  "Attempt to call getText on comment when in NOT_ANNOTATED state");
-            }
-
-            @Override
-            public boolean isDeprecated() {
-              throw new IllegalArgumentException(
-                  "Attempt to call getText on comment when in NOT_ANNOTATED state");
-            }
-          },
-          MatchType.NOT_ANNOTATED);
+          Optional.empty(), MatchType.NOT_ANNOTATED);
     }
   }
 
-  private static boolean isApproximateMatchingComment(Comment comment, String formal) {
+  private static boolean isApproximateMatchingComment(ErrorProneComment comment, String formal) {
     switch (comment.getStyle()) {
       case BLOCK:
       case LINE:
@@ -130,21 +105,22 @@ public final class NamedParameterComment {
    * parameter name.
    */
   static MatchedComment match(Commented<ExpressionTree> actual, String formal) {
-    Optional<Comment> lastBlockComment =
+    Optional<ErrorProneComment> lastBlockComment =
         Streams.findLast(
-            actual.beforeComments().stream().filter(c -> c.getStyle() == CommentStyle.BLOCK));
+            actual.beforeComments().stream()
+                .filter(c -> c.getStyle() == ErrorProneCommentStyle.BLOCK));
 
     if (lastBlockComment.isPresent()) {
       Matcher m =
           PARAMETER_COMMENT_PATTERN.matcher(Comments.getTextFromComment(lastBlockComment.get()));
       if (m.matches()) {
         return MatchedComment.create(
-            lastBlockComment.get(),
+            lastBlockComment,
             m.group(1).equals(formal) ? MatchType.EXACT_MATCH : MatchType.BAD_MATCH);
       }
     }
 
-    Optional<Comment> approximateMatchComment =
+    Optional<ErrorProneComment> approximateMatchComment =
         Stream.concat(actual.beforeComments().stream(), actual.afterComments().stream())
             .filter(comment -> isApproximateMatchingComment(comment, formal))
             .findFirst();
@@ -158,7 +134,7 @@ public final class NamedParameterComment {
           CharMatcher.anyOf("=:")
               .trimTrailingFrom(Comments.getTextFromComment(approximateMatchComment.get()).trim());
       return MatchedComment.create(
-          approximateMatchComment.get(),
+          approximateMatchComment,
           text.equals(formal) ? MatchType.EXACT_MATCH : MatchType.APPROXIMATE_MATCH);
     }
 

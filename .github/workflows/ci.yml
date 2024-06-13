@@ -38,6 +38,9 @@ jobs:
             java: 21
             experimental: false
           - os: ubuntu-latest
+            java: 22
+            experimental: false
+          - os: ubuntu-latest
             java: EA
             experimental: true
     runs-on: ${{ matrix.os }}

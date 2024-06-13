@@ -41,6 +41,8 @@ public final class JUnitIncompatibleTypeTest {
             "    // BUG: Diagnostic contains:",
             "    assertEquals(\"foo\", 1, \"\");",
             "    // BUG: Diagnostic contains:",
+            "    assertEquals(\"foo\", \"\", 1);",
+            "    // BUG: Diagnostic contains:",
             "    assertNotEquals(1, \"\");",
             "    // BUG: Diagnostic contains:",
             "    assertNotEquals(\"foo\", 1, \"\");",
@@ -124,6 +126,67 @@ public final class JUnitIncompatibleTypeTest {
             "  public void test() {",
             "    // BUG: Diagnostic contains:",
             "    assertEquals((Object) 1, (Object) 2L);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void fourArgumentOverload() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import static org.junit.Assert.assertArrayEquals;",
+            "class Test {",
+            "  public void test() {",
+            "    assertArrayEquals(\"foo\", new double[] {1}, new double[] {2}, 10d);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void arrayNullComparison() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import static org.junit.Assert.assertArrayEquals;",
+            "class Test {",
+            "  public void test() {",
+            "    assertArrayEquals(null, new Object[] {2});",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void typeVariables_incompatible() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import static org.junit.Assert.assertArrayEquals;",
+            "import java.util.Map;",
+            "class Test {",
+            "  public <T extends String> void test(Map<Integer, T[]> xs) {",
+            "    T[] x = xs.get(1);",
+            "    // BUG: Diagnostic contains:",
+            "    assertArrayEquals(x, new Double[] {1d});",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void typeVariables_compatible() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import static org.junit.Assert.assertArrayEquals;",
+            "import java.util.Map;",
+            "class Test {",
+            "  public <T extends Double> void test(Map<Integer, T[]> xs) {",
+            "    T[] x = xs.get(1);",
+            "    assertArrayEquals(x, new Double[] {1d});",
             "  }",
             "}")
         .doTest();

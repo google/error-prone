@@ -37,6 +37,8 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.Comments;
+import com.google.errorprone.util.ErrorProneComment;
+import com.google.errorprone.util.ErrorProneComment.ErrorProneCommentStyle;
 import com.google.errorprone.util.ErrorProneToken;
 import com.google.errorprone.util.ErrorProneTokens;
 import com.sun.source.tree.ExpressionTree;
@@ -45,8 +47,6 @@ import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
-import com.sun.tools.javac.parser.Tokens.Comment;
-import com.sun.tools.javac.parser.Tokens.Comment.CommentStyle;
 import com.sun.tools.javac.util.Position;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -185,12 +185,12 @@ public class ParameterName extends BugChecker
 
     abstract boolean isNameCorrect();
 
-    abstract Comment comment();
+    abstract ErrorProneComment comment();
 
     abstract String name();
 
     static FixInfo create(
-        boolean isFormatCorrect, boolean isNameCorrect, Comment comment, String name) {
+        boolean isFormatCorrect, boolean isNameCorrect, ErrorProneComment comment, String name) {
       return new AutoValue_ParameterName_FixInfo(isFormatCorrect, isNameCorrect, comment, name);
     }
   }
@@ -198,8 +198,8 @@ public class ParameterName extends BugChecker
   private void checkArgument(
       VarSymbol formal, ExpressionTree actual, ErrorProneToken token, VisitorState state) {
     List<FixInfo> matches = new ArrayList<>();
-    for (Comment comment : token.comments()) {
-      if (comment.getStyle().equals(CommentStyle.LINE)) {
+    for (ErrorProneComment comment : token.comments()) {
+      if (comment.getStyle().equals(ErrorProneCommentStyle.LINE)) {
         // These are usually not intended as a parameter comment, and we don't want to flag if they
         // happen to match the parameter comment format.
         continue;
@@ -271,7 +271,7 @@ public class ParameterName extends BugChecker
     }
   }
 
-  private static SuggestedFix rewriteComment(Comment comment, String format) {
+  private static SuggestedFix rewriteComment(ErrorProneComment comment, String format) {
     int replacementStartPos = comment.getSourcePos(0);
     int replacementEndPos = comment.getSourcePos(comment.getText().length() - 1) + 1;
     return SuggestedFix.replace(replacementStartPos, replacementEndPos, format);
@@ -279,7 +279,7 @@ public class ParameterName extends BugChecker
 
   // complains on parameter name comments on varargs past the first one
   private void checkComment(ExpressionTree arg, ErrorProneToken token, VisitorState state) {
-    for (Comment comment : token.comments()) {
+    for (ErrorProneComment comment : token.comments()) {
       Matcher m =
           NamedParameterComment.PARAMETER_COMMENT_PATTERN.matcher(
               Comments.getTextFromComment(comment));
