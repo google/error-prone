@@ -20,7 +20,6 @@ import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.sun.source.tree.Tree;
-import com.sun.tools.javac.parser.Tokens.Comment;
 
 /** Class to hold AST nodes annotated with the comments that are associated with them */
 @AutoValue
@@ -35,9 +34,9 @@ public abstract class Commented<T extends Tree> {
 
   public abstract T tree();
 
-  public abstract ImmutableList<Comment> beforeComments();
+  public abstract ImmutableList<ErrorProneComment> beforeComments();
 
-  public abstract ImmutableList<Comment> afterComments();
+  public abstract ImmutableList<ErrorProneComment> afterComments();
 
   static <T extends Tree> Builder<T> builder() {
     return new AutoValue_Commented.Builder<T>();
@@ -48,14 +47,14 @@ public abstract class Commented<T extends Tree> {
 
     abstract Builder<T> setTree(T tree);
 
-    protected abstract ImmutableList.Builder<Comment> beforeCommentsBuilder();
+    protected abstract ImmutableList.Builder<ErrorProneComment> beforeCommentsBuilder();
 
-    protected abstract ImmutableList.Builder<Comment> afterCommentsBuilder();
+    protected abstract ImmutableList.Builder<ErrorProneComment> afterCommentsBuilder();
 
     @CanIgnoreReturnValue
     Builder<T> addComment(
-        Comment comment, int nodePosition, int tokenizingOffset, Position position) {
-      OffsetComment offsetComment = new OffsetComment(comment, tokenizingOffset);
+        ErrorProneComment comment, int nodePosition, int tokenizingOffset, Position position) {
+      ErrorProneComment offsetComment = comment.withOffset(tokenizingOffset);
 
       if (comment.getSourcePos(0) < nodePosition) {
         if (position.equals(Position.BEFORE) || position.equals(Position.ANY)) {
@@ -71,11 +70,11 @@ public abstract class Commented<T extends Tree> {
 
     @CanIgnoreReturnValue
     Builder<T> addAllComment(
-        Iterable<? extends Comment> comments,
+        Iterable<ErrorProneComment> comments,
         int nodePosition,
         int tokenizingOffset,
         Position position) {
-      for (Comment comment : comments) {
+      for (ErrorProneComment comment : comments) {
         addComment(comment, nodePosition, tokenizingOffset, position);
       }
       return this;

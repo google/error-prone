@@ -19,23 +19,20 @@ package com.google.errorprone;
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assertWithMessage;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.DiagnosticTestHelper.diagnosticMessage;
+import static com.google.errorprone.DiagnosticTestHelper.DIAGNOSTIC_CONTAINING;
 import static com.google.errorprone.FileObjects.forResources;
 import static com.google.errorprone.FileObjects.forSourceLines;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.constValue;
 import static java.util.Locale.ENGLISH;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assume.assumeTrue;
 
 import com.google.common.base.Ascii;
 import com.google.common.base.StandardSystemProperty;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
+import com.google.common.truth.Correspondence;
 import com.google.errorprone.bugpatterns.BadShiftAmount;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ExpressionStatementTreeMatcher;
@@ -59,12 +56,11 @@ import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import javax.inject.Inject;
 import javax.lang.model.element.Name;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
-import org.hamcrest.CoreMatchers;
-import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
@@ -104,13 +100,12 @@ public class ErrorProneCompilerIntegrationTest {
     Result exitCode =
         compiler.compile(
             forResources(BadShiftAmount.class, "testdata/BadShiftAmountPositiveCases.java"));
-    assertThat(outputStream.toString(), exitCode, is(Result.ERROR));
+    assertWithMessage(outputStream.toString()).that(exitCode).isEqualTo(Result.ERROR);
 
-    Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
-        hasItem(diagnosticMessage(containsString("[BadShiftAmount]")));
     assertWithMessage("Error should be found. " + diagnosticHelper.describe())
-        .that(matcher.matches(diagnosticHelper.getDiagnostics()))
-        .isTrue();
+        .that(diagnosticHelper.getDiagnostics())
+        .comparingElementsUsing(DIAGNOSTIC_CONTAINING)
+        .contains("[BadShiftAmount]");
   }
 
   @Test
@@ -122,13 +117,12 @@ public class ErrorProneCompilerIntegrationTest {
             forResources(
                 NonAtomicVolatileUpdate.class,
                 "testdata/NonAtomicVolatileUpdatePositiveCases.java"));
-    assertThat(outputStream.toString(), exitCode, is(Result.OK));
+    assertWithMessage(outputStream.toString()).that(exitCode).isEqualTo(Result.OK);
 
-    Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
-        hasItem(diagnosticMessage(containsString("[NonAtomicVolatileUpdate]")));
     assertWithMessage("Warning should be found. " + diagnosticHelper.describe())
-        .that(matcher.matches(diagnosticHelper.getDiagnostics()))
-        .isTrue();
+        .that(diagnosticHelper.getDiagnostics())
+        .comparingElementsUsing(DIAGNOSTIC_CONTAINING)
+        .contains("[NonAtomicVolatileUpdate]");
   }
 
   @Test
@@ -136,7 +130,7 @@ public class ErrorProneCompilerIntegrationTest {
     Result exitCode =
         compiler.compile(
             forResources(getClass(), "testdata/MultipleTopLevelClassesWithNoErrors.java"));
-    assertThat(outputStream.toString(), exitCode, is(Result.OK));
+    assertWithMessage(outputStream.toString()).that(exitCode).isEqualTo(Result.OK);
   }
 
   @Test
@@ -147,7 +141,7 @@ public class ErrorProneCompilerIntegrationTest {
                 getClass(),
                 "testdata/MultipleTopLevelClassesWithNoErrors.java",
                 "testdata/ExtendedMultipleTopLevelClassesWithNoErrors.java"));
-    assertThat(outputStream.toString(), exitCode, is(Result.OK));
+    assertWithMessage(outputStream.toString()).that(exitCode).isEqualTo(Result.OK);
   }
 
   /**
@@ -162,16 +156,15 @@ public class ErrorProneCompilerIntegrationTest {
                 getClass(),
                 "testdata/MultipleTopLevelClassesWithErrors.java",
                 "testdata/ExtendedMultipleTopLevelClassesWithErrors.java"));
-    assertThat(outputStream.toString(), exitCode, is(Result.ERROR));
-    Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
-        hasItem(diagnosticMessage(containsString("[SelfAssignment]")));
+    assertWithMessage(outputStream.toString()).that(exitCode).isEqualTo(Result.ERROR);
     assertWithMessage("Warning should be found. " + diagnosticHelper.describe())
-        .that(matcher.matches(diagnosticHelper.getDiagnostics()))
-        .isTrue();
+        .that(diagnosticHelper.getDiagnostics())
+        .comparingElementsUsing(DIAGNOSTIC_CONTAINING)
+        .contains("[SelfAssignment]");
     assertThat(diagnosticHelper.getDiagnostics()).hasSize(4);
   }
 
-  @BugPattern(name = "", explanation = "", summary = "", severity = ERROR)
+  @BugPattern(summary = "", severity = ERROR)
   public static class Throwing extends BugChecker implements ExpressionStatementTreeMatcher {
     @Override
     public Description matchExpressionStatement(ExpressionStatementTree tree, VisitorState state) {
@@ -189,16 +182,20 @@ public class ErrorProneCompilerIntegrationTest {
                 getClass(),
                 "testdata/MultipleTopLevelClassesWithErrors.java",
                 "testdata/ExtendedMultipleTopLevelClassesWithErrors.java"));
-    assertThat(outputStream.toString(), exitCode, is(Result.ERROR));
-    Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
-        hasItem(
-            diagnosticMessage(
-                CoreMatchers.<String>allOf(
-                    containsString("IllegalStateException: test123"),
-                    containsString("unhandled exception was thrown by the Error Prone"))));
+
+    assertWithMessage(outputStream.toString()).that(exitCode).isEqualTo(Result.ERROR);
     assertWithMessage("Error should be reported. " + diagnosticHelper.describe())
-        .that(matcher.matches(diagnosticHelper.getDiagnostics()))
-        .isTrue();
+        .that(diagnosticHelper.getDiagnostics())
+        .comparingElementsUsing(
+            Correspondence.<Diagnostic<? extends JavaFileObject>, List<String>>from(
+                (diagnostic, messages) ->
+                    messages.stream()
+                        .allMatch(m -> diagnostic.getMessage(Locale.getDefault()).contains(m)),
+                "diagnostic containing"))
+        .contains(
+            ImmutableList.of(
+                "IllegalStateException: test123",
+                "unhandled exception was thrown by the Error Prone"));
   }
 
   /** Regression test for Issue 188, error-prone doesn't work with annotation processors. */
@@ -208,7 +205,7 @@ public class ErrorProneCompilerIntegrationTest {
         compiler.compile(
             forResources(getClass(), "testdata/UsesAnnotationProcessor.java"),
             Arrays.asList(new NullAnnotationProcessor()));
-    assertThat(outputStream.toString(), exitCode, is(Result.OK));
+    assertWithMessage(outputStream.toString()).that(exitCode).isEqualTo(Result.OK);
   }
 
   /** Test that if javac does dataflow on a class twice error-prone only analyses it once. */
@@ -224,10 +221,10 @@ public class ErrorProneCompilerIntegrationTest {
                 // the sources so it goes through flow twice (once so it can be used when the
                 // subclass is desugared, once normally).
                 "testdata/FlowSuper.java"));
-    assertThat(outputStream.toString(), exitCode, is(Result.OK));
+    assertWithMessage(outputStream.toString()).that(exitCode).isEqualTo(Result.OK);
   }
 
-  @BugPattern(explanation = "", severity = ERROR, summary = "")
+  @BugPattern(severity = ERROR, summary = "")
   public static class ConstructorMatcher extends BugChecker implements MethodTreeMatcher {
     @Override
     public Description matchMethod(MethodTree tree, VisitorState state) {
@@ -246,13 +243,12 @@ public class ErrorProneCompilerIntegrationTest {
                     "Test.java", //
                     "public class Test {}")));
 
-    Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
-        not(hasItem(diagnosticMessage(containsString("[ConstructorMatcher]"))));
     assertWithMessage("Warning should be found. " + diagnosticHelper.describe())
-        .that(matcher.matches(diagnosticHelper.getDiagnostics()))
-        .isTrue();
+        .that(diagnosticHelper.getDiagnostics())
+        .comparingElementsUsing(DIAGNOSTIC_CONTAINING)
+        .doesNotContain("[ConstructorMatcher]");
 
-    assertThat(outputStream.toString(), exitCode, is(Result.OK));
+    assertWithMessage(outputStream.toString()).that(exitCode).isEqualTo(Result.OK);
   }
 
   @BugPattern(explanation = "", severity = ERROR, summary = "")
@@ -287,13 +283,12 @@ public class ErrorProneCompilerIntegrationTest {
                     "  public Test() {}",
                     "}")));
 
-    Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
-        not(hasItem(diagnosticMessage(containsString("[SuperCallMatcher]"))));
-    assertWithMessage("Warning should be found. " + diagnosticHelper.describe())
-        .that(matcher.matches(diagnosticHelper.getDiagnostics()))
-        .isTrue();
+    assertWithMessage("[SuperCallMatcher]")
+        .that(diagnosticHelper.getDiagnostics())
+        .comparingElementsUsing(DIAGNOSTIC_CONTAINING)
+        .doesNotContain("Warning should be found. " + diagnosticHelper.describe());
 
-    assertThat(outputStream.toString(), exitCode, is(Result.OK));
+    assertWithMessage(outputStream.toString()).that(exitCode).isEqualTo(Result.OK);
   }
 
   @Test
@@ -326,19 +321,18 @@ public class ErrorProneCompilerIntegrationTest {
     Result exitCode = compiler.compile(fileObjects);
     outputStream.flush();
     assertThat(diagnosticHelper.getDiagnostics()).isEmpty();
-    assertThat(outputStream.toString(), exitCode, is(Result.OK));
+    assertWithMessage(outputStream.toString()).that(exitCode).isEqualTo(Result.OK);
 
     String[] args = {"-Xep:EmptyIf"};
     exitCode = compiler.compile(args, fileObjects);
     outputStream.flush();
 
-    Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
-        hasItem(diagnosticMessage(containsString("[EmptyIf]")));
     assertWithMessage("Error should be found. " + diagnosticHelper.describe())
-        .that(matcher.matches(diagnosticHelper.getDiagnostics()))
-        .isTrue();
+        .that(diagnosticHelper.getDiagnostics())
+        .comparingElementsUsing(DIAGNOSTIC_CONTAINING)
+        .contains("[EmptyIf]");
 
-    assertThat(outputStream.toString(), exitCode, is(Result.ERROR));
+    assertWithMessage(outputStream.toString()).that(exitCode).isEqualTo(Result.ERROR);
   }
 
   @Test
@@ -355,17 +349,16 @@ public class ErrorProneCompilerIntegrationTest {
     String[] args = {"-Xep:SelfAssignment:WARN"};
     Result exitCode = compiler.compile(args, fileObjects);
     outputStream.flush();
-    Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
-        hasItem(diagnosticMessage(containsString("[SelfAssignment]")));
-    assertThat(outputStream.toString(), exitCode, is(Result.OK));
+    assertWithMessage(outputStream.toString()).that(exitCode).isEqualTo(Result.OK);
     assertWithMessage("Warning should be found. " + diagnosticHelper.describe())
-        .that(matcher.matches(diagnosticHelper.getDiagnostics()))
-        .isTrue();
+        .that(diagnosticHelper.getDiagnostics())
+        .comparingElementsUsing(DIAGNOSTIC_CONTAINING)
+        .contains("[SelfAssignment]");
 
     // Should reset to default severity (ERROR)
     exitCode = compiler.compile(fileObjects);
     outputStream.flush();
-    assertThat(outputStream.toString(), exitCode, is(Result.ERROR));
+    assertWithMessage(outputStream.toString()).that(exitCode).isEqualTo(Result.ERROR);
   }
 
   @Test
@@ -382,17 +375,16 @@ public class ErrorProneCompilerIntegrationTest {
     String[] args = {"-Xep:EmptyIf"};
     Result exitCode = compiler.compile(args, fileObjects);
     outputStream.flush();
-    Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
-        hasItem(diagnosticMessage(containsString("[EmptyIf]")));
-    assertThat(outputStream.toString(), exitCode, is(Result.ERROR));
+    assertWithMessage(outputStream.toString()).that(exitCode).isEqualTo(Result.ERROR);
     assertWithMessage("Error should be found. " + diagnosticHelper.describe())
-        .that(matcher.matches(diagnosticHelper.getDiagnostics()))
-        .isTrue();
+        .that(diagnosticHelper.getDiagnostics())
+        .comparingElementsUsing(DIAGNOSTIC_CONTAINING)
+        .contains("[EmptyIf]");
 
     diagnosticHelper.clearDiagnostics();
     exitCode = compiler.compile(fileObjects);
     outputStream.flush();
-    assertThat(outputStream.toString(), exitCode, is(Result.OK));
+    assertWithMessage(outputStream.toString()).that(exitCode).isEqualTo(Result.OK);
     assertThat(diagnosticHelper.getDiagnostics()).isEmpty();
   }
 
@@ -416,7 +408,7 @@ public class ErrorProneCompilerIntegrationTest {
       assertThat(diagnosticHelper.getDiagnostics()).hasSize(1);
       assertThat(diagnosticHelper.getDiagnostics().get(0).getMessage(ENGLISH))
           .contains("[RemoveUnusedImports]");
-      assertThat(outputStream.toString(), exitCode, is(Result.OK));
+      assertWithMessage(outputStream.toString()).that(exitCode).isEqualTo(Result.OK);
     }
 
     diagnosticHelper.clearDiagnostics();
@@ -426,7 +418,7 @@ public class ErrorProneCompilerIntegrationTest {
       Result exitCode = compiler.compile(args, fileObjects);
       outputStream.flush();
       assertThat(diagnosticHelper.getDiagnostics()).isEmpty();
-      assertThat(outputStream.toString(), exitCode, is(Result.OK));
+      assertWithMessage(outputStream.toString()).that(exitCode).isEqualTo(Result.OK);
     }
   }
 
@@ -451,7 +443,7 @@ public class ErrorProneCompilerIntegrationTest {
       assertThat(diagnosticHelper.getDiagnostics()).hasSize(1);
       assertThat(diagnosticHelper.getDiagnostics().get(0).getMessage(ENGLISH))
           .contains("[EmptyIf]");
-      assertThat(outputStream.toString(), exitCode, is(Result.OK));
+      assertWithMessage(outputStream.toString()).that(exitCode).isEqualTo(Result.OK);
     }
 
     diagnosticHelper.clearDiagnostics();
@@ -461,7 +453,7 @@ public class ErrorProneCompilerIntegrationTest {
       Result exitCode = compiler.compile(args, fileObjects);
       outputStream.flush();
       assertThat(diagnosticHelper.getDiagnostics()).isEmpty();
-      assertThat(outputStream.toString(), exitCode, is(Result.OK));
+      assertWithMessage(outputStream.toString()).that(exitCode).isEqualTo(Result.OK);
     }
   }
 
@@ -482,7 +474,7 @@ public class ErrorProneCompilerIntegrationTest {
     outputStream.flush();
     assertThat(diagnosticHelper.getDiagnostics()).hasSize(1);
     assertThat(diagnosticHelper.getDiagnostics().get(0).getMessage(ENGLISH)).contains("[EmptyIf]");
-    assertThat(outputStream.toString(), exitCode, is(Result.ERROR));
+    assertWithMessage(outputStream.toString()).that(exitCode).isEqualTo(Result.ERROR);
   }
 
   @BugPattern(explanation = "", summary = "", severity = ERROR)
@@ -654,11 +646,11 @@ public class ErrorProneCompilerIntegrationTest {
     compiler = compilerBuilder.build();
     Result exitCode = compiler.compile(args, sources);
     outputStream.flush();
-    assertThat(outputStream.toString(), exitCode, is(Result.ERROR));
+    assertWithMessage(outputStream.toString()).that(exitCode).isEqualTo(Result.ERROR);
 
     // Flags should reset, compile should succeed.
     exitCode = compiler.compile(sources);
     outputStream.flush();
-    assertThat(outputStream.toString(), exitCode, is(Result.OK));
+    assertWithMessage(outputStream.toString()).that(exitCode).isEqualTo(Result.OK);
   }
 }

@@ -30,10 +30,12 @@ import com.sun.source.util.DocSourcePositions;
 import com.sun.source.util.DocTreePath;
 import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.tree.DCTree.DCDocComment;
+import com.sun.tools.javac.tree.DocCommentTable;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import com.sun.tools.javac.util.Position;
+import java.lang.reflect.Method;
 import java.util.Optional;
 import javax.annotation.Nullable;
 
@@ -53,8 +55,26 @@ final class Utils {
   }
 
   static DCDocComment getDocComment(VisitorState state, Tree tree) {
-    return ((JCCompilationUnit) state.getPath().getCompilationUnit())
-        .docComments.getCommentTree((JCTree) tree);
+    return getCommentTree(
+        ((JCCompilationUnit) state.getPath().getCompilationUnit()).docComments, (JCTree) tree);
+  }
+
+  private static final Method COMMENT_TREE_METHOD = getCommentTreeMethod();
+
+  private static Method getCommentTreeMethod() {
+    try {
+      return DocCommentTable.class.getMethod("getCommentTree", JCTree.class);
+    } catch (ReflectiveOperationException e) {
+      throw new LinkageError(e.getMessage(), e);
+    }
+  }
+
+  private static DCDocComment getCommentTree(DocCommentTable docCommentTable, JCTree tree) {
+    try {
+      return (DCDocComment) COMMENT_TREE_METHOD.invoke(docCommentTable, tree);
+    } catch (ReflectiveOperationException e) {
+      throw new LinkageError(e.getMessage(), e);
+    }
   }
 
   static SuggestedFix replace(DocTree docTree, String replacement, VisitorState state) {

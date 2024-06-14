@@ -16,7 +16,10 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.truth.TruthJUnit.assume;
+
 import com.google.errorprone.CompilationTestHelper;
+import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -39,5 +42,22 @@ public class NestedInstanceOfConditionsTest {
   @Test
   public void negativeCase() {
     compilationHelper.addSourceFile("NestedInstanceOfConditionsNegativeCases.java").doTest();
+  }
+
+  @Test
+  public void patternMatchingInstanceof() {
+    assume().that(RuntimeVersion.isAtLeast21()).isTrue();
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "public class Test {",
+            "  record Struct(Object a) {}",
+            "  public void test(Object x, Object y) {",
+            "    if (x instanceof Struct(Integer a1)) {",
+            "      if (y instanceof Struct(Integer a2)) {}",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
   }
 }

@@ -2020,7 +2020,7 @@ public class ASTHelpers {
 
     @Override
     public Type visitParenthesized(ParenthesizedTree node, Void unused) {
-      return visit(node.getExpression(), unused);
+      return visit(node.getExpression(), null);
     }
 
     @Nullable

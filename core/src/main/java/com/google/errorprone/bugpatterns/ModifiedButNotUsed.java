@@ -218,7 +218,7 @@ public class ModifiedButNotUsed extends BugChecker
           if (symbol.equals(getSymbol(node.getVariable()))) {
             initializers.add(new TreePath(getCurrentPath(), node.getExpression()));
           }
-          return super.visitAssignment(node, unused);
+          return super.visitAssignment(node, null);
         }
       }.scan(state.getPath().getParentPath(), null);
     } else {

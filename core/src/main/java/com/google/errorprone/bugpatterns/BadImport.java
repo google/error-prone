@@ -241,7 +241,7 @@ public class BadImport extends BugChecker implements ImportTreeMatcher {
                 return node;
               }
             }
-            return super.visitIdentifier(node, unused);
+            return super.visitIdentifier(node, null);
           }
 
           // We need to move any type annotation inside the qualified usage to preserve semantics,

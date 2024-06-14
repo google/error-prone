@@ -287,7 +287,8 @@ public class ErrorProneOptions {
         try {
           severity = Severity.valueOf(parts.get(1));
         } catch (IllegalArgumentException e) {
-          throw new InvalidCommandLineOptionException("invalid flag: " + arg);
+          throw new InvalidCommandLineOptionException(
+              "invalid flag: " + arg + " (" + parts.get(1) + " was not a valid severity)");
         }
       }
       severityMap.put(checkName, severity);

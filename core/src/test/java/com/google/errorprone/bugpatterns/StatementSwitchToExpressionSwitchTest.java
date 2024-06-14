@@ -2204,6 +2204,168 @@ public final class StatementSwitchToExpressionSwitchTest {
   }
 
   @Test
+  public void switchByEnum_assignmentSwitchToSingleArray_error() {
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  int[] x;",
+            "  public Test(int foo) {",
+            "    x = null;",
+            "  }",
+            " ",
+            "  public int[] foo(Side side) { ",
+            "    // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]",
+            "    switch(side) {",
+            "       case HEART:",
+            "         throw new RuntimeException();",
+            "       case DIAMOND:",
+            "          x[6] <<= (((x[6]+1) * (x[6]*x[5]) << 1));",
+            "          break;",
+            "       case SPADE:",
+            "         throw new RuntimeException();",
+            "       default:",
+            "         throw new NullPointerException();",
+            "    }",
+            "  return x;",
+            "  }",
+            "}")
+        .setArgs(
+            ImmutableList.of(
+                "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion"))
+        .doTest();
+
+    // Check correct generated code
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  int[] x;",
+            "  public Test(int foo) {",
+            "    x = null;",
+            "  }",
+            " ",
+            "  public int[] foo(Side side) { ",
+            "    // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]",
+            "    switch(side) {",
+            "       case HEART:",
+            "         throw new RuntimeException();",
+            "       case DIAMOND:",
+            "          x[6] <<= (((x[6]+1) * (x[6]*x[5]) << 1));",
+            "          break;",
+            "       case SPADE:",
+            "         throw new RuntimeException();",
+            "       default:",
+            "         throw new NullPointerException();",
+            "    }",
+            "  return x;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  int[] x;",
+            "  public Test(int foo) {",
+            "    x = null;",
+            "  }",
+            " ",
+            "  public int[] foo(Side side) { ",
+            "    x[6] <<= switch(side) {",
+            "       case HEART -> throw new RuntimeException();",
+            "       case DIAMOND -> (((x[6]+1) * (x[6]*x[5]) << 1));",
+            "       case SPADE -> throw new RuntimeException();",
+            "       default -> throw new NullPointerException();",
+            "    };",
+            "  return x;",
+            "  }",
+            "}")
+        .setArgs(
+            ImmutableList.of(
+                "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion"))
+        .doTest();
+  }
+
+  @Test
+  public void switchByEnum_assignmentSwitchToMultipleArray_noError() {
+    // Multiple array dereferences or other non-variable left-hand-side expressions may (in
+    // principle) be convertible to assignment switches, but this feature is not supported at this
+    // time
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  int[] x;",
+            "  public Test(int foo) {",
+            "    x = null;",
+            "  }",
+            " ",
+            "  public int[] foo(Side side) { ",
+            "    switch(side) {",
+            "       case HEART:",
+            "          // Inline comment",
+            "          x[6] <<= 2;",
+            "          break;",
+            "       case DIAMOND:",
+            "          x[6] <<= (((x[6]+1) * (x[6]*x[5]) << 1));",
+            "          break;",
+            "       case SPADE:",
+            "         throw new RuntimeException();",
+            "       default:",
+            "         throw new NullPointerException();",
+            "    }",
+            "  return x;",
+            "  }",
+            "}")
+        .setArgs(
+            ImmutableList.of(
+                "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion"))
+        .doTest();
+  }
+
+  @Test
+  public void switchByEnum_assignmentSwitchToMultipleDistinct_noError() {
+    // x[5] and x[6] are distinct assignment targets
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  int[] x;",
+            "  public Test(int foo) {",
+            "    x = null;",
+            "  }",
+            " ",
+            "  public int[] foo(Side side) { ",
+            "    switch(side) {",
+            "       case HEART:",
+            "          // Inline comment",
+            "          x[6] <<= 2;",
+            "          break;",
+            "       case DIAMOND:",
+            "          x[5] <<= (((x[6]+1) * (x[6]*x[5]) << 1));",
+            "          break;",
+            "       case SPADE:",
+            "         throw new RuntimeException();",
+            "       default:",
+            "         throw new NullPointerException();",
+            "    }",
+            "  return x;",
+            "  }",
+            "}")
+        .setArgs(
+            ImmutableList.of(
+                "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion"))
+        .doTest();
+  }
+
+  @Test
   public void switchByEnum_assignmentSwitchMixedKinds_noError() {
     // Different assignment types ("=" versus "+=").  The check does not attempt to alter the
     // assignments to make the assignment types match (e.g. does not change to "x = x + 2")

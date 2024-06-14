@@ -89,13 +89,13 @@ class CreatesDuplicateCallHeuristic implements Heuristic {
       @Override
       public Void visitMethodInvocation(MethodInvocationTree methodInvocationTree, Void unused) {
         addToResult(ASTHelpers.getSymbol(methodInvocationTree), methodInvocationTree);
-        return super.visitMethodInvocation(methodInvocationTree, unused);
+        return super.visitMethodInvocation(methodInvocationTree, null);
       }
 
       @Override
       public Void visitNewClass(NewClassTree newClassTree, Void unused) {
         addToResult(ASTHelpers.getSymbol(newClassTree), newClassTree);
-        return super.visitNewClass(newClassTree, unused);
+        return super.visitNewClass(newClassTree, null);
       }
 
       @Override
@@ -109,7 +109,7 @@ class CreatesDuplicateCallHeuristic implements Heuristic {
             ASTHelpers.findSuperMethods(methodSymbol, state.getTypes())) {
           addToResult(superSymbol, methodTree);
         }
-        return super.visitMethod(methodTree, unused);
+        return super.visitMethod(methodTree, null);
       }
 
       private void addToResult(MethodSymbol foundSymbol, Tree tree) {

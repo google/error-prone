@@ -211,7 +211,7 @@ public final class ParameterMissingNullable extends BugChecker
           public Void visitNewClass(NewClassTree tree, Void unused) {
             likelyToProduceException[0] |=
                 state.getTypes().isSubtype(getType(tree), state.getSymtab().throwableType);
-            return super.visitNewClass(tree, unused);
+            return super.visitNewClass(tree, null);
           }
 
           @Override

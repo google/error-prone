@@ -336,19 +336,19 @@ public class UnnecessaryBoxedVariable extends BugChecker implements CompilationU
       if (boxedUsageFound.contains(symbol)) {
         return null;
       }
-      return super.scan(tree, unused);
+      return super.scan(tree, null);
     }
 
     @Override
     public Void visitAssignment(AssignmentTree node, Void unused) {
       Symbol nodeSymbol = getSymbol(node.getVariable());
       if (!isBoxed(nodeSymbol, state)) {
-        return super.visitAssignment(node, unused);
+        return super.visitAssignment(node, null);
       }
       // The variable of interest is being assigned. Check if the expression is non-primitive,
       // and go on to scan the expression.
       if (!checkAssignmentExpression(node.getExpression())) {
-        return scan(node.getExpression(), unused);
+        return scan(node.getExpression(), null);
       }
 
       boxedUsageFound.add((VarSymbol) nodeSymbol);
@@ -379,14 +379,14 @@ public class UnnecessaryBoxedVariable extends BugChecker implements CompilationU
           return null;
         }
       }
-      return super.visitIdentifier(node, unused);
+      return super.visitIdentifier(node, null);
     }
 
     @Override
     public Void visitCompoundAssignment(CompoundAssignmentTree node, Void unused) {
       // Don't count the LHS of compound assignments as boxed usages, because they have to be
       // unboxed. Just visit the expression.
-      return scan(node.getExpression(), unused);
+      return scan(node.getExpression(), null);
     }
 
     @Override
@@ -416,14 +416,14 @@ public class UnnecessaryBoxedVariable extends BugChecker implements CompilationU
         return null;
       }
 
-      return super.visitMethodInvocation(node, unused);
+      return super.visitMethodInvocation(node, null);
     }
 
     @Override
     public Void visitReturn(ReturnTree node, Void unused) {
       Symbol nodeSymbol = getSymbol(ASTHelpers.stripParentheses(node.getExpression()));
       if (!isBoxed(nodeSymbol, state)) {
-        return super.visitReturn(node, unused);
+        return super.visitReturn(node, null);
       }
       dereferenced.add((VarSymbol) nodeSymbol);
 
@@ -452,7 +452,7 @@ public class UnnecessaryBoxedVariable extends BugChecker implements CompilationU
           return null;
         }
       }
-      return super.visitMemberReference(node, unused);
+      return super.visitMemberReference(node, null);
     }
   }
 

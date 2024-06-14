@@ -175,13 +175,13 @@ public final class PreferredInterfaceType extends BugChecker implements Compilat
         if (method != null) {
           symbolsToType.put(method, getType(node.getExpression()));
         }
-        return super.visitReturn(node, unused);
+        return super.visitReturn(node, null);
       }
 
       @Override
       public Void visitLambdaExpression(LambdaExpressionTree node, Void unused) {
         currentMethod.addLast(null);
-        super.visitLambdaExpression(node, unused);
+        super.visitLambdaExpression(node, null);
         currentMethod.removeLast();
         return null;
       }

@@ -96,7 +96,7 @@ public final class JUnit4TestsNotRunWithinEnclosed extends BugChecker
                         .build()));
           }
         }
-        return super.visitClass(classTree, unused);
+        return super.visitClass(classTree, null);
       }
     }.scan(tree, null);
     return Description.NO_MATCH;

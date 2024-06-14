@@ -61,6 +61,7 @@ import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
+import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCAssign;
@@ -74,6 +75,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -431,10 +433,8 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
         // First assignment seen?
         (assignmentTargetOptional.isEmpty() && caseAssignmentTargetOptional.isPresent())
             // Not first assignment, but assigning to same symbol as the first assignment?
-            || (assignmentTargetOptional.isPresent()
-                && caseAssignmentTargetOptional.isPresent()
-                && getSymbol(assignmentTargetOptional.get())
-                    .equals(getSymbol(caseAssignmentTargetOptional.get())));
+            || isCompatibleWithFirstAssignment(
+                assignmentTargetOptional, caseAssignmentTargetOptional);
 
     if (compatibleOperator && compatibleReference) {
       caseQualifications =
@@ -457,6 +457,28 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
         /* assignmentTreeOptional= */ assignmentTreeOptional.isEmpty()
             ? caseAssignmentTreeOptional
             : assignmentTreeOptional);
+  }
+
+  /**
+   * In a switch with multiple assignments, determine whether a subsequent assignment target is
+   * compatible with the first assignment target.
+   */
+  private static boolean isCompatibleWithFirstAssignment(
+      Optional<ExpressionTree> assignmentTargetOptional,
+      Optional<ExpressionTree> caseAssignmentTargetOptional) {
+
+    if (assignmentTargetOptional.isEmpty() || caseAssignmentTargetOptional.isEmpty()) {
+      return false;
+    }
+
+    Symbol assignmentTargetSymbol = getSymbol(assignmentTargetOptional.get());
+    // For non-symbol assignment targets, multiple assignments are not currently supported
+    if (assignmentTargetSymbol == null) {
+      return false;
+    }
+
+    Symbol caseAssignmentTargetSymbol = getSymbol(caseAssignmentTargetOptional.get());
+    return Objects.equals(assignmentTargetSymbol, caseAssignmentTargetSymbol);
   }
 
   /**

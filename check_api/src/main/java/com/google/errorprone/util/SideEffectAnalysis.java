@@ -93,6 +93,6 @@ public final class SideEffectAnalysis extends TreeScanner<Void, Void> {
       default:
         break;
     }
-    return super.visitUnary(tree, unused);
+    return super.visitUnary(tree, null);
   }
 }

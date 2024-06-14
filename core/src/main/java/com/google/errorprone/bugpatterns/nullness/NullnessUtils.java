@@ -505,39 +505,39 @@ class NullnessUtils {
     return new SimpleTreeVisitor<Boolean, Void>() {
       @Override
       public Boolean visitAssignment(AssignmentTree tree, Void unused) {
-        return visit(tree.getExpression(), unused);
+        return visit(tree.getExpression(), null);
       }
 
       @Override
       public Boolean visitConditionalExpression(ConditionalExpressionTree tree, Void unused) {
-        return visit(tree.getTrueExpression(), unused)
-            || visit(tree.getFalseExpression(), unused)
+        return visit(tree.getTrueExpression(), null)
+            || visit(tree.getFalseExpression(), null)
             || isTernaryXIfXIsNull(tree);
       }
 
       @Override
       public Boolean visitIdentifier(IdentifierTree tree, Void unused) {
-        return super.visitIdentifier(tree, unused)
+        return super.visitIdentifier(tree, null)
             || varsProvenNullByParentIf.contains(tree.getName());
       }
 
       @Override
       public Boolean visitMethodInvocation(MethodInvocationTree tree, Void unused) {
-        return super.visitMethodInvocation(tree, unused)
+        return super.visitMethodInvocation(tree, null)
             || isOptionalOrNull(tree)
             || isStringsEmptyToNull(tree);
       }
 
       @Override
       public Boolean visitParenthesized(ParenthesizedTree tree, Void unused) {
-        return visit(tree.getExpression(), unused);
+        return visit(tree.getExpression(), null);
       }
 
       // For visitSwitchExpression logic, see defaultAction.
 
       @Override
       public Boolean visitTypeCast(TypeCastTree tree, Void unused) {
-        return visit(tree.getExpression(), unused);
+        return visit(tree.getExpression(), null);
       }
 
       @Override

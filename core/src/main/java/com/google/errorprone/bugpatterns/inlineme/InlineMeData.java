@@ -185,7 +185,7 @@ abstract class InlineMeData {
     @Override
     public JCTree visitLambdaExpression(LambdaExpressionTree lambdaExpressionTree, Void unused) {
       JCLambda expr = (JCLambda) lambdaExpressionTree;
-      JCLambda lambda = (JCLambda) super.visitLambdaExpression(lambdaExpressionTree, unused);
+      JCLambda lambda = (JCLambda) super.visitLambdaExpression(lambdaExpressionTree, null);
       lambda.paramKind = expr.paramKind;
       return lambda;
     }
@@ -196,7 +196,7 @@ abstract class InlineMeData {
         return treeMaker.Select(
             qualifications.get(identifierTree), state.getName(identifierTree.toString()));
       }
-      return super.visitIdentifier(identifierTree, unused);
+      return super.visitIdentifier(identifierTree, null);
     }
   }
 
@@ -290,16 +290,16 @@ abstract class InlineMeData {
     @Override
     public Void visitIdentifier(IdentifierTree identifierTree, Void unused) {
       if (identifierTree.getName().contentEquals("this")) {
-        return super.visitIdentifier(identifierTree, unused);
+        return super.visitIdentifier(identifierTree, null);
       }
       Symbol symbol = getSymbol(identifierTree);
       if (symbol == null || ASTHelpers.isLocal(symbol)) {
-        return super.visitIdentifier(identifierTree, unused);
+        return super.visitIdentifier(identifierTree, null);
       }
 
       Tree parentNode = getCurrentPath().getParentPath().getLeaf();
       if (nameUsageDoesntRequireQualificationOrImport(parentNode)) {
-        return super.visitIdentifier(identifierTree, unused);
+        return super.visitIdentifier(identifierTree, null);
       }
 
       // TODO(glorioso): This suggestion has the following behavior:
@@ -333,7 +333,7 @@ abstract class InlineMeData {
           addImport(symbol.getQualifiedName().toString());
         }
       }
-      return super.visitIdentifier(identifierTree, unused);
+      return super.visitIdentifier(identifierTree, null);
     }
 
     private boolean isMemberOfThisClass(Symbol symbol, Tree parentNode) {

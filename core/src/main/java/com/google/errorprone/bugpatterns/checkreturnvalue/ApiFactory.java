@@ -59,13 +59,13 @@ public final class ApiFactory {
 
         @Override
         public Type visitClassType(Type.ClassType t, Void unused) {
-          return super.visitClassType((Type.ClassType) cloneWithoutMetadata(t), unused);
+          return super.visitClassType((Type.ClassType) cloneWithoutMetadata(t), null);
         }
 
         // Remove annotations from all enclosing containers
         @Override
         public Type visitArrayType(Type.ArrayType t, Void unused) {
-          return super.visitArrayType((Type.ArrayType) cloneWithoutMetadata(t), unused);
+          return super.visitArrayType((Type.ArrayType) cloneWithoutMetadata(t), null);
         }
       };
 

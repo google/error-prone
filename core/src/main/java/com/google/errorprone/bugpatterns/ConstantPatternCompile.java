@@ -106,7 +106,7 @@ public final class ConstantPatternCompile extends BugChecker implements ClassTre
                       firstHit[0] = tree;
                     }
                   });
-          return super.visitMethodInvocation(tree, unused);
+          return super.visitMethodInvocation(tree, null);
         }
 
         private Optional<SuggestedFix> tryFix(

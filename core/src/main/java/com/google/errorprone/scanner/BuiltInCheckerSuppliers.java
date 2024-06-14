@@ -103,6 +103,7 @@ import com.google.errorprone.bugpatterns.DateFormatConstant;
 import com.google.errorprone.bugpatterns.DeadException;
 import com.google.errorprone.bugpatterns.DeadThread;
 import com.google.errorprone.bugpatterns.DeduplicateConstants;
+import com.google.errorprone.bugpatterns.DeeplyNested;
 import com.google.errorprone.bugpatterns.DefaultCharset;
 import com.google.errorprone.bugpatterns.DefaultPackage;
 import com.google.errorprone.bugpatterns.DepAnn;
@@ -157,6 +158,7 @@ import com.google.errorprone.bugpatterns.FuzzyEqualsShouldNotBeUsedInEqualsMetho
 import com.google.errorprone.bugpatterns.GetClassOnAnnotation;
 import com.google.errorprone.bugpatterns.GetClassOnClass;
 import com.google.errorprone.bugpatterns.GetClassOnEnum;
+import com.google.errorprone.bugpatterns.GuiceNestedCombine;
 import com.google.errorprone.bugpatterns.HashtableContains;
 import com.google.errorprone.bugpatterns.HidingField;
 import com.google.errorprone.bugpatterns.ICCProfileGetInstance;
@@ -300,6 +302,7 @@ import com.google.errorprone.bugpatterns.PackageLocation;
 import com.google.errorprone.bugpatterns.ParameterComment;
 import com.google.errorprone.bugpatterns.ParameterName;
 import com.google.errorprone.bugpatterns.ParametersButNotParameterized;
+import com.google.errorprone.bugpatterns.PatternMatchingInstanceof;
 import com.google.errorprone.bugpatterns.PreconditionsCheckNotNullRepeated;
 import com.google.errorprone.bugpatterns.PreconditionsInvalidPlaceholder;
 import com.google.errorprone.bugpatterns.PreferredInterfaceType;
@@ -353,6 +356,7 @@ import com.google.errorprone.bugpatterns.StringFormatWithLiteral;
 import com.google.errorprone.bugpatterns.StringSplitter;
 import com.google.errorprone.bugpatterns.StronglyTypeByteString;
 import com.google.errorprone.bugpatterns.SubstringOfZero;
+import com.google.errorprone.bugpatterns.SunApi;
 import com.google.errorprone.bugpatterns.SuperCallToObjectMethod;
 import com.google.errorprone.bugpatterns.SuppressWarningsDeprecated;
 import com.google.errorprone.bugpatterns.SuppressWarningsWithoutExplanation;
@@ -880,6 +884,7 @@ public class BuiltInCheckerSuppliers {
           ComplexBooleanConstant.class,
           DateChecker.class,
           DateFormatConstant.class,
+          DeeplyNested.class,
           DefaultCharset.class,
           DefaultPackage.class,
           DeprecatedVariable.class,
@@ -916,6 +921,7 @@ public class BuiltInCheckerSuppliers {
           FragmentNotInstantiable.class,
           FutureReturnValueIgnored.class,
           GetClassOnEnum.class,
+          GuiceNestedCombine.class,
           HidingField.class,
           ICCProfileGetInstance.class,
           IdentityHashMapUsage.class,
@@ -1028,6 +1034,7 @@ public class BuiltInCheckerSuppliers {
           OverridesGuiceInjectableMethod.class,
           OverridingMethodInconsistentArgumentNamesChecker.class,
           ParameterName.class,
+          PatternMatchingInstanceof.class,
           PreconditionsCheckNotNullRepeated.class,
           PrimitiveAtomicReference.class,
           ProtectedMembersInFinalClass.class,
@@ -1204,6 +1211,7 @@ public class BuiltInCheckerSuppliers {
           StringFormatWithLiteral.class,
           StronglyTypeByteString.class,
           StronglyTypeTime.class,
+          SunApi.class,
           SuppressWarningsWithoutExplanation.class,
           SwitchDefault.class,
           SymbolToString.class,

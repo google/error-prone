@@ -128,7 +128,7 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
       generateConstraintsFromAnnotations(
           ((JCIdent) node).type, sym, declaredType, node, new ArrayDeque<>());
     }
-    return super.visitIdentifier(node, unused);
+    return super.visitIdentifier(node, null);
   }
 
   private void generateConstraintsFromAnnotations(
@@ -192,7 +192,7 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
             ? ((JCArrayAccess) node.getVariable()).getExpression().type
             : TreeInfo.symbol((JCTree) node.getVariable()).type;
     generateConstraintsForWrite(lhsType, null, node.getExpression(), node);
-    return super.visitAssignment(node, unused);
+    return super.visitAssignment(node, null);
   }
 
   @Override
@@ -201,7 +201,7 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
       Symbol symbol = TreeInfo.symbolFor((JCTree) node);
       generateConstraintsForWrite(symbol.type, symbol, node.getInitializer(), node);
     }
-    return super.visitVariable(node, unused);
+    return super.visitVariable(node, null);
   }
 
   @Override
@@ -211,7 +211,7 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
           ((MethodSymbol) TreeInfo.symbolFor((JCTree) currentMethodOrInitializerOrLambda));
       generateConstraintsForWrite(sym.getReturnType(), sym, node.getExpression(), node);
     }
-    return super.visitReturn(node, unused);
+    return super.visitReturn(node, null);
   }
 
   private static ImmutableList<TypeAndSymbol> expandVarargsToArity(
@@ -319,7 +319,7 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
                   actual,
                   iv -> qualifierConstraints.putEdge(iv, typeVarIv)));
     }
-    return super.visitMethodInvocation(node, unused);
+    return super.visitMethodInvocation(node, null);
   }
 
   private static void visitTypeVarRefs(
