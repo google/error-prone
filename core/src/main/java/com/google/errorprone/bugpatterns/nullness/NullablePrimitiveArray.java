@@ -26,7 +26,6 @@ import static java.util.stream.Collectors.joining;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.StandardTags;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
@@ -48,7 +47,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import javax.inject.Inject;
 import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
@@ -63,14 +61,6 @@ import javax.lang.model.util.SimpleAnnotationValueVisitor8;
     tags = StandardTags.STYLE)
 public class NullablePrimitiveArray extends BugChecker
     implements VariableTreeMatcher, MethodTreeMatcher {
-  private final boolean fixEvenWhenMixedWithDeclaration;
-
-  @Inject
-  NullablePrimitiveArray(ErrorProneFlags flags) {
-    this.fixEvenWhenMixedWithDeclaration =
-        flags.getBoolean("NullablePrimitiveArray:FixEvenWhenMixedWithDeclaration").orElse(true);
-  }
-
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
     return check(tree.getReturnType(), tree.getModifiers().getAnnotations(), state);
@@ -108,11 +98,6 @@ public class NullablePrimitiveArray extends BugChecker
             .filter(annotation -> isTypeAnnotation(getSymbol(annotation).attribute(target)))
             .collect(toImmutableList());
     if (typeNullnessAnnos.isEmpty()) {
-      return NO_MATCH;
-    }
-    if (!fixEvenWhenMixedWithDeclaration
-        && allTreeAnnos.stream()
-            .anyMatch(annotation -> !isTypeAnnotation(getSymbol(annotation).attribute(target)))) {
       return NO_MATCH;
     }
     Tree dims = typeTree;
