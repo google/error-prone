@@ -907,12 +907,17 @@ public class ErrorProneScanner extends Scanner {
     return super.visitWildcard(tree, state);
   }
 
+  /**
+   *  This is copied from the body of #handleError. Ideally we'd change that method to call this one,
+   *  but that would force us to declare `throws Throwable` which turns into a huge mess. To avoid
+   *  all of that we just copy the body verbatim.
+   */
   protected Throwable getError(Suppressible s, Throwable t) {
     if (t instanceof ErrorProneError) {
-      return t;
+      return  (ErrorProneError) t;
     }
     if (t instanceof CompletionFailure) {
-      return t;
+      return  (CompletionFailure) t;
     }
     TreePath path = getCurrentPath();
     return new ErrorProneError(
