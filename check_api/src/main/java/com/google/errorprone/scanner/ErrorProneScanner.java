@@ -453,7 +453,7 @@ public class ErrorProneScanner extends Scanner {
               stateWithSuppressionInformation);
         } catch (Exception | AssertionError t) {
           if (HubSpotUtils.isErrorHandlingEnabled(errorProneOptions)) {
-            HubSpotMetrics.instance(oldState.context).recordError(matcher);
+            HubSpotMetrics.instance(oldState.context).recordError(matcher, getError(matcher, t));
           } else {
             handleError(matcher, t);
           }
@@ -905,6 +905,21 @@ public class ErrorProneScanner extends Scanner {
     VisitorState state =
         processMatchers(wildcardMatchers, tree, WildcardTreeMatcher::matchWildcard, visitorState);
     return super.visitWildcard(tree, state);
+  }
+
+  protected Throwable getError(Suppressible s, Throwable t) {
+    if (t instanceof ErrorProneError) {
+      return t;
+    }
+    if (t instanceof CompletionFailure) {
+      return t;
+    }
+    TreePath path = getCurrentPath();
+    return new ErrorProneError(
+        s.canonicalName(),
+        t,
+        (DiagnosticPosition) path.getLeaf(),
+        path.getCompilationUnit().getSourceFile());
   }
 
   /**
