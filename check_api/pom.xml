@@ -136,12 +136,24 @@
       <artifactId>caffeine</artifactId>
       <version>${caffeine.version}</version>
     </dependency>
+
     <!-- Hubspot deps -->
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
       <version>2.12.5</version>
     </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.datatype</groupId>
+      <artifactId>jackson-datatype-guava</artifactId>
+      <version>2.12.5</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.datatype</groupId>
+      <artifactId>jackson-datatype-jdk8</artifactId>
+      <version>2.12.5</version>
+    </dependency>
+
     <dependency>
       <!-- Apache 2.0 -->
       <groupId>com.google.jimfs</groupId>

@@ -24,11 +24,13 @@ import java.nio.file.Paths;
 import java.util.Optional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.guava.GuavaModule;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.google.common.base.Strings;
 import com.sun.tools.javac.util.Context;
 
 class FileManager {
-  private static final ObjectMapper MAPPER = new ObjectMapper();
+  private static final ObjectMapper MAPPER = new ObjectMapper().registerModules(new GuavaModule(), new Jdk8Module());
   private static final String OVERWATCH_DIR_ENV_VAR = "MAVEN_PROJECTBASEDIR";
   private static final String BLAZAR_DIR_ENV_VAR = "VIEWABLE_BUILD_ARTIFACTS_DIR";
 
