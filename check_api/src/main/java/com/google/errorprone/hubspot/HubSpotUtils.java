@@ -22,7 +22,6 @@ import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugCheckerInfo;
@@ -58,17 +57,12 @@ public class HubSpotUtils {
   public static ScannerSupplier createScannerSupplier(Iterable<BugChecker> extraBugCheckers) {
     ImmutableList.Builder<BugCheckerInfo> builder = ImmutableList.builder();
     Iterator<BugChecker> iter = extraBugCheckers.iterator();
-
-    AtomicInteger i = new AtomicInteger(0);
-
     while (iter.hasNext()) {
-      BugChecker checker = null;
       try {
-        checker = iter.next();
-        builder.add(BugCheckerInfo.create(checker.getClass()));
+        Class<? extends BugChecker> checker = iter.next().getClass();
+        builder.add(BugCheckerInfo.create(checker));
       } catch (Throwable e) {
-        String name = checker == null ? ("Unknown_" + i.incrementAndGet()) : checker.canonicalName();
-        METRICS.ifPresent(metrics -> metrics.recordCheckLoadError(name, e));
+        METRICS.ifPresent(metrics -> metrics.recordCheckLoadError(e));
       }
     }
     return ScannerSupplier.fromBugCheckerInfos(builder.build());
@@ -77,16 +71,11 @@ public class HubSpotUtils {
   public static List<DescriptionListener> loadDescriptionListeners(Iterable<CustomDescriptionListenerFactory> factories, DescriptionListenerResources resources) {
     Iterator<CustomDescriptionListenerFactory> iter = factories.iterator();
     ImmutableList.Builder<DescriptionListener> listeners = ImmutableList.builder();
-
-    AtomicInteger i = new AtomicInteger(0);
     while (iter.hasNext()) {
-      CustomDescriptionListenerFactory listener = null;
       try {
-        listener = iter.next();
-        listeners.add(listener.createFactory(resources));
+        listeners.add(iter.next().createFactory(resources));
       } catch (Throwable t) {
-        String name = listener == null ? ("Unknown_" + i.incrementAndGet()) : listener.getClass().getCanonicalName();
-        METRICS.ifPresent(metrics -> metrics.recordListenerInitError(name, t));
+        METRICS.ifPresent(metrics -> metrics.recordListenerInitError(t));
       }
     }
 

@@ -453,7 +453,7 @@ public class ErrorProneScanner extends Scanner {
               stateWithSuppressionInformation);
         } catch (Exception | AssertionError t) {
           if (HubSpotUtils.isErrorHandlingEnabled(errorProneOptions)) {
-            HubSpotMetrics.instance(oldState.context).recordError(matcher, getError(matcher, t));
+            HubSpotMetrics.instance(oldState.context).recordError(matcher);
           } else {
             handleError(matcher, t);
           }
@@ -905,26 +905,6 @@ public class ErrorProneScanner extends Scanner {
     VisitorState state =
         processMatchers(wildcardMatchers, tree, WildcardTreeMatcher::matchWildcard, visitorState);
     return super.visitWildcard(tree, state);
-  }
-
-  /**
-   *  This is copied from the body of #handleError. Ideally we'd change that method to call this one,
-   *  but that would force us to declare `throws Throwable` which turns into a huge mess. To avoid
-   *  all of that we just copy the body verbatim.
-   */
-  protected Throwable getError(Suppressible s, Throwable t) {
-    if (t instanceof ErrorProneError) {
-      return  (ErrorProneError) t;
-    }
-    if (t instanceof CompletionFailure) {
-      return  (CompletionFailure) t;
-    }
-    TreePath path = getCurrentPath();
-    return new ErrorProneError(
-        s.canonicalName(),
-        t,
-        (DiagnosticPosition) path.getLeaf(),
-        path.getCompilationUnit().getSourceFile());
   }
 
   /**

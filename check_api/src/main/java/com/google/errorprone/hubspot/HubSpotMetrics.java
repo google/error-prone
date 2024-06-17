@@ -25,14 +25,11 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
-
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
+import com.google.common.base.Strings;
 import com.google.common.base.Suppliers;
 import com.google.common.base.Throwables;
-import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.Multimaps;
 import com.google.common.util.concurrent.AtomicLongMap;
 import com.google.errorprone.DescriptionListener;
 import com.google.errorprone.ErrorProneTimings;
@@ -40,6 +37,27 @@ import com.google.errorprone.matchers.Suppressible;
 import com.sun.tools.javac.util.Context;
 
 public class HubSpotMetrics {
+
+  enum ErrorType {
+    EXCEPTIONS("errorProneExceptions"),
+    MISSING("errorProneMissingChecks"),
+    INIT_ERRORS("errorProneInitErrors"),
+    LISTENER_INIT_ERRORS("errorProneListenerInitErrors"),
+    LISTENER_ON_DESCRIBE_ERROR("errorProneListenerDescribeErrors"),
+    UNHANDLED_ERRORS("errorProneUnhandledErrors");
+
+    final String value;
+
+    ErrorType(String value) {
+      this.value = value;
+    }
+
+    @JsonValue
+    public String getValue() {
+      return value;
+    }
+  }
+
   public static synchronized HubSpotMetrics instance(Context context) {
     HubSpotMetrics metrics = context.get(HubSpotMetrics.class);
 
@@ -59,23 +77,26 @@ public class HubSpotMetrics {
     return metrics;
   }
 
-  private final ErrorState errors;
+  private final ConcurrentHashMap<ErrorType, Set<String>> errors;
   private final AtomicLongMap<String> timings;
+
   private final Supplier<FileManager> fileManagerSupplier;
 
 
   HubSpotMetrics(Supplier<FileManager> fileManagerSupplier) {
-    this.errors = new ErrorState();
+    this.errors = new ConcurrentHashMap<>();
     this.timings = AtomicLongMap.create();
     this.fileManagerSupplier = fileManagerSupplier;
   }
 
-  public void recordError(Suppressible s, Throwable t) {
-    errors.exceptions.put(s.canonicalName(), t);
+  public void recordError(Suppressible s) {
+    errors.computeIfAbsent(ErrorType.EXCEPTIONS, ignored -> ConcurrentHashMap.newKeySet())
+        .add(s.canonicalName());
   }
 
   public void recordMissingCheck(String checkName) {
-    errors.missing.add(checkName);
+    errors.computeIfAbsent(ErrorType.MISSING, ignored -> ConcurrentHashMap.newKeySet())
+        .add(checkName);
   }
 
   public void recordTimings(Context context) {
@@ -85,11 +106,13 @@ public class HubSpotMetrics {
   }
 
   public void recordListenerDescribeError(DescriptionListener listener, Throwable t) {
-    errors.listenerOnDescribeErrors.put(listener.getClass().getCanonicalName(), t);
+    errors.computeIfAbsent(ErrorType.LISTENER_ON_DESCRIBE_ERROR, ignored -> ConcurrentHashMap.newKeySet())
+        .add(toErrorMessage(t));
   }
 
   public void recordUncaughtException(Throwable throwable) {
-    errors.unhandledErrors.add(throwable);
+    errors.computeIfAbsent(ErrorType.UNHANDLED_ERRORS, ignored -> ConcurrentHashMap.newKeySet())
+        .add(toErrorMessage(throwable));
 
     fileManagerSupplier.get().getUncaughtExceptionPath().ifPresent(p -> {
       // this should only ever be called once so overwriting is fine
@@ -103,12 +126,22 @@ public class HubSpotMetrics {
     });
   }
 
-  public void recordCheckLoadError(String name, Throwable t) {
-    errors.initErrors.put(name, t);
+  public void recordCheckLoadError(Throwable t) {
+    errors.computeIfAbsent(ErrorType.INIT_ERRORS, ignored -> ConcurrentHashMap.newKeySet())
+        .add(toErrorMessage(t));
   }
 
-  public void recordListenerInitError(String name, Throwable t) {
-    errors.listenerInitErrors.put(name, t);
+  public void recordListenerInitError(Throwable t) {
+    errors.computeIfAbsent(ErrorType.LISTENER_INIT_ERRORS, ignored -> ConcurrentHashMap.newKeySet())
+        .add(toErrorMessage(t));
+  }
+
+  private static String toErrorMessage(Throwable e) {
+    if (Strings.isNullOrEmpty(e.getMessage())) {
+      return "Unknown error";
+    } else {
+      return e.getMessage();
+    }
   }
 
   private void write() {
@@ -126,23 +159,4 @@ public class HubSpotMetrics {
         .collect(ImmutableMap.toImmutableMap(Entry::getKey, Entry::getValue));
   }
 
-  private static class ErrorState {
-    @JsonProperty("errorProneExceptions")
-    public final Multimap<String, Throwable> exceptions = Multimaps.synchronizedMultimap(HashMultimap.create());
-
-    @JsonProperty("errorProneMissingChecks")
-    public final Set<String> missing = ConcurrentHashMap.newKeySet();
-
-    @JsonProperty("errorProneInitErrors")
-    public final Multimap<String, Throwable> initErrors = Multimaps.synchronizedMultimap(HashMultimap.create());
-
-    @JsonProperty("errorProneListenerInitErrors")
-    public final Multimap<String, Throwable> listenerInitErrors = Multimaps.synchronizedMultimap(HashMultimap.create());
-
-    @JsonProperty("errorProneListenerDescribeErrors")
-    public final Multimap<String, Throwable> listenerOnDescribeErrors = Multimaps.synchronizedMultimap(HashMultimap.create());
-
-    @JsonProperty("errorProneUnhandledErrors")
-    public final Set<Throwable> unhandledErrors = ConcurrentHashMap.newKeySet();
-  }
 }
