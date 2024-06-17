@@ -16,6 +16,7 @@
 
 package com.google.errorprone.scanner;
 
+import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
@@ -141,6 +142,7 @@ import com.sun.tools.javac.util.Name;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -453,7 +455,7 @@ public class ErrorProneScanner extends Scanner {
               stateWithSuppressionInformation);
         } catch (Exception | AssertionError t) {
           if (HubSpotUtils.isErrorHandlingEnabled(errorProneOptions)) {
-            HubSpotMetrics.instance(oldState.context).recordError(matcher);
+            HubSpotMetrics.instance(oldState.context).recordError(matcher, getErrorDescription(t));
           } else {
             handleError(matcher, t);
           }
@@ -905,6 +907,16 @@ public class ErrorProneScanner extends Scanner {
     VisitorState state =
         processMatchers(wildcardMatchers, tree, WildcardTreeMatcher::matchWildcard, visitorState);
     return super.visitWildcard(tree, state);
+  }
+
+  protected Map<String, ?> getErrorDescription(Throwable t) {
+    TreePath path = getCurrentPath();
+
+    return ImmutableMap.<String, Object>builder()
+        .put("pos", ((DiagnosticPosition)path.getLeaf()).getStartPosition())
+        .put("source", ImmutableMap.of("name", path.getCompilationUnit().getSourceFile().getName()))
+        .putAll(HubSpotMetrics.getErrorDescription(t))
+        .build();
   }
 
   /**

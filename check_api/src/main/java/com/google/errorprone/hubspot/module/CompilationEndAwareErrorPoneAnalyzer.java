@@ -154,7 +154,7 @@ public class CompilationEndAwareErrorPoneAnalyzer implements TaskListener {
             );
           } catch (Throwable t) {
             if (HubSpotUtils.isErrorHandlingEnabled(errorProneOptions)) {
-              HubSpotMetrics.instance(context).recordError(bugChecker);
+              HubSpotMetrics.instance(context).recordError(bugChecker, HubSpotMetrics.getErrorDescription(t));
             } else {
               throw t;
             }
