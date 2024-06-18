@@ -19,17 +19,24 @@ package com.google.errorprone.hubspot;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
-import com.fasterxml.jackson.annotation.JsonValue;
-import com.google.common.base.Strings;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Suppliers;
 import com.google.common.base.Throwables;
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Multimaps;
 import com.google.common.util.concurrent.AtomicLongMap;
 import com.google.errorprone.DescriptionListener;
 import com.google.errorprone.ErrorProneTimings;
@@ -37,27 +44,6 @@ import com.google.errorprone.matchers.Suppressible;
 import com.sun.tools.javac.util.Context;
 
 public class HubSpotMetrics {
-
-  enum ErrorType {
-    EXCEPTIONS("errorProneExceptions"),
-    MISSING("errorProneMissingChecks"),
-    INIT_ERRORS("errorProneInitErrors"),
-    LISTENER_INIT_ERRORS("errorProneListenerInitErrors"),
-    LISTENER_ON_DESCRIBE_ERROR("errorProneListenerDescribeErrors"),
-    UNHANDLED_ERRORS("errorProneUnhandledErrors");
-
-    final String value;
-
-    ErrorType(String value) {
-      this.value = value;
-    }
-
-    @JsonValue
-    public String getValue() {
-      return value;
-    }
-  }
-
   public static synchronized HubSpotMetrics instance(Context context) {
     HubSpotMetrics metrics = context.get(HubSpotMetrics.class);
 
@@ -77,26 +63,23 @@ public class HubSpotMetrics {
     return metrics;
   }
 
-  private final ConcurrentHashMap<ErrorType, Set<String>> errors;
+  private final ErrorState errors;
   private final AtomicLongMap<String> timings;
-
   private final Supplier<FileManager> fileManagerSupplier;
 
 
   HubSpotMetrics(Supplier<FileManager> fileManagerSupplier) {
-    this.errors = new ConcurrentHashMap<>();
+    this.errors = new ErrorState();
     this.timings = AtomicLongMap.create();
     this.fileManagerSupplier = fileManagerSupplier;
   }
 
-  public void recordError(Suppressible s) {
-    errors.computeIfAbsent(ErrorType.EXCEPTIONS, ignored -> ConcurrentHashMap.newKeySet())
-        .add(s.canonicalName());
+  public void recordError(Suppressible s, Map<String, ?> t) {
+    errors.exceptions.put(s.canonicalName(), t);
   }
 
   public void recordMissingCheck(String checkName) {
-    errors.computeIfAbsent(ErrorType.MISSING, ignored -> ConcurrentHashMap.newKeySet())
-        .add(checkName);
+    errors.missing.add(checkName);
   }
 
   public void recordTimings(Context context) {
@@ -106,13 +89,11 @@ public class HubSpotMetrics {
   }
 
   public void recordListenerDescribeError(DescriptionListener listener, Throwable t) {
-    errors.computeIfAbsent(ErrorType.LISTENER_ON_DESCRIBE_ERROR, ignored -> ConcurrentHashMap.newKeySet())
-        .add(toErrorMessage(t));
+    errors.listenerOnDescribeErrors.put(listener.getClass().getCanonicalName(), getErrorDescription(t));
   }
 
   public void recordUncaughtException(Throwable throwable) {
-    errors.computeIfAbsent(ErrorType.UNHANDLED_ERRORS, ignored -> ConcurrentHashMap.newKeySet())
-        .add(toErrorMessage(throwable));
+    errors.unhandledErrors.add(getErrorDescription(throwable));
 
     fileManagerSupplier.get().getUncaughtExceptionPath().ifPresent(p -> {
       // this should only ever be called once so overwriting is fine
@@ -126,22 +107,12 @@ public class HubSpotMetrics {
     });
   }
 
-  public void recordCheckLoadError(Throwable t) {
-    errors.computeIfAbsent(ErrorType.INIT_ERRORS, ignored -> ConcurrentHashMap.newKeySet())
-        .add(toErrorMessage(t));
+  public void recordCheckLoadError(String name, Throwable t) {
+    errors.initErrors.put(name, getErrorDescription(t));
   }
 
-  public void recordListenerInitError(Throwable t) {
-    errors.computeIfAbsent(ErrorType.LISTENER_INIT_ERRORS, ignored -> ConcurrentHashMap.newKeySet())
-        .add(toErrorMessage(t));
-  }
-
-  private static String toErrorMessage(Throwable e) {
-    if (Strings.isNullOrEmpty(e.getMessage())) {
-      return "Unknown error";
-    } else {
-      return e.getMessage();
-    }
+  public void recordListenerInitError(String name, Throwable t) {
+    errors.listenerInitErrors.put(name, getErrorDescription(t));
   }
 
   private void write() {
@@ -159,4 +130,32 @@ public class HubSpotMetrics {
         .collect(ImmutableMap.toImmutableMap(Entry::getKey, Entry::getValue));
   }
 
+  @JsonInclude(Include.NON_EMPTY)
+  public static class ErrorState {
+    @JsonProperty("errorProneExceptions")
+    public final Multimap<String, Map<String, ?>> exceptions = Multimaps.synchronizedMultimap(HashMultimap.create());
+
+    @JsonProperty("errorProneMissingChecks")
+    public final Set<String> missing = ConcurrentHashMap.newKeySet();
+
+    @JsonProperty("errorProneInitErrors")
+    public final Multimap<String, Map<String, ?>> initErrors = Multimaps.synchronizedMultimap(HashMultimap.create());
+
+    @JsonProperty("errorProneListenerInitErrors")
+    public final Multimap<String, Map<String, ?>> listenerInitErrors = Multimaps.synchronizedMultimap(HashMultimap.create());
+
+    @JsonProperty("errorProneListenerDescribeErrors")
+    public final Multimap<String, Map<String, ?>> listenerOnDescribeErrors = Multimaps.synchronizedMultimap(HashMultimap.create());
+
+    @JsonProperty("errorProneUnhandledErrors")
+    public final Set<Map<String, ?>> unhandledErrors = ConcurrentHashMap.newKeySet();
+  }
+
+  public static Map<String, ?> getErrorDescription(Throwable t) {
+    return ImmutableMap.<String, String>builder()
+        .put("message", t.getMessage())
+        .put("class", t.getClass().getCanonicalName())
+        .put("stackTrace", Throwables.getStackTraceAsString(t))
+        .build();
+  }
 }
