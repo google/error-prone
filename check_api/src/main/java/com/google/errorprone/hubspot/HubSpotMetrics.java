@@ -152,26 +152,10 @@ public class HubSpotMetrics {
   }
 
   public static Map<String, ?> getErrorDescription(Throwable t) {
-    HashSet<Throwable> seen = new HashSet<>();
-    seen.add(t);
-
-    return throwableToMap(t, seen);
-  }
-
-  private static ImmutableMap<String, ?> throwableToMap(Throwable t, HashSet<Throwable> seen) {
-    ImmutableMap.Builder<String, Object> builder = ImmutableMap.<String, Object>builder()
+    return ImmutableMap.<String, String>builder()
         .put("message", t.getMessage())
-        .put("class", t.getClass())
-        .put("stackTrace", Throwables.getStackTraceAsString(t));
-
-    if (t.getCause() != null && seen.add(t.getCause())) {
-      builder.put("cause", throwableToMap(t.getCause(), new HashSet<>(seen)));
-    }
-
-    if (t.getSuppressed().length != 0) {
-      builder.put("suppressed", Arrays.stream(t.getSuppressed()).filter(seen::add).map(s -> throwableToMap(s, new HashSet<>(seen))));
-    }
-
-    return builder.build();
+        .put("class", t.getClass().getCanonicalName())
+        .put("stackTrace", Throwables.getStackTraceAsString(t))
+        .build();
   }
 }
