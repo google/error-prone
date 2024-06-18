@@ -72,6 +72,8 @@ public class HubSpotUtils {
         METRICS.ifPresent(metrics -> metrics.recordCheckLoadError(name, e));
       }
     }
+
+    return ScannerSupplier.fromBugCheckerInfos(builder.build());
   }
 
   public static List<DescriptionListener> loadDescriptionListeners(Iterable<CustomDescriptionListenerFactory> factories, DescriptionListenerResources resources) {
