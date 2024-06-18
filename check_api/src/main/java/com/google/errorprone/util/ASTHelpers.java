@@ -2074,25 +2074,25 @@ public class ASTHelpers {
       Type leftType = checkNotNull(getType(tree.getLeftOperand()));
       Type rightType = checkNotNull(getType(tree.getRightOperand()));
       switch (tree.getKind()) {
-          // The addition and subtraction operators for numeric types + and - (§15.18.2)
+        // The addition and subtraction operators for numeric types + and - (§15.18.2)
         case PLUS:
           // If either operand is of string type, string concatenation is performed.
           Type stringType = state.getSymtab().stringType;
           if (isSameType(stringType, leftType, state) || isSameType(stringType, rightType, state)) {
             return stringType;
           }
-          // Fall through.
+        // Fall through.
         case MINUS:
-          // The multiplicative operators *, /, and % (§15.17)
+        // The multiplicative operators *, /, and % (§15.17)
         case MULTIPLY:
         case DIVIDE:
         case REMAINDER:
-          // The numerical comparison operators <, <=, >, and >= (§15.20.1)
+        // The numerical comparison operators <, <=, >, and >= (§15.20.1)
         case LESS_THAN:
         case LESS_THAN_EQUAL:
         case GREATER_THAN:
         case GREATER_THAN_EQUAL:
-          // The integer bitwise operators &, ^, and |
+        // The integer bitwise operators &, ^, and |
         case AND:
         case XOR:
         case OR:

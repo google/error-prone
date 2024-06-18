@@ -108,7 +108,7 @@ public class UnnecessaryBoxedVariable extends BugChecker implements CompilationU
             || state.getPath().getParentPath().getLeaf() instanceof LambdaExpressionTree) {
           return Optional.empty();
         }
-        // Fall through.
+      // Fall through.
       case LOCAL_VARIABLE:
         if (!variableMatches(tree, state)) {
           return Optional.empty();

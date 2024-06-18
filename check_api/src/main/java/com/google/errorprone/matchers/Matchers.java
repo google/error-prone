@@ -594,7 +594,7 @@ public class Matchers {
         case DOUBLE_LITERAL:
         case BOOLEAN_LITERAL:
         case CHAR_LITERAL:
-          // fall through
+        // fall through
         case STRING_LITERAL:
           return true;
         default:

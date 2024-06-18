@@ -385,7 +385,7 @@ class NullnessUtils {
       case "org.checkerframework.checker.nullness.qual.Nullable":
       case "org.jspecify.annotations.NonNull":
       case "org.jspecify.annotations.Nullable":
-        // We break these strings to avoid having them rewritten by Copybara.
+      // We break these strings to avoid having them rewritten by Copybara.
       case "org.jspecify.null" + "ness.NonNull":
       case "org.jspecify.null" + "ness.Nullable":
         return true;

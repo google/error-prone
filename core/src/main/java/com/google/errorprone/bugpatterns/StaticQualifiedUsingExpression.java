@@ -61,7 +61,7 @@ public class StaticQualifiedUsingExpression extends BugChecker implements Member
             || sym.getSimpleName().contentEquals("super")) {
           return NO_MATCH;
         }
-        // fall through
+      // fall through
       case ENUM_CONSTANT:
       case METHOD:
         if (!isStatic(sym)) {
