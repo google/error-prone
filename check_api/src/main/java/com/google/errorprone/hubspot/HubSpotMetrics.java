@@ -39,9 +39,7 @@ import com.google.common.util.concurrent.AtomicLongMap;
 import com.google.errorprone.DescriptionListener;
 import com.google.errorprone.ErrorProneTimings;
 import com.google.errorprone.matchers.Suppressible;
-import com.sun.source.util.TreePath;
 import com.sun.tools.javac.util.Context;
-import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 
 public class HubSpotMetrics {
   public static synchronized HubSpotMetrics instance(Context context) {
@@ -130,7 +128,7 @@ public class HubSpotMetrics {
         .collect(ImmutableMap.toImmutableMap(Entry::getKey, Entry::getValue));
   }
 
-  private static class ErrorState {
+  public static class ErrorState {
     @JsonProperty("errorProneExceptions")
     public final Multimap<String, Map<String, ?>> exceptions = Multimaps.synchronizedMultimap(HashMultimap.create());
 
