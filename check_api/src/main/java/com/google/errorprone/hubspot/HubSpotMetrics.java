@@ -28,6 +28,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Suppliers;
 import com.google.common.base.Throwables;
@@ -128,6 +130,7 @@ public class HubSpotMetrics {
         .collect(ImmutableMap.toImmutableMap(Entry::getKey, Entry::getValue));
   }
 
+  @JsonInclude(Include.NON_EMPTY)
   public static class ErrorState {
     @JsonProperty("errorProneExceptions")
     public final Multimap<String, Map<String, ?>> exceptions = Multimaps.synchronizedMultimap(HashMultimap.create());
