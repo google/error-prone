@@ -43,7 +43,6 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.ListMultimap;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.StandardTags;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -106,12 +105,8 @@ public final class RedundantSetterCall extends BugChecker implements MethodInvoc
                       (ExpressionTree) state.getPath().getParentPath().getParentPath().getLeaf(),
                       state)));
 
-  private final boolean matchOneOfs;
-
   @Inject
-  RedundantSetterCall(ErrorProneFlags flags) {
-    this.matchOneOfs = flags.getBoolean("RedundantSetterCall:MatchOneOfs").orElse(true);
-  }
+  RedundantSetterCall() {}
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
@@ -119,8 +114,7 @@ public final class RedundantSetterCall extends BugChecker implements MethodInvoc
       return Description.NO_MATCH;
     }
     ListMultimap<Field, FieldWithValue> setters = ArrayListMultimap.create();
-    ImmutableMap<String, OneOfField> oneOfSetters =
-        matchOneOfs ? scanForOneOfSetters(getType(tree), state) : ImmutableMap.of();
+    ImmutableMap<String, OneOfField> oneOfSetters = scanForOneOfSetters(getType(tree), state);
     Type type = ASTHelpers.getReturnType(tree);
     for (ExpressionTree current = tree;
         FLUENT_SETTER.matches(current, state);
