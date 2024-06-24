@@ -19,7 +19,11 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
+import static com.google.errorprone.suppliers.Suppliers.OBJECT_TYPE;
+import static com.google.errorprone.suppliers.Suppliers.arrayOf;
+import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -44,32 +48,39 @@ public final class DistinctVarargsChecker extends BugChecker
 
   private static final Matcher<ExpressionTree> IMMUTABLE_SET_VARARGS_MATCHER =
       anyOf(
+          staticMethod().onClass("java.util.Set").named("of"),
           staticMethod().onClass("com.google.common.collect.ImmutableSet").named("of"),
           staticMethod().onClass("com.google.common.collect.ImmutableSortedSet").named("of"));
   private static final Matcher<ExpressionTree> ALL_DISTINCT_ARG_MATCHER =
       anyOf(
           staticMethod()
               .onClass("com.google.common.util.concurrent.Futures")
-              .withSignature(
-                  "<V>whenAllSucceed(com.google.common.util.concurrent.ListenableFuture<? extends"
-                      + " V>...)"),
-          staticMethod()
-              .onClass("com.google.common.util.concurrent.Futures")
-              .withSignature(
-                  "<V>whenAllComplete(com.google.common.util.concurrent.ListenableFuture<? extends"
-                      + " V>...)"),
+              .namedAnyOf("whenAllSucceed", "whenAllComplete")
+              .withParametersOfType(
+                  ImmutableList.of(
+                      arrayOf(
+                          typeFromString("com.google.common.util.concurrent.ListenableFuture")))),
           staticMethod()
               .onClass("com.google.common.collect.Ordering")
-              .withSignature("<T>explicit(T,T...)"));
+              .named("explicit")
+              .withParametersOfType(ImmutableList.of(OBJECT_TYPE, arrayOf(OBJECT_TYPE))));
   private static final Matcher<ExpressionTree> EVEN_PARITY_DISTINCT_ARG_MATCHER =
-      staticMethod().onClass("com.google.common.collect.ImmutableSortedMap").named("of");
+      anyOf(
+          // ImmutableMap.of is covered by AlwaysThrows.
+          staticMethod().onClass("com.google.common.collect.ImmutableSortedMap").named("of"),
+          staticMethod().onClass("java.util.Map").named("of"));
   private static final Matcher<ExpressionTree> EVEN_AND_ODD_PARITY_DISTINCT_ARG_MATCHER =
       staticMethod().onClass("com.google.common.collect.ImmutableBiMap").named("of");
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    // For ImmutableSet and ImmutableSortedSet fix can be constructed. For all other methods,
-    // non-distinct arguments will result in the runtime exceptions.
+    /*
+     * For set construction, a fix can be constructed. TODO(cpovirk): Also generate a fix for the
+     * Futures methods.
+     *
+     * For other methods, we'd often need the user's judgment. TODO(cpovirk): Generate multiple
+     * fixes for those—or one fix for map construction if the values for a given key all match.
+     */
     if (IMMUTABLE_SET_VARARGS_MATCHER.matches(tree, state)) {
       return checkDistinctArgumentsWithFix(tree, state);
     }
