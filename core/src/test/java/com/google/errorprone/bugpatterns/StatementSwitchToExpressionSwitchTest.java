@@ -1230,6 +1230,156 @@ public final class StatementSwitchToExpressionSwitchTest {
         .doTest();
   }
 
+  @Test
+  public void switchByEnum_surroundingBracesCannotRemove_error() {
+    // Can't remove braces around OBVERSE because break statements are not a member of
+    // KINDS_CONVERTIBLE_WITHOUT_BRACES
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {OBVERSE, REVERSE};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public void foo(Side side) { ",
+            "    // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]",
+            "    switch(side) {",
+            "      case OBVERSE: {",
+            "        // The quick brown fox, jumps over the lazy dog, etc.",
+            "        break;",
+            "      }",
+            "  ",
+            "      default: { ",
+            "        throw new RuntimeException(\"Invalid type.\");",
+            "      }",
+            "    }",
+            "  }",
+            "}")
+        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
+        .doTest();
+
+    // Check correct generated code
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {OBVERSE, REVERSE};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public void foo(Side side) { ",
+            "    switch(side) {",
+            "      case OBVERSE: {",
+            "        // The quick brown fox, jumps over the lazy dog, etc.",
+            "        break;",
+            "      }",
+            "  ",
+            "      default: { ",
+            "        throw new RuntimeException(\"Invalid type.\");",
+            "      }",
+            "    }",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {OBVERSE, REVERSE};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public void foo(Side side) { ",
+            "    switch(side) {",
+            "      case OBVERSE -> {",
+            "        // The quick brown fox, jumps over the lazy dog, etc.",
+            "        break;",
+            "      }",
+            "  ",
+            "      default -> ",
+            "        throw new RuntimeException(\"Invalid type.\");",
+            "      ",
+            "    }",
+            "  }",
+            "}")
+        .setArgs(
+            ImmutableList.of("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion"))
+        .doTest();
+  }
+
+  @Test
+  public void switchByEnum_surroundingBracesEmpty_error() {
+    // Test handling of cases with surrounding braces that are empty.  The braces around OBVERSE
+    // can be removed because throw is a member of KINDS_CONVERTIBLE_WITHOUT_BRACES.
+    assumeTrue(RuntimeVersion.isAtLeast14());
+
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {OBVERSE, REVERSE};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public void foo(Side side) { ",
+            "    // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]",
+            "    switch(side) {",
+            "      case OBVERSE: {",
+            "       // The quick brown fox, jumps over the lazy dog, etc.",
+            "       throw new RuntimeException(\"Invalid.\");",
+            "      }",
+            "  ",
+            "      default: {",
+            "      }",
+            "    }",
+            "  }",
+            "}")
+        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
+        .doTest();
+
+    // Check correct generated code
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {OBVERSE, REVERSE};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public void foo(Side side) { ",
+            "    switch(side) {",
+            "      case OBVERSE: {",
+            "       // The quick brown fox, jumps over the lazy dog, etc.",
+            "       throw new RuntimeException(\"Invalid.\");",
+            "      }",
+            "  ",
+            "      default: {",
+            "      }",
+            "    }",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {OBVERSE, REVERSE};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public void foo(Side side) { ",
+            "    switch(side) {",
+            "      case OBVERSE -> ",
+            "        // The quick brown fox, jumps over the lazy dog, etc.",
+            "        throw new RuntimeException(\"Invalid.\");",
+            "      default -> {}",
+            "      ",
+            "    }",
+            "  }",
+            "}")
+        .setArgs(
+            ImmutableList.of("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion"))
+        .doTest();
+  }
+
   /**********************************
    *
    * Return switch test cases
