@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns.inject.testdata;
 
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 
 import com.google.inject.BindingAnnotation;
@@ -30,50 +31,42 @@ import javax.inject.Scope;
 /**
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
-public class MissingRuntimeRetentionPositiveCases {
-  /** A scoping (@Scope) annotation with SOURCE retention */
+public class ScopeOrQualifierAnnotationRetentionNegativeCases {
+  /** A scoping (@Scope) annotation with runtime retention */
   @Scope
   @Target({TYPE, METHOD})
-  // BUG: Diagnostic contains: @Retention(RUNTIME)
-  @Retention(SOURCE)
+  @Retention(RUNTIME)
   public @interface TestAnnotation1 {}
 
-  /** A scoping (@ScopingAnnotation) annotation with SOURCE retention. */
+  /** A scoping (@ScopingAnnotation) annotation with runtime retention. */
   @ScopeAnnotation
   @Target({TYPE, METHOD})
-  // BUG: Diagnostic contains: @Retention(RUNTIME)
-  @Retention(SOURCE)
+  @Retention(RUNTIME)
   public @interface TestAnnotation2 {}
 
-  /** A qualifer(@Qualifier) annotation with SOURCE retention. */
+  /** A qualifer(@Qualifier) annotation with runtime retention. */
   @Qualifier
   @Target({TYPE, METHOD})
-  // BUG: Diagnostic contains: @Retention(RUNTIME)
-  @Retention(SOURCE)
+  @Retention(RUNTIME)
   public @interface TestAnnotation3 {}
 
-  /** A qualifer(@BindingAnnotation) annotation with SOURCE retention. */
+  /** A qualifer(@BindingAnnotation) annotation with runtime retention. */
   @BindingAnnotation
   @Target({TYPE, METHOD})
-  // BUG: Diagnostic contains: @Retention(RUNTIME)
-  @Retention(SOURCE)
+  @Retention(RUNTIME)
   public @interface TestAnnotation4 {}
 
-  /** A qualifer annotation with default retention. */
-  @BindingAnnotation
-  @Target({TYPE, METHOD})
-  // BUG: Diagnostic contains: @Retention(RUNTIME)
+  /** A non-qualifer, non-scoping annotation without runtime retention. */
+  @Retention(SOURCE)
   public @interface TestAnnotation5 {}
 
-  /** A dagger map key annotation with default retention. */
+  /** A dagger map key annotation. */
   @dagger.MapKey
-  @Target({TYPE, METHOD})
-  // BUG: Diagnostic contains: @Retention(RUNTIME)
+  @Retention(RUNTIME)
   public @interface TestAnnotation6 {}
 
-  /** A Guice map key annotation with default retention. */
+  /** A Guice map key annotation. */
   @com.google.inject.multibindings.MapKey
-  @Target({TYPE, METHOD})
-  // BUG: Diagnostic contains: @Retention(RUNTIME)
+  @Retention(RUNTIME)
   public @interface TestAnnotation7 {}
 }
