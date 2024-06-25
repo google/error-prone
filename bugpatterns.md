@@ -1381,6 +1381,9 @@ Do not extend an @AutoValue/@AutoOneOf class in non-generated code.
 __[InjectMoreThanOneQualifier](bugpattern/InjectMoreThanOneQualifier)__<br>
 Using more than one qualifier annotation on the same element is not allowed.
 
+__[InjectScopeOrQualifierAnnotationRetention](bugpattern/InjectScopeOrQualifierAnnotationRetention)__<br>
+Scoping and qualifier annotations must have runtime retention.
+
 __[InsecureCryptoUsage](bugpattern/InsecureCryptoUsage)__<br>
 A standard cryptographic operation is used in a mode that is prone to vulnerabilities
 
@@ -1395,9 +1398,6 @@ Use of class, field, or method that is not compatible with JDK 8
 
 __[LongLiteralLowerCaseSuffix](bugpattern/LongLiteralLowerCaseSuffix)__<br>
 Prefer &#39;L&#39; to &#39;l&#39; for the suffix to long literals
-
-__[MissingRuntimeRetention](bugpattern/MissingRuntimeRetention)__<br>
-Scoping and qualifier annotations must have runtime retention.
 
 __[NoAllocation](bugpattern/NoAllocation)__<br>
 @NoAllocation was specified on this method, but something was found that would trigger an allocation

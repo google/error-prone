@@ -1,5 +1,5 @@
 ---
-title: MissingRuntimeRetention
+title: InjectScopeOrQualifierAnnotationRetention
 summary: Scoping and qualifier annotations must have runtime retention.
 layout: bugpattern
 tags: ''
@@ -11,7 +11,6 @@ severity: ERROR
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
-_Alternate names: InjectScopeOrQualifierAnnotationRetention_
 
 ## The problem
 Qualifier and Scope annotations are used by dependency injection frameworks to
@@ -47,4 +46,4 @@ retention for both [`Qualifier`] and [`Scope`].
 [`Scope`]: http://docs.oracle.com/javaee/6/api/javax/inject/Scope.html
 
 ## Suppression
-Suppress false positives by adding the suppression annotation `@SuppressWarnings("MissingRuntimeRetention")` to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("InjectScopeOrQualifierAnnotationRetention")` to the enclosing element.
