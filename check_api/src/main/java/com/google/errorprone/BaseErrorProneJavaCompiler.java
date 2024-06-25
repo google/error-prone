@@ -98,6 +98,11 @@ public class BaseErrorProneJavaCompiler implements JavaCompiler {
     if (refactoringCollection[0] != null) {
       javacTask.addTaskListener(new RefactoringTask(context, refactoringCollection[0]));
     }
+
+    if (Options.instance(context).isSet("-verbose")) {
+      javacTask.addTaskListener(
+          new TimingReporter(ErrorProneTimings.instance(context), Log.instance(context)));
+    }
   }
 
   @Override
