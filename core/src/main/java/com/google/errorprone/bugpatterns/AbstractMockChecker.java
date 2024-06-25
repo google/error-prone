@@ -17,12 +17,8 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
-import static com.google.errorprone.matchers.Description.NO_MATCH;
 
 import com.google.auto.value.AutoValue;
-import com.google.common.base.Strings;
-import com.google.common.base.Suppliers;
-import com.google.common.collect.Lists;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
@@ -30,42 +26,35 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
+
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
-import com.sun.tools.javac.code.Attribute.Compound;
-import com.sun.tools.javac.code.Symbol.CompletionFailure;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Type;
-import java.lang.annotation.Annotation;
+
 import java.util.Optional;
-import java.util.function.Function;
-import java.util.function.Supplier;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import javax.annotation.Nullable;
 
 /**
  * Helper for enforcing Annotations that disallow mocking.
  *
  * @author amalloy@google.com (Alan Malloy)
  */
-public abstract class AbstractMockChecker<T extends Annotation> extends BugChecker
+public abstract class AbstractMockChecker extends BugChecker
     implements MethodInvocationTreeMatcher, VariableTreeMatcher {
 
   public AbstractMockChecker(
       TypeExtractor<VariableTree> varExtractor,
-      TypeExtractor<MethodInvocationTree> methodExtractor,
-      Class<T> annotationClass,
-      Function<T, String> getValueFunction) {
+      TypeExtractor<MethodInvocationTree> methodExtractor) {
     this.varExtractor = varExtractor;
     this.methodExtractor = methodExtractor;
-    this.annotationClass = annotationClass;
-    this.getValueFunction = getValueFunction;
-    this.annotationName = annotationClass.getSimpleName();
   }
+
+  protected abstract Description checkMockedType(Type mockedClass, Tree tree, VisitorState state);
 
   /**
    * A policy for determining what classes should not be mocked.
@@ -217,8 +206,15 @@ public abstract class AbstractMockChecker<T extends Annotation> extends BugCheck
   }
 
   /**
-   * A TypeExtractor for method invocations that create a mock using Mockito.mock, Mockito.spy, or
-   * EasyMock.create[...]Mock, extracting the type being mocked.
+   * A {@link TypeExtractor} for variables that create a mock using {@code @Mockito.Mock} or
+   * {@code @Mockito.Spy} annotations, extracting the type being mocked.
+   */
+  public static final TypeExtractor<VariableTree> MOCKING_ANNOTATION =
+      fieldAnnotatedWithOneOf(Stream.of("org.mockito.Mock", "org.mockito.Spy"));
+
+  /**
+   * A {@link TypeExtractor} for method invocations that create a mock using {@code Mockito.mock},
+   * {@code Mockito.spy}, or {@code EasyMock.create[...]Mock}, extracting the type being mocked.
    */
   public static final TypeExtractor<MethodInvocationTree> MOCKING_METHOD =
       extractFirstArg(
@@ -233,73 +229,11 @@ public abstract class AbstractMockChecker<T extends Annotation> extends BugCheck
                           .onClass("org.easymock.EasyMock")
                           .withNameMatching(Pattern.compile("^create.*Mock(Builder)?$")))));
 
-  @Override
-  public final Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    return this.methodExtractor
-        .extract(tree, state)
-        .flatMap(type -> argFromClass(type, state))
-        .map(type -> checkMockedType(type, tree, state))
-        .orElse(NO_MATCH);
-  }
-
-  @Override
-  public final Description matchVariable(VariableTree tree, VisitorState state) {
-    return varExtractor
-        .extract(tree, state)
-        .map(type -> checkMockedType(type, tree, state))
-        .orElse(NO_MATCH);
-  }
-
-  private Description checkMockedType(Type mockedClass, Tree tree, VisitorState state) {
-    if (ASTHelpers.isSameType(Type.noType, mockedClass, state)) {
-      return NO_MATCH;
-    }
-
-    // We could extract this for loop to a "default" MockForbidder, but there's not much
-    // advantage in doing so.
-    for (Type currentType : Lists.reverse(state.getTypes().closure(mockedClass))) {
-      TypeSymbol currentSymbol = currentType.asElement();
-      T doNotMock = currentSymbol.getAnnotation(annotationClass);
-      if (doNotMock != null) {
-        return buildDescription(tree)
-            .setMessage(buildMessage(mockedClass, currentSymbol, doNotMock))
-            .build();
-      }
-
-      for (Compound compound : currentSymbol.getAnnotationMirrors()) {
-        TypeSymbol metaAnnotationType = (TypeSymbol) compound.getAnnotationType().asElement();
-        try {
-          metaAnnotationType.complete();
-        } catch (CompletionFailure e) {
-          // if the annotation isn't on the compilation classpath, we can't check it for
-          // the annotationClass meta-annotation
-          continue;
-        }
-        doNotMock = metaAnnotationType.getAnnotation(annotationClass);
-        if (doNotMock != null) {
-          return buildDescription(tree)
-              .setMessage(buildMessage(mockedClass, currentSymbol, metaAnnotationType, doNotMock))
-              .build();
-        }
-      }
-    }
-    return forbidder
-        .get()
-        .forbidReason(mockedClass, state)
-        .map(
-            reason ->
-                buildDescription(tree)
-                    .setMessage(
-                        buildMessage(mockedClass, reason.unmockableClass().tsym, reason.reason()))
-                    .build())
-        .orElse(NO_MATCH);
-  }
-
   /**
    * If type is Class<T>, returns the erasure of T. Otherwise, returns type unmodified. Returns
    * empty() when provided a raw Class as argument.
    */
-  private static Optional<Type> argFromClass(Type type, VisitorState state) {
+  protected static Optional<Type> argFromClass(Type type, VisitorState state) {
     if (ASTHelpers.isSameType(type, state.getSymtab().classType, state)) {
       if (type.getTypeArguments().isEmpty()) {
         return Optional.empty();
@@ -309,28 +243,7 @@ public abstract class AbstractMockChecker<T extends Annotation> extends BugCheck
     return Optional.of(type);
   }
 
-  private String buildMessage(Type mockedClass, TypeSymbol forbiddenType, T doNotMock) {
-    return buildMessage(mockedClass, forbiddenType, null, doNotMock);
-  }
-
-  private String buildMessage(
-      Type mockedClass,
-      TypeSymbol forbiddenType,
-      @Nullable TypeSymbol metaAnnotationType,
-      T doNotMock) {
-    return String.format(
-        "%s; %s is annotated as @%s%s: %s.",
-        buildMessage(mockedClass, forbiddenType),
-        forbiddenType,
-        metaAnnotationType == null ? annotationName : metaAnnotationType,
-        (metaAnnotationType == null
-            ? ""
-            : String.format(" (which is annotated as @%s)", annotationName)),
-        Optional.ofNullable(Strings.emptyToNull(getValueFunction.apply(doNotMock)))
-            .orElseGet(() -> String.format("It is annotated as %s.", annotationName)));
-  }
-
-  private static String buildMessage(Type mockedClass, TypeSymbol forbiddenType) {
+  protected static String buildMessage(Type mockedClass, TypeSymbol forbiddenType) {
     return String.format(
         "Do not mock '%s'%s",
         mockedClass,
@@ -339,14 +252,10 @@ public abstract class AbstractMockChecker<T extends Annotation> extends BugCheck
             : " (which is-a '" + forbiddenType + "')"));
   }
 
-  private static String buildMessage(Type mockedClass, TypeSymbol forbiddenType, String reason) {
+  protected static String buildMessage(Type mockedClass, TypeSymbol forbiddenType, String reason) {
     return String.format("%s: %s.", buildMessage(mockedClass, forbiddenType), reason);
   }
 
-  private final TypeExtractor<VariableTree> varExtractor;
-  private final TypeExtractor<MethodInvocationTree> methodExtractor;
-  private final Class<T> annotationClass;
-  private final String annotationName;
-  private final Function<T, String> getValueFunction;
-  private final Supplier<MockForbidder> forbidder = Suppliers.memoize(this::forbidder);
+  protected final TypeExtractor<VariableTree> varExtractor;
+  protected final TypeExtractor<MethodInvocationTree> methodExtractor;
 }
