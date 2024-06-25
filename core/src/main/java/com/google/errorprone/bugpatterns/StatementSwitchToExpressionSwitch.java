@@ -568,7 +568,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
             || trimmedTransformedBlockSource.equals("break;")) {
           replacementCodeBuilder.append("{}");
         } else {
-          replacementCodeBuilder.append("{").append(transformedBlockSource).append("\n}");
+          replacementCodeBuilder.append("{\n").append(transformedBlockSource).append("\n}");
         }
       } else {
         // Transformed block has code
@@ -585,7 +585,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
           replacementCodeBuilder.append(transformedBlockSource);
         } else {
           // Use braces on the rhs
-          replacementCodeBuilder.append("{").append(transformedBlockSource).append("\n}");
+          replacementCodeBuilder.append("{\n").append(transformedBlockSource).append("\n}");
         }
       }
 
