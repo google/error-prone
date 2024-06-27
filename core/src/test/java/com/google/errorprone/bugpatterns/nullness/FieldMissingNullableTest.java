@@ -17,9 +17,11 @@
 package com.google.errorprone.bugpatterns.nullness;
 
 import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
+import static org.junit.Assume.assumeTrue;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
+import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -165,6 +167,30 @@ public class FieldMissingNullableTest {
   }
 
   @Test
+  public void recordComponent() {
+    assumeTrue(RuntimeVersion.isAtLeast16());
+    createAggressiveRefactoringTestHelper()
+        .addInputLines(
+            "com/google/errorprone/bugpatterns/nullness/FieldMissingNullTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "record FieldMissingNullTest(String message) {",
+            "  boolean hasMessage() {",
+            "    return message != null;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "com/google/errorprone/bugpatterns/nullness/FieldMissingNullTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "import org.jspecify.annotations.Nullable;",
+            "record FieldMissingNullTest(@Nullable String message) {",
+            "  boolean hasMessage() {",
+            "    return message != null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void negativeCases_comparisonToNullConservative() {
     createCompilationTestHelper()
         .addSourceLines(
@@ -248,6 +274,22 @@ public class FieldMissingNullableTest {
             "  @Nullable Inner message;",
             "  public void reset() {",
             "    this.message = null;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void negativeCases_alreadyAnnotatedRecordComponent() {
+    assumeTrue(RuntimeVersion.isAtLeast16());
+    createAggressiveCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/FieldMissingNullTest.java",
+            "package com.google.errorprone.bugpatterns.nullness;",
+            "import org.jspecify.annotations.Nullable;",
+            "record FieldMissingNullTest(@Nullable String message) {",
+            "  boolean hasMessage() {",
+            "    return message != null;",
             "  }",
             "}")
         .doTest();
@@ -473,5 +515,10 @@ public class FieldMissingNullableTest {
 
   private BugCheckerRefactoringTestHelper createRefactoringTestHelper() {
     return BugCheckerRefactoringTestHelper.newInstance(FieldMissingNullable.class, getClass());
+  }
+
+  private BugCheckerRefactoringTestHelper createAggressiveRefactoringTestHelper() {
+    return BugCheckerRefactoringTestHelper.newInstance(FieldMissingNullable.class, getClass())
+        .setArgs("-XepOpt:Nullness:Conservative=false");
   }
 }
