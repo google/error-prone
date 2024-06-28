@@ -46,7 +46,6 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.Reachability;
-import com.google.errorprone.util.SourceVersion;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.BreakTree;
@@ -63,7 +62,6 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCAssign;
 import com.sun.tools.javac.tree.JCTree.JCAssignOp;
 import com.sun.tools.javac.tree.Pretty;
@@ -135,7 +133,10 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
   @Inject
   StatementSwitchToExpressionSwitch(ErrorProneFlags flags) {
     this.enableDirectConversion =
-        flags.getBoolean("StatementSwitchToExpressionSwitch:EnableDirectConversion").orElse(false);
+        true
+            || flags
+                .getBoolean("StatementSwitchToExpressionSwitch:EnableDirectConversion")
+                .orElse(false);
     this.enableReturnSwitchConversion =
         flags
             .getBoolean("StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion")
@@ -148,9 +149,9 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
 
   @Override
   public Description matchSwitch(SwitchTree switchTree, VisitorState state) {
-    if (!SourceVersion.supportsSwitchExpressions(state.context)) {
-      return NO_MATCH;
-    }
+    // if (!SourceVersion.supportsSwitchExpressions(state.context)) {
+    //  return NO_MATCH;
+    // }
 
     AnalysisResult analysisResult = analyzeSwitchTree(switchTree, state);
 
@@ -529,8 +530,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
       // For readability, filter out trailing unlabelled break statement because these become a
       // No-Op when used inside expression switches
       ImmutableList<StatementTree> filteredStatements = filterOutRedundantBreak(caseTree);
-      String transformedBlockSource =
-          transformBlock(caseTree, state, cases, caseIndex, filteredStatements);
+      String transformedBlockSource = transformBlock(caseTree, state, filteredStatements);
 
       if (firstCaseInGroup) {
         groupedCaseCommentsAccumulator = new StringBuilder();
@@ -623,7 +623,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
       boolean isDefaultCase = caseTree.getExpression() == null;
 
       String transformedBlockSource =
-          transformReturnOrThrowBlock(caseTree, state, cases, caseIndex, getStatements(caseTree));
+          transformReturnOrThrowBlock(caseTree, state, getStatements(caseTree));
 
       if (firstCaseInGroup) {
         groupedCaseCommentsAccumulator = new StringBuilder();
@@ -725,7 +725,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
   /**
    * Transforms the supplied statement switch into an assignment switch style of expression switch.
    * In this conversion, each nontrivial statement block is mapped one-to-one to a new expression on
-   * the right-hand side of the arrow. Comments are presevered where possible. Precondition: the
+   * the right-hand side of the arrow. Comments are preserved where possible. Precondition: the
    * {@code AnalysisResult} for the {@code SwitchTree} must have deduced that this conversion is
    * possible.
    */
@@ -760,7 +760,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
       ImmutableList<StatementTree> filteredStatements = filterOutRedundantBreak(caseTree);
 
       String transformedBlockSource =
-          transformAssignOrThrowBlock(caseTree, state, cases, caseIndex, filteredStatements);
+          transformAssignOrThrowBlock(caseTree, state, filteredStatements);
 
       if (firstCaseInGroup) {
         groupedCaseCommentsAccumulator = new StringBuilder();
@@ -870,17 +870,13 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
 
   /** Transforms code for this case into the code under an expression switch. */
   private static String transformBlock(
-      CaseTree caseTree,
-      VisitorState state,
-      List<? extends CaseTree> cases,
-      int caseIndex,
-      ImmutableList<StatementTree> filteredStatements) {
+      CaseTree caseTree, VisitorState state, ImmutableList<StatementTree> filteredStatements) {
 
     StringBuilder transformedBlockBuilder = new StringBuilder();
     int codeBlockStart = extractLhsComments(caseTree, state, transformedBlockBuilder);
     int codeBlockEnd =
         filteredStatements.isEmpty()
-            ? getBlockEnd(state, caseTree, cases, caseIndex)
+            ? getBlockEnd(state, caseTree)
             : state.getEndPosition(Streams.findLast(filteredStatements.stream()).get());
     transformedBlockBuilder.append(state.getSourceCode(), codeBlockStart, codeBlockEnd);
 
@@ -913,19 +909,29 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
    * Finds the position in source corresponding to the end of the code block of the supplied {@code
    * caseIndex} within all {@code cases}.
    */
-  private static int getBlockEnd(
-      VisitorState state, CaseTree caseTree, List<? extends CaseTree> cases, int caseIndex) {
+  private static int getBlockEnd(VisitorState state, CaseTree caseTree) {
 
-    if (caseIndex == cases.size() - 1) {
+    List<? extends StatementTree> statements = caseTree.getStatements();
+    if (statements == null || statements.size() != 1) {
       return state.getEndPosition(caseTree);
     }
 
-    return ((JCTree) cases.get(caseIndex + 1)).getStartPosition();
+    // Invariant: statements.size() == 1
+    StatementTree onlyStatement = getOnlyElement(statements);
+    if (!onlyStatement.getKind().equals(BLOCK)) {
+      return state.getEndPosition(caseTree);
+    }
+
+    // The RHS of the case has a single enclosing block { ... }
+    List<? extends StatementTree> blockStatements = ((BlockTree) onlyStatement).getStatements();
+    return blockStatements.isEmpty()
+        ? state.getEndPosition(caseTree)
+        : state.getEndPosition(blockStatements.get(blockStatements.size() - 1));
   }
 
   /**
    * Determines whether the supplied {@code case}'s logic should be expressed on the right of the
-   * arrow symbol without braces, incorporating both language and readabilitiy considerations.
+   * arrow symbol without braces, incorporating both language and readability considerations.
    */
   private static boolean shouldTransformCaseWithoutBraces(
       ImmutableList<StatementTree> statementTrees) {
@@ -995,17 +1001,13 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
    * transformed to {@code x+1;}.
    */
   private static String transformReturnOrThrowBlock(
-      CaseTree caseTree,
-      VisitorState state,
-      List<? extends CaseTree> cases,
-      int caseIndex,
-      List<? extends StatementTree> statements) {
+      CaseTree caseTree, VisitorState state, List<? extends StatementTree> statements) {
 
     StringBuilder transformedBlockBuilder = new StringBuilder();
     int codeBlockStart;
     int codeBlockEnd =
         statements.isEmpty()
-            ? getBlockEnd(state, caseTree, cases, caseIndex)
+            ? getBlockEnd(state, caseTree)
             : state.getEndPosition(Streams.findLast(statements.stream()).get());
 
     if (statements.size() == 1 && statements.get(0).getKind().equals(RETURN)) {
@@ -1028,17 +1030,13 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
    * {@code >>=}).
    */
   private static String transformAssignOrThrowBlock(
-      CaseTree caseTree,
-      VisitorState state,
-      List<? extends CaseTree> cases,
-      int caseIndex,
-      List<? extends StatementTree> statements) {
+      CaseTree caseTree, VisitorState state, List<? extends StatementTree> statements) {
 
     StringBuilder transformedBlockBuilder = new StringBuilder();
     int codeBlockStart;
     int codeBlockEnd =
         statements.isEmpty()
-            ? getBlockEnd(state, caseTree, cases, caseIndex)
+            ? getBlockEnd(state, caseTree)
             : state.getEndPosition(Streams.findLast(statements.stream()).get());
 
     if (!statements.isEmpty() && statements.get(0).getKind().equals(EXPRESSION_STATEMENT)) {
