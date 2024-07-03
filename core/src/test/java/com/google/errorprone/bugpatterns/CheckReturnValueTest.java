@@ -107,7 +107,7 @@ public class CheckReturnValueTest {
   public void packageAnnotation() {
     compilationHelper
         .addSourceLines(
-            "package-info.java", //
+            "lib/package-info.java", //
             "@com.google.errorprone.annotations.CheckReturnValue",
             "package lib;")
         .addSourceLines(
@@ -153,7 +153,7 @@ public class CheckReturnValueTest {
   public void voidReturningMethodInAnnotatedPackage() {
     compilationHelper
         .addSourceLines(
-            "package-info.java", //
+            "lib/package-info.java", //
             "@com.google.errorprone.annotations.CheckReturnValue",
             "package lib;")
         .addSourceLines(
@@ -176,7 +176,7 @@ public class CheckReturnValueTest {
   public void badCRVOnProcedure() {
     compilationHelper
         .addSourceLines(
-            "Test.java",
+            "lib/Test.java",
             "package lib;",
             "@com.google.errorprone.annotations.CheckReturnValue",
             "public class Test {",
@@ -191,7 +191,7 @@ public class CheckReturnValueTest {
   public void badCRVOnPseudoProcedure() {
     compilationHelper
         .addSourceLines(
-            "Test.java",
+            "lib/Test.java",
             "package lib;",
             "@com.google.errorprone.annotations.CheckReturnValue",
             "public class Test {",
@@ -208,7 +208,7 @@ public class CheckReturnValueTest {
   public void packageAnnotationButCanIgnoreReturnValue() {
     compilationHelper
         .addSourceLines(
-            "package-info.java",
+            "lib/package-info.java",
             "@com.google.errorprone.annotations.CheckReturnValue",
             "package lib;")
         .addSourceLines(
@@ -253,7 +253,7 @@ public class CheckReturnValueTest {
   public void badCanIgnoreReturnValueOnProcedure() {
     compilationHelper
         .addSourceLines(
-            "Test.java",
+            "lib/Test.java",
             "package lib;",
             "@com.google.errorprone.annotations.CheckReturnValue",
             "public class Test {",
@@ -318,7 +318,7 @@ public class CheckReturnValueTest {
   public void packageWithCanIgnoreAnnotation() {
     compilationHelper
         .addSourceLines(
-            "package-info.java",
+            "lib/package-info.java",
             "@com.google.errorprone.annotations.CheckReturnValue",
             "package lib;")
         .addSourceLines(
@@ -371,7 +371,7 @@ public class CheckReturnValueTest {
   public void javaLangVoidReturningMethodInAnnotatedPackage() {
     compilationHelper
         .addSourceLines(
-            "package-info.java",
+            "lib/package-info.java",
             "@com.google.errorprone.annotations.CheckReturnValue",
             "package lib;")
         .addSourceLines(
