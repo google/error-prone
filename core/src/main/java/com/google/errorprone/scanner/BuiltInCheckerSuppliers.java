@@ -499,6 +499,7 @@ import com.google.errorprone.bugpatterns.inject.InvalidTargetingOnScopingAnnotat
 import com.google.errorprone.bugpatterns.inject.JavaxInjectOnAbstractMethod;
 import com.google.errorprone.bugpatterns.inject.JavaxInjectOnFinalField;
 import com.google.errorprone.bugpatterns.inject.MisplacedScopeAnnotations;
+import com.google.errorprone.bugpatterns.inject.MissingRuntimeRetention;
 import com.google.errorprone.bugpatterns.inject.MoreThanOneInjectableConstructor;
 import com.google.errorprone.bugpatterns.inject.MoreThanOneQualifier;
 import com.google.errorprone.bugpatterns.inject.MoreThanOneScopeAnnotationOnClass;
@@ -506,7 +507,6 @@ import com.google.errorprone.bugpatterns.inject.OverlappingQualifierAndScopeAnno
 import com.google.errorprone.bugpatterns.inject.QualifierOrScopeOnInjectMethod;
 import com.google.errorprone.bugpatterns.inject.QualifierWithTypeUse;
 import com.google.errorprone.bugpatterns.inject.ScopeAnnotationOnInterfaceOrAbstractClass;
-import com.google.errorprone.bugpatterns.inject.ScopeOrQualifierAnnotationRetention;
 import com.google.errorprone.bugpatterns.inject.dagger.AndroidInjectionBeforeSuper;
 import com.google.errorprone.bugpatterns.inject.dagger.EmptySetMultibindingContributions;
 import com.google.errorprone.bugpatterns.inject.dagger.PrivateConstructorForNoninstantiableModule;
@@ -1179,6 +1179,7 @@ public class BuiltInCheckerSuppliers {
           MethodCanBeStatic.class,
           MissingBraces.class,
           MissingDefault.class,
+          MissingRuntimeRetention.class,
           MixedArrayDimensions.class,
           MockitoDoSetup.class,
           MoreThanOneQualifier.class,
@@ -1205,7 +1206,6 @@ public class BuiltInCheckerSuppliers {
           ReturnMissingNullable.class,
           ReturnsNullCollection.class,
           ScopeOnModule.class,
-          ScopeOrQualifierAnnotationRetention.class,
           StaticOrDefaultInterfaceMethod.class,
           StaticQualifiedUsingExpression.class,
           StringFormatWithLiteral.class,
