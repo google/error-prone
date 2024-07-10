@@ -471,6 +471,9 @@ An object is compared to itself
 __[SelfEquals](bugpattern/SelfEquals)__<br>
 Testing an object for equality with itself will always be true.
 
+__[SetUnrecognized](bugpattern/SetUnrecognized)__<br>
+Setting a proto field to an UNRECOGNIZED value will result in an exception at runtime when building.
+
 __[ShouldHaveEvenArgs](bugpattern/ShouldHaveEvenArgs)__<br>
 This method must be called with an even number of arguments.
 
