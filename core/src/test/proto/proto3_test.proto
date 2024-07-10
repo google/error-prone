@@ -21,6 +21,13 @@ package com.google.errorprone.bugpatterns;
 option java_package = "com.google.errorprone.bugpatterns.proto";
 
 message TestProto3Message {
-  string myString = 1;
-  bytes myBytes = 2;
+  string my_string = 1;
+  bytes my_bytes = 2;
+  TestProto3Enum my_enum = 3;
+}
+
+enum TestProto3Enum {
+  UNKNOWN = 0;
+  VALUE_1 = 1;
+  VALUE_2 = 2;
 }
