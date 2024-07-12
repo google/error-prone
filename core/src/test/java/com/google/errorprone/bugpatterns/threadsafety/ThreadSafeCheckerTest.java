@@ -41,7 +41,14 @@ import org.junit.runners.JUnit4;
 public class ThreadSafeCheckerTest {
 
   private final CompilationTestHelper compilationHelper =
-      CompilationTestHelper.newInstance(ThreadSafeChecker.class, getClass());
+      CompilationTestHelper.newInstance(ThreadSafeChecker.class, getClass())
+          // TODO: b/339025111 - Remove this once ThreadSafeTypeParameter actually exists.
+          .addSourceLines(
+              "ThreadSafeTypeParameter.java",
+              "package com.google.errorprone.annotations;",
+              "@java.lang.annotation.Target(java.lang.annotation.ElementType.TYPE_PARAMETER)",
+              "@java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)",
+              "public @interface ThreadSafeTypeParameter {}");
 
   private final BugCheckerRefactoringTestHelper refactoringHelper =
       BugCheckerRefactoringTestHelper.newInstance(ThreadSafeChecker.class, getClass());
@@ -1001,6 +1008,16 @@ public class ThreadSafeCheckerTest {
         .doTest();
   }
 
+  // TODO: b/324092874 - Remove this test once ThreadSafe.TypeParameter is removed.
+
+  // TODO: b/324092874 - Remove this test once ThreadSafe.TypeParameter is removed.
+
+  // TODO: b/324092874 - Remove this test once ThreadSafe.TypeParameter is removed.
+
+  // TODO: b/324092874 - Remove this test once ThreadSafe.TypeParameter is removed.
+
+  // TODO: b/324092874 - Remove this test once ThreadSafe.TypeParameter is removed.
+
   @Test
   public void annotatedClassType() {
     compilationHelper
@@ -1015,7 +1032,16 @@ public class ThreadSafeCheckerTest {
         .doTest();
   }
 
+  // TODO: b/324092874 - Remove this test once ThreadSafe.TypeParameter is removed.
+
   // Regression test for b/117937500
+  // TODO: b/324092874 - Remove this test once ThreadSafe.TypeParameter is removed.
+
+  // Regression test for b/117937500
+
+  // javac does not instantiate type variables when they are not used for target typing, so we
+  // cannot check whether their instantiations are thread-safe.
+  // TODO: b/324092874 - Remove this test once ThreadSafe.TypeParameter is removed.
 
   // javac does not instantiate type variables when they are not used for target typing, so we
   // cannot check whether their instantiations are thread-safe.
