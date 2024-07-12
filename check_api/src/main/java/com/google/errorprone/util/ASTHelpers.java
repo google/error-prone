@@ -109,7 +109,6 @@ import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Scope;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
-import com.sun.tools.javac.code.Symbol.CompletionFailure;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.PackageSymbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
@@ -925,12 +924,6 @@ public class ASTHelpers {
               Symbol annotationSym = state.getSymbolFromName(annotationName);
               if (annotationSym == null) {
                 return false;
-              }
-              try {
-                annotationSym.complete();
-              } catch (CompletionFailure e) {
-                /* @Inherited won't work if the annotation isn't on the classpath, but we can still
-                check if it's present directly */
               }
               Symbol inheritedSym = state.getSymtab().inheritedType.tsym;
               return annotationSym.attribute(inheritedSym) != null;
