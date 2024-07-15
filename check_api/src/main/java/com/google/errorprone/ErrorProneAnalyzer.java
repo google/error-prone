@@ -72,22 +72,24 @@ public class ErrorProneAnalyzer implements TaskListener {
     refactoringCollection[0] = RefactoringCollection.refactor(epOptions.patchingOptions(), context);
 
     // Refaster refactorer or using builtin checks
-    CodeTransformer codeTransformer =
+    Supplier<CodeTransformer> codeTransformer =
         epOptions
             .patchingOptions()
             .customRefactorer()
             .or(
-                () -> {
-                  ScannerSupplier toUse = ErrorPronePlugins.loadPlugins(scannerSupplier, context);
-                  ImmutableSet<String> namedCheckers = epOptions.patchingOptions().namedCheckers();
-                  if (!namedCheckers.isEmpty()) {
-                    toUse = toUse.filter(bci -> namedCheckers.contains(bci.canonicalName()));
-                  } else {
-                    toUse = toUse.applyOverrides(epOptions);
-                  }
-                  return ErrorProneScannerTransformer.create(toUse.get());
-                })
-            .get();
+                Suppliers.memoize(
+                    () -> {
+                      ScannerSupplier toUse =
+                          ErrorPronePlugins.loadPlugins(scannerSupplier, context);
+                      ImmutableSet<String> namedCheckers =
+                          epOptions.patchingOptions().namedCheckers();
+                      if (!namedCheckers.isEmpty()) {
+                        toUse = toUse.filter(bci -> namedCheckers.contains(bci.canonicalName()));
+                      } else {
+                        toUse = toUse.applyOverrides(epOptions);
+                      }
+                      return ErrorProneScannerTransformer.create(toUse.get());
+                    }));
 
     return createWithCustomDescriptionListener(
         codeTransformer, epOptions, context, refactoringCollection[0]);
@@ -160,15 +162,12 @@ public class ErrorProneAnalyzer implements TaskListener {
   }
 
   static ErrorProneAnalyzer createWithCustomDescriptionListener(
-      CodeTransformer codeTransformer,
+      Supplier<CodeTransformer> codeTransformer,
       ErrorProneOptions errorProneOptions,
       Context context,
       DescriptionListener.Factory descriptionListenerFactory) {
     return new ErrorProneAnalyzer(
-        Suppliers.ofInstance(codeTransformer),
-        errorProneOptions,
-        context,
-        descriptionListenerFactory);
+        codeTransformer, errorProneOptions, context, descriptionListenerFactory);
   }
 
   private ErrorProneAnalyzer(
