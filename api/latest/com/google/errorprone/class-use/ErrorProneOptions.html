@@ -95,16 +95,22 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>static <a href="../ErrorProneAnalyzer.html" title="class in com.google.errorprone">ErrorProneAnalyzer</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">ErrorProneAnalyzer.</span><code><a href="../ErrorProneAnalyzer.html#createByScanningForPlugins(com.google.errorprone.scanner.ScannerSupplier,com.google.errorprone.ErrorProneOptions,com.sun.tools.javac.util.Context)" class="member-name-link">createByScanningForPlugins</a><wbr>(<a href="../scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a>&nbsp;scannerSupplier,
+<div class="col-second even-row-color"><span class="type-name-label">ErrorProneAnalyzer.</span><code><a href="../ErrorProneAnalyzer.html#createAnalyzer(com.google.errorprone.scanner.ScannerSupplier,com.google.errorprone.ErrorProneOptions,com.sun.tools.javac.util.Context,com.google.errorprone.RefactoringCollection%5B%5D)" class="member-name-link">createAnalyzer</a><wbr>(<a href="../scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a>&nbsp;scannerSupplier,
+ <a href="../ErrorProneOptions.html" title="class in com.google.errorprone">ErrorProneOptions</a>&nbsp;epOptions,
+ com.sun.tools.javac.util.Context&nbsp;context,
+ <a href="../RefactoringCollection.html" title="class in com.google.errorprone">RefactoringCollection</a>[]&nbsp;refactoringCollection)</code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>static <a href="../ErrorProneAnalyzer.html" title="class in com.google.errorprone">ErrorProneAnalyzer</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">ErrorProneAnalyzer.</span><code><a href="../ErrorProneAnalyzer.html#createByScanningForPlugins(com.google.errorprone.scanner.ScannerSupplier,com.google.errorprone.ErrorProneOptions,com.sun.tools.javac.util.Context)" class="member-name-link">createByScanningForPlugins</a><wbr>(<a href="../scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a>&nbsp;scannerSupplier,
  <a href="../ErrorProneOptions.html" title="class in com.google.errorprone">ErrorProneOptions</a>&nbsp;errorProneOptions,
  com.sun.tools.javac.util.Context&nbsp;context)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>static <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">VisitorState.</span><code><a href="../VisitorState.html#createConfiguredForCompilation(com.sun.tools.javac.util.Context,com.google.errorprone.DescriptionListener,java.util.Map,com.google.errorprone.ErrorProneOptions)" class="member-name-link">createConfiguredForCompilation</a><wbr>(com.sun.tools.javac.util.Context&nbsp;context,
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>static <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">VisitorState.</span><code><a href="../VisitorState.html#createConfiguredForCompilation(com.sun.tools.javac.util.Context,com.google.errorprone.DescriptionListener,java.util.Map,com.google.errorprone.ErrorProneOptions)" class="member-name-link">createConfiguredForCompilation</a><wbr>(com.sun.tools.javac.util.Context&nbsp;context,
  <a href="../DescriptionListener.html" title="interface in com.google.errorprone">DescriptionListener</a>&nbsp;listener,
  <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="../BugPattern.SeverityLevel.html" title="enum in com.google.errorprone">BugPattern.SeverityLevel</a>&gt;&nbsp;severityMap,
  <a href="../ErrorProneOptions.html" title="class in com.google.errorprone">ErrorProneOptions</a>&nbsp;errorProneOptions)</code></div>
-<div class="col-last odd-row-color">
+<div class="col-last even-row-color">
 <div class="block">Return a VisitorState configured for a new compilation, including Error Prone configuration.</div>
 </div>
 </div>

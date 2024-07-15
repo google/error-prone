@@ -2684,6 +2684,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Violation.html#create(org.pcollections.ConsPStack)" class="member-name-link">create(ConsPStack&lt;String&gt;)</a> - Static method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/ErrorProneAnalyzer.html#createAnalyzer(com.google.errorprone.scanner.ScannerSupplier,com.google.errorprone.ErrorProneOptions,com.sun.tools.javac.util.Context,com.google.errorprone.RefactoringCollection%5B%5D)" class="member-name-link">createAnalyzer(ScannerSupplier, ErrorProneOptions, Context, RefactoringCollection[])</a> - Static method in class com.google.errorprone.<a href="com/google/errorprone/ErrorProneAnalyzer.html" title="class in com.google.errorprone">ErrorProneAnalyzer</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/ErrorProneAnalyzer.html#createByScanningForPlugins(com.google.errorprone.scanner.ScannerSupplier,com.google.errorprone.ErrorProneOptions,com.sun.tools.javac.util.Context)" class="member-name-link">createByScanningForPlugins(ScannerSupplier, ErrorProneOptions, Context)</a> - Static method in class com.google.errorprone.<a href="com/google/errorprone/ErrorProneAnalyzer.html" title="class in com.google.errorprone">ErrorProneAnalyzer</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/StatisticsCollector.html#createCollector()" class="member-name-link">createCollector()</a> - Static method in interface com.google.errorprone.<a href="com/google/errorprone/StatisticsCollector.html" title="interface in com.google.errorprone">StatisticsCollector</a></dt>
@@ -3487,6 +3489,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">A <code>TaskListener</code> that runs Error Prone over attributed compilation units.</div>
 </dd>
+<dt><a href="com/google/errorprone/ErrorProneAnalyzer.RefactoringTask.html" class="type-name-link" title="class in com.google.errorprone">ErrorProneAnalyzer.RefactoringTask</a> - Class in <a href="com/google/errorprone/package-summary.html">com.google.errorprone</a></dt>
+<dd>
+<div class="block">A <code>TaskListener</code> that performs refactorings.</div>
+</dd>
 <dt><a href="com/google/errorprone/util/ErrorProneComment.html" class="type-name-link" title="class in com.google.errorprone.util">ErrorProneComment</a> - Class in <a href="com/google/errorprone/util/package-summary.html">com.google.errorprone.util</a></dt>
 <dd>
 <div class="block">Wraps a <code>Tokens.Comment</code> to allow an offset source position to be reported.</div>
@@ -3937,6 +3943,8 @@ loadScripts(document, 'script');</script>
 <div class="block">Finds all variable declarations which are unused at this point in the AST (i.e.</div>
 </dd>
 <dt><a href="com/google/errorprone/ErrorProneAnalyzer.html#finished(com.sun.source.util.TaskEvent)" class="member-name-link">finished(TaskEvent)</a> - Method in class com.google.errorprone.<a href="com/google/errorprone/ErrorProneAnalyzer.html" title="class in com.google.errorprone">ErrorProneAnalyzer</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/ErrorProneAnalyzer.RefactoringTask.html#finished(com.sun.source.util.TaskEvent)" class="member-name-link">finished(TaskEvent)</a> - Method in class com.google.errorprone.<a href="com/google/errorprone/ErrorProneAnalyzer.RefactoringTask.html" title="class in com.google.errorprone">ErrorProneAnalyzer.RefactoringTask</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/refaster/RefasterRuleCompilerAnalyzer.html#finished(com.sun.source.util.TaskEvent)" class="member-name-link">finished(TaskEvent)</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/RefasterRuleCompilerAnalyzer.html" title="class in com.google.errorprone.refaster">RefasterRuleCompilerAnalyzer</a></dt>
 <dd>&nbsp;</dd>
@@ -4691,6 +4699,8 @@ loadScripts(document, 'script');</script>
 <div class="block">Provides a violation description with suggested parameter ordering.</div>
 </dd>
 <dt><a href="com/google/errorprone/DescriptionListener.Factory.html#getDescriptionListener(com.sun.tools.javac.util.Log,com.sun.tools.javac.tree.JCTree.JCCompilationUnit)" class="member-name-link">getDescriptionListener(Log, JCTree.JCCompilationUnit)</a> - Method in interface com.google.errorprone.<a href="com/google/errorprone/DescriptionListener.Factory.html" title="interface in com.google.errorprone">DescriptionListener.Factory</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/RefactoringCollection.html#getDescriptionListener(com.sun.tools.javac.util.Log,com.sun.tools.javac.tree.JCTree.JCCompilationUnit)" class="member-name-link">getDescriptionListener(Log, JCTree.JCCompilationUnit)</a> - Method in class com.google.errorprone.<a href="com/google/errorprone/RefactoringCollection.html" title="class in com.google.errorprone">RefactoringCollection</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/apidiff/ApiDiffProto.ClassDiff.Builder.html#getDescriptor()" class="member-name-link">getDescriptor()</a> - Static method in class com.google.errorprone.bugpatterns.apidiff.<a href="com/google/errorprone/bugpatterns/apidiff/ApiDiffProto.ClassDiff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.ClassDiff.Builder</a></dt>
 <dd>&nbsp;</dd>
@@ -11527,6 +11537,12 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">This check performs a refactoring, for example migrating to a new version of an API.</div>
 </dd>
+<dt><a href="com/google/errorprone/RefactoringCollection.html" class="type-name-link" title="class in com.google.errorprone">RefactoringCollection</a> - Class in <a href="com/google/errorprone/package-summary.html">com.google.errorprone</a></dt>
+<dd>
+<div class="block">A container of fixes that have been collected during a single compilation phase.</div>
+</dd>
+<dt><a href="com/google/errorprone/ErrorProneAnalyzer.RefactoringTask.html#%3Cinit%3E(com.sun.tools.javac.util.Context,com.google.errorprone.RefactoringCollection)" class="member-name-link">RefactoringTask(Context, RefactoringCollection)</a> - Constructor for class com.google.errorprone.<a href="com/google/errorprone/ErrorProneAnalyzer.RefactoringTask.html" title="class in com.google.errorprone">ErrorProneAnalyzer.RefactoringTask</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/refaster/Refaster.html" class="type-name-link" title="class in com.google.errorprone.refaster">Refaster</a> - Class in <a href="com/google/errorprone/refaster/package-summary.html">com.google.errorprone.refaster</a></dt>
 <dd>
 <div class="block">Static utilities to indicate special handling in Refaster templates.</div>
@@ -12400,6 +12416,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Split a Java name into terms based on either Camel Case or Underscores.</div>
 </dd>
+<dt><a href="com/google/errorprone/ErrorProneAnalyzer.RefactoringTask.html#started(com.sun.source.util.TaskEvent)" class="member-name-link">started(TaskEvent)</a> - Method in class com.google.errorprone.<a href="com/google/errorprone/ErrorProneAnalyzer.RefactoringTask.html" title="class in com.google.errorprone">ErrorProneAnalyzer.RefactoringTask</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/fixes/Replacement.html#startPosition()" class="member-name-link">startPosition()</a> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/Replacement.html" title="class in com.google.errorprone.fixes">Replacement</a></dt>
 <dd>
 <div class="block">The beginning of the replacement range.</div>
