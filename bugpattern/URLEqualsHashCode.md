@@ -14,8 +14,13 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 
 
 ## The problem
-Equals and HashCode method of java.net.URL make blocking network calls. Either
-use java.net.URI or if that isn't possible, use Collection<URL> or List<URL>.
+The `equals` and `hashCode` methods of `java.net.URL` make blocking network
+calls. When you place a `URL` into a hash-based container, the container invokes
+those methods.
+
+Prefer `java.net.URI`. Or, if you must use `URL` in a
+collection, prefer to use a non-hash-based container like a `List<URL>`, and
+avoid calling methods like `contains` (which calls `equals`) on it.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("URLEqualsHashCode")` to the enclosing element.
