@@ -1679,4 +1679,19 @@ public class UnusedVariableTest {
         .expectUnchanged()
         .doTest();
   }
+
+  @Test
+  public void underscoreVariable() {
+    assumeTrue(RuntimeVersion.isAtLeast22());
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  public static void main(String[] args) {",
+            "    var _ = new Object();",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
 }

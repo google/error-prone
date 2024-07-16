@@ -79,6 +79,11 @@ public final class RuntimeVersion {
     return FEATURE >= 21;
   }
 
+  /** Returns true if the current runtime is JDK 22 or newer. */
+  public static boolean isAtLeast22() {
+    return FEATURE >= 22;
+  }
+
   /**
    * Returns the latest {@code --release} version.
    *

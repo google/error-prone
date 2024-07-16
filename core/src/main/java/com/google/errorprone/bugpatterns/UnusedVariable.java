@@ -198,6 +198,7 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
     this.exemptNames =
         ImmutableSet.<String>builder()
             .add("ignored")
+            .add("") // `var _ = ...` is handled as an empty variable name
             .addAll(flags.getListOrEmpty("Unused:exemptNames"))
             .build();
 
