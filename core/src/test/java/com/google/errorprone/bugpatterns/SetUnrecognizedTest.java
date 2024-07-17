@@ -56,4 +56,19 @@ public final class SetUnrecognizedTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void negativeNotEnum() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.bugpatterns.proto.Proto3Test.TestProto3Enum;",
+            "import com.google.errorprone.bugpatterns.proto.Proto3Test.TestProto3Message;",
+            "class Test {",
+            "  void test() {",
+            "    TestProto3Message.newBuilder().setMyString(\"\");",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

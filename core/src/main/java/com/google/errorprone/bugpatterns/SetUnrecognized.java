@@ -50,6 +50,9 @@ public final class SetUnrecognized extends BugChecker implements MethodInvocatio
     }
     ExpressionTree arg = tree.getArguments().get(0);
     var argSymbol = getSymbol(arg);
+    if (argSymbol == null) {
+      return NO_MATCH;
+    }
     if (!argSymbol.getSimpleName().contentEquals("UNRECOGNIZED")) {
       return NO_MATCH;
     }
