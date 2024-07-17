@@ -2809,6 +2809,31 @@ public class ASTHelpers {
   }
 
   /**
+   * Returns true if the given {@link CaseTree} is in the form: {@code case <expression> ->
+   * <expression>}.
+   */
+  public static boolean isRuleKind(CaseTree caseTree) {
+    Enum<?> kind;
+    try {
+      kind = (Enum<?>) GET_CASE_KIND_METHOD.invoke(caseTree);
+    } catch (ReflectiveOperationException e) {
+      return false;
+    }
+    return kind.name().equals("RULE");
+  }
+
+  private static final Method GET_CASE_KIND_METHOD = getGetCaseKindMethod();
+
+  @Nullable
+  private static Method getGetCaseKindMethod() {
+    try {
+      return CaseTree.class.getMethod("getCaseKind");
+    } catch (NoSuchMethodException e) {
+      return null;
+    }
+  }
+
+  /**
    * Retrieves a stream containing all case expressions, in order, for a given {@code CaseTree}.
    * This method acts as a facade to the {@code CaseTree.getExpressions()} API, falling back to
    * legacy APIs when necessary.

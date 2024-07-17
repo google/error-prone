@@ -379,6 +379,7 @@ import com.google.errorprone.bugpatterns.ThrowSpecificExceptions;
 import com.google.errorprone.bugpatterns.ThrowsUncheckedException;
 import com.google.errorprone.bugpatterns.ToStringReturnsNull;
 import com.google.errorprone.bugpatterns.TooManyParameters;
+import com.google.errorprone.bugpatterns.TraditionalSwitchExpression;
 import com.google.errorprone.bugpatterns.TransientMisuse;
 import com.google.errorprone.bugpatterns.TreeToString;
 import com.google.errorprone.bugpatterns.TruthAssertExpected;
@@ -1075,6 +1076,7 @@ public class BuiltInCheckerSuppliers {
           ThreeLetterTimeZoneID.class,
           TimeUnitConversionChecker.class,
           ToStringReturnsNull.class,
+          TraditionalSwitchExpression.class,
           TruthAssertExpected.class,
           TruthConstantAsserts.class,
           TruthGetOrDefault.class,
