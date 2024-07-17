@@ -6975,6 +6975,11 @@ loadScripts(document, 'script');</script>
 <div class="block">Returns <code>true</code> if and only if the given <code>tree</code> is an invocation of or reference to
  a constructor or non-<code>void</code> method for which the return value is considered unused.</div>
 </dd>
+<dt><a href="com/google/errorprone/util/ASTHelpers.html#isRuleKind(com.sun.source.tree.CaseTree)" class="member-name-link">isRuleKind(CaseTree)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
+<dd>
+<div class="block">Returns true if the given <code>CaseTree</code> is in the form: <code>case &lt;expression&gt; -&gt;
+ &lt;expression&gt;</code>.</div>
+</dd>
 <dt><a href="com/google/errorprone/matchers/Matchers.html#isSame(com.sun.source.tree.Tree)" class="member-name-link">isSame(Tree)</a> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
 <dd>
 <div class="block">Matches an AST node which is the same object reference as the given node.</div>
@@ -7867,6 +7872,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/google/errorprone/bugpatterns/Finally.html#matchBreak(com.sun.source.tree.BreakTree,com.google.errorprone.VisitorState)" class="member-name-link">matchBreak(BreakTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/Finally.html" title="class in com.google.errorprone.bugpatterns">Finally</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/BugChecker.CaseTreeMatcher.html#matchCase(com.sun.source.tree.CaseTree,com.google.errorprone.VisitorState)" class="member-name-link">matchCase(CaseTree, VisitorState)</a> - Method in interface com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BugChecker.CaseTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.CaseTreeMatcher</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/TraditionalSwitchExpression.html#matchCase(com.sun.source.tree.CaseTree,com.google.errorprone.VisitorState)" class="member-name-link">matchCase(CaseTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/TraditionalSwitchExpression.html" title="class in com.google.errorprone.bugpatterns">TraditionalSwitchExpression</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/BugChecker.CatchTreeMatcher.html#matchCatch(com.sun.source.tree.CatchTree,com.google.errorprone.VisitorState)" class="member-name-link">matchCatch(CatchTree, VisitorState)</a> - Method in interface com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BugChecker.CatchTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.CatchTreeMatcher</a></dt>
 <dd>&nbsp;</dd>
@@ -13277,6 +13284,12 @@ loadScripts(document, 'script');</script>
 <div class="block">Converts the given matcher to one that can be applied to any tree but is only executed when run
  on a tree of <code>type</code> and returns <code>false</code> for all other tree types.</div>
 </dd>
+<dt><a href="com/google/errorprone/bugpatterns/TraditionalSwitchExpression.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">TraditionalSwitchExpression</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>
+<div class="block">A <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="com/google/errorprone/BugPattern.html" title="annotation in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
+</dd>
+<dt><a href="com/google/errorprone/bugpatterns/TraditionalSwitchExpression.html#%3Cinit%3E()" class="member-name-link">TraditionalSwitchExpression()</a> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/TraditionalSwitchExpression.html" title="class in com.google.errorprone.bugpatterns">TraditionalSwitchExpression</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/refaster/Choice.html#transform(com.google.common.base.Function)" class="member-name-link">transform(Function&lt;? super T, R&gt;)</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Choice.html" title="class in com.google.errorprone.refaster">Choice</a></dt>
 <dd>
 <div class="block">Maps the choices with the specified function.</div>

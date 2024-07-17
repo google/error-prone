@@ -649,143 +649,149 @@ loadScripts(document, 'script');</script>
  member that is part of a record's state vector.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isSameType(com.sun.tools.javac.code.Type,com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)" class="member-name-link">isSameType</a><wbr>(com.sun.tools.javac.code.Type&nbsp;s,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isRuleKind(com.sun.source.tree.CaseTree)" class="member-name-link">isRuleKind</a><wbr>(com.sun.source.tree.CaseTree&nbsp;caseTree)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Returns true if the given <code>CaseTree</code> is in the form: <code>case &lt;expression&gt; -&gt;
+ &lt;expression&gt;</code>.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isSameType(com.sun.tools.javac.code.Type,com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)" class="member-name-link">isSameType</a><wbr>(com.sun.tools.javac.code.Type&nbsp;s,
  com.sun.tools.javac.code.Type&nbsp;t,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns true if <code>erasure(s) == erasure(t)</code>.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isStatic(com.sun.tools.javac.code.Symbol)" class="member-name-link">isStatic</a><wbr>(com.sun.tools.javac.code.Symbol&nbsp;symbol)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isStatic(com.sun.tools.javac.code.Symbol)" class="member-name-link">isStatic</a><wbr>(com.sun.tools.javac.code.Symbol&nbsp;symbol)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns true if the symbol is static.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isSubtype(com.sun.tools.javac.code.Type,com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)" class="member-name-link">isSubtype</a><wbr>(com.sun.tools.javac.code.Type&nbsp;s,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isSubtype(com.sun.tools.javac.code.Type,com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)" class="member-name-link">isSubtype</a><wbr>(com.sun.tools.javac.code.Type&nbsp;s,
  com.sun.tools.javac.code.Type&nbsp;t,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns true if <code>erasure(s) &lt;: erasure(t)</code>.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isSuper(com.sun.source.tree.Tree)" class="member-name-link">isSuper</a><wbr>(com.sun.source.tree.Tree&nbsp;tree)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isTestNgTestCode(com.google.errorprone.VisitorState)" class="member-name-link">isTestNgTestCode</a><wbr>(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isSuper(com.sun.source.tree.Tree)" class="member-name-link">isSuper</a><wbr>(com.sun.source.tree.Tree&nbsp;tree)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isTestNgTestCode(com.google.errorprone.VisitorState)" class="member-name-link">isTestNgTestCode</a><wbr>(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns true if the leaf node in the <code>TreePath</code> from <code>state</code> sits somewhere
  underneath a class or method that is marked as TestNG test code.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isVoidType(com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)" class="member-name-link">isVoidType</a><wbr>(com.sun.tools.javac.code.Type&nbsp;type,
- <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Return true if the given type is 'void' or 'Void'.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;com.sun.source.tree.ExpressionTree&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#matchBinaryTree(com.sun.source.tree.BinaryTree,java.util.List,com.google.errorprone.VisitorState)" class="member-name-link">matchBinaryTree</a><wbr>(com.sun.source.tree.BinaryTree&nbsp;tree,
- <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.ExpressionTree&gt;&gt;&nbsp;matchers,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isVoidType(com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)" class="member-name-link">isVoidType</a><wbr>(com.sun.tools.javac.code.Type&nbsp;type,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Return true if the given type is 'void' or 'Void'.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;com.sun.source.tree.ExpressionTree&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#matchBinaryTree(com.sun.source.tree.BinaryTree,java.util.List,com.google.errorprone.VisitorState)" class="member-name-link">matchBinaryTree</a><wbr>(com.sun.source.tree.BinaryTree&nbsp;tree,
+ <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;com.sun.source.tree.ExpressionTree&gt;&gt;&nbsp;matchers,
+ <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Given a BinaryTree to match against and a list of two matchers, applies the matchers to the
  operands in both orders.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html" title="class or interface in java.util.stream" class="external-link">Stream</a>&lt;com.sun.tools.javac.code.Symbol.MethodSymbol&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#matchingMethods(com.sun.tools.javac.util.Name,java.util.function.Predicate,com.sun.tools.javac.code.Type,com.sun.tools.javac.code.Types)" class="member-name-link">matchingMethods</a><wbr>(com.sun.tools.javac.util.Name&nbsp;name,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html" title="class or interface in java.util.stream" class="external-link">Stream</a>&lt;com.sun.tools.javac.code.Symbol.MethodSymbol&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#matchingMethods(com.sun.tools.javac.util.Name,java.util.function.Predicate,com.sun.tools.javac.code.Type,com.sun.tools.javac.code.Types)" class="member-name-link">matchingMethods</a><wbr>(com.sun.tools.javac.util.Name&nbsp;name,
  <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html" title="class or interface in java.util.function" class="external-link">Predicate</a>&lt;com.sun.tools.javac.code.Symbol.MethodSymbol&gt;&nbsp;predicate,
  com.sun.tools.javac.code.Type&nbsp;startClass,
  com.sun.tools.javac.code.Types&nbsp;types)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Finds all methods in any superclass of <code>startClass</code> with a certain <code>name</code> that
  match the given <code>predicate</code>.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#methodCanBeOverridden(com.sun.tools.javac.code.Symbol.MethodSymbol)" class="member-name-link">methodCanBeOverridden</a><wbr>(com.sun.tools.javac.code.Symbol.MethodSymbol&nbsp;methodSymbol)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#methodCanBeOverridden(com.sun.tools.javac.code.Symbol.MethodSymbol)" class="member-name-link">methodCanBeOverridden</a><wbr>(com.sun.tools.javac.code.Symbol.MethodSymbol&nbsp;methodSymbol)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Determines whether a method can be overridden.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#methodIsPublicAndNotAnOverride(com.sun.tools.javac.code.Symbol.MethodSymbol,com.google.errorprone.VisitorState)" class="member-name-link">methodIsPublicAndNotAnOverride</a><wbr>(com.sun.tools.javac.code.Symbol.MethodSymbol&nbsp;method,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#methodIsPublicAndNotAnOverride(com.sun.tools.javac.code.Symbol.MethodSymbol,com.google.errorprone.VisitorState)" class="member-name-link">methodIsPublicAndNotAnOverride</a><wbr>(com.sun.tools.javac.code.Symbol.MethodSymbol&nbsp;method,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns true if the given method symbol is public (both the method and the enclosing class) and
  does <i>not</i> have a super-method (i.e., it is not an <code>@Override</code>).</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.sun.tools.javac.code.Symbol.ClassSymbol</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#outermostClass(com.sun.tools.javac.code.Symbol)" class="member-name-link">outermostClass</a><wbr>(com.sun.tools.javac.code.Symbol&nbsp;symbol)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.sun.tools.javac.code.Symbol.ClassSymbol</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#outermostClass(com.sun.tools.javac.code.Symbol)" class="member-name-link">outermostClass</a><wbr>(com.sun.tools.javac.code.Symbol&nbsp;symbol)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns the outermost enclosing owning class, or <code>null</code>.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#requiresParentheses(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)" class="member-name-link">requiresParentheses</a><wbr>(com.sun.source.tree.ExpressionTree&nbsp;expression,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#requiresParentheses(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)" class="member-name-link">requiresParentheses</a><wbr>(com.sun.source.tree.ExpressionTree&nbsp;expression,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Checks whether an expression requires parentheses.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.sun.tools.javac.code.Symbol.MethodSymbol</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#resolveExistingMethod(com.google.errorprone.VisitorState,com.sun.tools.javac.code.Symbol.TypeSymbol,com.sun.tools.javac.util.Name,java.lang.Iterable,java.lang.Iterable)" class="member-name-link">resolveExistingMethod</a><wbr>(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.sun.tools.javac.code.Symbol.MethodSymbol</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#resolveExistingMethod(com.google.errorprone.VisitorState,com.sun.tools.javac.code.Symbol.TypeSymbol,com.sun.tools.javac.util.Name,java.lang.Iterable,java.lang.Iterable)" class="member-name-link">resolveExistingMethod</a><wbr>(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
  com.sun.tools.javac.code.Symbol.TypeSymbol&nbsp;base,
  com.sun.tools.javac.util.Name&nbsp;name,
  <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;argTypes,
  <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;tyargTypes)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Given a Type (<code>base</code>), find the method named <code>name</code>, with the appropriate <code>
  argTypes</code> and <code>tyargTypes</code> and return its MethodSymbol.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#sameVariable(com.sun.source.tree.ExpressionTree,com.sun.source.tree.ExpressionTree)" class="member-name-link">sameVariable</a><wbr>(com.sun.source.tree.ExpressionTree&nbsp;expr1,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#sameVariable(com.sun.source.tree.ExpressionTree,com.sun.source.tree.ExpressionTree)" class="member-name-link">sameVariable</a><wbr>(com.sun.source.tree.ExpressionTree&nbsp;expr1,
  com.sun.source.tree.ExpressionTree&nbsp;expr2)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Determines whether two expressions refer to the same variable.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="ErrorProneScope.html" title="class in com.google.errorprone.util">ErrorProneScope</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#scope(com.sun.tools.javac.code.Scope)" class="member-name-link">scope</a><wbr>(com.sun.tools.javac.code.Scope&nbsp;scope)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="ErrorProneScope.html" title="class in com.google.errorprone.util">ErrorProneScope</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#scope(com.sun.tools.javac.code.Scope)" class="member-name-link">scope</a><wbr>(com.sun.tools.javac.code.Scope&nbsp;scope)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns a compatibility adapter around <code>Scope</code>.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#shouldKeep(com.sun.source.tree.Tree)" class="member-name-link">shouldKeep</a><wbr>(com.sun.source.tree.Tree&nbsp;tree)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#shouldKeep(com.sun.source.tree.Tree)" class="member-name-link">shouldKeep</a><wbr>(com.sun.source.tree.Tree&nbsp;tree)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns true if any of the given tree is a declaration annotated with an annotation with the
  simple name <code>@UsedReflectively</code> or <code>@Keep</code>, or any annotations meta-annotated with
  an annotation with that simple name.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html" title="class or interface in java.util.stream" class="external-link">Stream</a>&lt;com.sun.source.tree.ExpressionTree&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#streamReceivers(com.sun.source.tree.ExpressionTree)" class="member-name-link">streamReceivers</a><wbr>(com.sun.source.tree.ExpressionTree&nbsp;tree)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html" title="class or interface in java.util.stream" class="external-link">Stream</a>&lt;com.sun.source.tree.ExpressionTree&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#streamReceivers(com.sun.source.tree.ExpressionTree)" class="member-name-link">streamReceivers</a><wbr>(com.sun.source.tree.ExpressionTree&nbsp;tree)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns a <a href="https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html" title="class or interface in java.util.stream" class="external-link"><code>Stream</code></a> of <code>ExpressionTree</code>s resulting from calling <a href="#getReceiver(com.sun.source.tree.ExpressionTree)"><code>getReceiver(ExpressionTree)</code></a> repeatedly until no receiver exists.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html" title="class or interface in java.util.stream" class="external-link">Stream</a>&lt;com.sun.tools.javac.code.Symbol.MethodSymbol&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#streamSuperMethods(com.sun.tools.javac.code.Symbol.MethodSymbol,com.sun.tools.javac.code.Types)" class="member-name-link">streamSuperMethods</a><wbr>(com.sun.tools.javac.code.Symbol.MethodSymbol&nbsp;methodSymbol,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html" title="class or interface in java.util.stream" class="external-link">Stream</a>&lt;com.sun.tools.javac.code.Symbol.MethodSymbol&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#streamSuperMethods(com.sun.tools.javac.code.Symbol.MethodSymbol,com.sun.tools.javac.code.Types)" class="member-name-link">streamSuperMethods</a><wbr>(com.sun.tools.javac.code.Symbol.MethodSymbol&nbsp;methodSymbol,
  com.sun.tools.javac.code.Types&nbsp;types)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">See <a href="#findSuperMethods(com.sun.tools.javac.code.Symbol.MethodSymbol,com.sun.tools.javac.code.Types)"><code>findSuperMethods(MethodSymbol, Types)</code></a>.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#stringContainsComments(java.lang.CharSequence,com.sun.tools.javac.util.Context)" class="member-name-link">stringContainsComments</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;source,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#stringContainsComments(java.lang.CharSequence,com.sun.tools.javac.util.Context)" class="member-name-link">stringContainsComments</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;source,
  com.sun.tools.javac.util.Context&nbsp;context)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns true if the given source code contains comments.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.sun.source.tree.ExpressionTree</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#stripParentheses(com.sun.source.tree.ExpressionTree)" class="member-name-link">stripParentheses</a><wbr>(com.sun.source.tree.ExpressionTree&nbsp;tree)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.sun.source.tree.ExpressionTree</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#stripParentheses(com.sun.source.tree.ExpressionTree)" class="member-name-link">stripParentheses</a><wbr>(com.sun.source.tree.ExpressionTree&nbsp;tree)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Given an ExpressionTree, removes any enclosing parentheses.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.sun.source.tree.Tree</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#stripParentheses(com.sun.source.tree.Tree)" class="member-name-link">stripParentheses</a><wbr>(com.sun.source.tree.Tree&nbsp;tree)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.sun.source.tree.Tree</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#stripParentheses(com.sun.source.tree.Tree)" class="member-name-link">stripParentheses</a><wbr>(com.sun.source.tree.Tree&nbsp;tree)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Removes any enclosing parentheses from the tree.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="ASTHelpers.TargetType.html" title="class in com.google.errorprone.util">ASTHelpers.TargetType</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#targetType(com.google.errorprone.VisitorState)" class="member-name-link">targetType</a><wbr>(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="ASTHelpers.TargetType.html" title="class in com.google.errorprone.util">ASTHelpers.TargetType</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#targetType(com.google.errorprone.VisitorState)" class="member-name-link">targetType</a><wbr>(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns the target type of the tree at the given <a href="../VisitorState.html" title="class in com.google.errorprone"><code>VisitorState</code></a>'s path, or else <code>
  null</code>.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#variableIsStaticFinal(com.sun.tools.javac.code.Symbol.VarSymbol)" class="member-name-link">variableIsStaticFinal</a><wbr>(com.sun.tools.javac.code.Symbol.VarSymbol&nbsp;var)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#variableIsStaticFinal(com.sun.tools.javac.code.Symbol.VarSymbol)" class="member-name-link">variableIsStaticFinal</a><wbr>(com.sun.tools.javac.code.Symbol.VarSymbol&nbsp;var)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Whether the variable is (or should be regarded as) static final.</div>
 </div>
 </div>
@@ -1964,6 +1970,14 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getSwitchDefault(com.sun.source.tree.SwitchTree)">
 <h3>getSwitchDefault</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;? extends com.sun.source.tree.CaseTree&gt;</span>&nbsp;<span class="element-name">getSwitchDefault</span><wbr><span class="parameters">(com.sun.source.tree.SwitchTree&nbsp;switchTree)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="isRuleKind(com.sun.source.tree.CaseTree)">
+<h3>isRuleKind</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isRuleKind</span><wbr><span class="parameters">(com.sun.source.tree.CaseTree&nbsp;caseTree)</span></div>
+<div class="block">Returns true if the given <code>CaseTree</code> is in the form: <code>case &lt;expression&gt; -&gt;
+ &lt;expression&gt;</code>.</div>
 </section>
 </li>
 <li>

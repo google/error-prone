@@ -1247,6 +1247,9 @@ This TimeUnit conversion looks buggy: converting from a smaller unit to a larger
 __[ToStringReturnsNull](bugpattern/ToStringReturnsNull)__<br>
 An implementation of Object.toString() should never return null.
 
+__[TraditionalSwitchExpression](bugpattern/TraditionalSwitchExpression)__<br>
+Prefer -&gt; switches for switch expressions
+
 __[TruthAssertExpected](bugpattern/TruthAssertExpected)__<br>
 The actual and expected values appear to be swapped, which results in poor assertion failure messages. The actual value should come first.
 
