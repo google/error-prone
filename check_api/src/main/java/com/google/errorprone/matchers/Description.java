@@ -152,6 +152,19 @@ public class Description {
         Optional.ofNullable(severity), metadata);
   }
 
+  @CheckReturnValue
+  public Description withPosition(DiagnosticPosition position) {
+    return new Description(
+      position,
+      checkName,
+      rawMessage,
+      linkUrl,
+      fixes,
+      severity,
+      metadata
+    );
+  }
+
   /**
    * Construct the link text to include in the compiler error message. Returns null if there is no
    * link.
