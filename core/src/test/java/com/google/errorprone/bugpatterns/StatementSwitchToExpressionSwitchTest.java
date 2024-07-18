@@ -110,6 +110,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "          // Middle comment",
             "          System.out.println(\"obverse\");",
             "          // Break comment",
+            "          // End comment",
             "       }",
             "       case REVERSE -> System.out.println(\"reverse\");",
             "    }",
@@ -268,7 +269,8 @@ public final class StatementSwitchToExpressionSwitchTest {
             "  public void foo(Side side) { ",
             "    switch(side) {",
             "       case HEART -> System.out.println(\"heart2\");",
-            "       case DIAMOND, SPADE, CLUB -> { /* sparkly */",
+            "       case DIAMOND, SPADE, CLUB -> {",
+            "          /* sparkly */",
             "          // Empty block comment 1",
             "          // Empty block comment 2",
             "          // Start of block comment 1",
@@ -354,7 +356,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "       case HEART -> ",
             "          System.out.println(\"heart\");",
             "          // Pre break comment",
-            "       ",
+            "          // Post break comment",
             "       case DIAMOND -> {",
             "          // Diamond break comment",
             "          break;",
@@ -444,7 +446,8 @@ public final class StatementSwitchToExpressionSwitchTest {
             "         case SPADE -> {",
             "            return;",
             "         }",
-            "         case CLUB -> throw new AssertionError();",
+            "         case CLUB ->",
+            "            throw new AssertionError();",
             "      }",
             "    }",
             "  }",
@@ -591,10 +594,11 @@ public final class StatementSwitchToExpressionSwitchTest {
             "          System.out.println(\"diamond\");",
             "          return;",
             "       }",
-            "       default -> /* comment: */",
+            "       default -> ",
+            "         /* comment: */",
             "         System.out.println(\"club\");",
-            "       ",
-            "       case SPADE -> System.out.println(\"spade\");",
+            "       case SPADE -> ",
+            "          System.out.println(\"spade\");",
             "    }",
             "  }",
             "}")
@@ -675,8 +679,11 @@ public final class StatementSwitchToExpressionSwitchTest {
             "            System.out.println(\"will return\");",
             "            return;",
             "         }",
-            "         case DIAMOND -> {break outer;}",
-            "         case SPADE, CLUB -> System.out.println(\"everything else\");",
+            "         case DIAMOND -> {",
+            "            break outer;",
+            "         }",
+            "         case SPADE, CLUB -> ",
+            "            System.out.println(\"everything else\");",
             "      }",
             "    }",
             "  }",
@@ -886,9 +893,12 @@ public final class StatementSwitchToExpressionSwitchTest {
             " ",
             "  public void foo(Side side) { ",
             "    switch(side) {",
-            "       case HEART-> System.out.println(\"heart\");",
-            "       case DIAMOND -> System.out.println(\"nested1\");",
-            "       case SPADE, CLUB -> System.out.println(\"everything else\");",
+            "       case HEART-> ",
+            "         System.out.println(\"heart\");",
+            "       case DIAMOND -> ",
+            "          System.out.println(\"nested1\");",
+            "       case SPADE, CLUB -> ",
+            "          System.out.println(\"everything else\");",
             "    }",
             "  }",
             "}")
@@ -1217,10 +1227,89 @@ public final class StatementSwitchToExpressionSwitchTest {
             "        // more comments.",
             "        // Diamond comment",
             "        System.out.println(\"Heart or diamond\");",
-            "      ",
             "      case SPADES, CLUBS -> {",
             "        bar();",
             "        System.out.println(\"Black suit\");",
+            "       }",
+            "    }",
+            "  }",
+            "  private void bar() {}",
+            "}")
+        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
+        .doTest();
+  }
+
+  @Test
+  public void switchByEnum_accumulatedComments_error() {
+    // Comments should be aggregated across multiple cases
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  enum Suit {HEARTS, CLUBS, SPADES, DIAMONDS};",
+            "  public Test() {}",
+            "  private void foo(Suit suit) {",
+            "    // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]",
+            "    switch(suit) {",
+            "      case /* red */ HEARTS:",
+            "        // A comment here",
+            "        // more comments.",
+            "      case /* red */ DIAMONDS:",
+            "        // Diamonds comment",
+            "      case /* black */SPADES:",
+            "        // Spades comment",
+            "      case /* black */CLUBS:",
+            "        bar();",
+            "        System.out.println(\"Any suit\");",
+            "    }",
+            "  }",
+            "  private void bar() {}",
+            "}")
+        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
+        .doTest();
+
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  enum Suit {HEARTS, CLUBS, SPADES, DIAMONDS};",
+            "  public Test() {}",
+            "  private void foo(Suit suit) {",
+            "    // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]",
+            "    switch(suit) {",
+            "      case /* red */ HEARTS:",
+            "        // A comment here",
+            "        // more comments.",
+            "      case /* red */ DIAMONDS:",
+            "        // Diamonds comment",
+            "      case /* black */SPADES:",
+            "        // Spades comment",
+            "      case /* black */CLUBS:",
+            "        bar();",
+            "        System.out.println(\"Any suit\");",
+            "    }",
+            "  }",
+            "  private void bar() {}",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  enum Suit {HEARTS, CLUBS, SPADES, DIAMONDS};",
+            "  public Test() {}",
+            "  private void foo(Suit suit) {",
+            "    switch(suit) {",
+            "      case HEARTS, DIAMONDS, SPADES, CLUBS -> {",
+            "        /* red */",
+            "        // A comment here",
+            "        /* red */",
+            "        // more comments.",
+            "        // Diamonds comment",
+            "        /* black */",
+            "        // Spades comment",
+            "        /* black */",
+            "        bar();",
+            "        System.out.println(\"Any suit\");",
             "       }",
             "    }",
             "  }",
@@ -1377,6 +1466,80 @@ public final class StatementSwitchToExpressionSwitchTest {
             "}")
         .setArgs(
             ImmutableList.of("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion"))
+        .doTest();
+  }
+
+  @Test
+  public void switchByEnum_afterReturnComments_error() {
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  enum Suit {HEART, SPADE, DIAMOND, CLUB};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public int foo(Suit suit) { ",
+            "    // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]",
+            "    switch(suit) {",
+            "       case HEART:",
+            "          // before return comment",
+            "          return 123;",
+            "          // after return comment",
+            "          /* more comments */",
+            "          default:",
+            "    }",
+            "  return 0;",
+            " }",
+            "}")
+        .setArgs(
+            ImmutableList.of("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion"))
+        .doTest();
+
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  enum Suit {HEART, SPADE, DIAMOND, CLUB};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public int foo(Suit suit) { ",
+            "    // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]",
+            "    switch(suit) {",
+            "       case HEART:",
+            "          // before return comment",
+            "          return 123;",
+            "          // after return comment",
+            "          /* more comments */",
+            "          default:",
+            "          //default comment",
+            "    }",
+            "  return 0;",
+            " }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  enum Suit {HEART, SPADE, DIAMOND, CLUB};",
+            "  public Test(int foo) {}",
+            "  public int foo(Suit suit) {",
+            "    switch(suit) {",
+            "      case HEART -> {",
+            "          // before return comment",
+            "          return 123;",
+            "          // after return comment",
+            "          /* more comments */",
+            "        }",
+            "      default -> {",
+            "          //default comment",
+            "       }",
+            "    }",
+            "    return 0;",
+            "  }",
+            "}")
+        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
         .doTest();
   }
 

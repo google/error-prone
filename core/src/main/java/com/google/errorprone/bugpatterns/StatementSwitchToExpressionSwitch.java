@@ -33,6 +33,7 @@ import static com.sun.source.tree.Tree.Kind.THROW;
 import static java.util.stream.Collectors.joining;
 
 import com.google.auto.value.AutoValue;
+import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
@@ -45,6 +46,7 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
+import com.google.errorprone.util.ErrorProneComment;
 import com.google.errorprone.util.Reachability;
 import com.google.errorprone.util.SourceVersion;
 import com.sun.source.tree.AssignmentTree;
@@ -513,6 +515,11 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
       SwitchTree switchTree, VisitorState state, AnalysisResult analysisResult) {
 
     List<? extends CaseTree> cases = switchTree.getCases();
+    ImmutableList<ErrorProneComment> allSwitchComments =
+        state.getTokensForNode(switchTree).stream()
+            .flatMap(errorProneToken -> errorProneToken.comments().stream())
+            .collect(toImmutableList());
+
     StringBuilder replacementCodeBuilder = new StringBuilder();
     replacementCodeBuilder
         .append("switch ")
@@ -540,19 +547,49 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
       replacementCodeBuilder.append(
           isDefaultCase ? "default" : printCaseExpressions(caseTree, state));
 
+      Optional<String> commentsAfterCaseOptional =
+          extractCommentsAfterCase(switchTree, allSwitchComments, state, caseIndex);
       if (analysisResult.groupedWithNextCase().get(caseIndex)) {
         firstCaseInGroup = false;
         replacementCodeBuilder.append(", ");
         // Capture comments from this case so they can be added to the group's transformed case
         if (!transformedBlockSource.trim().isEmpty()) {
-          groupedCaseCommentsAccumulator.append(removeFallThruLines(transformedBlockSource));
+          String commentsToAppend = removeFallThruLines(transformedBlockSource);
+          if (groupedCaseCommentsAccumulator.length() > 0) {
+            groupedCaseCommentsAccumulator.append("\n");
+          }
+          groupedCaseCommentsAccumulator.append(commentsToAppend);
         }
+
+        if (commentsAfterCaseOptional.isPresent()) {
+          if (groupedCaseCommentsAccumulator.length() > 0) {
+            groupedCaseCommentsAccumulator.append("\n");
+          }
+          groupedCaseCommentsAccumulator.append(commentsAfterCaseOptional.get());
+        }
+
         // Add additional cases to the list on the lhs of the arrow
         continue;
       } else {
-        // This case is the last case in its group, so insert the collected comments from the lhs of
-        // the colon here
-        transformedBlockSource = groupedCaseCommentsAccumulator + transformedBlockSource;
+        // Extract comments (if any) preceding break that was removed as redundant
+        Optional<String> commentsBeforeRemovedBreak =
+            filteredStatements.isEmpty()
+                ? Optional.empty()
+                : extractCommentsBeforeRemovedBreak(caseTree, state, filteredStatements);
+
+        // Join together all comments and code, separating with newlines
+        transformedBlockSource =
+            Joiner.on("\n")
+                .skipNulls()
+                .join(
+                    // This case is the last case in its group, so insert any comments from prior
+                    // grouped cases first
+                    groupedCaseCommentsAccumulator.length() == 0
+                        ? null
+                        : groupedCaseCommentsAccumulator.toString(),
+                    transformedBlockSource.isEmpty() ? null : transformedBlockSource,
+                    commentsBeforeRemovedBreak.orElse(null),
+                    commentsAfterCaseOptional.orElse(null));
       }
 
       replacementCodeBuilder.append(" -> ");
@@ -570,17 +607,10 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
         }
       } else {
         // Transformed block has code
-        // Extract comments (if any) for break that was removed as redundant
-        Optional<String> commentsBeforeRemovedBreak =
-            extractCommentsBeforeRemovedBreak(caseTree, state, filteredStatements);
-        if (commentsBeforeRemovedBreak.isPresent()) {
-          transformedBlockSource = transformedBlockSource + "\n" + commentsBeforeRemovedBreak.get();
-        }
-
         // To improve readability, don't use braces on the rhs if not needed
         if (shouldTransformCaseWithoutBraces(filteredStatements)) {
-          // Single statement with no comments - no braces needed
-          replacementCodeBuilder.append(transformedBlockSource);
+          // No braces needed
+          replacementCodeBuilder.append("\n").append(transformedBlockSource);
         } else {
           // Use braces on the rhs
           replacementCodeBuilder.append("{\n").append(transformedBlockSource).append("\n}");
@@ -599,7 +629,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
   /**
    * Transforms the supplied statement switch into a {@code return switch ...} style of expression
    * switch. In this conversion, each nontrivial statement block is mapped one-to-one to a new
-   * expression on the right-hand side of the arrow. Comments are presevered where possible.
+   * expression on the right-hand side of the arrow. Comments are preserved where possible.
    * Precondition: the {@code AnalysisResult} for the {@code SwitchTree} must have deduced that this
    * conversion is possible.
    */
@@ -901,6 +931,43 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
         .forEach(comment -> stringBuilder.append(comment.getText()).append("\n"));
 
     return lhsEnd;
+  }
+
+  /**
+   * Extracts any comments appearing after the specified {@code caseIndex} but before the subsequent
+   * case or end of the {@code switchTree}. Comments are merged into a single string separated by
+   * newlines.
+   */
+  private static Optional<String> extractCommentsAfterCase(
+      SwitchTree switchTree,
+      ImmutableList<ErrorProneComment> allSwitchComments,
+      VisitorState state,
+      int caseIndex) {
+
+    // Indexing relative to the start position of the switch statement
+    int switchStart = getStartPosition(switchTree);
+    // Invariant: caseEndIndex >= 0
+    int caseEndIndex = state.getEndPosition(switchTree.getCases().get(caseIndex)) - switchStart;
+    // Invariant: nextCaseStartIndex >= caseEndIndex
+    int nextCaseStartIndex =
+        caseIndex == switchTree.getCases().size() - 1
+            ? state.getEndPosition(switchTree) - switchStart
+            : getStartPosition(switchTree.getCases().get(caseIndex + 1)) - switchStart;
+
+    String filteredComments =
+        allSwitchComments.stream()
+            // Comments after the end of the current case and before the start of the next case
+            .filter(
+                comment ->
+                    comment.getPos() >= caseEndIndex && comment.getPos() < nextCaseStartIndex)
+            .map(ErrorProneComment::getText)
+            // Remove "fall thru" comments
+            .map(commentText -> removeFallThruLines(commentText))
+            // Remove empty comments
+            .filter(commentText -> !commentText.isEmpty())
+            .collect(joining("\n"));
+
+    return filteredComments.isEmpty() ? Optional.empty() : Optional.of(filteredComments);
   }
 
   /**
