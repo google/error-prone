@@ -2813,6 +2813,9 @@ public class ASTHelpers {
    * <expression>}.
    */
   public static boolean isRuleKind(CaseTree caseTree) {
+    if (GET_CASE_KIND_METHOD == null) {
+      return false;
+    }
     Enum<?> kind;
     try {
       kind = (Enum<?>) GET_CASE_KIND_METHOD.invoke(caseTree);

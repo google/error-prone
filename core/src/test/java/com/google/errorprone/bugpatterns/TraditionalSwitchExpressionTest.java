@@ -50,7 +50,6 @@ public class TraditionalSwitchExpressionTest {
 
   @Test
   public void negativeStatement() {
-    assumeTrue(RuntimeVersion.isAtLeast14());
     testHelper
         .addSourceLines(
             "Test.java",
