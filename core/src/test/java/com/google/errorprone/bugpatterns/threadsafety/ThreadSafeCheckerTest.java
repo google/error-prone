@@ -1084,4 +1084,21 @@ public class ThreadSafeCheckerTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void protoEnum() {
+    compilationHelper
+        .addSourceLines(
+            "E.java",
+            "import com.google.protobuf.ProtocolMessageEnum;",
+            "abstract class E implements ProtocolMessageEnum {",
+            "}")
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.ThreadSafe;",
+            "@ThreadSafe class Test {",
+            "  final E x = null;",
+            "}")
+        .doTest();
+  }
 }

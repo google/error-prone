@@ -367,16 +367,12 @@ public final class ThreadSafety {
       return new AutoValue_ThreadSafety_Violation(path);
     }
 
-    /**
-     * @return true if a violation was found
-     */
+    /** Returns true if a violation was found. */
     public boolean isPresent() {
       return !path().isEmpty();
     }
 
-    /**
-     * @return the explanation
-     */
+    /** Returns the explanation. */
     public String message() {
       return Joiner.on(", ").join(path());
     }
@@ -656,6 +652,9 @@ public final class ThreadSafety {
           return Violation.of(
               String.format("'%s' is a mutable proto message", type.tsym.getSimpleName()));
         }
+        return Violation.absent();
+      }
+      if (WellKnownMutability.isProtoEnum(state, type)) {
         return Violation.absent();
       }
       return Violation.of(

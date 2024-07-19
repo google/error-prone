@@ -342,6 +342,9 @@ public final class WellKnownMutability implements ThreadSafety.KnownTypes {
   private static final Supplier<Type> PROTOCOL_MESSAGE_TYPE =
       Suppliers.typeFromString("com.google.io.protocol.ProtocolMessage");
 
+  private static final Supplier<Type> PROTOCOL_MESSAGE_ENUM =
+      Suppliers.typeFromString("com.google.protobuf.ProtocolMessageEnum");
+
   private static boolean isAssignableTo(Type type, Supplier<Type> supplier, VisitorState state) {
     Type to = supplier.get(state);
     if (to == null) {
@@ -369,6 +372,11 @@ public final class WellKnownMutability implements ThreadSafety.KnownTypes {
     checkNotNull(type);
     return isAssignableTo(type, MUTABLE_MESSAGE_TYPE, state)
         && !isAssignableTo(type, PROTOCOL_MESSAGE_TYPE, state);
+  }
+
+  public static boolean isProtoEnum(VisitorState state, Type type) {
+    checkNotNull(type);
+    return isAssignableTo(type, PROTOCOL_MESSAGE_ENUM, state);
   }
 
   /** Returns true if the type is an annotation. */
