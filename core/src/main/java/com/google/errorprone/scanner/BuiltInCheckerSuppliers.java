@@ -105,6 +105,7 @@ import com.google.errorprone.bugpatterns.DeadThread;
 import com.google.errorprone.bugpatterns.DeduplicateConstants;
 import com.google.errorprone.bugpatterns.DeeplyNested;
 import com.google.errorprone.bugpatterns.DefaultCharset;
+import com.google.errorprone.bugpatterns.DefaultLocale;
 import com.google.errorprone.bugpatterns.DefaultPackage;
 import com.google.errorprone.bugpatterns.DepAnn;
 import com.google.errorprone.bugpatterns.DeprecatedVariable;
@@ -889,6 +890,7 @@ public class BuiltInCheckerSuppliers {
           DateFormatConstant.class,
           DeeplyNested.class,
           DefaultCharset.class,
+          DefaultLocale.class,
           DefaultPackage.class,
           DeprecatedVariable.class,
           DirectInvocationOnMock.class,

@@ -392,15 +392,15 @@ public class DefaultLocale extends BugChecker
 
   private Fix dateFormatGetInstanceFix(
       MethodInvocationTree tree, VisitorState state, LocaleFix localeFix) {
-    // XXX: handle case of statically imported DateFormat.getInstance?
     var fix = SuggestedFix.builder().setShortDescription(localeFix.title());
     fix.replace(
-        tree,
-        String.format(
-            "%1$s.getDateTimeInstance(%2$s, %<s, %3$s)",
-            state.getSourceForNode(ASTHelpers.getReceiver(tree)),
-            SuggestedFixes.qualifyStaticImport("java.text.DateFormat.SHORT", fix, state),
-            localeFix.replacement(fix, state)));
+            state.getEndPosition(tree.getMethodSelect()),
+            state.getEndPosition(tree),
+            String.format(
+                "(%1$s, %<s, %2$s)",
+                SuggestedFixes.qualifyStaticImport("java.text.DateFormat.SHORT", fix, state),
+                localeFix.replacement(fix, state)))
+        .merge(SuggestedFixes.renameMethodInvocation(tree, "getDateTimeInstance", state));
     return fix.build();
   }
 
@@ -460,9 +460,10 @@ public class DefaultLocale extends BugChecker
    */
   private boolean shouldRefactorStringFormat(
       ExpressionTree pattern, List<? extends ExpressionTree> arguments, VisitorState state) {
-    if (!(pattern instanceof LiteralTree)) return true;
-    if (!onlyContainsSpecifiersInAllowList((String) ((LiteralTree) pattern).getValue()))
+    String patternValue = ASTHelpers.constValue(pattern, String.class);
+    if (patternValue != null && !onlyContainsSpecifiersInAllowList(patternValue)) {
       return true;
+    }
     // Ideally we'd only check for Formattable on arguments used in %s specifiers
     return containsSomeFormattableArgument(arguments, state);
   }
@@ -480,7 +481,9 @@ public class DefaultLocale extends BugChecker
   }
 
   private boolean mightBeFormattable(ExpressionTree tree, VisitorState state) {
-    if (tree instanceof LiteralTree) return false;
+    if (tree instanceof LiteralTree) {
+      return false;
+    }
     var type = ASTHelpers.getResultType(tree);
     return type == null || ASTHelpers.isCastable(type, FORMATTABLE.get(state), state);
   }

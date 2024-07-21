@@ -78,7 +78,7 @@ public class DefaultLocaleTest {
             "import java.text.*;",
             "import java.util.Formatter;",
             "class Test {",
-            "  static final String PATTERN = \"\";",
+            "  static final String PATTERN = \"%d\";",
             "  void f(PrintStream ps, PrintWriter pw) throws Exception {",
             "    // BUG: Diagnostic contains: ps.format(Locale.getDefault(FORMAT), PATTERN, 42);",
             "    ps.format(PATTERN, 42);",
@@ -108,6 +108,7 @@ public class DefaultLocaleTest {
             "import java.io.*;",
             "import java.util.Formattable;",
             "class Test {",
+            "  static final String PATTERN = \"%s\";",
             "  final class B {}",
             "  void f(String s, int i, B b) throws Exception {",
             // On System.out and System.err
@@ -116,6 +117,7 @@ public class DefaultLocaleTest {
             "    System.err.format(\"%d\", 42);",
             "    System.err.printf(\"%d\", 42);",
             // "Safe" String.format
+            "    String.format(PATTERN, 42);",
             "    String.format(\"%s\", \"literal\");",
             "    String.format(\"%c\", 42);",
             "    String.format(\"%s\", s);",
