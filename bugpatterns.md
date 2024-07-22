@@ -1092,7 +1092,7 @@ __[NullableTypeParameter](bugpattern/NullableTypeParameter)__<br>
 Nullness annotations directly on type parameters are interpreted differently by different tools
 
 __[NullableVoid](bugpattern/NullableVoid)__<br>
-void-returning methods should not be annotated with @Nullable, since they cannot return null
+void-returning methods should not be annotated with nullness annotations, since they cannot return null
 
 __[NullableWildcard](bugpattern/NullableWildcard)__<br>
 Nullness annotations directly on wildcard types are interpreted differently by different tools

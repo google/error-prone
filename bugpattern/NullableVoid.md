@@ -1,7 +1,7 @@
 ---
 title: NullableVoid
-summary: void-returning methods should not be annotated with @Nullable, since they
-  cannot return null
+summary: void-returning methods should not be annotated with nullness annotations,
+  since they cannot return null
 layout: bugpattern
 tags: Style
 severity: WARNING
