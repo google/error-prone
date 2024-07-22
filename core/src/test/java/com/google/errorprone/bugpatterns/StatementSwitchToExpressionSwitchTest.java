@@ -118,7 +118,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "}")
         .setArgs(
             ImmutableList.of("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion"))
-        .doTest();
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 
   @Test
@@ -196,7 +196,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "}")
         .setArgs(
             ImmutableList.of("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion"))
-        .doTest();
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 
   @Test
@@ -282,7 +282,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "}")
         .setArgs(
             ImmutableList.of("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion"))
-        .doTest();
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 
   @Test
@@ -328,6 +328,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "  }",
             " ",
             "  public void foo(Side side) { ",
+            "    // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]",
             "    switch(side) {",
             "       case HEART:",
             "          System.out.println(\"heart\");",
@@ -367,7 +368,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "}")
         .setArgs(
             ImmutableList.of("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion"))
-        .doTest();
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 
   @Test
@@ -604,7 +605,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "}")
         .setArgs(
             ImmutableList.of("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion"))
-        .doTest();
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 
   @Test
@@ -1155,7 +1156,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "  private void bar() {}",
             "}")
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
-        .doTest();
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 
   @Test
@@ -1236,7 +1237,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "  private void bar() {}",
             "}")
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
-        .doTest();
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 
   @Test
@@ -1298,12 +1299,13 @@ public final class StatementSwitchToExpressionSwitchTest {
             "  enum Suit {HEARTS, CLUBS, SPADES, DIAMONDS};",
             "  public Test() {}",
             "  private void foo(Suit suit) {",
+            "    // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]",
             "    switch(suit) {",
             "      case HEARTS, DIAMONDS, SPADES, CLUBS -> {",
             "        /* red */",
             "        // A comment here",
-            "        /* red */",
             "        // more comments.",
+            "        /* red */",
             "        // Diamonds comment",
             "        /* black */",
             "        // Spades comment",
@@ -1316,7 +1318,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "  private void bar() {}",
             "}")
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
-        .doTest();
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 
   @Test
@@ -1384,7 +1386,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "        // The quick brown fox, jumps over the lazy dog, etc.",
             "        break;",
             "      }",
-            "  ",
             "      default -> ",
             "        throw new RuntimeException(\"Invalid type.\");",
             "      ",
@@ -1393,7 +1394,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "}")
         .setArgs(
             ImmutableList.of("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion"))
-        .doTest();
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 
   @Test
@@ -1466,7 +1467,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "}")
         .setArgs(
             ImmutableList.of("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion"))
-        .doTest();
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 
   @Test
@@ -1502,8 +1503,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             "class Test {",
             "  enum Suit {HEART, SPADE, DIAMOND, CLUB};",
-            "  public Test(int foo) {",
-            "  }",
+            "  public Test(int foo) {}",
             " ",
             "  public int foo(Suit suit) { ",
             "    // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]",
@@ -1524,7 +1524,9 @@ public final class StatementSwitchToExpressionSwitchTest {
             "class Test {",
             "  enum Suit {HEART, SPADE, DIAMOND, CLUB};",
             "  public Test(int foo) {}",
+            " ",
             "  public int foo(Suit suit) {",
+            "    // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]",
             "    switch(suit) {",
             "      case HEART -> {",
             "          // before return comment",
@@ -1540,7 +1542,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "  }",
             "}")
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
-        .doTest();
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 
   /**********************************
