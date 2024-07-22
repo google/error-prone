@@ -215,9 +215,9 @@ public final class StatementSwitchToExpressionSwitchTest {
             "    // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]",
             "    switch(side) {",
             "       case HEART:",
-            "          System.out.println(\"heart\");",
+            "          System.out.println(\"heart2\");",
             "          break;",
-            "       case DIAMOND:",
+            "       case /* sparkly */ DIAMOND /* Sparkly */:",
             "          // Empty block comment 1",
             "          // Fall through",
             "       case SPADE:",
@@ -247,7 +247,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "       case HEART:",
             "          System.out.println(\"heart2\");",
             "          break;",
-            "       case /* sparkly */ DIAMOND:",
+            "       case /* sparkly */ DIAMOND /* Sparkly */:",
             "          // Empty block comment 1",
             "          // Fall through",
             "       case SPADE:",
@@ -271,6 +271,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "       case HEART -> System.out.println(\"heart2\");",
             "       case DIAMOND, SPADE, CLUB -> {",
             "          /* sparkly */",
+            "          /* Sparkly */",
             "          // Empty block comment 1",
             "          // Empty block comment 2",
             "          // Start of block comment 1",
@@ -1679,12 +1680,14 @@ public final class StatementSwitchToExpressionSwitchTest {
             "       case SPADE -> throw new RuntimeException();",
             "       case CLUB -> throw new NullPointerException();",
             "    };",
+            "    // This should never happen",
+            " ",
             "  }",
             "}")
         .setArgs(
             ImmutableList.of(
                 "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion"))
-        .doTest();
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 
   @Test
@@ -1812,7 +1815,7 @@ public final class StatementSwitchToExpressionSwitchTest {
         .setArgs(
             ImmutableList.of(
                 "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion"))
-        .doTest();
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 
   @Test
@@ -1915,6 +1918,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "      }",
             "      // Custom comment - should never happen",
             "      int z = invoke(/* block comment 0 */);",
+            "      // Custom comment 2",
             "      {z++;}",
             "      throw new RuntimeException(\"Switch was not exhaustive at runtime \" + z);",
             "    }",
@@ -1955,6 +1959,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "      }",
             "      // Custom comment - should never happen",
             "      int z = invoke(/* block comment 0 */);",
+            "      // Custom comment 2",
             "      {z++;}",
             "      throw new RuntimeException(\"Switch was not exhaustive at runtime \" + z);",
             "    }",
@@ -1986,6 +1991,9 @@ public final class StatementSwitchToExpressionSwitchTest {
             "        case CLUB -> throw new NullPointerException();",
             "      };",
             "      // Custom comment - should never happen",
+            "",
+            "      // Custom comment 2",
+            "",
             "    }",
             "    System.out.println(\"don't delete 2\");",
             "    return 0;",
@@ -1994,7 +2002,7 @@ public final class StatementSwitchToExpressionSwitchTest {
         .setArgs(
             ImmutableList.of(
                 "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion"))
-        .doTest();
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 
   @Test
@@ -2107,7 +2115,136 @@ public final class StatementSwitchToExpressionSwitchTest {
         .setArgs(
             ImmutableList.of(
                 "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion"))
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+  }
+
+  @Test
+  public void switchByEnum_groupedComments_errorAndNoRemoval() {
+    // The switch is exhaustive but doesn't have any statements immediately following it in the
+    // lowest ancestor statement block
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public int invoke() {",
+            "    return 123;",
+            "  }",
+            "  public int foo(Side side) { ",
+            "    System.out.println(\"don't delete 0\");",
+            "    if (invoke() > 0) {",
+            "      System.out.println(\"don't delete 1\");",
+            "      // Preceding comment",
+            "      // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]",
+            "      switch(side) {",
+            "        case HEART /* lhs comment */: // rhs comment",
+            "          // Another comment",
+            "        case /* sparkly */ DIAMOND /* Sparkly */:",
+            "          // Diamond",
+            "        case SPADE:",
+            "          // Before invoke",
+            "          return invoke();",
+            "          // After invoke",
+            "        case CLUB:",
+            "          throw new NullPointerException();",
+            "          // After last case",
+            "      }",
+            "    }",
+            "    // Custom comment - should never happen because invoke returns 123 or throws",
+            "    int z = invoke(/* block comment 0 */);",
+            "    {z++;}",
+            "    throw new RuntimeException(\"Invoke <= 0 at runtime \");",
+            "  }",
+            "}")
+        .setArgs(
+            ImmutableList.of(
+                "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion"))
         .doTest();
+
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public int invoke() {",
+            "    return 123;",
+            "  }",
+            "  public int foo(Side side) { ",
+            "    System.out.println(\"don't delete 0\");",
+            "    if (invoke() > 0) {",
+            "      System.out.println(\"don't delete 1\");",
+            "      // Preceding comment",
+            "      // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]",
+            "      switch(side) {",
+            "        case HEART /* lhs comment */: // rhs comment",
+            "          // Another comment",
+            "        case /* sparkly */ DIAMOND /* Sparkly */:",
+            "          // Diamond",
+            "        case SPADE:",
+            "          // Before invoke",
+            "          return invoke();",
+            "          // After invoke",
+            "          /* More after invoke */",
+            "        case CLUB:",
+            "          throw new NullPointerException();",
+            "          // After last case",
+            "      }",
+            "    }",
+            "    // Custom comment - should never happen because invoke returns 123 or throws",
+            "    int z = invoke(/* block comment 0 */);",
+            "    {z++;}",
+            "    throw new RuntimeException(\"Invoke <= 0 at runtime \");",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public int invoke() {",
+            "    return 123;",
+            "  }",
+            "  public int foo(Side side) { ",
+            "    System.out.println(\"don't delete 0\");",
+            "    if (invoke() > 0) {",
+            "      System.out.println(\"don't delete 1\");",
+            "      // Preceding comment",
+            "      // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]",
+            "      return switch(side) {",
+            "        case HEART, DIAMOND, SPADE -> ",
+            "          /* lhs comment */",
+            "          // rhs comment",
+            "          // Another comment",
+            "          /* sparkly */",
+            "          /* Sparkly */",
+            "          // Diamond",
+            "          // Before invoke",
+            "          invoke();",
+            "          // After invoke",
+            "          /* More after invoke */",
+            "        case CLUB -> throw new NullPointerException();",
+            "          // After last case",
+            "      };",
+            "    }",
+            "    // Custom comment - should never happen because invoke returns 123 or throws",
+            "    int z = invoke(/* block comment 0 */);",
+            "    {z++;}",
+            "    throw new RuntimeException(\"Invoke <= 0 at runtime \");",
+            "  }",
+            "}")
+        .setArgs(
+            ImmutableList.of(
+                "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion"))
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 
   @Test
@@ -2170,6 +2307,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "        case CLUB -> throw new NullPointerException();",
             "      };",
             "      // Custom comment - should never happen",
+            "",
             "    };",
             "    System.out.println(\"don't delete 2\");",
             "    return lambda.get();",
@@ -2178,7 +2316,7 @@ public final class StatementSwitchToExpressionSwitchTest {
         .setArgs(
             ImmutableList.of(
                 "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion"))
-        .doTest();
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 
   @Test
@@ -2511,7 +2649,8 @@ public final class StatementSwitchToExpressionSwitchTest {
             " ",
             "  public int foo(Side side) { ",
             "    this.x <<= switch(side) {",
-            "       case HEART ->  /* LHS comment */",
+            "       case HEART ->",
+            "          /* LHS comment */",
             "          // Inline comment",
             "          2;",
             "       case DIAMOND -> (((x+1) * (x*x)) << 1);",
@@ -2524,7 +2663,7 @@ public final class StatementSwitchToExpressionSwitchTest {
         .setArgs(
             ImmutableList.of(
                 "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion"))
-        .doTest();
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 
   @Test
@@ -3080,7 +3219,7 @@ public final class StatementSwitchToExpressionSwitchTest {
         .setArgs(
             ImmutableList.of(
                 "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion"))
-        .doTest();
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 
   @Test
@@ -3163,6 +3302,112 @@ public final class StatementSwitchToExpressionSwitchTest {
   }
 
   @Test
+  public void switchByEnum_groupedComments_error() {
+    // Verify compound assignments (here, *=) with grouped comments
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public int foo(Side side) { ",
+            "    int x = 0;",
+            "    // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]",
+            "    switch(side) {",
+            "       case /* red suit */ HEART:",
+            "         // Heart comment",
+            "       case /* red suit */ DIAMOND: // sparkles",
+            "         // Diamond comment",
+            "         // Fall through",
+            "       case /* black suit */ SPADE:",
+            "         x *= 2;",
+            "         // Before break comment",
+            "         break;",
+            "         // After break comment",
+            "       case /* black suit */ CLUB:",
+            "         // Club comment",
+            "         throw new NullPointerException();",
+            "         // Club after throw comment",
+            "    }",
+            "    return x;",
+            "  }",
+            "}")
+        .setArgs(
+            ImmutableList.of(
+                "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion"))
+        .doTest();
+
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public int foo(Side side) { ",
+            "    int x = 0;",
+            "    // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]",
+            "    switch(side) {",
+            "       case /* red suit */ HEART:",
+            "         // Heart comment",
+            "       case /* red suit */ DIAMOND: // sparkles",
+            "         // Diamond comment",
+            "         // Fall through",
+            "       case /* black suit */ SPADE:",
+            "         x *= 2;",
+            "         // Before break comment",
+            "         break;",
+            "         // After break comment",
+            "       case /* black suit */ CLUB:",
+            "         // Club comment",
+            "         throw new NullPointerException();",
+            "         // Club after throw comment",
+            "    }",
+            "    return x;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public int foo(Side side) { ",
+            "    int x = 0;",
+            "    // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]",
+            "    x *= ",
+            "      switch(side) {",
+            "        case HEART, DIAMOND, SPADE ->",
+            "          /* red suit */",
+            "          // Heart comment",
+            "          /* red suit */",
+            "          // sparkles",
+            "          // Diamond comment",
+            "          /* black suit */",
+            "          2;",
+            "          // Before break comment",
+            "          // After break comment",
+            "        case CLUB ->",
+            "          /* black suit */",
+            "          // Club comment",
+            "          throw new NullPointerException();",
+            "          // Club after throw comment",
+            "      };",
+            "    return x;",
+            "  }",
+            "}")
+        .setArgs(
+            ImmutableList.of(
+                "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion"))
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+  }
+
+  @Test
   public void switchByEnum_compoundAssignmentExampleInDocumentation_error() {
     // This code appears as an example in the documentation (added surrounding class)
     assumeTrue(RuntimeVersion.isAtLeast14());
@@ -3177,7 +3422,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "    // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]",
             "    switch(suit) {",
             "      case HEARTS:",
-            "        // Fall thru",
+            "        // Fall through",
             "      case DIAMONDS:",
             "        score += -1;",
             "        break;",
@@ -3203,7 +3448,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "  private void updateScore(Suit suit) {",
             "    switch(suit) {",
             "      case HEARTS:",
-            "        // Fall thru",
+            "        // Fall through",
             "      case DIAMONDS:",
             "        score += -1;",
             "        break;",
@@ -3230,7 +3475,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "  }",
             "}")
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion")
-        .doTest();
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 
   @Test
