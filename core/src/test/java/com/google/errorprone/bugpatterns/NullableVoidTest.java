@@ -36,8 +36,20 @@ public class NullableVoidTest {
             "import javax.annotation.Nullable;",
             "class Test {",
             "  // BUG: Diagnostic contains:",
-            "  // void-returning methods should not be annotated with @Nullable",
             "  @Nullable void f() {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void positiveCheckForNull() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import javax.annotation.CheckForNull;",
+            "class Test {",
+            "  // BUG: Diagnostic contains:",
+            "  @CheckForNull void f() {}",
             "}")
         .doTest();
   }
