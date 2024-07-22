@@ -48,6 +48,8 @@ public final class BanClassLoader extends AbstractBanUnsafeAPIChecker
   private static final Matcher<MethodInvocationTree> METHOD_MATCHER =
       anyOf(
           anyMethod().onDescendantOf("java.lang.ClassLoader").named("defineClass"),
+          anyMethod().onDescendantOf("jdk.internal.misc.Unsafe").named("defineClass"),
+          anyMethod().onDescendantOf("jdk.internal.access.JavaLangAccess").named("defineClass"),
           anyMethod().onDescendantOf("java.lang.invoke.MethodHandles.Lookup").named("defineClass"),
           anyMethod()
               .onDescendantOf("java.rmi.server.RMIClassLoader")
