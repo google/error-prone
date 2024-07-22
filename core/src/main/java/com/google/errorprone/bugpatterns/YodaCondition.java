@@ -79,12 +79,12 @@ public final class YodaCondition extends BugChecker
           state);
     }
     if (instanceEqualsInvocation().matches(tree, state)) {
-      return fix(
-          tree,
-          getReceiver(tree),
-          tree.getArguments().get(0),
-          /* provideNullSafeFix= */ true,
-          state);
+      ExpressionTree receiver = getReceiver(tree);
+      if (receiver == null) {
+        // call to equals implicitly qualified by `this`
+        return NO_MATCH;
+      }
+      return fix(tree, receiver, tree.getArguments().get(0), /* provideNullSafeFix= */ true, state);
     }
     return NO_MATCH;
   }
