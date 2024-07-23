@@ -890,7 +890,6 @@ public class BuiltInCheckerSuppliers {
           DateFormatConstant.class,
           DeeplyNested.class,
           DefaultCharset.class,
-          DefaultLocale.class,
           DefaultPackage.class,
           DeprecatedVariable.class,
           DirectInvocationOnMock.class,
@@ -1145,6 +1144,7 @@ public class BuiltInCheckerSuppliers {
           ConstantField.class,
           ConstantPatternCompile.class,
           DeduplicateConstants.class,
+          DefaultLocale.class, // TODO: enable this by default.
           DepAnn.class,
           DifferentNameButSame.class,
           DoNotUseRuleChain.class,

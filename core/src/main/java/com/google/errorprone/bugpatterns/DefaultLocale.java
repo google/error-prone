@@ -461,6 +461,7 @@ public class DefaultLocale extends BugChecker
   private boolean shouldRefactorStringFormat(
       ExpressionTree pattern, List<? extends ExpressionTree> arguments, VisitorState state) {
     String patternValue = ASTHelpers.constValue(pattern, String.class);
+    // TODO: add a flag to be stricter and reformat whenever the pattern is not a constant
     if (patternValue != null && !onlyContainsSpecifiersInAllowList(patternValue)) {
       return true;
     }
@@ -484,8 +485,9 @@ public class DefaultLocale extends BugChecker
     if (tree instanceof LiteralTree) {
       return false;
     }
-    var type = ASTHelpers.getResultType(tree);
-    return type == null || ASTHelpers.isCastable(type, FORMATTABLE.get(state), state);
+    // TODO: add a flag to be stricter and detect any argument that could be cast to Formattable
+    //       (rather than only the ones that are proven to be Formattable)
+    return ASTHelpers.isSubtype(ASTHelpers.getResultType(tree), FORMATTABLE.get(state), state);
   }
 
   private Fix messageFormatFormatFix(
