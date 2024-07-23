@@ -821,4 +821,30 @@ public class UnnecessaryDefaultInEnumSwitchTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void multipleLabels() {
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  enum Type {",
+            "    FOO, BAR, BAZ,",
+            "  }",
+            "  public static void main(String[] args) {",
+            "    var type = Type.valueOf(args[0]);",
+            "    switch (type) {",
+            "      case FOO -> {",
+            "        System.out.println(\"Hi foo\");",
+            "      }",
+            "      case BAR, BAZ -> {",
+            "      }",
+            "      // BUG: Diagnostic contains: UnnecessaryDefaultInEnumSwitch",
+            "      default -> throw new AssertionError(type);",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
