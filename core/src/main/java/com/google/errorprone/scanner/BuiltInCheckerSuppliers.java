@@ -105,6 +105,7 @@ import com.google.errorprone.bugpatterns.DeadThread;
 import com.google.errorprone.bugpatterns.DeduplicateConstants;
 import com.google.errorprone.bugpatterns.DeeplyNested;
 import com.google.errorprone.bugpatterns.DefaultCharset;
+import com.google.errorprone.bugpatterns.DefaultLocale;
 import com.google.errorprone.bugpatterns.DefaultPackage;
 import com.google.errorprone.bugpatterns.DepAnn;
 import com.google.errorprone.bugpatterns.DeprecatedVariable;
@@ -1143,6 +1144,7 @@ public class BuiltInCheckerSuppliers {
           ConstantField.class,
           ConstantPatternCompile.class,
           DeduplicateConstants.class,
+          DefaultLocale.class, // TODO: enable this by default.
           DepAnn.class,
           DifferentNameButSame.class,
           DoNotUseRuleChain.class,
