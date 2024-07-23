@@ -149,6 +149,7 @@ public final class WellKnownThreadSafety implements ThreadSafety.KnownTypes {
         .add("kotlinx.coroutines.flow.MutableStateFlow", "T")
         .add("kotlinx.coroutines.sync.Mutex")
         .add("kotlinx.coroutines.sync.Semaphore")
+        .add("kotlin.Result", "T")
         .add("kotlin.Unit")
         .add("org.bouncycastle.cms.CMSSignedData")
         .add("org.bouncycastle.pkcs.PKCS10CertificationRequest")
