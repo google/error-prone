@@ -1467,6 +1467,9 @@ This method cannot throw a checked exception that it claims to. This may cause c
 __[ConstantPatternCompile](bugpattern/ConstantPatternCompile)__<br>
 Variables initialized with Pattern#compile calls on constants can be constants
 
+__[DefaultLocale](bugpattern/DefaultLocale)__<br>
+Implicit use of the JVM default locale, which can result in differing behaviour between JVM executions.
+
 __[DifferentNameButSame](bugpattern/DifferentNameButSame)__<br>
 This type is referred to in different ways within this file, which may be confusing.
 
