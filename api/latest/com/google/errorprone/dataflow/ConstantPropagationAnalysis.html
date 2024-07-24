@@ -94,7 +94,7 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Number.html" title="class or interface in java.lang" class="external-link">Number</a></code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static @Nullable <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Number.html" title="class or interface in java.lang" class="external-link">Number</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#numberValue(com.sun.source.util.TreePath,com.sun.tools.javac.util.Context)" class="member-name-link">numberValue</a><wbr>(com.sun.source.util.TreePath&nbsp;exprPath,
  com.sun.tools.javac.util.Context&nbsp;context)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
@@ -121,8 +121,7 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="numberValue(com.sun.source.util.TreePath,com.sun.tools.javac.util.Context)">
 <h3>numberValue</h3>
-<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html" title="class or interface in javax.annotation" class="external-link">@Nullable</a>
-</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Number.html" title="class or interface in java.lang" class="external-link">Number</a></span>&nbsp;<span class="element-name">numberValue</span><wbr><span class="parameters">(com.sun.source.util.TreePath&nbsp;exprPath,
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">@Nullable <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Number.html" title="class or interface in java.lang" class="external-link">Number</a></span>&nbsp;<span class="element-name">numberValue</span><wbr><span class="parameters">(com.sun.source.util.TreePath&nbsp;exprPath,
  com.sun.tools.javac.util.Context&nbsp;context)</span></div>
 <div class="block">Returns the value of the leaf of <code>exprPath</code>, if it is determined to be a constant (always
  evaluates to the same numeric value), and null otherwise. Note that returning null does not

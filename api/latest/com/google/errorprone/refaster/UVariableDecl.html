@@ -170,9 +170,9 @@ D&gt;&nbsp;R</code></div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="UVariableDecl.html" title="class in com.google.errorprone.refaster">UVariableDecl</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#create(java.lang.CharSequence,com.google.errorprone.refaster.UExpression,com.google.errorprone.refaster.UExpression)" class="member-name-link">create</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;identifier,
  <a href="UExpression.html" title="class in com.google.errorprone.refaster">UExpression</a>&nbsp;type,
- <a href="UExpression.html" title="class in com.google.errorprone.refaster">UExpression</a>&nbsp;initializer)</code></div>
+ @Nullable <a href="UExpression.html" title="class in com.google.errorprone.refaster">UExpression</a>&nbsp;initializer)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>abstract <a href="UExpression.html" title="class in com.google.errorprone.refaster">UExpression</a></code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>abstract @Nullable <a href="UExpression.html" title="class in com.google.errorprone.refaster">UExpression</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#getInitializer()" class="member-name-link">getInitializer</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.sun.source.tree.Tree.Kind</code></div>
@@ -251,8 +251,7 @@ D&gt;&nbsp;R</code></div>
 <h3>create</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="UVariableDecl.html" title="class in com.google.errorprone.refaster">UVariableDecl</a></span>&nbsp;<span class="element-name">create</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;identifier,
  <a href="UExpression.html" title="class in com.google.errorprone.refaster">UExpression</a>&nbsp;type,
- <a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html" title="class or interface in javax.annotation" class="external-link">@Nullable</a>
- <a href="UExpression.html" title="class in com.google.errorprone.refaster">UExpression</a>&nbsp;initializer)</span></div>
+ @Nullable <a href="UExpression.html" title="class in com.google.errorprone.refaster">UExpression</a>&nbsp;initializer)</span></div>
 </section>
 </li>
 <li>
@@ -285,8 +284,7 @@ D&gt;&nbsp;R</code></div>
 <li>
 <section class="detail" id="getInitializer()">
 <h3>getInitializer</h3>
-<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html" title="class or interface in javax.annotation" class="external-link">@Nullable</a>
-</span><span class="modifiers">public abstract</span>&nbsp;<span class="return-type"><a href="UExpression.html" title="class in com.google.errorprone.refaster">UExpression</a></span>&nbsp;<span class="element-name">getInitializer</span>()</div>
+<div class="member-signature"><span class="modifiers">public abstract</span>&nbsp;<span class="return-type">@Nullable <a href="UExpression.html" title="class in com.google.errorprone.refaster">UExpression</a></span>&nbsp;<span class="element-name">getInitializer</span>()</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code>getInitializer</code>&nbsp;in interface&nbsp;<code>com.sun.source.tree.VariableTree</code></dd>

@@ -111,13 +111,13 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="StaticImports.StaticImportInfo.html" title="class in com.google.errorprone.bugpatterns">StaticImports.StaticImportInfo</a></code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static @Nullable <a href="StaticImports.StaticImportInfo.html" title="class in com.google.errorprone.bugpatterns">StaticImports.StaticImportInfo</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#tryCreate(com.sun.source.tree.ImportTree,com.google.errorprone.VisitorState)" class="member-name-link">tryCreate</a><wbr>(com.sun.source.tree.ImportTree&nbsp;tree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns a <a href="StaticImports.StaticImportInfo.html" title="class in com.google.errorprone.bugpatterns"><code>StaticImports.StaticImportInfo</code></a> if the given import is a static single-type import.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="StaticImports.StaticImportInfo.html" title="class in com.google.errorprone.bugpatterns">StaticImports.StaticImportInfo</a></code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static @Nullable <a href="StaticImports.StaticImportInfo.html" title="class in com.google.errorprone.bugpatterns">StaticImports.StaticImportInfo</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#tryCreate(com.sun.source.tree.MemberSelectTree,com.google.errorprone.VisitorState)" class="member-name-link">tryCreate</a><wbr>(com.sun.source.tree.MemberSelectTree&nbsp;access,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
@@ -141,8 +141,7 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="tryCreate(com.sun.source.tree.ImportTree,com.google.errorprone.VisitorState)">
 <h3>tryCreate</h3>
-<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html" title="class or interface in javax.annotation" class="external-link">@Nullable</a>
-</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="StaticImports.StaticImportInfo.html" title="class in com.google.errorprone.bugpatterns">StaticImports.StaticImportInfo</a></span>&nbsp;<span class="element-name">tryCreate</span><wbr><span class="parameters">(com.sun.source.tree.ImportTree&nbsp;tree,
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">@Nullable <a href="StaticImports.StaticImportInfo.html" title="class in com.google.errorprone.bugpatterns">StaticImports.StaticImportInfo</a></span>&nbsp;<span class="element-name">tryCreate</span><wbr><span class="parameters">(com.sun.source.tree.ImportTree&nbsp;tree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <div class="block">Returns a <a href="StaticImports.StaticImportInfo.html" title="class in com.google.errorprone.bugpatterns"><code>StaticImports.StaticImportInfo</code></a> if the given import is a static single-type import. Returns
  <code>null</code> otherwise, e.g. because the import is non-static, or an on-demand import, or
@@ -152,8 +151,7 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="tryCreate(com.sun.source.tree.MemberSelectTree,com.google.errorprone.VisitorState)">
 <h3>tryCreate</h3>
-<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html" title="class or interface in javax.annotation" class="external-link">@Nullable</a>
-</span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="StaticImports.StaticImportInfo.html" title="class in com.google.errorprone.bugpatterns">StaticImports.StaticImportInfo</a></span>&nbsp;<span class="element-name">tryCreate</span><wbr><span class="parameters">(com.sun.source.tree.MemberSelectTree&nbsp;access,
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">@Nullable <a href="StaticImports.StaticImportInfo.html" title="class in com.google.errorprone.bugpatterns">StaticImports.StaticImportInfo</a></span>&nbsp;<span class="element-name">tryCreate</span><wbr><span class="parameters">(com.sun.source.tree.MemberSelectTree&nbsp;access,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 </section>
 </li>

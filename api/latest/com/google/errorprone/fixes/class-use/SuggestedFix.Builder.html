@@ -124,12 +124,12 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><span class="type-name-label">SuggestedFix.Builder.</span><code><a href="../SuggestedFix.Builder.html#delete(com.sun.source.tree.Tree)" class="member-name-link">delete</a><wbr>(com.sun.source.tree.Tree&nbsp;node)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code><a href="../SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">SuggestedFix.Builder.</span><code><a href="../SuggestedFix.Builder.html#merge(com.google.errorprone.fixes.SuggestedFix)" class="member-name-link">merge</a><wbr>(<a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a>&nbsp;other)</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">SuggestedFix.Builder.</span><code><a href="../SuggestedFix.Builder.html#merge(com.google.errorprone.fixes.SuggestedFix)" class="member-name-link">merge</a><wbr>(@Nullable <a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a>&nbsp;other)</code></div>
 <div class="col-last odd-row-color">
 <div class="block">Merges all edits from <code>other</code> into <code>this</code>.</div>
 </div>
 <div class="col-first even-row-color"><code><a href="../SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">SuggestedFix.Builder.</span><code><a href="../SuggestedFix.Builder.html#merge(com.google.errorprone.fixes.SuggestedFix.Builder)" class="member-name-link">merge</a><wbr>(<a href="../SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a>&nbsp;other)</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">SuggestedFix.Builder.</span><code><a href="../SuggestedFix.Builder.html#merge(com.google.errorprone.fixes.SuggestedFix.Builder)" class="member-name-link">merge</a><wbr>(@Nullable <a href="../SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a>&nbsp;other)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Merges all edits from <code>other</code> into <code>this</code>.</div>
 </div>
@@ -223,7 +223,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../SuggestedFixes.html#addSuppressWarnings(com.google.errorprone.fixes.SuggestedFix.Builder,com.google.errorprone.VisitorState,java.lang.String,java.lang.String)" class="member-name-link">addSuppressWarnings</a><wbr>(<a href="../SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a>&nbsp;fixBuilder,
  <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
  <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;warningToSuppress,
- <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;lineComment)</code></div>
+ @Nullable <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;lineComment)</code></div>
 <div class="col-last odd-row-color">
 <div class="block">Modifies <code>fixBuilder</code> to either create a new <code>@SuppressWarnings</code> element on the
  closest suppressible node, or add <code>warningToSuppress</code> to that node if there's already a
@@ -233,7 +233,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../SuggestedFixes.html#addSuppressWarnings(com.google.errorprone.fixes.SuggestedFix.Builder,com.google.errorprone.VisitorState,java.lang.String,java.lang.String,boolean)" class="member-name-link">addSuppressWarnings</a><wbr>(<a href="../SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a>&nbsp;fixBuilder,
  <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
  <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;warningToSuppress,
- <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;lineComment,
+ @Nullable <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;lineComment,
  boolean&nbsp;commentOnNewLine)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Modifies <code>fixBuilder</code> to either create a new <code>@SuppressWarnings</code> element on the
@@ -241,13 +241,13 @@ loadScripts(document, 'script');</script>
  <code>SuppressWarnings</code> annotation there.</div>
 </div>
 <div class="col-first odd-row-color"><code><a href="../SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">SuggestedFix.Builder.</span><code><a href="../SuggestedFix.Builder.html#merge(com.google.errorprone.fixes.SuggestedFix.Builder)" class="member-name-link">merge</a><wbr>(<a href="../SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a>&nbsp;other)</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">SuggestedFix.Builder.</span><code><a href="../SuggestedFix.Builder.html#merge(com.google.errorprone.fixes.SuggestedFix.Builder)" class="member-name-link">merge</a><wbr>(@Nullable <a href="../SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a>&nbsp;other)</code></div>
 <div class="col-last odd-row-color">
 <div class="block">Merges all edits from <code>other</code> into <code>this</code>.</div>
 </div>
 <div class="col-first even-row-color"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../SuggestedFixes.html#prettyType(com.google.errorprone.VisitorState,com.google.errorprone.fixes.SuggestedFix.Builder,com.sun.tools.javac.code.Type)" class="member-name-link">prettyType</a><wbr>(<a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
- <a href="../SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a>&nbsp;existingFix,
+<div class="col-second even-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../SuggestedFixes.html#prettyType(com.google.errorprone.VisitorState,com.google.errorprone.fixes.SuggestedFix.Builder,com.sun.tools.javac.code.Type)" class="member-name-link">prettyType</a><wbr>(@Nullable <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
+ @Nullable <a href="../SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a>&nbsp;existingFix,
  com.sun.tools.javac.code.Type&nbsp;type)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Pretty-prints a Type for use in fixes, qualifying any enclosed type names using <a href="../SuggestedFixes.html#qualifyType(com.google.errorprone.VisitorState,com.google.errorprone.fixes.SuggestedFix.Builder,com.sun.tools.javac.code.Symbol)"><code>SuggestedFixes.qualifyType(com.google.errorprone.VisitorState, com.google.errorprone.fixes.SuggestedFix.Builder, com.sun.tools.javac.code.Symbol)</code></a>}.</div>

@@ -141,9 +141,9 @@ implements <a href="Unifiable.html" title="interface in com.google.errorprone.re
 <div class="block">Returns all valid unification paths (if any) from this <code>Unifier</code> that unify this with
  <code>target</code>.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;<a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@Nullable <a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;<a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitType(com.sun.tools.javac.code.Type,com.google.errorprone.refaster.Unifier)" class="member-name-link">visitType</a><wbr>(com.sun.tools.javac.code.Type&nbsp;t,
- <a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;unifier)</code></div>
+ @Nullable <a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;unifier)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
@@ -185,10 +185,8 @@ implements <a href="Unifiable.html" title="interface in com.google.errorprone.re
 <li>
 <section class="detail" id="visitType(com.sun.tools.javac.code.Type,com.google.errorprone.refaster.Unifier)">
 <h3>visitType</h3>
-<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html" title="class or interface in javax.annotation" class="external-link">@Nullable</a>
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;<a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</span>&nbsp;<span class="element-name">visitType</span><wbr><span class="parameters">(com.sun.tools.javac.code.Type&nbsp;t,
- <a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html" title="class or interface in javax.annotation" class="external-link">@Nullable</a>
- <a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;unifier)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">@Nullable <a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;<a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</span>&nbsp;<span class="element-name">visitType</span><wbr><span class="parameters">(com.sun.tools.javac.code.Type&nbsp;t,
+ @Nullable <a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;unifier)</span></div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code>visitType</code>&nbsp;in interface&nbsp;<code>com.sun.tools.javac.code.Type.Visitor&lt;<a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;<a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;,<wbr><a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</code></dd>

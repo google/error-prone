@@ -193,7 +193,7 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns an <a href="ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><code>ThreadSafety.Violation</code></a> explaining whether the type is threadsafe.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.sun.tools.javac.code.Type</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@Nullable com.sun.tools.javac.code.Type</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#mutableEnclosingInstance(java.util.Optional,com.sun.tools.javac.code.Type.ClassType)" class="member-name-link">mutableEnclosingInstance</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;com.sun.source.tree.ClassTree&gt;&nbsp;tree,
  com.sun.tools.javac.code.Type.ClassType&nbsp;type)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
@@ -340,8 +340,7 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="mutableEnclosingInstance(java.util.Optional,com.sun.tools.javac.code.Type.ClassType)">
 <h3>mutableEnclosingInstance</h3>
-<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html" title="class or interface in javax.annotation" class="external-link">@Nullable</a>
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type">com.sun.tools.javac.code.Type</span>&nbsp;<span class="element-name">mutableEnclosingInstance</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;com.sun.source.tree.ClassTree&gt;&nbsp;tree,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">@Nullable com.sun.tools.javac.code.Type</span>&nbsp;<span class="element-name">mutableEnclosingInstance</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;com.sun.source.tree.ClassTree&gt;&nbsp;tree,
  com.sun.tools.javac.code.Type.ClassType&nbsp;type)</span></div>
 <div class="block">Returns an enclosing instance for the specified type if it is thread-safe.</div>
 </section>

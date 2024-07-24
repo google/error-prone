@@ -118,7 +118,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static &lt;A extends org.checkerframework.errorprone.dataflow.analysis.AbstractValue&lt;A&gt;,<wbr>
 S extends org.checkerframework.errorprone.dataflow.analysis.Store&lt;S&gt;,<wbr>
 T extends org.checkerframework.errorprone.dataflow.analysis.ForwardTransferFunction&lt;A,<wbr>
-S&gt;&gt;<br>A</code></div>
+S&gt;&gt;<br>@Nullable A</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#expressionDataflow(com.sun.source.util.TreePath,com.sun.tools.javac.util.Context,T)" class="member-name-link">expressionDataflow</a><wbr>(com.sun.source.util.TreePath&nbsp;exprPath,
  com.sun.tools.javac.util.Context&nbsp;context,
  T&nbsp;transfer)</code></div>
@@ -146,12 +146,11 @@ S&gt;&gt;<br>A</code></div>
 <li>
 <section class="detail" id="expressionDataflow(com.sun.source.util.TreePath,com.sun.tools.javac.util.Context,T)">
 <h3 id="expressionDataflow(com.sun.source.util.TreePath,com.sun.tools.javac.util.Context,org.checkerframework.errorprone.dataflow.analysis.ForwardTransferFunction)">expressionDataflow</h3>
-<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html" title="class or interface in javax.annotation" class="external-link">@Nullable</a>
-</span><span class="modifiers">public static</span>&nbsp;<span class="type-parameters-long">&lt;A extends org.checkerframework.errorprone.dataflow.analysis.AbstractValue&lt;A&gt;,<wbr>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="type-parameters-long">&lt;A extends org.checkerframework.errorprone.dataflow.analysis.AbstractValue&lt;A&gt;,<wbr>
 S extends org.checkerframework.errorprone.dataflow.analysis.Store&lt;S&gt;,<wbr>
 T extends org.checkerframework.errorprone.dataflow.analysis.ForwardTransferFunction&lt;A,<wbr>
 S&gt;&gt;</span>
-<span class="return-type">A</span>&nbsp;<span class="element-name">expressionDataflow</span><wbr><span class="parameters">(com.sun.source.util.TreePath&nbsp;exprPath,
+<span class="return-type">@Nullable A</span>&nbsp;<span class="element-name">expressionDataflow</span><wbr><span class="parameters">(com.sun.source.util.TreePath&nbsp;exprPath,
  com.sun.tools.javac.util.Context&nbsp;context,
  T&nbsp;transfer)</span></div>
 <div class="block">Runs the <code>transfer</code> dataflow analysis to compute the abstract value of the expression

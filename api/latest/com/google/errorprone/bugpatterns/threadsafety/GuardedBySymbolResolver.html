@@ -121,7 +121,7 @@ implements <a href="GuardedByBinder.Resolver.html" title="interface in com.googl
  com.sun.source.tree.Tree&nbsp;leaf,
  <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;visitorState)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.sun.tools.javac.code.Symbol</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@Nullable com.sun.tools.javac.code.Symbol</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resolveEnclosingClass(com.sun.source.tree.ExpressionTree)" class="member-name-link">resolveEnclosingClass</a><wbr>(com.sun.source.tree.ExpressionTree&nbsp;expr)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.sun.tools.javac.code.Symbol</code></div>
@@ -144,7 +144,7 @@ implements <a href="GuardedByBinder.Resolver.html" title="interface in com.googl
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resolveSelect(com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression,com.sun.source.tree.MemberSelectTree)" class="member-name-link">resolveSelect</a><wbr>(<a href="GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&nbsp;base,
  com.sun.source.tree.MemberSelectTree&nbsp;node)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.sun.tools.javac.code.Symbol</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@Nullable com.sun.tools.javac.code.Symbol</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resolveTypeLiteral(com.sun.source.tree.ExpressionTree)" class="member-name-link">resolveTypeLiteral</a><wbr>(com.sun.source.tree.ExpressionTree&nbsp;expr)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a></code></div>
@@ -261,8 +261,7 @@ implements <a href="GuardedByBinder.Resolver.html" title="interface in com.googl
 <li>
 <section class="detail" id="resolveTypeLiteral(com.sun.source.tree.ExpressionTree)">
 <h3>resolveTypeLiteral</h3>
-<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html" title="class or interface in javax.annotation" class="external-link">@Nullable</a>
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type">com.sun.tools.javac.code.Symbol</span>&nbsp;<span class="element-name">resolveTypeLiteral</span><wbr><span class="parameters">(com.sun.source.tree.ExpressionTree&nbsp;expr)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">@Nullable com.sun.tools.javac.code.Symbol</span>&nbsp;<span class="element-name">resolveTypeLiteral</span><wbr><span class="parameters">(com.sun.source.tree.ExpressionTree&nbsp;expr)</span></div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="GuardedByBinder.Resolver.html#resolveTypeLiteral(com.sun.source.tree.ExpressionTree)">resolveTypeLiteral</a></code>&nbsp;in interface&nbsp;<code><a href="GuardedByBinder.Resolver.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">GuardedByBinder.Resolver</a></code></dd>
@@ -272,8 +271,7 @@ implements <a href="GuardedByBinder.Resolver.html" title="interface in com.googl
 <li>
 <section class="detail" id="resolveEnclosingClass(com.sun.source.tree.ExpressionTree)">
 <h3>resolveEnclosingClass</h3>
-<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html" title="class or interface in javax.annotation" class="external-link">@Nullable</a>
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type">com.sun.tools.javac.code.Symbol</span>&nbsp;<span class="element-name">resolveEnclosingClass</span><wbr><span class="parameters">(com.sun.source.tree.ExpressionTree&nbsp;expr)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">@Nullable com.sun.tools.javac.code.Symbol</span>&nbsp;<span class="element-name">resolveEnclosingClass</span><wbr><span class="parameters">(com.sun.source.tree.ExpressionTree&nbsp;expr)</span></div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="GuardedByBinder.Resolver.html#resolveEnclosingClass(com.sun.source.tree.ExpressionTree)">resolveEnclosingClass</a></code>&nbsp;in interface&nbsp;<code><a href="GuardedByBinder.Resolver.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">GuardedByBinder.Resolver</a></code></dd>

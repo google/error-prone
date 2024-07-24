@@ -185,12 +185,12 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="ErrorProneOptions.html" title="class in com.google.errorprone">ErrorProneOptions</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#errorProneOptions()" class="member-name-link">errorProneOptions</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final &lt;T extends com.sun.source.tree.Tree&gt;<br>T</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final &lt;T extends com.sun.source.tree.Tree&gt;<br>@Nullable T</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#findEnclosing(java.lang.Class...)" class="member-name-link">findEnclosing</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends T&gt;...&nbsp;classes)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Find the first enclosing tree node of one of the given types.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final com.sun.source.util.TreePath</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final @Nullable com.sun.source.util.TreePath</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#findPathToEnclosing(java.lang.Class...)" class="member-name-link">findPathToEnclosing</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends com.sun.source.tree.Tree&gt;...&nbsp;classes)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the <code>TreePath</code> to the nearest tree node of one of the given types.</div>
@@ -233,26 +233,26 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.sun.source.util.TreePath</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getPath()" class="member-name-link">getPath</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a></code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@Nullable <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSourceCode()" class="member-name-link">getSourceCode</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Gets the current source file.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@Nullable <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSourceForNode(com.sun.source.tree.Tree)" class="member-name-link">getSourceForNode</a><wbr>(com.sun.source.tree.Tree&nbsp;tree)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Gets the original source code that represents the given node.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.sun.tools.javac.code.Symbol.ClassSymbol</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@Nullable com.sun.tools.javac.code.Symbol.ClassSymbol</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSymbolFromName(com.sun.tools.javac.util.Name)" class="member-name-link">getSymbolFromName</a><wbr>(com.sun.tools.javac.util.Name&nbsp;name)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Look up the class symbol for a given Name.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.sun.tools.javac.code.Symbol.ClassSymbol</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@Nullable com.sun.tools.javac.code.Symbol.ClassSymbol</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSymbolFromString(com.sun.tools.javac.code.Symbol.ModuleSymbol,com.sun.tools.javac.util.Name)" class="member-name-link">getSymbolFromString</a><wbr>(com.sun.tools.javac.code.Symbol.ModuleSymbol&nbsp;msym,
  com.sun.tools.javac.util.Name&nbsp;name)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.sun.tools.javac.code.Symbol</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@Nullable com.sun.tools.javac.code.Symbol</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSymbolFromString(java.lang.String)" class="member-name-link">getSymbolFromString</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;symStr)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.sun.tools.javac.code.Symtab</code></div>
@@ -273,7 +273,7 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Build an instance of a Type.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.sun.tools.javac.code.Type</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@Nullable com.sun.tools.javac.code.Type</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTypeFromString(java.lang.String)" class="member-name-link">getTypeFromString</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;typeStr)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Given the binary name of a class, returns the <code>Type</code>.</div>
@@ -541,8 +541,7 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="getTypeFromString(java.lang.String)">
 <h3>getTypeFromString</h3>
-<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html" title="class or interface in javax.annotation" class="external-link">@Nullable</a>
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type">com.sun.tools.javac.code.Type</span>&nbsp;<span class="element-name">getTypeFromString</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;typeStr)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">@Nullable com.sun.tools.javac.code.Type</span>&nbsp;<span class="element-name">getTypeFromString</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;typeStr)</span></div>
 <div class="block">Given the binary name of a class, returns the <code>Type</code>.
 
  <p>Prefer not to use this method for constant strings, or strings otherwise known at compile
@@ -565,8 +564,7 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="getSymbolFromString(java.lang.String)">
 <h3>getSymbolFromString</h3>
-<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html" title="class or interface in javax.annotation" class="external-link">@Nullable</a>
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type">com.sun.tools.javac.code.Symbol</span>&nbsp;<span class="element-name">getSymbolFromString</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;symStr)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">@Nullable com.sun.tools.javac.code.Symbol</span>&nbsp;<span class="element-name">getSymbolFromString</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;symStr)</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>symStr</code> - the string representation of a symbol</dd>
@@ -587,8 +585,7 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="getSymbolFromName(com.sun.tools.javac.util.Name)">
 <h3>getSymbolFromName</h3>
-<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html" title="class or interface in javax.annotation" class="external-link">@Nullable</a>
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type">com.sun.tools.javac.code.Symbol.ClassSymbol</span>&nbsp;<span class="element-name">getSymbolFromName</span><wbr><span class="parameters">(com.sun.tools.javac.util.Name&nbsp;name)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">@Nullable com.sun.tools.javac.code.Symbol.ClassSymbol</span>&nbsp;<span class="element-name">getSymbolFromName</span><wbr><span class="parameters">(com.sun.tools.javac.util.Name&nbsp;name)</span></div>
 <div class="block">Look up the class symbol for a given Name.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -599,8 +596,7 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="getSymbolFromString(com.sun.tools.javac.code.Symbol.ModuleSymbol,com.sun.tools.javac.util.Name)">
 <h3>getSymbolFromString</h3>
-<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html" title="class or interface in javax.annotation" class="external-link">@Nullable</a>
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type">com.sun.tools.javac.code.Symbol.ClassSymbol</span>&nbsp;<span class="element-name">getSymbolFromString</span><wbr><span class="parameters">(com.sun.tools.javac.code.Symbol.ModuleSymbol&nbsp;msym,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">@Nullable com.sun.tools.javac.code.Symbol.ClassSymbol</span>&nbsp;<span class="element-name">getSymbolFromString</span><wbr><span class="parameters">(com.sun.tools.javac.code.Symbol.ModuleSymbol&nbsp;msym,
  com.sun.tools.javac.util.Name&nbsp;name)</span></div>
 </section>
 </li>
@@ -623,9 +619,8 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="findPathToEnclosing(java.lang.Class...)">
 <h3>findPathToEnclosing</h3>
-<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html" title="class or interface in javax.annotation" class="external-link">@Nullable</a>
-<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/SafeVarargs.html" title="class or interface in java.lang" class="external-link">@SafeVarargs</a>
-</span><span class="modifiers">public final</span>&nbsp;<span class="return-type">com.sun.source.util.TreePath</span>&nbsp;<span class="element-name">findPathToEnclosing</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends com.sun.source.tree.Tree&gt;...&nbsp;classes)</span></div>
+<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/SafeVarargs.html" title="class or interface in java.lang" class="external-link">@SafeVarargs</a>
+</span><span class="modifiers">public final</span>&nbsp;<span class="return-type">@Nullable com.sun.source.util.TreePath</span>&nbsp;<span class="element-name">findPathToEnclosing</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends com.sun.source.tree.Tree&gt;...&nbsp;classes)</span></div>
 <div class="block">Returns the <code>TreePath</code> to the nearest tree node of one of the given types. To instead
  retrieve the element directly, use <a href="#findEnclosing(java.lang.Class...)"><code>findEnclosing(Class...)</code></a>.</div>
 <dl class="notes">
@@ -637,9 +632,9 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="findEnclosing(java.lang.Class...)">
 <h3>findEnclosing</h3>
-<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html" title="class or interface in javax.annotation" class="external-link">@Nullable</a>
-<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/SafeVarargs.html" title="class or interface in java.lang" class="external-link">@SafeVarargs</a>
-</span><span class="modifiers">public final</span>&nbsp;<span class="type-parameters">&lt;T extends com.sun.source.tree.Tree&gt;</span>&nbsp;<span class="return-type">T</span>&nbsp;<span class="element-name">findEnclosing</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends T&gt;...&nbsp;classes)</span></div>
+<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/SafeVarargs.html" title="class or interface in java.lang" class="external-link">@SafeVarargs</a>
+</span><span class="modifiers">public final</span>&nbsp;<span class="type-parameters">&lt;T extends com.sun.source.tree.Tree&gt;</span>
+<span class="return-type">@Nullable T</span>&nbsp;<span class="element-name">findEnclosing</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends T&gt;...&nbsp;classes)</span></div>
 <div class="block">Find the first enclosing tree node of one of the given types.</div>
 <dl class="notes">
 <dt>Returns:</dt>
@@ -650,8 +645,7 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="getSourceCode()">
 <h3>getSourceCode</h3>
-<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html" title="class or interface in javax.annotation" class="external-link">@Nullable</a>
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a></span>&nbsp;<span class="element-name">getSourceCode</span>()</div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">@Nullable <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a></span>&nbsp;<span class="element-name">getSourceCode</span>()</div>
 <div class="block">Gets the current source file.</div>
 <dl class="notes">
 <dt>Returns:</dt>
@@ -662,8 +656,7 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="getSourceForNode(com.sun.source.tree.Tree)">
 <h3>getSourceForNode</h3>
-<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html" title="class or interface in javax.annotation" class="external-link">@Nullable</a>
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getSourceForNode</span><wbr><span class="parameters">(com.sun.source.tree.Tree&nbsp;tree)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">@Nullable <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getSourceForNode</span><wbr><span class="parameters">(com.sun.source.tree.Tree&nbsp;tree)</span></div>
 <div class="block">Gets the original source code that represents the given node.
 
  <p>Note that this may be different from what is returned by calling .toString() on the node.

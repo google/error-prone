@@ -159,7 +159,7 @@ implements <a href="Unifiable.html" title="interface in com.google.errorprone.re
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#inline(com.google.errorprone.refaster.Inliner)" class="member-name-link">inline</a><wbr>(<a href="Inliner.html" title="class in com.google.errorprone.refaster">Inliner</a>&nbsp;inliner)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;<a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#unify(com.sun.source.tree.Tree,com.google.errorprone.refaster.Unifier)" class="member-name-link">unify</a><wbr>(com.sun.source.tree.Tree&nbsp;target,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#unify(com.sun.source.tree.Tree,com.google.errorprone.refaster.Unifier)" class="member-name-link">unify</a><wbr>(@Nullable com.sun.source.tree.Tree&nbsp;target,
  <a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;unifier)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns all valid unification paths (if any) from this <code>Unifier</code> that unify this with
@@ -205,8 +205,7 @@ implements <a href="Unifiable.html" title="interface in com.google.errorprone.re
 <li>
 <section class="detail" id="unify(com.sun.source.tree.Tree,com.google.errorprone.refaster.Unifier)">
 <h3>unify</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;<a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</span>&nbsp;<span class="element-name">unify</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/javase/8/docs/api/javax/annotation/Nullable.html" title="class or interface in javax.annotation" class="external-link">@Nullable</a>
- com.sun.source.tree.Tree&nbsp;target,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;<a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</span>&nbsp;<span class="element-name">unify</span><wbr><span class="parameters">(@Nullable com.sun.source.tree.Tree&nbsp;target,
  <a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;unifier)</span></div>
 <div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="Unifiable.html#unify(T,com.google.errorprone.refaster.Unifier)">Unifiable</a></code></span></div>
 <div class="block">Returns all valid unification paths (if any) from this <code>Unifier</code> that unify this with

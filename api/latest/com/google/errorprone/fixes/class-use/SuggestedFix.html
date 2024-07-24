@@ -76,7 +76,7 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>protected static <a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></div>
+<div class="col-first even-row-color"><code>protected static @Nullable <a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></div>
 <div class="col-second even-row-color"><span class="type-name-label">SelfEquals.</span><code><a href="../../bugpatterns/SelfEquals.html#fieldFix(com.sun.source.tree.Tree,com.google.errorprone.VisitorState)" class="member-name-link">fieldFix</a><wbr>(com.sun.source.tree.Tree&nbsp;toReplace,
  <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
@@ -136,7 +136,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color"><code>static <a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../SuggestedFixes.html#addSuppressWarnings(com.google.errorprone.VisitorState,java.lang.String,java.lang.String)" class="member-name-link">addSuppressWarnings</a><wbr>(<a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
  <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;warningToSuppress,
- <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;lineComment)</code></div>
+ @Nullable <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;lineComment)</code></div>
 <div class="col-last odd-row-color">
 <div class="block">Returns a fix that adds a <code>@SuppressWarnings(warningToSuppress)</code> to the closest
  suppressible element to the node pointed at by <code>state.getPath()</code>, optionally suffixing
@@ -326,7 +326,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><span class="type-name-label">BranchedSuggestedFixes.Builder.</span><code><a href="../BranchedSuggestedFixes.Builder.html#addOption(com.google.errorprone.fixes.SuggestedFix)" class="member-name-link">addOption</a><wbr>(<a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a>&nbsp;fix)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code><a href="../SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">SuggestedFix.Builder.</span><code><a href="../SuggestedFix.Builder.html#merge(com.google.errorprone.fixes.SuggestedFix)" class="member-name-link">merge</a><wbr>(<a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a>&nbsp;other)</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">SuggestedFix.Builder.</span><code><a href="../SuggestedFix.Builder.html#merge(com.google.errorprone.fixes.SuggestedFix)" class="member-name-link">merge</a><wbr>(@Nullable <a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a>&nbsp;other)</code></div>
 <div class="col-last odd-row-color">
 <div class="block">Merges all edits from <code>other</code> into <code>this</code>.</div>
 </div>
