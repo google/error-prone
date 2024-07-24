@@ -1289,6 +1289,9 @@ Fields annotated with @Inject/@Mock should not be manually assigned to, as they 
 __[UnnecessaryAsync](bugpattern/UnnecessaryAsync)__<br>
 Variables which are initialized and do not escape the current scope do not need to worry about concurrency. Using the non-concurrent type will reduce overhead and verbosity.
 
+__[UnnecessaryBreakInSwitch](bugpattern/UnnecessaryBreakInSwitch)__<br>
+This break is unnecessary, fallthrough does not occur in -&gt; switches
+
 __[UnnecessaryLambda](bugpattern/UnnecessaryLambda)__<br>
 Returning a lambda from a helper method or saving it in a constant is unnecessary; prefer to implement the functional interface method directly and use a method reference instead.
 
