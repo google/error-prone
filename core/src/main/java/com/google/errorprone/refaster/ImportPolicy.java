@@ -266,7 +266,7 @@ public enum ImportPolicy {
             whichImports.getExistingImports(inliner),
             Optional.ofNullable(inliner.getContext())
                 .map(c -> c.get(JCCompilationUnit.class))
-                .map(JCCompilationUnit::getImports)
+                .map(ImportPolicy::getImports)
                 .map(Collection::stream)
                 .orElse(Stream.of())
                 .filter(JCImport.class::isInstance)
@@ -274,6 +274,15 @@ public enum ImportPolicy {
                 .filter(whichImports::existingImportMatches)
                 .map(imp -> getQualifiedIdentifier(imp).toString()))
         .collect(toImmutableSet());
+  }
+
+  @SuppressWarnings("unchecked")
+  private static Collection<JCTree> getImports(JCCompilationUnit unit) {
+    try {
+      return (Collection<JCTree>) JCCompilationUnit.class.getMethod("getImports").invoke(unit);
+    } catch (ReflectiveOperationException e) {
+      throw new LinkageError(e.getMessage(), e);
+    }
   }
 
   private static JCTree getQualifiedIdentifier(JCImport i) {
