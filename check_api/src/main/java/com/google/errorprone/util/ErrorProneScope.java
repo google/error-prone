@@ -27,7 +27,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Arrays;
 import java.util.function.Predicate;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /** A compatibility wrapper around {@code com.sun.tools.javac.util.Filter} */
 public final class ErrorProneScope {

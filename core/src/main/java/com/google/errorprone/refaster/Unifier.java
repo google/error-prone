@@ -28,7 +28,7 @@ import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.Context;
 import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A mutable representation of an attempt to match a template source tree against a target source
@@ -71,8 +71,7 @@ public final class Unifier {
     return new Inliner(context, bindings);
   }
 
-  @Nullable
-  public <V> V getBinding(Bindings.Key<V> key) {
+  public <V> @Nullable V getBinding(Bindings.Key<V> key) {
     return bindings.getBinding(key);
   }
 

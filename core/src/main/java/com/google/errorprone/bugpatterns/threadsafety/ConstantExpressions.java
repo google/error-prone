@@ -67,7 +67,7 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
 import javax.inject.Inject;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /** Helper for establishing whether expressions correspond to a constant expression. */
 public final class ConstantExpressions {

@@ -26,7 +26,7 @@ import com.sun.source.tree.TreeVisitor;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCNewClass;
 import java.util.List;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * {@link UTree} version of {@link NewClassTree}, which represents a constructor invocation.
@@ -60,8 +60,7 @@ abstract class UNewClass extends UExpression implements NewClassTree {
   }
 
   @Override
-  @Nullable
-  public abstract UExpression getEnclosingExpression();
+  public abstract @Nullable UExpression getEnclosingExpression();
 
   /**
    * Note: these are not the type arguments to the class, but to the constructor, for those
@@ -78,12 +77,10 @@ abstract class UNewClass extends UExpression implements NewClassTree {
   public abstract ImmutableList<UExpression> getArguments();
 
   @Override
-  @Nullable
-  public abstract UClassDecl getClassBody();
+  public abstract @Nullable UClassDecl getClassBody();
 
   @Override
-  @Nullable
-  public Choice<Unifier> visitNewClass(NewClassTree newClass, @Nullable Unifier unifier) {
+  public @Nullable Choice<Unifier> visitNewClass(NewClassTree newClass, @Nullable Unifier unifier) {
     return unifyNullable(unifier, getEnclosingExpression(), newClass.getEnclosingExpression())
         .thenChoose(unifications(getTypeArguments(), newClass.getTypeArguments()))
         .thenChoose(unifications(getIdentifier(), newClass.getIdentifier()))

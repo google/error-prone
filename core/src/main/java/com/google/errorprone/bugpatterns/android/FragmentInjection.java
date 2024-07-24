@@ -51,8 +51,8 @@ import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.util.FatalError;
 import com.sun.tools.javac.util.Name;
-import javax.annotation.Nullable;
 import javax.lang.model.element.Modifier;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author epmjohnston@google.com (Emily P.M. Johnston)
@@ -121,8 +121,7 @@ public class FragmentInjection extends BugChecker implements ClassTreeMatcher {
    * Return the first method tree on the given class tree that matches the given method matcher,
    * or null if one does not exist.
    */
-  @Nullable
-  private static MethodTree getMethod(
+  private static @Nullable MethodTree getMethod(
       Matcher<MethodTree> methodMatcher, ClassTree classTree, VisitorState state) {
     for (Tree member : classTree.getMembers()) {
       if (member instanceof MethodTree) {

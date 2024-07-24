@@ -20,7 +20,7 @@ import com.google.auto.value.AutoValue;
 import com.sun.source.tree.ArrayTypeTree;
 import com.sun.source.tree.TreeVisitor;
 import com.sun.tools.javac.tree.JCTree.JCArrayTypeTree;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * {@link UTree} version of {@link ArrayTypeTree}. This is the AST representation of {@link
@@ -38,8 +38,7 @@ abstract class UArrayTypeTree extends UExpression implements ArrayTypeTree {
   public abstract UExpression getType();
 
   @Override
-  @Nullable
-  public Choice<Unifier> visitArrayType(ArrayTypeTree tree, @Nullable Unifier unifier) {
+  public @Nullable Choice<Unifier> visitArrayType(ArrayTypeTree tree, @Nullable Unifier unifier) {
     return getType().unify(tree.getType(), unifier);
   }
 

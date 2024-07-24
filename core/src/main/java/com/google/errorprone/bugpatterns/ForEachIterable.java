@@ -50,7 +50,7 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.TypeTag;
 import java.util.List;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(summary = "This loop can be replaced with an enhanced for loop.", severity = SUGGESTION)
@@ -196,8 +196,7 @@ public class ForEachIterable extends BugChecker implements VariableTreeMatcher {
     return uses.build();
   }
 
-  @Nullable
-  private static VariableTree existingVariable(
+  private static @Nullable VariableTree existingVariable(
       VarSymbol varSymbol, StatementTree body, VisitorState state) {
     if (!(body instanceof BlockTree)) {
       return null;

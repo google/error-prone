@@ -38,8 +38,8 @@ import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Type;
-import javax.annotation.Nullable;
 import javax.lang.model.element.ElementKind;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Classes that override {@link Object#equals} should also override {@link Object#hashCode}.
@@ -73,8 +73,7 @@ public class EqualsHashCode extends BugChecker implements ClassTreeMatcher {
    *   <li>there is no additional method with name matching {@code expectedNoArgMethod}
    * </ol>
    */
-  @Nullable
-  private static MethodTree checkMethodPresence(ClassTree classTree, VisitorState state) {
+  private static @Nullable MethodTree checkMethodPresence(ClassTree classTree, VisitorState state) {
     TypeSymbol symbol = ASTHelpers.getSymbol(classTree);
     if (symbol.getKind() != ElementKind.CLASS) {
       return null;

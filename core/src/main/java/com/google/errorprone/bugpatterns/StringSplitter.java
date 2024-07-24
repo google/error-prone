@@ -56,7 +56,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(summary = "String.split(String) has surprising behavior", severity = WARNING)
@@ -294,8 +294,7 @@ public class StringSplitter extends BugChecker implements MethodInvocationTreeMa
     throw new AssertionError(receiver);
   }
 
-  @Nullable
-  private static TreePath findEnclosing(VisitorState state) {
+  private static @Nullable TreePath findEnclosing(VisitorState state) {
     for (TreePath path = state.getPath(); path != null; path = path.getParentPath()) {
       switch (path.getLeaf().getKind()) {
         case METHOD:

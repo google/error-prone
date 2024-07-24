@@ -22,7 +22,7 @@ import com.google.auto.value.AutoValue;
 import com.sun.source.tree.DoWhileLoopTree;
 import com.sun.source.tree.TreeVisitor;
 import com.sun.tools.javac.tree.JCTree.JCDoWhileLoop;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A {@link UTree} representation of a {@link DoWhileLoopTree}.
@@ -42,8 +42,8 @@ abstract class UDoWhileLoop extends USimpleStatement implements DoWhileLoopTree 
   public abstract UExpression getCondition();
 
   @Override
-  @Nullable
-  public Choice<Unifier> visitDoWhileLoop(DoWhileLoopTree loop, @Nullable Unifier unifier) {
+  public @Nullable Choice<Unifier> visitDoWhileLoop(
+      DoWhileLoopTree loop, @Nullable Unifier unifier) {
     return getStatement()
         .unify(loop.getStatement(), unifier)
         .thenChoose(unifications(getCondition(), loop.getCondition()));

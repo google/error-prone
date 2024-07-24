@@ -107,7 +107,7 @@ import com.sun.tools.javac.util.Name;
 import java.util.EnumSet;
 import java.util.Map;
 import java.util.function.BiFunction;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Given a tree as input, returns all the ways this placeholder invocation could be matched with
@@ -136,8 +136,7 @@ abstract class PlaceholderUnificationVisitor
 
     public abstract Unifier unifier();
 
-    @Nullable
-    public abstract R result();
+    public abstract @Nullable R result();
 
     public <R2> State<R2> withResult(R2 result) {
       return create(seenParameters(), unifier(), result);

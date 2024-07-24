@@ -51,7 +51,7 @@ import java.lang.annotation.Retention;
 import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Stream;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author sgoldfeder@google.com (Steven Goldfeder)

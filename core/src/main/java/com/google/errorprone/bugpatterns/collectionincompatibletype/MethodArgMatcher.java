@@ -31,7 +31,7 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Type;
 import java.util.Collection;
 import java.util.Optional;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Matches an instance method like {@link Collection#contains}, for which we just need to compare
@@ -67,9 +67,8 @@ final class MethodArgMatcher extends AbstractCollectionIncompatibleTypeMatcher {
     return Iterables.get(tree.getArguments(), methodArgIndex);
   }
 
-  @Nullable
   @Override
-  ExpressionTree extractSourceTree(MemberReferenceTree tree, VisitorState state) {
+  @Nullable ExpressionTree extractSourceTree(MemberReferenceTree tree, VisitorState state) {
     return tree;
   }
 
@@ -78,9 +77,8 @@ final class MethodArgMatcher extends AbstractCollectionIncompatibleTypeMatcher {
     return getType(extractSourceTree(tree, state));
   }
 
-  @Nullable
   @Override
-  Type extractSourceType(MemberReferenceTree tree, VisitorState state) {
+  @Nullable Type extractSourceType(MemberReferenceTree tree, VisitorState state) {
     return state.getTypes().findDescriptorType(getType(tree)).getParameterTypes().get(0);
   }
 
@@ -93,9 +91,8 @@ final class MethodArgMatcher extends AbstractCollectionIncompatibleTypeMatcher {
         state.getTypes());
   }
 
-  @Nullable
   @Override
-  Type extractTargetType(MemberReferenceTree tree, VisitorState state) {
+  @Nullable Type extractTargetType(MemberReferenceTree tree, VisitorState state) {
     return extractTypeArgAsMemberOfSupertype(
         ASTHelpers.getReceiverType(tree),
         state.getSymbolFromString(typeName),

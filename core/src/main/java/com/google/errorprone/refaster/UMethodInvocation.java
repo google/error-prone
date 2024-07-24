@@ -25,7 +25,7 @@ import com.sun.source.tree.TreeVisitor;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
 import java.util.List;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * {@link UTree} version of {@link MethodInvocationTree}.
@@ -63,8 +63,7 @@ public abstract class UMethodInvocation extends UExpression implements MethodInv
   public abstract ImmutableList<UExpression> getArguments();
 
   @Override
-  @Nullable
-  public Choice<Unifier> visitMethodInvocation(
+  public @Nullable Choice<Unifier> visitMethodInvocation(
       MethodInvocationTree methodInvocation, @Nullable Unifier unifier) {
     return getMethodSelect()
         .unify(methodInvocation.getMethodSelect(), unifier)

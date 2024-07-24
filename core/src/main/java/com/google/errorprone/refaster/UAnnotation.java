@@ -25,7 +25,7 @@ import com.sun.source.tree.TreeVisitor;
 import com.sun.tools.javac.tree.JCTree.JCAnnotation;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import java.util.List;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * {@link UTree} version of {@link AnnotationTree}.
@@ -49,8 +49,7 @@ abstract class UAnnotation extends UExpression implements AnnotationTree {
   public abstract ImmutableList<UExpression> getArguments();
 
   @Override
-  @Nullable
-  public Choice<Unifier> visitAnnotation(AnnotationTree annotation, Unifier unifier) {
+  public @Nullable Choice<Unifier> visitAnnotation(AnnotationTree annotation, Unifier unifier) {
     return getAnnotationType()
         .unify(annotation.getAnnotationType(), unifier)
         .thenChoose(unifications(getArguments(), annotation.getArguments()));

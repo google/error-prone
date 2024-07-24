@@ -66,8 +66,8 @@ import com.sun.tools.javac.util.Position;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
-import javax.annotation.Nullable;
 import javax.lang.model.element.ElementKind;
+import org.jspecify.annotations.Nullable;
 
 /**
  * An abstract check for resources that must be closed; used by {@link StreamResourceLeak} and
@@ -350,8 +350,7 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
    * Returns the enclosing method of the given visitor state. Returns null if the state is within a
    * lambda expression or anonymous class.
    */
-  @Nullable
-  private static MethodTree enclosingMethod(VisitorState state) {
+  private static @Nullable MethodTree enclosingMethod(VisitorState state) {
     for (Tree node : state.getPath().getParentPath()) {
       switch (node.getKind()) {
         case LAMBDA_EXPRESSION:

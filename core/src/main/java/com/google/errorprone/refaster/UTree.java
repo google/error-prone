@@ -19,7 +19,7 @@ package com.google.errorprone.refaster;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.tools.javac.tree.JCTree;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A serializable representation of a template syntax tree which can be unified with a target AST

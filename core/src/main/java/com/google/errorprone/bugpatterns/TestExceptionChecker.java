@@ -44,7 +44,7 @@ import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
 import com.sun.tools.javac.tree.JCTree.Tag;
 import java.util.Collection;
 import java.util.List;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
@@ -114,8 +114,7 @@ public class TestExceptionChecker extends BugChecker implements MethodTreeMatche
    * Searches the annotation list for {@code @Test(expected=...)}. If found, deletes the exception
    * attribute from the annotation, and returns its value.
    */
-  @Nullable
-  private static JCExpression deleteExpectedException(
+  private static @Nullable JCExpression deleteExpectedException(
       SuggestedFix.Builder fix, List<JCAnnotation> annotations, VisitorState state) {
     Type testAnnotation = ORG_JUNIT_TEST.get(state);
     for (JCAnnotation annotationTree : annotations) {

@@ -33,7 +33,7 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Type;
 import java.util.Collection;
 import java.util.Optional;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Matches an instance method like {@link Collection#removeAll}, for which we need to extract the
@@ -84,9 +84,8 @@ class TypeArgOfMethodArgMatcher extends AbstractCollectionIncompatibleTypeMatche
     return Iterables.get(tree.getArguments(), methodArgIndex);
   }
 
-  @Nullable
   @Override
-  ExpressionTree extractSourceTree(MemberReferenceTree tree, VisitorState state) {
+  @Nullable ExpressionTree extractSourceTree(MemberReferenceTree tree, VisitorState state) {
     return tree;
   }
 
@@ -99,9 +98,8 @@ class TypeArgOfMethodArgMatcher extends AbstractCollectionIncompatibleTypeMatche
         state.getTypes());
   }
 
-  @Nullable
   @Override
-  Type extractSourceType(MemberReferenceTree tree, VisitorState state) {
+  @Nullable Type extractSourceType(MemberReferenceTree tree, VisitorState state) {
     return extractTypeArgAsMemberOfSupertype(
         getType(tree).allparams().get(methodArgIndex),
         state.getSymbolFromString(methodArgTypeName),
@@ -118,9 +116,8 @@ class TypeArgOfMethodArgMatcher extends AbstractCollectionIncompatibleTypeMatche
         state.getTypes());
   }
 
-  @Nullable
   @Override
-  Type extractTargetType(MemberReferenceTree tree, VisitorState state) {
+  @Nullable Type extractTargetType(MemberReferenceTree tree, VisitorState state) {
     return extractTypeArgAsMemberOfSupertype(
         ASTHelpers.getReceiverType(tree),
         state.getSymbolFromString(receiverTypeName),

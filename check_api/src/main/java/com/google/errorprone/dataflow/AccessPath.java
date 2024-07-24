@@ -28,7 +28,6 @@ import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
 import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
-import javax.annotation.Nullable;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
@@ -38,6 +37,7 @@ import org.checkerframework.errorprone.dataflow.cfg.node.LocalVariableNode;
 import org.checkerframework.errorprone.dataflow.cfg.node.Node;
 import org.checkerframework.errorprone.dataflow.cfg.node.VariableDeclarationNode;
 import org.checkerframework.errorprone.javacutil.TreeUtils;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A sequence of field names or autovalue accessors, along with a receiver: either a variable or a
@@ -61,8 +61,7 @@ import org.checkerframework.errorprone.javacutil.TreeUtils;
 public abstract class AccessPath {
 
   /** If present, base of access path is contained Element; if absent, base is `this` */
-  @Nullable
-  public abstract Element base();
+  public abstract @Nullable Element base();
 
   public abstract ImmutableList<String> path();
 
@@ -111,8 +110,7 @@ public abstract class AccessPath {
    * otherwise (for example, when the receiver of the field access contains an array access or
    * non-AutoValue method call.
    */
-  @Nullable
-  public static AccessPath fromFieldAccess(FieldAccessNode fieldAccess) {
+  public static @Nullable AccessPath fromFieldAccess(FieldAccessNode fieldAccess) {
     ImmutableList.Builder<String> pathBuilder = ImmutableList.builder();
 
     Tree tree = fieldAccess.getTree();
@@ -161,8 +159,7 @@ public abstract class AccessPath {
    * Returns an AccessPath representing {@code node} if {@code node} is representable as an access
    * path and null otherwise
    */
-  @Nullable
-  public static AccessPath fromNodeIfTrackable(Node node) {
+  public static @Nullable AccessPath fromNodeIfTrackable(Node node) {
     if (node instanceof LocalVariableNode) {
       return fromLocalVariable((LocalVariableNode) node);
     } else if (node instanceof VariableDeclarationNode) {

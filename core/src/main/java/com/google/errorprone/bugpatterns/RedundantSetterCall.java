@@ -61,7 +61,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.regex.Pattern;
 import javax.inject.Inject;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /** A BugPattern; see the summary. */
 @BugPattern(

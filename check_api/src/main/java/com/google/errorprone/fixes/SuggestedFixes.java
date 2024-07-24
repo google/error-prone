@@ -131,7 +131,6 @@ import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.IntStream;
 import java.util.stream.StreamSupport;
-import javax.annotation.Nullable;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
@@ -146,13 +145,13 @@ import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
 import javax.tools.JavaFileObject.Kind;
 import javax.tools.SimpleJavaFileObject;
+import org.jspecify.annotations.Nullable;
 
 /** Factories for constructing {@link Fix}es. */
 public final class SuggestedFixes {
 
   /** Parse a modifier token into a {@link Modifier}. */
-  @Nullable
-  private static Modifier getTokModifierKind(ErrorProneToken tok) {
+  private static @Nullable Modifier getTokModifierKind(ErrorProneToken tok) {
     switch (tok.kind()) {
       case PUBLIC:
         return Modifier.PUBLIC;
@@ -1107,8 +1106,7 @@ public final class SuggestedFixes {
     return maybeModifiers == null ? ImmutableList.of() : maybeModifiers.getAnnotations();
   }
 
-  @Nullable
-  private static Tree suppressibleNode(TreePath path, VisitorState state) {
+  private static @Nullable Tree suppressibleNode(TreePath path, VisitorState state) {
     return StreamSupport.stream(path.spliterator(), false)
         .filter(
             tree ->
@@ -1502,7 +1500,7 @@ public final class SuggestedFixes {
    * #qualifyType}}.
    */
   public static String prettyType(
-      @Nullable VisitorState state, @Nullable SuggestedFix.Builder existingFix, Type type) {
+      @Nullable VisitorState state, SuggestedFix.@Nullable Builder existingFix, Type type) {
     SuggestedFix.Builder fix = existingFix == null ? SuggestedFix.builder() : existingFix;
     return type.accept(
         new DefaultTypeVisitor<String, Void>() {

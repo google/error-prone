@@ -60,8 +60,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import javax.annotation.Nullable;
 import javax.lang.model.util.Elements;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
@@ -355,16 +355,14 @@ public class VisitorState {
    * @param typeStr the JLS 13.1 binary name of the class, e.g. {@code "java.util.Map$Entry"}
    * @return the {@link Type}, or null if it cannot be found
    */
-  @Nullable
-  public Type getTypeFromString(String typeStr) {
+  public @Nullable Type getTypeFromString(String typeStr) {
     return sharedState
         .typeCache
         .computeIfAbsent(typeStr, key -> Optional.ofNullable(getTypeFromStringInternal(key)))
         .orElse(null);
   }
 
-  @Nullable
-  private Type getTypeFromStringInternal(String typeStr) {
+  private @Nullable Type getTypeFromStringInternal(String typeStr) {
     validateTypeStr(typeStr);
     Type primitiveOrVoidType = getPrimitiveOrVoidType(typeStr);
     if (primitiveOrVoidType != null) {
@@ -385,8 +383,7 @@ public class VisitorState {
    * @return the Symbol object, or null if it cannot be found
    */
   // TODO(cushon): deal with binary compat issues and return ClassSymbol
-  @Nullable
-  public Symbol getSymbolFromString(String symStr) {
+  public @Nullable Symbol getSymbolFromString(String symStr) {
     return getSymbolFromName(binaryNameFromClassname(symStr));
   }
 
@@ -404,8 +401,7 @@ public class VisitorState {
    *
    * @param name the name to look up, which must be in binary form (i.e. with $ for nested classes).
    */
-  @Nullable
-  public ClassSymbol getSymbolFromName(Name name) {
+  public @Nullable ClassSymbol getSymbolFromName(Name name) {
     boolean modular = sharedState.modules.getDefaultModule() != getSymtab().noModule;
     if (!modular) {
       return getSymbolFromString(getSymtab().noModule, name);
@@ -422,8 +418,7 @@ public class VisitorState {
     return null;
   }
 
-  @Nullable
-  public ClassSymbol getSymbolFromString(ModuleSymbol msym, Name name) {
+  public @Nullable ClassSymbol getSymbolFromString(ModuleSymbol msym, Name name) {
     ClassSymbol result = getSymtab().getClass(msym, name);
     if (result == null || result.kind == Kind.ERR || !result.exists()) {
       return null;
@@ -507,9 +502,8 @@ public class VisitorState {
    *
    * @return the path, or {@code null} if there is no match
    */
-  @Nullable
   @SafeVarargs
-  public final TreePath findPathToEnclosing(Class<? extends Tree>... classes) {
+  public final @Nullable TreePath findPathToEnclosing(Class<? extends Tree>... classes) {
     TreePath enclosingPath = getPath();
     while (enclosingPath != null) {
       for (Class<? extends Tree> clazz : classes) {
@@ -527,10 +521,10 @@ public class VisitorState {
    *
    * @return the node, or {@code null} if there is no match
    */
-  @Nullable
-  @SuppressWarnings("unchecked") // findPathToEnclosing guarantees that the type is from |classes|
+  // findPathToEnclosing guarantees that the type is from |classes|
+  @SuppressWarnings("unchecked")
   @SafeVarargs
-  public final <T extends Tree> T findEnclosing(Class<? extends T>... classes) {
+  public final <T extends Tree> @Nullable T findEnclosing(Class<? extends T>... classes) {
     TreePath pathToEnclosing = findPathToEnclosing(classes);
     return (pathToEnclosing == null) ? null : (T) pathToEnclosing.getLeaf();
   }
@@ -540,8 +534,7 @@ public class VisitorState {
    *
    * @return the source file as a sequence of characters, or null if it is not available
    */
-  @Nullable
-  public CharSequence getSourceCode() {
+  public @Nullable CharSequence getSourceCode() {
     try {
       return getPath().getCompilationUnit().getSourceFile().getCharContent(false);
     } catch (IOException e) {
@@ -559,8 +552,7 @@ public class VisitorState {
    * @return the source code that represents the node, or {@code null} if the source code is
    *     unavailable (e.g. for generated or desugared AST nodes)
    */
-  @Nullable
-  public String getSourceForNode(Tree tree) {
+  public @Nullable String getSourceForNode(Tree tree) {
     int start = ((JCTree) tree).getStartPosition();
     int end = getEndPosition(tree);
     CharSequence source = getSourceCode();
@@ -634,8 +626,7 @@ public class VisitorState {
    * Given a string that represents a type, if it's a primitive type (e.g., "int") or "void", return
    * the corresponding Type, or null otherwise.
    */
-  @Nullable
-  private Type getPrimitiveOrVoidType(String typeStr) {
+  private @Nullable Type getPrimitiveOrVoidType(String typeStr) {
     switch (typeStr) {
       case "byte":
         return getSymtab().byteType;

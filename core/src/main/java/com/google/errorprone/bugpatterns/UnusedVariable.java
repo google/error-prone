@@ -116,13 +116,13 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.Name;
 import javax.lang.model.type.NullType;
 import javax.tools.JavaFileObject;
+import org.jspecify.annotations.Nullable;
 
 /** Bugpattern to detect unused declarations. */
 @BugPattern(

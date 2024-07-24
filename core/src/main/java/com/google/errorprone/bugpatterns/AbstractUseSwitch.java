@@ -50,7 +50,7 @@ import com.sun.tools.javac.tree.TreeInfo;
 import com.sun.tools.javac.tree.TreeMaker;
 import java.util.ArrayList;
 import java.util.List;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /** Helper for refactoring from if-else chains to switches. */
 public abstract class AbstractUseSwitch extends BugChecker implements IfTreeMatcher {

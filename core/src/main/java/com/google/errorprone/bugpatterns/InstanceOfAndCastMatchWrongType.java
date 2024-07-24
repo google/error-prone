@@ -43,7 +43,7 @@ import com.sun.source.tree.UnaryTree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Types;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author sulku@google.com (Marsela Sulku)
@@ -147,8 +147,7 @@ public class InstanceOfAndCastMatchWrongType extends BugChecker implements TypeC
     private boolean notApplicable = false;
     private final VisitorState state;
 
-    @Nullable
-    InstanceOfTree getRelevantTree() {
+    @Nullable InstanceOfTree getRelevantTree() {
       if (notApplicable) {
         return null;
       }

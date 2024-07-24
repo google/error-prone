@@ -37,7 +37,7 @@ import com.sun.tools.javac.code.Symbol;
 import java.io.Serializable;
 import java.util.List;
 import javax.lang.model.element.Modifier;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Base class for JUnit4SetUp/TearDown not run. This will take care of the nitty-gritty about

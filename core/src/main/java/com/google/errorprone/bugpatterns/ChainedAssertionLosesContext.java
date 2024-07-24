@@ -51,7 +51,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Identifies calls to {@code assertThat} and similar methods inside the implementation of a {@code
@@ -151,8 +151,7 @@ public final class ChainedAssertionLosesContext extends BugChecker
    * {@code check()}, which is part of the expression {@code check().that(...)}. But sometimes there
    * is an intervening call to {@code withMessage}, {@code about}, or both.
    */
-  @Nullable
-  static MethodInvocationTree findThatCall(VisitorState state) {
+  static @Nullable MethodInvocationTree findThatCall(VisitorState state) {
     TreePath path = state.getPath();
     /*
      * Each iteration walks 1 method call up the tree, but it's actually 2 steps in the tree because
@@ -186,8 +185,7 @@ public final class ChainedAssertionLosesContext extends BugChecker
       return new AutoValue_ChainedAssertionLosesContext_FactoryMethodName(clazz, method);
     }
 
-    @Nullable
-    static FactoryMethodName tryCreate(MethodSymbol symbol) {
+    static @Nullable FactoryMethodName tryCreate(MethodSymbol symbol) {
       return symbol.params.isEmpty()
           ? create(symbol.owner.getQualifiedName().toString(), symbol.getSimpleName().toString())
           : null;
@@ -198,8 +196,7 @@ public final class ChainedAssertionLosesContext extends BugChecker
     abstract String method();
   }
 
-  @Nullable
-  private static FactoryMethodName tryFindFactory(
+  private static @Nullable FactoryMethodName tryFindFactory(
       MethodInvocationTree assertThatCall, VisitorState state) {
     MethodSymbol assertThatSymbol = getSymbol(assertThatCall);
     /*
@@ -258,8 +255,7 @@ public final class ChainedAssertionLosesContext extends BugChecker
         getDeclaredSymbol(enclosingClass).type, COM_GOOGLE_COMMON_TRUTH_SUBJECT.get(state), state);
   }
 
-  @Nullable
-  private static String findThatCallAndMakeCheckDescription(VisitorState state) {
+  private static @Nullable String findThatCallAndMakeCheckDescription(VisitorState state) {
     MethodInvocationTree thatCall = findThatCall(state);
     if (thatCall == null) {
       return null;

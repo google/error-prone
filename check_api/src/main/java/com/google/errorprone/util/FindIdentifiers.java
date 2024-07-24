@@ -73,9 +73,9 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.BiPredicate;
 import java.util.stream.StreamSupport;
-import javax.annotation.Nullable;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
+import org.jspecify.annotations.Nullable;
 
 /** A helper class to find all identifiers in scope at a given program point. */
 public final class FindIdentifiers {
@@ -86,8 +86,7 @@ public final class FindIdentifiers {
   }
 
   /** Finds a declaration with the given name and type that is in scope at the current location. */
-  @Nullable
-  public static Symbol findIdent(String name, VisitorState state, KindSelector kind) {
+  public static @Nullable Symbol findIdent(String name, VisitorState state, KindSelector kind) {
     ClassType enclosingClass = ASTHelpers.getType(getEnclosingClass(state.getPath()));
     Env<AttrContext> env;
     if (enclosingClass == null || enclosingClass.tsym == null) {
@@ -127,8 +126,7 @@ public final class FindIdentifiers {
     return (Symbol) method.invoke(Resolve.instance(state.context), env, state.getName(name), kind);
   }
 
-  @Nullable
-  private static ClassTree getEnclosingClass(TreePath treePath) {
+  private static @Nullable ClassTree getEnclosingClass(TreePath treePath) {
     if (treePath.getLeaf() instanceof ClassTree) {
       return (ClassTree) treePath.getLeaf();
     }

@@ -32,7 +32,6 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.processing.JavacProcessingEnvironment;
 import com.sun.tools.javac.util.Context;
-import javax.annotation.Nullable;
 import javax.annotation.processing.ProcessingEnvironment;
 import org.checkerframework.errorprone.dataflow.analysis.AbstractValue;
 import org.checkerframework.errorprone.dataflow.analysis.Analysis;
@@ -43,6 +42,7 @@ import org.checkerframework.errorprone.dataflow.analysis.TransferFunction;
 import org.checkerframework.errorprone.dataflow.cfg.ControlFlowGraph;
 import org.checkerframework.errorprone.dataflow.cfg.UnderlyingAST;
 import org.checkerframework.errorprone.dataflow.cfg.builder.CFGBuilder;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Provides a wrapper around {@link org.checkerframework.errorprone.dataflow.analysis.Analysis}.
@@ -127,8 +127,7 @@ public final class DataFlow {
               });
 
   // TODO(b/158869538): remove once we merge jdk8 specific's with core
-  @Nullable
-  private static <T> TreePath findEnclosingMethodOrLambdaOrInitializer(TreePath path) {
+  private static <T> @Nullable TreePath findEnclosingMethodOrLambdaOrInitializer(TreePath path) {
     while (path != null) {
       if (path.getLeaf() instanceof MethodTree) {
         return path;
@@ -201,10 +200,9 @@ public final class DataFlow {
    * @return dataflow result for the given expression or {@code null} if the expression is not part
    *     of a method, lambda or initializer
    */
-  @Nullable
   public static <
           A extends AbstractValue<A>, S extends Store<S>, T extends ForwardTransferFunction<A, S>>
-      A expressionDataflow(TreePath exprPath, Context context, T transfer) {
+      @Nullable A expressionDataflow(TreePath exprPath, Context context, T transfer) {
     Tree leaf = exprPath.getLeaf();
     Preconditions.checkArgument(
         leaf instanceof ExpressionTree,

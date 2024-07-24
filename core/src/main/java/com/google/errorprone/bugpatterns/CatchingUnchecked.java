@@ -36,7 +36,7 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.UnionClassType;
 import java.util.HashSet;
 import java.util.Set;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Flags code which catches {@link RuntimeException}s under the guise of catching {@link Exception}.

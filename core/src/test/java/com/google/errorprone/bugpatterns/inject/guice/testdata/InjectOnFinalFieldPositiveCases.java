@@ -17,7 +17,7 @@
 package com.google.errorprone.bugpatterns.inject.guice.testdata;
 
 import com.google.inject.Inject;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author sgoldfeder@google.com (Steven Goldfeder)

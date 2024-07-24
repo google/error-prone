@@ -65,9 +65,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import javax.annotation.Nullable;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.type.TypeKind;
+import org.jspecify.annotations.Nullable;
 import org.pcollections.ConsPStack;
 
 /**
@@ -747,8 +747,7 @@ public final class ThreadSafety {
   }
 
   /** Returns an enclosing instance for the specified type if it is thread-safe. */
-  @Nullable
-  public Type mutableEnclosingInstance(Optional<ClassTree> tree, ClassType type) {
+  public @Nullable Type mutableEnclosingInstance(Optional<ClassTree> tree, ClassType type) {
     if (tree.isPresent()
         && !CanBeStaticAnalyzer.referencesOuter(
             tree.get(), ASTHelpers.getSymbol(tree.get()), state)) {
@@ -813,8 +812,7 @@ public final class ThreadSafety {
     return result.build();
   }
 
-  @Nullable
-  private AnnotationInfo getAnnotation(
+  private @Nullable AnnotationInfo getAnnotation(
       Symbol sym, ImmutableSet<String> annotationsToCheck, VisitorState state) {
     if (sym == null) {
       return null;

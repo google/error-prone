@@ -83,8 +83,8 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import javax.annotation.Nullable;
 import javax.lang.model.element.Name;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Static utility methods for common functionality in the nullable checkers.
@@ -305,8 +305,7 @@ class NullnessUtils {
       return prepareBuilder(state, suppressionToRemove).prefixWith(tree, "@" + use() + " ").build();
     }
 
-    @Nullable
-    abstract String importToAdd();
+    abstract @Nullable String importToAdd();
 
     abstract String use();
 
@@ -390,8 +389,7 @@ class NullnessUtils {
     }
   }
 
-  @Nullable
-  static NullCheck getNullCheck(ExpressionTree tree) {
+  static @Nullable NullCheck getNullCheck(ExpressionTree tree) {
     tree = stripParentheses(tree);
 
     Polarity polarity;
@@ -456,12 +454,10 @@ class NullnessUtils {
      * that form. Prefer this over {@link #varSymbolButUsuallyPreferBareIdentifier} in most cases,
      * as discussed in the class documentation.
      */
-    @Nullable
-    abstract Name bareIdentifier();
+    abstract @Nullable Name bareIdentifier();
 
     /** Returns the symbol that was checked against {@code null}. */
-    @Nullable
-    abstract VarSymbol varSymbolButUsuallyPreferBareIdentifier();
+    abstract @Nullable VarSymbol varSymbolButUsuallyPreferBareIdentifier();
 
     abstract Polarity polarity();
 
@@ -669,8 +665,7 @@ class NullnessUtils {
     return ImmutableSet.of();
   }
 
-  @Nullable
-  static VariableTree findDeclaration(VisitorState state, Symbol sym) {
+  static @Nullable VariableTree findDeclaration(VisitorState state, Symbol sym) {
     JavacProcessingEnvironment javacEnv = JavacProcessingEnvironment.instance(state.context);
     TreePath declPath = Trees.instance(javacEnv).getPath(sym);
     // Skip fields declared in other compilation units since we can't make a fix for them here.

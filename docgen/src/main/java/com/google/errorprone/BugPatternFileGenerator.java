@@ -37,7 +37,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
@@ -62,7 +62,7 @@ class BugPatternFileGenerator implements LineProcessor<List<BugPatternInstance>>
   private final boolean generateFrontMatter;
 
   /** The base url for links to bugpatterns. */
-  @Nullable private final String baseUrl;
+  private final @Nullable String baseUrl;
 
   public BugPatternFileGenerator(
       Path bugpatternDir,

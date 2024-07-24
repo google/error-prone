@@ -32,8 +32,8 @@ import com.sun.source.tree.Tree;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Type;
 import java.util.concurrent.atomic.AtomicBoolean;
-import javax.annotation.Nullable;
 import javax.lang.model.type.TypeKind;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Detects Flogger log statements that pass Exceptions to the log method instead of using withCause.
@@ -84,8 +84,7 @@ public class FloggerWithoutCause extends BugChecker
             String.format(".withCause(%s)", state.getSourceForNode(exception))));
   }
 
-  @Nullable
-  private static Tree getExceptionArg(MethodInvocationTree tree, VisitorState state) {
+  private static @Nullable Tree getExceptionArg(MethodInvocationTree tree, VisitorState state) {
     for (Tree arg : Lists.reverse(tree.getArguments())) {
       try {
         Type argType = ASTHelpers.getType(arg);

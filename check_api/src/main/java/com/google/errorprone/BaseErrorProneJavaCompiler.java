@@ -34,7 +34,6 @@ import java.util.EnumSet;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Set;
-import javax.annotation.Nullable;
 import javax.lang.model.SourceVersion;
 import javax.tools.DiagnosticListener;
 import javax.tools.JavaCompiler;
@@ -42,6 +41,7 @@ import javax.tools.JavaCompiler.CompilationTask;
 import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
+import org.jspecify.annotations.Nullable;
 
 /** An Error Prone compiler that implements {@link javax.tools.JavaCompiler}. */
 public class BaseErrorProneJavaCompiler implements JavaCompiler {

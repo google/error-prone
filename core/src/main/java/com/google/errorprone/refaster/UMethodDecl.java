@@ -29,7 +29,7 @@ import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
 import com.sun.tools.javac.tree.JCTree.JCTypeParameter;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import com.sun.tools.javac.util.List;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * {@code UTree} representation of a {@code MethodTree}.
@@ -65,8 +65,7 @@ abstract class UMethodDecl extends UTree<JCMethodDecl> implements MethodTree {
   }
 
   @Override
-  @Nullable
-  public Choice<Unifier> visitMethod(MethodTree decl, @Nullable Unifier unifier) {
+  public @Nullable Choice<Unifier> visitMethod(MethodTree decl, @Nullable Unifier unifier) {
     return getName()
         .unify(decl.getName(), unifier)
         .thenChoose(unifications(getReturnType(), decl.getReturnType()))

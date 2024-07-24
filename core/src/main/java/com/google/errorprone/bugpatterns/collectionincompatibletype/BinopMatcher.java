@@ -25,7 +25,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Type;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 final class BinopMatcher extends AbstractCollectionIncompatibleTypeMatcher {
 
@@ -42,9 +42,8 @@ final class BinopMatcher extends AbstractCollectionIncompatibleTypeMatcher {
     return matcher;
   }
 
-  @Nullable
   @Override
-  Type extractSourceType(MethodInvocationTree tree, VisitorState state) {
+  @Nullable Type extractSourceType(MethodInvocationTree tree, VisitorState state) {
     return extractTypeArgAsMemberOfSupertype(
         getType(tree.getArguments().get(0)),
         state.getSymbolFromString(collectionType),
@@ -52,9 +51,8 @@ final class BinopMatcher extends AbstractCollectionIncompatibleTypeMatcher {
         state.getTypes());
   }
 
-  @Nullable
   @Override
-  Type extractSourceType(MemberReferenceTree tree, VisitorState state) {
+  @Nullable Type extractSourceType(MemberReferenceTree tree, VisitorState state) {
     Type descriptorType = state.getTypes().findDescriptorType(getType(tree));
     return extractTypeArgAsMemberOfSupertype(
         descriptorType.getParameterTypes().get(0),
@@ -63,21 +61,18 @@ final class BinopMatcher extends AbstractCollectionIncompatibleTypeMatcher {
         state.getTypes());
   }
 
-  @Nullable
   @Override
-  ExpressionTree extractSourceTree(MethodInvocationTree tree, VisitorState state) {
+  @Nullable ExpressionTree extractSourceTree(MethodInvocationTree tree, VisitorState state) {
     return tree.getArguments().get(0);
   }
 
-  @Nullable
   @Override
-  ExpressionTree extractSourceTree(MemberReferenceTree tree, VisitorState state) {
+  @Nullable ExpressionTree extractSourceTree(MemberReferenceTree tree, VisitorState state) {
     return tree;
   }
 
-  @Nullable
   @Override
-  Type extractTargetType(MethodInvocationTree tree, VisitorState state) {
+  @Nullable Type extractTargetType(MethodInvocationTree tree, VisitorState state) {
     return extractTypeArgAsMemberOfSupertype(
         getType(tree.getArguments().get(1)),
         state.getSymbolFromString(collectionType),
@@ -85,9 +80,8 @@ final class BinopMatcher extends AbstractCollectionIncompatibleTypeMatcher {
         state.getTypes());
   }
 
-  @Nullable
   @Override
-  Type extractTargetType(MemberReferenceTree tree, VisitorState state) {
+  @Nullable Type extractTargetType(MemberReferenceTree tree, VisitorState state) {
     Type descriptorType = state.getTypes().findDescriptorType(getType(tree));
     return extractTypeArgAsMemberOfSupertype(
         descriptorType.getParameterTypes().get(1),

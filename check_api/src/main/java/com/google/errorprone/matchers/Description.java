@@ -34,7 +34,7 @@ import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import java.util.List;
 import java.util.Optional;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Simple data object containing the information captured about an AST match. Can be printed in a
@@ -63,7 +63,7 @@ public class Description {
   private final String rawMessage;
 
   /** The raw link URL for the check. May be null if there is no link. */
-  @Nullable private final String linkUrl;
+  private final @Nullable String linkUrl;
 
   /**
    * A list of fixes to suggest in an error message or use in automated refactoring. Fixes are in
@@ -87,8 +87,7 @@ public class Description {
   }
 
   /** Returns a link associated with this finding or null if there is no link. */
-  @Nullable
-  public String getLink() {
+  public @Nullable String getLink() {
     return linkUrl;
   }
 
@@ -135,8 +134,7 @@ public class Description {
    * Construct the link text to include in the compiler error message. Returns null if there is no
    * link.
    */
-  @Nullable
-  private static String linkTextForDiagnostic(String linkUrl) {
+  private static @Nullable String linkTextForDiagnostic(String linkUrl) {
     return isNullOrEmpty(linkUrl) ? null : "  (see " + linkUrl + ")";
   }
 

@@ -37,7 +37,7 @@ import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import com.sun.tools.javac.util.Position;
 import java.lang.reflect.Method;
 import java.util.Optional;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /** Common utility methods for fixing Javadocs. */
 final class Utils {
@@ -120,8 +120,7 @@ final class Utils {
     return new FixedPosition(tree, startPosition);
   }
 
-  @Nullable
-  static DocTreePath getDocTreePath(VisitorState state) {
+  static @Nullable DocTreePath getDocTreePath(VisitorState state) {
     DocCommentTree docCommentTree = getDocCommentTree(state);
     if (docCommentTree == null) {
       return null;
@@ -129,8 +128,7 @@ final class Utils {
     return new DocTreePath(state.getPath(), docCommentTree);
   }
 
-  @Nullable
-  private static DocCommentTree getDocCommentTree(VisitorState state) {
+  private static @Nullable DocCommentTree getDocCommentTree(VisitorState state) {
     return JavacTrees.instance(state.context).getDocCommentTree(state.getPath());
   }
 

@@ -77,7 +77,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.logging.Logger;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Abstract superclass for templates that can be used to search and replace in a Java syntax tree.
@@ -192,7 +192,6 @@ public abstract class Template<M extends TemplateMatch> implements Serializable 
     return List.from(result);
   }
 
-  @Nullable
   protected Optional<Unifier> typecheck(
       Unifier unifier,
       Inliner inliner,
@@ -490,8 +489,7 @@ public abstract class Template<M extends TemplateMatch> implements Serializable 
   }
 
   /** Reflectively instantiate the package-private {@code MethodResolutionPhase} enum. */
-  @Nullable
-  private static Object newMethodResolutionPhase(boolean autoboxing) {
+  private static @Nullable Object newMethodResolutionPhase(boolean autoboxing) {
     for (Class<?> c : Resolve.class.getDeclaredClasses()) {
       if (!c.getName().equals("com.sun.tools.javac.comp.Resolve$MethodResolutionPhase")) {
         continue;

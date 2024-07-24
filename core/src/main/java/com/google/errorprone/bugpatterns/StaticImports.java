@@ -34,7 +34,7 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.Name;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Logic for inspecting static imports used by {@link NonCanonicalStaticImport}, {@link
@@ -91,8 +91,7 @@ public final class StaticImports {
    * {@code null} otherwise, e.g. because the import is non-static, or an on-demand import, or
    * statically imports a field or method.
    */
-  @Nullable
-  public static StaticImportInfo tryCreate(ImportTree tree, VisitorState state) {
+  public static @Nullable StaticImportInfo tryCreate(ImportTree tree, VisitorState state) {
     if (!tree.isStatic()) {
       return null;
     }
@@ -109,8 +108,7 @@ public final class StaticImports {
     return tryCreate(access, state);
   }
 
-  @Nullable
-  public static StaticImportInfo tryCreate(MemberSelectTree access, VisitorState state) {
+  public static @Nullable StaticImportInfo tryCreate(MemberSelectTree access, VisitorState state) {
     Name identifier = (Name) access.getIdentifier();
     Symbol importedType = getSymbol(access.getExpression());
     if (importedType == null) {

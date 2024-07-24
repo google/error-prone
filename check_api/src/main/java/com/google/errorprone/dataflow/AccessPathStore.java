@@ -24,11 +24,11 @@ import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import javax.annotation.Nullable;
 import org.checkerframework.errorprone.dataflow.analysis.AbstractValue;
 import org.checkerframework.errorprone.dataflow.analysis.Store;
 import org.checkerframework.errorprone.dataflow.cfg.visualize.CFGVisualizer;
 import org.checkerframework.errorprone.dataflow.expression.JavaExpression;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Immutable map from local variables or heap access paths to their {@link AbstractValue}
@@ -58,8 +58,7 @@ public abstract class AccessPathStore<V extends AbstractValue<V>>
     return (AccessPathStore<V>) EMPTY;
   }
 
-  @Nullable
-  private V getInformation(AccessPath ap) {
+  private @Nullable V getInformation(AccessPath ap) {
     return heap().get(checkNotNull(ap));
   }
 

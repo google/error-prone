@@ -38,7 +38,7 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 import java.lang.annotation.Annotation;
 import java.util.Optional;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /** A base Error Prone check implementation to enforce compliance with a given API diff. */
 public abstract class ApiDiffChecker extends BugChecker

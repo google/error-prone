@@ -30,7 +30,7 @@ import com.sun.source.tree.Tree;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /** Flag DateFormats which use the same field more than once. */
 @BugPattern(summary = "Reuse of DateFormat fields is most likely unintentional", severity = WARNING)
@@ -44,7 +44,7 @@ public final class DuplicateDateFormatField extends MisusedDateFormat {
 
     private final Set<Character> seen = new HashSet<>();
     private final Set<Character> duplicates = new HashSet<>();
-    @Nullable private Character prev = null;
+    private @Nullable Character prev = null;
     private int optionalGroupDepth = 0;
 
     @Override

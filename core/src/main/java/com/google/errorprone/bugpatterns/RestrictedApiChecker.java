@@ -59,7 +59,7 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 import java.util.stream.Stream;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /** Check for non-allowlisted callers to RestrictedApiChecker. */
 @BugPattern(
@@ -194,8 +194,8 @@ public class RestrictedApiChecker extends BugChecker
         .orElse(NO_MATCH);
   }
 
-  @Nullable
-  private static Attribute.Compound getRestrictedApiAnnotation(Symbol sym, VisitorState state) {
+  private static Attribute.@Nullable Compound getRestrictedApiAnnotation(
+      Symbol sym, VisitorState state) {
     if (sym == null) {
       return null;
     }
@@ -203,7 +203,7 @@ public class RestrictedApiChecker extends BugChecker
   }
 
   private Description checkRestriction(
-      @Nullable Attribute.Compound attribute, Tree where, VisitorState state) {
+      Attribute.@Nullable Compound attribute, Tree where, VisitorState state) {
     if (attribute == null) {
       return NO_MATCH;
     }

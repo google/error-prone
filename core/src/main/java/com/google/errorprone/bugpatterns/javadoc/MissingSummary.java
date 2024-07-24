@@ -49,8 +49,8 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.tree.DCTree.DCDocComment;
 import java.util.List;
 import java.util.Set;
-import javax.annotation.Nullable;
 import javax.lang.model.element.Modifier;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Matches Javadocs which are missing a required summary line.
@@ -171,8 +171,7 @@ public final class MissingSummary extends BugChecker
         .build();
   }
 
-  @Nullable
-  private static <T> T findFirst(DocTreePath docTreePath, Class<T> clazz) {
+  private static <T> @Nullable T findFirst(DocTreePath docTreePath, Class<T> clazz) {
     return new DocTreeScanner<T, Void>() {
       @Override
       public T scan(DocTree docTree, Void unused) {

@@ -38,8 +38,8 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 import java.util.List;
-import javax.annotation.Nullable;
 import javax.lang.model.element.ElementKind;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Format string validation utility that fails on more cases than {@link FormatStringValidation} to
@@ -50,8 +50,7 @@ public class StrictFormatStringValidation {
   private static final Matcher<ExpressionTree> MOCKITO_MATCHERS =
       staticMethod().onClassAny("org.mockito.Matchers", "org.mockito.ArgumentMatchers");
 
-  @Nullable
-  public static ValidationResult validate(
+  public static @Nullable ValidationResult validate(
       ExpressionTree formatStringTree, List<? extends ExpressionTree> args, VisitorState state) {
     if (MOCKITO_MATCHERS.matches(formatStringTree, state)) {
       // Mockito matchers do not pass standard @FormatString requirements, but we allow them so
@@ -99,8 +98,7 @@ public class StrictFormatStringValidation {
   }
 
   /** Helps {@code validate()} validate a format string that is declared as a method parameter. */
-  @Nullable
-  private static ValidationResult validateFormatStringParameter(
+  private static @Nullable ValidationResult validateFormatStringParameter(
       ExpressionTree formatStringTree,
       Symbol formatStringSymbol,
       List<? extends ExpressionTree> args,
@@ -214,9 +212,9 @@ public class StrictFormatStringValidation {
                     return super.visitVariable(node, null);
                   }
 
-                  @Nullable
                   @Override
-                  public ValidationResult reduce(ValidationResult r1, ValidationResult r2) {
+                  public @Nullable ValidationResult reduce(
+                      ValidationResult r1, ValidationResult r2) {
                     if (r1 == null && r2 == null) {
                       return null;
                     }

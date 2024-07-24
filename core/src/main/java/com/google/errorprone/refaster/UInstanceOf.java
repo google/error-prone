@@ -23,7 +23,7 @@ import com.sun.source.tree.InstanceOfTree;
 import com.sun.source.tree.TreeVisitor;
 import com.sun.tools.javac.tree.JCTree.JCInstanceOf;
 import java.lang.reflect.Proxy;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * {@link UTree} representation of a {@link InstanceOfTree}.
@@ -78,8 +78,8 @@ abstract class UInstanceOf extends UExpression {
   }
 
   @Override
-  @Nullable
-  public Choice<Unifier> visitInstanceOf(InstanceOfTree instanceOf, @Nullable Unifier unifier) {
+  public @Nullable Choice<Unifier> visitInstanceOf(
+      InstanceOfTree instanceOf, @Nullable Unifier unifier) {
     return getExpression()
         .unify(instanceOf.getExpression(), unifier)
         .thenChoose(unifications(getType(), instanceOf.getType()));

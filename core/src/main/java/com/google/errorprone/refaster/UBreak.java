@@ -25,7 +25,7 @@ import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.Name;
 import java.util.Objects;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * {@code UTree} representation of {@code BreakTree}.
@@ -45,14 +45,12 @@ final class UBreak extends USimpleStatement implements BreakTree {
   }
 
   // TODO(b/176098078): Add @Override once compiling JDK 12+
-  @Nullable
-  public ExpressionTree getValue() {
+  public @Nullable ExpressionTree getValue() {
     return null;
   }
 
   @Override
-  @Nullable
-  public StringName getLabel() {
+  public @Nullable StringName getLabel() {
     return label;
   }
 

@@ -22,7 +22,7 @@ import com.google.errorprone.bugpatterns.collectionincompatibletype.AbstractColl
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.sun.source.tree.ExpressionTree;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /** Matchers for methods which express containment, like {@link java.util.Collection#contains}. */
 public final class ContainmentMatchers {
@@ -106,8 +106,8 @@ public final class ContainmentMatchers {
           .addAll(STATIC_MATCHERS)
           .build();
 
-  @Nullable
-  public static MatchResult firstNonNullMatchResult(ExpressionTree tree, VisitorState state) {
+  public static @Nullable MatchResult firstNonNullMatchResult(
+      ExpressionTree tree, VisitorState state) {
     if (!FIRST_ORDER_MATCHER.matches(tree, state)) {
       return null;
     }

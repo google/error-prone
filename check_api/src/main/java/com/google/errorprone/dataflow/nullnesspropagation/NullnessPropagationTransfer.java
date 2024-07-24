@@ -85,7 +85,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
-import javax.annotation.Nullable;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeVariable;
@@ -108,6 +107,7 @@ import org.checkerframework.errorprone.dataflow.cfg.node.NotEqualNode;
 import org.checkerframework.errorprone.dataflow.cfg.node.SwitchExpressionNode;
 import org.checkerframework.errorprone.dataflow.cfg.node.TypeCastNode;
 import org.checkerframework.errorprone.dataflow.cfg.node.VariableDeclarationNode;
+import org.jspecify.annotations.Nullable;
 
 /**
  * The {@code TransferFunction} for our nullability analysis. This analysis determines, for all
@@ -246,7 +246,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
   private transient CompilationUnitTree compilationUnit;
 
   /** Cached local inference results for nullability annotations on type parameters */
-  @Nullable private transient InferredNullability inferenceResults;
+  private transient @Nullable InferredNullability inferenceResults;
 
   @Override
   public AccessPathStore<Nullness> initialStore(
@@ -680,8 +680,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     return false;
   }
 
-  @Nullable
-  private static ClassAndField tryGetFieldSymbol(Tree tree) {
+  private static @Nullable ClassAndField tryGetFieldSymbol(Tree tree) {
     Symbol symbol = tryGetSymbol(tree);
     if (symbol instanceof VarSymbol) {
       return ClassAndField.make((VarSymbol) symbol);
@@ -689,8 +688,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     return null;
   }
 
-  @Nullable
-  static ClassAndMethod tryGetMethodSymbol(MethodInvocationTree tree, Types types) {
+  static @Nullable ClassAndMethod tryGetMethodSymbol(MethodInvocationTree tree, Types types) {
     Symbol symbol = tryGetSymbol(tree.getMethodSelect());
     if (symbol instanceof MethodSymbol) {
       return ClassAndMethod.make((MethodSymbol) symbol, types);
@@ -702,8 +700,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
    * We can't use ASTHelpers here. It's in core, which depends on jdk8, so we can't make jdk8 depend
    * back on core.
    */
-  @Nullable
-  private static Symbol tryGetSymbol(Tree tree) {
+  private static @Nullable Symbol tryGetSymbol(Tree tree) {
     if (tree instanceof JCIdent) {
       return ((JCIdent) tree).sym;
     }
@@ -799,8 +796,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     return getInferredNullness(node).orElse(assumedNullness);
   }
 
-  @Nullable
-  private Nullness fieldInitializerNullnessIfAvailable(ClassAndField accessed) {
+  private @Nullable Nullness fieldInitializerNullnessIfAvailable(ClassAndField accessed) {
     if (!traversed.add(accessed.symbol)) {
       // Circular dependency between initializers results in null.  Note static fields can also be
       // null if they're observed before initialized, but we're ignoring that case for simplicity.

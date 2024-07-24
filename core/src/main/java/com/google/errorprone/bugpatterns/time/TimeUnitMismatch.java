@@ -72,7 +72,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /** Checker that detects likely time-unit mismatches by looking at identifier names. */
 @BugPattern(
@@ -317,8 +317,7 @@ public final class TimeUnitMismatch extends BugChecker
    * <p>"Nomen est Omen: Exploring and Exploiting Similarities between Argument and Parameter
    * Names," ICSE 2016
    */
-  @Nullable
-  private static String extractArgumentName(ExpressionTree expr) {
+  private static @Nullable String extractArgumentName(ExpressionTree expr) {
     switch (expr.getKind()) {
       case TYPE_CAST:
         return extractArgumentName(((TypeCastTree) expr).getExpression());
@@ -371,9 +370,8 @@ public final class TimeUnitMismatch extends BugChecker
           isSameType("java.lang.Long"),
           isSameType("java.lang.Double"));
 
-  @Nullable
   @VisibleForTesting
-  static TimeUnit unitSuggestedByName(String name) {
+  static @Nullable TimeUnit unitSuggestedByName(String name) {
     // Tuple types, especially Pair, trip us up. Skip APIs that might be from them.
     // This check is somewhat redundant with the "second" check below.
     // TODO(cpovirk): Skip APIs only if they're from a type that also declares a first/getFirst()?

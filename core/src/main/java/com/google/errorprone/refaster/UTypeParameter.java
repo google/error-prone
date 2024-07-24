@@ -24,7 +24,7 @@ import com.google.common.collect.ImmutableList;
 import com.sun.source.tree.TreeVisitor;
 import com.sun.source.tree.TypeParameterTree;
 import com.sun.tools.javac.tree.JCTree.JCTypeParameter;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * {@code UTree} representation of a {@code TypeParameterTree}.
@@ -73,8 +73,8 @@ abstract class UTypeParameter extends UTree<JCTypeParameter> implements TypePara
   }
 
   @Override
-  @Nullable
-  public Choice<Unifier> visitTypeParameter(TypeParameterTree node, @Nullable Unifier unifier) {
+  public @Nullable Choice<Unifier> visitTypeParameter(
+      TypeParameterTree node, @Nullable Unifier unifier) {
     return getName()
         .unify(node.getName(), unifier)
         .thenChoose(unifications(getBounds(), node.getBounds()))

@@ -44,8 +44,8 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Type;
 import java.util.stream.Stream;
-import javax.annotation.Nullable;
 import javax.lang.model.element.Modifier;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Verifies that methods marked {@link com.google.errorprone.annotations.ForOverride} are only
@@ -147,8 +147,7 @@ public class ForOverrideChecker extends BugChecker
    * <p>By 'direct', we mean that if the leaf is part of a field initializer of a class, then it is
    * considered to not be part of any method.
    */
-  @Nullable
-  private static MethodTree findDirectMethod(TreePath path) {
+  private static @Nullable MethodTree findDirectMethod(TreePath path) {
     while (true) {
       path = path.getParentPath();
       if (path != null) {
@@ -205,8 +204,7 @@ public class ForOverrideChecker extends BugChecker
   }
 
   /** Get the outermost class/interface/enum of an element, or null if none. */
-  @Nullable
-  private static Type getOutermostClass(VisitorState state) {
+  private static @Nullable Type getOutermostClass(VisitorState state) {
     return findLast(
             stream(state.getPath())
                 .filter(t -> t instanceof ClassTree)

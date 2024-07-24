@@ -91,6 +91,7 @@
       <groupId>com.google.code.findbugs</groupId>
       <artifactId>jsr305</artifactId>
       <version>3.0.2</version>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <!-- GPLv2 with Classpath Exception -->
@@ -359,7 +360,6 @@
       <groupId>org.jspecify</groupId>
       <artifactId>jspecify</artifactId>
       <version>${jspecify.version}</version>
-      <scope>test</scope>
     </dependency>
       <!-- Apache 2.0 -->
     <dependency>

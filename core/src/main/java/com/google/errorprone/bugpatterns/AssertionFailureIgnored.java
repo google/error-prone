@@ -55,7 +55,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
@@ -205,8 +205,7 @@ public class AssertionFailureIgnored extends BugChecker implements MethodInvocat
         .findFirst();
   }
 
-  @Nullable
-  private static JCTry enclosingTry(VisitorState state) {
+  private static @Nullable JCTry enclosingTry(VisitorState state) {
     Tree prev = null;
     for (Tree parent : state.getPath()) {
       switch (parent.getKind()) {

@@ -25,7 +25,7 @@ import com.sun.source.tree.TreeVisitor;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCTypeApply;
 import java.util.List;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * {@link UTree} version of {@link ParameterizedTypeTree}. This is the AST version of {@link
@@ -54,8 +54,7 @@ abstract class UTypeApply extends UExpression implements ParameterizedTypeTree {
   public abstract ImmutableList<UExpression> getTypeArguments();
 
   @Override
-  @Nullable
-  public Choice<Unifier> visitParameterizedType(
+  public @Nullable Choice<Unifier> visitParameterizedType(
       ParameterizedTypeTree typeApply, @Nullable Unifier unifier) {
     Choice<Unifier> choice = getType().unify(typeApply.getType(), unifier);
     if (getTypeArguments().isEmpty()) {
