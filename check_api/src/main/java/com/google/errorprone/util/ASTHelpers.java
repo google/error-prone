@@ -2837,6 +2837,33 @@ public class ASTHelpers {
   }
 
   /**
+   * Returns the statement or expression after the arrow for a {@link CaseTree} of the form: {@code
+   * case <expression> -> <body>}.
+   */
+  @Nullable
+  public static Tree getCaseTreeBody(CaseTree caseTree) {
+    if (GET_CASE_BODY_METHOD == null) {
+      return null;
+    }
+    try {
+      return (Tree) GET_CASE_BODY_METHOD.invoke(caseTree);
+    } catch (ReflectiveOperationException e) {
+      throw new LinkageError(e.getMessage(), e);
+    }
+  }
+
+  @Nullable private static final Method GET_CASE_BODY_METHOD = getGetCaseBodyMethod();
+
+  @Nullable
+  private static Method getGetCaseBodyMethod() {
+    try {
+      return CaseTree.class.getMethod("getBody");
+    } catch (NoSuchMethodException e) {
+      return null;
+    }
+  }
+
+  /**
    * Retrieves a stream containing all case expressions, in order, for a given {@code CaseTree}.
    * This method acts as a facade to the {@code CaseTree.getExpressions()} API, falling back to
    * legacy APIs when necessary.
