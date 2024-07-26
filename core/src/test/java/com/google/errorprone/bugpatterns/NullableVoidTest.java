@@ -42,6 +42,19 @@ public class NullableVoidTest {
   }
 
   @Test
+  public void positiveConstructor() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import javax.annotation.Nullable;",
+            "class Test {",
+            "  // BUG: Diagnostic contains:",
+            "  @Nullable Test() {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void positiveCheckForNull() {
     compilationHelper
         .addSourceLines(
