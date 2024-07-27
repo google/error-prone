@@ -2791,8 +2791,7 @@ public class ASTHelpers {
    * Returns the statement or expression after the arrow for a {@link CaseTree} of the form: {@code
    * case <expression> -> <body>}.
    */
-  @Nullable
-  public static Tree getCaseTreeBody(CaseTree caseTree) {
+  public static @Nullable Tree getCaseTreeBody(CaseTree caseTree) {
     if (GET_CASE_BODY_METHOD == null) {
       return null;
     }
@@ -2803,10 +2802,9 @@ public class ASTHelpers {
     }
   }
 
-  @Nullable private static final Method GET_CASE_BODY_METHOD = getGetCaseBodyMethod();
+  private static final @Nullable Method GET_CASE_BODY_METHOD = getGetCaseBodyMethod();
 
-  @Nullable
-  private static Method getGetCaseBodyMethod() {
+  private static @Nullable Method getGetCaseBodyMethod() {
     try {
       return CaseTree.class.getMethod("getBody");
     } catch (NoSuchMethodException e) {
