@@ -260,14 +260,13 @@ public class ASTHelpers {
       return ((JCIdent) tree).sym;
     }
     if (tree instanceof JCMethodInvocation) {
-      return ASTHelpers.getSymbol((MethodInvocationTree) tree);
+      return getSymbol((MethodInvocationTree) tree);
     }
     if (tree instanceof JCNewClass) {
-      return ASTHelpers.getSymbol((NewClassTree) tree);
+      return getSymbol((NewClassTree) tree);
     }
     if (tree instanceof MemberReferenceTree) {
-      // TODO: b/285157761 - Delegate to the MemberReferenceTree overload.
-      return ((JCMemberReference) tree).sym;
+      return getSymbol((MemberReferenceTree) tree);
     }
     if (tree instanceof JCAnnotatedType) {
       return getSymbol(((JCAnnotatedType) tree).underlyingType);
