@@ -50,9 +50,10 @@ import javax.lang.model.element.ElementKind;
 @BugPattern(
     tags = {StandardTags.REFACTORING},
     summary =
-        "Prefer using `@Rule` with an explicit order over declaring a `RuleChain`. "
-            + "RuleChain was the only way to declare ordered rules before JUnit 4.13. Newer "
-            + "versions should use the cleaner individual `@Rule(order = n)` option.",
+        "Prefer using `@Rule` with an explicit order over declaring a `RuleChain`. RuleChain was"
+            + " the only way to declare ordered rules before JUnit 4.13. Newer versions should use"
+            + " the cleaner individual `@Rule(order = n)` option. The rules with a higher value are"
+            + " inner.",
     severity = WARNING)
 public class DoNotUseRuleChain extends BugChecker implements VariableTreeMatcher {
 
