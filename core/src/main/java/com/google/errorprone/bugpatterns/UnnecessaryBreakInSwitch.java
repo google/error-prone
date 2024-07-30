@@ -21,6 +21,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.isRuleKind;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -29,8 +30,9 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.BreakTree;
 import com.sun.source.tree.CaseTree;
-import com.sun.source.tree.StatementTree;
+import com.sun.source.tree.IfTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.util.SimpleTreeVisitor;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
@@ -43,21 +45,41 @@ public class UnnecessaryBreakInSwitch extends BugChecker implements BugChecker.C
       return NO_MATCH;
     }
     Tree body = ASTHelpers.getCaseTreeBody(tree);
-    if (!(body instanceof BlockTree)) {
+    ImmutableList<BreakTree> unnecessaryBreaks = unnecessaryBreaks(body);
+    if (unnecessaryBreaks.isEmpty()) {
       return NO_MATCH;
     }
-    BlockTree blockTree = (BlockTree) body;
-    if (blockTree.getStatements().isEmpty()) {
-      return NO_MATCH;
-    }
-    StatementTree last = getLast(blockTree.getStatements());
-    if (!(last instanceof BreakTree)) {
-      return NO_MATCH;
-    }
-    BreakTree breakTree = (BreakTree) last;
-    if (breakTree.getLabel() != null) {
-      return NO_MATCH;
-    }
-    return describeMatch(last, SuggestedFix.delete(last));
+    unnecessaryBreaks.forEach(
+        unnecessaryBreak ->
+            state.reportMatch(
+                describeMatch(unnecessaryBreak, SuggestedFix.delete(unnecessaryBreak))));
+    return NO_MATCH;
+  }
+
+  private ImmutableList<BreakTree> unnecessaryBreaks(Tree tree) {
+    ImmutableList.Builder<BreakTree> result = ImmutableList.builder();
+    new SimpleTreeVisitor<Void, Void>() {
+      @Override
+      public Void visitBreak(BreakTree node, Void unused) {
+        if (node.getLabel() == null) {
+          result.add(node);
+        }
+        return null;
+      }
+
+      @Override
+      public Void visitBlock(BlockTree node, Void unused) {
+        visit(getLast(node.getStatements(), null), null);
+        return null;
+      }
+
+      @Override
+      public Void visitIf(IfTree node, Void unused) {
+        visit(node.getThenStatement(), null);
+        visit(node.getElseStatement(), null);
+        return null;
+      }
+    }.visit(tree, null);
+    return result.build();
   }
 }

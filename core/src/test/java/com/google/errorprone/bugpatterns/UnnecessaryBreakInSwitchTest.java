@@ -92,7 +92,10 @@ public class UnnecessaryBreakInSwitchTest {
             "  void f(int i) {",
             "    switch (i) {",
             "      default -> {",
-            "        if (true) break;",
+            "        if (true) {",
+            "          break;",
+            "        }",
+            "        System.err.println();",
             "      }",
             "    };",
             "  }",
@@ -116,6 +119,52 @@ public class UnnecessaryBreakInSwitchTest {
             "        }",
             "      }",
             "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void negativeLoop() {
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void f(int i) {",
+            "    while (true) {",
+            "      switch (i) {",
+            "        default -> {",
+            "          while (true) {",
+            "            break;",
+            "          }",
+            "        }",
+            "      }",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void positiveIf() {
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  void f(int i) {",
+            "    switch (i) {",
+            "      default -> {",
+            "        if (true) {",
+            "          // BUG: Diagnostic contains: break is unnecessary",
+            "          break;",
+            "        } else {",
+            "          // BUG: Diagnostic contains: break is unnecessary",
+            "          break;",
+            "        }",
+            "      }",
+            "    };",
             "  }",
             "}")
         .doTest();
