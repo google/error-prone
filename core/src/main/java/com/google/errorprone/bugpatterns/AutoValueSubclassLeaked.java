@@ -39,6 +39,7 @@ import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Type;
+import java.util.regex.Pattern;
 
 /** Matches {@code AutoValue_} uses outside the containing file. */
 @BugPattern(
@@ -54,6 +55,8 @@ import com.sun.tools.javac.code.Type;
             + " single factory method, with other factories delegating to it if necessary.")
 public final class AutoValueSubclassLeaked extends BugChecker
     implements CompilationUnitTreeMatcher {
+
+  private static final Pattern AUTO_VALUE_PREFIX = Pattern.compile("\\$*AutoValue_.*");
 
   @Override
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
@@ -91,7 +94,7 @@ public final class AutoValueSubclassLeaked extends BugChecker
       private void handle(Tree tree) {
         Symbol symbol = getSymbol(tree);
         if (symbol instanceof ClassSymbol
-            && symbol.getSimpleName().toString().startsWith("AutoValue_")
+            && AUTO_VALUE_PREFIX.matcher(symbol.getSimpleName().toString()).matches()
             && autoValueClassesFromThisFile.stream()
                 .noneMatch(av -> isSubtype(symbol.type, av, state))) {
           state.reportMatch(describeMatch(tree));

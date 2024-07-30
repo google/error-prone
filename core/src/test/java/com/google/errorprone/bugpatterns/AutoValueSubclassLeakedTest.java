@@ -124,4 +124,33 @@ public final class AutoValueSubclassLeakedTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void positiveAutoValueExtension() {
+    helper
+        .addSourceLines(
+            "$$AutoValue_Foo.java", //
+            "package test;",
+            "class $$AutoValue_Foo extends Test.Foo {",
+            "}")
+        .addSourceLines(
+            "Test.java",
+            "package test;",
+            "import com.google.auto.value.AutoValue;",
+            "class Test {",
+            "  @AutoValue",
+            "  abstract static class Foo {",
+            "  }",
+            "}")
+        .addSourceLines(
+            "Bar.java",
+            "package test;",
+            "class Bar {",
+            "  public static Test.Foo create() {",
+            "    // BUG: Diagnostic contains:",
+            "    return new $$AutoValue_Foo();",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

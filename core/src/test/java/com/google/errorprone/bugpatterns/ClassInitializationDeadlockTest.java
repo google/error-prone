@@ -309,4 +309,21 @@ public class ClassInitializationDeadlockTest {
             "class B extends A {}")
         .doTest();
   }
+
+  @Test
+  public void negativeAutoValueExtension() {
+    testHelper
+        .addSourceLines(
+            "$$AutoValue_Foo.java", //
+            "class $$AutoValue_Foo extends Foo {",
+            "}")
+        .addSourceLines(
+            "A.java",
+            "import com.google.auto.value.AutoValue;",
+            "@AutoValue",
+            "abstract class Foo {",
+            "  private static final Foo FOO = new $$AutoValue_Foo();",
+            "}")
+        .doTest();
+  }
 }
