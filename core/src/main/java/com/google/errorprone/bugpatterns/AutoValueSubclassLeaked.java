@@ -23,7 +23,6 @@ import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 
-import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -39,6 +38,7 @@ import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.code.TypeTag;
 import java.util.regex.Pattern;
 
 /** Matches {@code AutoValue_} uses outside the containing file. */
@@ -57,6 +57,8 @@ public final class AutoValueSubclassLeaked extends BugChecker
     implements CompilationUnitTreeMatcher {
 
   private static final Pattern AUTO_VALUE_PREFIX = Pattern.compile("\\$*AutoValue_.*");
+
+  private static final String AUTO_VALUE_ANNOTATION = "com.google.auto.value.AutoValue";
 
   @Override
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
@@ -110,8 +112,19 @@ public final class AutoValueSubclassLeaked extends BugChecker
         new TreeScanner<Void, Void>() {
           @Override
           public Void visitClass(ClassTree classTree, Void unused) {
-            if (hasAnnotation(classTree, AutoValue.class, state)) {
+            if (hasAnnotation(classTree, AUTO_VALUE_ANNOTATION, state)) {
               types.add(getType(classTree));
+            }
+            ClassSymbol classSymbol = getSymbol(classTree);
+            if (AUTO_VALUE_PREFIX.matcher(classSymbol.getSimpleName().toString()).matches()) {
+              for (Type type = classSymbol.asType();
+                  !type.hasTag(TypeTag.NONE);
+                  type = state.getTypes().supertype(type)) {
+                if (hasAnnotation(type.asElement(), AUTO_VALUE_ANNOTATION, state)) {
+                  types.add(type);
+                  break;
+                }
+              }
             }
             return super.visitClass(classTree, null);
           }

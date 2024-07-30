@@ -153,4 +153,43 @@ public final class AutoValueSubclassLeakedTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void positiveAutoValueExtension_noGeneratedAnnotation() {
+    CompilationTestHelper.newInstance(AutoValueSubclassLeaked.class, getClass())
+        .addSourceLines(
+            "$AutoValue_Test_Foo.java", //
+            "package test;",
+            "final class AutoValue_Test_Foo extends $AutoValue_Test_Foo {",
+            "  static final Test.Foo AUTO_VALUE = new AutoValue_Test_Foo();",
+            "}")
+        .addSourceLines(
+            "$AutoValue_Test_Foo.java", //
+            "package test;",
+            "import javax.annotation.processing.Generated;",
+            "@Generated(\"com.google.auto.value.processor.AutoValueProcessor\")",
+            "class $AutoValue_Test_Foo extends Test.Foo {",
+            "}")
+        .addSourceLines(
+            "Test.java",
+            "package test;",
+            "import com.google.auto.value.AutoValue;",
+            "class Test {",
+            "  static final Test.Foo EXTENSION = new $AutoValue_Test_Foo();",
+            "  static final Test.Foo AUTO_VALUE = new AutoValue_Test_Foo();",
+            "  @AutoValue",
+            "  abstract static class Foo {",
+            "  }",
+            "}")
+        .addSourceLines(
+            "Bar.java",
+            "package test;",
+            "class Bar {",
+            "  // BUG: Diagnostic contains:",
+            "  static final Test.Foo EXTENSION = new $AutoValue_Test_Foo();",
+            "  // BUG: Diagnostic contains:",
+            "  static final Test.Foo AUTO_VALUE = new AutoValue_Test_Foo();",
+            "}")
+        .doTest();
+  }
 }
