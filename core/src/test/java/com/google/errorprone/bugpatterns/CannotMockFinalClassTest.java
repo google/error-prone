@@ -16,7 +16,10 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static org.junit.Assume.assumeTrue;
+
 import com.google.errorprone.CompilationTestHelper;
+import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -34,6 +37,26 @@ public class CannotMockFinalClassTest {
   @Test
   public void positiveCase() {
     compilationHelper.addSourceFile("CannotMockFinalClassPositiveCases.java").doTest();
+  }
+
+  @Test
+  public void positiveCase_record() {
+    assumeTrue(RuntimeVersion.isAtLeast16());
+
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import org.junit.runner.RunWith;",
+            "import org.junit.runners.JUnit4;",
+            "import org.mockito.Mock;",
+            "import org.mockito.Mockito;",
+            "@RunWith(JUnit4.class)",
+            "public class Test {",
+            "  record Record() {}",
+            "  // BUG: Diagnostic contains: ",
+            "  @Mock Record record;",
+            "}")
+        .doTest();
   }
 
   @Test
