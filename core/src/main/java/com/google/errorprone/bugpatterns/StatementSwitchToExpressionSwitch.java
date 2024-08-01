@@ -36,7 +36,6 @@ import com.google.auto.value.AutoValue;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.ErrorProneFlags;
@@ -585,7 +584,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
                     groupedCaseCommentsAccumulator.length() == 0
                         ? null
                         : groupedCaseCommentsAccumulator.toString(),
-                    transformedBlockSource.isEmpty() ? null : transformedBlockSource,
+                    transformedBlockSource.isEmpty() ? null : transformedBlockSource.trim(),
                     commentsBeforeRemovedBreak.orElse(null),
                     commentsAfterCaseOptional.orElse(null));
       }
@@ -902,7 +901,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
           state
               .getSourceCode()
               .subSequence(
-                  state.getEndPosition(Iterables.getLast(filteredStatements)),
+                  state.getEndPosition(getLast(filteredStatements)),
                   getStartPosition(getStatements(caseTree).get(getStatements(caseTree).size() - 1)))
               .toString()
               .trim();
@@ -952,11 +951,10 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
 
     StringBuilder transformedBlockBuilder = new StringBuilder();
     int codeBlockStart = extractLhsComments(caseTree, state, transformedBlockBuilder);
-    int codeBlockEnd =
-        filteredStatements.isEmpty()
-            ? getBlockEnd(state, caseTree)
-            : state.getEndPosition(Streams.findLast(filteredStatements.stream()).get());
-    transformedBlockBuilder.append(state.getSourceCode(), codeBlockStart, codeBlockEnd);
+    if (!filteredStatements.isEmpty()) {
+      int codeBlockEnd = state.getEndPosition(getLast(filteredStatements));
+      transformedBlockBuilder.append(state.getSourceCode(), codeBlockStart, codeBlockEnd);
+    }
 
     return transformedBlockBuilder.toString();
   }

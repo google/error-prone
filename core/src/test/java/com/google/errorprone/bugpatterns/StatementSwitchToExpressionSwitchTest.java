@@ -361,7 +361,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "          // Post break comment",
             "       case DIAMOND -> {",
             "          // Diamond break comment",
-            "          break;",
             "       }",
             "       case SPADE, CLUB -> System.out.println(\"everything else\");",
             "    }",
@@ -1385,7 +1384,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "    switch(side) {",
             "      case OBVERSE -> {",
             "        // The quick brown fox, jumps over the lazy dog, etc.",
-            "        break;",
             "      }",
             "      default -> ",
             "        throw new RuntimeException(\"Invalid type.\");",
@@ -3616,6 +3614,42 @@ public final class StatementSwitchToExpressionSwitchTest {
             "      case 2 -> {",
             "        System.out.println(2);",
             "        System.out.println(2);",
+            "      }",
+            "    }",
+            "  }",
+            "}")
+        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=true")
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+  }
+
+  @Test
+  public void unnecessaryBreaks() {
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "public class Test {",
+            "  public static void main(String[] args) {",
+            "    switch (args.length) {",
+            "      case 0:",
+            "        System.out.println(0);",
+            "        break;",
+            "      default:",
+            "        // hello",
+            "        // world",
+            "        break;",
+            "    }",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "public class Test {",
+            "  public static void main(String[] args) {",
+            "    switch (args.length) {",
+            "      case 0 -> System.out.println(0);",
+            "      default -> {",
+            "        // hello",
+            "        // world",
             "      }",
             "    }",
             "  }",
