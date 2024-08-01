@@ -419,6 +419,43 @@ public class CanIgnoreReturnValueSuggesterTest {
   }
 
   @Test
+  public void alreadyAnnotatedWithProtobufCirv_b356526159() {
+    helper
+        .addInputLines(
+            "Client.java",
+            "package com.google.protobuf;",
+            "public final class Client {",
+            "  private String name;",
+            "  @CanIgnoreReturnValue",
+            "  public Client setName(String name) {",
+            "    this.name = name;",
+            "    return this;",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void alreadyAnnotatedWithArbitraryCirv_b356526159() {
+    helper
+        .addInputLines(
+            "Client.java",
+            "package com.google.frobber;",
+            "public final class Client {",
+            "  @interface CanIgnoreReturnValue {}",
+            "  private String name;",
+            "  @CanIgnoreReturnValue",
+            "  public Client setName(String name) {",
+            "    this.name = name;",
+            "    return this;",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
   public void simpleCaseAlreadyAnnotatedWithCrv() {
     helper
         .addInputLines(
