@@ -79,11 +79,10 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
 
   private static final String AUTO_VALUE = "com.google.auto.value.AutoValue";
   private static final String IMMUTABLE = "com.google.errorprone.annotations.Immutable";
+  private static final String CRV_SIMPLE_NAME = "CheckReturnValue";
   private static final String CIRV_SIMPLE_NAME = "CanIgnoreReturnValue";
   private static final ImmutableSet<String> EXEMPTING_METHOD_ANNOTATIONS =
-      ImmutableSet.of(
-          "com.google.errorprone.annotations.CheckReturnValue",
-          "com.google.errorprone.refaster.annotation.AfterTemplate");
+      ImmutableSet.of("com.google.errorprone.refaster.annotation.AfterTemplate");
 
   private static final ImmutableSet<String> EXEMPTING_CLASS_ANNOTATIONS =
       ImmutableSet.of(
@@ -112,14 +111,14 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
   @Override
   public Description matchMethod(MethodTree methodTree, VisitorState state) {
     MethodSymbol methodSymbol = getSymbol(methodTree);
-    // Don't fire on overrides of methods within anonymous classes.
-    if (streamSuperMethods(methodSymbol, state.getTypes()).findFirst().isPresent()
-        && methodSymbol.owner.isAnonymous()) {
+
+    // If the method is directly annotated w/ any @CanIgnoreReturnValue, then bail out.
+    if (hasDirectAnnotationWithSimpleName(methodSymbol, CIRV_SIMPLE_NAME)) {
       return Description.NO_MATCH;
     }
 
-    // If the method is @CanIgnoreReturnValue (in any package), then bail out.
-    if (hasDirectAnnotationWithSimpleName(methodSymbol, CIRV_SIMPLE_NAME)) {
+    // If the method is directly annotated w/ any @CheckReturnValue, then bail out.
+    if (hasDirectAnnotationWithSimpleName(methodSymbol, CRV_SIMPLE_NAME)) {
       return Description.NO_MATCH;
     }
 
@@ -138,6 +137,12 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
     String methodName = methodSymbol.getSimpleName().toString();
     // TODO(kak): we also may want to check if methodSymbol.getParameters().isEmpty()
     if (BANNED_METHOD_PREFIXES.stream().anyMatch(methodName::startsWith)) {
+      return Description.NO_MATCH;
+    }
+
+    // Don't fire on overrides of methods within anonymous classes.
+    if (streamSuperMethods(methodSymbol, state.getTypes()).findFirst().isPresent()
+        && methodSymbol.owner.isAnonymous()) {
       return Description.NO_MATCH;
     }
 
