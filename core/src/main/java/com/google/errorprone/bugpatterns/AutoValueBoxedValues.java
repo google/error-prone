@@ -21,6 +21,9 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.hasModifier;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
+import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static java.beans.Introspector.decapitalize;
 
 import com.google.auto.value.AutoValue;
@@ -34,7 +37,6 @@ import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnnotations;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MethodTree;
@@ -60,31 +62,24 @@ public class AutoValueBoxedValues extends BugChecker implements ClassTreeMatcher
 
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
-    if (!ASTHelpers.hasAnnotation(tree, AutoValue.class.getName(), state)) {
+    if (!hasAnnotation(tree, AutoValue.class.getName(), state)) {
       return NO_MATCH;
     }
 
+    Optional<ClassTree> builderClass = findBuilderClass(tree, state);
+
     // Identify and potentially fix the getters.
-    ImmutableList<Getter> getters = handleGetterMethods(tree, state);
+    ImmutableList<Getter> getters = handleGetterMethods(tree, state, builderClass);
 
     // If we haven't modified any getter, it's ok to stop.
     if (getters.stream().allMatch(getter -> getter.fix().isEmpty())) {
       return NO_MATCH;
     }
 
-    // Handle the Builder class, if there is one.
-    boolean builderFound = false;
-    for (Tree memberTree : tree.getMembers()) {
-      if (memberTree instanceof ClassTree
-          && ASTHelpers.hasAnnotation(memberTree, AutoValue.Builder.class.getName(), state)) {
-        handleSetterMethods((ClassTree) memberTree, state, getters);
-        builderFound = true;
-        break;
-      }
-    }
-
-    // If a builder was not found, handle the factory methods.
-    if (!builderFound) {
+    // Handle the Builder class, if there is one. Otherwise handle the factory methods.
+    if (builderClass.isPresent()) {
+      handleSetterMethods(builderClass.get(), state, getters);
+    } else {
       handleFactoryMethods(tree, state, getters);
     }
 
@@ -103,13 +98,16 @@ public class AutoValueBoxedValues extends BugChecker implements ClassTreeMatcher
    * @param state The visitor state.
    * @return The list of {@link Getter} in the class.
    */
-  private ImmutableList<Getter> handleGetterMethods(ClassTree classTree, VisitorState state) {
+  private ImmutableList<Getter> handleGetterMethods(
+      ClassTree classTree, VisitorState state, Optional<ClassTree> builderClass) {
     return classTree.getMembers().stream()
         .filter(MethodTree.class::isInstance)
         .map(memberTree -> (MethodTree) memberTree)
         .filter(
             methodTree ->
-                ABSTRACT_MATCHER.matches(methodTree, state) && methodTree.getParameters().isEmpty())
+                ABSTRACT_MATCHER.matches(methodTree, state)
+                    && methodTree.getParameters().isEmpty()
+                    && !isToBuilderMethod(methodTree, state, builderClass))
         .map(methodTree -> maybeFixGetter(methodTree, state))
         .collect(toImmutableList());
   }
@@ -120,7 +118,7 @@ public class AutoValueBoxedValues extends BugChecker implements ClassTreeMatcher
    */
   private Getter maybeFixGetter(MethodTree method, VisitorState state) {
     Getter getter = Getter.of(method);
-    Type type = ASTHelpers.getType(method.getReturnType());
+    Type type = getType(method.getReturnType());
     if (!isSuppressed(method, state)
         && !hasNullableAnnotation(method)
         && isBoxedPrimitive(state, type)) {
@@ -143,7 +141,8 @@ public class AutoValueBoxedValues extends BugChecker implements ClassTreeMatcher
         .filter(
             methodTree ->
                 ABSTRACT_MATCHER.matches(methodTree, state)
-                    && methodTree.getParameters().size() == 1)
+                    && methodTree.getParameters().size() == 1
+                    && isSameType(getType(methodTree.getReturnType()), getType(classTree), state))
         .forEach(methodTree -> maybeFixSetter(methodTree, state, getters));
   }
 
@@ -162,7 +161,7 @@ public class AutoValueBoxedValues extends BugChecker implements ClassTreeMatcher
             .findAny();
     if (fixedGetter.isPresent()) {
       var parameter = methodTree.getParameters().get(0);
-      Type type = ASTHelpers.getType(parameter);
+      Type type = getType(parameter);
       if (isBoxedPrimitive(state, type) && !hasNullableAnnotation(parameter)) {
         suggestRemoveUnnecessaryBoxing(parameter.getType(), state, type, fixedGetter.get().fix());
       }
@@ -188,10 +187,8 @@ public class AutoValueBoxedValues extends BugChecker implements ClassTreeMatcher
             .filter(
                 methodTree ->
                     STATIC_MATCHER.matches(methodTree, state)
-                        && ASTHelpers.isSameType(
-                            ASTHelpers.getType(methodTree.getReturnType()),
-                            ASTHelpers.getType(classTree),
-                            state)
+                        && isSameType(
+                            getType(methodTree.getReturnType()), getType(classTree), state)
                         && isTrivialFactoryMethod(methodTree, getters.size()))
             .findAny();
     if (trivialFactoryMethod.isEmpty()) {
@@ -201,7 +198,7 @@ public class AutoValueBoxedValues extends BugChecker implements ClassTreeMatcher
       Getter getter = getters.get(idx);
       if (!getter.fix().isEmpty()) {
         var parameter = trivialFactoryMethod.get().getParameters().get(idx);
-        Type type = ASTHelpers.getType(parameter);
+        Type type = getType(parameter);
         if (isBoxedPrimitive(state, type) && !hasNullableAnnotation(parameter)) {
           suggestRemoveUnnecessaryBoxing(parameter.getType(), state, type, getter.fix());
         }
@@ -228,6 +225,23 @@ public class AutoValueBoxedValues extends BugChecker implements ClassTreeMatcher
     return unboxed != null && unboxed.getTag() != TypeTag.NONE && unboxed.getTag() != TypeTag.VOID;
   }
 
+  private static Optional<ClassTree> findBuilderClass(ClassTree tree, VisitorState state) {
+    return tree.getMembers().stream()
+        .filter(
+            memberTree ->
+                memberTree instanceof ClassTree
+                    && hasAnnotation(memberTree, AutoValue.Builder.class.getName(), state))
+        .map(memberTree -> (ClassTree) memberTree)
+        .findAny();
+  }
+
+  private static boolean isToBuilderMethod(
+      MethodTree methodTree, VisitorState state, Optional<ClassTree> builderClass) {
+    return builderClass.isPresent()
+        && !STATIC_MATCHER.matches(methodTree, state)
+        && isSameType(getType(methodTree.getReturnType()), getType(builderClass.get()), state);
+  }
+
   private static boolean allGettersPrefixed(List<Getter> getters) {
     return getters.stream().allMatch(getter -> !getterPrefix(getter.method()).isEmpty());
   }
@@ -238,7 +252,7 @@ public class AutoValueBoxedValues extends BugChecker implements ClassTreeMatcher
       return "get";
     } else if (name.startsWith("is")
         && !name.equals("is")
-        && ASTHelpers.getType(getterMethod.getReturnType()).getKind() == TypeKind.BOOLEAN) {
+        && getType(getterMethod.getReturnType()).getKind() == TypeKind.BOOLEAN) {
       return "is";
     }
     return "";

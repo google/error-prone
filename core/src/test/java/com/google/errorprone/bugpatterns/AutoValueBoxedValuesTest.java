@@ -536,7 +536,7 @@ public class AutoValueBoxedValuesTest {
   }
 
   @Test
-  public void allGettersWithPrefix() {
+  public void allGettersWithPrefix_ignoreToBuilder() {
     if (!withBuilder) {
       return;
     }
@@ -548,6 +548,7 @@ public class AutoValueBoxedValuesTest {
             "abstract class Test {",
             "  public abstract Long getLongId();",
             "  public abstract boolean isBooleanId();",
+            "  public abstract Builder toBuilder();",
             "  @AutoValue.Builder",
             "  abstract static class Builder {",
             "    abstract Builder setLongId(Long value);",
@@ -562,6 +563,7 @@ public class AutoValueBoxedValuesTest {
             "abstract class Test {",
             "  public abstract long getLongId();",
             "  public abstract boolean isBooleanId();",
+            "  public abstract Builder toBuilder();",
             "  @AutoValue.Builder",
             "  abstract static class Builder {",
             "    abstract Builder setLongId(long value);",
