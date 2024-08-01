@@ -339,7 +339,7 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="annotations"><a href="../annotations/CanIgnoreReturnValue.html" title="annotation in com.google.errorprone.annotations">@CanIgnoreReturnValue</a>
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></span>&nbsp;<span class="element-name">addImport</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;importString)</span></div>
 <div class="block">Add an import statement as part of this SuggestedFix. Import string should be of the form
- "foo.bar.baz".</div>
+ "foo.bar.SomeClass".</div>
 </section>
 </li>
 <li>
@@ -348,7 +348,7 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="annotations"><a href="../annotations/CanIgnoreReturnValue.html" title="annotation in com.google.errorprone.annotations">@CanIgnoreReturnValue</a>
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></span>&nbsp;<span class="element-name">addStaticImport</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;importString)</span></div>
 <div class="block">Add a static import statement as part of this SuggestedFix. Import string should be of the
- form "foo.bar.baz".</div>
+ form "foo.bar.SomeClass.someMethod" or "foo.bar.SomeClass.SOME_FIELD".</div>
 </section>
 </li>
 <li>
@@ -357,7 +357,7 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="annotations"><a href="../annotations/CanIgnoreReturnValue.html" title="annotation in com.google.errorprone.annotations">@CanIgnoreReturnValue</a>
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></span>&nbsp;<span class="element-name">removeImport</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;importString)</span></div>
 <div class="block">Remove an import statement as part of this SuggestedFix. Import string should be of the form
- "foo.bar.baz".</div>
+ "foo.bar.SomeClass".</div>
 </section>
 </li>
 <li>
@@ -366,7 +366,7 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="annotations"><a href="../annotations/CanIgnoreReturnValue.html" title="annotation in com.google.errorprone.annotations">@CanIgnoreReturnValue</a>
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></span>&nbsp;<span class="element-name">removeStaticImport</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;importString)</span></div>
 <div class="block">Remove a static import statement as part of this SuggestedFix. Import string should be of the
- form "foo.bar.baz".</div>
+ form "foo.bar.SomeClass.someMethod" or "foo.bar.SomeClass.SOME_FIELD".</div>
 </section>
 </li>
 <li>
