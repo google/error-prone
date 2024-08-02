@@ -94,7 +94,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
       ImmutableSet.of(THROW, EXPRESSION_STATEMENT);
   private static final ImmutableSet<Kind> KINDS_RETURN_OR_THROW = ImmutableSet.of(THROW, RETURN);
   private static final Pattern FALL_THROUGH_PATTERN =
-      Pattern.compile("\\bfalls?.?through\\b", Pattern.CASE_INSENSITIVE);
+      Pattern.compile("\\bfalls?.?(through|out)\\b", Pattern.CASE_INSENSITIVE);
   // Default (negative) result for assignment switch conversion analysis. Note that the value is
   // immutable.
   private static final AssignmentSwitchAnalysisResult DEFAULT_ASSIGNMENT_SWITCH_ANALYSIS_RESULT =

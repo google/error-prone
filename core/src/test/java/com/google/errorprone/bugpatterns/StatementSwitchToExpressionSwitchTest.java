@@ -3657,4 +3657,36 @@ public final class StatementSwitchToExpressionSwitchTest {
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=true")
         .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
+
+  @Test
+  public void fallOutComment() {
+    assumeTrue(RuntimeVersion.isAtLeast14());
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "public class Test {",
+            "  void f(int x) {",
+            "    switch (x) {",
+            "      case 0:",
+            "        System.err.println(\"ZERO\");",
+            "        break;",
+            "      default:",
+            "        // fall out",
+            "    }",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "public class Test {",
+            "  void f(int x) {",
+            "    switch (x) {",
+            "      case 0 -> System.err.println(\"ZERO\");",
+            "      default -> {}",
+            "    }",
+            "  }",
+            "}")
+        .setArgs(
+            ImmutableList.of("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion"))
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+  }
 }
