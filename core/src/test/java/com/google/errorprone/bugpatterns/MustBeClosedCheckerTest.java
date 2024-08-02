@@ -155,4 +155,47 @@ public class MustBeClosedCheckerTest {
         .expectUnchanged()
         .doTest();
   }
+
+  @Test
+  public void localVariableTypeInference() {
+    refactoringHelper
+        .addInputLines(
+            "Closeable.java",
+            "class Closeable implements AutoCloseable {",
+            "    @Override",
+            "    public void close() {}",
+            "    public int method() {",
+            "      return 1;",
+            "    }",
+            "  }")
+        .expectUnchanged()
+        .addInputLines(
+            "Foo.java",
+            "import com.google.errorprone.annotations.MustBeClosed;",
+            "class Foo {",
+            "  @MustBeClosed",
+            "  Closeable mustBeClosedMethod() {",
+            "    return null;",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  void test(Foo foo) {",
+            "    var bar = foo.mustBeClosedMethod().method();",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  void test(Foo foo) {",
+            "    int bar;",
+            "    try (var closeable = foo.mustBeClosedMethod()) {",
+            "      bar = closeable.method();",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

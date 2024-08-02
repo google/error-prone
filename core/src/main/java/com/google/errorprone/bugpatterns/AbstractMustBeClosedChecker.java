@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.fixes.SuggestedFixes.prettyType;
 import static com.google.errorprone.fixes.SuggestedFixes.qualifyType;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
@@ -28,6 +29,7 @@ import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
+import static com.google.errorprone.util.ASTHelpers.hasExplicitSource;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
@@ -467,16 +469,29 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
   private static Optional<Change> splitVariableDeclarationAroundTry(
       ExpressionTree tree, VariableTree var, VisitorState state, NameSuggester suggester) {
     int initPos = getStartPosition(var.getInitializer());
-    int afterTypePos = state.getEndPosition(var.getType());
+    Tree type = var.getType();
+    String typePrefix;
+    int startPos;
+    if (hasExplicitSource(type, state)) {
+      startPos = state.getEndPosition(type);
+      typePrefix = "";
+    } else {
+      startPos = getStartPosition(var);
+      typePrefix = prettyType(getType(type), state);
+    }
     String name = suggester.suggestName(tree);
     return Change.builder(
             SuggestedFix.builder()
                 .replace(
-                    afterTypePos,
+                    startPos,
                     initPos,
                     String.format(
-                        " %s;\ntry (var %s = %s) {\n%s =",
-                        var.getName(), name, state.getSourceForNode(tree), var.getName()))
+                        "%s %s;\ntry (var %s = %s) {\n%s =",
+                        typePrefix,
+                        var.getName(),
+                        name,
+                        state.getSourceForNode(tree),
+                        var.getName()))
                 .replace(tree, name)
                 .build())
         .closeBraceAfter(var)
