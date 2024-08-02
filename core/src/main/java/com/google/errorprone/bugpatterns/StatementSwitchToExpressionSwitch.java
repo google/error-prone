@@ -94,7 +94,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
       ImmutableSet.of(THROW, EXPRESSION_STATEMENT);
   private static final ImmutableSet<Kind> KINDS_RETURN_OR_THROW = ImmutableSet.of(THROW, RETURN);
   private static final Pattern FALL_THROUGH_PATTERN =
-      Pattern.compile("\\bfalls?.?(through|out)\\b", Pattern.CASE_INSENSITIVE);
+      Pattern.compile("\\bfalls?.?through\\b", Pattern.CASE_INSENSITIVE);
   // Default (negative) result for assignment switch conversion analysis. Note that the value is
   // immutable.
   private static final AssignmentSwitchAnalysisResult DEFAULT_ASSIGNMENT_SWITCH_ANALYSIS_RESULT =
@@ -325,14 +325,21 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
       return previousCaseQualifications;
     }
 
-    // Statement blocks on the RHS are not currently supported
-    if (!(statements.size() == 1 && KINDS_RETURN_OR_THROW.contains(statements.get(0).getKind()))) {
+    // Statement blocks on the RHS are not currently supported, except for trivial blocks of
+    // statements expressions followed by a return or throw
+    // TODO: handle more complex statement blocks that can be converted using 'yield'
+    if (statements.isEmpty()) {
+      return CaseQualifications.SOME_OR_ALL_CASES_DONT_QUALIFY;
+    }
+    StatementTree lastStatement = getLast(statements);
+    if (!statements.subList(0, statements.size() - 1).stream()
+            .allMatch(statement -> statement.getKind().equals(EXPRESSION_STATEMENT))
+        || !KINDS_RETURN_OR_THROW.contains(lastStatement.getKind())) {
       return CaseQualifications.SOME_OR_ALL_CASES_DONT_QUALIFY;
     }
 
-    StatementTree onlyStatement = statements.get(0);
     // For this analysis, cases that don't return something can be disregarded
-    if (!onlyStatement.getKind().equals(RETURN)) {
+    if (!lastStatement.getKind().equals(RETURN)) {
       return previousCaseQualifications;
     }
 
@@ -343,7 +350,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     }
 
     // This is the first value-returning case that we are examining
-    Type returnType = ASTHelpers.getType(((ReturnTree) onlyStatement).getExpression());
+    Type returnType = ASTHelpers.getType(((ReturnTree) lastStatement).getExpression());
     return returnType == null
         // Return of void does not qualify
         ? CaseQualifications.SOME_OR_ALL_CASES_DONT_QUALIFY
@@ -1117,21 +1124,30 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
       CaseTree caseTree, VisitorState state, List<? extends StatementTree> statements) {
 
     StringBuilder transformedBlockBuilder = new StringBuilder();
-    int codeBlockStart;
-    int codeBlockEnd =
-        statements.isEmpty()
-            ? getBlockEnd(state, caseTree)
-            : state.getEndPosition(Streams.findLast(statements.stream()).get());
-
-    if (statements.size() == 1 && statements.get(0).getKind().equals(RETURN)) {
+    int codeBlockEnd = state.getEndPosition(caseTree);
+    if (statements.size() > 1) {
+      transformedBlockBuilder.append("{\n");
+      int codeBlockStart = extractLhsComments(caseTree, state, transformedBlockBuilder);
+      int offset = transformedBlockBuilder.length();
+      transformedBlockBuilder.append(state.getSourceCode(), codeBlockStart, codeBlockEnd);
+      transformedBlockBuilder.append("\n}");
+      ReturnTree returnTree = (ReturnTree) getLast(statements);
+      int start = getStartPosition(returnTree);
+      transformedBlockBuilder.replace(
+          offset + start - codeBlockStart,
+          offset + start - codeBlockStart + "return".length(),
+          "yield");
+    } else if (statements.size() == 1 && statements.get(0).getKind().equals(RETURN)) {
       // For "return x;", we want to take source starting after the "return"
       int unused = extractLhsComments(caseTree, state, transformedBlockBuilder);
       ReturnTree returnTree = (ReturnTree) statements.get(0);
-      codeBlockStart = getStartPosition(returnTree.getExpression());
+      int codeBlockStart = getStartPosition(returnTree.getExpression());
+      codeBlockEnd = state.getEndPosition(Streams.findLast(statements.stream()).get());
+      transformedBlockBuilder.append(state.getSourceCode(), codeBlockStart, codeBlockEnd);
     } else {
-      codeBlockStart = extractLhsComments(caseTree, state, transformedBlockBuilder);
+      int codeBlockStart = extractLhsComments(caseTree, state, transformedBlockBuilder);
+      transformedBlockBuilder.append(state.getSourceCode(), codeBlockStart, codeBlockEnd);
     }
-    transformedBlockBuilder.append(state.getSourceCode(), codeBlockStart, codeBlockEnd);
 
     return transformedBlockBuilder.toString();
   }

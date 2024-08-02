@@ -3659,34 +3659,53 @@ public final class StatementSwitchToExpressionSwitchTest {
   }
 
   @Test
-  public void fallOutComment() {
+  public void mixedExpressionsAndYields() {
     assumeTrue(RuntimeVersion.isAtLeast14());
     refactoringHelper
         .addInputLines(
             "Test.java",
             "public class Test {",
-            "  void f(int x) {",
+            "  String f(int x) {",
             "    switch (x) {",
             "      case 0:",
-            "        System.err.println(\"ZERO\");",
-            "        break;",
+            "        return \"ZERO\";",
+            "      case 1:",
+            "        return \"ONE\";",
+            "      case 2: // hello",
+            "        // world",
+            "        System.err.println();",
+            "        System.err.println();",
+            "        return \"TWO\";",
+            "        // hello",
+            "        // world",
             "      default:",
-            "        // fall out",
+            "        return \"\";",
             "    }",
             "  }",
             "}")
         .addOutputLines(
             "Test.java",
             "public class Test {",
-            "  void f(int x) {",
-            "    switch (x) {",
-            "      case 0 -> System.err.println(\"ZERO\");",
-            "      default -> {}",
-            "    }",
+            "  String f(int x) {",
+            "    return switch (x) {",
+            "      case 0 -> \"ZERO\";",
+            "      case 1 -> \"ONE\";",
+            "      case 2 -> {",
+            "        // hello",
+            "        // world",
+            "        System.err.println();",
+            "        System.err.println();",
+            "        yield \"TWO\";",
+            "      }",
+            "      // hello",
+            "      // world",
+            "      default -> \"\";",
+            "    };",
             "  }",
             "}")
         .setArgs(
-            ImmutableList.of("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion"))
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=true",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion=true")
         .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 }
