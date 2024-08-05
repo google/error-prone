@@ -65,6 +65,7 @@ jobs:
         with:
           java-version: |
             11
+            24
             ${{ matrix.java }}
           distribution: 'zulu'
           cache: 'maven'
