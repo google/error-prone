@@ -59,13 +59,21 @@ jobs:
           website: jdk.java.net
           release: ${{ matrix.java }}
           cache: 'maven'
+      - run: |
+          download_url="https://download.java.net/java/early_access/jdk24/9/GPL/openjdk-24-ea+9_linux-x64_bin.tar.gz"
+          wget -O $RUNNER_TEMP/java_package.tar.gz $download_url
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'jdkfile'
+          jdkFile: ${{ runner.temp }}/openjdk-24-ea+9_linux-x64_bin.tar.gz
+          java-version: '24'
+          architecture: x64      
       - name: 'Set up JDK ${{ matrix.java }}'
         if: ${{ matrix.java != 'EA' }}
         uses: actions/setup-java@v4
         with:
           java-version: |
             11
-            24
             ${{ matrix.java }}
           distribution: 'zulu'
           cache: 'maven'
