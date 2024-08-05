@@ -65,7 +65,7 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           distribution: 'jdkfile'
-          jdkFile: ${{ runner.temp }}/openjdk-24-ea+9_linux-x64_bin.tar.gz
+          jdkFile: ${{ runner.temp }}/java_package.tar.gz
           java-version: '24'
           architecture: x64      
       - name: 'Set up JDK ${{ matrix.java }}'
