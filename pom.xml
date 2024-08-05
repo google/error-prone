@@ -272,6 +272,7 @@
           <toolchains>
             <jdk>
               <version>11</version>
+              <version>24</version>
             </jdk>
           </toolchains>
         </configuration>
