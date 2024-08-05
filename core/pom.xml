@@ -382,6 +382,7 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
+          <compilerVersion>11</compilerVersion>
           <annotationProcessorPaths>
             <path>
               <groupId>com.google.auto.value</groupId>
@@ -397,7 +398,7 @@
         </configuration>
       </plugin>
       <!-- Include the @BugPattern annotation in the main distribution
-           so users have only one jar to add to their classpath. -->
+      so users have only one jar to add to their classpath. -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
@@ -413,7 +414,7 @@
               <createDependencyReducedPom>false</createDependencyReducedPom>
               <artifactSet>
                 <!-- Include only dependencies with compatible licenses.
-                     Apache, BSD, and MIT are OK; others are not. -->
+                Apache, BSD, and MIT are OK; others are not. -->
                 <includes>
                   <include>com.github.kevinstern:software-and-algorithms</include>
                   <include>com.google.errorprone:error_prone_annotation</include>
