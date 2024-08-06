@@ -346,6 +346,34 @@ public class AutoValueBoxedValuesTest {
   }
 
   @Test
+  public void unnecessaryBoxedTypes_suppressWarningsForClass() {
+    compilationHelper
+        .addSourceLines(
+            "in/Test.java",
+            mergeLines(
+                lines(
+                    "import com.google.auto.value.AutoValue;",
+                    "@AutoValue",
+                    "@SuppressWarnings(\"AutoValueBoxedValues\")",
+                    "abstract class Test {",
+                    "  public abstract Long longId();",
+                    "  public abstract Integer intId();"),
+                linesWithoutBuilder(
+                    "  static Test create(Long longId, Integer intId) {",
+                    "    return new AutoValue_Test(longId, intId);",
+                    "  }"),
+                linesWithBuilder(
+                    "  @AutoValue.Builder",
+                    "  abstract static class Builder {",
+                    "    abstract Builder setLongId(Long value);",
+                    "    abstract Builder setIntId(Integer value);",
+                    "    abstract Test build();",
+                    "  }"),
+                lines("}")))
+        .doTest();
+  }
+
+  @Test
   public void unnecessaryBoxedTypes_suppressWarnings() {
     refactoringHelper
         .addInputLines(
