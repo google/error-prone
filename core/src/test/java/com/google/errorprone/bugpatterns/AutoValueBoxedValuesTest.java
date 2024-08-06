@@ -426,6 +426,64 @@ public class AutoValueBoxedValuesTest {
   }
 
   @Test
+  public void unnecessaryBoxedTypes_overrides() {
+    refactoringHelper
+        .addInputLines(
+            "in/Test.java",
+            mergeLines(
+                lines(
+                    "import com.google.auto.value.AutoValue;",
+                    "class Test {",
+                    "  interface SuperClass {",
+                    "    Long superClassLongId();",
+                    "  }",
+                    "  @AutoValue",
+                    "  static abstract class BaseClass implements SuperClass {",
+                    "    public abstract Long longId();",
+                    "    @Override",
+                    "    public abstract Long superClassLongId();"),
+                linesWithoutBuilder(
+                    "    static BaseClass create(Long longId, Long superClassLongId) {",
+                    "      return new AutoValue_Test_BaseClass(longId, superClassLongId);",
+                    "    }"),
+                linesWithBuilder(
+                    "    @AutoValue.Builder",
+                    "    abstract static class Builder {",
+                    "      abstract Builder setLongId(Long value);",
+                    "      abstract Builder setSuperClassLongId(Long value);",
+                    "      abstract BaseClass build();",
+                    "    }"),
+                lines("  }", "}")))
+        .addOutputLines(
+            "out/Test.java",
+            mergeLines(
+                lines(
+                    "import com.google.auto.value.AutoValue;",
+                    "class Test {",
+                    "  interface SuperClass {",
+                    "    Long superClassLongId();",
+                    "  }",
+                    "  @AutoValue",
+                    "  static abstract class BaseClass implements SuperClass {",
+                    "    public abstract long longId();",
+                    "    @Override",
+                    "    public abstract Long superClassLongId();"),
+                linesWithoutBuilder(
+                    "    static BaseClass create(long longId, Long superClassLongId) {",
+                    "      return new AutoValue_Test_BaseClass(longId, superClassLongId);",
+                    "    }"),
+                linesWithBuilder(
+                    "    @AutoValue.Builder",
+                    "    abstract static class Builder {",
+                    "      abstract Builder setLongId(long value);",
+                    "      abstract Builder setSuperClassLongId(Long value);",
+                    "      abstract BaseClass build();",
+                    "    }"),
+                lines("  }", "}")))
+        .doTest();
+  }
+
+  @Test
   public void nullableGettersWithNonNullableSetters_noChange() {
     if (!withBuilder) {
       return;

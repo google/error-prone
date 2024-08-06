@@ -20,6 +20,7 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.hasModifier;
+import static com.google.errorprone.util.ASTHelpers.findSuperMethods;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
@@ -121,6 +122,7 @@ public class AutoValueBoxedValues extends BugChecker implements ClassTreeMatcher
     Type type = getType(method.getReturnType());
     if (!isSuppressed(method, state)
         && !hasNullableAnnotation(method)
+        && !isOverride(method, state)
         && isBoxedPrimitive(state, type)) {
       suggestRemoveUnnecessaryBoxing(method.getReturnType(), state, type, getter.fix());
     }
@@ -209,6 +211,11 @@ public class AutoValueBoxedValues extends BugChecker implements ClassTreeMatcher
   /** Returns true if the given tree has a {@code Nullable} annotation. */
   private static boolean hasNullableAnnotation(Tree tree) {
     return NullnessAnnotations.fromAnnotationsOn(getSymbol(tree)).orElse(null) == Nullness.NULLABLE;
+  }
+
+  /** Returns true if the method overrides another method. */
+  private static boolean isOverride(MethodTree methodTree, VisitorState state) {
+    return !findSuperMethods(getSymbol(methodTree), state.getTypes()).isEmpty();
   }
 
   /** Returns the primitive type corresponding to a boxed type. */
