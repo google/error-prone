@@ -86,10 +86,15 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
 
   private static final ImmutableSet<String> EXEMPTING_CLASS_ANNOTATIONS =
       ImmutableSet.of(
-          "com.google.auto.value.AutoValue.Builder",
+          // keep-sorted start
           "com.google.auto.value.AutoBuilder",
+          "com.google.auto.value.AutoValue.Builder",
           "dagger.Component.Builder",
-          "dagger.Subcomponent.Builder");
+          "dagger.Subcomponent.Builder",
+          "dagger.producers.ProductionComponent.Builder",
+          "dagger.producers.ProductionSubcomponent.Builder"
+          // keep-sorted end
+          );
 
   private static final Supplier<Type> PROTO_BUILDER =
       VisitorState.memoize(s -> s.getTypeFromString("com.google.protobuf.MessageLite.Builder"));
