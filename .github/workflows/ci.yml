@@ -52,12 +52,11 @@ jobs:
           access_token: ${{ github.token }}
       - name: 'Check out repository'
         uses: actions/checkout@v3
-      - name: 'Set up JDK ${{ matrix.java }} from jdk.java.net'
-        if: ${{ matrix.java == 'EA' }}
+      - name: 'Set up JDK EA from jdk.java.net'
         uses: oracle-actions/setup-java@v1
         with:
           website: jdk.java.net
-          release: ${{ matrix.java }}
+          release: 24
           cache: 'maven'
       - name: 'Set up JDK ${{ matrix.java }}'
         if: ${{ matrix.java != 'EA' }}
@@ -70,10 +69,10 @@ jobs:
           cache: 'maven'
       - name: 'Install'
         shell: bash
-        run: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+        run: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V -X -e
       - name: 'Test'
         shell: bash
-        run: mvn test -B
+        run: mvn test -B -X -e
       - name: 'Test compatibility with JDK 11'
         if: ${{ matrix.java == 17 }}
         shell: bash

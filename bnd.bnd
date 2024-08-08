@@ -1,0 +1,1 @@
+-fixupmessages: "Classes found in the wrong directory"; restrict:=error; is:=warning
