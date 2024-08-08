@@ -56,9 +56,8 @@ jobs:
         uses: oracle-actions/setup-java@v1
         with:
           website: jdk.java.net
-          release: EA
+          release: 24
           cache: 'maven'
-          version: 24
       - name: 'Set up JDK ${{ matrix.java }}'
         if: ${{ matrix.java != 'EA' }}
         uses: actions/setup-java@v4
