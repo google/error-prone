@@ -58,6 +58,7 @@ jobs:
           website: jdk.java.net
           release: EA
           cache: 'maven'
+          version: 24
       - name: 'Set up JDK ${{ matrix.java }}'
         if: ${{ matrix.java != 'EA' }}
         uses: actions/setup-java@v4
