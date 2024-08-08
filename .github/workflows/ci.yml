@@ -69,10 +69,10 @@ jobs:
           cache: 'maven'
       - name: 'Install'
         shell: bash
-        run: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+        run: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V -X -e
       - name: 'Test'
         shell: bash
-        run: mvn test -B
+        run: mvn test -B -X -e
       - name: 'Test compatibility with JDK 11'
         if: ${{ matrix.java == 17 }}
         shell: bash
