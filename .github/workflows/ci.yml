@@ -41,7 +41,7 @@ jobs:
             java: 22
             experimental: false
           - os: ubuntu-latest
-            java: EA
+            java: 24-ea
             experimental: true
     runs-on: ${{ matrix.os }}
     continue-on-error: ${{ matrix.experimental }}
@@ -57,7 +57,7 @@ jobs:
         with:
           java-version: |
             11
-            24
+            24-ea
             ${{ matrix.java }}
           distribution: 'zulu'
           cache: 'maven'
