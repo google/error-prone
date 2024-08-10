@@ -175,8 +175,6 @@
           <execution>
             <id>java24</id>
             <configuration>
-              <source>24</source>
-              <target>24</target>
               <jdkToolchain>
                 <version>24</version>
               </jdkToolchain>
