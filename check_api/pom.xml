@@ -149,36 +149,31 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <annotationProcessorPaths>
+            <path>
+              <groupId>com.google.auto.value</groupId>
+              <artifactId>auto-value</artifactId>
+              <version>${autovalue.version}</version>
+            </path>
+            <path>
+              <groupId>com.google.auto.service</groupId>
+              <artifactId>auto-service</artifactId>
+              <version>${autoservice.version}</version>
+            </path>
+          </annotationProcessorPaths>
+        </configuration>
         <executions>
           <execution>
             <id>default-compile</id>
-            <goals>
-              <goal>compile</goal>
-            </goals>
             <configuration>
               <jdkToolchain>
                 <version>11</version>
               </jdkToolchain>
-              <fork>true</fork>
-              <annotationProcessorPaths>
-                <path>
-                  <groupId>com.google.auto.value</groupId>
-                  <artifactId>auto-value</artifactId>
-                  <version>${autovalue.version}</version>
-                </path>
-                <path>
-                  <groupId>com.google.auto.service</groupId>
-                  <artifactId>auto-service</artifactId>
-                  <version>${autoservice.version}</version>
-                </path>
-              </annotationProcessorPaths>
             </configuration>
           </execution>
           <execution>
             <id>java24</id>
-            <goals>
-              <goal>compile</goal>
-            </goals>
             <configuration>
               <source>24</source>
               <target>24</target>
@@ -191,18 +186,6 @@
               </compileSourceRoots>
               <!-- multiReleaseOutput requires setting release -->
               <outputDirectory>${project.build.outputDirectory}/META-INF/versions/24</outputDirectory>
-              <annotationProcessorPaths>
-                <path>
-                  <groupId>com.google.auto.value</groupId>
-                  <artifactId>auto-value</artifactId>
-                  <version>${autovalue.version}</version>
-                </path>
-                <path>
-                  <groupId>com.google.auto.service</groupId>
-                  <artifactId>auto-service</artifactId>
-                  <version>${autoservice.version}</version>
-                </path>
-              </annotationProcessorPaths>
             </configuration>
           </execution>
         </executions>
