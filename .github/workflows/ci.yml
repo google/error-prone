@@ -52,25 +52,12 @@ jobs:
           access_token: ${{ github.token }}
       - name: 'Check out repository'
         uses: actions/checkout@v3
-      - name: 'Set up JDK ${{ matrix.java }} from jdk.java.net'
-        if: ${{ matrix.java == 'EA' }}
-        uses: oracle-actions/setup-java@v1
-        with:
-          website: jdk.java.net
-          release: ${{ matrix.java }}
-          cache: 'maven'
-      - name: 'Set up JDK 24 from jdk.java.net'
-        uses: oracle-actions/setup-java@v1
-        with:
-          website: jdk.java.net
-          release: 24
-          cache: 'maven'
       - name: 'Set up JDK ${{ matrix.java }}'
-        if: ${{ matrix.java != 'EA' }}
         uses: actions/setup-java@v4
         with:
           java-version: |
             11
+            24
             ${{ matrix.java }}
           distribution: 'zulu'
           cache: 'maven'
