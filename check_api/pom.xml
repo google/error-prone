@@ -178,7 +178,9 @@
               <jdkToolchain>
                 <version>24</version>
               </jdkToolchain>
+              <!--
               <fork>true</fork>
+              -->
               <compileSourceRoots>
                 <compileSourceRoot>${basedir}/src/main/java24</compileSourceRoot>
               </compileSourceRoots>
