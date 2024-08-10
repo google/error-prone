@@ -176,7 +176,7 @@
             <id>java24</id>
             <configuration>
               <jdkToolchain>
-                <version>24-ea</version>
+                <version>24</version>
               </jdkToolchain>
               <!--
               <fork>true</fork>
