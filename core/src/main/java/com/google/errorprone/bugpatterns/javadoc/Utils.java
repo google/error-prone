@@ -83,7 +83,7 @@ final class Utils {
     int startPos = getStartPosition(docTree, state);
     int endPos =
         (int) positions.getEndPosition(compilationUnitTree, getDocCommentTree(state), docTree);
-    if (endPos == Position.NOPOS) {
+    if (startPos == Position.NOPOS || endPos == Position.NOPOS) {
       return SuggestedFix.emptyFix();
     }
     return SuggestedFix.replace(startPos, endPos, replacement);

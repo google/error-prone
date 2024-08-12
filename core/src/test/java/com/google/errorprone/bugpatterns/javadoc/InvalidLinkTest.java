@@ -17,9 +17,11 @@
 package com.google.errorprone.bugpatterns.javadoc;
 
 import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
+import static org.junit.Assume.assumeTrue;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
+import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -179,6 +181,21 @@ public final class InvalidLinkTest {
             "  /** {@link} */",
             "  void foo();",
             "}")
+        .doTest();
+  }
+
+  @Test
+  public void markdown() {
+    assumeTrue(RuntimeVersion.isAtLeast23());
+    helper
+        .addSourceLines(
+            "Test.java", //
+            "public class Test {",
+            "  /// Hello [bar]",
+            "  // BUG: Diagnostic contains: `bar` is a parameter",
+            "  static void foo(int bar) {}",
+            "}")
+        .setArgs("--release", "22")
         .doTest();
   }
 }
