@@ -343,7 +343,7 @@ public final class WellKnownMutability implements ThreadSafety.KnownTypes {
       Suppliers.typeFromString("com.google.io.protocol.ProtocolMessage");
 
   private static final Supplier<Type> PROTOCOL_MESSAGE_ENUM =
-      Suppliers.typeFromString("com.google.protobuf.ProtocolMessageEnum");
+      Suppliers.typeFromString("com.google.protobuf.Internal.EnumLite");
 
   private static boolean isAssignableTo(Type type, Supplier<Type> supplier, VisitorState state) {
     Type to = supplier.get(state);
