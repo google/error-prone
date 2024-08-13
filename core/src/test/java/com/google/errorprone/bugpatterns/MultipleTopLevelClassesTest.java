@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.truth.TruthJUnit.assume;
 
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -89,7 +88,7 @@ public class MultipleTopLevelClassesTest {
 
   @Test
   public void semiInImportList() {
-    assume().that(RuntimeVersion.isAtLeast21()).isFalse();
+    assume().that(Runtime.version().feature()).isLessThan(21);
     compilationHelper
         .addSourceLines(
             "a/A.java",

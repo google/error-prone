@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.truth.TruthJUnit.assume;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
-import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -31,7 +30,7 @@ public final class PatternMatchingInstanceofTest {
 
   @Test
   public void positive() {
-    assume().that(RuntimeVersion.isAtLeast21()).isTrue();
+    assume().that(Runtime.version().feature()).isAtLeast(21);
     helper
         .addInputLines(
             "Test.java",
@@ -74,7 +73,7 @@ public final class PatternMatchingInstanceofTest {
 
   @Test
   public void moreChecksInIf_stillMatches() {
-    assume().that(RuntimeVersion.isAtLeast21()).isTrue();
+    assume().that(Runtime.version().feature()).isAtLeast(21);
     helper
         .addInputLines(
             "Test.java",

@@ -16,10 +16,9 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static org.junit.Assume.assumeTrue;
+import static com.google.common.truth.TruthJUnit.assume;
 
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -32,7 +31,7 @@ public class UnnecessaryBreakInSwitchTest {
 
   @Test
   public void positive() {
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     testHelper
         .addSourceLines(
             "Test.java",
@@ -67,7 +66,7 @@ public class UnnecessaryBreakInSwitchTest {
 
   @Test
   public void negativeEmpty() {
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     testHelper
         .addSourceLines(
             "Test.java",
@@ -84,7 +83,7 @@ public class UnnecessaryBreakInSwitchTest {
 
   @Test
   public void negativeNotLast() {
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     testHelper
         .addSourceLines(
             "Test.java",
@@ -105,7 +104,7 @@ public class UnnecessaryBreakInSwitchTest {
 
   @Test
   public void negativeLabelledBreak() {
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     testHelper
         .addSourceLines(
             "Test.java",
@@ -126,7 +125,7 @@ public class UnnecessaryBreakInSwitchTest {
 
   @Test
   public void negativeLoop() {
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     testHelper
         .addSourceLines(
             "Test.java",
@@ -148,7 +147,7 @@ public class UnnecessaryBreakInSwitchTest {
 
   @Test
   public void positiveIf() {
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     testHelper
         .addSourceLines(
             "Test.java",

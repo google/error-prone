@@ -2822,7 +2822,7 @@ public class ASTHelpers {
     "unchecked", // reflection
   })
   public static Stream<? extends ExpressionTree> getCaseExpressions(CaseTree caseTree) {
-    if (!RuntimeVersion.isAtLeast12()) {
+    if (Runtime.version().feature() < 12) {
       // "default" case gives an empty stream
       return Stream.ofNullable(caseTree.getExpression());
     }

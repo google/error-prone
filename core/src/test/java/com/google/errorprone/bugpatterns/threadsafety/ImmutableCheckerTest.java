@@ -16,14 +16,13 @@
 
 package com.google.errorprone.bugpatterns.threadsafety;
 
-import static org.junit.Assume.assumeTrue;
+import static com.google.common.truth.TruthJUnit.assume;
 
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.annotations.Immutable;
 import com.google.errorprone.annotations.concurrent.LazyInit;
-import com.google.errorprone.util.RuntimeVersion;
 import java.util.Arrays;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -2994,7 +2993,7 @@ public class ImmutableCheckerTest {
 
   @Test
   public void switchExpressionsResultingInGenericTypes_doesNotThrow() {
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     compilationHelper
         .addSourceLines(
             "Kind.java",
@@ -3017,7 +3016,7 @@ public class ImmutableCheckerTest {
 
   @Test
   public void switchExpressionsYieldStatement_doesNotThrow() {
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -3037,7 +3036,7 @@ public class ImmutableCheckerTest {
 
   @Test
   public void switchExpressionsMethodReference_doesNotThrow() {
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -3055,7 +3054,7 @@ public class ImmutableCheckerTest {
 
   @Test
   public void switchExpressionsYieldStatementMethodReference_doesNotThrow() {
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     compilationHelper
         .addSourceLines(
             "Test.java",

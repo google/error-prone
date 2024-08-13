@@ -15,11 +15,10 @@
  */
 package com.google.errorprone.bugpatterns;
 
-import static org.junit.Assume.assumeTrue;
+import static com.google.common.truth.TruthJUnit.assume;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -351,7 +350,7 @@ public final class PrivateConstructorForUtilityClassTest {
 
   @Test
   public void record() {
-    assumeTrue(RuntimeVersion.isAtLeast16());
+    assume().that(Runtime.version().feature()).isAtLeast(16);
     CompilationTestHelper.newInstance(PrivateConstructorForUtilityClass.class, getClass())
         .addSourceLines(
             "ExampleUtilityClass.java",

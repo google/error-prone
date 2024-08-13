@@ -14,14 +14,13 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static org.junit.Assume.assumeTrue;
+import static com.google.common.truth.TruthJUnit.assume;
 
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.FixChoosers;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -1387,7 +1386,7 @@ public class UnusedVariableTest {
 
   @Test
   public void simpleRecord() {
-    assumeTrue(RuntimeVersion.isAtLeast16());
+    assume().that(Runtime.version().feature()).isAtLeast(16);
     helper
         .addSourceLines(
             "SimpleRecord.java", //
@@ -1398,7 +1397,7 @@ public class UnusedVariableTest {
 
   @Test
   public void nestedRecord() {
-    assumeTrue(RuntimeVersion.isAtLeast16());
+    assume().that(Runtime.version().feature()).isAtLeast(16);
     helper
         .addSourceLines(
             "SimpleClass.java",
@@ -1411,7 +1410,7 @@ public class UnusedVariableTest {
 
   @Test
   public void recordWithStaticFields() {
-    assumeTrue(RuntimeVersion.isAtLeast16());
+    assume().that(Runtime.version().feature()).isAtLeast(16);
     helper
         .addSourceLines(
             "SimpleClass.java",
@@ -1440,7 +1439,7 @@ public class UnusedVariableTest {
   // methods differently
   @Test
   public void nestedPrivateRecord() {
-    assumeTrue(RuntimeVersion.isAtLeast16());
+    assume().that(Runtime.version().feature()).isAtLeast(16);
     helper
         .addSourceLines(
             "SimpleClass.java",
@@ -1453,7 +1452,7 @@ public class UnusedVariableTest {
 
   @Test
   public void nestedPrivateRecordCompactCanonicalConstructor() {
-    assumeTrue(RuntimeVersion.isAtLeast16());
+    assume().that(Runtime.version().feature()).isAtLeast(16);
     helper
         .addSourceLines(
             "SimpleClass.java",
@@ -1471,7 +1470,7 @@ public class UnusedVariableTest {
 
   @Test
   public void nestedPrivateRecordNormalCanonicalConstructor() {
-    assumeTrue(RuntimeVersion.isAtLeast16());
+    assume().that(Runtime.version().feature()).isAtLeast(16);
     helper
         .addSourceLines(
             "SimpleClass.java",
@@ -1489,7 +1488,7 @@ public class UnusedVariableTest {
 
   @Test
   public void unusedRecordConstructorParameter() {
-    assumeTrue(RuntimeVersion.isAtLeast16());
+    assume().that(Runtime.version().feature()).isAtLeast(16);
     helper
         .addSourceLines(
             "SimpleRecord.java",
@@ -1504,7 +1503,7 @@ public class UnusedVariableTest {
 
   @Test
   public void unusedInRecord() {
-    assumeTrue(RuntimeVersion.isAtLeast16());
+    assume().that(Runtime.version().feature()).isAtLeast(16);
     helper
         .addSourceLines(
             "SimpleClass.java",
@@ -1682,7 +1681,7 @@ public class UnusedVariableTest {
 
   @Test
   public void underscoreVariable() {
-    assumeTrue(RuntimeVersion.isAtLeast22());
+    assume().that(Runtime.version().feature()).isAtLeast(22);
     refactoringHelper
         .addInputLines(
             "Test.java",

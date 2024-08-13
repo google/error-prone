@@ -16,12 +16,11 @@
 
 package com.google.errorprone.bugpatterns.javadoc;
 
+import static com.google.common.truth.TruthJUnit.assume;
 import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
-import static org.junit.Assume.assumeTrue;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -192,7 +191,7 @@ public final class InvalidParamTest {
 
   @Test
   public void negative_record() {
-    assumeTrue(RuntimeVersion.isAtLeast16());
+    assume().that(Runtime.version().feature()).isAtLeast(16);
     helper
         .addSourceLines(
             "Test.java", //
@@ -205,7 +204,7 @@ public final class InvalidParamTest {
 
   @Test
   public void badParameterName_record() {
-    assumeTrue(RuntimeVersion.isAtLeast16());
+    assume().that(Runtime.version().feature()).isAtLeast(16);
     helper
         .addSourceLines(
             "Test.java",
@@ -219,7 +218,7 @@ public final class InvalidParamTest {
 
   @Test
   public void multipleConstructors_record() {
-    assumeTrue(RuntimeVersion.isAtLeast16());
+    assume().that(Runtime.version().feature()).isAtLeast(16);
     helper
         .addSourceLines(
             "Test.java",
@@ -245,7 +244,7 @@ public final class InvalidParamTest {
 
   @Test
   public void typeParameter_record() {
-    assumeTrue(RuntimeVersion.isAtLeast16());
+    assume().that(Runtime.version().feature()).isAtLeast(16);
     helper
         .addSourceLines(
             "Negative.java",
@@ -269,7 +268,7 @@ public final class InvalidParamTest {
 
   @Test
   public void compactConstructor_record() {
-    assumeTrue(RuntimeVersion.isAtLeast16());
+    assume().that(Runtime.version().feature()).isAtLeast(16);
     helper
         .addSourceLines(
             "Test.java",
@@ -284,7 +283,7 @@ public final class InvalidParamTest {
 
   @Test
   public void normalConstructor_record() {
-    assumeTrue(RuntimeVersion.isAtLeast16());
+    assume().that(Runtime.version().feature()).isAtLeast(16);
     helper
         .addSourceLines(
             "Test.java",

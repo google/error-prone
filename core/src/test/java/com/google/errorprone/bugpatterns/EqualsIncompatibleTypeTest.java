@@ -16,10 +16,9 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static org.junit.Assume.assumeFalse;
+import static com.google.common.truth.TruthJUnit.assume;
 
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.util.RuntimeVersion;
 import java.util.Arrays;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -50,7 +49,9 @@ public class EqualsIncompatibleTypeTest {
 
   @Test
   public void primitiveBoxingIntoObject() {
-    assumeFalse(RuntimeVersion.isAtLeast12()); // https://bugs.openjdk.java.net/browse/JDK-8028563
+    assume()
+        .that(Runtime.version().feature())
+        .isLessThan(12); // https://bugs.openjdk.java.net/browse/JDK-8028563
     compilationHelper
         .addSourceLines(
             "Test.java",

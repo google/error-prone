@@ -112,7 +112,7 @@ public final class FindIdentifiers {
   private static Symbol findIdent(
       String name, VisitorState state, KindSelector kind, Env<AttrContext> env)
       throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-    if (RuntimeVersion.isAtLeast13()) {
+    if (Runtime.version().feature() >= 13) {
       Method method =
           Resolve.class.getDeclaredMethod(
               "findIdent", DiagnosticPosition.class, Env.class, Name.class, KindSelector.class);

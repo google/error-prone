@@ -16,7 +16,6 @@
 
 package com.google.errorprone.refaster;
 
-import com.google.errorprone.util.RuntimeVersion;
 import com.sun.source.tree.BreakTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.TreeVisitor;
@@ -75,7 +74,7 @@ final class UBreak extends USimpleStatement implements BreakTree {
 
   private static JCBreak makeBreak(Name label, Inliner inliner) {
     try {
-      if (RuntimeVersion.isAtLeast12()) {
+      if (Runtime.version().feature() >= 12) {
         return (JCBreak)
             TreeMaker.class
                 .getMethod("Break", JCExpression.class)

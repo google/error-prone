@@ -17,16 +17,15 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.base.Predicates.containsPattern;
+import static com.google.common.truth.TruthJUnit.assume;
 import static com.google.errorprone.bugpatterns.DefaultLocale.onlyContainsSpecifiersInAllowList;
 import static java.util.function.Predicate.not;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assume.assumeTrue;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.FixChoosers;
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -143,7 +142,7 @@ public class DefaultLocaleTest {
 
   @Test
   public void stringFormatted() {
-    assumeTrue(RuntimeVersion.isAtLeast15());
+    assume().that(Runtime.version().feature()).isAtLeast(15);
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -236,7 +235,7 @@ public class DefaultLocaleTest {
 
   @Test
   public void factoryMethodsJdk12plus() {
-    assumeTrue(RuntimeVersion.isAtLeast12());
+    assume().that(Runtime.version().feature()).isAtLeast(12);
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -313,7 +312,7 @@ public class DefaultLocaleTest {
 
   @Test
   public void resourceBundleJdk9plus() {
-    assumeTrue(RuntimeVersion.release() >= 9);
+    assume().that(Runtime.version().feature()).isAtLeast(9);
     compilationHelper
         .addSourceLines(
             "Test.java",

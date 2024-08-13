@@ -61,7 +61,7 @@ public final class ErrorProneScope {
   private static final Class<?> FILTER_CLASS = getFilterClass();
 
   private static @Nullable Class<?> getFilterClass() {
-    if (RuntimeVersion.isAtLeast17()) {
+    if (Runtime.version().feature() >= 17) {
       return null;
     }
     try {

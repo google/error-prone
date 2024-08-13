@@ -19,11 +19,7 @@ package com.google.errorprone.util;
 import com.sun.tools.javac.code.Source;
 import com.sun.tools.javac.util.Context;
 
-/**
- * JDK source version utilities.
- *
- * @see RuntimeVersion
- */
+/** JDK source version utilities. */
 public final class SourceVersion {
   /** Returns true if the compiler source version level supports switch expressions. */
   public static boolean supportsSwitchExpressions(Context context) {

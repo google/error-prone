@@ -16,11 +16,10 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static org.junit.Assume.assumeTrue;
+import static com.google.common.truth.TruthJUnit.assume;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -235,7 +234,7 @@ public class SwitchDefaultTest {
 
   @Test
   public void newNotation_validDefault() {
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -257,7 +256,7 @@ public class SwitchDefaultTest {
 
   @Test
   public void newNotation_changeOrder() {
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     testHelper
         .addInputLines(
             "Test.java",
@@ -294,7 +293,7 @@ public class SwitchDefaultTest {
 
   @Test
   public void arrowSwitch_noDefault() {
-    assumeTrue(RuntimeVersion.isAtLeast21());
+    assume().that(Runtime.version().feature()).isAtLeast(21);
     compilationHelper
         .addSourceLines(
             "Foo.java", //
