@@ -63,7 +63,7 @@ public class AutoValueBoxedValues extends BugChecker implements ClassTreeMatcher
 
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
-    if (!hasAnnotation(tree, AutoValue.class.getName(), state) || isSuppressed(tree, state)) {
+    if (!hasAnnotation(tree, AutoValue.class.getName(), state)) {
       return NO_MATCH;
     }
 
