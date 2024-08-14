@@ -145,7 +145,6 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
           "org.aspectj.lang.annotation.Pointcut",
           "org.aspectj.lang.annotation.After",
           "org.aspectj.lang.annotation.Before",
-          "org.chromium.base.annotations.CalledByNative",
           "org.springframework.context.annotation.Bean",
           "org.testng.annotations.AfterClass",
           "org.testng.annotations.AfterMethod",
