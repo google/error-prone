@@ -163,6 +163,30 @@
             </path>
           </annotationProcessorPaths>
         </configuration>
+        <executions>
+          <execution>
+            <id>default-compile</id>
+            <configuration>
+              <jdkToolchain>
+                <version>11</version>
+              </jdkToolchain>
+            </configuration>
+          </execution>
+          <execution>
+            <id>java24</id>
+            <configuration>
+              <jdkToolchain>
+                <version>24</version>
+              </jdkToolchain>
+              <compileSourceRoots>
+                <compileSourceRoot>${basedir}/src/main/java24</compileSourceRoot>
+              </compileSourceRoots>
+              <!-- multiReleaseOutput requires setting release -->
+              <outputDirectory>${project.build.outputDirectory}/META-INF/versions/24</outputDirectory>
+            </configuration>
+          </execution>
+        </executions>
+
       </plugin>
     </plugins>
   </build>

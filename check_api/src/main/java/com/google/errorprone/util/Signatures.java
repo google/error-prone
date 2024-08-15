@@ -26,74 +26,24 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.code.Types.DefaultTypeVisitor;
 import com.sun.tools.javac.util.Name;
-import com.sun.tools.javac.util.Names;
 
 /** Signature generation. */
 public final class Signatures {
 
   /** Returns the binary names of the class. */
   public static String classDescriptor(Type type, VisitorState state) {
-    return new Signatures(state).classDescriptor(type);
-  }
-
-  private String classDescriptor(Type type) {
-    SigGen sig = new SigGen();
+    Types types = state.getTypes();
+    ErrorProneSignatureGenerator sig = new ErrorProneSignatureGenerator(types, state.getNames());
     sig.assembleClassSig(types.erasure(type));
     return sig.toString();
   }
 
   /** Returns a JVMS 4.3.3 method descriptor. */
   public static String descriptor(Type type, VisitorState state) {
-    return new Signatures(state).descriptor(type);
-  }
-
-  private String descriptor(Type type) {
-    SigGen sig = new SigGen();
+    Types types = state.getTypes();
+    ErrorProneSignatureGenerator sig = new ErrorProneSignatureGenerator(types, state.getNames());
     sig.assembleSig(types.erasure(type));
     return sig.toString();
-  }
-
-  final Types types;
-  final Names names;
-
-  private Signatures(VisitorState state) {
-    this.types = state.getTypes();
-    this.names = state.getNames();
-  }
-
-  private class SigGen extends Types.SignatureGenerator {
-
-    private final com.sun.tools.javac.util.ByteBuffer buffer =
-        new com.sun.tools.javac.util.ByteBuffer();
-
-    protected SigGen() {
-      super(types);
-    }
-
-    @Override
-    protected void append(char ch) {
-      buffer.appendByte(ch);
-    }
-
-    @Override
-    protected void append(byte[] ba) {
-      buffer.appendBytes(ba);
-    }
-
-    @Override
-    protected void append(Name name) {
-      buffer.appendName(name);
-    }
-
-    @SuppressWarnings("CatchingUnchecked") // handles InvalidUtfException on JDK 21+
-    @Override
-    public String toString() {
-      try {
-        return buffer.toName(names).toString();
-      } catch (Exception e) {
-        throw new AssertionError(e);
-      }
-    }
   }
 
   /**
@@ -171,4 +121,6 @@ public final class Signatures {
           return t.toString();
         }
       };
+
+  private Signatures() {}
 }
