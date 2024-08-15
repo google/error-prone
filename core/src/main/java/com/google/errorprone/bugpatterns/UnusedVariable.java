@@ -137,6 +137,10 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
 
   /**
    * The set of annotation full names which exempt annotated element from being reported as unused.
+   *
+   * <p>Try to avoid adding more annotations here. Annotating these annotations with {@code @Keep}
+   * has the same effect; this list is chiefly for third-party annotations which cannot be
+   * annotated.
    */
   private static final ImmutableSet<String> EXEMPTING_VARIABLE_ANNOTATIONS =
       ImmutableSet.of(
