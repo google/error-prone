@@ -660,6 +660,47 @@ public class AutoValueBoxedValuesTest {
         .doTest();
   }
 
+  @Test
+  public void getterInBuilderClass() {
+    if (!withBuilder) {
+      return;
+    }
+    refactoringHelper
+        .addInputLines(
+            "in/Test.java",
+            "import com.google.auto.value.AutoValue;",
+            "@AutoValue",
+            "abstract class Test {",
+            "  public abstract Long longId();",
+            "  public abstract Boolean booleanId();",
+            "  public abstract Builder toBuilder();",
+            "  @AutoValue.Builder",
+            "  abstract static class Builder {",
+            "    abstract Builder longId(Long value);",
+            "    abstract Builder booleanId(Boolean value);",
+            "    abstract Boolean booleanId();",
+            "    abstract Test build();",
+            "  }",
+            "}")
+        .addOutputLines(
+            "out/Test.java",
+            "import com.google.auto.value.AutoValue;",
+            "@AutoValue",
+            "abstract class Test {",
+            "  public abstract long longId();",
+            "  public abstract boolean booleanId();",
+            "  public abstract Builder toBuilder();",
+            "  @AutoValue.Builder",
+            "  abstract static class Builder {",
+            "    abstract Builder longId(long value);",
+            "    abstract Builder booleanId(boolean value);",
+            "    abstract boolean booleanId();",
+            "    abstract Test build();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
   private static List<String> lines(String... lines) {
     return Arrays.asList(lines);
   }

@@ -130,13 +130,14 @@ public class AutoValueBoxedValues extends BugChecker implements ClassTreeMatcher
   }
 
   /**
-   * Identifies and fixes the setters in the {@link AutoValue.Builder} class.
+   * Identifies and fixes both the setters and the getters in the {@link AutoValue.Builder} class.
    *
    * @param classTree The {@link AutoValue.Builder} class tree.
    * @param state The visitor state.
    * @param getters The {@link List} of {@link Getter} in the {@link AutoValue} class.
    */
   private void handleSetterMethods(ClassTree classTree, VisitorState state, List<Getter> getters) {
+    // Identify and try to fix the setters.
     classTree.getMembers().stream()
         .filter(MethodTree.class::isInstance)
         .map(memberTree -> (MethodTree) memberTree)
@@ -146,6 +147,14 @@ public class AutoValueBoxedValues extends BugChecker implements ClassTreeMatcher
                     && methodTree.getParameters().size() == 1
                     && isSameType(getType(methodTree.getReturnType()), getType(classTree), state))
         .forEach(methodTree -> maybeFixSetter(methodTree, state, getters));
+    // Identify and try to fix the getters.
+    classTree.getMembers().stream()
+        .filter(MethodTree.class::isInstance)
+        .map(memberTree -> (MethodTree) memberTree)
+        .filter(
+            methodTree ->
+                ABSTRACT_MATCHER.matches(methodTree, state) && methodTree.getParameters().isEmpty())
+        .forEach(methodTree -> maybeFixGetterInBuilder(methodTree, state, getters));
   }
 
   /** Given a setter, it tries to apply a fix if the corresponding getter was also fixed. */
@@ -167,6 +176,30 @@ public class AutoValueBoxedValues extends BugChecker implements ClassTreeMatcher
       if (isBoxedPrimitive(state, type) && !hasNullableAnnotation(parameter)) {
         suggestRemoveUnnecessaryBoxing(parameter.getType(), state, type, fixedGetter.get().fix());
       }
+    }
+  }
+
+  /**
+   * Given a getter in the Builder class, it tries to apply a fix if the corresponding getter in the
+   * parent {@link AutoValue} class was also fixed.
+   */
+  private static void maybeFixGetterInBuilder(
+      MethodTree methodTree, VisitorState state, List<Getter> getters) {
+    Optional<Getter> fixedGetter =
+        getters.stream()
+            .filter(
+                getter ->
+                    !getter.fix().isEmpty()
+                        && getter.method().getName().contentEquals(methodTree.getName().toString())
+                        && isSameType(
+                            getType(getter.method().getReturnType()),
+                            getType(methodTree.getReturnType()),
+                            state))
+            .findAny();
+    if (fixedGetter.isPresent()) {
+      Type type = getType(methodTree.getReturnType());
+      suggestRemoveUnnecessaryBoxing(
+          methodTree.getReturnType(), state, type, fixedGetter.get().fix());
     }
   }
 
