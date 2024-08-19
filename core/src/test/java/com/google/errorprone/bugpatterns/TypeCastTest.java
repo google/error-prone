@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.errorprone.BugPattern;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.TypeCastTreeMatcher;
@@ -25,23 +26,27 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-@RunWith(JUnit4.class)
-public class TypeCast {
+import static com.google.errorprone.util.ASTHelpers.getType;
 
+@RunWith(JUnit4.class)
+public class TypeCastTest {
+
+  @BugPattern(summary = "", severity = BugPattern.SeverityLevel.ERROR)
   public static final class TypeCastChecker extends BugChecker implements TypeCastTreeMatcher {
 
     @Override
     public Description matchTypeCast(TypeCastTree tree, VisitorState state) {
-      return null;
+      return buildDescription(tree)
+          .setMessage(getType(tree) + " " + getType(tree.getType()))
+          .build();
     }
   }
 
   @Test
-  public void typeCase() {
+  public void typeCast() {
     CompilationTestHelper.newInstance(TypeCastChecker.class, getClass())
         .addSourceLines(
             "T.java",
-            "class T {",
             "import java.lang.annotation.ElementType;",
             "import java.lang.annotation.Target;",
             "class T {",
@@ -49,8 +54,8 @@ public class TypeCast {
             "    @interface Nullable {}",
             "    interface A<T> {}",
             "    void f(Object o) {",
+            "        // BUG: Diagnostic contains: T.A<java.lang.@T.Nullable String> T.A<java.lang.@T.Nullable String>",
             "        var x = (A<@Nullable String>) o;",
-            "        // A<@Nullable String> a = null;",
             "    }",
             "}")
         .doTest();
