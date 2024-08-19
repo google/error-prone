@@ -73,7 +73,7 @@ jobs:
         run: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
       - name: 'Test'
         shell: bash
-        run: mvn test -B
+        run: mvn test -B -Dsurefire.jdk-toolchain-version=${{ matrix.java }}
       - name: 'Test compatibility with JDK 11'
         if: ${{ matrix.java == 17 }}
         shell: bash
