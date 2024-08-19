@@ -246,6 +246,19 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <version>3.1.0</version>
         <configuration>
+          <jdkToolchain>
+            <!--
+            Test against the current default JDK, not the latest JDK a toolchain is registered for. 
+
+            On Error Prone's CI, the JDK we want to run the tests against is installed last, to
+            make it the default on the PATH and for JAVA_HOME:
+            https://github.com/google/error-prone/blob/master/.github/workflows/ci.yml
+
+            See also Guava's similar logic here:
+            https://github.com/google/guava/blob/781068569f0a275ac3c4bce08c9a1fe4d624048a/pom.xml#L20
+            -->
+            <version>${java.specification.version}</version>
+          </jdkToolchain>
           <argLine>
             -Xmx1g
             --add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED
