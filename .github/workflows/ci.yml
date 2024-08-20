@@ -146,8 +146,8 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: |
-            17
             11
+            17
           distribution: 'zulu'
           cache: 'maven'
       - name: 'Generate latest docs'
