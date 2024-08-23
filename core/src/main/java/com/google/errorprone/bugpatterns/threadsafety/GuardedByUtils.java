@@ -95,7 +95,7 @@ public final class GuardedByUtils {
   abstract static class GuardedByValidationResult {
     abstract String message();
 
-    abstract Boolean isValid();
+    abstract boolean isValid();
 
     static GuardedByValidationResult invalid(String message) {
       return new AutoValue_GuardedByUtils_GuardedByValidationResult(message, false);
