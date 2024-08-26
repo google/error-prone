@@ -35,6 +35,7 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.annotations.Immutable;
 import com.google.errorprone.annotations.ThreadSafe;
+import com.google.errorprone.annotations.ThreadSafeTypeParameter;
 import com.google.errorprone.bugpatterns.CanBeStaticAnalyzer;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
@@ -95,7 +96,8 @@ public final class ThreadSafety {
             .setPurpose(Purpose.FOR_THREAD_SAFE_CHECKER)
             .knownTypes(wellKnownThreadSafety)
             .markerAnnotations(ImmutableSet.of(ThreadSafe.class.getName()))
-            .acceptedAnnotations(ImmutableSet.of(Immutable.class.getName()));
+            .acceptedAnnotations(ImmutableSet.of(Immutable.class.getName()))
+            .typeParameterAnnotation(ImmutableSet.of(ThreadSafeTypeParameter.class.getName()));
     return builder;
   }
 

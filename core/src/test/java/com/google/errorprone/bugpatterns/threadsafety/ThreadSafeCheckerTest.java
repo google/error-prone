@@ -952,6 +952,29 @@ public class ThreadSafeCheckerTest {
 
   @Ignore("b/26797524 - add tests for generic arguments")
   @Test
+  public void threadSafeTypeParam() {
+    compilationHelper
+        .addSourceLines(
+            "X.java",
+            "import com.google.common.collect.ImmutableList;",
+            "import com.google.errorprone.annotations.ThreadSafe;",
+            "public class X {",
+            "  final ImmutableList<@ThreadSafeTypeParameter ?> unknownSafeType;",
+            "  X (ImmutableList<@ThreadSafeTypeParameter ?> unknownSafeType) {",
+            "      this.unknownSafeType = unknownSafeType;",
+            "  }",
+            "}")
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableList;",
+            "class Test {",
+            "  final X badX = new X(ImmutableList.of(ImmutableList.<String>of()));",
+            "}")
+        .doTest();
+  }
+
+  @Ignore("b/26797524 - add tests for generic arguments")
+  @Test
   public void mutableTypeParam() {
     compilationHelper
         .addSourceLines(
@@ -1002,6 +1025,78 @@ public class ThreadSafeCheckerTest {
   }
 
   @Test
+  public void threadSafeTypeParameter() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.ThreadSafe;",
+            "import com.google.errorprone.annotations.ThreadSafeTypeParameter;",
+            "@ThreadSafe class Test<@ThreadSafeTypeParameter T> {",
+            "  final T t = null;",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void threadSafeTypeParameterInstantiation() {
+    compilationHelper
+        .addSourceLines(
+            "A.java",
+            "import com.google.errorprone.annotations.ThreadSafe;",
+            "import com.google.errorprone.annotations.ThreadSafeTypeParameter;",
+            "@ThreadSafe class A<@ThreadSafeTypeParameter T> {",
+            "}")
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  A<String> f() {",
+            "    return new A<>();",
+            "  }",
+            "  A<Object> g() {",
+            "    // BUG: Diagnostic contains: instantiation of 'T' is not "
+                + "thread-safe, 'Object' is not thread-safe",
+            "    return new A<>();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void threadSafeTypeParameterUsage() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.ThreadSafeTypeParameter;",
+            "class Test {",
+            "  static <@ThreadSafeTypeParameter T> void f() {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void threadSafeTypeParameterUsage_interface() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.ThreadSafe;",
+            "import com.google.errorprone.annotations.ThreadSafeTypeParameter;",
+            "@ThreadSafe interface Test<@ThreadSafeTypeParameter T> {",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void threadSafeTypeParameterMutableClass() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.ThreadSafeTypeParameter;",
+            "// BUG: Diagnostic contains: @ThreadSafeTypeParameter is only supported on",
+            "class A<@ThreadSafeTypeParameter T> {}")
+        .doTest();
+  }
+
+  @Test
   public void annotatedClassType() {
     compilationHelper
         .addSourceLines(
@@ -1015,10 +1110,65 @@ public class ThreadSafeCheckerTest {
         .doTest();
   }
 
+  @Test
+  public void instantiationWithThreadSafeTypeParameter() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.collect.ImmutableList;",
+            "import com.google.errorprone.annotations.ThreadSafe;",
+            "import com.google.errorprone.annotations.ThreadSafeTypeParameter;",
+            "@ThreadSafe public class Test<@ThreadSafeTypeParameter T> {",
+            "  final ImmutableList<T> xs = ImmutableList.of();",
+            "}")
+        .doTest();
+  }
+
   // Regression test for b/117937500
+  @Test
+  public void notAllTypeVarsInstantiated() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.ThreadSafeTypeParameter;",
+            "import java.util.function.Function;",
+            "class Test {",
+            "  public final <A> void f1(A transform) {}",
+            "  public <B, @ThreadSafeTypeParameter C> C f2(Function<B, C> fn) {",
+            "    return null;",
+            "  }",
+            "  public final <D, E> void f3(Function<D, E> fn) {",
+            "    // BUG: Diagnostic contains: instantiation of 'C' is not thread-safe",
+            "    // 'E' is a non-thread-safe type variable",
+            "    f1(f2(fn));",
+            "  }",
+            "}")
+        .doTest();
+  }
 
   // javac does not instantiate type variables when they are not used for target typing, so we
   // cannot check whether their instantiations are thread-safe.
+  @Ignore
+  @Test
+  public void notAllTypeVarsInstantiated_shouldFail() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.errorprone.annotations.ThreadSafeTypeParameter;",
+            "import java.util.function.Function;",
+            "class Test {",
+            "  public final <A> void f1(A transform) {}",
+            "  public <@ThreadSafeTypeParameter B, C> C f2(Function<B, C> fn) {",
+            "    return null;",
+            "  }",
+            "  public final <D, E> void f3(Function<D, E> fn) {",
+            "    // BUG: Diagnostic contains: instantiation of 'B' is not thread-safe",
+            "    // 'D' is a non-thread-safe type variable",
+            "    f1(f2(fn));",
+            "  }",
+            "}")
+        .doTest();
+  }
 
   @Test
   public void threadSafeUpperBound() {
