@@ -57,6 +57,36 @@ public class CanIgnoreReturnValueSuggesterTest {
   }
 
   @Test
+  public void b362106953_returnThis() {
+    helper
+        .addInputLines(
+            "Client.java",
+            "package com.google.frobber;",
+            "public final class Client {",
+            "  public Client setName(String name) {",
+            "    return this;",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void b362106953_returnParam() {
+    helper
+        .addInputLines(
+            "Client.java",
+            "package com.google.frobber;",
+            "public final class Client {",
+            "  public String setName(String name) {",
+            "    return name;",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
   public void parenthesizedCastThis() {
     helper
         .addInputLines(
@@ -92,6 +122,7 @@ public class CanIgnoreReturnValueSuggesterTest {
             "package com.google.frobber;",
             "public final class Client {",
             "  public String method(String name) {",
+            "    System.out.println(name);",
             "    return name;",
             "  }",
             "}")
@@ -102,6 +133,7 @@ public class CanIgnoreReturnValueSuggesterTest {
             "public final class Client {",
             "  @CanIgnoreReturnValue",
             "  public String method(String name) {",
+            "    System.out.println(name);",
             "    return name;",
             "  }",
             "}")
@@ -157,6 +189,7 @@ public class CanIgnoreReturnValueSuggesterTest {
             "package com.google.frobber;",
             "public final class ReturnInputParam {",
             "  public static StringBuilder append(StringBuilder input, String name) {",
+            "    input.append(name);",
             "    return input;",
             "  }",
             "}")
@@ -167,6 +200,7 @@ public class CanIgnoreReturnValueSuggesterTest {
             "public final class ReturnInputParam {",
             "  @CanIgnoreReturnValue",
             "  public static StringBuilder append(StringBuilder input, String name) {",
+            "    input.append(name);",
             "    return input;",
             "  }",
             "}")
