@@ -46,23 +46,25 @@ public final class ContainmentMatchers {
           // "Normal" cases, e.g. Collection#remove(Object)
           // Make sure to keep that the type or one of its supertype should be present in
           // FIRST_ORDER_MATCHER
-          new MethodArgMatcher("java.util.Collection", "contains(java.lang.Object)", 0, 0),
-          new MethodArgMatcher("java.util.Collection", "remove(java.lang.Object)", 0, 0),
-          new MethodArgMatcher("java.util.Deque", "removeFirstOccurrence(java.lang.Object)", 0, 0),
-          new MethodArgMatcher("java.util.Deque", "removeLastOccurrence(java.lang.Object)", 0, 0),
-          new MethodArgMatcher("java.util.Dictionary", "get(java.lang.Object)", 0, 0),
-          new MethodArgMatcher("java.util.Dictionary", "remove(java.lang.Object)", 0, 0),
-          new MethodArgMatcher("java.util.List", "indexOf(java.lang.Object)", 0, 0),
-          new MethodArgMatcher("java.util.List", "lastIndexOf(java.lang.Object)", 0, 0),
-          new MethodArgMatcher("java.util.Map", "containsKey(java.lang.Object)", 0, 0),
-          new MethodArgMatcher("java.util.Map", "containsValue(java.lang.Object)", 1, 0),
-          new MethodArgMatcher("java.util.Map", "get(java.lang.Object)", 0, 0),
-          new MethodArgMatcher("java.util.Map", "getOrDefault(java.lang.Object,V)", 0, 0),
-          new MethodArgMatcher("java.util.Map", "remove(java.lang.Object)", 0, 0),
-          new MethodArgMatcher("java.util.Stack", "search(java.lang.Object)", 0, 0),
-          new MethodArgMatcher("java.util.Vector", "indexOf(java.lang.Object,int)", 0, 0),
-          new MethodArgMatcher("java.util.Vector", "lastIndexOf(java.lang.Object,int)", 0, 0),
-          new MethodArgMatcher("java.util.Vector", "removeElement(java.lang.Object)", 0, 0));
+          new MethodArgMatcher("java.util.Collection", 0, 0, "contains", "java.lang.Object"),
+          new MethodArgMatcher("java.util.Collection", 0, 0, "remove", "java.lang.Object"),
+          new MethodArgMatcher(
+              "java.util.Deque", 0, 0, "removeFirstOccurrence", "java.lang.Object"),
+          new MethodArgMatcher("java.util.Deque", 0, 0, "removeLastOccurrence", "java.lang.Object"),
+          new MethodArgMatcher("java.util.Dictionary", 0, 0, "get", "java.lang.Object"),
+          new MethodArgMatcher("java.util.Dictionary", 0, 0, "remove", "java.lang.Object"),
+          new MethodArgMatcher("java.util.List", 0, 0, "indexOf", "java.lang.Object"),
+          new MethodArgMatcher("java.util.List", 0, 0, "lastIndexOf", "java.lang.Object"),
+          new MethodArgMatcher("java.util.Map", 0, 0, "containsKey", "java.lang.Object"),
+          new MethodArgMatcher("java.util.Map", 1, 0, "containsValue", "java.lang.Object"),
+          new MethodArgMatcher("java.util.Map", 0, 0, "get", "java.lang.Object"),
+          new MethodArgMatcher(
+              "java.util.Map", 0, 0, "getOrDefault", "java.lang.Object", "java.lang.Object"),
+          new MethodArgMatcher("java.util.Map", 0, 0, "remove", "java.lang.Object"),
+          new MethodArgMatcher("java.util.Stack", 0, 0, "search", "java.lang.Object"),
+          new MethodArgMatcher("java.util.Vector", 0, 0, "indexOf", "java.lang.Object", "int"),
+          new MethodArgMatcher("java.util.Vector", 0, 0, "lastIndexOf", "java.lang.Object", "int"),
+          new MethodArgMatcher("java.util.Vector", 0, 0, "removeElement", "java.lang.Object"));
 
   /**
    * Cases where we need to extract the type argument from a method argument, e.g.
@@ -74,25 +76,28 @@ public final class ContainmentMatchers {
           // FIRST_ORDER_MATCHER
           new TypeArgOfMethodArgMatcher(
               "java.util.Collection", // class that defines the method
-              "containsAll(java.util.Collection<?>)", // method signature
               0, // index of the owning class's type argument to extract
               0, // index of the method argument whose type argument to extract
               "java.util.Collection", // type of the method argument
-              0), // index of the method argument's type argument to extract
+              0, // index of the method argument's type argument to extract
+              "containsAll", // method name
+              "java.util.Collection"), // method parameter
           new TypeArgOfMethodArgMatcher(
               "java.util.Collection", // class that defines the method
-              "removeAll(java.util.Collection<?>)", // method signature
               0, // index of the owning class's type argument to extract
               0, // index of the method argument whose type argument to extract
               "java.util.Collection", // type of the method argument
-              0), // index of the method argument's type argument to extract
+              0, // index of the method argument's type argument to extract
+              "removeAll", // method name
+              "java.util.Collection"), // method parameter
           new TypeArgOfMethodArgMatcher(
               "java.util.Collection", // class that defines the method
-              "retainAll(java.util.Collection<?>)", // method signature
               0, // index of the owning class's type argument to extract
               0, // index of the method argument whose type argument to extract
               "java.util.Collection", // type of the method argument
-              0)); // index of the method argument's type argument to extract
+              0, // index of the method argument's type argument to extract
+              "retainAll", // method name
+              "java.util.Collection")); // method parameter
 
   private static final ImmutableList<BinopMatcher> STATIC_MATCHERS =
       ImmutableList.of(

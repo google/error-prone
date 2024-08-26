@@ -46,12 +46,24 @@ final class MethodArgMatcher extends AbstractCollectionIncompatibleTypeMatcher {
 
   /**
    * @param typeName The fully-qualified name of the type whose descendants to match on
-   * @param signature The signature of the method to match on
    * @param typeArgIndex The index of the type argument that should match the method argument
    * @param methodArgIndex The index of the method argument that should match the type argument
+   * @param name The name of the method to match on
+   * @param firstParam The type of the first parameter of the method
+   * @param otherParams The types of any additional parameters of the method
    */
-  MethodArgMatcher(String typeName, String signature, int typeArgIndex, int methodArgIndex) {
-    this.methodMatcher = instanceMethod().onDescendantOf(typeName).withSignature(signature);
+  MethodArgMatcher(
+      String typeName,
+      int typeArgIndex,
+      int methodArgIndex,
+      String name,
+      String firstParam,
+      String... otherParams) {
+    this.methodMatcher =
+        instanceMethod()
+            .onDescendantOf(typeName)
+            .named(name)
+            .withParameters(firstParam, otherParams);
     this.typeName = typeName;
     this.typeArgIndex = typeArgIndex;
     this.methodArgIndex = methodArgIndex;
