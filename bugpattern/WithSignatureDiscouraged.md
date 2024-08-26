@@ -14,7 +14,7 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 
 
 ## The problem
-`withSignature` replies on the string representation of internal classes in the
+`withSignature` relies on the string representation of internal classes in the
 javac implementation. Those string representations are not necessarily stable
 across versions of javac, and they can change when a method is annotated with
 type-use annotations.
