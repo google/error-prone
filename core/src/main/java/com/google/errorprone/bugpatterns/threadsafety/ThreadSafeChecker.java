@@ -137,9 +137,8 @@ public class ThreadSafeChecker extends BugChecker
     ThreadSafeAnalysis analysis = new ThreadSafeAnalysis(this, state, wellKnownThreadSafety);
     if (analysis.hasThreadSafeTypeParameterAnnotation((TypeVariableSymbol) sym)) {
       if (analysis.getThreadSafeAnnotation(sym.owner, state) == null) {
-        // TODO: b/324092874 -- Update this message to use the new annotation name.
         return buildDescription(tree)
-            .setMessage("@ThreadSafe.TypeParameter is only supported on threadsafe classes")
+            .setMessage("@ThreadSafeTypeParameter is only supported on threadsafe classes")
             .build();
       }
     }
@@ -199,11 +198,10 @@ public class ThreadSafeChecker extends BugChecker
             .map(Entry::getKey)
             .collect(toImmutableSet());
     if (!threadSafeAndContainer.isEmpty()) {
-      // TODO: b/324092874 -- Update this message to use the new annotation name.
       return buildDescription(tree)
           .setMessage(
               String.format(
-                  "using both @ThreadSafe.TypeParameter and @ThreadSafe.Element is redundant: %s",
+                  "using both @ThreadSafeTypeParameter and @ThreadSafe.Element is redundant: %s",
                   Joiner.on("', '").join(threadSafeAndContainer)))
           .build();
     }
