@@ -19,9 +19,7 @@ package com.google.errorprone.fixes;
 import static com.google.common.base.Preconditions.checkArgument;
 
 import com.google.common.base.Joiner;
-import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Ordering;
 import com.google.common.collect.Range;
 import com.google.common.collect.RangeMap;
 import com.google.common.collect.TreeRangeMap;
@@ -41,15 +39,9 @@ public class Replacements {
    * length of the input don't affect the position of earlier replacements.
    */
   private static final Comparator<Range<Integer>> DESCENDING =
-      new Comparator<Range<Integer>>() {
-        @Override
-        public int compare(Range<Integer> o1, Range<Integer> o2) {
-          return ComparisonChain.start()
-              .compare(o1.lowerEndpoint(), o2.lowerEndpoint(), Ordering.natural().reverse())
-              .compare(o1.upperEndpoint(), o2.upperEndpoint(), Ordering.natural().reverse())
-              .result();
-        }
-      };
+      Comparator.<Range<Integer>, Integer>comparing(Range::lowerEndpoint)
+          .thenComparing(Range::upperEndpoint)
+          .reversed();
 
   private final TreeMap<Range<Integer>, Replacement> replacements = new TreeMap<>(DESCENDING);
   private final RangeMap<Integer, Replacement> overlaps = TreeRangeMap.create();
