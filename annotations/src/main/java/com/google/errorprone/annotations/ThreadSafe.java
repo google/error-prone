@@ -86,7 +86,7 @@ import java.lang.annotation.Target;
  * <p>This first requirement means the type is at least inherently shallowly thread-safe. For types
  * with type parameters to be deemed deeply thread-safe, those of these types that denote
  * containment must also be deemed thread-safe. A full explanation of this can be found in the
- * {@link ThreadSafeTypeParameter} javadoc.
+ * {@code ThreadSafeTypeParameter} javadoc.
  *
  * <p>Fields annotated with {@code javax.annotation.concurrent.GuardedBy} are likely the meat of a
  * mutable thread-safe class: these are things that need to be mutated, but should be done so in a
