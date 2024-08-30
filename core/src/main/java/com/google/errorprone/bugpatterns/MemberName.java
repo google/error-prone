@@ -132,12 +132,13 @@ public final class MemberName extends BugChecker implements MethodTreeMatcher, V
     boolean fixable = !suggested.equals(name) && canBeRemoved(symbol, state);
     String diagnostic =
         "Methods and non-static variables should be named in lowerCamelCase"
-            + (suggested.equals(renamed) ? "" : INITIALISM_DETAIL);
+            + (suggested.equals(renamed) ? "" : INITIALISM_DETAIL)
+            + ", but "
+            + symbol.getSimpleName()
+            + " is not";
     return buildDescription(tree)
         .setMessage(
-            fixable
-                ? diagnostic
-                : diagnostic + String.format("; did you" + " mean '%s'?", suggested))
+            fixable ? diagnostic : diagnostic + String.format("; did you mean '%s'?", suggested))
         .addFix(fixable ? renameMethodWithInvocations(tree, suggested, state) : emptyFix())
         .build();
   }
@@ -183,7 +184,10 @@ public final class MemberName extends BugChecker implements MethodTreeMatcher, V
     boolean fixable = !suggested.equals(name) && canBeRenamed(symbol);
     String diagnostic =
         (isStaticVariable(symbol) ? STATIC_VARIABLE_FINDING : message())
-            + (suggested.equals(renamed) ? "" : INITIALISM_DETAIL);
+            + (suggested.equals(renamed) ? "" : INITIALISM_DETAIL)
+            + ", but "
+            + symbol.getSimpleName()
+            + " is not";
     return buildDescription(tree)
         .setMessage(
             fixable

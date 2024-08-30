@@ -202,7 +202,7 @@ public class MemberNameTest {
         .addSourceLines(
             "Test.java",
             "class Test {",
-            "  // BUG: Diagnostic contains:",
+            "  // BUG: Diagnostic contains: foo",
             "  private int Foo;",
             "  int get() {",
             "    return Foo;",
@@ -347,7 +347,7 @@ public class MemberNameTest {
         .addSourceLines(
             "Test.java",
             "class Test extends Base {",
-            "  // BUG: Diagnostic contains:",
+            "  // BUG: Diagnostic contains: get_more",
             "  public int get_more() {",
             "    return 0;",
             "  }",
@@ -361,7 +361,7 @@ public class MemberNameTest {
         .addSourceLines(
             "Base.java",
             "interface Base {",
-            "  // BUG: Diagnostic contains:",
+            "  // BUG: Diagnostic contains: a_b",
             "  void foo(int a_b);",
             "}")
         .addSourceLines(
