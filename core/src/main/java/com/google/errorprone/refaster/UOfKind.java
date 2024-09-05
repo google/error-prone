@@ -24,7 +24,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.TreeVisitor;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import java.util.Set;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * {@code UExpression} imposing a restriction on the kind of the matched expression.
@@ -57,8 +57,7 @@ abstract class UOfKind extends UExpression {
   }
 
   @Override
-  @Nullable
-  protected Choice<Unifier> defaultAction(Tree tree, @Nullable Unifier unifier) {
+  protected @Nullable Choice<Unifier> defaultAction(Tree tree, @Nullable Unifier unifier) {
     return Choice.condition(allowed().contains(tree.getKind()), unifier)
         .thenChoose(unifications(expression(), tree));
   }

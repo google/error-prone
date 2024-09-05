@@ -46,7 +46,7 @@ import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import java.util.List;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author bhagwani@google.com (Sumit Bhagwani)
@@ -93,8 +93,7 @@ public class SelfEquals extends BugChecker implements MethodInvocationTreeMatche
     return description.build();
   }
 
-  @Nullable
-  protected static SuggestedFix fieldFix(Tree toReplace, VisitorState state) {
+  protected static @Nullable SuggestedFix fieldFix(Tree toReplace, VisitorState state) {
     TreePath path = state.getPath();
     while (path != null
         && path.getLeaf().getKind() != Kind.CLASS

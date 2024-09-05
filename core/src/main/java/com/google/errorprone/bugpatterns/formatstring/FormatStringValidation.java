@@ -60,8 +60,8 @@ import java.util.UnknownFormatConversionException;
 import java.util.UnknownFormatFlagsException;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
-import javax.annotation.Nullable;
 import javax.lang.model.type.TypeKind;
+import org.jspecify.annotations.Nullable;
 
 /** Utilities for validating format strings. */
 public final class FormatStringValidation {
@@ -96,8 +96,7 @@ public final class FormatStringValidation {
     return flat.stream().map(t -> ASTHelpers.constValue(t, String.class)).filter(x -> x != null);
   }
 
-  @Nullable
-  public static ValidationResult validate(
+  public static @Nullable ValidationResult validate(
       @Nullable MethodSymbol formatMethodSymbol,
       Collection<? extends ExpressionTree> arguments,
       VisitorState state) {
@@ -149,8 +148,7 @@ public final class FormatStringValidation {
    * For example, an intance of {@link Integer} will be returned for an input of type {@code int} or
    * {@link Integer}.
    */
-  @Nullable
-  private static Object getInstance(Tree tree, VisitorState state) {
+  private static @Nullable Object getInstance(Tree tree, VisitorState state) {
     Object value = ASTHelpers.constValue(tree);
     if (value != null) {
       return value;
@@ -159,8 +157,7 @@ public final class FormatStringValidation {
     return getInstance(type, state);
   }
 
-  @Nullable
-  private static Object getInstance(Type type, VisitorState state) {
+  private static @Nullable Object getInstance(Type type, VisitorState state) {
     Types types = state.getTypes();
     if (type.getKind() == TypeKind.NULL) {
       return null;
@@ -282,8 +279,7 @@ public final class FormatStringValidation {
     return extraFormatArguments(formatString, asList(arguments));
   }
 
-  @Nullable
-  private static ValidationResult extraFormatArguments(
+  private static @Nullable ValidationResult extraFormatArguments(
       String formatString, List<Object> arguments) {
     int used =
         IntStream.rangeClosed(0, arguments.size())

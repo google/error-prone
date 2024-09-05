@@ -16,12 +16,11 @@
 
 package com.google.errorprone.bugpatterns.nullness;
 
+import static com.google.common.truth.TruthJUnit.assume;
 import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
-import static org.junit.Assume.assumeTrue;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -139,7 +138,7 @@ public class ReturnMissingNullableTest {
 
   @Test
   public void switchExpressionTree() {
-    assumeTrue(RuntimeVersion.isAtLeast12());
+    assume().that(Runtime.version().feature()).isAtLeast(12);
 
     createCompilationTestHelper()
         .addSourceLines(
@@ -159,7 +158,7 @@ public class ReturnMissingNullableTest {
 
   @Test
   public void switchExpressionTree_negative() {
-    assumeTrue(RuntimeVersion.isAtLeast12());
+    assume().that(Runtime.version().feature()).isAtLeast(12);
 
     createCompilationTestHelper()
         .addSourceLines(

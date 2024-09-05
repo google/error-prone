@@ -68,8 +68,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import javax.annotation.Nullable;
 import javax.inject.Inject;
+import org.jspecify.annotations.Nullable;
 
 /** Matches comparison of proto fields to {@code null}. */
 @BugPattern(
@@ -193,9 +193,9 @@ public final class ImpossibleNullComparison extends BugChecker
     private Optional<ExpressionTree> getInitializer(ExpressionTree tree) {
       return Optional.ofNullable(
           new SimpleTreeVisitor<ExpressionTree, Void>() {
-            @Nullable
             @Override
-            public ExpressionTree visitMethodInvocation(MethodInvocationTree node, Void unused) {
+            public @Nullable ExpressionTree visitMethodInvocation(
+                MethodInvocationTree node, Void unused) {
               return PROTO_RECEIVER.matches(node, state) ? node : null;
             }
 
@@ -270,8 +270,7 @@ public final class ImpossibleNullComparison extends BugChecker
           .findFirst();
     }
 
-    @Nullable
-    private ExpressionTree getEffectiveTree(ExpressionTree tree) {
+    private @Nullable ExpressionTree getEffectiveTree(ExpressionTree tree) {
       return tree.getKind() == Kind.IDENTIFIER
           ? effectivelyFinalValues.getOrDefault(ASTHelpers.getSymbol(tree), tree)
           : tree;
@@ -322,9 +321,8 @@ public final class ImpossibleNullComparison extends BugChecker
 
   private enum GetterTypes {
     OPTIONAL_GET {
-      @Nullable
       @Override
-      Fixer match(ExpressionTree tree, VisitorState state) {
+      @Nullable Fixer match(ExpressionTree tree, VisitorState state) {
         if (!OPTIONAL_GET_MATCHER.matches(tree, state)) {
           return null;
         }
@@ -334,9 +332,8 @@ public final class ImpossibleNullComparison extends BugChecker
       }
     },
     GUAVA_OPTIONAL_GET {
-      @Nullable
       @Override
-      Fixer match(ExpressionTree tree, VisitorState state) {
+      @Nullable Fixer match(ExpressionTree tree, VisitorState state) {
         if (!GUAVA_OPTIONAL_GET_MATCHER.matches(tree, state)) {
           return null;
         }
@@ -345,9 +342,8 @@ public final class ImpossibleNullComparison extends BugChecker
       }
     },
     MULTIMAP_GET {
-      @Nullable
       @Override
-      Fixer match(ExpressionTree tree, VisitorState state) {
+      @Nullable Fixer match(ExpressionTree tree, VisitorState state) {
         if (!MULTIMAP_GET_MATCHER.matches(tree, state)) {
           return null;
         }
@@ -362,9 +358,8 @@ public final class ImpossibleNullComparison extends BugChecker
       }
     },
     TABLE_ROW_GET {
-      @Nullable
       @Override
-      Fixer match(ExpressionTree tree, VisitorState state) {
+      @Nullable Fixer match(ExpressionTree tree, VisitorState state) {
         if (!TABLE_ROW_MATCHER.matches(tree, state)) {
           return null;
         }
@@ -379,9 +374,8 @@ public final class ImpossibleNullComparison extends BugChecker
       }
     },
     TABLE_COLUMN_GET {
-      @Nullable
       @Override
-      Fixer match(ExpressionTree tree, VisitorState state) {
+      @Nullable Fixer match(ExpressionTree tree, VisitorState state) {
         if (!TABLE_COLUMN_MATCHER.matches(tree, state)) {
           return null;
         }
@@ -396,17 +390,15 @@ public final class ImpossibleNullComparison extends BugChecker
       }
     },
     PRIMITIVE {
-      @Nullable
       @Override
-      Fixer match(ExpressionTree tree, VisitorState state) {
+      @Nullable Fixer match(ExpressionTree tree, VisitorState state) {
         var type = getType(tree);
         return type != null && type.isPrimitive() ? GetterTypes::emptyFix : null;
       }
     },
     VALUE_OF {
-      @Nullable
       @Override
-      Fixer match(ExpressionTree tree, VisitorState state) {
+      @Nullable Fixer match(ExpressionTree tree, VisitorState state) {
         if (!NON_NULL_VALUE_OF.matches(tree, state)) {
           return null;
         }
@@ -416,9 +408,8 @@ public final class ImpossibleNullComparison extends BugChecker
     },
     /** {@code proto.getFoo()} */
     SCALAR {
-      @Nullable
       @Override
-      Fixer match(ExpressionTree tree, VisitorState state) {
+      @Nullable Fixer match(ExpressionTree tree, VisitorState state) {
         if (!PROTO_RECEIVER.matches(tree, state)) {
           return null;
         }
@@ -465,9 +456,8 @@ public final class ImpossibleNullComparison extends BugChecker
     },
     /** {@code proto.getRepeatedFoo(index)} */
     VECTOR_INDEXED {
-      @Nullable
       @Override
-      Fixer match(ExpressionTree tree, VisitorState state) {
+      @Nullable Fixer match(ExpressionTree tree, VisitorState state) {
         if (!PROTO_RECEIVER.matches(tree, state)) {
           return null;
         }
@@ -499,9 +489,8 @@ public final class ImpossibleNullComparison extends BugChecker
     },
     /** {@code proto.getRepeatedFooList()} */
     VECTOR {
-      @Nullable
       @Override
-      Fixer match(ExpressionTree tree, VisitorState state) {
+      @Nullable Fixer match(ExpressionTree tree, VisitorState state) {
         if (!PROTO_RECEIVER.matches(tree, state)) {
           return null;
         }
@@ -529,9 +518,8 @@ public final class ImpossibleNullComparison extends BugChecker
     },
     /** {@code proto.getField(f)} or {@code proto.getExtension(outer, extension)}; */
     EXTENSION_METHOD {
-      @Nullable
       @Override
-      Fixer match(ExpressionTree tree, VisitorState state) {
+      @Nullable Fixer match(ExpressionTree tree, VisitorState state) {
         if (!PROTO_RECEIVER.matches(tree, state)) {
           return null;
         }

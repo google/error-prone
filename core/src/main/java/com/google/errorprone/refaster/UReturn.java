@@ -22,7 +22,7 @@ import com.google.auto.value.AutoValue;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.TreeVisitor;
 import com.sun.tools.javac.tree.JCTree.JCReturn;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * {@link UTree} representation of a {@link ReturnTree}.
@@ -36,8 +36,7 @@ public abstract class UReturn extends USimpleStatement implements ReturnTree {
   }
 
   @Override
-  @Nullable
-  public abstract UExpression getExpression();
+  public abstract @Nullable UExpression getExpression();
 
   @Override
   public <R, D> R accept(TreeVisitor<R, D> visitor, D data) {
@@ -55,8 +54,7 @@ public abstract class UReturn extends USimpleStatement implements ReturnTree {
   }
 
   @Override
-  @Nullable
-  public Choice<Unifier> visitReturn(ReturnTree ret, @Nullable Unifier unifier) {
+  public @Nullable Choice<Unifier> visitReturn(ReturnTree ret, @Nullable Unifier unifier) {
     return unifyNullable(unifier, getExpression(), ret.getExpression());
   }
 }

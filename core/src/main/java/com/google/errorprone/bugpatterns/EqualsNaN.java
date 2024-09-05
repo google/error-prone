@@ -29,7 +29,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author lowasser@google.com (Louis Wasserman)
@@ -77,8 +77,7 @@ public class EqualsNaN extends BugChecker implements BinaryTreeMatcher {
     return (source == null) ? tree.toString() : source;
   }
 
-  @Nullable
-  private static String matchNaN(ExpressionTree tree) {
+  private static @Nullable String matchNaN(ExpressionTree tree) {
     Symbol sym = ASTHelpers.getSymbol(tree);
     if (sym != null
         && sym.owner != null

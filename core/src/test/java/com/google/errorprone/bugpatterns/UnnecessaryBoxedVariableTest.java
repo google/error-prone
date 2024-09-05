@@ -16,6 +16,8 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.auto.value.processor.AutoValueProcessor;
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
@@ -85,6 +87,25 @@ public class UnnecessaryBoxedVariableTest {
             "    };",
             "  }",
             "}")
+        .doTest();
+  }
+
+  @Test
+  public void positiveFactory() {
+    compilationTestHelper
+        .addSourceLines(
+            "Foo.java",
+            "import com.google.auto.value.AutoValue;",
+            "@AutoValue",
+            "abstract class Foo {",
+            "  abstract int getFoo();",
+            "  abstract boolean isBar();",
+            "  // BUG: Diagnostic contains: int foo",
+            "  static Foo create(Integer foo, Boolean bar) {",
+            "    return new AutoValue_Foo(foo, bar);",
+            "  }",
+            "}")
+        .setArgs(ImmutableList.of("-processor", AutoValueProcessor.class.getName()))
         .doTest();
   }
 }

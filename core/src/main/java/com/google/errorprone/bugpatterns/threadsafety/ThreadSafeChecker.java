@@ -56,7 +56,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import javax.inject.Inject;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A {@link BugChecker}; see the associated {@link BugPattern} annotation for details.
@@ -99,10 +99,10 @@ public class ThreadSafeChecker extends BugChecker
 
   @Override
   public Description matchNewClass(NewClassTree tree, VisitorState state) {
-    // check instantiations of `@ThreadSafe.TypeParameter`s in generic constructor invocations
+    // check instantiations of `@ThreadSafeTypeParameter`s in generic constructor invocations
     checkInvocation(
         tree, ((JCNewClass) tree).constructorType, state, ((JCNewClass) tree).constructor);
-    // check instantiations of `@ThreadSafe.TypeParameter`s in class constructor invocations
+    // check instantiations of `@ThreadSafeTypeParameter`s in class constructor invocations
     ThreadSafeAnalysis analysis = new ThreadSafeAnalysis(this, state, wellKnownThreadSafety);
     Violation info =
         analysis.checkInstantiation(
@@ -138,7 +138,7 @@ public class ThreadSafeChecker extends BugChecker
     if (analysis.hasThreadSafeTypeParameterAnnotation((TypeVariableSymbol) sym)) {
       if (analysis.getThreadSafeAnnotation(sym.owner, state) == null) {
         return buildDescription(tree)
-            .setMessage("@ThreadSafe.TypeParameter is only supported on threadsafe classes")
+            .setMessage("@ThreadSafeTypeParameter is only supported on threadsafe classes")
             .build();
       }
     }
@@ -201,7 +201,7 @@ public class ThreadSafeChecker extends BugChecker
       return buildDescription(tree)
           .setMessage(
               String.format(
-                  "using both @ThreadSafe.TypeParameter and @ThreadSafe.Element is redundant: %s",
+                  "using both @ThreadSafeTypeParameter and @ThreadSafe.Element is redundant: %s",
                   Joiner.on("', '").join(threadSafeAndContainer)))
           .build();
     }

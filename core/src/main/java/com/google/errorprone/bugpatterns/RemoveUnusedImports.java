@@ -46,7 +46,7 @@ import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.tree.DCTree.DCReference;
 import java.util.LinkedHashSet;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author gak@google.com (Gregory Kick)

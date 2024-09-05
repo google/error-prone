@@ -22,7 +22,7 @@ import com.google.auto.value.AutoValue;
 import com.sun.source.tree.AssertTree;
 import com.sun.source.tree.TreeVisitor;
 import com.sun.tools.javac.tree.JCTree.JCStatement;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * {@code UTree} representation of an assertion.
@@ -50,8 +50,7 @@ abstract class UAssert extends USimpleStatement implements AssertTree {
   public abstract UExpression getCondition();
 
   @Override
-  @Nullable
-  public abstract UExpression getDetail();
+  public abstract @Nullable UExpression getDetail();
 
   @Override
   public Choice<Unifier> visitAssert(AssertTree node, Unifier unifier) {

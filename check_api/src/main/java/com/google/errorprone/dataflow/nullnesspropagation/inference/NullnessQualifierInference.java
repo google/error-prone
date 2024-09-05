@@ -63,8 +63,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
-import javax.annotation.Nullable;
 import javax.lang.model.type.TypeVariable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Eagerly traverse one {@code MethodTree} at a time and accumulate constraints between nullness
@@ -530,7 +530,6 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
 
     abstract Type type();
 
-    @Nullable
-    abstract VarSymbol symbol();
+    abstract @Nullable VarSymbol symbol();
   }
 }

@@ -46,7 +46,7 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author epmjohnston@google.com (Emily P.M. Johnston)
@@ -101,8 +101,7 @@ public class IsLoggableTagLength extends BugChecker implements MethodInvocationT
     return Utf8.encodedLength(tag) <= 23;
   }
 
-  @Nullable
-  private static VariableTree findEnclosingIdentifier(
+  private static @Nullable VariableTree findEnclosingIdentifier(
       IdentifierTree originalNode, VisitorState state) {
     Symbol identifierSymbol = getSymbol(originalNode);
     if (!(identifierSymbol instanceof VarSymbol)) {
@@ -112,9 +111,8 @@ public class IsLoggableTagLength extends BugChecker implements MethodInvocationT
         .findEnclosing(ClassTree.class)
         .accept(
             new TreeScanner<VariableTree, Void>() {
-              @Nullable
               @Override
-              public VariableTree visitVariable(VariableTree node, Void p) {
+              public @Nullable VariableTree visitVariable(VariableTree node, Void p) {
                 return getSymbol(node).equals(identifierSymbol) ? node : null;
               }
 

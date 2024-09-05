@@ -50,7 +50,7 @@ public final class ProtoRules {
    */
   public static ResultUseRule<VisitorState, Symbol> mutableProtos() {
     return new ProtoRule(
-        isDescendantOfAny(ImmutableSet.of("com.google.protobuf.AbstractMutableMessageLite")),
+        isDescendantOfAny(ImmutableSet.of("com.google.protobuf.MutableMessageLite")),
         "MUTABLE_PROTO");
   }
 

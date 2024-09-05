@@ -39,7 +39,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.TryTree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreeScanner;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Suggests that calls to {@code Lock.lock} must be immediately followed by a {@code try-finally}

@@ -38,7 +38,7 @@ public class SourceVersionTest {
     Context context = contextWithSourceVersion("14");
 
     assertThat(SourceVersion.supportsSwitchExpressions(context))
-        .isEqualTo(RuntimeVersion.isAtLeast14());
+        .isEqualTo(Runtime.version().feature() >= 14);
   }
 
   @Test
@@ -52,7 +52,8 @@ public class SourceVersionTest {
   public void supportsTextBlocks_conditionallySupported() {
     Context context = contextWithSourceVersion("15");
 
-    assertThat(SourceVersion.supportsTextBlocks(context)).isEqualTo(RuntimeVersion.isAtLeast15());
+    assertThat(SourceVersion.supportsTextBlocks(context))
+        .isEqualTo(Runtime.version().feature() >= 15);
   }
 
   private static Context contextWithSourceVersion(String versionString) {

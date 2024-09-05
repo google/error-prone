@@ -17,7 +17,7 @@
 package com.google.errorprone.apply;
 
 import java.io.IOException;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Supplier of file differences.

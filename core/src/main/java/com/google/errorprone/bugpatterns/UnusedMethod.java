@@ -98,6 +98,13 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
   private static final String JUNIT_PARAMS_VALUE = "value";
   private static final String JUNIT_PARAMS_ANNOTATION_TYPE = "junitparams.Parameters";
 
+  /**
+   * Annotations that exempt methods from being considered unused.
+   *
+   * <p>Try to avoid adding more annotations here. Annotating these annotations with {@code @Keep}
+   * has the same effect; this list is chiefly for third-party annotations which cannot be
+   * annotated.
+   */
   private static final ImmutableSet<String> EXEMPTING_METHOD_ANNOTATIONS =
       ImmutableSet.of(
           "com.fasterxml.jackson.annotation.JsonAnyGetter",
@@ -166,10 +173,22 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
           "org.junit.jupiter.api.Test",
           "org.junit.jupiter.params.ParameterizedTest");
 
-  /** Class annotations which exempt methods within the annotated class from findings. */
+  /**
+   * Class annotations which exempt methods within the annotated class from findings.
+   *
+   * <p>Try to avoid adding more annotations here. Annotating these annotations with {@code @Keep}
+   * has the same effect; this list is chiefly for third-party annotations which cannot be
+   * annotated.
+   */
   private static final ImmutableSet<String> EXEMPTING_CLASS_ANNOTATIONS = ImmutableSet.of();
 
-  /** The set of types exempting a type that is extending or implementing them. */
+  /**
+   * The set of types exempting a type that is extending or implementing them.
+   *
+   * <p>Try to avoid adding more annotations here. Annotating these annotations with {@code @Keep}
+   * has the same effect; this list is chiefly for third-party annotations which cannot be
+   * annotated.
+   */
   private static final ImmutableSet<String> EXEMPTING_SUPER_TYPES = ImmutableSet.of();
 
   private final ImmutableSet<String> exemptingMethodAnnotations;

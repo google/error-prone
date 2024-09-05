@@ -61,7 +61,7 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 import java.util.Optional;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(summary = "Suggests alternatives to obsolete JDK classes.", severity = WARNING)
@@ -230,8 +230,7 @@ public class JdkObsolete extends BugChecker
     return NO_MATCH;
   }
 
-  @Nullable
-  private static Type getMethodOrLambdaReturnType(VisitorState state) {
+  private static @Nullable Type getMethodOrLambdaReturnType(VisitorState state) {
     for (Tree tree : state.getPath()) {
       switch (tree.getKind()) {
         case LAMBDA_EXPRESSION:
@@ -246,8 +245,7 @@ public class JdkObsolete extends BugChecker
     return null;
   }
 
-  @Nullable
-  static Type getTargetType(VisitorState state) {
+  static @Nullable Type getTargetType(VisitorState state) {
     Tree parent = state.getPath().getParentPath().getLeaf();
     Type type;
     if (parent instanceof VariableTree || parent instanceof AssignmentTree) {
@@ -353,8 +351,7 @@ public class JdkObsolete extends BugChecker
     return Optional.of(fix.build());
   }
 
-  @Nullable
-  private static TreePath findEnclosingMethod(VisitorState state) {
+  private static @Nullable TreePath findEnclosingMethod(VisitorState state) {
     TreePath path = state.getPath();
     while (path != null) {
       switch (path.getLeaf().getKind()) {

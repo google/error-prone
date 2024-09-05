@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.fixes.SuggestedFixes.prettyType;
 import static com.google.errorprone.fixes.SuggestedFixes.qualifyType;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
@@ -28,6 +29,7 @@ import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
+import static com.google.errorprone.util.ASTHelpers.hasExplicitSource;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
@@ -66,8 +68,8 @@ import com.sun.tools.javac.util.Position;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
-import javax.annotation.Nullable;
 import javax.lang.model.element.ElementKind;
+import org.jspecify.annotations.Nullable;
 
 /**
  * An abstract check for resources that must be closed; used by {@link StreamResourceLeak} and
@@ -350,8 +352,7 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
    * Returns the enclosing method of the given visitor state. Returns null if the state is within a
    * lambda expression or anonymous class.
    */
-  @Nullable
-  private static MethodTree enclosingMethod(VisitorState state) {
+  private static @Nullable MethodTree enclosingMethod(VisitorState state) {
     for (Tree node : state.getPath().getParentPath()) {
       switch (node.getKind()) {
         case LAMBDA_EXPRESSION:
@@ -468,16 +469,29 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
   private static Optional<Change> splitVariableDeclarationAroundTry(
       ExpressionTree tree, VariableTree var, VisitorState state, NameSuggester suggester) {
     int initPos = getStartPosition(var.getInitializer());
-    int afterTypePos = state.getEndPosition(var.getType());
+    Tree type = var.getType();
+    String typePrefix;
+    int startPos;
+    if (hasExplicitSource(type, state)) {
+      startPos = state.getEndPosition(type);
+      typePrefix = "";
+    } else {
+      startPos = getStartPosition(var);
+      typePrefix = prettyType(getType(type), state);
+    }
     String name = suggester.suggestName(tree);
     return Change.builder(
             SuggestedFix.builder()
                 .replace(
-                    afterTypePos,
+                    startPos,
                     initPos,
                     String.format(
-                        " %s;\ntry (var %s = %s) {\n%s =",
-                        var.getName(), name, state.getSourceForNode(tree), var.getName()))
+                        "%s %s;\ntry (var %s = %s) {\n%s =",
+                        typePrefix,
+                        var.getName(),
+                        name,
+                        state.getSourceForNode(tree),
+                        var.getName()))
                 .replace(tree, name)
                 .build())
         .closeBraceAfter(var)

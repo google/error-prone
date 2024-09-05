@@ -55,9 +55,9 @@ import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import java.util.Objects;
 import java.util.Optional;
-import javax.annotation.Nullable;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
+import org.jspecify.annotations.Nullable;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
@@ -233,8 +233,8 @@ public class UnnecessaryAnonymousClass extends BugChecker implements VariableTre
     /**
      * Replace the given {@code node} with the method reference specified by {@code this.newName}.
      */
-    @Nullable
-    private SuggestedFix replaceUseWithMethodReference(ExpressionTree node, VisitorState state) {
+    private @Nullable SuggestedFix replaceUseWithMethodReference(
+        ExpressionTree node, VisitorState state) {
       Tree parent = state.getPath().getParentPath().getLeaf();
       if (parent instanceof MemberSelectTree
           && ((MemberSelectTree) parent).getExpression().equals(node)) {

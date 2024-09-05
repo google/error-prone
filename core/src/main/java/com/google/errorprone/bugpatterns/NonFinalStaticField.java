@@ -54,7 +54,7 @@ import javax.lang.model.element.Modifier;
 @BugPattern(summary = "Static fields should almost always be final.", severity = WARNING)
 public final class NonFinalStaticField extends BugChecker implements VariableTreeMatcher {
   private static final ImmutableSet<String> ANNOTATIONS_TO_AVOID =
-      ImmutableSet.of("Captor", "Inject", "Mock", "TestParameter");
+      ImmutableSet.of("Captor", "Inject", "LazyInit", "Mock", "TestParameter");
 
   private static final ImmutableSet<String> BEFORE_ALL_METHOD_ANNOTATIONS =
       ImmutableSet.of("org.junit.BeforeClass", "org.junit.jupiter.api.BeforeAll");

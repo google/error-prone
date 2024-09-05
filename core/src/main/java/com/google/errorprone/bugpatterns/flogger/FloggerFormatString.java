@@ -37,7 +37,7 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import java.util.List;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author cushon@google.com (Liam Miller-Cushon)
@@ -83,8 +83,8 @@ public class FloggerFormatString extends BugChecker implements MethodInvocationT
    * If there were more arguments than format specifiers and the last argument is an exception,
    * suggest using {@code withCause(e)} instead of adding a format specifier.
    */
-  @Nullable
-  private Fix withCauseFix(ValidationResult result, MethodInvocationTree tree, VisitorState state) {
+  private @Nullable Fix withCauseFix(
+      ValidationResult result, MethodInvocationTree tree, VisitorState state) {
     if (!result.message().startsWith("extra format arguments")) {
       return null;
     }

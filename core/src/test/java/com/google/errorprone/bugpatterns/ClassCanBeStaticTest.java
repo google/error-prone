@@ -16,6 +16,8 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.truth.TruthJUnit.assume;
+
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,7 +32,10 @@ public class ClassCanBeStaticTest {
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("ClassCanBeStaticNegativeCases.java").doTest();
+    compilationHelper
+        .addSourceFile("ClassCanBeStaticNegativeCases.java")
+        .setArgs("--release", "11")
+        .doTest();
   }
 
   @Test
@@ -329,6 +334,25 @@ public class ClassCanBeStaticTest {
             "public class A {",
             "  static void f() {",
             "    class Outer {",
+            "      class Inner {",
+            "      }",
+            "    }",
+            "  }",
+            "}")
+        .setArgs("--release", "11")
+        .doTest();
+  }
+
+  @Test
+  public void nestedInLocal_static() {
+    assume().that(Runtime.version().feature()).isAtLeast(16);
+    compilationHelper
+        .addSourceLines(
+            "A.java", //
+            "public class A {",
+            "  static void f() {",
+            "    class Outer {",
+            "      // BUG: Diagnostic contains:",
             "      class Inner {",
             "      }",
             "    }",

@@ -24,7 +24,7 @@ import com.google.common.base.Objects;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.TypeVar;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * {@link UType} version of {@link TypeVar}.
@@ -54,8 +54,7 @@ public class UTypeVar extends UType {
 
     public abstract Type type();
 
-    @Nullable
-    abstract JCExpression expression();
+    abstract @Nullable JCExpression expression();
 
     @Override
     public JCExpression inline(Inliner inliner) {

@@ -58,7 +58,7 @@ import java.io.StringWriter;
 import java.lang.annotation.Annotation;
 import java.util.Map;
 import java.util.logging.Logger;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Implementation of a template to match and replace an expression anywhere in an AST.

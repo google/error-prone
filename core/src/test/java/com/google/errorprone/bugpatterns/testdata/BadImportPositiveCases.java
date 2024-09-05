@@ -17,7 +17,7 @@ package com.google.errorprone.bugpatterns.testdata;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Tests for {@link BadImport}.

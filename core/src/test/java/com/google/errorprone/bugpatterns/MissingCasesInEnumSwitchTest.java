@@ -16,10 +16,9 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static org.junit.Assume.assumeTrue;
+import static com.google.common.truth.TruthJUnit.assume;
 
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -52,7 +51,7 @@ public class MissingCasesInEnumSwitchTest {
 
   @Test
   public void exhaustive_multipleCaseExpressions() {
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -155,6 +154,65 @@ public class MissingCasesInEnumSwitchTest {
             "  void m(Case e) {",
             "    // BUG: Diagnostic contains: ONE, TWO",
             "    switch (e) {",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void nonExhaustive_arrowStatement() {
+    assume().that(Runtime.version().feature()).isAtLeast(14);
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  enum Case { ONE, TWO }",
+            "  void m(Case c) {",
+            "    // BUG: Diagnostic contains: TWO",
+            "    switch (c) {",
+            "      case ONE -> {",
+            "        System.err.println(\"found it!\");",
+            "      }",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void nonExhaustive_multi() {
+    assume().that(Runtime.version().feature()).isAtLeast(14);
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  enum Case { ONE, TWO, THREE }",
+            "  void m(Case c) {",
+            "    // BUG: Diagnostic contains: THREE",
+            "    switch (c) {",
+            "      case ONE, TWO:",
+            "        System.err.println(\"found it!\");",
+            "    }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void nonExhaustive_multiArrow() {
+    assume().that(Runtime.version().feature()).isAtLeast(14);
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  enum Case { ONE, TWO, THREE }",
+            "  void m(Case c) {",
+            "    // BUG: Diagnostic contains: THREE",
+            "    switch (c) {",
+            "      case ONE, TWO -> {",
+            "        System.err.println(\"found it!\");",
+            "      }",
             "    }",
             "  }",
             "}")

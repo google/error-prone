@@ -39,7 +39,7 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import java.util.List;
 import java.util.Optional;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Detects occurrences of pairs of parameters being passed straight through to {@link String#format}
@@ -119,8 +119,7 @@ public final class AnnotateFormatMethod extends BugChecker implements MethodInvo
         .collect(toOptional());
   }
 
-  @Nullable
-  private static VarSymbol asSymbol(ExpressionTree tree) {
+  private static @Nullable VarSymbol asSymbol(ExpressionTree tree) {
     Symbol symbol = ASTHelpers.getSymbol(tree);
     return symbol instanceof VarSymbol ? (VarSymbol) symbol : null;
   }

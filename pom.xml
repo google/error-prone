@@ -21,7 +21,7 @@
   <name>Error Prone parent POM</name>
   <groupId>com.google.errorprone</groupId>
   <artifactId>error_prone_parent</artifactId>
-  <version>2.28.0</version>
+  <version>2.31.0</version>
   <packaging>pom</packaging>
 
   <description>Error Prone is a static analysis tool for Java that catches common programming mistakes at compile-time.</description>
@@ -45,8 +45,7 @@
     <nexus-staging-maven-plugin.version>1.6.13</nexus-staging-maven-plugin.version>
     <protobuf.version>3.19.6</protobuf.version>
     <grpc.version>1.43.3</grpc.version>
-    <jspecify.version>0.3.0</jspecify.version>
-    <guice.version>5.1.0</guice.version>
+    <jspecify.version>1.0.0</jspecify.version>
   </properties>
 
   <organization>
@@ -181,7 +180,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.10.1</version>
+        <version>3.13.0</version>
         <configuration>
           <source>11</source>
           <target>11</target>
@@ -247,6 +246,19 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <version>3.1.0</version>
         <configuration>
+          <jdkToolchain>
+            <!--
+            Test against the current default JDK, not the latest JDK a toolchain is registered for.
+
+            On Error Prone's CI, the JDK we want to run the tests against is installed last, to
+            make it the default on the PATH and for JAVA_HOME:
+            https://github.com/google/error-prone/blob/master/.github/workflows/ci.yml
+
+            See also Guava's similar logic here:
+            https://github.com/google/guava/blob/781068569f0a275ac3c4bce08c9a1fe4d624048a/pom.xml#L20
+            -->
+            <version>${java.specification.version}</version>
+          </jdkToolchain>
           <argLine>
             -Xmx1g
             --add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED
@@ -264,6 +276,26 @@
           </argLine>
           <trimStackTrace>false</trimStackTrace>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-toolchains-plugin</artifactId>
+        <version>3.2.0</version>
+        <configuration>
+          <toolchains>
+            <jdk>
+              <version>11</version>
+              <version>24</version>
+            </jdk>
+          </toolchains>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>toolchain</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>

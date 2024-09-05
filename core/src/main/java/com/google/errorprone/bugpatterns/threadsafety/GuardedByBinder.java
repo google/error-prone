@@ -37,7 +37,7 @@ import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.Names;
 import java.util.Optional;
 import javax.lang.model.element.Name;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A binder from {@code @GuardedBy} annotations to {@link GuardedByExpression}s.

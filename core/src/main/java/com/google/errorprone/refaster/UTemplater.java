@@ -115,12 +115,12 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.annotation.Nullable;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.MirroredTypeException;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Converts a type-checked syntax tree to a portable {@code UTree} template.
@@ -212,8 +212,7 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
     return tree.accept(this, null);
   }
 
-  @Nullable
-  private ImmutableList<Tree> templateTrees(@Nullable Iterable<? extends Tree> trees) {
+  private @Nullable ImmutableList<Tree> templateTrees(@Nullable Iterable<? extends Tree> trees) {
     if (trees == null) {
       return null;
     }
@@ -254,8 +253,7 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
     return (UExpression) tree.accept(this, null);
   }
 
-  @Nullable
-  private ImmutableList<UExpression> templateExpressions(
+  private @Nullable ImmutableList<UExpression> templateExpressions(
       @Nullable Iterable<? extends ExpressionTree> expressions) {
     if (expressions == null) {
       return null;
@@ -275,8 +273,7 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
     return template((ExpressionTree) tree);
   }
 
-  @Nullable
-  private ImmutableList<UExpression> templateTypeExpressions(
+  private @Nullable ImmutableList<UExpression> templateTypeExpressions(
       @Nullable Iterable<? extends Tree> types) {
     if (types == null) {
       return null;
@@ -694,8 +691,7 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
     return (UStatement) tree.accept(this, null);
   }
 
-  @Nullable
-  private ImmutableList<UStatement> templateStatements(
+  private @Nullable ImmutableList<UStatement> templateStatements(
       @Nullable List<? extends StatementTree> statements) {
     if (statements == null) {
       return null;
@@ -728,8 +724,7 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
         visitVariable(tree.getParameter(), null), visitBlock(tree.getBlock(), null));
   }
 
-  @Nullable
-  private PlaceholderMethod placeholder(@Nullable ExpressionTree expr) {
+  private @Nullable PlaceholderMethod placeholder(@Nullable ExpressionTree expr) {
     Map<MethodSymbol, PlaceholderMethod> placeholderMethods =
         context.get(RefasterRuleBuilderScanner.PLACEHOLDER_METHODS_KEY);
     return (placeholderMethods != null && expr != null)

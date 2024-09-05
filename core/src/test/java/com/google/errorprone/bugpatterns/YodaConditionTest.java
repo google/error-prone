@@ -251,4 +251,22 @@ public final class YodaConditionTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void unqualified() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.base.Objects;",
+            "class Test {",
+            "  @Override",
+            "  public boolean equals(Object other) {",
+            "    return Objects.equal(this, other);",
+            "  }",
+            "  public boolean foo(Object other) {",
+            "    return equals(other);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

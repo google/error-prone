@@ -50,11 +50,15 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
+import java.util.regex.Pattern;
 import javax.lang.model.element.ElementKind;
 
 /** See the summary. */
 @BugPattern(summary = "Possible class initialization deadlock", severity = WARNING)
 public class ClassInitializationDeadlock extends BugChecker implements BugChecker.ClassTreeMatcher {
+
+  private static final Pattern AUTO_VALUE_PREFIX = Pattern.compile("\\$*AutoValue_.*");
+
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
     ClassSymbol classSymbol = getSymbol(tree);
@@ -223,7 +227,7 @@ public class ClassInitializationDeadlock extends BugChecker implements BugChecke
       // methods), it can't be directly instantiated outside the current file.
       return false;
     }
-    if (use.getSimpleName().toString().startsWith("AutoValue_")) {
+    if (AUTO_VALUE_PREFIX.matcher(use.getSimpleName().toString()).matches()) {
       // AutoValue generated code is necessarily package-private, but should only be  accessed
       // within the declaration of the corresponding base class. See also the discussion of
       // AutoValue in

@@ -22,7 +22,7 @@ import com.google.auto.value.AutoValue;
 import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.TreeVisitor;
 import com.sun.tools.javac.tree.JCTree.JCConditional;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * {@link UTree} version of {@link ConditionalExpressionTree}.
@@ -46,8 +46,7 @@ abstract class UConditional extends UExpression implements ConditionalExpression
   public abstract UExpression getFalseExpression();
 
   @Override
-  @Nullable
-  public Choice<Unifier> visitConditionalExpression(
+  public @Nullable Choice<Unifier> visitConditionalExpression(
       ConditionalExpressionTree conditional, Unifier unifier) {
     return getCondition()
         .unify(conditional.getCondition(), unifier.fork())

@@ -23,7 +23,7 @@ import com.google.common.collect.ImmutableList;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.MethodType;
 import java.util.List;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A {@code UType} representation of a {@link MethodType}. This can be used to e.g. disambiguate
@@ -47,8 +47,7 @@ public abstract class UMethodType extends UType {
   public abstract ImmutableList<UType> getParameterTypes();
 
   @Override
-  @Nullable
-  public Choice<Unifier> visitMethodType(MethodType methodTy, @Nullable Unifier unifier) {
+  public @Nullable Choice<Unifier> visitMethodType(MethodType methodTy, @Nullable Unifier unifier) {
     // Don't unify the return type, which doesn't matter in overload resolution.
     return unifyList(unifier, getParameterTypes(), methodTy.getParameterTypes());
   }

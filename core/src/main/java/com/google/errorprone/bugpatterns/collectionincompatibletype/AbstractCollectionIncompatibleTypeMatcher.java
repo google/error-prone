@@ -30,7 +30,7 @@ import com.sun.tools.javac.code.Types;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Extracts the necessary information from a {@link MethodInvocationTree} to check whether calls to
@@ -57,11 +57,9 @@ public abstract class AbstractCollectionIncompatibleTypeMatcher {
    *
    * @return the source type or null if not available
    */
-  @Nullable
-  abstract Type extractSourceType(MethodInvocationTree tree, VisitorState state);
+  abstract @Nullable Type extractSourceType(MethodInvocationTree tree, VisitorState state);
 
-  @Nullable
-  abstract Type extractSourceType(MemberReferenceTree tree, VisitorState state);
+  abstract @Nullable Type extractSourceType(MemberReferenceTree tree, VisitorState state);
 
   /**
    * Returns the AST node from which the source type was extracted. Needed to produce readable error
@@ -76,11 +74,10 @@ public abstract class AbstractCollectionIncompatibleTypeMatcher {
    *
    * @return the source AST node or null if not available
    */
-  @Nullable
-  abstract ExpressionTree extractSourceTree(MethodInvocationTree tree, VisitorState state);
+  abstract @Nullable ExpressionTree extractSourceTree(
+      MethodInvocationTree tree, VisitorState state);
 
-  @Nullable
-  abstract ExpressionTree extractSourceTree(MemberReferenceTree tree, VisitorState state);
+  abstract @Nullable ExpressionTree extractSourceTree(MemberReferenceTree tree, VisitorState state);
 
   /**
    * Extracts the target type to which the source type must be castable. For example, in this code
@@ -95,11 +92,9 @@ public abstract class AbstractCollectionIncompatibleTypeMatcher {
    *
    * @return the target type or null if not available
    */
-  @Nullable
-  abstract Type extractTargetType(MethodInvocationTree tree, VisitorState state);
+  abstract @Nullable Type extractTargetType(MethodInvocationTree tree, VisitorState state);
 
-  @Nullable
-  abstract Type extractTargetType(MemberReferenceTree tree, VisitorState state);
+  abstract @Nullable Type extractTargetType(MemberReferenceTree tree, VisitorState state);
 
   /**
    * Encapsulates the result of matching a {@link Collection#contains}-like call, including the
@@ -133,8 +128,7 @@ public abstract class AbstractCollectionIncompatibleTypeMatcher {
     }
   }
 
-  @Nullable
-  public final MatchResult matches(ExpressionTree tree, VisitorState state) {
+  public final @Nullable MatchResult matches(ExpressionTree tree, VisitorState state) {
     if (!methodMatcher().matches(tree, state)) {
       return null;
     }
@@ -160,8 +154,7 @@ public abstract class AbstractCollectionIncompatibleTypeMatcher {
     }.visit(tree, null);
   }
 
-  @Nullable
-  private MatchResult getMatchResult(
+  private @Nullable MatchResult getMatchResult(
       @Nullable ExpressionTree sourceTree, @Nullable Type sourceType, @Nullable Type targetType) {
     if (sourceTree == null || sourceType == null || targetType == null) {
       return null;
@@ -181,8 +174,7 @@ public abstract class AbstractCollectionIncompatibleTypeMatcher {
    * @param types the {@link Types} utility class from the {@link VisitorState}
    * @return the type argument, if defined, or null otherwise
    */
-  @Nullable
-  protected static Type extractTypeArgAsMemberOfSupertype(
+  protected static @Nullable Type extractTypeArgAsMemberOfSupertype(
       Type type, Symbol superTypeSym, int typeArgIndex, Types types) {
     Type collectionType = types.asSuper(type, superTypeSym);
     if (collectionType == null) {

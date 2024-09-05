@@ -50,7 +50,7 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import java.util.HashSet;
 import java.util.Set;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * {@link BugChecker} adds a null check to {@code equals()} method implementations which don't
@@ -131,8 +131,7 @@ public class EqualsBrokenForNull extends BugChecker implements MethodTreeMatcher
        * Unwraps expressions like `(Foo) foo` or `((Foo) foo)` to return the VarSymbol of `foo`, or
        * null if the expression wasn't of this form.
        */
-      @Nullable
-      private VarSymbol findVariable(Tree tree) {
+      private @Nullable VarSymbol findVariable(Tree tree) {
         while (tree != null) {
           switch (tree.getKind()) {
             case TYPE_CAST:

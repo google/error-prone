@@ -49,7 +49,7 @@ import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * TODO(eaftan): Consider cases where the parent is not a statement or there is no parent?

@@ -13283,9 +13283,6 @@ Msun/jvm/hotspot/debugger/posix/elf/ELFFileParser$ELFFileImpl$ELFHashTableImpl
 3
 1
 /org/graalvm/compiler/nodes/DirectCallTargetNode
-(
-&
-$java/util/concurrent/Flow$Subscriber
 8
 6
 4org/graalvm/compiler/lir/aarch64/AArch64BreakpointOp
@@ -14909,9 +14906,6 @@ $java/util/PrimitiveIterator$OfDouble
 6
 4
 2org/graalvm/compiler/hotspot/word/HotSpotWordTypes
-'
-%
-#java/util/concurrent/Flow$Publisher
 E
 C
 Asun/jvm/hotspot/debugger/cdbg/basic/BasicIndexableFieldIdentifier
@@ -22235,9 +22229,6 @@ Borg/graalvm/compiler/lir/constopt/ConstantLoadOptimization$Options
 )
 '
 %jdk/internal/agent/resources/agent_it
-
-
-java/util/concurrent/Flow
 E
 C
 Aorg/graalvm/compiler/debug/MemUseTrackerKeyImpl$FlatMemUseTracker
@@ -22901,9 +22892,6 @@ Csun/security/ssl/SSLTrafficKeyDerivation$LegacyTrafficKeyDerivation
 4
 2
 0jdk/javadoc/internal/doclets/toolkit/ClassWriter
-*
-(
-&java/util/concurrent/Flow$Subscription
 N
 L
 Jcom/sun/org/apache/xml/internal/security/signature/reference/ReferenceData
@@ -30773,9 +30761,6 @@ $
 /
 -
 +sun/jvm/hotspot/debugger/cdbg/ClosestSymbol
-'
-%
-#java/util/concurrent/Flow$Processor
 '
 %
 #org/graalvm/compiler/bytecode/Bytes

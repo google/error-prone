@@ -27,27 +27,22 @@ import org.junit.runners.JUnit4;
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
 @RunWith(JUnit4.class)
-public class ScopeOrQualifierAnnotationRetentionTest {
+public class MissingRuntimeRetentionTest {
 
   private final BugCheckerRefactoringTestHelper refactoringTestHelper =
-      BugCheckerRefactoringTestHelper.newInstance(
-          ScopeOrQualifierAnnotationRetention.class, getClass());
+      BugCheckerRefactoringTestHelper.newInstance(MissingRuntimeRetention.class, getClass());
 
   private final CompilationTestHelper compilationHelper =
-      CompilationTestHelper.newInstance(ScopeOrQualifierAnnotationRetention.class, getClass());
+      CompilationTestHelper.newInstance(MissingRuntimeRetention.class, getClass());
 
   @Test
   public void positiveCase() {
-    compilationHelper
-        .addSourceFile("ScopeOrQualifierAnnotationRetentionPositiveCases.java")
-        .doTest();
+    compilationHelper.addSourceFile("MissingRuntimeRetentionPositiveCases.java").doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper
-        .addSourceFile("ScopeOrQualifierAnnotationRetentionNegativeCases.java")
-        .doTest();
+    compilationHelper.addSourceFile("MissingRuntimeRetentionNegativeCases.java").doTest();
   }
 
   @Test

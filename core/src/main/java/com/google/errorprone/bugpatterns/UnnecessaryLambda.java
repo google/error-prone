@@ -68,7 +68,7 @@ import java.util.Objects;
 import java.util.function.Predicate;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(

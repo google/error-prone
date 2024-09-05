@@ -16,11 +16,10 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static org.junit.Assume.assumeFalse;
+import static com.google.common.truth.TruthJUnit.assume;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -36,7 +35,7 @@ public class NewFileSystemTest {
 
   @Test
   public void refactoring() {
-    assumeFalse(RuntimeVersion.isAtLeast13());
+    assume().that(Runtime.version().feature()).isLessThan(13);
     refactoringTestHelper
         .addInputLines(
             "Test.java",

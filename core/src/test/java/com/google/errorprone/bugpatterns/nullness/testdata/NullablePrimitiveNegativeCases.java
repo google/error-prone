@@ -16,7 +16,7 @@
 
 package com.google.errorprone.bugpatterns.testdata;
 
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author sebastian.h.monte@gmail.com (Sebastian Monte)

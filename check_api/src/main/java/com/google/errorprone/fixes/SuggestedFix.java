@@ -35,7 +35,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
@@ -294,7 +294,7 @@ public abstract class SuggestedFix implements Fix {
 
     /**
      * Add an import statement as part of this SuggestedFix. Import string should be of the form
-     * "foo.bar.baz".
+     * "foo.bar.SomeClass".
      */
     @CanIgnoreReturnValue
     public Builder addImport(String importString) {
@@ -304,7 +304,7 @@ public abstract class SuggestedFix implements Fix {
 
     /**
      * Add a static import statement as part of this SuggestedFix. Import string should be of the
-     * form "foo.bar.baz".
+     * form "foo.bar.SomeClass.someMethod" or "foo.bar.SomeClass.SOME_FIELD".
      */
     @CanIgnoreReturnValue
     public Builder addStaticImport(String importString) {
@@ -314,7 +314,7 @@ public abstract class SuggestedFix implements Fix {
 
     /**
      * Remove an import statement as part of this SuggestedFix. Import string should be of the form
-     * "foo.bar.baz".
+     * "foo.bar.SomeClass".
      */
     @CanIgnoreReturnValue
     public Builder removeImport(String importString) {
@@ -324,7 +324,7 @@ public abstract class SuggestedFix implements Fix {
 
     /**
      * Remove a static import statement as part of this SuggestedFix. Import string should be of the
-     * form "foo.bar.baz".
+     * form "foo.bar.SomeClass.someMethod" or "foo.bar.SomeClass.SOME_FIELD".
      */
     @CanIgnoreReturnValue
     public Builder removeStaticImport(String importString) {

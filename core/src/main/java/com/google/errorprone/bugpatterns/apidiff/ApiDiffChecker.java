@@ -35,10 +35,9 @@ import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.code.Types;
 import java.lang.annotation.Annotation;
 import java.util.Optional;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /** A base Error Prone check implementation to enforce compliance with a given API diff. */
 public abstract class ApiDiffChecker extends BugChecker
@@ -80,9 +79,8 @@ public abstract class ApiDiffChecker extends BugChecker
       // e.g. package symbols
       return Description.NO_MATCH;
     }
-    Types types = state.getTypes();
     // check for information associated with the class
-    if (apiDiff.isClassUnsupported(Signatures.classDescriptor(receiver.type, types))
+    if (apiDiff.isClassUnsupported(Signatures.classDescriptor(receiver.type, state))
         || classOrEnclosingClassIsForbiddenByAnnotation(receiver, state)) {
       return buildDescription(tree)
           .setMessage(String.format("%s is not available", receiver))
@@ -94,9 +92,9 @@ public abstract class ApiDiffChecker extends BugChecker
     }
     ClassMemberKey memberKey =
         ClassMemberKey.create(
-            sym.getSimpleName().toString(), Signatures.descriptor(sym.type, types));
+            sym.getSimpleName().toString(), Signatures.descriptor(sym.type, state));
     ClassSymbol owner = sym.owner.enclClass();
-    if (apiDiff.isMemberUnsupported(Signatures.classDescriptor(owner.type, types), memberKey)
+    if (apiDiff.isMemberUnsupported(Signatures.classDescriptor(owner.type, state), memberKey)
         || hasAnnotationForbiddingUse(sym, state)) {
       return buildDescription(tree)
           .setMessage(String.format("%s#%s is not available in %s", owner, sym, receiver))

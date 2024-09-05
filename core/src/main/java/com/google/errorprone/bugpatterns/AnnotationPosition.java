@@ -61,9 +61,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
-import javax.annotation.Nullable;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.Name;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Checks annotation positioning, and orphaned Javadocs.
@@ -325,8 +325,8 @@ public final class AnnotationPosition extends BugChecker
     return danglingJavadoc.getText();
   }
 
-  @Nullable
-  private static ErrorProneComment findOrphanedJavadoc(Name name, List<ErrorProneToken> tokens) {
+  private static @Nullable ErrorProneComment findOrphanedJavadoc(
+      Name name, List<ErrorProneToken> tokens) {
     for (ErrorProneToken token : tokens) {
       for (ErrorProneComment comment : token.comments()) {
         if (comment.getText().startsWith("/**")) {

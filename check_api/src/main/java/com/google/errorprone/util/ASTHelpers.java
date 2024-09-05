@@ -23,6 +23,7 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.common.collect.Streams.stream;
+import static com.google.errorprone.VisitorState.memoize;
 import static com.google.errorprone.matchers.JUnitMatchers.JUNIT4_RUN_WITH_ANNOTATION;
 import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
 import static com.sun.tools.javac.code.Scope.LookupKind.NON_RECURSIVE;
@@ -108,7 +109,6 @@ import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Scope;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
-import com.sun.tools.javac.code.Symbol.CompletionFailure;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.PackageSymbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
@@ -170,11 +170,11 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
-import javax.annotation.Nullable;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.type.TypeKind;
+import org.jspecify.annotations.Nullable;
 
 /** This class contains utility methods to work with the javac AST. */
 public class ASTHelpers {
@@ -224,8 +224,7 @@ public class ASTHelpers {
    * Gets the symbol declared by a tree. Returns null if {@code tree} does not declare a symbol or
    * is null.
    */
-  @Nullable
-  public static Symbol getDeclaredSymbol(Tree tree) {
+  public static @Nullable Symbol getDeclaredSymbol(Tree tree) {
     if (tree instanceof PackageTree) {
       return getSymbol((PackageTree) tree);
     }
@@ -250,8 +249,7 @@ public class ASTHelpers {
    * the wrong type, if {@code tree} is null, or if the symbol cannot be found due to a compilation
    * error.
    */
-  @Nullable
-  public static Symbol getSymbol(Tree tree) {
+  public static @Nullable Symbol getSymbol(Tree tree) {
     if (tree instanceof AnnotationTree) {
       return getSymbol(((AnnotationTree) tree).getAnnotationType());
     }
@@ -262,14 +260,13 @@ public class ASTHelpers {
       return ((JCIdent) tree).sym;
     }
     if (tree instanceof JCMethodInvocation) {
-      return ASTHelpers.getSymbol((MethodInvocationTree) tree);
+      return getSymbol((MethodInvocationTree) tree);
     }
     if (tree instanceof JCNewClass) {
-      return ASTHelpers.getSymbol((NewClassTree) tree);
+      return getSymbol((NewClassTree) tree);
     }
     if (tree instanceof MemberReferenceTree) {
-      // TODO: b/285157761 - Delegate to the MemberReferenceTree overload.
-      return ((JCMemberReference) tree).sym;
+      return getSymbol((MemberReferenceTree) tree);
     }
     if (tree instanceof JCAnnotatedType) {
       return getSymbol(((JCAnnotatedType) tree).underlyingType);
@@ -440,15 +437,13 @@ public class ASTHelpers {
    * Given a TreePath, walks up the tree until it finds a node of the given type. Returns null if no
    * such node is found.
    */
-  @Nullable
-  public static <T> T findEnclosingNode(TreePath path, Class<T> klass) {
+  public static <T> @Nullable T findEnclosingNode(TreePath path, Class<T> klass) {
     path = findPathFromEnclosingNodeToTopLevel(path, klass);
     return (path == null) ? null : klass.cast(path.getLeaf());
   }
 
   /** Finds the enclosing {@link MethodTree}. Returns {@code null} if no such node found. */
-  @Nullable
-  public static MethodTree findEnclosingMethod(VisitorState state) {
+  public static @Nullable MethodTree findEnclosingMethod(VisitorState state) {
     for (Tree parent : state.getPath()) {
       switch (parent.getKind()) {
         case METHOD:
@@ -478,8 +473,8 @@ public class ASTHelpers {
    * java.lang.String.format() ==> null
    * }</pre>
    */
-  @Nullable
-  public static ExpressionTree getRootAssignable(MethodInvocationTree methodInvocationTree) {
+  public static @Nullable ExpressionTree getRootAssignable(
+      MethodInvocationTree methodInvocationTree) {
     if (!(methodInvocationTree instanceof JCMethodInvocation)) {
       throw new IllegalArgumentException(
           "Expected type to be JCMethodInvocation, but was " + methodInvocationTree.getClass());
@@ -538,8 +533,7 @@ public class ASTHelpers {
    * @param expressionTree the tree to evaluate
    * @return the result type of this tree or null if unable to resolve it
    */
-  @Nullable
-  public static Type getResultType(ExpressionTree expressionTree) {
+  public static @Nullable Type getResultType(ExpressionTree expressionTree) {
     Type type = ASTHelpers.getType(expressionTree);
     return type == null ? null : Optional.ofNullable(type.getReturnType()).orElse(type);
   }
@@ -593,8 +587,7 @@ public class ASTHelpers {
    * aStaticallyImportedMethod() ==> null
    * }</pre>
    */
-  @Nullable
-  public static ExpressionTree getReceiver(ExpressionTree expressionTree) {
+  public static @Nullable ExpressionTree getReceiver(ExpressionTree expressionTree) {
     if (expressionTree instanceof MethodInvocationTree) {
       ExpressionTree methodSelect = ((MethodInvocationTree) expressionTree).getMethodSelect();
       if (methodSelect instanceof IdentifierTree) {
@@ -652,8 +645,7 @@ public class ASTHelpers {
    * @param state the VisitorState
    * @return a list of matched operands, or null if at least one did not match
    */
-  @Nullable
-  public static List<ExpressionTree> matchBinaryTree(
+  public static @Nullable List<ExpressionTree> matchBinaryTree(
       BinaryTree tree, List<Matcher<ExpressionTree>> matchers, VisitorState state) {
     ExpressionTree leftOperand = tree.getLeftOperand();
     ExpressionTree rightOperand = tree.getRightOperand();
@@ -671,8 +663,7 @@ public class ASTHelpers {
    * Returns the method tree that matches the given symbol within the compilation unit, or null if
    * none was found.
    */
-  @Nullable
-  public static MethodTree findMethod(MethodSymbol symbol, VisitorState state) {
+  public static @Nullable MethodTree findMethod(MethodSymbol symbol, VisitorState state) {
     return JavacTrees.instance(state.context).getTree(symbol);
   }
 
@@ -680,15 +671,13 @@ public class ASTHelpers {
    * Returns the class tree that matches the given symbol within the compilation unit, or null if
    * none was found.
    */
-  @Nullable
-  public static ClassTree findClass(ClassSymbol symbol, VisitorState state) {
+  public static @Nullable ClassTree findClass(ClassSymbol symbol, VisitorState state) {
     return JavacTrees.instance(state.context).getTree(symbol);
   }
 
   // TODO(ghm): Using a comparison of tsym here appears to be a behaviour change.
   @SuppressWarnings("TypeEquals")
-  @Nullable
-  public static MethodSymbol findSuperMethodInType(
+  public static @Nullable MethodSymbol findSuperMethodInType(
       MethodSymbol methodSymbol, Type superType, Types types) {
     if (methodSymbol.isStatic() || superType.equals(methodSymbol.owner.type)) {
       return null;
@@ -831,7 +820,7 @@ public class ASTHelpers {
    * inherited from superclasses due to {@code @Inherited}.
    *
    * @param annotationClass the binary class name of the annotation (e.g.
-   *     "javax.annotation.Nullable", or "some.package.OuterClassName$InnerClassName")
+   *     "org.jspecify.annotations.Nullable", or "some.package.OuterClassName$InnerClassName")
    * @return true if the symbol is annotated with given type.
    */
   public static boolean hasAnnotation(Symbol sym, String annotationClass, VisitorState state) {
@@ -877,7 +866,7 @@ public class ASTHelpers {
    * Check for the presence of an annotation, considering annotation inheritance.
    *
    * @param annotationClass the binary class name of the annotation (e.g.
-   *     "javax.annotation.Nullable", or "some.package.OuterClassName$InnerClassName")
+   *     "org.jspecify.annotations.Nullable", or "some.package.OuterClassName$InnerClassName")
    * @return true if the tree is annotated with given type.
    */
   public static boolean hasAnnotation(Tree tree, String annotationClass, VisitorState state) {
@@ -913,15 +902,17 @@ public class ASTHelpers {
         .get(
             annotationName,
             name -> {
+              if (name.equals(NULL_MARKED_NAME.get(state))) {
+                /*
+                 * We avoid searching for @Inherited on NullMarked not just because we already know
+                 * the answer but also because the search would cause issues under --release 8 on
+                 * account of NullMarked's use of @Target(MODULE, ...).
+                 */
+                return false;
+              }
               Symbol annotationSym = state.getSymbolFromName(annotationName);
               if (annotationSym == null) {
                 return false;
-              }
-              try {
-                annotationSym.complete();
-              } catch (CompletionFailure e) {
-                /* @Inherited won't work if the annotation isn't on the classpath, but we can still
-                check if it's present directly */
               }
               Symbol inheritedSym = state.getSymtab().inheritedType.tsym;
               return annotationSym.attribute(inheritedSym) != null;
@@ -1104,9 +1095,9 @@ public class ASTHelpers {
    *     {@link #getAnnotations} (or a direct call to a {@code getAnnotations} method declared on a
    *     specific {@link Tree} subclass) instead.
    */
-  @Nullable
   @Deprecated
-  public static <T extends Annotation> T getAnnotation(Tree tree, Class<T> annotationClass) {
+  public static <T extends Annotation> @Nullable T getAnnotation(
+      Tree tree, Class<T> annotationClass) {
     Symbol sym = getSymbol(tree);
     return sym == null ? null : getAnnotation(sym, annotationClass);
   }
@@ -1119,10 +1110,10 @@ public class ASTHelpers {
    *     runtime exception. Instead, operate on {@code sym.getAnnotationMirrors()} to
    *     meta-syntactically inspect the annotation.
    */
-  @Nullable
   @Deprecated
   @SuppressWarnings("deprecation")
-  public static <T extends Annotation> T getAnnotation(Symbol sym, Class<T> annotationClass) {
+  public static <T extends Annotation> @Nullable T getAnnotation(
+      Symbol sym, Class<T> annotationClass) {
     return sym == null ? null : sym.getAnnotation(annotationClass);
   }
 
@@ -1193,8 +1184,7 @@ public class ASTHelpers {
    * Returns the {@code Type} of the given tree, or {@code null} if the type could not be
    * determined.
    */
-  @Nullable
-  public static Type getType(@Nullable Tree tree) {
+  public static @Nullable Type getType(@Nullable Tree tree) {
     return tree instanceof JCTree ? ((JCTree) tree).type : null;
   }
 
@@ -1202,14 +1192,12 @@ public class ASTHelpers {
    * Returns the {@code ClassType} for the given type {@code ClassTree} or {@code null} if the type
    * could not be determined.
    */
-  @Nullable
-  public static ClassType getType(@Nullable ClassTree tree) {
+  public static @Nullable ClassType getType(@Nullable ClassTree tree) {
     Type type = getType((Tree) tree);
     return type instanceof ClassType ? (ClassType) type : null;
   }
 
-  @Nullable
-  public static String getAnnotationName(AnnotationTree tree) {
+  public static @Nullable String getAnnotationName(AnnotationTree tree) {
     Symbol sym = getSymbol(tree);
     return sym == null ? null : sym.name.toString();
   }
@@ -1232,8 +1220,7 @@ public class ASTHelpers {
   }
 
   /** Return the enclosing {@code ClassSymbol} of the given symbol, or {@code null}. */
-  @Nullable
-  public static ClassSymbol enclosingClass(Symbol sym) {
+  public static @Nullable ClassSymbol enclosingClass(Symbol sym) {
     // sym.owner is null in the case of module symbols.
     return sym.owner == null ? null : sym.owner.enclClass();
   }
@@ -1244,8 +1231,7 @@ public class ASTHelpers {
    * <p>Prefer this to {@link Symbol#packge}, which throws a {@link NullPointerException} for
    * symbols that are not contained by a package: https://bugs.openjdk.java.net/browse/JDK-8231911
    */
-  @Nullable
-  public static PackageSymbol enclosingPackage(Symbol sym) {
+  public static @Nullable PackageSymbol enclosingPackage(Symbol sym) {
     Symbol curr = sym;
     while (curr != null) {
       if (curr.getKind().equals(ElementKind.PACKAGE)) {
@@ -1277,8 +1263,7 @@ public class ASTHelpers {
   }
 
   /** Returns the compile-time constant value of a tree if it has one, or {@code null}. */
-  @Nullable
-  public static Object constValue(Tree tree) {
+  public static @Nullable Object constValue(Tree tree) {
     if (tree == null) {
       return null;
     }
@@ -1299,8 +1284,7 @@ public class ASTHelpers {
   }
 
   /** Returns the compile-time constant value of a tree if it is of type clazz, or {@code null}. */
-  @Nullable
-  public static <T> T constValue(Tree tree, Class<? extends T> clazz) {
+  public static <T> @Nullable T constValue(Tree tree, Class<? extends T> clazz) {
     Object value = constValue(tree);
     return clazz.isInstance(value) ? clazz.cast(value) : null;
   }
@@ -1360,8 +1344,7 @@ public class ASTHelpers {
   }
 
   /** Returns the modifiers tree of the given class, method, or variable declaration. */
-  @Nullable
-  public static ModifiersTree getModifiers(Tree tree) {
+  public static @Nullable ModifiersTree getModifiers(Tree tree) {
     if (tree instanceof ClassTree) {
       return ((ClassTree) tree).getModifiers();
     }
@@ -1460,8 +1443,7 @@ public class ASTHelpers {
   }
 
   /** Returns an {@link AnnotationTree} with the given simple name, or {@code null}. */
-  @Nullable
-  public static AnnotationTree getAnnotationWithSimpleName(
+  public static @Nullable AnnotationTree getAnnotationWithSimpleName(
       List<? extends AnnotationTree> annotations, String name) {
     for (AnnotationTree annotation : annotations) {
       if (hasSimpleName(annotation, name)) {
@@ -1503,8 +1485,7 @@ public class ASTHelpers {
    * Returns whether {@code anno} corresponds to a type annotation, or {@code null} if it could not
    * be determined.
    */
-  @Nullable
-  public static AnnotationType getAnnotationType(
+  public static @Nullable AnnotationType getAnnotationType(
       AnnotationTree anno, @Nullable Symbol target, VisitorState state) {
     if (target == null) {
       return null;
@@ -1556,8 +1537,7 @@ public class ASTHelpers {
    * The return value is normalized to always use '/' to separate elements of the path and to always
    * have a leading '/'.
    */
-  @Nullable
-  public static String getFileName(CompilationUnitTree tree) {
+  public static @Nullable String getFileName(CompilationUnitTree tree) {
     return getFileNameFromUri(tree.getSourceFile().toUri());
   }
 
@@ -1567,8 +1547,7 @@ public class ASTHelpers {
    * Extract the filename from the URI, with special handling for jar files. The return value is
    * normalized to always use '/' to separate elements of the path and to always have a leading '/'.
    */
-  @Nullable
-  public static String getFileNameFromUri(URI uri) {
+  public static @Nullable String getFileNameFromUri(URI uri) {
     if (!uri.getScheme().equals("jar")) {
       return uri.getPath();
     }
@@ -1615,8 +1594,7 @@ public class ASTHelpers {
    * @return a MethodSymbol representing the method symbol resolved from the context of this type,
    *     or {@code null} if the method could not be resolved.
    */
-  @Nullable
-  public static MethodSymbol resolveExistingMethod(
+  public static @Nullable MethodSymbol resolveExistingMethod(
       VisitorState state,
       TypeSymbol base,
       Name name,
@@ -1732,8 +1710,7 @@ public class ASTHelpers {
    * <p><a href="https://docs.oracle.com/javase/specs/jls/se9/html/jls-5.html#jls-5.6.1">JLS
    * §5.6.1</a>
    */
-  @Nullable
-  private static Type unaryNumericPromotion(Type type, VisitorState state) {
+  private static @Nullable Type unaryNumericPromotion(Type type, VisitorState state) {
     Type unboxed = unboxAndEnsureNumeric(type, state);
     switch (unboxed.getTag()) {
       case BYTE:
@@ -1756,8 +1733,8 @@ public class ASTHelpers {
    * <p><a href="https://docs.oracle.com/javase/specs/jls/se9/html/jls-5.html#jls-5.6.2">JLS
    * §5.6.2</a>
    */
-  @Nullable
-  private static Type binaryNumericPromotion(Type leftType, Type rightType, VisitorState state) {
+  private static @Nullable Type binaryNumericPromotion(
+      Type leftType, Type rightType, VisitorState state) {
     Type unboxedLeft = unboxAndEnsureNumeric(leftType, state);
     Type unboxedRight = unboxAndEnsureNumeric(rightType, state);
     Set<TypeTag> tags = EnumSet.of(unboxedLeft.getTag(), unboxedRight.getTag());
@@ -1785,8 +1762,7 @@ public class ASTHelpers {
    * <p>For example, the target type of an assignment expression is the variable's type, and the
    * target type of a return statement is the enclosing method's type.
    */
-  @Nullable
-  public static TargetType targetType(VisitorState state) {
+  public static @Nullable TargetType targetType(VisitorState state) {
     if (!canHaveTargetType(state.getPath().getLeaf())) {
       return null;
     }
@@ -1819,11 +1795,10 @@ public class ASTHelpers {
     return TargetType.create(type, parent);
   }
 
-  @Nullable private static final Class<?> CONSTANT_CASE_LABEL_TREE = constantCaseLabelTree();
-  @Nullable private static final Class<?> YIELD_TREE = yieldTree();
+  private static final @Nullable Class<?> CONSTANT_CASE_LABEL_TREE = constantCaseLabelTree();
+  private static final @Nullable Class<?> YIELD_TREE = yieldTree();
 
-  @Nullable
-  private static Class<?> constantCaseLabelTree() {
+  private static @Nullable Class<?> constantCaseLabelTree() {
     try {
       return Class.forName("com.sun.source.tree.ConstantCaseLabelTree");
     } catch (ClassNotFoundException e) {
@@ -1831,8 +1806,7 @@ public class ASTHelpers {
     }
   }
 
-  @Nullable
-  private static Class<?> yieldTree() {
+  private static @Nullable Class<?> yieldTree() {
     try {
       return Class.forName("com.sun.source.tree.YieldTree");
     } catch (ClassNotFoundException e) {
@@ -1886,9 +1860,8 @@ public class ASTHelpers {
       this.parent = parent;
     }
 
-    @Nullable
     @Override
-    public Type visitArrayAccess(ArrayAccessTree node, Void unused) {
+    public @Nullable Type visitArrayAccess(ArrayAccessTree node, Void unused) {
       if (current.equals(node.getIndex())) {
         return state.getSymtab().intType;
       } else {
@@ -1903,9 +1876,8 @@ public class ASTHelpers {
           : state.getSymtab().stringType;
     }
 
-    @Nullable
     @Override
-    public Type visitAssignment(AssignmentTree tree, Void unused) {
+    public @Nullable Type visitAssignment(AssignmentTree tree, Void unused) {
       return getType(tree.getVariable());
     }
 
@@ -1914,15 +1886,13 @@ public class ASTHelpers {
       return null;
     }
 
-    @Nullable
     @Override
-    public Type visitCase(CaseTree tree, Void unused) {
+    public @Nullable Type visitCase(CaseTree tree, Void unused) {
       Tree switchTree = parent.getParentPath().getLeaf();
       return getType(getSwitchExpression(switchTree));
     }
 
-    @Nullable
-    private static ExpressionTree getSwitchExpression(@Nullable Tree tree) {
+    private static @Nullable ExpressionTree getSwitchExpression(@Nullable Tree tree) {
       if (tree == null) {
         return null;
       }
@@ -1953,9 +1923,8 @@ public class ASTHelpers {
       return null;
     }
 
-    @Nullable
     @Override
-    public Type visitCompoundAssignment(CompoundAssignmentTree tree, Void unused) {
+    public @Nullable Type visitCompoundAssignment(CompoundAssignmentTree tree, Void unused) {
       Type variableType = getType(tree.getVariable());
       Type expressionType = getType(tree.getExpression());
       Types types = state.getTypes();
@@ -2023,9 +1992,8 @@ public class ASTHelpers {
       return visit(node.getExpression(), null);
     }
 
-    @Nullable
     @Override
-    public Type visitReturn(ReturnTree tree, Void unused) {
+    public @Nullable Type visitReturn(ReturnTree tree, Void unused) {
       for (TreePath path = parent; path != null; path = path.getParentPath()) {
         Tree enclosing = path.getLeaf();
         switch (enclosing.getKind()) {
@@ -2039,9 +2007,8 @@ public class ASTHelpers {
       throw new AssertionError("return not enclosed by method or lambda");
     }
 
-    @Nullable
     @Override
-    public Type visitSynchronized(SynchronizedTree node, Void unused) {
+    public @Nullable Type visitSynchronized(SynchronizedTree node, Void unused) {
       // The null occurs if you've asked for the type of the parentheses around the expression.
       return Objects.equals(current, node.getExpression()) ? state.getSymtab().objectType : null;
     }
@@ -2056,43 +2023,40 @@ public class ASTHelpers {
       return getType(node.getType());
     }
 
-    @Nullable
     @Override
-    public Type visitVariable(VariableTree tree, Void unused) {
+    public @Nullable Type visitVariable(VariableTree tree, Void unused) {
       return getType(tree.getType());
     }
 
-    @Nullable
     @Override
-    public Type visitUnary(UnaryTree tree, Void unused) {
+    public @Nullable Type visitUnary(UnaryTree tree, Void unused) {
       return getType(tree);
     }
 
-    @Nullable
     @Override
-    public Type visitBinary(BinaryTree tree, Void unused) {
+    public @Nullable Type visitBinary(BinaryTree tree, Void unused) {
       Type leftType = checkNotNull(getType(tree.getLeftOperand()));
       Type rightType = checkNotNull(getType(tree.getRightOperand()));
       switch (tree.getKind()) {
-          // The addition and subtraction operators for numeric types + and - (§15.18.2)
+        // The addition and subtraction operators for numeric types + and - (§15.18.2)
         case PLUS:
           // If either operand is of string type, string concatenation is performed.
           Type stringType = state.getSymtab().stringType;
           if (isSameType(stringType, leftType, state) || isSameType(stringType, rightType, state)) {
             return stringType;
           }
-          // Fall through.
+        // Fall through.
         case MINUS:
-          // The multiplicative operators *, /, and % (§15.17)
+        // The multiplicative operators *, /, and % (§15.17)
         case MULTIPLY:
         case DIVIDE:
         case REMAINDER:
-          // The numerical comparison operators <, <=, >, and >= (§15.20.1)
+        // The numerical comparison operators <, <=, >, and >= (§15.20.1)
         case LESS_THAN:
         case LESS_THAN_EQUAL:
         case GREATER_THAN:
         case GREATER_THAN_EQUAL:
-          // The integer bitwise operators &, ^, and |
+        // The integer bitwise operators &, ^, and |
         case AND:
         case XOR:
         case OR:
@@ -2114,8 +2078,7 @@ public class ASTHelpers {
       }
     }
 
-    @Nullable
-    private Type handleEqualityOperator(BinaryTree tree, Type leftType, Type rightType) {
+    private @Nullable Type handleEqualityOperator(BinaryTree tree, Type leftType, Type rightType) {
       Type unboxedLeft = checkNotNull(state.getTypes().unboxedTypeOrType(leftType));
       Type unboxedRight = checkNotNull(state.getTypes().unboxedTypeOrType(rightType));
 
@@ -2150,9 +2113,8 @@ public class ASTHelpers {
       return type.getTag() == TypeTag.BOOLEAN;
     }
 
-    @Nullable
     @Override
-    public Type visitConditionalExpression(ConditionalExpressionTree tree, Void unused) {
+    public @Nullable Type visitConditionalExpression(ConditionalExpressionTree tree, Void unused) {
       return tree.getCondition().equals(current) ? state.getSymtab().booleanType : getType(tree);
     }
 
@@ -2171,8 +2133,7 @@ public class ASTHelpers {
           tree.getArguments(), ASTHelpers.getSymbol(tree), ((JCMethodInvocation) tree).meth.type);
     }
 
-    @Nullable
-    private Type visitMethodInvocationOrNewClass(
+    private @Nullable Type visitMethodInvocationOrNewClass(
         List<? extends ExpressionTree> arguments, MethodSymbol sym, Type type) {
       int idx = arguments.indexOf(current);
       if (idx == -1) {
@@ -2218,9 +2179,8 @@ public class ASTHelpers {
       return getConditionType(tree.getCondition());
     }
 
-    @Nullable
     @Override
-    public Type visitSwitch(SwitchTree node, Void unused) {
+    public @Nullable Type visitSwitch(SwitchTree node, Void unused) {
       if (current == node.getExpression()) {
         return state.getTypes().unboxedTypeOrType(getType(current));
       } else {
@@ -2228,9 +2188,8 @@ public class ASTHelpers {
       }
     }
 
-    @Nullable
     @Override
-    public Type visitNewArray(NewArrayTree node, Void unused) {
+    public @Nullable Type visitNewArray(NewArrayTree node, Void unused) {
       if (Objects.equals(node.getType(), current)) {
         return null;
       }
@@ -2243,9 +2202,8 @@ public class ASTHelpers {
       return null;
     }
 
-    @Nullable
     @Override
-    public Type visitMemberSelect(MemberSelectTree node, Void unused) {
+    public @Nullable Type visitMemberSelect(MemberSelectTree node, Void unused) {
       if (current.equals(node.getExpression())) {
         return ASTHelpers.getType(node.getExpression());
       }
@@ -2257,8 +2215,7 @@ public class ASTHelpers {
       return state.getTypes().findDescriptorType(getType(node)).getReturnType();
     }
 
-    @Nullable
-    private Type getConditionType(Tree condition) {
+    private @Nullable Type getConditionType(Tree condition) {
       if (condition != null && condition.equals(current)) {
         return state.getSymtab().booleanType;
       }
@@ -2303,8 +2260,7 @@ public class ASTHelpers {
    * aren't containing in a package, unlike {@link Symbol#outermostClass} (see b/123431414).
    */
   // TODO(b/123431414): fix javac and use Symbol.outermostClass insteads
-  @Nullable
-  public static ClassSymbol outermostClass(Symbol symbol) {
+  public static @Nullable ClassSymbol outermostClass(Symbol symbol) {
     ClassSymbol curr = symbol.enclClass();
     while (curr != null && curr.owner != null) {
       ClassSymbol encl = curr.owner.enclClass();
@@ -2757,8 +2713,7 @@ public class ASTHelpers {
 
   private static final Method CASE_TREE_GET_LABELS = getCaseTreeGetLabelsMethod();
 
-  @Nullable
-  private static Method getCaseTreeGetLabelsMethod() {
+  private static @Nullable Method getCaseTreeGetLabelsMethod() {
     try {
       return CaseTree.class.getMethod("getLabels");
     } catch (NoSuchMethodException e) {
@@ -2797,10 +2752,61 @@ public class ASTHelpers {
 
   private static final Method CASE_TREE_GET_EXPRESSIONS = getCaseTreeGetExpressionsMethod();
 
-  @Nullable
-  private static Method getCaseTreeGetExpressionsMethod() {
+  private static @Nullable Method getCaseTreeGetExpressionsMethod() {
     try {
       return CaseTree.class.getMethod("getExpressions");
+    } catch (NoSuchMethodException e) {
+      return null;
+    }
+  }
+
+  /**
+   * Returns true if the given {@link CaseTree} is in the form: {@code case <expression> ->
+   * <expression>}.
+   */
+  public static boolean isRuleKind(CaseTree caseTree) {
+    if (GET_CASE_KIND_METHOD == null) {
+      return false;
+    }
+    Enum<?> kind;
+    try {
+      kind = (Enum<?>) GET_CASE_KIND_METHOD.invoke(caseTree);
+    } catch (ReflectiveOperationException e) {
+      return false;
+    }
+    return kind.name().equals("RULE");
+  }
+
+  private static final Method GET_CASE_KIND_METHOD = getGetCaseKindMethod();
+
+  private static @Nullable Method getGetCaseKindMethod() {
+    try {
+      return CaseTree.class.getMethod("getCaseKind");
+    } catch (NoSuchMethodException e) {
+      return null;
+    }
+  }
+
+  /**
+   * Returns the statement or expression after the arrow for a {@link CaseTree} of the form: {@code
+   * case <expression> -> <body>}.
+   */
+  public static @Nullable Tree getCaseTreeBody(CaseTree caseTree) {
+    if (GET_CASE_BODY_METHOD == null) {
+      return null;
+    }
+    try {
+      return (Tree) GET_CASE_BODY_METHOD.invoke(caseTree);
+    } catch (ReflectiveOperationException e) {
+      throw new LinkageError(e.getMessage(), e);
+    }
+  }
+
+  private static final @Nullable Method GET_CASE_BODY_METHOD = getGetCaseBodyMethod();
+
+  private static @Nullable Method getGetCaseBodyMethod() {
+    try {
+      return CaseTree.class.getMethod("getBody");
     } catch (NoSuchMethodException e) {
       return null;
     }
@@ -2816,7 +2822,7 @@ public class ASTHelpers {
     "unchecked", // reflection
   })
   public static Stream<? extends ExpressionTree> getCaseExpressions(CaseTree caseTree) {
-    if (!RuntimeVersion.isAtLeast12()) {
+    if (Runtime.version().feature() < 12) {
       // "default" case gives an empty stream
       return Stream.ofNullable(caseTree.getExpression());
     }
@@ -2829,6 +2835,9 @@ public class ASTHelpers {
       throw new LinkageError(e.getMessage(), e);
     }
   }
+
+  private static final Supplier<Name> NULL_MARKED_NAME =
+      memoize(state -> state.getName("org.jspecify.annotations.NullMarked"));
 
   private ASTHelpers() {}
 }

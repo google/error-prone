@@ -52,7 +52,7 @@ import java.util.Optional;
 import javax.inject.Inject;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Name;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /** Looks for types being shadowed by other types in a way that may be confusing. */
 @BugPattern(

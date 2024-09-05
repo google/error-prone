@@ -36,7 +36,7 @@ import com.sun.source.util.DocTreePath;
 import com.sun.source.util.DocTreePathScanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Finds unescaped entities in Javadocs.

@@ -28,7 +28,6 @@ import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.enclosingPackage;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
-import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static java.util.Arrays.stream;
 import static javax.lang.model.type.TypeKind.TYPEVAR;
 
@@ -70,6 +69,10 @@ public final class NullArgumentForNonNullParameter extends BugChecker
       memoize(state -> state.getName("com.google.common.collect.Immutable"));
   private static final Supplier<Name> GUAVA_GRAPH_IMMUTABLE_PREFIX =
       memoize(state -> state.getName("com.google.common.graph.Immutable"));
+  private static final Supplier<Name> PROTO_NONNULL_API_NAME =
+      memoize(state -> state.getName("com.google.protobuf.Internal$ProtoNonnullApi"));
+  private static final Supplier<Name> NULL_MARKED_NAME =
+      memoize(state -> state.getName("org.jspecify.annotations.NullMarked"));
   private static final Supplier<ImmutableSet<Name>> NULL_MARKED_PACKAGES_WE_TRUST =
       memoize(
           state ->
@@ -245,17 +248,27 @@ public final class NullArgumentForNonNullParameter extends BugChecker
   private boolean enclosingAnnotationDefaultsNonTypeVariablesToNonNull(
       Symbol sym, VisitorState state) {
     for (; sym != null; sym = sym.getEnclosingElement()) {
-      if (hasAnnotation(sym, "com.google.protobuf.Internal$ProtoNonnullApi", state)) {
+      if (hasDirectAnnotation(sym, PROTO_NONNULL_API_NAME.get(state))) {
         return true;
       }
-      if ((hasAnnotation(sym, "org.jspecify.annotations.NullMarked", state)
-              // We break this string to avoid having it rewritten by Copybara.
-              || hasAnnotation(sym, "org.jspecify.null" + "ness.NullMarked", state))
+      if (hasDirectAnnotation(sym, NULL_MARKED_NAME.get(state))
           && weTrustNullMarkedOn(sym, state)) {
         return true;
       }
     }
     return false;
+  }
+
+  /*
+   * ASTHelpers has hasAnnotation and hasDirectAnnotationWithSimpleName but I think not this.
+   *
+   * We avoid hasAnnotation not just because it's unnecessary but also because it would cause issues
+   * under --release 8 on account of NullMarked's use of @Target(MODULE, ...).
+   */
+  private static boolean hasDirectAnnotation(Symbol sym, Name name) {
+    return sym.getAnnotationMirrors().stream()
+        .anyMatch(
+            a -> ((Symbol) a.getAnnotationType().asElement()).getQualifiedName().equals(name));
   }
 
   private boolean weTrustNullMarkedOn(Symbol sym, VisitorState state) {

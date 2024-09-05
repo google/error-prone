@@ -16,11 +16,10 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static org.junit.Assume.assumeTrue;
+import static com.google.common.truth.TruthJUnit.assume;
 
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -141,7 +140,7 @@ public final class NamedLikeContextualKeywordTest {
   @Test
   public void yieldInSwitch_noError() {
 
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",

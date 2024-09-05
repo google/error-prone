@@ -44,7 +44,7 @@ import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.util.Name;
 import java.lang.annotation.Annotation;
 import java.util.function.Predicate;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Checker that ensures implementations of {@link Annotation} override equals and hashCode.
@@ -117,8 +117,7 @@ public class BadAnnotationImplementation extends BugChecker implements ClassTree
     return Description.NO_MATCH;
   }
 
-  @Nullable
-  private static MethodSymbol getMatchingMethod(
+  private static @Nullable MethodSymbol getMatchingMethod(
       Type type, Name name, Predicate<MethodSymbol> predicate) {
     Scope scope = type.tsym.members();
     for (Symbol sym : scope.getSymbolsByName(name)) {

@@ -34,7 +34,7 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.SimpleAnnotationValueVisitor7;
 import javax.tools.Diagnostic.Kind;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Enforces {@code @RequiredAnnotation} as an annotation processor.

@@ -52,7 +52,7 @@ import java.util.Deque;
 import java.util.HashSet;
 import java.util.Set;
 import javax.inject.Inject;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /** Bugpattern to find conditions which are checked more than once. */
 @BugPattern(severity = WARNING, summary = "This condition has already been checked.")

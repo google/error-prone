@@ -61,6 +61,46 @@ public class NullablePrimitiveArrayTest {
   }
 
   @Test
+  public void typeAnnotationWithOtherAnnotation() {
+    testHelper
+        .addInputLines(
+            "Test.java",
+            "import org.checkerframework.checker.nullness.qual.Nullable;",
+            "abstract class Test {",
+            "  @SuppressWarnings(\"SomeOtherChecker\") // unrelated annotation",
+            "  @Nullable abstract byte[] f();",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import org.checkerframework.checker.nullness.qual.Nullable;",
+            "abstract class Test {",
+            "  @SuppressWarnings(\"SomeOtherChecker\") // unrelated annotation",
+            "  abstract byte @Nullable [] f();",
+            "}")
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+  }
+
+  @Test
+  public void typeAnnotationWithOtherNullnessAnnotationDoesNotSuggestDoubleAnnotation() {
+    testHelper
+        .addInputLines(
+            "Test.java",
+            "import javax.annotation.CheckForNull;",
+            "import org.checkerframework.checker.nullness.qual.Nullable;",
+            "abstract class Test {",
+            "  @CheckForNull @Nullable abstract byte[] f();",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import javax.annotation.CheckForNull;",
+            "import org.checkerframework.checker.nullness.qual.Nullable;",
+            "abstract class Test {",
+            "  @CheckForNull abstract byte[] f();",
+            "}")
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+  }
+
+  @Test
   public void negative() {
     testHelper
         .addInputLines(

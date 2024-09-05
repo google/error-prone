@@ -51,7 +51,7 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.lang.model.element.Modifier;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /** Whether an API can have {@code @InlineMe} applied to it or not. */
 @AutoValue

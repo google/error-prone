@@ -25,6 +25,7 @@ import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getReturnType;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
+import static com.google.errorprone.util.ASTHelpers.hasDirectAnnotationWithSimpleName;
 import static com.google.errorprone.util.ASTHelpers.isAbstract;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
@@ -78,19 +79,22 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
 
   private static final String AUTO_VALUE = "com.google.auto.value.AutoValue";
   private static final String IMMUTABLE = "com.google.errorprone.annotations.Immutable";
-  private static final String CIRV = "com.google.errorprone.annotations.CanIgnoreReturnValue";
+  private static final String CRV_SIMPLE_NAME = "CheckReturnValue";
+  private static final String CIRV_SIMPLE_NAME = "CanIgnoreReturnValue";
   private static final ImmutableSet<String> EXEMPTING_METHOD_ANNOTATIONS =
-      ImmutableSet.of(
-          CIRV,
-          "com.google.errorprone.annotations.CheckReturnValue",
-          "com.google.errorprone.refaster.annotation.AfterTemplate");
+      ImmutableSet.of("com.google.errorprone.refaster.annotation.AfterTemplate");
 
   private static final ImmutableSet<String> EXEMPTING_CLASS_ANNOTATIONS =
       ImmutableSet.of(
-          "com.google.auto.value.AutoValue.Builder",
+          // keep-sorted start
           "com.google.auto.value.AutoBuilder",
+          "com.google.auto.value.AutoValue.Builder",
           "dagger.Component.Builder",
-          "dagger.Subcomponent.Builder");
+          "dagger.Subcomponent.Builder",
+          "dagger.producers.ProductionComponent.Builder",
+          "dagger.producers.ProductionSubcomponent.Builder"
+          // keep-sorted end
+          );
 
   private static final Supplier<Type> PROTO_BUILDER =
       VisitorState.memoize(s -> s.getTypeFromString("com.google.protobuf.MessageLite.Builder"));
@@ -112,13 +116,18 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
   @Override
   public Description matchMethod(MethodTree methodTree, VisitorState state) {
     MethodSymbol methodSymbol = getSymbol(methodTree);
-    // Don't fire on overrides of methods within anonymous classes.
-    if (streamSuperMethods(methodSymbol, state.getTypes()).findFirst().isPresent()
-        && methodSymbol.owner.isAnonymous()) {
+
+    // If the method is directly annotated w/ any @CanIgnoreReturnValue, then bail out.
+    if (hasDirectAnnotationWithSimpleName(methodSymbol, CIRV_SIMPLE_NAME)) {
       return Description.NO_MATCH;
     }
 
-    // If the method has an exempting annotation, then bail out.
+    // If the method is directly annotated w/ any @CheckReturnValue, then bail out.
+    if (hasDirectAnnotationWithSimpleName(methodSymbol, CRV_SIMPLE_NAME)) {
+      return Description.NO_MATCH;
+    }
+
+    // If the method has another exempting annotation, then bail out.
     if (exemptingMethodAnnotations.stream()
         .anyMatch(annotation -> hasAnnotation(methodSymbol, annotation, state))) {
       return Description.NO_MATCH;
@@ -136,8 +145,24 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
       return Description.NO_MATCH;
     }
 
+    // Don't fire on overrides of methods within anonymous classes.
+    if (streamSuperMethods(methodSymbol, state.getTypes()).findFirst().isPresent()
+        && methodSymbol.owner.isAnonymous()) {
+      return Description.NO_MATCH;
+    }
+
     // if the method always return a single input param (of the same type), make it CIRV
     if (methodAlwaysReturnsInputParam(methodTree, state)) {
+      // if the method _only_ returns an input param, bail out
+      if (methodTree.getBody() != null && methodTree.getBody().getStatements().size() == 1) {
+        StatementTree onlyStatement = methodTree.getBody().getStatements().get(0);
+        if (onlyStatement instanceof ReturnTree) {
+          ReturnTree returnTree = (ReturnTree) onlyStatement;
+          if (returnTree.getExpression() instanceof IdentifierTree) {
+            return Description.NO_MATCH;
+          }
+        }
+      }
       return annotateWithCanIgnoreReturnValue(methodTree, state);
     }
 
@@ -187,7 +212,8 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
     }
 
     // now annotate it with @CanIgnoreReturnValue
-    fix.prefixWith(methodTree, "@" + qualifyType(state, fix, CIRV) + "\n");
+    String cirv = "com.google.errorprone.annotations.CanIgnoreReturnValue";
+    fix.prefixWith(methodTree, "@" + qualifyType(state, fix, cirv) + "\n");
 
     return describeMatch(methodTree, fix.build());
   }
@@ -307,9 +333,8 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
               || isIdentifier(receiver, "super")) {
             // If the method we're calling is @CIRV and the enclosing class could be represented by
             // the object being returned by the other method, then it's probable that the other
-            // method is likely to
-            // be an ignorable result.
-            return hasAnnotation(calledMethod, CIRV, state)
+            // method is likely to be an ignorable result.
+            return hasDirectAnnotationWithSimpleName(calledMethod, CIRV_SIMPLE_NAME)
                 && isSubtype(enclosingClassType, methodReturnType, state)
                 && isSubtype(enclosingClassType, getReturnType(mit), state);
           }

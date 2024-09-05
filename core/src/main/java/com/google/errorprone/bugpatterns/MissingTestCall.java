@@ -40,8 +40,8 @@ import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Symbol;
 import java.util.HashSet;
 import java.util.Set;
-import javax.annotation.Nullable;
 import javax.lang.model.element.ElementKind;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Matches test helpers which require a terminating method to be called.
@@ -123,8 +123,7 @@ public final class MissingTestCall extends BugChecker implements MethodTreeMatch
         .orElse(NO_MATCH);
   }
 
-  @Nullable
-  private static ExpressionTree getUltimateReceiver(ExpressionTree tree) {
+  private static @Nullable ExpressionTree getUltimateReceiver(ExpressionTree tree) {
     return findLast(streamReceivers(tree)).orElse(null);
   }
 

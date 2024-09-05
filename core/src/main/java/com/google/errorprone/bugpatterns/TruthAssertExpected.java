@@ -44,7 +44,7 @@ import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import java.util.List;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Detects usages of Truth assertions with the expected and actual values reversed.
@@ -132,9 +132,8 @@ public final class TruthAssertExpected extends BugChecker implements MethodInvoc
                 return node.getArguments();
               }
 
-              @Nullable
               @Override
-              public List<? extends ExpressionTree> visitMethodInvocation(
+              public @Nullable List<? extends ExpressionTree> visitMethodInvocation(
                   MethodInvocationTree node, Void unused) {
                 MethodSymbol symbol = ASTHelpers.getSymbol(node);
                 if (!symbol.isStatic()) {
@@ -189,8 +188,7 @@ public final class TruthAssertExpected extends BugChecker implements MethodInvoc
    * Walks up the receivers for an expression chain until one matching {@code matcher} is found, and
    * returns the matched {@link ExpressionTree}, or {@code null} if none match.
    */
-  @Nullable
-  private static ExpressionTree findReceiverMatching(
+  private static @Nullable ExpressionTree findReceiverMatching(
       ExpressionTree tree, VisitorState state, Matcher<ExpressionTree> matcher) {
     return streamReceivers(tree).filter(t -> matcher.matches(t, state)).findFirst().orElse(null);
   }
@@ -199,8 +197,7 @@ public final class TruthAssertExpected extends BugChecker implements MethodInvoc
    * Walks up the provided {@link ExpressionTree} to find the {@link IdentifierTree identifier} that
    * it stems from. Returns {@code null} if the tree doesn't terminate in an identifier.
    */
-  @Nullable
-  private static IdentifierTree getRootIdentifier(ExpressionTree tree) {
+  private static @Nullable IdentifierTree getRootIdentifier(ExpressionTree tree) {
     if (tree == null) {
       return null;
     }

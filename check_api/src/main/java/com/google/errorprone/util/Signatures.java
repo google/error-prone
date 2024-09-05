@@ -16,67 +16,34 @@
 
 package com.google.errorprone.util;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.stream.Collectors.joining;
 
+import com.google.errorprone.VisitorState;
 import com.sun.tools.javac.code.BoundKind;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.code.Types.DefaultTypeVisitor;
-import com.sun.tools.javac.code.Types.SignatureGenerator;
 import com.sun.tools.javac.util.Name;
-import java.util.Arrays;
 
 /** Signature generation. */
 public final class Signatures {
 
   /** Returns the binary names of the class. */
-  public static String classDescriptor(Type type, Types types) {
-    SigGen sig = new SigGen(types);
+  public static String classDescriptor(Type type, VisitorState state) {
+    Types types = state.getTypes();
+    ErrorProneSignatureGenerator sig = new ErrorProneSignatureGenerator(types, state.getNames());
     sig.assembleClassSig(types.erasure(type));
     return sig.toString();
   }
 
   /** Returns a JVMS 4.3.3 method descriptor. */
-  public static String descriptor(Type type, Types types) {
-    SigGen sig = new SigGen(types);
+  public static String descriptor(Type type, VisitorState state) {
+    Types types = state.getTypes();
+    ErrorProneSignatureGenerator sig = new ErrorProneSignatureGenerator(types, state.getNames());
     sig.assembleSig(types.erasure(type));
     return sig.toString();
-  }
-
-  private static class SigGen extends SignatureGenerator {
-
-    private final com.sun.tools.javac.util.ByteBuffer buffer =
-        new com.sun.tools.javac.util.ByteBuffer();
-
-    protected SigGen(Types types) {
-      super(types);
-    }
-
-    @Override
-    protected void append(char ch) {
-      buffer.appendByte(ch);
-    }
-
-    @Override
-    protected void append(byte[] ba) {
-      buffer.appendBytes(ba);
-    }
-
-    @Override
-    protected void append(Name name) {
-      buffer.appendName(name);
-    }
-
-    @Override
-    public String toString() {
-      // We could use buffer.toName(Names), but we want a string anyways and this
-      // avoids plumbing a Context or instances of Names through.
-      // Names always uses UTF-8 internally.
-      return new String(Arrays.copyOf(buffer.elems, buffer.length), UTF_8);
-    }
   }
 
   /**

@@ -14,9 +14,11 @@
 
 package com.google.errorprone.bugpatterns.inject;
 
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.bugpatterns.inject.ElementPredicates.doesNotHaveRuntimeRetention;
 import static com.google.errorprone.bugpatterns.inject.ElementPredicates.hasSourceRetention;
+import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.InjectMatchers.DAGGER_MAP_KEY_ANNOTATION;
 import static com.google.errorprone.matchers.InjectMatchers.GUICE_BINDING_ANNOTATION;
 import static com.google.errorprone.matchers.InjectMatchers.GUICE_MAP_KEY_ANNOTATION;
@@ -24,12 +26,13 @@ import static com.google.errorprone.matchers.InjectMatchers.GUICE_SCOPE_ANNOTATI
 import static com.google.errorprone.matchers.InjectMatchers.JAVAX_QUALIFIER_ANNOTATION;
 import static com.google.errorprone.matchers.InjectMatchers.JAVAX_SCOPE_ANNOTATION;
 import static com.google.errorprone.matchers.Matchers.allOf;
-import static com.google.errorprone.matchers.Matchers.anyOf;
-import static com.google.errorprone.matchers.Matchers.hasAnnotation;
-import static com.google.errorprone.matchers.Matchers.kindIs;
+import static com.google.errorprone.util.ASTHelpers.annotationsAmong;
+import static com.google.errorprone.util.ASTHelpers.getDeclaredSymbol;
 import static com.sun.source.tree.Tree.Kind.ANNOTATION_TYPE;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -37,62 +40,91 @@ import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.InjectMatchers;
-import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
+import com.sun.tools.javac.util.Name;
 import java.lang.annotation.Retention;
-import javax.annotation.Nullable;
+import java.util.Collections;
+import java.util.Set;
+import java.util.stream.Stream;
+import org.jspecify.annotations.Nullable;
 
-// TODO(b/180081278): Rename this check to MissingRuntimeRetention
 /**
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
 @BugPattern(
-    name = "InjectScopeOrQualifierAnnotationRetention",
+    name = "MissingRuntimeRetention",
+    altNames = "InjectScopeOrQualifierAnnotationRetention",
     summary = "Scoping and qualifier annotations must have runtime retention.",
     severity = ERROR)
-public class ScopeOrQualifierAnnotationRetention extends BugChecker implements ClassTreeMatcher {
+public class MissingRuntimeRetention extends BugChecker implements ClassTreeMatcher {
 
   private static final String RETENTION_ANNOTATION = "java.lang.annotation.Retention";
 
-  /** Matches classes that are qualifier, scope annotation or map binding keys. */
-  private static final Matcher<ClassTree> SCOPE_OR_QUALIFIER_ANNOTATION_MATCHER =
-      allOf(
-          kindIs(ANNOTATION_TYPE),
-          anyOf(
-              hasAnnotation(GUICE_SCOPE_ANNOTATION),
-              hasAnnotation(JAVAX_SCOPE_ANNOTATION),
-              hasAnnotation(GUICE_BINDING_ANNOTATION),
-              hasAnnotation(JAVAX_QUALIFIER_ANNOTATION),
-              hasAnnotation(GUICE_MAP_KEY_ANNOTATION),
-              hasAnnotation(DAGGER_MAP_KEY_ANNOTATION)));
+  private static final Supplier<ImmutableSet<Name>> INJECT_ANNOTATIONS =
+      VisitorState.memoize(
+          state ->
+              Stream.of(
+                      GUICE_SCOPE_ANNOTATION,
+                      JAVAX_SCOPE_ANNOTATION,
+                      GUICE_BINDING_ANNOTATION,
+                      JAVAX_QUALIFIER_ANNOTATION,
+                      GUICE_MAP_KEY_ANNOTATION,
+                      DAGGER_MAP_KEY_ANNOTATION)
+                  .map(state::binaryNameFromClassname)
+                  .collect(toImmutableSet()));
+
+  private static final Supplier<ImmutableSet<Name>> ANNOTATIONS =
+      VisitorState.memoize(
+          state ->
+              Streams.concat(
+                      Stream.of("com.google.apps.framework.annotations.ProcessorAnnotation")
+                          .map(state::binaryNameFromClassname),
+                      INJECT_ANNOTATIONS.get(state).stream())
+                  .collect(toImmutableSet()));
 
   @Override
   public final Description matchClass(ClassTree classTree, VisitorState state) {
-    if (SCOPE_OR_QUALIFIER_ANNOTATION_MATCHER.matches(classTree, state)) {
-      ClassSymbol classSymbol = ASTHelpers.getSymbol(classTree);
-      if (hasSourceRetention(classSymbol)) {
-        return describe(classTree, state, ASTHelpers.getAnnotation(classSymbol, Retention.class));
-      }
-
-      // TODO(glorioso): This is a poor hack to exclude android apps that are more likely to not
-      // have reflective DI than normal java. JSR spec still says the annotations should be
-      // runtime-retained, but this reduces the instances that are flagged.
-      if (!state.isAndroidCompatible() && doesNotHaveRuntimeRetention(classSymbol)) {
-        // Is this in a dagger component?
-        ClassTree outer = ASTHelpers.findEnclosingNode(state.getPath(), ClassTree.class);
-        if (outer != null
-            && allOf(InjectMatchers.IS_DAGGER_COMPONENT_OR_MODULE).matches(outer, state)) {
-          return Description.NO_MATCH;
-        }
-        return describe(classTree, state, ASTHelpers.getAnnotation(classSymbol, Retention.class));
-      }
+    if (!classTree.getKind().equals(ANNOTATION_TYPE)) {
+      return NO_MATCH;
     }
-    return Description.NO_MATCH;
+    Set<Name> annotations =
+        annotationsAmong(getDeclaredSymbol(classTree), ANNOTATIONS.get(state), state);
+    if (annotations.isEmpty()) {
+      return NO_MATCH;
+    }
+    ClassSymbol classSymbol = ASTHelpers.getSymbol(classTree);
+    if (!doesNotHaveRuntimeRetention(classSymbol)) {
+      return NO_MATCH;
+    }
+    if (!Collections.disjoint(annotations, INJECT_ANNOTATIONS.get(state))
+        && exemptInjectAnnotation(state, classSymbol)) {
+      return NO_MATCH;
+    }
+    return describe(classTree, state, ASTHelpers.getAnnotation(classSymbol, Retention.class));
+  }
+
+  private static boolean exemptInjectAnnotation(VisitorState state, ClassSymbol classSymbol) {
+    // TODO(glorioso): This is a poor hack to exclude android apps that are more likely to not
+    // have reflective DI than normal java. JSR spec still says the annotations should be
+    // runtime-retained, but this reduces the instances that are flagged.
+    if (hasSourceRetention(classSymbol)) {
+      return false;
+    }
+    if (state.isAndroidCompatible()) {
+      return true;
+    }
+    // Is this in a dagger component?
+    ClassTree outer = ASTHelpers.findEnclosingNode(state.getPath(), ClassTree.class);
+    if (outer != null
+        && allOf(InjectMatchers.IS_DAGGER_COMPONENT_OR_MODULE).matches(outer, state)) {
+      return true;
+    }
+    return false;
   }
 
   private Description describe(

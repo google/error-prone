@@ -25,7 +25,7 @@ import com.sun.source.tree.TreeVisitor;
 import com.sun.tools.javac.tree.JCTree.JCExpressionStatement;
 import com.sun.tools.javac.tree.JCTree.JCForLoop;
 import com.sun.tools.javac.tree.JCTree.JCStatement;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * {@link UTree} representation of a {@link ForLoopTree}.
@@ -51,8 +51,7 @@ abstract class UForLoop extends USimpleStatement implements ForLoopTree {
   public abstract ImmutableList<UStatement> getInitializer();
 
   @Override
-  @Nullable
-  public abstract UExpression getCondition();
+  public abstract @Nullable UExpression getCondition();
 
   @Override
   public abstract ImmutableList<UExpressionStatement> getUpdate();
@@ -61,8 +60,7 @@ abstract class UForLoop extends USimpleStatement implements ForLoopTree {
   public abstract USimpleStatement getStatement();
 
   @Override
-  @Nullable
-  public Choice<Unifier> visitForLoop(ForLoopTree loop, @Nullable Unifier unifier) {
+  public @Nullable Choice<Unifier> visitForLoop(ForLoopTree loop, @Nullable Unifier unifier) {
     return UBlock.unifyStatementList(getInitializer(), loop.getInitializer(), unifier)
         .thenChoose(unifications(getCondition(), loop.getCondition()))
         .thenChoose(unifications(getUpdate(), loop.getUpdate()))

@@ -16,10 +16,9 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static org.junit.Assume.assumeTrue;
+import static com.google.common.truth.TruthJUnit.assume;
 
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -50,7 +49,7 @@ public final class AnnotateFormatMethodTest {
 
   @Test
   public void formatted() {
-    assumeTrue(RuntimeVersion.isAtLeast15());
+    assume().that(Runtime.version().feature()).isAtLeast(15);
     compilationHelper
         .addSourceLines(
             "AnnotateFormatMethodPositiveCases.java",

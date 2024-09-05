@@ -47,7 +47,7 @@ import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
 import java.util.List;
 import java.util.Optional;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author mariasam@google.com (Maria Sam)

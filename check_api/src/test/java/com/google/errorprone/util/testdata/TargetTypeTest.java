@@ -438,21 +438,21 @@ abstract class TargetTypeTest {
   void testSwitch(int anInt, String aString) {
     final int detectInt = 0;
     switch (anInt) {
-        // BUG: Diagnostic contains: int
+      // BUG: Diagnostic contains: int
       case detectInt:
         break;
     }
 
     final byte detectByte = 0;
     switch (anInt) {
-        // BUG: Diagnostic contains: int
+      // BUG: Diagnostic contains: int
       case detectByte:
         break;
     }
 
     final String detectString = "";
     switch (aString) {
-        // BUG: Diagnostic contains: java.lang.String
+      // BUG: Diagnostic contains: java.lang.String
       case detectString:
         break;
     }

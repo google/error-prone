@@ -62,7 +62,7 @@ import java.util.Optional;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.NestingKind;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Flags variables initialized with {@link java.util.regex.Pattern#compile(String)} calls that could

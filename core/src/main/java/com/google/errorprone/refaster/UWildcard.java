@@ -27,7 +27,7 @@ import com.sun.source.tree.TreeVisitor;
 import com.sun.source.tree.WildcardTree;
 import com.sun.tools.javac.code.BoundKind;
 import com.sun.tools.javac.tree.JCTree.JCWildcard;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * {@code UTree} representation of a {@code WildcardTree}.
@@ -57,8 +57,7 @@ abstract class UWildcard extends UExpression implements WildcardTree {
   public abstract Kind getKind();
 
   @Override
-  @Nullable
-  public abstract UTree<?> getBound();
+  public abstract @Nullable UTree<?> getBound();
 
   @Override
   public JCWildcard inline(Inliner inliner) throws CouldNotResolveImportException {

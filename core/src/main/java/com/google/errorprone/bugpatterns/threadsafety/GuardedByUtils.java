@@ -37,7 +37,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 import javax.lang.model.element.ElementKind;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author cushon@google.com (Liam Miller-Cushon)
@@ -95,7 +95,7 @@ public final class GuardedByUtils {
   abstract static class GuardedByValidationResult {
     abstract String message();
 
-    abstract Boolean isValid();
+    abstract boolean isValid();
 
     static GuardedByValidationResult invalid(String message) {
       return new AutoValue_GuardedByUtils_GuardedByValidationResult(message, false);

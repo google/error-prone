@@ -20,7 +20,6 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
-import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.google.errorprone.util.SourceVersion.supportsPatternMatchingInstanceof;
 
 import com.google.common.collect.ImmutableSet;
@@ -76,7 +75,7 @@ public final class PatternMatchingInstanceof extends BugChecker implements IfTre
         instanceofChecks.stream()
             .filter(
                 i ->
-                    isSameType(getType(i.getType()), getType(typeCast.getType()), state)
+                    state.getTypes().isSameType(getType(i.getType()), getType(typeCast.getType()))
                         && getSymbol(i.getExpression()) instanceof VarSymbol
                         && getSymbol(i.getExpression()).equals(getSymbol(typeCast.getExpression())))
             .findFirst()

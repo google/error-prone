@@ -18,7 +18,7 @@ package com.google.errorprone.refaster;
 
 import com.google.auto.value.AutoValue;
 import com.sun.tools.javac.code.Type.ArrayType;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * {@link UType} version of {@link ArrayType}, which represents a type {@code T[]} based on the type
@@ -35,8 +35,7 @@ abstract class UArrayType extends UType {
   abstract UType componentType();
 
   @Override
-  @Nullable
-  public Choice<Unifier> visitArrayType(ArrayType arrayType, @Nullable Unifier unifier) {
+  public @Nullable Choice<Unifier> visitArrayType(ArrayType arrayType, @Nullable Unifier unifier) {
     return componentType().unify(arrayType.getComponentType(), unifier);
   }
 

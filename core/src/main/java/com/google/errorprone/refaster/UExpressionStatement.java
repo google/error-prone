@@ -20,7 +20,7 @@ import com.google.auto.value.AutoValue;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.TreeVisitor;
 import com.sun.tools.javac.tree.JCTree.JCExpressionStatement;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * {@link UTree} representation of a {@link ExpressionStatementTree}.
@@ -37,8 +37,7 @@ abstract class UExpressionStatement extends USimpleStatement implements Expressi
   public abstract UExpression getExpression();
 
   @Override
-  @Nullable
-  public Choice<Unifier> visitExpressionStatement(
+  public @Nullable Choice<Unifier> visitExpressionStatement(
       ExpressionStatementTree expressionStatement, @Nullable Unifier unifier) {
     return getExpression().unify(expressionStatement.getExpression(), unifier);
   }

@@ -19,11 +19,7 @@ package com.google.errorprone.util;
 import com.sun.tools.javac.code.Source;
 import com.sun.tools.javac.util.Context;
 
-/**
- * JDK source version utilities.
- *
- * @see RuntimeVersion
- */
+/** JDK source version utilities. */
 public final class SourceVersion {
   /** Returns true if the compiler source version level supports switch expressions. */
   public static boolean supportsSwitchExpressions(Context context) {
@@ -43,6 +39,11 @@ public final class SourceVersion {
   /** Returns whether the compiler supports pattern-matching instanceofs. */
   public static boolean supportsPatternMatchingInstanceof(Context context) {
     return sourceIsAtLeast(context, 21);
+  }
+
+  /** Returns true if the compiler source version level supports static inner classes. */
+  public static boolean supportsStaticInnerClass(Context context) {
+    return sourceIsAtLeast(context, 16);
   }
 
   private static boolean sourceIsAtLeast(Context context, int version) {

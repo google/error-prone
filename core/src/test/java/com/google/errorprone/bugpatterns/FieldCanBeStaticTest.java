@@ -16,11 +16,10 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static org.junit.Assume.assumeTrue;
+import static com.google.common.truth.TruthJUnit.assume;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -285,12 +284,51 @@ public class FieldCanBeStaticTest {
             "    };",
             "  }",
             "}")
+        .setArgs("--release", "11")
+        .doTest();
+  }
+
+  @Test
+  public void inner_static() {
+    assume().that(Runtime.version().feature()).isAtLeast(16);
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.time.Duration;",
+            "class Test {",
+            "  class I {",
+            "    // BUG: Diagnostic contains: can be static",
+            "    private final Duration D = Duration.ofMillis(1);",
+            "    // BUG: Diagnostic contains: can be static",
+            "    private final int I = 42;",
+            "  }",
+            "  static class S {",
+            "    // BUG: Diagnostic contains: can be static",
+            "    private final Duration D = Duration.ofMillis(1);",
+            "    // BUG: Diagnostic contains: can be static",
+            "    private final int I = 42;",
+            "  }",
+            "  void f() {",
+            "    class L {",
+            "      // BUG: Diagnostic contains: can be static",
+            "      private final Duration D = Duration.ofMillis(1);",
+            "      // BUG: Diagnostic contains: can be static",
+            "      private final int I = 42;",
+            "    }",
+            "    new Object() {",
+            "      // BUG: Diagnostic contains: can be static",
+            "      private final Duration D = Duration.ofMillis(1);",
+            "      // BUG: Diagnostic contains: can be static",
+            "      private final int I = 42;",
+            "    };",
+            "  }",
+            "}")
         .doTest();
   }
 
   @Test
   public void record() {
-    assumeTrue(RuntimeVersion.isAtLeast16());
+    assume().that(Runtime.version().feature()).isAtLeast(16);
     compilationHelper
         .addSourceLines(
             "ExampleClass.java",

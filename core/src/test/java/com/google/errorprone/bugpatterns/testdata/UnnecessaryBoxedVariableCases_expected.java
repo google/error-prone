@@ -20,7 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.List;
 import java.util.stream.Stream;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /** @author awturner@google.com (Andy Turner) */
 class UnnecessaryBoxedVariableCases {

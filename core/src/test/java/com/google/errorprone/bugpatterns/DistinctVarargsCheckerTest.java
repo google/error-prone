@@ -77,7 +77,7 @@ public class DistinctVarargsCheckerTest {
   }
 
   @Test
-  public void distinctVarargsChecker_sameVariableInGuavaVarargMethods_shouldFlag() {
+  public void distinctVarargsChecker_sameVariableInVarargMethods_shouldFlag() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -85,6 +85,8 @@ public class DistinctVarargsCheckerTest {
             "import com.google.common.collect.ImmutableSortedMap;",
             "import com.google.common.collect.ImmutableSet;",
             "import com.google.common.collect.ImmutableSortedSet;",
+            "import java.util.Map;",
+            "import java.util.Set;",
             "public class Test {",
             "  void testFunction() {",
             "    int first = 1, second = 2;",
@@ -93,7 +95,11 @@ public class DistinctVarargsCheckerTest {
             "    // BUG: Diagnostic contains: DistinctVarargsChecker",
             "    Ordering.explicit(first, first, second);",
             "    // BUG: Diagnostic contains: DistinctVarargsChecker",
+            "    Map.of(first, second, first, second);",
+            "    // BUG: Diagnostic contains: DistinctVarargsChecker",
             "    ImmutableSortedMap.of(first, second, first, second);",
+            "    // BUG: Diagnostic contains: DistinctVarargsChecker",
+            "    Set.of(first, first);",
             "    // BUG: Diagnostic contains: DistinctVarargsChecker",
             "    ImmutableSet.of(first, first);",
             "    // BUG: Diagnostic contains: DistinctVarargsChecker",
@@ -108,24 +114,26 @@ public class DistinctVarargsCheckerTest {
   }
 
   @Test
-  public void distinctVarargsChecker_differentVariableInGuavaVarargMethods_shouldNotFlag() {
+  public void distinctVarargsChecker_differentVariableInVarargMethods_shouldNotFlag() {
     compilationHelper
         .addSourceLines(
             "Test.java",
             "import com.google.common.collect.Ordering;",
             "import com.google.common.collect.ImmutableBiMap;",
-            "import com.google.common.collect.ImmutableMap;",
             "import com.google.common.collect.ImmutableSortedMap;",
             "import com.google.common.collect.ImmutableSet;",
             "import com.google.common.collect.ImmutableSortedSet;",
+            "import java.util.Map;",
+            "import java.util.Set;",
             "public class Test {",
             "  void testFunction() {",
             "    int first = 1, second = 2, third = 3, fourth = 4;",
             "    Ordering.explicit(first);",
             "    Ordering.explicit(first, second);",
-            "    ImmutableMap.of(first, second);",
+            "    Map.of(first, second);",
             "    ImmutableSortedMap.of(first, second);",
             "    ImmutableBiMap.of(first, second, third, fourth);",
+            "    Set.of(first, second);",
             "    ImmutableSet.of(first);",
             "    ImmutableSet.of(first, second);",
             "    ImmutableSortedSet.of(first);",
@@ -142,9 +150,11 @@ public class DistinctVarargsCheckerTest {
             "Test.java",
             "import com.google.common.collect.ImmutableSet;",
             "import com.google.common.collect.ImmutableSortedSet;",
+            "import java.util.Set;",
             "public class Test {",
             "  void testFunction() {",
             "    int first = 1, second = 2;",
+            "    Set.of(first, first);",
             "    ImmutableSet.of(first, first);",
             "    ImmutableSet.of(first, first, second);",
             "    ImmutableSortedSet.of(first, first);",
@@ -155,9 +165,11 @@ public class DistinctVarargsCheckerTest {
             "Test.java",
             "import com.google.common.collect.ImmutableSet;",
             "import com.google.common.collect.ImmutableSortedSet;",
+            "import java.util.Set;",
             "public class Test {",
             "  void testFunction() {",
             "    int first = 1, second = 2;",
+            "    Set.of(first);",
             "    ImmutableSet.of(first);",
             "    ImmutableSet.of(first, second);",
             "    ImmutableSortedSet.of(first);",

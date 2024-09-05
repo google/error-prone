@@ -16,12 +16,11 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static org.junit.Assume.assumeTrue;
+import static com.google.common.truth.TruthJUnit.assume;
 
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.util.RuntimeVersion;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -38,7 +37,7 @@ public final class StatementSwitchToExpressionSwitchTest {
   @Test
   public void switchByEnum_removesRedundantBreak_error() {
 
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -101,7 +100,8 @@ public final class StatementSwitchToExpressionSwitchTest {
             " ",
             "  public void foo(Side side) { ",
             "    switch(side) {",
-            "       case OBVERSE -> { /* left comment */",
+            "       case OBVERSE -> {",
+            "          /* left comment */",
             "          /* and there is more: */",
             "          // to end of line",
             "          // Explanatory comment",
@@ -109,6 +109,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "          // Middle comment",
             "          System.out.println(\"obverse\");",
             "          // Break comment",
+            "          // End comment",
             "       }",
             "       case REVERSE -> System.out.println(\"reverse\");",
             "    }",
@@ -116,13 +117,13 @@ public final class StatementSwitchToExpressionSwitchTest {
             "}")
         .setArgs(
             ImmutableList.of("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion"))
-        .doTest();
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 
   @Test
   public void switchByEnumWithCompletionAnalsis_removesRedundantBreak_error() {
 
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -194,13 +195,13 @@ public final class StatementSwitchToExpressionSwitchTest {
             "}")
         .setArgs(
             ImmutableList.of("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion"))
-        .doTest();
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 
   @Test
   public void switchByEnumCard_combinesCaseComments_error() {
 
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -213,9 +214,9 @@ public final class StatementSwitchToExpressionSwitchTest {
             "    // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]",
             "    switch(side) {",
             "       case HEART:",
-            "          System.out.println(\"heart\");",
+            "          System.out.println(\"heart2\");",
             "          break;",
-            "       case DIAMOND:",
+            "       case /* sparkly */ DIAMOND /* Sparkly */:",
             "          // Empty block comment 1",
             "          // Fall through",
             "       case SPADE:",
@@ -245,7 +246,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "       case HEART:",
             "          System.out.println(\"heart2\");",
             "          break;",
-            "       case /* sparkly */ DIAMOND:",
+            "       case /* sparkly */ DIAMOND /* Sparkly */:",
             "          // Empty block comment 1",
             "          // Fall through",
             "       case SPADE:",
@@ -267,7 +268,9 @@ public final class StatementSwitchToExpressionSwitchTest {
             "  public void foo(Side side) { ",
             "    switch(side) {",
             "       case HEART -> System.out.println(\"heart2\");",
-            "       case DIAMOND, SPADE, CLUB -> { /* sparkly */",
+            "       case DIAMOND, SPADE, CLUB -> {",
+            "          /* sparkly */",
+            "          /* Sparkly */",
             "          // Empty block comment 1",
             "          // Empty block comment 2",
             "          // Start of block comment 1",
@@ -279,13 +282,13 @@ public final class StatementSwitchToExpressionSwitchTest {
             "}")
         .setArgs(
             ImmutableList.of("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion"))
-        .doTest();
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 
   @Test
   public void switchByEnumCard2_removesRedundantBreaks_error() {
 
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -325,6 +328,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "  }",
             " ",
             "  public void foo(Side side) { ",
+            "    // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]",
             "    switch(side) {",
             "       case HEART:",
             "          System.out.println(\"heart\");",
@@ -350,13 +354,12 @@ public final class StatementSwitchToExpressionSwitchTest {
             "  public void foo(Side side) { ",
             "    // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]",
             "    switch(side) {",
-            "       case HEART -> {",
+            "       case HEART -> ",
             "          System.out.println(\"heart\");",
             "          // Pre break comment",
-            "       }",
+            "          // Post break comment",
             "       case DIAMOND -> {",
             "          // Diamond break comment",
-            "          break;",
             "       }",
             "       case SPADE, CLUB -> System.out.println(\"everything else\");",
             "    }",
@@ -364,13 +367,13 @@ public final class StatementSwitchToExpressionSwitchTest {
             "}")
         .setArgs(
             ImmutableList.of("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion"))
-        .doTest();
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 
   @Test
   public void switchByEnumCard_onlyExpressionsAndThrowAreBraceless_error() {
 
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -443,7 +446,8 @@ public final class StatementSwitchToExpressionSwitchTest {
             "         case SPADE -> {",
             "            return;",
             "         }",
-            "         case CLUB -> throw new AssertionError();",
+            "         case CLUB ->",
+            "            throw new AssertionError();",
             "      }",
             "    }",
             "  }",
@@ -456,7 +460,7 @@ public final class StatementSwitchToExpressionSwitchTest {
   @Test
   public void switchFallsThruToDefault_noError() {
 
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -487,7 +491,7 @@ public final class StatementSwitchToExpressionSwitchTest {
   public void switchFallsThruFromDefault_noError() {
 
     // Placing default in the middle of the switch is not recommended, but is valid Java
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -520,7 +524,7 @@ public final class StatementSwitchToExpressionSwitchTest {
   public void switchWithDefaultInMiddle_error() {
 
     // Placing default in the middle of the switch is not recommended, but is valid Java
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -590,21 +594,22 @@ public final class StatementSwitchToExpressionSwitchTest {
             "          System.out.println(\"diamond\");",
             "          return;",
             "       }",
-            "       default -> { /* comment: */",
+            "       default -> ",
+            "         /* comment: */",
             "         System.out.println(\"club\");",
-            "       }",
-            "       case SPADE -> System.out.println(\"spade\");",
+            "       case SPADE -> ",
+            "          System.out.println(\"spade\");",
             "    }",
             "  }",
             "}")
         .setArgs(
             ImmutableList.of("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion"))
-        .doTest();
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 
   @Test
   public void switchWithLabelledBreak_error() {
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -674,8 +679,11 @@ public final class StatementSwitchToExpressionSwitchTest {
             "            System.out.println(\"will return\");",
             "            return;",
             "         }",
-            "         case DIAMOND -> {break outer;}",
-            "         case SPADE, CLUB -> System.out.println(\"everything else\");",
+            "         case DIAMOND -> {",
+            "            break outer;",
+            "         }",
+            "         case SPADE, CLUB -> ",
+            "            System.out.println(\"everything else\");",
             "      }",
             "    }",
             "  }",
@@ -687,7 +695,7 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void switchByEnum_statementSwitchWithMultipleExpressions_error() {
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -759,7 +767,7 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void switchByEnumCardWithThrow_error() {
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -790,7 +798,7 @@ public final class StatementSwitchToExpressionSwitchTest {
   @Test
   public void switchInSwitch_error() {
     // Only the outer "switch" should generate a finding
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -827,7 +835,7 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void switchByEnumCardWithReturnNested1_error() {
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -885,9 +893,12 @@ public final class StatementSwitchToExpressionSwitchTest {
             " ",
             "  public void foo(Side side) { ",
             "    switch(side) {",
-            "       case HEART-> System.out.println(\"heart\");",
-            "       case DIAMOND -> System.out.println(\"nested1\");",
-            "       case SPADE, CLUB -> System.out.println(\"everything else\");",
+            "       case HEART-> ",
+            "         System.out.println(\"heart\");",
+            "       case DIAMOND -> ",
+            "          System.out.println(\"nested1\");",
+            "       case SPADE, CLUB -> ",
+            "          System.out.println(\"everything else\");",
             "    }",
             "  }",
             "}")
@@ -898,7 +909,7 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void switchByEnumCardWithReturnNested2_error() {
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -930,7 +941,7 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void switchByEnumWithConditionalControl_noError() {
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -961,7 +972,7 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void switchByEnumWithLambda_noError() {
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -993,7 +1004,7 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void singleCaseConvertible_error() {
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -1018,7 +1029,7 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void emptyExpressionSwitchCases_noMatch() {
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -1035,7 +1046,7 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void nonEmptyExpressionSwitchCases_noMatch() {
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -1052,7 +1063,7 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void dynamicWithThrowableDuringInitializationFromMethod_noMatch() {
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -1073,7 +1084,7 @@ public final class StatementSwitchToExpressionSwitchTest {
   @Test
   public void switchByEnum_exampleInDocumentation_error() {
     // This code appears as an example in the documentation (added surrounding class)
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -1144,7 +1155,392 @@ public final class StatementSwitchToExpressionSwitchTest {
             "  private void bar() {}",
             "}")
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+  }
+
+  @Test
+  public void switchByEnum_caseHasOnlyComments_error() {
+    // When a case is solely comments, we should still try to convert the switch using braceless
+    // syntax
+    assume().that(Runtime.version().feature()).isAtLeast(14);
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  enum Suit {HEARTS, CLUBS, SPADES, DIAMONDS};",
+            "  public Test() {}",
+            "  private void foo(Suit suit) {",
+            "    // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]",
+            "    switch(suit) {",
+            "      case HEARTS:",
+            "        // A comment here",
+            "        // more comments.",
+            "      case DIAMONDS:",
+            "        // Diamond comment",
+            "        System.out.println(\"Red diamonds\");",
+            "        break;",
+            "      case SPADES:",
+            "        // Fall through",
+            "      case CLUBS:",
+            "        bar();",
+            "        System.out.println(\"Black suit\");",
+            "    }",
+            "  }",
+            "  private void bar() {}",
+            "}")
+        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
         .doTest();
+
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  enum Suit {HEARTS, CLUBS, SPADES, DIAMONDS};",
+            "  public Test() {}",
+            "  private void foo(Suit suit) {",
+            "    switch(suit) {",
+            "      case HEARTS:",
+            "        // A comment here",
+            "        // more comments.",
+            "      case DIAMONDS:",
+            "        // Diamond comment",
+            "        System.out.println(\"Heart or diamond\");",
+            "        break;",
+            "      case SPADES:",
+            "        // Fall through",
+            "      case CLUBS:",
+            "        bar();",
+            "        System.out.println(\"Black suit\");",
+            "    }",
+            "  }",
+            "  private void bar() {}",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  enum Suit {HEARTS, CLUBS, SPADES, DIAMONDS};",
+            "  public Test() {}",
+            "  private void foo(Suit suit) {",
+            "    switch(suit) {",
+            "      case HEARTS, DIAMONDS -> ",
+            "        // A comment here",
+            "        // more comments.",
+            "        // Diamond comment",
+            "        System.out.println(\"Heart or diamond\");",
+            "      case SPADES, CLUBS -> {",
+            "        bar();",
+            "        System.out.println(\"Black suit\");",
+            "       }",
+            "    }",
+            "  }",
+            "  private void bar() {}",
+            "}")
+        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+  }
+
+  @Test
+  public void switchByEnum_accumulatedComments_error() {
+    // Comments should be aggregated across multiple cases
+    assume().that(Runtime.version().feature()).isAtLeast(14);
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  enum Suit {HEARTS, CLUBS, SPADES, DIAMONDS};",
+            "  public Test() {}",
+            "  private void foo(Suit suit) {",
+            "    // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]",
+            "    switch(suit) {",
+            "      case /* red */ HEARTS:",
+            "        // A comment here",
+            "        // more comments.",
+            "      case /* red */ DIAMONDS:",
+            "        // Diamonds comment",
+            "      case /* black */SPADES:",
+            "        // Spades comment",
+            "      case /* black */CLUBS:",
+            "        bar();",
+            "        System.out.println(\"Any suit\");",
+            "    }",
+            "  }",
+            "  private void bar() {}",
+            "}")
+        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
+        .doTest();
+
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  enum Suit {HEARTS, CLUBS, SPADES, DIAMONDS};",
+            "  public Test() {}",
+            "  private void foo(Suit suit) {",
+            "    // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]",
+            "    switch(suit) {",
+            "      case /* red */ HEARTS:",
+            "        // A comment here",
+            "        // more comments.",
+            "      case /* red */ DIAMONDS:",
+            "        // Diamonds comment",
+            "      case /* black */SPADES:",
+            "        // Spades comment",
+            "      case /* black */CLUBS:",
+            "        bar();",
+            "        System.out.println(\"Any suit\");",
+            "    }",
+            "  }",
+            "  private void bar() {}",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  enum Suit {HEARTS, CLUBS, SPADES, DIAMONDS};",
+            "  public Test() {}",
+            "  private void foo(Suit suit) {",
+            "    // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]",
+            "    switch(suit) {",
+            "      case HEARTS, DIAMONDS, SPADES, CLUBS -> {",
+            "        /* red */",
+            "        // A comment here",
+            "        // more comments.",
+            "        /* red */",
+            "        // Diamonds comment",
+            "        /* black */",
+            "        // Spades comment",
+            "        /* black */",
+            "        bar();",
+            "        System.out.println(\"Any suit\");",
+            "       }",
+            "    }",
+            "  }",
+            "  private void bar() {}",
+            "}")
+        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+  }
+
+  @Test
+  public void switchByEnum_surroundingBracesCannotRemove_error() {
+    // Can't remove braces around OBVERSE because break statements are not a member of
+    // KINDS_CONVERTIBLE_WITHOUT_BRACES
+    assume().that(Runtime.version().feature()).isAtLeast(14);
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {OBVERSE, REVERSE};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public void foo(Side side) { ",
+            "    // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]",
+            "    switch(side) {",
+            "      case OBVERSE: {",
+            "        // The quick brown fox, jumps over the lazy dog, etc.",
+            "        break;",
+            "      }",
+            "  ",
+            "      default: { ",
+            "        throw new RuntimeException(\"Invalid type.\");",
+            "      }",
+            "    }",
+            "  }",
+            "}")
+        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
+        .doTest();
+
+    // Check correct generated code
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {OBVERSE, REVERSE};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public void foo(Side side) { ",
+            "    switch(side) {",
+            "      case OBVERSE: {",
+            "        // The quick brown fox, jumps over the lazy dog, etc.",
+            "        break;",
+            "      }",
+            "  ",
+            "      default: { ",
+            "        throw new RuntimeException(\"Invalid type.\");",
+            "      }",
+            "    }",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {OBVERSE, REVERSE};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public void foo(Side side) { ",
+            "    switch(side) {",
+            "      case OBVERSE -> {",
+            "        // The quick brown fox, jumps over the lazy dog, etc.",
+            "      }",
+            "      default -> ",
+            "        throw new RuntimeException(\"Invalid type.\");",
+            "      ",
+            "    }",
+            "  }",
+            "}")
+        .setArgs(
+            ImmutableList.of("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion"))
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+  }
+
+  @Test
+  public void switchByEnum_surroundingBracesEmpty_error() {
+    // Test handling of cases with surrounding braces that are empty.  The braces around OBVERSE
+    // can be removed because throw is a member of KINDS_CONVERTIBLE_WITHOUT_BRACES.
+    assume().that(Runtime.version().feature()).isAtLeast(14);
+
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {OBVERSE, REVERSE};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public void foo(Side side) { ",
+            "    // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]",
+            "    switch(side) {",
+            "      case OBVERSE: {",
+            "       // The quick brown fox, jumps over the lazy dog, etc.",
+            "       throw new RuntimeException(\"Invalid.\");",
+            "      }",
+            "  ",
+            "      default: {",
+            "      }",
+            "    }",
+            "  }",
+            "}")
+        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
+        .doTest();
+
+    // Check correct generated code
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {OBVERSE, REVERSE};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public void foo(Side side) { ",
+            "    switch(side) {",
+            "      case OBVERSE: {",
+            "       // The quick brown fox, jumps over the lazy dog, etc.",
+            "       throw new RuntimeException(\"Invalid.\");",
+            "      }",
+            "  ",
+            "      default: {",
+            "      }",
+            "    }",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {OBVERSE, REVERSE};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public void foo(Side side) { ",
+            "    switch(side) {",
+            "      case OBVERSE -> ",
+            "        // The quick brown fox, jumps over the lazy dog, etc.",
+            "        throw new RuntimeException(\"Invalid.\");",
+            "      default -> {}",
+            "      ",
+            "    }",
+            "  }",
+            "}")
+        .setArgs(
+            ImmutableList.of("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion"))
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+  }
+
+  @Test
+  public void switchByEnum_afterReturnComments_error() {
+    assume().that(Runtime.version().feature()).isAtLeast(14);
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  enum Suit {HEART, SPADE, DIAMOND, CLUB};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public int foo(Suit suit) { ",
+            "    // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]",
+            "    switch(suit) {",
+            "       case HEART:",
+            "          // before return comment",
+            "          return 123;",
+            "          // after return comment",
+            "          /* more comments */",
+            "          default:",
+            "    }",
+            "  return 0;",
+            " }",
+            "}")
+        .setArgs(
+            ImmutableList.of("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion"))
+        .doTest();
+
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  enum Suit {HEART, SPADE, DIAMOND, CLUB};",
+            "  public Test(int foo) {}",
+            " ",
+            "  public int foo(Suit suit) { ",
+            "    // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]",
+            "    switch(suit) {",
+            "       case HEART:",
+            "          // before return comment",
+            "          return 123;",
+            "          // after return comment",
+            "          /* more comments */",
+            "          default:",
+            "          //default comment",
+            "    }",
+            "  return 0;",
+            " }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  enum Suit {HEART, SPADE, DIAMOND, CLUB};",
+            "  public Test(int foo) {}",
+            " ",
+            "  public int foo(Suit suit) {",
+            "    // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]",
+            "    switch(suit) {",
+            "      case HEART -> {",
+            "          // before return comment",
+            "          return 123;",
+            "          // after return comment",
+            "          /* more comments */",
+            "        }",
+            "      default -> {",
+            "          //default comment",
+            "       }",
+            "    }",
+            "    return 0;",
+            "  }",
+            "}")
+        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 
   /**********************************
@@ -1155,7 +1551,7 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void switchByEnum_returnSwitch_error() {
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -1235,7 +1631,7 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void switchByEnum_returnSwitchWithShouldNeverHappen_error() {
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
 
     // Check correct generated code
     refactoringHelper
@@ -1281,17 +1677,19 @@ public final class StatementSwitchToExpressionSwitchTest {
             "       case SPADE -> throw new RuntimeException();",
             "       case CLUB -> throw new NullPointerException();",
             "    };",
+            "    // This should never happen",
+            " ",
             "  }",
             "}")
         .setArgs(
             ImmutableList.of(
                 "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion"))
-        .doTest();
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 
   @Test
   public void switchByEnum_switchInReturnSwitchWithShouldNeverHappen_error() {
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     // No error because the inner switch is the only fixable one
     helper
         .addSourceLines(
@@ -1336,7 +1734,7 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void switchByEnum_exhaustiveWithDefault_error() {
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -1414,13 +1812,13 @@ public final class StatementSwitchToExpressionSwitchTest {
         .setArgs(
             ImmutableList.of(
                 "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion"))
-        .doTest();
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 
   @Test
   public void switchByEnum_defaultFallThru_noError() {
     // No error because default doesn't return anything within its block
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -1454,7 +1852,7 @@ public final class StatementSwitchToExpressionSwitchTest {
   @Test
   public void switchByEnum_alwaysThrows_noError() {
     // Every case throws, thus no type for return switch
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -1487,7 +1885,7 @@ public final class StatementSwitchToExpressionSwitchTest {
   @Test
   public void switchByEnum_returnSwitchWithShouldNeverHappen_errorAndRemoveShouldNeverHappen() {
     // The switch has a case for each enum and "should never happen" error handling
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -1517,6 +1915,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "      }",
             "      // Custom comment - should never happen",
             "      int z = invoke(/* block comment 0 */);",
+            "      // Custom comment 2",
             "      {z++;}",
             "      throw new RuntimeException(\"Switch was not exhaustive at runtime \" + z);",
             "    }",
@@ -1557,6 +1956,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "      }",
             "      // Custom comment - should never happen",
             "      int z = invoke(/* block comment 0 */);",
+            "      // Custom comment 2",
             "      {z++;}",
             "      throw new RuntimeException(\"Switch was not exhaustive at runtime \" + z);",
             "    }",
@@ -1588,6 +1988,9 @@ public final class StatementSwitchToExpressionSwitchTest {
             "        case CLUB -> throw new NullPointerException();",
             "      };",
             "      // Custom comment - should never happen",
+            "",
+            "      // Custom comment 2",
+            "",
             "    }",
             "    System.out.println(\"don't delete 2\");",
             "    return 0;",
@@ -1596,14 +1999,14 @@ public final class StatementSwitchToExpressionSwitchTest {
         .setArgs(
             ImmutableList.of(
                 "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion"))
-        .doTest();
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 
   @Test
   public void switchByEnum_returnSwitchNoFollowingStatementsInBlock_errorAndNoRemoval() {
     // The switch is exhaustive but doesn't have any statements immediately following it in the
     // lowest ancestor statement block
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -1709,14 +2112,143 @@ public final class StatementSwitchToExpressionSwitchTest {
         .setArgs(
             ImmutableList.of(
                 "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion"))
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+  }
+
+  @Test
+  public void switchByEnum_groupedComments_errorAndNoRemoval() {
+    // The switch is exhaustive but doesn't have any statements immediately following it in the
+    // lowest ancestor statement block
+    assume().that(Runtime.version().feature()).isAtLeast(14);
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public int invoke() {",
+            "    return 123;",
+            "  }",
+            "  public int foo(Side side) { ",
+            "    System.out.println(\"don't delete 0\");",
+            "    if (invoke() > 0) {",
+            "      System.out.println(\"don't delete 1\");",
+            "      // Preceding comment",
+            "      // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]",
+            "      switch(side) {",
+            "        case HEART /* lhs comment */: // rhs comment",
+            "          // Another comment",
+            "        case /* sparkly */ DIAMOND /* Sparkly */:",
+            "          // Diamond",
+            "        case SPADE:",
+            "          // Before invoke",
+            "          return invoke();",
+            "          // After invoke",
+            "        case CLUB:",
+            "          throw new NullPointerException();",
+            "          // After last case",
+            "      }",
+            "    }",
+            "    // Custom comment - should never happen because invoke returns 123 or throws",
+            "    int z = invoke(/* block comment 0 */);",
+            "    {z++;}",
+            "    throw new RuntimeException(\"Invoke <= 0 at runtime \");",
+            "  }",
+            "}")
+        .setArgs(
+            ImmutableList.of(
+                "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion"))
         .doTest();
+
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public int invoke() {",
+            "    return 123;",
+            "  }",
+            "  public int foo(Side side) { ",
+            "    System.out.println(\"don't delete 0\");",
+            "    if (invoke() > 0) {",
+            "      System.out.println(\"don't delete 1\");",
+            "      // Preceding comment",
+            "      // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]",
+            "      switch(side) {",
+            "        case HEART /* lhs comment */: // rhs comment",
+            "          // Another comment",
+            "        case /* sparkly */ DIAMOND /* Sparkly */:",
+            "          // Diamond",
+            "        case SPADE:",
+            "          // Before invoke",
+            "          return invoke();",
+            "          // After invoke",
+            "          /* More after invoke */",
+            "        case CLUB:",
+            "          throw new NullPointerException();",
+            "          // After last case",
+            "      }",
+            "    }",
+            "    // Custom comment - should never happen because invoke returns 123 or throws",
+            "    int z = invoke(/* block comment 0 */);",
+            "    {z++;}",
+            "    throw new RuntimeException(\"Invoke <= 0 at runtime \");",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public int invoke() {",
+            "    return 123;",
+            "  }",
+            "  public int foo(Side side) { ",
+            "    System.out.println(\"don't delete 0\");",
+            "    if (invoke() > 0) {",
+            "      System.out.println(\"don't delete 1\");",
+            "      // Preceding comment",
+            "      // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]",
+            "      return switch(side) {",
+            "        case HEART, DIAMOND, SPADE -> ",
+            "          /* lhs comment */",
+            "          // rhs comment",
+            "          // Another comment",
+            "          /* sparkly */",
+            "          /* Sparkly */",
+            "          // Diamond",
+            "          // Before invoke",
+            "          invoke();",
+            "          // After invoke",
+            "          /* More after invoke */",
+            "        case CLUB -> throw new NullPointerException();",
+            "          // After last case",
+            "      };",
+            "    }",
+            "    // Custom comment - should never happen because invoke returns 123 or throws",
+            "    int z = invoke(/* block comment 0 */);",
+            "    {z++;}",
+            "    throw new RuntimeException(\"Invoke <= 0 at runtime \");",
+            "  }",
+            "}")
+        .setArgs(
+            ImmutableList.of(
+                "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion"))
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 
   @Test
   public void
       switchByEnum_returnSwitchWithShouldNeverHappenInLambda_errorAndRemoveShouldNeverHappen() {
     // Conversion to return switch within a lambda
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
 
     refactoringHelper
         .addInputLines(
@@ -1772,6 +2304,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "        case CLUB -> throw new NullPointerException();",
             "      };",
             "      // Custom comment - should never happen",
+            "",
             "    };",
             "    System.out.println(\"don't delete 2\");",
             "    return lambda.get();",
@@ -1780,13 +2313,13 @@ public final class StatementSwitchToExpressionSwitchTest {
         .setArgs(
             ImmutableList.of(
                 "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion"))
-        .doTest();
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 
   @Test
   public void switchByEnum_returnSwitchVoid_noError() {
     // A void cannot be converted to a return switch
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -1817,7 +2350,7 @@ public final class StatementSwitchToExpressionSwitchTest {
   @Test
   public void switchByEnum_returnLabelledContinue_noError() {
     // Control jumps outside the switch for HEART
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -1851,7 +2384,7 @@ public final class StatementSwitchToExpressionSwitchTest {
   @Test
   public void switchByEnum_returnUnlabelledContinue_noError() {
     // Control jumps outside the switch for HEART
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -1885,7 +2418,7 @@ public final class StatementSwitchToExpressionSwitchTest {
   @Test
   public void switchByEnum_returnLabelledBreak_noError() {
     // Control jumps outside the switch for HEART
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -1920,7 +2453,7 @@ public final class StatementSwitchToExpressionSwitchTest {
   @Test
   public void switchByEnum_returnYield_noError() {
     // Does not attempt to convert "yield" expressions
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -1956,7 +2489,7 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void switchByEnum_assignmentSwitchToLocalHasDefault_error() {
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -2039,7 +2572,7 @@ public final class StatementSwitchToExpressionSwitchTest {
   @Test
   public void switchByEnum_assignmentSwitchMixedReferences_error() {
     // Must deduce that "x" and "this.x" refer to same thing
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -2113,7 +2646,8 @@ public final class StatementSwitchToExpressionSwitchTest {
             " ",
             "  public int foo(Side side) { ",
             "    this.x <<= switch(side) {",
-            "       case HEART ->  /* LHS comment */",
+            "       case HEART ->",
+            "          /* LHS comment */",
             "          // Inline comment",
             "          2;",
             "       case DIAMOND -> (((x+1) * (x*x)) << 1);",
@@ -2126,13 +2660,13 @@ public final class StatementSwitchToExpressionSwitchTest {
         .setArgs(
             ImmutableList.of(
                 "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion"))
-        .doTest();
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 
   @Test
   public void switchByEnum_assignmentSwitchMixedReferences_noError() {
     // Must deduce that "x" and "this.y" refer to different things
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -2169,7 +2703,7 @@ public final class StatementSwitchToExpressionSwitchTest {
   @Test
   public void switchByEnum_assignmentSwitchTwoAssignments_noError() {
     // Can't convert multiple assignments, even if redundant
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -2205,7 +2739,7 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void switchByEnum_assignmentSwitchToSingleArray_error() {
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -2294,7 +2828,7 @@ public final class StatementSwitchToExpressionSwitchTest {
     // Multiple array dereferences or other non-variable left-hand-side expressions may (in
     // principle) be convertible to assignment switches, but this feature is not supported at this
     // time
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -2331,7 +2865,7 @@ public final class StatementSwitchToExpressionSwitchTest {
   @Test
   public void switchByEnum_assignmentSwitchToMultipleDistinct_noError() {
     // x[5] and x[6] are distinct assignment targets
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -2369,7 +2903,7 @@ public final class StatementSwitchToExpressionSwitchTest {
   public void switchByEnum_assignmentSwitchMixedKinds_noError() {
     // Different assignment types ("=" versus "+=").  The check does not attempt to alter the
     // assignments to make the assignment types match (e.g. does not change to "x = x + 2")
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -2404,7 +2938,7 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void switchByEnum_assignmentLabelledContinue_noError() {
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -2445,7 +2979,7 @@ public final class StatementSwitchToExpressionSwitchTest {
   @Test
   public void switchByEnum_assignmentLabelledBreak_noError() {
     // Can't convert because of "break before"
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -2486,7 +3020,7 @@ public final class StatementSwitchToExpressionSwitchTest {
   @Test
   public void switchByEnum_assignmentLabelledBreak2_noError() {
     // Can't convert because of "break before" as the second statement in its block
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -2527,7 +3061,7 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void switchByEnum_assignmentUnlabelledContinue_noError() {
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -2568,7 +3102,7 @@ public final class StatementSwitchToExpressionSwitchTest {
   @Test
   public void switchByEnum_assignmentYield_noError() {
     // Does not attempt to convert "yield" expressions
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -2603,7 +3137,7 @@ public final class StatementSwitchToExpressionSwitchTest {
     // Transformation can change error handling.  Here, if the enum is not exhaustive at runtime
     // (say there is a new JOKER suit), then nothing would happen.  But the transformed source,
     // would throw.
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -2682,13 +3216,13 @@ public final class StatementSwitchToExpressionSwitchTest {
         .setArgs(
             ImmutableList.of(
                 "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion"))
-        .doTest();
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 
   @Test
   public void switchByEnum_exhaustiveCompoundAssignmentSwitch_error() {
     // Verify compound assignments (here, +=)
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -2765,9 +3299,115 @@ public final class StatementSwitchToExpressionSwitchTest {
   }
 
   @Test
+  public void switchByEnum_groupedComments_error() {
+    // Verify compound assignments (here, *=) with grouped comments
+    assume().that(Runtime.version().feature()).isAtLeast(14);
+    helper
+        .addSourceLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public int foo(Side side) { ",
+            "    int x = 0;",
+            "    // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]",
+            "    switch(side) {",
+            "       case /* red suit */ HEART:",
+            "         // Heart comment",
+            "       case /* red suit */ DIAMOND: // sparkles",
+            "         // Diamond comment",
+            "         // Fall through",
+            "       case /* black suit */ SPADE:",
+            "         x *= 2;",
+            "         // Before break comment",
+            "         break;",
+            "         // After break comment",
+            "       case /* black suit */ CLUB:",
+            "         // Club comment",
+            "         throw new NullPointerException();",
+            "         // Club after throw comment",
+            "    }",
+            "    return x;",
+            "  }",
+            "}")
+        .setArgs(
+            ImmutableList.of(
+                "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion"))
+        .doTest();
+
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public int foo(Side side) { ",
+            "    int x = 0;",
+            "    // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]",
+            "    switch(side) {",
+            "       case /* red suit */ HEART:",
+            "         // Heart comment",
+            "       case /* red suit */ DIAMOND: // sparkles",
+            "         // Diamond comment",
+            "         // Fall through",
+            "       case /* black suit */ SPADE:",
+            "         x *= 2;",
+            "         // Before break comment",
+            "         break;",
+            "         // After break comment",
+            "       case /* black suit */ CLUB:",
+            "         // Club comment",
+            "         throw new NullPointerException();",
+            "         // Club after throw comment",
+            "    }",
+            "    return x;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "class Test {",
+            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
+            "  public Test(int foo) {",
+            "  }",
+            " ",
+            "  public int foo(Side side) { ",
+            "    int x = 0;",
+            "    // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]",
+            "    x *= ",
+            "      switch(side) {",
+            "        case HEART, DIAMOND, SPADE ->",
+            "          /* red suit */",
+            "          // Heart comment",
+            "          /* red suit */",
+            "          // sparkles",
+            "          // Diamond comment",
+            "          /* black suit */",
+            "          2;",
+            "          // Before break comment",
+            "          // After break comment",
+            "        case CLUB ->",
+            "          /* black suit */",
+            "          // Club comment",
+            "          throw new NullPointerException();",
+            "          // Club after throw comment",
+            "      };",
+            "    return x;",
+            "  }",
+            "}")
+        .setArgs(
+            ImmutableList.of(
+                "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion"))
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+  }
+
+  @Test
   public void switchByEnum_compoundAssignmentExampleInDocumentation_error() {
     // This code appears as an example in the documentation (added surrounding class)
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -2779,7 +3419,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "    // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]",
             "    switch(suit) {",
             "      case HEARTS:",
-            "        // Fall thru",
+            "        // Fall through",
             "      case DIAMONDS:",
             "        score += -1;",
             "        break;",
@@ -2805,7 +3445,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "  private void updateScore(Suit suit) {",
             "    switch(suit) {",
             "      case HEARTS:",
-            "        // Fall thru",
+            "        // Fall through",
             "      case DIAMONDS:",
             "        score += -1;",
             "        break;",
@@ -2832,13 +3472,13 @@ public final class StatementSwitchToExpressionSwitchTest {
             "  }",
             "}")
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion")
-        .doTest();
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 
   @Test
   public void switchByEnum_exhaustiveAssignmentSwitchCaseList_error() {
     // Statement switch has cases with multiple values
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -2910,7 +3550,7 @@ public final class StatementSwitchToExpressionSwitchTest {
   @Test
   public void switchByEnum_nonExhaustiveAssignmentSwitch_noError() {
     // No HEART case
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -2941,7 +3581,7 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void i4222() {
-    assumeTrue(RuntimeVersion.isAtLeast14());
+    assume().that(Runtime.version().feature()).isAtLeast(14);
     refactoringHelper
         .addInputLines(
             "Test.java",
@@ -2978,6 +3618,93 @@ public final class StatementSwitchToExpressionSwitchTest {
             "  }",
             "}")
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=true")
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+  }
+
+  @Test
+  public void unnecessaryBreaks() {
+    assume().that(Runtime.version().feature()).isAtLeast(14);
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "public class Test {",
+            "  public static void main(String[] args) {",
+            "    switch (args.length) {",
+            "      case 0:",
+            "        System.out.println(0);",
+            "        break;",
+            "      default:",
+            "        // hello",
+            "        // world",
+            "        break;",
+            "    }",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "public class Test {",
+            "  public static void main(String[] args) {",
+            "    switch (args.length) {",
+            "      case 0 -> System.out.println(0);",
+            "      default -> {",
+            "        // hello",
+            "        // world",
+            "      }",
+            "    }",
+            "  }",
+            "}")
+        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=true")
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+  }
+
+  @Test
+  public void mixedExpressionsAndYields() {
+    assume().that(Runtime.version().feature()).isAtLeast(14);
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "public class Test {",
+            "  String f(int x) {",
+            "    switch (x) {",
+            "      case 0:",
+            "        return \"ZERO\";",
+            "      case 1:",
+            "        return \"ONE\";",
+            "      case 2: // hello",
+            "        // world",
+            "        System.err.println();",
+            "        System.err.println();",
+            "        return \"TWO\";",
+            "        // hello",
+            "        // world",
+            "      default:",
+            "        return \"\";",
+            "    }",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "public class Test {",
+            "  String f(int x) {",
+            "    return switch (x) {",
+            "      case 0 -> \"ZERO\";",
+            "      case 1 -> \"ONE\";",
+            "      case 2 -> {",
+            "        // hello",
+            "        // world",
+            "        System.err.println();",
+            "        System.err.println();",
+            "        yield \"TWO\";",
+            "      }",
+            "      // hello",
+            "      // world",
+            "      default -> \"\";",
+            "    };",
+            "  }",
+            "}")
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=true",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion=true")
         .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 }

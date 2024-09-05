@@ -37,7 +37,7 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /** Flags types being referred to by their non-canonical name. */
 @BugPattern(
@@ -80,8 +80,7 @@ public final class NonCanonicalType extends BugChecker implements MemberSelectTr
         .build();
   }
 
-  @Nullable
-  private static String canonicalName(MemberSelectTree tree) {
+  private static @Nullable String canonicalName(MemberSelectTree tree) {
     Symbol sym = getSymbol(tree);
     if (sym == null) {
       return null;

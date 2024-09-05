@@ -18,7 +18,7 @@ package com.google.errorprone.refaster;
 
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A serializable representation of a type template, used for enforcing type constraints on target
@@ -30,8 +30,7 @@ public abstract class UType extends Types.SimpleVisitor<Choice<Unifier>, Unifier
     implements Unifiable<Type>, Inlineable<Type> {
 
   @Override
-  @Nullable
-  public Choice<Unifier> visitType(Type t, @Nullable Unifier unifier) {
+  public @Nullable Choice<Unifier> visitType(Type t, @Nullable Unifier unifier) {
     return Choice.none();
   }
 

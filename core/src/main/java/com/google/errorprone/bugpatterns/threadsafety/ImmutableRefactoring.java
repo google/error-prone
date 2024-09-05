@@ -23,6 +23,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.annotations.Immutable;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -51,22 +52,19 @@ public class ImmutableRefactoring extends BugChecker implements CompilationUnitT
     this.wellKnownMutability = wellKnownMutability;
   }
 
+  private static final String JSR_305_IMMUTABLE = "javax.annotation.concurrent.Immutable";
+
   @Override
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
     ImmutableChecker immutableChecker =
         new ImmutableChecker(
-            wellKnownMutability,
-            ImmutableSet.of(
-                javax.annotation.concurrent.Immutable.class.getName(),
-                com.google.errorprone.annotations.Immutable.class.getName()));
+            wellKnownMutability, ImmutableSet.of(JSR_305_IMMUTABLE, Immutable.class.getName()));
     Optional<? extends ImportTree> immutableImport =
         tree.getImports().stream()
             .filter(
                 i -> {
                   Symbol s = ASTHelpers.getSymbol(i.getQualifiedIdentifier());
-                  return s != null
-                      && s.getQualifiedName()
-                          .contentEquals(javax.annotation.concurrent.Immutable.class.getName());
+                  return s != null && s.getQualifiedName().contentEquals(JSR_305_IMMUTABLE);
                 })
             .findFirst();
     if (!immutableImport.isPresent()) {
@@ -76,8 +74,7 @@ public class ImmutableRefactoring extends BugChecker implements CompilationUnitT
     new TreePathScanner<Void, Void>() {
       @Override
       public Void visitClass(ClassTree node, Void unused) {
-        if (!ASTHelpers.hasAnnotation(
-            node, javax.annotation.concurrent.Immutable.class.getName(), state)) {
+        if (!ASTHelpers.hasAnnotation(node, JSR_305_IMMUTABLE, state)) {
           return super.visitClass(node, null);
         }
         boolean violator =
@@ -98,9 +95,7 @@ public class ImmutableRefactoring extends BugChecker implements CompilationUnitT
     }.scan(state.getPath(), null);
 
     SuggestedFix.Builder fixBuilder =
-        SuggestedFix.builder()
-            .removeImport(javax.annotation.concurrent.Immutable.class.getName())
-            .addImport(com.google.errorprone.annotations.Immutable.class.getName());
+        SuggestedFix.builder().removeImport(JSR_305_IMMUTABLE).addImport(Immutable.class.getName());
     for (ClassTree classTree : notOk) {
       getAnnotationsWithSimpleName(classTree.getModifiers().getAnnotations(), "Immutable")
           .forEach(fixBuilder::delete);

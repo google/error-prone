@@ -59,7 +59,7 @@ public class AmbiguousMethodReference extends BugChecker implements ClassTreeMat
             .map(MethodSymbol.class::cast)
             .filter(m -> m.isConstructor() || m.owner.equals(origin))
             .collect(
-                groupingBy(m -> methodReferenceDescriptor(types, m), toCollection(ArrayList::new)));
+                groupingBy(m -> methodReferenceDescriptor(state, m), toCollection(ArrayList::new)));
 
     // look for groups of ambiguous method references
     for (Tree member : tree.getMembers()) {
@@ -70,7 +70,7 @@ public class AmbiguousMethodReference extends BugChecker implements ClassTreeMat
       if (isSuppressed(msym, state)) {
         continue;
       }
-      List<MethodSymbol> clash = methods.remove(methodReferenceDescriptor(types, msym));
+      List<MethodSymbol> clash = methods.remove(methodReferenceDescriptor(state, msym));
       if (clash == null) {
         continue;
       }
@@ -104,13 +104,13 @@ public class AmbiguousMethodReference extends BugChecker implements ClassTreeMat
   }
 
   /** Returns a string descriptor of a method's reference type. */
-  private static String methodReferenceDescriptor(Types types, MethodSymbol sym) {
+  private static String methodReferenceDescriptor(VisitorState state, MethodSymbol sym) {
     StringBuilder sb = new StringBuilder();
     sb.append(sym.getSimpleName()).append('(');
     if (!sym.isStatic()) {
-      sb.append(Signatures.descriptor(sym.owner.type, types));
+      sb.append(Signatures.descriptor(sym.owner.type, state));
     }
-    sym.params().stream().map(p -> Signatures.descriptor(p.type, types)).forEachOrdered(sb::append);
+    sym.params().stream().map(p -> Signatures.descriptor(p.type, state)).forEachOrdered(sb::append);
     sb.append(")");
     return sb.toString();
   }

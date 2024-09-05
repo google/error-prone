@@ -44,10 +44,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.lang.model.element.Parameterizable;
 import javax.lang.model.element.TypeParameterElement;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author glorioso@google.com (Nick Glorioso)
@@ -68,8 +68,7 @@ public class IncompatibleArgumentType extends BugChecker implements MethodInvoca
   // null requiredType: I found the type variable, but I can't bind it to any type
   @AutoValue
   abstract static class RequiredType {
-    @Nullable
-    abstract Type type();
+    abstract @Nullable Type type();
 
     static RequiredType create(Type type) {
       return new AutoValue_IncompatibleArgumentType_RequiredType(type);
@@ -206,10 +205,9 @@ public class IncompatibleArgumentType extends BugChecker implements MethodInvoca
     return foundAnyTypeToEnforce;
   }
 
-  @Nullable
-  @CheckReturnValue
   // From calledReceiverType
-  private static RequiredType resolveRequiredTypeForThisCall(
+  @CheckReturnValue
+  private static @Nullable RequiredType resolveRequiredTypeForThisCall(
       VisitorState state,
       Type calledMethodType,
       Type calledReceiverType,
@@ -226,8 +224,7 @@ public class IncompatibleArgumentType extends BugChecker implements MethodInvoca
     return requiredType;
   }
 
-  @Nullable
-  private static RequiredType resolveTypeFromGenericMethod(
+  private static @Nullable RequiredType resolveTypeFromGenericMethod(
       Type calledMethodType, MethodSymbol declaredMethod, String typeArgName) {
     int tyargIndex = findTypeArgInList(declaredMethod, typeArgName);
     return tyargIndex == -1
@@ -238,8 +235,7 @@ public class IncompatibleArgumentType extends BugChecker implements MethodInvoca
 
   // Plumb through a type which is supposed to be a Types.Subst, then find the replacement
   // type that the compiler resolved.
-  @Nullable
-  private static Type getTypeFromTypeMapping(
+  private static @Nullable Type getTypeFromTypeMapping(
       Type m, MethodSymbol declaredMethod, String namedTypeArg) {
     ImmutableListMultimap<TypeVariableSymbol, Type> substitutions =
         ASTHelpers.getTypeSubstitution(m, declaredMethod);
@@ -254,8 +250,7 @@ public class IncompatibleArgumentType extends BugChecker implements MethodInvoca
 
   // class Foo<X> { void something(@CW("X") Object x); }
   // new Foo<String>().something(123);
-  @Nullable
-  private static RequiredType resolveTypeFromClass(
+  private static @Nullable RequiredType resolveTypeFromClass(
       Type calledType, ClassSymbol clazzSymbol, String typeArgName, VisitorState state) {
     // Try on the class
     int tyargIndex = findTypeArgInList(clazzSymbol, typeArgName);

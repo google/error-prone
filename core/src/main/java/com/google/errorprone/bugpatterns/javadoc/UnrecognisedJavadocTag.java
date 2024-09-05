@@ -42,7 +42,7 @@ import com.sun.tools.javac.parser.Tokens.Comment;
 import com.sun.tools.javac.tree.DCTree.DCDocComment;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /** Flags tags which haven't been recognised by the Javadoc parser. */
 @BugPattern(

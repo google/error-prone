@@ -20,7 +20,7 @@ import com.google.auto.value.AutoValue;
 import com.sun.source.tree.ContinueTree;
 import com.sun.source.tree.TreeVisitor;
 import com.sun.tools.javac.tree.JCTree.JCContinue;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * {@code UTree} representation of {@code ContinueTree}.
@@ -34,8 +34,7 @@ abstract class UContinue extends USimpleStatement implements ContinueTree {
   }
 
   @Override
-  @Nullable
-  public abstract StringName getLabel();
+  public abstract @Nullable StringName getLabel();
 
   @Override
   public Kind getKind() {

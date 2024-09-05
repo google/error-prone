@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns.nullness;
 
-import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,9 +28,6 @@ public class NullArgumentForNonNullParameterTest {
       CompilationTestHelper.newInstance(NullArgumentForNonNullParameter.class, getClass());
   private final CompilationTestHelper aggressiveHelper =
       CompilationTestHelper.newInstance(NullArgumentForNonNullParameter.class, getClass())
-          .setArgs("-XepOpt:Nullness:Conservative=false");
-  private final BugCheckerRefactoringTestHelper aggressiveRefactoringHelper =
-      BugCheckerRefactoringTestHelper.newInstance(NullArgumentForNonNullParameter.class, getClass())
           .setArgs("-XepOpt:Nullness:Conservative=false");
 
   @Test

@@ -32,7 +32,7 @@ import com.sun.tools.javac.tree.JCTree.JCConditional;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.TreeCopier;
 import com.sun.tools.javac.tree.TreeMaker;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * {@link UTree} version of {@link UnaryTree}.
@@ -66,8 +66,7 @@ abstract class UUnary extends UExpression implements UnaryTree {
   public abstract UExpression getExpression();
 
   @Override
-  @Nullable
-  public Choice<Unifier> visitUnary(UnaryTree unary, @Nullable Unifier unifier) {
+  public @Nullable Choice<Unifier> visitUnary(UnaryTree unary, @Nullable Unifier unifier) {
     return Choice.condition(getKind().equals(unary.getKind()), unifier)
         .thenChoose(
             unifications(getExpression(), ASTHelpers.stripParentheses(unary.getExpression())));

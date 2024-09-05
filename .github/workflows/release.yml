@@ -16,10 +16,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: 'Set up JDK 24 from jdk.java.net'
+        uses: oracle-actions/setup-java@v1
+        with:
+          website: jdk.java.net
+          release: 24
+          cache: 'maven'
+
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
-          java-version: 17
+          java-version: |
+            11
+            17
           distribution: 'zulu'
           cache: 'maven'
           server-id: ossrh

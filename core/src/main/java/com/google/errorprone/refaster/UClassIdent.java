@@ -27,7 +27,7 @@ import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Identifier for a class type.
@@ -71,13 +71,11 @@ abstract class UClassIdent extends UIdent {
   }
 
   @Override
-  @Nullable
-  protected Choice<Unifier> defaultAction(Tree tree, @Nullable Unifier unifier) {
+  protected @Nullable Choice<Unifier> defaultAction(Tree tree, @Nullable Unifier unifier) {
     return unify(ASTHelpers.getSymbol(tree), unifier);
   }
 
-  @Nullable
-  public Choice<Unifier> unify(@Nullable Symbol symbol, Unifier unifier) {
+  public @Nullable Choice<Unifier> unify(@Nullable Symbol symbol, Unifier unifier) {
     return symbol != null
         ? getName().unify(symbol.getQualifiedName(), unifier)
         : Choice.<Unifier>none();

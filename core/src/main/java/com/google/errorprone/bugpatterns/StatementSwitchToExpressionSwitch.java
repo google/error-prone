@@ -33,9 +33,9 @@ import static com.sun.source.tree.Tree.Kind.THROW;
 import static java.util.stream.Collectors.joining;
 
 import com.google.auto.value.AutoValue;
+import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.ErrorProneFlags;
@@ -45,6 +45,7 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
+import com.google.errorprone.util.ErrorProneComment;
 import com.google.errorprone.util.Reachability;
 import com.google.errorprone.util.SourceVersion;
 import com.sun.source.tree.AssignmentTree;
@@ -63,7 +64,6 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCAssign;
 import com.sun.tools.javac.tree.JCTree.JCAssignOp;
 import com.sun.tools.javac.tree.Pretty;
@@ -325,14 +325,21 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
       return previousCaseQualifications;
     }
 
-    // Statement blocks on the RHS are not currently supported
-    if (!(statements.size() == 1 && KINDS_RETURN_OR_THROW.contains(statements.get(0).getKind()))) {
+    // Statement blocks on the RHS are not currently supported, except for trivial blocks of
+    // statements expressions followed by a return or throw
+    // TODO: handle more complex statement blocks that can be converted using 'yield'
+    if (statements.isEmpty()) {
+      return CaseQualifications.SOME_OR_ALL_CASES_DONT_QUALIFY;
+    }
+    StatementTree lastStatement = getLast(statements);
+    if (!statements.subList(0, statements.size() - 1).stream()
+            .allMatch(statement -> statement.getKind().equals(EXPRESSION_STATEMENT))
+        || !KINDS_RETURN_OR_THROW.contains(lastStatement.getKind())) {
       return CaseQualifications.SOME_OR_ALL_CASES_DONT_QUALIFY;
     }
 
-    StatementTree onlyStatement = statements.get(0);
     // For this analysis, cases that don't return something can be disregarded
-    if (!onlyStatement.getKind().equals(RETURN)) {
+    if (!lastStatement.getKind().equals(RETURN)) {
       return previousCaseQualifications;
     }
 
@@ -343,7 +350,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     }
 
     // This is the first value-returning case that we are examining
-    Type returnType = ASTHelpers.getType(((ReturnTree) onlyStatement).getExpression());
+    Type returnType = ASTHelpers.getType(((ReturnTree) lastStatement).getExpression());
     return returnType == null
         // Return of void does not qualify
         ? CaseQualifications.SOME_OR_ALL_CASES_DONT_QUALIFY
@@ -508,12 +515,17 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
   /**
    * Transforms the supplied statement switch into an expression switch directly. In this
    * conversion, each nontrivial statement block is mapped one-to-one to a new {@code Expression} or
-   * {@code StatementBlock} on the right-hand side. Comments are presevered where possible.
+   * {@code StatementBlock} on the right-hand side. Comments are preserved where possible.
    */
   private static SuggestedFix convertDirectlyToExpressionSwitch(
       SwitchTree switchTree, VisitorState state, AnalysisResult analysisResult) {
 
     List<? extends CaseTree> cases = switchTree.getCases();
+    ImmutableList<ErrorProneComment> allSwitchComments =
+        state.getTokensForNode(switchTree).stream()
+            .flatMap(errorProneToken -> errorProneToken.comments().stream())
+            .collect(toImmutableList());
+
     StringBuilder replacementCodeBuilder = new StringBuilder();
     replacementCodeBuilder
         .append("switch ")
@@ -529,8 +541,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
       // For readability, filter out trailing unlabelled break statement because these become a
       // No-Op when used inside expression switches
       ImmutableList<StatementTree> filteredStatements = filterOutRedundantBreak(caseTree);
-      String transformedBlockSource =
-          transformBlock(caseTree, state, cases, caseIndex, filteredStatements);
+      String transformedBlockSource = transformBlock(caseTree, state, filteredStatements);
 
       if (firstCaseInGroup) {
         groupedCaseCommentsAccumulator = new StringBuilder();
@@ -542,19 +553,47 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
       replacementCodeBuilder.append(
           isDefaultCase ? "default" : printCaseExpressions(caseTree, state));
 
+      Optional<String> commentsAfterCaseOptional =
+          extractCommentsAfterCase(switchTree, allSwitchComments, state, caseIndex);
       if (analysisResult.groupedWithNextCase().get(caseIndex)) {
         firstCaseInGroup = false;
         replacementCodeBuilder.append(", ");
         // Capture comments from this case so they can be added to the group's transformed case
         if (!transformedBlockSource.trim().isEmpty()) {
-          groupedCaseCommentsAccumulator.append(removeFallThruLines(transformedBlockSource));
+          String commentsToAppend = removeFallThruLines(transformedBlockSource);
+          if (groupedCaseCommentsAccumulator.length() > 0) {
+            groupedCaseCommentsAccumulator.append("\n");
+          }
+          groupedCaseCommentsAccumulator.append(commentsToAppend);
         }
+
+        if (commentsAfterCaseOptional.isPresent()) {
+          if (groupedCaseCommentsAccumulator.length() > 0) {
+            groupedCaseCommentsAccumulator.append("\n");
+          }
+          groupedCaseCommentsAccumulator.append(commentsAfterCaseOptional.get());
+        }
+
         // Add additional cases to the list on the lhs of the arrow
         continue;
       } else {
-        // This case is the last case in its group, so insert the collected comments from the lhs of
-        // the colon here
-        transformedBlockSource = groupedCaseCommentsAccumulator + transformedBlockSource;
+        // Extract comments (if any) preceding break that was removed as redundant
+        Optional<String> commentsBeforeRemovedBreak =
+            extractCommentsBeforeRemovedBreak(caseTree, state, filteredStatements);
+
+        // Join together all comments and code, separating with newlines
+        transformedBlockSource =
+            Joiner.on("\n")
+                .skipNulls()
+                .join(
+                    // This case is the last case in its group, so insert any comments from prior
+                    // grouped cases first
+                    groupedCaseCommentsAccumulator.length() == 0
+                        ? null
+                        : groupedCaseCommentsAccumulator.toString(),
+                    transformedBlockSource.isEmpty() ? null : transformedBlockSource.trim(),
+                    commentsBeforeRemovedBreak.orElse(null),
+                    commentsAfterCaseOptional.orElse(null));
       }
 
       replacementCodeBuilder.append(" -> ");
@@ -568,25 +607,17 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
             || trimmedTransformedBlockSource.equals("break;")) {
           replacementCodeBuilder.append("{}");
         } else {
-          replacementCodeBuilder.append("{").append(transformedBlockSource).append("\n}");
+          replacementCodeBuilder.append("{\n").append(transformedBlockSource).append("\n}");
         }
       } else {
         // Transformed block has code
-        // Extract comments (if any) for break that was removed as redundant
-        Optional<String> commentsBeforeRemovedBreak =
-            extractCommentsBeforeRemovedBreak(caseTree, state, filteredStatements);
-        if (commentsBeforeRemovedBreak.isPresent()) {
-          transformedBlockSource = transformedBlockSource + "\n" + commentsBeforeRemovedBreak.get();
-        }
-
         // To improve readability, don't use braces on the rhs if not needed
-        if (shouldTransformCaseWithoutBraces(
-            filteredStatements, transformedBlockSource, filteredStatements.get(0), state)) {
-          // Single statement with no comments - no braces needed
-          replacementCodeBuilder.append(transformedBlockSource);
+        if (shouldTransformCaseWithoutBraces(filteredStatements)) {
+          // No braces needed
+          replacementCodeBuilder.append("\n").append(transformedBlockSource);
         } else {
           // Use braces on the rhs
-          replacementCodeBuilder.append("{").append(transformedBlockSource).append("\n}");
+          replacementCodeBuilder.append("{\n").append(transformedBlockSource).append("\n}");
         }
       }
 
@@ -602,7 +633,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
   /**
    * Transforms the supplied statement switch into a {@code return switch ...} style of expression
    * switch. In this conversion, each nontrivial statement block is mapped one-to-one to a new
-   * expression on the right-hand side of the arrow. Comments are presevered where possible.
+   * expression on the right-hand side of the arrow. Comments are preserved where possible.
    * Precondition: the {@code AnalysisResult} for the {@code SwitchTree} must have deduced that this
    * conversion is possible.
    */
@@ -611,6 +642,10 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
 
     List<StatementTree> statementsToDelete = new ArrayList<>();
     List<? extends CaseTree> cases = switchTree.getCases();
+    ImmutableList<ErrorProneComment> allSwitchComments =
+        state.getTokensForNode(switchTree).stream()
+            .flatMap(errorProneToken -> errorProneToken.comments().stream())
+            .collect(toImmutableList());
     StringBuilder replacementCodeBuilder = new StringBuilder();
     replacementCodeBuilder
         .append("return switch ")
@@ -624,7 +659,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
       boolean isDefaultCase = caseTree.getExpression() == null;
 
       String transformedBlockSource =
-          transformReturnOrThrowBlock(caseTree, state, cases, caseIndex, getStatements(caseTree));
+          transformReturnOrThrowBlock(caseTree, state, getStatements(caseTree));
 
       if (firstCaseInGroup) {
         groupedCaseCommentsAccumulator = new StringBuilder();
@@ -636,23 +671,46 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
       replacementCodeBuilder.append(
           isDefaultCase ? "default" : printCaseExpressions(caseTree, state));
 
+      Optional<String> commentsAfterCaseOptional =
+          extractCommentsAfterCase(switchTree, allSwitchComments, state, caseIndex);
       if (analysisResult.groupedWithNextCase().get(caseIndex)) {
         firstCaseInGroup = false;
         replacementCodeBuilder.append(", ");
         // Capture comments from this case so they can be added to the group's transformed case
         if (!transformedBlockSource.trim().isEmpty()) {
-          groupedCaseCommentsAccumulator.append(removeFallThruLines(transformedBlockSource));
+          String commentsToAppend = removeFallThruLines(transformedBlockSource);
+          if (groupedCaseCommentsAccumulator.length() > 0) {
+            groupedCaseCommentsAccumulator.append("\n");
+          }
+          groupedCaseCommentsAccumulator.append(commentsToAppend);
         }
+
+        if (commentsAfterCaseOptional.isPresent()) {
+          if (groupedCaseCommentsAccumulator.length() > 0) {
+            groupedCaseCommentsAccumulator.append("\n");
+          }
+          groupedCaseCommentsAccumulator.append(commentsAfterCaseOptional.get());
+        }
+
         // Add additional cases to the list on the lhs of the arrow
         continue;
       } else {
-        // This case is the last case in its group, so insert the collected comments from the lhs of
-        // the colon here
-        transformedBlockSource = groupedCaseCommentsAccumulator + transformedBlockSource;
+        // Join together all comments and code, separating with newlines
+        transformedBlockSource =
+            Joiner.on("\n")
+                .skipNulls()
+                .join(
+                    // This case is the last case in its group, so insert any comments from prior
+                    // grouped cases first
+                    groupedCaseCommentsAccumulator.length() == 0
+                        ? null
+                        : groupedCaseCommentsAccumulator.toString(),
+                    transformedBlockSource.isEmpty() ? null : transformedBlockSource,
+                    commentsAfterCaseOptional.orElse(null));
       }
       replacementCodeBuilder.append(" -> ");
-      // Single statement with no comments - no braces needed
-      replacementCodeBuilder.append(transformedBlockSource);
+      // No braces needed
+      replacementCodeBuilder.append("\n").append(transformedBlockSource);
 
       firstCaseInGroup = true;
     } // case loop
@@ -726,7 +784,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
   /**
    * Transforms the supplied statement switch into an assignment switch style of expression switch.
    * In this conversion, each nontrivial statement block is mapped one-to-one to a new expression on
-   * the right-hand side of the arrow. Comments are presevered where possible. Precondition: the
+   * the right-hand side of the arrow. Comments are preserved where possible. Precondition: the
    * {@code AnalysisResult} for the {@code SwitchTree} must have deduced that this conversion is
    * possible.
    */
@@ -734,6 +792,11 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
       SwitchTree switchTree, VisitorState state, AnalysisResult analysisResult) {
 
     List<? extends CaseTree> cases = switchTree.getCases();
+    ImmutableList<ErrorProneComment> allSwitchComments =
+        state.getTokensForNode(switchTree).stream()
+            .flatMap(errorProneToken -> errorProneToken.comments().stream())
+            .collect(toImmutableList());
+
     StringBuilder replacementCodeBuilder =
         new StringBuilder(
                 state.getSourceForNode(
@@ -761,7 +824,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
       ImmutableList<StatementTree> filteredStatements = filterOutRedundantBreak(caseTree);
 
       String transformedBlockSource =
-          transformAssignOrThrowBlock(caseTree, state, cases, caseIndex, filteredStatements);
+          transformAssignOrThrowBlock(caseTree, state, filteredStatements);
 
       if (firstCaseInGroup) {
         groupedCaseCommentsAccumulator = new StringBuilder();
@@ -773,32 +836,52 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
       replacementCodeBuilder.append(
           isDefaultCase ? "default" : printCaseExpressions(caseTree, state));
 
+      Optional<String> commentsAfterCaseOptional =
+          extractCommentsAfterCase(switchTree, allSwitchComments, state, caseIndex);
       if (analysisResult.groupedWithNextCase().get(caseIndex)) {
         firstCaseInGroup = false;
         replacementCodeBuilder.append(", ");
         // Capture comments from this case so they can be added to the group's transformed case
         if (!transformedBlockSource.trim().isEmpty()) {
-          groupedCaseCommentsAccumulator.append(removeFallThruLines(transformedBlockSource));
+          String commentsToAppend = removeFallThruLines(transformedBlockSource);
+          if (groupedCaseCommentsAccumulator.length() > 0) {
+            groupedCaseCommentsAccumulator.append("\n");
+          }
+          groupedCaseCommentsAccumulator.append(commentsToAppend);
+        }
+
+        if (commentsAfterCaseOptional.isPresent()) {
+          if (groupedCaseCommentsAccumulator.length() > 0) {
+            groupedCaseCommentsAccumulator.append("\n");
+          }
+          groupedCaseCommentsAccumulator.append(commentsAfterCaseOptional.get());
         }
         // Add additional cases to the list on the lhs of the arrow
         continue;
       } else {
-        // This case is the last case in its group, so insert the collected comments from the lhs of
-        // the colon here
-        transformedBlockSource = groupedCaseCommentsAccumulator + transformedBlockSource;
+        // Extract comments (if any) preceding break that was removed as redundant
+        Optional<String> commentsBeforeRemovedBreak =
+            extractCommentsBeforeRemovedBreak(caseTree, state, filteredStatements);
+
+        // Join together all comments and code, separating with newlines
+        transformedBlockSource =
+            Joiner.on("\n")
+                .skipNulls()
+                .join(
+                    // This case is the last case in its group, so insert any comments from prior
+                    // grouped cases first
+                    groupedCaseCommentsAccumulator.length() == 0
+                        ? null
+                        : groupedCaseCommentsAccumulator.toString(),
+                    transformedBlockSource.isEmpty() ? null : transformedBlockSource,
+                    commentsBeforeRemovedBreak.orElse(null),
+                    commentsAfterCaseOptional.orElse(null));
       }
 
       replacementCodeBuilder.append(" -> ");
 
-      // Extract comments (if any) for break that was removed as redundant
-      Optional<String> commentsBeforeRemovedBreak =
-          extractCommentsBeforeRemovedBreak(caseTree, state, filteredStatements);
-      if (commentsBeforeRemovedBreak.isPresent()) {
-        transformedBlockSource = transformedBlockSource + "\n" + commentsBeforeRemovedBreak.get();
-      }
-
-      // Single statement with no comments - no braces needed
-      replacementCodeBuilder.append(transformedBlockSource);
+      // No braces needed
+      replacementCodeBuilder.append("\n").append(transformedBlockSource);
 
       firstCaseInGroup = true;
     } // case loop
@@ -817,15 +900,15 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
       CaseTree caseTree, VisitorState state, ImmutableList<StatementTree> filteredStatements) {
 
     // Was a trailing break removed and some expressions remain?
-    if (getStatements(caseTree).size() > filteredStatements.size()
-        && !filteredStatements.isEmpty()) {
+    if (!filteredStatements.isEmpty()
+        && getStatements(caseTree).size() > filteredStatements.size()) {
       // Extract any comments after what is now the last statement and before the removed
       // break
       String commentsAfterNewLastStatement =
           state
               .getSourceCode()
               .subSequence(
-                  state.getEndPosition(Iterables.getLast(filteredStatements)),
+                  state.getEndPosition(getLast(filteredStatements)),
                   getStartPosition(getStatements(caseTree).get(getStatements(caseTree).size() - 1)))
               .toString()
               .trim();
@@ -871,19 +954,14 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
 
   /** Transforms code for this case into the code under an expression switch. */
   private static String transformBlock(
-      CaseTree caseTree,
-      VisitorState state,
-      List<? extends CaseTree> cases,
-      int caseIndex,
-      ImmutableList<StatementTree> filteredStatements) {
+      CaseTree caseTree, VisitorState state, ImmutableList<StatementTree> filteredStatements) {
 
     StringBuilder transformedBlockBuilder = new StringBuilder();
     int codeBlockStart = extractLhsComments(caseTree, state, transformedBlockBuilder);
-    int codeBlockEnd =
-        filteredStatements.isEmpty()
-            ? getBlockEnd(state, caseTree, cases, caseIndex)
-            : state.getEndPosition(Streams.findLast(filteredStatements.stream()).get());
-    transformedBlockBuilder.append(state.getSourceCode(), codeBlockStart, codeBlockEnd);
+    if (!filteredStatements.isEmpty()) {
+      int codeBlockEnd = state.getEndPosition(getLast(filteredStatements));
+      transformedBlockBuilder.append(state.getSourceCode(), codeBlockStart, codeBlockEnd);
+    }
 
     return transformedBlockBuilder.toString();
   }
@@ -911,28 +989,72 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
   }
 
   /**
+   * Extracts any comments appearing after the specified {@code caseIndex} but before the subsequent
+   * case or end of the {@code switchTree}. Comments are merged into a single string separated by
+   * newlines.
+   */
+  private static Optional<String> extractCommentsAfterCase(
+      SwitchTree switchTree,
+      ImmutableList<ErrorProneComment> allSwitchComments,
+      VisitorState state,
+      int caseIndex) {
+
+    // Indexing relative to the start position of the switch statement
+    int switchStart = getStartPosition(switchTree);
+    // Invariant: caseEndIndex >= 0
+    int caseEndIndex = state.getEndPosition(switchTree.getCases().get(caseIndex)) - switchStart;
+    // Invariant: nextCaseStartIndex >= caseEndIndex
+    int nextCaseStartIndex =
+        caseIndex == switchTree.getCases().size() - 1
+            ? state.getEndPosition(switchTree) - switchStart
+            : getStartPosition(switchTree.getCases().get(caseIndex + 1)) - switchStart;
+
+    String filteredComments =
+        allSwitchComments.stream()
+            // Comments after the end of the current case and before the start of the next case
+            .filter(
+                comment ->
+                    comment.getPos() >= caseEndIndex && comment.getPos() < nextCaseStartIndex)
+            .map(ErrorProneComment::getText)
+            // Remove "fall thru" comments
+            .map(commentText -> removeFallThruLines(commentText))
+            // Remove empty comments
+            .filter(commentText -> !commentText.isEmpty())
+            .collect(joining("\n"));
+
+    return filteredComments.isEmpty() ? Optional.empty() : Optional.of(filteredComments);
+  }
+
+  /**
    * Finds the position in source corresponding to the end of the code block of the supplied {@code
    * caseIndex} within all {@code cases}.
    */
-  private static int getBlockEnd(
-      VisitorState state, CaseTree caseTree, List<? extends CaseTree> cases, int caseIndex) {
+  private static int getBlockEnd(VisitorState state, CaseTree caseTree) {
 
-    if (caseIndex == cases.size() - 1) {
+    List<? extends StatementTree> statements = caseTree.getStatements();
+    if (statements == null || statements.size() != 1) {
       return state.getEndPosition(caseTree);
     }
 
-    return ((JCTree) cases.get(caseIndex + 1)).getStartPosition();
+    // Invariant: statements.size() == 1
+    StatementTree onlyStatement = getOnlyElement(statements);
+    if (!onlyStatement.getKind().equals(BLOCK)) {
+      return state.getEndPosition(caseTree);
+    }
+
+    // The RHS of the case has a single enclosing block { ... }
+    List<? extends StatementTree> blockStatements = ((BlockTree) onlyStatement).getStatements();
+    return blockStatements.isEmpty()
+        ? state.getEndPosition(caseTree)
+        : state.getEndPosition(blockStatements.get(blockStatements.size() - 1));
   }
 
   /**
    * Determines whether the supplied {@code case}'s logic should be expressed on the right of the
-   * arrow symbol without braces, incorporating both language and readabilitiy considerations.
+   * arrow symbol without braces, incorporating both language and readability considerations.
    */
   private static boolean shouldTransformCaseWithoutBraces(
-      ImmutableList<StatementTree> statementTrees,
-      String transformedBlockSource,
-      StatementTree firstStatement,
-      VisitorState state) {
+      ImmutableList<StatementTree> statementTrees) {
 
     if (statementTrees.isEmpty()) {
       // Instead, express as "-> {}"
@@ -941,11 +1063,6 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
 
     if (statementTrees.size() > 1) {
       // Instead, express as a code block "-> { ... }"
-      return false;
-    }
-
-    // If code has comments, use braces for readability
-    if (!transformedBlockSource.trim().equals(state.getSourceForNode(firstStatement).trim())) {
       return false;
     }
 
@@ -1004,28 +1121,33 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
    * transformed to {@code x+1;}.
    */
   private static String transformReturnOrThrowBlock(
-      CaseTree caseTree,
-      VisitorState state,
-      List<? extends CaseTree> cases,
-      int caseIndex,
-      List<? extends StatementTree> statements) {
+      CaseTree caseTree, VisitorState state, List<? extends StatementTree> statements) {
 
     StringBuilder transformedBlockBuilder = new StringBuilder();
-    int codeBlockStart;
-    int codeBlockEnd =
-        statements.isEmpty()
-            ? getBlockEnd(state, caseTree, cases, caseIndex)
-            : state.getEndPosition(Streams.findLast(statements.stream()).get());
-
-    if (statements.size() == 1 && statements.get(0).getKind().equals(RETURN)) {
+    int codeBlockEnd = state.getEndPosition(caseTree);
+    if (statements.size() > 1) {
+      transformedBlockBuilder.append("{\n");
+      int codeBlockStart = extractLhsComments(caseTree, state, transformedBlockBuilder);
+      int offset = transformedBlockBuilder.length();
+      transformedBlockBuilder.append(state.getSourceCode(), codeBlockStart, codeBlockEnd);
+      transformedBlockBuilder.append("\n}");
+      ReturnTree returnTree = (ReturnTree) getLast(statements);
+      int start = getStartPosition(returnTree);
+      transformedBlockBuilder.replace(
+          offset + start - codeBlockStart,
+          offset + start - codeBlockStart + "return".length(),
+          "yield");
+    } else if (statements.size() == 1 && statements.get(0).getKind().equals(RETURN)) {
       // For "return x;", we want to take source starting after the "return"
       int unused = extractLhsComments(caseTree, state, transformedBlockBuilder);
       ReturnTree returnTree = (ReturnTree) statements.get(0);
-      codeBlockStart = getStartPosition(returnTree.getExpression());
+      int codeBlockStart = getStartPosition(returnTree.getExpression());
+      codeBlockEnd = state.getEndPosition(Streams.findLast(statements.stream()).get());
+      transformedBlockBuilder.append(state.getSourceCode(), codeBlockStart, codeBlockEnd);
     } else {
-      codeBlockStart = extractLhsComments(caseTree, state, transformedBlockBuilder);
+      int codeBlockStart = extractLhsComments(caseTree, state, transformedBlockBuilder);
+      transformedBlockBuilder.append(state.getSourceCode(), codeBlockStart, codeBlockEnd);
     }
-    transformedBlockBuilder.append(state.getSourceCode(), codeBlockStart, codeBlockEnd);
 
     return transformedBlockBuilder.toString();
   }
@@ -1037,17 +1159,13 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
    * {@code >>=}).
    */
   private static String transformAssignOrThrowBlock(
-      CaseTree caseTree,
-      VisitorState state,
-      List<? extends CaseTree> cases,
-      int caseIndex,
-      List<? extends StatementTree> statements) {
+      CaseTree caseTree, VisitorState state, List<? extends StatementTree> statements) {
 
     StringBuilder transformedBlockBuilder = new StringBuilder();
     int codeBlockStart;
     int codeBlockEnd =
         statements.isEmpty()
-            ? getBlockEnd(state, caseTree, cases, caseIndex)
+            ? getBlockEnd(state, caseTree)
             : state.getEndPosition(Streams.findLast(statements.stream()).get());
 
     if (!statements.isEmpty() && statements.get(0).getKind().equals(EXPRESSION_STATEMENT)) {

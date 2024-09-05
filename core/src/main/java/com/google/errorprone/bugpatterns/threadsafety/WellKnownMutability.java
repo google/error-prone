@@ -228,6 +228,10 @@ public final class WellKnownMutability implements ThreadSafety.KnownTypes {
         .add("kotlin.Pair", "A", "B")
         .add("kotlin.Triple", "A", "B", "C")
         .add("kotlin.time.Duration")
+        .add("kotlin.ranges.IntRange")
+        .add("kotlin.ranges.LongRange")
+        .add("kotlin.ranges.UIntRange")
+        .add("kotlin.ranges.ULongRange")
         .add("org.threeten.bp.Duration")
         .add("org.threeten.bp.Instant")
         .add("org.threeten.bp.LocalDate")
@@ -342,6 +346,9 @@ public final class WellKnownMutability implements ThreadSafety.KnownTypes {
   private static final Supplier<Type> PROTOCOL_MESSAGE_TYPE =
       Suppliers.typeFromString("com.google.io.protocol.ProtocolMessage");
 
+  private static final Supplier<Type> PROTOCOL_MESSAGE_ENUM =
+      Suppliers.typeFromString("com.google.protobuf.Internal.EnumLite");
+
   private static boolean isAssignableTo(Type type, Supplier<Type> supplier, VisitorState state) {
     Type to = supplier.get(state);
     if (to == null) {
@@ -369,6 +376,11 @@ public final class WellKnownMutability implements ThreadSafety.KnownTypes {
     checkNotNull(type);
     return isAssignableTo(type, MUTABLE_MESSAGE_TYPE, state)
         && !isAssignableTo(type, PROTOCOL_MESSAGE_TYPE, state);
+  }
+
+  public static boolean isProtoEnum(VisitorState state, Type type) {
+    checkNotNull(type);
+    return isAssignableTo(type, PROTOCOL_MESSAGE_ENUM, state);
   }
 
   /** Returns true if the type is an annotation. */

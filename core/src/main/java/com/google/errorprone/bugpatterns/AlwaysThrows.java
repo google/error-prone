@@ -48,7 +48,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.UUID;
 import java.util.function.Consumer;
 import javax.inject.Inject;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(summary = "Detects calls that will fail at runtime", severity = ERROR)

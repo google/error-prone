@@ -42,6 +42,7 @@ import com.google.errorprone.bugpatterns.AssertionFailureIgnored;
 import com.google.errorprone.bugpatterns.AsyncCallableReturnsNull;
 import com.google.errorprone.bugpatterns.AsyncFunctionReturnsNull;
 import com.google.errorprone.bugpatterns.AttemptedNegativeZero;
+import com.google.errorprone.bugpatterns.AutoValueBoxedValues;
 import com.google.errorprone.bugpatterns.AutoValueBuilderDefaultsInConstructor;
 import com.google.errorprone.bugpatterns.AutoValueFinalMethods;
 import com.google.errorprone.bugpatterns.AutoValueImmutableFields;
@@ -105,6 +106,7 @@ import com.google.errorprone.bugpatterns.DeadThread;
 import com.google.errorprone.bugpatterns.DeduplicateConstants;
 import com.google.errorprone.bugpatterns.DeeplyNested;
 import com.google.errorprone.bugpatterns.DefaultCharset;
+import com.google.errorprone.bugpatterns.DefaultLocale;
 import com.google.errorprone.bugpatterns.DefaultPackage;
 import com.google.errorprone.bugpatterns.DepAnn;
 import com.google.errorprone.bugpatterns.DeprecatedVariable;
@@ -338,6 +340,7 @@ import com.google.errorprone.bugpatterns.SelfAssertion;
 import com.google.errorprone.bugpatterns.SelfAssignment;
 import com.google.errorprone.bugpatterns.SelfComparison;
 import com.google.errorprone.bugpatterns.SelfEquals;
+import com.google.errorprone.bugpatterns.SetUnrecognized;
 import com.google.errorprone.bugpatterns.ShortCircuitBoolean;
 import com.google.errorprone.bugpatterns.ShouldHaveEvenArgs;
 import com.google.errorprone.bugpatterns.SizeGreaterThanOrEqualsZero;
@@ -378,6 +381,7 @@ import com.google.errorprone.bugpatterns.ThrowSpecificExceptions;
 import com.google.errorprone.bugpatterns.ThrowsUncheckedException;
 import com.google.errorprone.bugpatterns.ToStringReturnsNull;
 import com.google.errorprone.bugpatterns.TooManyParameters;
+import com.google.errorprone.bugpatterns.TraditionalSwitchExpression;
 import com.google.errorprone.bugpatterns.TransientMisuse;
 import com.google.errorprone.bugpatterns.TreeToString;
 import com.google.errorprone.bugpatterns.TruthAssertExpected;
@@ -407,6 +411,7 @@ import com.google.errorprone.bugpatterns.UnnecessaryAssignment;
 import com.google.errorprone.bugpatterns.UnnecessaryAsync;
 import com.google.errorprone.bugpatterns.UnnecessaryBoxedAssignment;
 import com.google.errorprone.bugpatterns.UnnecessaryBoxedVariable;
+import com.google.errorprone.bugpatterns.UnnecessaryBreakInSwitch;
 import com.google.errorprone.bugpatterns.UnnecessaryDefaultInEnumSwitch;
 import com.google.errorprone.bugpatterns.UnnecessaryFinal;
 import com.google.errorprone.bugpatterns.UnnecessaryLambda;
@@ -499,6 +504,7 @@ import com.google.errorprone.bugpatterns.inject.InvalidTargetingOnScopingAnnotat
 import com.google.errorprone.bugpatterns.inject.JavaxInjectOnAbstractMethod;
 import com.google.errorprone.bugpatterns.inject.JavaxInjectOnFinalField;
 import com.google.errorprone.bugpatterns.inject.MisplacedScopeAnnotations;
+import com.google.errorprone.bugpatterns.inject.MissingRuntimeRetention;
 import com.google.errorprone.bugpatterns.inject.MoreThanOneInjectableConstructor;
 import com.google.errorprone.bugpatterns.inject.MoreThanOneQualifier;
 import com.google.errorprone.bugpatterns.inject.MoreThanOneScopeAnnotationOnClass;
@@ -506,7 +512,6 @@ import com.google.errorprone.bugpatterns.inject.OverlappingQualifierAndScopeAnno
 import com.google.errorprone.bugpatterns.inject.QualifierOrScopeOnInjectMethod;
 import com.google.errorprone.bugpatterns.inject.QualifierWithTypeUse;
 import com.google.errorprone.bugpatterns.inject.ScopeAnnotationOnInterfaceOrAbstractClass;
-import com.google.errorprone.bugpatterns.inject.ScopeOrQualifierAnnotationRetention;
 import com.google.errorprone.bugpatterns.inject.dagger.AndroidInjectionBeforeSuper;
 import com.google.errorprone.bugpatterns.inject.dagger.EmptySetMultibindingContributions;
 import com.google.errorprone.bugpatterns.inject.dagger.PrivateConstructorForNoninstantiableModule;
@@ -808,6 +813,7 @@ public class BuiltInCheckerSuppliers {
           SelfAssignment.class,
           SelfComparison.class,
           SelfEquals.class,
+          SetUnrecognized.class,
           ShouldHaveEvenArgs.class,
           SizeGreaterThanOrEqualsZero.class,
           StreamToString.class,
@@ -854,6 +860,7 @@ public class BuiltInCheckerSuppliers {
           AssertionFailureIgnored.class,
           AssistedInjectAndInjectOnSameConstructor.class,
           AttemptedNegativeZero.class,
+          AutoValueBoxedValues.class,
           AutoValueFinalMethods.class,
           AutoValueImmutableFields.class,
           AutoValueSubclassLeaked.class,
@@ -1052,6 +1059,7 @@ public class BuiltInCheckerSuppliers {
           ScopeAnnotationOnInterfaceOrAbstractClass.class,
           SelfAlwaysReturnsThis.class,
           ShortCircuitBoolean.class,
+          StatementSwitchToExpressionSwitch.class,
           StaticAssignmentInConstructor.class,
           StaticAssignmentOfThrowable.class,
           StaticGuardedByInstance.class,
@@ -1072,6 +1080,7 @@ public class BuiltInCheckerSuppliers {
           ThreeLetterTimeZoneID.class,
           TimeUnitConversionChecker.class,
           ToStringReturnsNull.class,
+          TraditionalSwitchExpression.class,
           TruthAssertExpected.class,
           TruthConstantAsserts.class,
           TruthGetOrDefault.class,
@@ -1085,6 +1094,7 @@ public class BuiltInCheckerSuppliers {
           UnicodeEscape.class,
           UnnecessaryAssignment.class,
           UnnecessaryAsync.class,
+          UnnecessaryBreakInSwitch.class,
           UnnecessaryLambda.class,
           UnnecessaryLongToIntConversion.class,
           UnnecessaryMethodInvocationMatcher.class,
@@ -1138,6 +1148,7 @@ public class BuiltInCheckerSuppliers {
           ConstantField.class,
           ConstantPatternCompile.class,
           DeduplicateConstants.class,
+          DefaultLocale.class, // TODO: enable this by default.
           DepAnn.class,
           DifferentNameButSame.class,
           DoNotUseRuleChain.class,
@@ -1178,6 +1189,7 @@ public class BuiltInCheckerSuppliers {
           MethodCanBeStatic.class,
           MissingBraces.class,
           MissingDefault.class,
+          MissingRuntimeRetention.class,
           MixedArrayDimensions.class,
           MockitoDoSetup.class,
           MoreThanOneQualifier.class,
@@ -1204,8 +1216,6 @@ public class BuiltInCheckerSuppliers {
           ReturnMissingNullable.class,
           ReturnsNullCollection.class,
           ScopeOnModule.class,
-          ScopeOrQualifierAnnotationRetention.class,
-          StatementSwitchToExpressionSwitch.class,
           StaticOrDefaultInterfaceMethod.class,
           StaticQualifiedUsingExpression.class,
           StringFormatWithLiteral.class,

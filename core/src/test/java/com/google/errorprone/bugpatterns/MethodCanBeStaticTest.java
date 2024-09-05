@@ -16,6 +16,8 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.truth.TruthJUnit.assume;
+
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
@@ -327,6 +329,24 @@ public class MethodCanBeStaticTest {
             "    }",
             "  }",
             "}")
+        .setArgs("--release", "11")
+        .doTest();
+  }
+
+  @Test
+  public void innerClass_static() {
+    assume().that(Runtime.version().feature()).isAtLeast(16);
+    testHelper
+        .addSourceLines(
+            "Test.java", //
+            "class Test {",
+            "  class Inner {",
+            "    // BUG: Diagnostic contains: static",
+            "    private int incr(int x) {",
+            "      return x + 1;",
+            "    }",
+            "  }",
+            "}")
         .doTest();
   }
 
@@ -366,6 +386,24 @@ public class MethodCanBeStaticTest {
             "class Test {",
             "  static void foo() {",
             "    class Local {",
+            "      private void foo() {}",
+            "    }",
+            "  }",
+            "}")
+        .setArgs("--release", "11")
+        .doTest();
+  }
+
+  @Test
+  public void positiveLocal() {
+    assume().that(Runtime.version().feature()).isAtLeast(16);
+    testHelper
+        .addSourceLines(
+            "Test.java", //
+            "class Test {",
+            "  static void foo() {",
+            "    class Local {",
+            "      // BUG: Diagnostic contains: static",
             "      private void foo() {}",
             "    }",
             "  }",

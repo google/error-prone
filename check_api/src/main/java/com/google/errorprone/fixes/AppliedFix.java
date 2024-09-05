@@ -22,7 +22,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.sun.tools.javac.tree.EndPosTable;
 import java.util.Set;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents the corrected source which we think was intended, by applying a Fix. This is used to
@@ -60,8 +60,7 @@ public class AppliedFix {
      * Applies the suggestedFix to the source. Returns null if applying the fix results in no change
      * to the source, or a change only to imports.
      */
-    @Nullable
-    public AppliedFix apply(Fix suggestedFix) {
+    public @Nullable AppliedFix apply(Fix suggestedFix) {
       // We apply the replacements in ascending order here. Descending is simpler, since applying a
       // replacement can't change the index for future replacements, but it leads to quadratic
       // copying behavior as we constantly shift the tail of the file around in our StringBuilder.

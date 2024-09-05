@@ -20,7 +20,7 @@ import com.google.auto.value.AutoValue;
 import com.sun.source.tree.ThrowTree;
 import com.sun.source.tree.TreeVisitor;
 import com.sun.tools.javac.tree.JCTree.JCThrow;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * {@link UTree} representation of a {@link ThrowTree}.
@@ -47,8 +47,7 @@ abstract class UThrow extends USimpleStatement implements ThrowTree {
   }
 
   @Override
-  @Nullable
-  public Choice<Unifier> visitThrow(ThrowTree throwStmt, @Nullable Unifier unifier) {
+  public @Nullable Choice<Unifier> visitThrow(ThrowTree throwStmt, @Nullable Unifier unifier) {
     return getExpression().unify(throwStmt.getExpression(), unifier);
   }
 

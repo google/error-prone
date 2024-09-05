@@ -31,7 +31,7 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Type;
 import java.util.Collection;
 import java.util.Optional;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Matches an instance method like {@link Collection#contains}, for which we just need to compare
@@ -46,12 +46,24 @@ final class MethodArgMatcher extends AbstractCollectionIncompatibleTypeMatcher {
 
   /**
    * @param typeName The fully-qualified name of the type whose descendants to match on
-   * @param signature The signature of the method to match on
    * @param typeArgIndex The index of the type argument that should match the method argument
    * @param methodArgIndex The index of the method argument that should match the type argument
+   * @param name The name of the method to match on
+   * @param firstParam The type of the first parameter of the method
+   * @param otherParams The types of any additional parameters of the method
    */
-  MethodArgMatcher(String typeName, String signature, int typeArgIndex, int methodArgIndex) {
-    this.methodMatcher = instanceMethod().onDescendantOf(typeName).withSignature(signature);
+  MethodArgMatcher(
+      String typeName,
+      int typeArgIndex,
+      int methodArgIndex,
+      String name,
+      String firstParam,
+      String... otherParams) {
+    this.methodMatcher =
+        instanceMethod()
+            .onDescendantOf(typeName)
+            .named(name)
+            .withParameters(firstParam, otherParams);
     this.typeName = typeName;
     this.typeArgIndex = typeArgIndex;
     this.methodArgIndex = methodArgIndex;
@@ -67,9 +79,8 @@ final class MethodArgMatcher extends AbstractCollectionIncompatibleTypeMatcher {
     return Iterables.get(tree.getArguments(), methodArgIndex);
   }
 
-  @Nullable
   @Override
-  ExpressionTree extractSourceTree(MemberReferenceTree tree, VisitorState state) {
+  @Nullable ExpressionTree extractSourceTree(MemberReferenceTree tree, VisitorState state) {
     return tree;
   }
 
@@ -78,9 +89,8 @@ final class MethodArgMatcher extends AbstractCollectionIncompatibleTypeMatcher {
     return getType(extractSourceTree(tree, state));
   }
 
-  @Nullable
   @Override
-  Type extractSourceType(MemberReferenceTree tree, VisitorState state) {
+  @Nullable Type extractSourceType(MemberReferenceTree tree, VisitorState state) {
     return state.getTypes().findDescriptorType(getType(tree)).getParameterTypes().get(0);
   }
 
@@ -93,9 +103,8 @@ final class MethodArgMatcher extends AbstractCollectionIncompatibleTypeMatcher {
         state.getTypes());
   }
 
-  @Nullable
   @Override
-  Type extractTargetType(MemberReferenceTree tree, VisitorState state) {
+  @Nullable Type extractTargetType(MemberReferenceTree tree, VisitorState state) {
     return extractTypeArgAsMemberOfSupertype(
         ASTHelpers.getReceiverType(tree),
         state.getSymbolFromString(typeName),

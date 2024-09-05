@@ -16,7 +16,7 @@
 
 package com.google.errorprone.bugpatterns.overloading.testdata;
 
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public abstract class InconsistentOverloadsPositiveCasesAnnotations {
 

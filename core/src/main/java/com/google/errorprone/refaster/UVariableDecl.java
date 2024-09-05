@@ -30,7 +30,7 @@ import com.sun.tools.javac.tree.JCTree.JCModifiers;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.Name;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A {@link UTree} representation of a local variable declaration.
@@ -64,8 +64,7 @@ public abstract class UVariableDecl extends USimpleStatement implements Variable
   public abstract UExpression getType();
 
   @Override
-  @Nullable
-  public abstract UExpression getInitializer();
+  public abstract @Nullable UExpression getInitializer();
 
   ULocalVarIdent.Key key() {
     return new ULocalVarIdent.Key(getName());

@@ -83,8 +83,8 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import javax.annotation.Nullable;
 import javax.lang.model.element.Name;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Static utility methods for common functionality in the nullable checkers.
@@ -130,9 +130,7 @@ class NullnessUtils {
 
   static boolean isInNullMarkedScope(Symbol sym, VisitorState state) {
     for (; sym != null; sym = sym.getEnclosingElement()) {
-      if (hasAnnotation(sym, "org.jspecify.annotations.NullMarked", state)
-          // We break this string to avoid having it rewritten by Copybara.
-          || hasAnnotation(sym, "org.jspecify.null" + "ness.NullMarked", state)) {
+      if (hasAnnotation(sym, "org.jspecify.annotations.NullMarked", state)) {
         return true;
       }
     }
@@ -307,8 +305,7 @@ class NullnessUtils {
       return prepareBuilder(state, suppressionToRemove).prefixWith(tree, "@" + use() + " ").build();
     }
 
-    @Nullable
-    abstract String importToAdd();
+    abstract @Nullable String importToAdd();
 
     abstract String use();
 
@@ -385,9 +382,6 @@ class NullnessUtils {
       case "org.checkerframework.checker.nullness.qual.Nullable":
       case "org.jspecify.annotations.NonNull":
       case "org.jspecify.annotations.Nullable":
-        // We break these strings to avoid having them rewritten by Copybara.
-      case "org.jspecify.null" + "ness.NonNull":
-      case "org.jspecify.null" + "ness.Nullable":
         return true;
       default:
         // TODO(cpovirk): Detect type-use-ness from the class symbol if it's available?
@@ -395,8 +389,7 @@ class NullnessUtils {
     }
   }
 
-  @Nullable
-  static NullCheck getNullCheck(ExpressionTree tree) {
+  static @Nullable NullCheck getNullCheck(ExpressionTree tree) {
     tree = stripParentheses(tree);
 
     Polarity polarity;
@@ -461,12 +454,10 @@ class NullnessUtils {
      * that form. Prefer this over {@link #varSymbolButUsuallyPreferBareIdentifier} in most cases,
      * as discussed in the class documentation.
      */
-    @Nullable
-    abstract Name bareIdentifier();
+    abstract @Nullable Name bareIdentifier();
 
     /** Returns the symbol that was checked against {@code null}. */
-    @Nullable
-    abstract VarSymbol varSymbolButUsuallyPreferBareIdentifier();
+    abstract @Nullable VarSymbol varSymbolButUsuallyPreferBareIdentifier();
 
     abstract Polarity polarity();
 
@@ -674,8 +665,7 @@ class NullnessUtils {
     return ImmutableSet.of();
   }
 
-  @Nullable
-  static VariableTree findDeclaration(VisitorState state, Symbol sym) {
+  static @Nullable VariableTree findDeclaration(VisitorState state, Symbol sym) {
     JavacProcessingEnvironment javacEnv = JavacProcessingEnvironment.instance(state.context);
     TreePath declPath = Trees.instance(javacEnv).getPath(sym);
     // Skip fields declared in other compilation units since we can't make a fix for them here.

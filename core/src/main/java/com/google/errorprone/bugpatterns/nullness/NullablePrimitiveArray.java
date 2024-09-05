@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns.nullness;
 
+import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -60,7 +61,6 @@ import javax.lang.model.util.SimpleAnnotationValueVisitor8;
     tags = StandardTags.STYLE)
 public class NullablePrimitiveArray extends BugChecker
     implements VariableTreeMatcher, MethodTreeMatcher {
-
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
     return check(tree.getReturnType(), tree.getModifiers().getAnnotations(), state);
@@ -73,7 +73,7 @@ public class NullablePrimitiveArray extends BugChecker
 
   // other cases of `@Nullable int[]` are covered by the existing NullablePrimitive
   private Description check(
-      Tree typeTree, List<? extends AnnotationTree> annotations, VisitorState state) {
+      Tree typeTree, List<? extends AnnotationTree> allTreeAnnos, VisitorState state) {
     Type type = getType(typeTree);
     if (type == null) {
       return NO_MATCH;
@@ -87,14 +87,17 @@ public class NullablePrimitiveArray extends BugChecker
     if (!type.isPrimitive()) {
       return NO_MATCH;
     }
-    ImmutableList<AnnotationTree> annotationsRelevantToNullness =
-        NullnessAnnotations.annotationsRelevantToNullness(annotations);
-    if (annotationsRelevantToNullness.isEmpty()) {
+    ImmutableList<AnnotationTree> treeNullnessAnnos =
+        NullnessAnnotations.annotationsRelevantToNullness(allTreeAnnos);
+    if (treeNullnessAnnos.isEmpty()) {
       return NO_MATCH;
     }
     Symbol target = state.getSymtab().annotationTargetType.tsym;
-    if (annotations.stream()
-        .anyMatch(annotation -> !isTypeAnnotation(getSymbol(annotation).attribute(target)))) {
+    ImmutableList<AnnotationTree> typeNullnessAnnos =
+        treeNullnessAnnos.stream()
+            .filter(annotation -> isTypeAnnotation(getSymbol(annotation).attribute(target)))
+            .collect(toImmutableList());
+    if (typeNullnessAnnos.isEmpty()) {
       return NO_MATCH;
     }
     Tree dims = typeTree;
@@ -102,15 +105,19 @@ public class NullablePrimitiveArray extends BugChecker
       dims = ((ArrayTypeTree) dims).getType();
     }
     SuggestedFix.Builder fix = SuggestedFix.builder();
-    annotations.forEach(fix::delete);
-    if (!(dims instanceof AnnotatedTypeTree)
-        || NullnessAnnotations.annotationsRelevantToNullness(
-                ((AnnotatedTypeTree) dims).getAnnotations())
-            .isEmpty()) {
+    typeNullnessAnnos.forEach(fix::delete);
+    boolean hasDeclarationNullnessAnno = typeNullnessAnnos.size() < treeNullnessAnnos.size();
+    boolean hasTypeNullnessAnnoOnArray =
+        dims instanceof AnnotatedTypeTree
+            && !NullnessAnnotations.annotationsRelevantToNullness(
+                    ((AnnotatedTypeTree) dims).getAnnotations())
+                .isEmpty();
+    if (!hasDeclarationNullnessAnno && !hasTypeNullnessAnnoOnArray) {
       fix.postfixWith(
-          dims, annotations.stream().map(state::getSourceForNode).collect(joining(" ", " ", " ")));
+          dims,
+          typeNullnessAnnos.stream().map(state::getSourceForNode).collect(joining(" ", " ", " ")));
     }
-    return describeMatch(annotations.get(0), fix.build());
+    return describeMatch(typeNullnessAnnos.get(0), fix.build());
   }
 
   private static boolean isTypeAnnotation(Attribute.Compound attribute) {

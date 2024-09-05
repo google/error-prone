@@ -49,8 +49,8 @@ import com.sun.tools.javac.code.Type.ArrayType;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
-import javax.annotation.Nullable;
 import javax.lang.model.type.TypeKind;
+import org.jspecify.annotations.Nullable;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
@@ -106,7 +106,7 @@ public class FloggerArgumentToString extends BugChecker implements MethodInvocat
 
     final Supplier<String> source;
     final Type type;
-    @Nullable final Character placeholder;
+    final @Nullable Character placeholder;
 
     private Parameter(ExpressionTree expression, char placeholder) {
       this(s -> s.getSourceForNode(expression), getType(expression), placeholder);
@@ -355,8 +355,8 @@ public class FloggerArgumentToString extends BugChecker implements MethodInvocat
     return describeMatch(tree, fix.build());
   }
 
-  @Nullable
-  private static Parameter unwrap(ExpressionTree argument, char placeholder, VisitorState state) {
+  private static @Nullable Parameter unwrap(
+      ExpressionTree argument, char placeholder, VisitorState state) {
     for (Unwrapper unwrapper : Unwrapper.values()) {
       if (unwrapper.matcher.matches(argument, state)) {
         return unwrapper.unwrap((MethodInvocationTree) argument, placeholder);

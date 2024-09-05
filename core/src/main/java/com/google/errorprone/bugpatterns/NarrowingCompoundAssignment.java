@@ -37,7 +37,7 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.tree.JCTree.JCBinary;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
@@ -121,8 +121,7 @@ public class NarrowingCompoundAssignment extends BugChecker
   }
 
   /** Classifies bad casts. */
-  @Nullable
-  private static String identifyBadCast(Type lhs, Type rhs, Types types) {
+  private static @Nullable String identifyBadCast(Type lhs, Type rhs, Types types) {
     if (!lhs.isPrimitive()) {
       return null;
     }

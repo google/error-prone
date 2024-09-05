@@ -171,7 +171,7 @@ public class FunctionalInterfaceClash extends BugChecker implements ClassTreeMat
   private static String functionalInterfaceSignature(VisitorState state, Type type) {
     Types types = state.getTypes();
     if (!maybeFunctionalInterface(type, types, state)) {
-      return Signatures.descriptor(type, types);
+      return Signatures.descriptor(type, state);
     }
     Type descriptorType = types.findDescriptorType(type);
     List<Type> fiparams = descriptorType.getParameterTypes();
@@ -180,10 +180,10 @@ public class FunctionalInterfaceClash extends BugChecker implements ClassTreeMat
     // types in general. The except is nullary functional interfaces, since the lambda parameters
     // will never be implicitly typed.
     String result =
-        fiparams.isEmpty() ? Signatures.descriptor(descriptorType.getReturnType(), types) : "_";
+        fiparams.isEmpty() ? Signatures.descriptor(descriptorType.getReturnType(), state) : "_";
     return String.format(
         "(%s)->%s",
-        fiparams.stream().map(t -> Signatures.descriptor(t, types)).collect(joining(",")), result);
+        fiparams.stream().map(t -> Signatures.descriptor(t, state)).collect(joining(",")), result);
   }
 
   private static boolean maybeFunctionalInterface(Type type, Types types, VisitorState state) {

@@ -35,6 +35,7 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.annotations.Immutable;
 import com.google.errorprone.annotations.ThreadSafe;
+import com.google.errorprone.annotations.ThreadSafeTypeParameter;
 import com.google.errorprone.bugpatterns.CanBeStaticAnalyzer;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
@@ -65,9 +66,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import javax.annotation.Nullable;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.type.TypeKind;
+import org.jspecify.annotations.Nullable;
 import org.pcollections.ConsPStack;
 
 /**
@@ -95,7 +96,8 @@ public final class ThreadSafety {
             .setPurpose(Purpose.FOR_THREAD_SAFE_CHECKER)
             .knownTypes(wellKnownThreadSafety)
             .markerAnnotations(ImmutableSet.of(ThreadSafe.class.getName()))
-            .acceptedAnnotations(ImmutableSet.of(Immutable.class.getName()));
+            .acceptedAnnotations(ImmutableSet.of(Immutable.class.getName()))
+            .typeParameterAnnotation(ImmutableSet.of(ThreadSafeTypeParameter.class.getName()));
     return builder;
   }
 
@@ -367,16 +369,12 @@ public final class ThreadSafety {
       return new AutoValue_ThreadSafety_Violation(path);
     }
 
-    /**
-     * @return true if a violation was found
-     */
+    /** Returns true if a violation was found. */
     public boolean isPresent() {
       return !path().isEmpty();
     }
 
-    /**
-     * @return the explanation
-     */
+    /** Returns the explanation. */
     public String message() {
       return Joiner.on(", ").join(path());
     }
@@ -658,6 +656,9 @@ public final class ThreadSafety {
         }
         return Violation.absent();
       }
+      if (WellKnownMutability.isProtoEnum(state, type)) {
+        return Violation.absent();
+      }
       return Violation.of(
           String.format(
               "the declaration of type '%s' is not annotated with %s",
@@ -748,8 +749,7 @@ public final class ThreadSafety {
   }
 
   /** Returns an enclosing instance for the specified type if it is thread-safe. */
-  @Nullable
-  public Type mutableEnclosingInstance(Optional<ClassTree> tree, ClassType type) {
+  public @Nullable Type mutableEnclosingInstance(Optional<ClassTree> tree, ClassType type) {
     if (tree.isPresent()
         && !CanBeStaticAnalyzer.referencesOuter(
             tree.get(), ASTHelpers.getSymbol(tree.get()), state)) {
@@ -814,8 +814,7 @@ public final class ThreadSafety {
     return result.build();
   }
 
-  @Nullable
-  private AnnotationInfo getAnnotation(
+  private @Nullable AnnotationInfo getAnnotation(
       Symbol sym, ImmutableSet<String> annotationsToCheck, VisitorState state) {
     if (sym == null) {
       return null;

@@ -38,6 +38,7 @@ import com.google.errorprone.bugpatterns.CanBeStaticAnalyzer.CanBeStaticResult;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
+import com.google.errorprone.util.SourceVersion;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ExpressionTree;
@@ -242,11 +243,16 @@ public class MethodCanBeStatic extends BugChecker implements CompilationUnitTree
       case TOP_LEVEL:
         break;
       case MEMBER:
-        if (sym.owner.enclClass().hasOuterInstance()) {
+        if (!SourceVersion.supportsStaticInnerClass(state.context)
+            && sym.owner.enclClass().hasOuterInstance()) {
           return true;
         }
         break;
       case LOCAL:
+        if (!SourceVersion.supportsStaticInnerClass(state.context)) {
+          return true;
+        }
+        break;
       case ANONYMOUS:
         return true;
     }

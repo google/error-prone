@@ -50,9 +50,9 @@ import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCExpressionStatement;
 import java.util.List;
 import java.util.Objects;
-import javax.annotation.Nullable;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
+import org.jspecify.annotations.Nullable;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 // TODO(cushon): allow @LazyInit on fields as a suppression mechanism?
@@ -218,8 +218,7 @@ public class DoubleCheckedLocking extends BugChecker implements IfTreeMatcher {
    * Gaps before the synchronized or inner 'if' statement are ignored, and the operands in the
    * null-checks are accepted in either order.
    */
-  @Nullable
-  private static DCLInfo findDcl(IfTree outerIf) {
+  private static @Nullable DCLInfo findDcl(IfTree outerIf) {
     // TODO(cushon): Optional.ifPresent...
     ExpressionTree outerIfTest = getNullCheckedExpression(outerIf.getCondition());
     if (outerIfTest == null) {
@@ -251,8 +250,7 @@ public class DoubleCheckedLocking extends BugChecker implements IfTreeMatcher {
   /**
    * Matches comparisons to null (e.g. {@code foo == null}) and returns the expression being tested.
    */
-  @Nullable
-  private static ExpressionTree getNullCheckedExpression(ExpressionTree condition) {
+  private static @Nullable ExpressionTree getNullCheckedExpression(ExpressionTree condition) {
     condition = stripParentheses(condition);
     if (!(condition instanceof BinaryTree)) {
       return null;
@@ -309,8 +307,7 @@ public class DoubleCheckedLocking extends BugChecker implements IfTreeMatcher {
    * Since double-checked locking should always be used on a private field, this should be
    * reasonably effective.
    */
-  @Nullable
-  private static JCTree findFieldDeclaration(TreePath path, VarSymbol var) {
+  private static @Nullable JCTree findFieldDeclaration(TreePath path, VarSymbol var) {
     for (TreePath curr = path; curr != null; curr = curr.getParentPath()) {
       Tree leaf = curr.getLeaf();
       if (!(leaf instanceof JCClassDecl)) {

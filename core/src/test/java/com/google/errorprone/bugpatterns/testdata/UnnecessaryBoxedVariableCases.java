@@ -20,7 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.List;
 import java.util.stream.Stream;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author awturner@google.com (Andy Turner)
@@ -186,7 +186,7 @@ class UnnecessaryBoxedVariableCases {
 
   static void positive_removeNullable_localVariable() {
     @Nullable Integer i = 0;
-    @javax.annotation.Nullable Integer j = 0;
+    @org.jspecify.annotations.Nullable Integer j = 0;
     int k = i + j;
   }
 

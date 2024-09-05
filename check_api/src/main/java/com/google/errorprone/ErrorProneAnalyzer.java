@@ -22,11 +22,13 @@ import static com.google.common.base.Verify.verify;
 
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
+import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.descriptionlistener.DescriptionListeners;
 import com.google.errorprone.hubspot.HubSpotLifecycleManager;
 import com.google.errorprone.hubspot.HubSpotMetrics;
 import com.google.errorprone.hubspot.HubSpotUtils;
+import com.google.errorprone.RefactoringCollection.RefactoringResult;
 import com.google.errorprone.scanner.ErrorProneScannerTransformer;
 import com.google.errorprone.scanner.ScannerSupplier;
 import com.google.errorprone.util.ASTHelpers;
@@ -43,7 +45,9 @@ import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Log;
+import com.sun.tools.javac.util.Log.WriterKind;
 import com.sun.tools.javac.util.PropagatedException;
+import java.io.PrintWriter;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -60,6 +64,76 @@ public class ErrorProneAnalyzer implements TaskListener {
   private final ErrorProneOptions errorProneOptions;
   private final Context context;
   private final DescriptionListener.Factory descriptionListenerFactory;
+
+  public static ErrorProneAnalyzer createAnalyzer(
+      ScannerSupplier scannerSupplier,
+      ErrorProneOptions epOptions,
+      Context context,
+      RefactoringCollection[] refactoringCollection) {
+    if (!epOptions.patchingOptions().doRefactor()) {
+      return createByScanningForPlugins(scannerSupplier, epOptions, context);
+    }
+    refactoringCollection[0] = RefactoringCollection.refactor(epOptions.patchingOptions(), context);
+
+    // Refaster refactorer or using builtin checks
+    Supplier<CodeTransformer> codeTransformer =
+        epOptions
+            .patchingOptions()
+            .customRefactorer()
+            .or(
+                Suppliers.memoize(
+                    () -> {
+                      ScannerSupplier toUse =
+                          ErrorPronePlugins.loadPlugins(scannerSupplier, epOptions, context);
+                      ImmutableSet<String> namedCheckers =
+                          epOptions.patchingOptions().namedCheckers();
+                      if (!namedCheckers.isEmpty()) {
+                        toUse = toUse.filter(bci -> namedCheckers.contains(bci.canonicalName()));
+                      } else {
+                        toUse = toUse.applyOverrides(epOptions);
+                      }
+                      return ErrorProneScannerTransformer.create(toUse.get());
+                    }));
+
+    return createWithCustomDescriptionListener(
+        codeTransformer, epOptions, context, refactoringCollection[0]);
+  }
+
+  /** A {@link TaskListener} that performs refactorings. */
+  public static class RefactoringTask implements TaskListener {
+
+    private final Context context;
+    private final RefactoringCollection refactoringCollection;
+
+    public RefactoringTask(Context context, RefactoringCollection refactoringCollection) {
+      this.context = context;
+      this.refactoringCollection = refactoringCollection;
+    }
+
+    @Override
+    public void started(TaskEvent event) {}
+
+    @Override
+    public void finished(TaskEvent event) {
+      if (event.getKind() != Kind.GENERATE) {
+        return;
+      }
+      RefactoringResult refactoringResult;
+      try {
+        refactoringResult = refactoringCollection.applyChanges(event.getSourceFile().toUri());
+      } catch (Exception e) {
+        PrintWriter out = Log.instance(context).getWriter(WriterKind.ERROR);
+        out.println(e.getMessage());
+        out.flush();
+        return;
+      }
+      if (refactoringResult.type() == RefactoringCollection.RefactoringResultType.CHANGED) {
+        PrintWriter out = Log.instance(context).getWriter(WriterKind.NOTICE);
+        out.println(refactoringResult.message());
+        out.flush();
+      }
+    }
+  }
 
   public static ErrorProneAnalyzer createByScanningForPlugins(
       ScannerSupplier scannerSupplier, ErrorProneOptions errorProneOptions, Context context) {
@@ -93,16 +167,13 @@ public class ErrorProneAnalyzer implements TaskListener {
   }
 
   static ErrorProneAnalyzer createWithCustomDescriptionListener(
-      CodeTransformer codeTransformer,
+      Supplier<CodeTransformer> codeTransformer,
       ErrorProneOptions errorProneOptions,
       Context context,
       DescriptionListener.Factory descriptionListenerFactory) {
     context.put(ErrorProneFlags.class, errorProneOptions.getFlags());
     return new ErrorProneAnalyzer(
-        Suppliers.ofInstance(codeTransformer),
-        errorProneOptions,
-        context,
-        descriptionListenerFactory);
+        codeTransformer, errorProneOptions, context, descriptionListenerFactory);
   }
 
   public ErrorProneAnalyzer(

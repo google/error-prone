@@ -91,7 +91,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 import javax.inject.Inject;
 import javax.lang.model.element.ElementKind;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author eaftan@google.com (Eddie Aftandilian)

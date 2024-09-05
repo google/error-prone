@@ -43,9 +43,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.lang.model.type.TypeKind;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Methods to answer the question: are these two types "compatible" with each other, in the context
@@ -364,14 +364,11 @@ public final class TypeCompatibility {
 
     public abstract boolean isCompatible();
 
-    @Nullable
-    public abstract Type lhs();
+    public abstract @Nullable Type lhs();
 
-    @Nullable
-    public abstract Type rhs();
+    public abstract @Nullable Type rhs();
 
-    @Nullable
-    public abstract String extraReason();
+    public abstract @Nullable String extraReason();
 
     static TypeCompatibilityReport compatible() {
       return COMPATIBLE;

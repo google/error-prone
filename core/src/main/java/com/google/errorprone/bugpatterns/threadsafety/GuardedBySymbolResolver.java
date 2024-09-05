@@ -43,9 +43,9 @@ import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.Context;
-import javax.annotation.Nullable;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Name;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A symbol resolver used while binding guardedby expressions from string literals.
@@ -211,8 +211,7 @@ public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
     return null;
   }
 
-  @Nullable
-  private VarSymbol getParam(@Nullable MethodInfo method, String name) {
+  private @Nullable VarSymbol getParam(@Nullable MethodInfo method, String name) {
     if (method == null) {
       return null;
     }
@@ -234,9 +233,8 @@ public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
     return null;
   }
 
-  @Nullable
   @Override
-  public Symbol resolveTypeLiteral(ExpressionTree expr) {
+  public @Nullable Symbol resolveTypeLiteral(ExpressionTree expr) {
     checkGuardedBy(expr instanceof IdentifierTree, "bad type literal: %s", expr);
     IdentifierTree ident = (IdentifierTree) expr;
     Symbol type = resolveType(ident.getName().toString(), SearchSuperTypes.YES);
@@ -276,8 +274,7 @@ public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
     return type;
   }
 
-  @Nullable
-  private Symbol getSuperType(Symbol symbol, String name) {
+  private @Nullable Symbol getSuperType(Symbol symbol, String name) {
     for (Type t : types.closure(symbol.type)) {
       if (t.asElement().getSimpleName().contentEquals(name)) {
         return t.asElement();
@@ -286,8 +283,7 @@ public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
     return null;
   }
 
-  @Nullable
-  private static Symbol getLexicallyEnclosing(ClassSymbol symbol, String name) {
+  private static @Nullable Symbol getLexicallyEnclosing(ClassSymbol symbol, String name) {
     Symbol current = symbol.owner;
     while (true) {
       if (current == null || current.getSimpleName().contentEquals(name)) {
@@ -308,9 +304,8 @@ public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
     return attr.attribIdent(tm.Ident(visitorState.getName(name)), compilationUnit);
   }
 
-  @Nullable
   @Override
-  public Symbol resolveEnclosingClass(ExpressionTree expr) {
+  public @Nullable Symbol resolveEnclosingClass(ExpressionTree expr) {
     checkGuardedBy(expr instanceof IdentifierTree, "bad type literal: %s", expr);
     IdentifierTree ident = (IdentifierTree) expr;
     Symbol type = resolveType(ident.getName().toString(), SearchSuperTypes.NO);
@@ -330,11 +325,9 @@ public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
      * The method arguments, if the site is a method invocation expression for a method annotated
      * with {@code @GuardedBy}.
      */
-    @Nullable
-    abstract ImmutableList<ExpressionTree> arguments();
+    abstract @Nullable ImmutableList<ExpressionTree> arguments();
 
-    @Nullable
-    ExpressionTree argument(int idx) {
+    @Nullable ExpressionTree argument(int idx) {
       if (arguments() == null) {
         return null;
       }
@@ -363,8 +356,7 @@ public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
       return new AutoValue_GuardedBySymbolResolver_MethodInfo(sym, arguments);
     }
 
-    @Nullable
-    static MethodInfo create(Tree tree, VisitorState visitorState) {
+    static @Nullable MethodInfo create(Tree tree, VisitorState visitorState) {
       Symbol sym = ASTHelpers.getSymbol(tree);
       if (!(sym instanceof MethodSymbol)) {
         return null;

@@ -27,7 +27,7 @@ import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.TreeVisitor;
 import com.sun.tools.javac.tree.JCTree.JCStatement;
 import com.sun.tools.javac.util.List;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * {@link UTree} representation of an {@link IfTree}.
@@ -48,8 +48,7 @@ abstract class UIf implements UStatement, IfTree {
   public abstract UStatement getThenStatement();
 
   @Override
-  @Nullable
-  public abstract UStatement getElseStatement();
+  public abstract @Nullable UStatement getElseStatement();
 
   @Override
   public <R, D> R accept(TreeVisitor<R, D> visitor, D data) {
@@ -76,8 +75,8 @@ abstract class UIf implements UStatement, IfTree {
   }
 
   @Override
-  @Nullable
-  public Choice<UnifierWithUnconsumedStatements> apply(UnifierWithUnconsumedStatements state) {
+  public @Nullable Choice<UnifierWithUnconsumedStatements> apply(
+      UnifierWithUnconsumedStatements state) {
     ImmutableList<? extends StatementTree> unconsumedStatements = state.unconsumedStatements();
     if (unconsumedStatements.isEmpty()) {
       return Choice.none();

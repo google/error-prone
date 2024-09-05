@@ -20,7 +20,7 @@ import com.google.common.base.Function;
 import com.google.common.util.concurrent.AsyncFunction;
 import com.google.common.util.concurrent.ListenableFuture;
 import java.util.function.Supplier;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /** Negative cases for {@link AsyncFunctionReturnsNull}. */
 public class AsyncFunctionReturnsNullNegativeCases {

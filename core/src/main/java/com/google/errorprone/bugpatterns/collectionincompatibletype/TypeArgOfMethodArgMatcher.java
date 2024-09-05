@@ -33,7 +33,7 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Type;
 import java.util.Collection;
 import java.util.Optional;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Matches an instance method like {@link Collection#removeAll}, for which we need to extract the
@@ -51,22 +51,30 @@ class TypeArgOfMethodArgMatcher extends AbstractCollectionIncompatibleTypeMatche
   /**
    * @param receiverTypeName The fully-qualified name of the type of the method receiver whose
    *     descendants to match on
-   * @param signature The signature of the method to match on
    * @param receiverTypeArgIndex The index of the type argument that should match the method
    *     argument
    * @param methodArgIndex The index of the method argument whose type argument we should extract
    * @param methodArgTypeName The fully-qualified name of the type of the method argument whose type
    *     argument we should extract
    * @param methodArgTypeArgIndex The index of the type argument to extract from the method argument
+   * @param name The name of the method to match on
+   * @param firstParam The type of the first parameter of the method
+   * @param otherParams The types of any additional parameters of the method
    */
   public TypeArgOfMethodArgMatcher(
       String receiverTypeName,
-      String signature,
       int receiverTypeArgIndex,
       int methodArgIndex,
       String methodArgTypeName,
-      int methodArgTypeArgIndex) {
-    this.methodMatcher = instanceMethod().onDescendantOf(receiverTypeName).withSignature(signature);
+      int methodArgTypeArgIndex,
+      String name,
+      String firstParam,
+      String... otherParams) {
+    this.methodMatcher =
+        instanceMethod()
+            .onDescendantOf(receiverTypeName)
+            .named(name)
+            .withParameters(firstParam, otherParams);
     this.receiverTypeName = receiverTypeName;
     this.receiverTypeArgIndex = receiverTypeArgIndex;
     this.methodArgIndex = methodArgIndex;
@@ -84,9 +92,8 @@ class TypeArgOfMethodArgMatcher extends AbstractCollectionIncompatibleTypeMatche
     return Iterables.get(tree.getArguments(), methodArgIndex);
   }
 
-  @Nullable
   @Override
-  ExpressionTree extractSourceTree(MemberReferenceTree tree, VisitorState state) {
+  @Nullable ExpressionTree extractSourceTree(MemberReferenceTree tree, VisitorState state) {
     return tree;
   }
 
@@ -99,9 +106,8 @@ class TypeArgOfMethodArgMatcher extends AbstractCollectionIncompatibleTypeMatche
         state.getTypes());
   }
 
-  @Nullable
   @Override
-  Type extractSourceType(MemberReferenceTree tree, VisitorState state) {
+  @Nullable Type extractSourceType(MemberReferenceTree tree, VisitorState state) {
     return extractTypeArgAsMemberOfSupertype(
         getType(tree).allparams().get(methodArgIndex),
         state.getSymbolFromString(methodArgTypeName),
@@ -118,9 +124,8 @@ class TypeArgOfMethodArgMatcher extends AbstractCollectionIncompatibleTypeMatche
         state.getTypes());
   }
 
-  @Nullable
   @Override
-  Type extractTargetType(MemberReferenceTree tree, VisitorState state) {
+  @Nullable Type extractTargetType(MemberReferenceTree tree, VisitorState state) {
     return extractTypeArgAsMemberOfSupertype(
         ASTHelpers.getReceiverType(tree),
         state.getSymbolFromString(receiverTypeName),

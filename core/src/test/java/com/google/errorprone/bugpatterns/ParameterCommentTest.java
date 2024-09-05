@@ -254,4 +254,21 @@ public class ParameterCommentTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void markdownJavadocComment() {
+    compilationTestHelper
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.truth.Truth.assertThat;",
+            "class Test {",
+            "  public void f(int x) {}",
+            "  public void test() {",
+            "    f(",
+            "        /// javadoc markdown",
+            "        /* x= */ 42);",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

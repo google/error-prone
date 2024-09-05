@@ -26,7 +26,7 @@ import com.sun.source.tree.TreeVisitor;
 import com.sun.tools.javac.code.TypeTag;
 import com.sun.tools.javac.tree.JCTree.JCLiteral;
 import java.util.Objects;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * {@link UTree} version of {@link LiteralTree}.
@@ -89,8 +89,7 @@ public abstract class ULiteral extends UExpression implements LiteralTree {
   public abstract Kind getKind();
 
   @Override
-  @Nullable
-  public abstract Object getValue();
+  public abstract @Nullable Object getValue();
 
   private static boolean integral(@Nullable Object o) {
     return o instanceof Integer || o instanceof Long;

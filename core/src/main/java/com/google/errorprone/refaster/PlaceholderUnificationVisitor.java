@@ -27,7 +27,6 @@ import com.google.common.collect.Iterables;
 import com.google.errorprone.refaster.PlaceholderUnificationVisitor.State;
 import com.google.errorprone.refaster.UPlaceholderExpression.PlaceholderParamIdent;
 import com.google.errorprone.util.ASTHelpers;
-import com.google.errorprone.util.RuntimeVersion;
 import com.sun.source.tree.ArrayAccessTree;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BinaryTree;
@@ -112,7 +111,7 @@ import java.util.EnumSet;
 import java.util.Map;
 import java.util.function.BiFunction;
 
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Given a tree as input, returns all the ways this placeholder invocation could be matched with
@@ -141,8 +140,7 @@ abstract class PlaceholderUnificationVisitor
 
     public abstract Unifier unifier();
 
-    @Nullable
-    public abstract R result();
+    public abstract @Nullable R result();
 
     public <R2> State<R2> withResult(R2 result) {
       return create(seenParameters(), unifier(), result);
@@ -694,12 +692,12 @@ abstract class PlaceholderUnificationVisitor
 
   private JCCase makeCase(CaseTree node, List<JCStatement> stmts) {
     try {
-      if (RuntimeVersion.isAtLeast12()) {
+      if (Runtime.version().feature() >= 12) {
         Enum<?> caseKind = (Enum) CaseTree.class.getMethod("getCaseKind").invoke(node);
         checkState(
             caseKind.name().contentEquals("STATEMENT"),
             "expression switches are not supported yet");
-        if (RuntimeVersion.isAtLeast21()) {
+        if (Runtime.version().feature() >= 21) {
           return (JCCase)
               TreeMaker.class
                   .getMethod(
@@ -728,7 +726,7 @@ abstract class PlaceholderUnificationVisitor
                 .invoke(
                     maker(),
                     caseKind,
-                    RuntimeVersion.isAtLeast17()
+                    Runtime.version().feature() >= 17
                         ? CaseTree.class.getMethod("getLabels").invoke(node)
                         : List.of((JCExpression) node.getExpression()),
                     stmts,

@@ -46,8 +46,8 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import java.util.Objects;
 import java.util.Optional;
-import javax.annotation.Nullable;
 import javax.lang.model.element.Modifier;
+import org.jspecify.annotations.Nullable;
 
 /** Removes overrides which purely pass through to the method in the super class. */
 @BugPattern(
@@ -130,8 +130,7 @@ public final class RedundantOverride extends BugChecker implements MethodTreeMat
     return describeMatch(tree, SuggestedFix.delete(tree));
   }
 
-  @Nullable
-  private static MethodInvocationTree getSingleInvocation(StatementTree statement) {
+  private static @Nullable MethodInvocationTree getSingleInvocation(StatementTree statement) {
     return statement.accept(
         new SimpleTreeVisitor<MethodInvocationTree, Void>() {
           @Override

@@ -21,6 +21,7 @@ import static com.google.errorprone.FileObjects.forSourceLines;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.Assert.fail;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.FileManagers;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.ASTHelpers;
@@ -34,7 +35,6 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import javax.tools.JavaCompiler;
@@ -497,13 +497,13 @@ public class GuardedByBinderTest {
     JavacTaskImpl task =
         (JavacTaskImpl)
             javaCompiler.getTask(
-                new PrintWriter(
+                /* out= */ new PrintWriter(
                     new BufferedWriter(new OutputStreamWriter(System.err, UTF_8)), true),
-                FileManagers.testFileManager(),
-                null,
-                Collections.<String>emptyList(),
-                null,
-                Arrays.asList(fileObject));
+                /* fileManager= */ FileManagers.testFileManager(),
+                /* diagnosticListener= */ null,
+                /* options= */ ImmutableList.of("-proc:none"),
+                /* classes= */ null,
+                /* compilationUnits= */ Arrays.asList(fileObject));
     Iterable<? extends CompilationUnitTree> compilationUnits = task.parse();
     task.analyze();
     for (CompilationUnitTree compilationUnit : compilationUnits) {

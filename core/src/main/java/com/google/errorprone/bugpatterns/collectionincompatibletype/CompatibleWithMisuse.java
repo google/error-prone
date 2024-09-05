@@ -44,7 +44,7 @@ import com.sun.tools.javac.code.Symbol.TypeVariableSymbol;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author glorioso@google.com (Nick Glorioso)

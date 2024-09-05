@@ -921,4 +921,24 @@ public final class PreferredInterfaceTypeTest {
         .expectUnchanged()
         .doTest();
   }
+
+  @Test
+  public void javaLangNotQualified() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "class Test {",
+            "  private CharSequence cs() {",
+            "    return \"\";",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java", //
+            "class Test {",
+            "  private String cs() {",
+            "    return \"\";",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

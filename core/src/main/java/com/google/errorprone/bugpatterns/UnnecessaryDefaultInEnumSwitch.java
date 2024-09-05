@@ -231,7 +231,7 @@ public class UnnecessaryDefaultInEnumSwitch extends BugChecker implements Switch
   private static SetView<String> unhandledCases(SwitchTree tree, TypeSymbol switchType) {
     ImmutableSet<String> handledCases =
         tree.getCases().stream()
-            .map(CaseTree::getExpression)
+            .flatMap(ASTHelpers::getCaseExpressions)
             .filter(IdentifierTree.class::isInstance)
             .map(p -> ((IdentifierTree) p).getName().toString())
             .collect(toImmutableSet());

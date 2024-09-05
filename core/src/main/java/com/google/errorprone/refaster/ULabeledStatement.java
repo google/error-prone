@@ -21,7 +21,7 @@ import com.sun.source.tree.LabeledStatementTree;
 import com.sun.source.tree.TreeVisitor;
 import com.sun.tools.javac.tree.JCTree.JCLabeledStatement;
 import com.sun.tools.javac.util.Name;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * {@code UTree} representation of a {@code LabeledStatementTree}.
@@ -44,8 +44,7 @@ abstract class ULabeledStatement extends USimpleStatement implements LabeledStat
    * Returns either the {@code Name} bound to the specified label, or a {@code Name} representing
    * the original label if none is already bound.
    */
-  @Nullable
-  static Name inlineLabel(@Nullable CharSequence label, Inliner inliner) {
+  static @Nullable Name inlineLabel(@Nullable CharSequence label, Inliner inliner) {
     return (label == null)
         ? null
         : inliner.asName(inliner.getOptionalBinding(new Key(label)).or(label));

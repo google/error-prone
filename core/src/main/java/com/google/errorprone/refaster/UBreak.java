@@ -16,7 +16,6 @@
 
 package com.google.errorprone.refaster;
 
-import com.google.errorprone.util.RuntimeVersion;
 import com.sun.source.tree.BreakTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.TreeVisitor;
@@ -25,7 +24,7 @@ import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.Name;
 import java.util.Objects;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * {@code UTree} representation of {@code BreakTree}.
@@ -45,14 +44,12 @@ final class UBreak extends USimpleStatement implements BreakTree {
   }
 
   // TODO(b/176098078): Add @Override once compiling JDK 12+
-  @Nullable
-  public ExpressionTree getValue() {
+  public @Nullable ExpressionTree getValue() {
     return null;
   }
 
   @Override
-  @Nullable
-  public StringName getLabel() {
+  public @Nullable StringName getLabel() {
     return label;
   }
 
@@ -77,7 +74,7 @@ final class UBreak extends USimpleStatement implements BreakTree {
 
   private static JCBreak makeBreak(Name label, Inliner inliner) {
     try {
-      if (RuntimeVersion.isAtLeast12()) {
+      if (Runtime.version().feature() >= 12) {
         return (JCBreak)
             TreeMaker.class
                 .getMethod("Break", JCExpression.class)

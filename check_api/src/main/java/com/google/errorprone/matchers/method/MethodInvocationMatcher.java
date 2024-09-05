@@ -41,8 +41,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiPredicate;
-import javax.annotation.Nullable;
 import javax.lang.model.element.ElementKind;
+import org.jspecify.annotations.Nullable;
 
 /**
  * The machinery and type definitions necessary to model and compile a single efficient matcher out
@@ -314,7 +314,7 @@ public class MethodInvocationMatcher {
   private static class NodeWithDefault {
 
     private final Set<Node> states;
-    @Nullable final Set<Node> def;
+    final @Nullable Set<Node> def;
     final SetMultimap<Token, Node> mapping;
 
     NodeWithDefault(Set<Node> states, Set<Node> def, SetMultimap<Token, Node> mapping) {

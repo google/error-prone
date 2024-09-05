@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.dataflow.nullnesspropagation.NullnessAnnotations.annotationsRelevantToNullness;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
 import com.google.errorprone.BugPattern;
@@ -26,7 +27,6 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
-import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import javax.lang.model.type.TypeKind;
@@ -34,7 +34,7 @@ import javax.lang.model.type.TypeKind;
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
     summary =
-        "void-returning methods should not be annotated with @Nullable,"
+        "void-returning methods should not be annotated with nullness annotations,"
             + " since they cannot return null",
     severity = WARNING,
     tags = StandardTags.STYLE)
@@ -46,11 +46,12 @@ public class NullableVoid extends BugChecker implements MethodTreeMatcher {
     if (sym.getReturnType().getKind() != TypeKind.VOID) {
       return NO_MATCH;
     }
-    AnnotationTree annotation =
-        ASTHelpers.getAnnotationWithSimpleName(tree.getModifiers().getAnnotations(), "Nullable");
-    if (annotation == null) {
+    var relevantAnnos = annotationsRelevantToNullness(tree.getModifiers().getAnnotations());
+    if (relevantAnnos.isEmpty()) {
       return NO_MATCH;
     }
-    return describeMatch(annotation, SuggestedFix.delete(annotation));
+    var fix = SuggestedFix.builder();
+    relevantAnnos.forEach(fix::delete);
+    return describeMatch(relevantAnnos.get(0), fix.build());
   }
 }

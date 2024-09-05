@@ -65,7 +65,7 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 import java.util.regex.Pattern;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(summary = "Prefer assertThrows to ExpectedException", severity = WARNING)

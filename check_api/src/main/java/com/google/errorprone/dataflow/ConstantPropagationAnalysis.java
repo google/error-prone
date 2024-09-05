@@ -18,9 +18,9 @@ package com.google.errorprone.dataflow;
 
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.util.Context;
-import javax.annotation.Nullable;
 import org.checkerframework.errorprone.dataflow.constantpropagation.Constant;
 import org.checkerframework.errorprone.dataflow.constantpropagation.ConstantPropagationTransfer;
+import org.jspecify.annotations.Nullable;
 
 /** An interface to the constant propagation analysis. */
 public final class ConstantPropagationAnalysis {
@@ -33,8 +33,7 @@ public final class ConstantPropagationAnalysis {
    * evaluates to the same numeric value), and null otherwise. Note that returning null does not
    * necessarily mean the expression is *not* a constant.
    */
-  @Nullable
-  public static Number numberValue(TreePath exprPath, Context context) {
+  public static @Nullable Number numberValue(TreePath exprPath, Context context) {
     Constant val = DataFlow.expressionDataflow(exprPath, context, CONSTANT_PROPAGATION);
     if (val == null || !val.isConstant()) {
       return null;

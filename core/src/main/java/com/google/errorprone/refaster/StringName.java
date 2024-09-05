@@ -17,8 +17,8 @@
 package com.google.errorprone.refaster;
 
 import com.google.auto.value.AutoValue;
-import javax.annotation.Nullable;
 import javax.lang.model.element.Name;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A simple wrapper to view a {@code String} as a {@code Name}.

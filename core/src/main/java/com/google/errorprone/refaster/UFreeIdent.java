@@ -25,7 +25,7 @@ import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.util.Names;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Free identifier that can be bound to any expression of the appropriate type.

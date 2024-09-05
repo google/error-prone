@@ -27,7 +27,7 @@ import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A type-safe map from objects of type {@code Bindings.Key<V>}, which consist of a {@code String}
@@ -130,9 +130,8 @@ public class Bindings extends ForwardingMap<Bindings.Key<?>, Object> {
   }
 
   @CanIgnoreReturnValue
-  @Nullable
   @Override
-  public Object put(Key<?> key, Object value) {
+  public @Nullable Object put(Key<?> key, Object value) {
     checkNotNull(key, "key");
     checkNotNull(value, "value");
     return super.put(key, key.getValueType().getRawType().cast(value));
