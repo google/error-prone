@@ -1,9 +1,10 @@
 buildpack:
   name: Blazar-Buildpack-Java
+  branch: js-jdk-toolchains
 
 provides:
   - parent
 
 env:
-  SET_VERSION_OVERRIDE: "2.28.0-$GIT_BRANCH-SNAPSHOT"
+  SET_VERSION_OVERRIDE: "2.31.0-$GIT_BRANCH-SNAPSHOT"
 
