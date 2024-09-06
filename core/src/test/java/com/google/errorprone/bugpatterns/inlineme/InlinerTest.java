@@ -1220,6 +1220,35 @@ public class InlinerTest {
         .doTest();
   }
 
+  @Test
+  public void b365094947() {
+    refactoringTestHelper
+        .addInputLines(
+            "Caller.java",
+            "import static java.nio.charset.StandardCharsets.UTF_8;",
+            "import com.google.common.io.Files;",
+            "import java.io.File;",
+            "public final class Caller {",
+            "  public void doTest(File file, String text) throws Exception {",
+            "    Files.write(text, file, UTF_8);",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Caller.java",
+            "import static java.nio.charset.StandardCharsets.UTF_8;",
+            "import com.google.common.io.Files;",
+            "import java.io.File;",
+            "public final class Caller {",
+            "  public void doTest(File file, String text) throws Exception {",
+            // TODO(b/365094947): this is a bug; it clearly does not compile. It should be:
+            //   Files.asCharSink(file, UTF_8).write(text);
+            "    Files.asCharSink(to, charset).write(from);",
+            "  }",
+            "}")
+        .allowBreakingChanges()
+        .doTest();
+  }
+
   private BugCheckerRefactoringTestHelper bugCheckerWithPrefixFlag(String prefix) {
     return BugCheckerRefactoringTestHelper.newInstance(Inliner.class, getClass())
         .setArgs("-XepOpt:" + PREFIX_FLAG + "=" + prefix);
