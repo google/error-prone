@@ -236,11 +236,18 @@ public final class Inliner extends BugChecker
     }
 
     for (int i = 0; i < varNames.size(); i++) {
+      String varName = varNames.get(i);
+
+      // If the parameter names are missing (b/365094947), don't perform the inlining.
+      if (varName.matches("arg[0-9]+")) {
+        return Description.NO_MATCH;
+      }
+
       // The replacement logic below assumes the existence of another token after the parameter
       // in the replacement string (ex: a trailing parens, comma, dot, etc.). However, in the case
       // where the replacement is _just_ one parameter, there isn't a trailing token. We just make
       // the direct replacement here.
-      if (replacement.equals(varNames.get(i))) {
+      if (replacement.equals(varName)) {
         replacement = callingVars.get(i);
         break;
       }
@@ -252,7 +259,7 @@ public final class Inliner extends BugChecker
       String capturePrefixForVarargs = terminalVarargsReplacement ? "(?:,\\s*)?" : "\\b";
       // We want to avoid replacing a method invocation with the same name as the method.
       var extractArgAndNextToken =
-          Pattern.compile(capturePrefixForVarargs + Pattern.quote(varNames.get(i)) + "\\b([^(])");
+          Pattern.compile(capturePrefixForVarargs + Pattern.quote(varName) + "\\b([^(])");
       String replacementResult =
           Matcher.quoteReplacement(terminalVarargsReplacement ? "" : callingVars.get(i)) + "$1";
       Matcher matcher = extractArgAndNextToken.matcher(replacement);
