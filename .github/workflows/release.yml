@@ -26,9 +26,7 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
-          java-version: |
-            11
-            17
+          java-version: 17
           distribution: 'zulu'
           cache: 'maven'
           server-id: ossrh
