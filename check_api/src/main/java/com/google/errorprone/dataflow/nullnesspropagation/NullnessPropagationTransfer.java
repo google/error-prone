@@ -1170,14 +1170,14 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
           .build();
 
   /**
-   * Maps from non-null test methods to indices of arguments that are comapred against null. These
+   * Maps from non-null test methods to indices of arguments that are compared against null. These
    * methods must guarantee non-nullness if {@code true} <b>and nullness if {@code false}</b>.
    */
   private static final ImmutableSetMultimap<MemberName, Integer> NONNULL_IFF_TRUE_PARAMETERS =
       ImmutableSetMultimap.of(member(Objects.class, "nonNull"), 0);
 
   /**
-   * Maps from null test methods to indices of arguments that are comapred against null. These
+   * Maps from null test methods to indices of arguments that are compared against null. These
    * methods must guarantee nullness if {@code true} <b>and non-nullness if {@code false}</b>.
    */
   private static final ImmutableSetMultimap<MemberName, Integer> NULL_IFF_TRUE_PARAMETERS =
