@@ -285,7 +285,7 @@ public abstract class BugChecker implements Suppressible, Serializable {
   public boolean isSuppressed(Tree tree, VisitorState state) {
     Symbol sym = getDeclaredSymbol(tree);
     /*
-     * TOOD(cpovirk): At least for @SuppressWarnings, should our suppression checks look for
+     * TODO(cpovirk): At least for @SuppressWarnings, should our suppression checks look for
      * annotations only on the kinds of trees that are covered by SuppressibleTreePathScanner? Or,
      * now that @SuppressWarnings has been changed to be applicable to all declaration locations,
      * should we generalize SuppressibleTreePathScanner to look on all those locations?
