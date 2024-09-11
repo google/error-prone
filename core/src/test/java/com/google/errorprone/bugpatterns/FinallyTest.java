@@ -55,15 +55,20 @@ public class FinallyTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void f() {",
-            "    try {",
-            "    } catch (Throwable t) {",
-            "  } finally {",
-            "      Runnable r = () -> { return; };",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f() {
+                try {
+                } catch (Throwable t) {
+                } finally {
+                  Runnable r =
+                      () -> {
+                        return;
+                      };
+                }
+              }
+            }
+            """)
         .doTest();
   }
 }
