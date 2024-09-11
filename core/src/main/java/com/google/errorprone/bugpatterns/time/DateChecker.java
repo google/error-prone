@@ -41,7 +41,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Warns against suspect looking calls to {@link java.util.Date} APIs. Noteably, {@code Date} uses:
+ * Warns against suspect looking calls to {@link java.util.Date} APIs. Notably, {@code Date} uses:
  *
  * <ul>
  *   <li>1900-based years (negative values permitted)
