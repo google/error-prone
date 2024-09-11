@@ -92,7 +92,7 @@ abstract class InlinabilityResult {
 
   boolean isValidForSuggester() {
     return isValidForValidator()
-        || error() == InlineValidationErrorReason.METHOD_CAN_BE_OVERIDDEN_BUT_CAN_BE_FIXED;
+        || error() == InlineValidationErrorReason.METHOD_CAN_BE_OVERRIDDEN_BUT_CAN_BE_FIXED;
   }
 
   boolean isValidForValidator() {
@@ -111,20 +111,21 @@ abstract class InlinabilityResult {
     BODY_WOULD_EVALUATE_DIFFERENTLY(
         "Inlining this method will result in a change in evaluation timing for one or more"
             + " arguments to this method."),
-    METHOD_CAN_BE_OVERIDDEN_AND_CANT_BE_FIXED(
+    METHOD_CAN_BE_OVERRIDDEN_AND_CANT_BE_FIXED(
         "Methods that are inlined should not be overridable, as the implementation of an overriding"
             + " method may be different than the inlining"),
 
     // Technically an error in the case where an existing @InlineMe annotation is applied, but could
     // be fixed while suggesting
-    METHOD_CAN_BE_OVERIDDEN_BUT_CAN_BE_FIXED(
+    METHOD_CAN_BE_OVERRIDDEN_BUT_CAN_BE_FIXED(
         "Methods that are inlined should not be overridable, as the implementation of an overriding"
             + " method may be different than the inlining"),
     VARARGS_USED_UNSAFELY(
         "When using a varargs parameter, it must only be passed in the last position of a method"
             + " call to another varargs method"),
     EMPTY_VOID("InlineMe cannot yet be applied to no-op void methods"),
-    REUSE_OF_ARGUMENTS("Implementations cannot use an argument more than once:");
+    REUSE_OF_ARGUMENTS("Implementations cannot use an argument more than once:"),
+    PARAM_NAMES_ARE_NAMED_ARGN("Method parameter names cannot match `arg[0-9]+`.");
 
     private final @Nullable String errorMessage;
 
@@ -135,6 +136,10 @@ abstract class InlinabilityResult {
     String getErrorMessage() {
       return errorMessage;
     }
+  }
+
+  static boolean matchesArgN(String paramName) {
+    return paramName.matches("arg[0-9]+");
   }
 
   static InlinabilityResult forMethod(MethodTree tree, VisitorState state) {
@@ -179,6 +184,12 @@ abstract class InlinabilityResult {
       return fromError(InlineValidationErrorReason.VARARGS_USED_UNSAFELY, body);
     }
 
+    for (VarSymbol param : methSymbol.params()) {
+      if (matchesArgN(param.name.toString())) {
+        return fromError(InlineValidationErrorReason.PARAM_NAMES_ARE_NAMED_ARGN);
+      }
+    }
+
     // TODO(kak): declare a list of all the types we don't want to allow (e.g., ClassTree) and use
     // contains
     if (body.toString().contains("{") || body.getKind() == Kind.CONDITIONAL_EXPRESSION) {
@@ -209,8 +220,8 @@ abstract class InlinabilityResult {
       // overridden due to having no publicly-accessible constructors.
       return fromError(
           methSymbol.isDefault()
-              ? InlineValidationErrorReason.METHOD_CAN_BE_OVERIDDEN_AND_CANT_BE_FIXED
-              : InlineValidationErrorReason.METHOD_CAN_BE_OVERIDDEN_BUT_CAN_BE_FIXED,
+              ? InlineValidationErrorReason.METHOD_CAN_BE_OVERRIDDEN_AND_CANT_BE_FIXED
+              : InlineValidationErrorReason.METHOD_CAN_BE_OVERRIDDEN_BUT_CAN_BE_FIXED,
           body);
     }
 

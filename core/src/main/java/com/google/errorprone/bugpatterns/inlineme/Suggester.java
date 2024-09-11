@@ -86,7 +86,7 @@ public final class Suggester extends BugChecker implements MethodTreeMatcher {
                 InlineMeData.buildExpectedInlineMeAnnotation(state, inlinabilityResult.body())
                     .buildAnnotation());
     if (inlinabilityResult.error()
-        == InlineValidationErrorReason.METHOD_CAN_BE_OVERIDDEN_BUT_CAN_BE_FIXED) {
+        == InlineValidationErrorReason.METHOD_CAN_BE_OVERRIDDEN_BUT_CAN_BE_FIXED) {
       SuggestedFixes.addModifiers(tree, state, Modifier.FINAL).ifPresent(fixBuilder::merge);
     }
     return describeMatch(tree, fixBuilder.build());

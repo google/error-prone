@@ -1046,4 +1046,49 @@ public class SuggesterTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void noInlineMeSuggestionWhenParameterNamesAreArgN() {
+    refactoringTestHelper
+        .addInputLines(
+            "Client.java",
+            "public final class Client {",
+            "  @Deprecated",
+            "  public void before(int arg0, int arg1) {",
+            "    after(arg0, arg1);",
+            "  }",
+            "  public void after(int arg0, int arg1) {",
+            "  }",
+            "}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void inlineMeSuggestionWhenParameterNamesAreNotArgN() {
+    refactoringTestHelper
+        .addInputLines(
+            "Client.java",
+            "public final class Client {",
+            "  @Deprecated",
+            "  public void before(int int0, int int1) {",
+            "    after(int0, int1);",
+            "  }",
+            "  public void after(int int0, int int1) {",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Client.java",
+            "import com.google.errorprone.annotations.InlineMe;",
+            "public final class Client {",
+            "  @InlineMe(replacement = \"this.after(int0, int1)\")",
+            "  @Deprecated",
+            "  public void before(int int0, int int1) {",
+            "    after(int0, int1);",
+            "  }",
+            "  public void after(int int0, int int1) {",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

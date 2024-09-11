@@ -239,7 +239,7 @@ public final class Inliner extends BugChecker
       String varName = varNames.get(i);
 
       // If the parameter names are missing (b/365094947), don't perform the inlining.
-      if (varName.matches("arg[0-9]+")) {
+      if (InlinabilityResult.matchesArgN(varName)) {
         return Description.NO_MATCH;
       }
 
