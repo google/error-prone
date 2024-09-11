@@ -1,7 +1,7 @@
 Calling `get()` on an `Optional` that is not present will result in a
 `NoSuchElementException`.
 
-This check detects cases where `get()` is called whent the optional is
+This check detects cases where `get()` is called when the optional is
 definitely not present, e.g.:
 
 ```java
