@@ -436,7 +436,7 @@ public class UnsafeWildcardTest {
   }
 
   /**
-   * Regresion test demonstrating that generic array creation is a compiler error. If it wasn't,
+   * Regression test demonstrating that generic array creation is a compiler error. If it wasn't,
    * we'd want to check element types.
    */
   @Test
