@@ -109,7 +109,7 @@ public class JUnitParameterMethodNotFoundNegativeCase {
 
   @Test
   @Parameters(
-      "please\\, escape commas if you use it here and don't want your parameters to be splitted")
+      "please\\, escape commas if you use it here and don't want your parameters to be split")
   public void commasInParametersUsage(String phrase) {}
 
   @Test

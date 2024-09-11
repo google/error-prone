@@ -39,7 +39,7 @@ public class UnnecessaryLongToIntConversionPositiveCases {
 
   public void convertMultipleArgs() {
     long x = 1;
-    // The method expects an int for the first parameter and a long for the second paremeter.
+    // The method expects an int for the first parameter and a long for the second parameter.
     // BUG: Diagnostic contains: UnnecessaryLongToIntConversion
     acceptsMultipleParams(Ints.checkedCast(x), Ints.checkedCast(x));
   }
