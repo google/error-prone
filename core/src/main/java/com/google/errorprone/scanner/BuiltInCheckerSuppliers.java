@@ -34,6 +34,7 @@ import com.google.errorprone.bugpatterns.ArrayAsKeyOfSetOrMap;
 import com.google.errorprone.bugpatterns.ArrayEquals;
 import com.google.errorprone.bugpatterns.ArrayFillIncompatibleType;
 import com.google.errorprone.bugpatterns.ArrayHashCode;
+import com.google.errorprone.bugpatterns.ArrayRecordComponent;
 import com.google.errorprone.bugpatterns.ArrayToString;
 import com.google.errorprone.bugpatterns.ArraysAsListPrimitiveArray;
 import com.google.errorprone.bugpatterns.AssertFalse;
@@ -855,6 +856,7 @@ public class BuiltInCheckerSuppliers {
           AnnotateFormatMethod.class,
           ArgumentSelectionDefectChecker.class,
           ArrayAsKeyOfSetOrMap.class,
+          ArrayRecordComponent.class,
           AssertEqualsArgumentOrderChecker.class,
           AssertThrowsMultipleStatements.class,
           AssertionFailureIgnored.class,
