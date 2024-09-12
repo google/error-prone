@@ -85,13 +85,13 @@ loadScripts(document, 'script');</script>
 <section class="class-description" id="class-description">
 <dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code><a href="ThreadSafety.KnownTypes.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.KnownTypes</a></code></dd>
+<dd><code><a href="ThreadSafetyKnownTypes.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">ThreadSafetyKnownTypes</a></code></dd>
 </dl>
 <hr>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">WellKnownThreadSafety</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
-implements <a href="ThreadSafety.KnownTypes.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.KnownTypes</a></span></div>
+implements <a href="ThreadSafetyKnownTypes.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">ThreadSafetyKnownTypes</a></span></div>
 <div class="block">A collection of types with known thread safety.</div>
 </div>
 </section>
@@ -102,8 +102,8 @@ implements <a href="ThreadSafety.KnownTypes.html" title="interface in com.google
 <section class="nested-class-summary" id="nested-class-summary">
 <h2>Nested Class Summary</h2>
 <div class="inherited-list">
-<h3 id="nested-classes-inherited-from-class-com.google.errorprone.bugpatterns.threadsafety.ThreadSafety.KnownTypes">Nested classes/interfaces inherited from interface&nbsp;com.google.errorprone.bugpatterns.threadsafety.<a href="ThreadSafety.KnownTypes.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.KnownTypes</a></h3>
-<code><a href="ThreadSafety.KnownTypes.MapBuilder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.KnownTypes.MapBuilder</a></code></div>
+<h3 id="nested-classes-inherited-from-class-com.google.errorprone.bugpatterns.threadsafety.ThreadSafetyKnownTypes">Nested classes/interfaces inherited from interface&nbsp;com.google.errorprone.bugpatterns.threadsafety.<a href="ThreadSafetyKnownTypes.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">ThreadSafetyKnownTypes</a></h3>
+<code><a href="ThreadSafetyKnownTypes.MapBuilder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafetyKnownTypes.MapBuilder</a></code></div>
 </section>
 </li>
 <!-- ========== METHOD SUMMARY =========== -->
@@ -171,11 +171,11 @@ implements <a href="ThreadSafety.KnownTypes.html" title="interface in com.google
 <h3>getKnownSafeClasses</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableMap&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="AnnotationInfo.html" title="class in com.google.errorprone.bugpatterns.threadsafety">AnnotationInfo</a>&gt;</span>&nbsp;<span class="element-name">getKnownSafeClasses</span>()</div>
-<div class="block"><span class="description-from-type-label">Description copied from interface:&nbsp;<code><a href="ThreadSafety.KnownTypes.html#getKnownSafeClasses()">ThreadSafety.KnownTypes</a></code></span></div>
+<div class="block"><span class="description-from-type-label">Description copied from interface:&nbsp;<code><a href="ThreadSafetyKnownTypes.html#getKnownSafeClasses()">ThreadSafetyKnownTypes</a></code></span></div>
 <div class="block">Types that are known to be safe even if they're not annotated with an expected annotation.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="ThreadSafety.KnownTypes.html#getKnownSafeClasses()">getKnownSafeClasses</a></code>&nbsp;in interface&nbsp;<code><a href="ThreadSafety.KnownTypes.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.KnownTypes</a></code></dd>
+<dd><code><a href="ThreadSafetyKnownTypes.html#getKnownSafeClasses()">getKnownSafeClasses</a></code>&nbsp;in interface&nbsp;<code><a href="ThreadSafetyKnownTypes.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">ThreadSafetyKnownTypes</a></code></dd>
 </dl>
 </div>
 </section>
@@ -185,11 +185,11 @@ implements <a href="ThreadSafety.KnownTypes.html" title="interface in com.google
 <h3>getKnownUnsafeClasses</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableSet&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">getKnownUnsafeClasses</span>()</div>
-<div class="block"><span class="description-from-type-label">Description copied from interface:&nbsp;<code><a href="ThreadSafety.KnownTypes.html#getKnownUnsafeClasses()">ThreadSafety.KnownTypes</a></code></span></div>
+<div class="block"><span class="description-from-type-label">Description copied from interface:&nbsp;<code><a href="ThreadSafetyKnownTypes.html#getKnownUnsafeClasses()">ThreadSafetyKnownTypes</a></code></span></div>
 <div class="block">Types that are known to be unsafe and don't need testing.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="ThreadSafety.KnownTypes.html#getKnownUnsafeClasses()">getKnownUnsafeClasses</a></code>&nbsp;in interface&nbsp;<code><a href="ThreadSafety.KnownTypes.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.KnownTypes</a></code></dd>
+<dd><code><a href="ThreadSafetyKnownTypes.html#getKnownUnsafeClasses()">getKnownUnsafeClasses</a></code>&nbsp;in interface&nbsp;<code><a href="ThreadSafetyKnownTypes.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">ThreadSafetyKnownTypes</a></code></dd>
 </dl>
 </div>
 </section>
