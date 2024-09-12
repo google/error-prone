@@ -4,7 +4,7 @@ layout: documentation
 ---
 
 Our goal is to make it simple to add Error Prone checks to your existing Java
-compilation. Please note that Error Prone must be run on JDK 11 or newer. (It
+compilation. Please note that Error Prone must be run on JDK 17 or newer. (It
 can still be used to build Java 8 code by setting the appropriate `-source` /
 `-target` / `-bootclasspath` flags.)
 
@@ -73,7 +73,7 @@ Edit your `pom.xml` file to add settings to the maven-compiler-plugin:
   </build>
 ```
 
-On JDK 16 and newer, additional flags are required due to
+Additional flags are required due to
 [JEP 396: Strongly Encapsulate JDK Internals by Default](https://openjdk.java.net/jeps/396).
 
 If your `maven-compiler-plugin` uses an external executable, e.g. because
@@ -182,8 +182,8 @@ catches many of the same issues.
 
 Error Prone supports the
 [`com.sun.source.util.Plugin`](https://docs.oracle.com/javase/8/docs/jdk/api/javac/tree/com/sun/source/util/Plugin.html)
-API, and can be used with JDK 9 and up by adding Error Prone to the
-`-processorpath` and setting the `-Xplugin` flag.
+API, which can be used by adding Error Prone to the `-processorpath` and setting
+the `-Xplugin` flag.
 
 Example:
 
@@ -215,8 +215,7 @@ ShortSet.java:8: error: [CollectionIncompatibleType] Argument 'i - 1' should not
 1 error
 ```
 
-The `--add-exports` and `--add-opens` flags are required when using JDK 16 and
-newer due to
+The `--add-exports` and `--add-opens` flags are required due to
 [JEP 396: Strongly Encapsulate JDK Internals by Default](https://openjdk.java.net/jeps/396):
 
 ## My build system isn't listed here
@@ -252,12 +251,14 @@ to Error Prone, such as
 need to add their JARs to your `-processorpath` argument. The mechanics of this
 will vary according to the build tool you are using.
 
-## JDK 8
+## Running Error Prone on earlier JDK versions
 
-Error Prone 2.10.0 is the latest version to support running on JDK 8. (Compiling
-the Java 8 language level is still supported by using a javac from a newer JDK,
-and setting the appropriate `-source`/`-target`/`-bootclasspath` or `--release`
-flags).
+*   Error Prone 2.10.0 is the latest version to support running on JDK 8.
+*   Error Prone 2.31.0 is the latest version to support running on JDK 11.
+
+(Compiling the Java 8 language level is still supported by using a javac from a
+newer JDK, and setting the appropriate `-source`/`-target`/`-bootclasspath` or
+`--release` flags).
 
 For instructions on using Error Prone 2.10.0 with JDK 8, see
 [this older version of the installation instructions](https://github.com/google/error-prone/blob/f8e33bc460be82ab22256a7ef8b979d7a2cacaba/docs/installation.md).
