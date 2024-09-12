@@ -25,11 +25,9 @@ import com.google.auto.value.AutoValue;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableListMultimap;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
-import com.google.common.collect.Sets.SetView;
 import com.google.common.collect.Streams;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
@@ -58,7 +56,6 @@ import com.sun.tools.javac.util.Name;
 import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
-import java.lang.reflect.TypeVariable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -78,7 +75,7 @@ import org.pcollections.ConsPStack;
 public final class ThreadSafety {
   private final VisitorState state;
   private final Purpose purpose;
-  private final KnownTypes knownTypes;
+  private final ThreadSafetyKnownTypes knownTypes;
   private final ImmutableSet<String> markerAnnotations;
   private final ImmutableSet<String> acceptedAnnotations;
   private final ImmutableSet<String> containerOfAnnotation;
@@ -153,7 +150,7 @@ public final class ThreadSafety {
     private Builder() {}
 
     private Purpose purpose = Purpose.FOR_IMMUTABLE_CHECKER;
-    private KnownTypes knownTypes;
+    private ThreadSafetyKnownTypes knownTypes;
     private ImmutableSet<String> markerAnnotations;
     private ImmutableSet<String> acceptedAnnotations = ImmutableSet.of();
     private ImmutableSet<String> containerOfAnnotation = ImmutableSet.of();
@@ -169,7 +166,7 @@ public final class ThreadSafety {
 
     /** Information about known types and whether they're known to be safe or unsafe. */
     @CanIgnoreReturnValue
-    public Builder knownTypes(KnownTypes knownTypes) {
+    public Builder knownTypes(ThreadSafetyKnownTypes knownTypes) {
       this.knownTypes = knownTypes;
       return this;
     }
@@ -275,7 +272,7 @@ public final class ThreadSafety {
   private ThreadSafety(
       VisitorState state,
       Purpose purpose,
-      KnownTypes knownTypes,
+      ThreadSafetyKnownTypes knownTypes,
       Set<String> markerAnnotations,
       Set<String> acceptedAnnotations,
       Set<String> containerOfAnnotation,
@@ -289,71 +286,6 @@ public final class ThreadSafety {
     this.containerOfAnnotation = ImmutableSet.copyOf(checkNotNull(containerOfAnnotation));
     this.suppressAnnotation = ImmutableSet.copyOf(checkNotNull(suppressAnnotation));
     this.typeParameterAnnotation = ImmutableSet.copyOf(checkNotNull(typeParameterAnnotation));
-  }
-
-  /** Information about known types and whether they're known to be safe or unsafe. */
-  public interface KnownTypes {
-    /**
-     * Types that are known to be safe even if they're not annotated with an expected annotation.
-     */
-    ImmutableMap<String, AnnotationInfo> getKnownSafeClasses();
-
-    /** Types that are known to be unsafe and don't need testing. */
-    ImmutableSet<String> getKnownUnsafeClasses();
-
-    /** Helper for building maps of classes to {@link AnnotationInfo}. */
-    final class MapBuilder {
-      final ImmutableMap.Builder<String, AnnotationInfo> mapBuilder = ImmutableMap.builder();
-
-      @CanIgnoreReturnValue
-      public MapBuilder addClasses(Set<Class<?>> clazzs) {
-        clazzs.forEach(this::add);
-        return this;
-      }
-
-      @CanIgnoreReturnValue
-      public MapBuilder addStrings(List<String> classNames) {
-        classNames.forEach(this::add);
-        return this;
-      }
-
-      @CanIgnoreReturnValue
-      public MapBuilder addAll(ImmutableMap<String, AnnotationInfo> map) {
-        mapBuilder.putAll(map);
-        return this;
-      }
-
-      @CanIgnoreReturnValue
-      public MapBuilder add(Class<?> clazz, String... containerOf) {
-        ImmutableSet<String> containerTyParams = ImmutableSet.copyOf(containerOf);
-        HashSet<String> actualTyParams = new HashSet<>();
-        for (TypeVariable<?> x : clazz.getTypeParameters()) {
-          actualTyParams.add(x.getName());
-        }
-        SetView<String> difference = Sets.difference(containerTyParams, actualTyParams);
-        if (!difference.isEmpty()) {
-          throw new AssertionError(
-              String.format(
-                  "For %s, please update the type parameter(s) from %s to %s",
-                  clazz, difference, actualTyParams));
-        }
-        mapBuilder.put(
-            clazz.getName(),
-            AnnotationInfo.create(clazz.getName(), ImmutableList.copyOf(containerOf)));
-        return this;
-      }
-
-      @CanIgnoreReturnValue
-      public MapBuilder add(String className, String... containerOf) {
-        mapBuilder.put(
-            className, AnnotationInfo.create(className, ImmutableList.copyOf(containerOf)));
-        return this;
-      }
-
-      public ImmutableMap<String, AnnotationInfo> build() {
-        return mapBuilder.buildKeepingLast();
-      }
-    }
   }
 
   /**

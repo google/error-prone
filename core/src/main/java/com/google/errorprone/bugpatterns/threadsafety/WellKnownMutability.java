@@ -36,7 +36,7 @@ import javax.inject.Inject;
 
 /** A collection of types with known mutability. */
 @Immutable
-public final class WellKnownMutability implements ThreadSafety.KnownTypes {
+public final class WellKnownMutability implements ThreadSafetyKnownTypes {
 
   /** Types that are known to be immutable. */
   private final ImmutableMap<String, AnnotationInfo> knownImmutableClasses;
