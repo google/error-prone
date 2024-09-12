@@ -34,12 +34,14 @@ public class StringCharsetTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void f(String s) throws Exception {",
-            "    // BUG: Diagnostic contains: nosuch is not a valid charset",
-            "    s.getBytes(\"nosuch\");",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f(String s) throws Exception {
+                // BUG: Diagnostic contains: nosuch is not a valid charset
+                s.getBytes("nosuch");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -48,22 +50,27 @@ public class StringCharsetTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  void f(String s) throws Exception {",
-            "    new String(new byte[0], \"utf8\");",
-            "    s.getBytes(\"latin1\");",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f(String s) throws Exception {
+                new String(new byte[0], "utf8");
+                s.getBytes("latin1");
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import static java.nio.charset.StandardCharsets.ISO_8859_1;",
-            "import static java.nio.charset.StandardCharsets.UTF_8;",
-            "class Test {",
-            "  void f(String s) throws Exception {",
-            "    new String(new byte[0], UTF_8);",
-            "    s.getBytes(ISO_8859_1);",
-            "  }",
-            "}")
+            """
+            import static java.nio.charset.StandardCharsets.ISO_8859_1;
+            import static java.nio.charset.StandardCharsets.UTF_8;
+
+            class Test {
+              void f(String s) throws Exception {
+                new String(new byte[0], UTF_8);
+                s.getBytes(ISO_8859_1);
+              }
+            }
+            """)
         .doTest();
   }
 }

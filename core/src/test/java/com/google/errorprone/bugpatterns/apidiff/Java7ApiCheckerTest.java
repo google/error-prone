@@ -40,11 +40,14 @@ public class Java7ApiCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.Optional;",
-            "class Test {",
-            "  // BUG: Diagnostic contains: java.util.Optional",
-            "  Optional<String> o;",
-            "}")
+            """
+            import java.util.Optional;
+
+            class Test {
+              // BUG: Diagnostic contains: java.util.Optional
+              Optional<String> o;
+            }
+            """)
         .doTest();
   }
 
@@ -53,13 +56,16 @@ public class Java7ApiCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.List;",
-            "class Test {",
-            "  void f(List<Integer> xs) {",
-            "    // BUG: Diagnostic contains: stream() is not available in java.util.List",
-            "    xs.stream();",
-            "  }",
-            "}")
+            """
+            import java.util.List;
+
+            class Test {
+              void f(List<Integer> xs) {
+                // BUG: Diagnostic contains: stream() is not available in java.util.List
+                xs.stream();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -68,11 +74,14 @@ public class Java7ApiCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import javax.lang.model.SourceVersion;",
-            "class Test {",
-            "  // BUG: Diagnostic contains: RELEASE_8",
-            "  SourceVersion version8 = SourceVersion.RELEASE_8;",
-            "}")
+            """
+            import javax.lang.model.SourceVersion;
+
+            class Test {
+              // BUG: Diagnostic contains: RELEASE_8
+              SourceVersion version8 = SourceVersion.RELEASE_8;
+            }
+            """)
         .doTest();
   }
 
@@ -81,18 +90,22 @@ public class Java7ApiCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.LinkedHashMap;",
-            "import java.util.concurrent.ConcurrentHashMap;",
-            "import java.util.Set;",
-            "class Test {",
-            "  Set<String> getKeySet(LinkedHashMap<String, String> map) {",
-            "    return map.keySet();",
-            "  }",
-            "  Set<String> getKeySet(ConcurrentHashMap<String, String> map) {",
-            "    // BUG: Diagnostic contains: keySet()",
-            "    return map.keySet();",
-            "  }",
-            "}")
+            """
+            import java.util.LinkedHashMap;
+            import java.util.concurrent.ConcurrentHashMap;
+            import java.util.Set;
+
+            class Test {
+              Set<String> getKeySet(LinkedHashMap<String, String> map) {
+                return map.keySet();
+              }
+
+              Set<String> getKeySet(ConcurrentHashMap<String, String> map) {
+                // BUG: Diagnostic contains: keySet()
+                return map.keySet();
+              }
+            }
+            """)
         .doTest();
   }
 }

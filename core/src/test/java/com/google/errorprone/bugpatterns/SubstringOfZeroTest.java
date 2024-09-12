@@ -32,20 +32,24 @@ public class SubstringOfZeroTest {
     helper
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  void f() {",
-            "    String x = \"hello\";",
-            "    String y = x.substring(0);",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f() {
+                String x = "hello";
+                String y = x.substring(0);
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "class Test {",
-            "  void f() {",
-            "    String x = \"hello\";",
-            "    String y = x;",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f() {
+                String x = "hello";
+                String y = x;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -54,20 +58,24 @@ public class SubstringOfZeroTest {
     helper
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  void f() {",
-            "   String x = \"HELLO\";",
-            "   String y = x.toLowerCase().substring(0);",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f() {
+                String x = "HELLO";
+                String y = x.toLowerCase().substring(0);
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "class Test {",
-            "  void f() {",
-            "   String x = \"HELLO\";",
-            "   String y = x.toLowerCase();",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f() {
+                String x = "HELLO";
+                String y = x.toLowerCase();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -76,12 +84,14 @@ public class SubstringOfZeroTest {
     helper
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  void f() {",
-            "    String x = \"hello\";",
-            "    String y = x.substring(1);",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f() {
+                String x = "hello";
+                String y = x.substring(1);
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -91,12 +101,14 @@ public class SubstringOfZeroTest {
     helper
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  void f() {",
-            "    String x = \"hello\";",
-            "    String y = x.substring(1,3);",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f() {
+                String x = "hello";
+                String y = x.substring(1, 3);
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -106,12 +118,14 @@ public class SubstringOfZeroTest {
     helper
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  void f() {",
-            "   String x = \"HELLO\";",
-            "   String y = x.toLowerCase().substring(1);",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f() {
+                String x = "HELLO";
+                String y = x.toLowerCase().substring(1);
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -121,12 +135,14 @@ public class SubstringOfZeroTest {
     helper
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  void f() {",
-            "   String x = \"HELLO\";",
-            "   String y = x.toLowerCase().substring(1,3);",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f() {
+                String x = "HELLO";
+                String y = x.toLowerCase().substring(1, 3);
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -136,12 +152,14 @@ public class SubstringOfZeroTest {
     helper
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  void f() {",
-            "   String x = \"HELLO\";",
-            "   char y = x.charAt(0);",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f() {
+                String x = "HELLO";
+                char y = x.charAt(0);
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -151,20 +169,26 @@ public class SubstringOfZeroTest {
     helper
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  public static final int MY_CONSTANT = 0;",
-            "  void f() {",
-            "    String x = \"hello\".substring(MY_CONSTANT);",
-            "  }",
-            "}")
+            """
+            class Test {
+              public static final int MY_CONSTANT = 0;
+
+              void f() {
+                String x = "hello".substring(MY_CONSTANT);
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "class Test {",
-            "  public static final int MY_CONSTANT = 0;",
-            "  void f() {",
-            "    String x = \"hello\";",
-            "  }",
-            "}")
+            """
+            class Test {
+              public static final int MY_CONSTANT = 0;
+
+              void f() {
+                String x = "hello";
+              }
+            }
+            """)
         .doTest();
   }
 }

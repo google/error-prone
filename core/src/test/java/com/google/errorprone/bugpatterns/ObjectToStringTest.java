@@ -99,18 +99,22 @@ public class ObjectToStringTest {
   public void qualifiedName() {
     compilationHelper
         .addSourceLines(
-            "A.java", //
-            "class A {",
-            "  static final class B {}",
-            "}")
+            "A.java",
+            """
+            class A {
+              static final class B {}
+            }
+            """)
         .addSourceLines(
             "C.java",
-            "class C {",
-            "  String test() {",
-            "    // BUG: Diagnostic contains: A.B",
-            "    return new A.B().toString();",
-            "  }",
-            "}")
+            """
+            class C {
+              String test() {
+                // BUG: Diagnostic contains: A.B
+                return new A.B().toString();
+              }
+            }
+            """)
         .doTest();
   }
 }

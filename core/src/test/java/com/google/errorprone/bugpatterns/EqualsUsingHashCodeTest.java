@@ -36,14 +36,19 @@ public final class EqualsUsingHashCodeTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.base.Objects;",
-            "class Test {",
-            "  private int a;",
-            "  @Override public boolean equals(Object o) {",
-            "    Test that = (Test) o;",
-            "    return o.hashCode() == hashCode() && a == that.a;",
-            "  }",
-            "}")
+            """
+            import com.google.common.base.Objects;
+
+            class Test {
+              private int a;
+
+              @Override
+              public boolean equals(Object o) {
+                Test that = (Test) o;
+                return o.hashCode() == hashCode() && a == that.a;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -52,14 +57,18 @@ public final class EqualsUsingHashCodeTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  private int a;",
-            "  private int b;",
-            "  @Override public boolean equals(Object o) {",
-            "    // BUG: Diagnostic contains:",
-            "    return o.hashCode() == hashCode();",
-            "  }",
-            "}")
+            """
+            class Test {
+              private int a;
+              private int b;
+
+              @Override
+              public boolean equals(Object o) {
+                // BUG: Diagnostic contains:
+                return o.hashCode() == hashCode();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -68,14 +77,18 @@ public final class EqualsUsingHashCodeTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  private int a;",
-            "  private int b;",
-            "  @Override public boolean equals(Object o) {",
-            "    // BUG: Diagnostic contains:",
-            "    return o instanceof Test && o.hashCode() == hashCode();",
-            "  }",
-            "}")
+            """
+            class Test {
+              private int a;
+              private int b;
+
+              @Override
+              public boolean equals(Object o) {
+                // BUG: Diagnostic contains:
+                return o instanceof Test && o.hashCode() == hashCode();
+              }
+            }
+            """)
         .doTest();
   }
 }

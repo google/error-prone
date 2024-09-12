@@ -35,16 +35,19 @@ public final class MockNotUsedInProductionTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import static org.mockito.Mockito.mock;",
-            "import static org.mockito.Mockito.when;",
-            "class Test {",
-            "  public Object test() {",
-            "    // BUG: Diagnostic contains:",
-            "    Test test = mock(Test.class);",
-            "    when(test.test()).thenCallRealMethod();",
-            "    return null;",
-            "  }",
-            "}")
+            """
+            import static org.mockito.Mockito.mock;
+            import static org.mockito.Mockito.when;
+
+            class Test {
+              public Object test() {
+                // BUG: Diagnostic contains:
+                Test test = mock(Test.class);
+                when(test.test()).thenCallRealMethod();
+                return null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -53,17 +56,21 @@ public final class MockNotUsedInProductionTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import static org.mockito.Mockito.mock;",
-            "import static org.mockito.Mockito.when;",
-            "class Test {",
-            "  private Test test;",
-            "  public Object test() {",
-            "    // BUG: Diagnostic contains:",
-            "    test = mock(Test.class);",
-            "    when(test.test()).thenCallRealMethod();",
-            "    return null;",
-            "  }",
-            "}")
+            """
+            import static org.mockito.Mockito.mock;
+            import static org.mockito.Mockito.when;
+
+            class Test {
+              private Test test;
+
+              public Object test() {
+                // BUG: Diagnostic contains:
+                test = mock(Test.class);
+                when(test.test()).thenCallRealMethod();
+                return null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -72,16 +79,19 @@ public final class MockNotUsedInProductionTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import static org.mockito.Mockito.spy;",
-            "import static org.mockito.Mockito.verify;",
-            "class Test {",
-            "  public Object test() {",
-            "    // BUG: Diagnostic contains:",
-            "    Test test = spy(new Test());",
-            "    verify(test).test();",
-            "    return null;",
-            "  }",
-            "}")
+            """
+            import static org.mockito.Mockito.spy;
+            import static org.mockito.Mockito.verify;
+
+            class Test {
+              public Object test() {
+                // BUG: Diagnostic contains:
+                Test test = spy(new Test());
+                verify(test).test();
+                return null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -90,17 +100,21 @@ public final class MockNotUsedInProductionTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import static org.mockito.Mockito.spy;",
-            "class Test {",
-            "  public Object test() {",
-            "    Test test = spy(new Test());",
-            "    verify(test).test();",
-            "    return null;",
-            "  }",
-            "  Test verify (Test t) {",
-            "    return t;",
-            "  }",
-            "}")
+            """
+            import static org.mockito.Mockito.spy;
+
+            class Test {
+              public Object test() {
+                Test test = spy(new Test());
+                verify(test).test();
+                return null;
+              }
+
+              Test verify(Test t) {
+                return t;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -109,15 +123,18 @@ public final class MockNotUsedInProductionTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import static org.mockito.Mockito.mock;",
-            "import static org.mockito.Mockito.when;",
-            "class Test {",
-            "  public Object test() {",
-            "    Test test = mock(Test.class);",
-            "    when(test.test()).thenCallRealMethod();",
-            "    return test.test();",
-            "  }",
-            "}")
+            """
+            import static org.mockito.Mockito.mock;
+            import static org.mockito.Mockito.when;
+
+            class Test {
+              public Object test() {
+                Test test = mock(Test.class);
+                when(test.test()).thenCallRealMethod();
+                return test.test();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -126,17 +143,21 @@ public final class MockNotUsedInProductionTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import static org.mockito.Mockito.mock;",
-            "import static org.mockito.Mockito.when;",
-            "import com.google.inject.testing.fieldbinder.Bind;",
-            "import org.mockito.Mock;",
-            "class Test {",
-            "  @Bind @Mock public Test test;",
-            "  public Object test() {",
-            "    when(test.test()).thenCallRealMethod();",
-            "    return null;",
-            "  }",
-            "}")
+            """
+            import static org.mockito.Mockito.mock;
+            import static org.mockito.Mockito.when;
+            import com.google.inject.testing.fieldbinder.Bind;
+            import org.mockito.Mock;
+
+            class Test {
+              @Bind @Mock public Test test;
+
+              public Object test() {
+                when(test.test()).thenCallRealMethod();
+                return null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -145,16 +166,20 @@ public final class MockNotUsedInProductionTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import static org.mockito.Mockito.mock;",
-            "import static org.mockito.Mockito.when;",
-            "import org.mockito.Mock;",
-            "class Test {",
-            "  @Mock public Test test;",
-            "  public Object test() {",
-            "    when(test.test()).thenCallRealMethod();",
-            "    return null;",
-            "  }",
-            "}")
+            """
+            import static org.mockito.Mockito.mock;
+            import static org.mockito.Mockito.when;
+            import org.mockito.Mock;
+
+            class Test {
+              @Mock public Test test;
+
+              public Object test() {
+                when(test.test()).thenCallRealMethod();
+                return null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -163,15 +188,19 @@ public final class MockNotUsedInProductionTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import static org.mockito.Mockito.mock;",
-            "import static org.mockito.Mockito.when;",
-            "import org.mockito.Mock;",
-            "class Test {",
-            "  @Mock private Test test;",
-            "  public Test test() {",
-            "    return this.test;",
-            "  }",
-            "}")
+            """
+            import static org.mockito.Mockito.mock;
+            import static org.mockito.Mockito.when;
+            import org.mockito.Mock;
+
+            class Test {
+              @Mock private Test test;
+
+              public Test test() {
+                return this.test;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -180,17 +209,21 @@ public final class MockNotUsedInProductionTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import static org.mockito.Mockito.mock;",
-            "import static org.mockito.Mockito.when;",
-            "import org.mockito.Mock;",
-            "class Test {",
-            "  // BUG: Diagnostic contains:",
-            "  @Mock private Test test;",
-            "  public Object test() {",
-            "    when(test.test()).thenCallRealMethod();",
-            "    return null;",
-            "  }",
-            "}")
+            """
+            import static org.mockito.Mockito.mock;
+            import static org.mockito.Mockito.when;
+            import org.mockito.Mock;
+
+            class Test {
+              // BUG: Diagnostic contains:
+              @Mock private Test test;
+
+              public Object test() {
+                when(test.test()).thenCallRealMethod();
+                return null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -199,18 +232,22 @@ public final class MockNotUsedInProductionTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import static org.mockito.Mockito.mock;",
-            "import static org.mockito.Mockito.when;",
-            "import org.mockito.InjectMocks;",
-            "import org.mockito.Mock;",
-            "class Test {",
-            "  @Mock private Test test;",
-            "  @InjectMocks Test t;",
-            "  public Object test() {",
-            "    when(test.test()).thenCallRealMethod();",
-            "    return null;",
-            "  }",
-            "}")
+            """
+            import static org.mockito.Mockito.mock;
+            import static org.mockito.Mockito.when;
+            import org.mockito.InjectMocks;
+            import org.mockito.Mock;
+
+            class Test {
+              @Mock private Test test;
+              @InjectMocks Test t;
+
+              public Object test() {
+                when(test.test()).thenCallRealMethod();
+                return null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -219,17 +256,22 @@ public final class MockNotUsedInProductionTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import static org.mockito.Mockito.mock;",
-            "import static org.mockito.Mockito.when;",
-            "import org.mockito.Mock;",
-            "class Test {",
-            "  @SuppressWarnings(\"MockNotUsedInProduction\")",
-            "  @Mock private Test test;",
-            "  public Object test() {",
-            "    when(test.test()).thenCallRealMethod();",
-            "    return null;",
-            "  }",
-            "}")
+            """
+            import static org.mockito.Mockito.mock;
+            import static org.mockito.Mockito.when;
+            import org.mockito.Mock;
+
+            class Test {
+              @SuppressWarnings("MockNotUsedInProduction")
+              @Mock
+              private Test test;
+
+              public Object test() {
+                when(test.test()).thenCallRealMethod();
+                return null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -238,26 +280,33 @@ public final class MockNotUsedInProductionTest {
     refactoring
         .addInputLines(
             "Test.java",
-            "import static org.mockito.Mockito.mock;",
-            "import static org.mockito.Mockito.when;",
-            "import org.mockito.Mock;",
-            "class Test {",
-            "  @Mock private Test test;",
-            "  public Object test() {",
-            "    when(test.test()).thenCallRealMethod();",
-            "    return null;",
-            "  }",
-            "}")
+            """
+            import static org.mockito.Mockito.mock;
+            import static org.mockito.Mockito.when;
+            import org.mockito.Mock;
+
+            class Test {
+              @Mock private Test test;
+
+              public Object test() {
+                when(test.test()).thenCallRealMethod();
+                return null;
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import static org.mockito.Mockito.mock;",
-            "import static org.mockito.Mockito.when;",
-            "import org.mockito.Mock;",
-            "class Test {",
-            "  public Object test() {",
-            "    return null;",
-            "  }",
-            "}")
+            """
+            import static org.mockito.Mockito.mock;
+            import static org.mockito.Mockito.when;
+            import org.mockito.Mock;
+
+            class Test {
+              public Object test() {
+                return null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -266,29 +315,41 @@ public final class MockNotUsedInProductionTest {
     refactoring
         .addInputLines(
             "Test.java",
-            "import static org.mockito.Mockito.doAnswer;",
-            "import static org.mockito.Mockito.mock;",
-            "import static org.mockito.Mockito.when;",
-            "import org.mockito.Mock;",
-            "class Test {",
-            "  @Mock private Test test;",
-            "  public Object test() {",
-            "    doAnswer(a -> { when(test.test()).thenReturn(null); return null;"
-                + " }).when(test).test();",
-            "    return null;",
-            "  }",
-            "}")
+            """
+            import static org.mockito.Mockito.doAnswer;
+            import static org.mockito.Mockito.mock;
+            import static org.mockito.Mockito.when;
+            import org.mockito.Mock;
+
+            class Test {
+              @Mock private Test test;
+
+              public Object test() {
+                doAnswer(
+                        a -> {
+                          when(test.test()).thenReturn(null);
+                          return null;
+                        })
+                    .when(test)
+                    .test();
+                return null;
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import static org.mockito.Mockito.doAnswer;",
-            "import static org.mockito.Mockito.mock;",
-            "import static org.mockito.Mockito.when;",
-            "import org.mockito.Mock;",
-            "class Test {",
-            "  public Object test() {",
-            "    return null;",
-            "  }",
-            "}")
+            """
+            import static org.mockito.Mockito.doAnswer;
+            import static org.mockito.Mockito.mock;
+            import static org.mockito.Mockito.when;
+            import org.mockito.Mock;
+
+            class Test {
+              public Object test() {
+                return null;
+              }
+            }
+            """)
         .doTest();
   }
 }

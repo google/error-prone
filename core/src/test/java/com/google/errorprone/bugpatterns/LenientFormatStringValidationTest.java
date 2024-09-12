@@ -35,13 +35,16 @@ public final class LenientFormatStringValidationTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.base.Preconditions;",
-            "class Test {",
-            "  void test() {",
-            "    // BUG: Diagnostic contains:",
-            "    Preconditions.checkState(false, \"%s\");",
-            "  }",
-            "}")
+            """
+            import com.google.common.base.Preconditions;
+
+            class Test {
+              void test() {
+                // BUG: Diagnostic contains:
+                Preconditions.checkState(false, "%s");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -50,13 +53,16 @@ public final class LenientFormatStringValidationTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.base.Preconditions;",
-            "class Test {",
-            "  void test() {",
-            "    // BUG: Diagnostic contains:",
-            "    Preconditions.checkState(false, \"%s\", 1, 1);",
-            "  }",
-            "}")
+            """
+            import com.google.common.base.Preconditions;
+
+            class Test {
+              void test() {
+                // BUG: Diagnostic contains:
+                Preconditions.checkState(false, "%s", 1, 1);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -65,20 +71,26 @@ public final class LenientFormatStringValidationTest {
     refactoring
         .addInputLines(
             "Test.java",
-            "import com.google.common.base.Preconditions;",
-            "class Test {",
-            "  void test() {",
-            "    Preconditions.checkState(false, \"%s\", 1, 1);",
-            "  }",
-            "}")
+            """
+            import com.google.common.base.Preconditions;
+
+            class Test {
+              void test() {
+                Preconditions.checkState(false, "%s", 1, 1);
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import com.google.common.base.Preconditions;",
-            "class Test {",
-            "  void test() {",
-            "    Preconditions.checkState(false, \"%s (%s)\", 1, 1);",
-            "  }",
-            "}")
+            """
+            import com.google.common.base.Preconditions;
+
+            class Test {
+              void test() {
+                Preconditions.checkState(false, "%s (%s)", 1, 1);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -87,22 +99,30 @@ public final class LenientFormatStringValidationTest {
     refactoring
         .addInputLines(
             "Test.java",
-            "import com.google.common.base.Preconditions;",
-            "class Test {",
-            "  private static final String FOO = \"%s\";",
-            "  void test() {",
-            "    Preconditions.checkState(false, FOO, 1, 1);",
-            "  }",
-            "}")
+            """
+            import com.google.common.base.Preconditions;
+
+            class Test {
+              private static final String FOO = "%s";
+
+              void test() {
+                Preconditions.checkState(false, FOO, 1, 1);
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import com.google.common.base.Preconditions;",
-            "class Test {",
-            "  private static final String FOO = \"%s\";",
-            "  void test() {",
-            "    Preconditions.checkState(false, FOO + \" (%s)\", 1, 1);",
-            "  }",
-            "}")
+            """
+            import com.google.common.base.Preconditions;
+
+            class Test {
+              private static final String FOO = "%s";
+
+              void test() {
+                Preconditions.checkState(false, FOO + " (%s)", 1, 1);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -111,12 +131,15 @@ public final class LenientFormatStringValidationTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.base.Preconditions;",
-            "class Test {",
-            "  void test() {",
-            "    Preconditions.checkState(false, \"%s\", 1);",
-            "  }",
-            "}")
+            """
+            import com.google.common.base.Preconditions;
+
+            class Test {
+              void test() {
+                Preconditions.checkState(false, "%s", 1);
+              }
+            }
+            """)
         .doTest();
   }
 }

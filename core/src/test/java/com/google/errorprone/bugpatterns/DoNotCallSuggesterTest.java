@@ -33,12 +33,14 @@ public class DoNotCallSuggesterTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "final class Test {",
-            "  // BUG: Diagnostic contains: Always throws java.lang.RuntimeException",
-            "  public final void foo() {",
-            "    throw new RuntimeException();",
-            "  }",
-            "}")
+            """
+            final class Test {
+              // BUG: Diagnostic contains: Always throws java.lang.RuntimeException
+              public final void foo() {
+                throw new RuntimeException();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -47,13 +49,15 @@ public class DoNotCallSuggesterTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "final class Test {",
-            "  // BUG: Diagnostic contains: Always throws java.lang.RuntimeException",
-            "  public final void foo() {",
-            "    // inline comments get stripped and don't matter",
-            "    throw new RuntimeException();",
-            "  }",
-            "}")
+            """
+            final class Test {
+              // BUG: Diagnostic contains: Always throws java.lang.RuntimeException
+              public final void foo() {
+                // inline comments get stripped and don't matter
+                throw new RuntimeException();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -62,13 +66,15 @@ public class DoNotCallSuggesterTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "final class Test {",
-            "  // BUG: Diagnostic contains: Always throws java.lang.RuntimeException",
-            "  public final void foo() {",
-            "    /* inline comments get stripped and don't matter */",
-            "    throw new RuntimeException();",
-            "  }",
-            "}")
+            """
+            final class Test {
+              // BUG: Diagnostic contains: Always throws java.lang.RuntimeException
+              public final void foo() {
+                /* inline comments get stripped and don't matter */
+                throw new RuntimeException();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -77,12 +83,14 @@ public class DoNotCallSuggesterTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "final class Test {",
-            "  // BUG: Diagnostic contains: Always throws java.lang.RuntimeException",
-            "  public void foo() {",
-            "    throw new RuntimeException();",
-            "  }",
-            "}")
+            """
+            final class Test {
+              // BUG: Diagnostic contains: Always throws java.lang.RuntimeException
+              public void foo() {
+                throw new RuntimeException();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -91,12 +99,14 @@ public class DoNotCallSuggesterTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  // BUG: Diagnostic contains: Always throws java.lang.RuntimeException",
-            "  public final void foo() {",
-            "    throw new RuntimeException();",
-            "  }",
-            "}")
+            """
+            class Test {
+              // BUG: Diagnostic contains: Always throws java.lang.RuntimeException
+              public final void foo() {
+                throw new RuntimeException();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -106,11 +116,13 @@ public class DoNotCallSuggesterTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  public void foo() {",
-            "    throw new RuntimeException();",
-            "  }",
-            "}")
+            """
+            class Test {
+              public void foo() {
+                throw new RuntimeException();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -119,14 +131,18 @@ public class DoNotCallSuggesterTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import java.io.IOException;",
-            "final class Test {",
-            "  private IOException ioe = new IOException();",
-            "  // BUG: Diagnostic contains: Always throws java.io.IOException",
-            "  public final void foo() throws IOException {",
-            "    throw ioe;",
-            "  }",
-            "}")
+            """
+            import java.io.IOException;
+
+            final class Test {
+              private IOException ioe = new IOException();
+
+              // BUG: Diagnostic contains: Always throws java.io.IOException
+              public final void foo() throws IOException {
+                throw ioe;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -135,16 +151,20 @@ public class DoNotCallSuggesterTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import java.io.IOException;",
-            "final class Test {",
-            "  // BUG: Diagnostic contains: Always throws java.io.IOException",
-            "  public final void foo() throws IOException {",
-            "    throw up();",
-            "  }",
-            "  private IOException up() {",
-            "    return new IOException();",
-            "  }",
-            "}")
+            """
+            import java.io.IOException;
+
+            final class Test {
+              // BUG: Diagnostic contains: Always throws java.io.IOException
+              public final void foo() throws IOException {
+                throw up();
+              }
+
+              private IOException up() {
+                return new IOException();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -153,12 +173,14 @@ public class DoNotCallSuggesterTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "final class Test {",
-            "  // BUG: Diagnostic contains: Always throws java.lang.RuntimeException",
-            "  public final String get() {",
-            "    throw new RuntimeException();",
-            "  }",
-            "}")
+            """
+            final class Test {
+              // BUG: Diagnostic contains: Always throws java.lang.RuntimeException
+              public final String get() {
+                throw new RuntimeException();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -167,13 +189,16 @@ public class DoNotCallSuggesterTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.function.Supplier;",
-            "final class Test implements Supplier<String> {",
-            "  @Override",
-            "  public final String get() {",
-            "    throw new RuntimeException();",
-            "  }",
-            "}")
+            """
+            import java.util.function.Supplier;
+
+            final class Test implements Supplier<String> {
+              @Override
+              public final String get() {
+                throw new RuntimeException();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -182,12 +207,15 @@ public class DoNotCallSuggesterTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.function.Supplier;",
-            "final class Test implements Supplier<String> {",
-            "  public final String get() {",
-            "    throw new RuntimeException();",
-            "  }",
-            "}")
+            """
+            import java.util.function.Supplier;
+
+            final class Test implements Supplier<String> {
+              public final String get() {
+                throw new RuntimeException();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -196,11 +224,13 @@ public class DoNotCallSuggesterTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "final class Test {",
-            "  public final String provideString() {",
-            "    throw new RuntimeException();",
-            "  }",
-            "}")
+            """
+            final class Test {
+              public final String provideString() {
+                throw new RuntimeException();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -209,11 +239,13 @@ public class DoNotCallSuggesterTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "final class Test {",
-            "  public final String produceString() {",
-            "    throw new RuntimeException();",
-            "  }",
-            "}")
+            """
+            final class Test {
+              public final String produceString() {
+                throw new RuntimeException();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -222,11 +254,13 @@ public class DoNotCallSuggesterTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "final class Test {",
-            "  public final void throwsRuntimeException() {",
-            "    throw new RuntimeException();",
-            "  }",
-            "}")
+            """
+            final class Test {
+              public final void throwsRuntimeException() {
+                throw new RuntimeException();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -235,16 +269,20 @@ public class DoNotCallSuggesterTest {
     testHelper
         .addSourceLines(
             "AbstractModule.java",
-            "package com.google.inject;",
-            "public abstract class AbstractModule {",
-            "}")
+            """
+            package com.google.inject;
+
+            public abstract class AbstractModule {}
+            """)
         .addSourceLines(
             "Test.java",
-            "final class Test extends com.google.inject.AbstractModule {",
-            "  public final String extractString() {",
-            "    throw new RuntimeException();",
-            "  }",
-            "}")
+            """
+            final class Test extends com.google.inject.AbstractModule {
+              public final String extractString() {
+                throw new RuntimeException();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -253,11 +291,13 @@ public class DoNotCallSuggesterTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "final class Test {",
-            "  public RuntimeException foo() {",
-            "    throw new RuntimeException();",
-            "  }",
-            "}")
+            """
+            final class Test {
+              public RuntimeException foo() {
+                throw new RuntimeException();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -266,15 +306,18 @@ public class DoNotCallSuggesterTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "final class Test {",
-            "  public final void foo() {",
-            "    Object obj = new Object() {",
-            "      public void foo() {",
-            "        throw new RuntimeException();",
-            "      }",
-            "    };",
-            "  }",
-            "}")
+            """
+            final class Test {
+              public final void foo() {
+                Object obj =
+                    new Object() {
+                      public void foo() {
+                        throw new RuntimeException();
+                      }
+                    };
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -282,10 +325,12 @@ public class DoNotCallSuggesterTest {
   public void abstractClass() {
     testHelper
         .addSourceLines(
-            "Test.java", //
-            "abstract class Test {",
-            "  abstract void test();",
-            "}")
+            "Test.java",
+            """
+            abstract class Test {
+              abstract void test();
+            }
+            """)
         .doTest();
   }
 
@@ -294,18 +339,23 @@ public class DoNotCallSuggesterTest {
     testHelper
         .addSourceLines(
             "StarlarkMethod.java",
-            "package net.starlark.java.annot;",
-            "public @interface StarlarkMethod {",
-            "}")
+            """
+            package net.starlark.java.annot;
+
+            public @interface StarlarkMethod {}
+            """)
         .addSourceLines(
             "Test.java",
-            "import net.starlark.java.annot.StarlarkMethod;",
-            "final class Test {",
-            "  @StarlarkMethod",
-            "  public static void foo() {",
-            "    throw new RuntimeException();",
-            "  }",
-            "}")
+            """
+            import net.starlark.java.annot.StarlarkMethod;
+
+            final class Test {
+              @StarlarkMethod
+              public static void foo() {
+                throw new RuntimeException();
+              }
+            }
+            """)
         .doTest();
   }
 }

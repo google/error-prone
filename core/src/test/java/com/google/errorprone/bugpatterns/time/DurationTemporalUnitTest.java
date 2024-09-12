@@ -31,18 +31,21 @@ public class DurationTemporalUnitTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import java.time.Duration;",
-            "import java.time.temporal.ChronoUnit;",
-            "public class TestClass {",
-            "  private static final Duration D0 = Duration.of(1, ChronoUnit.DAYS);",
-            "  private static final Duration D1 = Duration.of(1, ChronoUnit.HALF_DAYS);",
-            "  private static final Duration D2 = Duration.of(1, ChronoUnit.HOURS);",
-            "  private static final Duration D3 = Duration.of(1, ChronoUnit.MICROS);",
-            "  private static final Duration D4 = Duration.of(1, ChronoUnit.MILLIS);",
-            "  private static final Duration D5 = Duration.of(1, ChronoUnit.MINUTES);",
-            "  private static final Duration D6 = Duration.of(1, ChronoUnit.NANOS);",
-            "  private static final Duration D7 = Duration.of(1, ChronoUnit.SECONDS);",
-            "}")
+            """
+            import java.time.Duration;
+            import java.time.temporal.ChronoUnit;
+
+            public class TestClass {
+              private static final Duration D0 = Duration.of(1, ChronoUnit.DAYS);
+              private static final Duration D1 = Duration.of(1, ChronoUnit.HALF_DAYS);
+              private static final Duration D2 = Duration.of(1, ChronoUnit.HOURS);
+              private static final Duration D3 = Duration.of(1, ChronoUnit.MICROS);
+              private static final Duration D4 = Duration.of(1, ChronoUnit.MILLIS);
+              private static final Duration D5 = Duration.of(1, ChronoUnit.MINUTES);
+              private static final Duration D6 = Duration.of(1, ChronoUnit.NANOS);
+              private static final Duration D7 = Duration.of(1, ChronoUnit.SECONDS);
+            }
+            """)
         .doTest();
   }
 
@@ -51,26 +54,29 @@ public class DurationTemporalUnitTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import java.time.Duration;",
-            "import java.time.temporal.ChronoUnit;",
-            "public class TestClass {",
-            "  // BUG: Diagnostic contains: DurationTemporalUnit",
-            "  private static final Duration D0 = Duration.of(1, ChronoUnit.CENTURIES);",
-            "  // BUG: Diagnostic contains: DurationTemporalUnit",
-            "  private static final Duration D1 = Duration.of(1, ChronoUnit.DECADES);",
-            "  // BUG: Diagnostic contains: DurationTemporalUnit",
-            "  private static final Duration D2 = Duration.of(1, ChronoUnit.ERAS);",
-            "  // BUG: Diagnostic contains: DurationTemporalUnit",
-            "  private static final Duration D3 = Duration.of(1, ChronoUnit.FOREVER);",
-            "  // BUG: Diagnostic contains: DurationTemporalUnit",
-            "  private static final Duration D4 = Duration.of(1, ChronoUnit.MILLENNIA);",
-            "  // BUG: Diagnostic contains: DurationTemporalUnit",
-            "  private static final Duration D5 = Duration.of(1, ChronoUnit.MONTHS);",
-            "  // BUG: Diagnostic contains: DurationTemporalUnit",
-            "  private static final Duration D6 = Duration.of(1, ChronoUnit.WEEKS);",
-            "  // BUG: Diagnostic contains: DurationTemporalUnit",
-            "  private static final Duration D7 = Duration.of(1, ChronoUnit.YEARS);",
-            "}")
+            """
+            import java.time.Duration;
+            import java.time.temporal.ChronoUnit;
+
+            public class TestClass {
+              // BUG: Diagnostic contains: DurationTemporalUnit
+              private static final Duration D0 = Duration.of(1, ChronoUnit.CENTURIES);
+              // BUG: Diagnostic contains: DurationTemporalUnit
+              private static final Duration D1 = Duration.of(1, ChronoUnit.DECADES);
+              // BUG: Diagnostic contains: DurationTemporalUnit
+              private static final Duration D2 = Duration.of(1, ChronoUnit.ERAS);
+              // BUG: Diagnostic contains: DurationTemporalUnit
+              private static final Duration D3 = Duration.of(1, ChronoUnit.FOREVER);
+              // BUG: Diagnostic contains: DurationTemporalUnit
+              private static final Duration D4 = Duration.of(1, ChronoUnit.MILLENNIA);
+              // BUG: Diagnostic contains: DurationTemporalUnit
+              private static final Duration D5 = Duration.of(1, ChronoUnit.MONTHS);
+              // BUG: Diagnostic contains: DurationTemporalUnit
+              private static final Duration D6 = Duration.of(1, ChronoUnit.WEEKS);
+              // BUG: Diagnostic contains: DurationTemporalUnit
+              private static final Duration D7 = Duration.of(1, ChronoUnit.YEARS);
+            }
+            """)
         .doTest();
   }
 
@@ -79,18 +85,21 @@ public class DurationTemporalUnitTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import java.time.Duration;",
-            "import java.time.temporal.ChronoUnit;",
-            "public class TestClass {",
-            "  private static final Duration D0 = Duration.ZERO.plus(1, ChronoUnit.DAYS);",
-            "  private static final Duration D1 = Duration.ZERO.plus(1, ChronoUnit.HALF_DAYS);",
-            "  private static final Duration D2 = Duration.ZERO.plus(1, ChronoUnit.HOURS);",
-            "  private static final Duration D3 = Duration.ZERO.plus(1, ChronoUnit.MICROS);",
-            "  private static final Duration D4 = Duration.ZERO.plus(1, ChronoUnit.MILLIS);",
-            "  private static final Duration D5 = Duration.ZERO.plus(1, ChronoUnit.MINUTES);",
-            "  private static final Duration D6 = Duration.ZERO.plus(1, ChronoUnit.NANOS);",
-            "  private static final Duration D7 = Duration.ZERO.plus(1, ChronoUnit.SECONDS);",
-            "}")
+            """
+            import java.time.Duration;
+            import java.time.temporal.ChronoUnit;
+
+            public class TestClass {
+              private static final Duration D0 = Duration.ZERO.plus(1, ChronoUnit.DAYS);
+              private static final Duration D1 = Duration.ZERO.plus(1, ChronoUnit.HALF_DAYS);
+              private static final Duration D2 = Duration.ZERO.plus(1, ChronoUnit.HOURS);
+              private static final Duration D3 = Duration.ZERO.plus(1, ChronoUnit.MICROS);
+              private static final Duration D4 = Duration.ZERO.plus(1, ChronoUnit.MILLIS);
+              private static final Duration D5 = Duration.ZERO.plus(1, ChronoUnit.MINUTES);
+              private static final Duration D6 = Duration.ZERO.plus(1, ChronoUnit.NANOS);
+              private static final Duration D7 = Duration.ZERO.plus(1, ChronoUnit.SECONDS);
+            }
+            """)
         .doTest();
   }
 
@@ -99,26 +108,29 @@ public class DurationTemporalUnitTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import java.time.Duration;",
-            "import java.time.temporal.ChronoUnit;",
-            "public class TestClass {",
-            "  // BUG: Diagnostic contains: DurationTemporalUnit",
-            "  private static final Duration D0 = Duration.ZERO.plus(1, ChronoUnit.CENTURIES);",
-            "  // BUG: Diagnostic contains: DurationTemporalUnit",
-            "  private static final Duration D1 = Duration.ZERO.plus(1, ChronoUnit.DECADES);",
-            "  // BUG: Diagnostic contains: DurationTemporalUnit",
-            "  private static final Duration D2 = Duration.ZERO.plus(1, ChronoUnit.ERAS);",
-            "  // BUG: Diagnostic contains: DurationTemporalUnit",
-            "  private static final Duration D3 = Duration.ZERO.plus(1, ChronoUnit.FOREVER);",
-            "  // BUG: Diagnostic contains: DurationTemporalUnit",
-            "  private static final Duration D4 = Duration.ZERO.plus(1, ChronoUnit.MILLENNIA);",
-            "  // BUG: Diagnostic contains: DurationTemporalUnit",
-            "  private static final Duration D5 = Duration.ZERO.plus(1, ChronoUnit.MONTHS);",
-            "  // BUG: Diagnostic contains: DurationTemporalUnit",
-            "  private static final Duration D6 = Duration.ZERO.plus(1, ChronoUnit.WEEKS);",
-            "  // BUG: Diagnostic contains: DurationTemporalUnit",
-            "  private static final Duration D7 = Duration.ZERO.plus(1, ChronoUnit.YEARS);",
-            "}")
+            """
+            import java.time.Duration;
+            import java.time.temporal.ChronoUnit;
+
+            public class TestClass {
+              // BUG: Diagnostic contains: DurationTemporalUnit
+              private static final Duration D0 = Duration.ZERO.plus(1, ChronoUnit.CENTURIES);
+              // BUG: Diagnostic contains: DurationTemporalUnit
+              private static final Duration D1 = Duration.ZERO.plus(1, ChronoUnit.DECADES);
+              // BUG: Diagnostic contains: DurationTemporalUnit
+              private static final Duration D2 = Duration.ZERO.plus(1, ChronoUnit.ERAS);
+              // BUG: Diagnostic contains: DurationTemporalUnit
+              private static final Duration D3 = Duration.ZERO.plus(1, ChronoUnit.FOREVER);
+              // BUG: Diagnostic contains: DurationTemporalUnit
+              private static final Duration D4 = Duration.ZERO.plus(1, ChronoUnit.MILLENNIA);
+              // BUG: Diagnostic contains: DurationTemporalUnit
+              private static final Duration D5 = Duration.ZERO.plus(1, ChronoUnit.MONTHS);
+              // BUG: Diagnostic contains: DurationTemporalUnit
+              private static final Duration D6 = Duration.ZERO.plus(1, ChronoUnit.WEEKS);
+              // BUG: Diagnostic contains: DurationTemporalUnit
+              private static final Duration D7 = Duration.ZERO.plus(1, ChronoUnit.YEARS);
+            }
+            """)
         .doTest();
   }
 
@@ -127,18 +139,21 @@ public class DurationTemporalUnitTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import java.time.Duration;",
-            "import java.time.temporal.ChronoUnit;",
-            "public class TestClass {",
-            "  private static final Duration D0 = Duration.ZERO.minus(1, ChronoUnit.DAYS);",
-            "  private static final Duration D1 = Duration.ZERO.minus(1, ChronoUnit.HALF_DAYS);",
-            "  private static final Duration D2 = Duration.ZERO.minus(1, ChronoUnit.HOURS);",
-            "  private static final Duration D3 = Duration.ZERO.minus(1, ChronoUnit.MICROS);",
-            "  private static final Duration D4 = Duration.ZERO.minus(1, ChronoUnit.MILLIS);",
-            "  private static final Duration D5 = Duration.ZERO.minus(1, ChronoUnit.MINUTES);",
-            "  private static final Duration D6 = Duration.ZERO.minus(1, ChronoUnit.NANOS);",
-            "  private static final Duration D7 = Duration.ZERO.minus(1, ChronoUnit.SECONDS);",
-            "}")
+            """
+            import java.time.Duration;
+            import java.time.temporal.ChronoUnit;
+
+            public class TestClass {
+              private static final Duration D0 = Duration.ZERO.minus(1, ChronoUnit.DAYS);
+              private static final Duration D1 = Duration.ZERO.minus(1, ChronoUnit.HALF_DAYS);
+              private static final Duration D2 = Duration.ZERO.minus(1, ChronoUnit.HOURS);
+              private static final Duration D3 = Duration.ZERO.minus(1, ChronoUnit.MICROS);
+              private static final Duration D4 = Duration.ZERO.minus(1, ChronoUnit.MILLIS);
+              private static final Duration D5 = Duration.ZERO.minus(1, ChronoUnit.MINUTES);
+              private static final Duration D6 = Duration.ZERO.minus(1, ChronoUnit.NANOS);
+              private static final Duration D7 = Duration.ZERO.minus(1, ChronoUnit.SECONDS);
+            }
+            """)
         .doTest();
   }
 
@@ -147,26 +162,29 @@ public class DurationTemporalUnitTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import java.time.Duration;",
-            "import java.time.temporal.ChronoUnit;",
-            "public class TestClass {",
-            "  // BUG: Diagnostic contains: DurationTemporalUnit",
-            "  private static final Duration D0 = Duration.ZERO.minus(1, ChronoUnit.CENTURIES);",
-            "  // BUG: Diagnostic contains: DurationTemporalUnit",
-            "  private static final Duration D1 = Duration.ZERO.minus(1, ChronoUnit.DECADES);",
-            "  // BUG: Diagnostic contains: DurationTemporalUnit",
-            "  private static final Duration D2 = Duration.ZERO.minus(1, ChronoUnit.ERAS);",
-            "  // BUG: Diagnostic contains: DurationTemporalUnit",
-            "  private static final Duration D3 = Duration.ZERO.minus(1, ChronoUnit.FOREVER);",
-            "  // BUG: Diagnostic contains: DurationTemporalUnit",
-            "  private static final Duration D4 = Duration.ZERO.minus(1, ChronoUnit.MILLENNIA);",
-            "  // BUG: Diagnostic contains: DurationTemporalUnit",
-            "  private static final Duration D5 = Duration.ZERO.minus(1, ChronoUnit.MONTHS);",
-            "  // BUG: Diagnostic contains: DurationTemporalUnit",
-            "  private static final Duration D6 = Duration.ZERO.minus(1, ChronoUnit.WEEKS);",
-            "  // BUG: Diagnostic contains: DurationTemporalUnit",
-            "  private static final Duration D7 = Duration.ZERO.minus(1, ChronoUnit.YEARS);",
-            "}")
+            """
+            import java.time.Duration;
+            import java.time.temporal.ChronoUnit;
+
+            public class TestClass {
+              // BUG: Diagnostic contains: DurationTemporalUnit
+              private static final Duration D0 = Duration.ZERO.minus(1, ChronoUnit.CENTURIES);
+              // BUG: Diagnostic contains: DurationTemporalUnit
+              private static final Duration D1 = Duration.ZERO.minus(1, ChronoUnit.DECADES);
+              // BUG: Diagnostic contains: DurationTemporalUnit
+              private static final Duration D2 = Duration.ZERO.minus(1, ChronoUnit.ERAS);
+              // BUG: Diagnostic contains: DurationTemporalUnit
+              private static final Duration D3 = Duration.ZERO.minus(1, ChronoUnit.FOREVER);
+              // BUG: Diagnostic contains: DurationTemporalUnit
+              private static final Duration D4 = Duration.ZERO.minus(1, ChronoUnit.MILLENNIA);
+              // BUG: Diagnostic contains: DurationTemporalUnit
+              private static final Duration D5 = Duration.ZERO.minus(1, ChronoUnit.MONTHS);
+              // BUG: Diagnostic contains: DurationTemporalUnit
+              private static final Duration D6 = Duration.ZERO.minus(1, ChronoUnit.WEEKS);
+              // BUG: Diagnostic contains: DurationTemporalUnit
+              private static final Duration D7 = Duration.ZERO.minus(1, ChronoUnit.YEARS);
+            }
+            """)
         .doTest();
   }
 
@@ -175,16 +193,19 @@ public class DurationTemporalUnitTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import static java.time.temporal.ChronoUnit.NANOS;",
-            "import static java.time.temporal.ChronoUnit.SECONDS;",
-            "import static java.time.temporal.ChronoUnit.YEARS;",
-            "import java.time.Duration;",
-            "public class TestClass {",
-            "  private static final Duration D1 = Duration.of(1, SECONDS);",
-            "  private static final Duration D2 = Duration.of(1, NANOS);",
-            "  // BUG: Diagnostic contains: DurationTemporalUnit",
-            "  private static final Duration D3 = Duration.of(1, YEARS);",
-            "}")
+            """
+            import static java.time.temporal.ChronoUnit.NANOS;
+            import static java.time.temporal.ChronoUnit.SECONDS;
+            import static java.time.temporal.ChronoUnit.YEARS;
+            import java.time.Duration;
+
+            public class TestClass {
+              private static final Duration D1 = Duration.of(1, SECONDS);
+              private static final Duration D2 = Duration.of(1, NANOS);
+              // BUG: Diagnostic contains: DurationTemporalUnit
+              private static final Duration D3 = Duration.of(1, YEARS);
+            }
+            """)
         .doTest();
   }
 

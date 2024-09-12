@@ -31,10 +31,13 @@ public class ZoneIdOfZTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import java.time.ZoneId;",
-            "public class TestClass {",
-            "  private static final ZoneId NYC = ZoneId.of(\"America/New_York\");",
-            "}")
+            """
+            import java.time.ZoneId;
+
+            public class TestClass {
+              private static final ZoneId NYC = ZoneId.of("America/New_York");
+            }
+            """)
         .doTest();
   }
 
@@ -43,11 +46,14 @@ public class ZoneIdOfZTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import java.time.ZoneId;",
-            "public class TestClass {",
-            "  // BUG: Diagnostic contains: private static final ZoneId UTC = ZoneOffset.UTC;",
-            "  private static final ZoneId UTC = ZoneId.of(\"Z\");",
-            "}")
+            """
+            import java.time.ZoneId;
+
+            public class TestClass {
+              // BUG: Diagnostic contains: private static final ZoneId UTC = ZoneOffset.UTC;
+              private static final ZoneId UTC = ZoneId.of("Z");
+            }
+            """)
         .doTest();
   }
 
@@ -56,10 +62,13 @@ public class ZoneIdOfZTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import java.time.ZoneId;",
-            "public class TestClass {",
-            "  private static final ZoneId UTC = ZoneId.of(\"z\");",
-            "}")
+            """
+            import java.time.ZoneId;
+
+            public class TestClass {
+              private static final ZoneId UTC = ZoneId.of("z");
+            }
+            """)
         .doTest();
   }
 
@@ -68,12 +77,15 @@ public class ZoneIdOfZTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import java.time.ZoneId;",
-            "public class TestClass {",
-            "  private static final String ZONE = \"Z\";",
-            "  // BUG: Diagnostic contains: private static final ZoneId UTC = ZoneOffset.UTC;",
-            "  private static final ZoneId UTC = ZoneId.of(ZONE);",
-            "}")
+            """
+            import java.time.ZoneId;
+
+            public class TestClass {
+              private static final String ZONE = "Z";
+              // BUG: Diagnostic contains: private static final ZoneId UTC = ZoneOffset.UTC;
+              private static final ZoneId UTC = ZoneId.of(ZONE);
+            }
+            """)
         .doTest();
   }
 
@@ -82,11 +94,14 @@ public class ZoneIdOfZTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import java.time.ZoneId;",
-            "public class TestClass {",
-            "  private String zone = \"z\";",
-            "  private ZoneId utc = ZoneId.of(zone);",
-            "}")
+            """
+            import java.time.ZoneId;
+
+            public class TestClass {
+              private String zone = "z";
+              private ZoneId utc = ZoneId.of(zone);
+            }
+            """)
         .doTest();
   }
 }

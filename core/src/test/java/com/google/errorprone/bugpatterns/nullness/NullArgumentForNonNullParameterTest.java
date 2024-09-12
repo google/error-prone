@@ -35,14 +35,18 @@ public class NullArgumentForNonNullParameterTest {
     conservativeHelper
         .addSourceLines(
             "Foo.java",
-            "import java.util.Optional;",
-            "class Foo {",
-            "  void consume(int i) {}",
-            "  void foo(Optional<Integer> o) {",
-            "    // BUG: Diagnostic contains: ",
-            "    consume(o.orElse(null));",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            class Foo {
+              void consume(int i) {}
+
+              void foo(Optional<Integer> o) {
+                // BUG: Diagnostic contains:
+                consume(o.orElse(null));
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -51,14 +55,18 @@ public class NullArgumentForNonNullParameterTest {
     aggressiveHelper
         .addSourceLines(
             "Foo.java",
-            "import javax.annotation.Nonnull;",
-            "class Foo {",
-            "  void consume(@Nonnull String s) {}",
-            "  void foo() {",
-            "    // BUG: Diagnostic contains: ",
-            "    consume(null);",
-            "  }",
-            "}")
+            """
+            import javax.annotation.Nonnull;
+
+            class Foo {
+              void consume(@Nonnull String s) {}
+
+              void foo() {
+                // BUG: Diagnostic contains:
+                consume(null);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -67,13 +75,17 @@ public class NullArgumentForNonNullParameterTest {
     conservativeHelper
         .addSourceLines(
             "Foo.java",
-            "import javax.annotation.Nonnull;",
-            "class Foo {",
-            "  void consume(@Nonnull String s) {}",
-            "  void foo() {",
-            "    consume(null);",
-            "  }",
-            "}")
+            """
+            import javax.annotation.Nonnull;
+
+            class Foo {
+              void consume(@Nonnull String s) {}
+
+              void foo() {
+                consume(null);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -82,13 +94,16 @@ public class NullArgumentForNonNullParameterTest {
     conservativeHelper
         .addSourceLines(
             "Foo.java",
-            "import java.util.Optional;",
-            "class Foo {",
-            "  void foo() {",
-            "    // BUG: Diagnostic contains: ",
-            "    Optional.of(null);",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            class Foo {
+              void foo() {
+                // BUG: Diagnostic contains:
+                Optional.of(null);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -97,13 +112,16 @@ public class NullArgumentForNonNullParameterTest {
     conservativeHelper
         .addSourceLines(
             "Foo.java",
-            "import com.google.common.base.Optional;",
-            "class Foo {",
-            "  void foo() {",
-            "    // BUG: Diagnostic contains: ",
-            "    Optional.of(null);",
-            "  }",
-            "}")
+            """
+            import com.google.common.base.Optional;
+
+            class Foo {
+              void foo() {
+                // BUG: Diagnostic contains:
+                Optional.of(null);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -112,13 +130,16 @@ public class NullArgumentForNonNullParameterTest {
     conservativeHelper
         .addSourceLines(
             "Foo.java",
-            "import com.google.common.collect.ImmutableSet;",
-            "class Foo {",
-            "  void foo() {",
-            "    // BUG: Diagnostic contains: ",
-            "    ImmutableSet.of(null);",
-            "  }",
-            "}")
+            """
+            import com.google.common.collect.ImmutableSet;
+
+            class Foo {
+              void foo() {
+                // BUG: Diagnostic contains:
+                ImmutableSet.of(null);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -144,13 +165,16 @@ public class NullArgumentForNonNullParameterTest {
     conservativeHelper
         .addSourceLines(
             "Foo.java",
-            "import org.mockito.ArgumentCaptor;",
-            "class Foo {",
-            "  void foo() {",
-            "    // BUG: Diagnostic contains: ",
-            "    ArgumentCaptor.forClass(null);",
-            "  }",
-            "}")
+            """
+            import org.mockito.ArgumentCaptor;
+
+            class Foo {
+              void foo() {
+                // BUG: Diagnostic contains:
+                ArgumentCaptor.forClass(null);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -159,12 +183,15 @@ public class NullArgumentForNonNullParameterTest {
     conservativeHelper
         .addSourceLines(
             "Foo.java",
-            "import com.google.common.collect.ImmutableSet;",
-            "class Foo {",
-            "  void foo() {",
-            "    ImmutableSet.of().contains(null);",
-            "  }",
-            "}")
+            """
+            import com.google.common.collect.ImmutableSet;
+
+            class Foo {
+              void foo() {
+                ImmutableSet.of().contains(null);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -173,15 +200,19 @@ public class NullArgumentForNonNullParameterTest {
     aggressiveHelper
         .addSourceLines(
             "Foo.java",
-            "import org.jspecify.annotations.NullMarked;",
-            "@NullMarked",
-            "class Foo {",
-            "  void consume(String s) {}",
-            "  void foo() {",
-            "    // BUG: Diagnostic contains: ",
-            "    consume(null);",
-            "  }",
-            "}")
+            """
+            import org.jspecify.annotations.NullMarked;
+
+            @NullMarked
+            class Foo {
+              void consume(String s) {}
+
+              void foo() {
+                // BUG: Diagnostic contains:
+                consume(null);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -190,14 +221,18 @@ public class NullArgumentForNonNullParameterTest {
     conservativeHelper
         .addSourceLines(
             "Foo.java",
-            "import org.jspecify.annotations.NullMarked;",
-            "@NullMarked",
-            "class Foo {",
-            "  void consume(String s) {}",
-            "  void foo() {",
-            "    consume(null);",
-            "  }",
-            "}")
+            """
+            import org.jspecify.annotations.NullMarked;
+
+            @NullMarked
+            class Foo {
+              void consume(String s) {}
+
+              void foo() {
+                consume(null);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -206,12 +241,15 @@ public class NullArgumentForNonNullParameterTest {
     aggressiveHelper
         .addSourceLines(
             "Foo.java",
-            "import com.google.common.collect.ConcurrentHashMultiset;",
-            "class Foo {",
-            "  void foo() {",
-            "    ConcurrentHashMultiset.create().add(null);",
-            "  }",
-            "}")
+            """
+            import com.google.common.collect.ConcurrentHashMultiset;
+
+            class Foo {
+              void foo() {
+                ConcurrentHashMultiset.create().add(null);
+              }
+            }
+            """)
         .doTest();
   }
 

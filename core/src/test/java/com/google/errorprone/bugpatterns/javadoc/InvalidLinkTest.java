@@ -39,16 +39,20 @@ public final class InvalidLinkTest {
     refactoring
         .addInputLines(
             "Test.java",
-            "interface Test {",
-            "  /** {@link http://foo/bar/baz} */",
-            "  void foo();",
-            "}")
+            """
+            interface Test {
+              /** {@link http://foo/bar/baz} */
+              void foo();
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "interface Test {",
-            "  /** <a href=\"http://foo/bar/baz\">link</a> */",
-            "  void foo();",
-            "}")
+            """
+            interface Test {
+              /** <a href="http://foo/bar/baz">link</a> */
+              void foo();
+            }
+            """)
         .doTest(TEXT_MATCH);
   }
 
@@ -57,18 +61,20 @@ public final class InvalidLinkTest {
     refactoring
         .addInputLines(
             "Test.java",
-            "interface Test {",
-            "  /** {@link http://foo/bar/baz",
-            "   * foo}",
-            "   */",
-            "  void foo();",
-            "}")
+            """
+            interface Test {
+              /** {@link http://foo/bar/baz foo} */
+              void foo();
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "interface Test {",
-            "  /** <a href=\"http://foo/bar/baz\">foo</a> */",
-            "  void foo();",
-            "}")
+            """
+            interface Test {
+              /** <a href="http://foo/bar/baz">foo</a> */
+              void foo();
+            }
+            """)
         .doTest(TEXT_MATCH);
   }
 
@@ -77,11 +83,13 @@ public final class InvalidLinkTest {
     helper
         .addSourceLines(
             "Test.java",
-            "interface Test {",
-            "  // BUG: Diagnostic contains: The reference `#bar()` to a method doesn't resolve",
-            "  /** {@link #bar()} */",
-            "  void foo();",
-            "}")
+            """
+            interface Test {
+              // BUG: Diagnostic contains: The reference `#bar()` to a method doesn't resolve
+              /** {@link #bar()} */
+              void foo();
+            }
+            """)
         .doTest();
   }
 
@@ -90,11 +98,13 @@ public final class InvalidLinkTest {
     helper
         .addSourceLines(
             "Test.java",
-            "interface Test<T> {",
-            "  // BUG: Diagnostic contains: erasure",
-            "  /** {@link #bar(Test<String>)} */",
-            "  void foo(Test<String> foo);",
-            "}")
+            """
+            interface Test<T> {
+              // BUG: Diagnostic contains: erasure
+              /** {@link #bar(Test<String>)} */
+              void foo(Test<String> foo);
+            }
+            """)
         .doTest();
   }
 
@@ -103,12 +113,14 @@ public final class InvalidLinkTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import java.util.List;",
-            "interface Test {",
-            "  /** {@link Test} {@link List} {@link IllegalArgumentException}",
-            "    * {@link #foo} {@link #foo()} */",
-            "  void foo();",
-            "}")
+            """
+import java.util.List;
+
+interface Test {
+  /** {@link Test} {@link List} {@link IllegalArgumentException} {@link #foo} {@link #foo()} */
+  void foo();
+}
+""")
         .doTest();
   }
 
@@ -116,9 +128,11 @@ public final class InvalidLinkTest {
   public void dontComplainAboutFullyQualified() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "/** {@link i.dont.exist.B#foo} */",
-            "interface A {}")
+            "Test.java",
+            """
+            /** {@link i.dont.exist.B#foo} */
+            interface A {}
+            """)
         .doTest();
   }
 
@@ -126,13 +140,17 @@ public final class InvalidLinkTest {
   public void shouldBeMethodLink() {
     refactoring
         .addInputLines(
-            "Test.java", //
-            "/** {@link frobnicate} */",
-            "interface A {}")
+            "Test.java",
+            """
+            /** {@link frobnicate} */
+            interface A {}
+            """)
         .addOutputLines(
-            "Test.java", //
-            "/** {@link #frobnicate} */",
-            "interface A {}")
+            "Test.java",
+            """
+            /** {@link #frobnicate} */
+            interface A {}
+            """)
         .doTest(TEXT_MATCH);
   }
 
@@ -141,16 +159,20 @@ public final class InvalidLinkTest {
     refactoring
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  /** Pass in a {@link bar} */",
-            "  void foo(String bar) {}",
-            "}")
+            """
+            class Test {
+              /** Pass in a {@link bar} */
+              void foo(String bar) {}
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "class Test {",
-            "  /** Pass in a {@code bar} */",
-            "  void foo(String bar) {}",
-            "}")
+            """
+            class Test {
+              /** Pass in a {@code bar} */
+              void foo(String bar) {}
+            }
+            """)
         .doTest(TEXT_MATCH);
   }
 
@@ -158,16 +180,20 @@ public final class InvalidLinkTest {
   public void multiField() {
     helper
         .addSourceLines(
-            "Param.java", //
-            "@interface Param {",
-            "  String name() default \"\";",
-            "}")
+            "Param.java",
+            """
+            @interface Param {
+              String name() default "";
+            }
+            """)
         .addSourceLines(
-            "Test.java", //
-            "@interface Test {",
-            "  /** Pass in a {@link Tuple<Object>} */",
-            "  Param extraPositionals() default @Param(name = \"\");",
-            "}")
+            "Test.java",
+            """
+            @interface Test {
+              /** Pass in a {@link Tuple<Object>} */
+              Param extraPositionals() default @Param(name = "");
+            }
+            """)
         .doTest();
   }
 
@@ -175,11 +201,13 @@ public final class InvalidLinkTest {
   public void emptyLinkTest() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "interface Test {",
-            "  /** {@link} */",
-            "  void foo();",
-            "}")
+            "Test.java",
+            """
+            interface Test {
+              /** {@link} */
+              void foo();
+            }
+            """)
         .doTest();
   }
 
@@ -188,12 +216,14 @@ public final class InvalidLinkTest {
     assume().that(Runtime.version().feature()).isAtLeast(23);
     helper
         .addSourceLines(
-            "Test.java", //
-            "public class Test {",
-            "  /// Hello [bar]",
-            "  // BUG: Diagnostic contains: `bar` is a parameter",
-            "  static void foo(int bar) {}",
-            "}")
+            "Test.java",
+            """
+            public class Test {
+              /// Hello [bar]
+              // BUG: Diagnostic contains: `bar` is a parameter
+              static void foo(int bar) {}
+            }
+            """)
         .setArgs("--release", "22")
         .doTest();
   }

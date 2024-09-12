@@ -31,14 +31,17 @@ public final class SetUnrecognizedTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.bugpatterns.proto.Proto3Test.TestProto3Enum;",
-            "import com.google.errorprone.bugpatterns.proto.Proto3Test.TestProto3Message;",
-            "class Test {",
-            "  void test() {",
-            "    // BUG: Diagnostic contains:",
-            "    TestProto3Message.newBuilder().setMyEnum(TestProto3Enum.UNRECOGNIZED);",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.bugpatterns.proto.Proto3Test.TestProto3Enum;
+            import com.google.errorprone.bugpatterns.proto.Proto3Test.TestProto3Message;
+
+            class Test {
+              void test() {
+                // BUG: Diagnostic contains:
+                TestProto3Message.newBuilder().setMyEnum(TestProto3Enum.UNRECOGNIZED);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -47,13 +50,16 @@ public final class SetUnrecognizedTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.bugpatterns.proto.Proto3Test.TestProto3Enum;",
-            "import com.google.errorprone.bugpatterns.proto.Proto3Test.TestProto3Message;",
-            "class Test {",
-            "  void test() {",
-            "    TestProto3Message.newBuilder().setMyEnum(TestProto3Enum.VALUE_1);",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.bugpatterns.proto.Proto3Test.TestProto3Enum;
+            import com.google.errorprone.bugpatterns.proto.Proto3Test.TestProto3Message;
+
+            class Test {
+              void test() {
+                TestProto3Message.newBuilder().setMyEnum(TestProto3Enum.VALUE_1);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -62,13 +68,16 @@ public final class SetUnrecognizedTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.bugpatterns.proto.Proto3Test.TestProto3Enum;",
-            "import com.google.errorprone.bugpatterns.proto.Proto3Test.TestProto3Message;",
-            "class Test {",
-            "  void test() {",
-            "    TestProto3Message.newBuilder().setMyString(\"\");",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.bugpatterns.proto.Proto3Test.TestProto3Enum;
+            import com.google.errorprone.bugpatterns.proto.Proto3Test.TestProto3Message;
+
+            class Test {
+              void test() {
+                TestProto3Message.newBuilder().setMyString("");
+              }
+            }
+            """)
         .doTest();
   }
 }

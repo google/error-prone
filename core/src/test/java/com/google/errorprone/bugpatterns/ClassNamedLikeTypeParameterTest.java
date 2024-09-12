@@ -33,16 +33,21 @@ public class ClassNamedLikeTypeParameterTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "public class Test {",
-            "  // BUG: Diagnostic contains: ",
-            "  static class A {}",
-            "  // BUG: Diagnostic contains: ",
-            "  static class B2 {}",
-            "  // BUG: Diagnostic contains: ",
-            "  static class FooT {}",
-            "  // BUG: Diagnostic contains: ",
-            "  static class X {}",
-            "}")
+            """
+            public class Test {
+              // BUG: Diagnostic contains:
+              static class A {}
+
+              // BUG: Diagnostic contains:
+              static class B2 {}
+
+              // BUG: Diagnostic contains:
+              static class FooT {}
+
+              // BUG: Diagnostic contains:
+              static class X {}
+            }
+            """)
         .doTest();
   }
 
@@ -51,14 +56,19 @@ public class ClassNamedLikeTypeParameterTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "public class Test {",
-            "  static class CAPITALT {}",
-            "  static class MyClass {}",
-            "  static class FooBar {}",
-            "  static class HasGeneric<X> {",
-            "    public <T> void genericMethod(X foo, T bar) {}",
-            "  }",
-            "}")
+            """
+            public class Test {
+              static class CAPITALT {}
+
+              static class MyClass {}
+
+              static class FooBar {}
+
+              static class HasGeneric<X> {
+                public <T> void genericMethod(X foo, T bar) {}
+              }
+            }
+            """)
         .doTest();
   }
 }

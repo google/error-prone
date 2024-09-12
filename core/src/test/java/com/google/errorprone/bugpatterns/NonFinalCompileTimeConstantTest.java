@@ -33,13 +33,16 @@ public class NonFinalCompileTimeConstantTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.CompileTimeConstant;",
-            "public class Test {",
-            "  // BUG: Diagnostic contains:",
-            "  public void f(@CompileTimeConstant Object x) {",
-            "    x = null;",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.CompileTimeConstant;
+
+            public class Test {
+              // BUG: Diagnostic contains:
+              public void f(@CompileTimeConstant Object x) {
+                x = null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -48,13 +51,16 @@ public class NonFinalCompileTimeConstantTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.CompileTimeConstant;",
-            "public class Test {",
-            "  // BUG: Diagnostic contains:",
-            "  public void f(@CompileTimeConstant Object x, @CompileTimeConstant Object y) {",
-            "    x = y = null;",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.CompileTimeConstant;
+
+            public class Test {
+              // BUG: Diagnostic contains:
+              public void f(@CompileTimeConstant Object x, @CompileTimeConstant Object y) {
+                x = y = null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -63,15 +69,18 @@ public class NonFinalCompileTimeConstantTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.CompileTimeConstant;",
-            "public class Test {",
-            "  public void f(",
-            "      @CompileTimeConstant Object x,",
-            "      // BUG: Diagnostic contains:",
-            "      @CompileTimeConstant Object y) {",
-            "    y = null;",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.CompileTimeConstant;
+
+            public class Test {
+              public void f(
+                  @CompileTimeConstant Object x,
+                  // BUG: Diagnostic contains:
+                  @CompileTimeConstant Object y) {
+                y = null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -80,10 +89,13 @@ public class NonFinalCompileTimeConstantTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.CompileTimeConstant;",
-            "public class Test {",
-            "  public void f(final @CompileTimeConstant Object x) {}",
-            "}")
+            """
+            import com.google.errorprone.annotations.CompileTimeConstant;
+
+            public class Test {
+              public void f(final @CompileTimeConstant Object x) {}
+            }
+            """)
         .doTest();
   }
 
@@ -92,10 +104,13 @@ public class NonFinalCompileTimeConstantTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.CompileTimeConstant;",
-            "public class Test {",
-            "  public void f(@CompileTimeConstant Object x) {}",
-            "}")
+            """
+            import com.google.errorprone.annotations.CompileTimeConstant;
+
+            public class Test {
+              public void f(@CompileTimeConstant Object x) {}
+            }
+            """)
         .doTest();
   }
 
@@ -104,10 +119,13 @@ public class NonFinalCompileTimeConstantTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.CompileTimeConstant;",
-            "public interface Test {",
-            "  public void f(@CompileTimeConstant Object x);",
-            "}")
+            """
+            import com.google.errorprone.annotations.CompileTimeConstant;
+
+            public interface Test {
+              public void f(@CompileTimeConstant Object x);
+            }
+            """)
         .doTest();
   }
 }

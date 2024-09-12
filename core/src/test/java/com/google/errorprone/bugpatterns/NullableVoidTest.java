@@ -33,11 +33,15 @@ public class NullableVoidTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import javax.annotation.Nullable;",
-            "class Test {",
-            "  // BUG: Diagnostic contains:",
-            "  @Nullable void f() {}",
-            "}")
+            """
+            import javax.annotation.Nullable;
+
+            class Test {
+              // BUG: Diagnostic contains:
+              @Nullable
+              void f() {}
+            }
+            """)
         .doTest();
   }
 
@@ -46,11 +50,15 @@ public class NullableVoidTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import javax.annotation.Nullable;",
-            "class Test {",
-            "  // BUG: Diagnostic contains:",
-            "  @Nullable Test() {}",
-            "}")
+            """
+            import javax.annotation.Nullable;
+
+            class Test {
+              // BUG: Diagnostic contains:
+              @Nullable
+              Test() {}
+            }
+            """)
         .doTest();
   }
 
@@ -59,18 +67,28 @@ public class NullableVoidTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import javax.annotation.CheckForNull;",
-            "class Test {",
-            "  // BUG: Diagnostic contains:",
-            "  @CheckForNull void f() {}",
-            "}")
+            """
+            import javax.annotation.CheckForNull;
+
+            class Test {
+              // BUG: Diagnostic contains:
+              @CheckForNull
+              void f() {}
+            }
+            """)
         .doTest();
   }
 
   @Test
   public void negativeNotAnnotated() {
     compilationHelper
-        .addSourceLines("Test.java", "class Test {", "  public void f() {}", "}")
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              public void f() {}
+            }
+            """)
         .doTest();
   }
 
@@ -79,10 +97,16 @@ public class NullableVoidTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import javax.annotation.Nullable;",
-            "class Test {",
-            "  @Nullable Void f() { return null; }",
-            "}")
+            """
+            import javax.annotation.Nullable;
+
+            class Test {
+              @Nullable
+              Void f() {
+                return null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -92,18 +116,23 @@ public class NullableVoidTest {
     compilationHelper
         .addSourceLines(
             "Nullable.java",
-            "import java.lang.annotation.ElementType;",
-            "import java.lang.annotation.Retention;",
-            "import java.lang.annotation.RetentionPolicy;",
-            "import java.lang.annotation.Target;",
-            "@Retention(RetentionPolicy.RUNTIME)",
-            "@Target(ElementType.TYPE_USE)",
-            "public @interface Nullable {}")
+            """
+            import java.lang.annotation.ElementType;
+            import java.lang.annotation.Retention;
+            import java.lang.annotation.RetentionPolicy;
+            import java.lang.annotation.Target;
+
+            @Retention(RetentionPolicy.RUNTIME)
+            @Target(ElementType.TYPE_USE)
+            public @interface Nullable {}
+            """)
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  <@Nullable T> void f(T t) {}",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              <@Nullable T> void f(T t) {}
+            }
+            """)
         .doTest();
   }
 }

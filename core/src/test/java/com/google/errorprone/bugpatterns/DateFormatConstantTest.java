@@ -31,16 +31,17 @@ public class DateFormatConstantTest {
     CompilationTestHelper.newInstance(DateFormatConstant.class, getClass())
         .addSourceLines(
             "Test.java",
-            "import java.text.DateFormat;",
-            "import java.text.SimpleDateFormat;",
-            "class Test {",
-            "  // BUG: Diagnostic contains:",
-            "  private static final DateFormat DATE_FORMAT1 =",
-            "    new SimpleDateFormat(\"yyyy-MM-dd HH:mm\");",
-            "  // BUG: Diagnostic contains:",
-            "  private static final SimpleDateFormat DATE_FORMAT2 =",
-            "    new SimpleDateFormat(\"yyyy-MM-dd HH:mm\");",
-            "}")
+            """
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
+class Test {
+  // BUG: Diagnostic contains:
+  private static final DateFormat DATE_FORMAT1 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+  // BUG: Diagnostic contains:
+  private static final SimpleDateFormat DATE_FORMAT2 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+}
+""")
         .doTest();
   }
 
@@ -49,24 +50,27 @@ public class DateFormatConstantTest {
     CompilationTestHelper.newInstance(DateFormatConstant.class, getClass())
         .addSourceLines(
             "Test.java",
-            "import java.text.SimpleDateFormat;",
-            "class Test {",
-            "  private static final SimpleDateFormat NO_INITIALIZER;",
-            "  static {",
-            "    NO_INITIALIZER = new SimpleDateFormat(\"yyyy-MM-dd HH:mm\");",
-            "  }",
-            "  private final SimpleDateFormat NON_STATIC =",
-            "    new SimpleDateFormat(\"yyyy-MM-dd HH:mm\");",
-            "  private static SimpleDateFormat NON_FINAL =",
-            "    new SimpleDateFormat(\"yyyy-MM-dd HH:mm\");",
-            "  private static final SimpleDateFormat lowerCamelCase =",
-            "    new SimpleDateFormat(\"yyyy-MM-dd HH:mm\");",
-            "  static void f() {",
-            "    final SimpleDateFormat NOT_A_FIELD =",
-            "      new SimpleDateFormat(\"yyyy-MM-dd HH:mm\");",
-            "  }",
-            "  private static final String NOT_A_SIMPLE_DATE_FORMAT = \"\";",
-            "}")
+            """
+import java.text.SimpleDateFormat;
+
+class Test {
+  private static final SimpleDateFormat NO_INITIALIZER;
+
+  static {
+    NO_INITIALIZER = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+  }
+
+  private final SimpleDateFormat NON_STATIC = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+  private static SimpleDateFormat NON_FINAL = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+  private static final SimpleDateFormat lowerCamelCase = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
+  static void f() {
+    final SimpleDateFormat NOT_A_FIELD = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+  }
+
+  private static final String NOT_A_SIMPLE_DATE_FORMAT = "";
+}
+""")
         .doTest();
   }
 
@@ -75,28 +79,35 @@ public class DateFormatConstantTest {
     BugCheckerRefactoringTestHelper.newInstance(DateFormatConstant.class, getClass())
         .addInputLines(
             "in/Test.java",
-            "import java.text.SimpleDateFormat;",
-            "import java.text.DateFormat;",
-            "import java.util.Date;",
-            "class Test {",
-            "  private static final DateFormat DATE_FORMAT =",
-            "    new SimpleDateFormat(\"yyyy-MM-dd HH:mm\");",
-            "  static String f(Date d) {",
-            "    return DATE_FORMAT.format(d);",
-            "  }",
-            "}")
+            """
+import java.text.SimpleDateFormat;
+import java.text.DateFormat;
+import java.util.Date;
+
+class Test {
+  private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
+  static String f(Date d) {
+    return DATE_FORMAT.format(d);
+  }
+}
+""")
         .addOutputLines(
             "out/Test.java",
-            "import java.text.SimpleDateFormat;",
-            "import java.text.DateFormat;",
-            "import java.util.Date;",
-            "class Test {",
-            "  private static final ThreadLocal<DateFormat> dateFormat = ",
-            "    ThreadLocal.withInitial(() -> new SimpleDateFormat(\"yyyy-MM-dd HH:mm\"));",
-            "  static String f(Date d) {",
-            "    return dateFormat.get().format(d);",
-            "  }",
-            "}")
+            """
+            import java.text.SimpleDateFormat;
+            import java.text.DateFormat;
+            import java.util.Date;
+
+            class Test {
+              private static final ThreadLocal<DateFormat> dateFormat =
+                  ThreadLocal.withInitial(() -> new SimpleDateFormat("yyyy-MM-dd HH:mm"));
+
+              static String f(Date d) {
+                return dateFormat.get().format(d);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -105,28 +116,34 @@ public class DateFormatConstantTest {
     BugCheckerRefactoringTestHelper.newInstance(DateFormatConstant.class, getClass())
         .addInputLines(
             "in/Test.java",
-            "import java.text.SimpleDateFormat;",
-            "import java.text.DateFormat;",
-            "import java.util.Date;",
-            "class Test {",
-            "  private static final DateFormat DATE_FORMAT =",
-            "    new SimpleDateFormat(\"yyyy-MM-dd HH:mm\");",
-            "  static String f(Date d) {",
-            "    return DATE_FORMAT.format(d);",
-            "  }",
-            "}")
+            """
+import java.text.SimpleDateFormat;
+import java.text.DateFormat;
+import java.util.Date;
+
+class Test {
+  private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
+  static String f(Date d) {
+    return DATE_FORMAT.format(d);
+  }
+}
+""")
         .addOutputLines(
             "out/Test.java",
-            "import java.text.SimpleDateFormat;",
-            "import java.text.DateFormat;",
-            "import java.util.Date;",
-            "class Test {",
-            "  private static final DateFormat dateFormat =",
-            "    new SimpleDateFormat(\"yyyy-MM-dd HH:mm\");",
-            "  static String f(Date d) {",
-            "    return dateFormat.format(d);",
-            "  }",
-            "}")
+            """
+import java.text.SimpleDateFormat;
+import java.text.DateFormat;
+import java.util.Date;
+
+class Test {
+  private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
+  static String f(Date d) {
+    return dateFormat.format(d);
+  }
+}
+""")
         .setFixChooser(FixChoosers.SECOND)
         .doTest();
   }

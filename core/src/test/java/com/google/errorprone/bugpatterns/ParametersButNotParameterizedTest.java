@@ -35,23 +35,29 @@ public final class ParametersButNotParameterizedTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "import org.junit.runner.RunWith;",
-            "import org.junit.runners.JUnit4;",
-            "import org.junit.runners.Parameterized.Parameter;",
-            "@RunWith(JUnit4.class)",
-            "public class Test {",
-            "  @Parameter public int foo;",
-            "}")
+            """
+            import org.junit.runner.RunWith;
+            import org.junit.runners.JUnit4;
+            import org.junit.runners.Parameterized.Parameter;
+
+            @RunWith(JUnit4.class)
+            public class Test {
+              @Parameter public int foo;
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import org.junit.runner.RunWith;",
-            "import org.junit.runners.JUnit4;",
-            "import org.junit.runners.Parameterized;",
-            "import org.junit.runners.Parameterized.Parameter;",
-            "@RunWith(Parameterized.class)",
-            "public class Test {",
-            "  @Parameter public int foo;",
-            "}")
+            """
+            import org.junit.runner.RunWith;
+            import org.junit.runners.JUnit4;
+            import org.junit.runners.Parameterized;
+            import org.junit.runners.Parameterized.Parameter;
+
+            @RunWith(Parameterized.class)
+            public class Test {
+              @Parameter public int foo;
+            }
+            """)
         .doTest();
   }
 
@@ -60,13 +66,16 @@ public final class ParametersButNotParameterizedTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import org.junit.runner.RunWith;",
-            "import org.junit.runners.Parameterized;",
-            "import org.junit.runners.Parameterized.Parameter;",
-            "@RunWith(Parameterized.class)",
-            "public class Test {",
-            "  @Parameter public int foo;",
-            "}")
+            """
+            import org.junit.runner.RunWith;
+            import org.junit.runners.Parameterized;
+            import org.junit.runners.Parameterized.Parameter;
+
+            @RunWith(Parameterized.class)
+            public class Test {
+              @Parameter public int foo;
+            }
+            """)
         .doTest();
   }
 
@@ -75,11 +84,13 @@ public final class ParametersButNotParameterizedTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import org.junit.runner.RunWith;",
-            "import org.junit.runners.JUnit4;",
-            "@RunWith(JUnit4.class)",
-            "public class Test {",
-            "}")
+            """
+            import org.junit.runner.RunWith;
+            import org.junit.runners.JUnit4;
+
+            @RunWith(JUnit4.class)
+            public class Test {}
+            """)
         .doTest();
   }
 }

@@ -32,20 +32,24 @@ public class TypeToStringTest {
     testHelper
         .addSourceLines(
             "ExampleChecker.java",
-            "import com.google.errorprone.BugPattern;",
-            "import com.google.errorprone.BugPattern.SeverityLevel;",
-            "import com.google.errorprone.VisitorState;",
-            "import com.google.errorprone.bugpatterns.BugChecker;",
-            "import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;",
-            "import com.google.errorprone.matchers.Description;",
-            "import com.sun.source.tree.ClassTree;",
-            "import com.sun.tools.javac.code.Types;",
-            "@BugPattern(name = \"Example\", summary = \"\", severity = SeverityLevel.ERROR)",
-            "public class ExampleChecker extends BugChecker implements ClassTreeMatcher {",
-            "  @Override public Description matchClass(ClassTree t, VisitorState s) {",
-            "    return Description.NO_MATCH;",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.BugPattern;
+            import com.google.errorprone.BugPattern.SeverityLevel;
+            import com.google.errorprone.VisitorState;
+            import com.google.errorprone.bugpatterns.BugChecker;
+            import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
+            import com.google.errorprone.matchers.Description;
+            import com.sun.source.tree.ClassTree;
+            import com.sun.tools.javac.code.Types;
+
+            @BugPattern(name = "Example", summary = "", severity = SeverityLevel.ERROR)
+            public class ExampleChecker extends BugChecker implements ClassTreeMatcher {
+              @Override
+              public Description matchClass(ClassTree t, VisitorState s) {
+                return Description.NO_MATCH;
+              }
+            }
+            """)
         .addModules("jdk.compiler/com.sun.tools.javac.code")
         .doTest();
   }
@@ -55,45 +59,48 @@ public class TypeToStringTest {
     testHelper
         .addSourceLines(
             "ExampleChecker.java",
-            "import com.google.errorprone.BugPattern;",
-            "import com.google.errorprone.BugPattern.SeverityLevel;",
-            "import com.google.errorprone.VisitorState;",
-            "import com.google.errorprone.bugpatterns.BugChecker;",
-            "import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;",
-            "import com.google.errorprone.fixes.SuggestedFix;",
-            "import com.google.errorprone.matchers.Description;",
-            "import com.google.errorprone.matchers.Matcher;",
-            "import com.sun.source.tree.ClassTree;",
-            "import com.sun.tools.javac.tree.TreeMaker;",
-            "import com.sun.tools.javac.code.Type;",
-            "import com.sun.tools.javac.code.Types;",
-            "import com.sun.tools.javac.tree.JCTree;",
-            "import com.sun.tools.javac.tree.JCTree.JCClassDecl;",
-            "@BugPattern(name = \"Example\", summary = \"\", severity = SeverityLevel.ERROR)",
-            "public class ExampleChecker extends BugChecker implements ClassTreeMatcher {",
-            "  @Override",
-            "  public Description matchClass(ClassTree tree, VisitorState state) {",
-            "    Type type = ((JCTree) tree).type;",
-            "    if (type.toString().contains(\"matcha\")) {",
-            "      return describeMatch(tree);",
-            "    }",
-            "    // BUG: Diagnostic contains: TypeToString",
-            "    if (type.toString().equals(\"match\")) {",
-            "      return describeMatch(tree);",
-            "    }",
-            "    if (new InnerClass().matchaMatcher(type)) {",
-            "      return describeMatch(tree);",
-            "    }",
-            "    return Description.NO_MATCH;",
-            "  }",
-            "",
-            "  class InnerClass {",
-            "    boolean matchaMatcher(Type type) {",
-            "      // BUG: Diagnostic contains: TypeToString",
-            "      return type.toString().equals(\"match\");",
-            "    }",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.BugPattern;
+            import com.google.errorprone.BugPattern.SeverityLevel;
+            import com.google.errorprone.VisitorState;
+            import com.google.errorprone.bugpatterns.BugChecker;
+            import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
+            import com.google.errorprone.fixes.SuggestedFix;
+            import com.google.errorprone.matchers.Description;
+            import com.google.errorprone.matchers.Matcher;
+            import com.sun.source.tree.ClassTree;
+            import com.sun.tools.javac.tree.TreeMaker;
+            import com.sun.tools.javac.code.Type;
+            import com.sun.tools.javac.code.Types;
+            import com.sun.tools.javac.tree.JCTree;
+            import com.sun.tools.javac.tree.JCTree.JCClassDecl;
+
+            @BugPattern(name = "Example", summary = "", severity = SeverityLevel.ERROR)
+            public class ExampleChecker extends BugChecker implements ClassTreeMatcher {
+              @Override
+              public Description matchClass(ClassTree tree, VisitorState state) {
+                Type type = ((JCTree) tree).type;
+                if (type.toString().contains("matcha")) {
+                  return describeMatch(tree);
+                }
+                // BUG: Diagnostic contains: TypeToString
+                if (type.toString().equals("match")) {
+                  return describeMatch(tree);
+                }
+                if (new InnerClass().matchaMatcher(type)) {
+                  return describeMatch(tree);
+                }
+                return Description.NO_MATCH;
+              }
+
+              class InnerClass {
+                boolean matchaMatcher(Type type) {
+                  // BUG: Diagnostic contains: TypeToString
+                  return type.toString().equals("match");
+                }
+              }
+            }
+            """)
         .addModules(
             "jdk.compiler/com.sun.tools.javac.code",
             "jdk.compiler/com.sun.tools.javac.tree",

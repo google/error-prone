@@ -35,23 +35,31 @@ public final class TheoryButNoTheoriesTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "import org.junit.experimental.theories.Theory;",
-            "import org.junit.runner.RunWith;",
-            "import org.junit.runners.JUnit4;",
-            "@RunWith(JUnit4.class)",
-            "public class Test {",
-            "  @Theory public void test() {}",
-            "}")
+            """
+            import org.junit.experimental.theories.Theory;
+            import org.junit.runner.RunWith;
+            import org.junit.runners.JUnit4;
+
+            @RunWith(JUnit4.class)
+            public class Test {
+              @Theory
+              public void test() {}
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import org.junit.experimental.theories.Theories;",
-            "import org.junit.experimental.theories.Theory;",
-            "import org.junit.runner.RunWith;",
-            "import org.junit.runners.JUnit4;",
-            "@RunWith(Theories.class)",
-            "public class Test {",
-            "  @Theory public void test() {}",
-            "}")
+            """
+            import org.junit.experimental.theories.Theories;
+            import org.junit.experimental.theories.Theory;
+            import org.junit.runner.RunWith;
+            import org.junit.runners.JUnit4;
+
+            @RunWith(Theories.class)
+            public class Test {
+              @Theory
+              public void test() {}
+            }
+            """)
         .doTest();
   }
 
@@ -60,14 +68,18 @@ public final class TheoryButNoTheoriesTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import org.junit.experimental.theories.Theories;",
-            "import org.junit.experimental.theories.Theory;",
-            "import org.junit.runner.RunWith;",
-            "import org.junit.runners.JUnit4;",
-            "@RunWith(Theories.class)",
-            "public class Test {",
-            "  @Theory public void test() {}",
-            "}")
+            """
+            import org.junit.experimental.theories.Theories;
+            import org.junit.experimental.theories.Theory;
+            import org.junit.runner.RunWith;
+            import org.junit.runners.JUnit4;
+
+            @RunWith(Theories.class)
+            public class Test {
+              @Theory
+              public void test() {}
+            }
+            """)
         .doTest();
   }
 
@@ -76,11 +88,13 @@ public final class TheoryButNoTheoriesTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import org.junit.runner.RunWith;",
-            "import org.junit.runners.JUnit4;",
-            "@RunWith(JUnit4.class)",
-            "public class Test {",
-            "}")
+            """
+            import org.junit.runner.RunWith;
+            import org.junit.runners.JUnit4;
+
+            @RunWith(JUnit4.class)
+            public class Test {}
+            """)
         .doTest();
   }
 }

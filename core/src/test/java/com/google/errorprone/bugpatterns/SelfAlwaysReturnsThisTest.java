@@ -33,12 +33,15 @@ public class SelfAlwaysReturnsThisTest {
     helper
         .addInputLines(
             "Builder.java",
-            "package com.google.frobber;",
-            "public final class Builder {",
-            "  public Builder self() {",
-            "    return this;",
-            "  }",
-            "}")
+            """
+            package com.google.frobber;
+
+            public final class Builder {
+              public Builder self() {
+                return this;
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -48,12 +51,15 @@ public class SelfAlwaysReturnsThisTest {
     helper
         .addInputLines(
             "Builder.java",
-            "package com.google.frobber;",
-            "public final class Builder {",
-            "  public Builder self() {",
-            "    return (Builder) this;",
-            "  }",
-            "}")
+            """
+            package com.google.frobber;
+
+            public final class Builder {
+              public Builder self() {
+                return (Builder) this;
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -63,12 +69,15 @@ public class SelfAlwaysReturnsThisTest {
     helper
         .addInputLines(
             "Builder.java",
-            "package com.google.frobber;",
-            "public final class Builder {",
-            "  public Builder self() {",
-            "    return ((Builder) (this));",
-            "  }",
-            "}")
+            """
+            package com.google.frobber;
+
+            public final class Builder {
+              public Builder self() {
+                return ((Builder) (this));
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -98,16 +107,19 @@ public class SelfAlwaysReturnsThisTest {
     helper
         .addInputLines(
             "Builder.java",
-            "package com.google.frobber;",
-            "public final class Builder {",
-            "  public Builder self() {",
-            "    if (System.currentTimeMillis() % 2 == 0) {",
-            "      return this;",
-            "    } else {",
-            "      return this;",
-            "    }",
-            "  }",
-            "}")
+            """
+            package com.google.frobber;
+
+            public final class Builder {
+              public Builder self() {
+                if (System.currentTimeMillis() % 2 == 0) {
+                  return this;
+                } else {
+                  return this;
+                }
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -117,14 +129,17 @@ public class SelfAlwaysReturnsThisTest {
     helper
         .addInputLines(
             "Builder.java",
-            "package com.google.frobber;",
-            "public final class Builder {",
-            "  public Builder self() {",
-            "    // sometimes people write comments here :-)",
-            "    Builder self = (Builder) this;",
-            "    return self;",
-            "  }",
-            "}")
+            """
+            package com.google.frobber;
+
+            public final class Builder {
+              public Builder self() {
+                // sometimes people write comments here :-)
+                Builder self = (Builder) this;
+                return self;
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -134,13 +149,16 @@ public class SelfAlwaysReturnsThisTest {
     helper
         .addInputLines(
             "Builder.java",
-            "package com.google.frobber;",
-            "public final class Builder {",
-            "  public Builder self() {",
-            "    // this is an impl comment",
-            "    return this;",
-            "  }",
-            "}")
+            """
+            package com.google.frobber;
+
+            public final class Builder {
+              public Builder self() {
+                // this is an impl comment
+                return this;
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -150,12 +168,15 @@ public class SelfAlwaysReturnsThisTest {
     helper
         .addInputLines(
             "Builder.java",
-            "package com.google.frobber;",
-            "public final class Builder {",
-            "  public Builder self() {",
-            "    return /* self */ this;",
-            "  }",
-            "}")
+            """
+            package com.google.frobber;
+
+            public final class Builder {
+              public Builder self() {
+                return /* self */ this;
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -165,20 +186,26 @@ public class SelfAlwaysReturnsThisTest {
     helper
         .addInputLines(
             "Builder.java",
-            "package com.google.frobber;",
-            "public final class Builder {",
-            "  public Builder self() {",
-            "    return new Builder();",
-            "  }",
-            "}")
+            """
+            package com.google.frobber;
+
+            public final class Builder {
+              public Builder self() {
+                return new Builder();
+              }
+            }
+            """)
         .addOutputLines(
             "Builder.java",
-            "package com.google.frobber;",
-            "public final class Builder {",
-            "  public Builder self() {",
-            "    return this;",
-            "  }",
-            "}")
+            """
+            package com.google.frobber;
+
+            public final class Builder {
+              public Builder self() {
+                return this;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -187,20 +214,26 @@ public class SelfAlwaysReturnsThisTest {
     helper
         .addInputLines(
             "Builder.java",
-            "package com.google.frobber;",
-            "public final class Builder {",
-            "  public Builder getThis() {",
-            "    return new Builder();",
-            "  }",
-            "}")
+            """
+            package com.google.frobber;
+
+            public final class Builder {
+              public Builder getThis() {
+                return new Builder();
+              }
+            }
+            """)
         .addOutputLines(
             "Builder.java",
-            "package com.google.frobber;",
-            "public final class Builder {",
-            "  public Builder getThis() {",
-            "    return this;",
-            "  }",
-            "}")
+            """
+            package com.google.frobber;
+
+            public final class Builder {
+              public Builder getThis() {
+                return this;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -209,11 +242,13 @@ public class SelfAlwaysReturnsThisTest {
     helper
         .addInputLines(
             "Builder.java",
-            "package com.google.frobber;",
-            "public final class Builder {",
-            "  public void self() {",
-            "  }",
-            "}")
+            """
+            package com.google.frobber;
+
+            public final class Builder {
+              public void self() {}
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -223,12 +258,15 @@ public class SelfAlwaysReturnsThisTest {
     helper
         .addInputLines(
             "Builder.java",
-            "package com.google.frobber;",
-            "public final class Builder {",
-            "  public String self() {",
-            "    return \"hi\";",
-            "  }",
-            "}")
+            """
+            package com.google.frobber;
+
+            public final class Builder {
+              public String self() {
+                return "hi";
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -238,12 +276,15 @@ public class SelfAlwaysReturnsThisTest {
     helper
         .addInputLines(
             "Builder.java",
-            "package com.google.frobber;",
-            "public final class Builder {",
-            "  public static Builder self() {",
-            "    return new Builder();",
-            "  }",
-            "}")
+            """
+            package com.google.frobber;
+
+            public final class Builder {
+              public static Builder self() {
+                return new Builder();
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -253,12 +294,15 @@ public class SelfAlwaysReturnsThisTest {
     helper
         .addInputLines(
             "Builder.java",
-            "package com.google.frobber;",
-            "public final class Builder {",
-            "  public Builder selfie() {",
-            "    return new Builder();",
-            "  }",
-            "}")
+            """
+            package com.google.frobber;
+
+            public final class Builder {
+              public Builder selfie() {
+                return new Builder();
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -268,12 +312,15 @@ public class SelfAlwaysReturnsThisTest {
     helper
         .addInputLines(
             "Builder.java",
-            "package com.google.frobber;",
-            "public final class Builder {",
-            "  public Builder self(int foo) {",
-            "    return new Builder();",
-            "  }",
-            "}")
+            """
+            package com.google.frobber;
+
+            public final class Builder {
+              public Builder self(int foo) {
+                return new Builder();
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -283,10 +330,13 @@ public class SelfAlwaysReturnsThisTest {
     helper
         .addInputLines(
             "Builder.java",
-            "package com.google.frobber;",
-            "public abstract class Builder {",
-            "  public abstract Builder self();",
-            "}")
+            """
+            package com.google.frobber;
+
+            public abstract class Builder {
+              public abstract Builder self();
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }

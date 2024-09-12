@@ -34,15 +34,18 @@ public final class UnnecessaryAsyncTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import java.util.concurrent.atomic.AtomicInteger;",
-            "class Test {",
-            "  int test() {",
-            "    // BUG: Diagnostic contains:",
-            "    var ai = new AtomicInteger();",
-            "    ai.set(1);",
-            "    return ai.get();",
-            "  }",
-            "}")
+            """
+            import java.util.concurrent.atomic.AtomicInteger;
+
+            class Test {
+              int test() {
+                // BUG: Diagnostic contains:
+                var ai = new AtomicInteger();
+                ai.set(1);
+                return ai.get();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -51,24 +54,30 @@ public final class UnnecessaryAsyncTest {
     refactoring
         .addInputLines(
             "Test.java",
-            "import java.util.concurrent.atomic.AtomicInteger;",
-            "class Test {",
-            "  int test() {",
-            "    var ai = new AtomicInteger();",
-            "    ai.set(1);",
-            "    return ai.get();",
-            "  }",
-            "}")
+            """
+            import java.util.concurrent.atomic.AtomicInteger;
+
+            class Test {
+              int test() {
+                var ai = new AtomicInteger();
+                ai.set(1);
+                return ai.get();
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import java.util.concurrent.atomic.AtomicInteger;",
-            "class Test {",
-            "  int test() {",
-            "    int ai = 0;",
-            "    ai = 1;",
-            "    return ai;",
-            "  }",
-            "}")
+            """
+            import java.util.concurrent.atomic.AtomicInteger;
+
+            class Test {
+              int test() {
+                int ai = 0;
+                ai = 1;
+                return ai;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -77,24 +86,30 @@ public final class UnnecessaryAsyncTest {
     refactoring
         .addInputLines(
             "Test.java",
-            "import java.util.concurrent.atomic.AtomicReference;",
-            "class Test {",
-            "  String test() {",
-            "    var ar = new AtomicReference<String>(null);",
-            "    ar.compareAndSet(null, \"foo\");",
-            "    return ar.get();",
-            "  }",
-            "}")
+            """
+            import java.util.concurrent.atomic.AtomicReference;
+
+            class Test {
+              String test() {
+                var ar = new AtomicReference<String>(null);
+                ar.compareAndSet(null, "foo");
+                return ar.get();
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import java.util.concurrent.atomic.AtomicReference;",
-            "class Test {",
-            "  String test() {",
-            "    String ar = null;",
-            "    ar = \"foo\";",
-            "    return ar;",
-            "  }",
-            "}")
+            """
+            import java.util.concurrent.atomic.AtomicReference;
+
+            class Test {
+              String test() {
+                String ar = null;
+                ar = "foo";
+                return ar;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -103,13 +118,16 @@ public final class UnnecessaryAsyncTest {
     refactoring
         .addInputLines(
             "Test.java",
-            "import java.util.concurrent.atomic.AtomicReference;",
-            "class Test {",
-            "  String test() {",
-            "    var ar = new AtomicReference<String>(null);",
-            "    return ar.toString();",
-            "  }",
-            "}")
+            """
+            import java.util.concurrent.atomic.AtomicReference;
+
+            class Test {
+              String test() {
+                var ar = new AtomicReference<String>(null);
+                return ar.toString();
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -119,24 +137,30 @@ public final class UnnecessaryAsyncTest {
     refactoring
         .addInputLines(
             "Test.java",
-            "import java.util.concurrent.atomic.AtomicReference;",
-            "class Test {",
-            "  Object test() {",
-            "    var ar = new AtomicReference();",
-            "    ar.set(\"foo\");",
-            "    return ar.get();",
-            "  }",
-            "}")
+            """
+            import java.util.concurrent.atomic.AtomicReference;
+
+            class Test {
+              Object test() {
+                var ar = new AtomicReference();
+                ar.set("foo");
+                return ar.get();
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import java.util.concurrent.atomic.AtomicReference;",
-            "class Test {",
-            "  Object test() {",
-            "    Object ar = null;",
-            "    ar = \"foo\";",
-            "    return ar;",
-            "  }",
-            "}")
+            """
+            import java.util.concurrent.atomic.AtomicReference;
+
+            class Test {
+              Object test() {
+                Object ar = null;
+                ar = "foo";
+                return ar;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -145,14 +169,17 @@ public final class UnnecessaryAsyncTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import java.util.concurrent.atomic.AtomicInteger;",
-            "class Test {",
-            "  AtomicInteger test() {",
-            "    var ai = new AtomicInteger();",
-            "    ai.set(1);",
-            "    return ai;",
-            "  }",
-            "}")
+            """
+            import java.util.concurrent.atomic.AtomicInteger;
+
+            class Test {
+              AtomicInteger test() {
+                var ai = new AtomicInteger();
+                ai.set(1);
+                return ai;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -161,15 +188,19 @@ public final class UnnecessaryAsyncTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import java.util.concurrent.atomic.AtomicInteger;",
-            "class Test {",
-            "  void test() {",
-            "    var ai = new AtomicInteger();",
-            "    ai.set(1);",
-            "    frobnicate(ai);",
-            "  }",
-            "  void frobnicate(Number n) {}",
-            "}")
+            """
+            import java.util.concurrent.atomic.AtomicInteger;
+
+            class Test {
+              void test() {
+                var ai = new AtomicInteger();
+                ai.set(1);
+                frobnicate(ai);
+              }
+
+              void frobnicate(Number n) {}
+            }
+            """)
         .doTest();
   }
 
@@ -178,15 +209,18 @@ public final class UnnecessaryAsyncTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import java.util.concurrent.ConcurrentHashMap;",
-            "class Test {",
-            "  int test() {",
-            "    // BUG: Diagnostic contains:",
-            "    var chm = new ConcurrentHashMap<>();",
-            "    chm.put(1, 2);",
-            "    return chm.size();",
-            "  }",
-            "}")
+            """
+            import java.util.concurrent.ConcurrentHashMap;
+
+            class Test {
+              int test() {
+                // BUG: Diagnostic contains:
+                var chm = new ConcurrentHashMap<>();
+                chm.put(1, 2);
+                return chm.size();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -195,14 +229,17 @@ public final class UnnecessaryAsyncTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import java.util.concurrent.atomic.AtomicInteger;",
-            "import java.util.List;",
-            "class Test {",
-            "  long test(List<String> xs) {",
-            "    var ai = new AtomicInteger();",
-            "    return xs.stream().mapToLong(x -> ai.getAndIncrement()).sum();",
-            "  }",
-            "}")
+            """
+            import java.util.concurrent.atomic.AtomicInteger;
+            import java.util.List;
+
+            class Test {
+              long test(List<String> xs) {
+                var ai = new AtomicInteger();
+                return xs.stream().mapToLong(x -> ai.getAndIncrement()).sum();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -211,13 +248,16 @@ public final class UnnecessaryAsyncTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import java.util.concurrent.atomic.AtomicReference;",
-            "class Test {",
-            "  void f() {",
-            "    // BUG: Diagnostic contains: String result = null;",
-            "    AtomicReference<String> result = new AtomicReference<>();",
-            "  }",
-            "}")
+            """
+            import java.util.concurrent.atomic.AtomicReference;
+
+            class Test {
+              void f() {
+                // BUG: Diagnostic contains: String result = null;
+                AtomicReference<String> result = new AtomicReference<>();
+              }
+            }
+            """)
         .doTest();
   }
 }

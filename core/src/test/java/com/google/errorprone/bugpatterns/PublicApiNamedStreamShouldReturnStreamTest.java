@@ -39,10 +39,12 @@ public class PublicApiNamedStreamShouldReturnStreamTest {
     compilationHelper
         .addSourceLines(
             "in/Test.java",
-            "public abstract class Test {",
-            "  // BUG: Diagnostic contains: PublicApiNamedStreamShouldReturnStream",
-            "  public abstract int stream();",
-            "}")
+            """
+            public abstract class Test {
+              // BUG: Diagnostic contains: PublicApiNamedStreamShouldReturnStream
+              public abstract int stream();
+            }
+            """)
         .doTest();
   }
 
@@ -51,10 +53,14 @@ public class PublicApiNamedStreamShouldReturnStreamTest {
     compilationHelper
         .addSourceLines(
             "in/Test.java",
-            "public class Test {",
-            "  // BUG: Diagnostic contains: PublicApiNamedStreamShouldReturnStream",
-            "  public String stream() { return \"hello\";}",
-            "}")
+            """
+            public class Test {
+              // BUG: Diagnostic contains: PublicApiNamedStreamShouldReturnStream
+              public String stream() {
+                return "hello";
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -63,10 +69,13 @@ public class PublicApiNamedStreamShouldReturnStreamTest {
     compilationHelper
         .addSourceLines(
             "in/Test.java",
-            "import java.util.stream.Stream;",
-            "public abstract class Test {",
-            "  public abstract Stream<Integer> stream();",
-            "}")
+            """
+            import java.util.stream.Stream;
+
+            public abstract class Test {
+              public abstract Stream<Integer> stream();
+            }
+            """)
         .doTest();
   }
 
@@ -75,9 +84,13 @@ public class PublicApiNamedStreamShouldReturnStreamTest {
     compilationHelper
         .addSourceLines(
             "in/Test.java",
-            "public class Test {",
-            "  public int differentMethodName() { return 0; }",
-            "}")
+            """
+            public class Test {
+              public int differentMethodName() {
+                return 0;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -86,9 +99,13 @@ public class PublicApiNamedStreamShouldReturnStreamTest {
     compilationHelper
         .addSourceLines(
             "in/Test.java",
-            "public class Test {",
-            "  private String stream() { return \"hello\"; }",
-            "}")
+            """
+            public class Test {
+              private String stream() {
+                return "hello";
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -97,10 +114,15 @@ public class PublicApiNamedStreamShouldReturnStreamTest {
     compilationHelper
         .addSourceLines(
             "in/Test.java",
-            "public class Test {",
-            "  private static class TestStream {}",
-            "  public TestStream stream() { return new TestStream(); }",
-            "}")
+            """
+            public class Test {
+              private static class TestStream {}
+
+              public TestStream stream() {
+                return new TestStream();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -109,11 +131,16 @@ public class PublicApiNamedStreamShouldReturnStreamTest {
     compilationHelper
         .addSourceLines(
             "in/Test.java",
-            "public class Test {",
-            "  private static class TestStreamRandomSuffix {}",
-            "  // BUG: Diagnostic contains: PublicApiNamedStreamShouldReturnStream",
-            "  public TestStreamRandomSuffix stream() { return new TestStreamRandomSuffix(); }",
-            "}")
+            """
+            public class Test {
+              private static class TestStreamRandomSuffix {}
+
+              // BUG: Diagnostic contains: PublicApiNamedStreamShouldReturnStream
+              public TestStreamRandomSuffix stream() {
+                return new TestStreamRandomSuffix();
+              }
+            }
+            """)
         .doTest();
   }
 }

@@ -35,10 +35,11 @@ public class DefaultPackageTest {
   public void positiveCases() {
     compilationHelper
         .addSourceLines(
-            "Test.java", //
-            "// BUG: Diagnostic contains: DefaultPackage",
-            "class Test {",
-            "}")
+            "Test.java",
+            """
+            // BUG: Diagnostic contains: DefaultPackage
+            class Test {}
+            """)
         .doTest();
   }
 
@@ -46,11 +47,13 @@ public class DefaultPackageTest {
   public void negativeCases_classWithGenerated() {
     compilationHelper
         .addSourceLines(
-            "Test.java", //
-            "import javax.annotation.processing.Generated;",
-            "@Generated(\"generator\")",
-            "class Test {",
-            "}")
+            "Test.java",
+            """
+            import javax.annotation.processing.Generated;
+
+            @Generated("generator")
+            class Test {}
+            """)
         .doTest();
   }
 
@@ -58,10 +61,11 @@ public class DefaultPackageTest {
   public void negativeCases_classWithWarningSuppressed() {
     compilationHelper
         .addSourceLines(
-            "in/Test.java", //
-            "@SuppressWarnings(\"DefaultPackage\")",
-            "class Test {",
-            "}")
+            "in/Test.java",
+            """
+            @SuppressWarnings("DefaultPackage")
+            class Test {}
+            """)
         .doTest();
   }
 
@@ -69,10 +73,12 @@ public class DefaultPackageTest {
   public void negativeCases_classWithPackage() {
     compilationHelper
         .addSourceLines(
-            "in/Test.java", //
-            "package in;",
-            "class Test {",
-            "}")
+            "in/Test.java",
+            """
+            package in;
+
+            class Test {}
+            """)
         .doTest();
   }
 
@@ -81,9 +87,13 @@ public class DefaultPackageTest {
   public void trailingComma() {
     compilationHelper
         .addSourceLines(
-            "T.java", //
-            "package a;",
-            "class T {};")
+            "T.java",
+            """
+            package a;
+
+            class T {}
+            ;
+            """)
         .doTest();
   }
 
@@ -92,9 +102,10 @@ public class DefaultPackageTest {
 
     compilationHelper
         .addSourceLines(
-            "module-info.java", //
-            "module testmodule {",
-            "}")
+            "module-info.java",
+            """
+            module testmodule {}
+            """)
         .doTest();
   }
 }

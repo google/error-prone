@@ -32,13 +32,15 @@ public class ThrowNullTest {
   public void positive() {
     testHelper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  void f() {",
-            "    // BUG: Diagnostic contains: throw new NullPointerException();",
-            "    throw null;",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              void f() {
+                // BUG: Diagnostic contains: throw new NullPointerException();
+                throw null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -46,12 +48,14 @@ public class ThrowNullTest {
   public void negative() {
     testHelper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  void f() {",
-            "    throw new NullPointerException();",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              void f() {
+                throw new NullPointerException();
+              }
+            }
+            """)
         .doTest();
   }
 }

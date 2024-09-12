@@ -218,18 +218,22 @@ public final class DoNotMockCheckerTest {
     testHelper
         .addSourceLines(
             "lib/Lib.java",
-            "package lib;",
-            "import org.mockito.Mock;",
-            "import lib.DoNotMockObjects.*;",
-            "class Lib {",
-            "",
-            "  // BUG: Diagnostic contains:",
-            "  @Mock MetaDoNotMockObject metaAnnotatedDoNotMockObject;",
-            "  // BUG: Diagnostic contains:",
-            "  @Mock MetaDoNotMockInterface metaDoNotMockInterface;",
-            "  @Mock MockableObject mockableObject;",
-            "  @Mock DoubleMetaAnnotatedDoNotMock doubleMetaAnnotatedDoNotMock; // mockable",
-            "}")
+            """
+            package lib;
+
+            import org.mockito.Mock;
+            import lib.DoNotMockObjects.*;
+
+            class Lib {
+
+              // BUG: Diagnostic contains:
+              @Mock MetaDoNotMockObject metaAnnotatedDoNotMockObject;
+              // BUG: Diagnostic contains:
+              @Mock MetaDoNotMockInterface metaDoNotMockInterface;
+              @Mock MockableObject mockableObject;
+              @Mock DoubleMetaAnnotatedDoNotMock doubleMetaAnnotatedDoNotMock; // mockable
+            }
+            """)
         .doTest();
   }
 
@@ -238,22 +242,26 @@ public final class DoNotMockCheckerTest {
     testHelper
         .addSourceLines(
             "lib/Lib.java",
-            "package lib;",
-            "import org.mockito.Mockito;",
-            "import lib.AutoValueObjects.*;",
-            "public class Lib {",
-            "",
-            "  class MockableObject {}",
-            "",
-            "  public static void f() { ",
-            "    Mockito.mock(MockableObject.class);",
-            "    // BUG: Diagnostic contains:",
-            "    Mockito.mock(DoNotMockMyAutoValue.class);",
-            "    Mockito.mock(MyAutoValue.class);",
-            "    MyAutoValue myAutoValue = MyAutoValue.create(1);",
-            "    DoNotMockMyAutoValue doNotMockMyAutoValue = DoNotMockMyAutoValue.create(1);",
-            "  }",
-            "}")
+            """
+            package lib;
+
+            import org.mockito.Mockito;
+            import lib.AutoValueObjects.*;
+
+            public class Lib {
+
+              class MockableObject {}
+
+              public static void f() {
+                Mockito.mock(MockableObject.class);
+                // BUG: Diagnostic contains:
+                Mockito.mock(DoNotMockMyAutoValue.class);
+                Mockito.mock(MyAutoValue.class);
+                MyAutoValue myAutoValue = MyAutoValue.create(1);
+                DoNotMockMyAutoValue doNotMockMyAutoValue = DoNotMockMyAutoValue.create(1);
+              }
+            }
+            """)
         .addSourceLines(
             "lib/MyAutoValue.java",
             "package lib;",
@@ -283,15 +291,19 @@ public final class DoNotMockCheckerTest {
     CompilationTestHelper.newInstance(DoNotMockChecker.class, getClass())
         .addSourceLines(
             "Test.java",
-            "import org.mockito.Mockito;",
-            "import org.mockito.Mock;",
-            "class Test<E> {",
-            "  @Mock E e;",
-            "  <T> T f(T x) {",
-            "    T m = Mockito.spy(x);",
-            "    return m;",
-            "  }",
-            "}")
+            """
+            import org.mockito.Mockito;
+            import org.mockito.Mock;
+
+            class Test<E> {
+              @Mock E e;
+
+              <T> T f(T x) {
+                T m = Mockito.spy(x);
+                return m;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -300,12 +312,15 @@ public final class DoNotMockCheckerTest {
     CompilationTestHelper.newInstance(DoNotMockChecker.class, getClass())
         .addSourceLines(
             "Test.java",
-            "import org.mockito.Mockito;",
-            "class Test {",
-            "  <T> T evil(Class<T> clazz) {",
-            "    return (T) Mockito.mock((Class) clazz);",
-            "  }",
-            "}")
+            """
+            import org.mockito.Mockito;
+
+            class Test {
+              <T> T evil(Class<T> clazz) {
+                return (T) Mockito.mock((Class) clazz);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -314,11 +329,14 @@ public final class DoNotMockCheckerTest {
     CompilationTestHelper.newInstance(DoNotMockChecker.class, getClass())
         .addSourceLines(
             "Test.java",
-            "import java.lang.annotation.Annotation;",
-            "import org.mockito.Mock;",
-            "class Test {",
-            "  @Mock Annotation[] annotations;",
-            "}")
+            """
+            import java.lang.annotation.Annotation;
+            import org.mockito.Mock;
+
+            class Test {
+              @Mock Annotation[] annotations;
+            }
+            """)
         .doTest();
   }
 

@@ -36,23 +36,26 @@ public class JdkObsoleteTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import java.nio.file.Path;",
-            "class Test {",
-            "  {",
-            "    // BUG: Diagnostic contains:",
-            "    new java.util.LinkedList<>();",
-            "    // BUG: Diagnostic contains:",
-            "    new java.util.Stack<>();",
-            "    // BUG: Diagnostic contains:",
-            "    new java.util.Vector<>();",
-            "    // BUG: Diagnostic contains:",
-            "    new java.util.Hashtable<>();",
-            "    // BUG: Diagnostic contains:",
-            "    new StringBuffer();",
-            "    // BUG: Diagnostic contains:",
-            "    new java.util.Hashtable<Object, Object>() {};",
-            "  }",
-            "}")
+            """
+            import java.nio.file.Path;
+
+            class Test {
+              {
+                // BUG: Diagnostic contains:
+                new java.util.LinkedList<>();
+                // BUG: Diagnostic contains:
+                new java.util.Stack<>();
+                // BUG: Diagnostic contains:
+                new java.util.Vector<>();
+                // BUG: Diagnostic contains:
+                new java.util.Hashtable<>();
+                // BUG: Diagnostic contains:
+                new StringBuffer();
+                // BUG: Diagnostic contains:
+                new java.util.Hashtable<Object, Object>() {};
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -61,13 +64,16 @@ public class JdkObsoleteTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.regex.Matcher;",
-            "class Test {",
-            "  void f(Matcher m) {",
-            "    StringBuffer sb = new StringBuffer();",
-            "    m.appendReplacement(sb, null);",
-            "  }",
-            "}")
+            """
+            import java.util.regex.Matcher;
+
+            class Test {
+              void f(Matcher m) {
+                StringBuffer sb = new StringBuffer();
+                m.appendReplacement(sb, null);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -76,13 +82,16 @@ public class JdkObsoleteTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.regex.Matcher;",
-            "class Test {",
-            "  void f(Matcher m) {",
-            "    StringBuffer sb = new StringBuffer();",
-            "    m.appendTail(sb);",
-            "  }",
-            "}")
+            """
+            import java.util.regex.Matcher;
+
+            class Test {
+              void f(Matcher m) {
+                StringBuffer sb = new StringBuffer();
+                m.appendTail(sb);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -91,17 +100,23 @@ public class JdkObsoleteTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import java.nio.file.Path;",
-            "class Test {",
-            "  // BUG: Diagnostic contains:",
-            "  abstract class A implements java.util.Enumeration<Object> {}",
-            "  // BUG: Diagnostic contains:",
-            "  abstract class B implements java.util.SortedSet<Object> {}",
-            "  // BUG: Diagnostic contains:",
-            "  abstract class C implements java.util.SortedMap<Object, Object> {}",
-            "  // BUG: Diagnostic contains:",
-            "  abstract class D extends java.util.Dictionary<Object, Object> {}",
-            "}")
+            """
+            import java.nio.file.Path;
+
+            class Test {
+              // BUG: Diagnostic contains:
+              abstract class A implements java.util.Enumeration<Object> {}
+
+              // BUG: Diagnostic contains:
+              abstract class B implements java.util.SortedSet<Object> {}
+
+              // BUG: Diagnostic contains:
+              abstract class C implements java.util.SortedMap<Object, Object> {}
+
+              // BUG: Diagnostic contains:
+              abstract class D extends java.util.Dictionary<Object, Object> {}
+            }
+            """)
         .doTest();
   }
 
@@ -109,33 +124,49 @@ public class JdkObsoleteTest {
   public void refactoring() {
     BugCheckerRefactoringTestHelper.newInstance(JdkObsolete.class, getClass())
         .addInputLines(
-            "in/Test.java", //
-            "import java.util.*;",
-            "class Test {",
-            "  Deque<Object> d = new LinkedList<>();",
-            "  List<Object> l = new LinkedList<>();",
-            "  {",
-            "    l = new LinkedList<>();",
-            "  }",
-            "  LinkedList<Object> ll = new LinkedList<>();",
-            "  List<Object> lll = new LinkedList<Object>() {{",
-            "    add(null); // yikes",
-            "  }};",
-            "}")
+            "in/Test.java",
+            """
+            import java.util.*;
+
+            class Test {
+              Deque<Object> d = new LinkedList<>();
+              List<Object> l = new LinkedList<>();
+
+              {
+                l = new LinkedList<>();
+              }
+
+              LinkedList<Object> ll = new LinkedList<>();
+              List<Object> lll =
+                  new LinkedList<Object>() {
+                    {
+                      add(null); // yikes
+                    }
+                  };
+            }
+            """)
         .addOutputLines(
-            "out/Test.java", //
-            "import java.util.*;",
-            "class Test {",
-            "  Deque<Object> d = new ArrayDeque<>();",
-            "  List<Object> l = new ArrayList<>();",
-            "  {",
-            "    l = new ArrayList<>();",
-            "  }",
-            "  LinkedList<Object> ll = new LinkedList<>();",
-            "  List<Object> lll = new LinkedList<Object>() {{",
-            "    add(null); // yikes",
-            "  }};",
-            "}")
+            "out/Test.java",
+            """
+            import java.util.*;
+
+            class Test {
+              Deque<Object> d = new ArrayDeque<>();
+              List<Object> l = new ArrayList<>();
+
+              {
+                l = new ArrayList<>();
+              }
+
+              LinkedList<Object> ll = new LinkedList<>();
+              List<Object> lll =
+                  new LinkedList<Object>() {
+                    {
+                      add(null); // yikes
+                    }
+                  };
+            }
+            """)
         .doTest(TEXT_MATCH);
   }
 
@@ -143,21 +174,25 @@ public class JdkObsoleteTest {
   public void stringBufferRefactoringTest() {
     BugCheckerRefactoringTestHelper.newInstance(JdkObsolete.class, getClass())
         .addInputLines(
-            "in/Test.java", //
-            "class Test {",
-            "  String f() {",
-            "    StringBuffer sb = new StringBuffer();",
-            "    return sb.append(42).toString();",
-            "  }",
-            "}")
+            "in/Test.java",
+            """
+            class Test {
+              String f() {
+                StringBuffer sb = new StringBuffer();
+                return sb.append(42).toString();
+              }
+            }
+            """)
         .addOutputLines(
-            "out/Test.java", //
-            "class Test {",
-            "  String f() {",
-            "    StringBuilder sb = new StringBuilder();",
-            "    return sb.append(42).toString();",
-            "  }",
-            "}")
+            "out/Test.java",
+            """
+            class Test {
+              String f() {
+                StringBuilder sb = new StringBuilder();
+                return sb.append(42).toString();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -165,21 +200,25 @@ public class JdkObsoleteTest {
   public void stringBufferRefactoringTest_usingVar() {
     BugCheckerRefactoringTestHelper.newInstance(JdkObsolete.class, getClass())
         .addInputLines(
-            "in/Test.java", //
-            "class Test {",
-            "  String f() {",
-            "    var sb = new StringBuffer();",
-            "    return sb.append(42).toString();",
-            "  }",
-            "}")
+            "in/Test.java",
+            """
+            class Test {
+              String f() {
+                var sb = new StringBuffer();
+                return sb.append(42).toString();
+              }
+            }
+            """)
         .addOutputLines(
-            "out/Test.java", //
-            "class Test {",
-            "  String f() {",
-            "    var sb = new StringBuilder();",
-            "    return sb.append(42).toString();",
-            "  }",
-            "}")
+            "out/Test.java",
+            """
+            class Test {
+              String f() {
+                var sb = new StringBuilder();
+                return sb.append(42).toString();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -210,53 +249,69 @@ public class JdkObsoleteTest {
   public void additionalRefactorings() {
     BugCheckerRefactoringTestHelper.newInstance(JdkObsolete.class, getClass())
         .addInputLines(
-            "in/Test.java", //
-            "import java.util.*;",
-            "import java.util.function.*;",
-            "class Test {",
-            "  Supplier<Deque<Object>> a = () -> new LinkedList<>();",
-            "  Supplier<Deque<Object>> b = () -> {",
-            "    return new LinkedList<>();",
-            "  };",
-            "  Supplier<Deque<Object>> c = LinkedList::new;",
-            "  Deque<Object> f() {",
-            "    return new LinkedList<>();",
-            "  }",
-            "  void g(Deque<Object> x) {}",
-            "  {",
-            "    g(new LinkedList<>());",
-            "  }",
-            "  {",
-            "    List<LinkedList<String>> xs = new ArrayList<>();",
-            "    List<List<String>> ys = new ArrayList<>();",
-            "    xs.add(new LinkedList<>());",
-            "    ys.add(new LinkedList<>());",
-            "  }",
-            "}")
+            "in/Test.java",
+            """
+            import java.util.*;
+            import java.util.function.*;
+
+            class Test {
+              Supplier<Deque<Object>> a = () -> new LinkedList<>();
+              Supplier<Deque<Object>> b =
+                  () -> {
+                    return new LinkedList<>();
+                  };
+              Supplier<Deque<Object>> c = LinkedList::new;
+
+              Deque<Object> f() {
+                return new LinkedList<>();
+              }
+
+              void g(Deque<Object> x) {}
+
+              {
+                g(new LinkedList<>());
+              }
+
+              {
+                List<LinkedList<String>> xs = new ArrayList<>();
+                List<List<String>> ys = new ArrayList<>();
+                xs.add(new LinkedList<>());
+                ys.add(new LinkedList<>());
+              }
+            }
+            """)
         .addOutputLines(
-            "out/Test.java", //
-            "import java.util.*;",
-            "import java.util.function.*;",
-            "class Test {",
-            "  Supplier<Deque<Object>> a = () -> new ArrayDeque<>();",
-            "  Supplier<Deque<Object>> b = () -> {",
-            "    return new ArrayDeque<>();",
-            "  };",
-            "  Supplier<Deque<Object>> c = ArrayDeque::new;",
-            "  Deque<Object> f() {",
-            "    return new ArrayDeque<>();",
-            "  }",
-            "  void g(Deque<Object> x) {}",
-            "  {",
-            "    g(new ArrayDeque<>());",
-            "  }",
-            "  {",
-            "    List<LinkedList<String>> xs = new ArrayList<>();",
-            "    List<List<String>> ys = new ArrayList<>();",
-            "    xs.add(new LinkedList<>());",
-            "    ys.add(new ArrayList<>());",
-            "  }",
-            "}")
+            "out/Test.java",
+            """
+            import java.util.*;
+            import java.util.function.*;
+
+            class Test {
+              Supplier<Deque<Object>> a = () -> new ArrayDeque<>();
+              Supplier<Deque<Object>> b =
+                  () -> {
+                    return new ArrayDeque<>();
+                  };
+              Supplier<Deque<Object>> c = ArrayDeque::new;
+
+              Deque<Object> f() {
+                return new ArrayDeque<>();
+              }
+
+              void g(Deque<Object> x) {}
+
+              {
+                g(new ArrayDeque<>());
+              }
+
+              {
+                List<LinkedList<String>> xs = new ArrayList<>();
+                List<List<String>> ys = new ArrayList<>();
+                xs.add(new LinkedList<>());
+                ys.add(new ArrayList<>());
+              }
+            }
+            """)
         .doTest(TEXT_MATCH);
   }
 
@@ -290,16 +345,20 @@ public class JdkObsoleteTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.NavigableSet;",
-            "import java.util.Optional;",
-            "class Test {",
-            "  Optional<Object> fail1(Optional<NavigableSet<Object>> myOptionalSet) {",
-            "    return myOptionalSet.map(NavigableSet::first);",
-            "  }",
-            "  Optional<Object> fail2(Optional<NavigableSet<Object>> myOptionalSet) {",
-            "    return myOptionalSet.map(NavigableSet::last);",
-            "  }",
-            "}")
+            """
+            import java.util.NavigableSet;
+            import java.util.Optional;
+
+            class Test {
+              Optional<Object> fail1(Optional<NavigableSet<Object>> myOptionalSet) {
+                return myOptionalSet.map(NavigableSet::first);
+              }
+
+              Optional<Object> fail2(Optional<NavigableSet<Object>> myOptionalSet) {
+                return myOptionalSet.map(NavigableSet::last);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -308,15 +367,17 @@ public class JdkObsoleteTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.Map;",
-            "import java.util.Set;",
-            "import java.util.NavigableMap;",
-            "class Test {",
-            "  void f(NavigableMap<String, Integer> m) {",
-            "    for (Integer e : m.values()) {",
-            "    }",
-            "  }",
-            "}")
+            """
+            import java.util.Map;
+            import java.util.Set;
+            import java.util.NavigableMap;
+
+            class Test {
+              void f(NavigableMap<String, Integer> m) {
+                for (Integer e : m.values()) {}
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -325,14 +386,17 @@ public class JdkObsoleteTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.collect.SortedSetMultimap;",
-            "import com.google.common.collect.TreeMultimap;",
-            "class Test {",
-            "  void f() {",
-            "    SortedSetMultimap<String, String> myMultimap = TreeMultimap.create();",
-            "    String myValue = myMultimap.get(\"foo\").first();",
-            "  }",
-            "}")
+            """
+            import com.google.common.collect.SortedSetMultimap;
+            import com.google.common.collect.TreeMultimap;
+
+            class Test {
+              void f() {
+                SortedSetMultimap<String, String> myMultimap = TreeMultimap.create();
+                String myValue = myMultimap.get("foo").first();
+              }
+            }
+            """)
         .doTest();
   }
 }

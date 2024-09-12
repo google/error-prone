@@ -31,17 +31,21 @@ public final class JodaNewPeriodTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import org.joda.time.Instant;",
-            "import org.joda.time.LocalDate;",
-            "import org.joda.time.Period;",
-            "public class TestClass {",
-            "  // BUG: Diagnostic contains: new Duration(10, 20).getStandardDays()",
-            "  private static final int DAYS = new Period(10, 20).getDays();",
-            "  int days(LocalDate a, LocalDate b) {",
-            "    // BUG: Diagnostic contains: Days.daysBetween(a, b).getDays()",
-            "    return new Period(a, b).getDays();",
-            "  }",
-            "}")
+            """
+            import org.joda.time.Instant;
+            import org.joda.time.LocalDate;
+            import org.joda.time.Period;
+
+            public class TestClass {
+              // BUG: Diagnostic contains: new Duration(10, 20).getStandardDays()
+              private static final int DAYS = new Period(10, 20).getDays();
+
+              int days(LocalDate a, LocalDate b) {
+                // BUG: Diagnostic contains: Days.daysBetween(a, b).getDays()
+                return new Period(a, b).getDays();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -50,12 +54,15 @@ public final class JodaNewPeriodTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import org.joda.time.Period;",
-            "import org.joda.time.Instant;",
-            "public class TestClass {",
-            "  private static final Period period = new Period(10, 20);",
-            "  private static final int DAYS = period.getDays();",
-            "}")
+            """
+            import org.joda.time.Period;
+            import org.joda.time.Instant;
+
+            public class TestClass {
+              private static final Period period = new Period(10, 20);
+              private static final int DAYS = period.getDays();
+            }
+            """)
         .doTest();
   }
 }

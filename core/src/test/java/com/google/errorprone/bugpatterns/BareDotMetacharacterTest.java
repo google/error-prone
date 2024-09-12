@@ -33,22 +33,28 @@ public class BareDotMetacharacterTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "import com.google.common.base.Splitter;",
-            "class Test {",
-            "  private static final String DOT = \".\";",
-            "  Object x = \"foo.bar\".split(\".\");",
-            "  Object y = \"foo.bonk\".split(DOT);",
-            "  Object z = Splitter.onPattern(\".\");",
-            "}")
+            """
+            import com.google.common.base.Splitter;
+
+            class Test {
+              private static final String DOT = ".";
+              Object x = "foo.bar".split(".");
+              Object y = "foo.bonk".split(DOT);
+              Object z = Splitter.onPattern(".");
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import com.google.common.base.Splitter;",
-            "class Test {",
-            "  private static final String DOT = \".\";",
-            "  Object x = \"foo.bar\".split(\"\\\\.\");",
-            "  Object y = \"foo.bonk\".split(\"\\\\.\");",
-            "  Object z = Splitter.onPattern(\"\\\\.\");",
-            "}")
+            """
+            import com.google.common.base.Splitter;
+
+            class Test {
+              private static final String DOT = ".";
+              Object x = "foo.bar".split("\\\\.");
+              Object y = "foo.bonk".split("\\\\.");
+              Object z = Splitter.onPattern("\\\\.");
+            }
+            """)
         .doTest();
   }
 }

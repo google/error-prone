@@ -34,12 +34,23 @@ import org.junit.runners.JUnit4;
 public class AnnotationHasArgumentWithValueTest extends CompilerBasedAbstractTest {
   @Before
   public void setUp() {
-    writeFile("Thing.java", "public @interface Thing {", "  String stuff();", "}");
+    writeFile(
+        "Thing.java",
+        """
+        public @interface Thing {
+          String stuff();
+        }
+        """);
   }
 
   @Test
   public void matches() {
-    writeFile("A.java", "@Thing(stuff=\"y\")", "public class A {}");
+    writeFile(
+        "A.java",
+        """
+        @Thing(stuff = "y")
+        public class A {}
+        """);
     assertCompiles(
         annotationMatches(
             /* shouldMatch= */ true,
@@ -48,8 +59,19 @@ public class AnnotationHasArgumentWithValueTest extends CompilerBasedAbstractTes
 
   @Test
   public void matchesExtraParentheses() {
-    writeFile("Thing2.java", "public @interface Thing2 {", "  String value();", "}");
-    writeFile("A.java", "@Thing2((\"y\"))", "public class A {}");
+    writeFile(
+        "Thing2.java",
+        """
+        public @interface Thing2 {
+          String value();
+        }
+        """);
+    writeFile(
+        "A.java",
+        """
+        @Thing2(("y"))
+        public class A {}
+        """);
     assertCompiles(
         annotationMatches(
             /* shouldMatch= */ true,
@@ -58,7 +80,12 @@ public class AnnotationHasArgumentWithValueTest extends CompilerBasedAbstractTes
 
   @Test
   public void notMatches() {
-    writeFile("A.java", "@Thing(stuff=\"n\")", "public class A{}");
+    writeFile(
+        "A.java",
+        """
+        @Thing(stuff = "n")
+        public class A {}
+        """);
     assertCompiles(
         annotationMatches(
             /* shouldMatch= */ false,
@@ -71,7 +98,12 @@ public class AnnotationHasArgumentWithValueTest extends CompilerBasedAbstractTes
 
   @Test
   public void arrayValuedElement() {
-    writeFile("A.java", "@SuppressWarnings({\"unchecked\",\"fallthrough\"})", "public class A{}");
+    writeFile(
+        "A.java",
+        """
+        @SuppressWarnings({"unchecked", "fallthrough"})
+        public class A {}
+        """);
     assertCompiles(
         annotationMatches(
             /* shouldMatch= */ true,

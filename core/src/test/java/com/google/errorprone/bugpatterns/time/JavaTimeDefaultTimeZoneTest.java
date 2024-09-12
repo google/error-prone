@@ -33,13 +33,16 @@ public class JavaTimeDefaultTimeZoneTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import static java.time.ZoneId.systemDefault;",
-            "import java.time.Clock;",
-            "public class TestClass {",
-            "  // BUG: Diagnostic matches: REPLACEME",
-            "  Clock clock = Clock.systemDefaultZone();",
-            "  Clock clockWithZone = Clock.system(systemDefault());",
-            "}")
+            """
+            import static java.time.ZoneId.systemDefault;
+            import java.time.Clock;
+
+            public class TestClass {
+              // BUG: Diagnostic matches: REPLACEME
+              Clock clock = Clock.systemDefaultZone();
+              Clock clockWithZone = Clock.system(systemDefault());
+            }
+            """)
         .doTest();
   }
 
@@ -49,12 +52,15 @@ public class JavaTimeDefaultTimeZoneTest {
             JavaTimeDefaultTimeZone.class, JavaTimeDefaultTimeZoneTest.class)
         .addInputLines(
             "in/TestClass.java",
-            "import static java.time.LocalDate.now;",
-            "",
-            "import java.time.LocalDate;",
-            "public class TestClass {",
-            "  LocalDate date = now();",
-            "}")
+            """
+            import static java.time.LocalDate.now;
+
+            import java.time.LocalDate;
+
+            public class TestClass {
+              LocalDate date = now();
+            }
+            """)
         .addOutputLines(
             "out/TestClass.java",
             "import static java.time.LocalDate.now;",
@@ -71,13 +77,16 @@ public class JavaTimeDefaultTimeZoneTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import static java.time.ZoneId.systemDefault;",
-            "import java.time.LocalDate;",
-            "public class TestClass {",
-            "  // BUG: Diagnostic matches: REPLACEME",
-            "  LocalDate now = LocalDate.now();",
-            "  LocalDate nowWithZone = LocalDate.now(systemDefault());",
-            "}")
+            """
+            import static java.time.ZoneId.systemDefault;
+            import java.time.LocalDate;
+
+            public class TestClass {
+              // BUG: Diagnostic matches: REPLACEME
+              LocalDate now = LocalDate.now();
+              LocalDate nowWithZone = LocalDate.now(systemDefault());
+            }
+            """)
         .doTest();
   }
 
@@ -86,13 +95,16 @@ public class JavaTimeDefaultTimeZoneTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import static java.time.ZoneId.systemDefault;",
-            "import java.time.LocalTime;",
-            "public class TestClass {",
-            "  // BUG: Diagnostic matches: REPLACEME",
-            "  LocalTime now = LocalTime.now();",
-            "  LocalTime nowWithZone = LocalTime.now(systemDefault());",
-            "}")
+            """
+            import static java.time.ZoneId.systemDefault;
+            import java.time.LocalTime;
+
+            public class TestClass {
+              // BUG: Diagnostic matches: REPLACEME
+              LocalTime now = LocalTime.now();
+              LocalTime nowWithZone = LocalTime.now(systemDefault());
+            }
+            """)
         .doTest();
   }
 
@@ -101,13 +113,16 @@ public class JavaTimeDefaultTimeZoneTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import static java.time.ZoneId.systemDefault;",
-            "import java.time.LocalDateTime;",
-            "public class TestClass {",
-            "  // BUG: Diagnostic matches: REPLACEME",
-            "  LocalDateTime now = LocalDateTime.now();",
-            "  LocalDateTime nowWithZone = LocalDateTime.now(systemDefault());",
-            "}")
+            """
+            import static java.time.ZoneId.systemDefault;
+            import java.time.LocalDateTime;
+
+            public class TestClass {
+              // BUG: Diagnostic matches: REPLACEME
+              LocalDateTime now = LocalDateTime.now();
+              LocalDateTime nowWithZone = LocalDateTime.now(systemDefault());
+            }
+            """)
         .doTest();
   }
 
@@ -116,13 +131,16 @@ public class JavaTimeDefaultTimeZoneTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import static java.time.ZoneId.systemDefault;",
-            "import java.time.MonthDay;",
-            "public class TestClass {",
-            "  // BUG: Diagnostic matches: REPLACEME",
-            "  MonthDay now = MonthDay.now();",
-            "  MonthDay nowWithZone = MonthDay.now(systemDefault());",
-            "}")
+            """
+            import static java.time.ZoneId.systemDefault;
+            import java.time.MonthDay;
+
+            public class TestClass {
+              // BUG: Diagnostic matches: REPLACEME
+              MonthDay now = MonthDay.now();
+              MonthDay nowWithZone = MonthDay.now(systemDefault());
+            }
+            """)
         .doTest();
   }
 
@@ -131,13 +149,16 @@ public class JavaTimeDefaultTimeZoneTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import static java.time.ZoneId.systemDefault;",
-            "import java.time.OffsetDateTime;",
-            "public class TestClass {",
-            "  // BUG: Diagnostic matches: REPLACEME",
-            "  OffsetDateTime now = OffsetDateTime.now();",
-            "  OffsetDateTime nowWithZone = OffsetDateTime.now(systemDefault());",
-            "}")
+            """
+            import static java.time.ZoneId.systemDefault;
+            import java.time.OffsetDateTime;
+
+            public class TestClass {
+              // BUG: Diagnostic matches: REPLACEME
+              OffsetDateTime now = OffsetDateTime.now();
+              OffsetDateTime nowWithZone = OffsetDateTime.now(systemDefault());
+            }
+            """)
         .doTest();
   }
 
@@ -146,13 +167,16 @@ public class JavaTimeDefaultTimeZoneTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import static java.time.ZoneId.systemDefault;",
-            "import java.time.OffsetTime;",
-            "public class TestClass {",
-            "  // BUG: Diagnostic matches: REPLACEME",
-            "  OffsetTime now = OffsetTime.now();",
-            "  OffsetTime nowWithZone = OffsetTime.now(systemDefault());",
-            "}")
+            """
+            import static java.time.ZoneId.systemDefault;
+            import java.time.OffsetTime;
+
+            public class TestClass {
+              // BUG: Diagnostic matches: REPLACEME
+              OffsetTime now = OffsetTime.now();
+              OffsetTime nowWithZone = OffsetTime.now(systemDefault());
+            }
+            """)
         .doTest();
   }
 
@@ -161,13 +185,16 @@ public class JavaTimeDefaultTimeZoneTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import static java.time.ZoneId.systemDefault;",
-            "import java.time.Year;",
-            "public class TestClass {",
-            "  // BUG: Diagnostic matches: REPLACEME",
-            "  Year now = Year.now();",
-            "  Year nowWithZone = Year.now(systemDefault());",
-            "}")
+            """
+            import static java.time.ZoneId.systemDefault;
+            import java.time.Year;
+
+            public class TestClass {
+              // BUG: Diagnostic matches: REPLACEME
+              Year now = Year.now();
+              Year nowWithZone = Year.now(systemDefault());
+            }
+            """)
         .doTest();
   }
 
@@ -176,13 +203,16 @@ public class JavaTimeDefaultTimeZoneTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import static java.time.ZoneId.systemDefault;",
-            "import java.time.YearMonth;",
-            "public class TestClass {",
-            "  // BUG: Diagnostic matches: REPLACEME",
-            "  YearMonth now = YearMonth.now();",
-            "  YearMonth nowWithZone = YearMonth.now(systemDefault());",
-            "}")
+            """
+            import static java.time.ZoneId.systemDefault;
+            import java.time.YearMonth;
+
+            public class TestClass {
+              // BUG: Diagnostic matches: REPLACEME
+              YearMonth now = YearMonth.now();
+              YearMonth nowWithZone = YearMonth.now(systemDefault());
+            }
+            """)
         .doTest();
   }
 
@@ -191,13 +221,16 @@ public class JavaTimeDefaultTimeZoneTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import static java.time.ZoneId.systemDefault;",
-            "import java.time.ZonedDateTime;",
-            "public class TestClass {",
-            "  // BUG: Diagnostic matches: REPLACEME",
-            "  ZonedDateTime now = ZonedDateTime.now();",
-            "  ZonedDateTime nowWithZone = ZonedDateTime.now(systemDefault());",
-            "}")
+            """
+            import static java.time.ZoneId.systemDefault;
+            import java.time.ZonedDateTime;
+
+            public class TestClass {
+              // BUG: Diagnostic matches: REPLACEME
+              ZonedDateTime now = ZonedDateTime.now();
+              ZonedDateTime nowWithZone = ZonedDateTime.now(systemDefault());
+            }
+            """)
         .doTest();
   }
 
@@ -206,13 +239,16 @@ public class JavaTimeDefaultTimeZoneTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import static java.time.ZoneId.systemDefault;",
-            "import java.time.chrono.JapaneseDate;",
-            "public class TestClass {",
-            "  // BUG: Diagnostic matches: REPLACEME",
-            "  JapaneseDate now = JapaneseDate.now();",
-            "  JapaneseDate nowWithZone = JapaneseDate.now(systemDefault());",
-            "}")
+            """
+            import static java.time.ZoneId.systemDefault;
+            import java.time.chrono.JapaneseDate;
+
+            public class TestClass {
+              // BUG: Diagnostic matches: REPLACEME
+              JapaneseDate now = JapaneseDate.now();
+              JapaneseDate nowWithZone = JapaneseDate.now(systemDefault());
+            }
+            """)
         .doTest();
   }
 
@@ -221,13 +257,16 @@ public class JavaTimeDefaultTimeZoneTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import static java.time.ZoneId.systemDefault;",
-            "import java.time.chrono.MinguoDate;",
-            "public class TestClass {",
-            "  // BUG: Diagnostic matches: REPLACEME",
-            "  MinguoDate now = MinguoDate.now();",
-            "  MinguoDate nowWithZone = MinguoDate.now(systemDefault());",
-            "}")
+            """
+            import static java.time.ZoneId.systemDefault;
+            import java.time.chrono.MinguoDate;
+
+            public class TestClass {
+              // BUG: Diagnostic matches: REPLACEME
+              MinguoDate now = MinguoDate.now();
+              MinguoDate nowWithZone = MinguoDate.now(systemDefault());
+            }
+            """)
         .doTest();
   }
 
@@ -236,13 +275,16 @@ public class JavaTimeDefaultTimeZoneTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import static java.time.ZoneId.systemDefault;",
-            "import java.time.chrono.HijrahDate;",
-            "public class TestClass {",
-            "  // BUG: Diagnostic matches: REPLACEME",
-            "  HijrahDate now = HijrahDate.now();",
-            "  HijrahDate nowWithZone = HijrahDate.now(systemDefault());",
-            "}")
+            """
+            import static java.time.ZoneId.systemDefault;
+            import java.time.chrono.HijrahDate;
+
+            public class TestClass {
+              // BUG: Diagnostic matches: REPLACEME
+              HijrahDate now = HijrahDate.now();
+              HijrahDate nowWithZone = HijrahDate.now(systemDefault());
+            }
+            """)
         .doTest();
   }
 
@@ -251,13 +293,16 @@ public class JavaTimeDefaultTimeZoneTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import static java.time.ZoneId.systemDefault;",
-            "import java.time.chrono.ThaiBuddhistDate;",
-            "public class TestClass {",
-            "  // BUG: Diagnostic matches: REPLACEME",
-            "  ThaiBuddhistDate now = ThaiBuddhistDate.now();",
-            "  ThaiBuddhistDate nowWithZone = ThaiBuddhistDate.now(systemDefault());",
-            "}")
+            """
+            import static java.time.ZoneId.systemDefault;
+            import java.time.chrono.ThaiBuddhistDate;
+
+            public class TestClass {
+              // BUG: Diagnostic matches: REPLACEME
+              ThaiBuddhistDate now = ThaiBuddhistDate.now();
+              ThaiBuddhistDate nowWithZone = ThaiBuddhistDate.now(systemDefault());
+            }
+            """)
         .doTest();
   }
 
@@ -266,14 +311,17 @@ public class JavaTimeDefaultTimeZoneTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import static java.time.ZoneId.systemDefault;",
-            "import java.time.chrono.Chronology;",
-            "import java.time.chrono.ChronoLocalDate;",
-            "public class TestClass {",
-            "  // BUG: Diagnostic matches: REPLACEME",
-            "  ChronoLocalDate now = Chronology.of(\"ISO\").dateNow();",
-            "  ChronoLocalDate nowWithZone = Chronology.of(\"ISO\").dateNow(systemDefault());",
-            "}")
+            """
+            import static java.time.ZoneId.systemDefault;
+            import java.time.chrono.Chronology;
+            import java.time.chrono.ChronoLocalDate;
+
+            public class TestClass {
+              // BUG: Diagnostic matches: REPLACEME
+              ChronoLocalDate now = Chronology.of("ISO").dateNow();
+              ChronoLocalDate nowWithZone = Chronology.of("ISO").dateNow(systemDefault());
+            }
+            """)
         .doTest();
   }
 
@@ -282,14 +330,17 @@ public class JavaTimeDefaultTimeZoneTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import static java.time.ZoneId.systemDefault;",
-            "import java.time.chrono.HijrahChronology;",
-            "import java.time.chrono.HijrahDate;",
-            "public class TestClass {",
-            "  // BUG: Diagnostic matches: REPLACEME",
-            "  HijrahDate now = HijrahChronology.INSTANCE.dateNow();",
-            "  HijrahDate nowWithZone = HijrahChronology.INSTANCE.dateNow(systemDefault());",
-            "}")
+            """
+            import static java.time.ZoneId.systemDefault;
+            import java.time.chrono.HijrahChronology;
+            import java.time.chrono.HijrahDate;
+
+            public class TestClass {
+              // BUG: Diagnostic matches: REPLACEME
+              HijrahDate now = HijrahChronology.INSTANCE.dateNow();
+              HijrahDate nowWithZone = HijrahChronology.INSTANCE.dateNow(systemDefault());
+            }
+            """)
         .doTest();
   }
 
@@ -298,14 +349,17 @@ public class JavaTimeDefaultTimeZoneTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import static java.time.ZoneId.systemDefault;",
-            "import java.time.LocalDate;",
-            "import java.time.chrono.IsoChronology;",
-            "public class TestClass {",
-            "  // BUG: Diagnostic matches: REPLACEME",
-            "  LocalDate now = IsoChronology.INSTANCE.dateNow();",
-            "  LocalDate nowWithZone = IsoChronology.INSTANCE.dateNow(systemDefault());",
-            "}")
+            """
+            import static java.time.ZoneId.systemDefault;
+            import java.time.LocalDate;
+            import java.time.chrono.IsoChronology;
+
+            public class TestClass {
+              // BUG: Diagnostic matches: REPLACEME
+              LocalDate now = IsoChronology.INSTANCE.dateNow();
+              LocalDate nowWithZone = IsoChronology.INSTANCE.dateNow(systemDefault());
+            }
+            """)
         .doTest();
   }
 
@@ -314,14 +368,17 @@ public class JavaTimeDefaultTimeZoneTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import static java.time.ZoneId.systemDefault;",
-            "import java.time.chrono.JapaneseChronology;",
-            "import java.time.chrono.JapaneseDate;",
-            "public class TestClass {",
-            "  // BUG: Diagnostic matches: REPLACEME",
-            "  JapaneseDate now = JapaneseChronology.INSTANCE.dateNow();",
-            "  JapaneseDate nowWithZone = JapaneseChronology.INSTANCE.dateNow(systemDefault());",
-            "}")
+            """
+            import static java.time.ZoneId.systemDefault;
+            import java.time.chrono.JapaneseChronology;
+            import java.time.chrono.JapaneseDate;
+
+            public class TestClass {
+              // BUG: Diagnostic matches: REPLACEME
+              JapaneseDate now = JapaneseChronology.INSTANCE.dateNow();
+              JapaneseDate nowWithZone = JapaneseChronology.INSTANCE.dateNow(systemDefault());
+            }
+            """)
         .doTest();
   }
 
@@ -330,14 +387,17 @@ public class JavaTimeDefaultTimeZoneTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import static java.time.ZoneId.systemDefault;",
-            "import java.time.chrono.MinguoChronology;",
-            "import java.time.chrono.MinguoDate;",
-            "public class TestClass {",
-            "  // BUG: Diagnostic matches: REPLACEME",
-            "  MinguoDate now = MinguoChronology.INSTANCE.dateNow();",
-            "  MinguoDate nowWithZone = MinguoChronology.INSTANCE.dateNow(systemDefault());",
-            "}")
+            """
+            import static java.time.ZoneId.systemDefault;
+            import java.time.chrono.MinguoChronology;
+            import java.time.chrono.MinguoDate;
+
+            public class TestClass {
+              // BUG: Diagnostic matches: REPLACEME
+              MinguoDate now = MinguoChronology.INSTANCE.dateNow();
+              MinguoDate nowWithZone = MinguoChronology.INSTANCE.dateNow(systemDefault());
+            }
+            """)
         .doTest();
   }
 
@@ -346,15 +406,17 @@ public class JavaTimeDefaultTimeZoneTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import static java.time.ZoneId.systemDefault;",
-            "import java.time.chrono.ThaiBuddhistChronology;",
-            "import java.time.chrono.ThaiBuddhistDate;",
-            "public class TestClass {",
-            "  // BUG: Diagnostic matches: REPLACEME",
-            "  ThaiBuddhistDate now = ThaiBuddhistChronology.INSTANCE.dateNow();",
-            "  ThaiBuddhistDate nowWithZone = "
-                + "ThaiBuddhistChronology.INSTANCE.dateNow(systemDefault());",
-            "}")
+            """
+import static java.time.ZoneId.systemDefault;
+import java.time.chrono.ThaiBuddhistChronology;
+import java.time.chrono.ThaiBuddhistDate;
+
+public class TestClass {
+  // BUG: Diagnostic matches: REPLACEME
+  ThaiBuddhistDate now = ThaiBuddhistChronology.INSTANCE.dateNow();
+  ThaiBuddhistDate nowWithZone = ThaiBuddhistChronology.INSTANCE.dateNow(systemDefault());
+}
+""")
         .doTest();
   }
 }

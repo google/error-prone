@@ -31,17 +31,19 @@ public class ClosingStandardOutputStreamsTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import java.io.OutputStreamWriter;",
-            "import java.io.PrintWriter;",
-            "class Test {",
-            "  void f() {",
-            "    // BUG: Diagnostic contains:",
-            "    try (PrintWriter pw = new PrintWriter(new OutputStreamWriter(System.err), true))"
-                + " {",
-            "        pw.println(\"hello\");",
-            "    }",
-            "  }",
-            "}")
+            """
+            import java.io.OutputStreamWriter;
+            import java.io.PrintWriter;
+
+            class Test {
+              void f() {
+                // BUG: Diagnostic contains:
+                try (PrintWriter pw = new PrintWriter(new OutputStreamWriter(System.err), true)) {
+                  pw.println("hello");
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -50,16 +52,19 @@ public class ClosingStandardOutputStreamsTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import java.io.OutputStreamWriter;",
-            "import java.io.PrintWriter;",
-            "class Test {",
-            "  void f(OutputStreamWriter os) {",
-            "    System.err.println(42);",
-            "    try (PrintWriter pw = new PrintWriter(os, true)) {",
-            "        pw.println(\"hello\");",
-            "    }",
-            "  }",
-            "}")
+            """
+            import java.io.OutputStreamWriter;
+            import java.io.PrintWriter;
+
+            class Test {
+              void f(OutputStreamWriter os) {
+                System.err.println(42);
+                try (PrintWriter pw = new PrintWriter(os, true)) {
+                  pw.println("hello");
+                }
+              }
+            }
+            """)
         .doTest();
   }
 }

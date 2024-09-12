@@ -33,33 +33,47 @@ public class UseEnumSwitchTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  enum E { ONE, TWO, THREE }",
-            "  int f(E e) {",
-            "    if (e.equals(E.ONE)) {",
-            "      return 1;",
-            "    } else if (e.equals(E.TWO)) {",
-            "      return 2;",
-            "    } else {",
-            "      return 3;",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              enum E {
+                ONE,
+                TWO,
+                THREE
+              }
+
+              int f(E e) {
+                if (e.equals(E.ONE)) {
+                  return 1;
+                } else if (e.equals(E.TWO)) {
+                  return 2;
+                } else {
+                  return 3;
+                }
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "class Test {",
-            "  enum E { ONE, TWO, THREE }",
-            "  int f(E e) {",
-            "    switch (e) {",
-            "      case ONE:",
-            "        return 1;",
-            "      case TWO:",
-            "        return 2;",
-            "      default:",
-            "        return 3;",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              enum E {
+                ONE,
+                TWO,
+                THREE
+              }
+
+              int f(E e) {
+                switch (e) {
+                  case ONE:
+                    return 1;
+                  case TWO:
+                    return 2;
+                  default:
+                    return 3;
+                }
+              }
+            }
+            """)
         .doTest(TestMode.TEXT_MATCH);
   }
 
@@ -68,23 +82,29 @@ public class UseEnumSwitchTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  enum E {",
-            "    ONE, TWO, THREE;",
-            "    E one() {",
-            "      return ONE;",
-            "    }",
-            "  }",
-            "  int f(E e) {",
-            "    if (e == e.one()) {",
-            "      return 1;",
-            "    } else if (e == E.TWO) {",
-            "      return 2;",
-            "    } else {",
-            "      return 3;",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              enum E {
+                ONE,
+                TWO,
+                THREE;
+
+                E one() {
+                  return ONE;
+                }
+              }
+
+              int f(E e) {
+                if (e == e.one()) {
+                  return 1;
+                } else if (e == E.TWO) {
+                  return 2;
+                } else {
+                  return 3;
+                }
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest(TestMode.TEXT_MATCH);
   }
@@ -94,19 +114,27 @@ public class UseEnumSwitchTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  interface A {}",
-            "  enum E implements A { ONE, TWO, THREE }",
-            "  int f(A e) {",
-            "    if (e.equals(E.ONE)) {",
-            "      return 1;",
-            "    } else if (e.equals(E.TWO)) {",
-            "      return 2;",
-            "    } else {",
-            "      return 3;",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              interface A {}
+
+              enum E implements A {
+                ONE,
+                TWO,
+                THREE
+              }
+
+              int f(A e) {
+                if (e.equals(E.ONE)) {
+                  return 1;
+                } else if (e.equals(E.TWO)) {
+                  return 2;
+                } else {
+                  return 3;
+                }
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest(TestMode.TEXT_MATCH);
   }

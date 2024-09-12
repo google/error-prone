@@ -40,19 +40,22 @@ public final class ModifiedButNotUsedTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.ArrayList;",
-            "import java.util.List;",
-            "class Test {",
-            "  void test() {",
-            "    // BUG: Diagnostic contains:",
-            "    List<Integer> foo = new ArrayList<>();",
-            "    foo.add(1);",
-            "    List<Integer> bar;",
-            "    // BUG: Diagnostic contains:",
-            "    bar = new ArrayList<>();",
-            "    bar.add(1);",
-            "  }",
-            "}")
+            """
+            import java.util.ArrayList;
+            import java.util.List;
+
+            class Test {
+              void test() {
+                // BUG: Diagnostic contains:
+                List<Integer> foo = new ArrayList<>();
+                foo.add(1);
+                List<Integer> bar;
+                // BUG: Diagnostic contains:
+                bar = new ArrayList<>();
+                bar.add(1);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -61,29 +64,40 @@ public final class ModifiedButNotUsedTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "import java.util.ArrayList;",
-            "import java.util.List;",
-            "class Test {",
-            "  void test() {",
-            "    List<Integer> foo = new ArrayList<>();",
-            "    foo.add(1);",
-            "    List<Integer> bar = new ArrayList<>();",
-            "    bar.add(sideEffects());",
-            "    List<Integer> baz;",
-            "    baz = new ArrayList<>();",
-            "    baz.add(sideEffects());",
-            "  }",
-            "  int sideEffects() { return 1; }",
-            "}")
+            """
+            import java.util.ArrayList;
+            import java.util.List;
+
+            class Test {
+              void test() {
+                List<Integer> foo = new ArrayList<>();
+                foo.add(1);
+                List<Integer> bar = new ArrayList<>();
+                bar.add(sideEffects());
+                List<Integer> baz;
+                baz = new ArrayList<>();
+                baz.add(sideEffects());
+              }
+
+              int sideEffects() {
+                return 1;
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import java.util.ArrayList;",
-            "import java.util.List;",
-            "class Test {",
-            "  void test() {",
-            "  }",
-            "  int sideEffects() { return 1; }",
-            "}")
+            """
+            import java.util.ArrayList;
+            import java.util.List;
+
+            class Test {
+              void test() {}
+
+              int sideEffects() {
+                return 1;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -92,29 +106,41 @@ public final class ModifiedButNotUsedTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "import java.util.ArrayList;",
-            "import java.util.List;",
-            "class Test {",
-            "  void test() {",
-            "    List<Integer> bar = new ArrayList<>();",
-            "    bar.add(sideEffects());",
-            "    List<Integer> baz;",
-            "    baz = new ArrayList<>();",
-            "    baz.add(sideEffects());",
-            "  }",
-            "  int sideEffects() { return 1; }",
-            "}")
+            """
+            import java.util.ArrayList;
+            import java.util.List;
+
+            class Test {
+              void test() {
+                List<Integer> bar = new ArrayList<>();
+                bar.add(sideEffects());
+                List<Integer> baz;
+                baz = new ArrayList<>();
+                baz.add(sideEffects());
+              }
+
+              int sideEffects() {
+                return 1;
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import java.util.ArrayList;",
-            "import java.util.List;",
-            "class Test {",
-            "  void test() {",
-            "    sideEffects();",
-            "    sideEffects();",
-            "  }",
-            "  int sideEffects() { return 1; }",
-            "}")
+            """
+            import java.util.ArrayList;
+            import java.util.List;
+
+            class Test {
+              void test() {
+                sideEffects();
+                sideEffects();
+              }
+
+              int sideEffects() {
+                return 1;
+              }
+            }
+            """)
         .setFixChooser(FixChoosers.SECOND)
         .doTest();
   }
@@ -124,22 +150,29 @@ public final class ModifiedButNotUsedTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.ArrayList;",
-            "import java.util.List;",
-            "abstract class Test {",
-            "  void test() {",
-            "    List<Integer> foo = new ArrayList<>();",
-            "    foo.add(1);",
-            "    if (false) { foo = new ArrayList<>(); }",
-            "    int a = foo.get(0);",
-            "  }",
-            "  void test2() {",
-            "    List<Integer> foo = new ArrayList<>();",
-            "    foo.add(1);",
-            "    incoming(foo);",
-            "  }",
-            "  abstract void incoming(List<Integer> l);",
-            "}")
+            """
+            import java.util.ArrayList;
+            import java.util.List;
+
+            abstract class Test {
+              void test() {
+                List<Integer> foo = new ArrayList<>();
+                foo.add(1);
+                if (false) {
+                  foo = new ArrayList<>();
+                }
+                int a = foo.get(0);
+              }
+
+              void test2() {
+                List<Integer> foo = new ArrayList<>();
+                foo.add(1);
+                incoming(foo);
+              }
+
+              abstract void incoming(List<Integer> l);
+            }
+            """)
         .doTest();
   }
 
@@ -148,16 +181,20 @@ public final class ModifiedButNotUsedTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.ArrayList;",
-            "import java.util.List;",
-            "class Test {",
-            "  private List<Integer> bar;",
-            "  void test() {",
-            "    List<Integer> foo = new ArrayList<>();",
-            "    foo.add(1);",
-            "    bar = foo;",
-            "  }",
-            "}")
+            """
+            import java.util.ArrayList;
+            import java.util.List;
+
+            class Test {
+              private List<Integer> bar;
+
+              void test() {
+                List<Integer> foo = new ArrayList<>();
+                foo.add(1);
+                bar = foo;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -166,17 +203,22 @@ public final class ModifiedButNotUsedTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.ArrayList;",
-            "import java.util.List;",
-            "abstract class Test {",
-            "  private List<Integer> bar;",
-            "  void test() {",
-            "    List<Integer> foo = new ArrayList<>();",
-            "    foo.add(1);",
-            "    foo = frobnicate(foo);",
-            "  }",
-            "  abstract List<Integer> frobnicate(List<Integer> a);",
-            "}")
+            """
+            import java.util.ArrayList;
+            import java.util.List;
+
+            abstract class Test {
+              private List<Integer> bar;
+
+              void test() {
+                List<Integer> foo = new ArrayList<>();
+                foo.add(1);
+                foo = frobnicate(foo);
+              }
+
+              abstract List<Integer> frobnicate(List<Integer> a);
+            }
+            """)
         .doTest();
   }
 
@@ -185,18 +227,21 @@ public final class ModifiedButNotUsedTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.ArrayList;",
-            "import java.util.List;",
-            "class Test {",
-            "  void test() {",
-            "    List<Integer> foo = new ArrayList<>();",
-            "    foo.add(1);",
-            "    foo.get(0);",
-            "    foo = new ArrayList<>();",
-            "    foo.add(1);",
-            "    foo.get(0);",
-            "  }",
-            "}")
+            """
+            import java.util.ArrayList;
+            import java.util.List;
+
+            class Test {
+              void test() {
+                List<Integer> foo = new ArrayList<>();
+                foo.add(1);
+                foo.get(0);
+                foo = new ArrayList<>();
+                foo.add(1);
+                foo.get(0);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -205,24 +250,27 @@ public final class ModifiedButNotUsedTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;",
-            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
-            "class Test {",
-            "  static void foo() {",
-            "    // BUG: Diagnostic contains:",
-            "    TestProtoMessage.Builder proto = TestProtoMessage.newBuilder();",
-            "    proto.setMessage(TestFieldProtoMessage.newBuilder());",
-            "    TestProtoMessage.Builder proto2 =",
-            "        // BUG: Diagnostic contains:",
-            "        TestProtoMessage.newBuilder().setMessage(TestFieldProtoMessage.newBuilder());",
-            "    TestProtoMessage.Builder proto3 =",
-            "        // BUG: Diagnostic contains:",
-            "        TestProtoMessage.getDefaultInstance().toBuilder().clearMessage();",
-            "    TestProtoMessage.Builder proto4 =",
-            "        // BUG: Diagnostic contains:",
-            "        TestProtoMessage.getDefaultInstance().toBuilder().clear();",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
+
+            class Test {
+              static void foo() {
+                // BUG: Diagnostic contains:
+                TestProtoMessage.Builder proto = TestProtoMessage.newBuilder();
+                proto.setMessage(TestFieldProtoMessage.newBuilder());
+                TestProtoMessage.Builder proto2 =
+                    // BUG: Diagnostic contains:
+                    TestProtoMessage.newBuilder().setMessage(TestFieldProtoMessage.newBuilder());
+                TestProtoMessage.Builder proto3 =
+                    // BUG: Diagnostic contains:
+                    TestProtoMessage.getDefaultInstance().toBuilder().clearMessage();
+                TestProtoMessage.Builder proto4 =
+                    // BUG: Diagnostic contains:
+                    TestProtoMessage.getDefaultInstance().toBuilder().clear();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -231,27 +279,39 @@ public final class ModifiedButNotUsedTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;",
-            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
-            "class Test {",
-            "  void foo() {",
-            "    TestProtoMessage.Builder proto = TestProtoMessage.newBuilder();",
-            "    TestFieldProtoMessage.Builder builder = TestFieldProtoMessage.newBuilder();",
-            "    proto.setMessage(builder).setMessage(sideEffects());",
-            "  }",
-            "  TestFieldProtoMessage sideEffects() { throw new UnsupportedOperationException(); }",
-            "}")
+            """
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
+
+            class Test {
+              void foo() {
+                TestProtoMessage.Builder proto = TestProtoMessage.newBuilder();
+                TestFieldProtoMessage.Builder builder = TestFieldProtoMessage.newBuilder();
+                proto.setMessage(builder).setMessage(sideEffects());
+              }
+
+              TestFieldProtoMessage sideEffects() {
+                throw new UnsupportedOperationException();
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;",
-            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
-            "class Test {",
-            "  void foo() {",
-            "    TestFieldProtoMessage.Builder builder = TestFieldProtoMessage.newBuilder();",
-            "    sideEffects();",
-            "  }",
-            "  TestFieldProtoMessage sideEffects() { throw new UnsupportedOperationException(); }",
-            "}")
+            """
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
+
+            class Test {
+              void foo() {
+                TestFieldProtoMessage.Builder builder = TestFieldProtoMessage.newBuilder();
+                sideEffects();
+              }
+
+              TestFieldProtoMessage sideEffects() {
+                throw new UnsupportedOperationException();
+              }
+            }
+            """)
         .setFixChooser(FixChoosers.SECOND)
         .doTest();
   }
@@ -261,14 +321,17 @@ public final class ModifiedButNotUsedTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;",
-            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
-            "class Test {",
-            "  static TestProtoMessage foo() {",
-            "    TestProtoMessage.Builder proto = TestProtoMessage.newBuilder();",
-            "    return proto.setMessage(TestFieldProtoMessage.newBuilder()).build();",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
+
+            class Test {
+              static TestProtoMessage foo() {
+                TestProtoMessage.Builder proto = TestProtoMessage.newBuilder();
+                return proto.setMessage(TestFieldProtoMessage.newBuilder()).build();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -277,17 +340,20 @@ public final class ModifiedButNotUsedTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.collect.ImmutableList;",
-            "class Test {",
-            "  static void foo() {",
-            "    // BUG: Diagnostic contains:",
-            "    ImmutableList.Builder<Integer> a = ImmutableList.builder();",
-            "    a.add(1);",
-            "    // BUG: Diagnostic contains:",
-            "    ImmutableList.Builder<Integer> b = ImmutableList.<Integer>builder().add(1);",
-            "    b.add(1);",
-            "  }",
-            "}")
+            """
+            import com.google.common.collect.ImmutableList;
+
+            class Test {
+              static void foo() {
+                // BUG: Diagnostic contains:
+                ImmutableList.Builder<Integer> a = ImmutableList.builder();
+                a.add(1);
+                // BUG: Diagnostic contains:
+                ImmutableList.Builder<Integer> b = ImmutableList.<Integer>builder().add(1);
+                b.add(1);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -296,16 +362,19 @@ public final class ModifiedButNotUsedTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;",
-            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
-            "class Test {",
-            "  void foo(TestProtoMessage proto) {",
-            "    // BUG: Diagnostic contains:",
-            "    proto.toBuilder().setMessage(TestFieldProtoMessage.newBuilder()).build();",
-            "    // BUG: Diagnostic contains:",
-            "    proto.toBuilder().setMessage(TestFieldProtoMessage.newBuilder());",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
+
+            class Test {
+              void foo(TestProtoMessage proto) {
+                // BUG: Diagnostic contains:
+                proto.toBuilder().setMessage(TestFieldProtoMessage.newBuilder()).build();
+                // BUG: Diagnostic contains:
+                proto.toBuilder().setMessage(TestFieldProtoMessage.newBuilder());
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -314,14 +383,17 @@ public final class ModifiedButNotUsedTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;",
-            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
-            "class Test {",
-            "  void foo(TestProtoMessage proto) throws Exception {",
-            "    // BUG: Diagnostic contains:",
-            "    TestProtoMessage.newBuilder().mergeFrom(new byte[0]).build();",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
+
+            class Test {
+              void foo(TestProtoMessage proto) throws Exception {
+                // BUG: Diagnostic contains:
+                TestProtoMessage.newBuilder().mergeFrom(new byte[0]).build();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -330,14 +402,17 @@ public final class ModifiedButNotUsedTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;",
-            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
-            "class Test {",
-            "  void foo(TestProtoMessage proto) {",
-            "    // BUG: Diagnostic contains:",
-            "    proto.toBuilder().getMessageBuilder().clearField().build();",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
+
+            class Test {
+              void foo(TestProtoMessage proto) {
+                // BUG: Diagnostic contains:
+                proto.toBuilder().getMessageBuilder().clearField().build();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -346,15 +421,18 @@ public final class ModifiedButNotUsedTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.collect.ImmutableList;",
-            "class Test {",
-            "  void foo() {",
-            "    // BUG: Diagnostic contains:",
-            "    ImmutableList.<Integer>builder().add(1).build();",
-            "    // BUG: Diagnostic contains:",
-            "    ImmutableList.<Integer>builder().add(1);",
-            "  }",
-            "}")
+            """
+            import com.google.common.collect.ImmutableList;
+
+            class Test {
+              void foo() {
+                // BUG: Diagnostic contains:
+                ImmutableList.<Integer>builder().add(1).build();
+                // BUG: Diagnostic contains:
+                ImmutableList.<Integer>builder().add(1);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -363,16 +441,19 @@ public final class ModifiedButNotUsedTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.ArrayList;",
-            "import java.util.List;",
-            "class Test {",
-            "  void test() {",
-            "    List<Integer> unusedIntegers = new ArrayList<>();",
-            "    unusedIntegers.add(1);",
-            "    List<Integer> ignored = new ArrayList<>();",
-            "    ignored.add(1);",
-            "  }",
-            "}")
+            """
+            import java.util.ArrayList;
+            import java.util.List;
+
+            class Test {
+              void test() {
+                List<Integer> unusedIntegers = new ArrayList<>();
+                unusedIntegers.add(1);
+                List<Integer> ignored = new ArrayList<>();
+                ignored.add(1);
+              }
+            }
+            """)
         .doTest();
   }
 }

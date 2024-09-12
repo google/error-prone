@@ -34,9 +34,11 @@ public final class UnusedTypeParameterTest {
   public void positiveOnClass() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "// BUG: Diagnostic contains:",
-            "final class Test<T> {}")
+            "Test.java",
+            """
+            // BUG: Diagnostic contains:
+            final class Test<T> {}
+            """)
         .doTest();
   }
 
@@ -56,15 +58,23 @@ public final class UnusedTypeParameterTest {
   public void refactoringWithTwoParameters() {
     refactoring
         .addInputLines(
-            "Test.java", //
-            "final class Test<A, B> {",
-            "  B get() { return null; }",
-            "}")
+            "Test.java",
+            """
+            final class Test<A, B> {
+              B get() {
+                return null;
+              }
+            }
+            """)
         .addOutputLines(
-            "Test.java", //
-            "final class Test<B> {",
-            "  B get() { return null; }",
-            "}")
+            "Test.java",
+            """
+            final class Test<B> {
+              B get() {
+                return null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -84,11 +94,13 @@ public final class UnusedTypeParameterTest {
   public void positiveOnMethod() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "final class Test {",
-            "  // BUG: Diagnostic contains:",
-            "  private <T> void test() {}",
-            "}")
+            "Test.java",
+            """
+            final class Test {
+              // BUG: Diagnostic contains:
+              private <T> void test() {}
+            }
+            """)
         .doTest();
   }
 
@@ -96,10 +108,12 @@ public final class UnusedTypeParameterTest {
   public void methodCouldBeOverridden_negativeFinding() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  <T> void test() {}",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              <T> void test() {}
+            }
+            """)
         .doTest();
   }
 
@@ -107,12 +121,14 @@ public final class UnusedTypeParameterTest {
   public void negative() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  private <T> boolean contains(java.util.Set<T> set, T elem) {",
-            "    return set.contains(elem);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              private <T> boolean contains(java.util.Set<T> set, T elem) {
+                return set.contains(elem);
+              }
+            }
+            """)
         .doTest();
   }
 }

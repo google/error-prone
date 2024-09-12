@@ -32,15 +32,19 @@ public final class EnumOrdinalTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "enum TestEnum {",
-            "  FOO, BAR,",
-            "}",
-            "class Caller {",
-            "  public int callOrdinal() {",
-            "    // BUG: Diagnostic contains: ordinal",
-            "    return TestEnum.FOO.ordinal();",
-            "  }",
-            "}")
+            """
+            enum TestEnum {
+              FOO,
+              BAR,
+            }
+
+            class Caller {
+              public int callOrdinal() {
+                // BUG: Diagnostic contains: ordinal
+                return TestEnum.FOO.ordinal();
+              }
+            }
+            """)
         .doTest();
   }
 }

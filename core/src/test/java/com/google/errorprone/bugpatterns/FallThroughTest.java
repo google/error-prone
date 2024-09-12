@@ -46,16 +46,18 @@ public class FallThroughTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void f(int x) {",
-            "    switch (x) {",
-            "      case 1:",
-            "        for (;;) {}",
-            "      case 2:",
-            "        break;",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f(int x) {
+                switch (x) {
+                  case 1:
+                    for (; ; ) {}
+                  case 2:
+                    break;
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -64,21 +66,25 @@ public class FallThroughTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void f(int x) {",
-            "    switch (x) {",
-            "      case 0: {",
-            "        // fall through",
-            "      }",
-            "      case 1: {",
-            "        System.err.println();",
-            "        // fall through",
-            "      }",
-            "      case 2:",
-            "        break;",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f(int x) {
+                switch (x) {
+                  case 0:
+                    {
+                      // fall through
+                    }
+                  case 1:
+                    {
+                      System.err.println();
+                      // fall through
+                    }
+                  case 2:
+                    break;
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -87,15 +93,19 @@ public class FallThroughTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void f(char c, boolean b) {",
-            "    switch (c) {",
-            "      case 'a': {}",
-            "      // fall through",
-            "      default:",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f(char c, boolean b) {
+                switch (c) {
+                  case 'a':
+                    {
+                    }
+                  // fall through
+                  default:
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -105,16 +115,22 @@ public class FallThroughTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  enum Case { ONE, TWO }",
-            "  void m(Case c) {",
-            "    switch (c) {",
-            "      case ONE -> {}",
-            "      case TWO -> {}",
-            "      default -> {}",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              enum Case {
+                ONE,
+                TWO
+              }
+
+              void m(Case c) {
+                switch (c) {
+                  case ONE -> {}
+                  case TWO -> {}
+                  default -> {}
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -125,20 +141,26 @@ public class FallThroughTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  enum Case { ONE, TWO }",
-            "  void m(Case c) {",
-            "    switch (c) {",
-            "      case ONE:",
-            "        switch (c) {",
-            "          case ONE -> m(c);",
-            "          case TWO -> m(c);",
-            "        }",
-            "      default:",
-            "        assert false;",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              enum Case {
+                ONE,
+                TWO
+              }
+
+              void m(Case c) {
+                switch (c) {
+                  case ONE:
+                    switch (c) {
+                      case ONE -> m(c);
+                      case TWO -> m(c);
+                    }
+                  default:
+                    assert false;
+                }
+              }
+            }
+            """)
         .doTest();
   }
 }

@@ -32,21 +32,27 @@ public class ObjectsHashCodePrimitiveTest {
   public void hashCodeIntLiteral() {
     helper
         .addInputLines(
-            "Test.java", //
-            "import java.util.Objects;",
-            "class Test {",
-            "  void f() {",
-            "    int y = Objects.hashCode(3);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            import java.util.Objects;
+
+            class Test {
+              void f() {
+                int y = Objects.hashCode(3);
+              }
+            }
+            """)
         .addOutputLines(
-            "Test.java", //
-            "import java.util.Objects;",
-            "class Test {",
-            "  void f() {",
-            "    int y = Integer.hashCode(3);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            import java.util.Objects;
+
+            class Test {
+              void f() {
+                int y = Integer.hashCode(3);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -54,23 +60,29 @@ public class ObjectsHashCodePrimitiveTest {
   public void hashCodeByte() {
     helper
         .addInputLines(
-            "Test.java", //
-            "import java.util.Objects;",
-            "class Test {",
-            "  void f() {",
-            "    byte x = 3;",
-            "    int y = Objects.hashCode(x);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            import java.util.Objects;
+
+            class Test {
+              void f() {
+                byte x = 3;
+                int y = Objects.hashCode(x);
+              }
+            }
+            """)
         .addOutputLines(
-            "Test.java", //
-            "import java.util.Objects;",
-            "class Test {",
-            "  void f() {",
-            "    byte x = 3;",
-            "    int y = Byte.hashCode(x);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            import java.util.Objects;
+
+            class Test {
+              void f() {
+                byte x = 3;
+                int y = Byte.hashCode(x);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -78,23 +90,29 @@ public class ObjectsHashCodePrimitiveTest {
   public void hashCodeShort() {
     helper
         .addInputLines(
-            "Test.java", //
-            "import java.util.Objects;",
-            "class Test {",
-            "  void f() {",
-            "    short x = 3;",
-            "    int y = Objects.hashCode(x);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            import java.util.Objects;
+
+            class Test {
+              void f() {
+                short x = 3;
+                int y = Objects.hashCode(x);
+              }
+            }
+            """)
         .addOutputLines(
-            "Test.java", //
-            "import java.util.Objects;",
-            "class Test {",
-            "  void f() {",
-            "    short x = 3;",
-            "    int y = Short.hashCode(x);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            import java.util.Objects;
+
+            class Test {
+              void f() {
+                short x = 3;
+                int y = Short.hashCode(x);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -102,23 +120,29 @@ public class ObjectsHashCodePrimitiveTest {
   public void hashCodeInt() {
     helper
         .addInputLines(
-            "Test.java", //
-            "import java.util.Objects;",
-            "class Test {",
-            "  void f() {",
-            "    int x = 3;",
-            "    int y = Objects.hashCode(x);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            import java.util.Objects;
+
+            class Test {
+              void f() {
+                int x = 3;
+                int y = Objects.hashCode(x);
+              }
+            }
+            """)
         .addOutputLines(
-            "Test.java", //
-            "import java.util.Objects;",
-            "class Test {",
-            "  void f() {",
-            "    int x = 3;",
-            "    int y = Integer.hashCode(x);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            import java.util.Objects;
+
+            class Test {
+              void f() {
+                int x = 3;
+                int y = Integer.hashCode(x);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -126,23 +150,29 @@ public class ObjectsHashCodePrimitiveTest {
   public void hashCodeLong() {
     helper
         .addInputLines(
-            "Test.java", //
-            "import java.util.Objects;",
-            "class Test {",
-            "  void f() {",
-            "    long x = 3;",
-            "    int y = Objects.hashCode(x);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            import java.util.Objects;
+
+            class Test {
+              void f() {
+                long x = 3;
+                int y = Objects.hashCode(x);
+              }
+            }
+            """)
         .addOutputLines(
-            "Test.java", //
-            "import java.util.Objects;",
-            "class Test {",
-            "  void f() {",
-            "    long x = 3;",
-            "    int y = Long.hashCode(x);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            import java.util.Objects;
+
+            class Test {
+              void f() {
+                long x = 3;
+                int y = Long.hashCode(x);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -150,23 +180,29 @@ public class ObjectsHashCodePrimitiveTest {
   public void hashCodeFloat() {
     helper
         .addInputLines(
-            "Test.java", //
-            "import java.util.Objects;",
-            "class Test {",
-            "  void f() {",
-            "    float x = 3;",
-            "    int y = Objects.hashCode(x);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            import java.util.Objects;
+
+            class Test {
+              void f() {
+                float x = 3;
+                int y = Objects.hashCode(x);
+              }
+            }
+            """)
         .addOutputLines(
-            "Test.java", //
-            "import java.util.Objects;",
-            "class Test {",
-            "  void f() {",
-            "    float x = 3;",
-            "    int y = Float.hashCode(x);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            import java.util.Objects;
+
+            class Test {
+              void f() {
+                float x = 3;
+                int y = Float.hashCode(x);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -174,23 +210,29 @@ public class ObjectsHashCodePrimitiveTest {
   public void hashCodeDouble() {
     helper
         .addInputLines(
-            "Test.java", //
-            "import java.util.Objects;",
-            "class Test {",
-            "  void f() {",
-            "    double x = 3;",
-            "    int y = Objects.hashCode(x);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            import java.util.Objects;
+
+            class Test {
+              void f() {
+                double x = 3;
+                int y = Objects.hashCode(x);
+              }
+            }
+            """)
         .addOutputLines(
-            "Test.java", //
-            "import java.util.Objects;",
-            "class Test {",
-            "  void f() {",
-            "    double x = 3;",
-            "    int y = Double.hashCode(x);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            import java.util.Objects;
+
+            class Test {
+              void f() {
+                double x = 3;
+                int y = Double.hashCode(x);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -198,23 +240,29 @@ public class ObjectsHashCodePrimitiveTest {
   public void hashCodeChar() {
     helper
         .addInputLines(
-            "Test.java", //
-            "import java.util.Objects;",
-            "class Test {",
-            "  void f() {",
-            "    char x = 'C';",
-            "    int y = Objects.hashCode(x);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            import java.util.Objects;
+
+            class Test {
+              void f() {
+                char x = 'C';
+                int y = Objects.hashCode(x);
+              }
+            }
+            """)
         .addOutputLines(
-            "Test.java", //
-            "import java.util.Objects;",
-            "class Test {",
-            "  void f() {",
-            "    char x = 'C';",
-            "    int y = Character.hashCode(x);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            import java.util.Objects;
+
+            class Test {
+              void f() {
+                char x = 'C';
+                int y = Character.hashCode(x);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -222,23 +270,29 @@ public class ObjectsHashCodePrimitiveTest {
   public void hashCodeBoolean() {
     helper
         .addInputLines(
-            "Test.java", //
-            "import java.util.Objects;",
-            "class Test {",
-            "  void f() {",
-            "    boolean x = true;",
-            "    int y = Objects.hashCode(x);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            import java.util.Objects;
+
+            class Test {
+              void f() {
+                boolean x = true;
+                int y = Objects.hashCode(x);
+              }
+            }
+            """)
         .addOutputLines(
-            "Test.java", //
-            "import java.util.Objects;",
-            "class Test {",
-            "  void f() {",
-            "    boolean x = true;",
-            "    int y = Boolean.hashCode(x);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            import java.util.Objects;
+
+            class Test {
+              void f() {
+                boolean x = true;
+                int y = Boolean.hashCode(x);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -246,23 +300,31 @@ public class ObjectsHashCodePrimitiveTest {
   public void hashCodeClassVariable() {
     helper
         .addInputLines(
-            "Test.java", //
-            "import java.util.Objects;",
-            "class Test {",
-            "  boolean x = true;",
-            "  void f() {",
-            "    int y = Objects.hashCode(x);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            import java.util.Objects;
+
+            class Test {
+              boolean x = true;
+
+              void f() {
+                int y = Objects.hashCode(x);
+              }
+            }
+            """)
         .addOutputLines(
-            "Test.java", //
-            "import java.util.Objects;",
-            "class Test {",
-            "  boolean x = true;",
-            "  void f() {",
-            "    int y = Boolean.hashCode(x);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            import java.util.Objects;
+
+            class Test {
+              boolean x = true;
+
+              void f() {
+                int y = Boolean.hashCode(x);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -270,14 +332,18 @@ public class ObjectsHashCodePrimitiveTest {
   public void hashCodeObjectNegative() {
     helper
         .addInputLines(
-            "Test.java", //
-            "import java.util.Objects;",
-            "class Test {",
-            "  Object o = new Object();",
-            "  void f() {",
-            "    int y = Objects.hashCode(o);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            import java.util.Objects;
+
+            class Test {
+              Object o = new Object();
+
+              void f() {
+                int y = Objects.hashCode(o);
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -286,14 +352,18 @@ public class ObjectsHashCodePrimitiveTest {
   public void hashCodeBoxedPrimitiveNegative() {
     helper
         .addInputLines(
-            "Test.java", //
-            "import java.util.Objects;",
-            "class Test {",
-            "  Integer x = Integer.valueOf(3);",
-            "  void f() {",
-            "    int y = Objects.hashCode(x);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            import java.util.Objects;
+
+            class Test {
+              Integer x = Integer.valueOf(3);
+
+              void f() {
+                int y = Objects.hashCode(x);
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -302,14 +372,18 @@ public class ObjectsHashCodePrimitiveTest {
   public void hashCodeOtherMethodNegative() {
     helper
         .addInputLines(
-            "Test.java", //
-            "import java.util.Objects;",
-            "class Test {",
-            "  Integer x = Integer.valueOf(3);",
-            "  void f() {",
-            "    int y = x.hashCode();",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            import java.util.Objects;
+
+            class Test {
+              Integer x = Integer.valueOf(3);
+
+              void f() {
+                int y = x.hashCode();
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }

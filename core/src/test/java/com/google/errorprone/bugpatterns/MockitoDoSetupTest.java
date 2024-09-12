@@ -30,23 +30,29 @@ public final class MockitoDoSetupTest {
     helper
         .addInputLines(
             "Test.java",
-            "import org.mockito.Mockito;",
-            "public class Test {",
-            "  public int test(Test test) {",
-            "    Mockito.doReturn(1).when(test).test(null);",
-            "    return 1;",
-            "  }",
-            "}")
+            """
+            import org.mockito.Mockito;
+
+            public class Test {
+              public int test(Test test) {
+                Mockito.doReturn(1).when(test).test(null);
+                return 1;
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import static org.mockito.Mockito.when;",
-            "import org.mockito.Mockito;",
-            "public class Test {",
-            "  public int test(Test test) {",
-            "    when(test.test(null)).thenReturn(1);",
-            "    return 1;",
-            "  }",
-            "}")
+            """
+            import static org.mockito.Mockito.when;
+            import org.mockito.Mockito;
+
+            public class Test {
+              public int test(Test test) {
+                when(test.test(null)).thenReturn(1);
+                return 1;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -55,14 +61,18 @@ public final class MockitoDoSetupTest {
     helper
         .addInputLines(
             "Test.java",
-            "import org.mockito.Mockito;",
-            "public class Test {",
-            "  @org.mockito.Spy Test test;",
-            "  public int test() {",
-            "    Mockito.doReturn(1).when(test).test();",
-            "    return 1;",
-            "  }",
-            "}")
+            """
+            import org.mockito.Mockito;
+
+            public class Test {
+              @org.mockito.Spy Test test;
+
+              public int test() {
+                Mockito.doReturn(1).when(test).test();
+                return 1;
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -72,14 +82,18 @@ public final class MockitoDoSetupTest {
     helper
         .addInputLines(
             "Test.java",
-            "import org.mockito.Mockito;",
-            "public class Test {",
-            "  Test test = Mockito.spy(Test.class);",
-            "  public int test() {",
-            "    Mockito.doReturn(1).when(test).test();",
-            "    return 1;",
-            "  }",
-            "}")
+            """
+            import org.mockito.Mockito;
+
+            public class Test {
+              Test test = Mockito.spy(Test.class);
+
+              public int test() {
+                Mockito.doReturn(1).when(test).test();
+                return 1;
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -89,14 +103,17 @@ public final class MockitoDoSetupTest {
     helper
         .addInputLines(
             "Test.java",
-            "import org.mockito.Mockito;",
-            "public class Test {",
-            "  public int test(Test test) {",
-            "    Mockito.doReturn(1).when(test).test(null);",
-            "    Mockito.when(test.test(null)).thenThrow(new Exception());",
-            "    return 1;",
-            "  }",
-            "}")
+            """
+            import org.mockito.Mockito;
+
+            public class Test {
+              public int test(Test test) {
+                Mockito.doReturn(1).when(test).test(null);
+                Mockito.when(test.test(null)).thenThrow(new Exception());
+                return 1;
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -106,14 +123,17 @@ public final class MockitoDoSetupTest {
     helper
         .addInputLines(
             "Test.java",
-            "import org.mockito.Mockito;",
-            "public class Test {",
-            "  public int test(Test test) {",
-            "    Mockito.doReturn(1).when(test).test(null);",
-            "    Mockito.doThrow(new Exception()).when(test).test(null);",
-            "    return 1;",
-            "  }",
-            "}")
+            """
+            import org.mockito.Mockito;
+
+            public class Test {
+              public int test(Test test) {
+                Mockito.doReturn(1).when(test).test(null);
+                Mockito.doThrow(new Exception()).when(test).test(null);
+                return 1;
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }

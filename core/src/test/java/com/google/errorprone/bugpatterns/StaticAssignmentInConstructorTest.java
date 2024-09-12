@@ -32,13 +32,16 @@ public final class StaticAssignmentInConstructorTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  static int foo;",
-            "  public Test(int foo) {",
-            "    // BUG: Diagnostic contains:",
-            "    this.foo = foo;",
-            "  }",
-            "}")
+            """
+            class Test {
+              static int foo;
+
+              public Test(int foo) {
+                // BUG: Diagnostic contains:
+                this.foo = foo;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -47,12 +50,15 @@ public final class StaticAssignmentInConstructorTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  static Test latest;",
-            "  public Test() {",
-            "    latest = this;",
-            "  }",
-            "}")
+            """
+            class Test {
+              static Test latest;
+
+              public Test() {
+                latest = this;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -61,12 +67,15 @@ public final class StaticAssignmentInConstructorTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  int foo;",
-            "  public Test(int foo) {",
-            "    this.foo = foo;",
-            "  }",
-            "}")
+            """
+            class Test {
+              int foo;
+
+              public Test(int foo) {
+                this.foo = foo;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -75,12 +84,21 @@ public final class StaticAssignmentInConstructorTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  static int foo;",
-            "  public Test(int a) {",
-            "    java.util.Arrays.asList().stream().map(x -> { foo = 1; return a; }).count();",
-            "  }",
-            "}")
+            """
+            class Test {
+              static int foo;
+
+              public Test(int a) {
+                java.util.Arrays.asList().stream()
+                    .map(
+                        x -> {
+                          foo = 1;
+                          return a;
+                        })
+                    .count();
+              }
+            }
+            """)
         .doTest();
   }
 }

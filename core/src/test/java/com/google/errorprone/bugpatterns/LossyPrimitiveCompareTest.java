@@ -34,22 +34,24 @@ public class LossyPrimitiveCompareTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  int[] results = {",
-            "    // BUG: Diagnostic contains: Long.compare(0L, 0L)",
-            "    Double.compare(0L, 0L),",
-            "    // BUG: Diagnostic contains: Long.compare(Long.valueOf(0L), 0L)",
-            "    Double.compare(Long.valueOf(0L), 0L),",
-            "",
-            "    // Not lossy.",
-            "    Double.compare((byte) 0, (byte) 0),",
-            "    Double.compare((short) 0, (short) 0),",
-            "    Double.compare('0', '0'),",
-            "    Double.compare(0, 0),",
-            "    Double.compare(0.f, 0.f),",
-            "    Double.compare(0.0, 0.0),",
-            "  };",
-            "}")
+            """
+            class Test {
+              int[] results = {
+                // BUG: Diagnostic contains: Long.compare(0L, 0L)
+                Double.compare(0L, 0L),
+                // BUG: Diagnostic contains: Long.compare(Long.valueOf(0L), 0L)
+                Double.compare(Long.valueOf(0L), 0L),
+
+                // Not lossy.
+                Double.compare((byte) 0, (byte) 0),
+                Double.compare((short) 0, (short) 0),
+                Double.compare('0', '0'),
+                Double.compare(0, 0),
+                Double.compare(0.f, 0.f),
+                Double.compare(0.0, 0.0),
+              };
+            }
+            """)
         .doTest();
   }
 
@@ -58,24 +60,26 @@ public class LossyPrimitiveCompareTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  int[] results = {",
-            "    // BUG: Diagnostic contains: Long.compare(0L, 0L)",
-            "    Float.compare(0L, 0L),",
-            "    // BUG: Diagnostic contains: Long.compare(Long.valueOf(0L), 0L)",
-            "    Float.compare(Long.valueOf(0L), 0L),",
-            "    // BUG: Diagnostic contains: Integer.compare(0, 0)",
-            "    Float.compare(0, 0),",
-            "    // BUG: Diagnostic contains: Integer.compare(0, Integer.valueOf(0))",
-            "    Float.compare(0, Integer.valueOf(0)),",
-            "",
-            "    // Not lossy.",
-            "    Float.compare((byte) 0, (byte) 0),",
-            "    Float.compare((short) 0, (short) 0),",
-            "    Float.compare('0', '0'),",
-            "    Float.compare(0.f, 0.f),",
-            "  };",
-            "}")
+            """
+            class Test {
+              int[] results = {
+                // BUG: Diagnostic contains: Long.compare(0L, 0L)
+                Float.compare(0L, 0L),
+                // BUG: Diagnostic contains: Long.compare(Long.valueOf(0L), 0L)
+                Float.compare(Long.valueOf(0L), 0L),
+                // BUG: Diagnostic contains: Integer.compare(0, 0)
+                Float.compare(0, 0),
+                // BUG: Diagnostic contains: Integer.compare(0, Integer.valueOf(0))
+                Float.compare(0, Integer.valueOf(0)),
+
+                // Not lossy.
+                Float.compare((byte) 0, (byte) 0),
+                Float.compare((short) 0, (short) 0),
+                Float.compare('0', '0'),
+                Float.compare(0.f, 0.f),
+              };
+            }
+            """)
         .doTest();
   }
 }

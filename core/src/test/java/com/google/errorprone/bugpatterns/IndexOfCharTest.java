@@ -32,13 +32,17 @@ public class IndexOfCharTest {
   public void positive() {
     compilationHelper
         .addSourceLines(
-            "Test.java", //
-            "class Test {{",
-            "  // BUG: Diagnostic contains: \"\".indexOf('$', 0);",
-            "  \"\".indexOf(0, '$');",
-            "  // BUG: Diagnostic contains: \"\".lastIndexOf('$', 0);",
-            "  \"\".lastIndexOf(0, '$');",
-            "}}")
+            "Test.java",
+            """
+            class Test {
+              {
+                // BUG: Diagnostic contains: "".indexOf('$', 0);
+                "".indexOf(0, '$');
+                // BUG: Diagnostic contains: "".lastIndexOf('$', 0);
+                "".lastIndexOf(0, '$');
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -46,10 +50,14 @@ public class IndexOfCharTest {
   public void negative() {
     compilationHelper
         .addSourceLines(
-            "Test.java", //
-            "class Test {{",
-            "  \"\".indexOf('$', 0);",
-            "}}")
+            "Test.java",
+            """
+            class Test {
+              {
+                "".indexOf('$', 0);
+              }
+            }
+            """)
         .doTest();
   }
 }

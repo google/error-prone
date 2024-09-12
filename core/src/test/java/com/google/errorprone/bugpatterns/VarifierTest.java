@@ -32,18 +32,22 @@ public final class VarifierTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  public void t(Object o) {",
-            "    Test t = (Test) o;",
-            "  }",
-            "}")
+            """
+            class Test {
+              public void t(Object o) {
+                Test t = (Test) o;
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "class Test {",
-            "  public void t(Object o) {",
-            "    var t = (Test) o;",
-            "  }",
-            "}")
+            """
+            class Test {
+              public void t(Object o) {
+                var t = (Test) o;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -52,18 +56,22 @@ public final class VarifierTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  public void t() {",
-            "    Test t = new Test();",
-            "  }",
-            "}")
+            """
+            class Test {
+              public void t() {
+                Test t = new Test();
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "class Test {",
-            "  public void t() {",
-            "    var t = new Test();",
-            "  }",
-            "}")
+            """
+            class Test {
+              public void t() {
+                var t = new Test();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -72,12 +80,15 @@ public final class VarifierTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "import java.util.ArrayList;",
-            "class Test {",
-            "  public void t() {",
-            "    ArrayList<Integer> xs = new ArrayList<>();",
-            "  }",
-            "}")
+            """
+            import java.util.ArrayList;
+
+            class Test {
+              public void t() {
+                ArrayList<Integer> xs = new ArrayList<>();
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -87,20 +98,26 @@ public final class VarifierTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "import java.util.ArrayList;",
-            "class Test {",
-            "  public void t() {",
-            "    ArrayList<Integer> xs = new ArrayList<Integer>();",
-            "  }",
-            "}")
+            """
+            import java.util.ArrayList;
+
+            class Test {
+              public void t() {
+                ArrayList<Integer> xs = new ArrayList<Integer>();
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import java.util.ArrayList;",
-            "class Test {",
-            "  public void t() {",
-            "    var xs = new ArrayList<Integer>();",
-            "  }",
-            "}")
+            """
+            import java.util.ArrayList;
+
+            class Test {
+              public void t() {
+                var xs = new ArrayList<Integer>();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -109,11 +126,13 @@ public final class VarifierTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  public void t() {",
-            "    var t = new Test();",
-            "  }",
-            "}")
+            """
+            class Test {
+              public void t() {
+                var t = new Test();
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -123,12 +142,15 @@ public final class VarifierTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "abstract class Test {",
-            "  public void t() {",
-            "    Test t = t2();",
-            "  }",
-            "  public abstract Test t2();",
-            "}")
+            """
+            abstract class Test {
+              public void t() {
+                Test t = t2();
+              }
+
+              public abstract Test t2();
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -138,20 +160,26 @@ public final class VarifierTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "import com.google.protobuf.Duration;",
-            "abstract class Test {",
-            "  public void t() {",
-            "    Duration duration = Duration.newBuilder().setSeconds(4).build();",
-            "  }",
-            "}")
+            """
+            import com.google.protobuf.Duration;
+
+            abstract class Test {
+              public void t() {
+                Duration duration = Duration.newBuilder().setSeconds(4).build();
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import com.google.protobuf.Duration;",
-            "abstract class Test {",
-            "  public void t() {",
-            "    var duration = Duration.newBuilder().setSeconds(4).build();",
-            "  }",
-            "}")
+            """
+            import com.google.protobuf.Duration;
+
+            abstract class Test {
+              public void t() {
+                var duration = Duration.newBuilder().setSeconds(4).build();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -160,20 +188,26 @@ public final class VarifierTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "import java.time.Instant;",
-            "class Test {",
-            "  public void t() {",
-            "    Instant now = Instant.ofEpochMilli(1);",
-            "  }",
-            "}")
+            """
+            import java.time.Instant;
+
+            class Test {
+              public void t() {
+                Instant now = Instant.ofEpochMilli(1);
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import java.time.Instant;",
-            "class Test {",
-            "  public void t() {",
-            "    var now = Instant.ofEpochMilli(1);",
-            "  }",
-            "}")
+            """
+            import java.time.Instant;
+
+            class Test {
+              public void t() {
+                var now = Instant.ofEpochMilli(1);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -182,18 +216,22 @@ public final class VarifierTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  public void trim(String string) {",
-            "    String unused = string.trim();",
-            "  }",
-            "}")
+            """
+            class Test {
+              public void trim(String string) {
+                String unused = string.trim();
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "class Test {",
-            "  public void trim(String string) {",
-            "    var unused = string.trim();",
-            "  }",
-            "}")
+            """
+            class Test {
+              public void trim(String string) {
+                var unused = string.trim();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -202,24 +240,28 @@ public final class VarifierTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "import static org.junit.Assert.assertThrows;",
-            "class Test {",
-            "  public void testFoo() {",
-            "    Object nil = null;",
-            "    NullPointerException thrown = ",
-            "        assertThrows(NullPointerException.class, () -> nil.toString());",
-            "  }",
-            "}")
+            """
+import static org.junit.Assert.assertThrows;
+
+class Test {
+  public void testFoo() {
+    Object nil = null;
+    NullPointerException thrown = assertThrows(NullPointerException.class, () -> nil.toString());
+  }
+}
+""")
         .addOutputLines(
             "Test.java",
-            "import static org.junit.Assert.assertThrows;",
-            "class Test {",
-            "  public void testFoo() {",
-            "    Object nil = null;",
-            "    var thrown = ",
-            "        assertThrows(NullPointerException.class, () -> nil.toString());",
-            "  }",
-            "}")
+            """
+            import static org.junit.Assert.assertThrows;
+
+            class Test {
+              public void testFoo() {
+                Object nil = null;
+                var thrown = assertThrows(NullPointerException.class, () -> nil.toString());
+              }
+            }
+            """)
         .doTest();
   }
 }

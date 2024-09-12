@@ -37,14 +37,17 @@ public final class FieldCanBeLocalTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  // BUG: Diagnostic contains:",
-            "  private int a;",
-            "  int foo() {",
-            "    a = 1;",
-            "    return a;",
-            "  }",
-            "}")
+            """
+            class Test {
+              // BUG: Diagnostic contains:
+              private int a;
+
+              int foo() {
+                a = 1;
+                return a;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -53,13 +56,16 @@ public final class FieldCanBeLocalTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  private int unusedA;",
-            "  int foo() {",
-            "    unusedA = 1;",
-            "    return unusedA;",
-            "  }",
-            "}")
+            """
+            class Test {
+              private int unusedA;
+
+              int foo() {
+                unusedA = 1;
+                return unusedA;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -68,23 +74,28 @@ public final class FieldCanBeLocalTest {
     refactoringTestHelper
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  private int a;",
-            "  int foo() {",
-            "    a = 1;",
-            "    a = 2;",
-            "    return a;",
-            "  }",
-            "}")
+            """
+            class Test {
+              private int a;
+
+              int foo() {
+                a = 1;
+                a = 2;
+                return a;
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "class Test {",
-            "  int foo() {",
-            "    int a = 1;",
-            "    a = 2;",
-            "    return a;",
-            "  }",
-            "}")
+            """
+            class Test {
+              int foo() {
+                int a = 1;
+                a = 2;
+                return a;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -93,22 +104,28 @@ public final class FieldCanBeLocalTest {
     helper
         .addSourceLines(
             "Field.java",
-            "import java.lang.annotation.ElementType;",
-            "import java.lang.annotation.Retention;",
-            "import java.lang.annotation.RetentionPolicy;",
-            "import java.lang.annotation.Target;",
-            "@Target(ElementType.FIELD)",
-            "@Retention(RetentionPolicy.RUNTIME)",
-            "@interface Field {}")
+            """
+            import java.lang.annotation.ElementType;
+            import java.lang.annotation.Retention;
+            import java.lang.annotation.RetentionPolicy;
+            import java.lang.annotation.Target;
+
+            @Target(ElementType.FIELD)
+            @Retention(RetentionPolicy.RUNTIME)
+            @interface Field {}
+            """)
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  @Field private int a;",
-            "  int foo() {",
-            "    a = 1;",
-            "    return a;",
-            "  }",
-            "}")
+            """
+            class Test {
+              @Field private int a;
+
+              int foo() {
+                a = 1;
+                return a;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -117,31 +134,39 @@ public final class FieldCanBeLocalTest {
     refactoringTestHelper
         .addInputLines(
             "Field.java",
-            "import java.lang.annotation.ElementType;",
-            "import java.lang.annotation.Retention;",
-            "import java.lang.annotation.RetentionPolicy;",
-            "import java.lang.annotation.Target;",
-            "@Target({ElementType.FIELD, ElementType.LOCAL_VARIABLE})",
-            "@Retention(RetentionPolicy.RUNTIME)",
-            "@interface Field {}")
+            """
+            import java.lang.annotation.ElementType;
+            import java.lang.annotation.Retention;
+            import java.lang.annotation.RetentionPolicy;
+            import java.lang.annotation.Target;
+
+            @Target({ElementType.FIELD, ElementType.LOCAL_VARIABLE})
+            @Retention(RetentionPolicy.RUNTIME)
+            @interface Field {}
+            """)
         .expectUnchanged()
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  @Field private int a;",
-            "  int foo() {",
-            "    a = 1;",
-            "    return a;",
-            "  }",
-            "}")
+            """
+            class Test {
+              @Field private int a;
+
+              int foo() {
+                a = 1;
+                return a;
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "class Test {",
-            "  int foo() {",
-            "    @Field int a = 1;",
-            "    return a;",
-            "  }",
-            "}")
+            """
+            class Test {
+              int foo() {
+                @Field int a = 1;
+                return a;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -150,26 +175,35 @@ public final class FieldCanBeLocalTest {
     refactoringTestHelper
         .addInputLines(
             "Test.java",
-            "import javax.annotation.Nonnull;",
-            "import javax.annotation.Nullable;",
-            "class Test {",
-            "  @Nonnull /* foo */ @Nullable private Integer a;",
-            "  int foo() {",
-            "    a = 1;",
-            "    return a;",
-            "  }",
-            "}")
+            """
+            import javax.annotation.Nonnull;
+            import javax.annotation.Nullable;
+
+            class Test {
+              @Nonnull /* foo */ @Nullable private Integer a;
+
+              int foo() {
+                a = 1;
+                return a;
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import javax.annotation.Nonnull;",
-            "import javax.annotation.Nullable;",
-            "class Test {",
-            "",
-            "  int foo() {",
-            "    @Nonnull /* foo */ @Nullable Integer a = 1;",
-            "    return a;",
-            "  }",
-            "}")
+            """
+            import javax.annotation.Nonnull;
+            import javax.annotation.Nullable;
+
+            class Test {
+
+              int foo() {
+                @Nonnull /* foo */
+                @Nullable
+                Integer a = 1;
+                return a;
+              }
+            }
+            """)
         .doTest(TestMode.TEXT_MATCH);
   }
 
@@ -178,31 +212,39 @@ public final class FieldCanBeLocalTest {
     refactoringTestHelper
         .addInputLines(
             "Field.java",
-            "import java.lang.annotation.ElementType;",
-            "import java.lang.annotation.Retention;",
-            "import java.lang.annotation.RetentionPolicy;",
-            "import java.lang.annotation.Target;",
-            "@Target(ElementType.TYPE_USE)",
-            "@Retention(RetentionPolicy.RUNTIME)",
-            "@interface Field {}")
+            """
+            import java.lang.annotation.ElementType;
+            import java.lang.annotation.Retention;
+            import java.lang.annotation.RetentionPolicy;
+            import java.lang.annotation.Target;
+
+            @Target(ElementType.TYPE_USE)
+            @Retention(RetentionPolicy.RUNTIME)
+            @interface Field {}
+            """)
         .expectUnchanged()
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  @Field private int a;",
-            "  int foo() {",
-            "    a = 1;",
-            "    return a;",
-            "  }",
-            "}")
+            """
+            class Test {
+              @Field private int a;
+
+              int foo() {
+                a = 1;
+                return a;
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "class Test {",
-            "  int foo() {",
-            "    @Field int a = 1;",
-            "    return a;",
-            "  }",
-            "}")
+            """
+            class Test {
+              int foo() {
+                @Field int a = 1;
+                return a;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -211,14 +253,17 @@ public final class FieldCanBeLocalTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  @SuppressWarnings(\"FieldCanBeLocal\")",
-            "  private int a;",
-            "  int foo() {",
-            "    a = 1;",
-            "    return a;",
-            "  }",
-            "}")
+            """
+            class Test {
+              @SuppressWarnings("FieldCanBeLocal")
+              private int a;
+
+              int foo() {
+                a = 1;
+                return a;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -227,14 +272,17 @@ public final class FieldCanBeLocalTest {
     helper
         .addSourceLines(
             "Test.java",
-            "@SuppressWarnings(\"FieldCanBeLocal\")",
-            "class Test {",
-            "  private int a;",
-            "  int foo() {",
-            "    a = 1;",
-            "    return a;",
-            "  }",
-            "}")
+            """
+            @SuppressWarnings("FieldCanBeLocal")
+            class Test {
+              private int a;
+
+              int foo() {
+                a = 1;
+                return a;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -243,17 +291,21 @@ public final class FieldCanBeLocalTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  private int a;",
-            "  int foo(int b) {",
-            "    a = b > 2 ? a : b;",
-            "    return a;",
-            "  }",
-            "  int bar(int b) {",
-            "    a = b;",
-            "    return a;",
-            "  }",
-            "}")
+            """
+            class Test {
+              private int a;
+
+              int foo(int b) {
+                a = b > 2 ? a : b;
+                return a;
+              }
+
+              int bar(int b) {
+                a = b;
+                return a;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -262,13 +314,16 @@ public final class FieldCanBeLocalTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  public int a;",
-            "  int foo() {",
-            "    a = 1;",
-            "    return a;",
-            "  }",
-            "}")
+            """
+            class Test {
+              public int a;
+
+              int foo() {
+                a = 1;
+                return a;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -277,16 +332,19 @@ public final class FieldCanBeLocalTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  public int a;",
-            "  int foo() {",
-            "    if (a < 0) {",
-            "      return 0;",
-            "    }",
-            "    a = 1;",
-            "    return a;",
-            "  }",
-            "}")
+            """
+            class Test {
+              public int a;
+
+              int foo() {
+                if (a < 0) {
+                  return 0;
+                }
+                a = 1;
+                return a;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -295,29 +353,36 @@ public final class FieldCanBeLocalTest {
     refactoringTestHelper
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  private int a;",
-            "  int foo() {",
-            "    a = 1;",
-            "    return a;",
-            "  }",
-            "  int bar() {",
-            "    a = 2;",
-            "    return a;",
-            "  }",
-            "}")
+            """
+            class Test {
+              private int a;
+
+              int foo() {
+                a = 1;
+                return a;
+              }
+
+              int bar() {
+                a = 2;
+                return a;
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "class Test {",
-            "  int foo() {",
-            "    int a = 1;",
-            "    return a;",
-            "  }",
-            "  int bar() {",
-            "    int a = 2;",
-            "    return a;",
-            "  }",
-            "}")
+            """
+            class Test {
+              int foo() {
+                int a = 1;
+                return a;
+              }
+
+              int bar() {
+                int a = 2;
+                return a;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -326,29 +391,36 @@ public final class FieldCanBeLocalTest {
     refactoringTestHelper
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  private int a;",
-            "  int foo() {",
-            "    this.a = 1;",
-            "    return a;",
-            "  }",
-            "  int bar() {",
-            "    this.a = 2;",
-            "    return a;",
-            "  }",
-            "}")
+            """
+            class Test {
+              private int a;
+
+              int foo() {
+                this.a = 1;
+                return a;
+              }
+
+              int bar() {
+                this.a = 2;
+                return a;
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "class Test {",
-            "  int foo() {",
-            "    int a = 1;",
-            "    return a;",
-            "  }",
-            "  int bar() {",
-            "    int a = 2;",
-            "    return a;",
-            "  }",
-            "}")
+            """
+            class Test {
+              int foo() {
+                int a = 1;
+                return a;
+              }
+
+              int bar() {
+                int a = 2;
+                return a;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -357,36 +429,45 @@ public final class FieldCanBeLocalTest {
     refactoringTestHelper
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  private int a;",
-            "  Test(int a) {",
-            "    this.a = a;",
-            "    int b = a + 2;",
-            "  }",
-            "  int foo() {",
-            "    this.a = 1;",
-            "    return a;",
-            "  }",
-            "  int bar() {",
-            "    this.a = 2;",
-            "    return a;",
-            "  }",
-            "}")
+            """
+            class Test {
+              private int a;
+
+              Test(int a) {
+                this.a = a;
+                int b = a + 2;
+              }
+
+              int foo() {
+                this.a = 1;
+                return a;
+              }
+
+              int bar() {
+                this.a = 2;
+                return a;
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "class Test {",
-            "  Test(int a) {",
-            "    int b = a + 2;",
-            "  }",
-            "  int foo() {",
-            "    int a = 1;",
-            "    return a;",
-            "  }",
-            "  int bar() {",
-            "    int a = 2;",
-            "    return a;",
-            "  }",
-            "}")
+            """
+            class Test {
+              Test(int a) {
+                int b = a + 2;
+              }
+
+              int foo() {
+                int a = 1;
+                return a;
+              }
+
+              int bar() {
+                int a = 2;
+                return a;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -395,13 +476,16 @@ public final class FieldCanBeLocalTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  private int a;",
-            "  int foo() {",
-            "    a = a + 1;",
-            "    return a;",
-            "  }",
-            "}")
+            """
+            class Test {
+              private int a;
+
+              int foo() {
+                a = a + 1;
+                return a;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -410,21 +494,27 @@ public final class FieldCanBeLocalTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  class Sub {",
-            "    private int a;",
-            "    int a() {",
-            "      return a;",
-            "    }",
-            "  }",
-            "  private Sub sub;",
-            "  Test(Sub sub) {",
-            "    this.sub = sub;",
-            "  }",
-            "  void foo() {",
-            "    sub.a = 1;",
-            "  }",
-            "}")
+            """
+            class Test {
+              class Sub {
+                private int a;
+
+                int a() {
+                  return a;
+                }
+              }
+
+              private Sub sub;
+
+              Test(Sub sub) {
+                this.sub = sub;
+              }
+
+              void foo() {
+                sub.a = 1;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -433,17 +523,22 @@ public final class FieldCanBeLocalTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import java.util.function.Predicate;",
-            "class Test {",
-            "  private Integer a;",
-            "  Predicate<Integer> predicate = b -> a == b;",
-            "  Test(int a) {",
-            "    this.a = a;",
-            "  }",
-            "  public void set(int a) {",
-            "    this.a = a;",
-            "  }",
-            "}")
+            """
+            import java.util.function.Predicate;
+
+            class Test {
+              private Integer a;
+              Predicate<Integer> predicate = b -> a == b;
+
+              Test(int a) {
+                this.a = a;
+              }
+
+              public void set(int a) {
+                this.a = a;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -452,17 +547,22 @@ public final class FieldCanBeLocalTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import java.util.function.Predicate;",
-            "class Test {",
-            "  private Integer a;",
-            "  Test(int a) {",
-            "    this.a = a;",
-            "  }",
-            "  public Predicate<Integer> set(int a) {",
-            "    this.a = a;",
-            "    return x -> x == this.a;",
-            "  }",
-            "}")
+            """
+            import java.util.function.Predicate;
+
+            class Test {
+              private Integer a;
+
+              Test(int a) {
+                this.a = a;
+              }
+
+              public Predicate<Integer> set(int a) {
+                this.a = a;
+                return x -> x == this.a;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -471,21 +571,24 @@ public final class FieldCanBeLocalTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import java.util.function.Predicate;",
-            "import java.util.stream.Stream;",
-            "import java.util.Collections;",
-            "class Test {",
-            "  private Integer a;",
-            "  Test(int a) {",
-            "    this.a = a;",
-            "  }",
-            "  public Stream<Integer> set(int a) {",
-            "    this.a = a;",
-            "    return Collections.<Integer>emptyList().stream()",
-            "        .filter(x -> x == this.a)",
-            "        .filter(x -> x > 0);",
-            "  }",
-            "}")
+            """
+import java.util.function.Predicate;
+import java.util.stream.Stream;
+import java.util.Collections;
+
+class Test {
+  private Integer a;
+
+  Test(int a) {
+    this.a = a;
+  }
+
+  public Stream<Integer> set(int a) {
+    this.a = a;
+    return Collections.<Integer>emptyList().stream().filter(x -> x == this.a).filter(x -> x > 0);
+  }
+}
+""")
         .doTest();
   }
 
@@ -494,18 +597,22 @@ public final class FieldCanBeLocalTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  static {",
-            "    Test[] tests = new Test[0];",
-            "    for (Test test : tests) {",
-            "      int b = test.a;",
-            "    }",
-            "  }",
-            "  private Integer a;",
-            "  Test(int a) {",
-            "    this.a = a;",
-            "  }",
-            "}")
+            """
+            class Test {
+              static {
+                Test[] tests = new Test[0];
+                for (Test test : tests) {
+                  int b = test.a;
+                }
+              }
+
+              private Integer a;
+
+              Test(int a) {
+                this.a = a;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -514,25 +621,30 @@ public final class FieldCanBeLocalTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Keep;",
-            "import java.lang.annotation.ElementType;",
-            "import java.lang.annotation.Retention;",
-            "import java.lang.annotation.RetentionPolicy;",
-            "import java.lang.annotation.Target;",
-            "import javax.inject.Inject;",
-            "public class Test {",
-            "  @Keep private int a;",
-            "  @ProvidesCustom private int b;",
-            "  public int test(int aa, int bb) {",
-            "    a = aa;",
-            "    b = bb;",
-            "    return a + b;",
-            "  }",
-            "  @Keep",
-            "  @Target(ElementType.FIELD)",
-            "  @Retention(RetentionPolicy.SOURCE)",
-            "  private @interface ProvidesCustom {}",
-            "}")
+            """
+            import com.google.errorprone.annotations.Keep;
+            import java.lang.annotation.ElementType;
+            import java.lang.annotation.Retention;
+            import java.lang.annotation.RetentionPolicy;
+            import java.lang.annotation.Target;
+            import javax.inject.Inject;
+
+            public class Test {
+              @Keep private int a;
+              @ProvidesCustom private int b;
+
+              public int test(int aa, int bb) {
+                a = aa;
+                b = bb;
+                return a + b;
+              }
+
+              @Keep
+              @Target(ElementType.FIELD)
+              @Retention(RetentionPolicy.SOURCE)
+              private @interface ProvidesCustom {}
+            }
+            """)
         .doTest();
   }
 
@@ -541,17 +653,21 @@ public final class FieldCanBeLocalTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  private int x;",
-            "  int f() {",
-            "    x = 42;",
-            "    g();",
-            "    return x;",
-            "  }",
-            "  void g() {",
-            "    x = 46;",
-            "  }",
-            "}")
+            """
+            class Test {
+              private int x;
+
+              int f() {
+                x = 42;
+                g();
+                return x;
+              }
+
+              void g() {
+                x = 46;
+              }
+            }
+            """)
         .doTest();
   }
 }

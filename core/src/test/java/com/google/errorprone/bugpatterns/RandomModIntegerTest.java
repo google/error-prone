@@ -33,14 +33,17 @@ public class RandomModIntegerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.Random;",
-            "class Test {",
-            "  public static void main(String[] args) {",
-            "    Random r = new Random();",
-            "    // BUG: Diagnostic contains:",
-            "    System.err.println(r.nextInt() % 100);",
-            "  }",
-            "}")
+            """
+            import java.util.Random;
+
+            class Test {
+              public static void main(String[] args) {
+                Random r = new Random();
+                // BUG: Diagnostic contains:
+                System.err.println(r.nextInt() % 100);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -49,13 +52,16 @@ public class RandomModIntegerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.Random;",
-            "class Test {",
-            "  public static void main(String[] args) {",
-            "    Random r = new Random();",
-            "    System.err.println(r.nextInt(100));",
-            "  }",
-            "}")
+            """
+            import java.util.Random;
+
+            class Test {
+              public static void main(String[] args) {
+                Random r = new Random();
+                System.err.println(r.nextInt(100));
+              }
+            }
+            """)
         .doTest();
   }
 }

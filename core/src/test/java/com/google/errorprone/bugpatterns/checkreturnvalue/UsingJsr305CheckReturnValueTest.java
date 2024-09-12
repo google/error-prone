@@ -31,24 +31,32 @@ public class UsingJsr305CheckReturnValueTest {
     BugCheckerRefactoringTestHelper.newInstance(UsingJsr305CheckReturnValue.class, getClass())
         .addInputLines(
             "Client.java",
-            "package com.google.frobber;",
-            "import javax.annotation.CheckReturnValue;",
-            "public final class Client {",
-            "  @CheckReturnValue",
-            "  public int getValue() {",
-            "    return 42;",
-            "  }",
-            "}")
+            """
+            package com.google.frobber;
+
+            import javax.annotation.CheckReturnValue;
+
+            public final class Client {
+              @CheckReturnValue
+              public int getValue() {
+                return 42;
+              }
+            }
+            """)
         .addOutputLines(
             "Client.java",
-            "package com.google.frobber;",
-            "import com.google.errorprone.annotations.CheckReturnValue;",
-            "public final class Client {",
-            "  @CheckReturnValue",
-            "  public int getValue() {",
-            "    return 42;",
-            "  }",
-            "}")
+            """
+            package com.google.frobber;
+
+            import com.google.errorprone.annotations.CheckReturnValue;
+
+            public final class Client {
+              @CheckReturnValue
+              public int getValue() {
+                return 42;
+              }
+            }
+            """)
         .doTest();
   }
 

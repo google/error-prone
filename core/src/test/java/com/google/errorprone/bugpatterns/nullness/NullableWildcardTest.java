@@ -33,22 +33,28 @@ public class NullableWildcardTest {
     testHelper
         .addInputLines(
             "T.java",
-            "import java.util.List;",
-            "import org.checkerframework.checker.nullness.qual.NonNull;",
-            "import org.checkerframework.checker.nullness.qual.Nullable;",
-            "class T {",
-            "  List<@Nullable ?> xs;",
-            "  List<@NonNull ?> ys;",
-            "}")
+            """
+            import java.util.List;
+            import org.checkerframework.checker.nullness.qual.NonNull;
+            import org.checkerframework.checker.nullness.qual.Nullable;
+
+            class T {
+              List<@Nullable ?> xs;
+              List<@NonNull ?> ys;
+            }
+            """)
         .addOutputLines(
             "T.java",
-            "import java.util.List;",
-            "import org.checkerframework.checker.nullness.qual.NonNull;",
-            "import org.checkerframework.checker.nullness.qual.Nullable;",
-            "class T {",
-            "  List<? extends @Nullable Object> xs;",
-            "  List<? extends @NonNull Object> ys;",
-            "}")
+            """
+            import java.util.List;
+            import org.checkerframework.checker.nullness.qual.NonNull;
+            import org.checkerframework.checker.nullness.qual.Nullable;
+
+            class T {
+              List<? extends @Nullable Object> xs;
+              List<? extends @NonNull Object> ys;
+            }
+            """)
         .doTest();
   }
 
@@ -57,14 +63,17 @@ public class NullableWildcardTest {
     testHelper
         .addInputLines(
             "T.java",
-            "import java.util.List;",
-            "import org.checkerframework.checker.nullness.qual.NonNull;",
-            "import org.checkerframework.checker.nullness.qual.Nullable;",
-            "class T {",
-            "  List<@Nullable ? extends @Nullable Object> x;",
-            "  List<@Nullable ? super Object> y;",
-            "  List<@Nullable @NonNull ?> z;",
-            "}")
+            """
+            import java.util.List;
+            import org.checkerframework.checker.nullness.qual.NonNull;
+            import org.checkerframework.checker.nullness.qual.Nullable;
+
+            class T {
+              List<@Nullable ? extends @Nullable Object> x;
+              List<@Nullable ? super Object> y;
+              List<@Nullable @NonNull ?> z;
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -74,17 +83,20 @@ public class NullableWildcardTest {
     CompilationTestHelper.newInstance(NullableWildcard.class, getClass())
         .addSourceLines(
             "T.java",
-            "import java.util.List;",
-            "import org.checkerframework.checker.nullness.qual.NonNull;",
-            "import org.checkerframework.checker.nullness.qual.Nullable;",
-            "class T {",
-            "  // BUG: Diagnostic contains:",
-            "  List<@Nullable ? extends @Nullable Object> x;",
-            "  // BUG: Diagnostic contains:",
-            "  List<@Nullable ? super Object> y;",
-            "  // BUG: Diagnostic contains:",
-            "  List<@Nullable @NonNull ?> z;",
-            "}")
+            """
+            import java.util.List;
+            import org.checkerframework.checker.nullness.qual.NonNull;
+            import org.checkerframework.checker.nullness.qual.Nullable;
+
+            class T {
+              // BUG: Diagnostic contains:
+              List<@Nullable ? extends @Nullable Object> x;
+              // BUG: Diagnostic contains:
+              List<@Nullable ? super Object> y;
+              // BUG: Diagnostic contains:
+              List<@Nullable @NonNull ?> z;
+            }
+            """)
         .doTest();
   }
 }

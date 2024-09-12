@@ -30,13 +30,15 @@ public final class VoidUsedTest {
   public void positive() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  void test(Void v) {",
-            "    // BUG: Diagnostic contains: null",
-            "    System.out.println(v);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              void test(Void v) {
+                // BUG: Diagnostic contains: null
+                System.out.println(v);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -44,12 +46,14 @@ public final class VoidUsedTest {
   public void notVoid_noFinding() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  void test(Integer v) {",
-            "    System.out.println(v);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              void test(Integer v) {
+                System.out.println(v);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -57,12 +61,14 @@ public final class VoidUsedTest {
   public void assignedTo_noFinding() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  void test(Void v) {",
-            "    v = null;",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              void test(Void v) {
+                v = null;
+              }
+            }
+            """)
         .doTest();
   }
 }

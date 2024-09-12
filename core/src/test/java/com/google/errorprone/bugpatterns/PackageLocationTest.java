@@ -33,10 +33,13 @@ public class PackageLocationTest {
     compilationHelper
         .addSourceLines(
             "src/main/java/a/b/A.java",
-            "// BUG: Diagnostic contains: Expected package a to be declared in a directory "
-                + "ending with a, instead found b",
-            "package a;",
-            "class A {}")
+            """
+// BUG: Diagnostic contains: Expected package a to be declared in a directory ending with a, instead
+// found b
+package a;
+
+class A {}
+""")
         .doTest();
   }
 
@@ -45,10 +48,13 @@ public class PackageLocationTest {
     compilationHelper
         .addSourceLines(
             "src/main/java/A.java",
-            "// BUG: Diagnostic contains: Expected package a.b.c to be declared in a directory "
-                + "ending with a/b/c, instead found src/main/java",
-            "package a.b.c;",
-            "class A {}")
+            """
+// BUG: Diagnostic contains: Expected package a.b.c to be declared in a directory ending with a/b/c,
+// instead found src/main/java
+package a.b.c;
+
+class A {}
+""")
         .doTest();
   }
 
@@ -57,10 +63,13 @@ public class PackageLocationTest {
     compilationHelper
         .addSourceLines(
             "java/b/c/d/A.java",
-            "// BUG: Diagnostic contains: Expected package a.b.c.d to be declared in a directory "
-                + "ending with a/b/c/d, instead found java/b/c/d",
-            "package a.b.c.d;",
-            "class A {}")
+            """
+// BUG: Diagnostic contains: Expected package a.b.c.d to be declared in a directory ending with
+// a/b/c/d, instead found java/b/c/d
+package a.b.c.d;
+
+class A {}
+""")
         .doTest();
   }
 
@@ -69,10 +78,13 @@ public class PackageLocationTest {
     compilationHelper
         .addSourceLines(
             "panda/b/c/d/A.java",
-            "// BUG: Diagnostic contains: Expected package a.b.c.d to be declared in a directory "
-                + "ending with a/b/c/d, instead found panda/b/c/d",
-            "package a.b.c.d;",
-            "class A {}")
+            """
+// BUG: Diagnostic contains: Expected package a.b.c.d to be declared in a directory ending with
+// a/b/c/d, instead found panda/b/c/d
+package a.b.c.d;
+
+class A {}
+""")
         .doTest();
   }
 
@@ -80,9 +92,12 @@ public class PackageLocationTest {
   public void negative() {
     compilationHelper
         .addSourceLines(
-            "a/A.java", //
-            "package a;",
-            "class A {}")
+            "a/A.java",
+            """
+            package a;
+
+            class A {}
+            """)
         .doTest();
   }
 
@@ -90,9 +105,12 @@ public class PackageLocationTest {
   public void negative2() {
     compilationHelper
         .addSourceLines(
-            "a/b/c/A.java", //
-            "package a.b.c;",
-            "class A {}")
+            "a/b/c/A.java",
+            """
+            package a.b.c;
+
+            class A {}
+            """)
         .doTest();
   }
 
@@ -100,9 +118,12 @@ public class PackageLocationTest {
   public void negativeSuffix() {
     compilationHelper
         .addSourceLines(
-            "src/main/java/a/b/A.java", //
-            "package a.b;",
-            "class A {}")
+            "src/main/java/a/b/A.java",
+            """
+            package a.b;
+
+            class A {}
+            """)
         .doTest();
   }
 
@@ -111,12 +132,17 @@ public class PackageLocationTest {
     compilationHelper
         .addSourceLines(
             "java/com/google/foo/package-info.java",
-            "@com.google.errorprone.annotations.SuppressPackageLocation",
-            "package xyz.abc.foo;")
+            """
+            @com.google.errorprone.annotations.SuppressPackageLocation
+            package xyz.abc.foo;
+            """)
         .addSourceLines(
-            "java/com/google/foo/A.java", //
-            "package xyz.abc.foo;",
-            "class A {}")
+            "java/com/google/foo/A.java",
+            """
+            package xyz.abc.foo;
+
+            class A {}
+            """)
         .doTest();
   }
 }

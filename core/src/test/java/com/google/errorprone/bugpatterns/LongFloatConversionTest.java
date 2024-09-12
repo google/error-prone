@@ -32,15 +32,19 @@ public class LongFloatConversionTest {
   public void positive() {
     testHelper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  void f(Long l) {}",
-            "  void f(float l) {}",
-            "  {",
-            "    // BUG: Diagnostic contains:",
-            "    f(0L);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              void f(Long l) {}
+
+              void f(float l) {}
+
+              {
+                // BUG: Diagnostic contains:
+                f(0L);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -48,13 +52,16 @@ public class LongFloatConversionTest {
   public void negative() {
     testHelper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  void f(float l) {}",
-            "  {",
-            "    f((float) 0L);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              void f(float l) {}
+
+              {
+                f((float) 0L);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -63,19 +70,23 @@ public class LongFloatConversionTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import java.lang.invoke.MethodHandle;",
-            "import java.nio.ByteBuffer;",
-            "class Test {",
-            "  private static final long L = 42;",
-            "  private static final MethodHandle MH = null;",
-            "  long f(ByteBuffer buf) {",
-            "    try {",
-            "      return (long) MH.invoke(buf, L);",
-            "    } catch (Throwable throwable) {",
-            "      return 0;",
-            "    }",
-            "  }",
-            "}")
+            """
+            import java.lang.invoke.MethodHandle;
+            import java.nio.ByteBuffer;
+
+            class Test {
+              private static final long L = 42;
+              private static final MethodHandle MH = null;
+
+              long f(ByteBuffer buf) {
+                try {
+                  return (long) MH.invoke(buf, L);
+                } catch (Throwable throwable) {
+                  return 0;
+                }
+              }
+            }
+            """)
         .doTest();
   }
 }

@@ -32,67 +32,81 @@ public class RobolectricShadowDirectlyOnTest {
     testHelper
         .addInputLines(
             "Shadow.java",
-            "package org.robolectric.shadow.api;",
-            "import org.robolectric.util.ReflectionHelpers.ClassParameter;",
-            "public class Shadow {",
-            "  public static <T> T directlyOn(T shadowedObject, Class<T> clazz) {",
-            "    return null;",
-            "  }",
-            "  public static <T> Runnable directlyOn(",
-            "          T shadowedObject, Class<T> clazz, String baz, ClassParameter<?>... params)"
-                + " {",
-            "    return null;",
-            "  }",
-            "}")
+            """
+            package org.robolectric.shadow.api;
+
+            import org.robolectric.util.ReflectionHelpers.ClassParameter;
+
+            public class Shadow {
+              public static <T> T directlyOn(T shadowedObject, Class<T> clazz) {
+                return null;
+              }
+
+              public static <T> Runnable directlyOn(
+                  T shadowedObject, Class<T> clazz, String baz, ClassParameter<?>... params) {
+                return null;
+              }
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
             "ReflectionHelpers.java",
-            "package org.robolectric.util;",
-            "public class ReflectionHelpers {",
-            "  public static class ClassParameter<V> {",
-            "    public static <V> ClassParameter<V> from(Class<? extends V> clazz, V val) {",
-            "      return null;",
-            "    }",
-            "  }",
-            "}")
+            """
+            package org.robolectric.util;
+
+            public class ReflectionHelpers {
+              public static class ClassParameter<V> {
+                public static <V> ClassParameter<V> from(Class<? extends V> clazz, V val) {
+                  return null;
+                }
+              }
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
             "Foo.java",
-            "import java.util.List;",
-            "class Foo {",
-            "  Runnable baz(Object r, long n, List<?> x, String s) {",
-            "    return null;",
-            "  }",
-            "}")
+            """
+            import java.util.List;
+
+            class Foo {
+              Runnable baz(Object r, long n, List<?> x, String s) {
+                return null;
+              }
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
             "Test.java",
-            "import java.util.List;",
-            "import org.robolectric.shadow.api.Shadow;",
-            "class Test {",
-            "  public <T> Runnable registerNativeAllocation(Foo foo, Object r, long n, List<T> x)"
-                + " {",
-            "    return Shadow.directlyOn(foo, Foo.class).baz(r, n, x, null);",
-            "  }",
-            "}")
+            """
+            import java.util.List;
+            import org.robolectric.shadow.api.Shadow;
+
+            class Test {
+              public <T> Runnable registerNativeAllocation(Foo foo, Object r, long n, List<T> x) {
+                return Shadow.directlyOn(foo, Foo.class).baz(r, n, x, null);
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import java.util.List;",
-            "import org.robolectric.shadow.api.Shadow;",
-            "import org.robolectric.util.ReflectionHelpers.ClassParameter;",
-            "class Test {",
-            "  public <T> Runnable registerNativeAllocation(Foo foo, Object r, long n, List<T> x)"
-                + " {",
-            "  return Shadow.directlyOn(",
-            "          foo,",
-            "          Foo.class,",
-            "          \"baz\",",
-            "          ClassParameter.from(Object.class, r),",
-            "          ClassParameter.from(long.class, n),",
-            "          ClassParameter.from(List.class, x),",
-            "          ClassParameter.from(String.class, null));",
-            "  }",
-            "}")
+            """
+            import java.util.List;
+            import org.robolectric.shadow.api.Shadow;
+            import org.robolectric.util.ReflectionHelpers.ClassParameter;
+
+            class Test {
+              public <T> Runnable registerNativeAllocation(Foo foo, Object r, long n, List<T> x) {
+                return Shadow.directlyOn(
+                    foo,
+                    Foo.class,
+                    "baz",
+                    ClassParameter.from(Object.class, r),
+                    ClassParameter.from(long.class, n),
+                    ClassParameter.from(List.class, x),
+                    ClassParameter.from(String.class, null));
+              }
+            }
+            """)
         .doTest();
   }
 }

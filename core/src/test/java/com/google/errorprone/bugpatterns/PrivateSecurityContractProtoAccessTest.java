@@ -45,15 +45,19 @@ public class PrivateSecurityContractProtoAccessTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "package com.google.common.html.types;",
-            "import com.google.common.html.types.SafeHtmlProto;",
-            "class Test {",
-            "  SafeHtmlProto buildProto() {",
-            "    return SafeHtmlProto.newBuilder()",
-            "        .setPrivateDoNotAccessOrElseSafeHtmlWrappedValue(\"foo\")",
-            "        .build();",
-            "  }",
-            "}")
+            """
+            package com.google.common.html.types;
+
+            import com.google.common.html.types.SafeHtmlProto;
+
+            class Test {
+              SafeHtmlProto buildProto() {
+                return SafeHtmlProto.newBuilder()
+                    .setPrivateDoNotAccessOrElseSafeHtmlWrappedValue("foo")
+                    .build();
+              }
+            }
+            """)
         .doTest();
   }
 }

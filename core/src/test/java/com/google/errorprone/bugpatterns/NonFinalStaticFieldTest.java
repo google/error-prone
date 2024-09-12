@@ -34,15 +34,19 @@ public final class NonFinalStaticFieldTest {
   public void positiveFixable() {
     refactoringTestHelper
         .addInputLines(
-            "Test.java", //
-            "public class Test {",
-            "  private static String FOO = \"\";",
-            "}")
+            "Test.java",
+            """
+            public class Test {
+              private static String FOO = "";
+            }
+            """)
         .addOutputLines(
-            "Test.java", //
-            "public class Test {",
-            "  private static final String FOO = \"\";",
-            "}")
+            "Test.java",
+            """
+            public class Test {
+              private static final String FOO = "";
+            }
+            """)
         .doTest();
   }
 
@@ -50,10 +54,12 @@ public final class NonFinalStaticFieldTest {
   public void positiveButNotFixable_noRefactoring() {
     refactoringTestHelper
         .addInputLines(
-            "Test.java", //
-            "public class Test {",
-            "  public static String FOO = \"\";",
-            "}")
+            "Test.java",
+            """
+            public class Test {
+              public static String FOO = "";
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -62,11 +68,13 @@ public final class NonFinalStaticFieldTest {
   public void positiveNotFixable_finding() {
     refactoringTestHelper
         .addInputLines(
-            "Test.java", //
-            "public class Test {",
-            "  // BUG: Diagnostic contains:",
-            "  public static String FOO = \"\";",
-            "}")
+            "Test.java",
+            """
+            public class Test {
+              // BUG: Diagnostic contains:
+              public static String FOO = "";
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -75,10 +83,12 @@ public final class NonFinalStaticFieldTest {
   public void negative() {
     compilationTestHelper
         .addSourceLines(
-            "Test.java", //
-            "public class Test {",
-            "  private static final String FOO = \"\";",
-            "}")
+            "Test.java",
+            """
+            public class Test {
+              private static final String FOO = "";
+            }
+            """)
         .doTest();
   }
 
@@ -86,14 +96,17 @@ public final class NonFinalStaticFieldTest {
   public void reassigned_noFix() {
     refactoringTestHelper
         .addInputLines(
-            "Test.java", //
-            "public class Test {",
-            "  // BUG: Diagnostic contains:",
-            "  private static String foo = \"\";",
-            "  public void set(String s) {",
-            "    foo = s;",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            public class Test {
+              // BUG: Diagnostic contains:
+              private static String foo = "";
+
+              public void set(String s) {
+                foo = s;
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -102,14 +115,17 @@ public final class NonFinalStaticFieldTest {
   public void reassigned_finding() {
     compilationTestHelper
         .addSourceLines(
-            "Test.java", //
-            "public class Test {",
-            "  // BUG: Diagnostic contains:",
-            "  private static String foo = \"\";",
-            "  public void set(String s) {",
-            "    foo = s;",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            public class Test {
+              // BUG: Diagnostic contains:
+              private static String foo = "";
+
+              public void set(String s) {
+                foo = s;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -117,13 +133,16 @@ public final class NonFinalStaticFieldTest {
   public void incremented_noFix() {
     refactoringTestHelper
         .addInputLines(
-            "Test.java", //
-            "public class Test {",
-            "  private static int foo = 0;",
-            "  public void increment() {",
-            "    foo++;",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            public class Test {
+              private static int foo = 0;
+
+              public void increment() {
+                foo++;
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -132,13 +151,16 @@ public final class NonFinalStaticFieldTest {
   public void incrementedAnotherWay_noFix() {
     refactoringTestHelper
         .addInputLines(
-            "Test.java", //
-            "public class Test {",
-            "  private static int foo = 0;",
-            "  public void increment() {",
-            "    foo += 1;",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            public class Test {
+              private static int foo = 0;
+
+              public void increment() {
+                foo += 1;
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -148,11 +170,16 @@ public final class NonFinalStaticFieldTest {
   public void initialisedExactlyOnceInStaticInitializer_noFix() {
     refactoringTestHelper
         .addInputLines(
-            "Test.java", //
-            "public class Test {",
-            "  private static int foo;",
-            "  { foo = 1; }",
-            "}")
+            "Test.java",
+            """
+            public class Test {
+              private static int foo;
+
+              {
+                foo = 1;
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -161,15 +188,19 @@ public final class NonFinalStaticFieldTest {
   public void neverAssigned_getsDefaultInitializer() {
     refactoringTestHelper
         .addInputLines(
-            "Test.java", //
-            "public class Test {",
-            "  private static int foo;",
-            "}")
+            "Test.java",
+            """
+            public class Test {
+              private static int foo;
+            }
+            """)
         .addOutputLines(
-            "Test.java", //
-            "public class Test {",
-            "  private static final int foo = 0;",
-            "}")
+            "Test.java",
+            """
+            public class Test {
+              private static final int foo = 0;
+            }
+            """)
         .doTest();
   }
 
@@ -177,10 +208,12 @@ public final class NonFinalStaticFieldTest {
   public void negativeInterface() {
     compilationTestHelper
         .addSourceLines(
-            "Test.java", //
-            "public interface Test {",
-            "  String FOO = \"\";",
-            "}")
+            "Test.java",
+            """
+            public interface Test {
+              String FOO = "";
+            }
+            """)
         .doTest();
   }
 
@@ -188,11 +221,14 @@ public final class NonFinalStaticFieldTest {
   public void exemptedAnnotation_noFinding() {
     compilationTestHelper
         .addSourceLines(
-            "Test.java", //
-            "import org.mockito.Mock;",
-            "public class Test {",
-            "  @Mock private static String foo;",
-            "}")
+            "Test.java",
+            """
+            import org.mockito.Mock;
+
+            public class Test {
+              @Mock private static String foo;
+            }
+            """)
         .doTest();
   }
 
@@ -200,15 +236,19 @@ public final class NonFinalStaticFieldTest {
   public void volatileRemoved() {
     refactoringTestHelper
         .addInputLines(
-            "Test.java", //
-            "public class Test {",
-            "  private volatile static String FOO = \"\";",
-            "}")
+            "Test.java",
+            """
+            public class Test {
+              private static volatile String FOO = "";
+            }
+            """)
         .addOutputLines(
-            "Test.java", //
-            "public class Test {",
-            "  private static final String FOO = \"\";",
-            "}")
+            "Test.java",
+            """
+            public class Test {
+              private static final String FOO = "";
+            }
+            """)
         .doTest();
   }
 
@@ -216,15 +256,19 @@ public final class NonFinalStaticFieldTest {
   public void beforeClass() {
     compilationTestHelper
         .addSourceLines(
-            "Test.java", //
-            "import org.junit.BeforeClass;",
-            "public class Test {",
-            "  private static String foo;",
-            "  @BeforeClass",
-            "  public static void setup() {",
-            "    foo = \"\";",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            import org.junit.BeforeClass;
+
+            public class Test {
+              private static String foo;
+
+              @BeforeClass
+              public static void setup() {
+                foo = "";
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -233,29 +277,34 @@ public final class NonFinalStaticFieldTest {
     compilationTestHelper
         .addSourceLines(
             "org/junit/jupiter/api/BeforeAll.java",
-            "package org.junit.jupiter.api;",
-            "",
-            "import java.lang.annotation.Documented;",
-            "import java.lang.annotation.ElementType;",
-            "import java.lang.annotation.Retention;",
-            "import java.lang.annotation.RetentionPolicy;",
-            "import java.lang.annotation.Target;",
-            "",
-            "@Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })",
-            "@Retention(RetentionPolicy.RUNTIME)",
-            "@Documented",
-            "public @interface BeforeAll {",
-            "}")
+            """
+            package org.junit.jupiter.api;
+
+            import java.lang.annotation.Documented;
+            import java.lang.annotation.ElementType;
+            import java.lang.annotation.Retention;
+            import java.lang.annotation.RetentionPolicy;
+            import java.lang.annotation.Target;
+
+            @Target({ElementType.ANNOTATION_TYPE, ElementType.METHOD})
+            @Retention(RetentionPolicy.RUNTIME)
+            @Documented
+            public @interface BeforeAll {}
+            """)
         .addSourceLines(
-            "Test.java", //
-            "import org.junit.jupiter.api.BeforeAll;",
-            "public class Test {",
-            "  private static String foo;",
-            "  @BeforeAll",
-            "  public static void setup() {",
-            "    foo = \"\";",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            import org.junit.jupiter.api.BeforeAll;
+
+            public class Test {
+              private static String foo;
+
+              @BeforeAll
+              public static void setup() {
+                foo = "";
+              }
+            }
+            """)
         .doTest();
   }
 }

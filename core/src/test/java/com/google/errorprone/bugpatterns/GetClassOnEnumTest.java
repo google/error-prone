@@ -33,13 +33,18 @@ public class GetClassOnEnumTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  enum TheEnum { ONE }",
-            "  void f(TheEnum theEnum) {",
-            "    // BUG: Diagnostic contains: System.err.println(theEnum.getDeclaringClass());",
-            "    System.err.println(theEnum.getClass());",
-            "  }",
-            "}")
+            """
+            class Test {
+              enum TheEnum {
+                ONE
+              }
+
+              void f(TheEnum theEnum) {
+                // BUG: Diagnostic contains: System.err.println(theEnum.getDeclaringClass());
+                System.err.println(theEnum.getClass());
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -48,13 +53,18 @@ public class GetClassOnEnumTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  enum TheEnum { ONE }",
-            "  void f(TheEnum theEnum) {",
-            "    System.err.println(theEnum.getDeclaringClass());",
-            "    System.err.println(this.getClass());",
-            "  }",
-            "}")
+            """
+            class Test {
+              enum TheEnum {
+                ONE
+              }
+
+              void f(TheEnum theEnum) {
+                System.err.println(theEnum.getDeclaringClass());
+                System.err.println(this.getClass());
+              }
+            }
+            """)
         .doTest();
   }
 }

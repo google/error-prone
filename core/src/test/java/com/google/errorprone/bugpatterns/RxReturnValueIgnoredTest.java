@@ -31,45 +31,69 @@ public class RxReturnValueIgnoredTest {
       CompilationTestHelper.newInstance(RxReturnValueIgnored.class, getClass())
           // Rx1 stubs
           .addSourceLines(
-              "rx1/Observable.java", //
-              "package rx;", //
-              "public class Observable<T> {}" //
+              "rx1/Observable.java",
+              """
+              package rx;
+
+              public class Observable<T> {}
+              """ //
               )
           .addSourceLines(
-              "rx1/Single.java", //
-              "package rx;", //
-              "public class Single<T> {}" //
+              "rx1/Single.java",
+              """
+              package rx;
+
+              public class Single<T> {}
+              """ //
               )
           .addSourceLines(
-              "rx1/Completable.java", //
-              "package rx;", //
-              "public class Completable<T> {}" //
+              "rx1/Completable.java",
+              """
+              package rx;
+
+              public class Completable<T> {}
+              """ //
               )
           // Rx2 stubs
           .addSourceLines(
-              "rx2/Observable.java", //
-              "package io.reactivex;", //
-              "public class Observable<T> {}" //
+              "rx2/Observable.java",
+              """
+              package io.reactivex;
+
+              public class Observable<T> {}
+              """ //
               )
           .addSourceLines(
-              "rx2/Single.java", //
-              "package io.reactivex;", //
-              "public class Single<T> {}" //
+              "rx2/Single.java",
+              """
+              package io.reactivex;
+
+              public class Single<T> {}
+              """ //
               )
           .addSourceLines(
-              "rx2/Completable.java", //
-              "package io.reactivex;", //
-              "public class Completable<T> {}" //
+              "rx2/Completable.java",
+              """
+              package io.reactivex;
+
+              public class Completable<T> {}
+              """ //
               )
           .addSourceLines(
-              "rx2/Maybe.java", //
-              "package io.reactivex;", //
-              "public class Maybe<T> {}" //
+              "rx2/Maybe.java",
+              """
+              package io.reactivex;
+
+              public class Maybe<T> {}
+              """ //
               )
           .addSourceLines(
-              "rx2/Flowable.java", //
-              "package io.reactivex;", //
-              "public class Flowable<T> {}" //
+              "rx2/Flowable.java",
+              """
+              package io.reactivex;
+
+              public class Flowable<T> {}
+              """ //
               );
 
   @Test
@@ -87,14 +111,20 @@ public class RxReturnValueIgnoredTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import io.reactivex.Observable;",
-            "class Test {",
-            "  Observable getObservable() { return null; }",
-            "  void f() {",
-            "    // BUG: Diagnostic contains: Rx objects must be checked.",
-            "    getObservable();",
-            "  }",
-            "}")
+            """
+            import io.reactivex.Observable;
+
+            class Test {
+              Observable getObservable() {
+                return null;
+              }
+
+              void f() {
+                // BUG: Diagnostic contains: Rx objects must be checked.
+                getObservable();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -103,14 +133,20 @@ public class RxReturnValueIgnoredTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import io.reactivex.Single;",
-            "class Test {",
-            "  Single getSingle() { return null; }",
-            "  void f() {",
-            "    // BUG: Diagnostic contains: Rx objects must be checked.",
-            "    getSingle();",
-            "  }",
-            "}")
+            """
+            import io.reactivex.Single;
+
+            class Test {
+              Single getSingle() {
+                return null;
+              }
+
+              void f() {
+                // BUG: Diagnostic contains: Rx objects must be checked.
+                getSingle();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -119,14 +155,20 @@ public class RxReturnValueIgnoredTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import io.reactivex.Completable;",
-            "class Test {",
-            "  Completable getCompletable() { return null; } ",
-            "  void f() {",
-            "    // BUG: Diagnostic contains: Rx objects must be checked.",
-            "    getCompletable();",
-            "  }",
-            "}")
+            """
+            import io.reactivex.Completable;
+
+            class Test {
+              Completable getCompletable() {
+                return null;
+              }
+
+              void f() {
+                // BUG: Diagnostic contains: Rx objects must be checked.
+                getCompletable();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -135,14 +177,20 @@ public class RxReturnValueIgnoredTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import io.reactivex.Flowable;",
-            "class Test {",
-            "  Flowable getFlowable() { return null; } ",
-            "  void f() {",
-            "    // BUG: Diagnostic contains: Rx objects must be checked.",
-            "    getFlowable();",
-            "  }",
-            "}")
+            """
+            import io.reactivex.Flowable;
+
+            class Test {
+              Flowable getFlowable() {
+                return null;
+              }
+
+              void f() {
+                // BUG: Diagnostic contains: Rx objects must be checked.
+                getFlowable();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -151,14 +199,20 @@ public class RxReturnValueIgnoredTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import io.reactivex.Maybe;",
-            "class Test {",
-            "  Maybe getMaybe() { return null; }",
-            "  void f() {",
-            "    // BUG: Diagnostic contains: Rx objects must be checked.",
-            "    getMaybe();",
-            "  }",
-            "}")
+            """
+            import io.reactivex.Maybe;
+
+            class Test {
+              Maybe getMaybe() {
+                return null;
+              }
+
+              void f() {
+                // BUG: Diagnostic contains: Rx objects must be checked.
+                getMaybe();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -167,14 +221,20 @@ public class RxReturnValueIgnoredTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import rx.Observable;",
-            "class Test {",
-            "  Observable getObservable() { return null; }",
-            "  void f() {",
-            "    // BUG: Diagnostic contains: Rx objects must be checked.",
-            "    getObservable();",
-            "  }",
-            "}")
+            """
+            import rx.Observable;
+
+            class Test {
+              Observable getObservable() {
+                return null;
+              }
+
+              void f() {
+                // BUG: Diagnostic contains: Rx objects must be checked.
+                getObservable();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -183,14 +243,20 @@ public class RxReturnValueIgnoredTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import rx.Single;",
-            "class Test {",
-            "  Single getSingle() { return null; }",
-            "  void f() {",
-            "    // BUG: Diagnostic contains: Rx objects must be checked.",
-            "    getSingle();",
-            "  }",
-            "}")
+            """
+            import rx.Single;
+
+            class Test {
+              Single getSingle() {
+                return null;
+              }
+
+              void f() {
+                // BUG: Diagnostic contains: Rx objects must be checked.
+                getSingle();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -199,14 +265,20 @@ public class RxReturnValueIgnoredTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import rx.Completable;",
-            "class Test {",
-            "  Completable getCompletable() { return null; } ",
-            "  void f() {",
-            "    // BUG: Diagnostic contains: Rx objects must be checked.",
-            "    getCompletable();",
-            "  }",
-            "}")
+            """
+            import rx.Completable;
+
+            class Test {
+              Completable getCompletable() {
+                return null;
+              }
+
+              void f() {
+                // BUG: Diagnostic contains: Rx objects must be checked.
+                getCompletable();
+              }
+            }
+            """)
         .doTest();
   }
 }

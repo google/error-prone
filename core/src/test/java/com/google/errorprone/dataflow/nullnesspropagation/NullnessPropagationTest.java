@@ -166,15 +166,18 @@ public class NullnessPropagationTest {
     compilationHelper
         .addSourceLines(
             "ThisNonNullTest.java",
-            "package com.google.errorprone.dataflow.nullnesspropagation;",
-            "import static com.google.errorprone.dataflow.nullnesspropagation."
-                + "NullnessPropagationTest.triggerNullnessChecker;",
-            "public class ThisNonNullTest {",
-            "  public void instanceMethod() {",
-            "    // BUG: Diagnostic contains: (Non-null)",
-            "    triggerNullnessChecker(this);",
-            "  }",
-            "}")
+            """
+package com.google.errorprone.dataflow.nullnesspropagation;
+
+import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
+
+public class ThisNonNullTest {
+  public void instanceMethod() {
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(this);
+  }
+}
+""")
         .doTest();
   }
 
@@ -183,24 +186,28 @@ public class NullnessPropagationTest {
     compilationHelper
         .addSourceLines(
             "ThisEqualsTest.java",
-            "package com.google.errorprone.dataflow.nullnesspropagation;",
-            "import static com.google.errorprone.dataflow.nullnesspropagation."
-                + "NullnessPropagationTest.triggerNullnessChecker;",
-            "public class ThisEqualsTest {",
-            "  @Override",
-            "  public boolean equals(Object obj) {",
-            "    // BUG: Diagnostic contains: (Nullable)",
-            "    triggerNullnessChecker(obj);",
-            "    return this == obj;",
-            "  }",
-            "  private void testEquals(Object arg) {",
-            "   ThisEqualsTest thisEqualsTest = new ThisEqualsTest();",
-            "   if (thisEqualsTest.equals(arg)) {",
-            "     // BUG: Diagnostic contains: (Non-null)",
-            "     triggerNullnessChecker(arg);",
-            "   }",
-            "  }",
-            "}")
+            """
+package com.google.errorprone.dataflow.nullnesspropagation;
+
+import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
+
+public class ThisEqualsTest {
+  @Override
+  public boolean equals(Object obj) {
+    // BUG: Diagnostic contains: (Nullable)
+    triggerNullnessChecker(obj);
+    return this == obj;
+  }
+
+  private void testEquals(Object arg) {
+    ThisEqualsTest thisEqualsTest = new ThisEqualsTest();
+    if (thisEqualsTest.equals(arg)) {
+      // BUG: Diagnostic contains: (Non-null)
+      triggerNullnessChecker(arg);
+    }
+  }
+}
+""")
         .doTest();
   }
 
@@ -209,22 +216,25 @@ public class NullnessPropagationTest {
     compilationHelper
         .addSourceLines(
             "InstanceofTest.java",
-            "package com.google.errorprone.dataflow.nullnesspropagation;",
-            "import static com.google.errorprone.dataflow.nullnesspropagation."
-                + "NullnessPropagationTest.triggerNullnessChecker;",
-            "public class InstanceofTest {",
-            "  public static void m(Object o) {",
-            "    if (o instanceof InstanceofTest) {",
-            "      // BUG: Diagnostic contains: (Non-null)",
-            "      triggerNullnessChecker(o);",
-            "    } else {",
-            "      // BUG: Diagnostic contains: (Nullable)",
-            "      triggerNullnessChecker(o);",
-            "    }",
-            "    // BUG: Diagnostic contains: (Nullable)",
-            "    triggerNullnessChecker(o);",
-            "  }",
-            "}")
+            """
+package com.google.errorprone.dataflow.nullnesspropagation;
+
+import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
+
+public class InstanceofTest {
+  public static void m(Object o) {
+    if (o instanceof InstanceofTest) {
+      // BUG: Diagnostic contains: (Non-null)
+      triggerNullnessChecker(o);
+    } else {
+      // BUG: Diagnostic contains: (Nullable)
+      triggerNullnessChecker(o);
+    }
+    // BUG: Diagnostic contains: (Nullable)
+    triggerNullnessChecker(o);
+  }
+}
+""")
         .doTest();
   }
 
@@ -233,18 +243,21 @@ public class NullnessPropagationTest {
     compilationHelper
         .addSourceLines(
             "InstanceofTest.java",
-            "package com.google.errorprone.dataflow.nullnesspropagation;",
-            "import static com.google.errorprone.dataflow.nullnesspropagation."
-                + "NullnessPropagationTest.triggerNullnessChecker;",
-            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
-            "public class InstanceofTest {",
-            "  public static void m(TestProtoMessage o) {",
-            "    // BUG: Diagnostic contains: (Nullable)",
-            "    triggerNullnessChecker(o);",
-            "    // BUG: Diagnostic contains: (Non-null)",
-            "    triggerNullnessChecker(o.getMessage());",
-            "  }",
-            "}")
+            """
+package com.google.errorprone.dataflow.nullnesspropagation;
+
+import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
+import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
+
+public class InstanceofTest {
+  public static void m(TestProtoMessage o) {
+    // BUG: Diagnostic contains: (Nullable)
+    triggerNullnessChecker(o);
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(o.getMessage());
+  }
+}
+""")
         .doTest();
   }
 
@@ -253,34 +266,39 @@ public class NullnessPropagationTest {
     compilationHelper
         .addSourceLines(
             "ArrayAccessTest.java",
-            "package com.google.errorprone.dataflow.nullnesspropagation;",
-            "import static com.google.errorprone.dataflow.nullnesspropagation."
-                + "NullnessPropagationTest.triggerNullnessChecker;",
-            "public class ArrayAccessTest {",
-            "  public static void read(Integer[] a) {",
-            "    // BUG: Diagnostic contains: (Nullable)",
-            "    triggerNullnessChecker(a);",
-            "    Integer result = a[0];",
-            "    // BUG: Diagnostic contains: (Non-null)",
-            "    triggerNullnessChecker(a);",
-            "    // BUG: Diagnostic contains: (Nullable)",
-            "    triggerNullnessChecker(result);",
-            "  }",
-            "  public static void read(int[][] matrix) {",
-            "    // BUG: Diagnostic contains: (Nullable)",
-            "    triggerNullnessChecker(matrix);",
-            "    int result = matrix[0][0];",
-            "    // BUG: Diagnostic contains: (Non-null)",
-            "    triggerNullnessChecker(matrix);",
-            "  }",
-            "  public static void write(int[] vector) {",
-            "    // BUG: Diagnostic contains: (Nullable)",
-            "    triggerNullnessChecker(vector);",
-            "    vector[7] = 42;",
-            "    // BUG: Diagnostic contains: (Non-null)",
-            "    triggerNullnessChecker(vector);",
-            "  }",
-            "}")
+            """
+package com.google.errorprone.dataflow.nullnesspropagation;
+
+import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
+
+public class ArrayAccessTest {
+  public static void read(Integer[] a) {
+    // BUG: Diagnostic contains: (Nullable)
+    triggerNullnessChecker(a);
+    Integer result = a[0];
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(a);
+    // BUG: Diagnostic contains: (Nullable)
+    triggerNullnessChecker(result);
+  }
+
+  public static void read(int[][] matrix) {
+    // BUG: Diagnostic contains: (Nullable)
+    triggerNullnessChecker(matrix);
+    int result = matrix[0][0];
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(matrix);
+  }
+
+  public static void write(int[] vector) {
+    // BUG: Diagnostic contains: (Nullable)
+    triggerNullnessChecker(vector);
+    vector[7] = 42;
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(vector);
+  }
+}
+""")
         .doTest();
   }
 
@@ -289,23 +307,27 @@ public class NullnessPropagationTest {
     compilationHelper
         .addSourceLines(
             "FieldAccessTest.java",
-            "package com.google.errorprone.dataflow.nullnesspropagation;",
-            "import static com.google.errorprone.dataflow.nullnesspropagation."
-                + "NullnessPropagationTest.triggerNullnessChecker;",
-            "public class FieldAccessTest {",
-            "  public static void dereference(Coinductive o) {",
-            "    // BUG: Diagnostic contains: (Nullable)",
-            "    triggerNullnessChecker(o);",
-            "    // BUG: Diagnostic contains: (Nullable)",
-            "    triggerNullnessChecker(o.f);",
-            "    o.f = (Coinductive) new Object();",
-            "    // BUG: Diagnostic contains: (Non-null)",
-            "    triggerNullnessChecker(o.f);",
-            "  }",
-            "  abstract class Coinductive {",
-            "    Coinductive f;",
-            "  }",
-            "}")
+            """
+package com.google.errorprone.dataflow.nullnesspropagation;
+
+import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
+
+public class FieldAccessTest {
+  public static void dereference(Coinductive o) {
+    // BUG: Diagnostic contains: (Nullable)
+    triggerNullnessChecker(o);
+    // BUG: Diagnostic contains: (Nullable)
+    triggerNullnessChecker(o.f);
+    o.f = (Coinductive) new Object();
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(o.f);
+  }
+
+  abstract class Coinductive {
+    Coinductive f;
+  }
+}
+""")
         .doTest();
   }
 
@@ -314,31 +336,38 @@ public class NullnessPropagationTest {
     compilationHelper
         .addSourceLines(
             "FieldReceiversTest.java",
-            "package com.google.errorprone.dataflow.nullnesspropagation;",
-            "import static com.google.errorprone.dataflow.nullnesspropagation."
-                + "NullnessPropagationTest.triggerNullnessChecker;",
-            "public class FieldReceiversTest {",
-            "  Object f;",
-            "  public FieldReceiversTest getSelf() { return this; }",
-            "  public void test_different_receivers(FieldReceiversTest other) {",
-            "    // BUG: Diagnostic contains: (Nullable)",
-            "    triggerNullnessChecker(other);",
-            "    // BUG: Diagnostic contains: (Non-null)",
-            "    triggerNullnessChecker(this);",
-            "    other.f = new Object();",
-            "    // BUG: Diagnostic contains: (Non-null)",
-            "    triggerNullnessChecker(other.f);",
-            "    // BUG: Diagnostic contains: (Nullable)",
-            "    triggerNullnessChecker(this.f);",
-            "    // BUG: Diagnostic contains: (Nullable)",
-            "    triggerNullnessChecker(f);",
-            "    this.f = null;",
-            "    // BUG: Diagnostic contains: (Null)",
-            "    triggerNullnessChecker(this.f);",
-            "    // BUG: Diagnostic contains: (Null)",
-            "    triggerNullnessChecker(f);",
-            "  }",
-            "}")
+            """
+package com.google.errorprone.dataflow.nullnesspropagation;
+
+import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
+
+public class FieldReceiversTest {
+  Object f;
+
+  public FieldReceiversTest getSelf() {
+    return this;
+  }
+
+  public void test_different_receivers(FieldReceiversTest other) {
+    // BUG: Diagnostic contains: (Nullable)
+    triggerNullnessChecker(other);
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(this);
+    other.f = new Object();
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(other.f);
+    // BUG: Diagnostic contains: (Nullable)
+    triggerNullnessChecker(this.f);
+    // BUG: Diagnostic contains: (Nullable)
+    triggerNullnessChecker(f);
+    this.f = null;
+    // BUG: Diagnostic contains: (Null)
+    triggerNullnessChecker(this.f);
+    // BUG: Diagnostic contains: (Null)
+    triggerNullnessChecker(f);
+  }
+}
+""")
         .doTest();
   }
 
@@ -347,25 +376,29 @@ public class NullnessPropagationTest {
     compilationHelper
         .addSourceLines(
             "FieldPathSensitivityTest.java",
-            "package com.google.errorprone.dataflow.nullnesspropagation;",
-            "import static com.google.errorprone.dataflow.nullnesspropagation."
-                + "NullnessPropagationTest.triggerNullnessChecker;",
-            "public class FieldPathSensitivityTest {",
-            "  public static void path_sensitivity(Coinductive o) {",
-            "    // BUG: Diagnostic contains: (Nullable)",
-            "    triggerNullnessChecker(o.f);",
-            "    if (o.f == null) {",
-            "      // BUG: Diagnostic contains: (Null)",
-            "      triggerNullnessChecker(o.f);",
-            "    } else {",
-            "      // BUG: Diagnostic contains: (Non-null)",
-            "      triggerNullnessChecker(o.f);",
-            "    }",
-            "  }",
-            "  abstract class Coinductive {",
-            "    Coinductive f;",
-            "  }",
-            "}")
+            """
+package com.google.errorprone.dataflow.nullnesspropagation;
+
+import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
+
+public class FieldPathSensitivityTest {
+  public static void path_sensitivity(Coinductive o) {
+    // BUG: Diagnostic contains: (Nullable)
+    triggerNullnessChecker(o.f);
+    if (o.f == null) {
+      // BUG: Diagnostic contains: (Null)
+      triggerNullnessChecker(o.f);
+    } else {
+      // BUG: Diagnostic contains: (Non-null)
+      triggerNullnessChecker(o.f);
+    }
+  }
+
+  abstract class Coinductive {
+    Coinductive f;
+  }
+}
+""")
         .doTest();
   }
 
@@ -374,29 +407,33 @@ public class NullnessPropagationTest {
     compilationHelper
         .addSourceLines(
             "AccessPathsTest.java",
-            "package com.google.errorprone.dataflow.nullnesspropagation;",
-            "import static com.google.errorprone.dataflow.nullnesspropagation."
-                + "NullnessPropagationTest.triggerNullnessChecker;",
-            "public class AccessPathsTest {",
-            "  public static void access_paths(Coinductive o) {",
-            "    // BUG: Diagnostic contains: (Nullable)",
-            "    triggerNullnessChecker(o.f.f.f.f.f);",
-            "    o.f.f.f.f.f = (Coinductive) new Object();",
-            "    // BUG: Diagnostic contains: (Non-null)",
-            "    triggerNullnessChecker(o.f.f.f.f.f);",
-            "    // BUG: Diagnostic contains: (Non-null)",
-            "    triggerNullnessChecker(o.f.f.f.f);",
-            "    // BUG: Diagnostic contains: (Non-null)",
-            "    triggerNullnessChecker(o.f.f.f);",
-            "    // BUG: Diagnostic contains: (Non-null)",
-            "    triggerNullnessChecker(o.f.f);",
-            "    // BUG: Diagnostic contains: (Non-null)",
-            "    triggerNullnessChecker(o.f);",
-            "  }",
-            "  abstract class Coinductive {",
-            "    Coinductive f;",
-            "  }",
-            "}")
+            """
+package com.google.errorprone.dataflow.nullnesspropagation;
+
+import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
+
+public class AccessPathsTest {
+  public static void access_paths(Coinductive o) {
+    // BUG: Diagnostic contains: (Nullable)
+    triggerNullnessChecker(o.f.f.f.f.f);
+    o.f.f.f.f.f = (Coinductive) new Object();
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(o.f.f.f.f.f);
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(o.f.f.f.f);
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(o.f.f.f);
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(o.f.f);
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(o.f);
+  }
+
+  abstract class Coinductive {
+    Coinductive f;
+  }
+}
+""")
         .doTest();
   }
 
@@ -405,23 +442,28 @@ public class NullnessPropagationTest {
     compilationHelper
         .addSourceLines(
             "UntrackableFieldsTest.java",
-            "package com.google.errorprone.dataflow.nullnesspropagation;",
-            "import static com.google.errorprone.dataflow.nullnesspropagation."
-                + "NullnessPropagationTest.triggerNullnessChecker;",
-            "public class UntrackableFieldsTest {",
-            "  public static void untrackable_fields(CoinductiveWithMethod o) {",
-            "    o.f.f = (CoinductiveWithMethod) new Object();",
-            "    // BUG: Diagnostic contains: (Non-null)",
-            "    triggerNullnessChecker(o.f.f);",
-            "    o.foo().f = (CoinductiveWithMethod) new Object();",
-            "    // BUG: Diagnostic contains: (Nullable)",
-            "    triggerNullnessChecker(o.foo().f);",
-            "  }",
-            "  abstract class CoinductiveWithMethod {",
-            "    CoinductiveWithMethod f;",
-            "    abstract CoinductiveWithMethod foo();",
-            "  }",
-            "}")
+            """
+package com.google.errorprone.dataflow.nullnesspropagation;
+
+import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
+
+public class UntrackableFieldsTest {
+  public static void untrackable_fields(CoinductiveWithMethod o) {
+    o.f.f = (CoinductiveWithMethod) new Object();
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(o.f.f);
+    o.foo().f = (CoinductiveWithMethod) new Object();
+    // BUG: Diagnostic contains: (Nullable)
+    triggerNullnessChecker(o.foo().f);
+  }
+
+  abstract class CoinductiveWithMethod {
+    CoinductiveWithMethod f;
+
+    abstract CoinductiveWithMethod foo();
+  }
+}
+""")
         .doTest();
   }
 
@@ -430,23 +472,26 @@ public class NullnessPropagationTest {
     compilationHelper
         .addSourceLines(
             "AnnotatedAtGenericTypeUseTest.java",
-            "package com.google.errorprone.dataflow.nullnesspropagation;",
-            "import static com.google.errorprone.dataflow.nullnesspropagation."
-                + "NullnessPropagationTest.triggerNullnessChecker;",
-            "import org.checkerframework.checker.nullness.qual.Nullable;",
-            "import org.checkerframework.checker.nullness.qual.NonNull;",
-            "public class AnnotatedAtGenericTypeUseTest {",
-            "  void test(MyInnerClass<@Nullable Object> nullable,"
-                + "MyInnerClass<@NonNull Object> nonnull) {",
-            "    // BUG: Diagnostic contains: (Nullable)",
-            "    triggerNullnessChecker(nullable.get());",
-            "    // BUG: Diagnostic contains: (Non-null)",
-            "    triggerNullnessChecker(nonnull.get());",
-            "  }",
-            "  interface MyInnerClass<T> {",
-            "    T get();",
-            "  }",
-            "}")
+            """
+package com.google.errorprone.dataflow.nullnesspropagation;
+
+import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.qual.NonNull;
+
+public class AnnotatedAtGenericTypeUseTest {
+  void test(MyInnerClass<@Nullable Object> nullable, MyInnerClass<@NonNull Object> nonnull) {
+    // BUG: Diagnostic contains: (Nullable)
+    triggerNullnessChecker(nullable.get());
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(nonnull.get());
+  }
+
+  interface MyInnerClass<T> {
+    T get();
+  }
+}
+""")
         .doTest();
   }
 
@@ -497,26 +542,32 @@ public class NullnessPropagationTest {
     compilationHelper
         .addSourceLines(
             "BoundedAtGenericTypeUseTest.java",
-            "package com.google.errorprone.dataflow.nullnesspropagation;",
-            "import static com.google.errorprone.dataflow.nullnesspropagation."
-                + "NullnessPropagationTest.triggerNullnessChecker;",
-            "import org.checkerframework.checker.nullness.qual.Nullable;",
-            "import org.checkerframework.checker.nullness.qual.NonNull;",
-            "public class BoundedAtGenericTypeUseTest {",
-            "  void test(MyInnerClass<? extends @Nullable Object> nullable,"
-                + "MyInnerClass<? extends @NonNull Object> nonnull) {",
-            "    // BUG: Diagnostic contains: (Nullable)",
-            "    triggerNullnessChecker(nullable.get());",
-            "    // BUG: Diagnostic contains: (Non-null)",
-            "    triggerNullnessChecker(nullable.getNonNull());",
-            "    // BUG: Diagnostic contains: (Non-null)",
-            "    triggerNullnessChecker(nonnull.get());",
-            "  }",
-            "  interface MyInnerClass<T> {",
-            "    T get();",
-            "    @NonNull T getNonNull();",
-            "  }",
-            "}")
+            """
+package com.google.errorprone.dataflow.nullnesspropagation;
+
+import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.qual.NonNull;
+
+public class BoundedAtGenericTypeUseTest {
+  void test(
+      MyInnerClass<? extends @Nullable Object> nullable,
+      MyInnerClass<? extends @NonNull Object> nonnull) {
+    // BUG: Diagnostic contains: (Nullable)
+    triggerNullnessChecker(nullable.get());
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(nullable.getNonNull());
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(nonnull.get());
+  }
+
+  interface MyInnerClass<T> {
+    T get();
+
+    @NonNull T getNonNull();
+  }
+}
+""")
         .doTest();
   }
 
@@ -525,26 +576,30 @@ public class NullnessPropagationTest {
     compilationHelper
         .addSourceLines(
             "BoundedAtGenericTypeDefTest.java",
-            "package com.google.errorprone.dataflow.nullnesspropagation;",
-            "import static com.google.errorprone.dataflow.nullnesspropagation."
-                + "NullnessPropagationTest.triggerNullnessChecker;",
-            "import org.checkerframework.checker.nullness.qual.Nullable;",
-            "import org.checkerframework.checker.nullness.qual.NonNull;",
-            "public class BoundedAtGenericTypeDefTest {",
-            "  void test(NullableElementCollection<?> nullable, "
-                + "NonNullElementCollection<?> nonnull) {",
-            "    // BUG: Diagnostic contains: (Nullable)",
-            "    triggerNullnessChecker(nullable.get());",
-            "    // BUG: Diagnostic contains: (Non-null)",
-            "    triggerNullnessChecker(nonnull.get());",
-            "  }",
-            "  interface NullableElementCollection<T extends @Nullable Object> {",
-            "    T get();",
-            "  }",
-            "  interface NonNullElementCollection<T extends @NonNull Object> {",
-            "    T get();",
-            "  }",
-            "}")
+            """
+package com.google.errorprone.dataflow.nullnesspropagation;
+
+import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.qual.NonNull;
+
+public class BoundedAtGenericTypeDefTest {
+  void test(NullableElementCollection<?> nullable, NonNullElementCollection<?> nonnull) {
+    // BUG: Diagnostic contains: (Nullable)
+    triggerNullnessChecker(nullable.get());
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(nonnull.get());
+  }
+
+  interface NullableElementCollection<T extends @Nullable Object> {
+    T get();
+  }
+
+  interface NonNullElementCollection<T extends @NonNull Object> {
+    T get();
+  }
+}
+""")
         .doTest();
   }
 
@@ -553,19 +608,25 @@ public class NullnessPropagationTest {
     compilationHelper
         .addSourceLines(
             "AnnotatedMethodTypeParamsTest.java",
-            "package com.google.errorprone.dataflow.nullnesspropagation;",
-            "import static com.google.errorprone.dataflow.nullnesspropagation."
-                + "NullnessPropagationTest.triggerNullnessChecker;",
-            "import org.checkerframework.checker.nullness.qual.Nullable;",
-            "import org.checkerframework.checker.nullness.qual.NonNull;",
-            "public class AnnotatedMethodTypeParamsTest {",
-            "  public void test() {",
-            "    Object o = new Object();",
-            "    // BUG: Diagnostic contains: (Non-null)",
-            "    triggerNullnessChecker(AnnotatedMethodTypeParamsTest.<@NonNull Object>id(o));",
-            "  }",
-            "  static <T> T id(T t) { return t; }",
-            "}")
+            """
+package com.google.errorprone.dataflow.nullnesspropagation;
+
+import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.qual.NonNull;
+
+public class AnnotatedMethodTypeParamsTest {
+  public void test() {
+    Object o = new Object();
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(AnnotatedMethodTypeParamsTest.<@NonNull Object>id(o));
+  }
+
+  static <T> T id(T t) {
+    return t;
+  }
+}
+""")
         .doTest();
   }
 
@@ -611,17 +672,21 @@ public class NullnessPropagationTest {
     compilationHelper
         .addSourceLines(
             "LambdaBodyTest.java",
-            "package com.google.errorprone.dataflow.nullnesspropagation;",
-            "import static com.google.errorprone.dataflow.nullnesspropagation."
-                + "NullnessPropagationTest.triggerNullnessChecker;",
-            "public class LambdaBodyTest {",
-            "  public void startNothing() {",
-            "    new Thread(()",
-            "            // BUG: Diagnostic contains: (Null)",
-            "            -> triggerNullnessChecker(null))",
-            "        .start();",
-            "  }",
-            "}")
+            """
+package com.google.errorprone.dataflow.nullnesspropagation;
+
+import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
+
+public class LambdaBodyTest {
+  public void startNothing() {
+    new Thread(
+            ()
+            // BUG: Diagnostic contains: (Null)
+            -> triggerNullnessChecker(null))
+        .start();
+  }
+}
+""")
         .doTest();
   }
 
@@ -665,44 +730,51 @@ public class NullnessPropagationTest {
     compilationHelper
         .addSourceLines(
             "AnotherEnum.java",
-            "package com.google.errorprone.dataflow.nullnesspropagation;",
-            "public enum AnotherEnum {",
-            "  INSTANCE;",
-            "  public static final String COMPILE_TIME_CONSTANT = \"not null\";",
-            "  public static final AnotherEnum NOT_COMPILE_TIME_CONSTANT = INSTANCE;",
-            "  public static final String CIRCULAR = ConstantsFromOtherCompilationUnits.CIRCULAR;",
-            "}")
+            """
+            package com.google.errorprone.dataflow.nullnesspropagation;
+
+            public enum AnotherEnum {
+              INSTANCE;
+              public static final String COMPILE_TIME_CONSTANT = "not null";
+              public static final AnotherEnum NOT_COMPILE_TIME_CONSTANT = INSTANCE;
+              public static final String CIRCULAR = ConstantsFromOtherCompilationUnits.CIRCULAR;
+            }
+            """)
         .addSourceLines(
             "ConstantsFromOtherCompilationUnits.java",
-            "package com.google.errorprone.dataflow.nullnesspropagation;",
-            "import static com.google.errorprone.dataflow.nullnesspropagation."
-                + "NullnessPropagationTest.triggerNullnessChecker;",
-            "public class ConstantsFromOtherCompilationUnits {",
-            "  public static final String CIRCULAR = AnotherEnum.CIRCULAR;",
-            "  public void referenceInsideCompilation() {",
-            "    // BUG: Diagnostic contains: (Non-null)",
-            "    triggerNullnessChecker(AnotherEnum.INSTANCE);",
-            "    // BUG: Diagnostic contains: (Non-null)",
-            "    triggerNullnessChecker(AnotherEnum.COMPILE_TIME_CONSTANT);",
-            "    // BUG: Diagnostic contains: (Nullable)",
-            "    triggerNullnessChecker(AnotherEnum.NOT_COMPILE_TIME_CONSTANT);",
-            "    // BUG: Diagnostic contains: (Nullable)",
-            "    triggerNullnessChecker(CIRCULAR);",
-            "    // BUG: Diagnostic contains: (Nullable)",
-            "    triggerNullnessChecker(AnotherEnum.CIRCULAR);",
-            "  }",
-            "",
-            "  public void referenceOutsideCompilation() {",
-            "    // BUG: Diagnostic contains: (Non-null)",
-            "    triggerNullnessChecker(NullnessPropagationTest.COMPILE_TIME_CONSTANT);",
-            "    // BUG: Diagnostic contains: (Nullable)",
-            "    triggerNullnessChecker(NullnessPropagationTest.NOT_COMPILE_TIME_CONSTANT);",
-            "    // BUG: Diagnostic contains: (Nullable)",
-            "    triggerNullnessChecker(System.out);",
-            "    // BUG: Diagnostic contains: (Non-null)",
-            "    triggerNullnessChecker(java.math.RoundingMode.UNNECESSARY);",
-            "  }",
-            "}")
+            """
+package com.google.errorprone.dataflow.nullnesspropagation;
+
+import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
+
+public class ConstantsFromOtherCompilationUnits {
+  public static final String CIRCULAR = AnotherEnum.CIRCULAR;
+
+  public void referenceInsideCompilation() {
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(AnotherEnum.INSTANCE);
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(AnotherEnum.COMPILE_TIME_CONSTANT);
+    // BUG: Diagnostic contains: (Nullable)
+    triggerNullnessChecker(AnotherEnum.NOT_COMPILE_TIME_CONSTANT);
+    // BUG: Diagnostic contains: (Nullable)
+    triggerNullnessChecker(CIRCULAR);
+    // BUG: Diagnostic contains: (Nullable)
+    triggerNullnessChecker(AnotherEnum.CIRCULAR);
+  }
+
+  public void referenceOutsideCompilation() {
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(NullnessPropagationTest.COMPILE_TIME_CONSTANT);
+    // BUG: Diagnostic contains: (Nullable)
+    triggerNullnessChecker(NullnessPropagationTest.NOT_COMPILE_TIME_CONSTANT);
+    // BUG: Diagnostic contains: (Nullable)
+    triggerNullnessChecker(System.out);
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(java.math.RoundingMode.UNNECESSARY);
+  }
+}
+""")
         .doTest();
   }
 
@@ -713,17 +785,20 @@ public class NullnessPropagationTest {
     compilationHelper
         .addSourceLines(
             "PartialCorrectnessTest.java",
-            "package com.google.errorprone.dataflow.nullnesspropagation;",
-            "import static com.google.errorprone.dataflow.nullnesspropagation."
-                + "NullnessPropagationTest.triggerNullnessChecker;",
-            "public class PartialCorrectnessTest {",
-            "  public void test(java.util.function.Supplier<Object> supplier) {",
-            "    Object result;",
-            "    while((result = supplier.get()) == null) { }",
-            "    // BUG: Diagnostic contains: (Non-null)",
-            "    triggerNullnessChecker(result);",
-            "  }",
-            "}")
+            """
+package com.google.errorprone.dataflow.nullnesspropagation;
+
+import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
+
+public class PartialCorrectnessTest {
+  public void test(java.util.function.Supplier<Object> supplier) {
+    Object result;
+    while ((result = supplier.get()) == null) {}
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(result);
+  }
+}
+""")
         .doTest();
   }
 
@@ -732,19 +807,22 @@ public class NullnessPropagationTest {
     compilationHelper
         .addSourceLines(
             "CastsTest.java",
-            "package com.google.errorprone.dataflow.nullnesspropagation;",
-            "import static com.google.errorprone.dataflow.nullnesspropagation."
-                + "NullnessPropagationTest.triggerNullnessChecker;",
-            "import org.checkerframework.checker.nullness.qual.Nullable;",
-            "import org.checkerframework.checker.nullness.qual.NonNull;",
-            "public class CastsTest {",
-            "  public void test(@Nullable Object o) {",
-            "    // BUG: Diagnostic contains: (Nullable)",
-            "    triggerNullnessChecker(o);",
-            "    // BUG: Diagnostic contains: (Non-null)",
-            "    triggerNullnessChecker((@NonNull Object) o);",
-            "  }",
-            "}")
+            """
+package com.google.errorprone.dataflow.nullnesspropagation;
+
+import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.qual.NonNull;
+
+public class CastsTest {
+  public void test(@Nullable Object o) {
+    // BUG: Diagnostic contains: (Nullable)
+    triggerNullnessChecker(o);
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker((@NonNull Object) o);
+  }
+}
+""")
         .doTest();
   }
 
@@ -753,31 +831,38 @@ public class NullnessPropagationTest {
     compilationHelper
         .addSourceLines(
             "AutoValueTest.java",
-            "package com.google.errorprone.dataflow.nullnesspropagation;",
-            "import static com.google.errorprone.dataflow.nullnesspropagation."
-                + "NullnessPropagationTest.triggerNullnessChecker;",
-            "import com.google.auto.value.AutoValue;",
-            "import org.checkerframework.checker.nullness.qual.Nullable;",
-            "public class AutoValueTest {",
-            "  public void test(Value v) {",
-            "    // BUG: Diagnostic contains: (Nullable)",
-            "    triggerNullnessChecker(v.accessor().field);",
-            "    if (v.accessor().field != null) {",
-            "      // BUG: Diagnostic contains: (Non-null)",
-            "      triggerNullnessChecker(v.accessor().field);",
-            "    }",
-            "    // BUG: Diagnostic contains: (Nullable)",
-            "    triggerNullnessChecker(v.nullableAccessor());",
-            "    // BUG: Diagnostic contains: (Non-null)",
-            "    triggerNullnessChecker(v.accessor());",
-            "  }",
-            "  @AutoValue",
-            "  static abstract class Value {",
-            "    Value field;",
-            "    abstract Value accessor();",
-            "    @Nullable abstract Value nullableAccessor();",
-            "  }",
-            "}")
+            """
+package com.google.errorprone.dataflow.nullnesspropagation;
+
+import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
+import com.google.auto.value.AutoValue;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
+public class AutoValueTest {
+  public void test(Value v) {
+    // BUG: Diagnostic contains: (Nullable)
+    triggerNullnessChecker(v.accessor().field);
+    if (v.accessor().field != null) {
+      // BUG: Diagnostic contains: (Non-null)
+      triggerNullnessChecker(v.accessor().field);
+    }
+    // BUG: Diagnostic contains: (Nullable)
+    triggerNullnessChecker(v.nullableAccessor());
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(v.accessor());
+  }
+
+  @AutoValue
+  abstract static class Value {
+    Value field;
+
+    abstract Value accessor();
+
+    @Nullable
+    abstract Value nullableAccessor();
+  }
+}
+""")
         .doTest();
   }
 
@@ -786,25 +871,32 @@ public class NullnessPropagationTest {
     compilationHelper
         .addSourceLines(
             "GenericTypeInferenceTest.java",
-            "package com.google.errorprone.dataflow.nullnesspropagation;",
-            "import static com.google.errorprone.dataflow.nullnesspropagation."
-                + "NullnessPropagationTest.triggerNullnessChecker;",
-            "import org.checkerframework.checker.nullness.qual.Nullable;",
-            "import org.checkerframework.checker.nullness.qual.NonNull;",
-            "public class GenericTypeInferenceTest {",
-            "  public void test(@NonNull Object o) {",
-            "    // BUG: Diagnostic contains: (Non-null)",
-            "    triggerNullnessChecker(o);",
-            "    // BUG: Diagnostic contains: (Non-null)",
-            "    triggerNullnessChecker(id(o));",
-            "    // BUG: Diagnostic contains: (Nullable)",
-            "    triggerNullnessChecker(idButMaybeNullify(o));",
-            "  }",
-            "  <T> T id(T t) {return t;}",
-            "  <T> @Nullable T idButMaybeNullify(T t) {",
-            "    return java.lang.Math.random() > 0.5 ? t : null;",
-            "  }",
-            "}")
+            """
+package com.google.errorprone.dataflow.nullnesspropagation;
+
+import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.qual.NonNull;
+
+public class GenericTypeInferenceTest {
+  public void test(@NonNull Object o) {
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(o);
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(id(o));
+    // BUG: Diagnostic contains: (Nullable)
+    triggerNullnessChecker(idButMaybeNullify(o));
+  }
+
+  <T> T id(T t) {
+    return t;
+  }
+
+  <T> @Nullable T idButMaybeNullify(T t) {
+    return java.lang.Math.random() > 0.5 ? t : null;
+  }
+}
+""")
         .doTest();
   }
 
@@ -813,21 +905,24 @@ public class NullnessPropagationTest {
     compilationHelper
         .addSourceLines(
             "AnnotatedFormalTest.java",
-            "package com.google.errorprone.dataflow.nullnesspropagation;",
-            "import static com.google.errorprone.dataflow.nullnesspropagation."
-                + "NullnessPropagationTest.triggerNullnessChecker;",
-            "import org.checkerframework.checker.nullness.qual.NonNull;",
-            "import org.checkerframework.checker.nullness.qual.Nullable;",
-            "public class AnnotatedFormalTest {",
-            "  public void test(@NonNull Object nonnull, @Nullable Object nullable, Object o) {",
-            "    // BUG: Diagnostic contains: (Non-null)",
-            "    triggerNullnessChecker(nonnull);",
-            "    // BUG: Diagnostic contains: (Nullable)",
-            "    triggerNullnessChecker(nullable);",
-            "    // BUG: Diagnostic contains: (Nullable)",
-            "    triggerNullnessChecker(o);",
-            "  }",
-            "}")
+            """
+package com.google.errorprone.dataflow.nullnesspropagation;
+
+import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
+public class AnnotatedFormalTest {
+  public void test(@NonNull Object nonnull, @Nullable Object nullable, Object o) {
+    // BUG: Diagnostic contains: (Non-null)
+    triggerNullnessChecker(nonnull);
+    // BUG: Diagnostic contains: (Nullable)
+    triggerNullnessChecker(nullable);
+    // BUG: Diagnostic contains: (Nullable)
+    triggerNullnessChecker(o);
+  }
+}
+""")
         .doTest();
   }
 

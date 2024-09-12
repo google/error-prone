@@ -31,11 +31,14 @@ public final class JodaTimeConverterManagerTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import org.joda.time.convert.ConverterManager;",
-            "class Test {",
-            "  // BUG: Diagnostic contains: JodaTimeConverterManager",
-            "  ConverterManager cm = ConverterManager.getInstance();",
-            "}")
+            """
+            import org.joda.time.convert.ConverterManager;
+
+            class Test {
+              // BUG: Diagnostic contains: JodaTimeConverterManager
+              ConverterManager cm = ConverterManager.getInstance();
+            }
+            """)
         .doTest();
   }
 
@@ -44,11 +47,15 @@ public final class JodaTimeConverterManagerTest {
     helper
         .addSourceLines(
             "Test.java",
-            "package org.joda.time;",
-            "import org.joda.time.convert.ConverterManager;",
-            "class Test {",
-            "  ConverterManager cm = ConverterManager.getInstance();",
-            "}")
+            """
+            package org.joda.time;
+
+            import org.joda.time.convert.ConverterManager;
+
+            class Test {
+              ConverterManager cm = ConverterManager.getInstance();
+            }
+            """)
         .doTest();
   }
 }

@@ -35,20 +35,25 @@ public final class IgnoredPureGetterTest {
   public void autoValue() {
     helper
         .addSourceLines(
-            "A.java", //
-            "import com.google.auto.value.AutoValue;",
-            "@AutoValue",
-            "abstract class A {",
-            "  abstract int foo();",
-            "}")
+            "A.java",
+            """
+            import com.google.auto.value.AutoValue;
+
+            @AutoValue
+            abstract class A {
+              abstract int foo();
+            }
+            """)
         .addSourceLines(
-            "B.java", //
-            "class B {",
-            "  void test(A a) {",
-            "    // BUG: Diagnostic contains:",
-            "    a.foo();",
-            "  }",
-            "}")
+            "B.java",
+            """
+            class B {
+              void test(A a) {
+                // BUG: Diagnostic contains:
+                a.foo();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -57,16 +62,21 @@ public final class IgnoredPureGetterTest {
     helper
         .addSourceLines(
             "Animal.java",
-            "import com.google.auto.value.AutoValue;",
-            "@AutoValue",
-            "abstract class Animal {",
-            "  abstract String name();",
-            "  @AutoValue.Builder",
-            "  abstract static class Builder {",
-            "    abstract Builder setName(String name);",
-            "    abstract Animal build();",
-            "  }",
-            "}")
+            """
+            import com.google.auto.value.AutoValue;
+
+            @AutoValue
+            abstract class Animal {
+              abstract String name();
+
+              @AutoValue.Builder
+              abstract static class Builder {
+                abstract Builder setName(String name);
+
+                abstract Animal build();
+              }
+            }
+            """)
         .addSourceLines(
             "B.java",
             "class B {",
@@ -85,17 +95,31 @@ public final class IgnoredPureGetterTest {
     helper
         .addSourceLines(
             "Animal.java",
-            "import com.google.auto.value.AutoValue;",
-            "@AutoValue",
-            "public abstract class Animal {",
-            "  public abstract String name();",
-            "  public abstract int legs();",
-            "  public interface NameStep { LegStep setName(String name); }",
-            "  public interface LegStep { Build setLegs(int legs); }",
-            "  public interface Build { Animal build(); }",
-            "  @AutoValue.Builder",
-            "  abstract static class Builder implements NameStep, LegStep, Build {}",
-            "}")
+            """
+            import com.google.auto.value.AutoValue;
+
+            @AutoValue
+            public abstract class Animal {
+              public abstract String name();
+
+              public abstract int legs();
+
+              public interface NameStep {
+                LegStep setName(String name);
+              }
+
+              public interface LegStep {
+                Build setLegs(int legs);
+              }
+
+              public interface Build {
+                Animal build();
+              }
+
+              @AutoValue.Builder
+              abstract static class Builder implements NameStep, LegStep, Build {}
+            }
+            """)
         .addSourceLines(
             "B.java",
             "class B {",
@@ -114,30 +138,38 @@ public final class IgnoredPureGetterTest {
   public void autoValue_secondFix() {
     refactoringHelper
         .addInputLines(
-            "A.java", //
-            "import com.google.auto.value.AutoValue;",
-            "@AutoValue",
-            "abstract class A {",
-            "  abstract int foo();",
-            "  static A of(int foo) {",
-            "    return null;",
-            "  }",
-            "}")
+            "A.java",
+            """
+            import com.google.auto.value.AutoValue;
+
+            @AutoValue
+            abstract class A {
+              abstract int foo();
+
+              static A of(int foo) {
+                return null;
+              }
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
-            "B.java", //
-            "class B {",
-            "  void test() {",
-            "    A.of(1).foo();",
-            "  }",
-            "}")
+            "B.java",
+            """
+            class B {
+              void test() {
+                A.of(1).foo();
+              }
+            }
+            """)
         .addOutputLines(
-            "B.java", //
-            "class B {",
-            "  void test() {",
-            "    A.of(1);",
-            "  }",
-            "}")
+            "B.java",
+            """
+            class B {
+              void test() {
+                A.of(1);
+              }
+            }
+            """)
         .setFixChooser(FixChoosers.SECOND)
         .doTest();
   }
@@ -147,25 +179,34 @@ public final class IgnoredPureGetterTest {
     helper
         .addSourceLines(
             "Named.java",
-            "import com.google.auto.value.AutoBuilder;",
-            "import java.util.Optional;",
-            "public class Named {",
-            "  Named(String name, String nickname) {}",
-            "  @AutoBuilder",
-            "  public abstract static class Builder {",
-            "    public abstract Builder setName(String x);",
-            "    public abstract Builder setNickname(String x);",
-            "    abstract String getName();",
-            "    abstract Optional<String> getNickname();",
-            "    abstract Named autoBuild();",
-            "    public Named build() {",
-            "      if (!getNickname().isPresent()) {",
-            "        setNickname(getName());",
-            "      }",
-            "      return autoBuild();",
-            "    }",
-            "  }",
-            "}")
+            """
+            import com.google.auto.value.AutoBuilder;
+            import java.util.Optional;
+
+            public class Named {
+              Named(String name, String nickname) {}
+
+              @AutoBuilder
+              public abstract static class Builder {
+                public abstract Builder setName(String x);
+
+                public abstract Builder setNickname(String x);
+
+                abstract String getName();
+
+                abstract Optional<String> getNickname();
+
+                abstract Named autoBuild();
+
+                public Named build() {
+                  if (!getNickname().isPresent()) {
+                    setNickname(getName());
+                  }
+                  return autoBuild();
+                }
+              }
+            }
+            """)
         .addSourceLines(
             "B.java",
             "class B {",
@@ -235,20 +276,25 @@ public final class IgnoredPureGetterTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
-            "class Test {",
-            "  void test(TestProtoMessage message) {",
-            "    message.getMessage();",
-            "    message.hasMessage();",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
+
+            class Test {
+              void test(TestProtoMessage message) {
+                message.getMessage();
+                message.hasMessage();
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
-            "class Test {",
-            "  void test(TestProtoMessage message) {",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
+
+            class Test {
+              void test(TestProtoMessage message) {}
+            }
+            """)
         .doTest();
   }
 
@@ -257,27 +303,30 @@ public final class IgnoredPureGetterTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
-            "class Test {",
-            "  void test(TestProtoMessage message) {",
-            "    // BUG: Diagnostic contains: IgnoredPureGetter",
-            "    message.getMultiField(1);",
-            "    // BUG: Diagnostic contains: IgnoredPureGetter",
-            "    message.getWeightMap();",
-            "    // BUG: Diagnostic contains: IgnoredPureGetter",
-            "    message.getWeightOrDefault(1, 42);",
-            "    // BUG: Diagnostic contains: IgnoredPureGetter",
-            "    message.getWeightOrThrow(1);",
-            "    // BUG: Diagnostic contains: IgnoredPureGetter",
-            "    message.containsWeight(1);",
-            "    // BUG: Diagnostic contains: IgnoredPureGetter",
-            "    message.getWeightCount();",
-            "    // BUG: Diagnostic contains: IgnoredPureGetter",
-            "    message.getMessage();",
-            "    // BUG: Diagnostic contains: IgnoredPureGetter",
-            "    message.hasMessage();",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
+
+            class Test {
+              void test(TestProtoMessage message) {
+                // BUG: Diagnostic contains: IgnoredPureGetter
+                message.getMultiField(1);
+                // BUG: Diagnostic contains: IgnoredPureGetter
+                message.getWeightMap();
+                // BUG: Diagnostic contains: IgnoredPureGetter
+                message.getWeightOrDefault(1, 42);
+                // BUG: Diagnostic contains: IgnoredPureGetter
+                message.getWeightOrThrow(1);
+                // BUG: Diagnostic contains: IgnoredPureGetter
+                message.containsWeight(1);
+                // BUG: Diagnostic contains: IgnoredPureGetter
+                message.getWeightCount();
+                // BUG: Diagnostic contains: IgnoredPureGetter
+                message.getMessage();
+                // BUG: Diagnostic contains: IgnoredPureGetter
+                message.hasMessage();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -286,13 +335,16 @@ public final class IgnoredPureGetterTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
-            "class Test {",
-            "  void test(TestProtoMessage message) {",
-            "    Object o = message.getMessage();",
-            "    boolean b = message.hasMessage();",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
+
+            class Test {
+              void test(TestProtoMessage message) {
+                Object o = message.getMessage();
+                boolean b = message.hasMessage();
+              }
+            }
+            """)
         .doTest();
   }
 }

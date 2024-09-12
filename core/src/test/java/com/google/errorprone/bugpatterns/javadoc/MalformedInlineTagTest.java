@@ -34,28 +34,22 @@ public final class MalformedInlineTagTest {
     helper
         .addInputLines(
             "Test.java",
-            "/** Here are a list of malformed tags: ",
-            " * @{code code}",
-            " * @{docRoot}",
-            " * @{inheritDoc}",
-            " * @{link Test}",
-            " * @{linkplain Test}",
-            " * @{literal literal}",
-            " * @{value Test}",
-            " */",
-            "class Test {}")
+            """
+/**
+ * Here are a list of malformed tags: @{code code} @{docRoot} @{inheritDoc} @{link Test} @{linkplain
+ * Test} @{literal literal} @{value Test}
+ */
+class Test {}
+""")
         .addOutputLines(
             "Test.java",
-            "/** Here are a list of malformed tags: ",
-            " * {@code code}",
-            " * {@docRoot}",
-            " * {@inheritDoc}",
-            " * {@link Test}",
-            " * {@linkplain Test}",
-            " * {@literal literal}",
-            " * {@value Test}",
-            " */",
-            "class Test {}")
+            """
+/**
+ * Here are a list of malformed tags: {@code code} {@docRoot} {@inheritDoc} {@link Test} {@linkplain
+ * Test} {@literal literal} {@value Test}
+ */
+class Test {}
+""")
         .doTest(TEXT_MATCH);
   }
 
@@ -64,22 +58,34 @@ public final class MalformedInlineTagTest {
     helper
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  /** Add one to value.",
-            "    * @param x an @{code int} value to increment",
-            "    * @return @{code x} + 1",
-            "    */",
-            "  int addOne(int x) { return x+1; }",
-            "}")
+            """
+            class Test {
+              /**
+               * Add one to value.
+               *
+               * @param x an @{code int} value to increment
+               * @return @{code x} + 1
+               */
+              int addOne(int x) {
+                return x + 1;
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "class Test {",
-            "  /** Add one to value.",
-            "    * @param x an {@code int} value to increment",
-            "    * @return {@code x} + 1",
-            "    */",
-            "  int addOne(int x) { return x+1; }",
-            "}")
+            """
+            class Test {
+              /**
+               * Add one to value.
+               *
+               * @param x an {@code int} value to increment
+               * @return {@code x} + 1
+               */
+              int addOne(int x) {
+                return x + 1;
+              }
+            }
+            """)
         .doTest(TEXT_MATCH);
   }
 
@@ -88,16 +94,16 @@ public final class MalformedInlineTagTest {
     helper
         .addInputLines(
             "Test.java",
-            "/** This malformed tag spans @{code",
-            " * multiple lines}.",
-            " */",
-            "class Test {}")
+            """
+            /** This malformed tag spans @{code multiple lines}. */
+            class Test {}
+            """)
         .addOutputLines(
             "Test.java",
-            "/** This malformed tag spans {@code",
-            " * multiple lines}.",
-            " */",
-            "class Test {}")
+            """
+            /** This malformed tag spans {@code multiple lines}. */
+            class Test {}
+            """)
         .doTest(TEXT_MATCH);
   }
 
@@ -105,9 +111,11 @@ public final class MalformedInlineTagTest {
   public void negative() {
     helper
         .addInputLines(
-            "Test.java", //
-            "/** A correct {@link Test} tag in text. */",
-            "class Test {}")
+            "Test.java",
+            """
+            /** A correct {@link Test} tag in text. */
+            class Test {}
+            """)
         .expectUnchanged()
         .doTest(TEXT_MATCH);
   }
@@ -116,9 +124,11 @@ public final class MalformedInlineTagTest {
   public void negative_invalidTag() {
     helper
         .addInputLines(
-            "Test.java", //
-            "/** This @{case} is not a known Javadoc tag. Ignore. */",
-            "class Test {}")
+            "Test.java",
+            """
+            /** This @{case} is not a known Javadoc tag. Ignore. */
+            class Test {}
+            """)
         .expectUnchanged()
         .doTest(TEXT_MATCH);
   }

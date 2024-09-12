@@ -83,15 +83,19 @@ public final class EmptySetMultibindingContributionsTest {
             "}")
         .addOutputLines(
             "out/Test.java",
-            "import dagger.Module;",
-            "import dagger.Provides;",
-            "import dagger.multibindings.ElementsIntoSet;",
-            "import dagger.multibindings.Multibinds;",
-            "import java.util.Set;",
-            "@Module",
-            "abstract class Test {",
-            "  @Multibinds abstract Set<?> provideEmpty();",
-            "}")
+            """
+            import dagger.Module;
+            import dagger.Provides;
+            import dagger.multibindings.ElementsIntoSet;
+            import dagger.multibindings.Multibinds;
+            import java.util.Set;
+
+            @Module
+            abstract class Test {
+              @Multibinds
+              abstract Set<?> provideEmpty();
+            }
+            """)
         .doTest();
   }
 }

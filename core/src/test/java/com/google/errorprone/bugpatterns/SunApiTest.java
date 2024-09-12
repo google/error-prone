@@ -31,11 +31,13 @@ public class SunApiTest {
   public void positive() {
     compilationHelper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  // BUG: Diagnostic contains: sun.misc.Unsafe",
-            "  sun.misc.Unsafe u;",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              // BUG: Diagnostic contains: sun.misc.Unsafe
+              sun.misc.Unsafe u;
+            }
+            """)
         .doTest();
   }
 
@@ -43,11 +45,13 @@ public class SunApiTest {
   public void positiveSource8() {
     compilationHelper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  // BUG: Diagnostic contains: sun.misc.Unsafe",
-            "  sun.misc.Unsafe u;",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              // BUG: Diagnostic contains: sun.misc.Unsafe
+              sun.misc.Unsafe u;
+            }
+            """)
         .setArgs("-source", "8", "-target", "8")
         .doTest();
   }
@@ -56,11 +60,14 @@ public class SunApiTest {
   public void negative() {
     compilationHelper
         .addSourceLines(
-            "Test.java", //
-            "import jdk.internal.misc.Unsafe;",
-            "class Test {",
-            "  Unsafe u;",
-            "}")
+            "Test.java",
+            """
+            import jdk.internal.misc.Unsafe;
+
+            class Test {
+              Unsafe u;
+            }
+            """)
         .addModules("java.base/jdk.internal.misc")
         .doTest();
   }

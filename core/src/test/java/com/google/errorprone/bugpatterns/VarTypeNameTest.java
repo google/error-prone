@@ -49,10 +49,12 @@ public class VarTypeNameTest {
   public void negative() {
     testHelper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  int var;",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              int var;
+            }
+            """)
         .setArgs(ImmutableList.of("-source", "8", "-target", "8"))
         .doTest();
   }

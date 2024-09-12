@@ -33,64 +33,134 @@ public class ClassNameTest {
     compilationHelper
         .addSourceLines(
             "a/A.java",
-            "// BUG: Diagnostic contains: A inside A.java, instead found: One, Two",
-            "package a;",
-            "class One {}",
-            "class Two {}")
+            """
+            // BUG: Diagnostic contains: A inside A.java, instead found: One, Two
+            package a;
+
+            class One {}
+
+            class Two {}
+            """)
         .doTest();
   }
 
   @Test
   public void packageInfo() {
     compilationHelper
-        .addSourceLines("a/package-info.java", "/** Documentation for our package */", "package a;")
+        .addSourceLines(
+            "a/package-info.java",
+            """
+            /** Documentation for our package */
+            package a;
+            """)
         .addSourceLines(
             "b/Test.java",
-            "// BUG: Diagnostic contains: Test inside Test.java, instead found: Green",
-            "package b;",
-            "class Green {}")
+            """
+            // BUG: Diagnostic contains: Test inside Test.java, instead found: Green
+            package b;
+
+            class Green {}
+            """)
         .doTest();
   }
 
   @Test
   public void negative() {
     compilationHelper
-        .addSourceLines("a/A.java", "package a;", "class A {}")
-        .addSourceLines("b/B.java", "package b;", "class B {}")
+        .addSourceLines(
+            "a/A.java",
+            """
+            package a;
+
+            class A {}
+            """)
+        .addSourceLines(
+            "b/B.java",
+            """
+            package b;
+
+            class B {}
+            """)
         .doTest();
   }
 
   @Test
   public void negativeMultipleTopLevel() {
     compilationHelper
-        .addSourceLines("a/A.java", "package a;", "class A {}")
-        .addSourceLines("b/B.java", "package b;", "class B {}", "class C {}")
+        .addSourceLines(
+            "a/A.java",
+            """
+            package a;
+
+            class A {}
+            """)
+        .addSourceLines(
+            "b/B.java",
+            """
+            package b;
+
+            class B {}
+
+            class C {}
+            """)
         .doTest();
   }
 
   @Test
   public void negativeInnerClass() {
     compilationHelper
-        .addSourceLines("b/B.java", "package b;", "class B {", "  static class Inner {}", "}")
+        .addSourceLines(
+            "b/B.java",
+            """
+            package b;
+
+            class B {
+              static class Inner {}
+            }
+            """)
         .doTest();
   }
 
   @Test
   public void negativeInterface() {
     compilationHelper
-        .addSourceLines("b/B.java", "package b;", "interface B {", "  static class Inner {}", "}")
+        .addSourceLines(
+            "b/B.java",
+            """
+            package b;
+
+            interface B {
+              static class Inner {}
+            }
+            """)
         .doTest();
   }
 
   @Test
   public void negativeEnum() {
-    compilationHelper.addSourceLines("b/B.java", "package b;", "enum B {", "  ONE;", "}").doTest();
+    compilationHelper
+        .addSourceLines(
+            "b/B.java",
+            """
+            package b;
+
+            enum B {
+              ONE;
+            }
+            """)
+        .doTest();
   }
 
   @Test
   public void negativeAnnotation() {
     compilationHelper
-        .addSourceLines("b/B.java", "package b;", "public @interface B {", "}")
+        .addSourceLines(
+            "b/B.java",
+            """
+            package b;
+
+            public @interface B {}
+            """)
         .doTest();
   }
 
@@ -99,10 +169,12 @@ public class ClassNameTest {
     compilationHelper
         .addSourceLines(
             "b/B.java",
-            "package b;",
-            "// BUG: Diagnostic contains: should be declared in a file named Test.java",
-            "public class Test {",
-            "}")
+            """
+            package b;
+
+            // BUG: Diagnostic contains: should be declared in a file named Test.java
+            public class Test {}
+            """)
         .matchAllDiagnostics()
         .doTest();
   }
@@ -111,10 +183,13 @@ public class ClassNameTest {
   public void suppression() {
     compilationHelper
         .addSourceLines(
-            "b/Test.java", //
-            "package b;",
-            "@SuppressWarnings(\"ClassName\")",
-            "class Green {}")
+            "b/Test.java",
+            """
+            package b;
+
+            @SuppressWarnings("ClassName")
+            class Green {}
+            """)
         .doTest();
   }
 }

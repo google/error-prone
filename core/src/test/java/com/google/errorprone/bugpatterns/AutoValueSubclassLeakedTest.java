@@ -35,23 +35,30 @@ public final class AutoValueSubclassLeakedTest {
     helper
         .addSourceLines(
             "Test.java",
-            "package test;",
-            "import com.google.auto.value.AutoValue;",
-            "class Test {",
-            "  @AutoValue",
-            "  abstract static class Foo {",
-            "    abstract int foo();",
-            "  }",
-            "}")
+            """
+            package test;
+
+            import com.google.auto.value.AutoValue;
+
+            class Test {
+              @AutoValue
+              abstract static class Foo {
+                abstract int foo();
+              }
+            }
+            """)
         .addSourceLines(
             "Bar.java",
-            "package test;",
-            "class Bar {",
-            "  public static Test.Foo create(int i) {",
-            "    // BUG: Diagnostic contains:",
-            "    return new AutoValue_Test_Foo(i);",
-            "  }",
-            "}")
+            """
+            package test;
+
+            class Bar {
+              public static Test.Foo create(int i) {
+                // BUG: Diagnostic contains:
+                return new AutoValue_Test_Foo(i);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -60,22 +67,29 @@ public final class AutoValueSubclassLeakedTest {
     helper
         .addSourceLines(
             "Test.java",
-            "package test;",
-            "import com.google.auto.value.AutoValue;",
-            "class Test {",
-            "  @AutoValue",
-            "  abstract static class Foo {",
-            "    abstract int foo();",
-            "    @AutoValue.Builder",
-            "    abstract static class Builder {",
-            "      abstract Builder setFoo(int i);",
-            "      abstract Foo build();",
-            "    }",
-            "    public static Builder builder() {",
-            "      return new AutoValue_Test_Foo.Builder();",
-            "    }",
-            "  }",
-            "}")
+            """
+            package test;
+
+            import com.google.auto.value.AutoValue;
+
+            class Test {
+              @AutoValue
+              abstract static class Foo {
+                abstract int foo();
+
+                @AutoValue.Builder
+                abstract static class Builder {
+                  abstract Builder setFoo(int i);
+
+                  abstract Foo build();
+                }
+
+                public static Builder builder() {
+                  return new AutoValue_Test_Foo.Builder();
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -84,17 +98,22 @@ public final class AutoValueSubclassLeakedTest {
     helper
         .addSourceLines(
             "Test.java",
-            "package test;",
-            "import com.google.auto.value.AutoValue;",
-            "class Test {",
-            "  @AutoValue",
-            "  abstract static class Foo {",
-            "    abstract int foo();",
-            "    public static Foo create(int i) {",
-            "      return new AutoValue_Test_Foo(i);",
-            "    }",
-            "  }",
-            "}")
+            """
+            package test;
+
+            import com.google.auto.value.AutoValue;
+
+            class Test {
+              @AutoValue
+              abstract static class Foo {
+                abstract int foo();
+
+                public static Foo create(int i) {
+                  return new AutoValue_Test_Foo(i);
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -103,25 +122,32 @@ public final class AutoValueSubclassLeakedTest {
     helper
         .addSourceLines(
             "Test.java",
-            "package test;",
-            "import com.google.auto.value.AutoValue;",
-            "class Test {",
-            "  @AutoValue",
-            "  abstract static class Foo {",
-            "    abstract int foo();",
-            "  }",
-            "}")
+            """
+            package test;
+
+            import com.google.auto.value.AutoValue;
+
+            class Test {
+              @AutoValue
+              abstract static class Foo {
+                abstract int foo();
+              }
+            }
+            """)
         .addSourceLines(
             "Bar.java",
-            "package test;",
-            "import javax.annotation.processing.Generated;",
-            "",
-            "@Generated(\"generator\")",
-            "class Bar {",
-            "  public static Test.Foo create(int i) {",
-            "    return new AutoValue_Test_Foo(i);",
-            "  }",
-            "}")
+            """
+            package test;
+
+            import javax.annotation.processing.Generated;
+
+            @Generated("generator")
+            class Bar {
+              public static Test.Foo create(int i) {
+                return new AutoValue_Test_Foo(i);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -129,28 +155,36 @@ public final class AutoValueSubclassLeakedTest {
   public void positiveAutoValueExtension() {
     helper
         .addSourceLines(
-            "$$AutoValue_Foo.java", //
-            "package test;",
-            "class $$AutoValue_Foo extends Test.Foo {",
-            "}")
+            "$$AutoValue_Foo.java",
+            """
+            package test;
+
+            class $$AutoValue_Foo extends Test.Foo {}
+            """)
         .addSourceLines(
             "Test.java",
-            "package test;",
-            "import com.google.auto.value.AutoValue;",
-            "class Test {",
-            "  @AutoValue",
-            "  abstract static class Foo {",
-            "  }",
-            "}")
+            """
+            package test;
+
+            import com.google.auto.value.AutoValue;
+
+            class Test {
+              @AutoValue
+              abstract static class Foo {}
+            }
+            """)
         .addSourceLines(
             "Bar.java",
-            "package test;",
-            "class Bar {",
-            "  public static Test.Foo create() {",
-            "    // BUG: Diagnostic contains:",
-            "    return new $$AutoValue_Foo();",
-            "  }",
-            "}")
+            """
+            package test;
+
+            class Bar {
+              public static Test.Foo create() {
+                // BUG: Diagnostic contains:
+                return new $$AutoValue_Foo();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -158,38 +192,51 @@ public final class AutoValueSubclassLeakedTest {
   public void positiveAutoValueExtension_noGeneratedAnnotation() {
     CompilationTestHelper.newInstance(AutoValueSubclassLeaked.class, getClass())
         .addSourceLines(
-            "$AutoValue_Test_Foo.java", //
-            "package test;",
-            "final class AutoValue_Test_Foo extends $AutoValue_Test_Foo {",
-            "  static final Test.Foo AUTO_VALUE = new AutoValue_Test_Foo();",
-            "}")
+            "$AutoValue_Test_Foo.java",
+            """
+            package test;
+
+            final class AutoValue_Test_Foo extends $AutoValue_Test_Foo {
+              static final Test.Foo AUTO_VALUE = new AutoValue_Test_Foo();
+            }
+            """)
         .addSourceLines(
-            "$AutoValue_Test_Foo.java", //
-            "package test;",
-            "import javax.annotation.processing.Generated;",
-            "@Generated(\"com.google.auto.value.processor.AutoValueProcessor\")",
-            "class $AutoValue_Test_Foo extends Test.Foo {",
-            "}")
+            "$AutoValue_Test_Foo.java",
+            """
+            package test;
+
+            import javax.annotation.processing.Generated;
+
+            @Generated("com.google.auto.value.processor.AutoValueProcessor")
+            class $AutoValue_Test_Foo extends Test.Foo {}
+            """)
         .addSourceLines(
             "Test.java",
-            "package test;",
-            "import com.google.auto.value.AutoValue;",
-            "class Test {",
-            "  static final Test.Foo EXTENSION = new $AutoValue_Test_Foo();",
-            "  static final Test.Foo AUTO_VALUE = new AutoValue_Test_Foo();",
-            "  @AutoValue",
-            "  abstract static class Foo {",
-            "  }",
-            "}")
+            """
+            package test;
+
+            import com.google.auto.value.AutoValue;
+
+            class Test {
+              static final Test.Foo EXTENSION = new $AutoValue_Test_Foo();
+              static final Test.Foo AUTO_VALUE = new AutoValue_Test_Foo();
+
+              @AutoValue
+              abstract static class Foo {}
+            }
+            """)
         .addSourceLines(
             "Bar.java",
-            "package test;",
-            "class Bar {",
-            "  // BUG: Diagnostic contains:",
-            "  static final Test.Foo EXTENSION = new $AutoValue_Test_Foo();",
-            "  // BUG: Diagnostic contains:",
-            "  static final Test.Foo AUTO_VALUE = new AutoValue_Test_Foo();",
-            "}")
+            """
+            package test;
+
+            class Bar {
+              // BUG: Diagnostic contains:
+              static final Test.Foo EXTENSION = new $AutoValue_Test_Foo();
+              // BUG: Diagnostic contains:
+              static final Test.Foo AUTO_VALUE = new AutoValue_Test_Foo();
+            }
+            """)
         .doTest();
   }
 }

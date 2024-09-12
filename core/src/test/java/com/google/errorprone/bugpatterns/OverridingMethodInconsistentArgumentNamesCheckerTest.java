@@ -31,46 +31,86 @@ public class OverridingMethodInconsistentArgumentNamesCheckerTest {
   @Test
   public void positiveSwap() {
     testHelper
-        .addSourceLines("A.java", "class A {", "  void m(int p1, int p2) {}", "}")
+        .addSourceLines(
+            "A.java",
+            """
+            class A {
+              void m(int p1, int p2) {}
+            }
+            """)
         .addSourceLines(
             "B.java",
-            "class B extends A {",
-            "  @Override",
-            "  // BUG: Diagnostic contains: A consistent order would be: m(p1, p2)",
-            "  void m(int p2, int p1) {}",
-            "}")
+            """
+            class B extends A {
+              @Override
+              // BUG: Diagnostic contains: A consistent order would be: m(p1, p2)
+              void m(int p2, int p1) {}
+            }
+            """)
         .doTest();
   }
 
   @Test
   public void positivePermutation() {
     testHelper
-        .addSourceLines("A.java", "class A {", "  void m(int p1, int p2, int p3) {}", "}")
+        .addSourceLines(
+            "A.java",
+            """
+            class A {
+              void m(int p1, int p2, int p3) {}
+            }
+            """)
         .addSourceLines(
             "B.java",
-            "class B extends A {",
-            "  @Override",
-            "  // BUG: Diagnostic contains: A consistent order would be: m(p1, p2, p3)",
-            "  void m(int p3, int p1, int p2) {}",
-            "}")
+            """
+            class B extends A {
+              @Override
+              // BUG: Diagnostic contains: A consistent order would be: m(p1, p2, p3)
+              void m(int p3, int p1, int p2) {}
+            }
+            """)
         .doTest();
   }
 
   @Test
   public void negative() {
     testHelper
-        .addSourceLines("A.java", "class A {", "  void m(int p1, int p2) {}", "}")
         .addSourceLines(
-            "B.java", "class B extends A {", "  @Override", "  void m(int p1, int p2) {}", "}")
+            "A.java",
+            """
+            class A {
+              void m(int p1, int p2) {}
+            }
+            """)
+        .addSourceLines(
+            "B.java",
+            """
+            class B extends A {
+              @Override
+              void m(int p1, int p2) {}
+            }
+            """)
         .doTest();
   }
 
   @Test
   public void negative2() {
     testHelper
-        .addSourceLines("A.java", "class A {", "  void m(int p1, int p2) {}", "}")
         .addSourceLines(
-            "B.java", "class B extends A {", "  @Override", "  void m(int p1, int p3) {}", "}")
+            "A.java",
+            """
+            class A {
+              void m(int p1, int p2) {}
+            }
+            """)
+        .addSourceLines(
+            "B.java",
+            """
+            class B extends A {
+              @Override
+              void m(int p1, int p3) {}
+            }
+            """)
         .doTest();
   }
 }

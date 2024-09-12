@@ -35,15 +35,17 @@ public class TraditionalSwitchExpressionTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  int f(int i) {",
-            "    // BUG: Diagnostic contains: Prefer -> switches for switch expressions",
-            "    return switch (i) {",
-            "      default:",
-            "        yield -1;",
-            "    };",
-            "  }",
-            "}")
+            """
+            class Test {
+              int f(int i) {
+                // BUG: Diagnostic contains: Prefer -> switches for switch expressions
+                return switch (i) {
+                  default:
+                    yield -1;
+                };
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -52,14 +54,16 @@ public class TraditionalSwitchExpressionTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void f(int i) {",
-            "    switch (i) {",
-            "      default:",
-            "        return;",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f(int i) {
+                switch (i) {
+                  default:
+                    return;
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -69,13 +73,15 @@ public class TraditionalSwitchExpressionTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void f(int i) {",
-            "    switch (i) {",
-            "      default -> System.err.println();",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f(int i) {
+                switch (i) {
+                  default -> System.err.println();
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -85,13 +91,15 @@ public class TraditionalSwitchExpressionTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  int f(int i) {",
-            "    return switch (i) {",
-            "      default -> -1;",
-            "    };",
-            "  }",
-            "}")
+            """
+            class Test {
+              int f(int i) {
+                return switch (i) {
+                  default -> -1;
+                };
+              }
+            }
+            """)
         .doTest();
   }
 }

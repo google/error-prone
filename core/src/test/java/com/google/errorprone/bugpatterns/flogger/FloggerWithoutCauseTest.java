@@ -33,16 +33,20 @@ public class FloggerWithoutCauseTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "class Test {",
-            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "  public void f(Exception e, Throwable t) {",
-            "    // BUG: Diagnostic contains: logger.atInfo().withCause(e).log(\"hello %s\", e);",
-            "    logger.atInfo().log(\"hello %s\", e);",
-            "    // BUG: Diagnostic contains: .atInfo().withCause(t).log(\"hello %s\", e, t);",
-            "    logger.atInfo().log(\"hello %s\", e, t);",
-            "  }",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            class Test {
+              private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+
+              public void f(Exception e, Throwable t) {
+                // BUG: Diagnostic contains: logger.atInfo().withCause(e).log("hello %s", e);
+                logger.atInfo().log("hello %s", e);
+                // BUG: Diagnostic contains: .atInfo().withCause(t).log("hello %s", e, t);
+                logger.atInfo().log("hello %s", e, t);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -51,14 +55,18 @@ public class FloggerWithoutCauseTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "class Test {",
-            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "  public void f(ReflectiveOperationException e) {",
-            "    // BUG: Diagnostic contains: logger.atInfo().withCause(e).log(\"hello %s\", e);",
-            "    logger.atInfo().log(\"hello %s\", e);",
-            "  }",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            class Test {
+              private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+
+              public void f(ReflectiveOperationException e) {
+                // BUG: Diagnostic contains: logger.atInfo().withCause(e).log("hello %s", e);
+                logger.atInfo().log("hello %s", e);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -67,17 +75,21 @@ public class FloggerWithoutCauseTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "class Test {",
-            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "  public void f(Exception e, Throwable t) {",
-            "    logger.atInfo().log(null);",
-            "    logger.atInfo().log(\"hello\");",
-            "    logger.atInfo().log(\"hello %s\", 1);",
-            "    logger.atInfo().withCause(e).log(\"hello %s\", e);",
-            "    logger.atInfo().withCause(e).log(\"hello %s\", e, t);",
-            "  }",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            class Test {
+              private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+
+              public void f(Exception e, Throwable t) {
+                logger.atInfo().log(null);
+                logger.atInfo().log("hello");
+                logger.atInfo().log("hello %s", 1);
+                logger.atInfo().withCause(e).log("hello %s", e);
+                logger.atInfo().withCause(e).log("hello %s", e, t);
+              }
+            }
+            """)
         .doTest();
   }
 }

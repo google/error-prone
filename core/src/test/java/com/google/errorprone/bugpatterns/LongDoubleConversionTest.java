@@ -36,15 +36,19 @@ public class LongDoubleConversionTest {
   public void losesPrecision() {
     compilationTestHelper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  void method(Long l) {}",
-            "  void method(double l) {}",
-            "  {",
-            "    // BUG: Diagnostic contains:",
-            "    method(9223372036854775806L);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              void method(Long l) {}
+
+              void method(double l) {}
+
+              {
+                // BUG: Diagnostic contains:
+                method(9223372036854775806L);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -52,14 +56,18 @@ public class LongDoubleConversionTest {
   public void doesNotActuallyLosePrecision_noFinding() {
     compilationTestHelper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  void method(Long l) {}",
-            "  void method(double l) {}",
-            "  {",
-            "    method(0L);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              void method(Long l) {}
+
+              void method(double l) {}
+
+              {
+                method(0L);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -67,13 +75,16 @@ public class LongDoubleConversionTest {
   public void explicitlyCastToDouble_noFinding() {
     compilationTestHelper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  void method(double l) {}",
-            "  {",
-            "    method((double) 0L);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              void method(double l) {}
+
+              {
+                method((double) 0L);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -81,23 +92,31 @@ public class LongDoubleConversionTest {
   public void refactors_simpleArgument() {
     refactoringTestHelper
         .addInputLines(
-            "Test.java", //
-            "class Test {",
-            "  void method(Long l) {}",
-            "  void method(double l) {}",
-            "  {",
-            "    method(9223372036854775806L);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              void method(Long l) {}
+
+              void method(double l) {}
+
+              {
+                method(9223372036854775806L);
+              }
+            }
+            """)
         .addOutputLines(
-            "Test.java", //
-            "class Test {",
-            "  void method(Long l) {}",
-            "  void method(double l) {}",
-            "  {",
-            "    method((double) 9223372036854775806L);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              void method(Long l) {}
+
+              void method(double l) {}
+
+              {
+                method((double) 9223372036854775806L);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -105,23 +124,31 @@ public class LongDoubleConversionTest {
   public void refactors_complexArgument() {
     refactoringTestHelper
         .addInputLines(
-            "Test.java", //
-            "class Test {",
-            "  void method(Long l) {}",
-            "  void method(double l) {}",
-            "  {",
-            "    method(9223372036854775805L + 1L);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              void method(Long l) {}
+
+              void method(double l) {}
+
+              {
+                method(9223372036854775805L + 1L);
+              }
+            }
+            """)
         .addOutputLines(
-            "Test.java", //
-            "class Test {",
-            "  void method(Long l) {}",
-            "  void method(double l) {}",
-            "  {",
-            "    method((double) (9223372036854775805L + 1L));",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              void method(Long l) {}
+
+              void method(double l) {}
+
+              {
+                method((double) (9223372036854775805L + 1L));
+              }
+            }
+            """)
         .doTest();
   }
 }

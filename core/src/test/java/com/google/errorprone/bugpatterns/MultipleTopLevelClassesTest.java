@@ -35,11 +35,15 @@ public class MultipleTopLevelClassesTest {
     compilationHelper
         .addSourceLines(
             "a/A.java",
-            "package a;",
-            "// BUG: Diagnostic contains: one top-level class declaration, instead found: One, Two",
-            "class One {}",
-            "// BUG: Diagnostic contains:",
-            "class Two {}")
+            """
+            package a;
+
+            // BUG: Diagnostic contains: one top-level class declaration, instead found: One, Two
+            class One {}
+
+            // BUG: Diagnostic contains:
+            class Two {}
+            """)
         .doTest();
   }
 
@@ -47,9 +51,11 @@ public class MultipleTopLevelClassesTest {
   public void packageInfo() {
     compilationHelper
         .addSourceLines(
-            "a/package-info.java", //
-            "/** Documentation for our package */",
-            "package a;")
+            "a/package-info.java",
+            """
+            /** Documentation for our package */
+            package a;
+            """)
         .doTest();
   }
 
@@ -57,11 +63,14 @@ public class MultipleTopLevelClassesTest {
   public void defaultPackage() {
     compilationHelper
         .addSourceLines(
-            "a/A.java", //
-            "// BUG: Diagnostic contains:",
-            "class A {}",
-            "// BUG: Diagnostic contains:",
-            "class B {}")
+            "a/A.java",
+            """
+            // BUG: Diagnostic contains:
+            class A {}
+
+            // BUG: Diagnostic contains:
+            class B {}
+            """)
         .doTest();
   }
 
@@ -70,9 +79,14 @@ public class MultipleTopLevelClassesTest {
     compilationHelper
         .addSourceLines(
             "a/A.java",
-            "package a;",
-            "class One {}",
-            "@SuppressWarnings(\"TopLevel\") class Other {}")
+            """
+            package a;
+
+            class One {}
+
+            @SuppressWarnings("TopLevel")
+            class Other {}
+            """)
         .doTest();
   }
 
@@ -80,9 +94,13 @@ public class MultipleTopLevelClassesTest {
   public void emptyDeclaration() {
     compilationHelper
         .addSourceLines(
-            "a/A.java", //
-            "package a;",
-            "class Test {};")
+            "a/A.java",
+            """
+            package a;
+
+            class Test {}
+            ;
+            """)
         .doTest();
   }
 

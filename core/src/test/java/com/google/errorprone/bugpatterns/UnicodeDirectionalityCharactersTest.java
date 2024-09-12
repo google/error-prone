@@ -35,10 +35,12 @@ public final class UnicodeDirectionalityCharactersTest {
   public void negative() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  final int noUnicodeHereBoss = 1;",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              final int noUnicodeHereBoss = 1;
+            }
+            """)
         .doTest();
   }
 
@@ -46,12 +48,14 @@ public final class UnicodeDirectionalityCharactersTest {
   public void positive() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "// BUG: Diagnostic contains:",
-            "/** \u202A */",
-            "class Test {",
-            "  final int noUnicodeHereBoss = 1;",
-            "}")
+            "Test.java",
+            """
+            // BUG: Diagnostic contains:
+            /** \u202a */
+            class Test {
+              final int noUnicodeHereBoss = 1;
+            }
+            """)
         .doTest();
   }
 
@@ -59,19 +63,23 @@ public final class UnicodeDirectionalityCharactersTest {
   public void refactoring() {
     refactoring
         .addInputLines(
-            "Test.java", //
-            "// BUG: Diagnostic contains:",
-            "/** \u202A */",
-            "class Test {",
-            "  final int noUnicodeHereBoss = 1;",
-            "}")
+            "Test.java",
+            """
+            // BUG: Diagnostic contains:
+            /** \u202a */
+            class Test {
+              final int noUnicodeHereBoss = 1;
+            }
+            """)
         .addOutputLines(
-            "Test.java", //
-            "// BUG: Diagnostic contains:",
-            "/** \\u202A */",
-            "class Test {",
-            "  final int noUnicodeHereBoss = 1;",
-            "}")
+            "Test.java",
+            """
+            // BUG: Diagnostic contains:
+            /** \\u202A */
+            class Test {
+              final int noUnicodeHereBoss = 1;
+            }
+            """)
         .doTest();
   }
 }

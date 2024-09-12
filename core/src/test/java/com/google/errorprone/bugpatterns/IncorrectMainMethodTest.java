@@ -36,9 +36,11 @@ public class IncorrectMainMethodTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "class Test {", //
-            "  public static void main(String[] args) {}",
-            "}")
+            """
+            class Test {
+              public static void main(String[] args) {}
+            }
+            """)
         .doTest();
   }
 
@@ -47,9 +49,11 @@ public class IncorrectMainMethodTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "class Test {", //
-            "  public static void spain(String[] args) {}",
-            "}")
+            """
+            class Test {
+              public static void spain(String[] args) {}
+            }
+            """)
         .doTest();
   }
 
@@ -59,9 +63,11 @@ public class IncorrectMainMethodTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "interface Test {", //
-            "  static void main(String[] args) {}",
-            "}")
+            """
+            interface Test {
+              static void main(String[] args) {}
+            }
+            """)
         .doTest();
   }
 
@@ -71,9 +77,11 @@ public class IncorrectMainMethodTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "class Test {", //
-            "  public static void main(String... args) {}",
-            "}")
+            """
+            class Test {
+              public static void main(String... args) {}
+            }
+            """)
         .doTest();
   }
 
@@ -82,10 +90,12 @@ public class IncorrectMainMethodTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "class Test {", //
-            "  // BUG: Diagnostic contains:",
-            "  static void main(String[] args) {}",
-            "}")
+            """
+            class Test {
+              // BUG: Diagnostic contains:
+              static void main(String[] args) {}
+            }
+            """)
         .doTest();
   }
 
@@ -94,10 +104,12 @@ public class IncorrectMainMethodTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "class Test {", //
-            "  // BUG: Diagnostic contains:",
-            "  public void main(String[] args) {}",
-            "}")
+            """
+            class Test {
+              // BUG: Diagnostic contains:
+              public void main(String[] args) {}
+            }
+            """)
         .doTest();
   }
 
@@ -106,12 +118,14 @@ public class IncorrectMainMethodTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "class Test {", //
-            "  // BUG: Diagnostic contains:",
-            "  public static int main(String[] args) {",
-            "    return 0;",
-            "  }",
-            "}")
+            """
+            class Test {
+              // BUG: Diagnostic contains:
+              public static int main(String[] args) {
+                return 0;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -120,9 +134,11 @@ public class IncorrectMainMethodTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "class Test {", //
-            "  static void main(String[] args, String arg) {}",
-            "}")
+            """
+            class Test {
+              static void main(String[] args, String arg) {}
+            }
+            """)
         .doTest();
   }
 
@@ -131,9 +147,11 @@ public class IncorrectMainMethodTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "class Test {", //
-            "  static void main(String args) {}",
-            "}")
+            """
+            class Test {
+              static void main(String args) {}
+            }
+            """)
         .doTest();
   }
 
@@ -142,9 +160,11 @@ public class IncorrectMainMethodTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "class Test {", //
-            "  static void main(Object[] args) {}",
-            "}")
+            """
+            class Test {
+              static void main(Object[] args) {}
+            }
+            """)
         .doTest();
   }
 
@@ -153,14 +173,18 @@ public class IncorrectMainMethodTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "class Test {", //
-            "  private static void main(String[] args) {}",
-            "}")
+            """
+            class Test {
+              private static void main(String[] args) {}
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "class Test {", //
-            "  public static void main(String[] args) {}",
-            "}")
+            """
+            class Test {
+              public static void main(String[] args) {}
+            }
+            """)
         .doTest();
   }
 
@@ -169,14 +193,18 @@ public class IncorrectMainMethodTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "class Test {", //
-            "  protected static void main(String[] args) {}",
-            "}")
+            """
+            class Test {
+              protected static void main(String[] args) {}
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "class Test {", //
-            "  public static void main(String[] args) {}",
-            "}")
+            """
+            class Test {
+              public static void main(String[] args) {}
+            }
+            """)
         .doTest();
   }
 }

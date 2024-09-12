@@ -35,7 +35,13 @@ public class VarCheckerTest {
   @Test
   public void nonFinalField() {
     compilationHelper
-        .addSourceLines("Test.java", "class Test {", "  public int x = 42;", "}")
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              public int x = 42;
+            }
+            """)
         .doTest();
   }
 
@@ -56,12 +62,14 @@ public class VarCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  // BUG: Diagnostic contains: public void x(@Var int y) {",
-            "  public void x(int y) {",
-            "    y++;",
-            "  }",
-            "}")
+            """
+            class Test {
+              // BUG: Diagnostic contains: public void x(@Var int y) {
+              public void x(int y) {
+                y++;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -83,13 +91,15 @@ public class VarCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  public void x() {",
-            "    // BUG: Diagnostic contains: @Var int y = 0;",
-            "    int y = 0;",
-            "    y++;",
-            "  }",
-            "}")
+            """
+            class Test {
+              public void x() {
+                // BUG: Diagnostic contains: @Var int y = 0;
+                int y = 0;
+                y++;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -127,12 +137,14 @@ public class VarCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  public void x() {",
-            "    // BUG: Diagnostic contains: /*START*/ int y = 0;",
-            "    /*START*/ final int y = 0;",
-            "  }",
-            "}")
+            """
+            class Test {
+              public void x() {
+                // BUG: Diagnostic contains: /*START*/ int y = 0;
+                /*START*/ final int y = 0;
+              }
+            }
+            """)
         .setArgs(Arrays.asList("-source", "8", "-target", "8"))
         .doTest();
   }
@@ -142,12 +154,13 @@ public class VarCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  {",
-            "    for (int i = 0; i < 10; i++) {",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              {
+                for (int i = 0; i < 10; i++) {}
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -156,12 +169,13 @@ public class VarCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void f (Iterable<String> xs) {",
-            "    for (String x : xs) {",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f(Iterable<String> xs) {
+                for (String x : xs) {}
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -170,10 +184,12 @@ public class VarCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  // BUG: Diagnostic contains: native void f(int y);",
-            "  native void f(final int y);",
-            "}")
+            """
+            class Test {
+              // BUG: Diagnostic contains: native void f(int y);
+              native void f(final int y);
+            }
+            """)
         .doTest();
   }
 
@@ -218,10 +234,13 @@ public class VarCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Var;",
-            "class Test {",
-            "  @Var public int x = 42;",
-            "}")
+            """
+            import com.google.errorprone.annotations.Var;
+
+            class Test {
+              @Var public int x = 42;
+            }
+            """)
         .doTest();
   }
 
@@ -230,12 +249,15 @@ public class VarCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Var;",
-            "class Test {",
-            "  public void x(@Var int y) {",
-            "    y++;",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.Var;
+
+            class Test {
+              public void x(@Var int y) {
+                y++;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -244,13 +266,16 @@ public class VarCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Var;",
-            "class Test {",
-            "  public void x() {",
-            "    @Var int y = 0;",
-            "    y++;",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.Var;
+
+            class Test {
+              public void x() {
+                @Var int y = 0;
+                y++;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -259,15 +284,17 @@ public class VarCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  public void x() {",
-            "    try {",
-            "    // BUG: Diagnostic contains: missing @Var",
-            "    } catch (Exception e) {",
-            "      e = null;",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              public void x() {
+                try {
+                  // BUG: Diagnostic contains: missing @Var
+                } catch (Exception e) {
+                  e = null;
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -276,14 +303,16 @@ public class VarCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  public void x() {",
-            "    try {",
-            "    // BUG: Diagnostic contains: Unnecessary 'final' modifier.",
-            "    } catch (final Exception e) {",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              public void x() {
+                try {
+                  // BUG: Diagnostic contains: Unnecessary 'final' modifier.
+                } catch (final Exception e) {
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -292,15 +321,18 @@ public class VarCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.io.InputStream;",
-            "class Test {",
-            "  public void x() {",
-            "    // BUG: Diagnostic contains: Unnecessary 'final' modifier.",
-            "    try (final InputStream is = null) {",
-            "    } catch (Exception e) {",
-            "    }",
-            "  }",
-            "}")
+            """
+            import java.io.InputStream;
+
+            class Test {
+              public void x() {
+                // BUG: Diagnostic contains: Unnecessary 'final' modifier.
+                try (final InputStream is = null) {
+                } catch (Exception e) {
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -309,14 +341,17 @@ public class VarCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.io.InputStream;",
-            "class Test {",
-            "  public void x() {",
-            "    try (InputStream is = null) {",
-            "    } catch (Exception e) {",
-            "    }",
-            "  }",
-            "}")
+            """
+            import java.io.InputStream;
+
+            class Test {
+              public void x() {
+                try (InputStream is = null) {
+                } catch (Exception e) {
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -325,11 +360,13 @@ public class VarCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  public void f(Test this, int x) {",
-            "    this.toString();",
-            "  }",
-            "}")
+            """
+            class Test {
+              public void f(Test this, int x) {
+                this.toString();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -338,12 +375,16 @@ public class VarCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import javax.annotation.processing.Generated;",
-            "@Generated(\"generator\") class Test {",
-            "  public void x() {",
-            "    final int y = 0;",
-            "  }",
-            "}")
+            """
+            import javax.annotation.processing.Generated;
+
+            @Generated("generator")
+            class Test {
+              public void x() {
+                final int y = 0;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -352,11 +393,14 @@ public class VarCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "@SuppressWarnings(\"Var\") class Test {",
-            "  public void x() {",
-            "    final int y = 0;",
-            "  }",
-            "}")
+            """
+            @SuppressWarnings("Var")
+            class Test {
+              public void x() {
+                final int y = 0;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -365,12 +409,15 @@ public class VarCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "@SuppressWarnings(\"Foo\") class Test {",
-            "  public void x() {",
-            "    // BUG: Diagnostic contains: Unnecessary 'final' modifier.",
-            "    final int y = 0;",
-            "  }",
-            "}")
+            """
+            @SuppressWarnings("Foo")
+            class Test {
+              public void x() {
+                // BUG: Diagnostic contains: Unnecessary 'final' modifier.
+                final int y = 0;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -379,16 +426,18 @@ public class VarCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Var;",
-            "class Test {",
-            "  int f(",
-            "      // BUG: Diagnostic contains: @Var variable is never modified",
-            "      @Var int x,",
-            "      @Var int y) {",
-            "    y++;",
-            "    return x + y;",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.Var;
+
+            class Test {
+              int f(
+                  // BUG: Diagnostic contains: @Var variable is never modified
+                  @Var int x, @Var int y) {
+                y++;
+                return x + y;
+              }
+            }
+            """)
         .doTest();
   }
 }

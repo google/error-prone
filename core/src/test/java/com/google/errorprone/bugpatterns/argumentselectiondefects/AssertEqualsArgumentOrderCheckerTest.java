@@ -33,12 +33,16 @@ public class AssertEqualsArgumentOrderCheckerTest {
     compilationHelper
         .addSourceLines(
             "ErrorProneTest.java",
-            "abstract class ErrorProneTest {",
-            "  static void assertEquals(Object expected, Object actual) {};",
-            "  void test(Object expected, Object actual) {",
-            "    assertEquals(expected, actual);",
-            "  }",
-            "}")
+            """
+            abstract class ErrorProneTest {
+              static void assertEquals(Object expected, Object actual) {}
+              ;
+
+              void test(Object expected, Object actual) {
+                assertEquals(expected, actual);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -47,12 +51,16 @@ public class AssertEqualsArgumentOrderCheckerTest {
     compilationHelper
         .addSourceLines(
             "ErrorProneTest.java",
-            "abstract class ErrorProneTest {",
-            "  static void assertEquals(String message, Object expected, Object actual) {};",
-            "  void test(Object expected, Object actual) {",
-            "    assertEquals(\"\", expected, actual);",
-            "  }",
-            "}")
+            """
+            abstract class ErrorProneTest {
+              static void assertEquals(String message, Object expected, Object actual) {}
+              ;
+
+              void test(Object expected, Object actual) {
+                assertEquals("", expected, actual);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -61,14 +69,18 @@ public class AssertEqualsArgumentOrderCheckerTest {
     compilationHelper
         .addSourceLines(
             "ErrorProneTest.java",
-            "abstract class ErrorProneTest {",
-            "  static void assertEquals(Object expected, Object actual) {};",
-            "  void test(Object expected, Object actual) {",
-            "    // BUG: Diagnostic contains: assertEquals(expected, actual)",
-            "    // assertEquals(/* expected= */actual, /* actual= */expected)",
-            "    assertEquals(actual, expected);",
-            "  }",
-            "}")
+            """
+            abstract class ErrorProneTest {
+              static void assertEquals(Object expected, Object actual) {}
+              ;
+
+              void test(Object expected, Object actual) {
+                // BUG: Diagnostic contains: assertEquals(expected, actual)
+                // assertEquals(/* expected= */actual, /* actual= */expected)
+                assertEquals(actual, expected);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -77,13 +89,17 @@ public class AssertEqualsArgumentOrderCheckerTest {
     compilationHelper
         .addSourceLines(
             "ErrorProneTest.java",
-            "abstract class ErrorProneTest {",
-            "  static void assertEquals(String message, Object expected, Object actual) {};",
-            "  void test(Object expected, Object actual) {",
-            "    // BUG: Diagnostic contains: assertEquals(\"\", expected, actual)",
-            "    assertEquals(\"\", actual, expected);",
-            "  }",
-            "}")
+            """
+            abstract class ErrorProneTest {
+              static void assertEquals(String message, Object expected, Object actual) {}
+              ;
+
+              void test(Object expected, Object actual) {
+                // BUG: Diagnostic contains: assertEquals("", expected, actual)
+                assertEquals("", actual, expected);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -92,14 +108,19 @@ public class AssertEqualsArgumentOrderCheckerTest {
     compilationHelper
         .addSourceLines(
             "ErrorProneTest.java",
-            "abstract class ErrorProneTest {",
-            "  static void assertEquals(Object expected, Object actual) {};",
-            "  abstract Object get();",
-            "  void test(Object expectedValue) {",
-            "    // BUG: Diagnostic contains: assertEquals(expectedValue, get())",
-            "    assertEquals(get(), expectedValue);",
-            "  }",
-            "}")
+            """
+            abstract class ErrorProneTest {
+              static void assertEquals(Object expected, Object actual) {}
+              ;
+
+              abstract Object get();
+
+              void test(Object expectedValue) {
+                // BUG: Diagnostic contains: assertEquals(expectedValue, get())
+                assertEquals(get(), expectedValue);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -108,13 +129,17 @@ public class AssertEqualsArgumentOrderCheckerTest {
     compilationHelper
         .addSourceLines(
             "ErrorProneTest.java",
-            "abstract class ErrorProneTest {",
-            "  static void assertEquals(Object expected, Object actual) {};",
-            "  void test(Object other) {",
-            "    // BUG: Diagnostic contains: assertEquals(1, other)",
-            "    assertEquals(other, 1);",
-            "  }",
-            "}")
+            """
+            abstract class ErrorProneTest {
+              static void assertEquals(Object expected, Object actual) {}
+              ;
+
+              void test(Object other) {
+                // BUG: Diagnostic contains: assertEquals(1, other)
+                assertEquals(other, 1);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -123,12 +148,16 @@ public class AssertEqualsArgumentOrderCheckerTest {
     compilationHelper
         .addSourceLines(
             "ErrorProneTest.java",
-            "abstract class ErrorProneTest {",
-            "  static void assertEquals(String message, Object expected, Object actual) {};",
-            "  void test(Object other) {",
-            "    assertEquals(\"\",1, other);",
-            "  }",
-            "}")
+            """
+            abstract class ErrorProneTest {
+              static void assertEquals(String message, Object expected, Object actual) {}
+              ;
+
+              void test(Object other) {
+                assertEquals("", 1, other);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -137,12 +166,16 @@ public class AssertEqualsArgumentOrderCheckerTest {
     compilationHelper
         .addSourceLines(
             "ErrorProneTest.java",
-            "abstract class ErrorProneTest {",
-            "  static void assertEquals(Object expected, Object actual) {};",
-            "  void test() {",
-            "    assertEquals(2, 1);",
-            "  }",
-            "}")
+            """
+            abstract class ErrorProneTest {
+              static void assertEquals(Object expected, Object actual) {}
+              ;
+
+              void test() {
+                assertEquals(2, 1);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -151,13 +184,17 @@ public class AssertEqualsArgumentOrderCheckerTest {
     compilationHelper
         .addSourceLines(
             "ErrorProneTest.java",
-            "abstract class ErrorProneTest {",
-            "  static void assertEquals(Object expected, Object actual) {};",
-            "  void test(Object expected, Object actual) {",
-            "    assertEquals(expected, actual);",
-            "    assertEquals(actual, expected);",
-            "  }",
-            "}")
+            """
+            abstract class ErrorProneTest {
+              static void assertEquals(Object expected, Object actual) {}
+              ;
+
+              void test(Object expected, Object actual) {
+                assertEquals(expected, actual);
+                assertEquals(actual, expected);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -166,12 +203,16 @@ public class AssertEqualsArgumentOrderCheckerTest {
     compilationHelper
         .addSourceLines(
             "ErrorProneTest.java",
-            "abstract class ErrorProneTest {",
-            "  static void assertEquals(Object expected, Object actual) {};",
-            "  void test(Object other1, Object other2) {",
-            "    assertEquals(other1, other2);",
-            "  }",
-            "}")
+            """
+            abstract class ErrorProneTest {
+              static void assertEquals(Object expected, Object actual) {}
+              ;
+
+              void test(Object other1, Object other2) {
+                assertEquals(other1, other2);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -180,16 +221,20 @@ public class AssertEqualsArgumentOrderCheckerTest {
     compilationHelper
         .addSourceLines(
             "ErrorProneTest.java",
-            "abstract class ErrorProneTest {",
-            "  static void assertEquals(Object expected, Object actual) {};",
-            "  void test(Exception exception) {",
-            "    try {",
-            "      throw exception;",
-            "    } catch (Exception expected) {",
-            "      assertEquals(exception,expected);",
-            "    }",
-            "  }",
-            "}")
+            """
+            abstract class ErrorProneTest {
+              static void assertEquals(Object expected, Object actual) {}
+              ;
+
+              void test(Exception exception) {
+                try {
+                  throw exception;
+                } catch (Exception expected) {
+                  assertEquals(exception, expected);
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -198,15 +243,20 @@ public class AssertEqualsArgumentOrderCheckerTest {
     compilationHelper
         .addSourceLines(
             "ErrorProneTest.java",
-            "abstract class ErrorProneTest {",
-            "  static void assertEquals(Object expected, Object actual) {};",
-            "  enum MyEnum {",
-            "    VALUE",
-            "  }",
-            "  void test(MyEnum expected) {",
-            "    assertEquals(MyEnum.VALUE, expected);",
-            "  }",
-            "}")
+            """
+            abstract class ErrorProneTest {
+              static void assertEquals(Object expected, Object actual) {}
+              ;
+
+              enum MyEnum {
+                VALUE
+              }
+
+              void test(MyEnum expected) {
+                assertEquals(MyEnum.VALUE, expected);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -215,14 +265,20 @@ public class AssertEqualsArgumentOrderCheckerTest {
     compilationHelper
         .addSourceLines(
             "ErrorProneTest.java",
-            "abstract class ErrorProneTest {",
-            "  static void assertEquals(Object expected, Object actual) {};",
-            "  enum MyEnum {}",
-            "  abstract MyEnum enumValue();",
-            "  void test(Object other) {",
-            "    assertEquals(other, enumValue());",
-            "  }",
-            "}")
+            """
+            abstract class ErrorProneTest {
+              static void assertEquals(Object expected, Object actual) {}
+              ;
+
+              enum MyEnum {}
+
+              abstract MyEnum enumValue();
+
+              void test(Object other) {
+                assertEquals(other, enumValue());
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -231,12 +287,16 @@ public class AssertEqualsArgumentOrderCheckerTest {
     compilationHelper
         .addSourceLines(
             "ErrorProneTest.java",
-            "abstract class ErrorProneTest {",
-            "  static void assertEquals(Object expected, Object actual) {};",
-            "  void test(Object expected, Object actual) {",
-            "    assertEquals(/* expected= */actual, /* actual= */expected);",
-            "  }",
-            "}")
+            """
+            abstract class ErrorProneTest {
+              static void assertEquals(Object expected, Object actual) {}
+              ;
+
+              void test(Object expected, Object actual) {
+                assertEquals(/* expected= */ actual, /* actual= */ expected);
+              }
+            }
+            """)
         .doTest();
   }
 }

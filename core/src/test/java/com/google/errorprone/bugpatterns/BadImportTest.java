@@ -35,12 +35,15 @@ public final class BadImportTest {
     compilationTestHelper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.collect.ImmutableList.of;",
-            "import com.google.common.collect.ImmutableList;",
-            "class Test {",
-            "  // BUG: Diagnostic contains: ImmutableList.of()",
-            "  ImmutableList<?> list = of();",
-            "}")
+            """
+            import static com.google.common.collect.ImmutableList.of;
+            import com.google.common.collect.ImmutableList;
+
+            class Test {
+              // BUG: Diagnostic contains: ImmutableList.of()
+              ImmutableList<?> list = of();
+            }
+            """)
         .doTest();
   }
 
@@ -49,15 +52,17 @@ public final class BadImportTest {
     compilationTestHelper
         .addSourceLines(
             "Test.java",
-            "import static com.google.errorprone.CompilationTestHelper.newInstance;",
-            "import com.google.errorprone.CompilationTestHelper;",
-            "import com.google.errorprone.bugpatterns.BugChecker;",
-            "",
-            "class Test {",
-            "  private final CompilationTestHelper compilationTestHelper =",
-            "      // BUG: Diagnostic contains: CompilationTestHelper.newInstance",
-            "      newInstance(BugChecker.class, getClass());",
-            "}")
+            """
+            import static com.google.errorprone.CompilationTestHelper.newInstance;
+            import com.google.errorprone.CompilationTestHelper;
+            import com.google.errorprone.bugpatterns.BugChecker;
+
+            class Test {
+              private final CompilationTestHelper compilationTestHelper =
+                  // BUG: Diagnostic contains: CompilationTestHelper.newInstance
+                  newInstance(BugChecker.class, getClass());
+            }
+            """)
         .doTest();
   }
 
@@ -66,12 +71,15 @@ public final class BadImportTest {
     compilationTestHelper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.collect.ImmutableList.of;",
-            "import com.google.common.collect.ImmutableList;",
-            "class Test {",
-            "  // BUG: Diagnostic contains: qualified class: ImmutableList",
-            "  ImmutableList<?> list = of();",
-            "}")
+            """
+            import static com.google.common.collect.ImmutableList.of;
+            import com.google.common.collect.ImmutableList;
+
+            class Test {
+              // BUG: Diagnostic contains: qualified class: ImmutableList
+              ImmutableList<?> list = of();
+            }
+            """)
         .doTest();
   }
 
@@ -80,13 +88,15 @@ public final class BadImportTest {
     compilationTestHelper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.collect.ImmutableList.of;",
-            "import com.google.common.collect.ImmutableList;",
-            "class Test {",
-            "  // BUG: Diagnostic contains: "
-                + "ImmutableList.of(ImmutableList.of(1, 2, 3), ImmutableList.of())",
-            "  ImmutableList<?> list = of(of(1, 2, 3), of());",
-            "}")
+            """
+import static com.google.common.collect.ImmutableList.of;
+import com.google.common.collect.ImmutableList;
+
+class Test {
+  // BUG: Diagnostic contains: ImmutableList.of(ImmutableList.of(1, 2, 3), ImmutableList.of())
+  ImmutableList<?> list = of(of(1, 2, 3), of());
+}
+""")
         .doTest();
   }
 
@@ -96,14 +106,17 @@ public final class BadImportTest {
         .setArgs("-XepOpt:BadImport:Truth8=true")
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.truth.Truth8.assertThat;",
-            "import java.util.stream.IntStream;",
-            "class Test {",
-            "  void x(IntStream s) {",
-            "    // BUG: Diagnostic contains: usually recommend",
-            "    assertThat(s).isEmpty();",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth8.assertThat;
+            import java.util.stream.IntStream;
+
+            class Test {
+              void x(IntStream s) {
+                // BUG: Diagnostic contains: usually recommend
+                assertThat(s).isEmpty();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -112,30 +125,40 @@ public final class BadImportTest {
     refactoringTestHelper
         .addInputLines(
             "in/Test.java",
-            "import static com.google.common.collect.ImmutableList.of;",
-            "import com.google.common.collect.ImmutableList;",
-            "class Test {",
-            "  class Blah {",
-            "    Blah() {",
-            "      of();  // Left unchanged, because this is invoking Test.Blah.of.",
-            "    }",
-            "    void of() {}",
-            "  }",
-            "  ImmutableList<?> list = of();",
-            "}")
+            """
+            import static com.google.common.collect.ImmutableList.of;
+            import com.google.common.collect.ImmutableList;
+
+            class Test {
+              class Blah {
+                Blah() {
+                  of(); // Left unchanged, because this is invoking Test.Blah.of.
+                }
+
+                void of() {}
+              }
+
+              ImmutableList<?> list = of();
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "import static com.google.common.collect.ImmutableList.of;",
-            "import com.google.common.collect.ImmutableList;",
-            "class Test {",
-            "  class Blah {",
-            "    Blah() {",
-            "      of();  // Left unchanged, because this is invoking Test.Blah.of.",
-            "    }",
-            "    void of() {}",
-            "  }",
-            "  ImmutableList<?> list = ImmutableList.of();",
-            "}")
+            """
+            import static com.google.common.collect.ImmutableList.of;
+            import com.google.common.collect.ImmutableList;
+
+            class Test {
+              class Blah {
+                Blah() {
+                  of(); // Left unchanged, because this is invoking Test.Blah.of.
+                }
+
+                void of() {}
+              }
+
+              ImmutableList<?> list = ImmutableList.of();
+            }
+            """)
         .doTest();
   }
 
@@ -144,12 +167,15 @@ public final class BadImportTest {
     compilationTestHelper
         .addSourceLines(
             "in/Test.java",
-            "class Test {",
-            "  void of() {}",
-            "  void foo() {",
-            "    of();",
-            "  }",
-            "}")
+            """
+            class Test {
+              void of() {}
+
+              void foo() {
+                of();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -163,11 +189,14 @@ public final class BadImportTest {
     compilationTestHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.collect.ImmutableList.Builder;",
-            "class Test {",
-            "  // BUG: Diagnostic contains: ImmutableList.Builder<String> builder = null;",
-            "  Builder<String> builder = null;",
-            "}")
+            """
+            import com.google.common.collect.ImmutableList.Builder;
+
+            class Test {
+              // BUG: Diagnostic contains: ImmutableList.Builder<String> builder = null;
+              Builder<String> builder = null;
+            }
+            """)
         .doTest();
   }
 
@@ -176,21 +205,27 @@ public final class BadImportTest {
     compilationTestHelper
         .addSourceLines(
             "thing/A.java",
-            "package thing;",
-            "public class A {",
-            "  public static class B {",
-            "    public static class Builder {",
-            "    }",
-            "  }",
-            "}")
+            """
+            package thing;
+
+            public class A {
+              public static class B {
+                public static class Builder {}
+              }
+            }
+            """)
         .addSourceLines(
             "Test.java",
-            "import thing.A.B.Builder;",
-            "class Test {",
-            "  // BUG: Diagnostic contains: A.B.Builder builder;",
-            "  Builder builder;",
-            "  static class B {}",
-            "}")
+            """
+            import thing.A.B.Builder;
+
+            class Test {
+              // BUG: Diagnostic contains: A.B.Builder builder;
+              Builder builder;
+
+              static class B {}
+            }
+            """)
         .doTest();
   }
 
@@ -199,22 +234,29 @@ public final class BadImportTest {
     compilationTestHelper
         .addSourceLines(
             "thing/A.java",
-            "package thing;",
-            "public class A {",
-            "  public static class B {",
-            "    public static class Builder {",
-            "    }",
-            "  }",
-            "}")
+            """
+            package thing;
+
+            public class A {
+              public static class B {
+                public static class Builder {}
+              }
+            }
+            """)
         .addSourceLines(
             "Test.java",
-            "import thing.A.B.Builder;",
-            "class Test {",
-            "  // BUG: Diagnostic contains: thing.A.B.Builder builder",
-            "  Builder builder;",
-            "  static class A {}",
-            "  static class B {}",
-            "}")
+            """
+            import thing.A.B.Builder;
+
+            class Test {
+              // BUG: Diagnostic contains: thing.A.B.Builder builder
+              Builder builder;
+
+              static class A {}
+
+              static class B {}
+            }
+            """)
         .doTest();
   }
 
@@ -252,42 +294,66 @@ public final class BadImportTest {
     refactoringTestHelper
         .addInputLines(
             "input/TypeUseAnnotation.java",
-            "package test;",
-            "import java.lang.annotation.ElementType;",
-            "import java.lang.annotation.Target;",
-            "@Target({ElementType.TYPE_PARAMETER, ElementType.TYPE_USE})",
-            "@interface TypeUseAnnotation {}")
+            """
+            package test;
+
+            import java.lang.annotation.ElementType;
+            import java.lang.annotation.Target;
+
+            @Target({ElementType.TYPE_PARAMETER, ElementType.TYPE_USE})
+            @interface TypeUseAnnotation {}
+            """)
         .expectUnchanged()
         .addInputLines(
             "input/SomeClass.java",
-            "package test;",
-            "class SomeClass {",
-            "  static class Builder {}",
-            "}")
+            """
+            package test;
+
+            class SomeClass {
+              static class Builder {}
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
             "input/Test.java",
-            "package test;",
-            "import java.util.List;",
-            "import test.SomeClass.Builder;",
-            "abstract class Test {",
-            "  @TypeUseAnnotation Builder builder;",
-            "  @TypeUseAnnotation abstract Builder method1();",
-            "  abstract @TypeUseAnnotation Builder method2();",
-            "  abstract void method3(@TypeUseAnnotation Builder builder);",
-            "  abstract void method4(List<@TypeUseAnnotation Builder> builder);",
-            "}")
+            """
+            package test;
+
+            import java.util.List;
+            import test.SomeClass.Builder;
+
+            abstract class Test {
+              @TypeUseAnnotation Builder builder;
+
+              @TypeUseAnnotation
+              abstract Builder method1();
+
+              abstract @TypeUseAnnotation Builder method2();
+
+              abstract void method3(@TypeUseAnnotation Builder builder);
+
+              abstract void method4(List<@TypeUseAnnotation Builder> builder);
+            }
+            """)
         .addOutputLines(
             "output/Test.java",
-            "package test;",
-            "import java.util.List;",
-            "abstract class Test {",
-            "  SomeClass.@TypeUseAnnotation Builder builder;",
-            "  abstract SomeClass.@TypeUseAnnotation Builder method1();",
-            "  abstract SomeClass.@TypeUseAnnotation Builder method2();",
-            "  abstract void method3(SomeClass.@TypeUseAnnotation Builder builder);",
-            "  abstract void method4(List<SomeClass.@TypeUseAnnotation Builder> builder);",
-            "}")
+            """
+            package test;
+
+            import java.util.List;
+
+            abstract class Test {
+              SomeClass.@TypeUseAnnotation Builder builder;
+
+              abstract SomeClass.@TypeUseAnnotation Builder method1();
+
+              abstract SomeClass.@TypeUseAnnotation Builder method2();
+
+              abstract void method3(SomeClass.@TypeUseAnnotation Builder builder);
+
+              abstract void method4(List<SomeClass.@TypeUseAnnotation Builder> builder);
+            }
+            """)
         .doTest();
   }
 
@@ -297,13 +363,16 @@ public final class BadImportTest {
         .setArgs("-XepOpt:BadImport:Truth8=false")
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.truth.Truth8.assertThat;",
-            "import java.util.stream.IntStream;",
-            "class Test {",
-            "  void x(IntStream s) {",
-            "    assertThat(s).isEmpty();",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth8.assertThat;
+            import java.util.stream.IntStream;
+
+            class Test {
+              void x(IntStream s) {
+                assertThat(s).isEmpty();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -312,12 +381,15 @@ public final class BadImportTest {
     compilationTestHelper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "class Test {",
-            "  void x(Iterable<?> i) {",
-            "    assertThat(i).isEmpty();",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+
+            class Test {
+              void x(Iterable<?> i) {
+                assertThat(i).isEmpty();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -326,13 +398,16 @@ public final class BadImportTest {
     compilationTestHelper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.collect.ImmutableList.of;",
-            "import com.google.common.collect.ImmutableList;",
-            "@SuppressWarnings(\"BadImport\")",
-            "class Test {",
-            "  ImmutableList<?> list = of();",
-            "  ImmutableList<?> list2 = of();",
-            "}")
+            """
+            import static com.google.common.collect.ImmutableList.of;
+            import com.google.common.collect.ImmutableList;
+
+            @SuppressWarnings("BadImport")
+            class Test {
+              ImmutableList<?> list = of();
+              ImmutableList<?> list2 = of();
+            }
+            """)
         .doTest();
   }
 
@@ -341,15 +416,18 @@ public final class BadImportTest {
     compilationTestHelper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.collect.ImmutableList.of;",
-            "import com.google.common.collect.ImmutableList;",
-            "class Test {",
-            "  @SuppressWarnings(\"BadImport\")",
-            "  ImmutableList<?> list = of();",
-            "",
-            "  // BUG: Diagnostic contains: ImmutableList.of()",
-            "  ImmutableList<?> list2 = of();",
-            "}")
+            """
+            import static com.google.common.collect.ImmutableList.of;
+            import com.google.common.collect.ImmutableList;
+
+            class Test {
+              @SuppressWarnings("BadImport")
+              ImmutableList<?> list = of();
+
+              // BUG: Diagnostic contains: ImmutableList.of()
+              ImmutableList<?> list2 = of();
+            }
+            """)
         .doTest();
   }
 
@@ -358,18 +436,22 @@ public final class BadImportTest {
     compilationTestHelper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.collect.ImmutableList.of;",
-            "import com.google.common.collect.ImmutableList;",
-            "class Test {",
-            "  @SuppressWarnings(\"BadImport\")",
-            "  void foo() {",
-            "    ImmutableList<?> list = of();",
-            "  }",
-            "  void bar() {",
-            "    // BUG: Diagnostic contains: ImmutableList.of()",
-            "    ImmutableList<?> list2 = of();",
-            "  }",
-            "}")
+            """
+            import static com.google.common.collect.ImmutableList.of;
+            import com.google.common.collect.ImmutableList;
+
+            class Test {
+              @SuppressWarnings("BadImport")
+              void foo() {
+                ImmutableList<?> list = of();
+              }
+
+              void bar() {
+                // BUG: Diagnostic contains: ImmutableList.of()
+                ImmutableList<?> list2 = of();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -377,15 +459,19 @@ public final class BadImportTest {
   public void enumWithinSameCompilationUnitImported_noFinding() {
     compilationTestHelper
         .addSourceLines(
-            "Test.java", //
-            "package pkg;",
-            "import pkg.Test.Type;",
-            "class Test {",
-            "  enum Type {",
-            "    A,",
-            "    B;",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            package pkg;
+
+            import pkg.Test.Type;
+
+            class Test {
+              enum Type {
+                A,
+                B;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -393,27 +479,38 @@ public final class BadImportTest {
   public void enumWithinDifferentCompilationUnitImported_finding() {
     refactoringTestHelper
         .addInputLines(
-            "E.java", //
-            "package a;",
-            "public enum E {",
-            "  INSTANCE;",
-            "}")
+            "E.java",
+            """
+            package a;
+
+            public enum E {
+              INSTANCE;
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
-            "Test.java", //
-            "package pkg;",
-            "import static a.E.INSTANCE;",
-            "class Test {",
-            "  Object e = INSTANCE;",
-            "}")
+            "Test.java",
+            """
+            package pkg;
+
+            import static a.E.INSTANCE;
+
+            class Test {
+              Object e = INSTANCE;
+            }
+            """)
         .addOutputLines(
-            "Test.java", //
-            "package pkg;",
-            "import static a.E.INSTANCE;",
-            "import a.E;",
-            "class Test {",
-            "  Object e = E.INSTANCE;",
-            "}")
+            "Test.java",
+            """
+            package pkg;
+
+            import static a.E.INSTANCE;
+            import a.E;
+
+            class Test {
+              Object e = E.INSTANCE;
+            }
+            """)
         .doTest();
   }
 
@@ -422,17 +519,24 @@ public final class BadImportTest {
     compilationTestHelper
         .addSourceLines(
             "ProtoOuterClass.java",
-            "package pkg;",
-            "import com.google.protobuf.MessageLite;",
-            "public class ProtoOuterClass {",
-            "  public static abstract class Provider implements MessageLite {}",
-            "}")
+            """
+            package pkg;
+
+            import com.google.protobuf.MessageLite;
+
+            public class ProtoOuterClass {
+              public abstract static class Provider implements MessageLite {}
+            }
+            """)
         .addSourceLines(
             "Test.java",
-            "import pkg.ProtoOuterClass.Provider;",
-            "class Test {",
-            "  public void test(Provider p) {}",
-            "}")
+            """
+            import pkg.ProtoOuterClass.Provider;
+
+            class Test {
+              public void test(Provider p) {}
+            }
+            """)
         .doTest();
   }
 
@@ -442,24 +546,30 @@ public final class BadImportTest {
         .setArgs("-XepOpt:BadImport:BadEnclosingTypes=org.immutables.value.Value")
         .addInputLines(
             "org/immutables/value/Value.java",
-            "package org.immutables.value;",
-            "",
-            "public @interface Value {",
-            "  @interface Immutable {}",
-            "}")
+            """
+            package org.immutables.value;
+
+            public @interface Value {
+              @interface Immutable {}
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
             "Test.java",
-            "import org.immutables.value.Value.Immutable;",
-            "",
-            "@Immutable",
-            "interface Test {}")
+            """
+            import org.immutables.value.Value.Immutable;
+
+            @Immutable
+            interface Test {}
+            """)
         .addOutputLines(
             "Test.java",
-            "import org.immutables.value.Value;",
-            "",
-            "@Value.Immutable",
-            "interface Test {}")
+            """
+            import org.immutables.value.Value;
+
+            @Value.Immutable
+            interface Test {}
+            """)
         .doTest();
   }
 
@@ -469,12 +579,19 @@ public final class BadImportTest {
         .setArgs("-XepOpt:BadImport:BadEnclosingTypes=org.immutables.value.Value")
         .addSourceLines(
             "org/immutables/value/Value.java",
-            "package org.immutables.value;",
-            "",
-            "public @interface Value {",
-            "  @interface Immutable {}",
-            "}")
-        .addSourceLines("Test.java", "@org.immutables.value.Value.Immutable", "interface Test {}")
+            """
+            package org.immutables.value;
+
+            public @interface Value {
+              @interface Immutable {}
+            }
+            """)
+        .addSourceLines(
+            "Test.java",
+            """
+            @org.immutables.value.Value.Immutable
+            interface Test {}
+            """)
         .doTest();
   }
 
@@ -484,14 +601,16 @@ public final class BadImportTest {
         .setArgs("-XepOpt:BadImport:BadEnclosingTypes=com.google.common.collect.ImmutableList")
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.collect.ImmutableList.toImmutableList;",
-            "import com.google.common.collect.ImmutableList;",
-            "import java.util.stream.Collector;",
-            "",
-            "class Test {",
-            "  // BUG: Diagnostic contains: ImmutableList.toImmutableList()",
-            "  Collector<?, ?, ImmutableList<Object>> immutableList = toImmutableList();",
-            "}")
+            """
+            import static com.google.common.collect.ImmutableList.toImmutableList;
+            import com.google.common.collect.ImmutableList;
+            import java.util.stream.Collector;
+
+            class Test {
+              // BUG: Diagnostic contains: ImmutableList.toImmutableList()
+              Collector<?, ?, ImmutableList<Object>> immutableList = toImmutableList();
+            }
+            """)
         .doTest();
   }
 }

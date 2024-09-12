@@ -38,17 +38,20 @@ public final class BinderIdentityRestoredDangerouslyTest {
     compilationHelper
         .addSourceLines(
             "InFinally.java",
-            "import android.os.Binder;",
-            "public class InFinally {",
-            "  void foo() {",
-            "    long identity = Binder.clearCallingIdentity();",
-            "    try {",
-            "      // Do something (typically Binder IPC) ",
-            "    } finally {",
-            "      Binder.restoreCallingIdentity(identity);",
-            "    }",
-            "  }",
-            "}")
+            """
+            import android.os.Binder;
+
+            public class InFinally {
+              void foo() {
+                long identity = Binder.clearCallingIdentity();
+                try {
+                  // Do something (typically Binder IPC)
+                } finally {
+                  Binder.restoreCallingIdentity(identity);
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -57,15 +60,18 @@ public final class BinderIdentityRestoredDangerouslyTest {
     compilationHelper
         .addSourceLines(
             "InFinally.java",
-            "import android.os.Binder;",
-            "public class InFinally {",
-            "  void foo() {",
-            "    long identity = Binder.clearCallingIdentity();",
-            "    // Do something (typically Binder IPC) ",
-            "    // BUG: Diagnostic contains: Binder.restoreCallingIdentity() in a finally block",
-            "    Binder.restoreCallingIdentity(identity);",
-            "  }",
-            "}")
+            """
+            import android.os.Binder;
+
+            public class InFinally {
+              void foo() {
+                long identity = Binder.clearCallingIdentity();
+                // Do something (typically Binder IPC)
+                // BUG: Diagnostic contains: Binder.restoreCallingIdentity() in a finally block
+                Binder.restoreCallingIdentity(identity);
+              }
+            }
+            """)
         .doTest();
   }
 }

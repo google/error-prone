@@ -38,28 +38,34 @@ public class ParameterCommentTest {
     testHelper
         .addInputLines(
             "in/Test.java",
-            "class Test {",
-            "  void f(int x, int y) {}",
-            "  {",
-            "    f(0/*x*/, 1/*y=*/);",
-            "    f(0/*x*/, 1); // y",
-            "    f(/* x */ 0, /* y */ 1);",
-            "    f(0 /* x */, /* y */ 1);",
-            "    f(/* x */ 0, 1 /* y */);",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f(int x, int y) {}
+
+              {
+                f(0 /*x*/, 1/* y= */ );
+                f(0 /*x*/, 1); // y
+                f(/* x */ 0, /* y */ 1);
+                f(0 /* x */, /* y */ 1);
+                f(/* x */ 0, 1 /* y */);
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "class Test {",
-            "  void f(int x, int y) {}",
-            "  {",
-            "    f(/* x= */ 0, /* y= */ 1);",
-            "    f(/* x= */ 0, /* y= */ 1);",
-            "    f(/* x= */ 0, /* y= */ 1);",
-            "    f(/* x= */ 0, /* y= */ 1);",
-            "    f(/* x= */ 0, /* y= */ 1);",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f(int x, int y) {}
+
+              {
+                f(/* x= */ 0, /* y= */ 1);
+                f(/* x= */ 0, /* y= */ 1);
+                f(/* x= */ 0, /* y= */ 1);
+                f(/* x= */ 0, /* y= */ 1);
+                f(/* x= */ 0, /* y= */ 1);
+              }
+            }
+            """)
         .doTest(TestMode.TEXT_MATCH);
   }
 
@@ -68,13 +74,16 @@ public class ParameterCommentTest {
     compilationTestHelper
         .addSourceLines(
             "in/Test.java",
-            "class Test {",
-            "  void f(int x, int y) {}",
-            "  {",
-            "    f(/* x= */0, /* y = */1);",
-            "    f(0 /*y=*/, 1 /*x=*/); ",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f(int x, int y) {}
+
+              {
+                f(/* x= */ 0, /* y= */ 1);
+                f(0/* y= */ , 1/* x= */ );
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -83,26 +92,32 @@ public class ParameterCommentTest {
     testHelper
         .addInputLines(
             "in/Test.java",
-            "class Test {",
-            "  void f(int y, int... xs) {}",
-            "  {",
-            "    f(0/*y*/);",
-            "    f(0/*y*/, 1/*xs*/);",
-            "    f(0, new int[]{0}/*xs*/);",
-            "    f(0, 1, 2/*xs*/, 3/*xs*/);",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f(int y, int... xs) {}
+
+              {
+                f(0 /*y*/);
+                f(0 /*y*/, 1 /*xs*/);
+                f(0, new int[] {0} /*xs*/);
+                f(0, 1, 2 /*xs*/, 3 /*xs*/);
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "class Test {",
-            "  void f(int y, int... xs) {}",
-            "  {",
-            "    f(/* y= */ 0);",
-            "    f(/* y= */ 0, /* xs= */ 1);",
-            "    f(0, /* xs= */ new int[]{0});",
-            "    f(0, 1, /* xs= */ 2, /* xs= */ 3);",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f(int y, int... xs) {}
+
+              {
+                f(/* y= */ 0);
+                f(/* y= */ 0, /* xs= */ 1);
+                f(0, /* xs= */ new int[] {0});
+                f(0, 1, /* xs= */ 2, /* xs= */ 3);
+              }
+            }
+            """)
         .doTest(TestMode.TEXT_MATCH);
   }
 
@@ -110,13 +125,16 @@ public class ParameterCommentTest {
   public void noParams() {
     testHelper
         .addInputLines(
-            "in/Test.java", //
-            "class Test {",
-            "  void f() {}",
-            "  {",
-            "    f();",
-            "  }",
-            "}")
+            "in/Test.java",
+            """
+            class Test {
+              void f() {}
+
+              {
+                f();
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -126,22 +144,28 @@ public class ParameterCommentTest {
     testHelper
         .addInputLines(
             "in/Test.java",
-            "class Test {",
-            "  Test (int x, int y) {}",
-            "  {",
-            "    new Test(0/*x*/, 1/*y=*/);",
-            "    new Test(0/*x*/, 1); // y",
-            "  }",
-            "}")
+            """
+            class Test {
+              Test(int x, int y) {}
+
+              {
+                new Test(0 /*x*/, 1/* y= */ );
+                new Test(0 /*x*/, 1); // y
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "class Test {",
-            "  Test (int x, int y) {}",
-            "  {",
-            "    new Test(/* x= */ 0, /* y= */ 1);",
-            "    new Test(/* x= */ 0, /* y= */ 1); ",
-            "  }",
-            "}")
+            """
+            class Test {
+              Test(int x, int y) {}
+
+              {
+                new Test(/* x= */ 0, /* y= */ 1);
+                new Test(/* x= */ 0, /* y= */ 1);
+              }
+            }
+            """)
         .doTest(TestMode.TEXT_MATCH);
   }
 
@@ -150,22 +174,30 @@ public class ParameterCommentTest {
     testHelper
         .addInputLines(
             "in/Test.java",
-            "abstract class Test {",
-            "  abstract void target(Object first, Object second);",
-            "  abstract Object target2(Object second);",
-            "  void test(Object first, Object second) {",
-            "    target(first, target2(/* second= */ second));",
-            "  }",
-            "}")
+            """
+            abstract class Test {
+              abstract void target(Object first, Object second);
+
+              abstract Object target2(Object second);
+
+              void test(Object first, Object second) {
+                target(first, target2(/* second= */ second));
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "abstract class Test {",
-            "  abstract void target(Object first, Object second);",
-            "  abstract Object target2(Object second);",
-            "  void test(Object first, Object second) {",
-            "    target(first, target2(/* second= */ second));",
-            "  }",
-            "}")
+            """
+            abstract class Test {
+              abstract void target(Object first, Object second);
+
+              abstract Object target2(Object second);
+
+              void test(Object first, Object second) {
+                target(first, target2(/* second= */ second));
+              }
+            }
+            """)
         .doTest(TestMode.TEXT_MATCH);
   }
 
@@ -174,22 +206,30 @@ public class ParameterCommentTest {
     testHelper
         .addInputLines(
             "in/Test.java",
-            "abstract class Test {",
-            "  abstract void target(Object first, Object second);",
-            "  abstract Object target2(Object second);",
-            "  void test(Object first, Object second) {",
-            "    target(first, target2(second /* second */));",
-            "  }",
-            "}")
+            """
+            abstract class Test {
+              abstract void target(Object first, Object second);
+
+              abstract Object target2(Object second);
+
+              void test(Object first, Object second) {
+                target(first, target2(second /* second */));
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "abstract class Test {",
-            "  abstract void target(Object first, Object second);",
-            "  abstract Object target2(Object second);",
-            "  void test(Object first, Object second) {",
-            "    target(first, target2(/* second= */ second));",
-            "  }",
-            "}")
+            """
+            abstract class Test {
+              abstract void target(Object first, Object second);
+
+              abstract Object target2(Object second);
+
+              void test(Object first, Object second) {
+                target(first, target2(/* second= */ second));
+              }
+            }
+            """)
         .doTest(TestMode.TEXT_MATCH);
   }
 
@@ -198,16 +238,15 @@ public class ParameterCommentTest {
     compilationTestHelper
         .addSourceLines(
             "Test.java",
-            "public class Test {",
-            "  public static int foo(int x) {",
-            "    int y = true ? ",
-            "      foo(/* x= */ x) : foo(/* x= */ x);",
-            "    int z = true ? ",
-            "      foo(/* x= */ x) :",
-            "      foo(/* x= */ x);",
-            "    return 0;",
-            "  }",
-            "}")
+            """
+            public class Test {
+              public static int foo(int x) {
+                int y = true ? foo(/* x= */ x) : foo(/* x= */ x);
+                int z = true ? foo(/* x= */ x) : foo(/* x= */ x);
+                return 0;
+              }
+            }
+            """)
         .expectNoDiagnostics()
         .doTest();
   }
@@ -217,23 +256,25 @@ public class ParameterCommentTest {
     compilationTestHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.function.Consumer;",
-            "public class Test {",
-            "  private void testcase(String s, Consumer<Boolean> c) {",
-            "    outer(",
-            "        p -> {",
-            "          System.out.println(s);",
-            "          inner(",
-            "              /* myFunc= */ c,",
-            "              /* i1= */ 200,",
-            "              /* i2= */ 300);",
-            "        },",
-            "        /* b1= */ true,",
-            "        /* b2= */ false);",
-            "  }",
-            "  private void outer(Consumer<Boolean> myFunc, boolean b1, boolean b2) {}",
-            "  private void inner(Consumer<Boolean> myFunc, int i1, int i2) {}",
-            "}")
+            """
+            import java.util.function.Consumer;
+
+            public class Test {
+              private void testcase(String s, Consumer<Boolean> c) {
+                outer(
+                    p -> {
+                      System.out.println(s);
+                      inner(/* myFunc= */ c, /* i1= */ 200, /* i2= */ 300);
+                    },
+                    /* b1= */ true,
+                    /* b2= */ false);
+              }
+
+              private void outer(Consumer<Boolean> myFunc, boolean b1, boolean b2) {}
+
+              private void inner(Consumer<Boolean> myFunc, int i1, int i2) {}
+            }
+            """)
         .expectNoDiagnostics()
         .doTest();
   }
@@ -243,15 +284,24 @@ public class ParameterCommentTest {
     compilationTestHelper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "class Test {",
-            "  public Test a(int a) { return this; }",
-            "  public int b(int b) { return 1; }",
-            "  public void test(Test x) {",
-            "    assertThat(x.a(/* a= */ 1).b(/* b= */ 0)).isEqualTo(1);",
-            "    assertThat(x.a(/* a= */ 2).b(/* b= */ 0)).isEqualTo(1);",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+
+            class Test {
+              public Test a(int a) {
+                return this;
+              }
+
+              public int b(int b) {
+                return 1;
+              }
+
+              public void test(Test x) {
+                assertThat(x.a(/* a= */ 1).b(/* b= */ 0)).isEqualTo(1);
+                assertThat(x.a(/* a= */ 2).b(/* b= */ 0)).isEqualTo(1);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -260,15 +310,19 @@ public class ParameterCommentTest {
     compilationTestHelper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "class Test {",
-            "  public void f(int x) {}",
-            "  public void test() {",
-            "    f(",
-            "        /// javadoc markdown",
-            "        /* x= */ 42);",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+
+            class Test {
+              public void f(int x) {}
+
+              public void test() {
+                f(
+                    /// javadoc markdown
+                    /* x= */ 42);
+              }
+            }
+            """)
         .doTest();
   }
 }

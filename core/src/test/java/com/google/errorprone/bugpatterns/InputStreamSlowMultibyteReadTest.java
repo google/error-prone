@@ -32,11 +32,19 @@ public class InputStreamSlowMultibyteReadTest {
     compilationHelper
         .addSourceLines(
             "TestClass.java",
-            "class TestClass extends java.io.InputStream {",
-            "  byte[] buf = new byte[42];",
-            "  public int read(byte[] b, int a, int c) { return 0; }",
-            "  public int read() { return buf[0]; }",
-            "}")
+            """
+            class TestClass extends java.io.InputStream {
+              byte[] buf = new byte[42];
+
+              public int read(byte[] b, int a, int c) {
+                return 0;
+              }
+
+              public int read() {
+                return buf[0];
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -45,11 +53,16 @@ public class InputStreamSlowMultibyteReadTest {
     compilationHelper
         .addSourceLines(
             "TestClass.java",
-            "class TestClass extends java.io.InputStream {",
-            "  byte[] buf = new byte[42];",
-            "  // BUG: Diagnostic contains:",
-            "  public int read() { return buf[0]; }",
-            "}")
+            """
+            class TestClass extends java.io.InputStream {
+              byte[] buf = new byte[42];
+
+              // BUG: Diagnostic contains:
+              public int read() {
+                return buf[0];
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -58,10 +71,12 @@ public class InputStreamSlowMultibyteReadTest {
     compilationHelper
         .addSourceLines(
             "TestClass.java",
-            "abstract class TestClass extends java.io.InputStream {",
-            "  // BUG: Diagnostic contains:",
-            "  public abstract int read();",
-            "}")
+            """
+            abstract class TestClass extends java.io.InputStream {
+              // BUG: Diagnostic contains:
+              public abstract int read();
+            }
+            """)
         .doTest();
   }
 
@@ -70,10 +85,12 @@ public class InputStreamSlowMultibyteReadTest {
     compilationHelper
         .addSourceLines(
             "TestClass.java",
-            "abstract class TestClass extends java.io.InputStream {",
-            "  // BUG: Diagnostic contains:",
-            "  public native int read();",
-            "}")
+            """
+            abstract class TestClass extends java.io.InputStream {
+              // BUG: Diagnostic contains:
+              public native int read();
+            }
+            """)
         .doTest();
   }
 
@@ -82,9 +99,13 @@ public class InputStreamSlowMultibyteReadTest {
     compilationHelper
         .addSourceLines(
             "TestClass.java",
-            "class TestClass extends java.io.InputStream {",
-            "  public int read() { return 0; }",
-            "}")
+            """
+            class TestClass extends java.io.InputStream {
+              public int read() {
+                return 0;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -95,16 +116,25 @@ public class InputStreamSlowMultibyteReadTest {
     compilationHelper
         .addSourceLines(
             "Super.java",
-            "abstract class Super extends java.io.InputStream {",
-            "  public int read(byte[] b, int a, int c) { return 0; }",
-            "}")
+            """
+            abstract class Super extends java.io.InputStream {
+              public int read(byte[] b, int a, int c) {
+                return 0;
+              }
+            }
+            """)
         .addSourceLines(
             "TestClass.java",
-            "class TestClass extends Super {",
-            "  byte[] buf = new byte[42];",
-            "  // BUG: Diagnostic contains:",
-            "  public int read() { return buf[0]; }",
-            "}")
+            """
+            class TestClass extends Super {
+              byte[] buf = new byte[42];
+
+              // BUG: Diagnostic contains:
+              public int read() {
+                return buf[0];
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -113,11 +143,17 @@ public class InputStreamSlowMultibyteReadTest {
     compilationHelper
         .addSourceLines(
             "javatests/TestClass.java",
-            "class TestClass extends junit.framework.TestCase {",
-            " static class SomeStream extends java.io.InputStream {",
-            "  byte[] buf = new byte[42];",
-            "  public int read() { return buf[0]; }",
-            "}}")
+            """
+            class TestClass extends junit.framework.TestCase {
+              static class SomeStream extends java.io.InputStream {
+                byte[] buf = new byte[42];
+
+                public int read() {
+                  return buf[0];
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -126,12 +162,18 @@ public class InputStreamSlowMultibyteReadTest {
     compilationHelper
         .addSourceLines(
             "javatests/TestClass.java",
-            "@org.junit.runner.RunWith(org.junit.runners.JUnit4.class)",
-            "class TestClass {",
-            " static class SomeStream extends java.io.InputStream {",
-            "  byte[] buf = new byte[42];",
-            "  public int read() { return buf[0]; }",
-            "}}")
+            """
+            @org.junit.runner.RunWith(org.junit.runners.JUnit4.class)
+            class TestClass {
+              static class SomeStream extends java.io.InputStream {
+                byte[] buf = new byte[42];
+
+                public int read() {
+                  return buf[0];
+                }
+              }
+            }
+            """)
         .doTest();
   }
 }

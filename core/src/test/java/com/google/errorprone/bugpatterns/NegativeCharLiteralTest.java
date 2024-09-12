@@ -32,11 +32,13 @@ public class NegativeCharLiteralTest {
   public void positive_literalNegativeOne() {
     compilationHelper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  // BUG: Diagnostic contains: 'char x = Character.MAX_VALUE;'",
-            "  char x = (char) -1;",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              // BUG: Diagnostic contains: 'char x = Character.MAX_VALUE;'
+              char x = (char) -1;
+            }
+            """)
         .doTest();
   }
 
@@ -44,11 +46,13 @@ public class NegativeCharLiteralTest {
   public void positive_literalNegativeTwo() {
     compilationHelper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  // BUG: Diagnostic contains: 'char x = Character.MAX_VALUE - 1;'",
-            "  char x = (char) -2;",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              // BUG: Diagnostic contains: 'char x = Character.MAX_VALUE - 1;'
+              char x = (char) -2;
+            }
+            """)
         .doTest();
   }
 
@@ -56,11 +60,13 @@ public class NegativeCharLiteralTest {
   public void positive_literalOneLessThanMultipleOf65536() {
     compilationHelper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  // BUG: Diagnostic contains: 'char x = Character.MAX_VALUE;'",
-            "  char x = (char) -65537;",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              // BUG: Diagnostic contains: 'char x = Character.MAX_VALUE;'
+              char x = (char) -65537;
+            }
+            """)
         .doTest();
   }
 
@@ -68,11 +74,13 @@ public class NegativeCharLiteralTest {
   public void positive_longLiteral() {
     compilationHelper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  // BUG: Diagnostic contains: 'char x = Character.MAX_VALUE;'",
-            "  char x = (char) -1L;",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              // BUG: Diagnostic contains: 'char x = Character.MAX_VALUE;'
+              char x = (char) -1L;
+            }
+            """)
         .doTest();
   }
 
@@ -80,11 +88,13 @@ public class NegativeCharLiteralTest {
   public void positive_multipleOverflow() {
     compilationHelper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  // BUG: Diagnostic contains: 'char x = Character.MAX_VALUE - 38527;'",
-            "  char x = (char) -10000000;",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              // BUG: Diagnostic contains: 'char x = Character.MAX_VALUE - 38527;'
+              char x = (char) -10000000;
+            }
+            """)
         .doTest();
   }
 
@@ -92,10 +102,12 @@ public class NegativeCharLiteralTest {
   public void negative_zeroLiteral() {
     compilationHelper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  char x = (char) 0;",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              char x = (char) 0;
+            }
+            """)
         .doTest();
   }
 
@@ -103,10 +115,12 @@ public class NegativeCharLiteralTest {
   public void negative_positiveLiteral() {
     compilationHelper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  char x = (char) 1;",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              char x = (char) 1;
+            }
+            """)
         .doTest();
   }
 
@@ -114,10 +128,12 @@ public class NegativeCharLiteralTest {
   public void negative_castToTypeNotChar() {
     compilationHelper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  int x = (int) -1;",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              int x = (int) -1;
+            }
+            """)
         .doTest();
   }
 }

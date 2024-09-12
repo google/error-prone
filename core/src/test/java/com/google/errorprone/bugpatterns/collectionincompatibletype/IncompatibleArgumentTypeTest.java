@@ -53,19 +53,22 @@ public class IncompatibleArgumentTypeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.collect.ImmutableList;",
-            "import com.google.errorprone.annotations.CompatibleWith;",
-            "import java.util.Map;",
-            "import java.util.Optional;",
-            "abstract class Test {",
-            "  abstract <K, V> Optional<V> getOrEmpty(Map<K, V> map, @CompatibleWith(\"K\") Object"
-                + " key);",
-            "  void test(Map<Long, String> map, ImmutableList<Long> xs) {",
-            "    // BUG: Diagnostic contains:",
-            "    getOrEmpty(map, xs);",
-            "    Optional<String> x = Optional.empty().flatMap(k -> getOrEmpty(map, xs));",
-            "  }",
-            "}")
+            """
+import com.google.common.collect.ImmutableList;
+import com.google.errorprone.annotations.CompatibleWith;
+import java.util.Map;
+import java.util.Optional;
+
+abstract class Test {
+  abstract <K, V> Optional<V> getOrEmpty(Map<K, V> map, @CompatibleWith("K") Object key);
+
+  void test(Map<Long, String> map, ImmutableList<Long> xs) {
+    // BUG: Diagnostic contains:
+    getOrEmpty(map, xs);
+    Optional<String> x = Optional.empty().flatMap(k -> getOrEmpty(map, xs));
+  }
+}
+""")
         .doTest();
   }
 }

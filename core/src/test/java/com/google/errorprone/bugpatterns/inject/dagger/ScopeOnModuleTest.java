@@ -37,33 +37,37 @@ public class ScopeOnModuleTest {
     testHelper
         .addInputLines(
             "in/Test.java",
-            "import dagger.Module;",
-            "import dagger.Provides;",
-            "import javax.inject.Singleton;",
-            "",
-            "@Module",
-            "@Singleton",
-            "class Test {",
-            "  @Provides",
-            "  @Singleton",
-            "  Object provideObject() {",
-            "    return new Object();",
-            "  }",
-            "}")
+            """
+            import dagger.Module;
+            import dagger.Provides;
+            import javax.inject.Singleton;
+
+            @Module
+            @Singleton
+            class Test {
+              @Provides
+              @Singleton
+              Object provideObject() {
+                return new Object();
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "import dagger.Module;",
-            "import dagger.Provides;",
-            "import javax.inject.Singleton;",
-            "",
-            "@Module",
-            "class Test {",
-            "  @Provides",
-            "  @Singleton",
-            "  Object provideObject() {",
-            "    return new Object();",
-            "  }",
-            "}")
+            """
+            import dagger.Module;
+            import dagger.Provides;
+            import javax.inject.Singleton;
+
+            @Module
+            class Test {
+              @Provides
+              @Singleton
+              Object provideObject() {
+                return new Object();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -72,37 +76,43 @@ public class ScopeOnModuleTest {
     testHelper
         .addInputLines(
             "in/Test.java",
-            "import dagger.Module;",
-            "import dagger.Provides;",
-            "import javax.inject.Scope;",
-            "",
-            "@Module",
-            "@Test.MyScope",
-            "class Test {",
-            "  @Scope @interface MyScope {}",
-            "",
-            "  @Provides",
-            "  @MyScope",
-            "  Object provideObject() {",
-            "    return new Object();",
-            "  }",
-            "}")
+            """
+            import dagger.Module;
+            import dagger.Provides;
+            import javax.inject.Scope;
+
+            @Module
+            @Test.MyScope
+            class Test {
+              @Scope
+              @interface MyScope {}
+
+              @Provides
+              @MyScope
+              Object provideObject() {
+                return new Object();
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "import dagger.Module;",
-            "import dagger.Provides;",
-            "import javax.inject.Scope;",
-            "",
-            "@Module",
-            "class Test {",
-            "  @Scope @interface MyScope {}",
-            "",
-            "  @Provides",
-            "  @MyScope",
-            "  Object provideObject() {",
-            "    return new Object();",
-            "  }",
-            "}")
+            """
+            import dagger.Module;
+            import dagger.Provides;
+            import javax.inject.Scope;
+
+            @Module
+            class Test {
+              @Scope
+              @interface MyScope {}
+
+              @Provides
+              @MyScope
+              Object provideObject() {
+                return new Object();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -111,19 +121,21 @@ public class ScopeOnModuleTest {
     testHelper
         .addInputLines(
             "in/Test.java",
-            "import dagger.Module;",
-            "import dagger.Provides;",
-            "",
-            "@Module",
-            "@Test.NotAScope",
-            "class Test {",
-            "  @interface NotAScope {}",
-            "",
-            "  @Provides",
-            "  Object provideObject() {",
-            "    return new Object();",
-            "  }",
-            "}")
+            """
+            import dagger.Module;
+            import dagger.Provides;
+
+            @Module
+            @Test.NotAScope
+            class Test {
+              @interface NotAScope {}
+
+              @Provides
+              Object provideObject() {
+                return new Object();
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }

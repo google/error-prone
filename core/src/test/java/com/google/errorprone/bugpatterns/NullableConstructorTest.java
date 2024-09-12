@@ -33,11 +33,15 @@ public class NullableConstructorTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import javax.annotation.Nullable;",
-            "class Test {",
-            "  // BUG: Diagnostic contains: Constructors should not be annotated with @Nullable",
-            "  @Nullable public Test() {}",
-            "}")
+            """
+            import javax.annotation.Nullable;
+
+            class Test {
+              // BUG: Diagnostic contains: Constructors should not be annotated with @Nullable
+              @Nullable
+              public Test() {}
+            }
+            """)
         .doTest();
   }
 
@@ -45,10 +49,12 @@ public class NullableConstructorTest {
   public void negativeNotAnnotated() {
     compilationHelper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  public Test() {}",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              public Test() {}
+            }
+            """)
         .doTest();
   }
 
@@ -57,10 +63,16 @@ public class NullableConstructorTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import javax.annotation.Nullable;",
-            "class Test {",
-            "  @Nullable public int f() { return 42; }",
-            "}")
+            """
+            import javax.annotation.Nullable;
+
+            class Test {
+              @Nullable
+              public int f() {
+                return 42;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -70,18 +82,23 @@ public class NullableConstructorTest {
     compilationHelper
         .addSourceLines(
             "Nullable.java",
-            "import java.lang.annotation.ElementType;",
-            "import java.lang.annotation.Retention;",
-            "import java.lang.annotation.RetentionPolicy;",
-            "import java.lang.annotation.Target;",
-            "@Retention(RetentionPolicy.RUNTIME)",
-            "@Target(ElementType.TYPE_USE)",
-            "public @interface Nullable {}")
+            """
+            import java.lang.annotation.ElementType;
+            import java.lang.annotation.Retention;
+            import java.lang.annotation.RetentionPolicy;
+            import java.lang.annotation.Target;
+
+            @Retention(RetentionPolicy.RUNTIME)
+            @Target(ElementType.TYPE_USE)
+            public @interface Nullable {}
+            """)
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  <@Nullable T> Test(T t) {}",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              <@Nullable T> Test(T t) {}
+            }
+            """)
         .doTest();
   }
 }

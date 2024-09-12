@@ -32,13 +32,16 @@ public class AlwaysThrowsTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import java.time.Instant;",
-            "class T { ",
-            "  void f() {",
-            "    // BUG: Diagnostic contains: will fail at runtime with a DateTimeParseException",
-            "    Instant.parse(\"2007-12-3T10:15:30.00Z\");",
-            "  }",
-            "}")
+            """
+            import java.time.Instant;
+
+            class T {
+              void f() {
+                // BUG: Diagnostic contains: will fail at runtime with a DateTimeParseException
+                Instant.parse("2007-12-3T10:15:30.00Z");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -47,15 +50,18 @@ public class AlwaysThrowsTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.collect.ImmutableMap;",
-            "class Test {",
-            "  private static final ImmutableMap<Integer, Integer> xs =",
-            "    ImmutableMap.<Integer, Integer>builder()",
-            "      .put(1, 1)",
-            "      // BUG: Diagnostic contains:",
-            "      .put(1, 2)",
-            "      .buildOrThrow();",
-            "}")
+            """
+            import com.google.common.collect.ImmutableMap;
+
+            class Test {
+              private static final ImmutableMap<Integer, Integer> xs =
+                  ImmutableMap.<Integer, Integer>builder()
+                      .put(1, 1)
+                      // BUG: Diagnostic contains:
+                      .put(1, 2)
+                      .buildOrThrow();
+            }
+            """)
         .doTest();
   }
 
@@ -64,15 +70,18 @@ public class AlwaysThrowsTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.collect.ImmutableBiMap;",
-            "class Test {",
-            "  private static final ImmutableBiMap<Integer, Integer> xs =",
-            "    ImmutableBiMap.<Integer, Integer>builder()",
-            "      .put(1, 1)",
-            "      // BUG: Diagnostic contains:",
-            "      .put(2, 1)",
-            "      .buildOrThrow();",
-            "}")
+            """
+            import com.google.common.collect.ImmutableBiMap;
+
+            class Test {
+              private static final ImmutableBiMap<Integer, Integer> xs =
+                  ImmutableBiMap.<Integer, Integer>builder()
+                      .put(1, 1)
+                      // BUG: Diagnostic contains:
+                      .put(2, 1)
+                      .buildOrThrow();
+            }
+            """)
         .doTest();
   }
 
@@ -81,14 +90,14 @@ public class AlwaysThrowsTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.collect.ImmutableMap;",
-            "class Test {",
-            "  private static final ImmutableMap<Integer, Integer> xs =",
-            "    ImmutableMap.<Integer, Integer>builder()",
-            "      .put(1, 1)",
-            "      .put(2, 2)",
-            "      .buildOrThrow();",
-            "}")
+            """
+            import com.google.common.collect.ImmutableMap;
+
+            class Test {
+              private static final ImmutableMap<Integer, Integer> xs =
+                  ImmutableMap.<Integer, Integer>builder().put(1, 1).put(2, 2).buildOrThrow();
+            }
+            """)
         .doTest();
   }
 
@@ -97,12 +106,15 @@ public class AlwaysThrowsTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.collect.ImmutableMap;",
-            "class Test {",
-            "  private static final ImmutableMap<Integer, Integer> xs =",
-            "    // BUG: Diagnostic contains:",
-            "    ImmutableMap.of(1, 1, 1, 2);",
-            "}")
+            """
+            import com.google.common.collect.ImmutableMap;
+
+            class Test {
+              private static final ImmutableMap<Integer, Integer> xs =
+                  // BUG: Diagnostic contains:
+                  ImmutableMap.of(1, 1, 1, 2);
+            }
+            """)
         .doTest();
   }
 
@@ -111,13 +123,20 @@ public class AlwaysThrowsTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.collect.ImmutableMap;",
-            "class Test {",
-            "  private enum E {A, B}",
-            "  private static final ImmutableMap<E, Integer> xs =",
-            "    // BUG: Diagnostic contains:",
-            "    ImmutableMap.of(E.A, 1, E.A, 2);",
-            "}")
+            """
+            import com.google.common.collect.ImmutableMap;
+
+            class Test {
+              private enum E {
+                A,
+                B
+              }
+
+              private static final ImmutableMap<E, Integer> xs =
+                  // BUG: Diagnostic contains:
+                  ImmutableMap.of(E.A, 1, E.A, 2);
+            }
+            """)
         .doTest();
   }
 
@@ -126,13 +145,20 @@ public class AlwaysThrowsTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.collect.ImmutableMap;",
-            "class Test {",
-            "  private enum E {A, B}",
-            "  private static final ImmutableMap<E, Integer> xs =",
-            "    // BUG: Diagnostic contains:",
-            "    ImmutableMap.of(E.A, 1, E.A, 2);",
-            "}")
+            """
+            import com.google.common.collect.ImmutableMap;
+
+            class Test {
+              private enum E {
+                A,
+                B
+              }
+
+              private static final ImmutableMap<E, Integer> xs =
+                  // BUG: Diagnostic contains:
+                  ImmutableMap.of(E.A, 1, E.A, 2);
+            }
+            """)
         .doTest();
   }
 
@@ -141,17 +167,21 @@ public class AlwaysThrowsTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.collect.ImmutableBiMap;",
-            "class Test {",
-            "  ImmutableBiMap<String, Integer> map(String s) {",
-            "    // BUG: Diagnostic contains:",
-            "    return ImmutableBiMap.of(s, 1, s, 2);",
-            "  }",
-            "  ImmutableBiMap<Integer, String> values(String s) {",
-            "    // BUG: Diagnostic contains:",
-            "    return ImmutableBiMap.of(1, s, 2, s);",
-            "  }",
-            "}")
+            """
+            import com.google.common.collect.ImmutableBiMap;
+
+            class Test {
+              ImmutableBiMap<String, Integer> map(String s) {
+                // BUG: Diagnostic contains:
+                return ImmutableBiMap.of(s, 1, s, 2);
+              }
+
+              ImmutableBiMap<Integer, String> values(String s) {
+                // BUG: Diagnostic contains:
+                return ImmutableBiMap.of(1, s, 2, s);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -160,13 +190,16 @@ public class AlwaysThrowsTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.collect.ImmutableMap;",
-            "import java.time.Duration;",
-            "class Test {",
-            "  private static final ImmutableMap<Duration, Integer> xs =",
-            "    // BUG: Diagnostic contains: Duration.ofMillis(1)",
-            "    ImmutableMap.of(Duration.ofMillis(1), 1, Duration.ofMillis(1), 2);",
-            "}")
+            """
+            import com.google.common.collect.ImmutableMap;
+            import java.time.Duration;
+
+            class Test {
+              private static final ImmutableMap<Duration, Integer> xs =
+                  // BUG: Diagnostic contains: Duration.ofMillis(1)
+                  ImmutableMap.of(Duration.ofMillis(1), 1, Duration.ofMillis(1), 2);
+            }
+            """)
         .doTest();
   }
 
@@ -175,11 +208,14 @@ public class AlwaysThrowsTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.UUID;",
-            "class Test {",
-            "    // BUG: Diagnostic contains:",
-            "  private final UUID uuid = UUID.fromString(\"foo\");",
-            "}")
+            """
+            import java.util.UUID;
+
+            class Test {
+              // BUG: Diagnostic contains:
+              private final UUID uuid = UUID.fromString("foo");
+            }
+            """)
         .doTest();
   }
 }

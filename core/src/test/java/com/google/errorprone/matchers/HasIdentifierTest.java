@@ -48,7 +48,17 @@ public class HasIdentifierTest extends CompilerBasedAbstractTest {
 
   @Test
   public void shouldMatchThis() {
-    writeFile("A.java", "public class A {", "  A() { this(0); }", "  A(int foo) {}", "}");
+    writeFile(
+        "A.java",
+        """
+        public class A {
+          A() {
+            this(0);
+          }
+
+          A(int foo) {}
+        }
+        """);
     assertCompiles(
         methodHasIdentifierMatching(
             /* shouldMatch= */ true,
@@ -65,12 +75,14 @@ public class HasIdentifierTest extends CompilerBasedAbstractTest {
   public void shouldMatchLocalVar() {
     writeFile(
         "A.java",
-        "public class A {",
-        "  A() {",
-        "    int foo = 1;",
-        "    int bar = foo;",
-        "  }",
-        "}");
+        """
+        public class A {
+          A() {
+            int foo = 1;
+            int bar = foo;
+          }
+        }
+        """);
     assertCompiles(
         methodHasIdentifierMatching(
             /* shouldMatch= */ true,
@@ -85,7 +97,15 @@ public class HasIdentifierTest extends CompilerBasedAbstractTest {
 
   @Test
   public void shouldMatchParam() {
-    writeFile("A.java", "public class A {", "  A(int foo) {", "    int bar = foo;", "  }", "}");
+    writeFile(
+        "A.java",
+        """
+        public class A {
+          A(int foo) {
+            int bar = foo;
+          }
+        }
+        """);
     assertCompiles(
         methodHasIdentifierMatching(
             /* shouldMatch= */ true,
@@ -100,7 +120,15 @@ public class HasIdentifierTest extends CompilerBasedAbstractTest {
 
   @Test
   public void shouldNotMatchDeclaration() {
-    writeFile("A.java", "public class A {", "  A() {", "    int foo = 1;", "  }", "}");
+    writeFile(
+        "A.java",
+        """
+        public class A {
+          A() {
+            int foo = 1;
+          }
+        }
+        """);
     assertCompiles(
         methodHasIdentifierMatching(
             /* shouldMatch= */ false,
@@ -119,7 +147,15 @@ public class HasIdentifierTest extends CompilerBasedAbstractTest {
    */
   @Test
   public void doesNotThrowWhenMatcherIsAppliedDirectlyToLiteral() {
-    writeFile("A.java", "public class A {", "  A() {", "    int foo = 1;", "  }", "}");
+    writeFile(
+        "A.java",
+        """
+        public class A {
+          A() {
+            int foo = 1;
+          }
+        }
+        """);
     assertCompiles(
         literalHasIdentifierMatching(
             /* shouldMatch= */ false,

@@ -32,14 +32,17 @@ public final class CatchingUncheckedTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void test() {",
-            "    try {",
-            "      this.hashCode();",
-            "    // BUG: Diagnostic contains:",
-            "    } catch (Exception e) {}",
-            "  }",
-            "}")
+            """
+            class Test {
+              void test() {
+                try {
+                  this.hashCode();
+                  // BUG: Diagnostic contains:
+                } catch (Exception e) {
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -48,16 +51,20 @@ public final class CatchingUncheckedTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import java.io.IOException;",
-            "class Test {",
-            "  void test() {",
-            "    try {",
-            "      throw new IOException();",
-            "    } catch (IOException e) {",
-            "    // BUG: Diagnostic contains:",
-            "    } catch (Exception e) {}",
-            "  }",
-            "}")
+            """
+            import java.io.IOException;
+
+            class Test {
+              void test() {
+                try {
+                  throw new IOException();
+                } catch (IOException e) {
+                  // BUG: Diagnostic contains:
+                } catch (Exception e) {
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -66,14 +73,16 @@ public final class CatchingUncheckedTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void test() {",
-            "    try {",
-            "      throw new Exception();",
-            "    } catch (Exception e) {",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              void test() {
+                try {
+                  throw new Exception();
+                } catch (Exception e) {
+                }
+              }
+            }
+            """)
         .doTest();
   }
 }

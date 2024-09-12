@@ -36,15 +36,21 @@ public class TypeNameShadowingTest {
     compilationHelper
         .addSourceLines(
             "T.java",
-            "package foo.bar;", //
-            "class T {}")
+            """
+            package foo.bar;
+
+            class T {}
+            """)
         .addSourceLines(
             "Foo.java",
-            "package foo.bar;", //
-            "// BUG: Diagnostic contains: Type parameter T shadows visible type foo.bar.T",
-            "class Foo<T> {",
-            "  void bar(T t) {}",
-            "}")
+            """
+            package foo.bar;
+
+            // BUG: Diagnostic contains: Type parameter T shadows visible type foo.bar.T
+            class Foo<T> {
+              void bar(T t) {}
+            }
+            """)
         .doTest();
   }
 
@@ -53,15 +59,18 @@ public class TypeNameShadowingTest {
     compilationHelper
         .addSourceLines(
             "Foo.java",
-            "package foo.bar;", //
-            "class Foo {",
-            "  class T {}",
-            "  // BUG: Diagnostic contains: "
-                + "Type parameter T shadows visible type foo.bar.Foo$T",
-            "  class Bar<T> {",
-            "    void bar(T t) {}",
-            "  }",
-            "}")
+            """
+            package foo.bar;
+
+            class Foo {
+              class T {}
+
+              // BUG: Diagnostic contains: Type parameter T shadows visible type foo.bar.Foo$T
+              class Bar<T> {
+                void bar(T t) {}
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -70,15 +79,18 @@ public class TypeNameShadowingTest {
     compilationHelper
         .addSourceLines(
             "Foo.java",
-            "package foo.bar;", //
-            "class Foo {",
-            "  public static class T {}",
-            "  // BUG: Diagnostic contains: "
-                + "Type parameter T shadows visible type foo.bar.Foo$T",
-            "  class Bar<T> {",
-            "    void bar(T t) {}",
-            "  }",
-            "}")
+            """
+            package foo.bar;
+
+            class Foo {
+              public static class T {}
+
+              // BUG: Diagnostic contains: Type parameter T shadows visible type foo.bar.Foo$T
+              class Bar<T> {
+                void bar(T t) {}
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -87,17 +99,23 @@ public class TypeNameShadowingTest {
     compilationHelper
         .addSourceLines(
             "T.java",
-            "package foo.bar;", //
-            "interface T {}")
+            """
+            package foo.bar;
+
+            interface T {}
+            """)
         .addSourceLines(
             "Foo.java",
-            "package foo.bar;", //
-            "class Foo {",
-            "  // BUG: Diagnostic contains: Type parameter T shadows visible type foo.bar.T",
-            "  class FooInner<T> {",
-            "    void bar(T t) {}",
-            "  }",
-            "}")
+            """
+            package foo.bar;
+
+            class Foo {
+              // BUG: Diagnostic contains: Type parameter T shadows visible type foo.bar.T
+              class FooInner<T> {
+                void bar(T t) {}
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -106,18 +124,25 @@ public class TypeNameShadowingTest {
     compilationHelper
         .addSourceLines(
             "Foo.java",
-            "package foo.bar;", //
-            "class Foo {",
-            "  class T {}",
-            "}")
+            """
+            package foo.bar;
+
+            class Foo {
+              class T {}
+            }
+            """)
         .addSourceLines(
             "Bar.java",
-            "package foo.bar;", //
-            "import foo.bar.Foo.T;",
-            "// BUG: Diagnostic contains: Type parameter T shadows visible type foo.bar.Foo$T",
-            "class Bar<T> {",
-            "  void bar(T t) {}",
-            "}")
+            """
+            package foo.bar;
+
+            import foo.bar.Foo.T;
+
+            // BUG: Diagnostic contains: Type parameter T shadows visible type foo.bar.Foo$T
+            class Bar<T> {
+              void bar(T t) {}
+            }
+            """)
         .doTest();
   }
 
@@ -126,15 +151,21 @@ public class TypeNameShadowingTest {
     compilationHelper
         .addSourceLines(
             "T.java",
-            "package foo.bar;", //
-            "class T {}")
+            """
+            package foo.bar;
+
+            class T {}
+            """)
         .addSourceLines(
             "Foo.java",
-            "package foo.bar;", //
-            "// BUG: Diagnostic contains: Type parameter T shadows visible type foo.bar.T",
-            "class Foo<T,U,V> {",
-            "  void bar(T t, U u, V v) {}",
-            "}")
+            """
+            package foo.bar;
+
+            // BUG: Diagnostic contains: Type parameter T shadows visible type foo.bar.T
+            class Foo<T, U, V> {
+              void bar(T t, U u, V v) {}
+            }
+            """)
         .doTest();
   }
 
@@ -143,19 +174,28 @@ public class TypeNameShadowingTest {
     compilationHelper
         .addSourceLines(
             "T.java",
-            "package foo.bar;", //
-            "class T {}")
+            """
+            package foo.bar;
+
+            class T {}
+            """)
         .addSourceLines(
             "U.java",
-            "package foo.bar;", //
-            "class U {}")
+            """
+            package foo.bar;
+
+            class U {}
+            """)
         .addSourceLines(
             "Foo.java",
-            "package foo.bar;", //
-            "// BUG: Diagnostic matches: combo",
-            "class Foo<T,U> {",
-            "  void bar(T t, U u) {}",
-            "}")
+            """
+            package foo.bar;
+
+            // BUG: Diagnostic matches: combo
+            class Foo<T, U> {
+              void bar(T t, U u) {}
+            }
+            """)
         .expectErrorMessage(
             "combo",
             s ->
@@ -169,10 +209,12 @@ public class TypeNameShadowingTest {
     compilationHelper
         .addSourceLines(
             "Foo.java",
-            "// BUG: Diagnostic contains: Class shadows visible type java.lang.Class", //
-            "class Foo<Class> {",
-            "  void bar(Class c) {}",
-            "}")
+            """
+            // BUG: Diagnostic contains: Class shadows visible type java.lang.Class
+            class Foo<Class> {
+              void bar(Class c) {}
+            }
+            """)
         .doTest();
   }
 
@@ -181,14 +223,20 @@ public class TypeNameShadowingTest {
     compilationHelper
         .addSourceLines(
             "T.java",
-            "package foo.bar;", //
-            "class T {}")
+            """
+            package foo.bar;
+
+            class T {}
+            """)
         .addSourceLines(
             "Foo.java",
-            "package foo.bar;", //
-            "class Foo<T1> {",
-            "  void bar(T1 t) {}",
-            "}")
+            """
+            package foo.bar;
+
+            class Foo<T1> {
+              void bar(T1 t) {}
+            }
+            """)
         .doTest();
   }
 
@@ -197,12 +245,15 @@ public class TypeNameShadowingTest {
     compilationHelper
         .addSourceLines(
             "T.java",
-            "package foo.bar;", //
-            "class T {",
-            "  class Foo<T1> {",
-            "    void bar(T1 t) {}",
-            "  }",
-            "}")
+            """
+            package foo.bar;
+
+            class T {
+              class Foo<T1> {
+                void bar(T1 t) {}
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -211,16 +262,22 @@ public class TypeNameShadowingTest {
     compilationHelper
         .addSourceLines(
             "Foo.java",
-            "package foo.bar;", //
-            "class Foo {",
-            "  class T {}",
-            "}")
+            """
+            package foo.bar;
+
+            class Foo {
+              class T {}
+            }
+            """)
         .addSourceLines(
             "Bar.java",
-            "package foo.bar;", //
-            "class Bar<T> {",
-            "  void bar(T t) {}",
-            "}")
+            """
+            package foo.bar;
+
+            class Bar<T> {
+              void bar(T t) {}
+            }
+            """)
         .doTest();
   }
 
@@ -229,15 +286,22 @@ public class TypeNameShadowingTest {
     compilationHelper
         .addSourceLines(
             "a/T.java",
-            "package a;", //
-            "class T {}")
+            """
+            package a;
+
+            class T {}
+            """)
         .addSourceLines(
             "b/Foo.java",
-            "package b;", //
-            "import a.*;",
-            "class Foo<T> {",
-            "  void bar(T u) {}",
-            "}")
+            """
+            package b;
+
+            import a.*;
+
+            class Foo<T> {
+              void bar(T u) {}
+            }
+            """)
         .doTest();
   }
 
@@ -246,16 +310,22 @@ public class TypeNameShadowingTest {
     refactoring
         .addInputLines(
             "Foo.java",
-            "class Foo {", //
-            "  class T {}",
-            "  <T> void f(T t){}",
-            "}")
+            """
+            class Foo {
+              class T {}
+
+              <T> void f(T t) {}
+            }
+            """)
         .addOutputLines(
             "Foo.java",
-            "class Foo {", //
-            "  class T {}",
-            "  <T2> void f(T2 t){}",
-            "}")
+            """
+            class Foo {
+              class T {}
+
+              <T2> void f(T2 t) {}
+            }
+            """)
         .doTest();
   }
 
@@ -264,18 +334,26 @@ public class TypeNameShadowingTest {
     refactoring
         .addInputLines(
             "in/Foo.java",
-            "class Foo {", //
-            "  class T {}",
-            "  class U {}",
-            "  <T,U> void f(T t, U u){}",
-            "}")
+            """
+            class Foo {
+              class T {}
+
+              class U {}
+
+              <T, U> void f(T t, U u) {}
+            }
+            """)
         .addOutputLines(
             "out/Foo.java",
-            "class Foo {", //
-            "  class T {}",
-            "  class U {}",
-            "  <T2,U2> void f(T2 t, U2 u){}",
-            "}")
+            """
+            class Foo {
+              class T {}
+
+              class U {}
+
+              <T2, U2> void f(T2 t, U2 u) {}
+            }
+            """)
         .doTest();
   }
 
@@ -289,18 +367,26 @@ public class TypeNameShadowingTest {
     refactoring
         .addInputLines(
             "in/Foo.java",
-            "class Foo {", //
-            "  class T {}",
-            "  class BadParameterName {}",
-            "  <T,BadParameterName> void f(T t, BadParameterName u){}",
-            "}")
+            """
+            class Foo {
+              class T {}
+
+              class BadParameterName {}
+
+              <T, BadParameterName> void f(T t, BadParameterName u) {}
+            }
+            """)
         .addOutputLines(
             "out/Foo.java",
-            "class Foo {", //
-            "  class T {}",
-            "  class BadParameterName {}",
-            "  <T2,BadParameterName> void f(T2 t, BadParameterName u){}",
-            "}")
+            """
+            class Foo {
+              class T {}
+
+              class BadParameterName {}
+
+              <T2, BadParameterName> void f(T2 t, BadParameterName u) {}
+            }
+            """)
         .doTest();
   }
 
@@ -309,10 +395,13 @@ public class TypeNameShadowingTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  final Object T = new Object();",
-            "  <T> void doIt(T t) {}",
-            "}")
+            """
+            class Test {
+              final Object T = new Object();
+
+              <T> void doIt(T t) {}
+            }
+            """)
         .doTest();
   }
 }

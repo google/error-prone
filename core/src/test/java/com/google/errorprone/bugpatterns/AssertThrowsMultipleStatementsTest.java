@@ -33,39 +33,56 @@ public class AssertThrowsMultipleStatementsTest {
     compilationHelper
         .addInputLines(
             "Test.java",
-            "import static org.junit.Assert.assertThrows;",
-            "class Test {",
-            "  void f() {",
-            "   assertThrows(IllegalStateException.class, () -> {",
-            "     System.err.println();",
-            "   });",
-            "   IllegalStateException e = assertThrows(IllegalStateException.class, () -> {",
-            "     System.err.println(1);",
-            "     System.err.println(2);",
-            "   });",
-            "   assertThrows(IllegalStateException.class, () -> {",
-            "     int x = 2;",
-            "     int y = x;",
-            "   });",
-            "  }",
-            "}")
+            """
+            import static org.junit.Assert.assertThrows;
+
+            class Test {
+              void f() {
+                assertThrows(
+                    IllegalStateException.class,
+                    () -> {
+                      System.err.println();
+                    });
+                IllegalStateException e =
+                    assertThrows(
+                        IllegalStateException.class,
+                        () -> {
+                          System.err.println(1);
+                          System.err.println(2);
+                        });
+                assertThrows(
+                    IllegalStateException.class,
+                    () -> {
+                      int x = 2;
+                      int y = x;
+                    });
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import static org.junit.Assert.assertThrows;",
-            "class Test {",
-            "  void f() {",
-            "   assertThrows(IllegalStateException.class, () -> {",
-            "     System.err.println();",
-            "   });",
-            "   System.err.println(1);",
-            "   IllegalStateException e = assertThrows(IllegalStateException.class,",
-            "       () -> System.err.println(2));",
-            "   int x = 2;",
-            "   assertThrows(IllegalStateException.class, () -> {",
-            "     int y = x;",
-            "   });",
-            "  }",
-            "}")
+            """
+            import static org.junit.Assert.assertThrows;
+
+            class Test {
+              void f() {
+                assertThrows(
+                    IllegalStateException.class,
+                    () -> {
+                      System.err.println();
+                    });
+                System.err.println(1);
+                IllegalStateException e =
+                    assertThrows(IllegalStateException.class, () -> System.err.println(2));
+                int x = 2;
+                assertThrows(
+                    IllegalStateException.class,
+                    () -> {
+                      int y = x;
+                    });
+              }
+            }
+            """)
         .doTest();
   }
 }

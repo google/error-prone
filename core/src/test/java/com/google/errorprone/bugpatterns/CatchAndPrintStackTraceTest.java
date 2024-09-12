@@ -33,16 +33,18 @@ public class CatchAndPrintStackTraceTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void f() {",
-            "    try {",
-            "      System.err.println();",
-            "    } catch (Throwable t) {",
-            "      // BUG: Diagnostic contains:",
-            "      t.printStackTrace();",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f() {
+                try {
+                  System.err.println();
+                } catch (Throwable t) {
+                  // BUG: Diagnostic contains:
+                  t.printStackTrace();
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -51,24 +53,27 @@ public class CatchAndPrintStackTraceTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void f() {",
-            "    try {",
-            "      System.err.println();",
-            "    } catch (Throwable t) {}",
-            "    try {",
-            "      System.err.println();",
-            "    } catch (Throwable t) {",
-            "      t.printStackTrace();",
-            "      t.printStackTrace();",
-            "    }",
-            "    try {",
-            "      System.err.println();",
-            "    } catch (Throwable t) {",
-            "      t.printStackTrace(System.err);",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f() {
+                try {
+                  System.err.println();
+                } catch (Throwable t) {
+                }
+                try {
+                  System.err.println();
+                } catch (Throwable t) {
+                  t.printStackTrace();
+                  t.printStackTrace();
+                }
+                try {
+                  System.err.println();
+                } catch (Throwable t) {
+                  t.printStackTrace(System.err);
+                }
+              }
+            }
+            """)
         .doTest();
   }
 }

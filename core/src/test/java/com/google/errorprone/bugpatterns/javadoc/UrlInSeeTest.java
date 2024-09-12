@@ -33,17 +33,19 @@ public final class UrlInSeeTest {
   public void positive() {
     helper
         .addInputLines(
-            "Test.java", //
-            "/**",
-            " * @see http://foo for more details",
-            "*/",
-            "class Test {}")
+            "Test.java",
+            """
+            /**
+             * @see http://foo for more details
+             */
+            class Test {}
+            """)
         .addOutputLines(
-            "Test.java", //
-            "/**",
-            " * See http://foo for more details",
-            "*/",
-            "class Test {}")
+            "Test.java",
+            """
+            /** See http://foo for more details */
+            class Test {}
+            """)
         .doTest(TEXT_MATCH);
   }
 
@@ -51,11 +53,13 @@ public final class UrlInSeeTest {
   public void negative() {
     helper
         .addInputLines(
-            "Test.java", //
-            "/**",
-            " * @see java.util.List",
-            "*/",
-            "class Test {}")
+            "Test.java",
+            """
+            /**
+             * @see java.util.List
+             */
+            class Test {}
+            """)
         .expectUnchanged()
         .doTest(TEXT_MATCH);
   }

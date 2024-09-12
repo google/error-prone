@@ -31,13 +31,16 @@ public class ICCProfileGetInstanceTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import java.awt.color.ICC_Profile;",
-            "class Test {",
-            "  void f(String s) throws Exception {",
-            "    // BUG: Diagnostic contains:",
-            "    ICC_Profile.getInstance(s);",
-            "  }",
-            "}")
+            """
+            import java.awt.color.ICC_Profile;
+
+            class Test {
+              void f(String s) throws Exception {
+                // BUG: Diagnostic contains:
+                ICC_Profile.getInstance(s);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -46,12 +49,15 @@ public class ICCProfileGetInstanceTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import java.awt.color.ICC_Profile;",
-            "class Test {",
-            "  void f(byte[] b) throws Exception {",
-            "    ICC_Profile.getInstance(b);",
-            "  }",
-            "}")
+            """
+            import java.awt.color.ICC_Profile;
+
+            class Test {
+              void f(byte[] b) throws Exception {
+                ICC_Profile.getInstance(b);
+              }
+            }
+            """)
         .doTest();
   }
 }

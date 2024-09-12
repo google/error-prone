@@ -53,28 +53,30 @@ public class ErroneousThreadPoolConstructorCheckerTest {
         .setFixChooser(FixChoosers.FIRST)
         .addInputLines(
             "Test.java",
-            "import java.util.concurrent.LinkedBlockingQueue;",
-            "import java.util.concurrent.ThreadPoolExecutor;",
-            "import java.util.concurrent.TimeUnit;",
-            "",
-            "class Test {",
-            "  public void createThreadPool() {",
-            "    new ThreadPoolExecutor(10, 20, 60, TimeUnit.SECONDS,",
-            "                           new LinkedBlockingQueue<>());",
-            "  }",
-            "}")
+            """
+            import java.util.concurrent.LinkedBlockingQueue;
+            import java.util.concurrent.ThreadPoolExecutor;
+            import java.util.concurrent.TimeUnit;
+
+            class Test {
+              public void createThreadPool() {
+                new ThreadPoolExecutor(10, 20, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import java.util.concurrent.LinkedBlockingQueue;",
-            "import java.util.concurrent.ThreadPoolExecutor;",
-            "import java.util.concurrent.TimeUnit;",
-            "",
-            "class Test {",
-            "  public void createThreadPool() {",
-            "    new ThreadPoolExecutor(10, 10, 60, TimeUnit.SECONDS,",
-            "                           new LinkedBlockingQueue<>());",
-            "  }",
-            "}")
+            """
+            import java.util.concurrent.LinkedBlockingQueue;
+            import java.util.concurrent.ThreadPoolExecutor;
+            import java.util.concurrent.TimeUnit;
+
+            class Test {
+              public void createThreadPool() {
+                new ThreadPoolExecutor(10, 10, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -84,28 +86,30 @@ public class ErroneousThreadPoolConstructorCheckerTest {
         .setFixChooser(FixChoosers.FIRST)
         .addInputLines(
             "Test.java",
-            "import java.util.concurrent.LinkedBlockingQueue;",
-            "import java.util.concurrent.ThreadPoolExecutor;",
-            "import java.util.concurrent.TimeUnit;",
-            "",
-            "class Test {",
-            "  public void createThreadPool() {",
-            "    new ThreadPoolExecutor(0, 20, 60, TimeUnit.SECONDS,",
-            "                           new LinkedBlockingQueue<>());",
-            "  }",
-            "}")
+            """
+            import java.util.concurrent.LinkedBlockingQueue;
+            import java.util.concurrent.ThreadPoolExecutor;
+            import java.util.concurrent.TimeUnit;
+
+            class Test {
+              public void createThreadPool() {
+                new ThreadPoolExecutor(0, 20, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import java.util.concurrent.LinkedBlockingQueue;",
-            "import java.util.concurrent.ThreadPoolExecutor;",
-            "import java.util.concurrent.TimeUnit;",
-            "",
-            "class Test {",
-            "  public void createThreadPool() {",
-            "    new ThreadPoolExecutor(0, 1, 60, TimeUnit.SECONDS,",
-            "                           new LinkedBlockingQueue<>());",
-            "  }",
-            "}")
+            """
+            import java.util.concurrent.LinkedBlockingQueue;
+            import java.util.concurrent.ThreadPoolExecutor;
+            import java.util.concurrent.TimeUnit;
+
+            class Test {
+              public void createThreadPool() {
+                new ThreadPoolExecutor(0, 1, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -115,28 +119,30 @@ public class ErroneousThreadPoolConstructorCheckerTest {
         .setFixChooser(FixChoosers.SECOND)
         .addInputLines(
             "Test.java",
-            "import java.util.concurrent.LinkedBlockingQueue;",
-            "import java.util.concurrent.ThreadPoolExecutor;",
-            "import java.util.concurrent.TimeUnit;",
-            "",
-            "class Test {",
-            "  public void createThreadPool() {",
-            "    new ThreadPoolExecutor(10, 20, 60, TimeUnit.SECONDS,",
-            "                           new LinkedBlockingQueue<>());",
-            "  }",
-            "}")
+            """
+            import java.util.concurrent.LinkedBlockingQueue;
+            import java.util.concurrent.ThreadPoolExecutor;
+            import java.util.concurrent.TimeUnit;
+
+            class Test {
+              public void createThreadPool() {
+                new ThreadPoolExecutor(10, 20, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import java.util.concurrent.LinkedBlockingQueue;",
-            "import java.util.concurrent.ThreadPoolExecutor;",
-            "import java.util.concurrent.TimeUnit;",
-            "",
-            "class Test {",
-            "  public void createThreadPool() {",
-            "    new ThreadPoolExecutor(20, 20, 60, TimeUnit.SECONDS,",
-            "                           new LinkedBlockingQueue<>());",
-            "  }",
-            "}")
+            """
+            import java.util.concurrent.LinkedBlockingQueue;
+            import java.util.concurrent.ThreadPoolExecutor;
+            import java.util.concurrent.TimeUnit;
+
+            class Test {
+              public void createThreadPool() {
+                new ThreadPoolExecutor(20, 20, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -146,32 +152,36 @@ public class ErroneousThreadPoolConstructorCheckerTest {
         .setFixChooser(FixChoosers.FIRST)
         .addInputLines(
             "Test.java",
-            "import java.util.concurrent.LinkedBlockingQueue;",
-            "import java.util.concurrent.ThreadPoolExecutor;",
-            "import java.util.concurrent.TimeUnit;",
-            "",
-            "class Test {",
-            "  private static final int CORE_SIZE = 10;",
-            "  private static final int MAX_SIZE = 20;",
-            "  public void createThreadPool() {",
-            "    new ThreadPoolExecutor(CORE_SIZE, MAX_SIZE, 60, TimeUnit.SECONDS,",
-            "                           new LinkedBlockingQueue<>());",
-            "  }",
-            "}")
+            """
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
+class Test {
+  private static final int CORE_SIZE = 10;
+  private static final int MAX_SIZE = 20;
+
+  public void createThreadPool() {
+    new ThreadPoolExecutor(CORE_SIZE, MAX_SIZE, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
+  }
+}
+""")
         .addOutputLines(
             "Test.java",
-            "import java.util.concurrent.LinkedBlockingQueue;",
-            "import java.util.concurrent.ThreadPoolExecutor;",
-            "import java.util.concurrent.TimeUnit;",
-            "",
-            "class Test {",
-            "  private static final int CORE_SIZE = 10;",
-            "  private static final int MAX_SIZE = 20;",
-            "  public void createThreadPool() {",
-            "    new ThreadPoolExecutor(CORE_SIZE, CORE_SIZE, 60, TimeUnit.SECONDS,",
-            "                           new LinkedBlockingQueue<>());",
-            "  }",
-            "}")
+            """
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
+class Test {
+  private static final int CORE_SIZE = 10;
+  private static final int MAX_SIZE = 20;
+
+  public void createThreadPool() {
+    new ThreadPoolExecutor(CORE_SIZE, CORE_SIZE, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
+  }
+}
+""")
         .doTest();
   }
 
@@ -181,32 +191,36 @@ public class ErroneousThreadPoolConstructorCheckerTest {
         .setFixChooser(FixChoosers.SECOND)
         .addInputLines(
             "Test.java",
-            "import java.util.concurrent.LinkedBlockingQueue;",
-            "import java.util.concurrent.ThreadPoolExecutor;",
-            "import java.util.concurrent.TimeUnit;",
-            "",
-            "class Test {",
-            "  private static final int CORE_SIZE = 10;",
-            "  private static final int MAX_SIZE = 20;",
-            "  public void createThreadPool() {",
-            "    new ThreadPoolExecutor(CORE_SIZE, MAX_SIZE, 60, TimeUnit.SECONDS,",
-            "                           new LinkedBlockingQueue<>());",
-            "  }",
-            "}")
+            """
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
+class Test {
+  private static final int CORE_SIZE = 10;
+  private static final int MAX_SIZE = 20;
+
+  public void createThreadPool() {
+    new ThreadPoolExecutor(CORE_SIZE, MAX_SIZE, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
+  }
+}
+""")
         .addOutputLines(
             "Test.java",
-            "import java.util.concurrent.LinkedBlockingQueue;",
-            "import java.util.concurrent.ThreadPoolExecutor;",
-            "import java.util.concurrent.TimeUnit;",
-            "",
-            "class Test {",
-            "  private static final int CORE_SIZE = 10;",
-            "  private static final int MAX_SIZE = 20;",
-            "  public void createThreadPool() {",
-            "    new ThreadPoolExecutor(MAX_SIZE, MAX_SIZE, 60, TimeUnit.SECONDS,",
-            "                           new LinkedBlockingQueue<>());",
-            "  }",
-            "}")
+            """
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
+class Test {
+  private static final int CORE_SIZE = 10;
+  private static final int MAX_SIZE = 20;
+
+  public void createThreadPool() {
+    new ThreadPoolExecutor(MAX_SIZE, MAX_SIZE, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
+  }
+}
+""")
         .doTest();
   }
 }

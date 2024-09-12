@@ -32,15 +32,18 @@ public class ThreadLocalUsageTest {
   public void positive() {
     testHelper
         .addSourceLines(
-            "ThreadLocalUsage.java", //
-            "class ThreadLocalUsage {",
-            "  // BUG: Diagnostic contains:",
-            "  ThreadLocal<Object> local = new ThreadLocal<>();",
-            "  {",
-            "    new ThreadLocal<>();",
-            "    new ThreadLocal<Object>() {};",
-            "  }",
-            "}")
+            "ThreadLocalUsage.java",
+            """
+            class ThreadLocalUsage {
+              // BUG: Diagnostic contains:
+              ThreadLocal<Object> local = new ThreadLocal<>();
+
+              {
+                new ThreadLocal<>();
+                new ThreadLocal<Object>() {};
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -48,10 +51,12 @@ public class ThreadLocalUsageTest {
   public void negative() {
     testHelper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  static final ThreadLocal<Object> local = new ThreadLocal<>();",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              static final ThreadLocal<Object> local = new ThreadLocal<>();
+            }
+            """)
         .doTest();
   }
 
@@ -59,15 +64,18 @@ public class ThreadLocalUsageTest {
   public void negativeWellKnownTypes() {
     testHelper
         .addSourceLines(
-            "Test.java", //
-            "import java.text.DateFormat;",
-            "import java.text.SimpleDateFormat;",
-            "class Test {",
-            "  final ThreadLocal<Boolean> a = new ThreadLocal<>();",
-            "  final ThreadLocal<Long> b = new ThreadLocal<>();",
-            "  final ThreadLocal<DateFormat> c = new ThreadLocal<>();",
-            "  final ThreadLocal<SimpleDateFormat> d = new ThreadLocal<>();",
-            "}")
+            "Test.java",
+            """
+            import java.text.DateFormat;
+            import java.text.SimpleDateFormat;
+
+            class Test {
+              final ThreadLocal<Boolean> a = new ThreadLocal<>();
+              final ThreadLocal<Long> b = new ThreadLocal<>();
+              final ThreadLocal<DateFormat> c = new ThreadLocal<>();
+              final ThreadLocal<SimpleDateFormat> d = new ThreadLocal<>();
+            }
+            """)
         .doTest();
   }
 
@@ -78,11 +86,13 @@ public class ThreadLocalUsageTest {
             "Singleton.java", //
             "@interface Singleton {}")
         .addSourceLines(
-            "Test.java", //
-            "@Singleton",
-            "class Test {",
-            "  final ThreadLocal<Object> a = new ThreadLocal<>();",
-            "}")
+            "Test.java",
+            """
+            @Singleton
+            class Test {
+              final ThreadLocal<Object> a = new ThreadLocal<>();
+            }
+            """)
         .doTest();
   }
 }

@@ -80,48 +80,52 @@ public final class UnusedReturnValueMatcherTest {
     compilationHelper
         .addSourceLines(
             "test/Test.java",
-            "package test;",
-            "public class Test {",
-            "  static interface Foo {",
-            "    String bar();",
-            "  }",
-            "",
-            "  static String staticMethod() {",
-            "    return \"static\";",
-            "  }",
-            "  String instanceMethod() {",
-            "    return \"instance\";",
-            "  }",
-            "",
-            "  static void run(Runnable r) {}",
-            "",
-            "  void stuff(Foo foo) {",
-            "    // BUG: Diagnostic contains: bad",
-            "    foo.bar();",
-            "    // BUG: Diagnostic contains: bad",
-            "    run(foo::bar);",
-            "    // BUG: Diagnostic contains: bad",
-            "    run(() -> foo.bar());",
-            "    // BUG: Diagnostic contains: bad",
-            "    staticMethod();",
-            "    // BUG: Diagnostic contains: bad",
-            "    Test.staticMethod();",
-            "    // BUG: Diagnostic contains: bad",
-            "    instanceMethod();",
-            "    // BUG: Diagnostic contains: bad",
-            "    this.instanceMethod();",
-            "    // BUG: Diagnostic contains: bad",
-            "    run(Test::staticMethod);",
-            "    // BUG: Diagnostic contains: bad",
-            "    run(() -> Test.staticMethod());",
-            "    // BUG: Diagnostic contains: bad",
-            "    run(this::instanceMethod);",
-            "    // BUG: Diagnostic contains: bad",
-            "    run(() -> instanceMethod());",
-            "    // BUG: Diagnostic contains: bad",
-            "    run(() -> this.instanceMethod());",
-            "  }",
-            "}")
+            """
+            package test;
+
+            public class Test {
+              static interface Foo {
+                String bar();
+              }
+
+              static String staticMethod() {
+                return "static";
+              }
+
+              String instanceMethod() {
+                return "instance";
+              }
+
+              static void run(Runnable r) {}
+
+              void stuff(Foo foo) {
+                // BUG: Diagnostic contains: bad
+                foo.bar();
+                // BUG: Diagnostic contains: bad
+                run(foo::bar);
+                // BUG: Diagnostic contains: bad
+                run(() -> foo.bar());
+                // BUG: Diagnostic contains: bad
+                staticMethod();
+                // BUG: Diagnostic contains: bad
+                Test.staticMethod();
+                // BUG: Diagnostic contains: bad
+                instanceMethod();
+                // BUG: Diagnostic contains: bad
+                this.instanceMethod();
+                // BUG: Diagnostic contains: bad
+                run(Test::staticMethod);
+                // BUG: Diagnostic contains: bad
+                run(() -> Test.staticMethod());
+                // BUG: Diagnostic contains: bad
+                run(this::instanceMethod);
+                // BUG: Diagnostic contains: bad
+                run(() -> instanceMethod());
+                // BUG: Diagnostic contains: bad
+                run(() -> this.instanceMethod());
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -130,55 +134,62 @@ public final class UnusedReturnValueMatcherTest {
     compilationHelper
         .addSourceLines(
             "test/Test.java",
-            "package test;",
-            "import java.util.function.Supplier;",
-            "public class Test {",
-            "  interface Foo {",
-            "    String bar();",
-            "    void voidMethod();",
-            "  }",
-            "",
-            "  static String staticMethod() {",
-            "    return \"static\";",
-            "  }",
-            "  String instanceMethod() {",
-            "    return \"instance\";",
-            "  }",
-            "",
-            "  static void accept(String s) {}",
-            "  static void run(Supplier<String> s) {}",
-            "",
-            "  String stuff(Foo foo) {",
-            "    String s = foo.bar();",
-            "    s = staticMethod();",
-            "    s = instanceMethod();",
-            "    s = Test.staticMethod();",
-            "    s = this.instanceMethod();",
-            "    accept(foo.bar());",
-            "    accept(staticMethod());",
-            "    accept(instanceMethod());",
-            "    accept(Test.staticMethod());",
-            "    accept(this.instanceMethod());",
-            "    run(foo::bar);",
-            "    run(Test::staticMethod);",
-            "    run(this::instanceMethod);",
-            "    run(() -> foo.bar());",
-            "    run(() -> staticMethod());",
-            "    run(() -> instanceMethod());",
-            "    run(() -> Test.staticMethod());",
-            "    run(() -> this.instanceMethod());",
-            "    Supplier<String> supplier = foo::bar;",
-            "    supplier = Test::staticMethod;",
-            "    supplier = this::instanceMethod;",
-            "    supplier = () -> foo.bar();",
-            "    supplier = () -> staticMethod();",
-            "    supplier = () -> instanceMethod();",
-            "    supplier = () -> Test.staticMethod();",
-            "    supplier = () -> this.instanceMethod();",
-            "    foo.voidMethod();",
-            "    return foo.bar();",
-            "  }",
-            "}")
+            """
+            package test;
+
+            import java.util.function.Supplier;
+
+            public class Test {
+              interface Foo {
+                String bar();
+
+                void voidMethod();
+              }
+
+              static String staticMethod() {
+                return "static";
+              }
+
+              String instanceMethod() {
+                return "instance";
+              }
+
+              static void accept(String s) {}
+
+              static void run(Supplier<String> s) {}
+
+              String stuff(Foo foo) {
+                String s = foo.bar();
+                s = staticMethod();
+                s = instanceMethod();
+                s = Test.staticMethod();
+                s = this.instanceMethod();
+                accept(foo.bar());
+                accept(staticMethod());
+                accept(instanceMethod());
+                accept(Test.staticMethod());
+                accept(this.instanceMethod());
+                run(foo::bar);
+                run(Test::staticMethod);
+                run(this::instanceMethod);
+                run(() -> foo.bar());
+                run(() -> staticMethod());
+                run(() -> instanceMethod());
+                run(() -> Test.staticMethod());
+                run(() -> this.instanceMethod());
+                Supplier<String> supplier = foo::bar;
+                supplier = Test::staticMethod;
+                supplier = this::instanceMethod;
+                supplier = () -> foo.bar();
+                supplier = () -> staticMethod();
+                supplier = () -> instanceMethod();
+                supplier = () -> Test.staticMethod();
+                supplier = () -> this.instanceMethod();
+                foo.voidMethod();
+                return foo.bar();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -292,29 +303,33 @@ public final class UnusedReturnValueMatcherTest {
     notAllowedInExceptionTesting
         .addSourceLines(
             "test/Test.java",
-            "package test;",
-            "import static org.junit.Assert.fail;",
-            "import org.junit.rules.ExpectedException;",
-            "public class Test {",
-            "  interface Foo<T> {",
-            "    T bar();",
-            "  }",
-            "",
-            "  private final ExpectedException expected = ExpectedException.none();",
-            "",
-            "  void exceptionTesting(Foo<String> foo) {",
-            "    try {",
-            "      // BUG: Diagnostic contains: bad",
-            "      foo.bar();",
-            "      fail();",
-            "    } catch (RuntimeException expected) {",
-            "    }",
-            "",
-            "    expected.expect(RuntimeException.class);",
-            "    // BUG: Diagnostic contains: bad",
-            "    foo.bar();",
-            "  }",
-            "}")
+            """
+            package test;
+
+            import static org.junit.Assert.fail;
+            import org.junit.rules.ExpectedException;
+
+            public class Test {
+              interface Foo<T> {
+                T bar();
+              }
+
+              private final ExpectedException expected = ExpectedException.none();
+
+              void exceptionTesting(Foo<String> foo) {
+                try {
+                  // BUG: Diagnostic contains: bad
+                  foo.bar();
+                  fail();
+                } catch (RuntimeException expected) {
+                }
+
+                expected.expect(RuntimeException.class);
+                // BUG: Diagnostic contains: bad
+                foo.bar();
+              }
+            }
+            """)
         .doTest();
   }
 }

@@ -37,29 +37,33 @@ public class MissingDefaultTest {
     BugCheckerRefactoringTestHelper.newInstance(MissingDefault.class, getClass())
         .addInputLines(
             "in/Test.java",
-            "class Test {",
-            "  boolean f(int i) {",
-            "    // BUG: Diagnostic contains:",
-            "    switch (i) {",
-            "      case 42:",
-            "        return true;",
-            "    }",
-            "    return false;",
-            "  }",
-            "}")
+            """
+            class Test {
+              boolean f(int i) {
+                // BUG: Diagnostic contains:
+                switch (i) {
+                  case 42:
+                    return true;
+                }
+                return false;
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "class Test {",
-            "  boolean f(int i) {",
-            "    // BUG: Diagnostic contains:",
-            "    switch (i) {",
-            "      case 42:",
-            "        return true;",
-            "      default: // fall out",
-            "    }",
-            "    return false;",
-            "  }",
-            "}")
+            """
+            class Test {
+              boolean f(int i) {
+                // BUG: Diagnostic contains:
+                switch (i) {
+                  case 42:
+                    return true;
+                  default: // fall out
+                }
+                return false;
+              }
+            }
+            """)
         .doTest(TEXT_MATCH);
   }
 
@@ -68,28 +72,32 @@ public class MissingDefaultTest {
     BugCheckerRefactoringTestHelper.newInstance(MissingDefault.class, getClass())
         .addInputLines(
             "in/Test.java",
-            "class Test {",
-            "  void f(int i) {",
-            "    // BUG: Diagnostic contains:",
-            "    switch (i) {",
-            "      case 42:",
-            "        System.err.println(42);",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f(int i) {
+                // BUG: Diagnostic contains:
+                switch (i) {
+                  case 42:
+                    System.err.println(42);
+                }
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "class Test {",
-            "  void f(int i) {",
-            "    // BUG: Diagnostic contains:",
-            "    switch (i) {",
-            "      case 42:",
-            "        System.err.println(42);",
-            "        break;",
-            "      default: // fall out",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f(int i) {
+                // BUG: Diagnostic contains:
+                switch (i) {
+                  case 42:
+                    System.err.println(42);
+                    break;
+                  default: // fall out
+                }
+              }
+            }
+            """)
         .doTest(TEXT_MATCH);
   }
 
@@ -98,16 +106,18 @@ public class MissingDefaultTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  boolean f(int i) {",
-            "    switch (i) {",
-            "      case 42:",
-            "        return true;",
-            "      default:",
-            "        return false;",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              boolean f(int i) {
+                switch (i) {
+                  case 42:
+                    return true;
+                  default:
+                    return false;
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -116,16 +126,22 @@ public class MissingDefaultTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  enum E { ONE, TWO }",
-            "  boolean f(E e) {",
-            "    switch (e) {",
-            "      case ONE:",
-            "        return true;",
-            "    }",
-            "    return false;",
-            "  }",
-            "}")
+            """
+            class Test {
+              enum E {
+                ONE,
+                TWO
+              }
+
+              boolean f(E e) {
+                switch (e) {
+                  case ONE:
+                    return true;
+                }
+                return false;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -134,16 +150,18 @@ public class MissingDefaultTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  boolean f(int i) {",
-            "    switch (i) {",
-            "      case 42:",
-            "        return true;",
-            "      default: // fall out",
-            "    }",
-            "    return false;",
-            "  }",
-            "}")
+            """
+            class Test {
+              boolean f(int i) {
+                switch (i) {
+                  case 42:
+                    return true;
+                  default: // fall out
+                }
+                return false;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -152,28 +170,32 @@ public class MissingDefaultTest {
     BugCheckerRefactoringTestHelper.newInstance(MissingDefault.class, getClass())
         .addInputLines(
             "in/Test.java",
-            "class Test {",
-            "  boolean f(int i) {",
-            "    switch (i) {",
-            "      case 42:",
-            "        return true;",
-            "      default:",
-            "    }",
-            "    return false;",
-            "  }",
-            "}")
+            """
+            class Test {
+              boolean f(int i) {
+                switch (i) {
+                  case 42:
+                    return true;
+                  default:
+                }
+                return false;
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "class Test {",
-            "  boolean f(int i) {",
-            "    switch (i) {",
-            "      case 42:",
-            "        return true;",
-            "      default: // fall out",
-            "    }",
-            "    return false;",
-            "  }",
-            "}")
+            """
+            class Test {
+              boolean f(int i) {
+                switch (i) {
+                  case 42:
+                    return true;
+                  default: // fall out
+                }
+                return false;
+              }
+            }
+            """)
         .doTest(TEXT_MATCH);
   }
 
@@ -182,15 +204,17 @@ public class MissingDefaultTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  boolean f(int i) {",
-            "    switch (i) {",
-            "      default:",
-            "      case 42:",
-            "        return true;",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              boolean f(int i) {
+                switch (i) {
+                  default:
+                  case 42:
+                    return true;
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -199,31 +223,35 @@ public class MissingDefaultTest {
     BugCheckerRefactoringTestHelper.newInstance(MissingDefault.class, getClass())
         .addInputLines(
             "in/Test.java",
-            "class Test {",
-            "  boolean f(int i) {",
-            "    // BUG: Diagnostic contains:",
-            "    switch (i) {",
-            "      case 42:",
-            "        System.err.println();",
-            "        return true;",
-            "    }",
-            "    return false;",
-            "  }",
-            "}")
+            """
+            class Test {
+              boolean f(int i) {
+                // BUG: Diagnostic contains:
+                switch (i) {
+                  case 42:
+                    System.err.println();
+                    return true;
+                }
+                return false;
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "class Test {",
-            "  boolean f(int i) {",
-            "    // BUG: Diagnostic contains:",
-            "    switch (i) {",
-            "      case 42:",
-            "        System.err.println();",
-            "        return true;",
-            "      default: // fall out",
-            "    }",
-            "    return false;",
-            "  }",
-            "}")
+            """
+            class Test {
+              boolean f(int i) {
+                // BUG: Diagnostic contains:
+                switch (i) {
+                  case 42:
+                    System.err.println();
+                    return true;
+                  default: // fall out
+                }
+                return false;
+              }
+            }
+            """)
         .doTest(TEXT_MATCH);
   }
 
@@ -233,15 +261,17 @@ public class MissingDefaultTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void m(int i) {",
-            "    // BUG: Diagnostic contains:",
-            "    switch (i) {",
-            "      case 1 -> {}",
-            "      case 2 -> {}",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              void m(int i) {
+                // BUG: Diagnostic contains:
+                switch (i) {
+                  case 1 -> {}
+                  case 2 -> {}
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -251,15 +281,17 @@ public class MissingDefaultTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void m(int i) {",
-            "    switch (i) {",
-            "      case 1 -> {}",
-            "      case 2 -> {}",
-            "      default -> {} // fall out",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              void m(int i) {
+                switch (i) {
+                  case 1 -> {}
+                  case 2 -> {}
+                  default -> {} // fall out
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -269,16 +301,19 @@ public class MissingDefaultTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void f() {}",
-            "  void m(int i) {",
-            "    switch (i) {",
-            "      case 0 -> f();",
-            "      case 1 -> f();",
-            "      default -> f();",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f() {}
+
+              void m(int i) {
+                switch (i) {
+                  case 0 -> f();
+                  case 1 -> f();
+                  default -> f();
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -288,18 +323,25 @@ public class MissingDefaultTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  sealed interface I permits A, B {}",
-            "  abstract static class S {}",
-            "  static final class A extends S implements I {}",
-            "  static final class B extends S implements I {}",
-            "  void f(I i) {",
-            "    switch (i) {",
-            "      case A a -> System.err.println(a);",
-            "      case B b -> System.err.println(b);",
-            "    };",
-            "  }",
-            "}")
+            """
+            class Test {
+              sealed interface I permits A, B {}
+
+              abstract static class S {}
+
+              static final class A extends S implements I {}
+
+              static final class B extends S implements I {}
+
+              void f(I i) {
+                switch (i) {
+                  case A a -> System.err.println(a);
+                  case B b -> System.err.println(b);
+                }
+                ;
+              }
+            }
+            """)
         .doTest();
   }
 }

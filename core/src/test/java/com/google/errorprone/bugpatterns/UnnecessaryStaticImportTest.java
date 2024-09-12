@@ -32,12 +32,22 @@ public class UnnecessaryStaticImportTest {
   public void positive() {
     compilationHelper
         .addSourceLines(
-            "b/B.java", "package b;", "public class B {", "  public static class Inner {}", "}")
+            "b/B.java",
+            """
+            package b;
+
+            public class B {
+              public static class Inner {}
+            }
+            """)
         .addSourceLines(
             "Test.java",
-            "// BUG: Diagnostic contains: import b.B.Inner;",
-            "import static b.B.Inner;",
-            "class Test {}")
+            """
+            // BUG: Diagnostic contains: import b.B.Inner;
+            import static b.B.Inner;
+
+            class Test {}
+            """)
         .doTest();
   }
 
@@ -45,14 +55,33 @@ public class UnnecessaryStaticImportTest {
   public void positiveRename() {
     compilationHelper
         .addSourceLines(
-            "a/A.java", "package a;", "public class A {", "  public static class Inner {}", "}")
-        .addSourceLines("b/B.java", "package b;", "import a.A;", "public class B extends A {}")
+            "a/A.java",
+            """
+            package a;
+
+            public class A {
+              public static class Inner {}
+            }
+            """)
+        .addSourceLines(
+            "b/B.java",
+            """
+            package b;
+
+            import a.A;
+
+            public class B extends A {}
+            """)
         .addSourceLines(
             "b/Test.java",
-            "package b;",
-            "// BUG: Diagnostic contains: import a.A.Inner;",
-            "import static b.B.Inner;",
-            "class Test {}")
+            """
+            package b;
+
+            // BUG: Diagnostic contains: import a.A.Inner;
+            import static b.B.Inner;
+
+            class Test {}
+            """)
         .doTest();
   }
 
@@ -61,14 +90,33 @@ public class UnnecessaryStaticImportTest {
     compilationHelper
         .addSourceLines(
             "a/A.java",
-            "package a;",
-            "public class A {",
-            "  public static class Inner {",
-            "    public static void f() {}",
-            "  }",
-            "}")
-        .addSourceLines("b/B.java", "package b;", "import a.A;", "public class B extends A {}")
-        .addSourceLines("b/Test.java", "package b;", "import static a.A.Inner.f;", "class Test {}")
+            """
+            package a;
+
+            public class A {
+              public static class Inner {
+                public static void f() {}
+              }
+            }
+            """)
+        .addSourceLines(
+            "b/B.java",
+            """
+            package b;
+
+            import a.A;
+
+            public class B extends A {}
+            """)
+        .addSourceLines(
+            "b/Test.java",
+            """
+            package b;
+
+            import static a.A.Inner.f;
+
+            class Test {}
+            """)
         .doTest();
   }
 
@@ -77,14 +125,33 @@ public class UnnecessaryStaticImportTest {
     compilationHelper
         .addSourceLines(
             "a/A.java",
-            "package a;",
-            "public class A {",
-            "  public static class Inner<T> {",
-            "    public static void f() {}",
-            "  }",
-            "}")
-        .addSourceLines("b/B.java", "package b;", "import a.A;", "public class B extends A {}")
-        .addSourceLines("b/Test.java", "package b;", "import static a.A.Inner.f;", "class Test {}")
+            """
+            package a;
+
+            public class A {
+              public static class Inner<T> {
+                public static void f() {}
+              }
+            }
+            """)
+        .addSourceLines(
+            "b/B.java",
+            """
+            package b;
+
+            import a.A;
+
+            public class B extends A {}
+            """)
+        .addSourceLines(
+            "b/Test.java",
+            """
+            package b;
+
+            import static a.A.Inner.f;
+
+            class Test {}
+            """)
         .doTest();
   }
 
@@ -92,9 +159,32 @@ public class UnnecessaryStaticImportTest {
   public void negative() {
     compilationHelper
         .addSourceLines(
-            "a/A.java", "package a;", "public class A {", "  public static class Inner {}", "}")
-        .addSourceLines("b/B.java", "package b;", "import a.A;", "public class B extends A {}")
-        .addSourceLines("b/Test.java", "package b;", "import a.A.Inner;", "class Test {}")
+            "a/A.java",
+            """
+            package a;
+
+            public class A {
+              public static class Inner {}
+            }
+            """)
+        .addSourceLines(
+            "b/B.java",
+            """
+            package b;
+
+            import a.A;
+
+            public class B extends A {}
+            """)
+        .addSourceLines(
+            "b/Test.java",
+            """
+            package b;
+
+            import a.A.Inner;
+
+            class Test {}
+            """)
         .doTest();
   }
 }

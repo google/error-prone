@@ -47,58 +47,86 @@ public class WildcardImportTest {
     testHelper
         .addInputLines(
             "a/One.java",
-            "package a;",
-            "public class One {",
-            "  public static Two THE_INSTANCE = null;",
-            "}")
+            """
+            package a;
+
+            public class One {
+              public static Two THE_INSTANCE = null;
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
             "a/Two.java",
-            "package a;",
-            "public class Two {",
-            "  public static String MESSAGE = \"Hello\";",
-            "}")
+            """
+            package a;
+
+            public class Two {
+              public static String MESSAGE = "Hello";
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
             "in/test/Test.java",
-            "package test;",
-            "import static a.One.*;",
-            "public class Test {",
-            "  String m = THE_INSTANCE.MESSAGE;",
-            "}")
+            """
+            package test;
+
+            import static a.One.*;
+
+            public class Test {
+              String m = THE_INSTANCE.MESSAGE;
+            }
+            """)
         .addOutputLines(
             "out/test/Test.java",
-            "package test;",
-            "import static a.One.THE_INSTANCE;",
-            "public class Test {",
-            "  String m = THE_INSTANCE.MESSAGE;",
-            "}")
+            """
+            package test;
+
+            import static a.One.THE_INSTANCE;
+
+            public class Test {
+              String m = THE_INSTANCE.MESSAGE;
+            }
+            """)
         .doTest();
   }
 
   @Test
   public void classLiteral() {
     testHelper
-        .addInputLines("a/A.java", "package a;", "public class A {", "}")
+        .addInputLines(
+            "a/A.java",
+            """
+            package a;
+
+            public class A {}
+            """)
         .expectUnchanged()
         .addInputLines(
             "in/test/Test.java",
-            "package test;",
-            "import a.*;",
-            "public class Test {",
-            "  void m() {",
-            "     System.err.println(A.class);",
-            "  }",
-            "}")
+            """
+            package test;
+
+            import a.*;
+
+            public class Test {
+              void m() {
+                System.err.println(A.class);
+              }
+            }
+            """)
         .addOutputLines(
             "out/test/Test.java",
-            "package test;",
-            "import a.A;",
-            "public class Test {",
-            "  void m() {",
-            "     System.err.println(A.class);",
-            "  }",
-            "}")
+            """
+            package test;
+
+            import a.A;
+
+            public class Test {
+              void m() {
+                System.err.println(A.class);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -106,30 +134,41 @@ public class WildcardImportTest {
   public void staticMethod() {
     testHelper
         .addInputLines(
-            "a/A.java", //
-            "package a;",
-            "public class A {",
-            "  public static void f() {}",
-            "}")
+            "a/A.java",
+            """
+            package a;
+
+            public class A {
+              public static void f() {}
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
             "in/test/Test.java",
-            "package test;",
-            "import static a.A.*;",
-            "public class Test {",
-            "  void m() {",
-            "    f();",
-            "  }",
-            "}")
+            """
+            package test;
+
+            import static a.A.*;
+
+            public class Test {
+              void m() {
+                f();
+              }
+            }
+            """)
         .addOutputLines(
             "out/test/Test.java",
-            "package test;",
-            "import static a.A.f;",
-            "public class Test {",
-            "  void m() {",
-            "    f();",
-            "  }",
-            "}")
+            """
+            package test;
+
+            import static a.A.f;
+
+            public class Test {
+              void m() {
+                f();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -138,22 +177,30 @@ public class WildcardImportTest {
     testHelper
         .addInputLines(
             "in/test/Test.java",
-            "package test;",
-            "import static java.nio.charset.StandardCharsets.*;",
-            "public class Test {",
-            "  void m() {",
-            "    System.err.println(UTF_8);",
-            "  }",
-            "}")
+            """
+            package test;
+
+            import static java.nio.charset.StandardCharsets.*;
+
+            public class Test {
+              void m() {
+                System.err.println(UTF_8);
+              }
+            }
+            """)
         .addOutputLines(
             "out/test/Test.java",
-            "package test;",
-            "import static java.nio.charset.StandardCharsets.UTF_8;",
-            "public class Test {",
-            "  void m() {",
-            "    System.err.println(UTF_8);",
-            "  }",
-            "}")
+            """
+            package test;
+
+            import static java.nio.charset.StandardCharsets.UTF_8;
+
+            public class Test {
+              void m() {
+                System.err.println(UTF_8);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -162,21 +209,30 @@ public class WildcardImportTest {
     testHelper
         .addInputLines(
             "in/test/Test.java",
-            "package test;",
-            "import java.util.*;",
-            "public class Test {",
-            "    java.util.Map.Entry<String, String> e;",
-            "    C c;",
-            "    static class C {}",
-            "}")
+            """
+            package test;
+
+            import java.util.*;
+
+            public class Test {
+              java.util.Map.Entry<String, String> e;
+              C c;
+
+              static class C {}
+            }
+            """)
         .addOutputLines(
             "out/test/Test.java",
-            "package test;",
-            "public class Test {",
-            "    java.util.Map.Entry<String, String> e;",
-            "    C c;",
-            "    static class C {}",
-            "}")
+            """
+            package test;
+
+            public class Test {
+              java.util.Map.Entry<String, String> e;
+              C c;
+
+              static class C {}
+            }
+            """)
         .doTest();
   }
 
@@ -184,30 +240,44 @@ public class WildcardImportTest {
   public void doublePrefix() {
     testHelper
         .addInputLines(
-            "foo/Foo.java", //
-            "package foo;",
-            "public class Foo {}")
+            "foo/Foo.java",
+            """
+            package foo;
+
+            public class Foo {}
+            """)
         .expectUnchanged()
         .addInputLines(
-            "foo/bar/Bar.java", //
-            "package foo.bar;",
-            "public class Bar {}")
+            "foo/bar/Bar.java",
+            """
+            package foo.bar;
+
+            public class Bar {}
+            """)
         .expectUnchanged()
         .addInputLines(
             "in/test/Test.java",
-            "package test;",
-            "import foo.*;",
-            "import foo.bar.*;",
-            "public class Test {",
-            "    void f(Bar c) {}",
-            "}")
+            """
+            package test;
+
+            import foo.*;
+            import foo.bar.*;
+
+            public class Test {
+              void f(Bar c) {}
+            }
+            """)
         .addOutputLines(
             "out/test/Test.java",
-            "package test;",
-            "import foo.bar.Bar;",
-            "public class Test {",
-            "    void f(Bar c) {}",
-            "}")
+            """
+            package test;
+
+            import foo.bar.Bar;
+
+            public class Test {
+              void f(Bar c) {}
+            }
+            """)
         .doTest();
   }
 
@@ -216,22 +286,32 @@ public class WildcardImportTest {
     testHelper
         .addInputLines(
             "in/test/Test.java",
-            "package test;",
-            "import java.util.*;",
-            "public class Test {",
-            "    Map.Entry<String, String> e;",
-            "    C c;",
-            "    static class C {}",
-            "}")
+            """
+            package test;
+
+            import java.util.*;
+
+            public class Test {
+              Map.Entry<String, String> e;
+              C c;
+
+              static class C {}
+            }
+            """)
         .addOutputLines(
             "out/test/Test.java",
-            "package test;",
-            "import java.util.Map;",
-            "public class Test {",
-            "    Map.Entry<String, String> e;",
-            "    C c;",
-            "    static class C {}",
-            "}")
+            """
+            package test;
+
+            import java.util.Map;
+
+            public class Test {
+              Map.Entry<String, String> e;
+              C c;
+
+              static class C {}
+            }
+            """)
         .doTest();
   }
 
@@ -240,22 +320,32 @@ public class WildcardImportTest {
     testHelper
         .addInputLines(
             "in/test/Test.java",
-            "package test;",
-            "import java.util.Map.*;",
-            "public class Test {",
-            "    Entry<String, String> e;",
-            "    C c;",
-            "    static class C {}",
-            "}")
+            """
+            package test;
+
+            import java.util.Map.*;
+
+            public class Test {
+              Entry<String, String> e;
+              C c;
+
+              static class C {}
+            }
+            """)
         .addOutputLines(
             "out/test/Test.java",
-            "package test;",
-            "import java.util.Map.Entry;",
-            "public class Test {",
-            "    Entry<String, String> e;",
-            "    C c;",
-            "    static class C {}",
-            "}")
+            """
+            package test;
+
+            import java.util.Map.Entry;
+
+            public class Test {
+              Entry<String, String> e;
+              C c;
+
+              static class C {}
+            }
+            """)
         .doTest();
   }
 
@@ -263,17 +353,23 @@ public class WildcardImportTest {
   public void dontImportRuntime() {
     testHelper
         .addInputLines(
-            "in/test/Test.java", //
-            "package test;",
-            "public class Test {",
-            "    String s;",
-            "}")
+            "in/test/Test.java",
+            """
+            package test;
+
+            public class Test {
+              String s;
+            }
+            """)
         .addOutputLines(
-            "out/test/Test.java", //
-            "package test;",
-            "public class Test {",
-            "    String s;",
-            "}")
+            "out/test/Test.java",
+            """
+            package test;
+
+            public class Test {
+              String s;
+            }
+            """)
         .doTest();
   }
 
@@ -282,17 +378,24 @@ public class WildcardImportTest {
     testHelper
         .addInputLines(
             "in/test/Test.java",
-            "package test;",
-            "import java.util.*;",
-            "public class Test {",
-            "    Test s;",
-            "}")
+            """
+            package test;
+
+            import java.util.*;
+
+            public class Test {
+              Test s;
+            }
+            """)
         .addOutputLines(
-            "out/test/Test.java", //
-            "package test;",
-            "public class Test {",
-            "    Test s;",
-            "}")
+            "out/test/Test.java",
+            """
+            package test;
+
+            public class Test {
+              Test s;
+            }
+            """)
         .doTest();
   }
 
@@ -301,25 +404,32 @@ public class WildcardImportTest {
     testHelper
         .addInputLines(
             "in/test/Test.java",
-            "package test;",
-            "import test.Test.Inner.*;",
-            "public class Test {",
-            "  public static class Inner {",
-            "    private static class InnerMost {",
-            "      InnerMost i;",
-            "    }",
-            "  }",
-            "}")
+            """
+            package test;
+
+            import test.Test.Inner.*;
+
+            public class Test {
+              public static class Inner {
+                private static class InnerMost {
+                  InnerMost i;
+                }
+              }
+            }
+            """)
         .addOutputLines(
             "out/test/Test.java",
-            "package test;",
-            "public class Test {",
-            "  public static class Inner {",
-            "    private static class InnerMost {",
-            "      InnerMost i;",
-            "    }",
-            "  }",
-            "}")
+            """
+            package test;
+
+            public class Test {
+              public static class Inner {
+                private static class InnerMost {
+                  InnerMost i;
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -328,21 +438,28 @@ public class WildcardImportTest {
     testHelper
         .addInputLines(
             "in/test/Test.java",
-            "package test;",
-            "import java.util.*;",
-            "public class Test {",
-            "  public static class Inner {",
-            "    Inner t;",
-            "  }",
-            "}")
+            """
+            package test;
+
+            import java.util.*;
+
+            public class Test {
+              public static class Inner {
+                Inner t;
+              }
+            }
+            """)
         .addOutputLines(
             "out/test/Test.java",
-            "package test;",
-            "public class Test {",
-            "  public static class Inner {",
-            "    Inner t;",
-            "  }",
-            "}")
+            """
+            package test;
+
+            public class Test {
+              public static class Inner {
+                Inner t;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -351,25 +468,36 @@ public class WildcardImportTest {
     testHelper
         .addInputLines(
             "test/A.java",
-            "package test;",
-            "public class A {",
-            "  public static class Inner {}",
-            "}")
+            """
+            package test;
+
+            public class A {
+              public static class Inner {}
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
             "in/test/Test.java",
-            "package test;",
-            "import test.A.*;",
-            "public class Test {",
-            "  Inner t;",
-            "}")
+            """
+            package test;
+
+            import test.A.*;
+
+            public class Test {
+              Inner t;
+            }
+            """)
         .addOutputLines(
             "out/test/Test.java",
-            "package test;",
-            "import test.A.Inner;",
-            "public class Test {",
-            "  Inner t;",
-            "}")
+            """
+            package test;
+
+            import test.A.Inner;
+
+            public class Test {
+              Inner t;
+            }
+            """)
         .doTest();
   }
 
@@ -378,13 +506,18 @@ public class WildcardImportTest {
     CompilationTestHelper.newInstance(WildcardImport.class, getClass())
         .addSourceLines(
             "test/Test.java",
-            "package test;",
-            "import java.util.Map;",
-            "public class Test {",
-            "    Map.Entry<String, String> e;",
-            "    C c;",
-            "    static class C {}",
-            "}")
+            """
+            package test;
+
+            import java.util.Map;
+
+            public class Test {
+              Map.Entry<String, String> e;
+              C c;
+
+              static class C {}
+            }
+            """)
         .doTest();
   }
 
@@ -393,22 +526,32 @@ public class WildcardImportTest {
     testHelper
         .addInputLines(
             "in/test/Test.java",
-            "package test;",
-            "import java.util.Map;",
-            "public class Test {",
-            "    Map.Entry<String, String> e;",
-            "    C c;",
-            "    private static class C {}",
-            "}")
+            """
+            package test;
+
+            import java.util.Map;
+
+            public class Test {
+              Map.Entry<String, String> e;
+              C c;
+
+              private static class C {}
+            }
+            """)
         .addOutputLines(
             "test/Test.java",
-            "package test;",
-            "import java.util.Map;",
-            "public class Test {",
-            "    Map.Entry<String, String> e;",
-            "    C c;",
-            "    private static class C {}",
-            "}")
+            """
+            package test;
+
+            import java.util.Map;
+
+            public class Test {
+              Map.Entry<String, String> e;
+              C c;
+
+              private static class C {}
+            }
+            """)
         .doTest();
   }
 
@@ -416,32 +559,45 @@ public class WildcardImportTest {
   public void nonCanonical() {
     testHelper
         .addInputLines(
-            "a/One.java", //
-            "package a;",
-            "public class One extends Two {",
-            "}")
+            "a/One.java",
+            """
+            package a;
+
+            public class One extends Two {}
+            """)
         .expectUnchanged()
         .addInputLines(
-            "a/Two.java", //
-            "package a;",
-            "public class Two {",
-            "  public static class Inner {}",
-            "}")
+            "a/Two.java",
+            """
+            package a;
+
+            public class Two {
+              public static class Inner {}
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
             "in/test/Test.java",
-            "package test;",
-            "import static a.One.*;",
-            "public class Test {",
-            "  Inner i;",
-            "}")
+            """
+            package test;
+
+            import static a.One.*;
+
+            public class Test {
+              Inner i;
+            }
+            """)
         .addOutputLines(
             "out/test/Test.java",
-            "package test;",
-            "import a.Two.Inner;",
-            "public class Test {",
-            "  Inner i;",
-            "}")
+            """
+            package test;
+
+            import a.Two.Inner;
+
+            public class Test {
+              Inner i;
+            }
+            """)
         .doTest();
   }
 
@@ -450,20 +606,28 @@ public class WildcardImportTest {
     testHelper
         .addInputLines(
             "in/test/Test.java",
-            "package test;",
-            "import static java.util.Arrays.*;",
-            "import java.util.*;",
-            "public class Test {",
-            "  List<Integer> xs = asList(1, 2, 3);",
-            "}")
+            """
+            package test;
+
+            import static java.util.Arrays.*;
+            import java.util.*;
+
+            public class Test {
+              List<Integer> xs = asList(1, 2, 3);
+            }
+            """)
         .addOutputLines(
             "test/Test.java",
-            "package test;",
-            "import static java.util.Arrays.asList;",
-            "import java.util.List;",
-            "public class Test {",
-            "  List<Integer> xs = asList(1, 2, 3);",
-            "}")
+            """
+            package test;
+
+            import static java.util.Arrays.asList;
+            import java.util.List;
+
+            public class Test {
+              List<Integer> xs = asList(1, 2, 3);
+            }
+            """)
         .doTest();
   }
 
@@ -518,26 +682,30 @@ public class WildcardImportTest {
         .addInputLines("in/Test.java", testLines)
         .addOutputLines(
             "out/Test.java",
-            "import e.E;",
-            "public class Test {",
-            "  Object[] ex = {",
-            "    E.A, E.B, E.C, E.D, E.E, E.F, E.G, E.H, E.I, E.J,",
-            "    E.K, E.L, E.M, E.N, E.O, E.P, E.Q, E.R, E.S, E.T,",
-            "    E.U, E.V, E.W, E.X, E.Y, E.Z",
-            "  };",
-            "  boolean f(e.E e) {",
-            "    switch (e) {",
-            "      case A:",
-            "      case E:",
-            "      case I:",
-            "      case O:",
-            "      case U:",
-            "        return true;",
-            "      default:",
-            "        return false;",
-            "    }",
-            "  }",
-            "}")
+            """
+            import e.E;
+
+            public class Test {
+              Object[] ex = {
+                E.A, E.B, E.C, E.D, E.E, E.F, E.G, E.H, E.I, E.J,
+                E.K, E.L, E.M, E.N, E.O, E.P, E.Q, E.R, E.S, E.T,
+                E.U, E.V, E.W, E.X, E.Y, E.Z
+              };
+
+              boolean f(e.E e) {
+                switch (e) {
+                  case A:
+                  case E:
+                  case I:
+                  case O:
+                  case U:
+                    return true;
+                  default:
+                    return false;
+                }
+              }
+            }
+            """)
         .doTest();
   }
 

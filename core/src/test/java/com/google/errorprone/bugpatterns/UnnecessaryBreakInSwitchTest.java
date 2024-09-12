@@ -35,16 +35,19 @@ public class UnnecessaryBreakInSwitchTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void f(int i) {",
-            "    switch (i) {",
-            "      default -> {",
-            "        // BUG: Diagnostic contains: break is unnecessary",
-            "        break;",
-            "      }",
-            "    };",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f(int i) {
+                switch (i) {
+                  default -> {
+                    // BUG: Diagnostic contains: break is unnecessary
+                    break;
+                  }
+                }
+                ;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -53,14 +56,17 @@ public class UnnecessaryBreakInSwitchTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void f(int i) {",
-            "    switch (i) {",
-            "      default:",
-            "        break;",
-            "    };",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f(int i) {
+                switch (i) {
+                  default:
+                    break;
+                }
+                ;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -70,14 +76,16 @@ public class UnnecessaryBreakInSwitchTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void f(int i) {",
-            "    switch (i) {",
-            "      default -> {",
-            "      }",
-            "    };",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f(int i) {
+                switch (i) {
+                  default -> {}
+                }
+                ;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -87,18 +95,21 @@ public class UnnecessaryBreakInSwitchTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void f(int i) {",
-            "    switch (i) {",
-            "      default -> {",
-            "        if (true) {",
-            "          break;",
-            "        }",
-            "        System.err.println();",
-            "      }",
-            "    };",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f(int i) {
+                switch (i) {
+                  default -> {
+                    if (true) {
+                      break;
+                    }
+                    System.err.println();
+                  }
+                }
+                ;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -108,18 +119,20 @@ public class UnnecessaryBreakInSwitchTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void f(int i) {",
-            "    outer:",
-            "    while (true) {",
-            "      switch (i) {",
-            "        default -> {",
-            "          break outer;",
-            "        }",
-            "      }",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f(int i) {
+                outer:
+                while (true) {
+                  switch (i) {
+                    default -> {
+                      break outer;
+                    }
+                  }
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -129,19 +142,21 @@ public class UnnecessaryBreakInSwitchTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void f(int i) {",
-            "    while (true) {",
-            "      switch (i) {",
-            "        default -> {",
-            "          while (true) {",
-            "            break;",
-            "          }",
-            "        }",
-            "      }",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f(int i) {
+                while (true) {
+                  switch (i) {
+                    default -> {
+                      while (true) {
+                        break;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -151,21 +166,24 @@ public class UnnecessaryBreakInSwitchTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void f(int i) {",
-            "    switch (i) {",
-            "      default -> {",
-            "        if (true) {",
-            "          // BUG: Diagnostic contains: break is unnecessary",
-            "          break;",
-            "        } else {",
-            "          // BUG: Diagnostic contains: break is unnecessary",
-            "          break;",
-            "        }",
-            "      }",
-            "    };",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f(int i) {
+                switch (i) {
+                  default -> {
+                    if (true) {
+                      // BUG: Diagnostic contains: break is unnecessary
+                      break;
+                    } else {
+                      // BUG: Diagnostic contains: break is unnecessary
+                      break;
+                    }
+                  }
+                }
+                ;
+              }
+            }
+            """)
         .doTest();
   }
 }

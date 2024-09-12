@@ -52,36 +52,48 @@ public class StaticQualifiedUsingExpressionTest {
   public void clash() {
     refactoringHelper
         .addInputLines(
-            "a/Lib.java", //
-            "package a;",
-            "public class Lib {",
-            "  public static final int CONST = 0;",
-            "}")
+            "a/Lib.java",
+            """
+            package a;
+
+            public class Lib {
+              public static final int CONST = 0;
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
-            "b/Lib.java", //
-            "package b;",
-            "public class Lib {",
-            "  public static final int CONST = 0;",
-            "}")
+            "b/Lib.java",
+            """
+            package b;
+
+            public class Lib {
+              public static final int CONST = 0;
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
             "in/Test.java",
-            "import a.Lib;",
-            "class Test {",
-            "  void test() {",
-            "    int x = Lib.CONST + new b.Lib().CONST;",
-            "  }",
-            "}")
+            """
+            import a.Lib;
+
+            class Test {
+              void test() {
+                int x = Lib.CONST + new b.Lib().CONST;
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "import a.Lib;",
-            "class Test {",
-            "  void test() {",
-            "    new b.Lib();",
-            "    int x = Lib.CONST + b.Lib.CONST;",
-            "  }",
-            "}")
+            """
+            import a.Lib;
+
+            class Test {
+              void test() {
+                new b.Lib();
+                int x = Lib.CONST + b.Lib.CONST;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -89,29 +101,36 @@ public class StaticQualifiedUsingExpressionTest {
   public void expr() {
     refactoringHelper
         .addInputLines(
-            "I.java", //
-            "interface I {",
-            "  int CONST = 42;",
-            "  I id();",
-            "}")
+            "I.java",
+            """
+            interface I {
+              int CONST = 42;
+
+              I id();
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
-            "in/Test.java", //
-            "class Test {",
-            "  void f(I i) {",
-            "    System.err.println(((I) null).CONST);",
-            "    System.err.println(i.id().CONST);",
-            "  }",
-            "}")
+            "in/Test.java",
+            """
+            class Test {
+              void f(I i) {
+                System.err.println(((I) null).CONST);
+                System.err.println(i.id().CONST);
+              }
+            }
+            """)
         .addOutputLines(
-            "out/Test.java", //
-            "class Test {",
-            "  void f(I i) {",
-            "    System.err.println(I.CONST);",
-            "    i.id();",
-            "    System.err.println(I.CONST);",
-            "  }",
-            "}")
+            "out/Test.java",
+            """
+            class Test {
+              void f(I i) {
+                System.err.println(I.CONST);
+                i.id();
+                System.err.println(I.CONST);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -119,23 +138,28 @@ public class StaticQualifiedUsingExpressionTest {
   public void superAccess() {
     refactoringHelper
         .addInputLines(
-            "I.java", //
-            "interface I {",
-            "  interface Builder {",
-            "    default void f() {}",
-            "  }",
-            "}")
+            "I.java",
+            """
+            interface I {
+              interface Builder {
+                default void f() {}
+              }
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
-            "in/Test.java", //
-            "interface J extends I {",
-            "  interface Builder extends I.Builder {",
-            "    default void f() {}",
-            "    default void aI() {",
-            "      I.Builder.super.f();",
-            "    }",
-            "  }",
-            "}")
+            "in/Test.java",
+            """
+            interface J extends I {
+              interface Builder extends I.Builder {
+                default void f() {}
+
+                default void aI() {
+                  I.Builder.super.f();
+                }
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -144,25 +168,32 @@ public class StaticQualifiedUsingExpressionTest {
   public void enumConstantAccessedViaInstance() {
     refactoringHelper
         .addInputLines(
-            "Enum.java", //
-            "enum Enum {",
-            "A, B;",
-            "}")
+            "Enum.java",
+            """
+            enum Enum {
+              A,
+              B;
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
-            "Test.java", //
-            "class Test {",
-            "  Enum foo(Enum e) {",
-            "    return e.B;",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              Enum foo(Enum e) {
+                return e.B;
+              }
+            }
+            """)
         .addOutputLines(
-            "Test.java", //
-            "class Test {",
-            "  Enum foo(Enum e) {",
-            "    return Enum.B;",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              Enum foo(Enum e) {
+                return Enum.B;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -171,26 +202,34 @@ public class StaticQualifiedUsingExpressionTest {
     refactoringHelper
         .addInputLines(
             "C.java",
-            "class C {",
-            " static Object x;",
-            " void f() {",
-            "   Object x = this.x;",
-            " }",
-            " void g() {",
-            "   Object y = this.x;",
-            " }",
-            "}")
+            """
+            class C {
+              static Object x;
+
+              void f() {
+                Object x = this.x;
+              }
+
+              void g() {
+                Object y = this.x;
+              }
+            }
+            """)
         .addOutputLines(
             "C.java",
-            "class C {",
-            " static Object x;",
-            " void f() {",
-            "   Object x = C.x;",
-            " }",
-            " void g() {",
-            "   Object y = x;",
-            " }",
-            "}")
+            """
+            class C {
+              static Object x;
+
+              void f() {
+                Object x = C.x;
+              }
+
+              void g() {
+                Object y = x;
+              }
+            }
+            """)
         .doTest();
   }
 }

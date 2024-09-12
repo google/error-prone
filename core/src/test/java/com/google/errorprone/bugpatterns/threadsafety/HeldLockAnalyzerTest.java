@@ -41,22 +41,30 @@ public class HeldLockAnalyzerTest {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
-            "package threadsafety;",
-            "import javax.annotation.concurrent.GuardedBy;",
-            "import java.util.concurrent.locks.Lock;",
-            "class Test {",
-            "  final Lock lock = null;",
-            "  @GuardedBy(\"lock\")",
-            "  int x;",
-            "  void m() {",
-            "    lock.lock();",
-            "    try {",
-            "      // BUG: Diagnostic contains:",
-            "      // [(SELECT (THIS) lock)]",
-            "      x++;",
-            "    } finally { lock.unlock(); }",
-            "  }",
-            "}")
+            """
+            package threadsafety;
+
+            import javax.annotation.concurrent.GuardedBy;
+            import java.util.concurrent.locks.Lock;
+
+            class Test {
+              final Lock lock = null;
+
+              @GuardedBy("lock")
+              int x;
+
+              void m() {
+                lock.lock();
+                try {
+                  // BUG: Diagnostic contains:
+                  // [(SELECT (THIS) lock)]
+                  x++;
+                } finally {
+                  lock.unlock();
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -65,23 +73,32 @@ public class HeldLockAnalyzerTest {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
-            "package threadsafety;",
-            "import javax.annotation.concurrent.GuardedBy;",
-            "import java.util.concurrent.locks.Lock;",
-            "class Test {",
-            "  final Lock lock = null;",
-            "  @GuardedBy(\"lock\")",
-            "  int x;",
-            "  void m(Lock lock2) {",
-            "    lock.lock();",
-            "    lock2.lock();",
-            "    try {",
-            "    // BUG: Diagnostic contains:",
-            "    // [(LOCAL_VARIABLE lock2), (SELECT (THIS) lock)]",
-            "    x++;",
-            "    } finally { lock.unlock(); lock2.unlock(); }",
-            "  }",
-            "}")
+            """
+            package threadsafety;
+
+            import javax.annotation.concurrent.GuardedBy;
+            import java.util.concurrent.locks.Lock;
+
+            class Test {
+              final Lock lock = null;
+
+              @GuardedBy("lock")
+              int x;
+
+              void m(Lock lock2) {
+                lock.lock();
+                lock2.lock();
+                try {
+                  // BUG: Diagnostic contains:
+                  // [(LOCAL_VARIABLE lock2), (SELECT (THIS) lock)]
+                  x++;
+                } finally {
+                  lock.unlock();
+                  lock2.unlock();
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -90,17 +107,22 @@ public class HeldLockAnalyzerTest {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
-            "package threadsafety;",
-            "import javax.annotation.concurrent.GuardedBy;",
-            "import java.util.concurrent.locks.Lock;",
-            "class Test {",
-            "  @GuardedBy(\"this\")",
-            "  int x;",
-            "  synchronized void m() {",
-            "    // BUG: Diagnostic contains:  [(THIS)]",
-            "    x++;",
-            "  }",
-            "}")
+            """
+            package threadsafety;
+
+            import javax.annotation.concurrent.GuardedBy;
+            import java.util.concurrent.locks.Lock;
+
+            class Test {
+              @GuardedBy("this")
+              int x;
+
+              synchronized void m() {
+                // BUG: Diagnostic contains:  [(THIS)]
+                x++;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -109,19 +131,24 @@ public class HeldLockAnalyzerTest {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
-            "package threadsafety;",
-            "import javax.annotation.concurrent.GuardedBy;",
-            "import java.util.concurrent.locks.Lock;",
-            "class Test {",
-            "  @GuardedBy(\"this\")",
-            "  int x;",
-            "  void m() {",
-            "    synchronized (this) {",
-            "      // BUG: Diagnostic contains:  [(THIS)]",
-            "      x++;",
-            "    }",
-            "  }",
-            "}")
+            """
+            package threadsafety;
+
+            import javax.annotation.concurrent.GuardedBy;
+            import java.util.concurrent.locks.Lock;
+
+            class Test {
+              @GuardedBy("this")
+              int x;
+
+              void m() {
+                synchronized (this) {
+                  // BUG: Diagnostic contains:  [(THIS)]
+                  x++;
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -130,21 +157,30 @@ public class HeldLockAnalyzerTest {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
-            "package threadsafety;",
-            "import javax.annotation.concurrent.GuardedBy;",
-            "class Lock { final Object lock = null; }",
-            "class Test {",
-            "  final Lock mu = new Lock();",
-            "  @GuardedBy(\"this\")",
-            "  int x;",
-            "  void m() {",
-            "    synchronized (mu.lock) {",
-            "      // BUG: Diagnostic contains:",
-            "      // [(SELECT (SELECT (THIS) mu) lock)]",
-            "      x++;",
-            "    }",
-            "  }",
-            "}")
+            """
+            package threadsafety;
+
+            import javax.annotation.concurrent.GuardedBy;
+
+            class Lock {
+              final Object lock = null;
+            }
+
+            class Test {
+              final Lock mu = new Lock();
+
+              @GuardedBy("this")
+              int x;
+
+              void m() {
+                synchronized (mu.lock) {
+                  // BUG: Diagnostic contains:
+                  // [(SELECT (SELECT (THIS) mu) lock)]
+                  x++;
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -153,20 +189,27 @@ public class HeldLockAnalyzerTest {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
-            "package threadsafety;",
-            "import javax.annotation.concurrent.GuardedBy;",
-            "class Lock {}",
-            "class Test {",
-            "  final Lock mu = new Lock();",
-            "  @GuardedBy(\"this\")",
-            "  int x;",
-            "  void m() {",
-            "    synchronized (Lock.class) {",
-            "      // BUG: Diagnostic contains:  [(CLASS_LITERAL threadsafety.Lock)]",
-            "      x++;",
-            "    }",
-            "  }",
-            "}")
+            """
+            package threadsafety;
+
+            import javax.annotation.concurrent.GuardedBy;
+
+            class Lock {}
+
+            class Test {
+              final Lock mu = new Lock();
+
+              @GuardedBy("this")
+              int x;
+
+              void m() {
+                synchronized (Lock.class) {
+                  // BUG: Diagnostic contains:  [(CLASS_LITERAL threadsafety.Lock)]
+                  x++;
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -175,29 +218,35 @@ public class HeldLockAnalyzerTest {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
-            "package threadsafety;",
-            "import javax.annotation.concurrent.GuardedBy;",
-            "import java.util.concurrent.locks.Lock;",
-            "class Test {",
-            "  final Lock mu = null;",
-            "  final Lock lock = null;",
-            "  @GuardedBy(\"lock\")",
-            "  int x;",
-            "  void m() {",
-            "    mu.lock();",
-            "    // BUG: Diagnostic contains:  []",
-            "    x++;",
-            "    try {",
-            "      // BUG: Diagnostic contains:",
-            "      // [(SELECT (THIS) mu)]",
-            "      x++;",
-            "    } finally {",
-            "      mu.unlock();",
-            "    }",
-            "    // BUG: Diagnostic contains:  []",
-            "    x++;",
-            "  }",
-            "}")
+            """
+            package threadsafety;
+
+            import javax.annotation.concurrent.GuardedBy;
+            import java.util.concurrent.locks.Lock;
+
+            class Test {
+              final Lock mu = null;
+              final Lock lock = null;
+
+              @GuardedBy("lock")
+              int x;
+
+              void m() {
+                mu.lock();
+                // BUG: Diagnostic contains:  []
+                x++;
+                try {
+                  // BUG: Diagnostic contains:
+                  // [(SELECT (THIS) mu)]
+                  x++;
+                } finally {
+                  mu.unlock();
+                }
+                // BUG: Diagnostic contains:  []
+                x++;
+              }
+            }
+            """)
         .doTest();
   }
 

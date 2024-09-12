@@ -32,20 +32,26 @@ public class DeprecatedVariableTest {
     testHelper
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  @Deprecated int x;",
-            "  void f(@Deprecated int x) {",
-            "    @Deprecated int y;",
-            "  }",
-            "}")
+            """
+            class Test {
+              @Deprecated int x;
+
+              void f(@Deprecated int x) {
+                @Deprecated int y;
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "class Test {", //
-            "  @Deprecated int x;",
-            "  void f(int x) {",
-            "    int y;",
-            "  }",
-            "}")
+            """
+            class Test {
+              @Deprecated int x;
+
+              void f(int x) {
+                int y;
+              }
+            }
+            """)
         .doTest();
   }
 }

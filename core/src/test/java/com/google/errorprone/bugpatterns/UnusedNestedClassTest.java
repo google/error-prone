@@ -35,11 +35,13 @@ public class UnusedNestedClassTest {
   public void positive() {
     compilationHelper
         .addSourceLines(
-            "Test.java", //
-            "class A {",
-            "  // BUG: Diagnostic contains:",
-            "  private class B {}",
-            "}")
+            "Test.java",
+            """
+            class A {
+              // BUG: Diagnostic contains:
+              private class B {}
+            }
+            """)
         .doTest();
   }
 
@@ -47,10 +49,12 @@ public class UnusedNestedClassTest {
   public void exemptedByUnusedPrefix() {
     compilationHelper
         .addSourceLines(
-            "Test.java", //
-            "class A {",
-            "  private class UnusedClass {}",
-            "}")
+            "Test.java",
+            """
+            class A {
+              private class UnusedClass {}
+            }
+            """)
         .doTest();
   }
 
@@ -58,10 +62,12 @@ public class UnusedNestedClassTest {
   public void nonPrivateNestedClass_noWarning() {
     compilationHelper
         .addSourceLines(
-            "Test.java", //
-            "class A {",
-            "  class B {}",
-            "}")
+            "Test.java",
+            """
+            class A {
+              class B {}
+            }
+            """)
         .doTest();
   }
 
@@ -69,19 +75,23 @@ public class UnusedNestedClassTest {
   public void anonymousClass_noFinding() {
     compilationHelper
         .addSourceLines(
-            "Test.java", //
-            "import java.util.function.Function;",
-            "import java.util.stream.Stream;",
-            "class A {",
-            "  private Stream<String> map(Stream<Object> xs) {",
-            "    return xs.map(new Function<Object, String>() {",
-            "      @Override",
-            "      public String apply(Object o) {",
-            "        return o.toString();",
-            "      }",
-            "    });",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            import java.util.function.Function;
+            import java.util.stream.Stream;
+
+            class A {
+              private Stream<String> map(Stream<Object> xs) {
+                return xs.map(
+                    new Function<Object, String>() {
+                      @Override
+                      public String apply(Object o) {
+                        return o.toString();
+                      }
+                    });
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -111,20 +121,23 @@ public class UnusedNestedClassTest {
   public void localClass_used_noFinding() {
     compilationHelper
         .addSourceLines(
-            "Test.java", //
-            "import java.util.function.Function;",
-            "import java.util.stream.Stream;",
-            "class A {",
-            "  private Stream<String> map(Stream<Object> xs) {",
-            "    class Mapper implements Function<Object, String> {",
-            "      @Override",
-            "      public String apply(Object o) {",
-            "        return o.toString();",
-            "      }",
-            "    }",
-            "    return xs.map(new Mapper());",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            import java.util.function.Function;
+            import java.util.stream.Stream;
+
+            class A {
+              private Stream<String> map(Stream<Object> xs) {
+                class Mapper implements Function<Object, String> {
+                  @Override
+                  public String apply(Object o) {
+                    return o.toString();
+                  }
+                }
+                return xs.map(new Mapper());
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -132,20 +145,23 @@ public class UnusedNestedClassTest {
   public void localClass_unused_finding() {
     compilationHelper
         .addSourceLines(
-            "Test.java", //
-            "import java.util.function.Function;",
-            "import java.util.stream.Stream;",
-            "class A {",
-            "  void test() {",
-            "    // BUG: Diagnostic contains:",
-            "    class Mapper implements Function<Object, String> {",
-            "      @Override",
-            "      public String apply(Object o) {",
-            "        return o.toString();",
-            "      }",
-            "    }",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            import java.util.function.Function;
+            import java.util.stream.Stream;
+
+            class A {
+              void test() {
+                // BUG: Diagnostic contains:
+                class Mapper implements Function<Object, String> {
+                  @Override
+                  public String apply(Object o) {
+                    return o.toString();
+                  }
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -154,12 +170,14 @@ public class UnusedNestedClassTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class A {",
-            "  // BUG: Diagnostic contains:",
-            "  private static class B {",
-            "    private static final B b = new B();",
-            "  }",
-            "}")
+            """
+            class A {
+              // BUG: Diagnostic contains:
+              private static class B {
+                private static final B b = new B();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -168,10 +186,13 @@ public class UnusedNestedClassTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class A {",
-            "  private static final B b = new B();",
-            "  private static class B {}",
-            "}")
+            """
+            class A {
+              private static final B b = new B();
+
+              private static class B {}
+            }
+            """)
         .doTest();
   }
 
@@ -180,10 +201,13 @@ public class UnusedNestedClassTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class A {",
-            "  public static final Object b = new A.B();",
-            "  private static class B {}",
-            "}")
+            """
+            class A {
+              public static final Object b = new A.B();
+
+              private static class B {}
+            }
+            """)
         .doTest();
   }
 
@@ -192,10 +216,12 @@ public class UnusedNestedClassTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class A {",
-            "  @SuppressWarnings(\"unused\")",
-            "  private class B {}",
-            "}")
+            """
+            class A {
+              @SuppressWarnings("unused")
+              private class B {}
+            }
+            """)
         .doTest();
   }
 
@@ -204,11 +230,14 @@ public class UnusedNestedClassTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Keep;",
-            "class A {",
-            "  @Keep",
-            "  private class B {}",
-            "}")
+            """
+            import com.google.errorprone.annotations.Keep;
+
+            class A {
+              @Keep
+              private class B {}
+            }
+            """)
         .doTest();
   }
 
@@ -216,15 +245,18 @@ public class UnusedNestedClassTest {
   public void refactoring() {
     BugCheckerRefactoringTestHelper.newInstance(UnusedNestedClass.class, getClass())
         .addInputLines(
-            "Test.java", //
-            "class A {",
-            "  /** Foo. */",
-            "  private class B {}",
-            "}")
+            "Test.java",
+            """
+            class A {
+              /** Foo. */
+              private class B {}
+            }
+            """)
         .addOutputLines(
-            "Test.java", //
-            "class A {",
-            "}")
+            "Test.java",
+            """
+            class A {}
+            """)
         .doTest(TestMode.TEXT_MATCH);
   }
 
@@ -233,10 +265,12 @@ public class UnusedNestedClassTest {
     compilationHelper
         .setArgs(asList("-source", "9", "-target", "9"))
         .addSourceLines(
-            "module-info.java", //
-            "module foo {",
-            "  requires java.base;",
-            "}")
+            "module-info.java",
+            """
+            module foo {
+              requires java.base;
+            }
+            """)
         .doTest();
   }
 }

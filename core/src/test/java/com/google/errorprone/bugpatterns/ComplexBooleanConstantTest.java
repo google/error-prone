@@ -37,60 +37,74 @@ public class ComplexBooleanConstantTest {
     refactoringHelper
         .addInputLines(
             "in/Foo.java",
-            "class Foo {",
-            "  int CONSTANT1 = 1;",
-            "  int CONSTANT2 = 1;",
-            "  int barNoOp() {",
-            "    return 1 - 1;",
-            "  }",
-            "  boolean barNoOpWithConstants() {",
-            "    return CONSTANT1 == CONSTANT2;",
-            "  }",
-            "  boolean barEquals() {",
-            "    return 1 == 1;",
-            "  }",
-            "  boolean barNotEquals() {",
-            "    return 1 != 1;",
-            "  }",
-            "  boolean f(boolean x) {",
-            "    boolean r;",
-            "    r = x || !false;",
-            "    r = x || !true;",
-            "    r = x || true;",
-            "    r = x && !false;",
-            "    r = x && !true;",
-            "    r = x && false;",
-            "    return r;",
-            "  }",
-            "}")
+            """
+            class Foo {
+              int CONSTANT1 = 1;
+              int CONSTANT2 = 1;
+
+              int barNoOp() {
+                return 1 - 1;
+              }
+
+              boolean barNoOpWithConstants() {
+                return CONSTANT1 == CONSTANT2;
+              }
+
+              boolean barEquals() {
+                return 1 == 1;
+              }
+
+              boolean barNotEquals() {
+                return 1 != 1;
+              }
+
+              boolean f(boolean x) {
+                boolean r;
+                r = x || !false;
+                r = x || !true;
+                r = x || true;
+                r = x && !false;
+                r = x && !true;
+                r = x && false;
+                return r;
+              }
+            }
+            """)
         .addOutputLines(
             "out/Foo.java",
-            "class Foo {",
-            "  int CONSTANT1 = 1;",
-            "  int CONSTANT2 = 1;",
-            "  int barNoOp() {",
-            "    return 1 - 1;",
-            "  }",
-            "  boolean barNoOpWithConstants() {",
-            "    return CONSTANT1 == CONSTANT2;",
-            "  }",
-            "  boolean barEquals() {",
-            "    return true;",
-            "  }",
-            "  boolean barNotEquals() {",
-            "    return false;",
-            "  }",
-            "  boolean f(boolean x) {",
-            "    boolean r;",
-            "    r = true;",
-            "    r = x || !true;",
-            "    r = true;",
-            "    r = x && !false;",
-            "    r = false;",
-            "    r = false;",
-            "    return r;",
-            "  }",
-            "}")
+            """
+            class Foo {
+              int CONSTANT1 = 1;
+              int CONSTANT2 = 1;
+
+              int barNoOp() {
+                return 1 - 1;
+              }
+
+              boolean barNoOpWithConstants() {
+                return CONSTANT1 == CONSTANT2;
+              }
+
+              boolean barEquals() {
+                return true;
+              }
+
+              boolean barNotEquals() {
+                return false;
+              }
+
+              boolean f(boolean x) {
+                boolean r;
+                r = true;
+                r = x || !true;
+                r = true;
+                r = x && !false;
+                r = false;
+                r = false;
+                return r;
+              }
+            }
+            """)
         .doTest(TestMode.TEXT_MATCH);
   }
 
@@ -98,15 +112,18 @@ public class ComplexBooleanConstantTest {
   public void negative() {
     CompilationTestHelper.newInstance(ComplexBooleanConstant.class, getClass())
         .addSourceLines(
-            "A.java", //
-            "package a;",
-            "class A {",
-            "  static final int A = 1;",
-            "  static final int B = 2;",
-            "  static final boolean C = A > B;",
-            "  static final boolean D = A + B > 0;",
-            "  static final boolean E = (A + B) > 0;",
-            "}")
+            "A.java",
+            """
+            package a;
+
+            class A {
+              static final int A = 1;
+              static final int B = 2;
+              static final boolean C = A > B;
+              static final boolean D = A + B > 0;
+              static final boolean E = (A + B) > 0;
+            }
+            """)
         .doTest();
   }
 }

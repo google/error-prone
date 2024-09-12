@@ -32,16 +32,18 @@ public class DangerousLiteralNullCheckerTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import java.util.Optional;",
-            "",
-            "class Test {",
-            "  void bad(Optional<Object> o) {",
-            "    // BUG: Diagnostic contains: o.orElse(null)",
-            "    o.orElseGet(null);",
-            "    // BUG: Diagnostic contains: o.orElseThrow(NullPointerException::new)",
-            "    o.orElseThrow(null);",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            class Test {
+              void bad(Optional<Object> o) {
+                // BUG: Diagnostic contains: o.orElse(null)
+                o.orElseGet(null);
+                // BUG: Diagnostic contains: o.orElseThrow(NullPointerException::new)
+                o.orElseThrow(null);
+              }
+            }
+            """)
         .doTest();
   }
 

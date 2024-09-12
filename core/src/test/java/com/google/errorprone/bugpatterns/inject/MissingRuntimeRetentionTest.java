@@ -50,29 +50,33 @@ public class MissingRuntimeRetentionTest {
     refactoringTestHelper
         .addInputLines(
             "in/Anno.java",
-            "import static java.lang.annotation.ElementType.METHOD;",
-            "import static java.lang.annotation.ElementType.TYPE;",
-            "",
-            "import java.lang.annotation.Target;",
-            "import javax.inject.Qualifier;",
-            "",
-            "@Qualifier",
-            "@Target({TYPE, METHOD})",
-            "public @interface Anno {}")
+            """
+            import static java.lang.annotation.ElementType.METHOD;
+            import static java.lang.annotation.ElementType.TYPE;
+
+            import java.lang.annotation.Target;
+            import javax.inject.Qualifier;
+
+            @Qualifier
+            @Target({TYPE, METHOD})
+            public @interface Anno {}
+            """)
         .addOutputLines(
             "out/Anno.java",
-            "import static java.lang.annotation.ElementType.METHOD;",
-            "import static java.lang.annotation.ElementType.TYPE;",
-            "import static java.lang.annotation.RetentionPolicy.RUNTIME;",
-            "",
-            "import java.lang.annotation.Retention;",
-            "import java.lang.annotation.Target;",
-            "import javax.inject.Qualifier;",
-            "",
-            "@Qualifier",
-            "@Target({TYPE, METHOD})",
-            "@Retention(RUNTIME)",
-            "public @interface Anno {}")
+            """
+            import static java.lang.annotation.ElementType.METHOD;
+            import static java.lang.annotation.ElementType.TYPE;
+            import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
+            import java.lang.annotation.Retention;
+            import java.lang.annotation.Target;
+            import javax.inject.Qualifier;
+
+            @Qualifier
+            @Target({TYPE, METHOD})
+            @Retention(RUNTIME)
+            public @interface Anno {}
+            """)
         .doTest();
   }
 
@@ -80,11 +84,14 @@ public class MissingRuntimeRetentionTest {
   public void nestedQualifierInDaggerModule() {
     compilationHelper
         .addSourceLines(
-            "DaggerModule.java", //
-            "@dagger.Module class DaggerModule {",
-            "@javax.inject.Scope",
-            "public @interface TestAnnotation {}",
-            "}")
+            "DaggerModule.java",
+            """
+            @dagger.Module
+            class DaggerModule {
+              @javax.inject.Scope
+              public @interface TestAnnotation {}
+            }
+            """)
         .doTest();
   }
 
@@ -93,9 +100,11 @@ public class MissingRuntimeRetentionTest {
     compilationHelper
         .setArgs(Collections.singletonList("-XDandroidCompatible=true"))
         .addSourceLines(
-            "TestAnnotation.java", //
-            "@javax.inject.Scope",
-            "public @interface TestAnnotation {}")
+            "TestAnnotation.java",
+            """
+            @javax.inject.Scope
+            public @interface TestAnnotation {}
+            """)
         .doTest();
   }
 
@@ -105,12 +114,15 @@ public class MissingRuntimeRetentionTest {
         .setArgs(Collections.singletonList("-XDandroidCompatible=true"))
         .addSourceLines(
             "TestAnnotation.java",
-            "import java.lang.annotation.Retention;",
-            "import java.lang.annotation.RetentionPolicy;",
-            "@javax.inject.Scope",
-            "// BUG: Diagnostic contains: @Retention(RUNTIME)",
-            "@Retention(RetentionPolicy.SOURCE)",
-            "public @interface TestAnnotation {}")
+            """
+            import java.lang.annotation.Retention;
+            import java.lang.annotation.RetentionPolicy;
+
+            @javax.inject.Scope
+            // BUG: Diagnostic contains: @Retention(RUNTIME)
+            @Retention(RetentionPolicy.SOURCE)
+            public @interface TestAnnotation {}
+            """)
         .doTest();
   }
 }

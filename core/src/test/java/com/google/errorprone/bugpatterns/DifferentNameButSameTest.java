@@ -28,29 +28,39 @@ public final class DifferentNameButSameTest {
       BugCheckerRefactoringTestHelper.newInstance(DifferentNameButSame.class, getClass())
           .addInputLines(
               "TypeUseAnnotation.java",
-              "package pkg;",
-              "import java.lang.annotation.ElementType;",
-              "import java.lang.annotation.Target;",
-              "@Target({ElementType.TYPE_PARAMETER, ElementType.TYPE_USE})",
-              "@interface TypeUseAnnotation {}")
+              """
+              package pkg;
+
+              import java.lang.annotation.ElementType;
+              import java.lang.annotation.Target;
+
+              @Target({ElementType.TYPE_PARAMETER, ElementType.TYPE_USE})
+              @interface TypeUseAnnotation {}
+              """)
           .expectUnchanged()
           .addInputLines(
               "A.java",
-              "package pkg;",
-              "public class A {",
-              "  public static class B {",
-              "    public static class C {",
-              "      public static void foo() {}",
-              "    }",
-              "  }",
-              "}")
+              """
+              package pkg;
+
+              public class A {
+                public static class B {
+                  public static class C {
+                    public static void foo() {}
+                  }
+                }
+              }
+              """)
           .expectUnchanged()
           .addInputLines(
               "ClassAnnotation.java",
-              "package pkg;",
-              "public @interface ClassAnnotation {",
-              "  Class<?> value();",
-              "}")
+              """
+              package pkg;
+
+              public @interface ClassAnnotation {
+                Class<?> value();
+              }
+              """)
           .expectUnchanged();
 
   @Test
@@ -58,20 +68,30 @@ public final class DifferentNameButSameTest {
     helper
         .addInputLines(
             "Test.java",
-            "package pkg;",
-            "import pkg.A.B;",
-            "interface Test {",
-            "  A.B test();",
-            "  B test2();",
-            "}")
+            """
+            package pkg;
+
+            import pkg.A.B;
+
+            interface Test {
+              A.B test();
+
+              B test2();
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "package pkg;",
-            "import pkg.A.B;",
-            "interface Test {",
-            "  B test();",
-            "  B test2();",
-            "}")
+            """
+            package pkg;
+
+            import pkg.A.B;
+
+            interface Test {
+              B test();
+
+              B test2();
+            }
+            """)
         .doTest();
   }
 
@@ -80,11 +100,15 @@ public final class DifferentNameButSameTest {
     helper
         .addInputLines(
             "Test.java",
-            "package pkg;",
-            "interface Test {",
-            "  A.B test();",
-            "  pkg.A.B test2();",
-            "}")
+            """
+            package pkg;
+
+            interface Test {
+              A.B test();
+
+              pkg.A.B test2();
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -94,22 +118,30 @@ public final class DifferentNameButSameTest {
     helper
         .addInputLines(
             "Test.java",
-            "package pkg;",
-            "import pkg.A.B;",
-            "class Test {",
-            "  B test() {",
-            "    return new A.B();",
-            "  }",
-            "}")
+            """
+            package pkg;
+
+            import pkg.A.B;
+
+            class Test {
+              B test() {
+                return new A.B();
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "package pkg;",
-            "import pkg.A.B;",
-            "class Test {",
-            "  B test() {",
-            "    return new B();",
-            "  }",
-            "}")
+            """
+            package pkg;
+
+            import pkg.A.B;
+
+            class Test {
+              B test() {
+                return new B();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -118,24 +150,32 @@ public final class DifferentNameButSameTest {
     helper
         .addInputLines(
             "Test.java",
-            "package pkg;",
-            "import pkg.A.B;",
-            "class Test {",
-            "  B.C test() {",
-            "    A.B.C.foo();",
-            "    return null;",
-            "  }",
-            "}")
+            """
+            package pkg;
+
+            import pkg.A.B;
+
+            class Test {
+              B.C test() {
+                A.B.C.foo();
+                return null;
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "package pkg;",
-            "import pkg.A.B;",
-            "class Test {",
-            "  B.C test() {",
-            "    B.C.foo();",
-            "    return null;",
-            "  }",
-            "}")
+            """
+            package pkg;
+
+            import pkg.A.B;
+
+            class Test {
+              B.C test() {
+                B.C.foo();
+                return null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -144,20 +184,31 @@ public final class DifferentNameButSameTest {
     helper
         .addInputLines(
             "Test.java",
-            "package pkg;",
-            "import pkg.A.B;",
-            "interface Test {",
-            "  A.@TypeUseAnnotation B test();",
-            "  B test2();",
-            "}")
+            """
+            package pkg;
+
+            import pkg.A.B;
+
+            interface Test {
+              A.@TypeUseAnnotation B test();
+
+              B test2();
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "package pkg;",
-            "import pkg.A.B;",
-            "interface Test {",
-            "  @TypeUseAnnotation B test();",
-            "  B test2();",
-            "}")
+            """
+            package pkg;
+
+            import pkg.A.B;
+
+            interface Test {
+              @TypeUseAnnotation
+              B test();
+
+              B test2();
+            }
+            """)
         .doTest();
   }
 
@@ -166,20 +217,32 @@ public final class DifferentNameButSameTest {
     helper
         .addInputLines(
             "Test.java",
-            "package pkg;",
-            "import pkg.A.B;",
-            "interface Test {",
-            "  @TypeUseAnnotation B test();",
-            "  A.B test2();",
-            "}")
+            """
+            package pkg;
+
+            import pkg.A.B;
+
+            interface Test {
+              @TypeUseAnnotation
+              B test();
+
+              A.B test2();
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "package pkg;",
-            "import pkg.A.B;",
-            "interface Test {",
-            "  @TypeUseAnnotation B test();",
-            "  B test2();",
-            "}")
+            """
+            package pkg;
+
+            import pkg.A.B;
+
+            interface Test {
+              @TypeUseAnnotation
+              B test();
+
+              B test2();
+            }
+            """)
         .doTest();
   }
 
@@ -188,13 +251,17 @@ public final class DifferentNameButSameTest {
     helper
         .addInputLines(
             "Test.java",
-            "package pkg;",
-            "interface Test {",
-            "  interface B {",
-            "    B get();",
-            "  }",
-            "  Test.B get();",
-            "}")
+            """
+            package pkg;
+
+            interface Test {
+              interface B {
+                B get();
+              }
+
+              Test.B get();
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -204,20 +271,26 @@ public final class DifferentNameButSameTest {
     helper
         .addInputLines(
             "Test.java",
-            "package pkg;",
-            "@ClassAnnotation(A.B.C.class)",
-            "class D extends A.B {",
-            "  private C c;",
-            "  private C c2;",
-            "}")
+            """
+            package pkg;
+
+            @ClassAnnotation(A.B.C.class)
+            class D extends A.B {
+              private C c;
+              private C c2;
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "package pkg;",
-            "@ClassAnnotation(A.B.C.class)",
-            "class D extends A.B {",
-            "  private A.B.C c;",
-            "  private A.B.C c2;",
-            "}")
+            """
+            package pkg;
+
+            @ClassAnnotation(A.B.C.class)
+            class D extends A.B {
+              private A.B.C c;
+              private A.B.C c2;
+            }
+            """)
         .doTest();
   }
 
@@ -226,16 +299,23 @@ public final class DifferentNameButSameTest {
     helper
         .addInputLines(
             "Test.java",
-            "package pkg;",
-            "interface Test {",
-            "  interface A<T> {",
-            "    interface D {}",
-            "  }",
-            "  class B implements A<Long> {}",
-            "  class C implements A<String> {}",
-            "  B.D b();",
-            "  C.D c();",
-            "}")
+            """
+            package pkg;
+
+            interface Test {
+              interface A<T> {
+                interface D {}
+              }
+
+              class B implements A<Long> {}
+
+              class C implements A<String> {}
+
+              B.D b();
+
+              C.D c();
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -245,13 +325,17 @@ public final class DifferentNameButSameTest {
     helper
         .addInputLines(
             "Test.java",
-            "package pkg;",
-            "interface Test {",
-            "  interface Foo {",
-            "    Foo foo();",
-            "  }",
-            "  Test.Foo foo();",
-            "}")
+            """
+            package pkg;
+
+            interface Test {
+              interface Foo {
+                Foo foo();
+              }
+
+              Test.Foo foo();
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -259,24 +343,42 @@ public final class DifferentNameButSameTest {
   @Test
   public void typesWhichMakePoorImports_disfavoured() {
     helper
-        .addInputLines("Foo.java", "package pkg;", "interface Foo {", "  interface Builder {}", "}")
+        .addInputLines(
+            "Foo.java",
+            """
+            package pkg;
+
+            interface Foo {
+              interface Builder {}
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
             "Test.java",
-            "package pkg;",
-            "import pkg.Foo.Builder;",
-            "interface Test {",
-            "  Foo.Builder a();",
-            "  Builder b();",
-            "}")
+            """
+            package pkg;
+
+            import pkg.Foo.Builder;
+
+            interface Test {
+              Foo.Builder a();
+
+              Builder b();
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "package pkg;",
-            "import pkg.Foo.Builder;",
-            "interface Test {",
-            "  Foo.Builder a();",
-            "  Foo.Builder b();",
-            "}")
+            """
+            package pkg;
+
+            import pkg.Foo.Builder;
+
+            interface Test {
+              Foo.Builder a();
+
+              Foo.Builder b();
+            }
+            """)
         .doTest();
   }
 
@@ -285,28 +387,38 @@ public final class DifferentNameButSameTest {
     helper
         .addInputLines(
             "Test.java",
-            "package pkg;",
-            "import pkg.A.B;",
-            "class Test {",
-            "  A.B test(Object B) {",
-            "    return new A.B();",
-            "  }",
-            "  B test2() {",
-            "    return null;",
-            "  }",
-            "}")
+            """
+            package pkg;
+
+            import pkg.A.B;
+
+            class Test {
+              A.B test(Object B) {
+                return new A.B();
+              }
+
+              B test2() {
+                return null;
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "package pkg;",
-            "import pkg.A.B;",
-            "class Test {",
-            "  A.B test(Object B) {",
-            "    return new A.B();",
-            "  }",
-            "  A.B test2() {",
-            "    return null;",
-            "  }",
-            "}")
+            """
+            package pkg;
+
+            import pkg.A.B;
+
+            class Test {
+              A.B test(Object B) {
+                return new A.B();
+              }
+
+              A.B test2() {
+                return null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -314,20 +426,26 @@ public final class DifferentNameButSameTest {
   public void innerClassConstructor() {
     BugCheckerRefactoringTestHelper.newInstance(DifferentNameButSame.class, getClass())
         .addInputLines(
-            "A.java", //
-            "package pkg;",
-            "class A {",
-            "  class B {}",
-            "}")
+            "A.java",
+            """
+            package pkg;
+
+            class A {
+              class B {}
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
             "Test.java",
-            "package pkg;",
-            "class Test {",
-            "  static void f(A a) {",
-            "    A.B b = a.new B();",
-            "  }",
-            "}")
+            """
+            package pkg;
+
+            class Test {
+              static void f(A a) {
+                A.B b = a.new B();
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }

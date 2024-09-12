@@ -74,12 +74,14 @@ public class CompoundAssignmentTest extends CompilerBasedAbstractTest {
   public void shouldMatch() {
     writeFile(
         "A.java",
-        "public class A {",
-        "  public void getHash(int a, long b) {",
-        "    long c = a;",
-        "    c += b;",
-        "  }",
-        "}");
+        """
+        public class A {
+          public void getHash(int a, long b) {
+            long c = a;
+            c += b;
+          }
+        }
+        """);
     Set<Kind> operators = EnumSet.noneOf(Kind.class);
     operators.add(Kind.PLUS_ASSIGNMENT);
     operators.add(Kind.LEFT_SHIFT_ASSIGNMENT);
@@ -96,12 +98,14 @@ public class CompoundAssignmentTest extends CompilerBasedAbstractTest {
   public void shouldNotMatchWhenOperatorDiffers() {
     writeFile(
         "A.java",
-        "public class A {",
-        "  public void getHash(int a, long b) {",
-        "    long c = a;",
-        "    c -= b;",
-        "  }",
-        "}");
+        """
+        public class A {
+          public void getHash(int a, long b) {
+            long c = a;
+            c -= b;
+          }
+        }
+        """);
     Set<Kind> operators = EnumSet.noneOf(Kind.class);
     operators.add(Kind.PLUS_ASSIGNMENT);
     assertCompiles(
@@ -117,12 +121,14 @@ public class CompoundAssignmentTest extends CompilerBasedAbstractTest {
   public void shouldNotMatchWhenLeftOperandMatcherFails() {
     writeFile(
         "A.java",
-        "public class A {",
-        "  public void getHash(int a, long b) {",
-        "    long c = a;",
-        "    c += b;",
-        "  }",
-        "}");
+        """
+        public class A {
+          public void getHash(int a, long b) {
+            long c = a;
+            c += b;
+          }
+        }
+        """);
     Set<Kind> operators = EnumSet.noneOf(Kind.class);
     operators.add(Kind.PLUS_ASSIGNMENT);
     assertCompiles(
@@ -138,12 +144,14 @@ public class CompoundAssignmentTest extends CompilerBasedAbstractTest {
   public void shouldNotMatchWhenRightOperandMatcherFails() {
     writeFile(
         "A.java",
-        "public class A {",
-        "  public void getHash(int a, long b) {",
-        "    long c = a;",
-        "    c += b;",
-        "  }",
-        "}");
+        """
+        public class A {
+          public void getHash(int a, long b) {
+            long c = a;
+            c += b;
+          }
+        }
+        """);
     Set<Kind> operators = EnumSet.noneOf(Kind.class);
     operators.add(Kind.PLUS_ASSIGNMENT);
     assertCompiles(

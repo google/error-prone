@@ -33,14 +33,17 @@ public final class UnnecessaryMethodReferenceTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import java.util.function.Function;",
-            "import java.util.stream.Stream;",
-            "class Test {",
-            "  Stream<String> map(Stream<Integer> xs, Function<Integer, String> fn) {",
-            "    // BUG: Diagnostic contains: (fn)",
-            "    return xs.map(fn::apply);",
-            "  }",
-            "}")
+            """
+            import java.util.function.Function;
+            import java.util.stream.Stream;
+
+            class Test {
+              Stream<String> map(Stream<Integer> xs, Function<Integer, String> fn) {
+                // BUG: Diagnostic contains: (fn)
+                return xs.map(fn::apply);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -49,22 +52,28 @@ public final class UnnecessaryMethodReferenceTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "import java.util.function.Function;",
-            "import java.util.stream.Stream;",
-            "class Test {",
-            "  Stream<String> map(Stream<Integer> xs, Function<Integer, String> fn) {",
-            "    return xs.map(fn::apply);",
-            "  }",
-            "}")
+            """
+            import java.util.function.Function;
+            import java.util.stream.Stream;
+
+            class Test {
+              Stream<String> map(Stream<Integer> xs, Function<Integer, String> fn) {
+                return xs.map(fn::apply);
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import java.util.function.Function;",
-            "import java.util.stream.Stream;",
-            "class Test {",
-            "  Stream<String> map(Stream<Integer> xs, Function<Integer, String> fn) {",
-            "    return xs.map(fn);",
-            "  }",
-            "}")
+            """
+            import java.util.function.Function;
+            import java.util.stream.Stream;
+
+            class Test {
+              Stream<String> map(Stream<Integer> xs, Function<Integer, String> fn) {
+                return xs.map(fn);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -73,20 +82,24 @@ public final class UnnecessaryMethodReferenceTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import java.util.function.Function;",
-            "import java.util.stream.Stream;",
-            "class Test {",
-            "  Stream<String> map(Stream<Integer> xs, A fn) {",
-            "    // BUG: Diagnostic contains: (fn)",
-            "    return xs.map(fn::apply);",
-            "  }",
-            "  abstract static class A implements Function<Integer, String> {",
-            "    @Override",
-            "    public String apply(Integer i) {",
-            "      return i.toString();",
-            "    }",
-            "  }",
-            "}")
+            """
+            import java.util.function.Function;
+            import java.util.stream.Stream;
+
+            class Test {
+              Stream<String> map(Stream<Integer> xs, A fn) {
+                // BUG: Diagnostic contains: (fn)
+                return xs.map(fn::apply);
+              }
+
+              abstract static class A implements Function<Integer, String> {
+                @Override
+                public String apply(Integer i) {
+                  return i.toString();
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -95,16 +108,20 @@ public final class UnnecessaryMethodReferenceTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import java.util.function.Function;",
-            "import java.util.stream.Stream;",
-            "class Test {",
-            "  Stream<String> map(Stream<Integer> xs, A fn) {",
-            "    return xs.map(fn::frobnicate);",
-            "  }",
-            "  abstract static class A implements Function<Integer, String> {",
-            "    abstract String frobnicate(Integer i);",
-            "  }",
-            "}")
+            """
+            import java.util.function.Function;
+            import java.util.stream.Stream;
+
+            class Test {
+              Stream<String> map(Stream<Integer> xs, A fn) {
+                return xs.map(fn::frobnicate);
+              }
+
+              abstract static class A implements Function<Integer, String> {
+                abstract String frobnicate(Integer i);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -113,22 +130,28 @@ public final class UnnecessaryMethodReferenceTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import java.util.function.Function;",
-            "import java.util.stream.Stream;",
-            "abstract class Test {",
-            "  void test(A a) {",
-            "    // BUG: Diagnostic contains:",
-            "    foo(a::foo);",
-            "    foo(a::bar);",
-            "  }",
-            "  abstract void foo(A a);",
-            "  interface A {",
-            "    String foo(Integer i);",
-            "    default String bar(Integer i) {",
-            "      return null;",
-            "    }",
-            "  }",
-            "}")
+            """
+            import java.util.function.Function;
+            import java.util.stream.Stream;
+
+            abstract class Test {
+              void test(A a) {
+                // BUG: Diagnostic contains:
+                foo(a::foo);
+                foo(a::bar);
+              }
+
+              abstract void foo(A a);
+
+              interface A {
+                String foo(Integer i);
+
+                default String bar(Integer i) {
+                  return null;
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -137,15 +160,18 @@ public final class UnnecessaryMethodReferenceTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.base.Predicate;",
-            "import java.util.function.Function;",
-            "import java.util.stream.Stream;",
-            "class Test {",
-            "  Stream<Integer> map(Stream<Integer> xs, Predicate<Integer> p) {",
-            "    // BUG: Diagnostic contains: (p)",
-            "    return xs.filter(p::apply);",
-            "  }",
-            "}")
+            """
+            import com.google.common.base.Predicate;
+            import java.util.function.Function;
+            import java.util.stream.Stream;
+
+            class Test {
+              Stream<Integer> map(Stream<Integer> xs, Predicate<Integer> p) {
+                // BUG: Diagnostic contains: (p)
+                return xs.filter(p::apply);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -154,14 +180,17 @@ public final class UnnecessaryMethodReferenceTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.base.Converter;",
-            "import java.util.stream.Stream;",
-            "class Test {",
-            "  Stream<String> map(Stream<Integer> xs, Converter<Integer, String> fn) {",
-            "    // BUG: Diagnostic contains: (fn)",
-            "    return xs.map(fn::convert);",
-            "  }",
-            "}")
+            """
+            import com.google.common.base.Converter;
+            import java.util.stream.Stream;
+
+            class Test {
+              Stream<String> map(Stream<Integer> xs, Converter<Integer, String> fn) {
+                // BUG: Diagnostic contains: (fn)
+                return xs.map(fn::convert);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -170,15 +199,19 @@ public final class UnnecessaryMethodReferenceTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.base.Converter;",
-            "import com.google.common.base.Function;",
-            "class Test {",
-            "  void a(Converter<Integer, String> fn) {",
-            "    // BUG: Diagnostic contains: b(fn)",
-            "    b(fn::convert);",
-            "  }",
-            "  void b(Function<Integer, String> fn) {}",
-            "}")
+            """
+            import com.google.common.base.Converter;
+            import com.google.common.base.Function;
+
+            class Test {
+              void a(Converter<Integer, String> fn) {
+                // BUG: Diagnostic contains: b(fn)
+                b(fn::convert);
+              }
+
+              void b(Function<Integer, String> fn) {}
+            }
+            """)
         .doTest();
   }
 
@@ -186,18 +219,23 @@ public final class UnnecessaryMethodReferenceTest {
   public void ignoreSuper() {
     helper
         .addSourceLines(
-            "S.java", //
-            "class S implements Runnable {",
-            "  public void run() {}",
-            "}")
+            "S.java",
+            """
+            class S implements Runnable {
+              public void run() {}
+            }
+            """)
         .addSourceLines(
             "Test.java",
-            "abstract class Test extends S {",
-            "  abstract void r(Runnable r);",
-            "  public void run() {",
-            "    r(super::run);",
-            "  }",
-            "}")
+            """
+            abstract class Test extends S {
+              abstract void r(Runnable r);
+
+              public void run() {
+                r(super::run);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -206,13 +244,17 @@ public final class UnnecessaryMethodReferenceTest {
     helper
         .addSourceLines(
             "T.java",
-            "import java.util.function.Consumer;",
-            "abstract class T {",
-            "  void f(Consumer<String> c) {}",
-            "  void g(Consumer<Object> c) {",
-            "    f(c::accept);",
-            "  }",
-            "}")
+            """
+            import java.util.function.Consumer;
+
+            abstract class T {
+              void f(Consumer<String> c) {}
+
+              void g(Consumer<Object> c) {
+                f(c::accept);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -221,14 +263,17 @@ public final class UnnecessaryMethodReferenceTest {
     helper
         .addSourceLines(
             "T.java",
-            "import com.google.common.collect.Range;",
-            "import java.util.stream.Stream;",
-            "abstract class T {",
-            "  Stream<Long> g(Stream<Long> x, Range<Long> range) {",
-            "    // BUG: Diagnostic contains: filter(range)",
-            "    return x.filter(range::contains);",
-            "  }",
-            "}")
+            """
+            import com.google.common.collect.Range;
+            import java.util.stream.Stream;
+
+            abstract class T {
+              Stream<Long> g(Stream<Long> x, Range<Long> range) {
+                // BUG: Diagnostic contains: filter(range)
+                return x.filter(range::contains);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -237,16 +282,20 @@ public final class UnnecessaryMethodReferenceTest {
     helper
         .addSourceLines(
             "T.java",
-            "import com.google.common.base.Predicate;",
-            "import com.google.common.collect.Range;",
-            "import java.util.stream.Stream;",
-            "abstract class T {",
-            "  void g(Range<Long> range) {",
-            "    // BUG: Diagnostic contains: b(range)",
-            "    b(range::contains);",
-            "  }",
-            "  abstract void b(Predicate<Long> p);",
-            "}")
+            """
+            import com.google.common.base.Predicate;
+            import com.google.common.collect.Range;
+            import java.util.stream.Stream;
+
+            abstract class T {
+              void g(Range<Long> range) {
+                // BUG: Diagnostic contains: b(range)
+                b(range::contains);
+              }
+
+              abstract void b(Predicate<Long> p);
+            }
+            """)
         .doTest();
   }
 
@@ -255,15 +304,18 @@ public final class UnnecessaryMethodReferenceTest {
     helper
         .addSourceLines(
             "T.java",
-            "import com.google.common.collect.ImmutableList;",
-            "import java.util.List;",
-            "abstract class T {",
-            "  void test() {",
-            "    List<Integer> x = ImmutableList.of(1, 2);",
-            "    // BUG: Diagnostic contains:",
-            "    Iterable<Integer> xi = x::iterator;",
-            "  }",
-            "}")
+            """
+            import com.google.common.collect.ImmutableList;
+            import java.util.List;
+
+            abstract class T {
+              void test() {
+                List<Integer> x = ImmutableList.of(1, 2);
+                // BUG: Diagnostic contains:
+                Iterable<Integer> xi = x::iterator;
+              }
+            }
+            """)
         .doTest();
   }
 }

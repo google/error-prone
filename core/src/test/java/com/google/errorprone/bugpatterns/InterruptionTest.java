@@ -33,15 +33,18 @@ public class InterruptionTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.concurrent.Future;",
-            "class Test {",
-            "  void f(Future<?> f, boolean b) {",
-            "    // BUG: Diagnostic contains: f.cancel(false)",
-            "    f.cancel(true);",
-            "    // BUG: Diagnostic contains: f.cancel(false)",
-            "    f.cancel(b);",
-            "  }",
-            "}")
+            """
+            import java.util.concurrent.Future;
+
+            class Test {
+              void f(Future<?> f, boolean b) {
+                // BUG: Diagnostic contains: f.cancel(false)
+                f.cancel(true);
+                // BUG: Diagnostic contains: f.cancel(false)
+                f.cancel(b);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -50,13 +53,16 @@ public class InterruptionTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.util.concurrent.ClosingFuture;",
-            "class Test {",
-            "  void f(ClosingFuture<?> f) {",
-            "    // BUG: Diagnostic contains: f.cancel(false)",
-            "    f.cancel(true);",
-            "  }",
-            "}")
+            """
+            import com.google.common.util.concurrent.ClosingFuture;
+
+            class Test {
+              void f(ClosingFuture<?> f) {
+                // BUG: Diagnostic contains: f.cancel(false)
+                f.cancel(true);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -64,13 +70,15 @@ public class InterruptionTest {
   public void positiveInterrupt() {
     compilationHelper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  void f(Thread t) {",
-            "    // BUG: Diagnostic contains:",
-            "    t.interrupt();",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              void f(Thread t) {
+                // BUG: Diagnostic contains:
+                t.interrupt();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -79,12 +87,15 @@ public class InterruptionTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.concurrent.Future;",
-            "class Test {",
-            "  void f(Future<?> f) {",
-            "    f.cancel(false);",
-            "  }",
-            "}")
+            """
+            import java.util.concurrent.Future;
+
+            class Test {
+              void f(Future<?> f) {
+                f.cancel(false);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -93,12 +104,15 @@ public class InterruptionTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.util.concurrent.AbstractFuture;",
-            "class Test extends AbstractFuture<Object> {",
-            "  void f() {",
-            "    cancel(wasInterrupted());",
-            "  }",
-            "}")
+            """
+            import com.google.common.util.concurrent.AbstractFuture;
+
+            class Test extends AbstractFuture<Object> {
+              void f() {
+                cancel(wasInterrupted());
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -107,18 +121,21 @@ public class InterruptionTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.util.concurrent.AbstractFuture;",
-            "import java.util.concurrent.Future;",
-            "class Test extends AbstractFuture<Object> {",
-            "  void f(Future<?> f) {",
-            "    new AbstractFuture<Object>() {",
-            "      @Override",
-            "      public boolean cancel(boolean mayInterruptIfRunning) {",
-            "        return f.cancel(mayInterruptIfRunning);",
-            "      }",
-            "    };",
-            "  }",
-            "}")
+            """
+            import com.google.common.util.concurrent.AbstractFuture;
+            import java.util.concurrent.Future;
+
+            class Test extends AbstractFuture<Object> {
+              void f(Future<?> f) {
+                new AbstractFuture<Object>() {
+                  @Override
+                  public boolean cancel(boolean mayInterruptIfRunning) {
+                    return f.cancel(mayInterruptIfRunning);
+                  }
+                };
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -127,11 +144,13 @@ public class InterruptionTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void f(Thread t) {",
-            "    Thread.currentThread().interrupt();",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f(Thread t) {
+                Thread.currentThread().interrupt();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -140,18 +159,22 @@ public class InterruptionTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import org.junit.Test;",
-            "import org.junit.runner.RunWith;",
-            "import org.junit.runners.JUnit4;",
-            "import java.util.concurrent.Future;",
-            "@RunWith(JUnit4.class)",
-            "class FutureTest {",
-            "  Future<?> f;",
-            "  @Test",
-            "  public void t() {",
-            "    f.cancel(true);",
-            "  }",
-            "}")
+            """
+            import org.junit.Test;
+            import org.junit.runner.RunWith;
+            import org.junit.runners.JUnit4;
+            import java.util.concurrent.Future;
+
+            @RunWith(JUnit4.class)
+            class FutureTest {
+              Future<?> f;
+
+              @Test
+              public void t() {
+                f.cancel(true);
+              }
+            }
+            """)
         .setArgs("-XepCompilingTestOnlyCode")
         .doTest();
   }

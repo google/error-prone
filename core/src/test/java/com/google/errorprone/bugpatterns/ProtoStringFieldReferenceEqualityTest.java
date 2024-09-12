@@ -33,27 +33,34 @@ public class ProtoStringFieldReferenceEqualityTest {
     compilationHelper
         .addSourceLines(
             "com/google/protobuf/GeneratedMessage.java",
-            "package com.google.protobuf;",
-            "public class GeneratedMessage {}")
+            """
+            package com.google.protobuf;
+
+            public class GeneratedMessage {}
+            """)
         .addSourceLines(
             "Proto.java",
-            "public abstract class Proto extends com.google.protobuf.GeneratedMessage {",
-            "  public abstract String getMessage();",
-            "}")
+            """
+            public abstract class Proto extends com.google.protobuf.GeneratedMessage {
+              public abstract String getMessage();
+            }
+            """)
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  boolean g(Proto proto) {",
-            "    boolean r = false;",
-            "    // BUG: Diagnostic contains: proto.getMessage().equals(\"\")",
-            "    r |= proto.getMessage() == \"\";",
-            "    // BUG: Diagnostic contains: \"\".equals(proto.getMessage())",
-            "    r |= \"\" == proto.getMessage();",
-            "    // BUG: Diagnostic contains: !proto.getMessage().equals(\"\")",
-            "    r |= proto.getMessage() != \"\";",
-            "    return r;",
-            "  }",
-            "}")
+            """
+            class Test {
+              boolean g(Proto proto) {
+                boolean r = false;
+                // BUG: Diagnostic contains: proto.getMessage().equals("")
+                r |= proto.getMessage() == "";
+                // BUG: Diagnostic contains: "".equals(proto.getMessage())
+                r |= "" == proto.getMessage();
+                // BUG: Diagnostic contains: !proto.getMessage().equals("")
+                r |= proto.getMessage() != "";
+                return r;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -62,24 +69,32 @@ public class ProtoStringFieldReferenceEqualityTest {
     compilationHelper
         .addSourceLines(
             "com/google/protobuf/GeneratedMessage.java",
-            "package com.google.protobuf;",
-            "public class GeneratedMessage {}")
+            """
+            package com.google.protobuf;
+
+            public class GeneratedMessage {}
+            """)
         .addSourceLines(
             "Proto.java",
-            "public abstract class Proto extends com.google.protobuf.GeneratedMessage {",
-            "  public abstract int getId();",
-            "  public abstract String getMessage();",
-            "}")
+            """
+            public abstract class Proto extends com.google.protobuf.GeneratedMessage {
+              public abstract int getId();
+
+              public abstract String getMessage();
+            }
+            """)
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  boolean g(Proto proto) {",
-            "    boolean r = false;",
-            "    r |= proto.getId() == 0;",
-            "    r |= proto.getMessage() == null;",
-            "    return r;",
-            "  }",
-            "}")
+            """
+            class Test {
+              boolean g(Proto proto) {
+                boolean r = false;
+                r |= proto.getId() == 0;
+                r |= proto.getMessage() == null;
+                return r;
+              }
+            }
+            """)
         .doTest();
   }
 }

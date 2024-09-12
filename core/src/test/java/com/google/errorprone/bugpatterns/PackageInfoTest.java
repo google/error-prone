@@ -31,10 +31,13 @@ public class PackageInfoTest {
   public void positive() {
     testHelper
         .addSourceLines(
-            "test/package-info.java", //
-            "package test;",
-            "// BUG: Diagnostic contains:",
-            "class Test {}")
+            "test/package-info.java",
+            """
+            package test;
+
+            // BUG: Diagnostic contains:
+            class Test {}
+            """)
         .doTest();
   }
 

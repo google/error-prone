@@ -32,15 +32,20 @@ public class IterablePathParameterTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import java.nio.file.Path;",
-            "class Test {",
-            "  // BUG: Diagnostic contains: f(Collection<? extends Path> xs)",
-            "  void f(Iterable<? extends Path> xs) {}",
-            "  // BUG: Diagnostic contains: g(Collection<? super Path> xs)",
-            "  void g(Iterable<? super Path> xs) {}",
-            "  // BUG: Diagnostic contains: h(Collection<Path> xs)",
-            "  void h(Iterable<Path> xs) {}",
-            "}")
+            """
+            import java.nio.file.Path;
+
+            class Test {
+              // BUG: Diagnostic contains: f(Collection<? extends Path> xs)
+              void f(Iterable<? extends Path> xs) {}
+
+              // BUG: Diagnostic contains: g(Collection<? super Path> xs)
+              void g(Iterable<? super Path> xs) {}
+
+              // BUG: Diagnostic contains: h(Collection<Path> xs)
+              void h(Iterable<Path> xs) {}
+            }
+            """)
         .doTest();
   }
 
@@ -49,18 +54,27 @@ public class IterablePathParameterTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import java.nio.file.Path;",
-            "import java.util.Collection;",
-            "class Test {",
-            "  void f(Collection<Path> xs) {}",
-            "}")
+            """
+            import java.nio.file.Path;
+            import java.util.Collection;
+
+            class Test {
+              void f(Collection<Path> xs) {}
+            }
+            """)
         .doTest();
   }
 
   @Test
   public void raw() {
     testHelper
-        .addSourceLines("Test.java", "class Test {", "  void f(Iterable xs) {}", "}")
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              void f(Iterable xs) {}
+            }
+            """)
         .doTest();
   }
 
@@ -69,12 +83,15 @@ public class IterablePathParameterTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import java.nio.file.Path;",
-            "import java.util.function.Consumer;",
-            "class Test {",
-            "  // BUG: Diagnostic contains:",
-            "  Consumer<Iterable<Path>> c = (paths) -> {};",
-            "}")
+            """
+            import java.nio.file.Path;
+            import java.util.function.Consumer;
+
+            class Test {
+              // BUG: Diagnostic contains:
+              Consumer<Iterable<Path>> c = (paths) -> {};
+            }
+            """)
         .doTest();
   }
 }

@@ -39,29 +39,37 @@ public class NonNullLiteralTest extends CompilerBasedAbstractTest {
   public void shouldMatchPrimitiveLiterals() {
     writeFile(
         "A.java",
-        "public class A {",
-        "  public int getInt() {",
-        "    return 2;",
-        "  }",
-        "  public long getLong() {",
-        "    return 3L;",
-        "  }",
-        "  public float getFloat() {",
-        "    return 4.0f;",
-        "  }",
-        "  public double getDouble() {",
-        "    return 5.0d;",
-        "  }",
-        "  public boolean getBool() {",
-        "    return true;",
-        "  }",
-        "  public char getChar() {",
-        "    return 'c';",
-        "  }",
-        "  public String getString() {",
-        "    return \"test string\";",
-        "  }",
-        "}");
+        """
+        public class A {
+          public int getInt() {
+            return 2;
+          }
+
+          public long getLong() {
+            return 3L;
+          }
+
+          public float getFloat() {
+            return 4.0f;
+          }
+
+          public double getDouble() {
+            return 5.0d;
+          }
+
+          public boolean getBool() {
+            return true;
+          }
+
+          public char getChar() {
+            return 'c';
+          }
+
+          public String getString() {
+            return "test string";
+          }
+        }
+        """);
     assertCompiles(nonNullLiteralMatches(/* shouldMatch= */ true, Matchers.nonNullLiteral()));
   }
 
@@ -69,12 +77,15 @@ public class NonNullLiteralTest extends CompilerBasedAbstractTest {
   public void shouldMatchClassLiteral() {
     writeFile(
         "A.java",
-        "import java.lang.reflect.Type;",
-        "public class A {",
-        "  public void testClassLiteral() {",
-        "    Type klass = String.class;",
-        "  }",
-        "}");
+        """
+        import java.lang.reflect.Type;
+
+        public class A {
+          public void testClassLiteral() {
+            Type klass = String.class;
+          }
+        }
+        """);
     assertCompiles(nonNullLiteralMatches(/* shouldMatch= */ true, Matchers.nonNullLiteral()));
   }
 
@@ -82,12 +93,13 @@ public class NonNullLiteralTest extends CompilerBasedAbstractTest {
   public void shouldNotMatchClassDeclaration() {
     writeFile(
         "A.java",
-        "public class A {",
-        "  protected class B {",
-        "    private class C {",
-        "    }",
-        "  }",
-        "}");
+        """
+        public class A {
+          protected class B {
+            private class C {}
+          }
+        }
+        """);
     assertCompiles(nonNullLiteralMatches(/* shouldMatch= */ false, Matchers.nonNullLiteral()));
   }
 
@@ -95,23 +107,30 @@ public class NonNullLiteralTest extends CompilerBasedAbstractTest {
   public void shouldNotMatchMemberAccess() {
     writeFile(
         "A.java",
-        "package com.google;",
-        "public class A {",
-        "  public String stringVar;",
-        "  public void testMemberAccess() {",
-        "    this.stringVar = new String();",
-        "  }",
-        "}");
+        """
+        package com.google;
+
+        public class A {
+          public String stringVar;
+
+          public void testMemberAccess() {
+            this.stringVar = new String();
+          }
+        }
+        """);
 
     writeFile(
         "B.java",
-        "import com.google.A;",
-        "public class B {",
-        "  public void testInstanceMemberAccess() {",
-        "    A foo = new A();",
-        "    foo.stringVar = new String();",
-        "  }",
-        "}");
+        """
+        import com.google.A;
+
+        public class B {
+          public void testInstanceMemberAccess() {
+            A foo = new A();
+            foo.stringVar = new String();
+          }
+        }
+        """);
     assertCompiles(nonNullLiteralMatches(/* shouldMatch= */ false, Matchers.nonNullLiteral()));
   }
 

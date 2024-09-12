@@ -34,22 +34,28 @@ public final class InvalidThrowsLinkTest {
     refactoring
         .addInputLines(
             "Test.java",
-            "import java.io.IOException;",
-            "interface Test {",
-            "  /**",
-            "   * @throws {@link IOException} when failed",
-            "   */",
-            "  void foo(int a, int b) throws IOException;",
-            "}")
+            """
+            import java.io.IOException;
+
+            interface Test {
+              /**
+               * @throws {@link IOException} when failed
+               */
+              void foo(int a, int b) throws IOException;
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import java.io.IOException;",
-            "interface Test {",
-            "  /**",
-            "   * @throws IOException when failed",
-            "   */",
-            "  void foo(int a, int b) throws IOException;",
-            "}")
+            """
+            import java.io.IOException;
+
+            interface Test {
+              /**
+               * @throws IOException when failed
+               */
+              void foo(int a, int b) throws IOException;
+            }
+            """)
         .doTest(TEXT_MATCH);
   }
 
@@ -58,13 +64,16 @@ public final class InvalidThrowsLinkTest {
     refactoring
         .addInputLines(
             "Test.java",
-            "import java.io.IOException;",
-            "interface Test {",
-            "  /**",
-            "   * @throws IOException when failed",
-            "   */",
-            "  void foo(int a, int b) throws IOException;",
-            "}")
+            """
+            import java.io.IOException;
+
+            interface Test {
+              /**
+               * @throws IOException when failed
+               */
+              void foo(int a, int b) throws IOException;
+            }
+            """)
         .expectUnchanged()
         .doTest(TEXT_MATCH);
   }

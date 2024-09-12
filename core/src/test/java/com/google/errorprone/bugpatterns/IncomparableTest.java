@@ -32,20 +32,23 @@ public class IncomparableTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.TreeMap;",
-            "import java.util.TreeSet;",
-            "import java.util.Set;",
-            "import java.util.Collections;",
-            "final class Test {",
-            "  void f() {",
-            "    // BUG: Diagnostic contains: Test",
-            "    new TreeMap<Test, String>();",
-            "    // BUG: Diagnostic contains: Test",
-            "    new TreeSet<Test>();",
-            "    // BUG: Diagnostic contains: Test",
-            "    Set<Test> xs = Collections.synchronizedSet(new TreeSet<>());",
-            "  }",
-            "}")
+            """
+            import java.util.TreeMap;
+            import java.util.TreeSet;
+            import java.util.Set;
+            import java.util.Collections;
+
+            final class Test {
+              void f() {
+                // BUG: Diagnostic contains: Test
+                new TreeMap<Test, String>();
+                // BUG: Diagnostic contains: Test
+                new TreeSet<Test>();
+                // BUG: Diagnostic contains: Test
+                Set<Test> xs = Collections.synchronizedSet(new TreeSet<>());
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -54,17 +57,20 @@ public class IncomparableTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.TreeMap;",
-            "import java.util.TreeSet;",
-            "import java.util.Set;",
-            "import java.util.Collections;",
-            "class Test {",
-            "  void f() {",
-            "    new TreeMap<String, Test>();",
-            "    new TreeSet<String>();",
-            "    Set<String> xs = Collections.synchronizedSet(new TreeSet<>());",
-            "  }",
-            "}")
+            """
+            import java.util.TreeMap;
+            import java.util.TreeSet;
+            import java.util.Set;
+            import java.util.Collections;
+
+            class Test {
+              void f() {
+                new TreeMap<String, Test>();
+                new TreeSet<String>();
+                Set<String> xs = Collections.synchronizedSet(new TreeSet<>());
+              }
+            }
+            """)
         .doTest();
   }
 }

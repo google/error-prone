@@ -36,14 +36,18 @@ public final class StronglyTypeByteStringTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.protobuf.ByteString;",
-            "class Test {",
-            "  // BUG: Diagnostic contains: ByteString instances",
-            "  private static final byte[] FOO_BYTES = new byte[10];",
-            "  public ByteString get() {",
-            "    return ByteString.copyFrom(FOO_BYTES);",
-            "  }",
-            "}")
+            """
+            import com.google.protobuf.ByteString;
+
+            class Test {
+              // BUG: Diagnostic contains: ByteString instances
+              private static final byte[] FOO_BYTES = new byte[10];
+
+              public ByteString get() {
+                return ByteString.copyFrom(FOO_BYTES);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -52,22 +56,30 @@ public final class StronglyTypeByteStringTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "import com.google.protobuf.ByteString;",
-            "class Test {",
-            "  private static final byte[] FOO_BYTES = new byte[10];",
-            "  public ByteString get() {",
-            "    return ByteString.copyFrom(FOO_BYTES);",
-            "  }",
-            "}")
+            """
+            import com.google.protobuf.ByteString;
+
+            class Test {
+              private static final byte[] FOO_BYTES = new byte[10];
+
+              public ByteString get() {
+                return ByteString.copyFrom(FOO_BYTES);
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import com.google.protobuf.ByteString;",
-            "class Test {",
-            "  private static final ByteString FOO_BYTES = ByteString.copyFrom(new byte[10]);",
-            "  public ByteString get() {",
-            "    return FOO_BYTES;",
-            "  }",
-            "}")
+            """
+            import com.google.protobuf.ByteString;
+
+            class Test {
+              private static final ByteString FOO_BYTES = ByteString.copyFrom(new byte[10]);
+
+              public ByteString get() {
+                return FOO_BYTES;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -76,23 +88,30 @@ public final class StronglyTypeByteStringTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "import com.google.protobuf.ByteString;",
-            "class Test {",
-            "  private static final byte[] FOO_BYTES = {7, 7, 7};",
-            "  public ByteString get() {",
-            "    return ByteString.copyFrom(FOO_BYTES);",
-            "  }",
-            "}")
+            """
+            import com.google.protobuf.ByteString;
+
+            class Test {
+              private static final byte[] FOO_BYTES = {7, 7, 7};
+
+              public ByteString get() {
+                return ByteString.copyFrom(FOO_BYTES);
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import com.google.protobuf.ByteString;",
-            "class Test {",
-            "  private static final ByteString FOO_BYTES = ByteString.copyFrom(new byte[] {7, 7,"
-                + " 7});",
-            "  public ByteString get() {",
-            "    return FOO_BYTES;",
-            "  }",
-            "}")
+            """
+import com.google.protobuf.ByteString;
+
+class Test {
+  private static final ByteString FOO_BYTES = ByteString.copyFrom(new byte[] {7, 7, 7});
+
+  public ByteString get() {
+    return FOO_BYTES;
+  }
+}
+""")
         .doTest();
   }
 
@@ -101,23 +120,30 @@ public final class StronglyTypeByteStringTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "import com.google.protobuf.ByteString;",
-            "class Test {",
-            "  private static final byte[] FOO_BYTES = new byte[] {7, 7, 7};",
-            "  public ByteString get() {",
-            "    return ByteString.copyFrom(FOO_BYTES);",
-            "  }",
-            "}")
+            """
+            import com.google.protobuf.ByteString;
+
+            class Test {
+              private static final byte[] FOO_BYTES = new byte[] {7, 7, 7};
+
+              public ByteString get() {
+                return ByteString.copyFrom(FOO_BYTES);
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import com.google.protobuf.ByteString;",
-            "class Test {",
-            "  private static final ByteString FOO_BYTES = ByteString.copyFrom(new byte[] {7, 7,"
-                + " 7});",
-            "  public ByteString get() {",
-            "    return FOO_BYTES;",
-            "  }",
-            "}")
+            """
+import com.google.protobuf.ByteString;
+
+class Test {
+  private static final ByteString FOO_BYTES = ByteString.copyFrom(new byte[] {7, 7, 7});
+
+  public ByteString get() {
+    return FOO_BYTES;
+  }
+}
+""")
         .doTest();
   }
 }

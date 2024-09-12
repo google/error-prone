@@ -48,17 +48,22 @@ public class TruthIncompatibleTypeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "public class Test {",
-            "  static final class A {}",
-            "  static final class B {}",
-            "  public void f(A a, B b) {",
-            "    // BUG: Diagnostic contains:",
-            "    assertThat(a).isEqualTo(b);",
-            "    // BUG: Diagnostic contains:",
-            "    assertThat(a).isNotEqualTo(b);",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+
+            public class Test {
+              static final class A {}
+
+              static final class B {}
+
+              public void f(A a, B b) {
+                // BUG: Diagnostic contains:
+                assertThat(a).isEqualTo(b);
+                // BUG: Diagnostic contains:
+                assertThat(a).isNotEqualTo(b);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -67,15 +72,20 @@ public class TruthIncompatibleTypeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.truth.TruthJUnit.assume;",
-            "public class Test {",
-            "  static final class A {}",
-            "  static final class B {}",
-            "  public void f(A a, B b) {",
-            "    // BUG: Diagnostic contains:",
-            "    assume().that(a).isEqualTo(b);",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.TruthJUnit.assume;
+
+            public class Test {
+              static final class A {}
+
+              static final class B {}
+
+              public void f(A a, B b) {
+                // BUG: Diagnostic contains:
+                assume().that(a).isEqualTo(b);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -84,16 +94,21 @@ public class TruthIncompatibleTypeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "public class Test {",
-            "  static final class A {}",
-            "  static final class B {}",
-            "  public void f(A a, B b) {",
-            "    assertThat(a).isEqualTo(a);",
-            "    assertThat(b).isEqualTo(b);",
-            "    assertThat(\"a\").isEqualTo(\"b\");",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+
+            public class Test {
+              static final class A {}
+
+              static final class B {}
+
+              public void f(A a, B b) {
+                assertThat(a).isEqualTo(a);
+                assertThat(b).isEqualTo(b);
+                assertThat("a").isEqualTo("b");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -102,12 +117,15 @@ public class TruthIncompatibleTypeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "public class Test {",
-            "  public void f() {",
-            "    assertThat(2L).isEqualTo(2);",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+
+            public class Test {
+              public void f() {
+                assertThat(2L).isEqualTo(2);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -116,12 +134,15 @@ public class TruthIncompatibleTypeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "public class Test {",
-            "  public void f() {",
-            "    assertThat(Byte.valueOf((byte) 2)).isEqualTo(2);",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+
+            public class Test {
+              public void f() {
+                assertThat(Byte.valueOf((byte) 2)).isEqualTo(2);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -130,12 +151,15 @@ public class TruthIncompatibleTypeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "public class Test {",
-            "  public void f(Exception e) {",
-            "    assertThat(e).hasMessageThat().isEqualTo(\"foo\");",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+
+            public class Test {
+              public void f(Exception e) {
+                assertThat(e).hasMessageThat().isEqualTo("foo");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -144,15 +168,18 @@ public class TruthIncompatibleTypeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "public class Test {",
-            "  public void f(Class<InterruptedException> a, Class<? extends Throwable> b) {",
-            "    try {",
-            "    } catch (Exception e) {",
-            "      assertThat(e.getCause().getClass()).isEqualTo(IllegalArgumentException.class);",
-            "    }",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+
+            public class Test {
+              public void f(Class<InterruptedException> a, Class<? extends Throwable> b) {
+                try {
+                } catch (Exception e) {
+                  assertThat(e.getCause().getClass()).isEqualTo(IllegalArgumentException.class);
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -161,13 +188,16 @@ public class TruthIncompatibleTypeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "public class Test {",
-            "  public void f(Iterable<Long> xs, String x) {",
-            "    // BUG: Diagnostic contains:",
-            "    assertThat(xs).contains(x);",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+
+            public class Test {
+              public void f(Iterable<Long> xs, String x) {
+                // BUG: Diagnostic contains:
+                assertThat(xs).contains(x);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -176,12 +206,15 @@ public class TruthIncompatibleTypeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "public class Test {",
-            "  public void f(Iterable<Long> xs, Number x) {",
-            "    assertThat(xs).contains(x);",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+
+            public class Test {
+              public void f(Iterable<Long> xs, Number x) {
+                assertThat(xs).contains(x);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -190,14 +223,17 @@ public class TruthIncompatibleTypeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import com.google.common.collect.ImmutableList;",
-            "public class Test {",
-            "  public void f(Iterable<Long> xs, String x) {",
-            "    // BUG: Diagnostic contains:",
-            "    assertThat(xs).containsExactlyElementsIn(ImmutableList.of(x));",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import com.google.common.collect.ImmutableList;
+
+            public class Test {
+              public void f(Iterable<Long> xs, String x) {
+                // BUG: Diagnostic contains:
+                assertThat(xs).containsExactlyElementsIn(ImmutableList.of(x));
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -206,13 +242,16 @@ public class TruthIncompatibleTypeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import com.google.common.collect.ImmutableList;",
-            "public class Test {",
-            "  public void f(Iterable<Long> xs, Number x) {",
-            "    assertThat(xs).containsExactlyElementsIn(ImmutableList.of(x));",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import com.google.common.collect.ImmutableList;
+
+            public class Test {
+              public void f(Iterable<Long> xs, Number x) {
+                assertThat(xs).containsExactlyElementsIn(ImmutableList.of(x));
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -221,13 +260,16 @@ public class TruthIncompatibleTypeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import com.google.common.collect.ImmutableList;",
-            "public class Test {",
-            "  public void f(Iterable<Long> xs, Number... x) {",
-            "    assertThat(xs).containsExactly((Object[]) x);",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import com.google.common.collect.ImmutableList;
+
+            public class Test {
+              public void f(Iterable<Long> xs, Number... x) {
+                assertThat(xs).containsExactly((Object[]) x);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -236,13 +278,16 @@ public class TruthIncompatibleTypeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import com.google.common.collect.ImmutableList;",
-            "public class Test {",
-            "  public void f(Iterable<Long> xs, Object x) {",
-            "    assertThat(xs).containsExactlyElementsIn((Object[]) x);",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import com.google.common.collect.ImmutableList;
+
+            public class Test {
+              public void f(Iterable<Long> xs, Object x) {
+                assertThat(xs).containsExactlyElementsIn((Object[]) x);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -251,14 +296,17 @@ public class TruthIncompatibleTypeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import com.google.common.collect.ImmutableList;",
-            "public class Test {",
-            "  public void f(Iterable<Long> xs, String... x) {",
-            "    // BUG: Diagnostic contains:",
-            "    assertThat(xs).containsExactly(x);",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import com.google.common.collect.ImmutableList;
+
+            public class Test {
+              public void f(Iterable<Long> xs, String... x) {
+                // BUG: Diagnostic contains:
+                assertThat(xs).containsExactly(x);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -267,13 +315,16 @@ public class TruthIncompatibleTypeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import com.google.common.collect.ImmutableList;",
-            "public class Test {",
-            "  public void f(Iterable<byte[]> xs, byte[] ys) {",
-            "    assertThat(xs).containsExactly(ys);",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import com.google.common.collect.ImmutableList;
+
+            public class Test {
+              public void f(Iterable<byte[]> xs, byte[] ys) {
+                assertThat(xs).containsExactly(ys);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -282,13 +333,16 @@ public class TruthIncompatibleTypeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import com.google.common.collect.ImmutableList;",
-            "public class Test {",
-            "  public void f(Iterable<String> xs, Object... x) {",
-            "    assertThat(xs).containsExactlyElementsIn(x);",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import com.google.common.collect.ImmutableList;
+
+            public class Test {
+              public void f(Iterable<String> xs, Object... x) {
+                assertThat(xs).containsExactlyElementsIn(x);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -297,14 +351,17 @@ public class TruthIncompatibleTypeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import com.google.common.collect.ImmutableList;",
-            "public class Test {",
-            "  public void f(Iterable<Long> xs, String... x) {",
-            "    // BUG: Diagnostic contains:",
-            "    assertThat(xs).containsExactlyElementsIn(x);",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import com.google.common.collect.ImmutableList;
+
+            public class Test {
+              public void f(Iterable<Long> xs, String... x) {
+                // BUG: Diagnostic contains:
+                assertThat(xs).containsExactlyElementsIn(x);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -313,14 +370,17 @@ public class TruthIncompatibleTypeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import com.google.common.collect.ImmutableList;",
-            "public class Test {",
-            "  public void f(Iterable<Long> xs, ImmutableList<Integer> ys) {",
-            "    // BUG: Diagnostic contains:",
-            "    assertThat(xs).containsExactlyElementsIn(ys);",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import com.google.common.collect.ImmutableList;
+
+            public class Test {
+              public void f(Iterable<Long> xs, ImmutableList<Integer> ys) {
+                // BUG: Diagnostic contains:
+                assertThat(xs).containsExactlyElementsIn(ys);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -329,15 +389,18 @@ public class TruthIncompatibleTypeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import com.google.common.collect.ImmutableList;",
-            "import com.google.common.truth.Correspondence;",
-            "public class Test {",
-            "  @SuppressWarnings(\"unchecked\")",
-            "  public void f(Iterable<Long> xs, Correspondence c) {",
-            "    assertThat(xs).comparingElementsUsing(c).doesNotContain(\"\");",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import com.google.common.collect.ImmutableList;
+            import com.google.common.truth.Correspondence;
+
+            public class Test {
+              @SuppressWarnings("unchecked")
+              public void f(Iterable<Long> xs, Correspondence c) {
+                assertThat(xs).comparingElementsUsing(c).doesNotContain("");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -346,15 +409,18 @@ public class TruthIncompatibleTypeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import com.google.common.collect.ImmutableList;",
-            "import com.google.common.truth.Correspondence;",
-            "public class Test {",
-            "  public void f(Iterable<Long> xs, Correspondence<Integer, String> c) {",
-            "    // BUG: Diagnostic contains:",
-            "    assertThat(xs).comparingElementsUsing(c).doesNotContain(\"\");",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import com.google.common.collect.ImmutableList;
+            import com.google.common.truth.Correspondence;
+
+            public class Test {
+              public void f(Iterable<Long> xs, Correspondence<Integer, String> c) {
+                // BUG: Diagnostic contains:
+                assertThat(xs).comparingElementsUsing(c).doesNotContain("");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -363,14 +429,17 @@ public class TruthIncompatibleTypeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import com.google.common.collect.ImmutableList;",
-            "import com.google.common.truth.Correspondence;",
-            "public class Test {",
-            "  public void f(Iterable<Long> xs, Correspondence<Long, String> c) {",
-            "    assertThat(xs).comparingElementsUsing(c).doesNotContain(\"\");",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import com.google.common.collect.ImmutableList;
+            import com.google.common.truth.Correspondence;
+
+            public class Test {
+              public void f(Iterable<Long> xs, Correspondence<Long, String> c) {
+                assertThat(xs).comparingElementsUsing(c).doesNotContain("");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -379,14 +448,17 @@ public class TruthIncompatibleTypeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import java.util.Map;",
-            "public class Test {",
-            "  public void f(Map<String, Long> xs, Map<Long, Long> ys) {",
-            "    // BUG: Diagnostic contains:",
-            "    assertThat(xs).containsExactlyEntriesIn(ys);",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import java.util.Map;
+
+            public class Test {
+              public void f(Map<String, Long> xs, Map<Long, Long> ys) {
+                // BUG: Diagnostic contains:
+                assertThat(xs).containsExactlyEntriesIn(ys);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -395,14 +467,17 @@ public class TruthIncompatibleTypeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import java.util.Map;",
-            "public class Test {",
-            "  public void f(Map<String, Long> xs, Map<String, String> ys) {",
-            "    // BUG: Diagnostic contains:",
-            "    assertThat(xs).containsExactlyEntriesIn(ys);",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import java.util.Map;
+
+            public class Test {
+              public void f(Map<String, Long> xs, Map<String, String> ys) {
+                // BUG: Diagnostic contains:
+                assertThat(xs).containsExactlyEntriesIn(ys);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -411,14 +486,17 @@ public class TruthIncompatibleTypeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import java.util.Map;",
-            "public class Test {",
-            "  public void f(Map<String, Long> xs) {",
-            "    // BUG: Diagnostic contains:",
-            "    assertThat(xs).containsExactly(\"\", 1L, \"foo\", 2L, \"bar\", 3);",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import java.util.Map;
+
+            public class Test {
+              public void f(Map<String, Long> xs) {
+                // BUG: Diagnostic contains:
+                assertThat(xs).containsExactly("", 1L, "foo", 2L, "bar", 3);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -427,13 +505,16 @@ public class TruthIncompatibleTypeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import java.util.Map;",
-            "public class Test {",
-            "  public void f(Map<String, Long> xs, String a, Long b, Object... rest) {",
-            "    assertThat(xs).containsExactly(a, b, rest);",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import java.util.Map;
+
+            public class Test {
+              public void f(Map<String, Long> xs, String a, Long b, Object... rest) {
+                assertThat(xs).containsExactly(a, b, rest);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -442,14 +523,17 @@ public class TruthIncompatibleTypeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import com.google.common.collect.Multimap;",
-            "public class Test {",
-            "  public void f(Multimap<String, Long> xs) {",
-            "    // BUG: Diagnostic contains:",
-            "    assertThat(xs).containsExactly(\"\", 1L, \"foo\", 2L, \"bar\", 3);",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import com.google.common.collect.Multimap;
+
+            public class Test {
+              public void f(Multimap<String, Long> xs) {
+                // BUG: Diagnostic contains:
+                assertThat(xs).containsExactly("", 1L, "foo", 2L, "bar", 3);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -458,15 +542,18 @@ public class TruthIncompatibleTypeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import com.google.common.collect.Multimap;",
-            "import java.util.stream.Stream;",
-            "public class Test {",
-            "  public void f(Stream<String> xs) {",
-            "    // BUG: Diagnostic contains:",
-            "    assertThat(xs).containsExactly(1, 2);",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import com.google.common.collect.Multimap;
+            import java.util.stream.Stream;
+
+            public class Test {
+              public void f(Stream<String> xs) {
+                // BUG: Diagnostic contains:
+                assertThat(xs).containsExactly(1, 2);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -475,15 +562,18 @@ public class TruthIncompatibleTypeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.truth.extensions.proto.ProtoTruth.assertThat;",
-            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;",
-            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
-            "final class Test {",
-            "  void test(TestFieldProtoMessage a, TestProtoMessage b) {",
-            "    // BUG: Diagnostic contains:",
-            "    assertThat(a).isNotEqualTo(b);",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.extensions.proto.ProtoTruth.assertThat;
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
+
+            final class Test {
+              void test(TestFieldProtoMessage a, TestProtoMessage b) {
+                // BUG: Diagnostic contains:
+                assertThat(a).isNotEqualTo(b);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -492,15 +582,18 @@ public class TruthIncompatibleTypeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.truth.extensions.proto.ProtoTruth.assertThat;",
-            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;",
-            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
-            "final class Test {",
-            "  void test(TestFieldProtoMessage a, TestProtoMessage b) {",
-            "    // BUG: Diagnostic contains:",
-            "    assertThat(a).ignoringFields(1).isNotEqualTo(b);",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.extensions.proto.ProtoTruth.assertThat;
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
+
+            final class Test {
+              void test(TestFieldProtoMessage a, TestProtoMessage b) {
+                // BUG: Diagnostic contains:
+                assertThat(a).ignoringFields(1).isNotEqualTo(b);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -509,15 +602,18 @@ public class TruthIncompatibleTypeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.truth.extensions.proto.ProtoTruth.assertThat;",
-            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;",
-            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
-            "final class Test {",
-            "  void test(Iterable<TestFieldProtoMessage> a, TestProtoMessage b) {",
-            "    // BUG: Diagnostic contains:",
-            "    assertThat(a).containsExactly(b);",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.extensions.proto.ProtoTruth.assertThat;
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
+
+            final class Test {
+              void test(Iterable<TestFieldProtoMessage> a, TestProtoMessage b) {
+                // BUG: Diagnostic contains:
+                assertThat(a).containsExactly(b);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -526,13 +622,16 @@ public class TruthIncompatibleTypeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.truth.extensions.proto.ProtoTruth.assertThat;",
-            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;",
-            "final class Test {",
-            "  void test(TestFieldProtoMessage a, TestFieldProtoMessage b) {",
-            "    assertThat(a).isNotEqualTo(b);",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.extensions.proto.ProtoTruth.assertThat;
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
+
+            final class Test {
+              void test(TestFieldProtoMessage a, TestFieldProtoMessage b) {
+                assertThat(a).isNotEqualTo(b);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -541,20 +640,21 @@ public class TruthIncompatibleTypeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.truth.extensions.proto.ProtoTruth.assertThat;",
-            "import com.google.common.collect.ImmutableList;",
-            "import com.google.common.truth.Correspondence;",
-            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;",
-            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
-            "public class Test {",
-            "  public void f(",
-            "      Iterable<TestProtoMessage> xs,",
-            "      Correspondence<TestFieldProtoMessage, TestProtoMessage> c) {",
-            "    // BUG: Diagnostic contains:",
-            "    assertThat(xs).comparingElementsUsing(c)",
-            "        .doesNotContain(TestProtoMessage.getDefaultInstance());",
-            "  }",
-            "}")
+            """
+import static com.google.common.truth.extensions.proto.ProtoTruth.assertThat;
+import com.google.common.collect.ImmutableList;
+import com.google.common.truth.Correspondence;
+import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
+import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
+
+public class Test {
+  public void f(
+      Iterable<TestProtoMessage> xs, Correspondence<TestFieldProtoMessage, TestProtoMessage> c) {
+    // BUG: Diagnostic contains:
+    assertThat(xs).comparingElementsUsing(c).doesNotContain(TestProtoMessage.getDefaultInstance());
+  }
+}
+""")
         .doTest();
   }
 
@@ -563,15 +663,18 @@ public class TruthIncompatibleTypeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import com.google.common.collect.ImmutableList;",
-            "import com.google.common.truth.Correspondence;",
-            "public class Test {",
-            "  @SuppressWarnings(\"unchecked\")",
-            "  public void f(Iterable xs, Correspondence<Long, String> c) {",
-            "    assertThat(xs).comparingElementsUsing(c).doesNotContain(\"\");",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import com.google.common.collect.ImmutableList;
+            import com.google.common.truth.Correspondence;
+
+            public class Test {
+              @SuppressWarnings("unchecked")
+              public void f(Iterable xs, Correspondence<Long, String> c) {
+                assertThat(xs).comparingElementsUsing(c).doesNotContain("");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -580,12 +683,15 @@ public class TruthIncompatibleTypeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "public class Test {",
-            "  public void f(int a, long b, long c) {",
-            "    assertThat((long) a).isAnyOf(b, c);",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+
+            public class Test {
+              public void f(int a, long b, long c) {
+                assertThat((long) a).isAnyOf(b, c);
+              }
+            }
+            """)
         .doTest();
   }
 

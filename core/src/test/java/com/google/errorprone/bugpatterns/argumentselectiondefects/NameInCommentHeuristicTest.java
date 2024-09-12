@@ -75,13 +75,16 @@ public class NameInCommentHeuristicTest {
     CompilationTestHelper.newInstance(NameInCommentHeuristicChecker.class, getClass())
         .addSourceLines(
             "Test.java",
-            "abstract class Test {",
-            "  abstract void target(Object first);",
-            "  void test(Object first) {",
-            "     // BUG: Diagnostic contains: true",
-            "     target(first /* first */);",
-            "  }",
-            "}")
+            """
+            abstract class Test {
+              abstract void target(Object first);
+
+              void test(Object first) {
+                // BUG: Diagnostic contains: true
+                target(first /* first */);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -91,13 +94,16 @@ public class NameInCommentHeuristicTest {
     CompilationTestHelper.newInstance(NameInCommentHeuristicChecker.class, getClass())
         .addSourceLines(
             "Test.java",
-            "abstract class Test {",
-            "  abstract void target(Object first);",
-            "  void test(Object first) {",
-            "     // BUG: Diagnostic contains: true",
-            "     target(/*first= */ first);",
-            "  }",
-            "}")
+            """
+            abstract class Test {
+              abstract void target(Object first);
+
+              void test(Object first) {
+                // BUG: Diagnostic contains: true
+                target(/* first= */ first);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -107,13 +113,16 @@ public class NameInCommentHeuristicTest {
     CompilationTestHelper.newInstance(NameInCommentHeuristicChecker.class, getClass())
         .addSourceLines(
             "Test.java",
-            "abstract class Test {",
-            "  abstract void target(Object first);",
-            "  void test(Object first) {",
-            "     // BUG: Diagnostic contains: true",
-            "     target(/*note first = */ first);",
-            "  }",
-            "}")
+            """
+            abstract class Test {
+              abstract void target(Object first);
+
+              void test(Object first) {
+                // BUG: Diagnostic contains: true
+                target(/*note first = */ first);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -122,13 +131,16 @@ public class NameInCommentHeuristicTest {
     CompilationTestHelper.newInstance(NameInCommentHeuristicChecker.class, getClass())
         .addSourceLines(
             "Test.java",
-            "abstract class Test {",
-            "  abstract void target(Object first);",
-            "  void test(Object first) {",
-            "     // BUG: Diagnostic contains: false",
-            "     target(first);",
-            "  }",
-            "}")
+            """
+            abstract class Test {
+              abstract void target(Object first);
+
+              void test(Object first) {
+                // BUG: Diagnostic contains: false
+                target(first);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -137,13 +149,16 @@ public class NameInCommentHeuristicTest {
     CompilationTestHelper.newInstance(NameInCommentHeuristicChecker.class, getClass())
         .addSourceLines(
             "Test.java",
-            "abstract class Test {",
-            "  abstract void target(Object first);",
-            "  void test(Object first) {",
-            "     // BUG: Diagnostic contains: false",
-            "     target(first /* other */);",
-            "  }",
-            "}")
+            """
+            abstract class Test {
+              abstract void target(Object first);
+
+              void test(Object first) {
+                // BUG: Diagnostic contains: false
+                target(first /* other */);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -152,14 +167,18 @@ public class NameInCommentHeuristicTest {
     CompilationTestHelper.newInstance(NameInCommentHeuristicChecker.class, getClass())
         .addSourceLines(
             "Test.java",
-            "abstract class Test {",
-            "  abstract void target(Object first, Object second);",
-            "  void test(Object first, Object second) {",
-            "     // BUG: Diagnostic contains: true",
-            "     target(first, // first",
-            "            second);",
-            "  }",
-            "}")
+            """
+            abstract class Test {
+              abstract void target(Object first, Object second);
+
+              void test(Object first, Object second) {
+                // BUG: Diagnostic contains: true
+                target(
+                    first, // first
+                    second);
+              }
+            }
+            """)
         .doTest();
   }
 }

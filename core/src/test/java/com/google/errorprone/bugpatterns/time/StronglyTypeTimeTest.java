@@ -36,14 +36,18 @@ public final class StronglyTypeTimeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.time.Duration;",
-            "class Test {",
-            "  // BUG: Diagnostic contains: Duration instances",
-            "  private static final long FOO_MILLIS = 100;",
-            "  public Duration get() {",
-            "    return Duration.ofMillis(FOO_MILLIS);",
-            "  }",
-            "}")
+            """
+            import java.time.Duration;
+
+            class Test {
+              // BUG: Diagnostic contains: Duration instances
+              private static final long FOO_MILLIS = 100;
+
+              public Duration get() {
+                return Duration.ofMillis(FOO_MILLIS);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -52,14 +56,18 @@ public final class StronglyTypeTimeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.time.Duration;",
-            "class Test {",
-            "  // BUG: Diagnostic contains:",
-            "  private static final Long FOO_MILLIS = 100L;",
-            "  public Duration get() {",
-            "    return Duration.ofMillis(FOO_MILLIS);",
-            "  }",
-            "}")
+            """
+            import java.time.Duration;
+
+            class Test {
+              // BUG: Diagnostic contains:
+              private static final Long FOO_MILLIS = 100L;
+
+              public Duration get() {
+                return Duration.ofMillis(FOO_MILLIS);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -68,22 +76,30 @@ public final class StronglyTypeTimeTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "import org.joda.time.Instant;",
-            "class Test {",
-            "  private static final long FOO_MILLIS = 100L;",
-            "  public Instant get() {",
-            "    return new Instant(FOO_MILLIS);",
-            "  }",
-            "}")
+            """
+            import org.joda.time.Instant;
+
+            class Test {
+              private static final long FOO_MILLIS = 100L;
+
+              public Instant get() {
+                return new Instant(FOO_MILLIS);
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import org.joda.time.Instant;",
-            "class Test {",
-            "  private static final Instant FOO = new Instant(100L);",
-            "  public Instant get() {",
-            "    return FOO;",
-            "  }",
-            "}")
+            """
+            import org.joda.time.Instant;
+
+            class Test {
+              private static final Instant FOO = new Instant(100L);
+
+              public Instant get() {
+                return FOO;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -92,22 +108,30 @@ public final class StronglyTypeTimeTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "import org.joda.time.Instant;",
-            "class Test {",
-            "  private static final long FOO_MILLIS = 100L;",
-            "  public Instant get() {",
-            "    return Instant.ofEpochMilli(FOO_MILLIS);",
-            "  }",
-            "}")
+            """
+            import org.joda.time.Instant;
+
+            class Test {
+              private static final long FOO_MILLIS = 100L;
+
+              public Instant get() {
+                return Instant.ofEpochMilli(FOO_MILLIS);
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import org.joda.time.Instant;",
-            "class Test {",
-            "  private static final Instant FOO = Instant.ofEpochMilli(100L);",
-            "  public Instant get() {",
-            "    return FOO;",
-            "  }",
-            "}")
+            """
+            import org.joda.time.Instant;
+
+            class Test {
+              private static final Instant FOO = Instant.ofEpochMilli(100L);
+
+              public Instant get() {
+                return FOO;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -116,24 +140,32 @@ public final class StronglyTypeTimeTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "import com.google.protobuf.Timestamp;",
-            "import com.google.protobuf.util.Timestamps;",
-            "class Test {",
-            "  private static final long FOO_MILLIS = 100L;",
-            "  public Timestamp get() {",
-            "    return Timestamps.fromMillis(FOO_MILLIS);",
-            "  }",
-            "}")
+            """
+            import com.google.protobuf.Timestamp;
+            import com.google.protobuf.util.Timestamps;
+
+            class Test {
+              private static final long FOO_MILLIS = 100L;
+
+              public Timestamp get() {
+                return Timestamps.fromMillis(FOO_MILLIS);
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import com.google.protobuf.Timestamp;",
-            "import com.google.protobuf.util.Timestamps;",
-            "class Test {",
-            "  private static final Timestamp FOO = Timestamps.fromMillis(100L);",
-            "  public Timestamp get() {",
-            "    return FOO;",
-            "  }",
-            "}")
+            """
+            import com.google.protobuf.Timestamp;
+            import com.google.protobuf.util.Timestamps;
+
+            class Test {
+              private static final Timestamp FOO = Timestamps.fromMillis(100L);
+
+              public Timestamp get() {
+                return FOO;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -142,14 +174,18 @@ public final class StronglyTypeTimeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.time.Duration;",
-            "class Test {",
-            "  // BUG: Diagnostic contains:",
-            "  private final long fooMillis = 100;",
-            "  public Duration get() {",
-            "    return Duration.ofMillis(this.fooMillis);",
-            "  }",
-            "}")
+            """
+            import java.time.Duration;
+
+            class Test {
+              // BUG: Diagnostic contains:
+              private final long fooMillis = 100;
+
+              public Duration get() {
+                return Duration.ofMillis(this.fooMillis);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -158,16 +194,21 @@ public final class StronglyTypeTimeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.time.Duration;",
-            "class Test {",
-            "  private static final long FOO_MILLIS;",
-            "  static {",
-            "    FOO_MILLIS = 100;",
-            "  }",
-            "  public Duration get() {",
-            "    return Duration.ofMillis(FOO_MILLIS);",
-            "  }",
-            "}")
+            """
+            import java.time.Duration;
+
+            class Test {
+              private static final long FOO_MILLIS;
+
+              static {
+                FOO_MILLIS = 100;
+              }
+
+              public Duration get() {
+                return Duration.ofMillis(FOO_MILLIS);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -176,22 +217,30 @@ public final class StronglyTypeTimeTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "import java.time.Duration;",
-            "class Test {",
-            "  private final long FOO_MILLIS = 100;",
-            "  public Duration get() {",
-            "    return Duration.ofMillis(FOO_MILLIS);",
-            "  }",
-            "}")
+            """
+            import java.time.Duration;
+
+            class Test {
+              private final long FOO_MILLIS = 100;
+
+              public Duration get() {
+                return Duration.ofMillis(FOO_MILLIS);
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import java.time.Duration;",
-            "class Test {",
-            "  private final Duration FOO = Duration.ofMillis(100);",
-            "  public Duration get() {",
-            "    return FOO;",
-            "  }",
-            "}")
+            """
+            import java.time.Duration;
+
+            class Test {
+              private final Duration FOO = Duration.ofMillis(100);
+
+              public Duration get() {
+                return FOO;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -200,38 +249,50 @@ public final class StronglyTypeTimeTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "import java.time.Duration;",
-            "class Test {",
-            "  private final long FOO_MILLIS = 100;",
-            "  private final long BAR_IN_MILLIS = 100;",
-            "  private final long BAZ_MILLI = 100;",
-            "  public Duration foo() {",
-            "    return Duration.ofMillis(FOO_MILLIS);",
-            "  }",
-            "  public Duration bar() {",
-            "    return Duration.ofMillis(BAR_IN_MILLIS);",
-            "  }",
-            "  public Duration baz() {",
-            "    return Duration.ofMillis(BAZ_MILLI);",
-            "  }",
-            "}")
+            """
+            import java.time.Duration;
+
+            class Test {
+              private final long FOO_MILLIS = 100;
+              private final long BAR_IN_MILLIS = 100;
+              private final long BAZ_MILLI = 100;
+
+              public Duration foo() {
+                return Duration.ofMillis(FOO_MILLIS);
+              }
+
+              public Duration bar() {
+                return Duration.ofMillis(BAR_IN_MILLIS);
+              }
+
+              public Duration baz() {
+                return Duration.ofMillis(BAZ_MILLI);
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import java.time.Duration;",
-            "class Test {",
-            "  private final Duration FOO = Duration.ofMillis(100);",
-            "  private final Duration BAR = Duration.ofMillis(100);",
-            "  private final Duration BAZ = Duration.ofMillis(100);",
-            "  public Duration foo() {",
-            "    return FOO;",
-            "  }",
-            "  public Duration bar() {",
-            "    return BAR;",
-            "  }",
-            "  public Duration baz() {",
-            "    return BAZ;",
-            "  }",
-            "}")
+            """
+            import java.time.Duration;
+
+            class Test {
+              private final Duration FOO = Duration.ofMillis(100);
+              private final Duration BAR = Duration.ofMillis(100);
+              private final Duration BAZ = Duration.ofMillis(100);
+
+              public Duration foo() {
+                return FOO;
+              }
+
+              public Duration bar() {
+                return BAR;
+              }
+
+              public Duration baz() {
+                return BAZ;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -240,16 +301,21 @@ public final class StronglyTypeTimeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.time.Duration;",
-            "class Test {",
-            "  private final long FOO_MILLIS = 100;",
-            "  public Duration get() {",
-            "    return Duration.ofMillis(FOO_MILLIS);",
-            "  }",
-            "  public long frobnicate() {",
-            "    return FOO_MILLIS + 1;",
-            "  }",
-            "}")
+            """
+            import java.time.Duration;
+
+            class Test {
+              private final long FOO_MILLIS = 100;
+
+              public Duration get() {
+                return Duration.ofMillis(FOO_MILLIS);
+              }
+
+              public long frobnicate() {
+                return FOO_MILLIS + 1;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -258,13 +324,17 @@ public final class StronglyTypeTimeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.time.Duration;",
-            "class Test {",
-            "  final long FOO_MILLIS = 100;",
-            "  public Duration get() {",
-            "    return Duration.ofMillis(FOO_MILLIS);",
-            "  }",
-            "}")
+            """
+            import java.time.Duration;
+
+            class Test {
+              final long FOO_MILLIS = 100;
+
+              public Duration get() {
+                return Duration.ofMillis(FOO_MILLIS);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -273,10 +343,13 @@ public final class StronglyTypeTimeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.io.Serializable;",
-            "class Test implements Serializable {",
-            "  private static final long serialVersionUID = 1L;",
-            "}")
+            """
+            import java.io.Serializable;
+
+            class Test implements Serializable {
+              private static final long serialVersionUID = 1L;
+            }
+            """)
         .expectNoDiagnostics()
         .doTest();
   }
@@ -286,24 +359,32 @@ public final class StronglyTypeTimeTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "import java.time.Instant;",
-            "class Test {",
-            "  private static final long FOO_MILLIS = 100L;",
-            "  private static final Instant INSTANT = null;",
-            "  public org.joda.time.Instant get() {",
-            "    return new org.joda.time.Instant(FOO_MILLIS);",
-            "  }",
-            "}")
+            """
+            import java.time.Instant;
+
+            class Test {
+              private static final long FOO_MILLIS = 100L;
+              private static final Instant INSTANT = null;
+
+              public org.joda.time.Instant get() {
+                return new org.joda.time.Instant(FOO_MILLIS);
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import java.time.Instant;",
-            "class Test {",
-            "  private static final org.joda.time.Instant FOO = new org.joda.time.Instant(100L);",
-            "  private static final Instant INSTANT = null;",
-            "  public org.joda.time.Instant get() {",
-            "    return FOO;",
-            "  }",
-            "}")
+            """
+            import java.time.Instant;
+
+            class Test {
+              private static final org.joda.time.Instant FOO = new org.joda.time.Instant(100L);
+              private static final Instant INSTANT = null;
+
+              public org.joda.time.Instant get() {
+                return FOO;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -312,22 +393,30 @@ public final class StronglyTypeTimeTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "import java.time.Duration;",
-            "class Test {",
-            "  private static final long F1_RETRY_MILLISECONDS = 5000;",
-            "  public Duration frobber() {",
-            "    return Duration.ofMillis(F1_RETRY_MILLISECONDS);",
-            "  }",
-            "}")
+            """
+            import java.time.Duration;
+
+            class Test {
+              private static final long F1_RETRY_MILLISECONDS = 5000;
+
+              public Duration frobber() {
+                return Duration.ofMillis(F1_RETRY_MILLISECONDS);
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import java.time.Duration;",
-            "class Test {",
-            "  private static final Duration F1_RETRY = Duration.ofMillis(5000);",
-            "  public Duration frobber() {",
-            "    return F1_RETRY;",
-            "  }",
-            "}")
+            """
+            import java.time.Duration;
+
+            class Test {
+              private static final Duration F1_RETRY = Duration.ofMillis(5000);
+
+              public Duration frobber() {
+                return F1_RETRY;
+              }
+            }
+            """)
         .doTest();
   }
 }

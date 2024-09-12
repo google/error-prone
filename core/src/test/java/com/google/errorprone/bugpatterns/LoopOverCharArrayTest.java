@@ -29,29 +29,33 @@ public class LoopOverCharArrayTest {
     BugCheckerRefactoringTestHelper.newInstance(LoopOverCharArray.class, getClass())
         .addInputLines(
             "Test.java",
-            "class T {",
-            "  void f(String s) {",
-            "    for (char c : s.toCharArray()) {",
-            "      System.err.print(c);",
-            "    }",
-            "    for (char i : s.toCharArray()) {",
-            "      System.err.print(i);",
-            "    }",
-            "  }",
-            "}")
+            """
+            class T {
+              void f(String s) {
+                for (char c : s.toCharArray()) {
+                  System.err.print(c);
+                }
+                for (char i : s.toCharArray()) {
+                  System.err.print(i);
+                }
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "class T {",
-            "  void f(String s) {",
-            "    for (int i = 0; i < s.length(); i++) {",
-            "      char c = s.charAt(i);",
-            "      System.err.print(c);",
-            "    }",
-            "    for (char i : s.toCharArray()) {",
-            "      System.err.print(i);",
-            "    }",
-            "  }",
-            "}")
+            """
+            class T {
+              void f(String s) {
+                for (int i = 0; i < s.length(); i++) {
+                  char c = s.charAt(i);
+                  System.err.print(c);
+                }
+                for (char i : s.toCharArray()) {
+                  System.err.print(i);
+                }
+              }
+            }
+            """)
         .doTest();
   }
 }

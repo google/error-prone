@@ -35,34 +35,44 @@ public class CatchFailTest {
     testHelper
         .addInputLines(
             "in/Foo.java",
-            "import org.junit.Test;",
-            "class Foo {",
-            "  @Test public void f() {",
-            "    try {",
-            "      System.err.println();",
-            "    } catch (Exception expected) {",
-            "      org.junit.Assert.fail();",
-            "    }",
-            "  }",
-            "  public void testFoo() {",
-            "    try {",
-            "      System.err.println();",
-            "    } catch (Exception expected) {",
-            "      org.junit.Assert.fail();",
-            "    }",
-            "  }",
-            "}")
+            """
+            import org.junit.Test;
+
+            class Foo {
+              @Test
+              public void f() {
+                try {
+                  System.err.println();
+                } catch (Exception expected) {
+                  org.junit.Assert.fail();
+                }
+              }
+
+              public void testFoo() {
+                try {
+                  System.err.println();
+                } catch (Exception expected) {
+                  org.junit.Assert.fail();
+                }
+              }
+            }
+            """)
         .addOutputLines(
             "out/Foo.java",
-            "import org.junit.Test;",
-            "class Foo {",
-            "  @Test public void f() throws Exception {",
-            "    System.err.println();",
-            "  }",
-            "  public void testFoo() throws Exception {",
-            "    System.err.println();",
-            "  }",
-            "}")
+            """
+            import org.junit.Test;
+
+            class Foo {
+              @Test
+              public void f() throws Exception {
+                System.err.println();
+              }
+
+              public void testFoo() throws Exception {
+                System.err.println();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -71,26 +81,34 @@ public class CatchFailTest {
     testHelper
         .addInputLines(
             "in/Foo.java",
-            "import org.junit.Test;",
-            "class Foo {",
-            "  @Test public void f() {",
-            "    try {",
-            "      System.err.println();",
-            "    } catch (Exception expected) {",
-            "      org.junit.Assert.fail();",
-            "    } catch (Throwable unexpected) {",
-            "      org.junit.Assert.fail();",
-            "    }",
-            "  }",
-            "}")
+            """
+            import org.junit.Test;
+
+            class Foo {
+              @Test
+              public void f() {
+                try {
+                  System.err.println();
+                } catch (Exception expected) {
+                  org.junit.Assert.fail();
+                } catch (Throwable unexpected) {
+                  org.junit.Assert.fail();
+                }
+              }
+            }
+            """)
         .addOutputLines(
             "out/Foo.java",
-            "import org.junit.Test;",
-            "class Foo {",
-            "  @Test public void f() throws Exception, Throwable {",
-            "    System.err.println();",
-            "  }",
-            "}")
+            """
+            import org.junit.Test;
+
+            class Foo {
+              @Test
+              public void f() throws Exception, Throwable {
+                System.err.println();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -99,28 +117,34 @@ public class CatchFailTest {
     testHelper
         .addInputLines(
             "in/Test.java",
-            "class Test {",
-            "  public void test() {",
-            "    try {",
-            "      if (true) throw new NoSuchMethodException();",
-            "      if (true) throw new NoSuchFieldException();",
-            "      System.err.println();",
-            "    } catch (NoSuchMethodException | NoSuchFieldException expected) {",
-            "      org.junit.Assert.fail();",
-            "    } finally {}",
-            "  }",
-            "}")
+            """
+            class Test {
+              public void test() {
+                try {
+                  if (true) throw new NoSuchMethodException();
+                  if (true) throw new NoSuchFieldException();
+                  System.err.println();
+                } catch (NoSuchMethodException | NoSuchFieldException expected) {
+                  org.junit.Assert.fail();
+                } finally {
+                }
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "class Test {",
-            "  public void test() throws NoSuchMethodException, NoSuchFieldException {",
-            "    try {",
-            "      if (true) throw new NoSuchMethodException();",
-            "      if (true) throw new NoSuchFieldException();",
-            "      System.err.println();",
-            "    } finally {}",
-            "  }",
-            "}")
+            """
+            class Test {
+              public void test() throws NoSuchMethodException, NoSuchFieldException {
+                try {
+                  if (true) throw new NoSuchMethodException();
+                  if (true) throw new NoSuchFieldException();
+                  System.err.println();
+                } finally {
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -129,24 +153,30 @@ public class CatchFailTest {
     testHelper
         .addInputLines(
             "in/Test.java",
-            "class Test {",
-            "  public void test() {",
-            "    try {",
-            "      System.err.println();",
-            "    } catch (Exception expected) {",
-            "      org.junit.Assert.fail();",
-            "    } catch (Error e) {}",
-            "  }",
-            "}")
+            """
+            class Test {
+              public void test() {
+                try {
+                  System.err.println();
+                } catch (Exception expected) {
+                  org.junit.Assert.fail();
+                } catch (Error e) {
+                }
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "class Test {",
-            "  public void test() throws Exception {",
-            "    try {",
-            "      System.err.println();",
-            "    } catch (Error e) {}",
-            "  }",
-            "}")
+            """
+            class Test {
+              public void test() throws Exception {
+                try {
+                  System.err.println();
+                } catch (Error e) {
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -155,17 +185,20 @@ public class CatchFailTest {
     testHelper
         .addInputLines(
             "in/Foo.java",
-            "import org.junit.Test;",
-            "class Foo {",
-            "  public void f() {",
-            "    try {",
-            "      System.err.println();",
-            "    } catch (Exception expected) {",
-            "      // BUG: Diagnostic contains:",
-            "      org.junit.Assert.fail();",
-            "    }",
-            "  }",
-            "}")
+            """
+            import org.junit.Test;
+
+            class Foo {
+              public void f() {
+                try {
+                  System.err.println();
+                } catch (Exception expected) {
+                  // BUG: Diagnostic contains:
+                  org.junit.Assert.fail();
+                }
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -175,16 +208,20 @@ public class CatchFailTest {
     testHelper
         .addInputLines(
             "in/Foo.java",
-            "import org.junit.Test;",
-            "class Foo {",
-            "  @Test public void f() {",
-            "    try {",
-            "      System.err.println();",
-            "    } catch (Exception expected) {",
-            "      org.junit.Assert.fail(\"oh no \" + expected);",
-            "    }",
-            "  }",
-            "}")
+            """
+            import org.junit.Test;
+
+            class Foo {
+              @Test
+              public void f() {
+                try {
+                  System.err.println();
+                } catch (Exception expected) {
+                  org.junit.Assert.fail("oh no " + expected);
+                }
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -194,22 +231,29 @@ public class CatchFailTest {
     testHelper
         .addInputLines(
             "in/Foo.java",
-            "import org.junit.Test;",
-            "class Foo {",
-            "  @Test public void f() {",
-            "    try {",
-            "    } catch (Exception expected) {",
-            "      org.junit.Assert.fail(\"oh no \");",
-            "    }",
-            "  }",
-            "}")
+            """
+            import org.junit.Test;
+
+            class Foo {
+              @Test
+              public void f() {
+                try {
+                } catch (Exception expected) {
+                  org.junit.Assert.fail("oh no ");
+                }
+              }
+            }
+            """)
         .addOutputLines(
             "out/Foo.java",
-            "import org.junit.Test;",
-            "class Foo {",
-            "  @Test public void f() {",
-            "  }",
-            "}")
+            """
+            import org.junit.Test;
+
+            class Foo {
+              @Test
+              public void f() {}
+            }
+            """)
         .setFixChooser(FixChoosers.SECOND)
         .doTest();
   }
@@ -219,36 +263,40 @@ public class CatchFailTest {
     testHelper
         .addInputLines(
             "in/Foo.java",
-            "class Foo {",
-            "  public void f() {",
-            "    try {",
-            "      System.err.println();",
-            "    } catch (Exception expected) {",
-            "      org.junit.Assert.fail();",
-            "    }",
-            "    try {",
-            "      System.err.println();",
-            "    } catch (Exception expected) {",
-            "      org.junit.Assert.fail(\"oh no \");",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Foo {
+              public void f() {
+                try {
+                  System.err.println();
+                } catch (Exception expected) {
+                  org.junit.Assert.fail();
+                }
+                try {
+                  System.err.println();
+                } catch (Exception expected) {
+                  org.junit.Assert.fail("oh no ");
+                }
+              }
+            }
+            """)
         .addOutputLines(
             "out/Foo.java",
-            "class Foo {",
-            "  public void f() {",
-            "    try {",
-            "      System.err.println();",
-            "    } catch (Exception expected) {",
-            "      org.junit.Assert.fail();",
-            "    }",
-            "    try {",
-            "      System.err.println();",
-            "    } catch (Exception expected) {",
-            "      throw new AssertionError(\"oh no \", expected);",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Foo {
+              public void f() {
+                try {
+                  System.err.println();
+                } catch (Exception expected) {
+                  org.junit.Assert.fail();
+                }
+                try {
+                  System.err.println();
+                } catch (Exception expected) {
+                  throw new AssertionError("oh no ", expected);
+                }
+              }
+            }
+            """)
         .doTest(TestMode.TEXT_MATCH);
   }
 
@@ -257,32 +305,38 @@ public class CatchFailTest {
     testHelper
         .addInputLines(
             "in/Foo.java",
-            "import org.junit.Test;",
-            "import java.io.IOException;",
-            "class Foo {",
-            "  @Test(expected = IOException.class)",
-            "  public void f() {",
-            "    try {",
-            "      throw new IOException();",
-            "    } catch (IOException expected) {",
-            "      org.junit.Assert.fail();",
-            "    }",
-            "  }",
-            "}")
+            """
+            import org.junit.Test;
+            import java.io.IOException;
+
+            class Foo {
+              @Test(expected = IOException.class)
+              public void f() {
+                try {
+                  throw new IOException();
+                } catch (IOException expected) {
+                  org.junit.Assert.fail();
+                }
+              }
+            }
+            """)
         .addOutputLines(
             "out/Foo.java",
-            "import org.junit.Test;",
-            "import java.io.IOException;",
-            "class Foo {",
-            "  @Test(expected = IOException.class)",
-            "  public void f() {",
-            "    try {",
-            "      throw new IOException();",
-            "    } catch (IOException expected) {",
-            "      org.junit.Assert.fail();",
-            "    }",
-            "  }",
-            "}")
+            """
+            import org.junit.Test;
+            import java.io.IOException;
+
+            class Foo {
+              @Test(expected = IOException.class)
+              public void f() {
+                try {
+                  throw new IOException();
+                } catch (IOException expected) {
+                  org.junit.Assert.fail();
+                }
+              }
+            }
+            """)
         .doTest();
   }
 }

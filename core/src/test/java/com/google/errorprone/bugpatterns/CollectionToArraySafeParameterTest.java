@@ -44,12 +44,15 @@ public class CollectionToArraySafeParameterTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.Collection;",
-            "class Test {",
-            "  <C extends Collection<Integer>> void f(C cx) {",
-            "    cx.toArray(new Integer[0]);",
-            "  }",
-            "}")
+            """
+            import java.util.Collection;
+
+            class Test {
+              <C extends Collection<Integer>> void f(C cx) {
+                cx.toArray(new Integer[0]);
+              }
+            }
+            """)
         .doTest();
   }
 }

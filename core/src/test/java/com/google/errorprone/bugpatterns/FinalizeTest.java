@@ -32,14 +32,17 @@ public class FinalizeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  // BUG: Diagnostic contains: Do not override finalize",
-            "  protected void finalize() {}",
-            "  interface A {",
-            "    // BUG: Diagnostic contains: Do not override finalize",
-            "    void finalize();",
-            "  }",
-            "}")
+            """
+            class Test {
+              // BUG: Diagnostic contains: Do not override finalize
+              protected void finalize() {}
+
+              interface A {
+                // BUG: Diagnostic contains: Do not override finalize
+                void finalize();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -48,12 +51,15 @@ public class FinalizeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  public void finalize(int x) {}",
-            "  interface B {",
-            "    public int finalize();",
-            "  }",
-            "}")
+            """
+            class Test {
+              public void finalize(int x) {}
+
+              interface B {
+                public int finalize();
+              }
+            }
+            """)
         .doTest();
   }
 }

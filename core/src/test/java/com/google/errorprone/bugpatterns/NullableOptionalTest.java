@@ -32,12 +32,15 @@ public final class NullableOptionalTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.Optional;",
-            "import javax.annotation.Nullable;",
-            "final class Test {",
-            " // BUG: Diagnostic contains:",
-            " @Nullable private Optional<Object> foo;",
-            "}")
+            """
+            import java.util.Optional;
+            import javax.annotation.Nullable;
+
+            final class Test {
+              // BUG: Diagnostic contains:
+              @Nullable private Optional<Object> foo;
+            }
+            """)
         .doTest();
   }
 
@@ -46,13 +49,16 @@ public final class NullableOptionalTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.base.Optional;",
-            "import javax.annotation.Nullable;",
-            "final class Test {",
-            " @Nullable",
-            " // BUG: Diagnostic contains:",
-            " private Optional<Object> foo;",
-            "}")
+            """
+            import com.google.common.base.Optional;
+            import javax.annotation.Nullable;
+
+            final class Test {
+              @Nullable
+              // BUG: Diagnostic contains:
+              private Optional<Object> foo;
+            }
+            """)
         .doTest();
   }
 
@@ -61,15 +67,18 @@ public final class NullableOptionalTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.Optional;",
-            "import javax.annotation.Nullable;",
-            "final class Test {",
-            " @Nullable",
-            " // BUG: Diagnostic contains:",
-            " private Optional<Object> foo() {",
-            "   return Optional.empty();",
-            " }",
-            "}")
+            """
+            import java.util.Optional;
+            import javax.annotation.Nullable;
+
+            final class Test {
+              @Nullable
+              // BUG: Diagnostic contains:
+              private Optional<Object> foo() {
+                return Optional.empty();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -78,15 +87,18 @@ public final class NullableOptionalTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.Optional;",
-            "import org.jspecify.annotations.Nullable;",
-            "final class Test {",
-            " @Nullable",
-            " // BUG: Diagnostic contains:",
-            " private Optional<Object> foo() {",
-            "   return Optional.empty();",
-            " }",
-            "}")
+            """
+            import java.util.Optional;
+            import org.jspecify.annotations.Nullable;
+
+            final class Test {
+              @Nullable
+              // BUG: Diagnostic contains:
+              private Optional<Object> foo() {
+                return Optional.empty();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -95,12 +107,15 @@ public final class NullableOptionalTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.Optional;",
-            "import javax.annotation.Nullable;",
-            "final class Test {",
-            " // BUG: Diagnostic contains:",
-            " private void foo(@Nullable Optional<Object> optional) {}",
-            "}")
+            """
+            import java.util.Optional;
+            import javax.annotation.Nullable;
+
+            final class Test {
+              // BUG: Diagnostic contains:
+              private void foo(@Nullable Optional<Object> optional) {}
+            }
+            """)
         .doTest();
   }
 
@@ -109,10 +124,13 @@ public final class NullableOptionalTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import javax.annotation.Nullable;",
-            "final class Test {",
-            " @Nullable Object field;",
-            "}")
+            """
+            import javax.annotation.Nullable;
+
+            final class Test {
+              @Nullable Object field;
+            }
+            """)
         .doTest();
   }
 
@@ -121,13 +139,16 @@ public final class NullableOptionalTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import javax.annotation.Nullable;",
-            "final class Test {",
-            " @Nullable",
-            " private Object foo() {",
-            "   return null;",
-            " }",
-            "}")
+            """
+            import javax.annotation.Nullable;
+
+            final class Test {
+              @Nullable
+              private Object foo() {
+                return null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -136,13 +157,16 @@ public final class NullableOptionalTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import org.jspecify.annotations.Nullable;",
-            "final class Test {",
-            " @Nullable",
-            " private Object foo() {",
-            "   return null;",
-            " }",
-            "}")
+            """
+            import org.jspecify.annotations.Nullable;
+
+            final class Test {
+              @Nullable
+              private Object foo() {
+                return null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -151,10 +175,13 @@ public final class NullableOptionalTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import org.jspecify.annotations.Nullable;",
-            "final class Test {",
-            " private void foo(@Nullable Object object) {}",
-            "}")
+            """
+            import org.jspecify.annotations.Nullable;
+
+            final class Test {
+              private void foo(@Nullable Object object) {}
+            }
+            """)
         .doTest();
   }
 }

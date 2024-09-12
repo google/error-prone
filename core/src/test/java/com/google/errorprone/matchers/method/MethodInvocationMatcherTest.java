@@ -46,17 +46,19 @@ public class MethodInvocationMatcherTest {
     CompilationTestHelper.newInstance(MethodInvocationChecker.class, getClass())
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  public String toString() {",
-            "    System.out.println(\"Stringifying\");",
-            "    // BUG: Diagnostic contains: ",
-            "    String s = \"5\".toString();",
-            "    // BUG: Diagnostic contains: ",
-            "    int result = Integer.valueOf(5).compareTo(6);",
-            "    // BUG: Diagnostic contains: ",
-            "    return String.valueOf(5);",
-            "  }",
-            "}")
+            """
+            class Test {
+              public String toString() {
+                System.out.println("Stringifying");
+                // BUG: Diagnostic contains:
+                String s = "5".toString();
+                // BUG: Diagnostic contains:
+                int result = Integer.valueOf(5).compareTo(6);
+                // BUG: Diagnostic contains:
+                return String.valueOf(5);
+              }
+            }
+            """)
         .doTest();
   }
 

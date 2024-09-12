@@ -33,21 +33,27 @@ public class AnnotationValueToStringTest {
     testHelper
         .addInputLines(
             "Test.java",
-            "import javax.lang.model.element.AnnotationValue;",
-            "class Test {",
-            "  String f(AnnotationValue av) {",
-            "    return av.toString();",
-            "  }",
-            "}")
+            """
+            import javax.lang.model.element.AnnotationValue;
+
+            class Test {
+              String f(AnnotationValue av) {
+                return av.toString();
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import com.google.auto.common.AnnotationValues;",
-            "import javax.lang.model.element.AnnotationValue;",
-            "class Test {",
-            "  String f(AnnotationValue av) {",
-            "    return AnnotationValues.toString(av);",
-            "  }",
-            "}")
+            """
+            import com.google.auto.common.AnnotationValues;
+            import javax.lang.model.element.AnnotationValue;
+
+            class Test {
+              String f(AnnotationValue av) {
+                return AnnotationValues.toString(av);
+              }
+            }
+            """)
         .allowBreakingChanges() // TODO(cushon): remove after the next auto-common release
         .doTest();
   }

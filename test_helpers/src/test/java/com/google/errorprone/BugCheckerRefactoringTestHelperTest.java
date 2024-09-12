@@ -61,20 +61,24 @@ public class BugCheckerRefactoringTestHelperTest {
     helper
         .addInputLines(
             "in/Test.java",
-            "public class Test {",
-            "  public Object foo() {",
-            "    Integer i = 1 + 2;",
-            "    return i;",
-            "  }",
-            "}")
+            """
+            public class Test {
+              public Object foo() {
+                Integer i = 1 + 2;
+                return i;
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "public class Test {",
-            "  public Object foo() {",
-            "    Integer i = 1 + 2;",
-            "  return null;",
-            "  }",
-            "}")
+            """
+            public class Test {
+              public Object foo() {
+                Integer i = 1 + 2;
+                return null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -86,20 +90,24 @@ public class BugCheckerRefactoringTestHelperTest {
             helper
                 .addInputLines(
                     "in/Test.java",
-                    "public class Test {",
-                    "  public Object foo() {",
-                    "    Integer i = 1 + 2;",
-                    "    return i;",
-                    "  }",
-                    "}")
+                    """
+                    public class Test {
+                      public Object foo() {
+                        Integer i = 1 + 2;
+                        return i;
+                      }
+                    }
+                    """)
                 .addOutputLines(
                     "out/Test.java",
-                    "public class Test {",
-                    "  public Object foo() {",
-                    "    Integer i = 1 + 2;",
-                    "    return i;",
-                    "  }",
-                    "}")
+                    """
+                    public class Test {
+                      public Object foo() {
+                        Integer i = 1 + 2;
+                        return i;
+                      }
+                    }
+                    """)
                 .doTest());
   }
 
@@ -108,20 +116,24 @@ public class BugCheckerRefactoringTestHelperTest {
     helper
         .addInputLines(
             "in/Test.java",
-            "public class Test {",
-            "  public Object foo() {",
-            "    Integer i = 1 + 2;",
-            "    return i;",
-            "  }",
-            "}")
+            """
+            public class Test {
+              public Object foo() {
+                Integer i = 1 + 2;
+                return i;
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "public class Test {",
-            "  public Object foo() {",
-            "    Integer i = 1 + 2;",
-            "    return null;",
-            "  }",
-            "}")
+            """
+            public class Test {
+              public Object foo() {
+                Integer i = 1 + 2;
+                return null;
+              }
+            }
+            """)
         .doTest(TestMode.TEXT_MATCH);
   }
 
@@ -130,17 +142,24 @@ public class BugCheckerRefactoringTestHelperTest {
     helper
         .addInputLines(
             "in/Test.java",
-            "public class Test {",
-            "  public Object foo() { Integer i = 2 + 1; return i; }",
-            "}")
+            """
+            public class Test {
+              public Object foo() {
+                Integer i = 2 + 1;
+                return i;
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "public class Test {",
-            "  public Object foo() {",
-            "    Integer i = 2 + 1;",
-            "  return null;",
-            "  }",
-            "}")
+            """
+            public class Test {
+              public Object foo() {
+                Integer i = 2 + 1;
+                return null;
+              }
+            }
+            """)
         .doTest(TestMode.TEXT_MATCH);
   }
 
@@ -152,20 +171,24 @@ public class BugCheckerRefactoringTestHelperTest {
             helper
                 .addInputLines(
                     "in/Test.java",
-                    "public class Test {",
-                    "  public Object foo() {",
-                    "    Integer i = 1 + 2;",
-                    "    return i;",
-                    "  }",
-                    "}")
+                    """
+                    public class Test {
+                      public Object foo() {
+                        Integer i = 1 + 2;
+                        return i;
+                      }
+                    }
+                    """)
                 .addOutputLines(
                     "out/Test.java",
-                    "public class Test {",
-                    "  public Object foo() {",
-                    "    Integer i = 2 + 1;",
-                    "  return null;",
-                    "  }",
-                    "}")
+                    """
+                    public class Test {
+                      public Object foo() {
+                        Integer i = 2 + 1;
+                        return null;
+                      }
+                    }
+                    """)
                 .doTest(TestMode.TEXT_MATCH));
   }
 
@@ -186,10 +209,28 @@ public class BugCheckerRefactoringTestHelperTest {
   @Test
   public void annotationFullName() {
     BugCheckerRefactoringTestHelper.newInstance(RemoveAnnotationRefactoring.class, getClass())
-        .addInputLines("bar/Foo.java", "package bar;", "public @interface Foo {", "};")
+        .addInputLines(
+            "bar/Foo.java",
+            """
+            package bar;
+
+            public @interface Foo {};
+            """)
         .expectUnchanged()
-        .addInputLines("foo/Bar.java", "import bar.Foo;", "public @Foo class Bar {", "}")
-        .addOutputLines("out/foo/Bar.java", "import bar.Foo;", "public  class Bar {", "}")
+        .addInputLines(
+            "foo/Bar.java",
+            """
+            import bar.Foo;
+
+            public @Foo class Bar {}
+            """)
+        .addOutputLines(
+            "out/foo/Bar.java",
+            """
+            import bar.Foo;
+
+            public class Bar {}
+            """)
         .doTest(TestMode.TEXT_MATCH);
   }
 
@@ -240,14 +281,22 @@ public class BugCheckerRefactoringTestHelperTest {
   public void staticLastImportOrder() {
     BugCheckerRefactoringTestHelper.newInstance(ImportArrayList.class, getClass())
         .setImportOrder("static-last")
-        .addInputLines("pkg/A.java", "import static java.lang.Math.min;", "class A {", "}")
+        .addInputLines(
+            "pkg/A.java",
+            """
+            import static java.lang.Math.min;
+
+            class A {}
+            """)
         .addOutputLines(
             "out/pkg/A.java",
-            "import java.util.ArrayList;",
-            "",
-            "import static java.lang.Math.min;",
-            "class A {",
-            "}")
+            """
+            import java.util.ArrayList;
+
+            import static java.lang.Math.min;
+
+            class A {}
+            """)
         .doTest(TestMode.TEXT_MATCH);
   }
 

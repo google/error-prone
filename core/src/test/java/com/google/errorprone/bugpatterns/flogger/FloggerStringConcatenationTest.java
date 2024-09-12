@@ -33,24 +33,32 @@ public class FloggerStringConcatenationTest {
     testHelper
         .addInputLines(
             "in/Test.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "class Test {",
-            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "  private static final String CONSTANT = \"constant\";",
-            "  public void method(String world, int i, long l, float f, double d, boolean b) {",
-            "    logger.atInfo().log(\"hello \" + world + i + l + f + (d + \"\" + b) + CONSTANT);",
-            "  }",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            class Test {
+              private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+              private static final String CONSTANT = "constant";
+
+              public void method(String world, int i, long l, float f, double d, boolean b) {
+                logger.atInfo().log("hello " + world + i + l + f + (d + "" + b) + CONSTANT);
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "class Test {",
-            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "  private static final String CONSTANT = \"constant\";",
-            "  public void method(String world, int i, long l, float f, double d, boolean b) {",
-            "    logger.atInfo().log(\"hello %s%d%d%g%g%s%s\", world, i, l, f, d, b, CONSTANT);",
-            "  }",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            class Test {
+              private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+              private static final String CONSTANT = "constant";
+
+              public void method(String world, int i, long l, float f, double d, boolean b) {
+                logger.atInfo().log("hello %s%d%d%g%g%s%s", world, i, l, f, d, b, CONSTANT);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -59,14 +67,18 @@ public class FloggerStringConcatenationTest {
     CompilationTestHelper.newInstance(FloggerStringConcatenation.class, getClass())
         .addSourceLines(
             "in/Test.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "class Test {",
-            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "  private static final String CONSTANT = \"constant\";",
-            "  public void method() {",
-            "    logger.atInfo().log(CONSTANT + \"hello\");",
-            "  }",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            class Test {
+              private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+              private static final String CONSTANT = "constant";
+
+              public void method() {
+                logger.atInfo().log(CONSTANT + "hello");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -75,22 +87,30 @@ public class FloggerStringConcatenationTest {
     testHelper
         .addInputLines(
             "in/Test.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "class Test {",
-            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "  public void method(String world, int i) {",
-            "    logger.atInfo().log(\"hello \" + world + \" \" + (i - 1));",
-            "  }",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            class Test {
+              private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+
+              public void method(String world, int i) {
+                logger.atInfo().log("hello " + world + " " + (i - 1));
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "class Test {",
-            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "  public void method(String world, int i) {",
-            "    logger.atInfo().log(\"hello %s %d\", world, i - 1);",
-            "  }",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            class Test {
+              private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+
+              public void method(String world, int i) {
+                logger.atInfo().log("hello %s %d", world, i - 1);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -99,22 +119,30 @@ public class FloggerStringConcatenationTest {
     testHelper
         .addInputLines(
             "in/Test.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "class Test {",
-            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "  public void method(int x, int y) {",
-            "    logger.atInfo().log(x + y + \" sum; mean \" + (x + y) / 2);",
-            "  }",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            class Test {
+              private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+
+              public void method(int x, int y) {
+                logger.atInfo().log(x + y + " sum; mean " + (x + y) / 2);
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "class Test {",
-            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "  public void method(int x, int y) {",
-            "    logger.atInfo().log(\"%d sum; mean %d\", x + y, (x + y) / 2);",
-            "  }",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            class Test {
+              private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+
+              public void method(int x, int y) {
+                logger.atInfo().log("%d sum; mean %d", x + y, (x + y) / 2);
+              }
+            }
+            """)
         .doTest();
   }
 }

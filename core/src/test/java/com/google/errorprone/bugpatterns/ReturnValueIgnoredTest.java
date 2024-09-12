@@ -47,13 +47,16 @@ public class ReturnValueIgnoredTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.function.Function;",
-            "class Test {",
-            "  void f(Function<Integer, Integer> f) {",
-            "    // BUG: Diagnostic contains: ReturnValueIgnored",
-            "    f.apply(0);",
-            "  }",
-            "}")
+            """
+            import java.util.function.Function;
+
+            class Test {
+              void f(Function<Integer, Integer> f) {
+                // BUG: Diagnostic contains: ReturnValueIgnored
+                f.apply(0);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -62,12 +65,15 @@ public class ReturnValueIgnoredTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.function.Consumer;",
-            "class Test {",
-            "  void f(Consumer<Integer> f) {",
-            "    f.accept(0);",
-            "  }",
-            "}")
+            """
+            import java.util.function.Consumer;
+
+            class Test {
+              void f(Consumer<Integer> f) {
+                f.accept(0);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -76,12 +82,15 @@ public class ReturnValueIgnoredTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.function.Function;",
-            "class Test {",
-            "  void f(Function<Integer, Void> f) {",
-            "    f.apply(0);",
-            "  }",
-            "}")
+            """
+            import java.util.function.Function;
+
+            class Test {
+              void f(Function<Integer, Void> f) {
+                f.apply(0);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -90,16 +99,20 @@ public class ReturnValueIgnoredTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static org.junit.Assert.fail;",
-            "import java.util.function.Function;",
-            "class Test {",
-            "  void f(Function<Integer, Integer> f) {",
-            "    try {",
-            "      f.apply(0);",
-            "      fail();",
-            "    } catch (Exception expected) {}",
-            "  }",
-            "}")
+            """
+            import static org.junit.Assert.fail;
+            import java.util.function.Function;
+
+            class Test {
+              void f(Function<Integer, Integer> f) {
+                try {
+                  f.apply(0);
+                  fail();
+                } catch (Exception expected) {
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -108,13 +121,15 @@ public class ReturnValueIgnoredTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void f() {",
-            "    // BUG: Diagnostic contains: ReturnValueIgnored",
-            "    \"\".codePoints().count();",
-            "    \"\".codePoints().forEach(i -> {});",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f() {
+                // BUG: Diagnostic contains: ReturnValueIgnored
+                "".codePoints().count();
+                "".codePoints().forEach(i -> {});
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -149,17 +164,20 @@ public class ReturnValueIgnoredTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.Optional;",
-            "class Test {",
-            "  void optional() {",
-            "    // BUG: Diagnostic contains: ReturnValueIgnored",
-            "    Optional.empty();",
-            "    // BUG: Diagnostic contains: ReturnValueIgnored",
-            "    Optional.of(42);",
-            "    // BUG: Diagnostic contains: ReturnValueIgnored",
-            "    Optional.ofNullable(null);",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            class Test {
+              void optional() {
+                // BUG: Diagnostic contains: ReturnValueIgnored
+                Optional.empty();
+                // BUG: Diagnostic contains: ReturnValueIgnored
+                Optional.of(42);
+                // BUG: Diagnostic contains: ReturnValueIgnored
+                Optional.ofNullable(null);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -168,29 +186,32 @@ public class ReturnValueIgnoredTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.Optional;",
-            "class Test {",
-            "  void optional() {",
-            "    Optional<Integer> optional = Optional.of(42);",
-            "    // BUG: Diagnostic contains: ReturnValueIgnored",
-            "    optional.filter(v -> v > 40);",
-            "    // BUG: Diagnostic contains: ReturnValueIgnored",
-            "    optional.flatMap(v -> Optional.of(v + 1));",
-            "    // BUG: Diagnostic contains: ReturnValueIgnored",
-            "    optional.get();",
-            "    optional.ifPresent(v -> {});",
-            "    // BUG: Diagnostic contains: ReturnValueIgnored",
-            "    optional.isPresent();",
-            "    // BUG: Diagnostic contains: ReturnValueIgnored",
-            "    optional.map(v -> v + 1);",
-            "    // BUG: Diagnostic contains: ReturnValueIgnored",
-            "    optional.orElse(40);",
-            "    // BUG: Diagnostic contains: ReturnValueIgnored",
-            "    optional.orElseGet(() -> 40);",
-            "    // BUG: Diagnostic contains: ReturnValueIgnored",
-            "    optional.orElseThrow(() -> new RuntimeException());",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            class Test {
+              void optional() {
+                Optional<Integer> optional = Optional.of(42);
+                // BUG: Diagnostic contains: ReturnValueIgnored
+                optional.filter(v -> v > 40);
+                // BUG: Diagnostic contains: ReturnValueIgnored
+                optional.flatMap(v -> Optional.of(v + 1));
+                // BUG: Diagnostic contains: ReturnValueIgnored
+                optional.get();
+                optional.ifPresent(v -> {});
+                // BUG: Diagnostic contains: ReturnValueIgnored
+                optional.isPresent();
+                // BUG: Diagnostic contains: ReturnValueIgnored
+                optional.map(v -> v + 1);
+                // BUG: Diagnostic contains: ReturnValueIgnored
+                optional.orElse(40);
+                // BUG: Diagnostic contains: ReturnValueIgnored
+                optional.orElseGet(() -> 40);
+                // BUG: Diagnostic contains: ReturnValueIgnored
+                optional.orElseThrow(() -> new RuntimeException());
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -199,14 +220,17 @@ public class ReturnValueIgnoredTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.Optional;",
-            "class Test {",
-            "  void optional() {",
-            "    Optional<Integer> optional = Optional.of(42);",
-            "    // BUG: Diagnostic contains: ReturnValueIgnored",
-            "    optional.or(() -> Optional.empty());",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            class Test {
+              void optional() {
+                Optional<Integer> optional = Optional.of(42);
+                // BUG: Diagnostic contains: ReturnValueIgnored
+                optional.or(() -> Optional.empty());
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -215,14 +239,17 @@ public class ReturnValueIgnoredTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.Optional;",
-            "class Test {",
-            "  void optional() {",
-            "    Optional<Integer> optional = Optional.of(42);",
-            "    // BUG: Diagnostic contains: ReturnValueIgnored",
-            "    optional.orElseThrow();",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            class Test {
+              void optional() {
+                Optional<Integer> optional = Optional.of(42);
+                // BUG: Diagnostic contains: ReturnValueIgnored
+                optional.orElseThrow();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -231,14 +258,17 @@ public class ReturnValueIgnoredTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.Optional;",
-            "class Test {",
-            "  void optional() {",
-            "    Optional<Integer> optional = Optional.of(42);",
-            "    // BUG: Diagnostic contains: ReturnValueIgnored",
-            "    optional.isEmpty();",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            class Test {
+              void optional() {
+                Optional<Integer> optional = Optional.of(42);
+                // BUG: Diagnostic contains: ReturnValueIgnored
+                optional.isEmpty();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -247,14 +277,17 @@ public class ReturnValueIgnoredTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static java.util.concurrent.TimeUnit.MILLISECONDS;",
-            "class Test {",
-            "  void timeUnit() {",
-            "    long ms = 4200;",
-            "    // BUG: Diagnostic contains: ReturnValueIgnored",
-            "    MILLISECONDS.toNanos(ms);",
-            "  }",
-            "}")
+            """
+            import static java.util.concurrent.TimeUnit.MILLISECONDS;
+
+            class Test {
+              void timeUnit() {
+                long ms = 4200;
+                // BUG: Diagnostic contains: ReturnValueIgnored
+                MILLISECONDS.toNanos(ms);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -263,14 +296,18 @@ public class ReturnValueIgnoredTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.function.Function;",
-            "enum Test {",
-            "  A;",
-            "  void f(Function<Integer, Integer> f) {",
-            "    // BUG: Diagnostic contains: ReturnValueIgnored",
-            "    f.apply(0);",
-            "  }",
-            "}")
+            """
+            import java.util.function.Function;
+
+            enum Test {
+              A;
+
+              void f(Function<Integer, Integer> f) {
+                // BUG: Diagnostic contains: ReturnValueIgnored
+                f.apply(0);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -279,18 +316,21 @@ public class ReturnValueIgnoredTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.time.format.DateTimeFormatterBuilder;",
-            "class Test {",
-            "  void f() {",
-            "    DateTimeFormatterBuilder formatter = new DateTimeFormatterBuilder();",
-            "    formatter.appendZoneId();",
-            "    formatter.optionalEnd();",
-            "    formatter.padNext(5);",
-            "    formatter.parseCaseSensitive();",
-            "    // BUG: Diagnostic contains: ReturnValueIgnored",
-            "    formatter.toFormatter();",
-            "  }",
-            "}")
+            """
+            import java.time.format.DateTimeFormatterBuilder;
+
+            class Test {
+              void f() {
+                DateTimeFormatterBuilder formatter = new DateTimeFormatterBuilder();
+                formatter.appendZoneId();
+                formatter.optionalEnd();
+                formatter.padNext(5);
+                formatter.parseCaseSensitive();
+                // BUG: Diagnostic contains: ReturnValueIgnored
+                formatter.toFormatter();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -299,17 +339,22 @@ public class ReturnValueIgnoredTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.nio.file.Path;",
-            "abstract class Test {",
-            "  void test(Path p) {",
-            "    // BUG: Diagnostic contains: ReturnValueIgnored",
-            "    E e = p::toRealPath;",
-            "  }",
-            "  abstract <T> void a(T t);",
-            "  public interface E {",
-            "    void run() throws Exception;",
-            "  }",
-            "}")
+            """
+            import java.nio.file.Path;
+
+            abstract class Test {
+              void test(Path p) {
+                // BUG: Diagnostic contains: ReturnValueIgnored
+                E e = p::toRealPath;
+              }
+
+              abstract <T> void a(T t);
+
+              public interface E {
+                void run() throws Exception;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -318,12 +363,14 @@ public class ReturnValueIgnoredTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "abstract class Test {",
-            "  void test(java.util.List p) {",
-            "    // BUG: Diagnostic contains: ReturnValueIgnored",
-            "    p.contains(null);",
-            "  }",
-            "}")
+            """
+            abstract class Test {
+              void test(java.util.List p) {
+                // BUG: Diagnostic contains: ReturnValueIgnored
+                p.contains(null);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -332,32 +379,36 @@ public class ReturnValueIgnoredTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.Map;",
-            "public final class Test {",
-            "  void doTest(Map<Integer, Integer> map) {",
-            "    // BUG: Diagnostic contains: ReturnValueIgnored",
-            "    map.isEmpty();",
-            "    // BUG: Diagnostic contains: ReturnValueIgnored",
-            "    map.size();",
-            "    // BUG: Diagnostic contains: ReturnValueIgnored",
-            "    map.entrySet();",
-            "    // BUG: Diagnostic contains: ReturnValueIgnored",
-            "    map.keySet();",
-            "    // BUG: Diagnostic contains: ReturnValueIgnored",
-            "    map.values();",
-            "    // BUG: Diagnostic contains: ReturnValueIgnored",
-            "    map.containsKey(42);",
-            "    // BUG: Diagnostic contains: ReturnValueIgnored",
-            "    map.containsValue(42);",
-            "  }",
-            "  void doTest(Map.Entry<Integer, Integer> entry) {",
-            "    // BUG: Diagnostic contains: ReturnValueIgnored",
-            "    entry.getKey();",
-            "    // BUG: Diagnostic contains: ReturnValueIgnored",
-            "    entry.getValue();",
-            "    entry.setValue(42);",
-            "  }",
-            "}")
+            """
+            import java.util.Map;
+
+            public final class Test {
+              void doTest(Map<Integer, Integer> map) {
+                // BUG: Diagnostic contains: ReturnValueIgnored
+                map.isEmpty();
+                // BUG: Diagnostic contains: ReturnValueIgnored
+                map.size();
+                // BUG: Diagnostic contains: ReturnValueIgnored
+                map.entrySet();
+                // BUG: Diagnostic contains: ReturnValueIgnored
+                map.keySet();
+                // BUG: Diagnostic contains: ReturnValueIgnored
+                map.values();
+                // BUG: Diagnostic contains: ReturnValueIgnored
+                map.containsKey(42);
+                // BUG: Diagnostic contains: ReturnValueIgnored
+                map.containsValue(42);
+              }
+
+              void doTest(Map.Entry<Integer, Integer> entry) {
+                // BUG: Diagnostic contains: ReturnValueIgnored
+                entry.getKey();
+                // BUG: Diagnostic contains: ReturnValueIgnored
+                entry.getValue();
+                entry.setValue(42);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -366,23 +417,28 @@ public class ReturnValueIgnoredTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.Map;",
-            "class Test {",
-            "  void doTest() {",
-            "    // BUG: Diagnostic contains: ReturnValueIgnored",
-            "    Map.of(42, 42);",
-            "    // BUG: Diagnostic contains: ReturnValueIgnored",
-            "    Map.entry(42, 42);",
-            "  }",
-            "  void doTest(Map<Integer, Integer> map) {",
-            "    // BUG: Diagnostic contains: ReturnValueIgnored",
-            "    Map.copyOf(map);",
-            "  }",
-            "  void doTest(Map.Entry<Integer, Integer>... entries) {",
-            "    // BUG: Diagnostic contains: ReturnValueIgnored",
-            "    Map.ofEntries(entries);",
-            "  }",
-            "}")
+            """
+            import java.util.Map;
+
+            class Test {
+              void doTest() {
+                // BUG: Diagnostic contains: ReturnValueIgnored
+                Map.of(42, 42);
+                // BUG: Diagnostic contains: ReturnValueIgnored
+                Map.entry(42, 42);
+              }
+
+              void doTest(Map<Integer, Integer> map) {
+                // BUG: Diagnostic contains: ReturnValueIgnored
+                Map.copyOf(map);
+              }
+
+              void doTest(Map.Entry<Integer, Integer>... entries) {
+                // BUG: Diagnostic contains: ReturnValueIgnored
+                Map.ofEntries(entries);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -391,14 +447,17 @@ public class ReturnValueIgnoredTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.function.Function;",
-            "abstract class Test {",
-            "  void test(Function<Integer, Long> fn) {",
-            "    foo(fn::apply);",
-            "  }",
-            "  void foo(Function<Integer, Object> fn) {",
-            "  }",
-            "}")
+            """
+            import java.util.function.Function;
+
+            abstract class Test {
+              void test(Function<Integer, Long> fn) {
+                foo(fn::apply);
+              }
+
+              void foo(Function<Integer, Object> fn) {}
+            }
+            """)
         .doTest();
   }
 
@@ -446,15 +505,18 @@ public class ReturnValueIgnoredTest {
     compilationHelper
         .addSourceLines(
             "test.java",
-            "import com.google.protobuf.Duration;",
-            "class Test {",
-            "  public void proto_newBuilder() {",
-            "    // BUG: Diagnostic contains: ReturnValueIgnored",
-            "    Duration.newBuilder();",
-            "    Duration.Builder builder = Duration.newBuilder();",
-            "    Duration duration = Duration.newBuilder().setSeconds(4).build();",
-            "  }",
-            "}")
+            """
+            import com.google.protobuf.Duration;
+
+            class Test {
+              public void proto_newBuilder() {
+                // BUG: Diagnostic contains: ReturnValueIgnored
+                Duration.newBuilder();
+                Duration.Builder builder = Duration.newBuilder();
+                Duration duration = Duration.newBuilder().setSeconds(4).build();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -463,19 +525,23 @@ public class ReturnValueIgnoredTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.protobuf.Duration;",
-            "final class Test {",
-            "  public void proto_build() {",
-            "    // BUG: Diagnostic contains: ReturnValueIgnored",
-            "    Duration.newBuilder().setSeconds(4).build();",
-            "    Duration duration = Duration.newBuilder().setSeconds(4).build();",
-            "  }",
-            "  public void proto_buildPartial() {",
-            "    // BUG: Diagnostic contains: ReturnValueIgnored",
-            "    Duration.newBuilder().setSeconds(4).buildPartial();",
-            "    Duration duration = Duration.newBuilder().setSeconds(4).buildPartial();",
-            "  }",
-            "}")
+            """
+            import com.google.protobuf.Duration;
+
+            final class Test {
+              public void proto_build() {
+                // BUG: Diagnostic contains: ReturnValueIgnored
+                Duration.newBuilder().setSeconds(4).build();
+                Duration duration = Duration.newBuilder().setSeconds(4).build();
+              }
+
+              public void proto_buildPartial() {
+                // BUG: Diagnostic contains: ReturnValueIgnored
+                Duration.newBuilder().setSeconds(4).buildPartial();
+                Duration duration = Duration.newBuilder().setSeconds(4).buildPartial();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -484,25 +550,31 @@ public class ReturnValueIgnoredTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "import java.util.Optional;",
-            "import java.util.stream.Stream;",
-            "final class Test {",
-            "  public void f() {",
-            "    Optional.of(42);",
-            "    Optional.of(42).orElseThrow(AssertionError::new);",
-            "    Stream.of(Optional.of(42)).forEach(o -> o.orElseThrow(AssertionError::new));",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+            import java.util.stream.Stream;
+
+            final class Test {
+              public void f() {
+                Optional.of(42);
+                Optional.of(42).orElseThrow(AssertionError::new);
+                Stream.of(Optional.of(42)).forEach(o -> o.orElseThrow(AssertionError::new));
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import java.util.Optional;",
-            "import java.util.stream.Stream;",
-            "final class Test {",
-            "  public void f() {",
-            "    var unused = Optional.of(42).orElseThrow(AssertionError::new);",
-            "    Stream.of(Optional.of(42)).forEach(o -> o.orElseThrow(AssertionError::new));",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+            import java.util.stream.Stream;
+
+            final class Test {
+              public void f() {
+                var unused = Optional.of(42).orElseThrow(AssertionError::new);
+                Stream.of(Optional.of(42)).forEach(o -> o.orElseThrow(AssertionError::new));
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -511,20 +583,26 @@ public class ReturnValueIgnoredTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "import java.util.Optional;",
-            "class Test {",
-            "  void f(Optional<Integer> o) {",
-            "    o.map(i -> i + 1);",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            class Test {
+              void f(Optional<Integer> o) {
+                o.map(i -> i + 1);
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import java.util.Optional;",
-            "class Test {",
-            "  void f(Optional<Integer> o) {",
-            "    o = o.map(i -> i + 1);",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            class Test {
+              void f(Optional<Integer> o) {
+                o = o.map(i -> i + 1);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -533,22 +611,28 @@ public class ReturnValueIgnoredTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "import java.util.Optional;",
-            "final class Test {",
-            "  public void f() {",
-            "    Optional<Integer> o = Optional.of(42);",
-            "    o.map(i -> \"value is \" + i);",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            final class Test {
+              public void f() {
+                Optional<Integer> o = Optional.of(42);
+                o.map(i -> "value is " + i);
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import java.util.Optional;",
-            "final class Test {",
-            "  public void f() {",
-            "    Optional<Integer> o = Optional.of(42);",
-            "    var unused = o.map(i -> \"value is \" + i);",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            final class Test {
+              public void f() {
+                Optional<Integer> o = Optional.of(42);
+                var unused = o.map(i -> "value is " + i);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -602,14 +686,18 @@ public class ReturnValueIgnoredTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.collect.ImmutableList;",
-            "final class Test {",
-            "  private static final ImmutableList<Long> LIST = ImmutableList.of(42L);",
-            "  public void collectionToArray() {",
-            "    // BUG: Diagnostic contains: ReturnValueIgnored",
-            "    LIST.toArray(Long[]::new);",
-            "  }",
-            "}")
+            """
+            import com.google.common.collect.ImmutableList;
+
+            final class Test {
+              private static final ImmutableList<Long> LIST = ImmutableList.of(42L);
+
+              public void collectionToArray() {
+                // BUG: Diagnostic contains: ReturnValueIgnored
+                LIST.toArray(Long[]::new);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -618,18 +706,20 @@ public class ReturnValueIgnoredTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void test(Test t, Object o) {",
-            "    // BUG: Diagnostic contains: ReturnValueIgnored",
-            "    t.equals(o);",
-            "    // BUG: Diagnostic contains: ReturnValueIgnored",
-            "    o.equals(t);",
-            "    // BUG: Diagnostic contains: ReturnValueIgnored",
-            "    t.hashCode();",
-            "    // BUG: Diagnostic contains: ReturnValueIgnored",
-            "    t.getClass();",
-            "  }",
-            "}")
+            """
+            class Test {
+              void test(Test t, Object o) {
+                // BUG: Diagnostic contains: ReturnValueIgnored
+                t.equals(o);
+                // BUG: Diagnostic contains: ReturnValueIgnored
+                o.equals(t);
+                // BUG: Diagnostic contains: ReturnValueIgnored
+                t.hashCode();
+                // BUG: Diagnostic contains: ReturnValueIgnored
+                t.getClass();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -638,25 +728,28 @@ public class ReturnValueIgnoredTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void test(CharSequence cs) {",
-            "    // BUG: Diagnostic contains: ReturnValueIgnored",
-            "    cs.charAt(0);",
-            "    // BUG: Diagnostic contains: ReturnValueIgnored",
-            "    cs.chars();",
-            "    // BUG: Diagnostic contains: ReturnValueIgnored",
-            "    cs.codePoints();",
-            "    // BUG: Diagnostic contains: ReturnValueIgnored",
-            "    cs.length();",
-            "    // BUG: Diagnostic contains: ReturnValueIgnored",
-            "    cs.subSequence(1, 2);",
-            "    // BUG: Diagnostic contains: ReturnValueIgnored",
-            "    cs.toString();",
-            "  }",
-            "  void test(StringBuilder sb) {",
-            "    sb.append(\"hi\");",
-            "  }",
-            "}")
+            """
+            class Test {
+              void test(CharSequence cs) {
+                // BUG: Diagnostic contains: ReturnValueIgnored
+                cs.charAt(0);
+                // BUG: Diagnostic contains: ReturnValueIgnored
+                cs.chars();
+                // BUG: Diagnostic contains: ReturnValueIgnored
+                cs.codePoints();
+                // BUG: Diagnostic contains: ReturnValueIgnored
+                cs.length();
+                // BUG: Diagnostic contains: ReturnValueIgnored
+                cs.subSequence(1, 2);
+                // BUG: Diagnostic contains: ReturnValueIgnored
+                cs.toString();
+              }
+
+              void test(StringBuilder sb) {
+                sb.append("hi");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -665,19 +758,22 @@ public class ReturnValueIgnoredTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.concurrent.TimeUnit;",
-            "class Test {",
-            "  void test(Enum e) {",
-            "    // BUG: Diagnostic contains: ReturnValueIgnored",
-            "    e.getDeclaringClass();",
-            "    // BUG: Diagnostic contains: ReturnValueIgnored",
-            "    e.name();",
-            "    // BUG: Diagnostic contains: ReturnValueIgnored",
-            "    e.ordinal();",
-            "    // BUG: Diagnostic contains: ReturnValueIgnored",
-            "    TimeUnit.valueOf(\"MILLISECONDS\");",
-            "  }",
-            "}")
+            """
+            import java.util.concurrent.TimeUnit;
+
+            class Test {
+              void test(Enum e) {
+                // BUG: Diagnostic contains: ReturnValueIgnored
+                e.getDeclaringClass();
+                // BUG: Diagnostic contains: ReturnValueIgnored
+                e.name();
+                // BUG: Diagnostic contains: ReturnValueIgnored
+                e.ordinal();
+                // BUG: Diagnostic contains: ReturnValueIgnored
+                TimeUnit.valueOf("MILLISECONDS");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -686,12 +782,15 @@ public class ReturnValueIgnoredTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.lang.invoke.VarHandle;",
-            "class Test {",
-            "  void test(VarHandle.AccessMode accessMode) {",
-            "    accessMode.methodName();",
-            "  }",
-            "}")
+            """
+            import java.lang.invoke.VarHandle;
+
+            class Test {
+              void test(VarHandle.AccessMode accessMode) {
+                accessMode.methodName();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -767,14 +866,16 @@ public class ReturnValueIgnoredTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void test(Class<?> c) throws Exception {",
-            "    Class.forName(\"java.sql.Date\");",
-            "    c.getMethod(\"toString\");",
-            "    // BUG: Diagnostic contains: ReturnValueIgnored",
-            "    c.desiredAssertionStatus();",
-            "  }",
-            "}")
+            """
+            class Test {
+              void test(Class<?> c) throws Exception {
+                Class.forName("java.sql.Date");
+                c.getMethod("toString");
+                // BUG: Diagnostic contains: ReturnValueIgnored
+                c.desiredAssertionStatus();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -783,14 +884,18 @@ public class ReturnValueIgnoredTest {
     compilationHelper
         .addSourceLines(
             "TestModule.java",
-            "import com.google.inject.AbstractModule;",
-            "class TestModule extends AbstractModule {",
-            "  public TestModule() {}",
-            "  public static void foo() {",
-            "    // BUG: Diagnostic contains: Ignored return value of 'TestModule'",
-            "    new TestModule();",
-            "  }",
-            "}")
+            """
+            import com.google.inject.AbstractModule;
+
+            class TestModule extends AbstractModule {
+              public TestModule() {}
+
+              public static void foo() {
+                // BUG: Diagnostic contains: Ignored return value of 'TestModule'
+                new TestModule();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -799,16 +904,22 @@ public class ReturnValueIgnoredTest {
     compilationHelper
         .addSourceLines(
             "TestModule.java",
-            "import com.google.inject.Binder;",
-            "import com.google.inject.Module;",
-            "class TestModule implements Module {",
-            "  public TestModule() {}",
-            "  @Override public void configure(Binder binder) {}",
-            "  public static void foo() {",
-            "    // BUG: Diagnostic contains: Ignored return value of 'TestModule'",
-            "    new TestModule();",
-            "  }",
-            "}")
+            """
+            import com.google.inject.Binder;
+            import com.google.inject.Module;
+
+            class TestModule implements Module {
+              public TestModule() {}
+
+              @Override
+              public void configure(Binder binder) {}
+
+              public static void foo() {
+                // BUG: Diagnostic contains: Ignored return value of 'TestModule'
+                new TestModule();
+              }
+            }
+            """)
         .doTest();
   }
 }

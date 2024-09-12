@@ -59,14 +59,17 @@ public class ArgumentSelectionDefectCheckerTest {
     CompilationTestHelper.newInstance(ArgumentSelectionDefectWithStringEquality.class, getClass())
         .addSourceLines(
             "Test.java",
-            "abstract class Test {",
-            "  abstract void target(Object first, Object second);",
-            "  void test(Object first, Object second) {",
-            "     // BUG: Diagnostic contains: target(first, second)",
-            "     // target(/* first= */second, /* second= */first)",
-            "     target(second, first);",
-            "  }",
-            "}")
+            """
+            abstract class Test {
+              abstract void target(Object first, Object second);
+
+              void test(Object first, Object second) {
+                // BUG: Diagnostic contains: target(first, second)
+                // target(/* first= */second, /* second= */first)
+                target(second, first);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -75,15 +78,19 @@ public class ArgumentSelectionDefectCheckerTest {
     CompilationTestHelper.newInstance(ArgumentSelectionDefectWithStringEquality.class, getClass())
         .addSourceLines(
             "Test.java",
-            "abstract class Test {",
-            "  abstract void target(Object first, Object second);",
-            "  abstract Object getSecond();",
-            "  void test(Object first) {",
-            "     // BUG: Diagnostic contains: target(first, getSecond())",
-            "     // target(/* first= */getSecond(), /* second= */first)",
-            "     target(getSecond(), first);",
-            "  }",
-            "}")
+            """
+            abstract class Test {
+              abstract void target(Object first, Object second);
+
+              abstract Object getSecond();
+
+              void test(Object first) {
+                // BUG: Diagnostic contains: target(first, getSecond())
+                // target(/* first= */getSecond(), /* second= */first)
+                target(getSecond(), first);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -92,14 +99,17 @@ public class ArgumentSelectionDefectCheckerTest {
     CompilationTestHelper.newInstance(ArgumentSelectionDefectWithStringEquality.class, getClass())
         .addSourceLines(
             "Test.java",
-            "abstract class Test {",
-            "  abstract void target(Object first, Object second);",
-            "  void test(Object second) {",
-            "     // BUG: Diagnostic contains: target(null, second)",
-            "     // target(/* first= */second, /* second= */null)",
-            "     target(second, null);",
-            "  }",
-            "}")
+            """
+            abstract class Test {
+              abstract void target(Object first, Object second);
+
+              void test(Object second) {
+                // BUG: Diagnostic contains: target(null, second)
+                // target(/* first= */second, /* second= */null)
+                target(second, null);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -108,12 +118,15 @@ public class ArgumentSelectionDefectCheckerTest {
     CompilationTestHelper.newInstance(ArgumentSelectionDefectWithStringEquality.class, getClass())
         .addSourceLines(
             "Test.java",
-            "abstract class Test {",
-            "  abstract void target(String first, Integer second);",
-            "  void test(Integer first, String second) {",
-            "     target(second, first);",
-            "  }",
-            "}")
+            """
+            abstract class Test {
+              abstract void target(String first, Integer second);
+
+              void test(Integer first, String second) {
+                target(second, first);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -122,14 +135,17 @@ public class ArgumentSelectionDefectCheckerTest {
     CompilationTestHelper.newInstance(ArgumentSelectionDefectWithStringEquality.class, getClass())
         .addSourceLines(
             "Test.java",
-            "abstract class Test {",
-            "  abstract void target(Object first, Object second, Object third);",
-            "  void test(Object first, Object second, Object third) {",
-            "     // BUG: Diagnostic contains: target(first, second, third)",
-            "     // target(/* first= */second, /* second= */first, third)",
-            "     target(second, first, third);",
-            "  }",
-            "}")
+            """
+            abstract class Test {
+              abstract void target(Object first, Object second, Object third);
+
+              void test(Object first, Object second, Object third) {
+                // BUG: Diagnostic contains: target(first, second, third)
+                // target(/* first= */second, /* second= */first, third)
+                target(second, first, third);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -160,12 +176,15 @@ public class ArgumentSelectionDefectCheckerTest {
             ArgumentSelectionDefectWithIgnoredFormalsHeuristic.class, getClass())
         .addSourceLines(
             "Test.java",
-            "abstract class Test {",
-            "  abstract void target(Object ignore, Object second);",
-            "  void test(Object ignore, Object second) {",
-            "     target(second, ignore);",
-            "  }",
-            "}")
+            """
+            abstract class Test {
+              abstract void target(Object ignore, Object second);
+
+              void test(Object ignore, Object second) {
+                target(second, ignore);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -174,12 +193,15 @@ public class ArgumentSelectionDefectCheckerTest {
     CompilationTestHelper.newInstance(ArgumentSelectionDefectChecker.class, getClass())
         .addSourceLines(
             "Test.java",
-            "abstract class Test {",
-            "  abstract void target(Object first, Object second);",
-            "  void test(Object second) {",
-            "     target(second, null);",
-            "  }",
-            "}")
+            """
+            abstract class Test {
+              abstract void target(Object first, Object second);
+
+              void test(Object second) {
+                target(second, null);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -188,12 +210,15 @@ public class ArgumentSelectionDefectCheckerTest {
     CompilationTestHelper.newInstance(ArgumentSelectionDefectChecker.class, getClass())
         .addSourceLines(
             "Test.java",
-            "abstract class Test {",
-            "  abstract void target(Object first, Object second);",
-            "  void test(Object second) {",
-            "     target(second, 1);",
-            "  }",
-            "}")
+            """
+            abstract class Test {
+              abstract void target(Object first, Object second);
+
+              void test(Object second) {
+                target(second, 1);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -222,14 +247,17 @@ public class ArgumentSelectionDefectCheckerTest {
     CompilationTestHelper.newInstance(ArgumentSelectionDefectWithPenaltyThreshold.class, getClass())
         .addSourceLines(
             "Test.java",
-            "abstract class Test {",
-            "  abstract void target(Object first, Object second);",
-            "  void test(Object first, Object second) {",
-            "     // BUG: Diagnostic contains: target(first, second)",
-            "     // target(/* first= */second, /* second= */first)",
-            "     target(second, first);",
-            "  }",
-            "}")
+            """
+            abstract class Test {
+              abstract void target(Object first, Object second);
+
+              void test(Object first, Object second) {
+                // BUG: Diagnostic contains: target(first, second)
+                // target(/* first= */second, /* second= */first)
+                target(second, first);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -238,12 +266,15 @@ public class ArgumentSelectionDefectCheckerTest {
     CompilationTestHelper.newInstance(ArgumentSelectionDefectWithPenaltyThreshold.class, getClass())
         .addSourceLines(
             "Test.java",
-            "abstract class Test {",
-            "  abstract void target(Object first, Object second, Object third, Object fourth);",
-            "  void test(Object first, Object second, Object third, Object different) {",
-            "     target(different, third, second, first);",
-            "  }",
-            "}")
+            """
+            abstract class Test {
+              abstract void target(Object first, Object second, Object third, Object fourth);
+
+              void test(Object first, Object second, Object third, Object different) {
+                target(different, third, second, first);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -273,12 +304,15 @@ public class ArgumentSelectionDefectCheckerTest {
             ArgumentSelectionDefectWithNameInCommentsHeuristic.class, getClass())
         .addSourceLines(
             "Test.java",
-            "abstract class Test {",
-            "  abstract void target(Object first, Object second);",
-            "  void test(Object first, Object second) {",
-            "     target(/* first= */second, /* second= */first);",
-            "  }",
-            "}")
+            """
+            abstract class Test {
+              abstract void target(Object first, Object second);
+
+              void test(Object first, Object second) {
+                target(/* first= */ second, /* second= */ first);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -329,16 +363,18 @@ public class ArgumentSelectionDefectCheckerTest {
     CompilationTestHelper.newInstance(ArgumentSelectionDefectWithStringEquality.class, getClass())
         .addSourceLines(
             "Test.java",
-            "abstract class Test {",
-            "  abstract void target(Object first, Object second);",
-            "  void test(Object first, Object second) {",
-            "     // BUG: Diagnostic contains: The following arguments may have been swapped:"
-                + " 'second' for formal parameter 'first', 'first' for formal parameter 'second'."
-                + " Either add clarifying `/* paramName= */` comments, or swap the arguments if"
-                + " that is what was intended",
-            "     target(second, first);",
-            "  }",
-            "}")
+            """
+abstract class Test {
+  abstract void target(Object first, Object second);
+
+  void test(Object first, Object second) {
+    // BUG: Diagnostic contains: The following arguments may have been swapped: 'second' for formal
+    // parameter 'first', 'first' for formal parameter 'second'. Either add clarifying `/*
+    // paramName= */` comments, or swap the arguments if that is what was intended
+    target(second, first);
+  }
+}
+""")
         .doTest();
   }
 }

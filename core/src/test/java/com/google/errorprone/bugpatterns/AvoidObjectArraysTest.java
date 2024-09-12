@@ -33,22 +33,23 @@ public class AvoidObjectArraysTest {
     compilationHelper
         .addSourceLines(
             "ArrayUsage.java",
-            "public class ArrayUsage {",
-            "  // BUG: Diagnostic contains: consider an Iterable<Object> instead",
-            "  public void objectArray(Object[] objectArray) {",
-            "  }",
-            "  // BUG: Diagnostic contains: consider an Iterable<String> instead",
-            "  public void stringArray(String[] stringArray) {",
-            "  }",
-            "  public void intArray(int[] intArray) {",
-            "  }",
-            "  public void objectValue(Object objectValue) {",
-            "  }",
-            "  public void stringValue(String stringValue) {",
-            "  }",
-            "  public void intValue(int intValue) {",
-            "  }",
-            "}")
+            """
+            public class ArrayUsage {
+              // BUG: Diagnostic contains: consider an Iterable<Object> instead
+              public void objectArray(Object[] objectArray) {}
+
+              // BUG: Diagnostic contains: consider an Iterable<String> instead
+              public void stringArray(String[] stringArray) {}
+
+              public void intArray(int[] intArray) {}
+
+              public void objectValue(Object objectValue) {}
+
+              public void stringValue(String stringValue) {}
+
+              public void intValue(int intValue) {}
+            }
+            """)
         .doTest();
   }
 
@@ -57,22 +58,23 @@ public class AvoidObjectArraysTest {
     compilationHelper
         .addSourceLines(
             "ArrayUsage.java",
-            "public class ArrayUsage {",
-            "  // BUG: Diagnostic contains: consider an Iterable<Object> instead",
-            "  public static void objectArray(Object[] objectArray) {",
-            "  }",
-            "  // BUG: Diagnostic contains: consider an Iterable<String> instead",
-            "  public static void stringArray(String[] stringArray) {",
-            "  }",
-            "  public static void intArray(int[] intArray) {",
-            "  }",
-            "  public static void objectValue(Object objectValue) {",
-            "  }",
-            "  public static void stringValue(String stringValue) {",
-            "  }",
-            "  public static void intValue(int intValue) {",
-            "  }",
-            "}")
+            """
+            public class ArrayUsage {
+              // BUG: Diagnostic contains: consider an Iterable<Object> instead
+              public static void objectArray(Object[] objectArray) {}
+
+              // BUG: Diagnostic contains: consider an Iterable<String> instead
+              public static void stringArray(String[] stringArray) {}
+
+              public static void intArray(int[] intArray) {}
+
+              public static void objectValue(Object objectValue) {}
+
+              public static void stringValue(String stringValue) {}
+
+              public static void intValue(int intValue) {}
+            }
+            """)
         .doTest();
   }
 
@@ -81,12 +83,13 @@ public class AvoidObjectArraysTest {
     compilationHelper
         .addSourceLines(
             "IterableSubject.java",
-            "public class IterableSubject {",
-            "  public final void containsAnyIn(Iterable<?> expected) {",
-            "  }",
-            "  public final void containsAnyIn(Object[] expected) {",
-            "  }",
-            "}")
+            """
+            public class IterableSubject {
+              public final void containsAnyIn(Iterable<?> expected) {}
+
+              public final void containsAnyIn(Object[] expected) {}
+            }
+            """)
         .doTest();
   }
 
@@ -95,28 +98,35 @@ public class AvoidObjectArraysTest {
     compilationHelper
         .addSourceLines(
             "ArrayUsage.java",
-            "public class ArrayUsage {",
-            "  // BUG: Diagnostic contains: consider an ImmutableList<Object> instead",
-            "  public Object[] objectArray() {",
-            "    return new String[]{\"a\"};",
-            "  }",
-            "  // BUG: Diagnostic contains: consider an ImmutableList<String> instead",
-            "  public String[] stringArray() {",
-            "    return new String[]{\"a\"};",
-            "  }",
-            "  public int[] intArray() {",
-            "    return new int[]{42};",
-            "  }",
-            "  public Object objectValue() {",
-            "    return \"a\";",
-            "  }",
-            "  public String stringValue() {",
-            "    return \"a\";",
-            "  }",
-            "  public int intValue() {",
-            "    return 42;",
-            "  }",
-            "}")
+            """
+            public class ArrayUsage {
+              // BUG: Diagnostic contains: consider an ImmutableList<Object> instead
+              public Object[] objectArray() {
+                return new String[] {"a"};
+              }
+
+              // BUG: Diagnostic contains: consider an ImmutableList<String> instead
+              public String[] stringArray() {
+                return new String[] {"a"};
+              }
+
+              public int[] intArray() {
+                return new int[] {42};
+              }
+
+              public Object objectValue() {
+                return "a";
+              }
+
+              public String stringValue() {
+                return "a";
+              }
+
+              public int intValue() {
+                return 42;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -125,28 +135,35 @@ public class AvoidObjectArraysTest {
     compilationHelper
         .addSourceLines(
             "ArrayUsage.java",
-            "public class ArrayUsage {",
-            "  // BUG: Diagnostic contains: consider an ImmutableList<Object> instead",
-            "  public static Object[] objectArray() {",
-            "    return new String[]{\"a\"};",
-            "  }",
-            "  // BUG: Diagnostic contains: consider an ImmutableList<String> instead",
-            "  public static String[] stringArray() {",
-            "    return new String[]{\"a\"};",
-            "  }",
-            "  public static int[] intArray() {",
-            "    return new int[]{42};",
-            "  }",
-            "  public static Object objectValue() {",
-            "    return \"a\";",
-            "  }",
-            "  public static String stringValue() {",
-            "    return \"a\";",
-            "  }",
-            "  public static int intValue() {",
-            "    return 42;",
-            "  }",
-            "}")
+            """
+            public class ArrayUsage {
+              // BUG: Diagnostic contains: consider an ImmutableList<Object> instead
+              public static Object[] objectArray() {
+                return new String[] {"a"};
+              }
+
+              // BUG: Diagnostic contains: consider an ImmutableList<String> instead
+              public static String[] stringArray() {
+                return new String[] {"a"};
+              }
+
+              public static int[] intArray() {
+                return new int[] {42};
+              }
+
+              public static Object objectValue() {
+                return "a";
+              }
+
+              public static String stringValue() {
+                return "a";
+              }
+
+              public static int intValue() {
+                return 42;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -155,10 +172,11 @@ public class AvoidObjectArraysTest {
     compilationHelper
         .addSourceLines(
             "ArrayUsage.java",
-            "public class ArrayUsage {",
-            "  public static void main(String[] args) {",
-            "  }",
-            "}")
+            """
+            public class ArrayUsage {
+              public static void main(String[] args) {}
+            }
+            """)
         .doTest();
   }
 
@@ -167,12 +185,14 @@ public class AvoidObjectArraysTest {
     compilationHelper
         .addSourceLines(
             "ArrayUsage.java",
-            "public class ArrayUsage {",
-            "  // BUG: Diagnostic contains: Avoid returning a String[][]",
-            "  public String[][] returnValue() {",
-            "    return new String[2][2];",
-            "  }",
-            "}")
+            """
+            public class ArrayUsage {
+              // BUG: Diagnostic contains: Avoid returning a String[][]
+              public String[][] returnValue() {
+                return new String[2][2];
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -181,13 +201,14 @@ public class AvoidObjectArraysTest {
     compilationHelper
         .addSourceLines(
             "ArrayUsage.java",
-            "public class ArrayUsage {",
-            "  public void varArgs(String... strings) {",
-            "  }",
-            "  // BUG: Diagnostic contains: consider an Iterable<Class> instead",
-            "  public void varArgs(Class[] clazz, String... strings) {",
-            "  }",
-            "}")
+            """
+            public class ArrayUsage {
+              public void varArgs(String... strings) {}
+
+              // BUG: Diagnostic contains: consider an Iterable<Class> instead
+              public void varArgs(Class[] clazz, String... strings) {}
+            }
+            """)
         .doTest();
   }
 
@@ -196,9 +217,11 @@ public class AvoidObjectArraysTest {
     compilationHelper
         .addSourceLines(
             "TestAnnotation.java",
-            "public @interface TestAnnotation {", //
-            "  String[] value();", //
-            "}")
+            """
+            public @interface TestAnnotation {
+              String[] value();
+            }
+            """)
         .doTest();
   }
 
@@ -207,10 +230,12 @@ public class AvoidObjectArraysTest {
     compilationHelper
         .addSourceLines(
             "Parent.java",
-            "public abstract class Parent {",
-            "  // BUG: Diagnostic contains: consider an ImmutableList<String> instead",
-            "  public abstract String[] stringArray();",
-            "}")
+            """
+            public abstract class Parent {
+              // BUG: Diagnostic contains: consider an ImmutableList<String> instead
+              public abstract String[] stringArray();
+            }
+            """)
         .addSourceLines(
             "Child.java",
             "public class Child extends Parent {",
@@ -228,13 +253,16 @@ public class AvoidObjectArraysTest {
     compilationHelper
         .addSourceLines(
             "ArrayUsage.java",
-            "import org.junit.runners.Parameterized.Parameters;",
-            "public class ArrayUsage {",
-            "  @Parameters(name = \"{0}\")",
-            "  public static Object[] locales() {",
-            "    return new Object[] {\"vi\"};",
-            "  }",
-            "}")
+            """
+            import org.junit.runners.Parameterized.Parameters;
+
+            public class ArrayUsage {
+              @Parameters(name = "{0}")
+              public static Object[] locales() {
+                return new Object[] {"vi"};
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -243,17 +271,18 @@ public class AvoidObjectArraysTest {
     compilationHelper
         .addSourceLines(
             "ArrayUsage.java",
-            "public class ArrayUsage {",
-            "  // BUG: Diagnostic contains: consider an Iterable<String> instead",
-            "  public static void doSomething1(String[] args) {",
-            "  }",
-            "  // BUG: Diagnostic contains: consider an Iterable<String> instead",
-            "  public static void doSomething2(String[] argv) {",
-            "  }",
-            "  // BUG: Diagnostic contains: consider an Iterable<String> instead",
-            "  public static void doSomething3(String[] argz) {",
-            "  }",
-            "}")
+            """
+            public class ArrayUsage {
+              // BUG: Diagnostic contains: consider an Iterable<String> instead
+              public static void doSomething1(String[] args) {}
+
+              // BUG: Diagnostic contains: consider an Iterable<String> instead
+              public static void doSomething2(String[] argv) {}
+
+              // BUG: Diagnostic contains: consider an Iterable<String> instead
+              public static void doSomething3(String[] argz) {}
+            }
+            """)
         .doTest();
   }
 }

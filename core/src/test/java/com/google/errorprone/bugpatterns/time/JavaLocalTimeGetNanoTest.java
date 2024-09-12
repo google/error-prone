@@ -31,14 +31,18 @@ public final class JavaLocalTimeGetNanoTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "package test;",
-            "import java.time.LocalTime;",
-            "public class Test {",
-            "  public static void foo(LocalTime localTime) {",
-            "    long seconds = localTime.getSecond();",
-            "    int nanos = localTime.getNano();",
-            "  }",
-            "}")
+            """
+            package test;
+
+            import java.time.LocalTime;
+
+            public class Test {
+              public static void foo(LocalTime localTime) {
+                long seconds = localTime.getSecond();
+                int nanos = localTime.getNano();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -47,13 +51,16 @@ public final class JavaLocalTimeGetNanoTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.time.LocalTime;",
-            "public class Test {",
-            "  public static int foo(LocalTime localTime) {",
-            "    // BUG: Diagnostic contains:",
-            "    return localTime.getNano();",
-            "  }",
-            "}")
+            """
+            import java.time.LocalTime;
+
+            public class Test {
+              public static int foo(LocalTime localTime) {
+                // BUG: Diagnostic contains:
+                return localTime.getNano();
+              }
+            }
+            """)
         .doTest();
   }
 }

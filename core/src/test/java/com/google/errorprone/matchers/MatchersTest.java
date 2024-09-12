@@ -78,14 +78,16 @@ public class MatchersTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "public class Test {",
-            "  public void doIt() {",
-            "    while (true) {",
-            "      // BUG: Diagnostic contains:",
-            "      System.out.println();",
-            "    }",
-            "  }",
-            "}")
+            """
+            public class Test {
+              public void doIt() {
+                while (true) {
+                  // BUG: Diagnostic contains:
+                  System.out.println();
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -94,14 +96,16 @@ public class MatchersTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "public class Test {",
-            "  public void doIt() {",
-            "    do {",
-            "      // BUG: Diagnostic contains:",
-            "      System.out.println();",
-            "    } while (true);",
-            "  }",
-            "}")
+            """
+            public class Test {
+              public void doIt() {
+                do {
+                  // BUG: Diagnostic contains:
+                  System.out.println();
+                } while (true);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -110,14 +114,16 @@ public class MatchersTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "public class Test {",
-            "  public void doIt() {",
-            "    for (; true; ) {",
-            "      // BUG: Diagnostic contains:",
-            "      System.out.println();",
-            "    }",
-            "  }",
-            "}")
+            """
+            public class Test {
+              public void doIt() {
+                for (; true; ) {
+                  // BUG: Diagnostic contains:
+                  System.out.println();
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -126,15 +132,18 @@ public class MatchersTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.List;",
-            "public class Test {",
-            "  public void doIt(List<String> strings) {",
-            "    for (String s : strings) {",
-            "      // BUG: Diagnostic contains:",
-            "      System.out.println();",
-            "    }",
-            "  }",
-            "}")
+            """
+            import java.util.List;
+
+            public class Test {
+              public void doIt(List<String> strings) {
+                for (String s : strings) {
+                  // BUG: Diagnostic contains:
+                  System.out.println();
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -143,12 +152,15 @@ public class MatchersTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.List;",
-            "public class Test {",
-            "  {",
-            "    System.out.println();",
-            "  }",
-            "}")
+            """
+            import java.util.List;
+
+            public class Test {
+              {
+                System.out.println();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -157,16 +169,19 @@ public class MatchersTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.List;",
-            "public class Test {",
-            "  {",
-            "    int count = 0;",
-            "    while (count < 10) {",
-            "      // BUG: Diagnostic contains:",
-            "      System.out.println();",
-            "    }",
-            "  }",
-            "}")
+            """
+            import java.util.List;
+
+            public class Test {
+              {
+                int count = 0;
+                while (count < 10) {
+                  // BUG: Diagnostic contains:
+                  System.out.println();
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -175,24 +190,31 @@ public class MatchersTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.*;",
-            "public class Test {",
-            "  public void sort(List<List<String>> stringLists) {",
-            "    for (List<String> stringList : stringLists) {",
-            "      Collections.sort(stringList, new Comparator<String>() {",
-            "          {",
-            "            System.out.println();",
-            "          }",
-            "          public int compare(String s1, String s2) {",
-            "            return 0;",
-            "          }",
-            "          public boolean equals(Object obj) {",
-            "            return false;",
-            "          }",
-            "      });",
-            "    }",
-            "  }",
-            "}")
+            """
+            import java.util.*;
+
+            public class Test {
+              public void sort(List<List<String>> stringLists) {
+                for (List<String> stringList : stringLists) {
+                  Collections.sort(
+                      stringList,
+                      new Comparator<String>() {
+                        {
+                          System.out.println();
+                        }
+
+                        public int compare(String s1, String s2) {
+                          return 0;
+                        }
+
+                        public boolean equals(Object obj) {
+                          return false;
+                        }
+                      });
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -203,11 +225,14 @@ public class MatchersTest {
     CompilationTestHelper.newInstance(methodTreeCheckerSupplier(matcher), getClass())
         .addSourceLines(
             "com/google/errorprone/foo/bar/Test.java",
-            "package com.google.errorprone.foo.bar;",
-            "public class Test {",
-            "  // BUG: Diagnostic contains:",
-            "  public void myMethod() {}",
-            "}")
+            """
+            package com.google.errorprone.foo.bar;
+
+            public class Test {
+              // BUG: Diagnostic contains:
+              public void myMethod() {}
+            }
+            """)
         .doTest();
   }
 
@@ -217,16 +242,20 @@ public class MatchersTest {
     CompilationTestHelper.newInstance(methodTreeCheckerSupplier(matcher), getClass())
         .addSourceLines(
             "test/MethodReturnsSubtypeTest.java",
-            "package test;",
-            "public class MethodReturnsSubtypeTest {",
-            "  // BUG: Diagnostic contains:",
-            "  public java.util.ArrayList<String> matches() {",
-            "    return null;",
-            "  }",
-            "  public java.util.HashSet<String> doesntMatch() {",
-            "    return null;",
-            "  }",
-            "}")
+            """
+            package test;
+
+            public class MethodReturnsSubtypeTest {
+              // BUG: Diagnostic contains:
+              public java.util.ArrayList<String> matches() {
+                return null;
+              }
+
+              public java.util.HashSet<String> doesntMatch() {
+                return null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -236,16 +265,20 @@ public class MatchersTest {
     CompilationTestHelper.newInstance(methodTreeCheckerSupplier(matcher), getClass())
         .addSourceLines(
             "test/MethodReturnsSubtypeTest.java",
-            "package test;",
-            "public class MethodReturnsSubtypeTest {",
-            "  public java.lang.Integer doesntMatch() {",
-            "    return 0;",
-            "  }",
-            "  // BUG: Diagnostic contains:",
-            "  public java.lang.Number matches() {",
-            "    return 0;",
-            "  }",
-            "}")
+            """
+            package test;
+
+            public class MethodReturnsSubtypeTest {
+              public java.lang.Integer doesntMatch() {
+                return 0;
+              }
+
+              // BUG: Diagnostic contains:
+              public java.lang.Number matches() {
+                return 0;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -255,19 +288,23 @@ public class MatchersTest {
     CompilationTestHelper.newInstance(methodTreeCheckerSupplier(matcher), getClass())
         .addSourceLines(
             "test/MethodReturnsPrimitiveTypeTest.java",
-            "package test;",
-            "public class MethodReturnsPrimitiveTypeTest {",
-            "  // BUG: Diagnostic contains:",
-            "  public boolean matches1() {",
-            "    return false;",
-            "  }",
-            "  public void doesntMatch() {",
-            "  }",
-            "  // BUG: Diagnostic contains:",
-            "  public int matches2() {",
-            "    return 42;",
-            "  }",
-            "}")
+            """
+            package test;
+
+            public class MethodReturnsPrimitiveTypeTest {
+              // BUG: Diagnostic contains:
+              public boolean matches1() {
+                return false;
+              }
+
+              public void doesntMatch() {}
+
+              // BUG: Diagnostic contains:
+              public int matches2() {
+                return 42;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -278,19 +315,24 @@ public class MatchersTest {
     CompilationTestHelper.newInstance(methodTreeCheckerSupplier(matcher), getClass())
         .addSourceLines(
             "test/MethodReturnsVoidTypeTest.java",
-            "package test;",
-            "public class MethodReturnsVoidTypeTest {",
-            "  public boolean doesntMatch1() {",
-            "    return true;",
-            "  }",
-            "  public Object doesntMatch2() {",
-            "    return Integer.valueOf(42);",
-            "  }",
-            "  // BUG: Diagnostic contains:",
-            "  public void matches() {",
-            "    System.out.println(42);",
-            "  }",
-            "}")
+            """
+            package test;
+
+            public class MethodReturnsVoidTypeTest {
+              public boolean doesntMatch1() {
+                return true;
+              }
+
+              public Object doesntMatch2() {
+                return Integer.valueOf(42);
+              }
+
+              // BUG: Diagnostic contains:
+              public void matches() {
+                System.out.println(42);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -300,23 +342,28 @@ public class MatchersTest {
     CompilationTestHelper.newInstance(methodTreeCheckerSupplier(matcher), getClass())
         .addSourceLines(
             "test/MethodReturnsPrimitiveOrVoidTypeTest.java",
-            "package test;",
-            "public class MethodReturnsPrimitiveOrVoidTypeTest {",
-            "  public Object doesntMatch() {",
-            "    return null;",
-            "  }",
-            "  // BUG: Diagnostic contains:",
-            "  public boolean doesMatch1() {",
-            "    return true;",
-            "  }",
-            "  // BUG: Diagnostic contains:",
-            "  public void doesMatch2() {",
-            "  }",
-            "  // BUG: Diagnostic contains:",
-            "  public double doesMatch3() {",
-            "    return 42.0;",
-            "  }",
-            "}")
+            """
+            package test;
+
+            public class MethodReturnsPrimitiveOrVoidTypeTest {
+              public Object doesntMatch() {
+                return null;
+              }
+
+              // BUG: Diagnostic contains:
+              public boolean doesMatch1() {
+                return true;
+              }
+
+              // BUG: Diagnostic contains:
+              public void doesMatch2() {}
+
+              // BUG: Diagnostic contains:
+              public double doesMatch3() {
+                return 42.0;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -326,18 +373,22 @@ public class MatchersTest {
     CompilationTestHelper.newInstance(methodTreeCheckerSupplier(matcher), getClass())
         .addSourceLines(
             "test/MethodReturnsSubtypeTest.java",
-            "package test;",
-            "public class MethodReturnsSubtypeTest {",
-            "  public int doesntMatch() {",
-            "    return 0;",
-            "  }",
-            "  public void doesntMatch2() {",
-            "  }",
-            "  // BUG: Diagnostic contains:",
-            "  public String matches() {",
-            "    return \"\";",
-            "  }",
-            "}")
+            """
+            package test;
+
+            public class MethodReturnsSubtypeTest {
+              public int doesntMatch() {
+                return 0;
+              }
+
+              public void doesntMatch2() {}
+
+              // BUG: Diagnostic contains:
+              public String matches() {
+                return "";
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -346,15 +397,18 @@ public class MatchersTest {
     CompilationTestHelper.newInstance(NoAnnotatedCallsChecker.class, getClass())
         .addSourceLines(
             "test/MethodInvocationDoesntMatchAnnotation.java",
-            "package test;",
-            "public class MethodInvocationDoesntMatchAnnotation {",
-            "  @Deprecated",
-            "  public void matches() {",
-            "  }",
-            "  public void doesntMatch() {",
-            "    matches();",
-            "  }",
-            "}")
+            """
+            package test;
+
+            public class MethodInvocationDoesntMatchAnnotation {
+              @Deprecated
+              public void matches() {}
+
+              public void doesntMatch() {
+                matches();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -363,16 +417,19 @@ public class MatchersTest {
     CompilationTestHelper.newInstance(NoAnnotatedDeclarationCallsChecker.class, getClass())
         .addSourceLines(
             "test/MethodInvocationMatchesDeclAnnotation.java",
-            "package test;",
-            "public class MethodInvocationMatchesDeclAnnotation {",
-            "  @Deprecated",
-            "  public void matches() {",
-            "  }",
-            "  public void callsMatch() {",
-            "    // BUG: Diagnostic contains:",
-            "    matches();",
-            "  }",
-            "}")
+            """
+            package test;
+
+            public class MethodInvocationMatchesDeclAnnotation {
+              @Deprecated
+              public void matches() {}
+
+              public void callsMatch() {
+                // BUG: Diagnostic contains:
+                matches();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -385,15 +442,18 @@ public class MatchersTest {
                 CompilationTestHelper.newInstance(SameArgumentChecker.class, getClass())
                     .addSourceLines(
                         "test/SameArgumentCheckerTest.java",
-                        "package test;",
-                        "public class SameArgumentCheckerTest {",
-                        "  public void matches(Object... args) {",
-                        "  }",
-                        "  public void callsMatch() {",
-                        "    Object obj = new Object();",
-                        "    matches(obj, \"some arg\");",
-                        "  }",
-                        "}")
+                        """
+                        package test;
+
+                        public class SameArgumentCheckerTest {
+                          public void matches(Object... args) {}
+
+                          public void callsMatch() {
+                            Object obj = new Object();
+                            matches(obj, "some arg");
+                          }
+                        }
+                        """)
                     .doTest());
     assertThat(thrown).hasMessageThat().contains("IndexOutOfBoundsException");
   }
@@ -403,15 +463,19 @@ public class MatchersTest {
     CompilationTestHelper.newInstance(BooleanConstantTrueChecker.class, getClass())
         .addSourceLines(
             "test/BooleanConstantTrueCheckerTest.java",
-            "package test;",
-            "public class BooleanConstantTrueCheckerTest {",
-            "  public void function() {",
-            "    // BUG: Diagnostic contains:",
-            "    method(Boolean.TRUE);",
-            "    method(Boolean.FALSE);",
-            "  }",
-            "  void method(Object value) {}",
-            "}")
+            """
+            package test;
+
+            public class BooleanConstantTrueCheckerTest {
+              public void function() {
+                // BUG: Diagnostic contains:
+                method(Boolean.TRUE);
+                method(Boolean.FALSE);
+              }
+
+              void method(Object value) {}
+            }
+            """)
         .doTest();
   }
 
@@ -420,9 +484,12 @@ public class MatchersTest {
     CompilationTestHelper.newInstance(PackageNameChecker.class, getClass())
         .addSourceLines(
             "test/foo/ClassName.java",
-            "package test.foo;",
-            "// BUG: Diagnostic contains:",
-            "public class ClassName {}")
+            """
+            package test.foo;
+
+            // BUG: Diagnostic contains:
+            public class ClassName {}
+            """)
         .doTest();
 
     CompilationTestHelper.newInstance(PackageNameChecker.class, getClass())
@@ -436,9 +503,12 @@ public class MatchersTest {
     CompilationTestHelper.newInstance(PackageNameChecker.class, getClass())
         .addSourceLines(
             "test/foo/bar/ClassName.java",
-            "package test.foo.bar;",
-            "// BUG: Diagnostic contains:",
-            "public class ClassName {}")
+            """
+            package test.foo.bar;
+
+            // BUG: Diagnostic contains:
+            public class ClassName {}
+            """)
         .doTest();
 
     CompilationTestHelper.newInstance(PackageNameChecker.class, getClass())
@@ -451,9 +521,12 @@ public class MatchersTest {
     CompilationTestHelper.newInstance(PackageNameChecker.class, getClass())
         .addSourceLines(
             "test/foobar/ClassName.java",
-            "package test.foobar;",
-            "// BUG: Diagnostic contains:",
-            "public class ClassName {}")
+            """
+            package test.foobar;
+
+            // BUG: Diagnostic contains:
+            public class ClassName {}
+            """)
         .doTest();
   }
 

@@ -32,13 +32,15 @@ public class DeadThreadTest {
   public void positive() {
     testHelper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  {",
-            "    // BUG: Diagnostic contains:",
-            "    new Thread();",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              {
+                // BUG: Diagnostic contains:
+                new Thread();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -46,12 +48,14 @@ public class DeadThreadTest {
   public void negative() {
     testHelper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  {",
-            "    new Thread().start();",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              {
+                new Thread().start();
+              }
+            }
+            """)
         .doTest();
   }
 }

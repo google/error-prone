@@ -38,14 +38,17 @@ public final class DirectInvocationOnMockTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import static org.mockito.Mockito.mock;",
-            "class Test {",
-            "  public void test() {",
-            "    Test test = mock(Test.class);",
-            "    // BUG: Diagnostic contains: test",
-            "    test.test();",
-            "  }",
-            "}")
+            """
+            import static org.mockito.Mockito.mock;
+
+            class Test {
+              public void test() {
+                Test test = mock(Test.class);
+                // BUG: Diagnostic contains: test
+                test.test();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -54,15 +57,18 @@ public final class DirectInvocationOnMockTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import static org.mockito.Mockito.mock;",
-            "class Test {",
-            "  public void test() {",
-            "    Test test;",
-            "    test = mock(Test.class);",
-            "    // BUG: Diagnostic contains:",
-            "    test.test();",
-            "  }",
-            "}")
+            """
+            import static org.mockito.Mockito.mock;
+
+            class Test {
+              public void test() {
+                Test test;
+                test = mock(Test.class);
+                // BUG: Diagnostic contains:
+                test.test();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -71,24 +77,30 @@ public final class DirectInvocationOnMockTest {
     refactoring
         .addInputLines(
             "Test.java",
-            "import static org.mockito.Mockito.mock;",
-            "import static org.mockito.Mockito.verify;",
-            "class Test {",
-            "  public void test() {",
-            "    Test test = mock(Test.class);",
-            "    test.test();",
-            "  }",
-            "}")
+            """
+            import static org.mockito.Mockito.mock;
+            import static org.mockito.Mockito.verify;
+
+            class Test {
+              public void test() {
+                Test test = mock(Test.class);
+                test.test();
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import static org.mockito.Mockito.mock;",
-            "import static org.mockito.Mockito.verify;",
-            "class Test {",
-            "  public void test() {",
-            "    Test test = mock(Test.class);",
-            "    verify(test).test();",
-            "  }",
-            "}")
+            """
+            import static org.mockito.Mockito.mock;
+            import static org.mockito.Mockito.verify;
+
+            class Test {
+              public void test() {
+                Test test = mock(Test.class);
+                verify(test).test();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -97,14 +109,17 @@ public final class DirectInvocationOnMockTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import static org.mockito.Mockito.mock;",
-            "import org.mockito.Answers;",
-            "class Test {",
-            "  public void test() {",
-            "    Test test = mock(Test.class, Answers.RETURNS_DEEP_STUBS);",
-            "    test.test();",
-            "  }",
-            "}")
+            """
+            import static org.mockito.Mockito.mock;
+            import org.mockito.Answers;
+
+            class Test {
+              public void test() {
+                Test test = mock(Test.class, Answers.RETURNS_DEEP_STUBS);
+                test.test();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -113,14 +128,18 @@ public final class DirectInvocationOnMockTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import org.mockito.Mock;",
-            "class Test {",
-            "  @Mock public Test test;",
-            "  public void test() {",
-            "    // BUG: Diagnostic contains:",
-            "    test.test();",
-            "  }",
-            "}")
+            """
+            import org.mockito.Mock;
+
+            class Test {
+              @Mock public Test test;
+
+              public void test() {
+                // BUG: Diagnostic contains:
+                test.test();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -129,14 +148,19 @@ public final class DirectInvocationOnMockTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import org.mockito.Answers;",
-            "import org.mockito.Mock;",
-            "class Test {",
-            "  @Mock(answer = Answers.RETURNS_DEEP_STUBS) public Test test;",
-            "  public void test() {",
-            "    test.test();",
-            "  }",
-            "}")
+            """
+            import org.mockito.Answers;
+            import org.mockito.Mock;
+
+            class Test {
+              @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+              public Test test;
+
+              public void test() {
+                test.test();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -145,15 +169,18 @@ public final class DirectInvocationOnMockTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import static org.mockito.Mockito.mock;",
-            "import static org.mockito.Mockito.when;",
-            "class Test {",
-            "  public Object test() {",
-            "    Test test = mock(Test.class);",
-            "    when(test.test()).thenReturn(null);",
-            "    return null;",
-            "  }",
-            "}")
+            """
+            import static org.mockito.Mockito.mock;
+            import static org.mockito.Mockito.when;
+
+            class Test {
+              public Object test() {
+                Test test = mock(Test.class);
+                when(test.test()).thenReturn(null);
+                return null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -163,15 +190,18 @@ public final class DirectInvocationOnMockTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import static org.mockito.Mockito.mock;",
-            "import static org.mockito.BDDMockito.given;",
-            "class Test {",
-            "  public Object test() {",
-            "    Test test = mock(Test.class);",
-            "    given(test.test()).willReturn(null);",
-            "    return null;",
-            "  }",
-            "}")
+            """
+            import static org.mockito.Mockito.mock;
+            import static org.mockito.BDDMockito.given;
+
+            class Test {
+              public Object test() {
+                Test test = mock(Test.class);
+                given(test.test()).willReturn(null);
+                return null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -180,15 +210,18 @@ public final class DirectInvocationOnMockTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import static org.mockito.Mockito.mock;",
-            "import static org.mockito.Mockito.when;",
-            "class Test {",
-            "  public Object test() {",
-            "    Test test = mock(Test.class);",
-            "    when(test.test()).thenCallRealMethod();",
-            "    return test.test();",
-            "  }",
-            "}")
+            """
+            import static org.mockito.Mockito.mock;
+            import static org.mockito.Mockito.when;
+
+            class Test {
+              public Object test() {
+                Test test = mock(Test.class);
+                when(test.test()).thenCallRealMethod();
+                return test.test();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -198,15 +231,18 @@ public final class DirectInvocationOnMockTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import static org.mockito.Mockito.mock;",
-            "import static org.mockito.BDDMockito.given;",
-            "class Test {",
-            "  public Object test() {",
-            "    Test test = mock(Test.class);",
-            "    given(test.test()).willCallRealMethod();",
-            "    return test.test();",
-            "  }",
-            "}")
+            """
+            import static org.mockito.Mockito.mock;
+            import static org.mockito.BDDMockito.given;
+
+            class Test {
+              public Object test() {
+                Test test = mock(Test.class);
+                given(test.test()).willCallRealMethod();
+                return test.test();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -215,15 +251,18 @@ public final class DirectInvocationOnMockTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import static org.mockito.Mockito.mock;",
-            "import static org.mockito.Mockito.doCallRealMethod;",
-            "class Test {",
-            "  public Object test() {",
-            "    Test test = mock(Test.class);",
-            "    doCallRealMethod().when(test).test();",
-            "    return test.test();",
-            "  }",
-            "}")
+            """
+            import static org.mockito.Mockito.mock;
+            import static org.mockito.Mockito.doCallRealMethod;
+
+            class Test {
+              public Object test() {
+                Test test = mock(Test.class);
+                doCallRealMethod().when(test).test();
+                return test.test();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -233,15 +272,18 @@ public final class DirectInvocationOnMockTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import static org.mockito.Mockito.mock;",
-            "import static org.mockito.BDDMockito.willCallRealMethod;",
-            "class Test {",
-            "  public Object test() {",
-            "    Test test = mock(Test.class);",
-            "    willCallRealMethod().given(test).test();",
-            "    return test.test();",
-            "  }",
-            "}")
+            """
+            import static org.mockito.Mockito.mock;
+            import static org.mockito.BDDMockito.willCallRealMethod;
+
+            class Test {
+              public Object test() {
+                Test test = mock(Test.class);
+                willCallRealMethod().given(test).test();
+                return test.test();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -250,18 +292,22 @@ public final class DirectInvocationOnMockTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import static org.mockito.Mockito.mock;",
-            "import org.mockito.stubbing.OngoingStubbing;",
-            "class Test {",
-            "  public <T> OngoingStubbing<T> when(T t) {",
-            "    return org.mockito.Mockito.when(t);",
-            "  }",
-            "  public Object test() {",
-            "    Test test = mock(Test.class);",
-            "    when(test.test()).thenReturn(null);",
-            "    return null;",
-            "  }",
-            "}")
+            """
+            import static org.mockito.Mockito.mock;
+            import org.mockito.stubbing.OngoingStubbing;
+
+            class Test {
+              public <T> OngoingStubbing<T> when(T t) {
+                return org.mockito.Mockito.when(t);
+              }
+
+              public Object test() {
+                Test test = mock(Test.class);
+                when(test.test()).thenReturn(null);
+                return null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -271,18 +317,22 @@ public final class DirectInvocationOnMockTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import static org.mockito.Mockito.mock;",
-            "import org.mockito.BDDMockito.BDDMyOngoingStubbing;",
-            "class Test {",
-            "  public <T> BDDMyOngoingStubbing<T> given(T t) {",
-            "    return org.mockito.BDDMockito.given(t);",
-            "  }",
-            "  public Object test() {",
-            "    Test test = mock(Test.class);",
-            "    given(test.test()).willReturn(null);",
-            "    return null;",
-            "  }",
-            "}")
+            """
+            import static org.mockito.Mockito.mock;
+            import org.mockito.BDDMockito.BDDMyOngoingStubbing;
+
+            class Test {
+              public <T> BDDMyOngoingStubbing<T> given(T t) {
+                return org.mockito.BDDMockito.given(t);
+              }
+
+              public Object test() {
+                Test test = mock(Test.class);
+                given(test.test()).willReturn(null);
+                return null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -291,15 +341,18 @@ public final class DirectInvocationOnMockTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import static org.mockito.Mockito.mock;",
-            "import static org.mockito.Mockito.when;",
-            "class Test {",
-            "  public Object test() {",
-            "    Test test = mock(Test.class);",
-            "    when((Object) test.test()).thenReturn(null);",
-            "    return null;",
-            "  }",
-            "}")
+            """
+            import static org.mockito.Mockito.mock;
+            import static org.mockito.Mockito.when;
+
+            class Test {
+              public Object test() {
+                Test test = mock(Test.class);
+                when((Object) test.test()).thenReturn(null);
+                return null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -309,15 +362,18 @@ public final class DirectInvocationOnMockTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import static org.mockito.Mockito.mock;",
-            "import static org.mockito.BDDMockito.given;",
-            "class Test {",
-            "  public Object test() {",
-            "    Test test = mock(Test.class);",
-            "    given((Object) test.test()).willReturn(null);",
-            "    return null;",
-            "  }",
-            "}")
+            """
+            import static org.mockito.Mockito.mock;
+            import static org.mockito.BDDMockito.given;
+
+            class Test {
+              public Object test() {
+                Test test = mock(Test.class);
+                given((Object) test.test()).willReturn(null);
+                return null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -326,13 +382,16 @@ public final class DirectInvocationOnMockTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import static org.mockito.Mockito.mock;",
-            "class Test {",
-            "  public Object test() {",
-            "    Test test = mock(Test.class);",
-            "    return test.getClass();",
-            "  }",
-            "}")
+            """
+            import static org.mockito.Mockito.mock;
+
+            class Test {
+              public Object test() {
+                Test test = mock(Test.class);
+                return test.getClass();
+              }
+            }
+            """)
         .doTest();
   }
 

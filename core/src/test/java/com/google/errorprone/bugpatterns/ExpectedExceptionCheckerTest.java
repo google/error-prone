@@ -33,60 +33,64 @@ public class ExpectedExceptionCheckerTest {
     testHelper
         .addInputLines(
             "in/ExceptionTest.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import java.io.IOException;",
-            "import java.nio.file.*;",
-            "import org.junit.Test;",
-            "import org.junit.Rule;",
-            "import org.hamcrest.CoreMatchers;",
-            "import org.junit.rules.ExpectedException;",
-            "class ExceptionTest {",
-            "  @Rule ExpectedException thrown = ExpectedException.none();",
-            "  @Test",
-            "  public void test() throws Exception {",
-            "    if (true) {",
-            "      Path p = Paths.get(\"NOSUCH\");",
-            "      thrown.expect(IOException.class);",
-            "      thrown.expect(CoreMatchers.is(CoreMatchers.instanceOf(IOException.class)));",
-            "      thrown.expectCause(",
-            "          CoreMatchers.is(CoreMatchers.instanceOf(IOException.class)));",
-            "      thrown.expectMessage(\"error\");",
-            "      thrown.expectMessage(CoreMatchers.containsString(\"error\"));",
-            "      Files.readAllBytes(p);",
-            "      assertThat(Files.exists(p)).isFalse();",
-            "    }",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import java.io.IOException;
+            import java.nio.file.*;
+            import org.junit.Test;
+            import org.junit.Rule;
+            import org.hamcrest.CoreMatchers;
+            import org.junit.rules.ExpectedException;
+
+            class ExceptionTest {
+              @Rule ExpectedException thrown = ExpectedException.none();
+
+              @Test
+              public void test() throws Exception {
+                if (true) {
+                  Path p = Paths.get("NOSUCH");
+                  thrown.expect(IOException.class);
+                  thrown.expect(CoreMatchers.is(CoreMatchers.instanceOf(IOException.class)));
+                  thrown.expectCause(CoreMatchers.is(CoreMatchers.instanceOf(IOException.class)));
+                  thrown.expectMessage("error");
+                  thrown.expectMessage(CoreMatchers.containsString("error"));
+                  Files.readAllBytes(p);
+                  assertThat(Files.exists(p)).isFalse();
+                }
+              }
+            }
+            """)
         .addOutputLines(
             "out/ExceptionTest.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import static org.hamcrest.MatcherAssert.assertThat;",
-            "import static org.junit.Assert.assertThrows;",
-            "",
-            "import java.io.IOException;",
-            "import java.nio.file.*;",
-            "import org.hamcrest.CoreMatchers;",
-            "import org.junit.Rule;",
-            "import org.junit.Test;",
-            "import org.junit.rules.ExpectedException;",
-            "class ExceptionTest {",
-            "  @Rule ExpectedException thrown = ExpectedException.none();",
-            "  @Test",
-            "  public void test() throws Exception {",
-            "    if (true) {",
-            "      Path p = Paths.get(\"NOSUCH\");",
-            "      IOException thrown =",
-            "          assertThrows(IOException.class, () -> Files.readAllBytes(p));",
-            "      assertThat(thrown,",
-            "          CoreMatchers.is(CoreMatchers.instanceOf(IOException.class)));",
-            "      assertThat(thrown.getCause(),",
-            "          CoreMatchers.is(CoreMatchers.instanceOf(IOException.class)));",
-            "      assertThat(thrown).hasMessageThat().contains(\"error\");",
-            "      assertThat(thrown.getMessage(), CoreMatchers.containsString(\"error\"));",
-            "      assertThat(Files.exists(p)).isFalse();",
-            "    }",
-            "  }",
-            "}")
+            """
+import static com.google.common.truth.Truth.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertThrows;
+
+import java.io.IOException;
+import java.nio.file.*;
+import org.hamcrest.CoreMatchers;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+
+class ExceptionTest {
+  @Rule ExpectedException thrown = ExpectedException.none();
+
+  @Test
+  public void test() throws Exception {
+    if (true) {
+      Path p = Paths.get("NOSUCH");
+      IOException thrown = assertThrows(IOException.class, () -> Files.readAllBytes(p));
+      assertThat(thrown, CoreMatchers.is(CoreMatchers.instanceOf(IOException.class)));
+      assertThat(thrown.getCause(), CoreMatchers.is(CoreMatchers.instanceOf(IOException.class)));
+      assertThat(thrown).hasMessageThat().contains("error");
+      assertThat(thrown.getMessage(), CoreMatchers.containsString("error"));
+      assertThat(Files.exists(p)).isFalse();
+    }
+  }
+}
+""")
         .doTest();
   }
 
@@ -95,47 +99,58 @@ public class ExpectedExceptionCheckerTest {
     testHelper
         .addInputLines(
             "in/ExceptionTest.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import java.io.IOException;",
-            "import java.nio.file.*;",
-            "import org.hamcrest.CoreMatchers;",
-            "import org.junit.Rule;",
-            "import org.junit.Test;",
-            "import org.junit.rules.ExpectedException;",
-            "class ExceptionTest {",
-            "  @Rule ExpectedException thrown = ExpectedException.none();",
-            "  @Test",
-            "  public void test() throws Exception {",
-            "    Path p = Paths.get(\"NOSUCH\");",
-            "    thrown.expect(CoreMatchers.is(CoreMatchers.instanceOf(IOException.class)));",
-            "    Files.readAllBytes(p);",
-            "    Files.readAllBytes(p);",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import java.io.IOException;
+            import java.nio.file.*;
+            import org.hamcrest.CoreMatchers;
+            import org.junit.Rule;
+            import org.junit.Test;
+            import org.junit.rules.ExpectedException;
+
+            class ExceptionTest {
+              @Rule ExpectedException thrown = ExpectedException.none();
+
+              @Test
+              public void test() throws Exception {
+                Path p = Paths.get("NOSUCH");
+                thrown.expect(CoreMatchers.is(CoreMatchers.instanceOf(IOException.class)));
+                Files.readAllBytes(p);
+                Files.readAllBytes(p);
+              }
+            }
+            """)
         .addOutputLines(
             "out/ExceptionTest.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import static org.hamcrest.MatcherAssert.assertThat;",
-            "import static org.junit.Assert.assertThrows;",
-            "",
-            "import java.io.IOException;",
-            "import java.nio.file.*;",
-            "import org.hamcrest.CoreMatchers;",
-            "import org.junit.Rule;",
-            "import org.junit.Test;",
-            "import org.junit.rules.ExpectedException;",
-            "class ExceptionTest {",
-            "  @Rule ExpectedException thrown = ExpectedException.none();",
-            "  @Test",
-            "  public void test() throws Exception {",
-            "    Path p = Paths.get(\"NOSUCH\");",
-            "    Throwable thrown = assertThrows(Throwable.class, () -> {",
-            "      Files.readAllBytes(p);",
-            "      Files.readAllBytes(p);",
-            "    });",
-            "    assertThat(thrown, CoreMatchers.is(CoreMatchers.instanceOf(IOException.class)));",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import static org.hamcrest.MatcherAssert.assertThat;
+            import static org.junit.Assert.assertThrows;
+
+            import java.io.IOException;
+            import java.nio.file.*;
+            import org.hamcrest.CoreMatchers;
+            import org.junit.Rule;
+            import org.junit.Test;
+            import org.junit.rules.ExpectedException;
+
+            class ExceptionTest {
+              @Rule ExpectedException thrown = ExpectedException.none();
+
+              @Test
+              public void test() throws Exception {
+                Path p = Paths.get("NOSUCH");
+                Throwable thrown =
+                    assertThrows(
+                        Throwable.class,
+                        () -> {
+                          Files.readAllBytes(p);
+                          Files.readAllBytes(p);
+                        });
+                assertThat(thrown, CoreMatchers.is(CoreMatchers.instanceOf(IOException.class)));
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -144,42 +159,50 @@ public class ExpectedExceptionCheckerTest {
     testHelper
         .addInputLines(
             "in/ExceptionTest.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import java.io.IOException;",
-            "import java.nio.file.*;",
-            "import org.hamcrest.CoreMatchers;",
-            "import org.junit.Rule;",
-            "import org.junit.Test;",
-            "import org.junit.rules.ExpectedException;",
-            "class ExceptionTest {",
-            "  @Rule ExpectedException thrown = ExpectedException.none();",
-            "  @Test",
-            "  public void test() throws Exception {",
-            "    Path p = Paths.get(\"NOSUCH\");",
-            "    thrown.expect(IOException.class);",
-            "    Files.readAllBytes(p);",
-            "    assertThat(Files.exists(p)).isFalse();",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import java.io.IOException;
+            import java.nio.file.*;
+            import org.hamcrest.CoreMatchers;
+            import org.junit.Rule;
+            import org.junit.Test;
+            import org.junit.rules.ExpectedException;
+
+            class ExceptionTest {
+              @Rule ExpectedException thrown = ExpectedException.none();
+
+              @Test
+              public void test() throws Exception {
+                Path p = Paths.get("NOSUCH");
+                thrown.expect(IOException.class);
+                Files.readAllBytes(p);
+                assertThat(Files.exists(p)).isFalse();
+              }
+            }
+            """)
         .addOutputLines(
             "out/ExceptionTest.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import static org.junit.Assert.assertThrows;",
-            "import java.io.IOException;",
-            "import java.nio.file.*;",
-            "import org.hamcrest.CoreMatchers;",
-            "import org.junit.Rule;",
-            "import org.junit.Test;",
-            "import org.junit.rules.ExpectedException;",
-            "class ExceptionTest {",
-            "  @Rule ExpectedException thrown = ExpectedException.none();",
-            "  @Test",
-            "  public void test() throws Exception {",
-            "    Path p = Paths.get(\"NOSUCH\");",
-            "    assertThrows(IOException.class, () -> Files.readAllBytes(p));",
-            "    assertThat(Files.exists(p)).isFalse();",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import static org.junit.Assert.assertThrows;
+            import java.io.IOException;
+            import java.nio.file.*;
+            import org.hamcrest.CoreMatchers;
+            import org.junit.Rule;
+            import org.junit.Test;
+            import org.junit.rules.ExpectedException;
+
+            class ExceptionTest {
+              @Rule ExpectedException thrown = ExpectedException.none();
+
+              @Test
+              public void test() throws Exception {
+                Path p = Paths.get("NOSUCH");
+                assertThrows(IOException.class, () -> Files.readAllBytes(p));
+                assertThat(Files.exists(p)).isFalse();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -188,43 +211,53 @@ public class ExpectedExceptionCheckerTest {
     testHelper
         .addInputLines(
             "in/ExceptionTest.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import java.io.IOException;",
-            "import java.nio.file.*;",
-            "import org.junit.Rule;",
-            "import org.junit.Test;",
-            "import org.junit.rules.ExpectedException;",
-            "class ExceptionTest {",
-            "  @Rule ExpectedException thrown = ExpectedException.none();",
-            "  @Test",
-            "  public void test() throws Exception {",
-            "    Path p = Paths.get(\"NOSUCH\");",
-            "    thrown.expect(IOException.class);",
-            "    Files.readAllBytes(p);",
-            "    if (true) Files.readAllBytes(p);",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import java.io.IOException;
+            import java.nio.file.*;
+            import org.junit.Rule;
+            import org.junit.Test;
+            import org.junit.rules.ExpectedException;
+
+            class ExceptionTest {
+              @Rule ExpectedException thrown = ExpectedException.none();
+
+              @Test
+              public void test() throws Exception {
+                Path p = Paths.get("NOSUCH");
+                thrown.expect(IOException.class);
+                Files.readAllBytes(p);
+                if (true) Files.readAllBytes(p);
+              }
+            }
+            """)
         .addOutputLines(
             "out/ExceptionTest.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import static org.junit.Assert.assertThrows;",
-            "",
-            "import java.io.IOException;",
-            "import java.nio.file.*;",
-            "import org.junit.Rule;",
-            "import org.junit.Test;",
-            "import org.junit.rules.ExpectedException;",
-            "class ExceptionTest {",
-            "  @Rule ExpectedException thrown = ExpectedException.none();",
-            "  @Test",
-            "  public void test() throws Exception {",
-            "    Path p = Paths.get(\"NOSUCH\");",
-            "    assertThrows(IOException.class, () -> {",
-            "      Files.readAllBytes(p);",
-            "      if (true) Files.readAllBytes(p);",
-            "    });",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import static org.junit.Assert.assertThrows;
+
+            import java.io.IOException;
+            import java.nio.file.*;
+            import org.junit.Rule;
+            import org.junit.Test;
+            import org.junit.rules.ExpectedException;
+
+            class ExceptionTest {
+              @Rule ExpectedException thrown = ExpectedException.none();
+
+              @Test
+              public void test() throws Exception {
+                Path p = Paths.get("NOSUCH");
+                assertThrows(
+                    IOException.class,
+                    () -> {
+                      Files.readAllBytes(p);
+                      if (true) Files.readAllBytes(p);
+                    });
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -234,48 +267,55 @@ public class ExpectedExceptionCheckerTest {
     testHelper
         .addInputLines(
             "in/ExceptionTest.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import java.io.IOException;",
-            "import java.nio.file.*;",
-            "import org.junit.Test;",
-            "import org.junit.Rule;",
-            "import org.hamcrest.CoreMatchers;",
-            "import org.junit.rules.ExpectedException;",
-            "class ExceptionTest {",
-            "  @Rule ExpectedException thrown = ExpectedException.none();",
-            "  @Test",
-            "  public void test() throws Exception {",
-            "    Path p = Paths.get(\"NOSUCH\");",
-            "    thrown.expect(IOException.class);",
-            "    thrown.expectCause(CoreMatchers.isA(IOException.class));",
-            "    thrown.expectCause(org.hamcrest.core.Is.isA(IOException.class));",
-            "    Files.readAllBytes(p);",
-            "    assertThat(Files.exists(p)).isFalse();",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import java.io.IOException;
+            import java.nio.file.*;
+            import org.junit.Test;
+            import org.junit.Rule;
+            import org.hamcrest.CoreMatchers;
+            import org.junit.rules.ExpectedException;
+
+            class ExceptionTest {
+              @Rule ExpectedException thrown = ExpectedException.none();
+
+              @Test
+              public void test() throws Exception {
+                Path p = Paths.get("NOSUCH");
+                thrown.expect(IOException.class);
+                thrown.expectCause(CoreMatchers.isA(IOException.class));
+                thrown.expectCause(org.hamcrest.core.Is.isA(IOException.class));
+                Files.readAllBytes(p);
+                assertThat(Files.exists(p)).isFalse();
+              }
+            }
+            """)
         .addOutputLines(
             "out/ExceptionTest.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import static org.junit.Assert.assertThrows;",
-            "",
-            "import java.io.IOException;",
-            "import java.nio.file.*;",
-            "import org.hamcrest.CoreMatchers;",
-            "import org.junit.Rule;",
-            "import org.junit.Test;",
-            "import org.junit.rules.ExpectedException;",
-            "class ExceptionTest {",
-            "  @Rule ExpectedException thrown = ExpectedException.none();",
-            "  @Test",
-            "  public void test() throws Exception {",
-            "    Path p = Paths.get(\"NOSUCH\");",
-            "    IOException thrown =",
-            "        assertThrows(IOException.class, () -> Files.readAllBytes(p));",
-            "    assertThat(thrown).hasCauseThat().isInstanceOf(IOException.class);",
-            "    assertThat(thrown).hasCauseThat().isInstanceOf(IOException.class);",
-            "    assertThat(Files.exists(p)).isFalse();",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import static org.junit.Assert.assertThrows;
+
+            import java.io.IOException;
+            import java.nio.file.*;
+            import org.hamcrest.CoreMatchers;
+            import org.junit.Rule;
+            import org.junit.Test;
+            import org.junit.rules.ExpectedException;
+
+            class ExceptionTest {
+              @Rule ExpectedException thrown = ExpectedException.none();
+
+              @Test
+              public void test() throws Exception {
+                Path p = Paths.get("NOSUCH");
+                IOException thrown = assertThrows(IOException.class, () -> Files.readAllBytes(p));
+                assertThat(thrown).hasCauseThat().isInstanceOf(IOException.class);
+                assertThat(thrown).hasCauseThat().isInstanceOf(IOException.class);
+                assertThat(Files.exists(p)).isFalse();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -284,48 +324,55 @@ public class ExpectedExceptionCheckerTest {
     testHelper
         .addInputLines(
             "in/ExceptionTest.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import java.io.IOException;",
-            "import java.nio.file.*;",
-            "import org.junit.Test;",
-            "import org.junit.Rule;",
-            "import org.hamcrest.Matcher;",
-            "import org.junit.rules.ExpectedException;",
-            "class ExceptionTest {",
-            "  @Rule ExpectedException thrown = ExpectedException.none();",
-            "  Matcher<IOException> matcher;",
-            "  @Test",
-            "  public void test() throws Exception {",
-            "    Path p = Paths.get(\"NOSUCH\");",
-            "    thrown.expect(matcher);",
-            "    Files.readAllBytes(p);",
-            "    assertThat(Files.exists(p)).isFalse();",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import java.io.IOException;
+            import java.nio.file.*;
+            import org.junit.Test;
+            import org.junit.Rule;
+            import org.hamcrest.Matcher;
+            import org.junit.rules.ExpectedException;
+
+            class ExceptionTest {
+              @Rule ExpectedException thrown = ExpectedException.none();
+              Matcher<IOException> matcher;
+
+              @Test
+              public void test() throws Exception {
+                Path p = Paths.get("NOSUCH");
+                thrown.expect(matcher);
+                Files.readAllBytes(p);
+                assertThat(Files.exists(p)).isFalse();
+              }
+            }
+            """)
         .addOutputLines(
             "out/ExceptionTest.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import static org.hamcrest.MatcherAssert.assertThat;",
-            "import static org.junit.Assert.assertThrows;",
-            "",
-            "import java.io.IOException;",
-            "import java.nio.file.*;",
-            "import org.hamcrest.Matcher;",
-            "import org.junit.Rule;",
-            "import org.junit.Test;",
-            "import org.junit.rules.ExpectedException;",
-            "class ExceptionTest {",
-            "  @Rule ExpectedException thrown = ExpectedException.none();",
-            "  Matcher<IOException> matcher;",
-            "  @Test",
-            "  public void test() throws Exception {",
-            "    Path p = Paths.get(\"NOSUCH\");",
-            "    IOException thrown =",
-            "        assertThrows(IOException.class, () -> Files.readAllBytes(p));",
-            "    assertThat(thrown, matcher);",
-            "    assertThat(Files.exists(p)).isFalse();",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import static org.hamcrest.MatcherAssert.assertThat;
+            import static org.junit.Assert.assertThrows;
+
+            import java.io.IOException;
+            import java.nio.file.*;
+            import org.hamcrest.Matcher;
+            import org.junit.Rule;
+            import org.junit.Test;
+            import org.junit.rules.ExpectedException;
+
+            class ExceptionTest {
+              @Rule ExpectedException thrown = ExpectedException.none();
+              Matcher<IOException> matcher;
+
+              @Test
+              public void test() throws Exception {
+                Path p = Paths.get("NOSUCH");
+                IOException thrown = assertThrows(IOException.class, () -> Files.readAllBytes(p));
+                assertThat(thrown, matcher);
+                assertThat(Files.exists(p)).isFalse();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -334,33 +381,41 @@ public class ExpectedExceptionCheckerTest {
     testHelper
         .addInputLines(
             "in/ExceptionTest.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import org.junit.Rule;",
-            "import org.junit.Test;",
-            "import org.junit.rules.ExpectedException;",
-            "class ExceptionTest {",
-            "  @Rule ExpectedException thrown = ExpectedException.none();",
-            "  @Test",
-            "  public void test() throws Exception {",
-            "    thrown.expect(RuntimeException.class);",
-            "    assertThat(false).isFalse();",
-            "    assertThat(true).isTrue();",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import org.junit.Rule;
+            import org.junit.Test;
+            import org.junit.rules.ExpectedException;
+
+            class ExceptionTest {
+              @Rule ExpectedException thrown = ExpectedException.none();
+
+              @Test
+              public void test() throws Exception {
+                thrown.expect(RuntimeException.class);
+                assertThat(false).isFalse();
+                assertThat(true).isTrue();
+              }
+            }
+            """)
         .addOutputLines(
             "out/ExceptionTest.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import org.junit.Rule;",
-            "import org.junit.Test;",
-            "import org.junit.rules.ExpectedException;",
-            "class ExceptionTest {",
-            "  @Rule ExpectedException thrown = ExpectedException.none();",
-            "  @Test",
-            "  public void test() throws Exception {",
-            "    assertThat(false).isFalse();",
-            "    assertThat(true).isTrue();",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import org.junit.Rule;
+            import org.junit.Test;
+            import org.junit.rules.ExpectedException;
+
+            class ExceptionTest {
+              @Rule ExpectedException thrown = ExpectedException.none();
+
+              @Test
+              public void test() throws Exception {
+                assertThat(false).isFalse();
+                assertThat(true).isTrue();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -369,66 +424,77 @@ public class ExpectedExceptionCheckerTest {
     testHelper
         .addInputLines(
             "in/ExceptionTest.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import static org.junit.Assert.fail;",
-            "import java.io.IOException;",
-            "import java.nio.file.*;",
-            "import org.junit.Test;",
-            "import org.junit.Rule;",
-            "import org.junit.rules.ExpectedException;",
-            "class ExceptionTest {",
-            "  @Rule ExpectedException thrown = ExpectedException.none();",
-            "  @Test",
-            "  public void testThrow() throws Exception {",
-            "    thrown.expect(IOException.class);",
-            "    throw new IOException();",
-            "  }",
-            "  @Test",
-            "  public void one() throws Exception {",
-            "    Path p = Paths.get(\"NOSUCH\");",
-            "    thrown.expect(IOException.class);",
-            "    Files.readAllBytes(p);",
-            "    assertThat(Files.exists(p)).isFalse();",
-            "    fail();",
-            "  }",
-            "  @Test",
-            "  public void two() throws Exception {",
-            "    Path p = Paths.get(\"NOSUCH\");",
-            "    thrown.expect(IOException.class);",
-            "    Files.readAllBytes(p);",
-            "    assertThat(Files.exists(p)).isFalse();",
-            "    throw new AssertionError();",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import static org.junit.Assert.fail;
+            import java.io.IOException;
+            import java.nio.file.*;
+            import org.junit.Test;
+            import org.junit.Rule;
+            import org.junit.rules.ExpectedException;
+
+            class ExceptionTest {
+              @Rule ExpectedException thrown = ExpectedException.none();
+
+              @Test
+              public void testThrow() throws Exception {
+                thrown.expect(IOException.class);
+                throw new IOException();
+              }
+
+              @Test
+              public void one() throws Exception {
+                Path p = Paths.get("NOSUCH");
+                thrown.expect(IOException.class);
+                Files.readAllBytes(p);
+                assertThat(Files.exists(p)).isFalse();
+                fail();
+              }
+
+              @Test
+              public void two() throws Exception {
+                Path p = Paths.get("NOSUCH");
+                thrown.expect(IOException.class);
+                Files.readAllBytes(p);
+                assertThat(Files.exists(p)).isFalse();
+                throw new AssertionError();
+              }
+            }
+            """)
         .addOutputLines(
             "out/ExceptionTest.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import static org.junit.Assert.assertThrows;",
-            "import static org.junit.Assert.fail;",
-            "",
-            "import java.io.IOException;",
-            "import java.nio.file.*;",
-            "import org.junit.Rule;",
-            "import org.junit.Test;",
-            "import org.junit.rules.ExpectedException;",
-            "class ExceptionTest {",
-            "  @Rule ExpectedException thrown = ExpectedException.none();",
-            "  @Test",
-            "  public void testThrow() throws Exception {",
-            "  }",
-            "  @Test",
-            "  public void one() throws Exception {",
-            "    Path p = Paths.get(\"NOSUCH\");",
-            "    assertThrows(IOException.class, () -> Files.readAllBytes(p));",
-            "    assertThat(Files.exists(p)).isFalse();",
-            "  }",
-            "  @Test",
-            "  public void two() throws Exception {",
-            "    Path p = Paths.get(\"NOSUCH\");",
-            "    assertThrows(IOException.class, () -> Files.readAllBytes(p));",
-            "    assertThat(Files.exists(p)).isFalse();",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import static org.junit.Assert.assertThrows;
+            import static org.junit.Assert.fail;
+
+            import java.io.IOException;
+            import java.nio.file.*;
+            import org.junit.Rule;
+            import org.junit.Test;
+            import org.junit.rules.ExpectedException;
+
+            class ExceptionTest {
+              @Rule ExpectedException thrown = ExpectedException.none();
+
+              @Test
+              public void testThrow() throws Exception {}
+
+              @Test
+              public void one() throws Exception {
+                Path p = Paths.get("NOSUCH");
+                assertThrows(IOException.class, () -> Files.readAllBytes(p));
+                assertThat(Files.exists(p)).isFalse();
+              }
+
+              @Test
+              public void two() throws Exception {
+                Path p = Paths.get("NOSUCH");
+                assertThrows(IOException.class, () -> Files.readAllBytes(p));
+                assertThat(Files.exists(p)).isFalse();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -438,30 +504,38 @@ public class ExpectedExceptionCheckerTest {
     testHelper
         .addInputLines(
             "in/ExceptionTest.java",
-            "import org.junit.Rule;",
-            "import org.junit.Test;",
-            "import org.junit.rules.ExpectedException;",
-            "class ExceptionTest {",
-            "  @Rule ExpectedException thrown = ExpectedException.none();",
-            "  @Test",
-            "  public void testThrow(Class<? extends Throwable> clazz) throws Exception {",
-            "    thrown.expect(clazz);",
-            "    clazz.toString();",
-            "  }",
-            "}")
+            """
+            import org.junit.Rule;
+            import org.junit.Test;
+            import org.junit.rules.ExpectedException;
+
+            class ExceptionTest {
+              @Rule ExpectedException thrown = ExpectedException.none();
+
+              @Test
+              public void testThrow(Class<? extends Throwable> clazz) throws Exception {
+                thrown.expect(clazz);
+                clazz.toString();
+              }
+            }
+            """)
         .addOutputLines(
             "in/ExceptionTest.java",
-            "import static org.junit.Assert.assertThrows;",
-            "import org.junit.Rule;",
-            "import org.junit.Test;",
-            "import org.junit.rules.ExpectedException;",
-            "class ExceptionTest {",
-            "  @Rule ExpectedException thrown = ExpectedException.none();",
-            "  @Test",
-            "  public void testThrow(Class<? extends Throwable> clazz) throws Exception {",
-            "    assertThrows(Throwable.class, () -> clazz.toString());",
-            "  }",
-            "}")
+            """
+            import static org.junit.Assert.assertThrows;
+            import org.junit.Rule;
+            import org.junit.Test;
+            import org.junit.rules.ExpectedException;
+
+            class ExceptionTest {
+              @Rule ExpectedException thrown = ExpectedException.none();
+
+              @Test
+              public void testThrow(Class<? extends Throwable> clazz) throws Exception {
+                assertThrows(Throwable.class, () -> clazz.toString());
+              }
+            }
+            """)
         .doTest();
   }
 }

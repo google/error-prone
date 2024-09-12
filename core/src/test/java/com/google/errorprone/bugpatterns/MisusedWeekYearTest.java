@@ -49,18 +49,24 @@ public class MisusedWeekYearTest {
     BugCheckerRefactoringTestHelper.newInstance(MisusedWeekYear.class, getClass())
         .addInputLines(
             "Test.java",
-            "import java.time.format.DateTimeFormatter;",
-            "class Test {", //
-            "  private static final String PATTERN = \"YYYY\";",
-            "  static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern(PATTERN);",
-            "}")
+            """
+            import java.time.format.DateTimeFormatter;
+
+            class Test {
+              private static final String PATTERN = "YYYY";
+              static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern(PATTERN);
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import java.time.format.DateTimeFormatter;",
-            "class Test {", //
-            "  private static final String PATTERN = \"yyyy\";",
-            "  static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern(PATTERN);",
-            "}")
+            """
+            import java.time.format.DateTimeFormatter;
+
+            class Test {
+              private static final String PATTERN = "yyyy";
+              static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern(PATTERN);
+            }
+            """)
         .doTest();
   }
 }

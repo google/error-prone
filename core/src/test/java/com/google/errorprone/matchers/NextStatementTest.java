@@ -62,14 +62,16 @@ public final class NextStatementTest {
     CompilationTestHelper.newInstance(CompoundBeforeAnythingChecker.class, getClass())
         .addSourceLines(
             "B.java",
-            "public class B {",
-            "  public boolean getHash() {",
-            "    int a = 0;",
-            "    if (true) a += 1;",
-            "    else a += 2;",
-            "    return false;",
-            "  }",
-            "}")
+            """
+            public class B {
+              public boolean getHash() {
+                int a = 0;
+                if (true) a += 1;
+                else a += 2;
+                return false;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -78,17 +80,19 @@ public final class NextStatementTest {
     CompilationTestHelper.newInstance(CompoundBeforeAnythingChecker.class, getClass())
         .addSourceLines(
             "A.java",
-            "public class A {",
-            "  public boolean getHash() {",
-            "    int a = 0;",
-            "    if (a == 0) {",
-            "      // BUG: Diagnostic contains: This is a compound assignment",
-            "      a += 1;",
-            "      return true;",
-            "    }",
-            "    return false;",
-            "  }",
-            "}")
+            """
+            public class A {
+              public boolean getHash() {
+                int a = 0;
+                if (a == 0) {
+                  // BUG: Diagnostic contains: This is a compound assignment
+                  a += 1;
+                  return true;
+                }
+                return false;
+              }
+            }
+            """)
         .doTest();
   }
 }

@@ -32,13 +32,15 @@ public final class UnrecognisedJavadocTagTest {
     helper
         .addSourceLines(
             "Test.java",
-            "/**",
-            " * // BUG: Diagnostic contains:",
-            " * <pre>{@code",
-            " *  foo() {",
-            " * }</pre>",
-            " */",
-            "class Test {}")
+            """
+            /**
+             * // BUG: Diagnostic contains:
+             * <pre>{@code
+             *  foo() {
+             * }</pre>
+             */
+            class Test {}
+            """)
         .doTest();
   }
 
@@ -47,12 +49,16 @@ public final class UnrecognisedJavadocTagTest {
     helper
         .addSourceLines(
             "Test.java",
-            "/**",
-            " * <pre>{@code",
-            " *  foo() {}",
-            " * }</pre>",
-            " */",
-            "class Test {}")
+            """
+            /**
+             *
+             *
+             * <pre>{@code
+             * foo() {}
+             * }</pre>
+             */
+            class Test {}
+            """)
         .doTest();
   }
 
@@ -61,11 +67,13 @@ public final class UnrecognisedJavadocTagTest {
     helper
         .addSourceLines(
             "Test.java",
-            "/**",
-            " * // BUG: Diagnostic contains:",
-            " * {@link Test)",
-            " */",
-            "class Test {}")
+            """
+            /**
+             * // BUG: Diagnostic contains:
+             * {@link Test)
+             */
+            class Test {}
+            """)
         .doTest();
   }
 
@@ -73,11 +81,11 @@ public final class UnrecognisedJavadocTagTest {
   public void correctLink() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "/**",
-            " * {@link Test}, {@link Bar}",
-            " */",
-            "class Test {}")
+            "Test.java",
+            """
+            /** {@link Test}, {@link Bar} */
+            class Test {}
+            """)
         .doTest();
   }
 }

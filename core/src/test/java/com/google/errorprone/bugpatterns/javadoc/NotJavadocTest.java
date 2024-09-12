@@ -32,19 +32,23 @@ public final class NotJavadocTest {
   public void notJavadoc() {
     helper
         .addInputLines(
-            "Test.java", //
-            "class Test {",
-            "  void test() {",
-            "    /** Not Javadoc. */",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              void test() {
+                /** Not Javadoc. */
+              }
+            }
+            """)
         .addOutputLines(
-            "Test.java", //
-            "class Test {",
-            "  void test() {",
-            "    /* Not Javadoc. */",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              void test() {
+                /* Not Javadoc. */
+              }
+            }
+            """)
         .doTest(TEXT_MATCH);
   }
 
@@ -69,20 +73,24 @@ public final class NotJavadocTest {
     helper
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  void test() {",
-            "    /** Not Javadoc. */",
-            "    class A {}",
-            "  }",
-            "}")
+            """
+            class Test {
+              void test() {
+                /** Not Javadoc. */
+                class A {}
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "class Test {",
-            "  void test() {",
-            "    /* Not Javadoc. */",
-            "    class A {}",
-            "  }",
-            "}")
+            """
+            class Test {
+              void test() {
+                /* Not Javadoc. */
+                class A {}
+              }
+            }
+            """)
         .doTest(TEXT_MATCH);
   }
 
@@ -91,20 +99,24 @@ public final class NotJavadocTest {
     helper
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  void test() {",
-            "    /******** Not Javadoc. */",
-            "    class A {}",
-            "  }",
-            "}")
+            """
+            class Test {
+              void test() {
+                /******** Not Javadoc. */
+                class A {}
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "class Test {",
-            "  void test() {",
-            "    /* Not Javadoc. */",
-            "    class A {}",
-            "  }",
-            "}")
+            """
+            class Test {
+              void test() {
+                /* Not Javadoc. */
+                class A {}
+              }
+            }
+            """)
         .doTest(TEXT_MATCH);
   }
 
@@ -112,12 +124,13 @@ public final class NotJavadocTest {
   public void actuallyJavadoc() {
     helper
         .addInputLines(
-            "Test.java", //
-            "class Test {",
-            "  /** Not Javadoc. */",
-            "  void test() {",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              /** Not Javadoc. */
+              void test() {}
+            }
+            """)
         .expectUnchanged()
         .doTest(TEXT_MATCH);
   }
@@ -126,12 +139,14 @@ public final class NotJavadocTest {
   public void strangeComment() {
     helper
         .addInputLines(
-            "Test.java", //
-            "class Test {",
-            "  void test() {",
-            "    /**/",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              void test() {
+                /**/
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest(TEXT_MATCH);
   }
@@ -140,9 +155,11 @@ public final class NotJavadocTest {
   public void packageLevel() {
     helper
         .addInputLines(
-            "package-info.java", //
-            "/** Package javadoc */",
-            "package foo;")
+            "package-info.java",
+            """
+            /** Package javadoc */
+            package foo;
+            """)
         .expectUnchanged()
         .doTest(TEXT_MATCH);
   }
@@ -151,9 +168,11 @@ public final class NotJavadocTest {
   public void moduleLevel() {
     helper
         .addInputLines(
-            "module-info.java", //
-            "/** Module javadoc */",
-            "module foo {}")
+            "module-info.java",
+            """
+            /** Module javadoc */
+            module foo {}
+            """)
         .expectUnchanged()
         .doTest(TEXT_MATCH);
   }
@@ -162,13 +181,15 @@ public final class NotJavadocTest {
   public void suppression() {
     helper
         .addInputLines(
-            "Test.java", //
-            "class Test {",
-            "  @SuppressWarnings(\"NotJavadoc\")",
-            "  void test() {",
-            "    /** Not Javadoc. */",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              @SuppressWarnings("NotJavadoc")
+              void test() {
+                /** Not Javadoc. */
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest(TEXT_MATCH);
   }

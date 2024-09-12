@@ -37,13 +37,16 @@ public final class TruthContainsExactlyElementsInUsageTest {
     compilationHelper
         .addSourceLines(
             "ExampleClassTest.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import com.google.common.collect.ImmutableList;",
-            "public class ExampleClassTest {",
-            "  void test() {",
-            "    assertThat(ImmutableList.of(1, 2, 3)).containsExactly(1,2,3);",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import com.google.common.collect.ImmutableList;
+
+            public class ExampleClassTest {
+              void test() {
+                assertThat(ImmutableList.of(1, 2, 3)).containsExactly(1, 2, 3);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -52,15 +55,18 @@ public final class TruthContainsExactlyElementsInUsageTest {
     compilationHelper
         .addSourceLines(
             "ExampleClassTest.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import com.google.common.collect.ImmutableList;",
-            "import java.util.List;",
-            "public class ExampleClassTest {",
-            "  void test() {",
-            "    List<Integer> list = ImmutableList.of(1, 2, 3);",
-            "    assertThat(list).containsExactly(1,2,3);",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import com.google.common.collect.ImmutableList;
+            import java.util.List;
+
+            public class ExampleClassTest {
+              void test() {
+                List<Integer> list = ImmutableList.of(1, 2, 3);
+                assertThat(list).containsExactly(1, 2, 3);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -69,15 +75,18 @@ public final class TruthContainsExactlyElementsInUsageTest {
     compilationHelper
         .addSourceLines(
             "ExampleClassTest.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import com.google.common.collect.ImmutableList;",
-            "import java.util.List;",
-            "public class ExampleClassTest {",
-            "  void test() {",
-            "    List<Integer> list = ImmutableList.of(1, 2, 3);",
-            "    assertThat(list).containsExactlyElementsIn(list);",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import com.google.common.collect.ImmutableList;
+            import java.util.List;
+
+            public class ExampleClassTest {
+              void test() {
+                List<Integer> list = ImmutableList.of(1, 2, 3);
+                assertThat(list).containsExactlyElementsIn(list);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -86,15 +95,18 @@ public final class TruthContainsExactlyElementsInUsageTest {
     compilationHelper
         .addSourceLines(
             "ExampleClassTest.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import com.google.common.collect.ImmutableList;",
-            "import java.util.List;",
-            "public class ExampleClassTest {",
-            "  void test() {",
-            "    List<Integer> list = ImmutableList.of(1, 2, 3);",
-            "    assertThat(list).containsExactlyElementsIn(ImmutableList.copyOf(list));",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import com.google.common.collect.ImmutableList;
+            import java.util.List;
+
+            public class ExampleClassTest {
+              void test() {
+                List<Integer> list = ImmutableList.of(1, 2, 3);
+                assertThat(list).containsExactlyElementsIn(ImmutableList.copyOf(list));
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -103,15 +115,17 @@ public final class TruthContainsExactlyElementsInUsageTest {
     compilationHelper
         .addSourceLines(
             "ExampleClassTest.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import com.google.common.collect.ImmutableList;",
-            "import com.google.common.collect.Sets;",
-            "public class ExampleClassTest {",
-            "  void test() {",
-            "    assertThat(ImmutableList.of(1, 2, 3))",
-            "    .containsExactlyElementsIn(Sets.newHashSet(1, 2, 3));",
-            "  }",
-            "}")
+            """
+import static com.google.common.truth.Truth.assertThat;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Sets;
+
+public class ExampleClassTest {
+  void test() {
+    assertThat(ImmutableList.of(1, 2, 3)).containsExactlyElementsIn(Sets.newHashSet(1, 2, 3));
+  }
+}
+""")
         .doTest();
   }
 
@@ -120,15 +134,17 @@ public final class TruthContainsExactlyElementsInUsageTest {
     compilationHelper
         .addSourceLines(
             "ExampleClassTest.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import com.google.common.collect.ImmutableList;",
-            "import com.google.common.collect.ImmutableSet;",
-            "public class ExampleClassTest {",
-            "  void test() {",
-            "    assertThat(ImmutableList.of(1, 2, 3))",
-            "    .containsExactlyElementsIn(ImmutableSet.of(1, 2, 3));",
-            "  }",
-            "}")
+            """
+import static com.google.common.truth.Truth.assertThat;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
+
+public class ExampleClassTest {
+  void test() {
+    assertThat(ImmutableList.of(1, 2, 3)).containsExactlyElementsIn(ImmutableSet.of(1, 2, 3));
+  }
+}
+""")
         .doTest();
   }
 
@@ -137,25 +153,30 @@ public final class TruthContainsExactlyElementsInUsageTest {
     refactoringHelper
         .addInputLines(
             "ExampleClassTest.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import com.google.common.collect.ImmutableList;",
-            "import java.util.Arrays;",
-            "public class ExampleClassTest {",
-            "  void test() {",
-            "    assertThat(ImmutableList.of(1, 2, 3))",
-            "    .containsExactlyElementsIn(Arrays.asList(1, 2, 3));",
-            "  }",
-            "}")
+            """
+import static com.google.common.truth.Truth.assertThat;
+import com.google.common.collect.ImmutableList;
+import java.util.Arrays;
+
+public class ExampleClassTest {
+  void test() {
+    assertThat(ImmutableList.of(1, 2, 3)).containsExactlyElementsIn(Arrays.asList(1, 2, 3));
+  }
+}
+""")
         .addOutputLines(
             "ExampleClassTest.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import com.google.common.collect.ImmutableList;",
-            "import java.util.Arrays;",
-            "public class ExampleClassTest {",
-            "  void test() {",
-            "    assertThat(ImmutableList.of(1, 2, 3)).containsExactly(1, 2, 3);",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import com.google.common.collect.ImmutableList;
+            import java.util.Arrays;
+
+            public class ExampleClassTest {
+              void test() {
+                assertThat(ImmutableList.of(1, 2, 3)).containsExactly(1, 2, 3);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -164,25 +185,30 @@ public final class TruthContainsExactlyElementsInUsageTest {
     refactoringHelper
         .addInputLines(
             "ExampleClassTest.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import com.google.common.collect.ImmutableList;",
-            "import java.util.List;",
-            "public class ExampleClassTest {",
-            "  void test() {",
-            "    assertThat(ImmutableList.of(1, 2, 3))",
-            "    .containsExactlyElementsIn(List.of(1, 2, 3));",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import com.google.common.collect.ImmutableList;
+            import java.util.List;
+
+            public class ExampleClassTest {
+              void test() {
+                assertThat(ImmutableList.of(1, 2, 3)).containsExactlyElementsIn(List.of(1, 2, 3));
+              }
+            }
+            """)
         .addOutputLines(
             "ExampleClassTest.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import com.google.common.collect.ImmutableList;",
-            "import java.util.List;",
-            "public class ExampleClassTest {",
-            "  void test() {",
-            "    assertThat(ImmutableList.of(1, 2, 3)).containsExactly(1, 2, 3);",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import com.google.common.collect.ImmutableList;
+            import java.util.List;
+
+            public class ExampleClassTest {
+              void test() {
+                assertThat(ImmutableList.of(1, 2, 3)).containsExactly(1, 2, 3);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -191,25 +217,32 @@ public final class TruthContainsExactlyElementsInUsageTest {
     refactoringHelper
         .addInputLines(
             "ExampleClassTest.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import com.google.common.collect.ImmutableList;",
-            "import java.util.Arrays;",
-            "public class ExampleClassTest {",
-            "  void test() {",
-            "    assertThat(ImmutableList.of(1, 2, 3))",
-            "    .containsExactlyElementsIn(Arrays.asList(1, 2, 3)).inOrder();",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import com.google.common.collect.ImmutableList;
+            import java.util.Arrays;
+
+            public class ExampleClassTest {
+              void test() {
+                assertThat(ImmutableList.of(1, 2, 3))
+                    .containsExactlyElementsIn(Arrays.asList(1, 2, 3))
+                    .inOrder();
+              }
+            }
+            """)
         .addOutputLines(
             "ExampleClassTest.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import com.google.common.collect.ImmutableList;",
-            "import java.util.Arrays;",
-            "public class ExampleClassTest {",
-            "  void test() {",
-            "    assertThat(ImmutableList.of(1, 2, 3)).containsExactly(1, 2, 3).inOrder();",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import com.google.common.collect.ImmutableList;
+            import java.util.Arrays;
+
+            public class ExampleClassTest {
+              void test() {
+                assertThat(ImmutableList.of(1, 2, 3)).containsExactly(1, 2, 3).inOrder();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -218,24 +251,30 @@ public final class TruthContainsExactlyElementsInUsageTest {
     refactoringHelper
         .addInputLines(
             "ExampleClassTest.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import com.google.common.collect.ImmutableList;",
-            "import static java.util.Arrays.asList;",
-            "public class ExampleClassTest {",
-            "  void test() {",
-            "    assertThat(ImmutableList.of(1, 2, 3)).containsExactlyElementsIn(asList(1, 2, 3));",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import com.google.common.collect.ImmutableList;
+            import static java.util.Arrays.asList;
+
+            public class ExampleClassTest {
+              void test() {
+                assertThat(ImmutableList.of(1, 2, 3)).containsExactlyElementsIn(asList(1, 2, 3));
+              }
+            }
+            """)
         .addOutputLines(
             "ExampleClassTest.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import com.google.common.collect.ImmutableList;",
-            "import static java.util.Arrays.asList;",
-            "public class ExampleClassTest {",
-            "  void test() {",
-            "    assertThat(ImmutableList.of(1, 2, 3)).containsExactly(1, 2, 3);",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import com.google.common.collect.ImmutableList;
+            import static java.util.Arrays.asList;
+
+            public class ExampleClassTest {
+              void test() {
+                assertThat(ImmutableList.of(1, 2, 3)).containsExactly(1, 2, 3);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -244,25 +283,30 @@ public final class TruthContainsExactlyElementsInUsageTest {
     refactoringHelper
         .addInputLines(
             "ExampleClassTest.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import com.google.common.collect.ImmutableList;",
-            "import com.google.common.collect.Lists;",
-            "public class ExampleClassTest {",
-            "  void test() {",
-            "    assertThat(ImmutableList.of(1, 2, 3))",
-            "    .containsExactlyElementsIn(Lists.newArrayList(1, 2, 3));",
-            "  }",
-            "}")
+            """
+import static com.google.common.truth.Truth.assertThat;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
+
+public class ExampleClassTest {
+  void test() {
+    assertThat(ImmutableList.of(1, 2, 3)).containsExactlyElementsIn(Lists.newArrayList(1, 2, 3));
+  }
+}
+""")
         .addOutputLines(
             "ExampleClassTest.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import com.google.common.collect.ImmutableList;",
-            "import com.google.common.collect.Lists;",
-            "public class ExampleClassTest {",
-            "  void test() {",
-            "    assertThat(ImmutableList.of(1, 2, 3)).containsExactly(1, 2, 3);",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import com.google.common.collect.ImmutableList;
+            import com.google.common.collect.Lists;
+
+            public class ExampleClassTest {
+              void test() {
+                assertThat(ImmutableList.of(1, 2, 3)).containsExactly(1, 2, 3);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -271,25 +315,30 @@ public final class TruthContainsExactlyElementsInUsageTest {
     refactoringHelper
         .addInputLines(
             "ExampleClassTest.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import com.google.common.collect.ImmutableList;",
-            "import java.util.Collections;",
-            "public class ExampleClassTest {",
-            "  void test() {",
-            "    assertThat(ImmutableList.of(1))",
-            "    .containsExactlyElementsIn(Collections.singletonList(1));",
-            "  }",
-            "}")
+            """
+import static com.google.common.truth.Truth.assertThat;
+import com.google.common.collect.ImmutableList;
+import java.util.Collections;
+
+public class ExampleClassTest {
+  void test() {
+    assertThat(ImmutableList.of(1)).containsExactlyElementsIn(Collections.singletonList(1));
+  }
+}
+""")
         .addOutputLines(
             "ExampleClassTest.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import com.google.common.collect.ImmutableList;",
-            "import java.util.Collections;",
-            "public class ExampleClassTest {",
-            "  void test() {",
-            "    assertThat(ImmutableList.of(1)).containsExactly(1);",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import com.google.common.collect.ImmutableList;
+            import java.util.Collections;
+
+            public class ExampleClassTest {
+              void test() {
+                assertThat(ImmutableList.of(1)).containsExactly(1);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -298,24 +347,30 @@ public final class TruthContainsExactlyElementsInUsageTest {
     refactoringHelper
         .addInputLines(
             "ExampleClassTest.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import com.google.common.collect.ImmutableList;",
-            "import java.util.Arrays;",
-            "public class ExampleClassTest {",
-            "  void test() {",
-            "    assertThat(ImmutableList.of()).containsExactlyElementsIn(Arrays.asList());",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import com.google.common.collect.ImmutableList;
+            import java.util.Arrays;
+
+            public class ExampleClassTest {
+              void test() {
+                assertThat(ImmutableList.of()).containsExactlyElementsIn(Arrays.asList());
+              }
+            }
+            """)
         .addOutputLines(
             "ExampleClassTest.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import com.google.common.collect.ImmutableList;",
-            "import java.util.Arrays;",
-            "public class ExampleClassTest {",
-            "  void test() {",
-            "    assertThat(ImmutableList.of()).containsExactly();",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import com.google.common.collect.ImmutableList;
+            import java.util.Arrays;
+
+            public class ExampleClassTest {
+              void test() {
+                assertThat(ImmutableList.of()).containsExactly();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -324,23 +379,28 @@ public final class TruthContainsExactlyElementsInUsageTest {
     refactoringHelper
         .addInputLines(
             "ExampleClassTest.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import com.google.common.collect.ImmutableList;",
-            "public class ExampleClassTest {",
-            "  void test() {",
-            "    assertThat(ImmutableList.of(1, 2, 3))",
-            "    .containsExactlyElementsIn(ImmutableList.of(1, 2, 3));",
-            "  }",
-            "}")
+            """
+import static com.google.common.truth.Truth.assertThat;
+import com.google.common.collect.ImmutableList;
+
+public class ExampleClassTest {
+  void test() {
+    assertThat(ImmutableList.of(1, 2, 3)).containsExactlyElementsIn(ImmutableList.of(1, 2, 3));
+  }
+}
+""")
         .addOutputLines(
             "ExampleClassTest.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import com.google.common.collect.ImmutableList;",
-            "public class ExampleClassTest {",
-            "  void test() {",
-            "    assertThat(ImmutableList.of(1, 2, 3)).containsExactly(1, 2, 3);",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import com.google.common.collect.ImmutableList;
+
+            public class ExampleClassTest {
+              void test() {
+                assertThat(ImmutableList.of(1, 2, 3)).containsExactly(1, 2, 3);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -349,23 +409,28 @@ public final class TruthContainsExactlyElementsInUsageTest {
     refactoringHelper
         .addInputLines(
             "ExampleClassTest.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import com.google.common.collect.ImmutableList;",
-            "public class ExampleClassTest {",
-            "  void test() {",
-            "    assertThat(ImmutableList.of(1, 2, 3))",
-            "    .containsExactlyElementsIn(new Integer[] {1, 2, 3});",
-            "  }",
-            "}")
+            """
+import static com.google.common.truth.Truth.assertThat;
+import com.google.common.collect.ImmutableList;
+
+public class ExampleClassTest {
+  void test() {
+    assertThat(ImmutableList.of(1, 2, 3)).containsExactlyElementsIn(new Integer[] {1, 2, 3});
+  }
+}
+""")
         .addOutputLines(
             "ExampleClassTest.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import com.google.common.collect.ImmutableList;",
-            "public class ExampleClassTest {",
-            "  void test() {",
-            "    assertThat(ImmutableList.of(1, 2, 3)).containsExactly(1,2,3);",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import com.google.common.collect.ImmutableList;
+
+            public class ExampleClassTest {
+              void test() {
+                assertThat(ImmutableList.of(1, 2, 3)).containsExactly(1, 2, 3);
+              }
+            }
+            """)
         .doTest();
   }
 }

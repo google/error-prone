@@ -37,21 +37,24 @@ public class OperatorPrecedenceTest {
     compilationTestHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  boolean f(boolean a, boolean b, boolean c) {",
-            "    // BUG: Diagnostic contains: (a && b) || c",
-            "    boolean r = a && b || c;",
-            "    // BUG: Diagnostic contains: a || (b && c)",
-            "    r = a || b && c;",
-            "    // BUG: Diagnostic contains: a || (b && c) || !(b && c)",
-            "    r = a || b && c || !(b && c);",
-            "    return r;",
-            "  }",
-            "  int f(int a, int b) {",
-            "    // BUG: Diagnostic contains: (a + b) << 2",
-            "    return a + b << 2;",
-            "  }",
-            "}")
+            """
+            class Test {
+              boolean f(boolean a, boolean b, boolean c) {
+                // BUG: Diagnostic contains: (a && b) || c
+                boolean r = a && b || c;
+                // BUG: Diagnostic contains: a || (b && c)
+                r = a || b && c;
+                // BUG: Diagnostic contains: a || (b && c) || !(b && c)
+                r = a || b && c || !(b && c);
+                return r;
+              }
+
+              int f(int a, int b) {
+                // BUG: Diagnostic contains: (a + b) << 2
+                return a + b << 2;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -60,17 +63,20 @@ public class OperatorPrecedenceTest {
     compilationTestHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  int f(int a, int b) {",
-            "    int r = a + a * b;",
-            "    return r;",
-            "  }",
-            "  boolean f(boolean a, boolean b) {",
-            "    boolean r = (a && b) || (!a && !b);",
-            "    r = (a = a && b);",
-            "    return r;",
-            "  }",
-            "}")
+            """
+            class Test {
+              int f(int a, int b) {
+                int r = a + a * b;
+                return r;
+              }
+
+              boolean f(boolean a, boolean b) {
+                boolean r = (a && b) || (!a && !b);
+                r = (a = a && b);
+                return r;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -79,36 +85,44 @@ public class OperatorPrecedenceTest {
     helper
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  boolean f(boolean a, boolean b, boolean c, boolean d, boolean e) {",
-            "    boolean r = a || (b && c) && (d && e);",
-            "    return r;",
-            "  }",
-            "  int f2(int a, int b, int c, int d) {",
-            "    int e = a << (b + c) + d;",
-            "    return e;",
-            "  }",
-            "  boolean f3(boolean a, boolean b, boolean c, boolean d, boolean e) {",
-            "    boolean r = a || b && c;",
-            "    return r;",
-            "  }",
-            "}")
+            """
+            class Test {
+              boolean f(boolean a, boolean b, boolean c, boolean d, boolean e) {
+                boolean r = a || (b && c) && (d && e);
+                return r;
+              }
+
+              int f2(int a, int b, int c, int d) {
+                int e = a << (b + c) + d;
+                return e;
+              }
+
+              boolean f3(boolean a, boolean b, boolean c, boolean d, boolean e) {
+                boolean r = a || b && c;
+                return r;
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "class Test {",
-            "  boolean f(boolean a, boolean b, boolean c, boolean d, boolean e) {",
-            "    boolean r = a || ((b && c) && (d && e));",
-            "    return r;",
-            "  }",
-            "  int f2(int a, int b, int c, int d) {",
-            "    int e = a << (b + c + d);",
-            "    return e;",
-            "  }",
-            "  boolean f3(boolean a, boolean b, boolean c, boolean d, boolean e) {",
-            "    boolean r = a || (b && c);",
-            "    return r;",
-            "  }",
-            "}")
+            """
+            class Test {
+              boolean f(boolean a, boolean b, boolean c, boolean d, boolean e) {
+                boolean r = a || ((b && c) && (d && e));
+                return r;
+              }
+
+              int f2(int a, int b, int c, int d) {
+                int e = a << (b + c + d);
+                return e;
+              }
+
+              boolean f3(boolean a, boolean b, boolean c, boolean d, boolean e) {
+                boolean r = a || (b && c);
+                return r;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -116,19 +130,23 @@ public class OperatorPrecedenceTest {
   public void extraParenthesis() {
     helper
         .addInputLines(
-            "Test.java", //
-            "class Test {",
-            " void f(boolean a, boolean b, boolean c, boolean d, boolean e) {",
-            "   boolean g = (a || (b && c && d) && e);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              void f(boolean a, boolean b, boolean c, boolean d, boolean e) {
+                boolean g = (a || (b && c && d) && e);
+              }
+            }
+            """)
         .addOutputLines(
-            "Test.java", //
-            "class Test {",
-            " void f(boolean a, boolean b, boolean c, boolean d, boolean e) {",
-            "   boolean g = (a || (b && c && d && e));",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              void f(boolean a, boolean b, boolean c, boolean d, boolean e) {
+                boolean g = (a || (b && c && d && e));
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -136,19 +154,23 @@ public class OperatorPrecedenceTest {
   public void rightAndParenthesis() {
     helper
         .addInputLines(
-            "Test.java", //
-            "class Test {",
-            " void f(boolean a, boolean b, boolean c, boolean d) {",
-            "   boolean g = a || b && (c && d);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              void f(boolean a, boolean b, boolean c, boolean d) {
+                boolean g = a || b && (c && d);
+              }
+            }
+            """)
         .addOutputLines(
-            "Test.java", //
-            "class Test {",
-            " void f(boolean a, boolean b, boolean c, boolean d) {",
-            "   boolean g = a || (b && c && d);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              void f(boolean a, boolean b, boolean c, boolean d) {
+                boolean g = a || (b && c && d);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -156,19 +178,23 @@ public class OperatorPrecedenceTest {
   public void leftAndParenthesis() {
     helper
         .addInputLines(
-            "Test.java", //
-            "class Test {",
-            " void f(boolean a, boolean b, boolean c, boolean d) {",
-            "   boolean g = a || (b && c) && d;",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              void f(boolean a, boolean b, boolean c, boolean d) {
+                boolean g = a || (b && c) && d;
+              }
+            }
+            """)
         .addOutputLines(
-            "Test.java", //
-            "class Test {",
-            " void f(boolean a, boolean b, boolean c, boolean d) {",
-            "   boolean g = a || (b && c && d);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              void f(boolean a, boolean b, boolean c, boolean d) {
+                boolean g = a || (b && c && d);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -176,19 +202,23 @@ public class OperatorPrecedenceTest {
   public void aLotOfParenthesis() {
     helper
         .addInputLines(
-            "Test.java", //
-            "class Test {",
-            " void f(boolean a, boolean b, boolean c, boolean d, boolean e) {",
-            "   boolean g = (a || (b && c && d) && e);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              void f(boolean a, boolean b, boolean c, boolean d, boolean e) {
+                boolean g = (a || (b && c && d) && e);
+              }
+            }
+            """)
         .addOutputLines(
-            "Test.java", //
-            "class Test {",
-            " void f(boolean a, boolean b, boolean c, boolean d, boolean e) {",
-            "   boolean g = (a || (b && c && d && e));",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              void f(boolean a, boolean b, boolean c, boolean d, boolean e) {
+                boolean g = (a || (b && c && d && e));
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -196,23 +226,27 @@ public class OperatorPrecedenceTest {
   public void conditionalBoolean() {
     helper
         .addInputLines(
-            "Test.java", //
-            "class Test {",
-            " void f(boolean a, boolean b, boolean c, boolean d) {",
-            "   boolean g = a || b ? c : d;",
-            "   g = a && b ? c : d;",
-            "   g = a == b ? c : d;",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              void f(boolean a, boolean b, boolean c, boolean d) {
+                boolean g = a || b ? c : d;
+                g = a && b ? c : d;
+                g = a == b ? c : d;
+              }
+            }
+            """)
         .addOutputLines(
-            "Test.java", //
-            "class Test {",
-            " void f(boolean a, boolean b, boolean c, boolean d) {",
-            "   boolean g = (a || b) ? c : d;",
-            "   g = (a && b) ? c : d;",
-            "   g = a == b ? c : d;",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              void f(boolean a, boolean b, boolean c, boolean d) {
+                boolean g = (a || b) ? c : d;
+                g = (a && b) ? c : d;
+                g = a == b ? c : d;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -220,12 +254,14 @@ public class OperatorPrecedenceTest {
   public void conditionOtherType() {
     helper
         .addInputLines(
-            "Test.java", //
-            "class Test {",
-            " void f(boolean a, boolean b, String c, String d) {",
-            "   String g = a || b ? c : d;",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              void f(boolean a, boolean b, String c, String d) {
+                String g = a || b ? c : d;
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }

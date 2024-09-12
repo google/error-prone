@@ -32,16 +32,18 @@ public final class StaticAssignmentOfThrowableTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  static Throwable foo;",
-            "  public Test(int foo) {",
-            "  }",
-            " ",
-            "  public void foo() { ",
-            "    // BUG: Diagnostic contains: [StaticAssignmentOfThrowable]",
-            "    foo = new NullPointerException(\"assign in method\");",
-            "  }",
-            "}")
+            """
+            class Test {
+              static Throwable foo;
+
+              public Test(int foo) {}
+
+              public void foo() {
+                // BUG: Diagnostic contains: [StaticAssignmentOfThrowable]
+                foo = new NullPointerException("assign in method");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -51,12 +53,14 @@ public final class StaticAssignmentOfThrowableTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            " // BUG: Diagnostic contains: [StaticAssignmentOfThrowable]",
-            "  static Throwable foo = new NullPointerException(\"message\");",
-            "  public Test(int foo) {",
-            "  }",
-            "}")
+            """
+            class Test {
+              // BUG: Diagnostic contains: [StaticAssignmentOfThrowable]
+              static Throwable foo = new NullPointerException("message");
+
+              public Test(int foo) {}
+            }
+            """)
         .doTest();
   }
 
@@ -66,16 +70,18 @@ public final class StaticAssignmentOfThrowableTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  // BUG: Diagnostic contains: [StaticAssignmentOfThrowable]",
-            "  static Throwable foo = bar(); ",
-            "  public Test(int foo) {",
-            "  } ",
-            " ",
-            "  private static Throwable bar() { ",
-            "    return new NullPointerException(\"initialized with return value\"); ",
-            "  } ",
-            "}")
+            """
+            class Test {
+              // BUG: Diagnostic contains: [StaticAssignmentOfThrowable]
+              static Throwable foo = bar();
+
+              public Test(int foo) {}
+
+              private static Throwable bar() {
+                return new NullPointerException("initialized with return value");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -85,15 +91,17 @@ public final class StaticAssignmentOfThrowableTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  Throwable foo = bar(); ",
-            "  public Test(int foo) {",
-            "  } ",
-            " ",
-            "  private static Throwable bar() { ",
-            "    return new NullPointerException(\"initialized with return value\"); ",
-            "  } ",
-            "}")
+            """
+            class Test {
+              Throwable foo = bar();
+
+              public Test(int foo) {}
+
+              private static Throwable bar() {
+                return new NullPointerException("initialized with return value");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -104,12 +112,15 @@ public final class StaticAssignmentOfThrowableTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  static Throwable foo;",
-            "  public Test(int bar) {",
-            "    foo = new NullPointerException(Integer.toString(bar));",
-            "  }",
-            "}")
+            """
+            class Test {
+              static Throwable foo;
+
+              public Test(int bar) {
+                foo = new NullPointerException(Integer.toString(bar));
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -118,14 +129,17 @@ public final class StaticAssignmentOfThrowableTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  static int foo;",
-            "  public Test(int foo) {",
-            "  }",
-            "  private void bar() { ",
-            "    this.foo = 5;",
-            "  } ",
-            "}")
+            """
+            class Test {
+              static int foo;
+
+              public Test(int foo) {}
+
+              private void bar() {
+                this.foo = 5;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -134,11 +148,13 @@ public final class StaticAssignmentOfThrowableTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  private static final String RULE = \"allow this\";",
-            "  public Test(int foo) {",
-            "  }",
-            "}")
+            """
+            class Test {
+              private static final String RULE = "allow this";
+
+              public Test(int foo) {}
+            }
+            """)
         .doTest();
   }
 
@@ -147,12 +163,15 @@ public final class StaticAssignmentOfThrowableTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  Throwable foo;",
-            "  public Test(int foo) {",
-            "    this.foo = new RuntimeException(\"odd but not an error here\");",
-            "  }",
-            "}")
+            """
+            class Test {
+              Throwable foo;
+
+              public Test(int foo) {
+                this.foo = new RuntimeException("odd but not an error here");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -162,18 +181,24 @@ public final class StaticAssignmentOfThrowableTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  static Throwable foo;",
-            "  public Test(int a) {",
-            "  } ",
-            " void foo(int a) { ",
-            "    java.util.Arrays.asList().stream().map(x -> { ",
-            "      // BUG: Diagnostic contains: [StaticAssignmentOfThrowable]",
-            "      foo = new NullPointerException(\"assign\"); ",
-            "      return a; }) ",
-            "    .count();",
-            "  }",
-            "}")
+            """
+            class Test {
+              static Throwable foo;
+
+              public Test(int a) {}
+
+              void foo(int a) {
+                java.util.Arrays.asList().stream()
+                    .map(
+                        x -> {
+                          // BUG: Diagnostic contains: [StaticAssignmentOfThrowable]
+                          foo = new NullPointerException("assign");
+                          return a;
+                        })
+                    .count();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -183,22 +208,32 @@ public final class StaticAssignmentOfThrowableTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  static Throwable foo;",
-            "  public Test(int a) {",
-            "  } ",
-            " void bar(int a) { ",
-            "    java.util.Arrays.asList().stream().map(x -> { ",
-            "      java.util.Arrays.asList().stream().map(y -> { ",
-            "        // BUG: Diagnostic contains: [StaticAssignmentOfThrowable]",
-            "        foo = new NullPointerException(\"inner assign\"); return y;}",
-            "      ).count(); ",
-            "      // BUG: Diagnostic contains: [StaticAssignmentOfThrowable]",
-            "      foo = new NullPointerException(\"outer assign\"); ",
-            "      return a; }) ",
-            "    .count();",
-            "  }",
-            "}")
+            """
+            class Test {
+              static Throwable foo;
+
+              public Test(int a) {}
+
+              void bar(int a) {
+                java.util.Arrays.asList().stream()
+                    .map(
+                        x -> {
+                          java.util.Arrays.asList().stream()
+                              .map(
+                                  y -> {
+                                    // BUG: Diagnostic contains: [StaticAssignmentOfThrowable]
+                                    foo = new NullPointerException("inner assign");
+                                    return y;
+                                  })
+                              .count();
+                          // BUG: Diagnostic contains: [StaticAssignmentOfThrowable]
+                          foo = new NullPointerException("outer assign");
+                          return a;
+                        })
+                    .count();
+              }
+            }
+            """)
         .doTest();
   }
 }

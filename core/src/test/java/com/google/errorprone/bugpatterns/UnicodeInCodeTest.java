@@ -45,10 +45,12 @@ public final class UnicodeInCodeTest {
   public void negative() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  final int noUnicodeHereBoss = 1;",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              final int noUnicodeHereBoss = 1;
+            }
+            """)
         .doTest();
   }
 
@@ -56,11 +58,13 @@ public final class UnicodeInCodeTest {
   public void negativeInComment() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "/** \u03C0 */",
-            "class Test {",
-            "  final int noUnicodeHereBoss = 1; // roughly \u03C0",
-            "}")
+            "Test.java",
+            """
+            /** \u03c0 */
+            class Test {
+              final int noUnicodeHereBoss = 1; // roughly \u03c0
+            }
+            """)
         .doTest();
   }
 
@@ -68,10 +72,12 @@ public final class UnicodeInCodeTest {
   public void negativeInStringLiteral() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  static final String pi = \"\u03C0\";",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              static final String pi = "\u03c0";
+            }
+            """)
         .doTest();
   }
 
@@ -79,10 +85,12 @@ public final class UnicodeInCodeTest {
   public void negativeInCharLiteral() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  static final char pi = '\u03C0';",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              static final char pi = '\u03c0';
+            }
+            """)
         .doTest();
   }
 
@@ -90,11 +98,13 @@ public final class UnicodeInCodeTest {
   public void positive() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  // BUG: Diagnostic contains: Unicode character (\\u03c0)",
-            "  static final double \u03C0 = 3;",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              // BUG: Diagnostic contains: Unicode character (\\u03c0)
+              static final double \u03c0 = 3;
+            }
+            """)
         .doTest();
   }
 
@@ -102,11 +112,13 @@ public final class UnicodeInCodeTest {
   public void positiveMultiCharacterGivesOneFinding() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  // BUG: Diagnostic contains: Unicode character (\\u03c0\\u03c0)",
-            "  static final double \u03C0\u03C0 = 3;",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              // BUG: Diagnostic contains: Unicode character (\\u03c0\\u03c0)
+              static final double \u03c0\u03c0 = 3;
+            }
+            """)
         .doTest();
   }
 
@@ -114,11 +126,13 @@ public final class UnicodeInCodeTest {
   public void suppressibleAtClassLevel() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "@SuppressWarnings(\"UnicodeInCode\")",
-            "class Test {",
-            "  static final double \u03C0 = 3;",
-            "}")
+            "Test.java",
+            """
+            @SuppressWarnings("UnicodeInCode")
+            class Test {
+              static final double \u03c0 = 3;
+            }
+            """)
         .doTest();
   }
 
@@ -126,13 +140,15 @@ public final class UnicodeInCodeTest {
   public void suppressibleAtMethodLevel() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  @SuppressWarnings(\"UnicodeInCode\")",
-            "  void test() {",
-            "    double \u03C0 = 3;",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              @SuppressWarnings("UnicodeInCode")
+              void test() {
+                double \u03c0 = 3;
+              }
+            }
+            """)
         .doTest();
   }
 

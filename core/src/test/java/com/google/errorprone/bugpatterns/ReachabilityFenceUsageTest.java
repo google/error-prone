@@ -33,13 +33,16 @@ public final class ReachabilityFenceUsageTest {
     compilationTestHelper
         .addSourceLines(
             "Test.java",
-            "import java.lang.ref.Reference;",
-            "class Test {",
-            "  public void run() {",
-            "    // BUG: Diagnostic contains:",
-            "    Reference.reachabilityFence(this);",
-            "  }",
-            "}")
+            """
+            import java.lang.ref.Reference;
+
+            class Test {
+              public void run() {
+                // BUG: Diagnostic contains:
+                Reference.reachabilityFence(this);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -48,15 +51,19 @@ public final class ReachabilityFenceUsageTest {
     compilationTestHelper
         .addSourceLines(
             "Test.java",
-            "import java.lang.ref.Reference;",
-            "class Test {",
-            "  public void run() {",
-            "    try {",
-            "      // BUG: Diagnostic contains:",
-            "      Reference.reachabilityFence(this);",
-            "    } catch (Exception e) {}",
-            "  }",
-            "}")
+            """
+            import java.lang.ref.Reference;
+
+            class Test {
+              public void run() {
+                try {
+                  // BUG: Diagnostic contains:
+                  Reference.reachabilityFence(this);
+                } catch (Exception e) {
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -65,15 +72,18 @@ public final class ReachabilityFenceUsageTest {
     compilationTestHelper
         .addSourceLines(
             "Test.java",
-            "import java.lang.ref.Reference;",
-            "class Test {",
-            "  public void run() {",
-            "    try {",
-            "    } finally {",
-            "      Reference.reachabilityFence(this);",
-            "    }",
-            "  }",
-            "}")
+            """
+            import java.lang.ref.Reference;
+
+            class Test {
+              public void run() {
+                try {
+                } finally {
+                  Reference.reachabilityFence(this);
+                }
+              }
+            }
+            """)
         .doTest();
   }
 }

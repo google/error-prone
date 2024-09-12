@@ -70,22 +70,28 @@ public class ThreeLetterTimeZoneIDTest {
     compilationHelper
         .addSourceLines(
             "a/A.java",
-            "package a;",
-            "import java.util.TimeZone;",
-            "class A {",
-            "  public static void test_PST() {",
-            "    // BUG: Diagnostic contains: TimeZone.getTimeZone(\"America/Los_Angeles\")",
-            "    TimeZone.getTimeZone(\"PST\");",
-            "  }",
-            "  public static void test_EST() {",
-            "    // BUG: Diagnostic contains: TimeZone.getTimeZone(\"Etc/GMT+5\")",
-            "    TimeZone.getTimeZone(\"EST\");",
-            "  }",
-            "  public static void test_noPreferredReplacements() {",
-            "    // BUG: Diagnostic contains: TimeZone.getTimeZone(\"Asia/Dhaka\")",
-            "    TimeZone.getTimeZone(\"BST\");",
-            "  }",
-            "}")
+            """
+            package a;
+
+            import java.util.TimeZone;
+
+            class A {
+              public static void test_PST() {
+                // BUG: Diagnostic contains: TimeZone.getTimeZone("America/Los_Angeles")
+                TimeZone.getTimeZone("PST");
+              }
+
+              public static void test_EST() {
+                // BUG: Diagnostic contains: TimeZone.getTimeZone("Etc/GMT+5")
+                TimeZone.getTimeZone("EST");
+              }
+
+              public static void test_noPreferredReplacements() {
+                // BUG: Diagnostic contains: TimeZone.getTimeZone("Asia/Dhaka")
+                TimeZone.getTimeZone("BST");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -94,28 +100,35 @@ public class ThreeLetterTimeZoneIDTest {
     compilationHelper
         .addSourceLines(
             "a/A.java",
-            "package a;",
-            "import java.util.TimeZone;",
-            "import org.joda.time.DateTimeZone;",
-            "class A {",
-            "  public static void test_EST() {",
-            "    // BUG: Diagnostic contains: TimeZone.getTimeZone(\"America/New_York\")",
-            "    DateTimeZone.forTimeZone(TimeZone.getTimeZone(\"EST\"));",
-            "  }",
-            "  public static void test_HST() {",
-            "    // BUG: Diagnostic contains: TimeZone.getTimeZone(\"Pacific/Honolulu\")",
-            "    DateTimeZone.forTimeZone(TimeZone.getTimeZone(\"HST\"));",
-            "  }",
-            "  public static void test_MST() {",
-            "    // BUG: Diagnostic contains: TimeZone.getTimeZone(\"America/Denver\")",
-            "    DateTimeZone.forTimeZone(TimeZone.getTimeZone(\"MST\"));",
-            "  }",
-            "  public static void test_PST() {",
-            "    // Not a special case, but should still work.",
-            "    // BUG: Diagnostic contains: TimeZone.getTimeZone(\"America/Los_Angeles\")",
-            "    DateTimeZone.forTimeZone(TimeZone.getTimeZone(\"PST\"));",
-            "  }",
-            "}")
+            """
+            package a;
+
+            import java.util.TimeZone;
+            import org.joda.time.DateTimeZone;
+
+            class A {
+              public static void test_EST() {
+                // BUG: Diagnostic contains: TimeZone.getTimeZone("America/New_York")
+                DateTimeZone.forTimeZone(TimeZone.getTimeZone("EST"));
+              }
+
+              public static void test_HST() {
+                // BUG: Diagnostic contains: TimeZone.getTimeZone("Pacific/Honolulu")
+                DateTimeZone.forTimeZone(TimeZone.getTimeZone("HST"));
+              }
+
+              public static void test_MST() {
+                // BUG: Diagnostic contains: TimeZone.getTimeZone("America/Denver")
+                DateTimeZone.forTimeZone(TimeZone.getTimeZone("MST"));
+              }
+
+              public static void test_PST() {
+                // Not a special case, but should still work.
+                // BUG: Diagnostic contains: TimeZone.getTimeZone("America/Los_Angeles")
+                DateTimeZone.forTimeZone(TimeZone.getTimeZone("PST"));
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -124,20 +137,25 @@ public class ThreeLetterTimeZoneIDTest {
     compilationHelper
         .addSourceLines(
             "a/A.java",
-            "package a;",
-            "import java.util.TimeZone;",
-            "class A {",
-            "  public static void notThreeLetter() {",
-            "    TimeZone.getTimeZone(\"\");",
-            "    TimeZone.getTimeZone(\"America/Los_Angeles\");",
-            "  }",
-            "  public static void threeLetterButAllowed() {",
-            "    TimeZone.getTimeZone(\"GMT\");",
-            "    TimeZone.getTimeZone(\"UTC\");",
-            "    TimeZone.getTimeZone(\"CET\");",
-            "    TimeZone.getTimeZone(\"PRC\");",
-            "  }",
-            "}")
+            """
+            package a;
+
+            import java.util.TimeZone;
+
+            class A {
+              public static void notThreeLetter() {
+                TimeZone.getTimeZone("");
+                TimeZone.getTimeZone("America/Los_Angeles");
+              }
+
+              public static void threeLetterButAllowed() {
+                TimeZone.getTimeZone("GMT");
+                TimeZone.getTimeZone("UTC");
+                TimeZone.getTimeZone("CET");
+                TimeZone.getTimeZone("PRC");
+              }
+            }
+            """)
         .doTest();
   }
 

@@ -36,22 +36,30 @@ public final class NullOptionalTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "import java.util.Optional;",
-            "class Test {",
-            "  void a(Optional<Object> o) {}",
-            "  void test() {",
-            "    a(null);",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            class Test {
+              void a(Optional<Object> o) {}
+
+              void test() {
+                a(null);
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import java.util.Optional;",
-            "class Test {",
-            "  void a(Optional<Object> o) {}",
-            "  void test() {",
-            "    a(Optional.empty());",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            class Test {
+              void a(Optional<Object> o) {}
+
+              void test() {
+                a(Optional.empty());
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -60,14 +68,18 @@ public final class NullOptionalTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import java.util.Optional;",
-            "import javax.annotation.Nullable;",
-            "class Test {",
-            "  void a(@Nullable Optional<Object> o) {}",
-            "  void test() {",
-            "    a(null);",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+            import javax.annotation.Nullable;
+
+            class Test {
+              void a(@Nullable Optional<Object> o) {}
+
+              void test() {
+                a(null);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -76,13 +88,17 @@ public final class NullOptionalTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import java.util.Optional;",
-            "class Test {",
-            "  void a(Optional<Object> o) {}",
-            "  void test() {",
-            "    a(Optional.empty());",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            class Test {
+              void a(Optional<Object> o) {}
+
+              void test() {
+                a(Optional.empty());
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -91,14 +107,18 @@ public final class NullOptionalTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import static org.junit.Assert.assertThrows;",
-            "import java.util.Optional;",
-            "class Test {",
-            "  void a(Optional<Object> o) {}",
-            "  void test() {",
-            "    assertThrows(NullPointerException.class, () -> a(null));",
-            "  }",
-            "}")
+            """
+            import static org.junit.Assert.assertThrows;
+            import java.util.Optional;
+
+            class Test {
+              void a(Optional<Object> o) {}
+
+              void test() {
+                assertThrows(NullPointerException.class, () -> a(null));
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -107,15 +127,19 @@ public final class NullOptionalTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import java.util.Optional;",
-            "class Test {",
-            "  @SafeVarargs",
-            "  private final void a(int a, Optional<Object>... o) {}",
-            "  void test() {",
-            "    // BUG: Diagnostic contains:",
-            "    a(1, Optional.empty(), null);",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            class Test {
+              @SafeVarargs
+              private final void a(int a, Optional<Object>... o) {}
+
+              void test() {
+                // BUG: Diagnostic contains:
+                a(1, Optional.empty(), null);
+              }
+            }
+            """)
         .doTest();
   }
 }

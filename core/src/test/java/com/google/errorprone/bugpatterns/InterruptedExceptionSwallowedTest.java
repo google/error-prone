@@ -29,9 +29,11 @@ public final class InterruptedExceptionSwallowedTest {
       CompilationTestHelper.newInstance(InterruptedExceptionSwallowed.class, getClass())
           .addSourceLines(
               "Thrower.java",
-              "class Thrower implements AutoCloseable {",
-              "  public void close() throws InterruptedException {}",
-              "}");
+              """
+              class Thrower implements AutoCloseable {
+                public void close() throws InterruptedException {}
+              }
+              """);
 
   private final BugCheckerRefactoringTestHelper refactoringHelper =
       BugCheckerRefactoringTestHelper.newInstance(InterruptedExceptionSwallowed.class, getClass());
@@ -41,16 +43,19 @@ public final class InterruptedExceptionSwallowedTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.concurrent.Future;",
-            "class Test {",
-            "  void test(Future<?> future) {",
-            "    try {",
-            "      throw new Exception();",
-            "    } catch (Exception e) {",
-            "      throw new IllegalStateException(e);",
-            "    }",
-            "  }",
-            "}")
+            """
+            import java.util.concurrent.Future;
+
+            class Test {
+              void test(Future<?> future) {
+                try {
+                  throw new Exception();
+                } catch (Exception e) {
+                  throw new IllegalStateException(e);
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -59,18 +64,22 @@ public final class InterruptedExceptionSwallowedTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.concurrent.Future;",
-            "class Test {",
-            "  void test(Future<?> future) {",
-            "    try {",
-            "       try {",
-            "         future.get();",
-            "       } catch (InterruptedException e) {}",
-            "    } catch (Exception e) {",
-            "      throw new IllegalStateException(e);",
-            "    }",
-            "  }",
-            "}")
+            """
+            import java.util.concurrent.Future;
+
+            class Test {
+              void test(Future<?> future) {
+                try {
+                  try {
+                    future.get();
+                  } catch (InterruptedException e) {
+                  }
+                } catch (Exception e) {
+                  throw new IllegalStateException(e);
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -79,21 +88,24 @@ public final class InterruptedExceptionSwallowedTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.concurrent.Future;",
-            "class Test {",
-            "  void test(Future<?> future) {",
-            "    try {",
-            "       try {",
-            "         future.get();",
-            "       } catch (InterruptedException e) {",
-            "         throw e;",
-            "       }",
-            "    // BUG: Diagnostic contains:",
-            "    } catch (Exception e) {",
-            "      throw new IllegalStateException(e);",
-            "    }",
-            "  }",
-            "}")
+            """
+            import java.util.concurrent.Future;
+
+            class Test {
+              void test(Future<?> future) {
+                try {
+                  try {
+                    future.get();
+                  } catch (InterruptedException e) {
+                    throw e;
+                  }
+                  // BUG: Diagnostic contains:
+                } catch (Exception e) {
+                  throw new IllegalStateException(e);
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -102,14 +114,16 @@ public final class InterruptedExceptionSwallowedTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.concurrent.Future;",
-            "class Test {",
-            "  // BUG: Diagnostic contains:",
-            "  void test() throws Exception {",
-            "    try (Thrower t = new Thrower()) {",
-            "    }",
-            "  }",
-            "}")
+            """
+            import java.util.concurrent.Future;
+
+            class Test {
+              // BUG: Diagnostic contains:
+              void test() throws Exception {
+                try (Thrower t = new Thrower()) {}
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -118,17 +132,19 @@ public final class InterruptedExceptionSwallowedTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.concurrent.Future;",
-            "class Test {",
-            "  void test() {",
-            "    try {",
-            "      try (Thrower t = new Thrower()) {",
-            "      }",
-            "    // BUG: Diagnostic contains:",
-            "    } catch (Exception e) {",
-            "    }",
-            "  }",
-            "}")
+            """
+            import java.util.concurrent.Future;
+
+            class Test {
+              void test() {
+                try {
+                  try (Thrower t = new Thrower()) {}
+                  // BUG: Diagnostic contains:
+                } catch (Exception e) {
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -137,17 +153,21 @@ public final class InterruptedExceptionSwallowedTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.concurrent.Future;",
-            "class Test {",
-            "  class Mischief implements AutoCloseable {",
-            "    public int close = 1;",
-            "    public void close() {}",
-            "  }",
-            "  void test() {",
-            "    try (Mischief m = new Mischief()) {",
-            "    }",
-            "  }",
-            "}")
+            """
+            import java.util.concurrent.Future;
+
+            class Test {
+              class Mischief implements AutoCloseable {
+                public int close = 1;
+
+                public void close() {}
+              }
+
+              void test() {
+                try (Mischief m = new Mischief()) {}
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -156,17 +176,19 @@ public final class InterruptedExceptionSwallowedTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.concurrent.Future;",
-            "class Test {",
-            "  void test() throws InterruptedException, Exception {",
-            "    try {",
-            "      try (Thrower t = new Thrower()) {",
-            "      }",
-            "    } catch (Exception e) {",
-            "      throw e;",
-            "    }",
-            "  }",
-            "}")
+            """
+            import java.util.concurrent.Future;
+
+            class Test {
+              void test() throws InterruptedException, Exception {
+                try {
+                  try (Thrower t = new Thrower()) {}
+                } catch (Exception e) {
+                  throw e;
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -175,18 +197,22 @@ public final class InterruptedExceptionSwallowedTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.concurrent.Future;",
-            "class Test {",
-            "  class ThrowingParent implements AutoCloseable {",
-            "    public void close() throws InterruptedException {}",
-            "  }",
-            "  class ThrowingChild extends ThrowingParent {}",
-            "  // BUG: Diagnostic contains:",
-            "  void test() throws Exception {",
-            "    try (ThrowingChild t = new ThrowingChild()) {",
-            "    }",
-            "  }",
-            "}")
+            """
+            import java.util.concurrent.Future;
+
+            class Test {
+              class ThrowingParent implements AutoCloseable {
+                public void close() throws InterruptedException {}
+              }
+
+              class ThrowingChild extends ThrowingParent {}
+
+              // BUG: Diagnostic contains:
+              void test() throws Exception {
+                try (ThrowingChild t = new ThrowingChild()) {}
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -195,15 +221,18 @@ public final class InterruptedExceptionSwallowedTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.concurrent.Future;",
-            "class Test {",
-            "  void test() {",
-            "    try (Thrower t = new Thrower()) {",
-            "    // BUG: Diagnostic contains:",
-            "    } catch (Exception e) {",
-            "    }",
-            "  }",
-            "}")
+            """
+            import java.util.concurrent.Future;
+
+            class Test {
+              void test() {
+                try (Thrower t = new Thrower()) {
+                  // BUG: Diagnostic contains:
+                } catch (Exception e) {
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -212,26 +241,29 @@ public final class InterruptedExceptionSwallowedTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.concurrent.ExecutionException;",
-            "import java.util.concurrent.Future;",
-            "class Test {",
-            "  void test(Future<?> future) {",
-            "    try {",
-            "      try {",
-            "        future.get();",
-            "      } catch (ExecutionException e) {",
-            "        if (e.getCause() instanceof IllegalStateException) {",
-            "          throw new InterruptedException();",
-            "        }",
-            "      } catch (InterruptedException e) {",
-            "        Thread.currentThread().interrupt();",
-            "        throw new IllegalStateException(e);",
-            "      }",
-            "    // BUG: Diagnostic contains:",
-            "    } catch (Exception e) {",
-            "    }",
-            "  }",
-            "}")
+            """
+            import java.util.concurrent.ExecutionException;
+            import java.util.concurrent.Future;
+
+            class Test {
+              void test(Future<?> future) {
+                try {
+                  try {
+                    future.get();
+                  } catch (ExecutionException e) {
+                    if (e.getCause() instanceof IllegalStateException) {
+                      throw new InterruptedException();
+                    }
+                  } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    throw new IllegalStateException(e);
+                  }
+                  // BUG: Diagnostic contains:
+                } catch (Exception e) {
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -240,19 +272,22 @@ public final class InterruptedExceptionSwallowedTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.concurrent.Future;",
-            "class Test {",
-            "  void test(Future<?> future) {",
-            "    try {",
-            "      throw new Exception();",
-            "    } catch (Exception e) {",
-            "      if (e instanceof InterruptedException) {",
-            "        Thread.currentThread().interrupt();",
-            "      }",
-            "      throw new IllegalStateException(e);",
-            "    }",
-            "  }",
-            "}")
+            """
+            import java.util.concurrent.Future;
+
+            class Test {
+              void test(Future<?> future) {
+                try {
+                  throw new Exception();
+                } catch (Exception e) {
+                  if (e instanceof InterruptedException) {
+                    Thread.currentThread().interrupt();
+                  }
+                  throw new IllegalStateException(e);
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -261,17 +296,20 @@ public final class InterruptedExceptionSwallowedTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.concurrent.Future;",
-            "class Test {",
-            "  void test(Future<?> future) {",
-            "    try {",
-            "      future.get();",
-            "    // BUG: Diagnostic contains:",
-            "    } catch (Exception e) {",
-            "      throw new IllegalStateException(e);",
-            "    }",
-            "  }",
-            "}")
+            """
+            import java.util.concurrent.Future;
+
+            class Test {
+              void test(Future<?> future) {
+                try {
+                  future.get();
+                  // BUG: Diagnostic contains:
+                } catch (Exception e) {
+                  throw new IllegalStateException(e);
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -280,31 +318,37 @@ public final class InterruptedExceptionSwallowedTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "import java.util.concurrent.Future;",
-            "class Test {",
-            "  void test(Future<?> future) {",
-            "    try {",
-            "      future.get();",
-            "    } catch (Exception e) {",
-            "      throw new IllegalStateException(e);",
-            "    }",
-            "  }",
-            "}")
+            """
+            import java.util.concurrent.Future;
+
+            class Test {
+              void test(Future<?> future) {
+                try {
+                  future.get();
+                } catch (Exception e) {
+                  throw new IllegalStateException(e);
+                }
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import java.util.concurrent.Future;",
-            "class Test {",
-            "  void test(Future<?> future) {",
-            "    try {",
-            "      future.get();",
-            "    } catch (Exception e) {",
-            "      if (e instanceof InterruptedException) {",
-            "        Thread.currentThread().interrupt();",
-            "      }",
-            "      throw new IllegalStateException(e);",
-            "    }",
-            "  }",
-            "}")
+            """
+            import java.util.concurrent.Future;
+
+            class Test {
+              void test(Future<?> future) {
+                try {
+                  future.get();
+                } catch (Exception e) {
+                  if (e instanceof InterruptedException) {
+                    Thread.currentThread().interrupt();
+                  }
+                  throw new IllegalStateException(e);
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -313,28 +357,35 @@ public final class InterruptedExceptionSwallowedTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "import java.util.concurrent.Future;",
-            "class Test {",
-            "  void test(Future<?> future) {",
-            "    try {",
-            "      future.get();",
-            "    } catch (Exception e) {}",
-            "  }",
-            "}")
+            """
+            import java.util.concurrent.Future;
+
+            class Test {
+              void test(Future<?> future) {
+                try {
+                  future.get();
+                } catch (Exception e) {
+                }
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import java.util.concurrent.Future;",
-            "class Test {",
-            "  void test(Future<?> future) {",
-            "    try {",
-            "      future.get();",
-            "    } catch (Exception e) {",
-            "      if (e instanceof InterruptedException) {",
-            "        Thread.currentThread().interrupt();",
-            "      }",
-            "    }",
-            "  }",
-            "}")
+            """
+            import java.util.concurrent.Future;
+
+            class Test {
+              void test(Future<?> future) {
+                try {
+                  future.get();
+                } catch (Exception e) {
+                  if (e instanceof InterruptedException) {
+                    Thread.currentThread().interrupt();
+                  }
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -343,17 +394,20 @@ public final class InterruptedExceptionSwallowedTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.concurrent.ExecutionException;",
-            "import java.util.concurrent.Future;",
-            "class Test {",
-            "  void test(Future<?> future) {",
-            "    try {",
-            "      future.get();",
-            "    } catch (ExecutionException | InterruptedException e) {",
-            "      throw new IllegalStateException(e);",
-            "    }",
-            "  }",
-            "}")
+            """
+            import java.util.concurrent.ExecutionException;
+            import java.util.concurrent.Future;
+
+            class Test {
+              void test(Future<?> future) {
+                try {
+                  future.get();
+                } catch (ExecutionException | InterruptedException e) {
+                  throw new IllegalStateException(e);
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -362,16 +416,21 @@ public final class InterruptedExceptionSwallowedTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.concurrent.Future;",
-            "class Test {",
-            "  void test(Future<?> future) {",
-            "    try {",
-            "      future.get();",
-            "    } catch (@SuppressWarnings(\"InterruptedExceptionSwallowed\") Exception e) {",
-            "      throw new IllegalStateException(e);",
-            "    }",
-            "  }",
-            "}")
+            """
+            import java.util.concurrent.Future;
+
+            class Test {
+              void test(Future<?> future) {
+                try {
+                  future.get();
+                } catch (
+                    @SuppressWarnings("InterruptedExceptionSwallowed")
+                    Exception e) {
+                  throw new IllegalStateException(e);
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -380,26 +439,32 @@ public final class InterruptedExceptionSwallowedTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "import java.util.concurrent.ExecutionException;",
-            "import java.util.concurrent.Future;",
-            "class Test {",
-            "  // BUG: Diagnostic contains:",
-            "  void test(Future<?> future) throws Exception {",
-            "    future.get();",
-            "    throw new IllegalStateException();",
-            "  }",
-            "}")
+            """
+            import java.util.concurrent.ExecutionException;
+            import java.util.concurrent.Future;
+
+            class Test {
+              // BUG: Diagnostic contains:
+              void test(Future<?> future) throws Exception {
+                future.get();
+                throw new IllegalStateException();
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import java.util.concurrent.ExecutionException;",
-            "import java.util.concurrent.Future;",
-            "class Test {",
-            "  // BUG: Diagnostic contains:",
-            "  void test(Future<?> future) throws ExecutionException, InterruptedException {",
-            "    future.get();",
-            "    throw new IllegalStateException();",
-            "  }",
-            "}")
+            """
+            import java.util.concurrent.ExecutionException;
+            import java.util.concurrent.Future;
+
+            class Test {
+              // BUG: Diagnostic contains:
+              void test(Future<?> future) throws ExecutionException, InterruptedException {
+                future.get();
+                throw new IllegalStateException();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -408,14 +473,17 @@ public final class InterruptedExceptionSwallowedTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.concurrent.ExecutionException;",
-            "import java.util.concurrent.Future;",
-            "class Test {",
-            "  void test(Future<?> future) throws Exception {",
-            "    future.get();",
-            "    throw new Exception();",
-            "  }",
-            "}")
+            """
+            import java.util.concurrent.ExecutionException;
+            import java.util.concurrent.Future;
+
+            class Test {
+              void test(Future<?> future) throws Exception {
+                future.get();
+                throw new Exception();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -424,21 +492,24 @@ public final class InterruptedExceptionSwallowedTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.io.IOException;",
-            "import java.io.FileNotFoundException;",
-            "import java.util.concurrent.ExecutionException;",
-            "import java.util.concurrent.Future;",
-            "class Test {",
-            "  // BUG: Diagnostic contains: ExecutionException, IOException, InterruptedException",
-            "  void test(Future<?> future) throws Exception {",
-            "    future.get();",
-            "    if (true) {",
-            "      throw new IOException();",
-            "    } else {",
-            "      throw new FileNotFoundException();",
-            "    }",
-            "  }",
-            "}")
+            """
+            import java.io.IOException;
+            import java.io.FileNotFoundException;
+            import java.util.concurrent.ExecutionException;
+            import java.util.concurrent.Future;
+
+            class Test {
+              // BUG: Diagnostic contains: ExecutionException, IOException, InterruptedException
+              void test(Future<?> future) throws Exception {
+                future.get();
+                if (true) {
+                  throw new IOException();
+                } else {
+                  throw new FileNotFoundException();
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -447,35 +518,43 @@ public final class InterruptedExceptionSwallowedTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.io.IOException;",
-            "import java.util.concurrent.ExecutionException;",
-            "import java.util.concurrent.Future;",
-            "import java.util.concurrent.TimeoutException;",
-            "class Test {",
-            "  void test(Future<?> future) throws Exception {",
-            "    future.get();",
-            "    if (hashCode() == 0) {",
-            "      throw new A();",
-            "     }",
-            "    if (hashCode() == 0) {",
-            "      throw new B();",
-            "     }",
-            "    if (hashCode() == 0) {",
-            "      throw new C();",
-            "     }",
-            "    if (hashCode() == 0) {",
-            "      throw new D();",
-            "     }",
-            "    if (hashCode() == 0) {",
-            "      throw new E();",
-            "     }",
-            "  }",
-            "  static class A extends Exception {}",
-            "  static class B extends Exception {}",
-            "  static class C extends Exception {}",
-            "  static class D extends Exception {}",
-            "  static class E extends Exception {}",
-            "}")
+            """
+            import java.io.IOException;
+            import java.util.concurrent.ExecutionException;
+            import java.util.concurrent.Future;
+            import java.util.concurrent.TimeoutException;
+
+            class Test {
+              void test(Future<?> future) throws Exception {
+                future.get();
+                if (hashCode() == 0) {
+                  throw new A();
+                }
+                if (hashCode() == 0) {
+                  throw new B();
+                }
+                if (hashCode() == 0) {
+                  throw new C();
+                }
+                if (hashCode() == 0) {
+                  throw new D();
+                }
+                if (hashCode() == 0) {
+                  throw new E();
+                }
+              }
+
+              static class A extends Exception {}
+
+              static class B extends Exception {}
+
+              static class C extends Exception {}
+
+              static class D extends Exception {}
+
+              static class E extends Exception {}
+            }
+            """)
         .doTest();
   }
 
@@ -484,12 +563,15 @@ public final class InterruptedExceptionSwallowedTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.concurrent.Future;",
-            "class Test {",
-            "  void test(Future<?> future) throws Exception {",
-            "    throw new Exception();",
-            "  }",
-            "}")
+            """
+            import java.util.concurrent.Future;
+
+            class Test {
+              void test(Future<?> future) throws Exception {
+                throw new Exception();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -498,13 +580,16 @@ public final class InterruptedExceptionSwallowedTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.concurrent.ExecutionException;",
-            "import java.util.concurrent.Future;",
-            "class Test {",
-            "  void test(Future<?> future) throws InterruptedException, ExecutionException {",
-            "    future.get();",
-            "  }",
-            "}")
+            """
+            import java.util.concurrent.ExecutionException;
+            import java.util.concurrent.Future;
+
+            class Test {
+              void test(Future<?> future) throws InterruptedException, ExecutionException {
+                future.get();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -513,14 +598,18 @@ public final class InterruptedExceptionSwallowedTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.concurrent.ExecutionException;",
-            "import java.util.concurrent.Future;",
-            "public class Test {",
-            "  private static final Future<?> future = null;",
-            "  public static void main(String[] argv) throws Exception {",
-            "    future.get();",
-            "  }",
-            "}")
+            """
+            import java.util.concurrent.ExecutionException;
+            import java.util.concurrent.Future;
+
+            public class Test {
+              private static final Future<?> future = null;
+
+              public static void main(String[] argv) throws Exception {
+                future.get();
+              }
+            }
+            """)
         .doTest();
   }
 }

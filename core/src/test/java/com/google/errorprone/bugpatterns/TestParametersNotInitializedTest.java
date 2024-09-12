@@ -35,23 +35,29 @@ public final class TestParametersNotInitializedTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "import com.google.testing.junit.testparameterinjector.TestParameter;",
-            "import org.junit.runner.RunWith;",
-            "import org.junit.runners.JUnit4;",
-            "@RunWith(JUnit4.class)",
-            "public class Test {",
-            "  @TestParameter public boolean foo;",
-            "}")
+            """
+            import com.google.testing.junit.testparameterinjector.TestParameter;
+            import org.junit.runner.RunWith;
+            import org.junit.runners.JUnit4;
+
+            @RunWith(JUnit4.class)
+            public class Test {
+              @TestParameter public boolean foo;
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import com.google.testing.junit.testparameterinjector.TestParameter;",
-            "import com.google.testing.junit.testparameterinjector.TestParameterInjector;",
-            "import org.junit.runner.RunWith;",
-            "import org.junit.runners.JUnit4;",
-            "@RunWith(TestParameterInjector.class)",
-            "public class Test {",
-            "  @TestParameter public boolean foo;",
-            "}")
+            """
+            import com.google.testing.junit.testparameterinjector.TestParameter;
+            import com.google.testing.junit.testparameterinjector.TestParameterInjector;
+            import org.junit.runner.RunWith;
+            import org.junit.runners.JUnit4;
+
+            @RunWith(TestParameterInjector.class)
+            public class Test {
+              @TestParameter public boolean foo;
+            }
+            """)
         .doTest();
   }
 
@@ -60,23 +66,29 @@ public final class TestParametersNotInitializedTest {
     refactoringHelper
         .addInputLines(
             "MyRunner.java",
-            "import org.junit.runners.BlockJUnit4ClassRunner;",
-            "import org.junit.runners.model.InitializationError;",
-            "public final class MyRunner extends BlockJUnit4ClassRunner {",
-            "  public MyRunner(Class<?> testClass) throws InitializationError {",
-            "    super(testClass);",
-            "  }",
-            "}")
+            """
+            import org.junit.runners.BlockJUnit4ClassRunner;
+            import org.junit.runners.model.InitializationError;
+
+            public final class MyRunner extends BlockJUnit4ClassRunner {
+              public MyRunner(Class<?> testClass) throws InitializationError {
+                super(testClass);
+              }
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
             "Test.java",
-            "import com.google.testing.junit.testparameterinjector.TestParameter;",
-            "import org.junit.runner.RunWith;",
-            "import org.junit.runners.JUnit4;",
-            "@RunWith(MyRunner.class)",
-            "public class Test {",
-            "  @TestParameter public boolean foo;",
-            "}")
+            """
+            import com.google.testing.junit.testparameterinjector.TestParameter;
+            import org.junit.runner.RunWith;
+            import org.junit.runners.JUnit4;
+
+            @RunWith(MyRunner.class)
+            public class Test {
+              @TestParameter public boolean foo;
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -86,13 +98,16 @@ public final class TestParametersNotInitializedTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import com.google.testing.junit.testparameterinjector.TestParameter;",
-            "import com.google.testing.junit.testparameterinjector.TestParameterInjector;",
-            "import org.junit.runner.RunWith;",
-            "@RunWith(TestParameterInjector.class)",
-            "public class Test {",
-            "  @TestParameter public boolean foo;",
-            "}")
+            """
+            import com.google.testing.junit.testparameterinjector.TestParameter;
+            import com.google.testing.junit.testparameterinjector.TestParameterInjector;
+            import org.junit.runner.RunWith;
+
+            @RunWith(TestParameterInjector.class)
+            public class Test {
+              @TestParameter public boolean foo;
+            }
+            """)
         .doTest();
   }
 
@@ -101,11 +116,13 @@ public final class TestParametersNotInitializedTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import org.junit.runner.RunWith;",
-            "import org.junit.runners.JUnit4;",
-            "@RunWith(JUnit4.class)",
-            "public class Test {",
-            "}")
+            """
+            import org.junit.runner.RunWith;
+            import org.junit.runners.JUnit4;
+
+            @RunWith(JUnit4.class)
+            public class Test {}
+            """)
         .doTest();
   }
 }

@@ -53,18 +53,21 @@ public final class InstantTemporalUnitTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import java.time.Instant;",
-            "import java.time.temporal.ChronoUnit;",
-            "public class TestClass {",
-            "  private static final Instant I0 = Instant.EPOCH.plus(1, ChronoUnit.DAYS);",
-            "  private static final Instant I1 = Instant.EPOCH.plus(1, ChronoUnit.HALF_DAYS);",
-            "  private static final Instant I2 = Instant.EPOCH.plus(1, ChronoUnit.HOURS);",
-            "  private static final Instant I3 = Instant.EPOCH.plus(1, ChronoUnit.MICROS);",
-            "  private static final Instant I4 = Instant.EPOCH.plus(1, ChronoUnit.MILLIS);",
-            "  private static final Instant I5 = Instant.EPOCH.plus(1, ChronoUnit.MINUTES);",
-            "  private static final Instant I6 = Instant.EPOCH.plus(1, ChronoUnit.NANOS);",
-            "  private static final Instant I7 = Instant.EPOCH.plus(1, ChronoUnit.SECONDS);",
-            "}")
+            """
+            import java.time.Instant;
+            import java.time.temporal.ChronoUnit;
+
+            public class TestClass {
+              private static final Instant I0 = Instant.EPOCH.plus(1, ChronoUnit.DAYS);
+              private static final Instant I1 = Instant.EPOCH.plus(1, ChronoUnit.HALF_DAYS);
+              private static final Instant I2 = Instant.EPOCH.plus(1, ChronoUnit.HOURS);
+              private static final Instant I3 = Instant.EPOCH.plus(1, ChronoUnit.MICROS);
+              private static final Instant I4 = Instant.EPOCH.plus(1, ChronoUnit.MILLIS);
+              private static final Instant I5 = Instant.EPOCH.plus(1, ChronoUnit.MINUTES);
+              private static final Instant I6 = Instant.EPOCH.plus(1, ChronoUnit.NANOS);
+              private static final Instant I7 = Instant.EPOCH.plus(1, ChronoUnit.SECONDS);
+            }
+            """)
         .doTest();
   }
 
@@ -73,26 +76,29 @@ public final class InstantTemporalUnitTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import java.time.Instant;",
-            "import java.time.temporal.ChronoUnit;",
-            "public class TestClass {",
-            "  // BUG: Diagnostic contains: InstantTemporalUnit",
-            "  private static final Instant I0 = Instant.EPOCH.plus(1, ChronoUnit.CENTURIES);",
-            "  // BUG: Diagnostic contains: InstantTemporalUnit",
-            "  private static final Instant I1 = Instant.EPOCH.plus(1, ChronoUnit.DECADES);",
-            "  // BUG: Diagnostic contains: InstantTemporalUnit",
-            "  private static final Instant I2 = Instant.EPOCH.plus(1, ChronoUnit.ERAS);",
-            "  // BUG: Diagnostic contains: InstantTemporalUnit",
-            "  private static final Instant I3 = Instant.EPOCH.plus(1, ChronoUnit.FOREVER);",
-            "  // BUG: Diagnostic contains: InstantTemporalUnit",
-            "  private static final Instant I4 = Instant.EPOCH.plus(1, ChronoUnit.MILLENNIA);",
-            "  // BUG: Diagnostic contains: InstantTemporalUnit",
-            "  private static final Instant I5 = Instant.EPOCH.plus(1, ChronoUnit.MONTHS);",
-            "  // BUG: Diagnostic contains: InstantTemporalUnit",
-            "  private static final Instant I6 = Instant.EPOCH.plus(1, ChronoUnit.WEEKS);",
-            "  // BUG: Diagnostic contains: InstantTemporalUnit",
-            "  private static final Instant I7 = Instant.EPOCH.plus(1, ChronoUnit.YEARS);",
-            "}")
+            """
+            import java.time.Instant;
+            import java.time.temporal.ChronoUnit;
+
+            public class TestClass {
+              // BUG: Diagnostic contains: InstantTemporalUnit
+              private static final Instant I0 = Instant.EPOCH.plus(1, ChronoUnit.CENTURIES);
+              // BUG: Diagnostic contains: InstantTemporalUnit
+              private static final Instant I1 = Instant.EPOCH.plus(1, ChronoUnit.DECADES);
+              // BUG: Diagnostic contains: InstantTemporalUnit
+              private static final Instant I2 = Instant.EPOCH.plus(1, ChronoUnit.ERAS);
+              // BUG: Diagnostic contains: InstantTemporalUnit
+              private static final Instant I3 = Instant.EPOCH.plus(1, ChronoUnit.FOREVER);
+              // BUG: Diagnostic contains: InstantTemporalUnit
+              private static final Instant I4 = Instant.EPOCH.plus(1, ChronoUnit.MILLENNIA);
+              // BUG: Diagnostic contains: InstantTemporalUnit
+              private static final Instant I5 = Instant.EPOCH.plus(1, ChronoUnit.MONTHS);
+              // BUG: Diagnostic contains: InstantTemporalUnit
+              private static final Instant I6 = Instant.EPOCH.plus(1, ChronoUnit.WEEKS);
+              // BUG: Diagnostic contains: InstantTemporalUnit
+              private static final Instant I7 = Instant.EPOCH.plus(1, ChronoUnit.YEARS);
+            }
+            """)
         .doTest();
   }
 
@@ -101,18 +107,21 @@ public final class InstantTemporalUnitTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import java.time.Instant;",
-            "import java.time.temporal.ChronoUnit;",
-            "public class TestClass {",
-            "  private static final Instant I0 = Instant.EPOCH.minus(1, ChronoUnit.DAYS);",
-            "  private static final Instant I1 = Instant.EPOCH.minus(1, ChronoUnit.HALF_DAYS);",
-            "  private static final Instant I2 = Instant.EPOCH.minus(1, ChronoUnit.HOURS);",
-            "  private static final Instant I3 = Instant.EPOCH.minus(1, ChronoUnit.MICROS);",
-            "  private static final Instant I4 = Instant.EPOCH.minus(1, ChronoUnit.MILLIS);",
-            "  private static final Instant I5 = Instant.EPOCH.minus(1, ChronoUnit.MINUTES);",
-            "  private static final Instant I6 = Instant.EPOCH.minus(1, ChronoUnit.NANOS);",
-            "  private static final Instant I7 = Instant.EPOCH.minus(1, ChronoUnit.SECONDS);",
-            "}")
+            """
+            import java.time.Instant;
+            import java.time.temporal.ChronoUnit;
+
+            public class TestClass {
+              private static final Instant I0 = Instant.EPOCH.minus(1, ChronoUnit.DAYS);
+              private static final Instant I1 = Instant.EPOCH.minus(1, ChronoUnit.HALF_DAYS);
+              private static final Instant I2 = Instant.EPOCH.minus(1, ChronoUnit.HOURS);
+              private static final Instant I3 = Instant.EPOCH.minus(1, ChronoUnit.MICROS);
+              private static final Instant I4 = Instant.EPOCH.minus(1, ChronoUnit.MILLIS);
+              private static final Instant I5 = Instant.EPOCH.minus(1, ChronoUnit.MINUTES);
+              private static final Instant I6 = Instant.EPOCH.minus(1, ChronoUnit.NANOS);
+              private static final Instant I7 = Instant.EPOCH.minus(1, ChronoUnit.SECONDS);
+            }
+            """)
         .doTest();
   }
 
@@ -121,26 +130,29 @@ public final class InstantTemporalUnitTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import java.time.Instant;",
-            "import java.time.temporal.ChronoUnit;",
-            "public class TestClass {",
-            "  // BUG: Diagnostic contains: InstantTemporalUnit",
-            "  private static final Instant I0 = Instant.EPOCH.minus(1, ChronoUnit.CENTURIES);",
-            "  // BUG: Diagnostic contains: InstantTemporalUnit",
-            "  private static final Instant I1 = Instant.EPOCH.minus(1, ChronoUnit.DECADES);",
-            "  // BUG: Diagnostic contains: InstantTemporalUnit",
-            "  private static final Instant I2 = Instant.EPOCH.minus(1, ChronoUnit.ERAS);",
-            "  // BUG: Diagnostic contains: InstantTemporalUnit",
-            "  private static final Instant I3 = Instant.EPOCH.minus(1, ChronoUnit.FOREVER);",
-            "  // BUG: Diagnostic contains: InstantTemporalUnit",
-            "  private static final Instant I4 = Instant.EPOCH.minus(1, ChronoUnit.MILLENNIA);",
-            "  // BUG: Diagnostic contains: InstantTemporalUnit",
-            "  private static final Instant I5 = Instant.EPOCH.minus(1, ChronoUnit.MONTHS);",
-            "  // BUG: Diagnostic contains: InstantTemporalUnit",
-            "  private static final Instant I6 = Instant.EPOCH.minus(1, ChronoUnit.WEEKS);",
-            "  // BUG: Diagnostic contains: InstantTemporalUnit",
-            "  private static final Instant I7 = Instant.EPOCH.minus(1, ChronoUnit.YEARS);",
-            "}")
+            """
+            import java.time.Instant;
+            import java.time.temporal.ChronoUnit;
+
+            public class TestClass {
+              // BUG: Diagnostic contains: InstantTemporalUnit
+              private static final Instant I0 = Instant.EPOCH.minus(1, ChronoUnit.CENTURIES);
+              // BUG: Diagnostic contains: InstantTemporalUnit
+              private static final Instant I1 = Instant.EPOCH.minus(1, ChronoUnit.DECADES);
+              // BUG: Diagnostic contains: InstantTemporalUnit
+              private static final Instant I2 = Instant.EPOCH.minus(1, ChronoUnit.ERAS);
+              // BUG: Diagnostic contains: InstantTemporalUnit
+              private static final Instant I3 = Instant.EPOCH.minus(1, ChronoUnit.FOREVER);
+              // BUG: Diagnostic contains: InstantTemporalUnit
+              private static final Instant I4 = Instant.EPOCH.minus(1, ChronoUnit.MILLENNIA);
+              // BUG: Diagnostic contains: InstantTemporalUnit
+              private static final Instant I5 = Instant.EPOCH.minus(1, ChronoUnit.MONTHS);
+              // BUG: Diagnostic contains: InstantTemporalUnit
+              private static final Instant I6 = Instant.EPOCH.minus(1, ChronoUnit.WEEKS);
+              // BUG: Diagnostic contains: InstantTemporalUnit
+              private static final Instant I7 = Instant.EPOCH.minus(1, ChronoUnit.YEARS);
+            }
+            """)
         .doTest();
   }
 }

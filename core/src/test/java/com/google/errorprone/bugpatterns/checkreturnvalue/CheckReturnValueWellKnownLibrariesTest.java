@@ -49,27 +49,33 @@ public class CheckReturnValueWellKnownLibrariesTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "package lib;",
-            "public class Test {",
-            "  @com.google.errorprone.annotations.CheckReturnValue",
-            " public int f() {",
-            "    return 0;",
-            "  }",
-            "}")
+            """
+            package lib;
+
+            public class Test {
+              @com.google.errorprone.annotations.CheckReturnValue
+              public int f() {
+                return 0;
+              }
+            }
+            """)
         .addSourceLines(
             "TestCase.java",
-            "import static org.mockito.Mockito.verify;",
-            "import static org.mockito.Mockito.doReturn;",
-            "import org.mockito.Mockito;",
-            "class TestCase {",
-            "  void m() {",
-            "    lib.Test t = new lib.Test();",
-            "    Mockito.verify(t).f();",
-            "    verify(t).f();",
-            "    doReturn(1).when(t).f();",
-            "    Mockito.doReturn(1).when(t).f();",
-            "  }",
-            "}")
+            """
+            import static org.mockito.Mockito.verify;
+            import static org.mockito.Mockito.doReturn;
+            import org.mockito.Mockito;
+
+            class TestCase {
+              void m() {
+                lib.Test t = new lib.Test();
+                Mockito.verify(t).f();
+                verify(t).f();
+                doReturn(1).when(t).f();
+                Mockito.doReturn(1).when(t).f();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -77,27 +83,35 @@ public class CheckReturnValueWellKnownLibrariesTest {
   public void mockitoVerifyMistake() {
     refactoringHelper
         .addInputLines(
-            "Test.java", //
-            "interface Test {",
-            "  int f();",
-            "}")
+            "Test.java",
+            """
+            interface Test {
+              int f();
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
             "TestCase.java",
-            "import static org.mockito.Mockito.verify;",
-            "class TestCase {",
-            "  void m(Test t) {",
-            "    verify(t.f());",
-            "  }",
-            "}")
+            """
+            import static org.mockito.Mockito.verify;
+
+            class TestCase {
+              void m(Test t) {
+                verify(t.f());
+              }
+            }
+            """)
         .addOutputLines(
             "TestCase.java",
-            "import static org.mockito.Mockito.verify;",
-            "class TestCase {",
-            "  void m(Test t) {",
-            "    verify(t).f();",
-            "  }",
-            "}")
+            """
+            import static org.mockito.Mockito.verify;
+
+            class TestCase {
+              void m(Test t) {
+                verify(t).f();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -106,30 +120,37 @@ public class CheckReturnValueWellKnownLibrariesTest {
     compilationHelper
         .addSourceLines(
             "Foo.java",
-            "@com.google.errorprone.annotations.CheckReturnValue",
-            "public class Foo {",
-            "  public int f() {",
-            "    return 42;",
-            "  }",
-            "}")
+            """
+            @com.google.errorprone.annotations.CheckReturnValue
+            public class Foo {
+              public int f() {
+                return 42;
+              }
+            }
+            """)
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void f(Foo foo) {",
-            "    try {",
-            "      foo.f();",
-            "      org.junit.Assert.fail();",
-            "    } catch (Exception expected) {}",
-            "    try {",
-            "      foo.f();",
-            "      junit.framework.Assert.fail();",
-            "    } catch (Exception expected) {}",
-            "    try {",
-            "      foo.f();",
-            "      junit.framework.TestCase.fail();",
-            "    } catch (Exception expected) {}",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f(Foo foo) {
+                try {
+                  foo.f();
+                  org.junit.Assert.fail();
+                } catch (Exception expected) {
+                }
+                try {
+                  foo.f();
+                  junit.framework.Assert.fail();
+                } catch (Exception expected) {
+                }
+                try {
+                  foo.f();
+                  junit.framework.TestCase.fail();
+                } catch (Exception expected) {
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -138,21 +159,26 @@ public class CheckReturnValueWellKnownLibrariesTest {
     compilationHelper
         .addSourceLines(
             "Foo.java",
-            "@com.google.errorprone.annotations.CheckReturnValue",
-            "public class Foo {",
-            "  public int f() {",
-            "    return 42;",
-            "  }",
-            "}")
+            """
+            @com.google.errorprone.annotations.CheckReturnValue
+            public class Foo {
+              public int f() {
+                return 42;
+              }
+            }
+            """)
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  private org.junit.rules.ExpectedException exception;",
-            "  void f(Foo foo) {",
-            "    exception.expect(IllegalArgumentException.class);",
-            "    foo.f();",
-            "  }",
-            "}")
+            """
+            class Test {
+              private org.junit.rules.ExpectedException exception;
+
+              void f(Foo foo) {
+                exception.expect(IllegalArgumentException.class);
+                foo.f();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -161,30 +187,37 @@ public class CheckReturnValueWellKnownLibrariesTest {
     compilationHelper
         .addSourceLines(
             "Foo.java",
-            "@com.google.errorprone.annotations.CheckReturnValue",
-            "public class Foo {",
-            "  public int f() {",
-            "    return 42;",
-            "  }",
-            "}")
+            """
+            @com.google.errorprone.annotations.CheckReturnValue
+            public class Foo {
+              public int f() {
+                return 42;
+              }
+            }
+            """)
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void f(Foo foo) {",
-            "    try {",
-            "      foo.f();",
-            "      org.junit.Assert.fail(\"message\");",
-            "    } catch (Exception expected) {}",
-            "    try {",
-            "      foo.f();",
-            "      junit.framework.Assert.fail(\"message\");",
-            "    } catch (Exception expected) {}",
-            "    try {",
-            "      foo.f();",
-            "      junit.framework.TestCase.fail(\"message\");",
-            "    } catch (Exception expected) {}",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f(Foo foo) {
+                try {
+                  foo.f();
+                  org.junit.Assert.fail("message");
+                } catch (Exception expected) {
+                }
+                try {
+                  foo.f();
+                  junit.framework.Assert.fail("message");
+                } catch (Exception expected) {
+                }
+                try {
+                  foo.f();
+                  junit.framework.TestCase.fail("message");
+                } catch (Exception expected) {
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -193,40 +226,50 @@ public class CheckReturnValueWellKnownLibrariesTest {
     compilationHelper
         .addSourceLines(
             "Foo.java",
-            "@com.google.errorprone.annotations.CheckReturnValue",
-            "public class Foo {",
-            "  public int f() {",
-            "    return 42;",
-            "  }",
-            "}")
+            """
+            @com.google.errorprone.annotations.CheckReturnValue
+            public class Foo {
+              public int f() {
+                return 42;
+              }
+            }
+            """)
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void f(Foo foo) {",
-            "   org.junit.Assert.assertThrows(IllegalStateException.class, ",
-            "     new org.junit.function.ThrowingRunnable() {",
-            "       @Override",
-            "       public void run() throws Throwable {",
-            "         foo.f();",
-            "       }",
-            "     });",
-            "   org.junit.Assert.assertThrows(IllegalStateException.class, () -> foo.f());",
-            "   org.junit.Assert.assertThrows(IllegalStateException.class, foo::f);",
-            "   org.junit.Assert.assertThrows(IllegalStateException.class, () -> {",
-            "      int bah = foo.f();",
-            "      foo.f(); ",
-            "   });",
-            "   org.junit.Assert.assertThrows(IllegalStateException.class, () -> { ",
-            "     // BUG: Diagnostic contains: CheckReturnValue",
-            "     foo.f(); ",
-            "     foo.f(); ",
-            "   });",
-            "   bar(() -> foo.f());",
-            "   org.assertj.core.api.Assertions.assertThatExceptionOfType(IllegalStateException.class)",
-            "      .isThrownBy(() -> foo.f());",
-            "  }",
-            "  void bar(org.junit.function.ThrowingRunnable r) {}",
-            "}")
+            """
+class Test {
+  void f(Foo foo) {
+    org.junit.Assert.assertThrows(
+        IllegalStateException.class,
+        new org.junit.function.ThrowingRunnable() {
+          @Override
+          public void run() throws Throwable {
+            foo.f();
+          }
+        });
+    org.junit.Assert.assertThrows(IllegalStateException.class, () -> foo.f());
+    org.junit.Assert.assertThrows(IllegalStateException.class, foo::f);
+    org.junit.Assert.assertThrows(
+        IllegalStateException.class,
+        () -> {
+          int bah = foo.f();
+          foo.f();
+        });
+    org.junit.Assert.assertThrows(
+        IllegalStateException.class,
+        () -> {
+          // BUG: Diagnostic contains: CheckReturnValue
+          foo.f();
+          foo.f();
+        });
+    bar(() -> foo.f());
+    org.assertj.core.api.Assertions.assertThatExceptionOfType(IllegalStateException.class)
+        .isThrownBy(() -> foo.f());
+  }
+
+  void bar(org.junit.function.ThrowingRunnable r) {}
+}
+""")
         .doTest();
   }
 
@@ -235,23 +278,29 @@ public class CheckReturnValueWellKnownLibrariesTest {
     compilationHelper
         .addSourceLines(
             "Foo.java",
-            "@com.google.errorprone.annotations.CheckReturnValue",
-            "public class Foo {",
-            "  public int f() {",
-            "    return 42;",
-            "  }",
-            "}")
+            """
+            @com.google.errorprone.annotations.CheckReturnValue
+            public class Foo {
+              public int f() {
+                return 42;
+              }
+            }
+            """)
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.truth.Truth.assert_;",
-            "class Test {",
-            "  void f(Foo foo) {",
-            "    try {",
-            "      foo.f();",
-            "      assert_().fail();",
-            "    } catch (Exception expected) {}",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assert_;
+
+            class Test {
+              void f(Foo foo) {
+                try {
+                  foo.f();
+                  assert_().fail();
+                } catch (Exception expected) {
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -260,20 +309,26 @@ public class CheckReturnValueWellKnownLibrariesTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "class Test {",
-            "  void f(boolean b) {",
-            "    assertThat(b);",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+
+            class Test {
+              void f(boolean b) {
+                assertThat(b);
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "class Test {",
-            "  void f(boolean b) {",
-            "    assertThat(b).isTrue();",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+
+            class Test {
+              void f(boolean b) {
+                assertThat(b).isTrue();
+              }
+            }
+            """)
         .setFixChooser(Iterables::getOnlyElement)
         .doTest();
   }
@@ -284,26 +339,33 @@ public class CheckReturnValueWellKnownLibrariesTest {
         .setArgs("-XepCompilingTestOnlyCode")
         .addInputLines(
             "Lib.java",
-            "@com.google.errorprone.annotations.CheckReturnValue",
-            "interface Lib {",
-            "  boolean b();",
-            "}")
+            """
+            @com.google.errorprone.annotations.CheckReturnValue
+            interface Lib {
+              boolean b();
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
-            "Test.java", //
-            "class Test {",
-            "  void go(Lib lib) {",
-            "    lib.b();",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              void go(Lib lib) {
+                lib.b();
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "class Test {",
-            "  void go(Lib lib) {",
-            "    assertThat(lib.b()).isTrue();",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+
+            class Test {
+              void go(Lib lib) {
+                assertThat(lib.b()).isTrue();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -312,26 +374,33 @@ public class CheckReturnValueWellKnownLibrariesTest {
     refactoringHelper
         .addInputLines(
             "Lib.java",
-            "@com.google.errorprone.annotations.CheckReturnValue",
-            "interface Lib {",
-            "  boolean b();",
-            "}")
+            """
+            @com.google.errorprone.annotations.CheckReturnValue
+            interface Lib {
+              boolean b();
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
-            "Test.java", //
-            "class Test {",
-            "  void go(Lib lib) {",
-            "    lib.b();",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              void go(Lib lib) {
+                lib.b();
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import static com.google.common.base.Verify.verify;",
-            "class Test {",
-            "  void go(Lib lib) {",
-            "    verify(lib.b());",
-            "  }",
-            "}")
+            """
+            import static com.google.common.base.Verify.verify;
+
+            class Test {
+              void go(Lib lib) {
+                verify(lib.b());
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -340,28 +409,33 @@ public class CheckReturnValueWellKnownLibrariesTest {
     compilationHelper
         .addSourceLines(
             "Foo.java",
-            "@com.google.errorprone.annotations.CheckReturnValue",
-            "public class Foo {",
-            "  public int f() {",
-            "    return 42;",
-            "  }",
-            "}")
+            """
+            @com.google.errorprone.annotations.CheckReturnValue
+            public class Foo {
+              public int f() {
+                return 42;
+              }
+            }
+            """)
         .addSourceLines(
             "Test.java",
-            "import static org.junit.Assert.fail;",
-            "class Test {",
-            "  void f(Foo foo) {",
-            "    // BUG: Diagnostic contains: CheckReturnValue",
-            "    foo.f();",
-            "    org.junit.Assert.fail();",
-            "    // BUG: Diagnostic contains: CheckReturnValue",
-            "    foo.f();",
-            "    junit.framework.Assert.fail();",
-            "    // BUG: Diagnostic contains: CheckReturnValue",
-            "    foo.f();",
-            "    junit.framework.TestCase.fail();",
-            "  }",
-            "}")
+            """
+            import static org.junit.Assert.fail;
+
+            class Test {
+              void f(Foo foo) {
+                // BUG: Diagnostic contains: CheckReturnValue
+                foo.f();
+                org.junit.Assert.fail();
+                // BUG: Diagnostic contains: CheckReturnValue
+                foo.f();
+                junit.framework.Assert.fail();
+                // BUG: Diagnostic contains: CheckReturnValue
+                foo.f();
+                junit.framework.TestCase.fail();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -370,20 +444,25 @@ public class CheckReturnValueWellKnownLibrariesTest {
     compilationHelper
         .addSourceLines(
             "Lib.java",
-            "public class Lib {",
-            "  @com.google.errorprone.annotations.CheckReturnValue",
-            "  public int f() {",
-            "    return 0;",
-            "  }",
-            "}")
+            """
+            public class Lib {
+              @com.google.errorprone.annotations.CheckReturnValue
+              public int f() {
+                return 0;
+              }
+            }
+            """)
         .addSourceLines(
             "Test.java",
-            "import static org.mockito.Mockito.inOrder;",
-            "class Test {",
-            "  void m() {",
-            "    inOrder().verify(new Lib()).f();",
-            "  }",
-            "}")
+            """
+            import static org.mockito.Mockito.inOrder;
+
+            class Test {
+              void m() {
+                inOrder().verify(new Lib()).f();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -421,24 +500,33 @@ public class CheckReturnValueWellKnownLibrariesTest {
     compilationHelper
         .addSourceLines(
             "Animal.java",
-            "package com.google.frobber;",
-            "import com.google.auto.value.AutoValue;",
-            "import com.google.errorprone.annotations.CheckReturnValue;",
-            "@AutoValue",
-            "@CheckReturnValue",
-            "abstract class Animal {",
-            "  abstract String name();",
-            "  abstract int numberOfLegs();",
-            "  static Builder builder() {",
-            "    return new AutoValue_Animal.Builder();",
-            "  }",
-            "  @AutoValue.Builder",
-            "  abstract static class Builder {",
-            "    abstract Builder setName(String value);",
-            "    abstract Builder setNumberOfLegs(int value);",
-            "    abstract Animal build();",
-            "  }",
-            "}")
+            """
+            package com.google.frobber;
+
+            import com.google.auto.value.AutoValue;
+            import com.google.errorprone.annotations.CheckReturnValue;
+
+            @AutoValue
+            @CheckReturnValue
+            abstract class Animal {
+              abstract String name();
+
+              abstract int numberOfLegs();
+
+              static Builder builder() {
+                return new AutoValue_Animal.Builder();
+              }
+
+              @AutoValue.Builder
+              abstract static class Builder {
+                abstract Builder setName(String value);
+
+                abstract Builder setNumberOfLegs(int value);
+
+                abstract Animal build();
+              }
+            }
+            """)
         .addSourceLines(
             "AnimalCaller.java",
             "package com.google.frobber;",
@@ -459,27 +547,37 @@ public class CheckReturnValueWellKnownLibrariesTest {
     compilationHelper
         .addSourceLines(
             "Animal.java",
-            "package com.google.frobber;",
-            "import com.google.auto.value.AutoValue;",
-            "import com.google.errorprone.annotations.CheckReturnValue;",
-            "@AutoValue",
-            "@CheckReturnValue",
-            "abstract class Animal {",
-            "  abstract String name();",
-            "  abstract int numberOfLegs();",
-            "  static Builder builder() {",
-            "    return new AutoValue_Animal.Builder();",
-            "  }",
-            "  @AutoValue.Builder",
-            "  interface Builder {",
-            "    Builder setName(String value);",
-            "    Builder setNumberOfLegs(int numberOfLegs);",
-            "    default Builder defaultMethod(int value) {",
-            "      return new AutoValue_Animal.Builder();",
-            "    }",
-            "    Animal build();",
-            "  }",
-            "}")
+            """
+            package com.google.frobber;
+
+            import com.google.auto.value.AutoValue;
+            import com.google.errorprone.annotations.CheckReturnValue;
+
+            @AutoValue
+            @CheckReturnValue
+            abstract class Animal {
+              abstract String name();
+
+              abstract int numberOfLegs();
+
+              static Builder builder() {
+                return new AutoValue_Animal.Builder();
+              }
+
+              @AutoValue.Builder
+              interface Builder {
+                Builder setName(String value);
+
+                Builder setNumberOfLegs(int numberOfLegs);
+
+                default Builder defaultMethod(int value) {
+                  return new AutoValue_Animal.Builder();
+                }
+
+                Animal build();
+              }
+            }
+            """)
         .addSourceLines(
             "AnimalCaller.java",
             "package com.google.frobber;",
@@ -502,13 +600,18 @@ public class CheckReturnValueWellKnownLibrariesTest {
     compilationHelper
         .addSourceLines(
             "Animal.java",
-            "package com.google.frobber;",
-            "import com.google.auto.value.AutoValue;",
-            "@AutoValue",
-            "abstract class Animal {",
-            "  abstract String name();",
-            "  abstract int numberOfLegs();",
-            "}")
+            """
+            package com.google.frobber;
+
+            import com.google.auto.value.AutoValue;
+
+            @AutoValue
+            abstract class Animal {
+              abstract String name();
+
+              abstract int numberOfLegs();
+            }
+            """)
         .addSourceLines(
             "AnimalCaller.java",
             "package com.google.frobber;",
@@ -532,25 +635,35 @@ public class CheckReturnValueWellKnownLibrariesTest {
     compilationHelper
         .addSourceLines(
             "Person.java",
-            "package com.google.frobber;",
-            "public final class Person {",
-            "  public Person(String name, int id) {}",
-            "}")
+            """
+            package com.google.frobber;
+
+            public final class Person {
+              public Person(String name, int id) {}
+            }
+            """)
         .addSourceLines(
             "PersonBuilder.java",
-            "package com.google.frobber;",
-            "import com.google.auto.value.AutoBuilder;",
-            "import com.google.errorprone.annotations.CheckReturnValue;",
-            "@CheckReturnValue",
-            "@AutoBuilder(ofClass = Person.class)",
-            "interface PersonBuilder {",
-            "  static PersonBuilder personBuilder() {",
-            "    return new AutoBuilder_PersonBuilder();",
-            "  }",
-            "  PersonBuilder setName(String name);",
-            "  PersonBuilder setId(int id);",
-            "  Person build();",
-            "}")
+            """
+            package com.google.frobber;
+
+            import com.google.auto.value.AutoBuilder;
+            import com.google.errorprone.annotations.CheckReturnValue;
+
+            @CheckReturnValue
+            @AutoBuilder(ofClass = Person.class)
+            interface PersonBuilder {
+              static PersonBuilder personBuilder() {
+                return new AutoBuilder_PersonBuilder();
+              }
+
+              PersonBuilder setName(String name);
+
+              PersonBuilder setId(int id);
+
+              Person build();
+            }
+            """)
         .addSourceLines(
             "PersonCaller.java",
             "package com.google.frobber;",
@@ -577,27 +690,38 @@ public class CheckReturnValueWellKnownLibrariesTest {
     compilationHelper
         .addSourceLines(
             "LogUtil.java",
-            "package com.google.frobber;",
-            "import java.util.logging.Level;",
-            "public class LogUtil {",
-            "  public static void log(Level severity, String message) {}",
-            "}")
+            """
+            package com.google.frobber;
+
+            import java.util.logging.Level;
+
+            public class LogUtil {
+              public static void log(Level severity, String message) {}
+            }
+            """)
         .addSourceLines(
             "Caller.java",
-            "package com.google.frobber;",
-            "import com.google.auto.value.AutoBuilder;",
-            "import java.util.logging.Level;",
-            "import com.google.errorprone.annotations.CheckReturnValue;",
-            "@CheckReturnValue",
-            "@AutoBuilder(callMethod = \"log\", ofClass = LogUtil.class)",
-            "public interface Caller {",
-            "  static Caller logCaller() {",
-            "    return new AutoBuilder_Caller();",
-            "  }",
-            "  Caller setSeverity(Level level);",
-            "  Caller setMessage(String message);",
-            "  void call(); // calls: LogUtil.log(severity, message)",
-            "}")
+            """
+            package com.google.frobber;
+
+            import com.google.auto.value.AutoBuilder;
+            import java.util.logging.Level;
+            import com.google.errorprone.annotations.CheckReturnValue;
+
+            @CheckReturnValue
+            @AutoBuilder(callMethod = "log", ofClass = LogUtil.class)
+            public interface Caller {
+              static Caller logCaller() {
+                return new AutoBuilder_Caller();
+              }
+
+              Caller setSeverity(Level level);
+
+              Caller setMessage(String message);
+
+              void call(); // calls: LogUtil.log(severity, message)
+            }
+            """)
         .addSourceLines(
             "LogCaller.java",
             "package com.google.frobber;",
@@ -621,15 +745,20 @@ public class CheckReturnValueWellKnownLibrariesTest {
     compilationHelper
         .addSourceLines(
             "Builder.java",
-            "package com.google.frobber;",
-            "import com.google.errorprone.annotations.CheckReturnValue;",
-            "import dagger.Component;",
-            "@CheckReturnValue",
-            "@Component.Builder",
-            "interface Builder {",
-            "  Builder setName(String name);",
-            "  String build();",
-            "}")
+            """
+            package com.google.frobber;
+
+            import com.google.errorprone.annotations.CheckReturnValue;
+            import dagger.Component;
+
+            @CheckReturnValue
+            @Component.Builder
+            interface Builder {
+              Builder setName(String name);
+
+              String build();
+            }
+            """)
         .addSourceLines(
             "ComponentBuilderCaller.java",
             "package com.google.frobber;",
@@ -649,15 +778,20 @@ public class CheckReturnValueWellKnownLibrariesTest {
     compilationHelper
         .addSourceLines(
             "Builder.java",
-            "package com.google.frobber;",
-            "import com.google.errorprone.annotations.CheckReturnValue;",
-            "import dagger.Subcomponent;",
-            "@CheckReturnValue",
-            "@Subcomponent.Builder",
-            "interface Builder {",
-            "  Builder setName(String name);",
-            "  String build();",
-            "}")
+            """
+            package com.google.frobber;
+
+            import com.google.errorprone.annotations.CheckReturnValue;
+            import dagger.Subcomponent;
+
+            @CheckReturnValue
+            @Subcomponent.Builder
+            interface Builder {
+              Builder setName(String name);
+
+              String build();
+            }
+            """)
         .addSourceLines(
             "SubcomponentBuilderCaller.java",
             "package com.google.frobber;",

@@ -35,10 +35,13 @@ public final class UnusedMethodTest {
     helper
         .addSourceLines(
             "UnusedNative.java",
-            "package unusedvars;",
-            "public class UnusedNative {",
-            "  private native void aNativeMethod();",
-            "}")
+            """
+            package unusedvars;
+
+            public class UnusedNative {
+              private native void aNativeMethod();
+            }
+            """)
         .doTest();
   }
 
@@ -47,27 +50,35 @@ public final class UnusedMethodTest {
     helper
         .addSourceLines(
             "UnusedPrivateMethod.java",
-            "package unusedvars;",
-            "import com.google.errorprone.annotations.Keep;",
-            "import java.lang.annotation.ElementType;",
-            "import java.lang.annotation.Retention;",
-            "import java.lang.annotation.RetentionPolicy;",
-            "import java.lang.annotation.Target;",
-            "import javax.inject.Inject;",
-            "public class UnusedPrivateMethod {",
-            "  public void test() {",
-            "    used();",
-            "  }",
-            "  private void used() {}",
-            "  // BUG: Diagnostic contains: Method 'notUsed' is never used.",
-            "  private void notUsed() {}",
-            "  @Inject",
-            "  private void notUsedExempted() {}",
-            "  @Keep",
-            "  @Target(ElementType.METHOD)",
-            "  @Retention(RetentionPolicy.SOURCE)",
-            "  private @interface ProvidesCustom {}",
-            "}")
+            """
+            package unusedvars;
+
+            import com.google.errorprone.annotations.Keep;
+            import java.lang.annotation.ElementType;
+            import java.lang.annotation.Retention;
+            import java.lang.annotation.RetentionPolicy;
+            import java.lang.annotation.Target;
+            import javax.inject.Inject;
+
+            public class UnusedPrivateMethod {
+              public void test() {
+                used();
+              }
+
+              private void used() {}
+
+              // BUG: Diagnostic contains: Method 'notUsed' is never used.
+              private void notUsed() {}
+
+              @Inject
+              private void notUsedExempted() {}
+
+              @Keep
+              @Target(ElementType.METHOD)
+              @Retention(RetentionPolicy.SOURCE)
+              private @interface ProvidesCustom {}
+            }
+            """)
         .doTest();
   }
 
@@ -76,28 +87,36 @@ public final class UnusedMethodTest {
     helper
         .addSourceLines(
             "Unuseds.java",
-            "package unusedvars;",
-            "import java.io.IOException;",
-            "import java.io.ObjectStreamException;",
-            "import java.util.List;",
-            "import javax.inject.Inject;",
-            "public class Unuseds {",
-            "  // BUG: Diagnostic contains:",
-            "  private void notUsedMethod() {}",
-            "  // BUG: Diagnostic contains:",
-            "  private static void staticNotUsedMethod() {}",
-            "  @SuppressWarnings({\"deprecation\", \"unused\"})",
-            "  class UsesSuppressWarning {",
-            "    private int f1;",
-            "    private void test1() {",
-            "      int local;",
-            "    }",
-            "    @SuppressWarnings(value = \"unused\")",
-            "    private void test2() {",
-            "      int local;",
-            "    }",
-            "  }",
-            "}")
+            """
+            package unusedvars;
+
+            import java.io.IOException;
+            import java.io.ObjectStreamException;
+            import java.util.List;
+            import javax.inject.Inject;
+
+            public class Unuseds {
+              // BUG: Diagnostic contains:
+              private void notUsedMethod() {}
+
+              // BUG: Diagnostic contains:
+              private static void staticNotUsedMethod() {}
+
+              @SuppressWarnings({"deprecation", "unused"})
+              class UsesSuppressWarning {
+                private int f1;
+
+                private void test1() {
+                  int local;
+                }
+
+                @SuppressWarnings(value = "unused")
+                private void test2() {
+                  int local;
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -106,21 +125,28 @@ public final class UnusedMethodTest {
     helper
         .addSourceLines(
             "Unuseds.java",
-            "package unusedvars;",
-            "import java.io.IOException;",
-            "import java.io.ObjectStreamException;",
-            "public class Unuseds implements java.io.Serializable {",
-            "  private void readObject(java.io.ObjectInputStream in) throws IOException {",
-            "    in.hashCode();",
-            "  }",
-            "  private void writeObject(java.io.ObjectOutputStream out) throws IOException {",
-            "    out.writeInt(123);",
-            "  }",
-            "  private Object readResolve() {",
-            "    return null;",
-            "  }",
-            "  private void readObjectNoData() throws ObjectStreamException {}",
-            "}")
+            """
+            package unusedvars;
+
+            import java.io.IOException;
+            import java.io.ObjectStreamException;
+
+            public class Unuseds implements java.io.Serializable {
+              private void readObject(java.io.ObjectInputStream in) throws IOException {
+                in.hashCode();
+              }
+
+              private void writeObject(java.io.ObjectOutputStream out) throws IOException {
+                out.writeInt(123);
+              }
+
+              private Object readResolve() {
+                return null;
+              }
+
+              private void readObjectNoData() throws ObjectStreamException {}
+            }
+            """)
         .doTest();
   }
 
@@ -129,16 +155,21 @@ public final class UnusedMethodTest {
     helper
         .addSourceLines(
             "Unuseds.java",
-            "package unusedvars;",
-            "class ExemptedByName {",
-            "  private void unused1("
-                + "     int a, int unusedParam, "
-                + "     int customUnused1, int customUnused2, "
-                + "     int prefixUnused1Param, int prefixUnused2Param"
-                + "  ) {",
-            "    int unusedLocal = a;",
-            "  }",
-            "}")
+            """
+            package unusedvars;
+
+            class ExemptedByName {
+              private void unused1(
+                  int a,
+                  int unusedParam,
+                  int customUnused1,
+                  int customUnused2,
+                  int prefixUnused1Param,
+                  int prefixUnused2Param) {
+                int unusedLocal = a;
+              }
+            }
+            """)
         .setArgs(
             "-XepOpt:Unused:exemptNames=customUnused1,customUnused2",
             "-XepOpt:Unused:exemptPrefixes=prefixunused1,prefixunused2")
@@ -149,16 +180,22 @@ public final class UnusedMethodTest {
   public void exemptedByCustomAnnotation() {
     helper
         .addSourceLines(
-            "Foo.java", //
-            "package example;",
-            "@interface Foo {}")
+            "Foo.java",
+            """
+            package example;
+
+            @interface Foo {}
+            """)
         .addSourceLines(
             "ExemptedByCustomAnnotation.java",
-            "package example;",
-            "class ExemptedByCustomAnnotation {",
-            "  @Foo",
-            "  private void bar() {}",
-            "}")
+            """
+            package example;
+
+            class ExemptedByCustomAnnotation {
+              @Foo
+              private void bar() {}
+            }
+            """)
         .setArgs("-XepOpt:UnusedMethod:ExemptingMethodAnnotations=example.Foo")
         .doTest();
   }
@@ -168,19 +205,23 @@ public final class UnusedMethodTest {
     helper
         .addSourceLines(
             "Unuseds.java",
-            "package unusedvars;",
-            "class Suppressed {",
-            "  @SuppressWarnings({\"deprecation\", \"unused\"})",
-            "  class UsesSuppressWarning {",
-            "    private void test1() {",
-            "      int local;",
-            "    }",
-            "    @SuppressWarnings(value = \"unused\")",
-            "    private void test2() {",
-            "      int local;",
-            "    }",
-            "  }",
-            "}")
+            """
+            package unusedvars;
+
+            class Suppressed {
+              @SuppressWarnings({"deprecation", "unused"})
+              class UsesSuppressWarning {
+                private void test1() {
+                  int local;
+                }
+
+                @SuppressWarnings(value = "unused")
+                private void test2() {
+                  int local;
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -189,24 +230,27 @@ public final class UnusedMethodTest {
     refactoringHelper
         .addInputLines(
             "UnusedWithComment.java",
-            "package unusedvars;",
-            "public class UnusedWithComment {",
-            "  /**",
-            "   * Method comment",
-            "   */private void test1() {",
-            "  }",
-            "  /** Method comment */",
-            "  private void test2() {",
-            "  }",
-            "  // Non javadoc comment",
-            "  private void test3() {",
-            "  }",
-            "}")
+            """
+            package unusedvars;
+
+            public class UnusedWithComment {
+              /** Method comment */
+              private void test1() {}
+
+              /** Method comment */
+              private void test2() {}
+
+              // Non javadoc comment
+              private void test3() {}
+            }
+            """)
         .addOutputLines(
-            "UnusedWithComment.java", //
-            "package unusedvars;",
-            "public class UnusedWithComment {",
-            "}")
+            "UnusedWithComment.java",
+            """
+            package unusedvars;
+
+            public class UnusedWithComment {}
+            """)
         .doTest(TestMode.TEXT_MATCH);
   }
 
@@ -215,27 +259,34 @@ public final class UnusedMethodTest {
     helper
         .addSourceLines(
             "UsedInLambda.java",
-            "package unusedvars;",
-            "import java.util.Arrays;",
-            "import java.util.List;",
-            "import java.util.function.Function;",
-            "import java.util.stream.Collectors;",
-            "/** Method parameters used in lambdas and anonymous classes */",
-            "public class UsedInLambda {",
-            "  private Function<Integer, Integer> usedInLambda() {",
-            "    return x -> 1;",
-            "  }",
-            "  private String print(Object o) {",
-            "    return o.toString();",
-            "  }",
-            "  public List<String> print(List<Object> os) {",
-            "    return os.stream().map(this::print).collect(Collectors.toList());",
-            "  }",
-            "  public static void main(String[] args) {",
-            "    System.err.println(new UsedInLambda().usedInLambda());",
-            "    System.err.println(new UsedInLambda().print(Arrays.asList(1, 2, 3)));",
-            "  }",
-            "}")
+            """
+            package unusedvars;
+
+            import java.util.Arrays;
+            import java.util.List;
+            import java.util.function.Function;
+            import java.util.stream.Collectors;
+
+            /** Method parameters used in lambdas and anonymous classes */
+            public class UsedInLambda {
+              private Function<Integer, Integer> usedInLambda() {
+                return x -> 1;
+              }
+
+              private String print(Object o) {
+                return o.toString();
+              }
+
+              public List<String> print(List<Object> os) {
+                return os.stream().map(this::print).collect(Collectors.toList());
+              }
+
+              public static void main(String[] args) {
+                System.err.println(new UsedInLambda().usedInLambda());
+                System.err.println(new UsedInLambda().print(Arrays.asList(1, 2, 3)));
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -244,13 +295,17 @@ public final class UnusedMethodTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import java.util.function.Predicate;",
-            "class Test {",
-            "  private static boolean foo(int a) {",
-            "    return true;",
-            "  }",
-            "  Predicate<Integer> pred = Test::foo;",
-            "}")
+            """
+            import java.util.function.Predicate;
+
+            class Test {
+              private static boolean foo(int a) {
+                return true;
+              }
+
+              Predicate<Integer> pred = Test::foo;
+            }
+            """)
         .doTest();
   }
 
@@ -259,22 +314,28 @@ public final class UnusedMethodTest {
     helper
         .addSourceLines(
             "MethodSource.java",
-            "package org.junit.jupiter.params.provider;",
-            "public @interface MethodSource {",
-            "  String[] value();",
-            "}")
+            """
+            package org.junit.jupiter.params.provider;
+
+            public @interface MethodSource {
+              String[] value();
+            }
+            """)
         .addSourceLines(
             "Test.java",
-            "import java.util.stream.Stream;",
-            "import org.junit.jupiter.params.provider.MethodSource;",
-            "class Test {",
-            "  @MethodSource(\"parameters\")",
-            "  void test() {}",
-            "",
-            "  private static Stream<String> parameters() {",
-            "    return Stream.of();",
-            "  }",
-            "}")
+            """
+            import java.util.stream.Stream;
+            import org.junit.jupiter.params.provider.MethodSource;
+
+            class Test {
+              @MethodSource("parameters")
+              void test() {}
+
+              private static Stream<String> parameters() {
+                return Stream.of();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -283,23 +344,28 @@ public final class UnusedMethodTest {
     helper
         .addSourceLines(
             "MethodSource.java",
-            "package org.junit.jupiter.params.provider;",
-            "public @interface MethodSource {",
-            "  String[] value();",
-            "}")
+            """
+            package org.junit.jupiter.params.provider;
+
+            public @interface MethodSource {
+              String[] value();
+            }
+            """)
         .addSourceLines(
             "Test.java",
-            "import java.util.stream.Stream;",
-            "import org.junit.jupiter.params.provider.MethodSource;",
-            "class Test {",
-            "  @MethodSource(\"Test#parameters\")",
-            "  void test() {}",
-            "",
-            "",
-            "  private static Stream<String> parameters() {",
-            "    return Stream.of();",
-            "  }",
-            "}")
+            """
+            import java.util.stream.Stream;
+            import org.junit.jupiter.params.provider.MethodSource;
+
+            class Test {
+              @MethodSource("Test#parameters")
+              void test() {}
+
+              private static Stream<String> parameters() {
+                return Stream.of();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -308,25 +374,31 @@ public final class UnusedMethodTest {
     helper
         .addSourceLines(
             "MethodSource.java",
-            "package org.junit.jupiter.params.provider;",
-            "public @interface MethodSource {",
-            "  String[] value();",
-            "}")
+            """
+            package org.junit.jupiter.params.provider;
+
+            public @interface MethodSource {
+              String[] value();
+            }
+            """)
         .addSourceLines(
             "Test.java",
-            "import java.util.stream.Stream;",
-            "import org.junit.jupiter.params.provider.MethodSource;",
-            "class Test {",
-            "  // @Nested",
-            "  public class NestedTest {",
-            "    @MethodSource(\"Test#parameters\")",
-            "    void test() {}",
-            "  }",
-            "",
-            "  private static Stream<String> parameters() {",
-            "    return Stream.of();",
-            "  }",
-            "}")
+            """
+            import java.util.stream.Stream;
+            import org.junit.jupiter.params.provider.MethodSource;
+
+            class Test {
+              // @Nested
+              public class NestedTest {
+                @MethodSource("Test#parameters")
+                void test() {}
+              }
+
+              private static Stream<String> parameters() {
+                return Stream.of();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -335,11 +407,16 @@ public final class UnusedMethodTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  private class Inner {",
-            "    @Override public String toString() { return null; }",
-            "  }",
-            "}")
+            """
+            class Test {
+              private class Inner {
+                @Override
+                public String toString() {
+                  return null;
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -348,12 +425,14 @@ public final class UnusedMethodTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  private class Inner {",
-            "    // BUG: Diagnostic contains:",
-            "    public void foo() {}",
-            "  }",
-            "}")
+            """
+            class Test {
+              private class Inner {
+                // BUG: Diagnostic contains:
+                public void foo() {}
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -361,11 +440,13 @@ public final class UnusedMethodTest {
   public void unusedConstructor() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  // BUG: Diagnostic contains: Constructor 'Test'",
-            "  private Test(int a) {}",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              // BUG: Diagnostic contains: Constructor 'Test'
+              private Test(int a) {}
+            }
+            """)
         .doTest();
   }
 
@@ -373,15 +454,19 @@ public final class UnusedMethodTest {
   public void unusedConstructor_refactoredToPrivateNoArgVersion() {
     refactoringHelper
         .addInputLines(
-            "Test.java", //
-            "class Test {",
-            "  private Test(int a) {}",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              private Test(int a) {}
+            }
+            """)
         .addOutputLines(
-            "Test.java", //
-            "class Test {",
-            "  private Test() {}",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              private Test() {}
+            }
+            """)
         .doTest();
   }
 
@@ -389,13 +474,16 @@ public final class UnusedMethodTest {
   public void unusedConstructor_finalFieldsLeftDangling_noFix() {
     refactoringHelper
         .addInputLines(
-            "Test.java", //
-            "class Test {",
-            "  private final int a;",
-            "  private Test(int a) {",
-            "    this.a = a;",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              private final int a;
+
+              private Test(int a) {
+                this.a = a;
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -404,17 +492,23 @@ public final class UnusedMethodTest {
   public void unusedConstructor_nonFinalFields_stillRefactored() {
     refactoringHelper
         .addInputLines(
-            "Test.java", //
-            "class Test {",
-            "  private int a;",
-            "  private Test(int a) {}",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              private int a;
+
+              private Test(int a) {}
+            }
+            """)
         .addOutputLines(
-            "Test.java", //
-            "class Test {",
-            "  private int a;",
-            "  private Test() {}",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              private int a;
+
+              private Test() {}
+            }
+            """)
         .doTest();
   }
 
@@ -422,18 +516,29 @@ public final class UnusedMethodTest {
   public void unusedConstructor_removed() {
     refactoringHelper
         .addInputLines(
-            "Test.java", //
-            "class Test {",
-            "  private Test(int a) {}",
-            "  private Test(String a) {}",
-            "  public Test of() { return new Test(1); }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              private Test(int a) {}
+
+              private Test(String a) {}
+
+              public Test of() {
+                return new Test(1);
+              }
+            }
+            """)
         .addOutputLines(
-            "Test.java", //
-            "class Test {",
-            "  private Test(int a) {}",
-            "  public Test of() { return new Test(1); }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              private Test(int a) {}
+
+              public Test of() {
+                return new Test(1);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -441,13 +546,16 @@ public final class UnusedMethodTest {
   public void privateConstructor_calledWithinClass() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  private Test(int a) {}",
-            "  public Test of(int a) {",
-            "    return new Test(a);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              private Test(int a) {}
+
+              public Test of(int a) {
+                return new Test(a);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -455,10 +563,12 @@ public final class UnusedMethodTest {
   public void zeroArgConstructor_notFlagged() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  private Test() {}",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              private Test() {}
+            }
+            """)
         .doTest();
   }
 
@@ -467,12 +577,16 @@ public final class UnusedMethodTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  private @interface Anno {",
-            "    int value() default 1;",
-            "  }",
-            "  @Anno(value = 1) int b;",
-            "}")
+            """
+            class Test {
+              private @interface Anno {
+                int value() default 1;
+              }
+
+              @Anno(value = 1)
+              int b;
+            }
+            """)
         .doTest();
   }
 
@@ -481,12 +595,16 @@ public final class UnusedMethodTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  private @interface Anno {",
-            "    int value();",
-            "  }",
-            "  @Anno(1) int a;",
-            "}")
+            """
+            class Test {
+              private @interface Anno {
+                int value();
+              }
+
+              @Anno(1)
+              int a;
+            }
+            """)
         .doTest();
   }
 
@@ -495,12 +613,15 @@ public final class UnusedMethodTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  private class A {",
-            "    public void foo() {}",
-            "  }",
-            "  public class B extends A {}",
-            "}")
+            """
+            class Test {
+              private class A {
+                public void foo() {}
+              }
+
+              public class B extends A {}
+            }
+            """)
         .doTest();
   }
 
@@ -509,15 +630,19 @@ public final class UnusedMethodTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  private static class A {",
-            "    public void a() {}",
-            "  }",
-            "  public interface B {",
-            "    public void a();",
-            "  }",
-            "  public static final class C extends A implements B {}",
-            "}")
+            """
+            class Test {
+              private static class A {
+                public void a() {}
+              }
+
+              public interface B {
+                public void a();
+              }
+
+              public static final class C extends A implements B {}
+            }
+            """)
         .doTest();
   }
 }

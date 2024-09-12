@@ -43,12 +43,15 @@ public class ByteBufferBackingArrayTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.nio.ByteBuffer;",
-            "public class Test {",
-            "  public void ByteBufferBackingArrayTest() {",
-            "    byte[] byteArray = ((ByteBuffer) new Object()).array();",
-            "  }",
-            "}")
+            """
+            import java.nio.ByteBuffer;
+
+            public class Test {
+              public void ByteBufferBackingArrayTest() {
+                byte[] byteArray = ((ByteBuffer) new Object()).array();
+              }
+            }
+            """)
         .doTest();
   }
 }

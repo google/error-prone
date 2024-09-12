@@ -33,12 +33,15 @@ public final class StreamToIterableTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import java.util.stream.Stream;",
-            "class Test {",
-            "  void test() {",
-            "    for (int i : (Iterable<Integer>) () -> Stream.of(1, 2, 3).iterator()) {}",
-            "  }",
-            "}")
+            """
+            import java.util.stream.Stream;
+
+            class Test {
+              void test() {
+                for (int i : (Iterable<Integer>) () -> Stream.of(1, 2, 3).iterator()) {}
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -62,26 +65,34 @@ public final class StreamToIterableTest {
     refactoring
         .addInputLines(
             "Test.java",
-            "import static com.google.common.collect.ImmutableList.toImmutableList;",
-            "import java.util.List;",
-            "import java.util.stream.Stream;",
-            "class Test {",
-            "  void test(List<Integer> i) {",
-            "    addAll(Stream.of(1, 2, 3)::iterator);",
-            "  }",
-            "  void addAll(Iterable<Integer> ints) {}",
-            "}")
+            """
+            import static com.google.common.collect.ImmutableList.toImmutableList;
+            import java.util.List;
+            import java.util.stream.Stream;
+
+            class Test {
+              void test(List<Integer> i) {
+                addAll(Stream.of(1, 2, 3)::iterator);
+              }
+
+              void addAll(Iterable<Integer> ints) {}
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import static com.google.common.collect.ImmutableList.toImmutableList;",
-            "import java.util.List;",
-            "import java.util.stream.Stream;",
-            "class Test {",
-            "  void test(List<Integer> i) {",
-            "    addAll(Stream.of(1, 2, 3).collect(toImmutableList()));",
-            "  }",
-            "  void addAll(Iterable<Integer> ints) {}",
-            "}")
+            """
+            import static com.google.common.collect.ImmutableList.toImmutableList;
+            import java.util.List;
+            import java.util.stream.Stream;
+
+            class Test {
+              void test(List<Integer> i) {
+                addAll(Stream.of(1, 2, 3).collect(toImmutableList()));
+              }
+
+              void addAll(Iterable<Integer> ints) {}
+            }
+            """)
         .doTest();
   }
 
@@ -90,27 +101,35 @@ public final class StreamToIterableTest {
     refactoring
         .addInputLines(
             "Test.java",
-            "import java.util.List;",
-            "import java.util.stream.Stream;",
-            "class Test {",
-            "  void test(List<Integer> i) {",
-            "    Stream<Integer> stream = Stream.of(1, 2, 3);",
-            "    addAll(() -> stream.iterator());",
-            "  }",
-            "  void addAll(Iterable<Integer> ints) {}",
-            "}")
+            """
+            import java.util.List;
+            import java.util.stream.Stream;
+
+            class Test {
+              void test(List<Integer> i) {
+                Stream<Integer> stream = Stream.of(1, 2, 3);
+                addAll(() -> stream.iterator());
+              }
+
+              void addAll(Iterable<Integer> ints) {}
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import static com.google.common.collect.ImmutableList.toImmutableList;",
-            "import java.util.List;",
-            "import java.util.stream.Stream;",
-            "class Test {",
-            "  void test(List<Integer> i) {",
-            "    Stream<Integer> stream = Stream.of(1, 2, 3);",
-            "    addAll(stream.collect(toImmutableList()));",
-            "  }",
-            "  void addAll(Iterable<Integer> ints) {}",
-            "}")
+            """
+            import static com.google.common.collect.ImmutableList.toImmutableList;
+            import java.util.List;
+            import java.util.stream.Stream;
+
+            class Test {
+              void test(List<Integer> i) {
+                Stream<Integer> stream = Stream.of(1, 2, 3);
+                addAll(stream.collect(toImmutableList()));
+              }
+
+              void addAll(Iterable<Integer> ints) {}
+            }
+            """)
         .doTest();
   }
 }

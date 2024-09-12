@@ -32,12 +32,17 @@ public class NCopiesOfCharTest {
   public void positive() {
     compilationHelper
         .addSourceLines(
-            "Test.java", //
-            "import java.util.Collections;",
-            "class Test {{",
-            "  // BUG: Diagnostic contains: nCopies(10, ' ');",
-            "  Collections.nCopies(' ', 10);",
-            "}}")
+            "Test.java",
+            """
+            import java.util.Collections;
+
+            class Test {
+              {
+                // BUG: Diagnostic contains: nCopies(10, ' ');
+                Collections.nCopies(' ', 10);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -45,11 +50,16 @@ public class NCopiesOfCharTest {
   public void negative() {
     compilationHelper
         .addSourceLines(
-            "Test.java", //
-            "import java.util.Collections;",
-            "class Test {{",
-            "  Collections.nCopies(10, ' ');",
-            "}}")
+            "Test.java",
+            """
+            import java.util.Collections;
+
+            class Test {
+              {
+                Collections.nCopies(10, ' ');
+              }
+            }
+            """)
         .doTest();
   }
 }

@@ -33,13 +33,16 @@ public class JavaUtilDateCheckerTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.Date;",
-            "class Test {",
-            "  // BUG: Diagnostic contains: Date has a bad API",
-            "  private static final Date date1 = new Date();",
-            "  // BUG: Diagnostic contains: Date has a bad API",
-            "  private static final Date date2 = new Date(123456789L);",
-            "}")
+            """
+            import java.util.Date;
+
+            class Test {
+              // BUG: Diagnostic contains: Date has a bad API
+              private static final Date date1 = new Date();
+              // BUG: Diagnostic contains: Date has a bad API
+              private static final Date date2 = new Date(123456789L);
+            }
+            """)
         .doTest();
   }
 
@@ -48,11 +51,14 @@ public class JavaUtilDateCheckerTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.Date;",
-            "class Test {",
-            "  // BUG: Diagnostic contains: Date has a bad API",
-            "  private static final long date = Date.parse(\"Sat, 12 Aug 1995 13:30:00 GMT\");",
-            "}")
+            """
+            import java.util.Date;
+
+            class Test {
+              // BUG: Diagnostic contains: Date has a bad API
+              private static final long date = Date.parse("Sat, 12 Aug 1995 13:30:00 GMT");
+            }
+            """)
         .doTest();
   }
 
@@ -61,13 +67,16 @@ public class JavaUtilDateCheckerTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.Date;",
-            "class Test {",
-            "  public void doSomething(Date date) {",
-            "    // BUG: Diagnostic contains: Date has a bad API",
-            "    long time = date.getTime();",
-            "  }",
-            "}")
+            """
+            import java.util.Date;
+
+            class Test {
+              public void doSomething(Date date) {
+                // BUG: Diagnostic contains: Date has a bad API
+                long time = date.getTime();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -76,14 +85,17 @@ public class JavaUtilDateCheckerTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import java.time.Instant;",
-            "import java.util.Date;",
-            "class Test {",
-            "  public void doSomething(Date date) {",
-            "    Instant instant = date.toInstant();",
-            "    Date date2 = Date.from(instant);",
-            "  }",
-            "}")
+            """
+            import java.time.Instant;
+            import java.util.Date;
+
+            class Test {
+              public void doSomething(Date date) {
+                Instant instant = date.toInstant();
+                Date date2 = Date.from(instant);
+              }
+            }
+            """)
         .doTest();
   }
 }

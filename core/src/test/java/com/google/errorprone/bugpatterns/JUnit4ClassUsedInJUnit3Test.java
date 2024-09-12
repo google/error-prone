@@ -35,11 +35,17 @@ public class JUnit4ClassUsedInJUnit3Test {
     compilationHelper
         .addSourceLines(
             "Foo.java",
-            "import junit.framework.TestCase;",
-            "public class Foo extends TestCase {",
-            "  public void testName1() { System.out.println(\"here\");}",
-            "  public void testName2() {}",
-            "}")
+            """
+            import junit.framework.TestCase;
+
+            public class Foo extends TestCase {
+              public void testName1() {
+                System.out.println("here");
+              }
+
+              public void testName2() {}
+            }
+            """)
         .doTest();
   }
 
@@ -48,17 +54,20 @@ public class JUnit4ClassUsedInJUnit3Test {
     compilationHelper
         .addSourceLines(
             "Foo.java",
-            "import org.junit.runner.RunWith;",
-            "import org.junit.runners.JUnit4;",
-            "import org.junit.Assume;",
-            "import org.junit.Test;",
-            "@RunWith(JUnit4.class)",
-            "public class Foo {",
-            "  @Test",
-            "  public void testOne() {",
-            "    Assume.assumeTrue(true);",
-            "  }",
-            "}")
+            """
+            import org.junit.runner.RunWith;
+            import org.junit.runners.JUnit4;
+            import org.junit.Assume;
+            import org.junit.Test;
+
+            @RunWith(JUnit4.class)
+            public class Foo {
+              @Test
+              public void testOne() {
+                Assume.assumeTrue(true);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -67,20 +76,26 @@ public class JUnit4ClassUsedInJUnit3Test {
     compilationHelper
         .addSourceLines(
             "Foo.java",
-            "import org.junit.runner.RunWith;",
-            "import org.junit.runners.JUnit4;",
-            "import org.junit.Rule;",
-            "import org.junit.rules.TemporaryFolder;",
-            "import org.junit.Test;",
-            "import org.junit.Ignore;",
-            "@RunWith(JUnit4.class)",
-            "public class Foo {",
-            "  @Rule public TemporaryFolder folder= new TemporaryFolder();",
-            "  @Ignore",
-            "  @Test",
-            "  public void testOne() {}",
-            "  @Test public void testTwo() {}",
-            "}")
+            """
+            import org.junit.runner.RunWith;
+            import org.junit.runners.JUnit4;
+            import org.junit.Rule;
+            import org.junit.rules.TemporaryFolder;
+            import org.junit.Test;
+            import org.junit.Ignore;
+
+            @RunWith(JUnit4.class)
+            public class Foo {
+              @Rule public TemporaryFolder folder = new TemporaryFolder();
+
+              @Ignore
+              @Test
+              public void testOne() {}
+
+              @Test
+              public void testTwo() {}
+            }
+            """)
         .doTest();
   }
 
@@ -89,17 +104,24 @@ public class JUnit4ClassUsedInJUnit3Test {
     compilationHelper
         .addSourceLines(
             "Foo.java",
-            "import junit.framework.TestCase;",
-            "import org.junit.Test;",
-            "import org.junit.Assume;",
-            "public class Foo extends TestCase {",
-            "  public void testName1() { System.out.println(\"here\");}",
-            "  public void testName2() {",
-            "    // BUG: Diagnostic contains: Assume",
-            "    Assume.assumeTrue(true);",
-            "  }",
-            "  public void testName3() {}",
-            "}")
+            """
+            import junit.framework.TestCase;
+            import org.junit.Test;
+            import org.junit.Assume;
+
+            public class Foo extends TestCase {
+              public void testName1() {
+                System.out.println("here");
+              }
+
+              public void testName2() {
+                // BUG: Diagnostic contains: Assume
+                Assume.assumeTrue(true);
+              }
+
+              public void testName3() {}
+            }
+            """)
         .doTest();
   }
 
@@ -108,16 +130,21 @@ public class JUnit4ClassUsedInJUnit3Test {
     compilationHelper
         .addSourceLines(
             "Foo.java",
-            "import junit.framework.TestCase;",
-            "import org.junit.Test;",
-            "import org.junit.Assume;",
-            "public class Foo extends TestCase {",
-            "  @Override public void setUp() {",
-            "    // BUG: Diagnostic contains: Assume",
-            "    Assume.assumeTrue(true);",
-            "  }",
-            "  public void testName1() {}",
-            "}")
+            """
+            import junit.framework.TestCase;
+            import org.junit.Test;
+            import org.junit.Assume;
+
+            public class Foo extends TestCase {
+              @Override
+              public void setUp() {
+                // BUG: Diagnostic contains: Assume
+                Assume.assumeTrue(true);
+              }
+
+              public void testName1() {}
+            }
+            """)
         .doTest();
   }
 
@@ -126,16 +153,21 @@ public class JUnit4ClassUsedInJUnit3Test {
     compilationHelper
         .addSourceLines(
             "Foo.java",
-            "import junit.framework.TestCase;",
-            "import org.junit.Test;",
-            "import org.junit.Assume;",
-            "public class Foo extends TestCase {",
-            "  @Override public void tearDown() {",
-            "    // BUG: Diagnostic contains: Assume",
-            "    Assume.assumeTrue(true);",
-            "  }",
-            "  public void testName1() {}",
-            "}")
+            """
+            import junit.framework.TestCase;
+            import org.junit.Test;
+            import org.junit.Assume;
+
+            public class Foo extends TestCase {
+              @Override
+              public void tearDown() {
+                // BUG: Diagnostic contains: Assume
+                Assume.assumeTrue(true);
+              }
+
+              public void testName1() {}
+            }
+            """)
         .doTest();
   }
 
@@ -144,17 +176,24 @@ public class JUnit4ClassUsedInJUnit3Test {
     compilationHelper
         .addSourceLines(
             "Foo.java",
-            "import junit.framework.TestCase;",
-            "import org.junit.Test;",
-            "import static org.junit.Assume.assumeTrue;",
-            "public class Foo extends TestCase {",
-            "  public void testName1() { System.out.println(\"here\");}",
-            "  public void testName2() {",
-            "    // BUG: Diagnostic contains: Assume",
-            "    assumeTrue(true);",
-            "  }",
-            "  public void testName3() {}",
-            "}")
+            """
+            import junit.framework.TestCase;
+            import org.junit.Test;
+            import static org.junit.Assume.assumeTrue;
+
+            public class Foo extends TestCase {
+              public void testName1() {
+                System.out.println("here");
+              }
+
+              public void testName2() {
+                // BUG: Diagnostic contains: Assume
+                assumeTrue(true);
+              }
+
+              public void testName3() {}
+            }
+            """)
         .doTest();
   }
 
@@ -163,14 +202,18 @@ public class JUnit4ClassUsedInJUnit3Test {
     compilationHelper
         .addSourceLines(
             "Foo.java",
-            "import junit.framework.TestCase;",
-            "import org.junit.Ignore;",
-            "public class Foo extends TestCase {",
-            "  public void testName1() {}",
-            "  // BUG: Diagnostic contains: @Ignore",
-            "  @Ignore",
-            "  public void testName2() {}",
-            "}")
+            """
+            import junit.framework.TestCase;
+            import org.junit.Ignore;
+
+            public class Foo extends TestCase {
+              public void testName1() {}
+
+              // BUG: Diagnostic contains: @Ignore
+              @Ignore
+              public void testName2() {}
+            }
+            """)
         .doTest();
   }
 
@@ -179,14 +222,18 @@ public class JUnit4ClassUsedInJUnit3Test {
     compilationHelper
         .addSourceLines(
             "Foo.java",
-            "import junit.framework.TestCase;",
-            "import org.junit.Ignore;",
-            "// BUG: Diagnostic contains: @Ignore",
-            "@Ignore",
-            "public class Foo extends TestCase {",
-            "  public void testName1() {}",
-            "  public void testName2() {}",
-            "}")
+            """
+            import junit.framework.TestCase;
+            import org.junit.Ignore;
+
+            // BUG: Diagnostic contains: @Ignore
+            @Ignore
+            public class Foo extends TestCase {
+              public void testName1() {}
+
+              public void testName2() {}
+            }
+            """)
         .doTest();
   }
 
@@ -195,15 +242,20 @@ public class JUnit4ClassUsedInJUnit3Test {
     compilationHelper
         .addSourceLines(
             "Foo.java",
-            "import junit.framework.TestCase;",
-            "import org.junit.Rule;",
-            "import org.junit.rules.TemporaryFolder;",
-            "public class Foo extends TestCase {",
-            "  // BUG: Diagnostic contains: @Rule",
-            "  @Rule public TemporaryFolder folder = new TemporaryFolder();",
-            "  public void testName1() {}",
-            "  public void testName2() {}",
-            "}")
+            """
+            import junit.framework.TestCase;
+            import org.junit.Rule;
+            import org.junit.rules.TemporaryFolder;
+
+            public class Foo extends TestCase {
+              // BUG: Diagnostic contains: @Rule
+              @Rule public TemporaryFolder folder = new TemporaryFolder();
+
+              public void testName1() {}
+
+              public void testName2() {}
+            }
+            """)
         .doTest();
   }
 }

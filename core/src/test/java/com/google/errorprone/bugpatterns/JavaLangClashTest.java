@@ -37,10 +37,13 @@ public class JavaLangClashTest {
   public void positive() {
     testHelper
         .addSourceLines(
-            "foo/String.java", //
-            "package foo;",
-            "// BUG: Diagnostic contains:",
-            "public class String {}")
+            "foo/String.java",
+            """
+            package foo;
+
+            // BUG: Diagnostic contains:
+            public class String {}
+            """)
         .doTest();
   }
 
@@ -48,10 +51,13 @@ public class JavaLangClashTest {
   public void positiveTypeParameter() {
     testHelper
         .addSourceLines(
-            "java/lang/Foo.java", //
-            "package java.lang;",
-            "// BUG: Diagnostic contains:",
-            "public class Foo<String> {}")
+            "java/lang/Foo.java",
+            """
+            package java.lang;
+
+            // BUG: Diagnostic contains:
+            public class Foo<String> {}
+            """)
         .setArgs(JAVA8_JAVACOPTS)
         .doTest();
   }
@@ -60,9 +66,12 @@ public class JavaLangClashTest {
   public void negative() {
     testHelper
         .addSourceLines(
-            "java/lang/String.java", //
-            "package java.lang;",
-            "public class String {}")
+            "java/lang/String.java",
+            """
+            package java.lang;
+
+            public class String {}
+            """)
         .setArgs(JAVA8_JAVACOPTS)
         .doTest();
   }
@@ -71,9 +80,12 @@ public class JavaLangClashTest {
   public void negativeNonPublic() {
     testHelper
         .addSourceLines(
-            "test/AssertionStatusDirectives.java", //
-            "package Test;",
-            "public class AssertionStatusDirectives {}")
+            "test/AssertionStatusDirectives.java",
+            """
+            package Test;
+
+            public class AssertionStatusDirectives {}
+            """)
         .doTest();
   }
 
@@ -81,9 +93,12 @@ public class JavaLangClashTest {
   public void negative_compiler() {
     testHelper
         .addSourceLines(
-            "Compiler.java", //
-            "package p;",
-            "public class Compiler {}")
+            "Compiler.java",
+            """
+            package p;
+
+            public class Compiler {}
+            """)
         .doTest();
   }
 
@@ -91,9 +106,12 @@ public class JavaLangClashTest {
   public void negative_module() {
     testHelper
         .addSourceLines(
-            "Module.java", //
-            "package p;",
-            "public class Module {}")
+            "Module.java",
+            """
+            package p;
+
+            public class Module {}
+            """)
         .doTest();
   }
 }

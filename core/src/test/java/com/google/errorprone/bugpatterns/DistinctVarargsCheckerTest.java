@@ -39,21 +39,24 @@ public class DistinctVarargsCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.util.concurrent.Futures;",
-            "import com.google.common.util.concurrent.ListenableFuture;",
-            "public class Test {",
-            "  void testFunction() {",
-            "    ListenableFuture firstFuture = null, secondFuture = null;",
-            "    // BUG: Diagnostic contains: DistinctVarargsChecker",
-            "    Futures.whenAllSucceed(firstFuture, firstFuture);",
-            "    // BUG: Diagnostic contains: DistinctVarargsChecker",
-            "    Futures.whenAllSucceed(firstFuture, firstFuture, secondFuture);",
-            "    // BUG: Diagnostic contains: DistinctVarargsChecker",
-            "    Futures.whenAllComplete(firstFuture, firstFuture);",
-            "    // BUG: Diagnostic contains: DistinctVarargsChecker",
-            "    Futures.whenAllComplete(firstFuture, firstFuture, secondFuture);",
-            "  }",
-            "}")
+            """
+            import com.google.common.util.concurrent.Futures;
+            import com.google.common.util.concurrent.ListenableFuture;
+
+            public class Test {
+              void testFunction() {
+                ListenableFuture firstFuture = null, secondFuture = null;
+                // BUG: Diagnostic contains: DistinctVarargsChecker
+                Futures.whenAllSucceed(firstFuture, firstFuture);
+                // BUG: Diagnostic contains: DistinctVarargsChecker
+                Futures.whenAllSucceed(firstFuture, firstFuture, secondFuture);
+                // BUG: Diagnostic contains: DistinctVarargsChecker
+                Futures.whenAllComplete(firstFuture, firstFuture);
+                // BUG: Diagnostic contains: DistinctVarargsChecker
+                Futures.whenAllComplete(firstFuture, firstFuture, secondFuture);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -62,17 +65,20 @@ public class DistinctVarargsCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.util.concurrent.Futures;",
-            "import com.google.common.util.concurrent.ListenableFuture;",
-            "public class Test {",
-            "  void testFunction() {",
-            "    ListenableFuture firstFuture = null, secondFuture = null;",
-            "    Futures.whenAllComplete(firstFuture);",
-            "    Futures.whenAllSucceed(firstFuture, secondFuture);",
-            "    Futures.whenAllComplete(firstFuture);",
-            "    Futures.whenAllComplete(firstFuture, secondFuture);",
-            "  }",
-            "}")
+            """
+            import com.google.common.util.concurrent.Futures;
+            import com.google.common.util.concurrent.ListenableFuture;
+
+            public class Test {
+              void testFunction() {
+                ListenableFuture firstFuture = null, secondFuture = null;
+                Futures.whenAllComplete(firstFuture);
+                Futures.whenAllSucceed(firstFuture, secondFuture);
+                Futures.whenAllComplete(firstFuture);
+                Futures.whenAllComplete(firstFuture, secondFuture);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -81,35 +87,38 @@ public class DistinctVarargsCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.collect.Ordering;",
-            "import com.google.common.collect.ImmutableSortedMap;",
-            "import com.google.common.collect.ImmutableSet;",
-            "import com.google.common.collect.ImmutableSortedSet;",
-            "import java.util.Map;",
-            "import java.util.Set;",
-            "public class Test {",
-            "  void testFunction() {",
-            "    int first = 1, second = 2;",
-            "    // BUG: Diagnostic contains: DistinctVarargsChecker",
-            "    Ordering.explicit(first, first);",
-            "    // BUG: Diagnostic contains: DistinctVarargsChecker",
-            "    Ordering.explicit(first, first, second);",
-            "    // BUG: Diagnostic contains: DistinctVarargsChecker",
-            "    Map.of(first, second, first, second);",
-            "    // BUG: Diagnostic contains: DistinctVarargsChecker",
-            "    ImmutableSortedMap.of(first, second, first, second);",
-            "    // BUG: Diagnostic contains: DistinctVarargsChecker",
-            "    Set.of(first, first);",
-            "    // BUG: Diagnostic contains: DistinctVarargsChecker",
-            "    ImmutableSet.of(first, first);",
-            "    // BUG: Diagnostic contains: DistinctVarargsChecker",
-            "    ImmutableSet.of(first, first, second);",
-            "    // BUG: Diagnostic contains: DistinctVarargsChecker",
-            "    ImmutableSortedSet.of(first, first);",
-            "    // BUG: Diagnostic contains: DistinctVarargsChecker",
-            "    ImmutableSortedSet.of(first, first, second);",
-            "  }",
-            "}")
+            """
+            import com.google.common.collect.Ordering;
+            import com.google.common.collect.ImmutableSortedMap;
+            import com.google.common.collect.ImmutableSet;
+            import com.google.common.collect.ImmutableSortedSet;
+            import java.util.Map;
+            import java.util.Set;
+
+            public class Test {
+              void testFunction() {
+                int first = 1, second = 2;
+                // BUG: Diagnostic contains: DistinctVarargsChecker
+                Ordering.explicit(first, first);
+                // BUG: Diagnostic contains: DistinctVarargsChecker
+                Ordering.explicit(first, first, second);
+                // BUG: Diagnostic contains: DistinctVarargsChecker
+                Map.of(first, second, first, second);
+                // BUG: Diagnostic contains: DistinctVarargsChecker
+                ImmutableSortedMap.of(first, second, first, second);
+                // BUG: Diagnostic contains: DistinctVarargsChecker
+                Set.of(first, first);
+                // BUG: Diagnostic contains: DistinctVarargsChecker
+                ImmutableSet.of(first, first);
+                // BUG: Diagnostic contains: DistinctVarargsChecker
+                ImmutableSet.of(first, first, second);
+                // BUG: Diagnostic contains: DistinctVarargsChecker
+                ImmutableSortedSet.of(first, first);
+                // BUG: Diagnostic contains: DistinctVarargsChecker
+                ImmutableSortedSet.of(first, first, second);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -118,28 +127,31 @@ public class DistinctVarargsCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.collect.Ordering;",
-            "import com.google.common.collect.ImmutableBiMap;",
-            "import com.google.common.collect.ImmutableSortedMap;",
-            "import com.google.common.collect.ImmutableSet;",
-            "import com.google.common.collect.ImmutableSortedSet;",
-            "import java.util.Map;",
-            "import java.util.Set;",
-            "public class Test {",
-            "  void testFunction() {",
-            "    int first = 1, second = 2, third = 3, fourth = 4;",
-            "    Ordering.explicit(first);",
-            "    Ordering.explicit(first, second);",
-            "    Map.of(first, second);",
-            "    ImmutableSortedMap.of(first, second);",
-            "    ImmutableBiMap.of(first, second, third, fourth);",
-            "    Set.of(first, second);",
-            "    ImmutableSet.of(first);",
-            "    ImmutableSet.of(first, second);",
-            "    ImmutableSortedSet.of(first);",
-            "    ImmutableSortedSet.of(first, second);",
-            "  }",
-            "}")
+            """
+            import com.google.common.collect.Ordering;
+            import com.google.common.collect.ImmutableBiMap;
+            import com.google.common.collect.ImmutableSortedMap;
+            import com.google.common.collect.ImmutableSet;
+            import com.google.common.collect.ImmutableSortedSet;
+            import java.util.Map;
+            import java.util.Set;
+
+            public class Test {
+              void testFunction() {
+                int first = 1, second = 2, third = 3, fourth = 4;
+                Ordering.explicit(first);
+                Ordering.explicit(first, second);
+                Map.of(first, second);
+                ImmutableSortedMap.of(first, second);
+                ImmutableBiMap.of(first, second, third, fourth);
+                Set.of(first, second);
+                ImmutableSet.of(first);
+                ImmutableSet.of(first, second);
+                ImmutableSortedSet.of(first);
+                ImmutableSortedSet.of(first, second);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -148,34 +160,40 @@ public class DistinctVarargsCheckerTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "import com.google.common.collect.ImmutableSet;",
-            "import com.google.common.collect.ImmutableSortedSet;",
-            "import java.util.Set;",
-            "public class Test {",
-            "  void testFunction() {",
-            "    int first = 1, second = 2;",
-            "    Set.of(first, first);",
-            "    ImmutableSet.of(first, first);",
-            "    ImmutableSet.of(first, first, second);",
-            "    ImmutableSortedSet.of(first, first);",
-            "    ImmutableSortedSet.of(first, first, second);",
-            "  }",
-            "}")
+            """
+            import com.google.common.collect.ImmutableSet;
+            import com.google.common.collect.ImmutableSortedSet;
+            import java.util.Set;
+
+            public class Test {
+              void testFunction() {
+                int first = 1, second = 2;
+                Set.of(first, first);
+                ImmutableSet.of(first, first);
+                ImmutableSet.of(first, first, second);
+                ImmutableSortedSet.of(first, first);
+                ImmutableSortedSet.of(first, first, second);
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import com.google.common.collect.ImmutableSet;",
-            "import com.google.common.collect.ImmutableSortedSet;",
-            "import java.util.Set;",
-            "public class Test {",
-            "  void testFunction() {",
-            "    int first = 1, second = 2;",
-            "    Set.of(first);",
-            "    ImmutableSet.of(first);",
-            "    ImmutableSet.of(first, second);",
-            "    ImmutableSortedSet.of(first);",
-            "    ImmutableSortedSet.of(first, second);",
-            "  }",
-            "}")
+            """
+            import com.google.common.collect.ImmutableSet;
+            import com.google.common.collect.ImmutableSortedSet;
+            import java.util.Set;
+
+            public class Test {
+              void testFunction() {
+                int first = 1, second = 2;
+                Set.of(first);
+                ImmutableSet.of(first);
+                ImmutableSet.of(first, second);
+                ImmutableSortedSet.of(first);
+                ImmutableSortedSet.of(first, second);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -184,30 +202,36 @@ public class DistinctVarargsCheckerTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "import com.google.common.collect.ImmutableSet;",
-            "import com.google.common.collect.ImmutableSortedSet;",
-            "public class Test {",
-            "  void testFunction() {",
-            "    int first = 1, second = 2;",
-            "    ImmutableSet.of(first);",
-            "    ImmutableSet.of(first, second);",
-            "    ImmutableSortedSet.of(first);",
-            "    ImmutableSortedSet.of(first, second);",
-            "  }",
-            "}")
+            """
+            import com.google.common.collect.ImmutableSet;
+            import com.google.common.collect.ImmutableSortedSet;
+
+            public class Test {
+              void testFunction() {
+                int first = 1, second = 2;
+                ImmutableSet.of(first);
+                ImmutableSet.of(first, second);
+                ImmutableSortedSet.of(first);
+                ImmutableSortedSet.of(first, second);
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import com.google.common.collect.ImmutableSet;",
-            "import com.google.common.collect.ImmutableSortedSet;",
-            "public class Test {",
-            "  void testFunction() {",
-            "    int first = 1, second = 2;",
-            "    ImmutableSet.of(first);",
-            "    ImmutableSet.of(first, second);",
-            "    ImmutableSortedSet.of(first);",
-            "    ImmutableSortedSet.of(first, second);",
-            "  }",
-            "}")
+            """
+            import com.google.common.collect.ImmutableSet;
+            import com.google.common.collect.ImmutableSortedSet;
+
+            public class Test {
+              void testFunction() {
+                int first = 1, second = 2;
+                ImmutableSet.of(first);
+                ImmutableSet.of(first, second);
+                ImmutableSortedSet.of(first);
+                ImmutableSortedSet.of(first, second);
+              }
+            }
+            """)
         .doTest();
   }
 

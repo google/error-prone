@@ -37,10 +37,14 @@ public final class StaticOrDefaultInterfaceMethodTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "interface Test {",
-            "  // BUG: Diagnostic contains: StaticOrDefaultInterfaceMethod",
-            "  default void test() { System.out.println(); }",
-            "}")
+            """
+            interface Test {
+              // BUG: Diagnostic contains: StaticOrDefaultInterfaceMethod
+              default void test() {
+                System.out.println();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -49,10 +53,14 @@ public final class StaticOrDefaultInterfaceMethodTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "interface Test {",
-            "  // BUG: Diagnostic contains: StaticOrDefaultInterfaceMethod",
-            "  static void test() { System.out.println(); }",
-            "}")
+            """
+            interface Test {
+              // BUG: Diagnostic contains: StaticOrDefaultInterfaceMethod
+              static void test() {
+                System.out.println();
+              }
+            }
+            """)
         .doTest();
   }
 

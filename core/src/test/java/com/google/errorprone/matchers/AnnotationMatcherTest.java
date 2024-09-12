@@ -48,15 +48,28 @@ public class AnnotationMatcherTest extends CompilerBasedAbstractTest {
   public void setUp() {
     tests.clear();
     writeFile(
-        "SampleAnnotation1.java", "package com.google;", "public @interface SampleAnnotation1 {}");
+        "SampleAnnotation1.java",
+        """
+        package com.google;
+
+        public @interface SampleAnnotation1 {}
+        """);
     writeFile(
-        "SampleAnnotation2.java", "package com.google;", "public @interface SampleAnnotation2 {}");
+        "SampleAnnotation2.java",
+        """
+        package com.google;
+
+        public @interface SampleAnnotation2 {}
+        """);
     writeFile(
         "SampleNestedAnnotation.java",
-        "package com.google;",
-        "public class SampleNestedAnnotation {",
-        "  public @interface Annotation {}",
-        "}");
+        """
+        package com.google;
+
+        public class SampleNestedAnnotation {
+          public @interface Annotation {}
+        }
+        """);
   }
 
   @After
@@ -68,7 +81,13 @@ public class AnnotationMatcherTest extends CompilerBasedAbstractTest {
 
   @Test
   public void shouldNotMatchNoAnnotations() {
-    writeFile("A.java", "package com.google;", "public class A {}");
+    writeFile(
+        "A.java",
+        """
+        package com.google;
+
+        public class A {}
+        """);
     assertCompiles(
         nodeWithAnnotationMatches(
             /* shouldMatch= */ false,
@@ -81,7 +100,14 @@ public class AnnotationMatcherTest extends CompilerBasedAbstractTest {
 
   @Test
   public void shouldMatchSingleAnnotationOnClass() {
-    writeFile("A.java", "package com.google;", "@SampleAnnotation1", "public class A {}");
+    writeFile(
+        "A.java",
+        """
+        package com.google;
+
+        @SampleAnnotation1
+        public class A {}
+        """);
     assertCompiles(
         nodeWithAnnotationMatches(
             /* shouldMatch= */ true,
@@ -95,7 +121,13 @@ public class AnnotationMatcherTest extends CompilerBasedAbstractTest {
   @Test
   public void shouldMatchSingleFullyQualifiedAnnotationOnClass() {
     writeFile(
-        "A.java", "package com.google.foo;", "@com.google.SampleAnnotation1", "public class A {}");
+        "A.java",
+        """
+        package com.google.foo;
+
+        @com.google.SampleAnnotation1
+        public class A {}
+        """);
     assertCompiles(
         nodeWithAnnotationMatches(
             /* shouldMatch= */ true,
@@ -109,7 +141,13 @@ public class AnnotationMatcherTest extends CompilerBasedAbstractTest {
   @Test
   public void shouldMatchSingleNestedAnnotationOnClass() {
     writeFile(
-        "A.java", "package com.google;", "@SampleNestedAnnotation.Annotation", "public class A {}");
+        "A.java",
+        """
+        package com.google;
+
+        @SampleNestedAnnotation.Annotation
+        public class A {}
+        """);
     assertCompiles(
         nodeWithAnnotationMatches(
             /* shouldMatch= */ true,
@@ -124,7 +162,14 @@ public class AnnotationMatcherTest extends CompilerBasedAbstractTest {
 
   @Test
   public void shouldNotMatchNonmatchingSingleAnnotationOnClass() {
-    writeFile("A.java", "package com.google;", "@SampleAnnotation1", "public class A {}");
+    writeFile(
+        "A.java",
+        """
+        package com.google;
+
+        @SampleAnnotation1
+        public class A {}
+        """);
     assertCompiles(
         nodeWithAnnotationMatches(
             /* shouldMatch= */ false,
@@ -138,7 +183,13 @@ public class AnnotationMatcherTest extends CompilerBasedAbstractTest {
   @Test
   public void shouldNotMatchNonmatchingSingleFullyQualifiedAnnotationOnClass() {
     writeFile(
-        "A.java", "package com.google.foo;", "@com.google.SampleAnnotation1", "public class A {}");
+        "A.java",
+        """
+        package com.google.foo;
+
+        @com.google.SampleAnnotation1
+        public class A {}
+        """);
     assertCompiles(
         nodeWithAnnotationMatches(
             /* shouldMatch= */ false,
@@ -153,9 +204,12 @@ public class AnnotationMatcherTest extends CompilerBasedAbstractTest {
   public void shouldNotMatchNonmatchingNestedAnnotationOnClass() {
     writeFile(
         "A.java",
-        "package com.google;",
-        "@com.google.SampleNestedAnnotation.Annotation",
-        "public class A {}");
+        """
+        package com.google;
+
+        @com.google.SampleNestedAnnotation.Annotation
+        public class A {}
+        """);
     assertCompiles(
         nodeWithAnnotationMatches(
             /* shouldMatch= */ false,
@@ -170,9 +224,13 @@ public class AnnotationMatcherTest extends CompilerBasedAbstractTest {
   public void shouldMatchAllAnnotationsOnClass() {
     writeFile(
         "A.java",
-        "package com.google;",
-        "@SampleAnnotation1 @SampleAnnotation2",
-        "public class A {}");
+        """
+        package com.google;
+
+        @SampleAnnotation1
+        @SampleAnnotation2
+        public class A {}
+        """);
     assertCompiles(
         nodeWithAnnotationMatches(
             /* shouldMatch= */ true,
@@ -195,9 +253,13 @@ public class AnnotationMatcherTest extends CompilerBasedAbstractTest {
   public void matchOneAnnotationsOnClass() {
     writeFile(
         "A.java",
-        "package com.google;",
-        "@SampleAnnotation1 @SampleAnnotation2",
-        "public class A {}");
+        """
+        package com.google;
+
+        @SampleAnnotation1
+        @SampleAnnotation2
+        public class A {}
+        """);
     assertCompiles(
         nodeWithAnnotationMatches(
             /* shouldMatch= */ true,
@@ -210,7 +272,14 @@ public class AnnotationMatcherTest extends CompilerBasedAbstractTest {
 
   @Test
   public void shouldMatchAnnotationOnInterface() {
-    writeFile("A.java", "package com.google;", "@SampleAnnotation1", "public interface A {}");
+    writeFile(
+        "A.java",
+        """
+        package com.google;
+
+        @SampleAnnotation1
+        public interface A {}
+        """);
     assertCompiles(
         nodeWithAnnotationMatches(
             /* shouldMatch= */ true,
@@ -223,7 +292,14 @@ public class AnnotationMatcherTest extends CompilerBasedAbstractTest {
 
   @Test
   public void shouldMatchAnnotationOnEnum() {
-    writeFile("A.java", "package com.google;", "@SampleAnnotation1", "public enum A {}");
+    writeFile(
+        "A.java",
+        """
+        package com.google;
+
+        @SampleAnnotation1
+        public enum A {}
+        """);
     assertCompiles(
         nodeWithAnnotationMatches(
             /* shouldMatch= */ true,
@@ -238,11 +314,13 @@ public class AnnotationMatcherTest extends CompilerBasedAbstractTest {
   public void shouldMatchAnnotationOnField() {
     writeFile(
         "A.java",
-        "package com.google;",
-        "public class A {",
-        "  @SampleAnnotation1",
-        "  public int i;",
-        "}");
+        """
+        package com.google;
+
+        public class A {
+          @SampleAnnotation1 public int i;
+        }
+        """);
     assertCompiles(
         nodeWithAnnotationMatches(
             /* shouldMatch= */ true,
@@ -257,11 +335,14 @@ public class AnnotationMatcherTest extends CompilerBasedAbstractTest {
   public void shouldMatchAnnotationOnMethod() {
     writeFile(
         "A.java",
-        "package com.google;",
-        "public class A {",
-        "  @SampleAnnotation1",
-        "  public void foo() {}",
-        "}");
+        """
+        package com.google;
+
+        public class A {
+          @SampleAnnotation1
+          public void foo() {}
+        }
+        """);
     assertCompiles(
         nodeWithAnnotationMatches(
             /* shouldMatch= */ true,
@@ -276,10 +357,13 @@ public class AnnotationMatcherTest extends CompilerBasedAbstractTest {
   public void shouldMatchAnnotationOnParameter() {
     writeFile(
         "A.java",
-        "package com.google;",
-        "public class A {",
-        "  public void foo(@SampleAnnotation1 int i) {}",
-        "}");
+        """
+        package com.google;
+
+        public class A {
+          public void foo(@SampleAnnotation1 int i) {}
+        }
+        """);
     assertCompiles(
         nodeWithAnnotationMatches(
             /* shouldMatch= */ true,
@@ -294,11 +378,14 @@ public class AnnotationMatcherTest extends CompilerBasedAbstractTest {
   public void shouldMatchAnnotationOnConstructor() {
     writeFile(
         "A.java",
-        "package com.google;",
-        "public class A {",
-        "  @SampleAnnotation1",
-        "  public A() {}",
-        "}");
+        """
+        package com.google;
+
+        public class A {
+          @SampleAnnotation1
+          public A() {}
+        }
+        """);
     assertCompiles(
         nodeWithAnnotationMatches(
             /* shouldMatch= */ true,
@@ -313,13 +400,15 @@ public class AnnotationMatcherTest extends CompilerBasedAbstractTest {
   public void shouldMatchAnnotationOnLocalVariable() {
     writeFile(
         "A.java",
-        "package com.google;",
-        "public class A {",
-        "  public void foo() {",
-        "    @SampleAnnotation1",
-        "    int i = 0;",
-        "  }",
-        "}");
+        """
+        package com.google;
+
+        public class A {
+          public void foo() {
+            @SampleAnnotation1 int i = 0;
+          }
+        }
+        """);
     assertCompiles(
         nodeWithAnnotationMatches(
             /* shouldMatch= */ true,
@@ -332,7 +421,14 @@ public class AnnotationMatcherTest extends CompilerBasedAbstractTest {
 
   @Test
   public void shouldMatchAnnotationOnAnnotation() {
-    writeFile("A.java", "package com.google;", "@SampleAnnotation1", "public @interface A {}");
+    writeFile(
+        "A.java",
+        """
+        package com.google;
+
+        @SampleAnnotation1
+        public @interface A {}
+        """);
     assertCompiles(
         nodeWithAnnotationMatches(
             /* shouldMatch= */ true,
@@ -345,7 +441,12 @@ public class AnnotationMatcherTest extends CompilerBasedAbstractTest {
 
   @Test
   public void shouldMatchAnnotationOnPackage() {
-    writeFile("package-info.java", "@SampleAnnotation1", "package com.google;");
+    writeFile(
+        "package-info.java",
+        """
+        @SampleAnnotation1
+        package com.google;
+        """);
     assertCompiles(
         nodeWithAnnotationMatches(
             /* shouldMatch= */ true,

@@ -35,18 +35,22 @@ public class IdentityHashMapUsageTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.IdentityHashMap;",
-            "import java.util.Map;",
-            "class Test {",
-            "  boolean test(Map map, IdentityHashMap ihm) {",
-            "    // BUG: Diagnostic contains: IdentityHashMapUsage",
-            "    return ihm.equals(map);",
-            "  }",
-            "  void putAll(Map map, IdentityHashMap ihm) {",
-            "    // BUG: Diagnostic contains: IdentityHashMapUsage",
-            "    ihm.putAll(map);",
-            "  }",
-            "}")
+            """
+            import java.util.IdentityHashMap;
+            import java.util.Map;
+
+            class Test {
+              boolean test(Map map, IdentityHashMap ihm) {
+                // BUG: Diagnostic contains: IdentityHashMapUsage
+                return ihm.equals(map);
+              }
+
+              void putAll(Map map, IdentityHashMap ihm) {
+                // BUG: Diagnostic contains: IdentityHashMapUsage
+                ihm.putAll(map);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -55,22 +59,28 @@ public class IdentityHashMapUsageTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.IdentityHashMap;",
-            "import java.util.Map;",
-            "class Test {",
-            "  boolean test(Map map, IdentityHashMap ihm) {",
-            "    return map.equals(ihm);",
-            "  }",
-            "  boolean equalsSameType(IdentityHashMap ihm, IdentityHashMap ihm2) {",
-            "    return ihm.equals(ihm2);",
-            "  }",
-            "  void putAll(Map map, IdentityHashMap ihm) {",
-            "    map.putAll(ihm);",
-            "  }",
-            "  void putAllSameType(IdentityHashMap ihm, IdentityHashMap ihm2) {",
-            "    ihm.putAll(ihm2);",
-            "  }",
-            "}")
+            """
+            import java.util.IdentityHashMap;
+            import java.util.Map;
+
+            class Test {
+              boolean test(Map map, IdentityHashMap ihm) {
+                return map.equals(ihm);
+              }
+
+              boolean equalsSameType(IdentityHashMap ihm, IdentityHashMap ihm2) {
+                return ihm.equals(ihm2);
+              }
+
+              void putAll(Map map, IdentityHashMap ihm) {
+                map.putAll(ihm);
+              }
+
+              void putAllSameType(IdentityHashMap ihm, IdentityHashMap ihm2) {
+                ihm.putAll(ihm2);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -79,16 +89,19 @@ public class IdentityHashMapUsageTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.IdentityHashMap;",
-            "import java.util.Map;",
-            "class Test {",
-            "  Map putAll(IdentityHashMap ihm) {",
-            "    Map map;",
-            "    // BUG: Diagnostic contains: IdentityHashMapUsage",
-            "    map = ihm;",
-            "    return map;",
-            "  }",
-            "}")
+            """
+            import java.util.IdentityHashMap;
+            import java.util.Map;
+
+            class Test {
+              Map putAll(IdentityHashMap ihm) {
+                Map map;
+                // BUG: Diagnostic contains: IdentityHashMapUsage
+                map = ihm;
+                return map;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -97,24 +110,30 @@ public class IdentityHashMapUsageTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "import java.util.IdentityHashMap;",
-            "import java.util.Map;",
-            "class Test {",
-            "  Map putAll(IdentityHashMap ihmArg) {",
-            "    Map map = ihmArg;",
-            "    return map;",
-            "  }",
-            "}")
+            """
+            import java.util.IdentityHashMap;
+            import java.util.Map;
+
+            class Test {
+              Map putAll(IdentityHashMap ihmArg) {
+                Map map = ihmArg;
+                return map;
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import java.util.IdentityHashMap;",
-            "import java.util.Map;",
-            "class Test {",
-            "  Map putAll(IdentityHashMap ihmArg) {",
-            "    IdentityHashMap map = ihmArg;",
-            "    return map;",
-            "  }",
-            "}")
+            """
+            import java.util.IdentityHashMap;
+            import java.util.Map;
+
+            class Test {
+              Map putAll(IdentityHashMap ihmArg) {
+                IdentityHashMap map = ihmArg;
+                return map;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -123,14 +142,17 @@ public class IdentityHashMapUsageTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.IdentityHashMap;",
-            "import java.util.Map;",
-            "class Test {",
-            "  IdentityHashMap something(Map mapArg) {",
-            "    // BUG: Diagnostic contains: IdentityHashMapUsage",
-            "    return new IdentityHashMap(mapArg);",
-            "  }",
-            "}")
+            """
+            import java.util.IdentityHashMap;
+            import java.util.Map;
+
+            class Test {
+              IdentityHashMap something(Map mapArg) {
+                // BUG: Diagnostic contains: IdentityHashMapUsage
+                return new IdentityHashMap(mapArg);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -139,18 +161,24 @@ public class IdentityHashMapUsageTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "import java.util.IdentityHashMap;",
-            "import java.util.Map;",
-            "class Test {",
-            "  private final Map<String, Integer> m = new IdentityHashMap<>();",
-            "}")
+            """
+            import java.util.IdentityHashMap;
+            import java.util.Map;
+
+            class Test {
+              private final Map<String, Integer> m = new IdentityHashMap<>();
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import java.util.IdentityHashMap;",
-            "import java.util.Map;",
-            "class Test {",
-            "  private final IdentityHashMap<String, Integer> m = new IdentityHashMap<>();",
-            "}")
+            """
+            import java.util.IdentityHashMap;
+            import java.util.Map;
+
+            class Test {
+              private final IdentityHashMap<String, Integer> m = new IdentityHashMap<>();
+            }
+            """)
         .doTest();
   }
 }

@@ -32,13 +32,15 @@ public class SystemExitOutsideMainTest {
   public void systemExitNotMain() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  void f() {",
-            "    // BUG: Diagnostic contains: SystemExitOutsideMain",
-            "   System.exit(0);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              void f() {
+                // BUG: Diagnostic contains: SystemExitOutsideMain
+                System.exit(0);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -46,13 +48,15 @@ public class SystemExitOutsideMainTest {
   public void systemExitMainLookalikeWithoutParameters() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  public static void main() {",
-            "    // BUG: Diagnostic contains: SystemExitOutsideMain",
-            "   System.exit(0);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              public static void main() {
+                // BUG: Diagnostic contains: SystemExitOutsideMain
+                System.exit(0);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -60,13 +64,15 @@ public class SystemExitOutsideMainTest {
   public void systemExitMainLookalikeWithTwoParameters() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  public static void main(String[] args, int num) {",
-            "    // BUG: Diagnostic contains: SystemExitOutsideMain",
-            "   System.exit(0);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              public static void main(String[] args, int num) {
+                // BUG: Diagnostic contains: SystemExitOutsideMain
+                System.exit(0);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -74,13 +80,15 @@ public class SystemExitOutsideMainTest {
   public void systemExitMainLookalikeWithoutStatic() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  public void main(String[] args) {",
-            "    // BUG: Diagnostic contains: SystemExitOutsideMain",
-            "   System.exit(0);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              public void main(String[] args) {
+                // BUG: Diagnostic contains: SystemExitOutsideMain
+                System.exit(0);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -88,14 +96,16 @@ public class SystemExitOutsideMainTest {
   public void systemExitMainLookalikeDifferentReturnType() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  public static int main(String[] args) {",
-            "    // BUG: Diagnostic contains: SystemExitOutsideMain",
-            "   System.exit(0);",
-            "   return 0;",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              public static int main(String[] args) {
+                // BUG: Diagnostic contains: SystemExitOutsideMain
+                System.exit(0);
+                return 0;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -103,13 +113,15 @@ public class SystemExitOutsideMainTest {
   public void systemExitMainLookalikeDifferentVisibility() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  private static void main(String[] args) {",
-            "    // BUG: Diagnostic contains: SystemExitOutsideMain",
-            "   System.exit(0);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              private static void main(String[] args) {
+                // BUG: Diagnostic contains: SystemExitOutsideMain
+                System.exit(0);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -117,13 +129,15 @@ public class SystemExitOutsideMainTest {
   public void systemExitMainLookalikeDifferentArrayParameter() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  private static void main(int[] args) {",
-            "    // BUG: Diagnostic contains: SystemExitOutsideMain",
-            "   System.exit(0);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              private static void main(int[] args) {
+                // BUG: Diagnostic contains: SystemExitOutsideMain
+                System.exit(0);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -131,13 +145,15 @@ public class SystemExitOutsideMainTest {
   public void systemExitMainLookalikeStringParameter() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  private static void main(String args) {",
-            "    // BUG: Diagnostic contains: SystemExitOutsideMain",
-            "   System.exit(0);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              private static void main(String args) {
+                // BUG: Diagnostic contains: SystemExitOutsideMain
+                System.exit(0);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -145,13 +161,15 @@ public class SystemExitOutsideMainTest {
   public void systemExitInMethodMainNotInClass() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  public static void foo() {",
-            "   // BUG: Diagnostic contains: SystemExitOutsideMain",
-            "   System.exit(0);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              public static void foo() {
+                // BUG: Diagnostic contains: SystemExitOutsideMain
+                System.exit(0);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -159,15 +177,18 @@ public class SystemExitOutsideMainTest {
   public void systemExitInMethodMainInClassNegative() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  public static void main(String[] args) {",
-            "   foo();",
-            "  }",
-            "  public static void foo() {",
-            "   System.exit(0);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              public static void main(String[] args) {
+                foo();
+              }
+
+              public static void foo() {
+                System.exit(0);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -175,12 +196,14 @@ public class SystemExitOutsideMainTest {
   public void systemExitMainVarArgsParameterNegative() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  public static void main(String... args) {",
-            "   System.exit(0);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              public static void main(String... args) {
+                System.exit(0);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -188,12 +211,14 @@ public class SystemExitOutsideMainTest {
   public void systemExitMainNegative() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  public static void main(String[] args) {",
-            "   System.exit(0);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              public static void main(String[] args) {
+                System.exit(0);
+              }
+            }
+            """)
         .doTest();
   }
 }

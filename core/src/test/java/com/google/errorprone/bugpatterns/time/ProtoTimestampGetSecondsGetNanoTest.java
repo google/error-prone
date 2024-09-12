@@ -38,14 +38,18 @@ public class ProtoTimestampGetSecondsGetNanoTest {
     compilationHelper
         .addSourceLines(
             "test/TestCase.java",
-            "package test;",
-            "import com.google.protobuf.Timestamp;",
-            "public class TestCase {",
-            "  public static void foo(Timestamp timestamp) {",
-            "    long seconds = timestamp.getSeconds();",
-            "    int nanos = timestamp.getNanos();",
-            "  }",
-            "}")
+            """
+            package test;
+
+            import com.google.protobuf.Timestamp;
+
+            public class TestCase {
+              public static void foo(Timestamp timestamp) {
+                long seconds = timestamp.getSeconds();
+                int nanos = timestamp.getNanos();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -54,15 +58,19 @@ public class ProtoTimestampGetSecondsGetNanoTest {
     compilationHelper
         .addSourceLines(
             "test/TestCase.java",
-            "package test;",
-            "import com.google.common.collect.ImmutableMap;",
-            "import com.google.protobuf.Timestamp;",
-            "public class TestCase {",
-            "  public static int foo(Timestamp timestamp) {",
-            "    // BUG: Diagnostic contains: ProtoTimestampGetSecondsGetNano",
-            "    return timestamp.getNanos();",
-            "  }",
-            "}")
+            """
+            package test;
+
+            import com.google.common.collect.ImmutableMap;
+            import com.google.protobuf.Timestamp;
+
+            public class TestCase {
+              public static int foo(Timestamp timestamp) {
+                // BUG: Diagnostic contains: ProtoTimestampGetSecondsGetNano
+                return timestamp.getNanos();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -71,15 +79,18 @@ public class ProtoTimestampGetSecondsGetNanoTest {
     compilationHelper
         .addSourceLines(
             "test/TestCase.java",
-            "package test;",
-            "import com.google.common.collect.ImmutableMap;",
-            "import com.google.protobuf.Timestamp;",
-            "public class TestCase {",
-            "  public static ImmutableMap<String, Object> foo(Timestamp timestamp) {",
-            "    return ImmutableMap.of(",
-            "        \"seconds\", timestamp.getSeconds(), \"nanos\", timestamp.getNanos());",
-            "  }",
-            "}")
+            """
+package test;
+
+import com.google.common.collect.ImmutableMap;
+import com.google.protobuf.Timestamp;
+
+public class TestCase {
+  public static ImmutableMap<String, Object> foo(Timestamp timestamp) {
+    return ImmutableMap.of("seconds", timestamp.getSeconds(), "nanos", timestamp.getNanos());
+  }
+}
+""")
         .doTest();
   }
 
@@ -89,17 +100,21 @@ public class ProtoTimestampGetSecondsGetNanoTest {
     compilationHelper
         .addSourceLines(
             "test/TestCase.java",
-            "package test;",
-            "import com.google.protobuf.Timestamp;",
-            "public class TestCase {",
-            "  public static void foo(Timestamp timestamp) {",
-            "    long seconds = timestamp.getSeconds();",
-            "    if (true) {",
-            "      // BUG: Diagnostic contains: ProtoTimestampGetSecondsGetNano",
-            "      int nanos = timestamp.getNanos();",
-            "    }",
-            "  }",
-            "}")
+            """
+            package test;
+
+            import com.google.protobuf.Timestamp;
+
+            public class TestCase {
+              public static void foo(Timestamp timestamp) {
+                long seconds = timestamp.getSeconds();
+                if (true) {
+                  // BUG: Diagnostic contains: ProtoTimestampGetSecondsGetNano
+                  int nanos = timestamp.getNanos();
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -108,17 +123,22 @@ public class ProtoTimestampGetSecondsGetNanoTest {
     compilationHelper
         .addSourceLines(
             "test/TestCase.java",
-            "package test;",
-            "import com.google.protobuf.Timestamp;",
-            "public class TestCase {",
-            "  public static void foo(Timestamp timestamp) {",
-            "    long seconds = timestamp.getSeconds();",
-            "  }",
-            "  public static void bar(Timestamp timestamp) {",
-            "    // BUG: Diagnostic contains: ProtoTimestampGetSecondsGetNano",
-            "    int nanos = timestamp.getNanos();",
-            "  }",
-            "}")
+            """
+            package test;
+
+            import com.google.protobuf.Timestamp;
+
+            public class TestCase {
+              public static void foo(Timestamp timestamp) {
+                long seconds = timestamp.getSeconds();
+              }
+
+              public static void bar(Timestamp timestamp) {
+                // BUG: Diagnostic contains: ProtoTimestampGetSecondsGetNano
+                int nanos = timestamp.getNanos();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -127,13 +147,17 @@ public class ProtoTimestampGetSecondsGetNanoTest {
     compilationHelper
         .addSourceLines(
             "test/TestCase.java",
-            "package test;",
-            "import com.google.protobuf.Timestamp;",
-            "public class TestCase {",
-            "  public static void foo(Timestamp timestamp) {",
-            "    long seconds = timestamp.getSeconds();",
-            "  }",
-            "}")
+            """
+            package test;
+
+            import com.google.protobuf.Timestamp;
+
+            public class TestCase {
+              public static void foo(Timestamp timestamp) {
+                long seconds = timestamp.getSeconds();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -142,14 +166,18 @@ public class ProtoTimestampGetSecondsGetNanoTest {
     compilationHelper
         .addSourceLines(
             "test/TestCase.java",
-            "package test;",
-            "import com.google.protobuf.Timestamp;",
-            "public class TestCase {",
-            "  public static void foo(Timestamp timestamp) {",
-            "    // BUG: Diagnostic contains: ProtoTimestampGetSecondsGetNano",
-            "    int nanos = timestamp.getNanos();",
-            "  }",
-            "}")
+            """
+            package test;
+
+            import com.google.protobuf.Timestamp;
+
+            public class TestCase {
+              public static void foo(Timestamp timestamp) {
+                // BUG: Diagnostic contains: ProtoTimestampGetSecondsGetNano
+                int nanos = timestamp.getNanos();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -158,16 +186,21 @@ public class ProtoTimestampGetSecondsGetNanoTest {
     compilationHelper
         .addSourceLines(
             "test/TestCase.java",
-            "package test;",
-            "import com.google.protobuf.Timestamp;",
-            "public class TestCase {",
-            "  private static final Timestamp TIMESTAMP = Timestamp.getDefaultInstance();",
-            "  private static final long seconds = TIMESTAMP.getSeconds();",
-            "  public static void foo() {",
-            "    // BUG: Diagnostic contains: ProtoTimestampGetSecondsGetNano",
-            "    int nanos = TIMESTAMP.getNanos();",
-            "  }",
-            "}")
+            """
+            package test;
+
+            import com.google.protobuf.Timestamp;
+
+            public class TestCase {
+              private static final Timestamp TIMESTAMP = Timestamp.getDefaultInstance();
+              private static final long seconds = TIMESTAMP.getSeconds();
+
+              public static void foo() {
+                // BUG: Diagnostic contains: ProtoTimestampGetSecondsGetNano
+                int nanos = TIMESTAMP.getNanos();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -176,13 +209,17 @@ public class ProtoTimestampGetSecondsGetNanoTest {
     compilationHelper
         .addSourceLines(
             "test/TestCase.java",
-            "package test;",
-            "import com.google.protobuf.Timestamp;",
-            "public class TestCase {",
-            "  static {",
-            "    long seconds = Timestamp.getDefaultInstance().getSeconds();",
-            "  }",
-            "}")
+            """
+            package test;
+
+            import com.google.protobuf.Timestamp;
+
+            public class TestCase {
+              static {
+                long seconds = Timestamp.getDefaultInstance().getSeconds();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -191,14 +228,18 @@ public class ProtoTimestampGetSecondsGetNanoTest {
     compilationHelper
         .addSourceLines(
             "test/TestCase.java",
-            "package test;",
-            "import com.google.protobuf.Timestamp;",
-            "public class TestCase {",
-            "  static {",
-            "    // BUG: Diagnostic contains: ProtoTimestampGetSecondsGetNano",
-            "    int nanos = Timestamp.getDefaultInstance().getNanos();",
-            "  }",
-            "}")
+            """
+            package test;
+
+            import com.google.protobuf.Timestamp;
+
+            public class TestCase {
+              static {
+                // BUG: Diagnostic contains: ProtoTimestampGetSecondsGetNano
+                int nanos = Timestamp.getDefaultInstance().getNanos();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -207,13 +248,17 @@ public class ProtoTimestampGetSecondsGetNanoTest {
     compilationHelper
         .addSourceLines(
             "test/TestCase.java",
-            "package test;",
-            "import com.google.protobuf.Timestamp;",
-            "public class TestCase {",
-            "  private final Timestamp TIMESTAMP = Timestamp.getDefaultInstance();",
-            "  private final long seconds = TIMESTAMP.getSeconds();",
-            "  private final int nanos = TIMESTAMP.getNanos();",
-            "}")
+            """
+            package test;
+
+            import com.google.protobuf.Timestamp;
+
+            public class TestCase {
+              private final Timestamp TIMESTAMP = Timestamp.getDefaultInstance();
+              private final long seconds = TIMESTAMP.getSeconds();
+              private final int nanos = TIMESTAMP.getNanos();
+            }
+            """)
         .doTest();
   }
 
@@ -222,12 +267,16 @@ public class ProtoTimestampGetSecondsGetNanoTest {
     compilationHelper
         .addSourceLines(
             "test/TestCase.java",
-            "package test;",
-            "import com.google.protobuf.Timestamp;",
-            "public class TestCase {",
-            "  // BUG: Diagnostic contains: ProtoTimestampGetSecondsGetNano",
-            "  private final int nanos = Timestamp.getDefaultInstance().getNanos();",
-            "}")
+            """
+            package test;
+
+            import com.google.protobuf.Timestamp;
+
+            public class TestCase {
+              // BUG: Diagnostic contains: ProtoTimestampGetSecondsGetNano
+              private final int nanos = Timestamp.getDefaultInstance().getNanos();
+            }
+            """)
         .doTest();
   }
 
@@ -236,20 +285,27 @@ public class ProtoTimestampGetSecondsGetNanoTest {
     compilationHelper
         .addSourceLines(
             "test/TestCase.java",
-            "package test;",
-            "import com.google.protobuf.Timestamp;",
-            "public class TestCase {",
-            "  private static final Timestamp TIMESTAMP = Timestamp.getDefaultInstance();",
-            "  public static void foo() {",
-            "    long seconds = TIMESTAMP.getSeconds();",
-            "    Object obj = new Object() {",
-            "      @Override public String toString() {",
-            "        // BUG: Diagnostic contains: ProtoTimestampGetSecondsGetNano",
-            "        return String.valueOf(TIMESTAMP.getNanos()); ",
-            "      }",
-            "    };",
-            "  }",
-            "}")
+            """
+            package test;
+
+            import com.google.protobuf.Timestamp;
+
+            public class TestCase {
+              private static final Timestamp TIMESTAMP = Timestamp.getDefaultInstance();
+
+              public static void foo() {
+                long seconds = TIMESTAMP.getSeconds();
+                Object obj =
+                    new Object() {
+                      @Override
+                      public String toString() {
+                        // BUG: Diagnostic contains: ProtoTimestampGetSecondsGetNano
+                        return String.valueOf(TIMESTAMP.getNanos());
+                      }
+                    };
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -258,16 +314,21 @@ public class ProtoTimestampGetSecondsGetNanoTest {
     compilationHelper
         .addSourceLines(
             "test/TestCase.java",
-            "package test;",
-            "import com.google.protobuf.Timestamp;",
-            "public class TestCase {",
-            "  Timestamp TIMESTAMP = Timestamp.getDefaultInstance();",
-            "  long seconds = TIMESTAMP.getSeconds();",
-            "  Object obj = new Object() {",
-            "    // BUG: Diagnostic contains: ProtoTimestampGetSecondsGetNano",
-            "    long nanos = TIMESTAMP.getNanos();",
-            "  };",
-            "}")
+            """
+            package test;
+
+            import com.google.protobuf.Timestamp;
+
+            public class TestCase {
+              Timestamp TIMESTAMP = Timestamp.getDefaultInstance();
+              long seconds = TIMESTAMP.getSeconds();
+              Object obj =
+                  new Object() {
+                    // BUG: Diagnostic contains: ProtoTimestampGetSecondsGetNano
+                    long nanos = TIMESTAMP.getNanos();
+                  };
+            }
+            """)
         .doTest();
   }
 
@@ -276,16 +337,21 @@ public class ProtoTimestampGetSecondsGetNanoTest {
     compilationHelper
         .addSourceLines(
             "test/TestCase.java",
-            "package test;",
-            "import com.google.protobuf.Timestamp;",
-            "public class TestCase {",
-            "  private static final Timestamp TIMESTAMP = Timestamp.getDefaultInstance();",
-            "  public static void foo() {",
-            "    Runnable r = () -> TIMESTAMP.getSeconds();",
-            "    // BUG: Diagnostic contains: ProtoTimestampGetSecondsGetNano",
-            "    int nanos = TIMESTAMP.getNanos();",
-            "  }",
-            "}")
+            """
+            package test;
+
+            import com.google.protobuf.Timestamp;
+
+            public class TestCase {
+              private static final Timestamp TIMESTAMP = Timestamp.getDefaultInstance();
+
+              public static void foo() {
+                Runnable r = () -> TIMESTAMP.getSeconds();
+                // BUG: Diagnostic contains: ProtoTimestampGetSecondsGetNano
+                int nanos = TIMESTAMP.getNanos();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -294,19 +360,24 @@ public class ProtoTimestampGetSecondsGetNanoTest {
     compilationHelper
         .addSourceLines(
             "test/TestCase.java",
-            "package test;",
-            "import com.google.protobuf.Timestamp;",
-            "import java.util.function.Supplier;",
-            "public class TestCase {",
-            "  private static final Timestamp TIMESTAMP = Timestamp.getDefaultInstance();",
-            "  public void foo() {",
-            "    doSomething(() -> TIMESTAMP.getSeconds());",
-            "    // BUG: Diagnostic contains: ProtoTimestampGetSecondsGetNano",
-            "    int nanos = TIMESTAMP.getNanos();",
-            "  }",
-            "  public void doSomething(Supplier<Long> supplier) {",
-            "  }",
-            "}")
+            """
+            package test;
+
+            import com.google.protobuf.Timestamp;
+            import java.util.function.Supplier;
+
+            public class TestCase {
+              private static final Timestamp TIMESTAMP = Timestamp.getDefaultInstance();
+
+              public void foo() {
+                doSomething(() -> TIMESTAMP.getSeconds());
+                // BUG: Diagnostic contains: ProtoTimestampGetSecondsGetNano
+                int nanos = TIMESTAMP.getNanos();
+              }
+
+              public void doSomething(Supplier<Long> supplier) {}
+            }
+            """)
         .doTest();
   }
 
@@ -315,16 +386,21 @@ public class ProtoTimestampGetSecondsGetNanoTest {
     compilationHelper
         .addSourceLines(
             "test/TestCase.java",
-            "package test;",
-            "import com.google.protobuf.Timestamp;",
-            "public class TestCase {",
-            "  private static final Timestamp TIMESTAMP = Timestamp.getDefaultInstance();",
-            "  public static void foo() {",
-            "    // BUG: Diagnostic contains: ProtoTimestampGetSecondsGetNano",
-            "    Runnable r = () -> TIMESTAMP.getNanos();",
-            "    long seconds = TIMESTAMP.getSeconds();",
-            "  }",
-            "}")
+            """
+            package test;
+
+            import com.google.protobuf.Timestamp;
+
+            public class TestCase {
+              private static final Timestamp TIMESTAMP = Timestamp.getDefaultInstance();
+
+              public static void foo() {
+                // BUG: Diagnostic contains: ProtoTimestampGetSecondsGetNano
+                Runnable r = () -> TIMESTAMP.getNanos();
+                long seconds = TIMESTAMP.getSeconds();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -333,14 +409,18 @@ public class ProtoTimestampGetSecondsGetNanoTest {
     compilationHelper
         .addSourceLines(
             "test/TestCase.java",
-            "package test;",
-            "import com.google.errorprone.bugpatterns.time.Test.DurationTimestamp;",
-            "public class TestCase {",
-            "  public static void foo(DurationTimestamp durationTimestamp) {",
-            "    long seconds = durationTimestamp.getTestTimestamp().getSeconds();",
-            "    int nanos = durationTimestamp.getTestTimestamp().getNanos();",
-            "  }",
-            "}")
+            """
+            package test;
+
+            import com.google.errorprone.bugpatterns.time.Test.DurationTimestamp;
+
+            public class TestCase {
+              public static void foo(DurationTimestamp durationTimestamp) {
+                long seconds = durationTimestamp.getTestTimestamp().getSeconds();
+                int nanos = durationTimestamp.getTestTimestamp().getNanos();
+              }
+            }
+            """)
         .doTest();
   }
 }

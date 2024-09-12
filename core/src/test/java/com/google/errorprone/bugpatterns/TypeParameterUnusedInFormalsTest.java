@@ -32,11 +32,17 @@ public class TypeParameterUnusedInFormalsTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "package foo.bar;",
-            "class Test {",
-            "  // BUG: Diagnostic contains:",
-            "  static <T> T doCast(Object o) { T t = (T) o; return t; }",
-            "}")
+            """
+            package foo.bar;
+
+            class Test {
+              // BUG: Diagnostic contains:
+              static <T> T doCast(Object o) {
+                T t = (T) o;
+                return t;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -45,11 +51,17 @@ public class TypeParameterUnusedInFormalsTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "package foo.bar;",
-            "class Test {",
-            "  // BUG: Diagnostic contains:",
-            "  static <U extends Object, T> T doCast(U o) { T t = (T) o; return t; }",
-            "}")
+            """
+            package foo.bar;
+
+            class Test {
+              // BUG: Diagnostic contains:
+              static <U extends Object, T> T doCast(U o) {
+                T t = (T) o;
+                return t;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -58,11 +70,17 @@ public class TypeParameterUnusedInFormalsTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "package foo.bar;",
-            "class Test {",
-            "  // BUG: Diagnostic contains:",
-            "  static <T, U extends Object> T doCast(U o) { T t = (T) o; return t; }",
-            "}")
+            """
+            package foo.bar;
+
+            class Test {
+              // BUG: Diagnostic contains:
+              static <T, U extends Object> T doCast(U o) {
+                T t = (T) o;
+                return t;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -71,12 +89,17 @@ public class TypeParameterUnusedInFormalsTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "package foo.bar;",
-            "class Test {",
-            "  // BUG: Diagnostic contains:",
-            "  static <V extends Object, T, U extends Object> T doCast(U o, V v) { T t = (T) o;"
-                + " return t; }",
-            "}")
+            """
+            package foo.bar;
+
+            class Test {
+              // BUG: Diagnostic contains:
+              static <V extends Object, T, U extends Object> T doCast(U o, V v) {
+                T t = (T) o;
+                return t;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -85,11 +108,16 @@ public class TypeParameterUnusedInFormalsTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "package foo.bar;",
-            "class Test {",
-            "  // BUG: Diagnostic contains:",
-            "  static <T extends Number> T doCast(Object o) { return (T) o; }",
-            "}")
+            """
+            package foo.bar;
+
+            class Test {
+              // BUG: Diagnostic contains:
+              static <T extends Number> T doCast(Object o) {
+                return (T) o;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -98,11 +126,17 @@ public class TypeParameterUnusedInFormalsTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "package foo.bar;",
-            "class Test {",
-            "  interface Foo<T> {}",
-            "  static <T extends Foo<T>> T doCast(Object o) { return (T) o; }",
-            "}")
+            """
+            package foo.bar;
+
+            class Test {
+              interface Foo<T> {}
+
+              static <T extends Foo<T>> T doCast(Object o) {
+                return (T) o;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -111,12 +145,18 @@ public class TypeParameterUnusedInFormalsTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "package foo.bar;",
-            "class Test {",
-            "  interface Foo<T> {}",
-            "  // BUG: Diagnostic contains:",
-            "  static <T extends Foo<?>> T doCast(Object o) { return (T) o; }",
-            "}")
+            """
+            package foo.bar;
+
+            class Test {
+              interface Foo<T> {}
+
+              // BUG: Diagnostic contains:
+              static <T extends Foo<?>> T doCast(Object o) {
+                return (T) o;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -125,10 +165,15 @@ public class TypeParameterUnusedInFormalsTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.List;",
-            "class Test {",
-            "  static <T> List<T> newList() { return null; }",
-            "}")
+            """
+            import java.util.List;
+
+            class Test {
+              static <T> List<T> newList() {
+                return null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -137,10 +182,15 @@ public class TypeParameterUnusedInFormalsTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.List;",
-            "class Test {",
-            "  static <T> T noop(T t) { return t; }",
-            "}")
+            """
+            import java.util.List;
+
+            class Test {
+              static <T> T noop(T t) {
+                return t;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -149,10 +199,15 @@ public class TypeParameterUnusedInFormalsTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.List;",
-            "class Test<T> {",
-            "  T noop(T t) { return t; }",
-            "}")
+            """
+            import java.util.List;
+
+            class Test<T> {
+              T noop(T t) {
+                return t;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -161,10 +216,12 @@ public class TypeParameterUnusedInFormalsTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "abstract class Test {",
-            "  // BUG: Diagnostic contains:",
-            "  abstract <T> T badMethod();",
-            "}")
+            """
+            abstract class Test {
+              // BUG: Diagnostic contains:
+              abstract <T> T badMethod();
+            }
+            """)
         .doTest();
   }
 
@@ -173,10 +230,14 @@ public class TypeParameterUnusedInFormalsTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  // BUG: Diagnostic contains:",
-            "  <T> T badMethod(String s) { return (T) s; }",
-            "}")
+            """
+            class Test {
+              // BUG: Diagnostic contains:
+              <T> T badMethod(String s) {
+                return (T) s;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -185,17 +246,22 @@ public class TypeParameterUnusedInFormalsTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "interface Test {",
-            "  interface Visitor1<X, Y> {}",
-            "  interface Visitor2<X, Y> {}",
-            "  <R,",
-            "    R1 extends R,",
-            "    R2 extends R,",
-            "    X1 extends Exception,",
-            "    X2 extends Exception,",
-            "    V extends Visitor1<R1, X1> & Visitor2<R2, X2>>",
-            "  R accept_(V v) throws X1, X2;",
-            "}")
+            """
+            interface Test {
+              interface Visitor1<X, Y> {}
+
+              interface Visitor2<X, Y> {}
+
+              <
+                      R,
+                      R1 extends R,
+                      R2 extends R,
+                      X1 extends Exception,
+                      X2 extends Exception,
+                      V extends Visitor1<R1, X1> & Visitor2<R2, X2>>
+                  R accept_(V v) throws X1, X2;
+            }
+            """)
         .doTest();
   }
 
@@ -203,7 +269,13 @@ public class TypeParameterUnusedInFormalsTest {
   @Test
   public void classTypeParameter() {
     compilationHelper
-        .addSourceLines("Test.java", "abstract class Test<T> {", "  abstract T get(String s);", "}")
+        .addSourceLines(
+            "Test.java",
+            """
+            abstract class Test<T> {
+              abstract T get(String s);
+            }
+            """)
         .doTest();
   }
 
@@ -213,17 +285,22 @@ public class TypeParameterUnusedInFormalsTest {
     compilationHelper
         .addSourceLines(
             "A.java",
-            "import java.lang.annotation.ElementType;",
-            "import java.lang.annotation.Target;",
-            "@Target(ElementType.TYPE_USE)",
-            "@interface A {}")
+            """
+            import java.lang.annotation.ElementType;
+            import java.lang.annotation.Target;
+
+            @Target(ElementType.TYPE_USE)
+            @interface A {}
+            """)
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  <T> T f(@A T x) {",
-            "    return x;",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              <T> T f(@A T x) {
+                return x;
+              }
+            }
+            """)
         .doTest();
   }
 }

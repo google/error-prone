@@ -33,13 +33,16 @@ public class AndroidJdkLibsCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.lang.annotation.Repeatable;",
-            "@Repeatable(Test.Container.class)",
-            "public @interface Test {",
-            "  public @interface Container {",
-            "    Test[] value();",
-            "  }",
-            "}")
+            """
+            import java.lang.annotation.Repeatable;
+
+            @Repeatable(Test.Container.class)
+            public @interface Test {
+              public @interface Container {
+                Test[] value();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -48,11 +51,13 @@ public class AndroidJdkLibsCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.lang.annotation.Target;",
-            "import java.lang.annotation.ElementType;",
-            "@Target({ElementType.TYPE_PARAMETER, ElementType.TYPE_USE})",
-            "public @interface Test {",
-            "}")
+            """
+            import java.lang.annotation.Target;
+            import java.lang.annotation.ElementType;
+
+            @Target({ElementType.TYPE_PARAMETER, ElementType.TYPE_USE})
+            public @interface Test {}
+            """)
         .doTest();
   }
 
@@ -61,20 +66,25 @@ public class AndroidJdkLibsCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.Map;",
-            "public class Test {",
-            "  abstract static class A implements Map<Object, Object> {}",
-            "  abstract static class B implements Map<Object, Object> {",
-            "    @Override",
-            "    public Object getOrDefault(Object key, Object defaultValue) {",
-            "      return null;",
-            "    }",
-            "  }",
-            "  void f(A a, B b) {",
-            "    a.getOrDefault(null, null);",
-            "    b.getOrDefault(null, null); // OK: overrides getOrDefault",
-            "  }",
-            "}")
+            """
+            import java.util.Map;
+
+            public class Test {
+              abstract static class A implements Map<Object, Object> {}
+
+              abstract static class B implements Map<Object, Object> {
+                @Override
+                public Object getOrDefault(Object key, Object defaultValue) {
+                  return null;
+                }
+              }
+
+              void f(A a, B b) {
+                a.getOrDefault(null, null);
+                b.getOrDefault(null, null); // OK: overrides getOrDefault
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -83,10 +93,12 @@ public class AndroidJdkLibsCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "public class Test {",
-            "  // BUG: Diagnostic contains:",
-            "  javax.lang.model.type.TypeKind tk;",
-            "}")
+            """
+            public class Test {
+              // BUG: Diagnostic contains:
+              javax.lang.model.type.TypeKind tk;
+            }
+            """)
         .doTest();
   }
 
@@ -95,14 +107,17 @@ public class AndroidJdkLibsCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.base.Stopwatch;",
-            "import java.util.concurrent.TimeUnit;",
-            "public class Test {",
-            "  void o() {",
-            "    Stopwatch.createStarted().elapsed();",
-            "    Stopwatch.createStarted().elapsed(TimeUnit.MILLISECONDS);",
-            "  }",
-            "}")
+            """
+            import com.google.common.base.Stopwatch;
+            import java.util.concurrent.TimeUnit;
+
+            public class Test {
+              void o() {
+                Stopwatch.createStarted().elapsed();
+                Stopwatch.createStarted().elapsed(TimeUnit.MILLISECONDS);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -111,16 +126,20 @@ public class AndroidJdkLibsCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.time.Duration;",
-            "import java.util.stream.Stream;",
-            "import com.google.common.base.Predicates;",
-            "import java.util.Arrays;",
-            "public class Test {",
-            "  Duration d = Duration.ofSeconds(10);",
-            "  public static void test(Stream s) {",
-            "    s.forEach(i -> {});",
-            "  }",
-            "}")
+            """
+            import java.time.Duration;
+            import java.util.stream.Stream;
+            import com.google.common.base.Predicates;
+            import java.util.Arrays;
+
+            public class Test {
+              Duration d = Duration.ofSeconds(10);
+
+              public static void test(Stream s) {
+                s.forEach(i -> {});
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -129,12 +148,15 @@ public class AndroidJdkLibsCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.Arrays;",
-            "public class Test {",
-            "  public static void main(String... args) {",
-            "    Arrays.stream(args);",
-            "  }",
-            "}")
+            """
+            import java.util.Arrays;
+
+            public class Test {
+              public static void main(String... args) {
+                Arrays.stream(args);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -143,14 +165,17 @@ public class AndroidJdkLibsCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.time.ZoneId;",
-            "import java.util.TimeZone;",
-            "public class Test {",
-            "  public static void test() {",
-            "    TimeZone.getTimeZone(\"a\");",
-            "    TimeZone.getTimeZone(ZoneId.of(\"a\"));",
-            "  }",
-            "}")
+            """
+            import java.time.ZoneId;
+            import java.util.TimeZone;
+
+            public class Test {
+              public static void test() {
+                TimeZone.getTimeZone("a");
+                TimeZone.getTimeZone(ZoneId.of("a"));
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -159,9 +184,11 @@ public class AndroidJdkLibsCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.Spliterator;",
-            "public abstract class Test implements Spliterator.OfInt {",
-            "}")
+            """
+            import java.util.Spliterator;
+
+            public abstract class Test implements Spliterator.OfInt {}
+            """)
         .doTest();
   }
 
@@ -170,13 +197,16 @@ public class AndroidJdkLibsCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.Collection;",
-            "class T {",
-            "  void f(Iterable<?> i, Collection<?> c) {",
-            "    i.forEach(System.err::println);",
-            "    c.forEach(System.err::println);",
-            "  }",
-            "}")
+            """
+            import java.util.Collection;
+
+            class T {
+              void f(Iterable<?> i, Collection<?> c) {
+                i.forEach(System.err::println);
+                c.forEach(System.err::println);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -184,10 +214,12 @@ public class AndroidJdkLibsCheckerTest {
   public void moduleInfo() {
     compilationHelper
         .addSourceLines(
-            "module-info.java", //
-            "module testmodule {",
-            "  requires java.base;",
-            "}")
+            "module-info.java",
+            """
+            module testmodule {
+              requires java.base;
+            }
+            """)
         .doTest();
   }
 
@@ -196,13 +228,16 @@ public class AndroidJdkLibsCheckerTest {
   public void methodHandle() {
     compilationHelper
         .addSourceLines(
-            "Test.java", //
-            "import java.lang.invoke.MethodHandles;",
-            "public class Test {",
-            "  void f() {",
-            "    Object o = MethodHandles.lookup();",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            import java.lang.invoke.MethodHandles;
+
+            public class Test {
+              void f() {
+                Object o = MethodHandles.lookup();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -211,18 +246,23 @@ public class AndroidJdkLibsCheckerTest {
   public void newAndroidApi() {
     compilationHelper
         .addSourceLines(
-            "Tile.java", //
-            "package android.service.quicksettings;",
-            "public class Tile {",
-            "}")
+            "Tile.java",
+            """
+            package android.service.quicksettings;
+
+            public class Tile {}
+            """)
         .addSourceLines(
-            "Test.java", //
-            "import static java.util.Objects.requireNonNull;",
-            "public class Test {",
-            "  void f() {",
-            "    requireNonNull(android.service.quicksettings.Tile.class);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            import static java.util.Objects.requireNonNull;
+
+            public class Test {
+              void f() {
+                requireNonNull(android.service.quicksettings.Tile.class);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -232,15 +272,18 @@ public class AndroidJdkLibsCheckerTest {
   public void parallelStream() {
     compilationHelper
         .addSourceLines(
-            "Test.java", //
-            "import java.util.Collection;",
-            "import java.util.stream.Stream;",
-            "public class Test {",
-            "  Stream<?> f(Collection<?> xs) {",
-            "    // BUG: Diagnostic contains:",
-            "    return xs.parallelStream().map(x -> x);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            import java.util.Collection;
+            import java.util.stream.Stream;
+
+            public class Test {
+              Stream<?> f(Collection<?> xs) {
+                // BUG: Diagnostic contains:
+                return xs.parallelStream().map(x -> x);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -248,13 +291,16 @@ public class AndroidJdkLibsCheckerTest {
   public void base64() {
     compilationHelper
         .addSourceLines(
-            "Test.java", //
-            "import java.util.Base64;",
-            "public class Test {",
-            "  String f(byte[] code) {",
-            "    return Base64.getUrlEncoder().encodeToString(code);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            import java.util.Base64;
+
+            public class Test {
+              String f(byte[] code) {
+                return Base64.getUrlEncoder().encodeToString(code);
+              }
+            }
+            """)
         .doTest();
   }
 }

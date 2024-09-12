@@ -46,16 +46,22 @@ public final class ThrowsUncheckedExceptionTest {
     BugCheckerRefactoringTestHelper.newInstance(ThrowsUncheckedException.class, getClass())
         .addInputLines(
             "in/Test.java",
-            "import java.io.IOError;",
-            "interface Test {",
-            "  void f() throws IOError, RuntimeException;",
-            "}")
+            """
+            import java.io.IOError;
+
+            interface Test {
+              void f() throws IOError, RuntimeException;
+            }
+            """)
         .addOutputLines(
-            "out/Test.java", //
-            "import java.io.IOError;",
-            "interface Test {",
-            "  void f();",
-            "}")
+            "out/Test.java",
+            """
+            import java.io.IOError;
+
+            interface Test {
+              void f();
+            }
+            """)
         .doTest(TEXT_MATCH);
   }
 
@@ -64,18 +70,24 @@ public final class ThrowsUncheckedExceptionTest {
     BugCheckerRefactoringTestHelper.newInstance(ThrowsUncheckedException.class, getClass())
         .addInputLines(
             "in/Test.java",
-            "import java.io.IOError;",
-            "import java.io.IOException;",
-            "interface Test {",
-            "  void f() throws IOError, RuntimeException, IOException;",
-            "}")
+            """
+            import java.io.IOError;
+            import java.io.IOException;
+
+            interface Test {
+              void f() throws IOError, RuntimeException, IOException;
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "import java.io.IOError;",
-            "import java.io.IOException;",
-            "interface Test {",
-            "  void f() throws IOException;",
-            "}")
+            """
+            import java.io.IOError;
+            import java.io.IOException;
+
+            interface Test {
+              void f() throws IOException;
+            }
+            """)
         .doTest();
   }
 
@@ -84,18 +96,24 @@ public final class ThrowsUncheckedExceptionTest {
     BugCheckerRefactoringTestHelper.newInstance(ThrowsUncheckedException.class, getClass())
         .addInputLines(
             "in/Test.java",
-            "import java.io.IOError;",
-            "import java.io.IOException;",
-            "interface Test {",
-            "  void f() throws IOException, IOError, RuntimeException;",
-            "}")
+            """
+            import java.io.IOError;
+            import java.io.IOException;
+
+            interface Test {
+              void f() throws IOException, IOError, RuntimeException;
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "import java.io.IOError;",
-            "import java.io.IOException;",
-            "interface Test {",
-            "  void f() throws IOException;",
-            "}")
+            """
+            import java.io.IOError;
+            import java.io.IOException;
+
+            interface Test {
+              void f() throws IOException;
+            }
+            """)
         .doTest();
   }
 
@@ -104,16 +122,22 @@ public final class ThrowsUncheckedExceptionTest {
     BugCheckerRefactoringTestHelper.newInstance(ThrowsUncheckedException.class, getClass())
         .addInputLines(
             "in/Test.java",
-            "import java.io.IOException;",
-            "interface Test {",
-            "  void f() throws ReflectiveOperationException, IOException, RuntimeException;",
-            "}")
+            """
+            import java.io.IOException;
+
+            interface Test {
+              void f() throws ReflectiveOperationException, IOException, RuntimeException;
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "import java.io.IOException;",
-            "interface Test {",
-            "  void f() throws ReflectiveOperationException, IOException;",
-            "}")
+            """
+            import java.io.IOException;
+
+            interface Test {
+              void f() throws ReflectiveOperationException, IOException;
+            }
+            """)
         .doTest();
   }
 }

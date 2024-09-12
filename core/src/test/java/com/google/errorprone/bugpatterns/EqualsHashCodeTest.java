@@ -44,10 +44,14 @@ public class EqualsHashCodeTest {
         .addSourceLines("Super.java", "abstract class Super {}")
         .addSourceLines(
             "Test.java",
-            "class Test extends Super {",
-            "  // BUG: Diagnostic contains:",
-            "  public boolean equals(Object o) { return false; }",
-            "}")
+            """
+            class Test extends Super {
+              // BUG: Diagnostic contains:
+              public boolean equals(Object o) {
+                return false;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -56,23 +60,35 @@ public class EqualsHashCodeTest {
     compilationHelper
         .addSourceLines(
             "Super.java",
-            "class Super {",
-            "  public int hashCode() {",
-            "    return 42;",
-            "  }",
-            "}")
+            """
+            class Super {
+              public int hashCode() {
+                return 42;
+              }
+            }
+            """)
         .addSourceLines(
             "Test.java",
-            "class Test extends Super {",
-            "  public boolean equals(Object o) { return false; }",
-            "}")
+            """
+            class Test extends Super {
+              public boolean equals(Object o) {
+                return false;
+              }
+            }
+            """)
         .doTest();
   }
 
   @Test
   public void interfaceEquals() {
     compilationHelper
-        .addSourceLines("I.java", "interface I {", "  boolean equals(Object o);", "}")
+        .addSourceLines(
+            "I.java",
+            """
+            interface I {
+              boolean equals(Object o);
+            }
+            """)
         .doTest();
   }
 
@@ -81,10 +97,13 @@ public class EqualsHashCodeTest {
     compilationHelper
         .addSourceLines(
             "Super.java",
-            "abstract class Super {",
-            "  public abstract boolean equals(Object o);",
-            "  public abstract int hashCode();",
-            "}")
+            """
+            abstract class Super {
+              public abstract boolean equals(Object o);
+
+              public abstract int hashCode();
+            }
+            """)
         .doTest();
   }
 
@@ -93,10 +112,12 @@ public class EqualsHashCodeTest {
     compilationHelper
         .addSourceLines(
             "Super.java",
-            "abstract class Super {",
-            "  // BUG: Diagnostic contains:",
-            "  public abstract boolean equals(Object o);",
-            "}")
+            """
+            abstract class Super {
+              // BUG: Diagnostic contains:
+              public abstract boolean equals(Object o);
+            }
+            """)
         .doTest();
   }
 
@@ -105,10 +126,14 @@ public class EqualsHashCodeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  @SuppressWarnings(\"EqualsHashCode\")",
-            "  public boolean equals(Object o) { return false; }",
-            "}")
+            """
+            class Test {
+              @SuppressWarnings("EqualsHashCode")
+              public boolean equals(Object o) {
+                return false;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -117,11 +142,13 @@ public class EqualsHashCodeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  public boolean equals(Object o) {",
-            "    return super.equals(o);",
-            "  }",
-            "}")
+            """
+            class Test {
+              public boolean equals(Object o) {
+                return super.equals(o);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -130,12 +157,15 @@ public class EqualsHashCodeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import javax.annotation.Nullable;",
-            "class Test {",
-            "  public boolean equals(@Nullable Object o) {",
-            "    return super.equals(o);",
-            "  }",
-            "}")
+            """
+            import javax.annotation.Nullable;
+
+            class Test {
+              public boolean equals(@Nullable Object o) {
+                return super.equals(o);
+              }
+            }
+            """)
         .doTest();
   }
 }

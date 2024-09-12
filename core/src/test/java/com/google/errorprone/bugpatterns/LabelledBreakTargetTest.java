@@ -32,15 +32,17 @@ public class LabelledBreakTargetTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void f() {",
-            "    // BUG: Diagnostic contains:",
-            "    FOO:",
-            "    if (true) {",
-            "      break FOO;",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f() {
+                // BUG: Diagnostic contains:
+                FOO:
+                if (true) {
+                  break FOO;
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -49,26 +51,28 @@ public class LabelledBreakTargetTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void f(Iterable<?> xs) {",
-            "    ONE:",
-            "    while (true) {",
-            "      break ONE;",
-            "    }",
-            "    TWO:",
-            "    do {",
-            "      break TWO;",
-            "    } while (true);",
-            "    THREE:",
-            "    for (var x : xs) {",
-            "      break THREE;",
-            "    }",
-            "    FOUR:",
-            "    for (int i = 0; i < 10; i++) {",
-            "      break FOUR;",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f(Iterable<?> xs) {
+                ONE:
+                while (true) {
+                  break ONE;
+                }
+                TWO:
+                do {
+                  break TWO;
+                } while (true);
+                THREE:
+                for (var x : xs) {
+                  break THREE;
+                }
+                FOUR:
+                for (int i = 0; i < 10; i++) {
+                  break FOUR;
+                }
+              }
+            }
+            """)
         .doTest();
   }
 }

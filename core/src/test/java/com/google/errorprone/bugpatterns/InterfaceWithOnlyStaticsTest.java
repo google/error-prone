@@ -35,10 +35,12 @@ public class InterfaceWithOnlyStaticsTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "// BUG: Diagnostic contains: InterfaceWithOnlyStatics",
-            "interface Test {",
-            "  public static final int foo = 42;",
-            "}")
+            """
+            // BUG: Diagnostic contains: InterfaceWithOnlyStatics
+            interface Test {
+              public static final int foo = 42;
+            }
+            """)
         .doTest();
   }
 
@@ -47,10 +49,13 @@ public class InterfaceWithOnlyStaticsTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "interface Test {",
-            "  public static final int foo = 42;",
-            "  int bar();",
-            "}")
+            """
+            interface Test {
+              public static final int foo = 42;
+
+              int bar();
+            }
+            """)
         .doTest();
   }
 
@@ -58,10 +63,12 @@ public class InterfaceWithOnlyStaticsTest {
   public void negative_notInterface() {
     testHelper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  public static final int foo = 42;",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              public static final int foo = 42;
+            }
+            """)
         .doTest();
   }
 
@@ -69,10 +76,12 @@ public class InterfaceWithOnlyStaticsTest {
   public void negative_annotation() {
     testHelper
         .addSourceLines(
-            "Test.java", //
-            "@interface Test {",
-            "  public static final int foo = 42;",
-            "}")
+            "Test.java",
+            """
+            @interface Test {
+              public static final int foo = 42;
+            }
+            """)
         .doTest();
   }
 
@@ -83,11 +92,16 @@ public class InterfaceWithOnlyStaticsTest {
             "A.java", //
             "interface A {}")
         .addSourceLines(
-            "Test.java", //
-            "interface Test extends A {",
-            "  int foo = 42;",
-            "  static int bar() { return 1; }",
-            "}")
+            "Test.java",
+            """
+            interface Test extends A {
+              int foo = 42;
+
+              static int bar() {
+                return 1;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -95,16 +109,22 @@ public class InterfaceWithOnlyStaticsTest {
   public void negative_daggerModules() {
     testHelper
         .addSourceLines(
-            "Module.java", //
-            "package dagger;",
-            "public @interface Module {}")
+            "Module.java",
+            """
+            package dagger;
+
+            public @interface Module {}
+            """)
         .addSourceLines(
-            "Test.java", //
-            "import dagger.Module;",
-            "@Module",
-            "interface Test {",
-            "  public static final int foo = 42;",
-            "}")
+            "Test.java",
+            """
+            import dagger.Module;
+
+            @Module
+            interface Test {
+              public static final int foo = 42;
+            }
+            """)
         .doTest();
   }
 
@@ -112,16 +132,22 @@ public class InterfaceWithOnlyStaticsTest {
   public void negative_daggerModules_producerModule() {
     testHelper
         .addSourceLines(
-            "ProducerModule.java", //
-            "package dagger.producers;",
-            "public @interface ProducerModule {}")
+            "ProducerModule.java",
+            """
+            package dagger.producers;
+
+            public @interface ProducerModule {}
+            """)
         .addSourceLines(
-            "Test.java", //
-            "import dagger.producers.ProducerModule;",
-            "@ProducerModule",
-            "interface Test {",
-            "  public static final int foo = 42;",
-            "}")
+            "Test.java",
+            """
+            import dagger.producers.ProducerModule;
+
+            @ProducerModule
+            interface Test {
+              public static final int foo = 42;
+            }
+            """)
         .doTest();
   }
 
@@ -129,18 +155,29 @@ public class InterfaceWithOnlyStaticsTest {
   public void refactoring() {
     refactoringHelper
         .addInputLines(
-            "Test.java", //
-            "interface Test {",
-            "  int foo = 42;",
-            "  static int bar() { return 1; }",
-            "}")
+            "Test.java",
+            """
+            interface Test {
+              int foo = 42;
+
+              static int bar() {
+                return 1;
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "final class Test {",
-            "  public static final int foo = 42;",
-            "  public static int bar() { return 1; }",
-            "  private Test() {}",
-            "}")
+            """
+            final class Test {
+              public static final int foo = 42;
+
+              public static int bar() {
+                return 1;
+              }
+
+              private Test() {}
+            }
+            """)
         .doTest();
   }
 
@@ -148,20 +185,25 @@ public class InterfaceWithOnlyStaticsTest {
   public void refactoring_innerClass() {
     refactoringHelper
         .addInputLines(
-            "Foo.java", //
-            "class Foo {",
-            "  interface Test {",
-            "    int foo = 42;",
-            "  }",
-            "}")
+            "Foo.java",
+            """
+            class Foo {
+              interface Test {
+                int foo = 42;
+              }
+            }
+            """)
         .addOutputLines(
             "Foo.java",
-            "class Foo {",
-            "  static final class Test {",
-            "    public static final int foo = 42;",
-            "    private Test() {}",
-            "  }",
-            "}")
+            """
+            class Foo {
+              static final class Test {
+                public static final int foo = 42;
+
+                private Test() {}
+              }
+            }
+            """)
         .doTest();
   }
 }

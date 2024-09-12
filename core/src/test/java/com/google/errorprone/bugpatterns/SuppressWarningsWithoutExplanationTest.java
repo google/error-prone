@@ -35,16 +35,20 @@ public final class SuppressWarningsWithoutExplanationTest {
     helper
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  @SuppressWarnings(\"deprecation\")",
-            "  void test() {}",
-            "}")
+            """
+            class Test {
+              @SuppressWarnings("deprecation")
+              void test() {}
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "class Test {",
-            "  @SuppressWarnings(\"deprecation\") // Safe because...",
-            "  void test() {}",
-            "}")
+            """
+            class Test {
+              @SuppressWarnings("deprecation") // Safe because...
+              void test() {}
+            }
+            """)
         .doTest(TEXT_MATCH);
   }
 
@@ -53,16 +57,20 @@ public final class SuppressWarningsWithoutExplanationTest {
     helper
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  @SuppressWarnings({\"deprecation\", \"another\"})",
-            "  void test() {}",
-            "}")
+            """
+            class Test {
+              @SuppressWarnings({"deprecation", "another"})
+              void test() {}
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "class Test {",
-            "  @SuppressWarnings({\"deprecation\", \"another\"}) // Safe because...",
-            "  void test() {}",
-            "}")
+            """
+            class Test {
+              @SuppressWarnings({"deprecation", "another"}) // Safe because...
+              void test() {}
+            }
+            """)
         .doTest(TEXT_MATCH);
   }
 
@@ -71,10 +79,12 @@ public final class SuppressWarningsWithoutExplanationTest {
     helper
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  @SuppressWarnings(\"someotherwarning\")",
-            "  void test() {}",
-            "}")
+            """
+            class Test {
+              @SuppressWarnings("someotherwarning")
+              void test() {}
+            }
+            """)
         .expectUnchanged()
         .doTest(TEXT_MATCH);
   }
@@ -84,10 +94,12 @@ public final class SuppressWarningsWithoutExplanationTest {
     helper
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  @SuppressWarnings(\"rawtypes\") // foo",
-            "  void test() {}",
-            "}")
+            """
+            class Test {
+              @SuppressWarnings("rawtypes") // foo
+              void test() {}
+            }
+            """)
         .expectUnchanged()
         .doTest(TEXT_MATCH);
   }
@@ -97,11 +109,13 @@ public final class SuppressWarningsWithoutExplanationTest {
     helper
         .addInputLines(
             "Test.java",
-            "@Deprecated",
-            "@SuppressWarnings(\"deprecation\") // foo",
-            "class Test {",
-            "  void test() {}",
-            "}")
+            """
+            @Deprecated
+            @SuppressWarnings("deprecation") // foo
+            class Test {
+              void test() {}
+            }
+            """)
         .expectUnchanged()
         .doTest(TEXT_MATCH);
   }
@@ -111,11 +125,13 @@ public final class SuppressWarningsWithoutExplanationTest {
     helper
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  // foo",
-            "  @SuppressWarnings(\"deprecation\")",
-            "  void test() {}",
-            "}")
+            """
+            class Test {
+              // foo
+              @SuppressWarnings("deprecation")
+              void test() {}
+            }
+            """)
         .expectUnchanged()
         .doTest(TEXT_MATCH);
   }
@@ -125,14 +141,13 @@ public final class SuppressWarningsWithoutExplanationTest {
     helper
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  /**",
-            "    * Frobnicates.",
-            "    * This comment might explain why it's safe.",
-            "    */",
-            "  @SuppressWarnings(\"deprecation\")",
-            "  void test() {}",
-            "}")
+            """
+            class Test {
+              /** Frobnicates. This comment might explain why it's safe. */
+              @SuppressWarnings("deprecation")
+              void test() {}
+            }
+            """)
         .expectUnchanged()
         .doTest(TEXT_MATCH);
   }

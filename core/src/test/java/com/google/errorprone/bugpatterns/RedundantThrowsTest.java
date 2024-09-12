@@ -34,15 +34,19 @@ public final class RedundantThrowsTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import java.io.IOException;",
-            "import java.io.FileNotFoundException;",
-            "import java.nio.file.AccessDeniedException;",
-            "interface Test {",
-            "  // BUG: Diagnostic contains: FileNotFoundException is a subtype of IOException",
-            "  void f() throws FileNotFoundException, IOException;",
-            "  // BUG: Diagnostic contains: FileNotFoundException is a subtype of IOException",
-            "  void g() throws IOException, FileNotFoundException;",
-            "}")
+            """
+            import java.io.IOException;
+            import java.io.FileNotFoundException;
+            import java.nio.file.AccessDeniedException;
+
+            interface Test {
+              // BUG: Diagnostic contains: FileNotFoundException is a subtype of IOException
+              void f() throws FileNotFoundException, IOException;
+
+              // BUG: Diagnostic contains: FileNotFoundException is a subtype of IOException
+              void g() throws IOException, FileNotFoundException;
+            }
+            """)
         .doTest();
   }
 
@@ -51,13 +55,13 @@ public final class RedundantThrowsTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "interface Test {",
-            "  // BUG: Diagnostic contains:"
-                + " IllegalAccessException and NoSuchFieldException are subtypes of"
-                + " ReflectiveOperationException",
-            "  void f() throws IllegalAccessException, NoSuchFieldException,"
-                + " ReflectiveOperationException;",
-            "}")
+            """
+interface Test {
+  // BUG: Diagnostic contains: IllegalAccessException and NoSuchFieldException are subtypes of
+  // ReflectiveOperationException
+  void f() throws IllegalAccessException, NoSuchFieldException, ReflectiveOperationException;
+}
+""")
         .doTest();
   }
 
@@ -66,10 +70,13 @@ public final class RedundantThrowsTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import java.io.*;",
-            "interface Test {",
-            "  void f() throws NullPointerException, FileNotFoundException;",
-            "}")
+            """
+            import java.io.*;
+
+            interface Test {
+              void f() throws NullPointerException, FileNotFoundException;
+            }
+            """)
         .doTest();
   }
 
@@ -78,20 +85,26 @@ public final class RedundantThrowsTest {
     BugCheckerRefactoringTestHelper.newInstance(RedundantThrows.class, getClass())
         .addInputLines(
             "in/Test.java",
-            "import java.io.IOException;",
-            "import java.io.FileNotFoundException;",
-            "import java.nio.file.AccessDeniedException;",
-            "interface Test {",
-            "  void f() throws FileNotFoundException, IOException, AccessDeniedException;",
-            "}")
+            """
+            import java.io.IOException;
+            import java.io.FileNotFoundException;
+            import java.nio.file.AccessDeniedException;
+
+            interface Test {
+              void f() throws FileNotFoundException, IOException, AccessDeniedException;
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "import java.io.IOException;",
-            "import java.io.FileNotFoundException;",
-            "import java.nio.file.AccessDeniedException;",
-            "interface Test {",
-            "  void f() throws IOException;",
-            "}")
+            """
+            import java.io.IOException;
+            import java.io.FileNotFoundException;
+            import java.nio.file.AccessDeniedException;
+
+            interface Test {
+              void f() throws IOException;
+            }
+            """)
         .doTest();
   }
 }

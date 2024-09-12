@@ -36,14 +36,17 @@ public class MislabeledAndroidStringTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/android/MatchFullyQualifiedTest.java",
-            "package com.google.errorprone.bugpatterns.android;",
-            "public class MatchFullyQualifiedTest {",
-            "  public int getStringId() {",
-            "    // BUG: Diagnostic contains: android.R.string.ok",
-            "    // android.R.string.yes is not \"Yes\" but \"OK\"; prefer android.R.string.ok",
-            "    return android.R.string.yes;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.android;
+
+            public class MatchFullyQualifiedTest {
+              public int getStringId() {
+                // BUG: Diagnostic contains: android.R.string.ok
+                // android.R.string.yes is not "Yes" but "OK"; prefer android.R.string.ok
+                return android.R.string.yes;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -52,16 +55,20 @@ public class MislabeledAndroidStringTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/android/MatchWithImportTest.java",
-            "package com.google.errorprone.bugpatterns.android;",
-            "import android.R;",
-            "public class MatchWithImportTest {",
-            "  public int getStringId() {",
-            "    // BUG: Diagnostic contains: R.string.cancel",
-            "    // android.R.string.no is not \"No\" but \"Cancel\";",
-            "    // prefer android.R.string.cancel",
-            "    return R.string.no;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.android;
+
+            import android.R;
+
+            public class MatchWithImportTest {
+              public int getStringId() {
+                // BUG: Diagnostic contains: R.string.cancel
+                // android.R.string.no is not "No" but "Cancel";
+                // prefer android.R.string.cancel
+                return R.string.no;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -70,12 +77,15 @@ public class MislabeledAndroidStringTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/android/MatchUseInFieldTest.java",
-            "package com.google.errorprone.bugpatterns.android;",
-            "public class MatchUseInFieldTest {",
-            "  // BUG: Diagnostic contains: android.R.string.ok",
-            "  // android.R.string.yes is not \"Yes\" but \"OK\"; prefer android.R.string.ok",
-            "  private static final int SAY_YES = android.R.string.yes;",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.android;
+
+            public class MatchUseInFieldTest {
+              // BUG: Diagnostic contains: android.R.string.ok
+              // android.R.string.yes is not "Yes" but "OK"; prefer android.R.string.ok
+              private static final int SAY_YES = android.R.string.yes;
+            }
+            """)
         .doTest();
   }
 
@@ -84,13 +94,17 @@ public class MislabeledAndroidStringTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/android/FineStringTest.java",
-            "package com.google.errorprone.bugpatterns.android;",
-            "import android.R;",
-            "public class FineStringTest {",
-            "  public int getStringId() {",
-            "    return R.string.copy;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.android;
+
+            import android.R;
+
+            public class FineStringTest {
+              public int getStringId() {
+                return R.string.copy;
+              }
+            }
+            """)
         .doTest();
   }
 

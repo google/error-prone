@@ -31,10 +31,12 @@ public final class EscapedEntityTest {
   public void positive_decimalEscape() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "// BUG: Diagnostic contains:",
-            "/** {@code &#064;Override} */",
-            "interface Test {}")
+            "Test.java",
+            """
+            // BUG: Diagnostic contains:
+            /** {@code &#064;Override} */
+            interface Test {}
+            """)
         .doTest();
   }
 
@@ -42,10 +44,12 @@ public final class EscapedEntityTest {
   public void positive_hexEscape() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "// BUG: Diagnostic contains:",
-            "/** {@code &#x52;Override} */",
-            "interface Test {}")
+            "Test.java",
+            """
+            // BUG: Diagnostic contains:
+            /** {@code &#x52;Override} */
+            interface Test {}
+            """)
         .doTest();
   }
 
@@ -53,10 +57,12 @@ public final class EscapedEntityTest {
   public void positive_characterReferemce() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "// BUG: Diagnostic contains:",
-            "/** {@code A &amp; B} */",
-            "interface Test {}")
+            "Test.java",
+            """
+            // BUG: Diagnostic contains:
+            /** {@code A &amp; B} */
+            interface Test {}
+            """)
         .doTest();
   }
 
@@ -64,9 +70,15 @@ public final class EscapedEntityTest {
   public void negative() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "/** <pre> &#064;Override </pre> */",
-            "interface Test {}")
+            "Test.java",
+            """
+            /**
+             *
+             *
+             * <pre> &#064;Override </pre>
+             */
+            interface Test {}
+            """)
         .doTest();
   }
 }

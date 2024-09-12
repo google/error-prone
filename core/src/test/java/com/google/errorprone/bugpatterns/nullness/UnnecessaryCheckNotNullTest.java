@@ -52,50 +52,54 @@ public class UnnecessaryCheckNotNullTest extends CompilerBasedAbstractTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.base.Preconditions;",
-            "import com.google.common.base.Verify;",
-            "import java.util.Objects;",
-            "class Test {",
-            " void positive_checkNotNull() {",
-            "// BUG: Diagnostic contains: UnnecessaryCheckNotNull",
-            "Preconditions.checkNotNull(new String(\"\"));",
-            "// BUG: Diagnostic contains: UnnecessaryCheckNotNull",
-            "Preconditions.checkNotNull(new String(\"\"), new Object());",
-            "// BUG: Diagnostic contains: UnnecessaryCheckNotNull",
-            "Preconditions.checkNotNull(new String(\"\"), \"Message %s\", \"template\");",
-            "// BUG: Diagnostic contains: UnnecessaryCheckNotNull",
-            "String pa = Preconditions.checkNotNull(new String(\"\"));",
-            "// BUG: Diagnostic contains: UnnecessaryCheckNotNull",
-            "String pb = Preconditions.checkNotNull(new String(\"\"), new Object());",
-            "// BUG: Diagnostic contains: UnnecessaryCheckNotNull",
-            "String pc = Preconditions.checkNotNull(new String(\"\"), \"Message %s\","
-                + " \"template\");",
-            "}",
-            " void positive_verifyNotNull() {",
-            "// BUG: Diagnostic contains: UnnecessaryCheckNotNull",
-            "Verify.verifyNotNull(new String(\"\"));",
-            "// BUG: Diagnostic contains: UnnecessaryCheckNotNull",
-            "Verify.verifyNotNull(new String(\"\"), \"Message\");",
-            "// BUG: Diagnostic contains: UnnecessaryCheckNotNull",
-            "Verify.verifyNotNull(new String(\"\"), \"Message %s\", \"template\");",
-            "// BUG: Diagnostic contains: UnnecessaryCheckNotNull",
-            "String va = Verify.verifyNotNull(new String(\"\"));",
-            "// BUG: Diagnostic contains: UnnecessaryCheckNotNull",
-            "String vb = Verify.verifyNotNull(new String(\"\"), \"Message\");",
-            "// BUG: Diagnostic contains: UnnecessaryCheckNotNull",
-            "String vc = Verify.verifyNotNull(new String(\"\"), \"Message %s\", \"template\");",
-            "}",
-            " void positive_requireNonNull() {",
-            "// BUG: Diagnostic contains: UnnecessaryCheckNotNull",
-            "Objects.requireNonNull(new String(\"\"));",
-            "// BUG: Diagnostic contains: UnnecessaryCheckNotNull",
-            "Objects.requireNonNull(new String(\"\"), \"Message\");",
-            "// BUG: Diagnostic contains: UnnecessaryCheckNotNull",
-            "String va = Objects.requireNonNull(new String(\"\"));",
-            "// BUG: Diagnostic contains: UnnecessaryCheckNotNull",
-            "String vb = Objects.requireNonNull(new String(\"\"), \"Message\");",
-            "}",
-            "}")
+            """
+            import com.google.common.base.Preconditions;
+            import com.google.common.base.Verify;
+            import java.util.Objects;
+
+            class Test {
+              void positive_checkNotNull() {
+                // BUG: Diagnostic contains: UnnecessaryCheckNotNull
+                Preconditions.checkNotNull(new String(""));
+                // BUG: Diagnostic contains: UnnecessaryCheckNotNull
+                Preconditions.checkNotNull(new String(""), new Object());
+                // BUG: Diagnostic contains: UnnecessaryCheckNotNull
+                Preconditions.checkNotNull(new String(""), "Message %s", "template");
+                // BUG: Diagnostic contains: UnnecessaryCheckNotNull
+                String pa = Preconditions.checkNotNull(new String(""));
+                // BUG: Diagnostic contains: UnnecessaryCheckNotNull
+                String pb = Preconditions.checkNotNull(new String(""), new Object());
+                // BUG: Diagnostic contains: UnnecessaryCheckNotNull
+                String pc = Preconditions.checkNotNull(new String(""), "Message %s", "template");
+              }
+
+              void positive_verifyNotNull() {
+                // BUG: Diagnostic contains: UnnecessaryCheckNotNull
+                Verify.verifyNotNull(new String(""));
+                // BUG: Diagnostic contains: UnnecessaryCheckNotNull
+                Verify.verifyNotNull(new String(""), "Message");
+                // BUG: Diagnostic contains: UnnecessaryCheckNotNull
+                Verify.verifyNotNull(new String(""), "Message %s", "template");
+                // BUG: Diagnostic contains: UnnecessaryCheckNotNull
+                String va = Verify.verifyNotNull(new String(""));
+                // BUG: Diagnostic contains: UnnecessaryCheckNotNull
+                String vb = Verify.verifyNotNull(new String(""), "Message");
+                // BUG: Diagnostic contains: UnnecessaryCheckNotNull
+                String vc = Verify.verifyNotNull(new String(""), "Message %s", "template");
+              }
+
+              void positive_requireNonNull() {
+                // BUG: Diagnostic contains: UnnecessaryCheckNotNull
+                Objects.requireNonNull(new String(""));
+                // BUG: Diagnostic contains: UnnecessaryCheckNotNull
+                Objects.requireNonNull(new String(""), "Message");
+                // BUG: Diagnostic contains: UnnecessaryCheckNotNull
+                String va = Objects.requireNonNull(new String(""));
+                // BUG: Diagnostic contains: UnnecessaryCheckNotNull
+                String vb = Objects.requireNonNull(new String(""), "Message");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -104,35 +108,40 @@ public class UnnecessaryCheckNotNullTest extends CompilerBasedAbstractTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.base.Preconditions;",
-            "import com.google.common.base.Verify;",
-            "import java.util.Objects;",
-            "class Test {",
-            " void positive_checkNotNull() {",
-            "// BUG: Diagnostic contains: UnnecessaryCheckNotNull",
-            "Preconditions.checkNotNull(new int[3]);",
-            "// BUG: Diagnostic contains: UnnecessaryCheckNotNull",
-            "Preconditions.checkNotNull(new int[]{1, 2, 3});",
-            "// BUG: Diagnostic contains: UnnecessaryCheckNotNull",
-            "Preconditions.checkNotNull(new int[5][2]);",
-            "}",
-            " void positive_verifyNotNull() {",
-            "// BUG: Diagnostic contains: UnnecessaryCheckNotNull",
-            "Verify.verifyNotNull(new int[3]);",
-            "// BUG: Diagnostic contains: UnnecessaryCheckNotNull",
-            "Verify.verifyNotNull(new int[]{1, 2, 3});",
-            "// BUG: Diagnostic contains: UnnecessaryCheckNotNull",
-            "Verify.verifyNotNull(new int[5][2]);",
-            "}",
-            " void positive_requireNonNull() {",
-            "// BUG: Diagnostic contains: UnnecessaryCheckNotNull",
-            "Objects.requireNonNull(new int[3]);",
-            "// BUG: Diagnostic contains: UnnecessaryCheckNotNull",
-            "Objects.requireNonNull(new int[]{1, 2, 3});",
-            "// BUG: Diagnostic contains: UnnecessaryCheckNotNull",
-            "Objects.requireNonNull(new int[5][2]);",
-            "}",
-            "}")
+            """
+            import com.google.common.base.Preconditions;
+            import com.google.common.base.Verify;
+            import java.util.Objects;
+
+            class Test {
+              void positive_checkNotNull() {
+                // BUG: Diagnostic contains: UnnecessaryCheckNotNull
+                Preconditions.checkNotNull(new int[3]);
+                // BUG: Diagnostic contains: UnnecessaryCheckNotNull
+                Preconditions.checkNotNull(new int[] {1, 2, 3});
+                // BUG: Diagnostic contains: UnnecessaryCheckNotNull
+                Preconditions.checkNotNull(new int[5][2]);
+              }
+
+              void positive_verifyNotNull() {
+                // BUG: Diagnostic contains: UnnecessaryCheckNotNull
+                Verify.verifyNotNull(new int[3]);
+                // BUG: Diagnostic contains: UnnecessaryCheckNotNull
+                Verify.verifyNotNull(new int[] {1, 2, 3});
+                // BUG: Diagnostic contains: UnnecessaryCheckNotNull
+                Verify.verifyNotNull(new int[5][2]);
+              }
+
+              void positive_requireNonNull() {
+                // BUG: Diagnostic contains: UnnecessaryCheckNotNull
+                Objects.requireNonNull(new int[3]);
+                // BUG: Diagnostic contains: UnnecessaryCheckNotNull
+                Objects.requireNonNull(new int[] {1, 2, 3});
+                // BUG: Diagnostic contains: UnnecessaryCheckNotNull
+                Objects.requireNonNull(new int[5][2]);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -141,16 +150,19 @@ public class UnnecessaryCheckNotNullTest extends CompilerBasedAbstractTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.base.Preconditions;",
-            "import com.google.common.base.Verify;",
-            "import java.util.Objects;",
-            "class Test {",
-            "void negative() {",
-            "Preconditions.checkNotNull(new String(\"\").substring(0, 0));",
-            "Verify.verifyNotNull(new String(\"\").substring(0, 0));",
-            "Objects.requireNonNull(new String(\"\").substring(0, 0));",
-            "}",
-            "}")
+            """
+            import com.google.common.base.Preconditions;
+            import com.google.common.base.Verify;
+            import java.util.Objects;
+
+            class Test {
+              void negative() {
+                Preconditions.checkNotNull(new String("").substring(0, 0));
+                Verify.verifyNotNull(new String("").substring(0, 0));
+                Objects.requireNonNull(new String("").substring(0, 0));
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -176,25 +188,39 @@ public class UnnecessaryCheckNotNullTest extends CompilerBasedAbstractTest {
 
   @Test
   public void getVariableUses() {
-    writeFile("A.java", "public class A {", "  public String b;", "  void foo() {}", "}");
+    writeFile(
+        "A.java",
+        """
+        public class A {
+          public String b;
+
+          void foo() {}
+        }
+        """);
     writeFile(
         "B.java",
-        "public class B {",
-        "  A my;",
-        "  B bar() { return null; }",
-        "  void foo(String x, A a) {",
-        "    x.trim().intern();",
-        "    a.b.trim().intern();",
-        "    this.my.foo();",
-        "    my.foo();",
-        "    this.bar();",
-        "    String.valueOf(0);",
-        "    java.lang.String.valueOf(1);",
-        "    bar().bar();",
-        "    System.out.println();",
-        "    a.b.indexOf(x.substring(1));",
-        "  }",
-        "}");
+        """
+        public class B {
+          A my;
+
+          B bar() {
+            return null;
+          }
+
+          void foo(String x, A a) {
+            x.trim().intern();
+            a.b.trim().intern();
+            this.my.foo();
+            my.foo();
+            this.bar();
+            String.valueOf(0);
+            java.lang.String.valueOf(1);
+            bar().bar();
+            System.out.println();
+            a.b.indexOf(x.substring(1));
+          }
+        }
+        """);
 
     TestScanner scanner =
         new TestScanner.Builder()

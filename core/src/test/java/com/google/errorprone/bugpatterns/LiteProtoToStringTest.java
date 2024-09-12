@@ -36,13 +36,16 @@ public final class LiteProtoToStringTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.protobuf.GeneratedMessageLite;",
-            "class Test {",
-            "  private String test(GeneratedMessageLite message) {",
-            "    // BUG: Diagnostic contains:",
-            "    return message.toString();",
-            "  }",
-            "}")
+            """
+            import com.google.protobuf.GeneratedMessageLite;
+
+            class Test {
+              private String test(GeneratedMessageLite message) {
+                // BUG: Diagnostic contains:
+                return message.toString();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -51,13 +54,17 @@ public final class LiteProtoToStringTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.protobuf.GeneratedMessageLite;",
-            "class Test {",
-            "  private void test(GeneratedMessageLite message) {",
-            "    atVerbose(message.toString());",
-            "  }",
-            "  public void atVerbose(String s) {}",
-            "}")
+            """
+            import com.google.protobuf.GeneratedMessageLite;
+
+            class Test {
+              private void test(GeneratedMessageLite message) {
+                atVerbose(message.toString());
+              }
+
+              public void atVerbose(String s) {}
+            }
+            """)
         .doTest();
   }
 
@@ -66,12 +73,15 @@ public final class LiteProtoToStringTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.protobuf.UnknownFieldSet;",
-            "class Test {",
-            "  private String test(UnknownFieldSet message) {",
-            "    return message.toString();",
-            "  }",
-            "}")
+            """
+            import com.google.protobuf.UnknownFieldSet;
+
+            class Test {
+              private String test(UnknownFieldSet message) {
+                return message.toString();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -80,24 +90,30 @@ public final class LiteProtoToStringTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.protobuf.Internal.EnumLite;",
-            "import com.google.protobuf.ProtocolMessageEnum;",
-            "class Test {",
-            "  private String test(EnumLite e) {",
-            "    // BUG: Diagnostic contains:",
-            "    return e.toString();",
-            "  }",
-            "  private String testImplicit(EnumLite e) {",
-            "    // BUG: Diagnostic contains:",
-            "    return \"\" + e;",
-            "  }",
-            "  private String test2(ProtocolMessageEnum e) {",
-            "    return e.toString();",
-            "  }",
-            "  private String test3(ProtocolMessageEnum e) {",
-            "    return e.getValueDescriptor().toString();",
-            "  }",
-            "}")
+            """
+            import com.google.protobuf.Internal.EnumLite;
+            import com.google.protobuf.ProtocolMessageEnum;
+
+            class Test {
+              private String test(EnumLite e) {
+                // BUG: Diagnostic contains:
+                return e.toString();
+              }
+
+              private String testImplicit(EnumLite e) {
+                // BUG: Diagnostic contains:
+                return "" + e;
+              }
+
+              private String test2(ProtocolMessageEnum e) {
+                return e.toString();
+              }
+
+              private String test3(ProtocolMessageEnum e) {
+                return e.getValueDescriptor().toString();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -106,18 +122,23 @@ public final class LiteProtoToStringTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.protobuf.GeneratedMessageLite;",
-            "class Test {",
-            "  private void test(GeneratedMessageLite message) {",
-            "    atVerbose().log(message.toString());",
-            "  }",
-            "  public Test atVerbose() {",
-            "    return this;",
-            "  }",
-            "  public Test log(String s) {",
-            "    return this;",
-            "  }",
-            "}")
+            """
+            import com.google.protobuf.GeneratedMessageLite;
+
+            class Test {
+              private void test(GeneratedMessageLite message) {
+                atVerbose().log(message.toString());
+              }
+
+              public Test atVerbose() {
+                return this;
+              }
+
+              public Test log(String s) {
+                return this;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -126,19 +147,25 @@ public final class LiteProtoToStringTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.protobuf.GeneratedMessageLite;",
-            "class Test {",
-            "  static class Log {",
-            "    static void i(String s) {}",
-            "    static void d(String s) {}",
-            "    static void v(String s) {}",
-            "  }",
-            "  private void test(GeneratedMessageLite message) {",
-            "    Log.i(message.toString());",
-            "    Log.d(message.toString());",
-            "    Log.v(message.toString());",
-            "  }",
-            "}")
+            """
+            import com.google.protobuf.GeneratedMessageLite;
+
+            class Test {
+              static class Log {
+                static void i(String s) {}
+
+                static void d(String s) {}
+
+                static void v(String s) {}
+              }
+
+              private void test(GeneratedMessageLite message) {
+                Log.i(message.toString());
+                Log.d(message.toString());
+                Log.v(message.toString());
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -147,16 +174,20 @@ public final class LiteProtoToStringTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.protobuf.GeneratedMessageLite;",
-            "class Test {",
-            "  static class Log {",
-            "    static void w(String s) {}",
-            "  }",
-            "  private void test(GeneratedMessageLite message) {",
-            "    // BUG: Diagnostic contains:",
-            "    Log.w(message.toString());",
-            "  }",
-            "}")
+            """
+            import com.google.protobuf.GeneratedMessageLite;
+
+            class Test {
+              static class Log {
+                static void w(String s) {}
+              }
+
+              private void test(GeneratedMessageLite message) {
+                // BUG: Diagnostic contains:
+                Log.w(message.toString());
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -165,19 +196,23 @@ public final class LiteProtoToStringTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.FormatMethod;",
-            "import com.google.protobuf.GeneratedMessageLite;",
-            "class Test {",
-            "  private void test(GeneratedMessageLite message) {",
-            "    // BUG: Diagnostic contains:",
-            "    format(null, \"%s\", message);",
-            "    format(message, \"%s\", 1);",
-            "  }",
-            "  @FormatMethod",
-            "  String format(Object tag, String format, Object... args) {",
-            "    return String.format(format, args);",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.FormatMethod;
+            import com.google.protobuf.GeneratedMessageLite;
+
+            class Test {
+              private void test(GeneratedMessageLite message) {
+                // BUG: Diagnostic contains:
+                format(null, "%s", message);
+                format(message, "%s", 1);
+              }
+
+              @FormatMethod
+              String format(Object tag, String format, Object... args) {
+                return String.format(format, args);
+              }
+            }
+            """)
         .doTest();
   }
 }

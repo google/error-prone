@@ -33,14 +33,18 @@ public class ImmutableEnumCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "enum Enum {",
-            "  ONE(1), TWO(2);",
-            "  // BUG: Diagnostic contains: final int x;'",
-            "  int x;",
-            "  private Enum(int x) {",
-            "    this.x = x;",
-            "  }",
-            "}")
+            """
+            enum Enum {
+              ONE(1),
+              TWO(2);
+              // BUG: Diagnostic contains: final int x;'
+              int x;
+
+              private Enum(int x) {
+                this.x = x;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -49,14 +53,19 @@ public class ImmutableEnumCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.collect.ImmutableSet;",
-            "enum Enum {",
-            "  ONE(1), TWO(2);",
-            "  final ImmutableSet<Integer> xs;",
-            "  private Enum(Integer... xs) {",
-            "    this.xs = ImmutableSet.copyOf(xs);",
-            "  }",
-            "}")
+            """
+            import com.google.common.collect.ImmutableSet;
+
+            enum Enum {
+              ONE(1),
+              TWO(2);
+              final ImmutableSet<Integer> xs;
+
+              private Enum(Integer... xs) {
+                this.xs = ImmutableSet.copyOf(xs);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -65,18 +74,23 @@ public class ImmutableEnumCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.Arrays;",
-            "import java.util.HashSet;",
-            "import java.util.Set;",
-            "enum Enum {",
-            "  ONE(1), TWO(2);",
-            "  // BUG: Diagnostic contains:  enums should be immutable: 'Enum' has field 'xs' of"
-                + " type 'java.util.Set<java.lang.Integer>', 'Set' is mutable",
-            "  final Set<Integer> xs;",
-            "  private Enum(Integer... xs) {",
-            "    this.xs = new HashSet<>(Arrays.asList(xs));",
-            "  }",
-            "}")
+            """
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
+enum Enum {
+  ONE(1),
+  TWO(2);
+  // BUG: Diagnostic contains:  enums should be immutable: 'Enum' has field 'xs' of type
+  // 'java.util.Set<java.lang.Integer>', 'Set' is mutable
+  final Set<Integer> xs;
+
+  private Enum(Integer... xs) {
+    this.xs = new HashSet<>(Arrays.asList(xs));
+  }
+}
+""")
         .doTest();
   }
 
@@ -85,12 +99,16 @@ public class ImmutableEnumCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "// BUG: Diagnostic contains: enums are immutable by default",
-            "@Immutable",
-            "enum Enum {",
-            "  ONE, TWO",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+
+            // BUG: Diagnostic contains: enums are immutable by default
+            @Immutable
+            enum Enum {
+              ONE,
+              TWO
+            }
+            """)
         .doTest();
   }
 
@@ -99,15 +117,23 @@ public class ImmutableEnumCheckerTest {
     compilationHelper
         .addSourceLines(
             "MyInterface.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable interface MyInterface {}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+
+            @Immutable
+            interface MyInterface {}
+            """)
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable",
-            "enum Enum implements MyInterface {",
-            "  ONE, TWO",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+
+            @Immutable
+            enum Enum implements MyInterface {
+              ONE,
+              TWO
+            }
+            """)
         .doTest();
   }
 
@@ -116,38 +142,59 @@ public class ImmutableEnumCheckerTest {
     compilationHelper
         .addSourceLines(
             "MyInterface.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable interface MyInterface { void bar(); }")
+            """
+            import com.google.errorprone.annotations.Immutable;
+
+            @Immutable
+            interface MyInterface {
+              void bar();
+            }
+            """)
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable",
-            "enum Enum implements MyInterface {",
-            "  ONE { public void bar() {} },",
-            "  TWO { public void bar() {} }",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+
+            @Immutable
+            enum Enum implements MyInterface {
+              ONE {
+                public void bar() {}
+              },
+              TWO {
+                public void bar() {}
+              }
+            }
+            """)
         .doTest();
   }
 
   @Test
   public void mutableFieldType() {
     compilationHelper
-        .addSourceLines("Foo.java", "class Foo {", "}")
+        .addSourceLines(
+            "Foo.java",
+            """
+            class Foo {}
+            """)
         .addSourceLines(
             "Test.java",
-            "import java.util.Arrays;",
-            "import java.util.HashSet;",
-            "import java.util.Set;",
-            "enum Enum {",
-            "  ONE(new Foo()), TWO(new Foo());",
-            "  // BUG: Diagnostic contains:"
-                + " the declaration of type 'Foo' is not annotated with"
-                + " @com.google.errorprone.annotations.Immutable",
-            "  final Foo f;",
-            "  private Enum(Foo f) {",
-            "    this.f = f;",
-            "  }",
-            "}")
+            """
+            import java.util.Arrays;
+            import java.util.HashSet;
+            import java.util.Set;
+
+            enum Enum {
+              ONE(new Foo()),
+              TWO(new Foo());
+              // BUG: Diagnostic contains: the declaration of type 'Foo' is not annotated with
+              // @com.google.errorprone.annotations.Immutable
+              final Foo f;
+
+              private Enum(Foo f) {
+                this.f = f;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -156,12 +203,16 @@ public class ImmutableEnumCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "enum Test {",
-            "  ONE;",
-            "  @SuppressWarnings(\"Immutable\")",
-            "  final int[] xs = {1};",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+
+            enum Test {
+              ONE;
+
+              @SuppressWarnings("Immutable")
+              final int[] xs = {1};
+            }
+            """)
         .doTest();
   }
 
@@ -169,17 +220,21 @@ public class ImmutableEnumCheckerTest {
   public void enumInstanceSuperMutable() {
     compilationHelper
         .addSourceLines(
-            "Test.java", //
-            "enum Test {",
-            "  ONE {",
-            "    int incr() {",
-            "      return x++;",
-            "    }",
-            "  };",
-            "  abstract int incr();",
-            "  // BUG: Diagnostic contains: non-final",
-            "  int x;",
-            "}")
+            "Test.java",
+            """
+            enum Test {
+              ONE {
+                int incr() {
+                  return x++;
+                }
+              };
+
+              abstract int incr();
+
+              // BUG: Diagnostic contains: non-final
+              int x;
+            }
+            """)
         .doTest();
   }
 
@@ -187,17 +242,21 @@ public class ImmutableEnumCheckerTest {
   public void enumInstanceMutable() {
     compilationHelper
         .addSourceLines(
-            "Test.java", //
-            "enum Test {",
-            "  ONE {",
-            "    // BUG: Diagnostic contains: non-final",
-            "    int x;",
-            "    int incr() {",
-            "      return x++;",
-            "    }",
-            "  };",
-            "  abstract int incr();",
-            "}")
+            "Test.java",
+            """
+            enum Test {
+              ONE {
+                // BUG: Diagnostic contains: non-final
+                int x;
+
+                int incr() {
+                  return x++;
+                }
+              };
+
+              abstract int incr();
+            }
+            """)
         .doTest();
   }
 
@@ -205,19 +264,22 @@ public class ImmutableEnumCheckerTest {
   public void jucImmutable() {
     compilationHelper
         .addSourceLines(
-            "Lib.java", //
-            "import javax.annotation.concurrent.Immutable;",
-            "@Immutable",
-            "class Lib {",
-            "}")
+            "Lib.java",
+            """
+            import javax.annotation.concurrent.Immutable;
+
+            @Immutable
+            class Lib {}
+            """)
         .addSourceLines(
-            "Test.java", //
-            "enum Test {",
-            "  ONE;",
-            "  // BUG: Diagnostic contains:"
-                + " not annotated with @com.google.errorprone.annotations.Immutable",
-            "  final Lib l = new Lib();",
-            "}")
+            "Test.java",
+            """
+enum Test {
+  ONE;
+  // BUG: Diagnostic contains: not annotated with @com.google.errorprone.annotations.Immutable
+  final Lib l = new Lib();
+}
+""")
         .doTest();
   }
 }

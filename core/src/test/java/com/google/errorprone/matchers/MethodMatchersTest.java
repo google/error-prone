@@ -81,14 +81,18 @@ public class MethodMatchersTest {
     CompilationTestHelper.newInstance(ConstructorDeleter.class, getClass())
         .addSourceLines(
             "test/Foo.java",
-            "package test;",
-            "public class Foo { ",
-            "  public Foo(String s) {}",
-            "  public Foo() {",
-            "    // BUG: Diagnostic contains:",
-            "    this(\"\");",
-            "  }",
-            "}")
+            """
+            package test;
+
+            public class Foo {
+              public Foo(String s) {}
+
+              public Foo() {
+                // BUG: Diagnostic contains:
+                this("");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -97,19 +101,25 @@ public class MethodMatchersTest {
     CompilationTestHelper.newInstance(ConstructorDeleter.class, getClass())
         .addSourceLines(
             "test/Foo.java",
-            "package test;",
-            "public class Foo { ",
-            "  public Foo(String s) {}",
-            "}")
+            """
+            package test;
+
+            public class Foo {
+              public Foo(String s) {}
+            }
+            """)
         .addSourceLines(
-            "test/Bar.java", //
-            "package test;",
-            "public class Bar extends Foo {",
-            "  public Bar() {",
-            "    // BUG: Diagnostic contains:",
-            "    super(\"\");",
-            "  }",
-            "}")
+            "test/Bar.java",
+            """
+            package test;
+
+            public class Bar extends Foo {
+              public Bar() {
+                // BUG: Diagnostic contains:
+                super("");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -118,13 +128,18 @@ public class MethodMatchersTest {
     CompilationTestHelper.newInstance(ConstructorDeleter.class, getClass())
         .addSourceLines(
             "test/Foo.java",
-            "package test;",
-            "import java.util.function.Function;",
-            "public class Foo { ",
-            "  public Foo(String s) {}",
-            "  // BUG: Diagnostic contains:",
-            "  private static final Function<String, Foo> make = Foo::new;",
-            "}")
+            """
+            package test;
+
+            import java.util.function.Function;
+
+            public class Foo {
+              public Foo(String s) {}
+
+              // BUG: Diagnostic contains:
+              private static final Function<String, Foo> make = Foo::new;
+            }
+            """)
         .doTest();
   }
 
@@ -133,19 +148,25 @@ public class MethodMatchersTest {
     CompilationTestHelper.newInstance(ConstructorDeleter.class, getClass())
         .addSourceLines(
             "test/Foo.java",
-            "package test;",
-            "public class Foo { ",
-            "  public Foo(String s) {}",
-            "}")
+            """
+            package test;
+
+            public class Foo {
+              public Foo(String s) {}
+            }
+            """)
         .addSourceLines(
-            "test/Test.java", //
-            "package test;",
-            "public class Test {",
-            "  public void f() {",
-            "    // BUG: Diagnostic contains:",
-            "    new Foo(\"\");",
-            "  }",
-            "}")
+            "test/Test.java",
+            """
+            package test;
+
+            public class Test {
+              public void f() {
+                // BUG: Diagnostic contains:
+                new Foo("");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -166,14 +187,22 @@ public class MethodMatchersTest {
   @Test
   public void varargsParameterMatcher() {
     CompilationTestHelper.newInstance(CrashyerMatcherTestChecker.class, getClass())
-        .addSourceLines("Lib.java", "abstract class Lib { ", "  void f(int x) {}", "}")
         .addSourceLines(
-            "test/Test.java", //
-            "class Test {",
-            "  void f(Lib l) {",
-            "    l.f(42);",
-            "  }",
-            "}")
+            "Lib.java",
+            """
+            abstract class Lib {
+              void f(int x) {}
+            }
+            """)
+        .addSourceLines(
+            "test/Test.java",
+            """
+            class Test {
+              void f(Lib l) {
+                l.f(42);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -212,29 +241,37 @@ public class MethodMatchersTest {
     CompilationTestHelper.newInstance(FlagMethodNamesChecker.class, getClass())
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void foo() {}",
-            "  void bar() {}",
-            "  static void fizz() {}",
-            "  static void buzz() {}",
-            "  void anotherMethod() {}",
-            "  static void yetAnother() {}",
-            "  void f() {",
-            "    // BUG: Diagnostic contains: instance varargs",
-            "    this.foo();",
-            "    // BUG: Diagnostic contains: instance varargs",
-            "    this.bar();",
-            "    // BUG: Diagnostic contains: static varargs",
-            "    Test.fizz();",
-            "    // BUG: Diagnostic contains: static varargs",
-            "    Test.buzz();",
-            "    // BUG: Diagnostic contains: static varargs",
-            "    Runnable r = Test::fizz;",
-            "    // These ones are ok",
-            "    this.anotherMethod();",
-            "    Test.yetAnother();",
-            "  }",
-            "}")
+            """
+            class Test {
+              void foo() {}
+
+              void bar() {}
+
+              static void fizz() {}
+
+              static void buzz() {}
+
+              void anotherMethod() {}
+
+              static void yetAnother() {}
+
+              void f() {
+                // BUG: Diagnostic contains: instance varargs
+                this.foo();
+                // BUG: Diagnostic contains: instance varargs
+                this.bar();
+                // BUG: Diagnostic contains: static varargs
+                Test.fizz();
+                // BUG: Diagnostic contains: static varargs
+                Test.buzz();
+                // BUG: Diagnostic contains: static varargs
+                Runnable r = Test::fizz;
+                // These ones are ok
+                this.anotherMethod();
+                Test.yetAnother();
+              }
+            }
+            """)
         .doTest();
   }
 }

@@ -50,21 +50,26 @@ public class EmptyCatchTest {
     compilationHelper
         .addSourceLines(
             "org/testng/annotations/Test.java",
-            "package org.testng.annotations;",
-            "public @interface Test {",
-            "}")
+            """
+            package org.testng.annotations;
+
+            public @interface Test {}
+            """)
         .addSourceLines(
             "in/SomeTest.java",
-            "import org.testng.annotations.Test;",
-            "public class SomeTest {",
-            "  @Test",
-            "  public void testNG() {",
-            "    try {",
-            "      System.err.println();",
-            "    } catch (Exception doNotCare) {",
-            "    }",
-            "  }",
-            "}")
+            """
+            import org.testng.annotations.Test;
+
+            public class SomeTest {
+              @Test
+              public void testNG() {
+                try {
+                  System.err.println();
+                } catch (Exception doNotCare) {
+                }
+              }
+            }
+            """)
         .doTest();
   }
 }

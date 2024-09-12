@@ -31,28 +31,34 @@ public class SystemConsoleNullTest {
   public void positive() {
     testHelper
         .addSourceLines(
-            "Test.java", //
-            "import java.io.Console;",
-            "class Test {",
-            "  boolean f() {",
-            "    // BUG: Diagnostic contains:",
-            "    return System.console() != null;",
-            "  }",
-            "  boolean g() {",
-            "    // BUG: Diagnostic contains:",
-            "    return System.console() == null;",
-            "  }",
-            "  boolean h() {",
-            "    Console c = System.console();",
-            "    // BUG: Diagnostic contains:",
-            "    return c == null;",
-            "  }",
-            "  boolean i() {",
-            "    Console c = System.console();",
-            "    // BUG: Diagnostic contains:",
-            "    return c != null;",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            import java.io.Console;
+
+            class Test {
+              boolean f() {
+                // BUG: Diagnostic contains:
+                return System.console() != null;
+              }
+
+              boolean g() {
+                // BUG: Diagnostic contains:
+                return System.console() == null;
+              }
+
+              boolean h() {
+                Console c = System.console();
+                // BUG: Diagnostic contains:
+                return c == null;
+              }
+
+              boolean i() {
+                Console c = System.console();
+                // BUG: Diagnostic contains:
+                return c != null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -60,18 +66,22 @@ public class SystemConsoleNullTest {
   public void negative() {
     testHelper
         .addSourceLines(
-            "Test.java", //
-            "import java.io.Console;",
-            "class Test {",
-            "  Console f() {",
-            "    return System.console();",
-            "  }",
-            "  boolean h() {",
-            "    Console c = System.console();",
-            "    c = null;",
-            "    return c == null;",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            import java.io.Console;
+
+            class Test {
+              Console f() {
+                return System.console();
+              }
+
+              boolean h() {
+                Console c = System.console();
+                c = null;
+                return c == null;
+              }
+            }
+            """)
         .doTest();
   }
 }

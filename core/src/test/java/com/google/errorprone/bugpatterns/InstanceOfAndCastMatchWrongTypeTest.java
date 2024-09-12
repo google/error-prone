@@ -44,16 +44,18 @@ public class InstanceOfAndCastMatchWrongTypeTest {
     compilationHelper
         .addSourceLines(
             "Foo.java",
-            "class Foo {",
-            "  void foo() {",
-            "    Object[] values = null;",
-            "    if (values[0] instanceof Integer) {",
-            "      int x = (Integer) values[0];",
-            "    } else if (values[0] instanceof Long) {",
-            "      long y = (Long) values[0];",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Foo {
+              void foo() {
+                Object[] values = null;
+                if (values[0] instanceof Integer) {
+                  int x = (Integer) values[0];
+                } else if (values[0] instanceof Long) {
+                  long y = (Long) values[0];
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -81,16 +83,19 @@ public class InstanceOfAndCastMatchWrongTypeTest {
     compilationHelper
         .addSourceLines(
             "Foo.java",
-            "class Foo {",
-            "  private Object[] getArray() {",
-            "    return new Object[0];",
-            "  }",
-            "  void doIt() {",
-            "    if (getArray()[0] instanceof Integer) {",
-            "      String s0 = (String) getArray()[0];",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Foo {
+              private Object[] getArray() {
+                return new Object[0];
+              }
+
+              void doIt() {
+                if (getArray()[0] instanceof Integer) {
+                  String s0 = (String) getArray()[0];
+                }
+              }
+            }
+            """)
         .doTest();
   }
 }

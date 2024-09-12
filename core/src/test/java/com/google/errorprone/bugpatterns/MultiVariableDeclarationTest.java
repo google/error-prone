@@ -35,13 +35,16 @@ public class MultiVariableDeclarationTest {
   public void positivePosition() {
     compilationHelper
         .addSourceLines(
-            "A.java", //
-            "package a;",
-            "public class A {",
-            "  int a;",
-            "  // BUG: Diagnostic contains:",
-            "  int x = 1, y = 2;",
-            "}")
+            "A.java",
+            """
+            package a;
+
+            public class A {
+              int a;
+              // BUG: Diagnostic contains:
+              int x = 1, y = 2;
+            }
+            """)
         .doTest();
   }
 
@@ -49,17 +52,24 @@ public class MultiVariableDeclarationTest {
   public void positive() {
     BugCheckerRefactoringTestHelper.newInstance(MultiVariableDeclaration.class, getClass())
         .addInputLines(
-            "in/A.java", //
-            "package a;",
-            "public class A {",
-            "  int x = 1, y = 2;",
-            "}")
+            "in/A.java",
+            """
+            package a;
+
+            public class A {
+              int x = 1, y = 2;
+            }
+            """)
         .addOutputLines(
-            "out/A.java", //
-            "package a;",
-            "public class A {",
-            "  int x = 1; int y = 2;",
-            "}")
+            "out/A.java",
+            """
+            package a;
+
+            public class A {
+              int x = 1;
+              int y = 2;
+            }
+            """)
         .doTest(TEXT_MATCH);
   }
 
@@ -68,20 +78,27 @@ public class MultiVariableDeclarationTest {
     BugCheckerRefactoringTestHelper.newInstance(MultiVariableDeclaration.class, getClass())
         .addInputLines(
             "in/A.java",
-            "package a;",
-            "public class A {",
-            "  int a = 1;",
-            "  int x = 1, y = 2;",
-            "  int b = 1;",
-            "}")
+            """
+            package a;
+
+            public class A {
+              int a = 1;
+              int x = 1, y = 2;
+              int b = 1;
+            }
+            """)
         .addOutputLines(
             "out/A.java",
-            "package a;",
-            "public class A {",
-            "  int a = 1;",
-            "  int x = 1; int y = 2;",
-            "  int b = 1;",
-            "}")
+            """
+            package a;
+
+            public class A {
+              int a = 1;
+              int x = 1;
+              int y = 2;
+              int b = 1;
+            }
+            """)
         .doTest(TEXT_MATCH);
   }
 
@@ -90,28 +107,39 @@ public class MultiVariableDeclarationTest {
     BugCheckerRefactoringTestHelper.newInstance(MultiVariableDeclaration.class, getClass())
         .addInputLines(
             "in/A.java",
-            "package a;",
-            "public class A {",
-            "  {",
-            "    int a = 1;",
-            "  }",
-            "  int x = 1, y = 2;",
-            "  {",
-            "    int a = 1;",
-            "  }",
-            "}")
+            """
+            package a;
+
+            public class A {
+              {
+                int a = 1;
+              }
+
+              int x = 1, y = 2;
+
+              {
+                int a = 1;
+              }
+            }
+            """)
         .addOutputLines(
             "out/A.java",
-            "package a;",
-            "public class A {",
-            "  {",
-            "    int a = 1;",
-            "  }",
-            "  int x = 1; int y = 2;",
-            "  {",
-            "    int a = 1;",
-            "  }",
-            "}")
+            """
+            package a;
+
+            public class A {
+              {
+                int a = 1;
+              }
+
+              int x = 1;
+              int y = 2;
+
+              {
+                int a = 1;
+              }
+            }
+            """)
         .doTest(TEXT_MATCH);
   }
 
@@ -119,17 +147,28 @@ public class MultiVariableDeclarationTest {
   public void positiveCinit() {
     BugCheckerRefactoringTestHelper.newInstance(MultiVariableDeclaration.class, getClass())
         .addInputLines(
-            "in/A.java", //
-            "package a;",
-            "public class A {",
-            "  { int x = 1, y = 2; }",
-            "}")
+            "in/A.java",
+            """
+            package a;
+
+            public class A {
+              {
+                int x = 1, y = 2;
+              }
+            }
+            """)
         .addOutputLines(
-            "out/A.java", //
-            "package a;",
-            "public class A {",
-            "  { int x = 1; int y = 2; }",
-            "}")
+            "out/A.java",
+            """
+            package a;
+
+            public class A {
+              {
+                int x = 1;
+                int y = 2;
+              }
+            }
+            """)
         .doTest(TEXT_MATCH);
   }
 
@@ -137,12 +176,15 @@ public class MultiVariableDeclarationTest {
   public void negative() {
     compilationHelper
         .addSourceLines(
-            "a/A.java", //
-            "package a;",
-            "public class A {",
-            "  int x = 1;",
-            "int y = 2;",
-            "}")
+            "a/A.java",
+            """
+            package a;
+
+            public class A {
+              int x = 1;
+              int y = 2;
+            }
+            """)
         .doTest();
   }
 
@@ -151,12 +193,15 @@ public class MultiVariableDeclarationTest {
     compilationHelper
         .addSourceLines(
             "a/A.java",
-            "package a;",
-            "public class A {",
-            "  void f() {",
-            "    for (int x = 1, y = 2;;) { }",
-            "  }",
-            "}")
+            """
+            package a;
+
+            public class A {
+              void f() {
+                for (int x = 1, y = 2; ; ) {}
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -164,18 +209,24 @@ public class MultiVariableDeclarationTest {
   public void positiveAnnotation() {
     BugCheckerRefactoringTestHelper.newInstance(MultiVariableDeclaration.class, getClass())
         .addInputLines(
-            "in/A.java", //
-            "package a;",
-            "public class A {",
-            "  @Deprecated int x = 1, y = 2;",
-            "}")
+            "in/A.java",
+            """
+            package a;
+
+            public class A {
+              @Deprecated int x = 1, y = 2;
+            }
+            """)
         .addOutputLines(
             "out/A.java",
-            "package a;",
-            "public class A {",
-            "  @Deprecated int x = 1;",
-            "  @Deprecated int y = 2;",
-            "}")
+            """
+            package a;
+
+            public class A {
+              @Deprecated int x = 1;
+              @Deprecated int y = 2;
+            }
+            """)
         .doTest(TEXT_MATCH);
   }
 
@@ -183,17 +234,24 @@ public class MultiVariableDeclarationTest {
   public void positiveArrayDimensions() {
     BugCheckerRefactoringTestHelper.newInstance(MultiVariableDeclaration.class, getClass())
         .addInputLines(
-            "in/A.java", //
-            "package a;",
-            "public class A {",
-            "  int[] x = {0}, y[] = {{0}};",
-            "}")
+            "in/A.java",
+            """
+            package a;
+
+            public class A {
+              int[] x = {0}, y[] = {{0}};
+            }
+            """)
         .addOutputLines(
             "out/A.java",
-            "package a;",
-            "public class A {",
-            "  int[] x = {0}; int[][] y = {{0}};",
-            "}")
+            """
+            package a;
+
+            public class A {
+              int[] x = {0};
+              int[][] y = {{0}};
+            }
+            """)
         .doTest(TEXT_MATCH);
   }
 
@@ -201,17 +259,24 @@ public class MultiVariableDeclarationTest {
   public void positiveNoInitializer() {
     BugCheckerRefactoringTestHelper.newInstance(MultiVariableDeclaration.class, getClass())
         .addInputLines(
-            "in/A.java", //
-            "package a;",
-            "public class A {",
-            "  int x, y;",
-            "}")
+            "in/A.java",
+            """
+            package a;
+
+            public class A {
+              int x, y;
+            }
+            """)
         .addOutputLines(
-            "out/A.java", //
-            "package a;",
-            "public class A {",
-            "  int x; int y;",
-            "}")
+            "out/A.java",
+            """
+            package a;
+
+            public class A {
+              int x;
+              int y;
+            }
+            """)
         .doTest(TEXT_MATCH);
   }
 }

@@ -46,11 +46,14 @@ public class JodaDateTimeConstantsTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import org.joda.time.DateTimeConstants;",
-            "public class TestClass {",
-            "  // BUG: Diagnostic contains: JodaDateTimeConstants",
-            "  private final long sixMinsInMillis = 6 * DateTimeConstants.MILLIS_PER_MINUTE;",
-            "}")
+            """
+            import org.joda.time.DateTimeConstants;
+
+            public class TestClass {
+              // BUG: Diagnostic contains: JodaDateTimeConstants
+              private final long sixMinsInMillis = 6 * DateTimeConstants.MILLIS_PER_MINUTE;
+            }
+            """)
         .doTest();
   }
 
@@ -59,11 +62,14 @@ public class JodaDateTimeConstantsTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import static org.joda.time.DateTimeConstants.MILLIS_PER_MINUTE;",
-            "public class TestClass {",
-            "  // BUG: Diagnostic contains: JodaDateTimeConstants",
-            "  private final long sixMinsInMillis = 6 * MILLIS_PER_MINUTE;",
-            "}")
+            """
+            import static org.joda.time.DateTimeConstants.MILLIS_PER_MINUTE;
+
+            public class TestClass {
+              // BUG: Diagnostic contains: JodaDateTimeConstants
+              private final long sixMinsInMillis = 6 * MILLIS_PER_MINUTE;
+            }
+            """)
         .doTest();
   }
 }

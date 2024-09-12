@@ -33,21 +33,26 @@ public final class IntLongMathTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  int f(int x) {",
-            "     return x + 3;",
-            "  }",
-            "  long g(long x) {",
-            "     return x + 3;",
-            "  }",
-            "  int h(long x) {",
-            "     return (int) (x + 3);",
-            "  }",
-            "  long i(int x) {",
-            "     // BUG: Diagnostic contains: x + 3L",
-            "     return x + 3;",
-            "  }",
-            "}")
+            """
+            class Test {
+              int f(int x) {
+                return x + 3;
+              }
+
+              long g(long x) {
+                return x + 3;
+              }
+
+              int h(long x) {
+                return (int) (x + 3);
+              }
+
+              long i(int x) {
+                // BUG: Diagnostic contains: x + 3L
+                return x + 3;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -56,16 +61,21 @@ public final class IntLongMathTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.function.Function;",
-            "class Test {",
-            "  interface F {",
-            "    long f(int i);",
-            "  }",
-            "  F f = i -> {",
-            "     // BUG: Diagnostic contains: return i + 3L",
-            "     return i + 3;",
-            "  };",
-            "}")
+            """
+            import java.util.function.Function;
+
+            class Test {
+              interface F {
+                long f(int i);
+              }
+
+              F f =
+                  i -> {
+                    // BUG: Diagnostic contains: return i + 3L
+                    return i + 3;
+                  };
+            }
+            """)
         .doTest();
   }
 
@@ -74,28 +84,34 @@ public final class IntLongMathTest {
     BugCheckerRefactoringTestHelper.newInstance(IntLongMath.class, getClass())
         .addInputLines(
             "in/Test.java",
-            "class Test {",
-            "  static final int MILLION = 1_000_000;",
-            "  long f(int x) {",
-            "     long r = (x + 3) * MILLION / 3;",
-            "     r = (x / 3) * MILLION / 3;",
-            "     r = x / 3;",
-            "     r = x + 3;",
-            "     return r;",
-            "  }",
-            "}")
+            """
+            class Test {
+              static final int MILLION = 1_000_000;
+
+              long f(int x) {
+                long r = (x + 3) * MILLION / 3;
+                r = (x / 3) * MILLION / 3;
+                r = x / 3;
+                r = x + 3;
+                return r;
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "class Test {",
-            "  static final int MILLION = 1_000_000;",
-            "  long f(int x) {",
-            "     long r = (x + 3L) * MILLION / 3;",
-            "     r = (long) (x / 3) * MILLION / 3;",
-            "     r = x / 3;",
-            "     r = x + 3L;",
-            "     return r;",
-            "  }",
-            "}")
+            """
+            class Test {
+              static final int MILLION = 1_000_000;
+
+              long f(int x) {
+                long r = (x + 3L) * MILLION / 3;
+                r = (long) (x / 3) * MILLION / 3;
+                r = x / 3;
+                r = x + 3L;
+                return r;
+              }
+            }
+            """)
         .doTest();
   }
 }

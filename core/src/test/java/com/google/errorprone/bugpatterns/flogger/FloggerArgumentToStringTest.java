@@ -37,50 +37,58 @@ public class FloggerArgumentToStringTest {
     refactoringHelper
         .addInputLines(
             "in/Test.java",
-            "import com.google.common.base.Ascii;",
-            "import com.google.common.flogger.FluentLogger;",
-            "import java.util.Arrays;",
-            "class Test {",
-            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "  public void f(String world, Object[] xs, long l) {",
-            "    logger.atInfo().log(\"hello '%s'\", world.toString());",
-            "    logger.atInfo().log(\"hello %s %d\", world.toString(), 2);",
-            "    logger.atInfo().log(\"hello %s\", world.toUpperCase());",
-            "    logger.atInfo().log(\"hello %s\", Ascii.toUpperCase(world));",
-            "    logger.atInfo().log(\"hello %s\", Integer.toString(42));",
-            "    logger.atInfo().log(\"hello %d\", Integer.valueOf(42));",
-            "    logger.atInfo().log(\"hello %s\", Integer.toHexString(42));",
-            "    logger.atInfo().log(\"hello %S\", Integer.toHexString(42));",
-            "    logger.atInfo().log(\"hello %s\", Arrays.asList(1, 2));",
-            "    logger.atInfo().log(\"hello %s\", Arrays.asList(xs));",
-            "    logger.atInfo().log(\"hello %s\", Arrays.toString(xs));",
-            "    logger.atInfo().log(\"hello %s\", Long.toHexString(l));",
-            "    logger.atInfo().log(\"%%s\", Ascii.toUpperCase(world));",
-            "  }",
-            "}")
+            """
+            import com.google.common.base.Ascii;
+            import com.google.common.flogger.FluentLogger;
+            import java.util.Arrays;
+
+            class Test {
+              private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+
+              public void f(String world, Object[] xs, long l) {
+                logger.atInfo().log("hello '%s'", world.toString());
+                logger.atInfo().log("hello %s %d", world.toString(), 2);
+                logger.atInfo().log("hello %s", world.toUpperCase());
+                logger.atInfo().log("hello %s", Ascii.toUpperCase(world));
+                logger.atInfo().log("hello %s", Integer.toString(42));
+                logger.atInfo().log("hello %d", Integer.valueOf(42));
+                logger.atInfo().log("hello %s", Integer.toHexString(42));
+                logger.atInfo().log("hello %S", Integer.toHexString(42));
+                logger.atInfo().log("hello %s", Arrays.asList(1, 2));
+                logger.atInfo().log("hello %s", Arrays.asList(xs));
+                logger.atInfo().log("hello %s", Arrays.toString(xs));
+                logger.atInfo().log("hello %s", Long.toHexString(l));
+                logger.atInfo().log("%%s", Ascii.toUpperCase(world));
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "import com.google.common.base.Ascii;",
-            "import com.google.common.flogger.FluentLogger;",
-            "import java.util.Arrays;",
-            "class Test {",
-            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "  public void f(String world, Object[] xs, long l) {",
-            "    logger.atInfo().log(\"hello '%s'\", world);",
-            "    logger.atInfo().log(\"hello %s %d\", world, 2);",
-            "    logger.atInfo().log(\"hello %S\", world);",
-            "    logger.atInfo().log(\"hello %S\", world);",
-            "    logger.atInfo().log(\"hello %d\", 42);",
-            "    logger.atInfo().log(\"hello %d\", 42);",
-            "    logger.atInfo().log(\"hello %x\", 42);",
-            "    logger.atInfo().log(\"hello %X\", 42);",
-            "    logger.atInfo().log(\"hello %s\", Arrays.asList(1, 2));",
-            "    logger.atInfo().log(\"hello %s\", xs);",
-            "    logger.atInfo().log(\"hello %s\", xs);",
-            "    logger.atInfo().log(\"hello %x\", l);",
-            "    logger.atInfo().log(\"%%s\", Ascii.toUpperCase(world));",
-            "  }",
-            "}")
+            """
+            import com.google.common.base.Ascii;
+            import com.google.common.flogger.FluentLogger;
+            import java.util.Arrays;
+
+            class Test {
+              private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+
+              public void f(String world, Object[] xs, long l) {
+                logger.atInfo().log("hello '%s'", world);
+                logger.atInfo().log("hello %s %d", world, 2);
+                logger.atInfo().log("hello %S", world);
+                logger.atInfo().log("hello %S", world);
+                logger.atInfo().log("hello %d", 42);
+                logger.atInfo().log("hello %d", 42);
+                logger.atInfo().log("hello %x", 42);
+                logger.atInfo().log("hello %X", 42);
+                logger.atInfo().log("hello %s", Arrays.asList(1, 2));
+                logger.atInfo().log("hello %s", xs);
+                logger.atInfo().log("hello %s", xs);
+                logger.atInfo().log("hello %x", l);
+                logger.atInfo().log("%%s", Ascii.toUpperCase(world));
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -89,13 +97,17 @@ public class FloggerArgumentToStringTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "class Test {",
-            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "  public void f(String world) {",
-            "    logger.atInfo().log(\"hello '%s'\", world);",
-            "  }",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            class Test {
+              private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+
+              public void f(String world) {
+                logger.atInfo().log("hello '%s'", world);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -104,22 +116,30 @@ public class FloggerArgumentToStringTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "class Test {",
-            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "  public void f() {",
-            "    logger.atInfo().log(\"hello '%s'\", toString());",
-            "  }",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            class Test {
+              private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+
+              public void f() {
+                logger.atInfo().log("hello '%s'", toString());
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "class Test {",
-            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "  public void f() {",
-            "    logger.atInfo().log(\"hello '%s'\", this);",
-            "  }",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            class Test {
+              private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+
+              public void f() {
+                logger.atInfo().log("hello '%s'", this);
+              }
+            }
+            """)
         .doTest();
   }
 }

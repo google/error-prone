@@ -42,16 +42,19 @@ public class DoNotUseRuleChainTest {
     compilationHelper
         .addSourceLines(
             "RuleChainNoInitializer.java",
-            "package rulechainnoinitializer;",
-            "import org.junit.Rule;",
-            "import org.junit.rules.RuleChain;",
-            "import org.junit.rules.TestRule;",
-            "import org.junit.runner.Description;",
-            "import org.junit.runners.model.Statement;",
-            "public class RuleChainNoInitializer {",
-            "@Rule",
-            "public RuleChain notInitializedRule;",
-            "}")
+            """
+            package rulechainnoinitializer;
+
+            import org.junit.Rule;
+            import org.junit.rules.RuleChain;
+            import org.junit.rules.TestRule;
+            import org.junit.runner.Description;
+            import org.junit.runners.model.Statement;
+
+            public class RuleChainNoInitializer {
+              @Rule public RuleChain notInitializedRule;
+            }
+            """)
         .doTest();
   }
 
@@ -434,38 +437,48 @@ public class DoNotUseRuleChainTest {
     refactoringHelper
         .addInputLines(
             "UnorderedRuleChainWithoutTestRuleImport.java",
-            "package orderedrulechainwithouttestruleimport;",
-            "import org.junit.Rule;",
-            "import org.junit.rules.RuleChain;",
-            "import org.junit.runners.model.Statement;",
-            "public class UnorderedRuleChainWithoutTestRuleImport {",
-            "@Rule",
-            "// BUG: Diagnostic contains: Do not use RuleChain",
-            "public final RuleChain ruleChain = RuleChain.outerRule((base, description) ->",
-            "new Statement() {",
-            "@Override",
-            "public void evaluate() throws Throwable {",
-            "// Do nothing",
-            "}",
-            "});",
-            "}")
+            """
+            package orderedrulechainwithouttestruleimport;
+
+            import org.junit.Rule;
+            import org.junit.rules.RuleChain;
+            import org.junit.runners.model.Statement;
+
+            public class UnorderedRuleChainWithoutTestRuleImport {
+              @Rule
+              // BUG: Diagnostic contains: Do not use RuleChain
+              public final RuleChain ruleChain =
+                  RuleChain.outerRule(
+                      (base, description) ->
+                          new Statement() {
+                            @Override
+                            public void evaluate() throws Throwable {
+                              // Do nothing
+                            }
+                          });
+            }
+            """)
         .addOutputLines(
             "UnorderedRuleChainWithoutTestRuleImport.java",
-            "package orderedrulechainwithouttestruleimport;",
-            "import org.junit.Rule;",
-            "import org.junit.rules.TestRule;",
-            "import org.junit.runners.model.Statement;",
-            "public class UnorderedRuleChainWithoutTestRuleImport {",
-            "@Rule(order = 0)",
-            "public final TestRule testRuleTestRule =",
-            "(base, description) ->",
-            "new Statement() {",
-            "@Override",
-            "public void evaluate() throws Throwable {",
-            "// Do nothing",
-            "}",
-            "};",
-            "}")
+            """
+            package orderedrulechainwithouttestruleimport;
+
+            import org.junit.Rule;
+            import org.junit.rules.TestRule;
+            import org.junit.runners.model.Statement;
+
+            public class UnorderedRuleChainWithoutTestRuleImport {
+              @Rule(order = 0)
+              public final TestRule testRuleTestRule =
+                  (base, description) ->
+                      new Statement() {
+                        @Override
+                        public void evaluate() throws Throwable {
+                          // Do nothing
+                        }
+                      };
+            }
+            """)
         .doTest();
   }
 

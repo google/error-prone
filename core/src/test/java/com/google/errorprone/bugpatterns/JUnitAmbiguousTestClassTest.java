@@ -33,13 +33,16 @@ public class JUnitAmbiguousTestClassTest {
     compilationHelper
         .addSourceLines(
             "Positive.java",
-            "import org.junit.Test;",
-            "import junit.framework.TestCase;",
-            "// BUG: Diagnostic contains:",
-            "public class Positive extends TestCase {",
-            "  @Test",
-            "  public void testCase() {}",
-            "}")
+            """
+            import org.junit.Test;
+            import junit.framework.TestCase;
+
+            // BUG: Diagnostic contains:
+            public class Positive extends TestCase {
+              @Test
+              public void testCase() {}
+            }
+            """)
         .doTest();
   }
 
@@ -48,11 +51,14 @@ public class JUnitAmbiguousTestClassTest {
     compilationHelper
         .addSourceLines(
             "Positive.java",
-            "import org.junit.Test;",
-            "public class Positive {",
-            "  @Test",
-            "  public void testCase() {}",
-            "}")
+            """
+            import org.junit.Test;
+
+            public class Positive {
+              @Test
+              public void testCase() {}
+            }
+            """)
         .doTest();
   }
 
@@ -61,10 +67,13 @@ public class JUnitAmbiguousTestClassTest {
     compilationHelper
         .addSourceLines(
             "Positive.java",
-            "import junit.framework.TestCase;",
-            "public class Positive extends TestCase {",
-            "  public void testCase() {}",
-            "}")
+            """
+            import junit.framework.TestCase;
+
+            public class Positive extends TestCase {
+              public void testCase() {}
+            }
+            """)
         .doTest();
   }
 }

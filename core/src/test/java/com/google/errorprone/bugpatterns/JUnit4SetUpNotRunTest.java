@@ -53,27 +53,35 @@ public class JUnit4SetUpNotRunTest {
         .expectUnchanged()
         .addInputLines(
             "in/Foo.java",
-            "import org.junit.runner.RunWith;",
-            "import org.junit.runners.JUnit4;",
-            "@RunWith(JUnit4.class)",
-            "public class Foo {",
-            "  @Before",
-            "  public void initMocks() {}",
-            "  @Before",
-            "  protected void badVisibility() {}",
-            "}")
+            """
+            import org.junit.runner.RunWith;
+            import org.junit.runners.JUnit4;
+
+            @RunWith(JUnit4.class)
+            public class Foo {
+              @Before
+              public void initMocks() {}
+
+              @Before
+              protected void badVisibility() {}
+            }
+            """)
         .addOutputLines(
             "out/Foo.java",
-            "import org.junit.Before;",
-            "import org.junit.runner.RunWith;",
-            "import org.junit.runners.JUnit4;",
-            "@RunWith(JUnit4.class)",
-            "public class Foo {",
-            "  @Before",
-            "  public void initMocks() {}",
-            "  @Before",
-            "  public void badVisibility() {}",
-            "}")
+            """
+            import org.junit.Before;
+            import org.junit.runner.RunWith;
+            import org.junit.runners.JUnit4;
+
+            @RunWith(JUnit4.class)
+            public class Foo {
+              @Before
+              public void initMocks() {}
+
+              @Before
+              public void badVisibility() {}
+            }
+            """)
         .doTest();
   }
 

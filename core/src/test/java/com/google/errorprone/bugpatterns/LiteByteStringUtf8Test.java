@@ -33,14 +33,17 @@ public class LiteByteStringUtf8Test {
     compilationHelper
         .addSourceLines(
             "Foo.java",
-            "import com.google.protobuf.ByteString;",
-            "import com.google.protobuf.MessageLite;",
-            "class Foo {",
-            "  void main(com.google.protobuf.MessageLite m) {",
-            "    // BUG: Diagnostic contains: ByteString",
-            "    String s = m.toByteString().toStringUtf8();",
-            "  }",
-            "}")
+            """
+            import com.google.protobuf.ByteString;
+            import com.google.protobuf.MessageLite;
+
+            class Foo {
+              void main(com.google.protobuf.MessageLite m) {
+                // BUG: Diagnostic contains: ByteString
+                String s = m.toByteString().toStringUtf8();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -49,14 +52,17 @@ public class LiteByteStringUtf8Test {
     compilationHelper
         .addSourceLines(
             "Foo.java",
-            "import com.google.protobuf.ByteString;",
-            "import com.google.protobuf.MessageLite;",
-            "class Foo {",
-            "  void main(MessageLite m, ByteString b) {",
-            "    ByteString b2 = m.toByteString();",
-            "    String s = b2.toStringUtf8();",
-            "  }",
-            "}")
+            """
+            import com.google.protobuf.ByteString;
+            import com.google.protobuf.MessageLite;
+
+            class Foo {
+              void main(MessageLite m, ByteString b) {
+                ByteString b2 = m.toByteString();
+                String s = b2.toStringUtf8();
+              }
+            }
+            """)
         .doTest();
   }
 }

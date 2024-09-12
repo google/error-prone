@@ -47,12 +47,14 @@ public class UnnecessaryBoxedVariableTest {
     helper
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  @SuppressWarnings(\"UnnecessaryBoxedVariable\")",
-            "  private int a(Integer o) {",
-            "    return o;",
-            "  }",
-            "}")
+            """
+            class Test {
+              @SuppressWarnings("UnnecessaryBoxedVariable")
+              private int a(Integer o) {
+                return o;
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -62,13 +64,22 @@ public class UnnecessaryBoxedVariableTest {
     compilationTestHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  interface Boxed<O> { void a(O b); }",
-            "  void boxed(Boxed<?> b) {}",
-            "  private void test() {",
-            "    boxed((Double a) -> { double b = a + 1; });",
-            "  }",
-            "}")
+            """
+            class Test {
+              interface Boxed<O> {
+                void a(O b);
+              }
+
+              void boxed(Boxed<?> b) {}
+
+              private void test() {
+                boxed(
+                    (Double a) -> {
+                      double b = a + 1;
+                    });
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -77,16 +88,20 @@ public class UnnecessaryBoxedVariableTest {
     compilationTestHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  interface F {",
-            "    int f(Integer i);",
-            "  }",
-            "  Test() {",
-            "    F f = (Integer i) -> {",
-            "      return i;",
-            "    };",
-            "  }",
-            "}")
+            """
+            class Test {
+              interface F {
+                int f(Integer i);
+              }
+
+              Test() {
+                F f =
+                    (Integer i) -> {
+                      return i;
+                    };
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -95,16 +110,21 @@ public class UnnecessaryBoxedVariableTest {
     compilationTestHelper
         .addSourceLines(
             "Foo.java",
-            "import com.google.auto.value.AutoValue;",
-            "@AutoValue",
-            "abstract class Foo {",
-            "  abstract int getFoo();",
-            "  abstract boolean isBar();",
-            "  // BUG: Diagnostic contains: int foo",
-            "  static Foo create(Integer foo, Boolean bar) {",
-            "    return new AutoValue_Foo(foo, bar);",
-            "  }",
-            "}")
+            """
+            import com.google.auto.value.AutoValue;
+
+            @AutoValue
+            abstract class Foo {
+              abstract int getFoo();
+
+              abstract boolean isBar();
+
+              // BUG: Diagnostic contains: int foo
+              static Foo create(Integer foo, Boolean bar) {
+                return new AutoValue_Foo(foo, bar);
+              }
+            }
+            """)
         .setArgs(ImmutableList.of("-processor", AutoValueProcessor.class.getName()))
         .doTest();
   }

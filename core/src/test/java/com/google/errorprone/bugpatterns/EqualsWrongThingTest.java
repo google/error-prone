@@ -36,15 +36,20 @@ public final class EqualsWrongThingTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.base.Objects;",
-            "class Test {",
-            "  private int a;",
-            "  private int b;",
-            "  @Override public boolean equals(Object o) {",
-            "    Test that = (Test) o;",
-            "    return a == that.a && Objects.equal(b, that.b);",
-            "  }",
-            "}")
+            """
+            import com.google.common.base.Objects;
+
+            class Test {
+              private int a;
+              private int b;
+
+              @Override
+              public boolean equals(Object o) {
+                Test that = (Test) o;
+                return a == that.a && Objects.equal(b, that.b);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -53,14 +58,18 @@ public final class EqualsWrongThingTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  private int a;",
-            "  private int b;",
-            "  @Override public boolean equals(Object o) {",
-            "    Test that = (Test) o;",
-            "    return (a == that.a && b == that.b) || (a == that.b && b == that.a);",
-            "  }",
-            "}")
+            """
+            class Test {
+              private int a;
+              private int b;
+
+              @Override
+              public boolean equals(Object o) {
+                Test that = (Test) o;
+                return (a == that.a && b == that.b) || (a == that.b && b == that.a);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -69,17 +78,27 @@ public final class EqualsWrongThingTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  private int a;",
-            "  private int b;",
-            "  private Object c;",
-            "  private int getA() { return a; }",
-            "  private int getB() { return b; }",
-            "  @Override public boolean equals(Object o) {",
-            "    Test that = (Test) o;",
-            "    return this.a == that.getA() && this.b == that.getB() && c.equals(that.c);",
-            "  }",
-            "}")
+            """
+            class Test {
+              private int a;
+              private int b;
+              private Object c;
+
+              private int getA() {
+                return a;
+              }
+
+              private int getB() {
+                return b;
+              }
+
+              @Override
+              public boolean equals(Object o) {
+                Test that = (Test) o;
+                return this.a == that.getA() && this.b == that.getB() && c.equals(that.c);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -88,15 +107,19 @@ public final class EqualsWrongThingTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  private int a;",
-            "  private int b;",
-            "  @Override public boolean equals(Object o) {",
-            "    Test that = (Test) o;",
-            "    // BUG: Diagnostic contains: comparison between `a` and `b`",
-            "    return a == that.b && b == that.b;",
-            "  }",
-            "}")
+            """
+            class Test {
+              private int a;
+              private int b;
+
+              @Override
+              public boolean equals(Object o) {
+                Test that = (Test) o;
+                // BUG: Diagnostic contains: comparison between `a` and `b`
+                return a == that.b && b == that.b;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -105,17 +128,27 @@ public final class EqualsWrongThingTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  private int a;",
-            "  private int b;",
-            "  private int getA() { return a; }",
-            "  private int getB() { return b; }",
-            "  @Override public boolean equals(Object o) {",
-            "    Test that = (Test) o;",
-            "    // BUG: Diagnostic contains: comparison between `getA()` and `getB()`",
-            "    return getA() == that.getB() && getB() == that.getB();",
-            "  }",
-            "}")
+            """
+            class Test {
+              private int a;
+              private int b;
+
+              private int getA() {
+                return a;
+              }
+
+              private int getB() {
+                return b;
+              }
+
+              @Override
+              public boolean equals(Object o) {
+                Test that = (Test) o;
+                // BUG: Diagnostic contains: comparison between `getA()` and `getB()`
+                return getA() == that.getB() && getB() == that.getB();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -124,16 +157,21 @@ public final class EqualsWrongThingTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.base.Objects;",
-            "class Test {",
-            "  private int a;",
-            "  private int b;",
-            "  @Override public boolean equals(Object o) {",
-            "    Test that = (Test) o;",
-            "    // BUG: Diagnostic contains: comparison between `a` and `b`",
-            "    return Objects.equal(a, that.b) && b == that.b;",
-            "  }",
-            "}")
+            """
+            import com.google.common.base.Objects;
+
+            class Test {
+              private int a;
+              private int b;
+
+              @Override
+              public boolean equals(Object o) {
+                Test that = (Test) o;
+                // BUG: Diagnostic contains: comparison between `a` and `b`
+                return Objects.equal(a, that.b) && b == that.b;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -142,15 +180,19 @@ public final class EqualsWrongThingTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  private Object a;",
-            "  private Object b;",
-            "  @Override public boolean equals(Object o) {",
-            "    Test that = (Test) o;",
-            "    // BUG: Diagnostic contains: comparison between `a` and `b`",
-            "    return a.equals(that.b) && b == that.b;",
-            "  }",
-            "}")
+            """
+            class Test {
+              private Object a;
+              private Object b;
+
+              @Override
+              public boolean equals(Object o) {
+                Test that = (Test) o;
+                // BUG: Diagnostic contains: comparison between `a` and `b`
+                return a.equals(that.b) && b == that.b;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -159,12 +201,15 @@ public final class EqualsWrongThingTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import java.util.Arrays;",
-            "class Test {",
-            "  boolean test(int[] a, int[] b) {",
-            "    return Arrays.equals(a, 0, 1, b, 2, 3);",
-            "  }",
-            "}")
+            """
+            import java.util.Arrays;
+
+            class Test {
+              boolean test(int[] a, int[] b) {
+                return Arrays.equals(a, 0, 1, b, 2, 3);
+              }
+            }
+            """)
         .doTest();
   }
 }

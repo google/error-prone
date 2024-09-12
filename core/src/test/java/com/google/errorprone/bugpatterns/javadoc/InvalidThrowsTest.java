@@ -33,20 +33,26 @@ public final class InvalidThrowsTest {
     refactoring
         .addInputLines(
             "Test.java",
-            "import java.io.IOException;",
-            "interface Test {",
-            "  /**",
-            "   * @throws IOException when failed",
-            "   */",
-            "  void foo(int a, int b);",
-            "}")
+            """
+            import java.io.IOException;
+
+            interface Test {
+              /**
+               * @throws IOException when failed
+               */
+              void foo(int a, int b);
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import java.io.IOException;",
-            "interface Test {",
-            "  /** */",
-            "  void foo(int a, int b);",
-            "}")
+            """
+            import java.io.IOException;
+
+            interface Test {
+              /** */
+              void foo(int a, int b);
+            }
+            """)
         .doTest(TestMode.TEXT_MATCH);
   }
 
@@ -55,17 +61,21 @@ public final class InvalidThrowsTest {
     refactoring
         .addInputLines(
             "Test.java",
-            "import java.io.IOException;",
-            "interface Test {",
-            "  /**",
-            "   * @throws IOException when failed",
-            "   */",
-            "  void bar(int a, int b) throws IOException;",
-            "  /**",
-            "   * @throws IOException when failed",
-            "   */",
-            "  void baz(int a, int b) throws Exception;",
-            "}")
+            """
+            import java.io.IOException;
+
+            interface Test {
+              /**
+               * @throws IOException when failed
+               */
+              void bar(int a, int b) throws IOException;
+
+              /**
+               * @throws IOException when failed
+               */
+              void baz(int a, int b) throws Exception;
+            }
+            """)
         .expectUnchanged()
         .doTest(TestMode.TEXT_MATCH);
   }
@@ -75,12 +85,14 @@ public final class InvalidThrowsTest {
     refactoring
         .addInputLines(
             "Test.java",
-            "interface Test {",
-            "  /**",
-            "   * @throws com.google.UnknownRuntimeException when failed",
-            "   */",
-            "  void bar(int a, int b);",
-            "}")
+            """
+            interface Test {
+              /**
+               * @throws com.google.UnknownRuntimeException when failed
+               */
+              void bar(int a, int b);
+            }
+            """)
         .expectUnchanged()
         .doTest(TestMode.TEXT_MATCH);
   }
@@ -90,13 +102,16 @@ public final class InvalidThrowsTest {
     refactoring
         .addInputLines(
             "Test.java",
-            "interface Test {",
-            "  /**",
-            "   * @throws bar when failed",
-            "   */",
-            "  void foo();",
-            "  void bar();",
-            "}")
+            """
+            interface Test {
+              /**
+               * @throws bar when failed
+               */
+              void foo();
+
+              void bar();
+            }
+            """)
         .expectUnchanged()
         .doTest(TestMode.TEXT_MATCH);
   }

@@ -41,15 +41,19 @@ public class VoidMissingNullableTest {
     aggressiveCompilationHelper
         .addSourceLines(
             "Test.java",
-            "import javax.annotation.Nullable;",
-            "class Test {",
-            "  // BUG: Diagnostic contains: @Nullable",
-            "  Void v;",
-            "  // BUG: Diagnostic contains: @Nullable",
-            "  Void f() {",
-            "    return v;",
-            "  }",
-            "}")
+            """
+            import javax.annotation.Nullable;
+
+            class Test {
+              // BUG: Diagnostic contains: @Nullable
+              Void v;
+
+              // BUG: Diagnostic contains: @Nullable
+              Void f() {
+                return v;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -58,22 +62,31 @@ public class VoidMissingNullableTest {
     aggressiveRefactoringHelper
         .addInputLines(
             "in/Foo.java",
-            "import javax.annotation.Nullable;",
-            "abstract class Foo {",
-            "  java.lang.Void v;",
-            "  final Void f() {",
-            "    return v;",
-            "  }",
-            "}")
+            """
+            import javax.annotation.Nullable;
+
+            abstract class Foo {
+              java.lang.Void v;
+
+              final Void f() {
+                return v;
+              }
+            }
+            """)
         .addOutputLines(
             "out/Foo.java",
-            "import javax.annotation.Nullable;",
-            "abstract class Foo {",
-            "  @Nullable java.lang.Void v;",
-            "  @Nullable final Void f() {",
-            "    return v;",
-            "  }",
-            "}")
+            """
+            import javax.annotation.Nullable;
+
+            abstract class Foo {
+              @Nullable java.lang.Void v;
+
+              @Nullable
+              final Void f() {
+                return v;
+              }
+            }
+            """)
         .doTest(TEXT_MATCH);
   }
 
@@ -82,22 +95,30 @@ public class VoidMissingNullableTest {
     aggressiveRefactoringHelper
         .addInputLines(
             "in/Foo.java",
-            "import org.checkerframework.checker.nullness.qual.Nullable;",
-            "abstract class Foo {",
-            "  java.lang.Void v;",
-            "  final Void f() {",
-            "    return v;",
-            "  }",
-            "}")
+            """
+            import org.checkerframework.checker.nullness.qual.Nullable;
+
+            abstract class Foo {
+              java.lang.Void v;
+
+              final Void f() {
+                return v;
+              }
+            }
+            """)
         .addOutputLines(
             "out/Foo.java",
-            "import org.checkerframework.checker.nullness.qual.Nullable;",
-            "abstract class Foo {",
-            "  java.lang.@Nullable Void v;",
-            "  final @Nullable Void f() {",
-            "    return v;",
-            "  }",
-            "}")
+            """
+            import org.checkerframework.checker.nullness.qual.Nullable;
+
+            abstract class Foo {
+              java.lang.@Nullable Void v;
+
+              final @Nullable Void f() {
+                return v;
+              }
+            }
+            """)
         .doTest(TEXT_MATCH);
   }
 
@@ -106,13 +127,18 @@ public class VoidMissingNullableTest {
     aggressiveCompilationHelper
         .addSourceLines(
             "Test.java",
-            "import javax.annotation.Nullable;",
-            "class Test {",
-            "  @Nullable Void v;",
-            "  @Nullable Void f() {",
-            "    return v;",
-            "  }",
-            "}")
+            """
+            import javax.annotation.Nullable;
+
+            class Test {
+              @Nullable Void v;
+
+              @Nullable
+              Void f() {
+                return v;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -121,13 +147,17 @@ public class VoidMissingNullableTest {
     aggressiveCompilationHelper
         .addSourceLines(
             "Test.java",
-            "import javax.annotation.Nullable;",
-            "class Test {",
-            "  String s;",
-            "  String f() {",
-            "    return s;",
-            "  }",
-            "}")
+            """
+            import javax.annotation.Nullable;
+
+            class Test {
+              String s;
+
+              String f() {
+                return s;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -136,17 +166,20 @@ public class VoidMissingNullableTest {
     aggressiveCompilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.List;",
-            "import org.checkerframework.checker.nullness.qual.Nullable;",
-            "class Test {",
-            "  // BUG: Diagnostic contains: @Nullable",
-            "  List<Void> a;",
-            "  // BUG: Diagnostic contains: @Nullable",
-            "  List<? extends Void> b;",
-            "  // BUG: Diagnostic contains: @Nullable",
-            "  List<? super Void> c;",
-            "  List<?> d;",
-            "}")
+            """
+            import java.util.List;
+            import org.checkerframework.checker.nullness.qual.Nullable;
+
+            class Test {
+              // BUG: Diagnostic contains: @Nullable
+              List<Void> a;
+              // BUG: Diagnostic contains: @Nullable
+              List<? extends Void> b;
+              // BUG: Diagnostic contains: @Nullable
+              List<? super Void> c;
+              List<?> d;
+            }
+            """)
         .doTest();
   }
 
@@ -155,26 +188,32 @@ public class VoidMissingNullableTest {
     aggressiveCompilationHelper
         .addSourceLines(
             "NonNull.java",
-            "import java.lang.annotation.ElementType;",
-            "import java.lang.annotation.Retention;",
-            "import java.lang.annotation.RetentionPolicy;",
-            "import java.lang.annotation.Target;",
-            "@Retention(RetentionPolicy.RUNTIME)",
-            "@Target(ElementType.TYPE_USE)",
-            "public @interface NonNull {}")
+            """
+            import java.lang.annotation.ElementType;
+            import java.lang.annotation.Retention;
+            import java.lang.annotation.RetentionPolicy;
+            import java.lang.annotation.Target;
+
+            @Retention(RetentionPolicy.RUNTIME)
+            @Target(ElementType.TYPE_USE)
+            public @interface NonNull {}
+            """)
         .addSourceLines(
             "Test.java",
-            "import java.util.List;",
-            "import org.checkerframework.checker.nullness.qual.Nullable;",
-            "class Test {",
-            "  // BUG: Diagnostic contains: @Nullable",
-            "  List<@NonNull Void> a;",
-            "  // BUG: Diagnostic contains: @Nullable",
-            "  List<? extends @NonNull Void> b;",
-            "  // BUG: Diagnostic contains: @Nullable",
-            "  List<? super @NonNull Void> c;",
-            "  List<?> d;",
-            "}")
+            """
+            import java.util.List;
+            import org.checkerframework.checker.nullness.qual.Nullable;
+
+            class Test {
+              // BUG: Diagnostic contains: @Nullable
+              List<@NonNull Void> a;
+              // BUG: Diagnostic contains: @Nullable
+              List<? extends @NonNull Void> b;
+              // BUG: Diagnostic contains: @Nullable
+              List<? super @NonNull Void> c;
+              List<?> d;
+            }
+            """)
         .doTest();
   }
 
@@ -183,22 +222,28 @@ public class VoidMissingNullableTest {
     aggressiveCompilationHelper
         .addSourceLines(
             "Nullable.java",
-            "import java.lang.annotation.ElementType;",
-            "import java.lang.annotation.Retention;",
-            "import java.lang.annotation.RetentionPolicy;",
-            "import java.lang.annotation.Target;",
-            "@Retention(RetentionPolicy.RUNTIME)",
-            "@Target(ElementType.TYPE_USE)",
-            "public @interface Nullable {}")
+            """
+            import java.lang.annotation.ElementType;
+            import java.lang.annotation.Retention;
+            import java.lang.annotation.RetentionPolicy;
+            import java.lang.annotation.Target;
+
+            @Retention(RetentionPolicy.RUNTIME)
+            @Target(ElementType.TYPE_USE)
+            public @interface Nullable {}
+            """)
         .addSourceLines(
             "Test.java",
-            "import java.util.List;",
-            "class Test {",
-            "  List<@Nullable Void> a;",
-            "  List<? extends @Nullable Void> b;",
-            "  List<? super @Nullable Void> c;",
-            "  List<?> d;",
-            "}")
+            """
+            import java.util.List;
+
+            class Test {
+              List<@Nullable Void> a;
+              List<? extends @Nullable Void> b;
+              List<? super @Nullable Void> c;
+              List<?> d;
+            }
+            """)
         .doTest();
   }
 
@@ -207,21 +252,26 @@ public class VoidMissingNullableTest {
     aggressiveCompilationHelper
         .addSourceLines(
             "Nullable.java",
-            "import java.lang.annotation.ElementType;",
-            "import java.lang.annotation.Retention;",
-            "import java.lang.annotation.RetentionPolicy;",
-            "import java.lang.annotation.Target;",
-            "@Retention(RetentionPolicy.RUNTIME)",
-            "@Target(ElementType.TYPE_USE)",
-            "public @interface Nullable {}")
+            """
+            import java.lang.annotation.ElementType;
+            import java.lang.annotation.Retention;
+            import java.lang.annotation.RetentionPolicy;
+            import java.lang.annotation.Target;
+
+            @Retention(RetentionPolicy.RUNTIME)
+            @Target(ElementType.TYPE_USE)
+            public @interface Nullable {}
+            """)
         .addSourceLines("Bystander.java", "public interface Bystander<T> {}")
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  static {",
-            "    new Bystander<@Nullable Void>() {};",
-            "  }",
-            "}")
+            """
+            class Test {
+              static {
+                new Bystander<@Nullable Void>() {};
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -230,22 +280,28 @@ public class VoidMissingNullableTest {
     aggressiveCompilationHelper
         .addSourceLines(
             "Nullable.java",
-            "import java.lang.annotation.ElementType;",
-            "import java.lang.annotation.Retention;",
-            "import java.lang.annotation.RetentionPolicy;",
-            "import java.lang.annotation.Target;",
-            "@Retention(RetentionPolicy.RUNTIME)",
-            "@Target(ElementType.TYPE_USE)",
-            "public @interface Nullable {}")
+            """
+            import java.lang.annotation.ElementType;
+            import java.lang.annotation.Retention;
+            import java.lang.annotation.RetentionPolicy;
+            import java.lang.annotation.Target;
+
+            @Retention(RetentionPolicy.RUNTIME)
+            @Target(ElementType.TYPE_USE)
+            public @interface Nullable {}
+            """)
         .addSourceLines(
             "Test.java",
-            "import java.util.List;",
-            "class Test {",
-            "  List<String> a;",
-            "  List<? extends String> b;",
-            "  List<? super String> c;",
-            "  List<?> d;",
-            "}")
+            """
+            import java.util.List;
+
+            class Test {
+              List<String> a;
+              List<? extends String> b;
+              List<? super String> c;
+              List<?> d;
+            }
+            """)
         .doTest();
   }
 
@@ -254,14 +310,17 @@ public class VoidMissingNullableTest {
     aggressiveCompilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.List;",
-            "import javax.annotation.Nullable;",
-            "class Test {",
-            "  List<Void> a;",
-            "  List<? extends Void> b;",
-            "  List<? super Void> c;",
-            "  List<?> d;",
-            "}")
+            """
+            import java.util.List;
+            import javax.annotation.Nullable;
+
+            class Test {
+              List<Void> a;
+              List<? extends Void> b;
+              List<? super Void> c;
+              List<?> d;
+            }
+            """)
         .doTest();
   }
 
@@ -270,13 +329,16 @@ public class VoidMissingNullableTest {
     aggressiveCompilationHelper
         .addSourceLines(
             "Test.java",
-            "import javax.annotation.Nullable;",
-            "interface Test {",
-            "  void consume(@Nullable Void v);",
-            "",
-            "  // BUG: Diagnostic contains: @Nullable",
-            "  Test TEST = (Void v) -> {};",
-            "}")
+            """
+            import javax.annotation.Nullable;
+
+            interface Test {
+              void consume(@Nullable Void v);
+
+              // BUG: Diagnostic contains: @Nullable
+              Test TEST = (Void v) -> {};
+            }
+            """)
         .doTest();
   }
 
@@ -285,12 +347,15 @@ public class VoidMissingNullableTest {
     aggressiveCompilationHelper
         .addSourceLines(
             "Test.java",
-            "import javax.annotation.Nullable;",
-            "interface Test {",
-            "  void consume(@Nullable Void v);",
-            "",
-            "  Test TEST = v -> {};",
-            "}")
+            """
+            import javax.annotation.Nullable;
+
+            interface Test {
+              void consume(@Nullable Void v);
+
+              Test TEST = v -> {};
+            }
+            """)
         .doTest();
   }
 
@@ -299,12 +364,15 @@ public class VoidMissingNullableTest {
     aggressiveCompilationHelper
         .addSourceLines(
             "Test.java",
-            "import org.jspecify.annotations.Nullable;",
-            "interface Test {",
-            "  void consume(Iterable<@Nullable Void> it);",
-            "",
-            "  Test TEST = it -> {};",
-            "}")
+            """
+            import org.jspecify.annotations.Nullable;
+
+            interface Test {
+              void consume(Iterable<@Nullable Void> it);
+
+              Test TEST = it -> {};
+            }
+            """)
         .doTest();
   }
 
@@ -315,14 +383,17 @@ public class VoidMissingNullableTest {
     aggressiveCompilationHelper
         .addSourceLines(
             "Test.java",
-            "import javax.annotation.Nullable;",
-            "class Test {",
-            "  @Nullable Void v;",
-            "",
-            "  void f() {",
-            "    var v = this.v;",
-            "  }",
-            "}")
+            """
+            import javax.annotation.Nullable;
+
+            class Test {
+              @Nullable Void v;
+
+              void f() {
+                var v = this.v;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -331,14 +402,17 @@ public class VoidMissingNullableTest {
     aggressiveCompilationHelper
         .addSourceLines(
             "Test.java",
-            "import javax.annotation.Nullable;",
-            "class Test {",
-            "  @Nullable Void v;",
-            "",
-            "  void f() {",
-            "    Void v = this.v;",
-            "  }",
-            "}")
+            """
+            import javax.annotation.Nullable;
+
+            class Test {
+              @Nullable Void v;
+
+              void f() {
+                Void v = this.v;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -347,13 +421,16 @@ public class VoidMissingNullableTest {
     conservativeCompilationHelper
         .addSourceLines(
             "Test.java",
-            "import javax.annotation.Nullable;",
-            "import org.jspecify.annotations.NullMarked;",
-            "@NullMarked",
-            "class Test {",
-            "  // BUG: Diagnostic contains: @Nullable",
-            "  Void v;",
-            "}")
+            """
+            import javax.annotation.Nullable;
+            import org.jspecify.annotations.NullMarked;
+
+            @NullMarked
+            class Test {
+              // BUG: Diagnostic contains: @Nullable
+              Void v;
+            }
+            """)
         .doTest();
   }
 
@@ -361,11 +438,14 @@ public class VoidMissingNullableTest {
   public void negativeConservativeNotNullMarked() {
     conservativeCompilationHelper
         .addSourceLines(
-            "Test.java", //
-            "import javax.annotation.Nullable;",
-            "class Test {",
-            "  Void v;",
-            "}")
+            "Test.java",
+            """
+            import javax.annotation.Nullable;
+
+            class Test {
+              Void v;
+            }
+            """)
         .doTest();
   }
 }

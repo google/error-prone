@@ -38,11 +38,13 @@ public final class StringFormatWithLiteralTest {
     compilationHelper
         .addSourceLines(
             "ExampleClass.java",
-            "public class ExampleClass {",
-            "  String test() {",
-            "    return String.format(\"This number %02x will be formatted\", 101);",
-            "  }",
-            "}")
+            """
+            public class ExampleClass {
+              String test() {
+                return String.format("This number %02x will be formatted", 101);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -51,11 +53,13 @@ public final class StringFormatWithLiteralTest {
     compilationHelper
         .addSourceLines(
             "ExampleClass.java",
-            "public class ExampleClass {",
-            "  String test() {",
-            "    return String.format(\"Formatting this float: %f\", 101.0);",
-            "  }",
-            "}")
+            """
+            public class ExampleClass {
+              String test() {
+                return String.format("Formatting this float: %f", 101.0);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -64,13 +68,16 @@ public final class StringFormatWithLiteralTest {
     compilationHelper
         .addSourceLines(
             "ExampleClass.java",
-            "import java.lang.String;",
-            "public class ExampleClass {",
-            "  String test() {",
-            "    String formatString = \"Formatting this string: %s\";",
-            "    return String.format(formatString, \"data\");",
-            "  }",
-            "}")
+            """
+            import java.lang.String;
+
+            public class ExampleClass {
+              String test() {
+                String formatString = "Formatting this string: %s";
+                return String.format(formatString, "data");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -79,12 +86,14 @@ public final class StringFormatWithLiteralTest {
     compilationHelper
         .addSourceLines(
             "ExampleClass.java",
-            "public class ExampleClass {",
-            "  String test() {",
-            "    String formatString = \"Nothing to format\";",
-            "    return String.format(formatString);",
-            "  }",
-            "}")
+            """
+            public class ExampleClass {
+              String test() {
+                String formatString = "Nothing to format";
+                return String.format(formatString);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -93,12 +102,15 @@ public final class StringFormatWithLiteralTest {
     compilationHelper
         .addSourceLines(
             "ExampleClass.java",
-            "import java.lang.String;",
-            "public class ExampleClass {",
-            "  String test() {",
-            "    return String.format(\"%n\");",
-            "  }",
-            "}")
+            """
+            import java.lang.String;
+
+            public class ExampleClass {
+              String test() {
+                return String.format("%n");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -107,13 +119,16 @@ public final class StringFormatWithLiteralTest {
     compilationHelper
         .addSourceLines(
             "ExampleClass.java",
-            "import java.lang.String;",
-            "public class ExampleClass {",
-            "  String test() {",
-            "    String data = \"data\";",
-            "    return String.format(\"Formatting this string: %s\", data);",
-            "  }",
-            "}")
+            """
+            import java.lang.String;
+
+            public class ExampleClass {
+              String test() {
+                String data = "data";
+                return String.format("Formatting this string: %s", data);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -122,13 +137,16 @@ public final class StringFormatWithLiteralTest {
     compilationHelper
         .addSourceLines(
             "ExampleClass.java",
-            "import java.lang.String;",
-            "public class ExampleClass {",
-            "  String test() {",
-            "    Integer data = 3;",
-            "    return String.format(\"Formatting this int: %d\", data);",
-            "  }",
-            "}")
+            """
+            import java.lang.String;
+
+            public class ExampleClass {
+              String test() {
+                Integer data = 3;
+                return String.format("Formatting this int: %d", data);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -137,14 +155,16 @@ public final class StringFormatWithLiteralTest {
     compilationHelper
         .addSourceLines(
             "ExampleClass.java",
-            "import java.lang.String;",
-            "public class ExampleClass {",
-            "  String test() {",
-            "    Integer data = 3;",
-            "    return String.format(\"Formatting this int: %d;Formatting this string: %s\",",
-            "                         data, \"string\");",
-            "  }",
-            "}")
+            """
+import java.lang.String;
+
+public class ExampleClass {
+  String test() {
+    Integer data = 3;
+    return String.format("Formatting this int: %d;Formatting this string: %s", data, "string");
+  }
+}
+""")
         .doTest();
   }
 
@@ -153,13 +173,16 @@ public final class StringFormatWithLiteralTest {
     compilationHelper
         .addSourceLines(
             "ExampleClass.java",
-            "import static java.lang.String.format;",
-            "public class ExampleClass {",
-            "  String test() {",
-            "    String data = \"data\";",
-            "    return format(\"Formatting this string: %s\", data);",
-            "  }",
-            "}")
+            """
+            import static java.lang.String.format;
+
+            public class ExampleClass {
+              String test() {
+                String data = "data";
+                return format("Formatting this string: %s", data);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -168,12 +191,15 @@ public final class StringFormatWithLiteralTest {
     compilationHelper
         .addSourceLines(
             "ExampleClass.java",
-            "import java.lang.String;",
-            "public class ExampleClass {",
-            "  String test() {",
-            "    return String.valueOf(true);",
-            "  }",
-            "}")
+            """
+            import java.lang.String;
+
+            public class ExampleClass {
+              String test() {
+                return String.valueOf(true);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -182,18 +208,22 @@ public final class StringFormatWithLiteralTest {
     refactoringHelper
         .addInputLines(
             "ExampleClass.java",
-            "public class ExampleClass {",
-            "  String test() {",
-            "    return String.format(\"Formatting nothing\");",
-            "  }",
-            "}")
+            """
+            public class ExampleClass {
+              String test() {
+                return String.format("Formatting nothing");
+              }
+            }
+            """)
         .addOutputLines(
             "ExampleClass.java",
-            "public class ExampleClass {",
-            "  String test() {",
-            "    return \"Formatting nothing\";",
-            "  }",
-            "}")
+            """
+            public class ExampleClass {
+              String test() {
+                return "Formatting nothing";
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -203,18 +233,22 @@ public final class StringFormatWithLiteralTest {
     refactoringHelper
         .addInputLines(
             "ExampleClass.java",
-            "public class ExampleClass {",
-            "  String test() {",
-            "    return \"Formatting nothing\".formatted();",
-            "  }",
-            "}")
+            """
+            public class ExampleClass {
+              String test() {
+                return "Formatting nothing".formatted();
+              }
+            }
+            """)
         .addOutputLines(
             "ExampleClass.java",
-            "public class ExampleClass {",
-            "  String test() {",
-            "    return \"Formatting nothing\";",
-            "  }",
-            "}")
+            """
+            public class ExampleClass {
+              String test() {
+                return "Formatting nothing";
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -223,18 +257,22 @@ public final class StringFormatWithLiteralTest {
     refactoringHelper
         .addInputLines(
             "ExampleClass.java",
-            "public class ExampleClass {",
-            "  String test() {",
-            "    return String.format(\"Formatting this integer: %d\", 1);",
-            "  }",
-            "}")
+            """
+            public class ExampleClass {
+              String test() {
+                return String.format("Formatting this integer: %d", 1);
+              }
+            }
+            """)
         .addOutputLines(
             "ExampleClass.java",
-            "public class ExampleClass {",
-            "  String test() {",
-            "    return \"Formatting this integer: 1\";",
-            "  }",
-            "}")
+            """
+            public class ExampleClass {
+              String test() {
+                return "Formatting this integer: 1";
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -244,18 +282,22 @@ public final class StringFormatWithLiteralTest {
     refactoringHelper
         .addInputLines(
             "ExampleClass.java",
-            "public class ExampleClass {",
-            "  String test() {",
-            "    return \"Formatting this integer: %d\".formatted(1);",
-            "  }",
-            "}")
+            """
+            public class ExampleClass {
+              String test() {
+                return "Formatting this integer: %d".formatted(1);
+              }
+            }
+            """)
         .addOutputLines(
             "ExampleClass.java",
-            "public class ExampleClass {",
-            "  String test() {",
-            "    return \"Formatting this integer: 1\";",
-            "  }",
-            "}")
+            """
+            public class ExampleClass {
+              String test() {
+                return "Formatting this integer: 1";
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -264,18 +306,22 @@ public final class StringFormatWithLiteralTest {
     refactoringHelper
         .addInputLines(
             "ExampleClass.java",
-            "public class ExampleClass {",
-            "  String test() {",
-            "    return String.format(\"Formatting this boolean: %B\", true);",
-            "  }",
-            "}")
+            """
+            public class ExampleClass {
+              String test() {
+                return String.format("Formatting this boolean: %B", true);
+              }
+            }
+            """)
         .addOutputLines(
             "ExampleClass.java",
-            "public class ExampleClass {",
-            "  String test() {",
-            "    return \"Formatting this boolean: TRUE\";",
-            "  }",
-            "}")
+            """
+            public class ExampleClass {
+              String test() {
+                return "Formatting this boolean: TRUE";
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -284,18 +330,22 @@ public final class StringFormatWithLiteralTest {
     refactoringHelper
         .addInputLines(
             "ExampleClass.java",
-            "public class ExampleClass {",
-            "  String test() {",
-            "    return String.format(\"Formatting this string: %s\", \"data\");",
-            "  }",
-            "}")
+            """
+            public class ExampleClass {
+              String test() {
+                return String.format("Formatting this string: %s", "data");
+              }
+            }
+            """)
         .addOutputLines(
             "ExampleClass.java",
-            "public class ExampleClass {",
-            "  String test() {",
-            "    return \"Formatting this string: data\";",
-            "  }",
-            "}")
+            """
+            public class ExampleClass {
+              String test() {
+                return "Formatting this string: data";
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -304,18 +354,22 @@ public final class StringFormatWithLiteralTest {
     refactoringHelper
         .addInputLines(
             "ExampleClass.java",
-            "public class ExampleClass {",
-            "  String test() {",
-            "    return String.format(\"Formatting this string: %s;Integer: %d\", \"data\", 1);",
-            "  }",
-            "}")
+            """
+            public class ExampleClass {
+              String test() {
+                return String.format("Formatting this string: %s;Integer: %d", "data", 1);
+              }
+            }
+            """)
         .addOutputLines(
             "ExampleClass.java",
-            "public class ExampleClass {",
-            "  String test() {",
-            "    return \"Formatting this string: data;Integer: 1\";",
-            "  }",
-            "}")
+            """
+            public class ExampleClass {
+              String test() {
+                return "Formatting this string: data;Integer: 1";
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -324,18 +378,22 @@ public final class StringFormatWithLiteralTest {
     refactoringHelper
         .addInputLines(
             "ExampleClass.java",
-            "public class ExampleClass {",
-            "  String test() {",
-            "    return String.format(\"hello \\n %s\", \"world\");",
-            "  }",
-            "}")
+            """
+            public class ExampleClass {
+              String test() {
+                return String.format("hello \\n %s", "world");
+              }
+            }
+            """)
         .addOutputLines(
             "ExampleClass.java",
-            "public class ExampleClass {",
-            "  String test() {",
-            "    return \"hello \\n world\";",
-            "  }",
-            "}")
+            """
+            public class ExampleClass {
+              String test() {
+                return "hello \\n world";
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -344,18 +402,22 @@ public final class StringFormatWithLiteralTest {
     refactoringHelper
         .addInputLines(
             "ExampleClass.java",
-            "public class ExampleClass {",
-            "  String test() {",
-            "    return String.format(\"hello %s\", \"\\n world\");",
-            "  }",
-            "}")
+            """
+            public class ExampleClass {
+              String test() {
+                return String.format("hello %s", "\\n world");
+              }
+            }
+            """)
         .addOutputLines(
             "ExampleClass.java",
-            "public class ExampleClass {",
-            "  String test() {",
-            "    return \"hello \\n world\";",
-            "  }",
-            "}")
+            """
+            public class ExampleClass {
+              String test() {
+                return "hello \\n world";
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -364,18 +426,22 @@ public final class StringFormatWithLiteralTest {
     refactoringHelper
         .addInputLines(
             "ExampleClass.java",
-            "public class ExampleClass {",
-            "  String test() {",
-            "    return String.format(\"hello %s\", \"['world']\");",
-            "  }",
-            "}")
+            """
+            public class ExampleClass {
+              String test() {
+                return String.format("hello %s", "['world']");
+              }
+            }
+            """)
         .addOutputLines(
             "ExampleClass.java",
-            "public class ExampleClass {",
-            "  String test() {",
-            "    return \"hello ['world']\";",
-            "  }",
-            "}")
+            """
+            public class ExampleClass {
+              String test() {
+                return "hello ['world']";
+              }
+            }
+            """)
         .doTest();
   }
 }

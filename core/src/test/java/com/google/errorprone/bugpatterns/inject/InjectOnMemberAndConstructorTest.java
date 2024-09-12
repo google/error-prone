@@ -38,34 +38,42 @@ public class InjectOnMemberAndConstructorTest {
     testHelper
         .addInputLines(
             "in/InjectOnMemberAndConstructorPositiveCases.java",
-            "import javax.inject.Inject;",
-            "public class InjectOnMemberAndConstructorPositiveCases {",
-            "  @Inject private final String stringFieldWithInject;",
-            "  @Inject private final Long longFieldWithInject;",
-            "  private final String stringFieldWithoutInject;",
-            "  @Inject",
-            "  public InjectOnMemberAndConstructorPositiveCases(String stringFieldWithInject,",
-            "    String stringFieldWithoutInject, Long longFieldWithInject) {",
-            "        this.stringFieldWithInject = stringFieldWithInject;",
-            "        this.stringFieldWithoutInject = stringFieldWithoutInject;",
-            "        this.longFieldWithInject = longFieldWithInject;",
-            "  }",
-            "}")
+            """
+import javax.inject.Inject;
+
+public class InjectOnMemberAndConstructorPositiveCases {
+  @Inject private final String stringFieldWithInject;
+  @Inject private final Long longFieldWithInject;
+  private final String stringFieldWithoutInject;
+
+  @Inject
+  public InjectOnMemberAndConstructorPositiveCases(
+      String stringFieldWithInject, String stringFieldWithoutInject, Long longFieldWithInject) {
+    this.stringFieldWithInject = stringFieldWithInject;
+    this.stringFieldWithoutInject = stringFieldWithoutInject;
+    this.longFieldWithInject = longFieldWithInject;
+  }
+}
+""")
         .addOutputLines(
             "out/InjectOnMemberAndConstructorPositiveCases.java",
-            "import javax.inject.Inject;",
-            "public class InjectOnMemberAndConstructorPositiveCases {",
-            "  private final String stringFieldWithInject;",
-            "  private final Long longFieldWithInject;",
-            "  private final String stringFieldWithoutInject;",
-            "  @Inject",
-            "  public InjectOnMemberAndConstructorPositiveCases(String stringFieldWithInject,",
-            "    String stringFieldWithoutInject, Long longFieldWithInject) {",
-            "        this.stringFieldWithInject = stringFieldWithInject;",
-            "        this.stringFieldWithoutInject = stringFieldWithoutInject;",
-            "        this.longFieldWithInject = longFieldWithInject;",
-            "  }",
-            "}")
+            """
+import javax.inject.Inject;
+
+public class InjectOnMemberAndConstructorPositiveCases {
+  private final String stringFieldWithInject;
+  private final Long longFieldWithInject;
+  private final String stringFieldWithoutInject;
+
+  @Inject
+  public InjectOnMemberAndConstructorPositiveCases(
+      String stringFieldWithInject, String stringFieldWithoutInject, Long longFieldWithInject) {
+    this.stringFieldWithInject = stringFieldWithInject;
+    this.stringFieldWithoutInject = stringFieldWithoutInject;
+    this.longFieldWithInject = longFieldWithInject;
+  }
+}
+""")
         .doTest();
   }
 

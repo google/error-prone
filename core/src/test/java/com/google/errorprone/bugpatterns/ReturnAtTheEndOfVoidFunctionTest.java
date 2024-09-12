@@ -33,21 +33,27 @@ public class ReturnAtTheEndOfVoidFunctionTest {
     helper
         .addInputLines(
             "Builder.java",
-            "package com.google.gporeba;",
-            "public final class Builder {",
-            "  public void stuff() {",
-            "    int x = 5;",
-            "    return;",
-            "  }",
-            "}")
+            """
+            package com.google.gporeba;
+
+            public final class Builder {
+              public void stuff() {
+                int x = 5;
+                return;
+              }
+            }
+            """)
         .addOutputLines(
             "Builder.java",
-            "package com.google.gporeba;",
-            "public final class Builder {",
-            "  public void stuff() {",
-            "    int x = 5;",
-            "  }",
-            "}")
+            """
+            package com.google.gporeba;
+
+            public final class Builder {
+              public void stuff() {
+                int x = 5;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -56,13 +62,16 @@ public class ReturnAtTheEndOfVoidFunctionTest {
     helper
         .addInputLines(
             "Builder.java",
-            "package com.google.gporeba;",
-            "public final class Builder {",
-            "  public int stuff() {",
-            "    int x = 5;",
-            "    return x;",
-            "  }",
-            "}")
+            """
+            package com.google.gporeba;
+
+            public final class Builder {
+              public int stuff() {
+                int x = 5;
+                return x;
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -72,16 +81,19 @@ public class ReturnAtTheEndOfVoidFunctionTest {
     helper
         .addInputLines(
             "Builder.java",
-            "package com.google.gporeba;",
-            "public final class Builder {",
-            "  public void stuff() {",
-            "    int x = 5;",
-            "    if(x > 2) {",
-            "     return;",
-            "    }",
-            "    int z = 2173;",
-            "  }",
-            "}")
+            """
+            package com.google.gporeba;
+
+            public final class Builder {
+              public void stuff() {
+                int x = 5;
+                if (x > 2) {
+                  return;
+                }
+                int z = 2173;
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -91,11 +103,13 @@ public class ReturnAtTheEndOfVoidFunctionTest {
     helper
         .addInputLines(
             "Builder.java",
-            "package com.google.gporeba;",
-            "public final class Builder {",
-            "  public void nothing() {",
-            "  }",
-            "}")
+            """
+            package com.google.gporeba;
+
+            public final class Builder {
+              public void nothing() {}
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -105,12 +119,15 @@ public class ReturnAtTheEndOfVoidFunctionTest {
     helper
         .addInputLines(
             "Builder.java",
-            "package com.google.gporeba;",
-            "public final class Builder {",
-            "  public Void nothing() {",
-            "    return null;",
-            "  }",
-            "}")
+            """
+            package com.google.gporeba;
+
+            public final class Builder {
+              public Void nothing() {
+                return null;
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -120,19 +137,24 @@ public class ReturnAtTheEndOfVoidFunctionTest {
     helper
         .addInputLines(
             "Builder.java",
-            "package com.google.gporeba;",
-            "public final class Builder {",
-            "  public Builder() {",
-            "    return;",
-            "  }",
-            "}")
+            """
+            package com.google.gporeba;
+
+            public final class Builder {
+              public Builder() {
+                return;
+              }
+            }
+            """)
         .addOutputLines(
             "Builder.java",
-            "package com.google.gporeba;",
-            "public final class Builder {",
-            "  public Builder() {",
-            "  }",
-            "}")
+            """
+            package com.google.gporeba;
+
+            public final class Builder {
+              public Builder() {}
+            }
+            """)
         .doTest();
   }
 
@@ -141,10 +163,13 @@ public class ReturnAtTheEndOfVoidFunctionTest {
     helper
         .addInputLines(
             "Builder.java",
-            "package com.google.gporeba;",
-            "public abstract class Builder {",
-            "  public abstract void stuff();",
-            "}")
+            """
+            package com.google.gporeba;
+
+            public abstract class Builder {
+              public abstract void stuff();
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }

@@ -40,14 +40,18 @@ public final class AutoValueBuilderDefaultsInConstructorTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import com.google.auto.value.AutoValue;",
-            "class Test {",
-            "  @AutoValue.Builder",
-            "  abstract class Builder {",
-            "    Builder() {}",
-            "    abstract void setFoo(int foo);",
-            "  }",
-            "}")
+            """
+            import com.google.auto.value.AutoValue;
+
+            class Test {
+              @AutoValue.Builder
+              abstract class Builder {
+                Builder() {}
+
+                abstract void setFoo(int foo);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -56,39 +60,54 @@ public final class AutoValueBuilderDefaultsInConstructorTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "package test;",
-            "import com.google.auto.value.AutoValue;",
-            "@AutoValue",
-            "abstract class Test {",
-            "  abstract int foo();",
-            "  Builder builder() {",
-            "    return new AutoValue_Test.Builder();",
-            "  }",
-            "  @AutoValue.Builder",
-            "  abstract static class Builder {",
-            "    Builder() {",
-            "      this.setFoo(1);",
-            "    }",
-            "    abstract Builder setFoo(int foo);",
-            "    abstract Test build();",
-            "  }",
-            "}")
+            """
+            package test;
+
+            import com.google.auto.value.AutoValue;
+
+            @AutoValue
+            abstract class Test {
+              abstract int foo();
+
+              Builder builder() {
+                return new AutoValue_Test.Builder();
+              }
+
+              @AutoValue.Builder
+              abstract static class Builder {
+                Builder() {
+                  this.setFoo(1);
+                }
+
+                abstract Builder setFoo(int foo);
+
+                abstract Test build();
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "package test;",
-            "import com.google.auto.value.AutoValue;",
-            "@AutoValue",
-            "abstract class Test {",
-            "  abstract int foo();",
-            "  Builder builder() {",
-            "    return new AutoValue_Test.Builder().setFoo(1);",
-            "  }",
-            "  @AutoValue.Builder",
-            "  abstract static class Builder {",
-            "    abstract Builder setFoo(int foo);",
-            "    abstract Test build();",
-            "  }",
-            "}")
+            """
+            package test;
+
+            import com.google.auto.value.AutoValue;
+
+            @AutoValue
+            abstract class Test {
+              abstract int foo();
+
+              Builder builder() {
+                return new AutoValue_Test.Builder().setFoo(1);
+              }
+
+              @AutoValue.Builder
+              abstract static class Builder {
+                abstract Builder setFoo(int foo);
+
+                abstract Test build();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -97,24 +116,33 @@ public final class AutoValueBuilderDefaultsInConstructorTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "package test;",
-            "import com.google.auto.value.AutoValue;",
-            "@AutoValue",
-            "abstract class Test {",
-            "  abstract int foo();",
-            "  Builder builder() {",
-            "    return new AutoValue_Test.Builder();",
-            "  }",
-            "  @AutoValue.Builder",
-            "  abstract static class Builder {",
-            "    Builder() {",
-            "      doSomethingOdd();",
-            "    }",
-            "    void doSomethingOdd() {}",
-            "    abstract Builder setFoo(int foo);",
-            "    abstract Test build();",
-            "  }",
-            "}")
+            """
+            package test;
+
+            import com.google.auto.value.AutoValue;
+
+            @AutoValue
+            abstract class Test {
+              abstract int foo();
+
+              Builder builder() {
+                return new AutoValue_Test.Builder();
+              }
+
+              @AutoValue.Builder
+              abstract static class Builder {
+                Builder() {
+                  doSomethingOdd();
+                }
+
+                void doSomethingOdd() {}
+
+                abstract Builder setFoo(int foo);
+
+                abstract Test build();
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }

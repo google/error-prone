@@ -31,15 +31,19 @@ public final class UnnecessaryFinalTest {
   public final void removesOnParameters() {
     helper
         .addInputLines(
-            "Test.java", //
-            "class Test {",
-            "  void test(final Object o) {}",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              void test(final Object o) {}
+            }
+            """)
         .addOutputLines(
-            "Test.java", //
-            "class Test {",
-            "  void test(Object o) {}",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {}
+            }
+            """)
         .doTest();
   }
 
@@ -47,19 +51,23 @@ public final class UnnecessaryFinalTest {
   public final void removesOnLocals() {
     helper
         .addInputLines(
-            "Test.java", //
-            "class Test {",
-            "  void test() {",
-            "    final Object o;",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              void test() {
+                final Object o;
+              }
+            }
+            """)
         .addOutputLines(
-            "Test.java", //
-            "class Test {",
-            "  void test() {",
-            "    Object o;",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              void test() {
+                Object o;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -67,10 +75,12 @@ public final class UnnecessaryFinalTest {
   public final void doesNotRemoveOnFields() {
     helper
         .addInputLines(
-            "Test.java", //
-            "class Test {",
-            "  final Object o = null;",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              final Object o = null;
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }

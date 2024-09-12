@@ -33,25 +33,28 @@ public class SystemOutTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import java.io.PrintStream;",
-            "",
-            "class Test {",
-            "  void f() {",
-            "    // BUG: Diagnostic contains: SystemOut",
-            "    System.out.println();",
-            "    // BUG: Diagnostic contains: SystemOut",
-            "    System.err.println();",
-            "    // BUG: Diagnostic contains: SystemOut",
-            "    p(System.out);",
-            "    // BUG: Diagnostic contains: SystemOut",
-            "    p(System.err);",
-            "    // BUG: Diagnostic contains: SystemOut",
-            "    Thread.dumpStack();",
-            "    // BUG: Diagnostic contains: SystemOut",
-            "    new Exception().printStackTrace();",
-            "  }",
-            "  private void p(PrintStream ps) {}",
-            "}")
+            """
+            import java.io.PrintStream;
+
+            class Test {
+              void f() {
+                // BUG: Diagnostic contains: SystemOut
+                System.out.println();
+                // BUG: Diagnostic contains: SystemOut
+                System.err.println();
+                // BUG: Diagnostic contains: SystemOut
+                p(System.out);
+                // BUG: Diagnostic contains: SystemOut
+                p(System.err);
+                // BUG: Diagnostic contains: SystemOut
+                Thread.dumpStack();
+                // BUG: Diagnostic contains: SystemOut
+                new Exception().printStackTrace();
+              }
+
+              private void p(PrintStream ps) {}
+            }
+            """)
         .doTest();
   }
 
@@ -60,14 +63,16 @@ public class SystemOutTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import java.io.*;",
-            "",
-            "class Test {",
-            "  void f() {",
-            "    new Exception().printStackTrace(new PrintStream((OutputStream) null));",
-            "    new Exception().printStackTrace(new PrintWriter((OutputStream) null));",
-            "  }",
-            "}")
+            """
+            import java.io.*;
+
+            class Test {
+              void f() {
+                new Exception().printStackTrace(new PrintStream((OutputStream) null));
+                new Exception().printStackTrace(new PrintWriter((OutputStream) null));
+              }
+            }
+            """)
         .doTest();
   }
 }

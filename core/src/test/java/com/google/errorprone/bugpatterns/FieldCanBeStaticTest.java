@@ -38,22 +38,30 @@ public class FieldCanBeStaticTest {
     helper
         .addInputLines(
             "Test.java",
-            "import java.time.Duration;",
-            "class Test {",
-            "  private final Duration myDuration = Duration.ofMillis(1);",
-            "  public Duration d() {",
-            "    return this.myDuration;",
-            "  }",
-            "}")
+            """
+            import java.time.Duration;
+
+            class Test {
+              private final Duration myDuration = Duration.ofMillis(1);
+
+              public Duration d() {
+                return this.myDuration;
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import java.time.Duration;",
-            "class Test {",
-            "  private static final Duration MY_DURATION = Duration.ofMillis(1);",
-            "  public Duration d() {",
-            "    return MY_DURATION;",
-            "  }",
-            "}")
+            """
+            import java.time.Duration;
+
+            class Test {
+              private static final Duration MY_DURATION = Duration.ofMillis(1);
+
+              public Duration d() {
+                return MY_DURATION;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -62,16 +70,22 @@ public class FieldCanBeStaticTest {
     helper
         .addInputLines(
             "Test.java",
-            "import java.time.Instant;",
-            "class Test {",
-            "  private final Instant instant = Instant.ofEpochMilli(1);",
-            "}")
+            """
+            import java.time.Instant;
+
+            class Test {
+              private final Instant instant = Instant.ofEpochMilli(1);
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import java.time.Instant;",
-            "class Test {",
-            "  private static final Instant INSTANT = Instant.ofEpochMilli(1);",
-            "}")
+            """
+            import java.time.Instant;
+
+            class Test {
+              private static final Instant INSTANT = Instant.ofEpochMilli(1);
+            }
+            """)
         .doTest();
   }
 
@@ -80,10 +94,13 @@ public class FieldCanBeStaticTest {
     helper
         .addInputLines(
             "Test.java",
-            "import java.time.Instant;",
-            "class Test {",
-            "  private final Instant instant = Instant.now();",
-            "}")
+            """
+            import java.time.Instant;
+
+            class Test {
+              private final Instant instant = Instant.now();
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -93,24 +110,32 @@ public class FieldCanBeStaticTest {
     helper
         .addInputLines(
             "Test.java",
-            "import java.time.Duration;",
-            "class Test {",
-            "  private static final int millis = 1;",
-            "  private final Duration myDuration = Duration.ofMillis(millis);",
-            "  public Duration d() {",
-            "    return this.myDuration;",
-            "  }",
-            "}")
+            """
+            import java.time.Duration;
+
+            class Test {
+              private static final int millis = 1;
+              private final Duration myDuration = Duration.ofMillis(millis);
+
+              public Duration d() {
+                return this.myDuration;
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import java.time.Duration;",
-            "class Test {",
-            "  private static final int millis = 1;",
-            "  private static final Duration MY_DURATION = Duration.ofMillis(millis);",
-            "  public Duration d() {",
-            "    return MY_DURATION;",
-            "  }",
-            "}")
+            """
+            import java.time.Duration;
+
+            class Test {
+              private static final int millis = 1;
+              private static final Duration MY_DURATION = Duration.ofMillis(millis);
+
+              public Duration d() {
+                return MY_DURATION;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -119,14 +144,18 @@ public class FieldCanBeStaticTest {
     helper
         .addInputLines(
             "Test.java",
-            "import java.time.Duration;",
-            "class Test {",
-            "  final int millis = 1;",
-            "  private final Duration myDuration = Duration.ofMillis(millis);",
-            "  public Duration d() {",
-            "    return this.myDuration;",
-            "  }",
-            "}")
+            """
+            import java.time.Duration;
+
+            class Test {
+              final int millis = 1;
+              private final Duration myDuration = Duration.ofMillis(millis);
+
+              public Duration d() {
+                return this.myDuration;
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -135,11 +164,14 @@ public class FieldCanBeStaticTest {
   public void notPrivate_noMatch() {
     helper
         .addInputLines(
-            "Test.java", //
-            "import java.time.Duration;",
-            "class Test {",
-            "  public final Duration d = Duration.ofMillis(1);",
-            "}")
+            "Test.java",
+            """
+            import java.time.Duration;
+
+            class Test {
+              public final Duration d = Duration.ofMillis(1);
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -148,11 +180,14 @@ public class FieldCanBeStaticTest {
   public void notFinal_noMatch() {
     helper
         .addInputLines(
-            "Test.java", //
-            "import java.time.Duration;",
-            "class Test {",
-            "  private Duration d = Duration.ofMillis(1);",
-            "}")
+            "Test.java",
+            """
+            import java.time.Duration;
+
+            class Test {
+              private Duration d = Duration.ofMillis(1);
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -162,11 +197,14 @@ public class FieldCanBeStaticTest {
     helper
         .addInputLines(
             "Test.java",
-            "import com.google.inject.testing.fieldbinder.Bind;",
-            "import java.time.Duration;",
-            "class Test {",
-            "  @Bind private final Duration d = Duration.ofMillis(1);",
-            "}")
+            """
+            import com.google.inject.testing.fieldbinder.Bind;
+            import java.time.Duration;
+
+            class Test {
+              @Bind private final Duration d = Duration.ofMillis(1);
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -175,14 +213,18 @@ public class FieldCanBeStaticTest {
   public void possibleImpureInitializer_noMatch() {
     helper
         .addInputLines(
-            "Test.java", //
-            "import java.time.Duration;",
-            "class Test {",
-            "  private final Duration d = getDuration();",
-            "  Duration getDuration() {",
-            "    return null;",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            import java.time.Duration;
+
+            class Test {
+              private final Duration d = getDuration();
+
+              Duration getDuration() {
+                return null;
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -192,12 +234,14 @@ public class FieldCanBeStaticTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  // BUG: Diagnostic contains:",
-            "  private final int primitive = 3;",
-            "  // BUG: Diagnostic contains:",
-            "  private final String string = \"string\";",
-            "}")
+            """
+            class Test {
+              // BUG: Diagnostic contains:
+              private final int primitive = 3;
+              // BUG: Diagnostic contains:
+              private final String string = "string";
+            }
+            """)
         .doTest();
   }
 
@@ -206,26 +250,32 @@ public class FieldCanBeStaticTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  private static final String staticFinalInitializer;",
-            "  static {",
-            "    staticFinalInitializer = \"string\";",
-            "  }",
-            "  private static final String staticFinal = \"string\";",
-            "  private int nonFinal = 3;",
-            "  private static int staticNonFinal = 4;",
-            "  private final Object finalMutable = new Object();",
-            "  private final int nonLiteral = new java.util.Random().nextInt();",
-            "  private final Person pojo = new Person(\"Bob\", 42);",
-            "  private static class Person {",
-            "    final String name;",
-            "    final int age;",
-            "    Person(String name, int age) {",
-            "      this.name = name;",
-            "      this.age = age;",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              private static final String staticFinalInitializer;
+
+              static {
+                staticFinalInitializer = "string";
+              }
+
+              private static final String staticFinal = "string";
+              private int nonFinal = 3;
+              private static int staticNonFinal = 4;
+              private final Object finalMutable = new Object();
+              private final int nonLiteral = new java.util.Random().nextInt();
+              private final Person pojo = new Person("Bob", 42);
+
+              private static class Person {
+                final String name;
+                final int age;
+
+                Person(String name, int age) {
+                  this.name = name;
+                  this.age = age;
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -234,22 +284,28 @@ public class FieldCanBeStaticTest {
     helper
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  private final int foo = 1;",
-            "  private final int BAR_FIELD = 2;",
-            "  int f() {",
-            "    return foo + BAR_FIELD;",
-            "  }",
-            "}")
+            """
+            class Test {
+              private final int foo = 1;
+              private final int BAR_FIELD = 2;
+
+              int f() {
+                return foo + BAR_FIELD;
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "class Test {",
-            "  private static final int FOO = 1;",
-            "  private static final int BAR_FIELD = 2;",
-            "  int f() {",
-            "    return FOO + BAR_FIELD;",
-            "  }",
-            "}")
+            """
+            class Test {
+              private static final int FOO = 1;
+              private static final int BAR_FIELD = 2;
+
+              int f() {
+                return FOO + BAR_FIELD;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -258,32 +314,37 @@ public class FieldCanBeStaticTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.time.Duration;",
-            "class Test {",
-            "  class I {",
-            "    private final Duration D = Duration.ofMillis(1);",
-            "    // BUG: Diagnostic contains: can be static",
-            "    private final int I = 42;",
-            "  }",
-            "  static class S {",
-            "    // BUG: Diagnostic contains: can be static",
-            "    private final Duration D = Duration.ofMillis(1);",
-            "    // BUG: Diagnostic contains: can be static",
-            "    private final int I = 42;",
-            "  }",
-            "  void f() {",
-            "    class L {",
-            "      private final Duration D = Duration.ofMillis(1);",
-            "      // BUG: Diagnostic contains: can be static",
-            "      private final int I = 42;",
-            "    }",
-            "    new Object() {",
-            "      private final Duration D = Duration.ofMillis(1);",
-            "      // BUG: Diagnostic contains: can be static",
-            "      private final int I = 42;",
-            "    };",
-            "  }",
-            "}")
+            """
+            import java.time.Duration;
+
+            class Test {
+              class I {
+                private final Duration D = Duration.ofMillis(1);
+                // BUG: Diagnostic contains: can be static
+                private final int I = 42;
+              }
+
+              static class S {
+                // BUG: Diagnostic contains: can be static
+                private final Duration D = Duration.ofMillis(1);
+                // BUG: Diagnostic contains: can be static
+                private final int I = 42;
+              }
+
+              void f() {
+                class L {
+                  private final Duration D = Duration.ofMillis(1);
+                  // BUG: Diagnostic contains: can be static
+                  private final int I = 42;
+                }
+                new Object() {
+                  private final Duration D = Duration.ofMillis(1);
+                  // BUG: Diagnostic contains: can be static
+                  private final int I = 42;
+                };
+              }
+            }
+            """)
         .setArgs("--release", "11")
         .doTest();
   }
@@ -294,35 +355,40 @@ public class FieldCanBeStaticTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.time.Duration;",
-            "class Test {",
-            "  class I {",
-            "    // BUG: Diagnostic contains: can be static",
-            "    private final Duration D = Duration.ofMillis(1);",
-            "    // BUG: Diagnostic contains: can be static",
-            "    private final int I = 42;",
-            "  }",
-            "  static class S {",
-            "    // BUG: Diagnostic contains: can be static",
-            "    private final Duration D = Duration.ofMillis(1);",
-            "    // BUG: Diagnostic contains: can be static",
-            "    private final int I = 42;",
-            "  }",
-            "  void f() {",
-            "    class L {",
-            "      // BUG: Diagnostic contains: can be static",
-            "      private final Duration D = Duration.ofMillis(1);",
-            "      // BUG: Diagnostic contains: can be static",
-            "      private final int I = 42;",
-            "    }",
-            "    new Object() {",
-            "      // BUG: Diagnostic contains: can be static",
-            "      private final Duration D = Duration.ofMillis(1);",
-            "      // BUG: Diagnostic contains: can be static",
-            "      private final int I = 42;",
-            "    };",
-            "  }",
-            "}")
+            """
+            import java.time.Duration;
+
+            class Test {
+              class I {
+                // BUG: Diagnostic contains: can be static
+                private final Duration D = Duration.ofMillis(1);
+                // BUG: Diagnostic contains: can be static
+                private final int I = 42;
+              }
+
+              static class S {
+                // BUG: Diagnostic contains: can be static
+                private final Duration D = Duration.ofMillis(1);
+                // BUG: Diagnostic contains: can be static
+                private final int I = 42;
+              }
+
+              void f() {
+                class L {
+                  // BUG: Diagnostic contains: can be static
+                  private final Duration D = Duration.ofMillis(1);
+                  // BUG: Diagnostic contains: can be static
+                  private final int I = 42;
+                }
+                new Object() {
+                  // BUG: Diagnostic contains: can be static
+                  private final Duration D = Duration.ofMillis(1);
+                  // BUG: Diagnostic contains: can be static
+                  private final int I = 42;
+                };
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -332,17 +398,21 @@ public class FieldCanBeStaticTest {
     compilationHelper
         .addSourceLines(
             "ExampleClass.java",
-            "package example;",
-            "public final class ExampleClass {",
-            "  public record OtherRecord(String value) {}",
-            "  public record SomeRecord(OtherRecord value) {",
-            "    public static SomeRecord fromValue(final OtherRecord value) {",
-            "      return new SomeRecord(value);",
-            "    }",
-            "  }",
-            "  private ExampleClass() {",
-            "  }",
-            "}")
+            """
+            package example;
+
+            public final class ExampleClass {
+              public record OtherRecord(String value) {}
+
+              public record SomeRecord(OtherRecord value) {
+                public static SomeRecord fromValue(final OtherRecord value) {
+                  return new SomeRecord(value);
+                }
+              }
+
+              private ExampleClass() {}
+            }
+            """)
         .doTest();
   }
 
@@ -351,12 +421,15 @@ public class FieldCanBeStaticTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  private final int foo;",
-            "  Test(int foo) {",
-            "    this.foo = foo;",
-            "  }",
-            "}")
+            """
+            class Test {
+              private final int foo;
+
+              Test(int foo) {
+                this.foo = foo;
+              }
+            }
+            """)
         .doTest();
   }
 }

@@ -34,26 +34,28 @@ public class WithSignatureDiscouragedTest {
     refactoringTestHelper
         .addInputLines(
             "Test.java",
-            "import static com.google.errorprone.matchers.Matchers.instanceMethod;",
-            "import com.google.errorprone.matchers.Matcher;",
-            "import com.sun.source.tree.ExpressionTree;",
-            "public class Test {",
-            "  private static final Matcher<ExpressionTree> TO_STRING = ",
-            "    instanceMethod()",
-            "      .anyClass()",
-            "      .withSignature(\"toString\");",
-            "}")
+            """
+            import static com.google.errorprone.matchers.Matchers.instanceMethod;
+            import com.google.errorprone.matchers.Matcher;
+            import com.sun.source.tree.ExpressionTree;
+
+            public class Test {
+              private static final Matcher<ExpressionTree> TO_STRING =
+                  instanceMethod().anyClass().withSignature("toString");
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import static com.google.errorprone.matchers.Matchers.instanceMethod;",
-            "import com.google.errorprone.matchers.Matcher;",
-            "import com.sun.source.tree.ExpressionTree;",
-            "public class Test {",
-            "  private static final Matcher<ExpressionTree> TO_STRING = ",
-            "    instanceMethod()",
-            "      .anyClass()",
-            "      .named(\"toString\");",
-            "}")
+            """
+            import static com.google.errorprone.matchers.Matchers.instanceMethod;
+            import com.google.errorprone.matchers.Matcher;
+            import com.sun.source.tree.ExpressionTree;
+
+            public class Test {
+              private static final Matcher<ExpressionTree> TO_STRING =
+                  instanceMethod().anyClass().named("toString");
+            }
+            """)
         .doTest();
   }
 
@@ -62,27 +64,28 @@ public class WithSignatureDiscouragedTest {
     refactoringTestHelper
         .addInputLines(
             "Test.java",
-            "import static com.google.errorprone.matchers.Matchers.instanceMethod;",
-            "import com.google.errorprone.matchers.Matcher;",
-            "import com.sun.source.tree.ExpressionTree;",
-            "public class Test {",
-            "  private static final Matcher<ExpressionTree> TO_STRING = ",
-            "    instanceMethod()",
-            "      .anyClass()",
-            "      .withSignature(\"toString()\");",
-            "}")
+            """
+            import static com.google.errorprone.matchers.Matchers.instanceMethod;
+            import com.google.errorprone.matchers.Matcher;
+            import com.sun.source.tree.ExpressionTree;
+
+            public class Test {
+              private static final Matcher<ExpressionTree> TO_STRING =
+                  instanceMethod().anyClass().withSignature("toString()");
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import static com.google.errorprone.matchers.Matchers.instanceMethod;",
-            "import com.google.errorprone.matchers.Matcher;",
-            "import com.sun.source.tree.ExpressionTree;",
-            "public class Test {",
-            "  private static final Matcher<ExpressionTree> TO_STRING = ",
-            "    instanceMethod()",
-            "      .anyClass()",
-            "      .named(\"toString\")",
-            "      .withNoParameters();",
-            "}")
+            """
+            import static com.google.errorprone.matchers.Matchers.instanceMethod;
+            import com.google.errorprone.matchers.Matcher;
+            import com.sun.source.tree.ExpressionTree;
+
+            public class Test {
+              private static final Matcher<ExpressionTree> TO_STRING =
+                  instanceMethod().anyClass().named("toString").withNoParameters();
+            }
+            """)
         .doTest();
   }
 
@@ -91,27 +94,28 @@ public class WithSignatureDiscouragedTest {
     refactoringTestHelper
         .addInputLines(
             "Test.java",
-            "import static com.google.errorprone.matchers.Matchers.instanceMethod;",
-            "import com.google.errorprone.matchers.Matcher;",
-            "import com.sun.source.tree.ExpressionTree;",
-            "public class Test {",
-            "  private static final Matcher<ExpressionTree> VALUE_OF = ",
-            "    instanceMethod()",
-            "      .anyClass()",
-            "      .withSignature(\"valueOf(double)\");",
-            "}")
+            """
+            import static com.google.errorprone.matchers.Matchers.instanceMethod;
+            import com.google.errorprone.matchers.Matcher;
+            import com.sun.source.tree.ExpressionTree;
+
+            public class Test {
+              private static final Matcher<ExpressionTree> VALUE_OF =
+                  instanceMethod().anyClass().withSignature("valueOf(double)");
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import static com.google.errorprone.matchers.Matchers.instanceMethod;",
-            "import com.google.errorprone.matchers.Matcher;",
-            "import com.sun.source.tree.ExpressionTree;",
-            "public class Test {",
-            "  private static final Matcher<ExpressionTree> VALUE_OF = ",
-            "    instanceMethod()",
-            "      .anyClass()",
-            "      .named(\"valueOf\")",
-            "      .withParameters(\"double\");",
-            "}")
+            """
+            import static com.google.errorprone.matchers.Matchers.instanceMethod;
+            import com.google.errorprone.matchers.Matcher;
+            import com.sun.source.tree.ExpressionTree;
+
+            public class Test {
+              private static final Matcher<ExpressionTree> VALUE_OF =
+                  instanceMethod().anyClass().named("valueOf").withParameters("double");
+            }
+            """)
         .doTest();
   }
 
@@ -120,15 +124,18 @@ public class WithSignatureDiscouragedTest {
     refactoringTestHelper
         .addInputLines(
             "Test.java",
-            "import static com.google.errorprone.matchers.Matchers.staticMethod;",
-            "import com.google.errorprone.matchers.Matcher;",
-            "import com.sun.source.tree.ExpressionTree;",
-            "public class Test {",
-            "  private static final Matcher<ExpressionTree> STRING_FORMAT = ",
-            "    staticMethod()",
-            "      .onClass(\"java.lang.String\")",
-            "      .withSignature(\"format(java.lang.String,java.lang.Object...)\");",
-            "}")
+            """
+            import static com.google.errorprone.matchers.Matchers.staticMethod;
+            import com.google.errorprone.matchers.Matcher;
+            import com.sun.source.tree.ExpressionTree;
+
+            public class Test {
+              private static final Matcher<ExpressionTree> STRING_FORMAT =
+                  staticMethod()
+                      .onClass("java.lang.String")
+                      .withSignature("format(java.lang.String,java.lang.Object...)");
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -138,15 +145,18 @@ public class WithSignatureDiscouragedTest {
     refactoringTestHelper
         .addInputLines(
             "Test.java",
-            "import static com.google.errorprone.matchers.Matchers.staticMethod;",
-            "import com.google.errorprone.matchers.Matcher;",
-            "import com.sun.source.tree.ExpressionTree;",
-            "public class Test {",
-            "  private static final Matcher<ExpressionTree> TO_STRING = ",
-            "    staticMethod()",
-            "      .onClass(\"com.google.common.collect.ImmutableList\")",
-            "      .withSignature(\"<E>builder()\");",
-            "}")
+            """
+            import static com.google.errorprone.matchers.Matchers.staticMethod;
+            import com.google.errorprone.matchers.Matcher;
+            import com.sun.source.tree.ExpressionTree;
+
+            public class Test {
+              private static final Matcher<ExpressionTree> TO_STRING =
+                  staticMethod()
+                      .onClass("com.google.common.collect.ImmutableList")
+                      .withSignature("<E>builder()");
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -156,15 +166,16 @@ public class WithSignatureDiscouragedTest {
     refactoringTestHelper
         .addInputLines(
             "Test.java",
-            "import static com.google.errorprone.matchers.Matchers.staticMethod;",
-            "import com.google.errorprone.matchers.Matcher;",
-            "import com.sun.source.tree.ExpressionTree;",
-            "public class Test {",
-            "  private static final Matcher<ExpressionTree> TO_STRING = ",
-            "    staticMethod()",
-            "      .onClass(\"java.lang.String\")",
-            "      .withSignature(\"copyValueOf(char[])\");",
-            "}")
+            """
+            import static com.google.errorprone.matchers.Matchers.staticMethod;
+            import com.google.errorprone.matchers.Matcher;
+            import com.sun.source.tree.ExpressionTree;
+
+            public class Test {
+              private static final Matcher<ExpressionTree> TO_STRING =
+                  staticMethod().onClass("java.lang.String").withSignature("copyValueOf(char[])");
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }

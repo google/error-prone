@@ -30,32 +30,52 @@ public class MissingBracesTest {
     BugCheckerRefactoringTestHelper.newInstance(MissingBraces.class, getClass())
         .addInputLines(
             "Test.java",
-            "import java.util.List;",
-            "class Test {",
-            "  void f(boolean x, List<Integer> is) {",
-            "    if (x) throw new AssertionError();",
-            "    else x = !x;",
-            "    while (x) g();",
-            "    do g(); while (x);",
-            "    for ( ; x; ) g();",
-            "    for (int i : is) g();",
-            "  }",
-            "  void g() {}",
-            "}")
+            """
+            import java.util.List;
+
+            class Test {
+              void f(boolean x, List<Integer> is) {
+                if (x) throw new AssertionError();
+                else x = !x;
+                while (x) g();
+                do g();
+                while (x);
+                for (; x; ) g();
+                for (int i : is) g();
+              }
+
+              void g() {}
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import java.util.List;",
-            "class Test {",
-            "  void f(boolean x, List<Integer> is) {",
-            "    if (x) { throw new AssertionError(); }",
-            "    else { x = !x; }",
-            "    while (x) { g(); }",
-            "    do { g(); } while (x);",
-            "    for ( ; x; ) { g(); }",
-            "    for (int i : is) { g(); }",
-            "  }",
-            "  void g() {}",
-            "}")
+            """
+            import java.util.List;
+
+            class Test {
+              void f(boolean x, List<Integer> is) {
+                if (x) {
+                  throw new AssertionError();
+                } else {
+                  x = !x;
+                }
+                while (x) {
+                  g();
+                }
+                do {
+                  g();
+                } while (x);
+                for (; x; ) {
+                  g();
+                }
+                for (int i : is) {
+                  g();
+                }
+              }
+
+              void g() {}
+            }
+            """)
         .doTest();
   }
 
@@ -64,16 +84,28 @@ public class MissingBracesTest {
     CompilationTestHelper.newInstance(MissingBraces.class, getClass())
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void f(boolean x) {",
-            "    if (x) { g(); }",
-            "    else { g(); }",
-            "    while (x) { g(); }",
-            "    do { g(); } while (x);",
-            "    for (;;) { g(); }",
-            "  }",
-            "  void g() {}",
-            "}")
+            """
+            class Test {
+              void f(boolean x) {
+                if (x) {
+                  g();
+                } else {
+                  g();
+                }
+                while (x) {
+                  g();
+                }
+                do {
+                  g();
+                } while (x);
+                for (; ; ) {
+                  g();
+                }
+              }
+
+              void g() {}
+            }
+            """)
         .doTest();
   }
 
@@ -82,27 +114,32 @@ public class MissingBracesTest {
     BugCheckerRefactoringTestHelper.newInstance(MissingBraces.class, getClass())
         .addInputLines(
             "Test.java",
-            "import java.util.List;",
-            "class Test {",
-            "  private String findNotNull(List<String> items) {",
-            "    for (String item : items)",
-            "      if (item != null) return item;",
-            "    return null;",
-            "  }",
-            "}")
+            """
+            import java.util.List;
+
+            class Test {
+              private String findNotNull(List<String> items) {
+                for (String item : items) if (item != null) return item;
+                return null;
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import java.util.List;",
-            "class Test {",
-            "  private String findNotNull(List<String> items) {",
-            "    for (String item : items) {",
-            "      if (item != null) {",
-            "        return item;",
-            "      }",
-            "    }",
-            "    return null;",
-            "  }",
-            "}")
+            """
+            import java.util.List;
+
+            class Test {
+              private String findNotNull(List<String> items) {
+                for (String item : items) {
+                  if (item != null) {
+                    return item;
+                  }
+                }
+                return null;
+              }
+            }
+            """)
         .doTest();
   }
 }

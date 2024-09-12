@@ -33,21 +33,27 @@ public class AnnotationMirrorToStringTest {
     testHelper
         .addInputLines(
             "Test.java",
-            "import javax.lang.model.element.AnnotationMirror;",
-            "class Test {",
-            "  String f(AnnotationMirror av) {",
-            "    return av.toString();",
-            "  }",
-            "}")
+            """
+            import javax.lang.model.element.AnnotationMirror;
+
+            class Test {
+              String f(AnnotationMirror av) {
+                return av.toString();
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import com.google.auto.common.AnnotationMirrors;",
-            "import javax.lang.model.element.AnnotationMirror;",
-            "class Test {",
-            "  String f(AnnotationMirror av) {",
-            "    return AnnotationMirrors.toString(av);",
-            "  }",
-            "}")
+            """
+            import com.google.auto.common.AnnotationMirrors;
+            import javax.lang.model.element.AnnotationMirror;
+
+            class Test {
+              String f(AnnotationMirror av) {
+                return AnnotationMirrors.toString(av);
+              }
+            }
+            """)
         .allowBreakingChanges() // TODO(cushon): remove after the next auto-common release
         .doTest();
   }

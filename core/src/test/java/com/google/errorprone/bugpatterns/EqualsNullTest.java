@@ -39,11 +39,13 @@ public class EqualsNullTest {
     compilationTestHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  boolean m(Object x, Object y) {",
-            "    return x.equals(y);",
-            "  }",
-            "}")
+            """
+            class Test {
+              boolean m(Object x, Object y) {
+                return x.equals(y);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -52,14 +54,17 @@ public class EqualsNullTest {
     compilationTestHelper
         .addSourceLines(
             "Test.java",
-            "import org.junit.runner.RunWith;",
-            "import org.junit.runners.JUnit4;",
-            "@RunWith(JUnit4.class)",
-            "class Test {",
-            "  boolean m(Object x) {",
-            "    return x.equals(null);",
-            "  }",
-            "}")
+            """
+            import org.junit.runner.RunWith;
+            import org.junit.runners.JUnit4;
+
+            @RunWith(JUnit4.class)
+            class Test {
+              boolean m(Object x) {
+                return x.equals(null);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -68,18 +73,23 @@ public class EqualsNullTest {
     compilationTestHelper
         .addSourceLines(
             "org/testng/annotations/Test.java",
-            "package org.testng.annotations;",
-            "public @interface Test {",
-            "}")
+            """
+            package org.testng.annotations;
+
+            public @interface Test {}
+            """)
         .addSourceLines(
             "MyTest.java",
-            "import org.testng.annotations.Test;",
-            "@Test",
-            "class MyTest {",
-            "  boolean m(Object x) {",
-            "    return x.equals(null);",
-            "  }",
-            "}")
+            """
+            import org.testng.annotations.Test;
+
+            @Test
+            class MyTest {
+              boolean m(Object x) {
+                return x.equals(null);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -88,12 +98,15 @@ public class EqualsNullTest {
     compilationTestHelper
         .addSourceLines(
             "AssertHelper.java",
-            "import org.junit.Assert;",
-            "class AssertHelper extends Assert {",
-            "  public static void myAssert(Object x) {",
-            "    x.equals(null);",
-            "  }",
-            "}")
+            """
+            import org.junit.Assert;
+
+            class AssertHelper extends Assert {
+              public static void myAssert(Object x) {
+                x.equals(null);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -102,12 +115,15 @@ public class EqualsNullTest {
     compilationTestHelper
         .addSourceLines(
             "TestHelper.java",
-            "import static org.junit.Assert.assertFalse;",
-            "class TestHelper {",
-            "  public static void myAssert(Object x) {",
-            "    assertFalse(x.equals(null));",
-            "  }",
-            "}")
+            """
+            import static org.junit.Assert.assertFalse;
+
+            class TestHelper {
+              public static void myAssert(Object x) {
+                assertFalse(x.equals(null));
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -116,12 +132,15 @@ public class EqualsNullTest {
     compilationTestHelper
         .addSourceLines(
             "TestHelper.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "class TestHelper {",
-            "  public static void myAssert(Object x) {",
-            "    assertThat(x.equals(null)).isFalse();",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+
+            class TestHelper {
+              public static void myAssert(Object x) {
+                assertThat(x.equals(null)).isFalse();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -144,18 +163,22 @@ public class EqualsNullTest {
     refactoringTestHelper
         .addInputLines(
             "in/Test.java",
-            "class Test {",
-            "  boolean m(Object x) {",
-            "    return x.equals(null);",
-            "  }",
-            "}")
+            """
+            class Test {
+              boolean m(Object x) {
+                return x.equals(null);
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "class Test {",
-            "  boolean m(Object x) {",
-            "    return x == null;",
-            "  }",
-            "}")
+            """
+            class Test {
+              boolean m(Object x) {
+                return x == null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -164,18 +187,22 @@ public class EqualsNullTest {
     refactoringTestHelper
         .addInputLines(
             "in/Test.java",
-            "class Test {",
-            "  boolean m(Object x) {",
-            "    return !x.equals(null);",
-            "  }",
-            "}")
+            """
+            class Test {
+              boolean m(Object x) {
+                return !x.equals(null);
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "class Test {",
-            "  boolean m(Object x) {",
-            "    return x != null;",
-            "  }",
-            "}")
+            """
+            class Test {
+              boolean m(Object x) {
+                return x != null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -184,22 +211,26 @@ public class EqualsNullTest {
     refactoringTestHelper
         .addInputLines(
             "in/Test.java",
-            "class Test {",
-            "  void m(Object x) {",
-            "    if (x.equals(null)) {",
-            "       return;",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              void m(Object x) {
+                if (x.equals(null)) {
+                  return;
+                }
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "class Test {",
-            "  void m(Object x) {",
-            "    if (x == null) {",
-            "       return;",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              void m(Object x) {
+                if (x == null) {
+                  return;
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -208,18 +239,22 @@ public class EqualsNullTest {
     refactoringTestHelper
         .addInputLines(
             "in/Test.java",
-            "class Test {",
-            "  boolean m(Object x) {",
-            "    return !x.toString().equals(null);",
-            "  }",
-            "}")
+            """
+            class Test {
+              boolean m(Object x) {
+                return !x.toString().equals(null);
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "class Test {",
-            "  boolean m(Object x) {",
-            "    return x.toString() != null;",
-            "  }",
-            "}")
+            """
+            class Test {
+              boolean m(Object x) {
+                return x.toString() != null;
+              }
+            }
+            """)
         .doTest();
   }
 }

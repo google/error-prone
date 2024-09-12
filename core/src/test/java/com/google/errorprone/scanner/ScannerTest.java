@@ -44,11 +44,14 @@ public class ScannerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.scanner.ScannerTest.Foo;",
-            "class Test {",
-            "  // BUG: Diagnostic contains: ShouldNotUseFoo",
-            "  Foo foo;",
-            "}")
+            """
+            import com.google.errorprone.scanner.ScannerTest.Foo;
+
+            class Test {
+              // BUG: Diagnostic contains: ShouldNotUseFoo
+              Foo foo;
+            }
+            """)
         .doTest();
   }
 
@@ -57,11 +60,14 @@ public class ScannerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.scanner.ScannerTest.Foo;",
-            "class Test {",
-            "  // BUG: Diagnostic contains: ShouldNotUseFoo",
-            "  Foo<String> foo;",
-            "}")
+            """
+            import com.google.errorprone.scanner.ScannerTest.Foo;
+
+            class Test {
+              // BUG: Diagnostic contains: ShouldNotUseFoo
+              Foo<String> foo;
+            }
+            """)
         .doTest();
   }
 
@@ -70,12 +76,14 @@ public class ScannerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.scanner.ScannerTest.Foo;",
-            "import com.google.errorprone.scanner.ScannerTest.OkToUseFoo;",
-            "class Test {",
-            "  @OkToUseFoo",
-            "  Foo foo;",
-            "}")
+            """
+            import com.google.errorprone.scanner.ScannerTest.Foo;
+            import com.google.errorprone.scanner.ScannerTest.OkToUseFoo;
+
+            class Test {
+              @OkToUseFoo Foo foo;
+            }
+            """)
         .doTest();
   }
 
@@ -84,13 +92,16 @@ public class ScannerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.scanner.ScannerTest.Foo;",
-            "import com.google.errorprone.scanner.ScannerTest.OkToUseFoo;",
-            "class Test {",
-            "  @OkToUseFoo",
-            "  // BUG: Diagnostic contains: ShouldNotUseFoo",
-            "  Foo foo;",
-            "}")
+            """
+            import com.google.errorprone.scanner.ScannerTest.Foo;
+            import com.google.errorprone.scanner.ScannerTest.OkToUseFoo;
+
+            class Test {
+              @OkToUseFoo
+              // BUG: Diagnostic contains: ShouldNotUseFoo
+              Foo foo;
+            }
+            """)
         .setArgs(ImmutableList.of("-XepIgnoreSuppressionAnnotations"))
         .doTest();
   }
@@ -100,10 +111,13 @@ public class ScannerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.scanner.ScannerTest.Foo;",
-            "class Test {",
-            "  Foo foo;",
-            "}")
+            """
+            import com.google.errorprone.scanner.ScannerTest.Foo;
+
+            class Test {
+              Foo foo;
+            }
+            """)
         .setArgs("-XepPatchLocation:IN_PLACE", "-XepPatchChecks:", "-Xep:ShouldNotUseFoo:OFF")
         .doTest();
   }
@@ -113,10 +127,13 @@ public class ScannerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.scanner.ScannerTest.Foo;",
-            "class Test {",
-            "  Foo foo;",
-            "}")
+            """
+            import com.google.errorprone.scanner.ScannerTest.Foo;
+
+            class Test {
+              Foo foo;
+            }
+            """)
         .setArgs(
             "-XepPatchLocation:IN_PLACE",
             "-Xep:ShouldNotUseFoo:WARN",

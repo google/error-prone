@@ -32,12 +32,15 @@ public class AutoValueImmutableFieldsTest {
     compilationHelper
         .addSourceLines(
             "in/Test.java",
-            "import com.google.auto.value.AutoValue;",
-            "@AutoValue",
-            "abstract class Test {",
-            "  // BUG: Diagnostic contains: ImmutableList",
-            "  public abstract String[] countries();",
-            "}")
+            """
+            import com.google.auto.value.AutoValue;
+
+            @AutoValue
+            abstract class Test {
+              // BUG: Diagnostic contains: ImmutableList
+              public abstract String[] countries();
+            }
+            """)
         .doTest();
   }
 
@@ -46,12 +49,15 @@ public class AutoValueImmutableFieldsTest {
     compilationHelper
         .addSourceLines(
             "in/Test.java",
-            "import com.google.auto.value.AutoValue;",
-            "@AutoValue",
-            "abstract class Test {",
-            "  // BUG: Diagnostic contains: ImmutableList",
-            "  public abstract int[] countries();",
-            "}")
+            """
+            import com.google.auto.value.AutoValue;
+
+            @AutoValue
+            abstract class Test {
+              // BUG: Diagnostic contains: ImmutableList
+              public abstract int[] countries();
+            }
+            """)
         .doTest();
   }
 
@@ -60,13 +66,16 @@ public class AutoValueImmutableFieldsTest {
     compilationHelper
         .addSourceLines(
             "in/Test.java",
-            "import com.google.auto.value.AutoValue;",
-            "import java.util.Collection;",
-            "@AutoValue",
-            "abstract class Test {",
-            "  // BUG: Diagnostic contains: ImmutableCollection",
-            "  public abstract Collection<String> countries();",
-            "}")
+            """
+            import com.google.auto.value.AutoValue;
+            import java.util.Collection;
+
+            @AutoValue
+            abstract class Test {
+              // BUG: Diagnostic contains: ImmutableCollection
+              public abstract Collection<String> countries();
+            }
+            """)
         .doTest();
   }
 
@@ -75,13 +84,16 @@ public class AutoValueImmutableFieldsTest {
     compilationHelper
         .addSourceLines(
             "in/Test.java",
-            "import com.google.auto.value.AutoValue;",
-            "import java.util.List;",
-            "@AutoValue",
-            "abstract class Test {",
-            "  // BUG: Diagnostic contains: ImmutableList",
-            "  public abstract List<String> countries();",
-            "}")
+            """
+            import com.google.auto.value.AutoValue;
+            import java.util.List;
+
+            @AutoValue
+            abstract class Test {
+              // BUG: Diagnostic contains: ImmutableList
+              public abstract List<String> countries();
+            }
+            """)
         .doTest();
   }
 
@@ -90,13 +102,16 @@ public class AutoValueImmutableFieldsTest {
     compilationHelper
         .addSourceLines(
             "in/Test.java",
-            "import com.google.auto.value.AutoValue;",
-            "import java.util.Map;",
-            "@AutoValue",
-            "abstract class Test {",
-            "  // BUG: Diagnostic contains: ImmutableMap",
-            "  public abstract Map<String, String> countries();",
-            "}")
+            """
+            import com.google.auto.value.AutoValue;
+            import java.util.Map;
+
+            @AutoValue
+            abstract class Test {
+              // BUG: Diagnostic contains: ImmutableMap
+              public abstract Map<String, String> countries();
+            }
+            """)
         .doTest();
   }
 
@@ -105,13 +120,16 @@ public class AutoValueImmutableFieldsTest {
     compilationHelper
         .addSourceLines(
             "in/Test.java",
-            "import com.google.auto.value.AutoValue;",
-            "import com.google.common.collect.Multimap;",
-            "@AutoValue",
-            "abstract class Test {",
-            "  // BUG: Diagnostic contains: ImmutableMultimap",
-            "  public abstract Multimap<String, String> countries();",
-            "}")
+            """
+            import com.google.auto.value.AutoValue;
+            import com.google.common.collect.Multimap;
+
+            @AutoValue
+            abstract class Test {
+              // BUG: Diagnostic contains: ImmutableMultimap
+              public abstract Multimap<String, String> countries();
+            }
+            """)
         .doTest();
   }
 
@@ -120,13 +138,16 @@ public class AutoValueImmutableFieldsTest {
     compilationHelper
         .addSourceLines(
             "in/Test.java",
-            "import com.google.auto.value.AutoValue;",
-            "import com.google.common.collect.ListMultimap;",
-            "@AutoValue",
-            "abstract class Test {",
-            "  // BUG: Diagnostic contains: ImmutableListMultimap",
-            "  public abstract ListMultimap<String, String> countries();",
-            "}")
+            """
+            import com.google.auto.value.AutoValue;
+            import com.google.common.collect.ListMultimap;
+
+            @AutoValue
+            abstract class Test {
+              // BUG: Diagnostic contains: ImmutableListMultimap
+              public abstract ListMultimap<String, String> countries();
+            }
+            """)
         .doTest();
   }
 
@@ -135,13 +156,16 @@ public class AutoValueImmutableFieldsTest {
     compilationHelper
         .addSourceLines(
             "in/Test.java",
-            "import com.google.auto.value.AutoValue;",
-            "import com.google.common.collect.SetMultimap;",
-            "@AutoValue",
-            "abstract class Test {",
-            "  // BUG: Diagnostic contains: ImmutableSetMultimap",
-            "  public abstract SetMultimap<String, String> countries();",
-            "}")
+            """
+            import com.google.auto.value.AutoValue;
+            import com.google.common.collect.SetMultimap;
+
+            @AutoValue
+            abstract class Test {
+              // BUG: Diagnostic contains: ImmutableSetMultimap
+              public abstract SetMultimap<String, String> countries();
+            }
+            """)
         .doTest();
   }
 
@@ -150,13 +174,16 @@ public class AutoValueImmutableFieldsTest {
     compilationHelper
         .addSourceLines(
             "in/Test.java",
-            "import com.google.auto.value.AutoValue;",
-            "import com.google.common.collect.Multiset;",
-            "@AutoValue",
-            "abstract class Test {",
-            "  // BUG: Diagnostic contains: ImmutableMultiset",
-            "  public abstract Multiset<String> countries();",
-            "}")
+            """
+            import com.google.auto.value.AutoValue;
+            import com.google.common.collect.Multiset;
+
+            @AutoValue
+            abstract class Test {
+              // BUG: Diagnostic contains: ImmutableMultiset
+              public abstract Multiset<String> countries();
+            }
+            """)
         .doTest();
   }
 
@@ -165,13 +192,16 @@ public class AutoValueImmutableFieldsTest {
     compilationHelper
         .addSourceLines(
             "in/Test.java",
-            "import com.google.auto.value.AutoValue;",
-            "import java.util.Set;",
-            "@AutoValue",
-            "abstract class Test {",
-            "  // BUG: Diagnostic contains: ImmutableSet",
-            "  public abstract Set<String> countries();",
-            "}")
+            """
+            import com.google.auto.value.AutoValue;
+            import java.util.Set;
+
+            @AutoValue
+            abstract class Test {
+              // BUG: Diagnostic contains: ImmutableSet
+              public abstract Set<String> countries();
+            }
+            """)
         .doTest();
   }
 
@@ -180,13 +210,16 @@ public class AutoValueImmutableFieldsTest {
     compilationHelper
         .addSourceLines(
             "in/Test.java",
-            "import com.google.auto.value.AutoValue;",
-            "import com.google.common.collect.Table;",
-            "@AutoValue",
-            "abstract class Test {",
-            "  // BUG: Diagnostic contains: ImmutableTable",
-            "  public abstract Table<String, String, String> countries();",
-            "}")
+            """
+            import com.google.auto.value.AutoValue;
+            import com.google.common.collect.Table;
+
+            @AutoValue
+            abstract class Test {
+              // BUG: Diagnostic contains: ImmutableTable
+              public abstract Table<String, String, String> countries();
+            }
+            """)
         .doTest();
   }
 
@@ -195,16 +228,20 @@ public class AutoValueImmutableFieldsTest {
     compilationHelper
         .addSourceLines(
             "in/Test.java",
-            "import com.google.auto.value.AutoValue;",
-            "import java.util.Map;",
-            "import java.util.Set;",
-            "@AutoValue",
-            "abstract class Test {",
-            "  // BUG: Diagnostic contains: ImmutableSet",
-            "  public abstract Set<String> countriesSet();",
-            "  // BUG: Diagnostic contains: ImmutableMap",
-            "  public abstract Map<String, String> countriesMap();",
-            "}")
+            """
+            import com.google.auto.value.AutoValue;
+            import java.util.Map;
+            import java.util.Set;
+
+            @AutoValue
+            abstract class Test {
+              // BUG: Diagnostic contains: ImmutableSet
+              public abstract Set<String> countriesSet();
+
+              // BUG: Diagnostic contains: ImmutableMap
+              public abstract Map<String, String> countriesMap();
+            }
+            """)
         .doTest();
   }
 
@@ -213,28 +250,39 @@ public class AutoValueImmutableFieldsTest {
     compilationHelper
         .addSourceLines(
             "in/Test.java",
-            "import com.google.auto.value.AutoValue;",
-            "import com.google.common.collect.ImmutableCollection;",
-            "import com.google.common.collect.ImmutableList;",
-            "import com.google.common.collect.ImmutableMap;",
-            "import com.google.common.collect.ImmutableMultimap;",
-            "import com.google.common.collect.ImmutableListMultimap;",
-            "import com.google.common.collect.ImmutableSetMultimap;",
-            "import com.google.common.collect.ImmutableMultiset;",
-            "import com.google.common.collect.ImmutableSet;",
-            "import com.google.common.collect.ImmutableTable;",
-            "@AutoValue",
-            "abstract class Test {",
-            "  public abstract ImmutableCollection<String> immutableCountriesCollection();",
-            "  public abstract ImmutableList<String> immutableCountriesList();",
-            "  public abstract ImmutableSet<String> immutableCountriesSet();",
-            "  public abstract ImmutableMap<String, String> immutableCountriesMap();",
-            "  public abstract ImmutableMultimap<String, String> immutableCountriesMultimap();",
-            "  public abstract ImmutableListMultimap<String, String> countriesListMultimap();",
-            "  public abstract ImmutableSetMultimap<String, String> countriesSetMultimap();",
-            "  public abstract ImmutableMultiset<String> immutableCountriesMultiset();",
-            "  public abstract ImmutableTable<String, String, String> immutableCountriesTable();",
-            "}")
+            """
+            import com.google.auto.value.AutoValue;
+            import com.google.common.collect.ImmutableCollection;
+            import com.google.common.collect.ImmutableList;
+            import com.google.common.collect.ImmutableMap;
+            import com.google.common.collect.ImmutableMultimap;
+            import com.google.common.collect.ImmutableListMultimap;
+            import com.google.common.collect.ImmutableSetMultimap;
+            import com.google.common.collect.ImmutableMultiset;
+            import com.google.common.collect.ImmutableSet;
+            import com.google.common.collect.ImmutableTable;
+
+            @AutoValue
+            abstract class Test {
+              public abstract ImmutableCollection<String> immutableCountriesCollection();
+
+              public abstract ImmutableList<String> immutableCountriesList();
+
+              public abstract ImmutableSet<String> immutableCountriesSet();
+
+              public abstract ImmutableMap<String, String> immutableCountriesMap();
+
+              public abstract ImmutableMultimap<String, String> immutableCountriesMultimap();
+
+              public abstract ImmutableListMultimap<String, String> countriesListMultimap();
+
+              public abstract ImmutableSetMultimap<String, String> countriesSetMultimap();
+
+              public abstract ImmutableMultiset<String> immutableCountriesMultiset();
+
+              public abstract ImmutableTable<String, String, String> immutableCountriesTable();
+            }
+            """)
         .doTest();
   }
 
@@ -243,13 +291,16 @@ public class AutoValueImmutableFieldsTest {
     compilationHelper
         .addSourceLines(
             "in/Test.java",
-            "import com.google.auto.value.AutoValue;",
-            "import java.util.Collection;",
-            "@AutoValue",
-            "abstract class Test {",
-            "  @SuppressWarnings(\"AutoValueImmutableFields\")",
-            "  public abstract Collection<String> countries();",
-            "}")
+            """
+            import com.google.auto.value.AutoValue;
+            import java.util.Collection;
+
+            @AutoValue
+            abstract class Test {
+              @SuppressWarnings("AutoValueImmutableFields")
+              public abstract Collection<String> countries();
+            }
+            """)
         .doTest();
   }
 
@@ -258,13 +309,16 @@ public class AutoValueImmutableFieldsTest {
     compilationHelper
         .addSourceLines(
             "in/Test.java",
-            "import com.google.auto.value.AutoValue;",
-            "import java.util.Collection;",
-            "@AutoValue",
-            "abstract class Test {",
-            "  @SuppressWarnings(\"mutable\")",
-            "  public abstract Collection<String> countries();",
-            "}")
+            """
+            import com.google.auto.value.AutoValue;
+            import java.util.Collection;
+
+            @AutoValue
+            abstract class Test {
+              @SuppressWarnings("mutable")
+              public abstract Collection<String> countries();
+            }
+            """)
         .doTest();
   }
 
@@ -273,12 +327,15 @@ public class AutoValueImmutableFieldsTest {
     compilationHelper
         .addSourceLines(
             "in/Test.java",
-            "import com.google.auto.value.AutoValue;",
-            "@AutoValue",
-            "abstract class Test {",
-            "  // BUG: Diagnostic contains: ImmutableList",
-            "  abstract String[] countries();",
-            "}")
+            """
+            import com.google.auto.value.AutoValue;
+
+            @AutoValue
+            abstract class Test {
+              // BUG: Diagnostic contains: ImmutableList
+              abstract String[] countries();
+            }
+            """)
         .doTest();
   }
 }

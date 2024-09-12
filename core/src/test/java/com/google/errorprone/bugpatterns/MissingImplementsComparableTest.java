@@ -33,12 +33,14 @@ public final class MissingImplementsComparableTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  // BUG: Diagnostic contains:",
-            "  public int compareTo(Test o) {",
-            "    return 0;",
-            "  }",
-            "}")
+            """
+            class Test {
+              // BUG: Diagnostic contains:
+              public int compareTo(Test o) {
+                return 0;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -47,12 +49,14 @@ public final class MissingImplementsComparableTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test implements Comparable<Test> {",
-            "  @Override",
-            "  public int compareTo(Test o) {",
-            "    return 0;",
-            "  }",
-            "}")
+            """
+            class Test implements Comparable<Test> {
+              @Override
+              public int compareTo(Test o) {
+                return 0;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -62,12 +66,14 @@ public final class MissingImplementsComparableTest {
         .addSourceLines("Foo.java", "abstract class Foo<T> implements Comparable<Foo<T>> {}")
         .addSourceLines(
             "Test.java",
-            "class Test extends Foo<String> {",
-            "  @Override",
-            "  public int compareTo(Foo<String> o) {",
-            "    return 0;",
-            "  }",
-            "}")
+            """
+            class Test extends Foo<String> {
+              @Override
+              public int compareTo(Foo<String> o) {
+                return 0;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -76,11 +82,13 @@ public final class MissingImplementsComparableTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  public int compareTo(Object o) {",
-            "    return 0;",
-            "  }",
-            "}")
+            """
+            class Test {
+              public int compareTo(Object o) {
+                return 0;
+              }
+            }
+            """)
         .doTest();
   }
 }

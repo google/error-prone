@@ -35,12 +35,14 @@ public class VariableNameSameAsTypeTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void f() {",
-            "    // BUG: Diagnostic contains: VariableNameSameAsType",
-            "    String String; ",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f() {
+                // BUG: Diagnostic contains: VariableNameSameAsType
+                String String;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -49,13 +51,16 @@ public class VariableNameSameAsTypeTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import java.util.function.Predicate;",
-            "class Test {",
-            "  void f() {",
-            "    // BUG: Diagnostic contains: Variable named String has the type String",
-            "    Predicate<String> p = (String) -> String.isEmpty(); ",
-            "  }",
-            "}")
+            """
+            import java.util.function.Predicate;
+
+            class Test {
+              void f() {
+                // BUG: Diagnostic contains: Variable named String has the type String
+                Predicate<String> p = (String) -> String.isEmpty();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -64,12 +69,14 @@ public class VariableNameSameAsTypeTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void f() {",
-            "    // BUG: Diagnostic contains: VariableNameSameAsType",
-            "    String String = \"Kayla\"; ",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f() {
+                // BUG: Diagnostic contains: VariableNameSameAsType
+                String String = "Kayla";
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -78,13 +85,15 @@ public class VariableNameSameAsTypeTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void f() {",
-            "    // BUG: Diagnostic contains: VariableNameSameAsType",
-            "    String String; ",
-            "    String = \"Kayla\"; ",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f() {
+                // BUG: Diagnostic contains: VariableNameSameAsType
+                String String;
+                String = "Kayla";
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -93,12 +102,14 @@ public class VariableNameSameAsTypeTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  // BUG: Diagnostic contains: VariableNameSameAsType",
-            "  String String;",
-            "  void f() {",
-            "  }",
-            "}")
+            """
+            class Test {
+              // BUG: Diagnostic contains: VariableNameSameAsType
+              String String;
+
+              void f() {}
+            }
+            """)
         .doTest();
   }
 
@@ -106,12 +117,14 @@ public class VariableNameSameAsTypeTest {
   public void negativeLowerCase() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  void f() {",
-            "    String string;",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              void f() {
+                String string;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -119,12 +132,14 @@ public class VariableNameSameAsTypeTest {
   public void negativeInitializedLowerCase() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  void f() {",
-            "    String string = \"Kayla\"; ",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              void f() {
+                String string = "Kayla";
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -133,12 +148,14 @@ public class VariableNameSameAsTypeTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void f() {",
-            "    String string; ",
-            "    string = \"Kayla\"; ",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f() {
+                String string;
+                string = "Kayla";
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -146,12 +163,14 @@ public class VariableNameSameAsTypeTest {
   public void negativeOther() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  void f() {",
-            "    String t; ",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              void f() {
+                String t;
+              }
+            }
+            """)
         .doTest();
   }
 }

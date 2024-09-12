@@ -491,19 +491,26 @@ public class AutoValueBoxedValuesTest {
     compilationHelper
         .addSourceLines(
             "in/Test.java",
-            "import com.google.auto.value.AutoValue;",
-            "import javax.annotation.Nullable;",
-            "@AutoValue",
-            "abstract class Test {",
-            "  public abstract @Nullable Long longId();",
-            "  public abstract @Nullable Integer intId();",
-            "  @AutoValue.Builder",
-            "  abstract static class Builder {",
-            "    abstract Builder setLongId(Long value);",
-            "    abstract Builder setIntId(Integer value);",
-            "    abstract Test build();",
-            "  }",
-            "}")
+            """
+            import com.google.auto.value.AutoValue;
+            import javax.annotation.Nullable;
+
+            @AutoValue
+            abstract class Test {
+              public abstract @Nullable Long longId();
+
+              public abstract @Nullable Integer intId();
+
+              @AutoValue.Builder
+              abstract static class Builder {
+                abstract Builder setLongId(Long value);
+
+                abstract Builder setIntId(Integer value);
+
+                abstract Test build();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -515,72 +522,102 @@ public class AutoValueBoxedValuesTest {
     refactoringHelper
         .addInputLines(
             "in/Test.java",
-            "package test;",
-            "import com.google.auto.value.AutoValue;",
-            "@AutoValue",
-            "abstract class Test {",
-            "  abstract int foo();",
-            "  abstract Long bar();",
-            "  static Test createTrivial(int foo, Long bar) {",
-            "    return new AutoValue_Test(foo, bar);",
-            "  }",
-            "  static String notFactoryMethod(int foo, Long bar) {",
-            "    return String.format(\"foo: %d, bar: %d\", foo, bar);",
-            "  }",
-            "  static Test createWrongOrder(Long bar, int foo) {",
-            "    return new AutoValue_Test(foo, bar);",
-            "  }",
-            "  static Test createLessArguments(int foo) {",
-            "    return new AutoValue_Test(foo, 0L);",
-            "  }",
-            "  static Test createMoreArguments(int foo, Long bar, Long baz) {",
-            "    return new AutoValue_Test(foo, bar + baz);",
-            "  }",
-            "  static Test createWithValidation(int foo, Long bar) {",
-            "    if (bar == null) { throw new AssertionError(); }",
-            "    return new AutoValue_Test(foo, bar);",
-            "  }",
-            "  static Test createModifyArgs(int foo, Long bar) {",
-            "    return new AutoValue_Test(foo + 1, bar);",
-            "  }",
-            "  static Test createModifyArgsIfNull(int foo, Long bar) {",
-            "    return new AutoValue_Test(foo, bar == null ? 0L : bar);",
-            "  }",
-            "}")
+            """
+            package test;
+
+            import com.google.auto.value.AutoValue;
+
+            @AutoValue
+            abstract class Test {
+              abstract int foo();
+
+              abstract Long bar();
+
+              static Test createTrivial(int foo, Long bar) {
+                return new AutoValue_Test(foo, bar);
+              }
+
+              static String notFactoryMethod(int foo, Long bar) {
+                return String.format("foo: %d, bar: %d", foo, bar);
+              }
+
+              static Test createWrongOrder(Long bar, int foo) {
+                return new AutoValue_Test(foo, bar);
+              }
+
+              static Test createLessArguments(int foo) {
+                return new AutoValue_Test(foo, 0L);
+              }
+
+              static Test createMoreArguments(int foo, Long bar, Long baz) {
+                return new AutoValue_Test(foo, bar + baz);
+              }
+
+              static Test createWithValidation(int foo, Long bar) {
+                if (bar == null) {
+                  throw new AssertionError();
+                }
+                return new AutoValue_Test(foo, bar);
+              }
+
+              static Test createModifyArgs(int foo, Long bar) {
+                return new AutoValue_Test(foo + 1, bar);
+              }
+
+              static Test createModifyArgsIfNull(int foo, Long bar) {
+                return new AutoValue_Test(foo, bar == null ? 0L : bar);
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "package test;",
-            "import com.google.auto.value.AutoValue;",
-            "@AutoValue",
-            "abstract class Test {",
-            "  abstract int foo();",
-            "  abstract long bar();",
-            "  static Test createTrivial(int foo, long bar) {",
-            "    return new AutoValue_Test(foo, bar);",
-            "  }",
-            "  static String notFactoryMethod(int foo, Long bar) {",
-            "    return String.format(\"foo: %d, bar: %d\", foo, bar);",
-            "  }",
-            "  static Test createWrongOrder(Long bar, int foo) {",
-            "    return new AutoValue_Test(foo, bar);",
-            "  }",
-            "  static Test createLessArguments(int foo) {",
-            "    return new AutoValue_Test(foo, 0L);",
-            "  }",
-            "  static Test createMoreArguments(int foo, Long bar, Long baz) {",
-            "    return new AutoValue_Test(foo, bar + baz);",
-            "  }",
-            "  static Test createWithValidation(int foo, Long bar) {",
-            "    if (bar == null) { throw new AssertionError(); }",
-            "    return new AutoValue_Test(foo, bar);",
-            "  }",
-            "  static Test createModifyArgs(int foo, Long bar) {",
-            "    return new AutoValue_Test(foo + 1, bar);",
-            "  }",
-            "  static Test createModifyArgsIfNull(int foo, Long bar) {",
-            "    return new AutoValue_Test(foo, bar == null ? 0L : bar);",
-            "  }",
-            "}")
+            """
+            package test;
+
+            import com.google.auto.value.AutoValue;
+
+            @AutoValue
+            abstract class Test {
+              abstract int foo();
+
+              abstract long bar();
+
+              static Test createTrivial(int foo, long bar) {
+                return new AutoValue_Test(foo, bar);
+              }
+
+              static String notFactoryMethod(int foo, Long bar) {
+                return String.format("foo: %d, bar: %d", foo, bar);
+              }
+
+              static Test createWrongOrder(Long bar, int foo) {
+                return new AutoValue_Test(foo, bar);
+              }
+
+              static Test createLessArguments(int foo) {
+                return new AutoValue_Test(foo, 0L);
+              }
+
+              static Test createMoreArguments(int foo, Long bar, Long baz) {
+                return new AutoValue_Test(foo, bar + baz);
+              }
+
+              static Test createWithValidation(int foo, Long bar) {
+                if (bar == null) {
+                  throw new AssertionError();
+                }
+                return new AutoValue_Test(foo, bar);
+              }
+
+              static Test createModifyArgs(int foo, Long bar) {
+                return new AutoValue_Test(foo + 1, bar);
+              }
+
+              static Test createModifyArgsIfNull(int foo, Long bar) {
+                return new AutoValue_Test(foo, bar == null ? 0L : bar);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -592,32 +629,46 @@ public class AutoValueBoxedValuesTest {
     refactoringHelper
         .addInputLines(
             "in/Test.java",
-            "import com.google.auto.value.AutoValue;",
-            "@AutoValue",
-            "abstract class Test {",
-            "  public abstract Long longId();",
-            "  public abstract Boolean booleanId();",
-            "  @AutoValue.Builder",
-            "  abstract static class Builder {",
-            "    abstract Builder longId(Long value);",
-            "    abstract Builder booleanId(Boolean value);",
-            "    abstract Test build();",
-            "  }",
-            "}")
+            """
+            import com.google.auto.value.AutoValue;
+
+            @AutoValue
+            abstract class Test {
+              public abstract Long longId();
+
+              public abstract Boolean booleanId();
+
+              @AutoValue.Builder
+              abstract static class Builder {
+                abstract Builder longId(Long value);
+
+                abstract Builder booleanId(Boolean value);
+
+                abstract Test build();
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "import com.google.auto.value.AutoValue;",
-            "@AutoValue",
-            "abstract class Test {",
-            "  public abstract long longId();",
-            "  public abstract boolean booleanId();",
-            "  @AutoValue.Builder",
-            "  abstract static class Builder {",
-            "    abstract Builder longId(long value);",
-            "    abstract Builder booleanId(boolean value);",
-            "    abstract Test build();",
-            "  }",
-            "}")
+            """
+            import com.google.auto.value.AutoValue;
+
+            @AutoValue
+            abstract class Test {
+              public abstract long longId();
+
+              public abstract boolean booleanId();
+
+              @AutoValue.Builder
+              abstract static class Builder {
+                abstract Builder longId(long value);
+
+                abstract Builder booleanId(boolean value);
+
+                abstract Test build();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -629,34 +680,50 @@ public class AutoValueBoxedValuesTest {
     refactoringHelper
         .addInputLines(
             "in/Test.java",
-            "import com.google.auto.value.AutoValue;",
-            "@AutoValue",
-            "abstract class Test {",
-            "  public abstract Long getLongId();",
-            "  public abstract boolean isBooleanId();",
-            "  public abstract Builder toBuilder();",
-            "  @AutoValue.Builder",
-            "  abstract static class Builder {",
-            "    abstract Builder setLongId(Long value);",
-            "    abstract Builder setBooleanId(boolean value);",
-            "    abstract Test build();",
-            "  }",
-            "}")
+            """
+            import com.google.auto.value.AutoValue;
+
+            @AutoValue
+            abstract class Test {
+              public abstract Long getLongId();
+
+              public abstract boolean isBooleanId();
+
+              public abstract Builder toBuilder();
+
+              @AutoValue.Builder
+              abstract static class Builder {
+                abstract Builder setLongId(Long value);
+
+                abstract Builder setBooleanId(boolean value);
+
+                abstract Test build();
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "import com.google.auto.value.AutoValue;",
-            "@AutoValue",
-            "abstract class Test {",
-            "  public abstract long getLongId();",
-            "  public abstract boolean isBooleanId();",
-            "  public abstract Builder toBuilder();",
-            "  @AutoValue.Builder",
-            "  abstract static class Builder {",
-            "    abstract Builder setLongId(long value);",
-            "    abstract Builder setBooleanId(boolean value);",
-            "    abstract Test build();",
-            "  }",
-            "}")
+            """
+            import com.google.auto.value.AutoValue;
+
+            @AutoValue
+            abstract class Test {
+              public abstract long getLongId();
+
+              public abstract boolean isBooleanId();
+
+              public abstract Builder toBuilder();
+
+              @AutoValue.Builder
+              abstract static class Builder {
+                abstract Builder setLongId(long value);
+
+                abstract Builder setBooleanId(boolean value);
+
+                abstract Test build();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -668,36 +735,54 @@ public class AutoValueBoxedValuesTest {
     refactoringHelper
         .addInputLines(
             "in/Test.java",
-            "import com.google.auto.value.AutoValue;",
-            "@AutoValue",
-            "abstract class Test {",
-            "  public abstract Long longId();",
-            "  public abstract Boolean booleanId();",
-            "  public abstract Builder toBuilder();",
-            "  @AutoValue.Builder",
-            "  abstract static class Builder {",
-            "    abstract Builder longId(Long value);",
-            "    abstract Builder booleanId(Boolean value);",
-            "    abstract Boolean booleanId();",
-            "    abstract Test build();",
-            "  }",
-            "}")
+            """
+            import com.google.auto.value.AutoValue;
+
+            @AutoValue
+            abstract class Test {
+              public abstract Long longId();
+
+              public abstract Boolean booleanId();
+
+              public abstract Builder toBuilder();
+
+              @AutoValue.Builder
+              abstract static class Builder {
+                abstract Builder longId(Long value);
+
+                abstract Builder booleanId(Boolean value);
+
+                abstract Boolean booleanId();
+
+                abstract Test build();
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "import com.google.auto.value.AutoValue;",
-            "@AutoValue",
-            "abstract class Test {",
-            "  public abstract long longId();",
-            "  public abstract boolean booleanId();",
-            "  public abstract Builder toBuilder();",
-            "  @AutoValue.Builder",
-            "  abstract static class Builder {",
-            "    abstract Builder longId(long value);",
-            "    abstract Builder booleanId(boolean value);",
-            "    abstract boolean booleanId();",
-            "    abstract Test build();",
-            "  }",
-            "}")
+            """
+            import com.google.auto.value.AutoValue;
+
+            @AutoValue
+            abstract class Test {
+              public abstract long longId();
+
+              public abstract boolean booleanId();
+
+              public abstract Builder toBuilder();
+
+              @AutoValue.Builder
+              abstract static class Builder {
+                abstract Builder longId(long value);
+
+                abstract Builder booleanId(boolean value);
+
+                abstract boolean booleanId();
+
+                abstract Test build();
+              }
+            }
+            """)
         .doTest();
   }
 

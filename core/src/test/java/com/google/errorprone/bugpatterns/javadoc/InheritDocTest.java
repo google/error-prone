@@ -32,11 +32,13 @@ public final class InheritDocTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  // BUG: Diagnostic contains: InheritDoc",
-            "  /** {@inheritDoc} */",
-            "  void test() {}",
-            "}")
+            """
+            class Test {
+              // BUG: Diagnostic contains: InheritDoc
+              /** {@inheritDoc} */
+              void test() {}
+            }
+            """)
         .doTest();
   }
 
@@ -45,10 +47,15 @@ public final class InheritDocTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  /** {@inheritDoc} */",
-            "  @Override public boolean equals(Object o) { return true; }",
-            "}")
+            """
+            class Test {
+              /** {@inheritDoc} */
+              @Override
+              public boolean equals(Object o) {
+                return true;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -57,9 +64,11 @@ public final class InheritDocTest {
     helper
         .addSourceLines(
             "Test.java",
-            "// BUG: Diagnostic contains: InheritDoc",
-            "/** {@inheritDoc} */",
-            "class Test {}")
+            """
+            // BUG: Diagnostic contains: InheritDoc
+            /** {@inheritDoc} */
+            class Test {}
+            """)
         .doTest();
   }
 
@@ -67,9 +76,11 @@ public final class InheritDocTest {
   public void overridingClass() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "/** {@inheritDoc} */",
-            "class Test extends java.util.ArrayList {}")
+            "Test.java",
+            """
+            /** {@inheritDoc} */
+            class Test extends java.util.ArrayList {}
+            """)
         .doTest();
   }
 
@@ -78,11 +89,13 @@ public final class InheritDocTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  // BUG: Diagnostic contains: InheritDoc",
-            "  /** {@inheritDoc} */",
-            "  private static final int a = 1;",
-            "}")
+            """
+            class Test {
+              // BUG: Diagnostic contains: InheritDoc
+              /** {@inheritDoc} */
+              private static final int a = 1;
+            }
+            """)
         .doTest();
   }
 }

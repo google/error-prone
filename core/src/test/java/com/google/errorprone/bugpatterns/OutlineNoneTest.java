@@ -33,17 +33,21 @@ public final class OutlineNoneTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.gwt.safehtml.shared.SafeHtml;",
-            "import com.google.gwt.safehtml.client.SafeHtmlTemplates.Template;",
-            "interface Test {",
-            "  // BUG: Diagnostic contains: OutlineNone",
-            "  @Template(\".body {color: red;outline: 0px;}"
-                + "<a href=http://outlinenone.com style=\\\"outline:none\\\">\")",
-            "  SafeHtml myElement();",
-            "  // BUG: Diagnostic contains: OutlineNone",
-            "  @Template(\".invisible {outline: none}\")",
-            "  SafeHtml invisible();",
-            "}")
+            """
+import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.client.SafeHtmlTemplates.Template;
+
+interface Test {
+  // BUG: Diagnostic contains: OutlineNone
+  @Template(
+      ".body {color: red;outline: 0px;}<a href=http://outlinenone.com style=\\"outline:none\\">")
+  SafeHtml myElement();
+
+  // BUG: Diagnostic contains: OutlineNone
+  @Template(".invisible {outline: none}")
+  SafeHtml invisible();
+}
+""")
         .doTest();
   }
 
@@ -52,14 +56,16 @@ public final class OutlineNoneTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.gwt.safehtml.shared.SafeHtml;",
-            "import com.google.gwt.safehtml.client.SafeHtmlTemplates.Template;",
-            "interface Test {",
-            "  // BUG: Diagnostic contains: OutlineNone",
-            "  @Template(\".body {color: red;}\\n\"",
-            "      + \"<a href=http://outlinenone.com style=\\\"outline:none\\\">\")",
-            "  SafeHtml myElement();",
-            "}")
+            """
+import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.client.SafeHtmlTemplates.Template;
+
+interface Test {
+  // BUG: Diagnostic contains: OutlineNone
+  @Template(".body {color: red;}\\n" + "<a href=http://outlinenone.com style=\\"outline:none\\">")
+  SafeHtml myElement();
+}
+""")
         .doTest();
   }
 

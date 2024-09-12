@@ -47,38 +47,48 @@ public class LambdaFunctionalInterfaceTest {
     refactoringHelper
         .addInputLines(
             "in/TwoLambdaFunctions.java",
-            "import java.util.function.Function;",
-            "   public class TwoLambdaFunctions {",
-            "    private static double find(Function<Double, Long> firstSpecial, ",
-            "        Function<Integer, Long> secondSpecial, double mid) {",
-            "      secondSpecial.apply(2);",
-            "      return firstSpecial.apply(mid);",
-            "    }",
-            "    public Double getMu() {",
-            "      return find(mu -> 0L, nu -> 1L, 3.0);",
-            "    }",
-            "    public Double getTu() {",
-            "      return find(mu -> 2L,  nu -> 3L,4.0);",
-            "    }",
-            "  }")
+            """
+import java.util.function.Function;
+
+public class TwoLambdaFunctions {
+  private static double find(
+      Function<Double, Long> firstSpecial, Function<Integer, Long> secondSpecial, double mid) {
+    secondSpecial.apply(2);
+    return firstSpecial.apply(mid);
+  }
+
+  public Double getMu() {
+    return find(mu -> 0L, nu -> 1L, 3.0);
+  }
+
+  public Double getTu() {
+    return find(mu -> 2L, nu -> 3L, 4.0);
+  }
+}
+""")
         .addOutputLines(
             "out/TwoLambdaFunctions.java",
-            "import java.util.function.DoubleToLongFunction;",
-            "    import java.util.function.Function;",
-            "    import java.util.function.IntToLongFunction;",
-            "   public class TwoLambdaFunctions {",
-            "    private static double find(DoubleToLongFunction firstSpecial, ",
-            "  IntToLongFunction secondSpecial, double mid) {",
-            "      secondSpecial.applyAsLong(2);",
-            "      return firstSpecial.applyAsLong(mid);",
-            "    }",
-            "    public Double getMu() {",
-            "      return find(mu -> 0L, nu -> 1L, 3.0);",
-            "    }",
-            "    public Double getTu() {",
-            "      return find(mu -> 2L,  nu -> 3L,4.0);",
-            "    }",
-            "  }")
+            """
+            import java.util.function.DoubleToLongFunction;
+            import java.util.function.Function;
+            import java.util.function.IntToLongFunction;
+
+            public class TwoLambdaFunctions {
+              private static double find(
+                  DoubleToLongFunction firstSpecial, IntToLongFunction secondSpecial, double mid) {
+                secondSpecial.applyAsLong(2);
+                return firstSpecial.applyAsLong(mid);
+              }
+
+              public Double getMu() {
+                return find(mu -> 0L, nu -> 1L, 3.0);
+              }
+
+              public Double getTu() {
+                return find(mu -> 2L, nu -> 3L, 4.0);
+              }
+            }
+            """)
         .setFixChooser(FixChoosers.FIRST)
         .doTest();
   }
@@ -88,38 +98,48 @@ public class LambdaFunctionalInterfaceTest {
     refactoringHelper
         .addInputLines(
             "in/TwoLambdaFunctions.java",
-            "import java.util.function.Function;",
-            "   public class TwoLambdaFunctions {",
-            "    private static int find(Function<Integer, Integer> firstSpecial, ",
-            "Function<Integer, Double> secondSpecial, int mid) {",
-            "      secondSpecial.apply(2);",
-            "      return firstSpecial.apply(mid);",
-            "    }",
-            "    public Integer getMu() {",
-            "      return find(mu -> 0, nu -> 1.1, 3);",
-            "    }",
-            "    public Integer getTu() {",
-            "      return find(mu -> 2,  nu -> 3.2, 4);",
-            "    }",
-            "  }")
+            """
+import java.util.function.Function;
+
+public class TwoLambdaFunctions {
+  private static int find(
+      Function<Integer, Integer> firstSpecial, Function<Integer, Double> secondSpecial, int mid) {
+    secondSpecial.apply(2);
+    return firstSpecial.apply(mid);
+  }
+
+  public Integer getMu() {
+    return find(mu -> 0, nu -> 1.1, 3);
+  }
+
+  public Integer getTu() {
+    return find(mu -> 2, nu -> 3.2, 4);
+  }
+}
+""")
         .addOutputLines(
             "out/TwoLambdaFunctions.java",
-            " import java.util.function.Function;",
-            "    import java.util.function.IntFunction;",
-            "    import java.util.function.IntToDoubleFunction;",
-            "   public class TwoLambdaFunctions {",
-            "    private static int find(IntFunction<Integer> firstSpecial, ",
-            "  IntToDoubleFunction secondSpecial, int mid) {",
-            "      secondSpecial.applyAsDouble(2);",
-            "      return firstSpecial.apply(mid);",
-            "    }",
-            "    public Integer getMu() {",
-            "      return find(mu -> 0, nu -> 1.1, 3);",
-            "    }",
-            "    public Integer getTu() {",
-            "      return find(mu -> 2,  nu -> 3.2, 4);",
-            "    }",
-            "  }")
+            """
+            import java.util.function.Function;
+            import java.util.function.IntFunction;
+            import java.util.function.IntToDoubleFunction;
+
+            public class TwoLambdaFunctions {
+              private static int find(
+                  IntFunction<Integer> firstSpecial, IntToDoubleFunction secondSpecial, int mid) {
+                secondSpecial.applyAsDouble(2);
+                return firstSpecial.apply(mid);
+              }
+
+              public Integer getMu() {
+                return find(mu -> 0, nu -> 1.1, 3);
+              }
+
+              public Integer getTu() {
+                return find(mu -> 2, nu -> 3.2, 4);
+              }
+            }
+            """)
         .setFixChooser(FixChoosers.FIRST)
         .doTest();
   }
@@ -129,53 +149,61 @@ public class LambdaFunctionalInterfaceTest {
     refactoringHelper
         .addInputLines(
             "in/NumbertoT.java",
-            "import java.util.function.Function;",
-            "     import java.util.ArrayList; ",
-            "     import java.util.List; ",
-            "  public class NumbertoT { ",
-            "    private static <T extends Number> List<T> numToTFunction(Function<Double, T>",
-            "  converter) { ",
-            "       List<T> namedNumberIntervals = new ArrayList<>(); ",
-            "       T min = converter.apply(2.9); ",
-            "       T max = converter.apply(5.6); ",
-            "       namedNumberIntervals.add(min); ",
-            "       namedNumberIntervals.add(max); ",
-            "        return namedNumberIntervals; ",
-            "     } ",
-            "     public List<Integer> getIntList() { ",
-            "       List<Integer> result = numToTFunction(num -> 2); ",
-            "       return result; ",
-            "     } ",
-            "     public List<Double> getDoubleList() { ",
-            "       List<Double> result = numToTFunction(num -> 3.2); ",
-            "       return result; ",
-            "     } ",
-            "  }")
+            """
+import java.util.function.Function;
+import java.util.ArrayList;
+import java.util.List;
+
+public class NumbertoT {
+  private static <T extends Number> List<T> numToTFunction(Function<Double, T> converter) {
+    List<T> namedNumberIntervals = new ArrayList<>();
+    T min = converter.apply(2.9);
+    T max = converter.apply(5.6);
+    namedNumberIntervals.add(min);
+    namedNumberIntervals.add(max);
+    return namedNumberIntervals;
+  }
+
+  public List<Integer> getIntList() {
+    List<Integer> result = numToTFunction(num -> 2);
+    return result;
+  }
+
+  public List<Double> getDoubleList() {
+    List<Double> result = numToTFunction(num -> 3.2);
+    return result;
+  }
+}
+""")
         .addOutputLines(
             "out/NumbertoT.java",
-            "  import java.util.ArrayList; ",
-            "  import java.util.List; ",
-            "  import java.util.function.DoubleFunction;",
-            "  import java.util.function.Function;",
-            "  public class NumbertoT { ",
-            "    private static <T extends Number> List<T> numToTFunction(DoubleFunction<T> ",
-            "  converter) {",
-            "       List<T> namedNumberIntervals = new ArrayList<>(); ",
-            "       T min = converter.apply(2.9); ",
-            "       T max = converter.apply(5.6); ",
-            "       namedNumberIntervals.add(min); ",
-            "       namedNumberIntervals.add(max); ",
-            "        return namedNumberIntervals; ",
-            "     } ",
-            "     public List<Integer> getIntList() { ",
-            "       List<Integer> result = numToTFunction(num -> 2); ",
-            "       return result; ",
-            "     } ",
-            "     public List<Double> getDoubleList() { ",
-            "       List<Double> result = numToTFunction(num -> 3.2); ",
-            "       return result; ",
-            "     } ",
-            "  }")
+            """
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.DoubleFunction;
+import java.util.function.Function;
+
+public class NumbertoT {
+  private static <T extends Number> List<T> numToTFunction(DoubleFunction<T> converter) {
+    List<T> namedNumberIntervals = new ArrayList<>();
+    T min = converter.apply(2.9);
+    T max = converter.apply(5.6);
+    namedNumberIntervals.add(min);
+    namedNumberIntervals.add(max);
+    return namedNumberIntervals;
+  }
+
+  public List<Integer> getIntList() {
+    List<Integer> result = numToTFunction(num -> 2);
+    return result;
+  }
+
+  public List<Double> getDoubleList() {
+    List<Double> result = numToTFunction(num -> 3.2);
+    return result;
+  }
+}
+""")
         .setFixChooser(FixChoosers.FIRST)
         .doTest();
   }
@@ -185,27 +213,35 @@ public class LambdaFunctionalInterfaceTest {
     refactoringHelper
         .addInputLines(
             "in/NumbertoT.java",
-            "import java.util.function.Function;",
-            "  public class NumbertoT { ",
-            "   private <T> int sumAll(Function<T, Integer> sizeConv) {",
-            "      return sizeConv.apply((T) Integer.valueOf(3));",
-            "    }",
-            "    public int getSumAll() {",
-            "      return sumAll(o -> 2);",
-            "    } ",
-            "  }")
+            """
+            import java.util.function.Function;
+
+            public class NumbertoT {
+              private <T> int sumAll(Function<T, Integer> sizeConv) {
+                return sizeConv.apply((T) Integer.valueOf(3));
+              }
+
+              public int getSumAll() {
+                return sumAll(o -> 2);
+              }
+            }
+            """)
         .addOutputLines(
             "out/NumbertoT.java",
-            "  import java.util.function.Function;",
-            "  import java.util.function.ToIntFunction;",
-            "  public class NumbertoT { ",
-            "   private <T> int sumAll(ToIntFunction<T> sizeConv) {",
-            "      return sizeConv.applyAsInt((T) Integer.valueOf(3));",
-            "    }",
-            "    public int getSumAll() {",
-            "      return sumAll(o -> 2);",
-            "    } ",
-            "  }")
+            """
+            import java.util.function.Function;
+            import java.util.function.ToIntFunction;
+
+            public class NumbertoT {
+              private <T> int sumAll(ToIntFunction<T> sizeConv) {
+                return sizeConv.applyAsInt((T) Integer.valueOf(3));
+              }
+
+              public int getSumAll() {
+                return sumAll(o -> 2);
+              }
+            }
+            """)
         .setFixChooser(FixChoosers.FIRST)
         .doTest();
   }
@@ -215,12 +251,16 @@ public class LambdaFunctionalInterfaceTest {
     compilationHelper
         .addSourceLines(
             "E.java",
-            "import java.util.function.Function;",
-            "public enum E {",
-            "  VALUE(String::length);",
-            "  // BUG: Diagnostic contains:",
-            "  E(Function<String, Integer> func) {}",
-            "}")
+            """
+            import java.util.function.Function;
+
+            public enum E {
+              VALUE(String::length);
+
+              // BUG: Diagnostic contains:
+              E(Function<String, Integer> func) {}
+            }
+            """)
         .doTest();
   }
 }

@@ -33,20 +33,25 @@ public class InfiniteRecursionTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void f(int x) {}",
-            "  void f() {",
-            "    // BUG: Diagnostic contains:",
-            "    f();",
-            "  }",
-            "  int g() {",
-            "    return 0;",
-            "  }",
-            "  int g(int x) {",
-            "    // BUG: Diagnostic contains:",
-            "    return g(x);",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f(int x) {}
+
+              void f() {
+                // BUG: Diagnostic contains:
+                f();
+              }
+
+              int g() {
+                return 0;
+              }
+
+              int g(int x) {
+                // BUG: Diagnostic contains:
+                return g(x);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -55,25 +60,31 @@ public class InfiniteRecursionTest {
     compilationHelper
         .addSourceLines(
             "p/Test.java",
-            "package p;",
-            "class Test {",
-            "  void f() {",
-            "    // BUG: Diagnostic contains:",
-            "    this.f();",
-            "  }",
-            "  void g() {",
-            "    // BUG: Diagnostic contains:",
-            "    (this).g();",
-            "  }",
-            "  void h() {",
-            "    // BUG: Diagnostic contains:",
-            "    Test.this.h();",
-            "  }",
-            "  void i() {",
-            "    // BUG: Diagnostic contains:",
-            "    (p.Test.this).i();",
-            "  }",
-            "}")
+            """
+            package p;
+
+            class Test {
+              void f() {
+                // BUG: Diagnostic contains:
+                this.f();
+              }
+
+              void g() {
+                // BUG: Diagnostic contains:
+                (this).g();
+              }
+
+              void h() {
+                // BUG: Diagnostic contains:
+                Test.this.h();
+              }
+
+              void i() {
+                // BUG: Diagnostic contains:
+                (p.Test.this).i();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -82,13 +93,15 @@ public class InfiniteRecursionTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  Test f() {",
-            "    // BUG: Diagnostic contains:",
-            "    f();",
-            "    return this;",
-            "  }",
-            "}")
+            """
+            class Test {
+              Test f() {
+                // BUG: Diagnostic contains:
+                f();
+                return this;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -97,30 +110,37 @@ public class InfiniteRecursionTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  static void f(int x) {}",
-            "  static void f() {",
-            "    // BUG: Diagnostic contains:",
-            "    Test.f();",
-            "  }",
-            "  static void instanceF() {",
-            "    // BUG: Diagnostic contains:",
-            "    new Test().instanceF();",
-            "  }",
-            "  static void subclassF() {",
-            "    // BUG: Diagnostic contains:",
-            "    Subclass.subclassF();",
-            "  }",
-            "  static int g() {",
-            "    return 0;",
-            "  }",
-            "  static int g(int x) {",
-            "    // BUG: Diagnostic contains:",
-            "    return Test.g(x);",
-            "  }",
-            "",
-            "  class Subclass extends Test {}",
-            "}")
+            """
+            class Test {
+              static void f(int x) {}
+
+              static void f() {
+                // BUG: Diagnostic contains:
+                Test.f();
+              }
+
+              static void instanceF() {
+                // BUG: Diagnostic contains:
+                new Test().instanceF();
+              }
+
+              static void subclassF() {
+                // BUG: Diagnostic contains:
+                Subclass.subclassF();
+              }
+
+              static int g() {
+                return 0;
+              }
+
+              static int g(int x) {
+                // BUG: Diagnostic contains:
+                return Test.g(x);
+              }
+
+              class Subclass extends Test {}
+            }
+            """)
         .doTest();
   }
 
@@ -129,18 +149,23 @@ public class InfiniteRecursionTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void f(int x) {}",
-            "  void f() {",
-            "    f(42);",
-            "  }",
-            "  int g() {",
-            "    return 0;",
-            "  }",
-            "  int g(int x) {",
-            "    return x == 0 ? g() : g(x - 1);",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f(int x) {}
+
+              void f() {
+                f(42);
+              }
+
+              int g() {
+                return 0;
+              }
+
+              int g(int x) {
+                return x == 0 ? g() : g(x - 1);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -149,14 +174,16 @@ public class InfiniteRecursionTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  Test f() {",
-            "    new Test();",
-            "    // BUG: Diagnostic contains:",
-            "    f();",
-            "    return this;",
-            "  }",
-            "}")
+            """
+            class Test {
+              Test f() {
+                new Test();
+                // BUG: Diagnostic contains:
+                f();
+                return this;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -165,12 +192,15 @@ public class InfiniteRecursionTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  Test test;",
-            "  void f() {",
-            "    test.f();",
-            "  }",
-            "}")
+            """
+            class Test {
+              Test test;
+
+              void f() {
+                test.f();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -179,13 +209,16 @@ public class InfiniteRecursionTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "final class Test {",
-            "  Test test;",
-            "  void f() {",
-            "    // BUG: Diagnostic contains:",
-            "    test.f();",
-            "  }",
-            "}")
+            """
+            final class Test {
+              Test test;
+
+              void f() {
+                // BUG: Diagnostic contains:
+                test.f();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -194,14 +227,16 @@ public class InfiniteRecursionTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "final class Test {",
-            "  void f(boolean callAgain) {",
-            "    if (!callAgain) {",
-            "      return;",
-            "    }",
-            "    f(false);",
-            "  }",
-            "}")
+            """
+            final class Test {
+              void f(boolean callAgain) {
+                if (!callAgain) {
+                  return;
+                }
+                f(false);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -210,15 +245,17 @@ public class InfiniteRecursionTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "final class Test {",
-            "  void f(boolean callAgain) {",
-            "    // BUG: Diagnostic contains:",
-            "    f(false);",
-            "    if (!callAgain) {",
-            "      return;",
-            "    }",
-            "  }",
-            "}")
+            """
+            final class Test {
+              void f(boolean callAgain) {
+                // BUG: Diagnostic contains:
+                f(false);
+                if (!callAgain) {
+                  return;
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -227,13 +264,15 @@ public class InfiniteRecursionTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "final class Test {",
-            "  void f(boolean callAgain) {",
-            "    if (callAgain) {",
-            "      f(false);",
-            "    }",
-            "  }",
-            "}")
+            """
+            final class Test {
+              void f(boolean callAgain) {
+                if (callAgain) {
+                  f(false);
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -242,15 +281,17 @@ public class InfiniteRecursionTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "final class Test {",
-            "  void f() {",
-            "    new Object() {",
-            "      void g() {",
-            "        f();",
-            "      }",
-            "    };",
-            "  }",
-            "}")
+            """
+            final class Test {
+              void f() {
+                new Object() {
+                  void g() {
+                    f();
+                  }
+                };
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -259,18 +300,20 @@ public class InfiniteRecursionTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "final class Test {",
-            "  void f() {",
-            "    new Object() {",
-            "      void g() {",
-            "        f();",
-            "        return;",
-            "      }",
-            "    };",
-            "    // BUG: Diagnostic contains:",
-            "    f();",
-            "  }",
-            "}")
+            """
+            final class Test {
+              void f() {
+                new Object() {
+                  void g() {
+                    f();
+                    return;
+                  }
+                };
+                // BUG: Diagnostic contains:
+                f();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -279,11 +322,13 @@ public class InfiniteRecursionTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "final class Test {",
-            "  Runnable f() {",
-            "    return () -> f();",
-            "  }",
-            "}")
+            """
+            final class Test {
+              Runnable f() {
+                return () -> f();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -292,16 +337,19 @@ public class InfiniteRecursionTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test<X> {",
-            "  <T> void f(T x) {",
-            "    // BUG: Diagnostic contains:",
-            "    this.<String>f(\"\");",
-            "  }",
-            "  void g(X x) {",
-            "    // BUG: Diagnostic contains:",
-            "    g(null);",
-            "  }",
-            "}")
+            """
+            class Test<X> {
+              <T> void f(T x) {
+                // BUG: Diagnostic contains:
+                this.<String>f("");
+              }
+
+              void g(X x) {
+                // BUG: Diagnostic contains:
+                g(null);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -310,12 +358,14 @@ public class InfiniteRecursionTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test<X> {",
-            "  String overrideOfSomeMethodThatReturnsObject() {",
-            "    // BUG: Diagnostic contains:",
-            "    return (String) overrideOfSomeMethodThatReturnsObject();",
-            "  }",
-            "}")
+            """
+            class Test<X> {
+              String overrideOfSomeMethodThatReturnsObject() {
+                // BUG: Diagnostic contains:
+                return (String) overrideOfSomeMethodThatReturnsObject();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -324,12 +374,14 @@ public class InfiniteRecursionTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test<X> {",
-            "  String overrideOfSomeMethodThatReturnsObject() {",
-            "    // BUG: Diagnostic contains:",
-            "    return (String) (overrideOfSomeMethodThatReturnsObject());",
-            "  }",
-            "}")
+            """
+            class Test<X> {
+              String overrideOfSomeMethodThatReturnsObject() {
+                // BUG: Diagnostic contains:
+                return (String) (overrideOfSomeMethodThatReturnsObject());
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -338,15 +390,18 @@ public class InfiniteRecursionTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  public void f(String s) {",
-            "    f((Object) s);",
-            "  }",
-            "  public void f(Object o) {",
-            "    // BUG: Diagnostic contains:",
-            "    f(o);",
-            "  }",
-            "}")
+            """
+            class Test {
+              public void f(String s) {
+                f((Object) s);
+              }
+
+              public void f(Object o) {
+                // BUG: Diagnostic contains:
+                f(o);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -354,10 +409,12 @@ public class InfiniteRecursionTest {
   public void abstractMethod() {
     compilationHelper
         .addSourceLines(
-            "Test.java", //
-            "abstract class Test {",
-            "  abstract void f();",
-            "}")
+            "Test.java",
+            """
+            abstract class Test {
+              abstract void f();
+            }
+            """)
         .doTest();
   }
 
@@ -366,14 +423,17 @@ public class InfiniteRecursionTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "final class Test {",
-            "  Test next;",
-            "  boolean nextIsCool;",
-            "  boolean isCool(boolean thisIsCool) {",
-            "    // BUG: Diagnostic contains:",
-            "    return next.isCool(nextIsCool) || thisIsCool;",
-            "  }",
-            "}")
+            """
+            final class Test {
+              Test next;
+              boolean nextIsCool;
+
+              boolean isCool(boolean thisIsCool) {
+                // BUG: Diagnostic contains:
+                return next.isCool(nextIsCool) || thisIsCool;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -382,13 +442,16 @@ public class InfiniteRecursionTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "final class Test {",
-            "  Test next;",
-            "  boolean nextIsCool;",
-            "  boolean isCool(boolean thisIsCool) {",
-            "    return thisIsCool || next.isCool(thisIsCool);",
-            "  }",
-            "}")
+            """
+            final class Test {
+              Test next;
+              boolean nextIsCool;
+
+              boolean isCool(boolean thisIsCool) {
+                return thisIsCool || next.isCool(thisIsCool);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -397,12 +460,14 @@ public class InfiniteRecursionTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  String asString() {",
-            "    // BUG: Diagnostic contains:",
-            "    return '{' + asString() + '}';",
-            "  }",
-            "}")
+            """
+            class Test {
+              String asString() {
+                // BUG: Diagnostic contains:
+                return '{' + asString() + '}';
+              }
+            }
+            """)
         .doTest();
   }
 }

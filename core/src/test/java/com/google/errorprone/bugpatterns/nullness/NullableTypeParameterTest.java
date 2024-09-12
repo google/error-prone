@@ -33,28 +33,42 @@ public class NullableTypeParameterTest {
     testHelper
         .addInputLines(
             "T.java",
-            "import java.util.List;",
-            "import org.checkerframework.checker.nullness.qual.NonNull;",
-            "import org.checkerframework.checker.nullness.qual.Nullable;",
-            "class T {",
-            "  interface I {}",
-            "  interface J {}",
-            "  <@Nullable X, @NonNull Y> void f() {}",
-            "  <@Nullable X extends Object> void h() {}",
-            "  <@Nullable X extends I & J> void i() {}",
-            "}")
+            """
+            import java.util.List;
+            import org.checkerframework.checker.nullness.qual.NonNull;
+            import org.checkerframework.checker.nullness.qual.Nullable;
+
+            class T {
+              interface I {}
+
+              interface J {}
+
+              <@Nullable X, @NonNull Y> void f() {}
+
+              <@Nullable X extends Object> void h() {}
+
+              <@Nullable X extends I & J> void i() {}
+            }
+            """)
         .addOutputLines(
             "T.java",
-            "import java.util.List;",
-            "import org.checkerframework.checker.nullness.qual.NonNull;",
-            "import org.checkerframework.checker.nullness.qual.Nullable;",
-            "class T {",
-            "  interface I {}",
-            "  interface J {}",
-            "  <X extends @Nullable Object, Y extends @NonNull Object> void f() {}",
-            "  <X extends @Nullable Object> void h() {}",
-            "  <X extends @Nullable I & @Nullable J> void i() {}",
-            "}")
+            """
+            import java.util.List;
+            import org.checkerframework.checker.nullness.qual.NonNull;
+            import org.checkerframework.checker.nullness.qual.Nullable;
+
+            class T {
+              interface I {}
+
+              interface J {}
+
+              <X extends @Nullable Object, Y extends @NonNull Object> void f() {}
+
+              <X extends @Nullable Object> void h() {}
+
+              <X extends @Nullable I & @Nullable J> void i() {}
+            }
+            """)
         .doTest();
   }
 
@@ -63,16 +77,23 @@ public class NullableTypeParameterTest {
     testHelper
         .addInputLines(
             "T.java",
-            "import java.util.List;",
-            "import org.checkerframework.checker.nullness.qual.NonNull;",
-            "import org.checkerframework.checker.nullness.qual.Nullable;",
-            "class T {",
-            "  interface I {}",
-            "  interface J {}",
-            "  <@Nullable @NonNull X> void f() {}",
-            "  <@Nullable X extends @Nullable Object> void g() {}",
-            "  <@Nullable X extends I & @Nullable J> void h() {}",
-            "}")
+            """
+            import java.util.List;
+            import org.checkerframework.checker.nullness.qual.NonNull;
+            import org.checkerframework.checker.nullness.qual.Nullable;
+
+            class T {
+              interface I {}
+
+              interface J {}
+
+              <@Nullable @NonNull X> void f() {}
+
+              <@Nullable X extends @Nullable Object> void g() {}
+
+              <@Nullable X extends I & @Nullable J> void h() {}
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -82,19 +103,26 @@ public class NullableTypeParameterTest {
     CompilationTestHelper.newInstance(NullableTypeParameter.class, getClass())
         .addSourceLines(
             "T.java",
-            "import java.util.List;",
-            "import org.checkerframework.checker.nullness.qual.NonNull;",
-            "import org.checkerframework.checker.nullness.qual.Nullable;",
-            "class T {",
-            "  interface I {}",
-            "  interface J {}",
-            "  // BUG: Diagnostic contains:",
-            "  <@Nullable @NonNull X> void f() {}",
-            "  // BUG: Diagnostic contains:",
-            "  <@Nullable X extends @Nullable Object> void g() {}",
-            "  // BUG: Diagnostic contains:",
-            "  <@Nullable X extends I & @Nullable J> void h() {}",
-            "}")
+            """
+            import java.util.List;
+            import org.checkerframework.checker.nullness.qual.NonNull;
+            import org.checkerframework.checker.nullness.qual.Nullable;
+
+            class T {
+              interface I {}
+
+              interface J {}
+
+              // BUG: Diagnostic contains:
+              <@Nullable @NonNull X> void f() {}
+
+              // BUG: Diagnostic contains:
+              <@Nullable X extends @Nullable Object> void g() {}
+
+              // BUG: Diagnostic contains:
+              <@Nullable X extends I & @Nullable J> void h() {}
+            }
+            """)
         .doTest();
   }
 }

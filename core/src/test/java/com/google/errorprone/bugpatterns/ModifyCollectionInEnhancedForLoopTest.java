@@ -43,17 +43,18 @@ public class ModifyCollectionInEnhancedForLoopTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.AbstractCollection;",
-            "import java.util.Collection;",
-            "abstract class Test<E> extends AbstractCollection<E> {",
-            "  public boolean addAll(Collection<? extends E> c) {",
-            "    boolean modified = false;",
-            "    for (E e : c)",
-            "      if (add(e))",
-            "        modified = true;",
-            "    return modified;",
-            "  }",
-            "}")
+            """
+            import java.util.AbstractCollection;
+            import java.util.Collection;
+
+            abstract class Test<E> extends AbstractCollection<E> {
+              public boolean addAll(Collection<? extends E> c) {
+                boolean modified = false;
+                for (E e : c) if (add(e)) modified = true;
+                return modified;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -62,15 +63,18 @@ public class ModifyCollectionInEnhancedForLoopTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.Map;",
-            "import java.util.concurrent.ConcurrentMap;",
-            "class Test {",
-            "  void f(ConcurrentMap<String, Integer> map) {",
-            "    for (Map.Entry<String, Integer> e : map.entrySet()) {",
-            "      map.remove(e.getKey());",
-            "    }",
-            "  }",
-            "}")
+            """
+            import java.util.Map;
+            import java.util.concurrent.ConcurrentMap;
+
+            class Test {
+              void f(ConcurrentMap<String, Integer> map) {
+                for (Map.Entry<String, Integer> e : map.entrySet()) {
+                  map.remove(e.getKey());
+                }
+              }
+            }
+            """)
         .doTest();
   }
 }

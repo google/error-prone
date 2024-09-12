@@ -38,12 +38,14 @@ public final class AnnotateFormatMethodTest {
     compilationHelper
         .addSourceLines(
             "AnnotateFormatMethodPositiveCases.java",
-            "class AnnotateFormatMethodPositiveCases {",
-            "  // BUG: Diagnostic contains: FormatMethod",
-            "  String formatMe(String formatString, Object... args) {",
-            "    return String.format(formatString, args);",
-            "  }",
-            "}")
+            """
+            class AnnotateFormatMethodPositiveCases {
+              // BUG: Diagnostic contains: FormatMethod
+              String formatMe(String formatString, Object... args) {
+                return String.format(formatString, args);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -53,12 +55,14 @@ public final class AnnotateFormatMethodTest {
     compilationHelper
         .addSourceLines(
             "AnnotateFormatMethodPositiveCases.java",
-            "class AnnotateFormatMethodPositiveCases {",
-            "  // BUG: Diagnostic contains: FormatMethod",
-            "  String formatMe(String formatString, Object... args) {",
-            "    return formatString.formatted(args);",
-            "  }",
-            "}")
+            """
+            class AnnotateFormatMethodPositiveCases {
+              // BUG: Diagnostic contains: FormatMethod
+              String formatMe(String formatString, Object... args) {
+                return formatString.formatted(args);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -67,14 +71,17 @@ public final class AnnotateFormatMethodTest {
     compilationHelper
         .addSourceLines(
             "AnnotateFormatMethodNegativeCases.java",
-            "import com.google.errorprone.annotations.FormatMethod;",
-            "import com.google.errorprone.annotations.FormatString;",
-            "class AnnotateFormatMethodNegativeCases {",
-            "  @FormatMethod",
-            "  String formatMe(@FormatString String formatString, Object... args) {",
-            "    return String.format(formatString, args);",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.FormatMethod;
+            import com.google.errorprone.annotations.FormatString;
+
+            class AnnotateFormatMethodNegativeCases {
+              @FormatMethod
+              String formatMe(@FormatString String formatString, Object... args) {
+                return String.format(formatString, args);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -83,12 +90,14 @@ public final class AnnotateFormatMethodTest {
     compilationHelper
         .addSourceLines(
             "AnnotateFormatMethodNegativeCases.java",
-            "class AnnotateFormatMethodNegativeCases {",
-            "  // BUG: Diagnostic contains: reordered",
-            "  String formatMe(String formatString, String surprise, Object... args) {",
-            "    return String.format(formatString, args);",
-            "  }",
-            "}")
+            """
+            class AnnotateFormatMethodNegativeCases {
+              // BUG: Diagnostic contains: reordered
+              String formatMe(String formatString, String surprise, Object... args) {
+                return String.format(formatString, args);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -97,11 +106,13 @@ public final class AnnotateFormatMethodTest {
     compilationHelper
         .addSourceLines(
             "AnnotateFormatMethodNegativeCases.java",
-            "class AnnotateFormatMethodNegativeCases {",
-            "  String formatMe(String formatString, String justTheOneArgument) {",
-            "    return String.format(formatString, justTheOneArgument);",
-            "  }",
-            "}")
+            """
+            class AnnotateFormatMethodNegativeCases {
+              String formatMe(String formatString, String justTheOneArgument) {
+                return String.format(formatString, justTheOneArgument);
+              }
+            }
+            """)
         .doTest();
   }
 }

@@ -32,20 +32,24 @@ public class DoubleCheckedLockingTest {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
-            "package threadsafety;",
-            "class Test {",
-            "  public Object x;",
-            "  void m() {",
-            "    // BUG: Diagnostic contains: public volatile Object x",
-            "    if (x == null) {",
-            "      synchronized (this) {",
-            "        if (x == null) {",
-            "          x = new Object();",
-            "        }",
-            "      }",
-            "    }",
-            "  }",
-            "}")
+            """
+            package threadsafety;
+
+            class Test {
+              public Object x;
+
+              void m() {
+                // BUG: Diagnostic contains: public volatile Object x
+                if (x == null) {
+                  synchronized (this) {
+                    if (x == null) {
+                      x = new Object();
+                    }
+                  }
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -54,20 +58,26 @@ public class DoubleCheckedLockingTest {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
-            "package threadsafety;",
-            "class Test {",
-            "  static class Inner { static Object x; }",
-            "  void m() {",
-            "    // BUG: Diagnostic contains:",
-            "    if (Inner.x == null) {",
-            "      synchronized (this) {",
-            "        if (Inner.x == null) {",
-            "          Inner.x = new Object();",
-            "        }",
-            "      }",
-            "    }",
-            "  }",
-            "}")
+            """
+            package threadsafety;
+
+            class Test {
+              static class Inner {
+                static Object x;
+              }
+
+              void m() {
+                // BUG: Diagnostic contains:
+                if (Inner.x == null) {
+                  synchronized (this) {
+                    if (Inner.x == null) {
+                      Inner.x = new Object();
+                    }
+                  }
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -76,22 +86,26 @@ public class DoubleCheckedLockingTest {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
-            "package threadsafety;",
-            "class Test {",
-            "  Object x;",
-            "  void m() {",
-            "    Object z = x;",
-            "    // BUG: Diagnostic contains: volatile Object",
-            "    if (z == null) {",
-            "      synchronized (this) {",
-            "        z = x;",
-            "        if (z == null) {",
-            "          x = z = new Object();",
-            "        }",
-            "      }",
-            "    }",
-            "  }",
-            "}")
+            """
+            package threadsafety;
+
+            class Test {
+              Object x;
+
+              void m() {
+                Object z = x;
+                // BUG: Diagnostic contains: volatile Object
+                if (z == null) {
+                  synchronized (this) {
+                    z = x;
+                    if (z == null) {
+                      x = z = new Object();
+                    }
+                  }
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -100,19 +114,23 @@ public class DoubleCheckedLockingTest {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
-            "package threadsafety;",
-            "class Test {",
-            "  volatile Object x;",
-            "  void m() {",
-            "    if (x == null) {",
-            "      synchronized (this) {",
-            "        if (x == null) {",
-            "          x = new Object();",
-            "        }",
-            "      }",
-            "    }",
-            "  }",
-            "}")
+            """
+            package threadsafety;
+
+            class Test {
+              volatile Object x;
+
+              void m() {
+                if (x == null) {
+                  synchronized (this) {
+                    if (x == null) {
+                      x = new Object();
+                    }
+                  }
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -121,19 +139,23 @@ public class DoubleCheckedLockingTest {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
-            "package threadsafety;",
-            "class Test {",
-            "  public Integer x;",
-            "  void m() {",
-            "    if (x == null) {",
-            "      synchronized (this) {",
-            "        if (x == null) {",
-            "          x = 1;",
-            "        }",
-            "      }",
-            "    }",
-            "  }",
-            "}")
+            """
+            package threadsafety;
+
+            class Test {
+              public Integer x;
+
+              void m() {
+                if (x == null) {
+                  synchronized (this) {
+                    if (x == null) {
+                      x = 1;
+                    }
+                  }
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -142,19 +164,23 @@ public class DoubleCheckedLockingTest {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
-            "package threadsafety;",
-            "class Test {",
-            "  public String x;",
-            "  void m() {",
-            "    if (x == null) {",
-            "      synchronized (this) {",
-            "        if (x == null) {",
-            "          x = \"\";",
-            "        }",
-            "      }",
-            "    }",
-            "  }",
-            "}")
+            """
+            package threadsafety;
+
+            class Test {
+              public String x;
+
+              void m() {
+                if (x == null) {
+                  synchronized (this) {
+                    if (x == null) {
+                      x = "";
+                    }
+                  }
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -163,20 +189,23 @@ public class DoubleCheckedLockingTest {
     compilationHelper
         .addSourceLines(
             "tTest.java",
-            "class Test {",
-            "  public String x;",
-            "  String m() {",
-            "    String result = x;",
-            "    if (result == null) {",
-            "      synchronized (this) {",
-            "        if (result == null) {",
-            "          x = result = \"\";",
-            "        }",
-            "      }",
-            "    }",
-            "    return result;",
-            "  }",
-            "}")
+            """
+            class Test {
+              public String x;
+
+              String m() {
+                String result = x;
+                if (result == null) {
+                  synchronized (this) {
+                    if (result == null) {
+                      x = result = "";
+                    }
+                  }
+                }
+                return result;
+              }
+            }
+            """)
         .doTest();
   }
 }

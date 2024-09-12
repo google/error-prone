@@ -32,19 +32,24 @@ public final class FloggerSplitLogStatementTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "class Test {",
-            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "  // BUG: Diagnostic contains:",
-            "  FluentLogger.Api getLogger() {",
-            "    return logger.atInfo();",
-            "  }",
-            " void splitLog() {",
-            "    // BUG: Diagnostic contains:",
-            "    FluentLogger.Api api = logger.atInfo();",
-            "    api.log(\"foo\");",
-            "  }",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            class Test {
+              private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+
+              // BUG: Diagnostic contains:
+              FluentLogger.Api getLogger() {
+                return logger.atInfo();
+              }
+
+              void splitLog() {
+                // BUG: Diagnostic contains:
+                FluentLogger.Api api = logger.atInfo();
+                api.log("foo");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -53,15 +58,19 @@ public final class FloggerSplitLogStatementTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "class Test {",
-            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            " void splitLog() {",
-            "    // BUG: Diagnostic contains:",
-            "    var api = logger.atInfo();",
-            "    api.log(\"foo\");",
-            "  }",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            class Test {
+              private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+
+              void splitLog() {
+                // BUG: Diagnostic contains:
+                var api = logger.atInfo();
+                api.log("foo");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -70,13 +79,17 @@ public final class FloggerSplitLogStatementTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "class Test {",
-            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "  void log() {",
-            "    logger.atInfo().log(\"foo\");",
-            "  }",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            class Test {
+              private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+
+              void log() {
+                logger.atInfo().log("foo");
+              }
+            }
+            """)
         .doTest();
   }
 }

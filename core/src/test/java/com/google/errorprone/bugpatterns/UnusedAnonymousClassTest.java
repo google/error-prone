@@ -32,12 +32,15 @@ public class UnusedAnonymousClassTest {
     compilationHelper
         .addSourceLines(
             "a/One.java",
-            "package a;",
-            "public class One {",
-            "  public static void main(String[] args) {",
-            "    new Object();",
-            "  }",
-            "}")
+            """
+            package a;
+
+            public class One {
+              public static void main(String[] args) {
+                new Object();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -47,15 +50,18 @@ public class UnusedAnonymousClassTest {
     compilationHelper
         .addSourceLines(
             "a/One.java",
-            "package a;",
-            "public class One {",
-            "  public static void main(String[] args) {",
-            "    // BUG: Diagnostic contains:",
-            "    new Thread() {",
-            "      public void run() {}",
-            "    };",
-            "  }",
-            "}")
+            """
+            package a;
+
+            public class One {
+              public static void main(String[] args) {
+                // BUG: Diagnostic contains:
+                new Thread() {
+                  public void run() {}
+                };
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -64,12 +70,15 @@ public class UnusedAnonymousClassTest {
     compilationHelper
         .addSourceLines(
             "a/One.java",
-            "package a;",
-            "public class One {",
-            "  public static void main(String[] args) {",
-            "    new Object().toString();",
-            "  }",
-            "}")
+            """
+            package a;
+
+            public class One {
+              public static void main(String[] args) {
+                new Object().toString();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -78,18 +87,22 @@ public class UnusedAnonymousClassTest {
     compilationHelper
         .addSourceLines(
             "a/One.java",
-            "package a;",
-            "import java.util.concurrent.Callable;",
-            "public class One {",
-            "  public static void main(String[] args) throws Exception {",
-            "    // BUG: Diagnostic contains:",
-            "    new Callable<Void>() {",
-            "      public Void call() throws Exception {",
-            "        return null;",
-            "      }",
-            "    };",
-            "  }",
-            "}")
+            """
+            package a;
+
+            import java.util.concurrent.Callable;
+
+            public class One {
+              public static void main(String[] args) throws Exception {
+                // BUG: Diagnostic contains:
+                new Callable<Void>() {
+                  public Void call() throws Exception {
+                    return null;
+                  }
+                };
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -98,17 +111,21 @@ public class UnusedAnonymousClassTest {
     compilationHelper
         .addSourceLines(
             "a/One.java",
-            "package a;",
-            "import java.util.concurrent.Callable;",
-            "public class One {",
-            "  public static void main(String[] args) throws Exception {",
-            "    new Callable<Void>() {",
-            "      public Void call() throws Exception {",
-            "        return null;",
-            "      }",
-            "    }.call();",
-            "  }",
-            "}")
+            """
+            package a;
+
+            import java.util.concurrent.Callable;
+
+            public class One {
+              public static void main(String[] args) throws Exception {
+                new Callable<Void>() {
+                  public Void call() throws Exception {
+                    return null;
+                  }
+                }.call();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -117,20 +134,28 @@ public class UnusedAnonymousClassTest {
     compilationHelper
         .addSourceLines(
             "a/One.java",
-            "package a;",
-            "import java.util.concurrent.Callable;",
-            "import java.util.ArrayList;",
-            "public class One {",
-            "  static ArrayList<Callable<Void>> callables = new ArrayList<>();",
-            "  public static void main(String[] args) throws Exception {",
-            "    new Callable<Void>() {",
-            "      { callables.add(this); }",
-            "      public Void call() throws Exception {",
-            "        return null;",
-            "      }",
-            "    };",
-            "  }",
-            "}")
+            """
+            package a;
+
+            import java.util.concurrent.Callable;
+            import java.util.ArrayList;
+
+            public class One {
+              static ArrayList<Callable<Void>> callables = new ArrayList<>();
+
+              public static void main(String[] args) throws Exception {
+                new Callable<Void>() {
+                  {
+                    callables.add(this);
+                  }
+
+                  public Void call() throws Exception {
+                    return null;
+                  }
+                };
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -139,20 +164,25 @@ public class UnusedAnonymousClassTest {
     compilationHelper
         .addSourceLines(
             "a/One.java",
-            "package a;",
-            "import java.util.concurrent.Callable;",
-            "import java.util.ArrayList;",
-            "public class One {",
-            "  public static void main(String[] args) throws Exception {",
-            "    // BUG: Diagnostic contains:",
-            "    new Callable<Void>() {",
-            "      Void register;",
-            "      public Void call() throws Exception {",
-            "        return null;",
-            "      }",
-            "    };",
-            "  }",
-            "}")
+            """
+            package a;
+
+            import java.util.concurrent.Callable;
+            import java.util.ArrayList;
+
+            public class One {
+              public static void main(String[] args) throws Exception {
+                // BUG: Diagnostic contains:
+                new Callable<Void>() {
+                  Void register;
+
+                  public Void call() throws Exception {
+                    return null;
+                  }
+                };
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -161,24 +191,31 @@ public class UnusedAnonymousClassTest {
     compilationHelper
         .addSourceLines(
             "a/One.java",
-            "package a;",
-            "import java.util.concurrent.Callable;",
-            "import java.util.ArrayList;",
-            "public class One {",
-            "  static ArrayList<Callable<Void>> callables = new ArrayList<>();",
-            "  static Void register(Callable<Void> callable) {",
-            "    callables.add(callable);",
-            "    return null;",
-            "  }",
-            "  public static void main(String[] args) throws Exception {",
-            "    new Callable<Void>() {",
-            "      Void register = register(this);",
-            "      public Void call() throws Exception {",
-            "        return null;",
-            "      }",
-            "    };",
-            "  }",
-            "}")
+            """
+            package a;
+
+            import java.util.concurrent.Callable;
+            import java.util.ArrayList;
+
+            public class One {
+              static ArrayList<Callable<Void>> callables = new ArrayList<>();
+
+              static Void register(Callable<Void> callable) {
+                callables.add(callable);
+                return null;
+              }
+
+              public static void main(String[] args) throws Exception {
+                new Callable<Void>() {
+                  Void register = register(this);
+
+                  public Void call() throws Exception {
+                    return null;
+                  }
+                };
+              }
+            }
+            """)
         .doTest();
   }
 }

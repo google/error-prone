@@ -45,9 +45,19 @@ public class MethodHasParametersTest extends CompilerBasedAbstractTest {
   public void setUp() {
     tests.clear();
     writeFile(
-        "SampleAnnotation1.java", "package com.google;", "public @interface SampleAnnotation1 {}");
+        "SampleAnnotation1.java",
+        """
+        package com.google;
+
+        public @interface SampleAnnotation1 {}
+        """);
     writeFile(
-        "SampleAnnotation2.java", "package com.google;", "public @interface SampleAnnotation2 {}");
+        "SampleAnnotation2.java",
+        """
+        package com.google;
+
+        public @interface SampleAnnotation2 {}
+        """);
   }
 
   @After
@@ -60,7 +70,14 @@ public class MethodHasParametersTest extends CompilerBasedAbstractTest {
   @Test
   public void shouldMatchSingleParameter() {
     writeFile(
-        "A.java", "package com.google;", "public class A {", "  public void A(int i) {}", "}");
+        "A.java",
+        """
+        package com.google;
+
+        public class A {
+          public void A(int i) {}
+        }
+        """);
     assertCompiles(
         methodMatches(
             /* shouldMatch= */ true,
@@ -73,7 +90,15 @@ public class MethodHasParametersTest extends CompilerBasedAbstractTest {
 
   @Test
   public void shouldNotMatchNoParameters() {
-    writeFile("A.java", "package com.google;", "public class A {", "  public void A() {}", "}");
+    writeFile(
+        "A.java",
+        """
+        package com.google;
+
+        public class A {
+          public void A() {}
+        }
+        """);
     assertCompiles(
         methodMatches(
             /* shouldMatch= */ false,
@@ -87,7 +112,14 @@ public class MethodHasParametersTest extends CompilerBasedAbstractTest {
   @Test
   public void shouldNotMatchNonmatchingParameter() {
     writeFile(
-        "A.java", "package com.google;", "public class A {", "  public void A(Object obj) {}", "}");
+        "A.java",
+        """
+        package com.google;
+
+        public class A {
+          public void A(Object obj) {}
+        }
+        """);
     assertCompiles(
         methodMatches(
             /* shouldMatch= */ false,
@@ -102,10 +134,13 @@ public class MethodHasParametersTest extends CompilerBasedAbstractTest {
   public void multipleParameters() {
     writeFile(
         "A.java",
-        "package com.google;",
-        "public class A {",
-        "  public void A(int i, Object obj) {}",
-        "}");
+        """
+        package com.google;
+
+        public class A {
+          public void A(int i, Object obj) {}
+        }
+        """);
     assertCompiles(
         methodMatches(
             /* shouldMatch= */ true,

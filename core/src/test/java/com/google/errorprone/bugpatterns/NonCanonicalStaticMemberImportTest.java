@@ -32,22 +32,34 @@ public class NonCanonicalStaticMemberImportTest {
     compilationHelper
         .addSourceLines(
             "a/A.java",
-            "package a;",
-            "public class A {",
-            "  public static final int foo() { return 42; }",
-            "}")
+            """
+            package a;
+
+            public class A {
+              public static final int foo() {
+                return 42;
+              }
+            }
+            """)
         .addSourceLines(
-            "b/B.java", //
-            "package b;",
-            "import a.A;",
-            "public class B extends A {",
-            "}")
+            "b/B.java",
+            """
+            package b;
+
+            import a.A;
+
+            public class B extends A {}
+            """)
         .addSourceLines(
             "b/Test.java",
-            "package b;",
-            "// BUG: Diagnostic contains: import static a.A.foo;",
-            "import static b.B.foo;",
-            "class Test {}")
+            """
+            package b;
+
+            // BUG: Diagnostic contains: import static a.A.foo;
+            import static b.B.foo;
+
+            class Test {}
+            """)
         .doTest();
   }
 
@@ -56,22 +68,32 @@ public class NonCanonicalStaticMemberImportTest {
     compilationHelper
         .addSourceLines(
             "a/A.java",
-            "package a;",
-            "public class A {",
-            "  public static final int CONST = 42;",
-            "}")
+            """
+            package a;
+
+            public class A {
+              public static final int CONST = 42;
+            }
+            """)
         .addSourceLines(
-            "b/B.java", //
-            "package b;",
-            "import a.A;",
-            "public class B extends A {",
-            "}")
+            "b/B.java",
+            """
+            package b;
+
+            import a.A;
+
+            public class B extends A {}
+            """)
         .addSourceLines(
             "b/Test.java",
-            "package b;",
-            "// BUG: Diagnostic contains: import static a.A.CONST;",
-            "import static b.B.CONST;",
-            "class Test {}")
+            """
+            package b;
+
+            // BUG: Diagnostic contains: import static a.A.CONST;
+            import static b.B.CONST;
+
+            class Test {}
+            """)
         .doTest();
   }
 
@@ -82,28 +104,41 @@ public class NonCanonicalStaticMemberImportTest {
     compilationHelper
         .addSourceLines(
             "a/Super.java",
-            "package a;",
-            "public class Super {",
-            "  public static final int CONST = 42;",
-            "}")
+            """
+            package a;
+
+            public class Super {
+              public static final int CONST = 42;
+            }
+            """)
         .addSourceLines(
             "a/A.java",
-            "package a;",
-            "public class A {",
-            "  public static class Inner extends Super {}",
-            "}")
+            """
+            package a;
+
+            public class A {
+              public static class Inner extends Super {}
+            }
+            """)
         .addSourceLines(
-            "b/B.java", //
-            "package b;",
-            "import a.A;",
-            "public class B extends A {",
-            "}")
+            "b/B.java",
+            """
+            package b;
+
+            import a.A;
+
+            public class B extends A {}
+            """)
         .addSourceLines(
             "b/Test.java",
-            "package b;",
-            "// BUG: Diagnostic contains: import static a.Super.CONST;",
-            "import static a.A.Inner.CONST;",
-            "class Test {}")
+            """
+            package b;
+
+            // BUG: Diagnostic contains: import static a.Super.CONST;
+            import static a.A.Inner.CONST;
+
+            class Test {}
+            """)
         .doTest();
   }
 
@@ -112,21 +147,33 @@ public class NonCanonicalStaticMemberImportTest {
     compilationHelper
         .addSourceLines(
             "a/A.java",
-            "package a;",
-            "public class A {",
-            "  public static final int foo() { return 42; }",
-            "}")
+            """
+            package a;
+
+            public class A {
+              public static final int foo() {
+                return 42;
+              }
+            }
+            """)
         .addSourceLines(
-            "b/B.java", //
-            "package b;",
-            "import a.A;",
-            "public class B extends A {",
-            "}")
+            "b/B.java",
+            """
+            package b;
+
+            import a.A;
+
+            public class B extends A {}
+            """)
         .addSourceLines(
-            "b/Test.java", //
-            "package b;",
-            "import static a.A.foo;",
-            "class Test {}")
+            "b/Test.java",
+            """
+            package b;
+
+            import static a.A.foo;
+
+            class Test {}
+            """)
         .doTest();
   }
 
@@ -135,21 +182,31 @@ public class NonCanonicalStaticMemberImportTest {
     compilationHelper
         .addSourceLines(
             "a/A.java",
-            "package a;",
-            "public class A {",
-            "  public static final int CONST = 42;",
-            "}")
+            """
+            package a;
+
+            public class A {
+              public static final int CONST = 42;
+            }
+            """)
         .addSourceLines(
-            "b/B.java", //
-            "package b;",
-            "import a.A;",
-            "public class B extends A {",
-            "}")
+            "b/B.java",
+            """
+            package b;
+
+            import a.A;
+
+            public class B extends A {}
+            """)
         .addSourceLines(
-            "b/Test.java", //
-            "package b;",
-            "import static a.A.CONST;",
-            "class Test {}")
+            "b/Test.java",
+            """
+            package b;
+
+            import static a.A.CONST;
+
+            class Test {}
+            """)
         .doTest();
   }
 
@@ -158,27 +215,40 @@ public class NonCanonicalStaticMemberImportTest {
     compilationHelper
         .addSourceLines(
             "a/Super.java",
-            "package a;",
-            "public class Super {",
-            "  public static final int CONST = 42;",
-            "}")
+            """
+            package a;
+
+            public class Super {
+              public static final int CONST = 42;
+            }
+            """)
         .addSourceLines(
             "a/A.java",
-            "package a;",
-            "public class A {",
-            "  public static class Inner extends Super {}",
-            "}")
+            """
+            package a;
+
+            public class A {
+              public static class Inner extends Super {}
+            }
+            """)
         .addSourceLines(
-            "b/B.java", //
-            "package b;",
-            "import a.A;",
-            "public class B extends A {",
-            "}")
+            "b/B.java",
+            """
+            package b;
+
+            import a.A;
+
+            public class B extends A {}
+            """)
         .addSourceLines(
-            "b/Test.java", //
-            "package b;",
-            "import static a.Super.CONST;",
-            "class Test {}")
+            "b/Test.java",
+            """
+            package b;
+
+            import static a.Super.CONST;
+
+            class Test {}
+            """)
         .doTest();
   }
 }

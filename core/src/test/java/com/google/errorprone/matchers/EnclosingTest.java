@@ -93,12 +93,14 @@ public class EnclosingTest extends CompilerBasedAbstractTest {
   public void usedDirectlyInLoopCondition() {
     writeFile(
         "A.java",
-        "public class A {",
-        "  A() {",
-        "    boolean foo = true;",
-        "    for (int i = 0; foo; i++) {}",
-        "  }",
-        "}");
+        """
+        public class A {
+          A() {
+            boolean foo = true;
+            for (int i = 0; foo; i++) {}
+          }
+        }
+        """);
     assertCompiles(fooIsUsedUnderLoopCondition(false));
     assertCompiles(fooIsChildOfLoopCondition(false));
     assertCompiles(fooIsUsedUnderLoopStatement(false));
@@ -110,12 +112,14 @@ public class EnclosingTest extends CompilerBasedAbstractTest {
   public void usedAsChildTreeOfLoopCondition() {
     writeFile(
         "A.java",
-        "public class A {",
-        "  A() {",
-        "    boolean foo = true;",
-        "    for (int i = 0; !foo; i++) {}",
-        "  }",
-        "}");
+        """
+        public class A {
+          A() {
+            boolean foo = true;
+            for (int i = 0; !foo; i++) {}
+          }
+        }
+        """);
     assertCompiles(fooIsUsedUnderLoopCondition(true));
     assertCompiles(fooIsChildOfLoopCondition(true));
     assertCompiles(fooIsUsedUnderLoopStatement(false));
@@ -127,12 +131,14 @@ public class EnclosingTest extends CompilerBasedAbstractTest {
   public void usedInSubTreeOfLoopCondition() {
     writeFile(
         "A.java",
-        "public class A {",
-        "  A() {",
-        "    boolean foo = true;",
-        "    for (int i = 0; !!!!!!!!!foo; i++) {}",
-        "  }",
-        "}");
+        """
+        public class A {
+          A() {
+            boolean foo = true;
+            for (int i = 0; !!!!!!!!!foo; i++) {}
+          }
+        }
+        """);
     assertCompiles(fooIsUsedUnderLoopCondition(true));
     assertCompiles(fooIsChildOfLoopCondition(false));
     assertCompiles(fooIsUsedUnderLoopStatement(false));
@@ -144,14 +150,16 @@ public class EnclosingTest extends CompilerBasedAbstractTest {
   public void usedInStatement() {
     writeFile(
         "A.java",
-        "public class A {",
-        "  A() {",
-        "    boolean foo = true;",
-        "    for (int i = 0; i < 100; i++) {",
-        "      foo = !foo;",
-        "    }",
-        "  }",
-        "}");
+        """
+        public class A {
+          A() {
+            boolean foo = true;
+            for (int i = 0; i < 100; i++) {
+              foo = !foo;
+            }
+          }
+        }
+        """);
     assertCompiles(fooIsUsedUnderLoopCondition(false));
     assertCompiles(fooIsChildOfLoopCondition(false));
     assertCompiles(fooIsUsedUnderLoopStatement(true));
@@ -163,12 +171,14 @@ public class EnclosingTest extends CompilerBasedAbstractTest {
   public void usedElsewhereInLoop() {
     writeFile(
         "A.java",
-        "public class A {",
-        "  A() {",
-        "    boolean foo = true;",
-        "    for (int i = foo ? 0 : 1; i < 100; foo = !foo) {}",
-        "  }",
-        "}");
+        """
+        public class A {
+          A() {
+            boolean foo = true;
+            for (int i = foo ? 0 : 1; i < 100; foo = !foo) {}
+          }
+        }
+        """);
     assertCompiles(fooIsUsedUnderLoopCondition(false));
     assertCompiles(fooIsChildOfLoopCondition(false));
     assertCompiles(fooIsUsedUnderLoopStatement(false));

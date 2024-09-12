@@ -33,12 +33,14 @@ public class GetClassOnAnnotationTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void f(Deprecated deprecated) {",
-            "    // BUG: Diagnostic contains: System.err.println(deprecated.annotationType());",
-            "    System.err.println(deprecated.getClass());",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f(Deprecated deprecated) {
+                // BUG: Diagnostic contains: System.err.println(deprecated.annotationType());
+                System.err.println(deprecated.getClass());
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -47,11 +49,13 @@ public class GetClassOnAnnotationTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void f(Deprecated deprecated) {",
-            "    System.err.println(this.getClass());",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f(Deprecated deprecated) {
+                System.err.println(this.getClass());
+              }
+            }
+            """)
         .doTest();
   }
 }

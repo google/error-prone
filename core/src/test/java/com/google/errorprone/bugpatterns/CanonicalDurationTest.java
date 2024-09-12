@@ -34,35 +34,45 @@ public class CanonicalDurationTest {
   public void refactoringJavaTime() {
     helper
         .addInputLines(
-            "in/A.java", //
-            "package a;",
-            "import java.time.Duration;",
-            "public class A {",
-            "  static final int CONST = 86400;",
-            "  {",
-            "    Duration.ofSeconds(86400);",
-            "    java.time.Duration.ofSeconds(86400);",
-            "    Duration.ofSeconds(CONST);",
-            "    Duration.ofMillis(0);",
-            "    Duration.ofMillis(4611686018427387904L);",
-            "    Duration.ofDays(1);",
-            "  }",
-            "}")
+            "in/A.java",
+            """
+            package a;
+
+            import java.time.Duration;
+
+            public class A {
+              static final int CONST = 86400;
+
+              {
+                Duration.ofSeconds(86400);
+                java.time.Duration.ofSeconds(86400);
+                Duration.ofSeconds(CONST);
+                Duration.ofMillis(0);
+                Duration.ofMillis(4611686018427387904L);
+                Duration.ofDays(1);
+              }
+            }
+            """)
         .addOutputLines(
-            "out/A.java", //
-            "package a;",
-            "import java.time.Duration;",
-            "public class A {",
-            "  static final int CONST = 86400;",
-            "  {",
-            "    Duration.ofDays(1);",
-            "    java.time.Duration.ofDays(1);",
-            "    Duration.ofSeconds(CONST);",
-            "    Duration.ofMillis(0);",
-            "    Duration.ofMillis(4611686018427387904L);",
-            "    Duration.ofDays(1);",
-            "  }",
-            "}")
+            "out/A.java",
+            """
+            package a;
+
+            import java.time.Duration;
+
+            public class A {
+              static final int CONST = 86400;
+
+              {
+                Duration.ofDays(1);
+                java.time.Duration.ofDays(1);
+                Duration.ofSeconds(CONST);
+                Duration.ofMillis(0);
+                Duration.ofMillis(4611686018427387904L);
+                Duration.ofDays(1);
+              }
+            }
+            """)
         .doTest(TEXT_MATCH);
   }
 
@@ -70,33 +80,43 @@ public class CanonicalDurationTest {
   public void refactoringJoda() {
     helper
         .addInputLines(
-            "in/A.java", //
-            "package a;",
-            "import org.joda.time.Duration;",
-            "public class A {",
-            "  static final int CONST = 86400;",
-            "  {",
-            "    Duration.standardSeconds(86400);",
-            "    org.joda.time.Duration.standardSeconds(86400);",
-            "    Duration.standardSeconds(CONST);",
-            "    Duration zero = Duration.standardSeconds(0);",
-            "    Duration.standardDays(1);",
-            "  }",
-            "}")
+            "in/A.java",
+            """
+            package a;
+
+            import org.joda.time.Duration;
+
+            public class A {
+              static final int CONST = 86400;
+
+              {
+                Duration.standardSeconds(86400);
+                org.joda.time.Duration.standardSeconds(86400);
+                Duration.standardSeconds(CONST);
+                Duration zero = Duration.standardSeconds(0);
+                Duration.standardDays(1);
+              }
+            }
+            """)
         .addOutputLines(
-            "out/A.java", //
-            "package a;",
-            "import org.joda.time.Duration;",
-            "public class A {",
-            "  static final int CONST = 86400;",
-            "  {",
-            "    Duration.standardDays(1);",
-            "    org.joda.time.Duration.standardDays(1);",
-            "    Duration.standardSeconds(CONST);",
-            "    Duration zero = Duration.ZERO;",
-            "    Duration.standardDays(1);",
-            "  }",
-            "}")
+            "out/A.java",
+            """
+            package a;
+
+            import org.joda.time.Duration;
+
+            public class A {
+              static final int CONST = 86400;
+
+              {
+                Duration.standardDays(1);
+                org.joda.time.Duration.standardDays(1);
+                Duration.standardSeconds(CONST);
+                Duration zero = Duration.ZERO;
+                Duration.standardDays(1);
+              }
+            }
+            """)
         .doTest(TEXT_MATCH);
   }
 
@@ -104,29 +124,35 @@ public class CanonicalDurationTest {
   public void refactoringJavaTimeStaticImport() {
     helper
         .addInputLines(
-            "in/A.java", //
-            "package a;",
-            "import static java.time.Duration.ofSeconds;",
-            "import java.time.Duration;",
-            "public class A {",
-            "  {",
-            "    ofSeconds(86400);",
-            "  }",
-            "}")
+            "in/A.java",
+            """
+            package a;
+
+            import static java.time.Duration.ofSeconds;
+            import java.time.Duration;
+
+            public class A {
+              {
+                ofSeconds(86400);
+              }
+            }
+            """)
         .addOutputLines(
-            "out/A.java", //
-            "package a;",
-            "",
-            "import static java.time.Duration.ofDays;",
-            "import static java.time.Duration.ofSeconds;",
-            "",
-            "import java.time.Duration;",
-            "",
-            "public class A {",
-            "  {",
-            "    ofDays(1);",
-            "  }",
-            "}")
+            "out/A.java",
+            """
+            package a;
+
+            import static java.time.Duration.ofDays;
+            import static java.time.Duration.ofSeconds;
+
+            import java.time.Duration;
+
+            public class A {
+              {
+                ofDays(1);
+              }
+            }
+            """)
         .doTest(TEXT_MATCH);
   }
 
@@ -134,28 +160,36 @@ public class CanonicalDurationTest {
   public void refactoringJodaStaticImport() {
     helper
         .addInputLines(
-            "in/A.java", //
-            "package a;",
-            "import static org.joda.time.Duration.standardSeconds;",
-            "public class A {",
-            "  {",
-            "    standardSeconds(86400);",
-            "    standardSeconds(0).getStandardSeconds();",
-            "  }",
-            "}")
+            "in/A.java",
+            """
+            package a;
+
+            import static org.joda.time.Duration.standardSeconds;
+
+            public class A {
+              {
+                standardSeconds(86400);
+                standardSeconds(0).getStandardSeconds();
+              }
+            }
+            """)
         .addOutputLines(
-            "out/A.java", //
-            "package a;",
-            "import static org.joda.time.Duration.standardDays;",
-            "import static org.joda.time.Duration.standardSeconds;",
-            "",
-            "import org.joda.time.Duration;",
-            "public class A {",
-            "  {",
-            "    standardDays(1);",
-            "    Duration.ZERO.getStandardSeconds();",
-            "  }",
-            "}")
+            "out/A.java",
+            """
+            package a;
+
+            import static org.joda.time.Duration.standardDays;
+            import static org.joda.time.Duration.standardSeconds;
+
+            import org.joda.time.Duration;
+
+            public class A {
+              {
+                standardDays(1);
+                Duration.ZERO.getStandardSeconds();
+              }
+            }
+            """)
         .doTest(TEXT_MATCH);
   }
 
@@ -164,18 +198,23 @@ public class CanonicalDurationTest {
     helper
         .addInputLines(
             "A.java",
-            "package a;",
-            "import java.time.Duration;",
-            "public class A {",
-            "  static final int S = 60;",
-            "  static final int M = 60;",
-            "  static final int H = 24;",
-            "  {",
-            "    Duration.ofSeconds(S);",
-            "    Duration.ofMinutes(H);",
-            "    Duration.ofHours(24);",
-            "  }",
-            "}")
+            """
+            package a;
+
+            import java.time.Duration;
+
+            public class A {
+              static final int S = 60;
+              static final int M = 60;
+              static final int H = 24;
+
+              {
+                Duration.ofSeconds(S);
+                Duration.ofMinutes(H);
+                Duration.ofHours(24);
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -185,31 +224,39 @@ public class CanonicalDurationTest {
     helper
         .addInputLines(
             "A.java",
-            "package a;",
-            "import static java.time.Duration.ofSeconds;",
-            "import static java.util.Arrays.asList;",
-            "import java.time.Duration;",
-            "import java.util.List;",
-            "public class A {",
-            "  // The 120 is left alone here because 121 can't be converted too.",
-            "  static final List<Duration> negative = asList(ofSeconds(120), ofSeconds(121));",
-            "",
-            "  static final List<Duration> positive = asList(ofSeconds(120), ofSeconds(180));",
-            "}")
+            """
+            package a;
+
+            import static java.time.Duration.ofSeconds;
+            import static java.util.Arrays.asList;
+            import java.time.Duration;
+            import java.util.List;
+
+            public class A {
+              // The 120 is left alone here because 121 can't be converted too.
+              static final List<Duration> negative = asList(ofSeconds(120), ofSeconds(121));
+
+              static final List<Duration> positive = asList(ofSeconds(120), ofSeconds(180));
+            }
+            """)
         .addOutputLines(
             "A.java",
-            "package a;",
-            "import static java.time.Duration.ofMinutes;",
-            "import static java.time.Duration.ofSeconds;",
-            "import static java.util.Arrays.asList;",
-            "import java.time.Duration;",
-            "import java.util.List;",
-            "public class A {",
-            "  // The 120 is left alone here because 121 can't be converted too.",
-            "  static final List<Duration> negative = asList(ofSeconds(120), ofSeconds(121));",
-            "",
-            "  static final List<Duration> positive = asList(ofMinutes(2), ofMinutes(3));",
-            "}")
+            """
+            package a;
+
+            import static java.time.Duration.ofMinutes;
+            import static java.time.Duration.ofSeconds;
+            import static java.util.Arrays.asList;
+            import java.time.Duration;
+            import java.util.List;
+
+            public class A {
+              // The 120 is left alone here because 121 can't be converted too.
+              static final List<Duration> negative = asList(ofSeconds(120), ofSeconds(121));
+
+              static final List<Duration> positive = asList(ofMinutes(2), ofMinutes(3));
+            }
+            """)
         .doTest();
   }
 
@@ -218,21 +265,29 @@ public class CanonicalDurationTest {
     helper
         .addInputLines(
             "A.java",
-            "package a;",
-            "import static java.time.Duration.ofSeconds;",
-            "import java.time.Duration;",
-            "public class A {",
-            "  static final Duration positive = ofSeconds(2 * 60);",
-            "}")
+            """
+            package a;
+
+            import static java.time.Duration.ofSeconds;
+            import java.time.Duration;
+
+            public class A {
+              static final Duration positive = ofSeconds(2 * 60);
+            }
+            """)
         .addOutputLines(
             "A.java",
-            "package a;",
-            "import static java.time.Duration.ofMinutes;",
-            "import static java.time.Duration.ofSeconds;",
-            "import java.time.Duration;",
-            "public class A {",
-            "  static final Duration positive = ofMinutes(2);",
-            "}")
+            """
+            package a;
+
+            import static java.time.Duration.ofMinutes;
+            import static java.time.Duration.ofSeconds;
+            import java.time.Duration;
+
+            public class A {
+              static final Duration positive = ofMinutes(2);
+            }
+            """)
         .doTest();
   }
 }

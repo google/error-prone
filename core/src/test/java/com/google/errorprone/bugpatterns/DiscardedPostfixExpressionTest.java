@@ -30,14 +30,17 @@ public final class DiscardedPostfixExpressionTest {
     CompilationTestHelper.newInstance(DiscardedPostfixExpression.class, getClass())
         .addSourceLines(
             "Test.java",
-            "import java.util.function.UnaryOperator;",
-            "class Test {",
-            "  int x;",
-            "  UnaryOperator<Integer> f = x1 -> x++;",
-            "  UnaryOperator<Integer> g = x1 -> x--;",
-            "  UnaryOperator<Integer> h = x -> ++x;",
-            "  UnaryOperator<Integer> i = x -> --x;",
-            "}")
+            """
+            import java.util.function.UnaryOperator;
+
+            class Test {
+              int x;
+              UnaryOperator<Integer> f = x1 -> x++;
+              UnaryOperator<Integer> g = x1 -> x--;
+              UnaryOperator<Integer> h = x -> ++x;
+              UnaryOperator<Integer> i = x -> --x;
+            }
+            """)
         .doTest();
   }
 
@@ -46,18 +49,24 @@ public final class DiscardedPostfixExpressionTest {
     BugCheckerRefactoringTestHelper.newInstance(DiscardedPostfixExpression.class, getClass())
         .addInputLines(
             "Test.java",
-            "import java.util.function.UnaryOperator;",
-            "class Test {",
-            "  UnaryOperator<Integer> f = x -> x++;",
-            "  UnaryOperator<Integer> g = x -> x--;",
-            "}")
+            """
+            import java.util.function.UnaryOperator;
+
+            class Test {
+              UnaryOperator<Integer> f = x -> x++;
+              UnaryOperator<Integer> g = x -> x--;
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import java.util.function.UnaryOperator;",
-            "class Test {",
-            "  UnaryOperator<Integer> f = x -> x + 1;",
-            "  UnaryOperator<Integer> g = x -> x - 1;",
-            "}")
+            """
+            import java.util.function.UnaryOperator;
+
+            class Test {
+              UnaryOperator<Integer> f = x -> x + 1;
+              UnaryOperator<Integer> g = x -> x - 1;
+            }
+            """)
         .doTest();
   }
 }

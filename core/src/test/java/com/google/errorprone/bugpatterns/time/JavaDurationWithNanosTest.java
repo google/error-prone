@@ -31,11 +31,14 @@ public class JavaDurationWithNanosTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import java.time.Duration;",
-            "public class TestClass {",
-            "  // BUG: Diagnostic contains: Duration.ofSeconds(Duration.ZERO.getSeconds(), 42);",
-            "  private static final Duration DURATION = Duration.ZERO.withNanos(42);",
-            "}")
+            """
+            import java.time.Duration;
+
+            public class TestClass {
+              // BUG: Diagnostic contains: Duration.ofSeconds(Duration.ZERO.getSeconds(), 42);
+              private static final Duration DURATION = Duration.ZERO.withNanos(42);
+            }
+            """)
         .doTest();
   }
 
@@ -44,12 +47,15 @@ public class JavaDurationWithNanosTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import java.time.Duration;",
-            "public class TestClass {",
-            "  private static final Duration DURATION1 = Duration.ZERO;",
-            "  // BUG: Diagnostic contains: Duration.ofSeconds(DURATION1.getSeconds(), 44);",
-            "  private static final Duration DURATION2 = DURATION1.withNanos(44);",
-            "}")
+            """
+            import java.time.Duration;
+
+            public class TestClass {
+              private static final Duration DURATION1 = Duration.ZERO;
+              // BUG: Diagnostic contains: Duration.ofSeconds(DURATION1.getSeconds(), 44);
+              private static final Duration DURATION2 = DURATION1.withNanos(44);
+            }
+            """)
         .doTest();
   }
 
@@ -58,13 +64,16 @@ public class JavaDurationWithNanosTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import org.joda.time.Duration;",
-            "public class TestClass {",
-            "  private static final java.time.Duration DURATION = ",
-            "      // BUG: Diagnostic contains: "
-                + "java.time.Duration.ofSeconds(java.time.Duration.ZERO.getSeconds(), 42);",
-            "      java.time.Duration.ZERO.withNanos(42);",
-            "}")
+            """
+            import org.joda.time.Duration;
+
+            public class TestClass {
+              private static final java.time.Duration DURATION =
+                  // BUG: Diagnostic contains:
+                  // java.time.Duration.ofSeconds(java.time.Duration.ZERO.getSeconds(), 42);
+                  java.time.Duration.ZERO.withNanos(42);
+            }
+            """)
         .doTest();
   }
 }

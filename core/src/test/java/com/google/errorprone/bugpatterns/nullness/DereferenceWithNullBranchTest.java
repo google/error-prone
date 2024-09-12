@@ -32,13 +32,16 @@ public class DereferenceWithNullBranchTest {
     helper
         .addSourceLines(
             "Foo.java",
-            "import java.util.Optional;",
-            "class Foo {",
-            "  void foo(Optional<Integer> o) {",
-            "    // BUG: Diagnostic contains: ",
-            "    o.orElse(null).intValue();",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            class Foo {
+              void foo(Optional<Integer> o) {
+                // BUG: Diagnostic contains:
+                o.orElse(null).intValue();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -47,13 +50,16 @@ public class DereferenceWithNullBranchTest {
     helper
         .addSourceLines(
             "Foo.java",
-            "import java.util.Optional;",
-            "class Foo {",
-            "  int foo(String s) {",
-            "    // BUG: Diagnostic contains: ",
-            "    return (s == null) ? s.length() : 0;",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            class Foo {
+              int foo(String s) {
+                // BUG: Diagnostic contains:
+                return (s == null) ? s.length() : 0;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -62,12 +68,15 @@ public class DereferenceWithNullBranchTest {
     helper
         .addSourceLines(
             "Foo.java",
-            "import java.util.Optional;",
-            "class Foo {",
-            "  void foo() {",
-            "    Optional.of(7).get().intValue();",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            class Foo {
+              void foo() {
+                Optional.of(7).get().intValue();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -76,14 +85,16 @@ public class DereferenceWithNullBranchTest {
     helper
         .addSourceLines(
             "Foo.java",
-            "class Foo {",
-            "  void foo() {",
-            "    Class<?> c;",
-            "    c = Void.class;",
-            "    c = void.class;",
-            "    c = Void.TYPE;",
-            "  }",
-            "}")
+            """
+            class Foo {
+              void foo() {
+                Class<?> c;
+                c = Void.class;
+                c = void.class;
+                c = Void.TYPE;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -91,11 +102,14 @@ public class DereferenceWithNullBranchTest {
   public void noCrashOnQualifiedClass() {
     helper
         .addSourceLines(
-            "Foo.java", //
-            "class Foo {",
-            "  class Bar {}",
-            "  Foo.Bar bar;",
-            "}")
+            "Foo.java",
+            """
+            class Foo {
+              class Bar {}
+
+              Foo.Bar bar;
+            }
+            """)
         .doTest();
   }
 
@@ -104,10 +118,13 @@ public class DereferenceWithNullBranchTest {
     helper
         .addSourceLines(
             "Foo.java",
-            "import java.util.Map;",
-            "interface Foo {",
-            "  void foo(Map.Entry<?, ?> o);",
-            "}")
+            """
+            import java.util.Map;
+
+            interface Foo {
+              void foo(Map.Entry<?, ?> o);
+            }
+            """)
         .doTest();
   }
 
@@ -115,10 +132,12 @@ public class DereferenceWithNullBranchTest {
   public void noCrashOnModule() {
     helper
         .addSourceLines(
-            "module-info.java", //
-            "module foo.bar {",
-            "  requires java.logging;",
-            "}")
+            "module-info.java",
+            """
+            module foo.bar {
+              requires java.logging;
+            }
+            """)
         .doTest();
   }
 }

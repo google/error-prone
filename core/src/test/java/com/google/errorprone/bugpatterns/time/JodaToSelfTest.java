@@ -31,11 +31,14 @@ public class JodaToSelfTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import org.joda.time.Duration;",
-            "public class TestClass {",
-            "  // BUG: Diagnostic contains: private static final Duration DUR = Duration.ZERO;",
-            "  private static final Duration DUR = Duration.ZERO.toDuration();",
-            "}")
+            """
+            import org.joda.time.Duration;
+
+            public class TestClass {
+              // BUG: Diagnostic contains: private static final Duration DUR = Duration.ZERO;
+              private static final Duration DUR = Duration.ZERO.toDuration();
+            }
+            """)
         .doTest();
   }
 
@@ -44,12 +47,15 @@ public class JodaToSelfTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import org.joda.time.Duration;",
-            "public class TestClass {",
-            "  private static final Duration DURATION1 = Duration.ZERO;",
-            "  // BUG: Diagnostic contains: private static final Duration DURATION2 = DURATION1;",
-            "  private static final Duration DURATION2 = DURATION1.toDuration();",
-            "}")
+            """
+            import org.joda.time.Duration;
+
+            public class TestClass {
+              private static final Duration DURATION1 = Duration.ZERO;
+              // BUG: Diagnostic contains: private static final Duration DURATION2 = DURATION1;
+              private static final Duration DURATION2 = DURATION1.toDuration();
+            }
+            """)
         .doTest();
   }
 
@@ -58,10 +64,13 @@ public class JodaToSelfTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "package org.joda.time;",
-            "public class TestClass {",
-            "  private static final Duration DURATION = Duration.ZERO.toDuration();",
-            "}")
+            """
+            package org.joda.time;
+
+            public class TestClass {
+              private static final Duration DURATION = Duration.ZERO.toDuration();
+            }
+            """)
         .doTest();
   }
 
@@ -70,12 +79,15 @@ public class JodaToSelfTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import org.joda.time.Duration;",
-            "public class TestClass {",
-            "  private static final org.joda.time.Duration DURATION = ",
-            "  // BUG: Diagnostic contains: org.joda.time.Duration.ZERO;",
-            "      org.joda.time.Duration.ZERO.toDuration();",
-            "}")
+            """
+            import org.joda.time.Duration;
+
+            public class TestClass {
+              private static final org.joda.time.Duration DURATION =
+                  // BUG: Diagnostic contains: org.joda.time.Duration.ZERO;
+                  org.joda.time.Duration.ZERO.toDuration();
+            }
+            """)
         .doTest();
   }
 
@@ -84,13 +96,16 @@ public class JodaToSelfTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import org.joda.time.DateTime;",
-            "public class TestClass {",
-            "  DateTime test(DateTime dt) {",
-            "    // BUG: Diagnostic contains: return dt;",
-            "    return new DateTime(dt);",
-            "  }",
-            "}")
+            """
+            import org.joda.time.DateTime;
+
+            public class TestClass {
+              DateTime test(DateTime dt) {
+                // BUG: Diagnostic contains: return dt;
+                return new DateTime(dt);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -99,13 +114,16 @@ public class JodaToSelfTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import org.joda.time.DateTime;",
-            "import org.joda.time.Instant;",
-            "public class TestClass {",
-            "  DateTime test(Instant i) {",
-            "    return new DateTime(i);",
-            "  }",
-            "}")
+            """
+            import org.joda.time.DateTime;
+            import org.joda.time.Instant;
+
+            public class TestClass {
+              DateTime test(Instant i) {
+                return new DateTime(i);
+              }
+            }
+            """)
         .doTest();
   }
 }

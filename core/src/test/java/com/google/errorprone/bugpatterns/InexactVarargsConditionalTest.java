@@ -33,20 +33,24 @@ public class InexactVarargsConditionalTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.Arrays;",
-            "class Test {",
-            "  public static void main(String[] args) {",
-            "    Object[] a = {1, 2};",
-            "    Object b = \"hello\";",
-            "    for (boolean flag : new boolean[]{true, false}) {",
-            "      // BUG: Diagnostic contains: 'f(0, flag ? a : new Object[] {b});'?",
-            "      f(0, flag ? a : b);",
-            "    }",
-            "  }",
-            "  static void f(int x, Object... xs) {",
-            "    System.err.println(Arrays.deepToString(xs));",
-            "  }",
-            "}")
+            """
+            import java.util.Arrays;
+
+            class Test {
+              public static void main(String[] args) {
+                Object[] a = {1, 2};
+                Object b = "hello";
+                for (boolean flag : new boolean[] {true, false}) {
+                  // BUG: Diagnostic contains: 'f(0, flag ? a : new Object[] {b});'?
+                  f(0, flag ? a : b);
+                }
+              }
+
+              static void f(int x, Object... xs) {
+                System.err.println(Arrays.deepToString(xs));
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -55,21 +59,25 @@ public class InexactVarargsConditionalTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.Arrays;",
-            "class Test {",
-            "  public static void main(String[] args) {",
-            "    Object[] a = {1, 2};",
-            "    Object b = \"hello\";",
-            "    f(0, a);",
-            "    f(0, b);",
-            "    for (boolean flag : new boolean[]{true, false}) {",
-            "      f(0, 1, flag ? a : b);",
-            "    }",
-            "  }",
-            "  static void f(int x, Object... xs) {",
-            "    System.err.println(Arrays.deepToString(xs));",
-            "  }",
-            "}")
+            """
+            import java.util.Arrays;
+
+            class Test {
+              public static void main(String[] args) {
+                Object[] a = {1, 2};
+                Object b = "hello";
+                f(0, a);
+                f(0, b);
+                for (boolean flag : new boolean[] {true, false}) {
+                  f(0, 1, flag ? a : b);
+                }
+              }
+
+              static void f(int x, Object... xs) {
+                System.err.println(Arrays.deepToString(xs));
+              }
+            }
+            """)
         .doTest();
   }
 }

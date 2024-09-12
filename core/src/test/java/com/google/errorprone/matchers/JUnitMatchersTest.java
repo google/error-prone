@@ -45,11 +45,14 @@ public final class JUnitMatchersTest {
     compilationHelper
         .addSourceLines(
             "RunWithAnnotationOnClass.java",
-            "import org.junit.runner.RunWith;",
-            "import org.junit.runners.JUnit4;",
-            "@RunWith(JUnit4.class)",
-            "// BUG: Diagnostic contains: Version:JUnit4",
-            "public class RunWithAnnotationOnClass {}")
+            """
+            import org.junit.runner.RunWith;
+            import org.junit.runners.JUnit4;
+
+            @RunWith(JUnit4.class)
+            // BUG: Diagnostic contains: Version:JUnit4
+            public class RunWithAnnotationOnClass {}
+            """)
         .doTest();
   }
 
@@ -58,12 +61,15 @@ public final class JUnitMatchersTest {
     compilationHelper
         .addSourceLines(
             "TestAnnotationOnMethod.java",
-            "import org.junit.Test;",
-            "// BUG: Diagnostic contains: Version:JUnit4",
-            "public class TestAnnotationOnMethod {",
-            "  @Test",
-            "  public void someTest() {}",
-            "}")
+            """
+            import org.junit.Test;
+
+            // BUG: Diagnostic contains: Version:JUnit4
+            public class TestAnnotationOnMethod {
+              @Test
+              public void someTest() {}
+            }
+            """)
         .doTest();
   }
 
@@ -72,32 +78,44 @@ public final class JUnitMatchersTest {
     compilationHelper
         .addSourceLines(
             "BeforeAnnotationOnMethod.java",
-            "import org.junit.Before;",
-            "public class BeforeAnnotationOnMethod {",
-            "  @Before",
-            "  public void someTest() {}",
-            "}")
+            """
+            import org.junit.Before;
+
+            public class BeforeAnnotationOnMethod {
+              @Before
+              public void someTest() {}
+            }
+            """)
         .addSourceLines(
             "BeforeClassAnnotationOnMethod.java",
-            "import org.junit.BeforeClass;",
-            "public class BeforeClassAnnotationOnMethod {",
-            "  @BeforeClass",
-            "  public void someTest() {}",
-            "}")
+            """
+            import org.junit.BeforeClass;
+
+            public class BeforeClassAnnotationOnMethod {
+              @BeforeClass
+              public void someTest() {}
+            }
+            """)
         .addSourceLines(
             "AfterAnnotationOnMethod.java",
-            "import org.junit.After;",
-            "public class AfterAnnotationOnMethod {",
-            "  @After",
-            "  public void someTest() {}",
-            "}")
+            """
+            import org.junit.After;
+
+            public class AfterAnnotationOnMethod {
+              @After
+              public void someTest() {}
+            }
+            """)
         .addSourceLines(
             "AfterClassAnnotationOnMethod.java",
-            "import org.junit.AfterClass;",
-            "public class AfterClassAnnotationOnMethod {",
-            "  @AfterClass",
-            "  public void someTest() {}",
-            "}")
+            """
+            import org.junit.AfterClass;
+
+            public class AfterClassAnnotationOnMethod {
+              @AfterClass
+              public void someTest() {}
+            }
+            """)
         .doTest();
   }
 
@@ -106,11 +124,14 @@ public final class JUnitMatchersTest {
     compilationHelper
         .addSourceLines(
             "TestIgnoreAnnotation.java",
-            "import org.junit.Ignore;",
-            "public class TestIgnoreAnnotation {",
-            "  @Ignore",
-            "  public void someTest() {}",
-            "}")
+            """
+            import org.junit.Ignore;
+
+            public class TestIgnoreAnnotation {
+              @Ignore
+              public void someTest() {}
+            }
+            """)
         .doTest();
   }
 
@@ -131,18 +152,26 @@ public final class JUnitMatchersTest {
     compilationHelper
         .addSourceLines(
             "MyRule.java",
-            "import org.junit.rules.TestRule;",
-            "import org.junit.runners.model.Statement;",
-            "import org.junit.runner.Description;",
-            "public class MyRule implements TestRule {",
-            "  public Statement apply(Statement s, Description d) { return null; }",
-            "}")
+            """
+            import org.junit.rules.TestRule;
+            import org.junit.runners.model.Statement;
+            import org.junit.runner.Description;
+
+            public class MyRule implements TestRule {
+              public Statement apply(Statement s, Description d) {
+                return null;
+              }
+            }
+            """)
         .addSourceLines(
             "TestRuleAnnotation.java",
-            "import org.junit.Rule;",
-            "public class TestRuleAnnotation {",
-            "  @Rule public final MyRule r = new MyRule();",
-            "}")
+            """
+            import org.junit.Rule;
+
+            public class TestRuleAnnotation {
+              @Rule public final MyRule r = new MyRule();
+            }
+            """)
         .doTest();
   }
 
@@ -151,9 +180,12 @@ public final class JUnitMatchersTest {
     compilationHelper
         .addSourceLines(
             "TestCaseDescendant.java",
-            "import junit.framework.TestCase;",
-            "// BUG: Diagnostic contains: Version:JUnit3",
-            "public class TestCaseDescendant extends TestCase {}")
+            """
+            import junit.framework.TestCase;
+
+            // BUG: Diagnostic contains: Version:JUnit3
+            public class TestCaseDescendant extends TestCase {}
+            """)
         .doTest();
   }
 
@@ -162,26 +194,32 @@ public final class JUnitMatchersTest {
     compilationHelper
         .addSourceLines(
             "AmbiguousRunWith.java",
-            "import junit.framework.TestCase;",
-            "import org.junit.runner.RunWith;",
-            "import org.junit.runners.JUnit4;",
-            "import org.junit.Test;",
-            "@RunWith(JUnit4.class)",
-            "// BUG: Diagnostic contains: Version:Both",
-            "public class AmbiguousRunWith extends TestCase {",
-            "  public void someTest() {}",
-            "}")
+            """
+            import junit.framework.TestCase;
+            import org.junit.runner.RunWith;
+            import org.junit.runners.JUnit4;
+            import org.junit.Test;
+
+            @RunWith(JUnit4.class)
+            // BUG: Diagnostic contains: Version:Both
+            public class AmbiguousRunWith extends TestCase {
+              public void someTest() {}
+            }
+            """)
         .addSourceLines(
             "AmbiguousTest.java",
-            "import junit.framework.TestCase;",
-            "import org.junit.runner.RunWith;",
-            "import org.junit.runners.JUnit4;",
-            "import org.junit.Test;",
-            "// BUG: Diagnostic contains: Version:Both",
-            "public class AmbiguousTest extends TestCase {",
-            "  @Test",
-            "  public void someTest() {}",
-            "}")
+            """
+            import junit.framework.TestCase;
+            import org.junit.runner.RunWith;
+            import org.junit.runners.JUnit4;
+            import org.junit.Test;
+
+            // BUG: Diagnostic contains: Version:Both
+            public class AmbiguousTest extends TestCase {
+              @Test
+              public void someTest() {}
+            }
+            """)
         .doTest();
   }
 

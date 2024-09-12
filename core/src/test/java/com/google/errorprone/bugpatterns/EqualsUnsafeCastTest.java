@@ -37,23 +37,33 @@ public final class EqualsUnsafeCastTest {
     BugCheckerRefactoringTestHelper.newInstance(EqualsUnsafeCast.class, getClass())
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  private int a;",
-            "  @Override public boolean equals(Object o) {",
-            "    Test that = (Test) o;",
-            "    return that.a == a;",
-            "  }",
-            "}")
+            """
+            class Test {
+              private int a;
+
+              @Override
+              public boolean equals(Object o) {
+                Test that = (Test) o;
+                return that.a == a;
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "class Test {",
-            "  private int a;",
-            "  @Override public boolean equals(Object o) {",
-            "    if (!(o instanceof Test)) { return false; }",
-            "    Test that = (Test) o;",
-            "    return that.a == a;",
-            "  }",
-            "}")
+            """
+            class Test {
+              private int a;
+
+              @Override
+              public boolean equals(Object o) {
+                if (!(o instanceof Test)) {
+                  return false;
+                }
+                Test that = (Test) o;
+                return that.a == a;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -62,21 +72,31 @@ public final class EqualsUnsafeCastTest {
     BugCheckerRefactoringTestHelper.newInstance(EqualsUnsafeCast.class, getClass())
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  private int a;",
-            "  @Override public boolean equals(Object o) {",
-            "    return o != null && a == ((Test) o).a;",
-            "  }",
-            "}")
+            """
+            class Test {
+              private int a;
+
+              @Override
+              public boolean equals(Object o) {
+                return o != null && a == ((Test) o).a;
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "class Test {",
-            "  private int a;",
-            "  @Override public boolean equals(Object o) {",
-            "    if (!(o instanceof Test)) { return false; }",
-            "    return o != null && a == ((Test) o).a;",
-            "  }",
-            "}")
+            """
+            class Test {
+              private int a;
+
+              @Override
+              public boolean equals(Object o) {
+                if (!(o instanceof Test)) {
+                  return false;
+                }
+                return o != null && a == ((Test) o).a;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -85,15 +105,22 @@ public final class EqualsUnsafeCastTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class SubTest extends Test {",
-            "  private int a;",
-            "  @Override public boolean equals(Object o) {",
-            "    if (!(o instanceof Test)) { return false; }",
-            "    // BUG: Diagnostic contains: instanceof SubTest",
-            "    return o != null && a == ((SubTest) o).a;",
-            "  }",
-            "}",
-            "class Test {}")
+            """
+            class SubTest extends Test {
+              private int a;
+
+              @Override
+              public boolean equals(Object o) {
+                if (!(o instanceof Test)) {
+                  return false;
+                }
+                // BUG: Diagnostic contains: instanceof SubTest
+                return o != null && a == ((SubTest) o).a;
+              }
+            }
+
+            class Test {}
+            """)
         .doTest();
   }
 
@@ -102,13 +129,19 @@ public final class EqualsUnsafeCastTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  private int a;",
-            "  @Override public boolean equals(Object o) {",
-            "    if (getClass() == o.getClass()) { return false; }",
-            "    return o != null && a == ((Test) o).a;",
-            "  }",
-            "}")
+            """
+            class Test {
+              private int a;
+
+              @Override
+              public boolean equals(Object o) {
+                if (getClass() == o.getClass()) {
+                  return false;
+                }
+                return o != null && a == ((Test) o).a;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -117,13 +150,19 @@ public final class EqualsUnsafeCastTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  private int a;",
-            "  @Override public boolean equals(Object o) {",
-            "    if (!(o instanceof Test)) { return false; }",
-            "    return o != null && a == ((Test) o).a;",
-            "  }",
-            "}")
+            """
+            class Test {
+              private int a;
+
+              @Override
+              public boolean equals(Object o) {
+                if (!(o instanceof Test)) {
+                  return false;
+                }
+                return o != null && a == ((Test) o).a;
+              }
+            }
+            """)
         .doTest();
   }
 }

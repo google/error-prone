@@ -31,10 +31,13 @@ public class JodaDurationWithMillisTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import org.joda.time.Duration;",
-            "public class TestClass {",
-            "  private static final Duration DURATION = Duration.millis(42);",
-            "}")
+            """
+            import org.joda.time.Duration;
+
+            public class TestClass {
+              private static final Duration DURATION = Duration.millis(42);
+            }
+            """)
         .doTest();
   }
 
@@ -43,11 +46,14 @@ public class JodaDurationWithMillisTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import org.joda.time.Duration;",
-            "public class TestClass {",
-            "  // BUG: Diagnostic contains: use Duration.millis(long) instead",
-            "  private static final Duration DURATION = Duration.ZERO.withMillis(42);",
-            "}")
+            """
+            import org.joda.time.Duration;
+
+            public class TestClass {
+              // BUG: Diagnostic contains: use Duration.millis(long) instead
+              private static final Duration DURATION = Duration.ZERO.withMillis(42);
+            }
+            """)
         .doTest();
   }
 
@@ -56,11 +62,14 @@ public class JodaDurationWithMillisTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import org.joda.time.Duration;",
-            "public class TestClass {",
-            "  // BUG: Diagnostic contains: use Duration.millis(long) instead",
-            "  private static final Duration DURATION = Duration.ZERO.withMillis(42L);",
-            "}")
+            """
+            import org.joda.time.Duration;
+
+            public class TestClass {
+              // BUG: Diagnostic contains: use Duration.millis(long) instead
+              private static final Duration DURATION = Duration.ZERO.withMillis(42L);
+            }
+            """)
         .doTest();
   }
 
@@ -69,11 +78,14 @@ public class JodaDurationWithMillisTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import org.joda.time.Duration;",
-            "public class TestClass {",
-            "  // BUG: Diagnostic contains: use Duration.millis(long) instead",
-            "  private static final Duration DURATION = Duration.standardHours(1).withMillis(42);",
-            "}")
+            """
+            import org.joda.time.Duration;
+
+            public class TestClass {
+              // BUG: Diagnostic contains: use Duration.millis(long) instead
+              private static final Duration DURATION = Duration.standardHours(1).withMillis(42);
+            }
+            """)
         .doTest();
   }
 
@@ -82,10 +94,13 @@ public class JodaDurationWithMillisTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "package org.joda.time;",
-            "public class TestClass {",
-            "  private static final Duration DURATION = Duration.ZERO.withMillis(42);",
-            "}")
+            """
+            package org.joda.time;
+
+            public class TestClass {
+              private static final Duration DURATION = Duration.ZERO.withMillis(42);
+            }
+            """)
         .doTest();
   }
 
@@ -94,10 +109,13 @@ public class JodaDurationWithMillisTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "package org.joda.time;",
-            "public class TestClass {",
-            "  private static final Duration DURATION = Duration.ZERO.withMillis(42L);",
-            "}")
+            """
+            package org.joda.time;
+
+            public class TestClass {
+              private static final Duration DURATION = Duration.ZERO.withMillis(42L);
+            }
+            """)
         .doTest();
   }
 
@@ -106,12 +124,15 @@ public class JodaDurationWithMillisTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import java.time.Duration;",
-            "public class TestClass {",
-            "  private static final org.joda.time.Duration DURATION = ",
-            "      // BUG: Diagnostic contains: Did you mean 'org.joda.time.Duration.millis(42L);'",
-            "      org.joda.time.Duration.ZERO.withMillis(42L);",
-            "}")
+            """
+            import java.time.Duration;
+
+            public class TestClass {
+              private static final org.joda.time.Duration DURATION =
+                  // BUG: Diagnostic contains: Did you mean 'org.joda.time.Duration.millis(42L);'
+                  org.joda.time.Duration.ZERO.withMillis(42L);
+            }
+            """)
         .doTest();
   }
 }

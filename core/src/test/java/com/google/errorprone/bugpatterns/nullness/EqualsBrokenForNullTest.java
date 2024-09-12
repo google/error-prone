@@ -45,17 +45,20 @@ public class EqualsBrokenForNullTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test<A, B> {",
-            "  A a;",
-            "  B b;",
-            "  public boolean equals(Object other) {",
-            "    if (!(other instanceof Test<?, ?>)) {",
-            "      return false;",
-            "    }",
-            "    Test<?, ?> that = (Test<?, ?>) other;",
-            "    return a.equals(that.a) && b.equals(that.b);",
-            "  }",
-            "}")
+            """
+            class Test<A, B> {
+              A a;
+              B b;
+
+              public boolean equals(Object other) {
+                if (!(other instanceof Test<?, ?>)) {
+                  return false;
+                }
+                Test<?, ?> that = (Test<?, ?>) other;
+                return a.equals(that.a) && b.equals(that.b);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -64,19 +67,22 @@ public class EqualsBrokenForNullTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.Optional;",
-            "class Test {",
-            "  public boolean equals(Object other) {",
-            "    if (other == null) {",
-            "      return false;",
-            "    }",
-            "    if (other instanceof Test) {",
-            "      Test otherTest = (Test) other;",
-            "      Optional.empty().map(x -> otherTest.toString());",
-            "    }",
-            "    return other.equals(this);",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            class Test {
+              public boolean equals(Object other) {
+                if (other == null) {
+                  return false;
+                }
+                if (other instanceof Test) {
+                  Test otherTest = (Test) other;
+                  Optional.empty().map(x -> otherTest.toString());
+                }
+                return other.equals(this);
+              }
+            }
+            """)
         .doTest();
   }
 }

@@ -70,13 +70,15 @@ public class CustomSuppressionTest {
     CompilationTestHelper.newInstance(MyChecker.class, getClass())
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  @SuppressWarnings(\"MyChecker\")",
-            "  int identity(int value) {",
-            "    // BUG: Diagnostic contains:",
-            "    return value;",
-            "  }",
-            "}")
+            """
+            class Test {
+              @SuppressWarnings("MyChecker")
+              int identity(int value) {
+                // BUG: Diagnostic contains:
+                return value;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -85,13 +87,16 @@ public class CustomSuppressionTest {
     CompilationTestHelper.newInstance(MyChecker.class, getClass())
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.suppress.CustomSuppressionTest.SuppressBothCheckers;",
-            "class Test {",
-            "  @SuppressBothCheckers",
-            "  int identity(int value) {",
-            "    return value;",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.suppress.CustomSuppressionTest.SuppressBothCheckers;
+
+            class Test {
+              @SuppressBothCheckers
+              int identity(int value) {
+                return value;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -100,15 +105,20 @@ public class CustomSuppressionTest {
     CompilationTestHelper.newInstance(MyChecker.class, getClass())
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.suppress.CustomSuppressionTest.SuppressBothCheckers;",
-            "class Test {",
-            "  @SuppressBothCheckers",
-            "  Comparable<Integer> myComparable = new Comparable<Integer>() {",
-            "    @Override public int compareTo(Integer other) {",
-            "      return -1;",
-            "    }",
-            "  };",
-            "}")
+            """
+            import com.google.errorprone.suppress.CustomSuppressionTest.SuppressBothCheckers;
+
+            class Test {
+              @SuppressBothCheckers
+              Comparable<Integer> myComparable =
+                  new Comparable<Integer>() {
+                    @Override
+                    public int compareTo(Integer other) {
+                      return -1;
+                    }
+                  };
+            }
+            """)
         .doTest();
   }
 
@@ -117,14 +127,17 @@ public class CustomSuppressionTest {
     CompilationTestHelper.newInstance(MyChecker.class, getClass())
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.suppress.CustomSuppressionTest.SuppressMyChecker2;",
-            "class Test {",
-            "  @SuppressMyChecker2",
-            "  int identity(int value) {",
-            "    // BUG: Diagnostic contains:",
-            "    return value;",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.suppress.CustomSuppressionTest.SuppressMyChecker2;
+
+            class Test {
+              @SuppressMyChecker2
+              int identity(int value) {
+                // BUG: Diagnostic contains:
+                return value;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -133,18 +146,22 @@ public class CustomSuppressionTest {
     CompilationTestHelper.newInstance(MyChecker2.class, getClass())
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.suppress.CustomSuppressionTest.SuppressBothCheckers;",
-            "import com.google.errorprone.suppress.CustomSuppressionTest.SuppressMyChecker2;",
-            "class Test {",
-            "  @SuppressBothCheckers",
-            "  int identity(int value) {",
-            "    return value;",
-            "  }",
-            "  @SuppressMyChecker2",
-            "  int square(int value) {",
-            "    return value * value;",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.suppress.CustomSuppressionTest.SuppressBothCheckers;
+            import com.google.errorprone.suppress.CustomSuppressionTest.SuppressMyChecker2;
+
+            class Test {
+              @SuppressBothCheckers
+              int identity(int value) {
+                return value;
+              }
+
+              @SuppressMyChecker2
+              int square(int value) {
+                return value * value;
+              }
+            }
+            """)
         .doTest();
   }
 }

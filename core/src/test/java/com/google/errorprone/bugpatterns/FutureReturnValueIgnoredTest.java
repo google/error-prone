@@ -45,18 +45,25 @@ public class FutureReturnValueIgnoredTest {
     compilationHelper
         .addSourceLines(
             "lib/Lib.java",
-            "package lib;",
-            "public class Lib {",
-            "  @com.google.errorprone.annotations.CanIgnoreReturnValue",
-            "  public static java.util.concurrent.Future<?> f() { return null; }",
-            "}")
+            """
+            package lib;
+
+            public class Lib {
+              @com.google.errorprone.annotations.CanIgnoreReturnValue
+              public static java.util.concurrent.Future<?> f() {
+                return null;
+              }
+            }
+            """)
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  void m() {",
-            "    lib.Lib.f();",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              void m() {
+                lib.Lib.f();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -65,12 +72,15 @@ public class FutureReturnValueIgnoredTest {
     compilationHelper
         .addSourceLines(
             "test.java",
-            "import java.util.concurrent.CompletableFuture;",
-            "class Test {",
-            "  void f(CompletableFuture<?> cf) {",
-            "    cf.exceptionally(t -> null);",
-            "  }",
-            "}")
+            """
+            import java.util.concurrent.CompletableFuture;
+
+            class Test {
+              void f(CompletableFuture<?> cf) {
+                cf.exceptionally(t -> null);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -79,16 +89,19 @@ public class FutureReturnValueIgnoredTest {
     compilationHelper
         .addSourceLines(
             "test.java",
-            "import java.util.concurrent.CompletableFuture;",
-            "import static java.util.concurrent.TimeUnit.MILLISECONDS;",
-            "class Test {",
-            "  void f(CompletableFuture<?> cf) {",
-            "    cf.completeAsync(() -> null);",
-            "    cf.completeAsync(() -> null, null);",
-            "    cf.orTimeout(0, MILLISECONDS);",
-            "    cf.completeOnTimeout(null, 0, MILLISECONDS);",
-            "  }",
-            "}")
+            """
+            import java.util.concurrent.CompletableFuture;
+            import static java.util.concurrent.TimeUnit.MILLISECONDS;
+
+            class Test {
+              void f(CompletableFuture<?> cf) {
+                cf.completeAsync(() -> null);
+                cf.completeAsync(() -> null, null);
+                cf.orTimeout(0, MILLISECONDS);
+                cf.completeOnTimeout(null, 0, MILLISECONDS);
+              }
+            }
+            """)
         .doTest();
   }
 }

@@ -55,11 +55,13 @@ public class CompilationTestHelperTest {
                 compilationHelper
                     .addSourceLines(
                         "Test.java",
-                        "public class Test {",
-                        "  public boolean doIt() {",
-                        "    return true;",
-                        "  }",
-                        "}")
+                        """
+                        public class Test {
+                          public boolean doIt() {
+                            return true;
+                          }
+                        }
+                        """)
                     .doTest());
     assertThat(expected).hasMessageThat().contains("Saw unexpected error on line 3");
   }
@@ -73,10 +75,12 @@ public class CompilationTestHelperTest {
                 compilationHelper
                     .addSourceLines(
                         "Test.java",
-                        "public class Test {",
-                        "  // BUG: Diagnostic contains:",
-                        "  public void doIt() {}",
-                        "}")
+                        """
+                        public class Test {
+                          // BUG: Diagnostic contains:
+                          public void doIt() {}
+                        }
+                        """)
                     .doTest());
     assertThat(expected).hasMessageThat().contains("Did not see an error on line 3");
   }
@@ -90,10 +94,12 @@ public class CompilationTestHelperTest {
                 compilationHelper
                     .addSourceLines(
                         "Test.java",
-                        "public class Test {",
-                        "  // BUG: Diagnostic matches: X",
-                        "  public void doIt() {}",
-                        "}")
+                        """
+                        public class Test {
+                          // BUG: Diagnostic matches: X
+                          public void doIt() {}
+                        }
+                        """)
                     .expectErrorMessage("X", Predicates.containsPattern(""))
                     .doTest());
     assertThat(expected).hasMessageThat().contains("Did not see an error on line 3");
@@ -104,12 +110,14 @@ public class CompilationTestHelperTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "public class Test {",
-            "  public boolean doIt() {",
-            "    // BUG: Diagnostic contains: Method may return normally",
-            "    return true;",
-            "  }",
-            "}")
+            """
+            public class Test {
+              public boolean doIt() {
+                // BUG: Diagnostic contains: Method may return normally
+                return true;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -118,12 +126,14 @@ public class CompilationTestHelperTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "public class Test {",
-            "  public boolean doIt() {",
-            "    // BUG: Diagnostic matches: X",
-            "    return true;",
-            "  }",
-            "}")
+            """
+            public class Test {
+              public boolean doIt() {
+                // BUG: Diagnostic matches: X
+                return true;
+              }
+            }
+            """)
         .expectErrorMessage("X", Predicates.containsPattern("Method may return normally"))
         .doTest();
   }
@@ -137,12 +147,14 @@ public class CompilationTestHelperTest {
                 compilationHelper
                     .addSourceLines(
                         "Test.java",
-                        "public class Test {",
-                        "  // BUG: Diagnostic contains:",
-                        "  public boolean doIt() {",
-                        "    return true;",
-                        "  }",
-                        "}")
+                        """
+                        public class Test {
+                          // BUG: Diagnostic contains:
+                          public boolean doIt() {
+                            return true;
+                          }
+                        }
+                        """)
                     .doTest());
     assertThat(expected).hasMessageThat().contains("Did not see an error on line 3");
   }
@@ -156,12 +168,14 @@ public class CompilationTestHelperTest {
                 compilationHelper
                     .addSourceLines(
                         "Test.java",
-                        "public class Test {",
-                        "  // BUG: Diagnostic matches: X",
-                        "  public boolean doIt() {",
-                        "    return true;",
-                        "  }",
-                        "}")
+                        """
+                        public class Test {
+                          // BUG: Diagnostic matches: X
+                          public boolean doIt() {
+                            return true;
+                          }
+                        }
+                        """)
                     .expectErrorMessage("X", Predicates.containsPattern(""))
                     .doTest());
     assertThat(expected).hasMessageThat().contains("Did not see an error on line 3");
@@ -172,16 +186,19 @@ public class CompilationTestHelperTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "public class Test {",
-            "  public boolean doIt() {",
-            "    // BUG: Diagnostic contains: Method may return normally",
-            "    return true;",
-            "  }",
-            "  public String doItAgain() {",
-            "    // BUG: Diagnostic contains: Method may return normally",
-            "    return null;",
-            "  }",
-            "}")
+            """
+            public class Test {
+              public boolean doIt() {
+                // BUG: Diagnostic contains: Method may return normally
+                return true;
+              }
+
+              public String doItAgain() {
+                // BUG: Diagnostic contains: Method may return normally
+                return null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -190,16 +207,19 @@ public class CompilationTestHelperTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "public class Test {",
-            "  public boolean doIt() {",
-            "    // BUG: Diagnostic matches: X",
-            "    return true;",
-            "  }",
-            "  public String doItAgain() {",
-            "    // BUG: Diagnostic matches: X",
-            "    return null;",
-            "  }",
-            "}")
+            """
+            public class Test {
+              public boolean doIt() {
+                // BUG: Diagnostic matches: X
+                return true;
+              }
+
+              public String doItAgain() {
+                // BUG: Diagnostic matches: X
+                return null;
+              }
+            }
+            """)
         .expectErrorMessage("X", Predicates.containsPattern("Method may return normally"))
         .doTest();
   }
@@ -209,16 +229,19 @@ public class CompilationTestHelperTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "public class Test {",
-            "  public boolean doIt() {",
-            "    // BUG: Diagnostic matches: X",
-            "    return true;",
-            "  }",
-            "  public String doItAgain() {",
-            "    // BUG: Diagnostic matches: Y",
-            "    return null;",
-            "  }",
-            "}")
+            """
+            public class Test {
+              public boolean doIt() {
+                // BUG: Diagnostic matches: X
+                return true;
+              }
+
+              public String doItAgain() {
+                // BUG: Diagnostic matches: Y
+                return null;
+              }
+            }
+            """)
         .expectErrorMessage("X", Predicates.containsPattern("Method may return normally"))
         .expectErrorMessage("Y", Predicates.containsPattern("Method may return normally"))
         .doTest();
@@ -269,7 +292,12 @@ public class CompilationTestHelperTest {
   public void expectNoDiagnoticsAndNoDiagnosticsProducedSucceeds() {
     compilationHelper
         .expectNoDiagnostics()
-        .addSourceLines("Test.java", "// BUG: Diagnostic contains:", "public class Test {}")
+        .addSourceLines(
+            "Test.java",
+            """
+            // BUG: Diagnostic contains:
+            public class Test {}
+            """)
         .doTest();
   }
 
@@ -277,7 +305,12 @@ public class CompilationTestHelperTest {
   public void expectNoDiagnoticsAndNoDiagnosticsProducedSucceedsWithMatches() {
     compilationHelper
         .expectNoDiagnostics()
-        .addSourceLines("Test.java", "// BUG: Diagnostic matches: X", "public class Test {}")
+        .addSourceLines(
+            "Test.java",
+            """
+            // BUG: Diagnostic matches: X
+            public class Test {}
+            """)
         .expectErrorMessage("X", Predicates.containsPattern(""))
         .doTest();
   }
@@ -292,12 +325,14 @@ public class CompilationTestHelperTest {
                     .expectNoDiagnostics()
                     .addSourceLines(
                         "Test.java",
-                        "public class Test {",
-                        "  public boolean doIt() {",
-                        "    // BUG: Diagnostic contains:",
-                        "    return true;",
-                        "  }",
-                        "}")
+                        """
+                        public class Test {
+                          public boolean doIt() {
+                            // BUG: Diagnostic contains:
+                            return true;
+                          }
+                        }
+                        """)
                     .doTest());
     assertThat(expected).hasMessageThat().contains("Expected no diagnostics produced, but found 1");
   }
@@ -312,12 +347,14 @@ public class CompilationTestHelperTest {
                     .expectNoDiagnostics()
                     .addSourceLines(
                         "Test.java",
-                        "public class Test {",
-                        "  public boolean doIt() {",
-                        "    // BUG: Diagnostic matches: X",
-                        "    return true;",
-                        "  }",
-                        "}")
+                        """
+                        public class Test {
+                          public boolean doIt() {
+                            // BUG: Diagnostic matches: X
+                            return true;
+                          }
+                        }
+                        """)
                     .expectErrorMessage("X", Predicates.containsPattern(""))
                     .doTest());
     assertThat(expected).hasMessageThat().contains("Expected no diagnostics produced, but found 1");
@@ -347,12 +384,14 @@ public class CompilationTestHelperTest {
         .expectNoDiagnostics()
         .addSourceLines(
             "Test.java",
-            "public class Test {",
-            "  public boolean doIt() {",
-            "    // BUG: Diagnostic contains:",
-            "    return true;",
-            "  }",
-            "}")
+            """
+            public class Test {
+              public boolean doIt() {
+                // BUG: Diagnostic contains:
+                return true;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -364,7 +403,11 @@ public class CompilationTestHelperTest {
             () ->
                 compilationHelper
                     .addSourceLines(
-                        "Test.java", " // BUG: Diagnostic matches: X", "public class Test {}")
+                        "Test.java",
+                        """
+                        // BUG: Diagnostic matches: X
+                        public class Test {}
+                        """)
                     .doTest());
     assertThat(expected).hasMessageThat().contains("No expected error message with key [X]");
   }
@@ -387,7 +430,13 @@ public class CompilationTestHelperTest {
             AssertionError.class,
             () ->
                 CompilationTestHelper.newInstance(PackageTreeChecker.class, getClass())
-                    .addSourceLines("test/Test.java", "package test;", "public class Test {}")
+                    .addSourceLines(
+                        "test/Test.java",
+                        """
+                        package test;
+
+                        public class Test {}
+                        """)
                     .doTest());
     assertThat(expected).hasMessageThat().contains("Package declaration found");
   }
@@ -451,7 +500,13 @@ public class CompilationTestHelperTest {
   public void assertionErrors_causeTestFailures() {
     var compilationTestHelper =
         CompilationTestHelper.newInstance(AssertionFailingChecker.class, getClass())
-            .addSourceLines("test/Test.java", "package test;", "public class Test {}");
+            .addSourceLines(
+                "test/Test.java",
+                """
+                package test;
+
+                public class Test {}
+                """);
     AssertionError expected =
         assertThrows(AssertionError.class, () -> compilationTestHelper.doTest());
     assertThat(expected)

@@ -31,14 +31,17 @@ public class JodaConstructorsTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import org.joda.time.Duration;",
-            "public class TestClass {",
-            "  private static final Duration ONE_MILLI = Duration.millis(1);",
-            "  private static final Duration ONE_SEC = Duration.standardSeconds(1);",
-            "  private static final Duration ONE_MIN = Duration.standardMinutes(1);",
-            "  private static final Duration ONE_HOUR = Duration.standardHours(1);",
-            "  private static final Duration ONE_DAY = Duration.standardDays(1);",
-            "}")
+            """
+            import org.joda.time.Duration;
+
+            public class TestClass {
+              private static final Duration ONE_MILLI = Duration.millis(1);
+              private static final Duration ONE_SEC = Duration.standardSeconds(1);
+              private static final Duration ONE_MIN = Duration.standardMinutes(1);
+              private static final Duration ONE_HOUR = Duration.standardHours(1);
+              private static final Duration ONE_DAY = Duration.standardDays(1);
+            }
+            """)
         .doTest();
   }
 
@@ -47,10 +50,13 @@ public class JodaConstructorsTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import org.joda.time.Duration;",
-            "public class TestClass {",
-            "  private static final Duration ONE_MILLI = new Duration(\"1\");",
-            "}")
+            """
+            import org.joda.time.Duration;
+
+            public class TestClass {
+              private static final Duration ONE_MILLI = new Duration("1");
+            }
+            """)
         .doTest();
   }
 
@@ -59,10 +65,13 @@ public class JodaConstructorsTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import org.joda.time.Duration;",
-            "public class TestClass {",
-            "  private static final Duration INTERVAL = new Duration(42, 48);",
-            "}")
+            """
+            import org.joda.time.Duration;
+
+            public class TestClass {
+              private static final Duration INTERVAL = new Duration(42, 48);
+            }
+            """)
         .doTest();
   }
 
@@ -71,10 +80,13 @@ public class JodaConstructorsTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import org.joda.time.Duration;",
-            "public class TestClass {",
-            "  private static final Duration INTERVAL = new Duration(42, 48L);",
-            "}")
+            """
+            import org.joda.time.Duration;
+
+            public class TestClass {
+              private static final Duration INTERVAL = new Duration(42, 48L);
+            }
+            """)
         .doTest();
   }
 
@@ -83,10 +95,13 @@ public class JodaConstructorsTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import org.joda.time.Duration;",
-            "public class TestClass {",
-            "  private static final Duration INTERVAL = new Duration(42L, 48);",
-            "}")
+            """
+            import org.joda.time.Duration;
+
+            public class TestClass {
+              private static final Duration INTERVAL = new Duration(42L, 48);
+            }
+            """)
         .doTest();
   }
 
@@ -95,10 +110,13 @@ public class JodaConstructorsTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import org.joda.time.Duration;",
-            "public class TestClass {",
-            "  private static final Duration INTERVAL = new Duration(42L, 48L);",
-            "}")
+            """
+            import org.joda.time.Duration;
+
+            public class TestClass {
+              private static final Duration INTERVAL = new Duration(42L, 48L);
+            }
+            """)
         .doTest();
   }
 
@@ -107,11 +125,14 @@ public class JodaConstructorsTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import org.joda.time.Duration;",
-            "public class TestClass {",
-            "  // BUG: Diagnostic contains: Duration ONE_MILLI = Duration.millis(1);",
-            "  private static final Duration ONE_MILLI = new Duration(1);",
-            "}")
+            """
+            import org.joda.time.Duration;
+
+            public class TestClass {
+              // BUG: Diagnostic contains: Duration ONE_MILLI = Duration.millis(1);
+              private static final Duration ONE_MILLI = new Duration(1);
+            }
+            """)
         .doTest();
   }
 
@@ -121,10 +142,13 @@ public class JodaConstructorsTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import org.joda.time.Duration;",
-            "public class TestClass {",
-            "  private static final Duration ONE_MILLI = new Duration(Integer.valueOf(42));",
-            "}")
+            """
+            import org.joda.time.Duration;
+
+            public class TestClass {
+              private static final Duration ONE_MILLI = new Duration(Integer.valueOf(42));
+            }
+            """)
         .doTest();
   }
 
@@ -133,11 +157,14 @@ public class JodaConstructorsTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import org.joda.time.Duration;",
-            "public class TestClass {",
-            "  // BUG: Diagnostic contains: Duration ONE_MILLI = Duration.millis(1L);",
-            "  private static final Duration ONE_MILLI = new Duration(1L);",
-            "}")
+            """
+            import org.joda.time.Duration;
+
+            public class TestClass {
+              // BUG: Diagnostic contains: Duration ONE_MILLI = Duration.millis(1L);
+              private static final Duration ONE_MILLI = new Duration(1L);
+            }
+            """)
         .doTest();
   }
 
@@ -146,10 +173,13 @@ public class JodaConstructorsTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "package org.joda.time;",
-            "public class TestClass {",
-            "  private static final Duration ONE_MILLI = new Duration(1L);",
-            "}")
+            """
+            package org.joda.time;
+
+            public class TestClass {
+              private static final Duration ONE_MILLI = new Duration(1L);
+            }
+            """)
         .doTest();
   }
 
@@ -158,11 +188,13 @@ public class JodaConstructorsTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "public class TestClass {",
-            "  private static final org.joda.time.Duration ONE_MILLI = ",
-            "      // BUG: Diagnostic contains: Did you mean 'org.joda.time.Duration.millis(1L);'",
-            "      new org.joda.time.Duration(1L);",
-            "}")
+            """
+            public class TestClass {
+              private static final org.joda.time.Duration ONE_MILLI =
+                  // BUG: Diagnostic contains: Did you mean 'org.joda.time.Duration.millis(1L);'
+                  new org.joda.time.Duration(1L);
+            }
+            """)
         .doTest();
   }
 
@@ -172,10 +204,13 @@ public class JodaConstructorsTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import org.joda.time.Duration;",
-            "public class TestClass {",
-            "  private static final Duration ONE_MILLI = new Duration(Long.valueOf(1L));",
-            "}")
+            """
+            import org.joda.time.Duration;
+
+            public class TestClass {
+              private static final Duration ONE_MILLI = new Duration(Long.valueOf(1L));
+            }
+            """)
         .doTest();
   }
 
@@ -184,13 +219,16 @@ public class JodaConstructorsTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import org.joda.time.Instant;",
-            "public class TestClass {",
-            "  // BUG: Diagnostic contains: Instant I1 = Instant.now();",
-            "  private static final Instant I1 = new Instant();",
-            "  // BUG: Diagnostic contains: Instant I2 = Instant.ofEpochMilli(42);",
-            "  private static final Instant I2 = new Instant(42);",
-            "}")
+            """
+            import org.joda.time.Instant;
+
+            public class TestClass {
+              // BUG: Diagnostic contains: Instant I1 = Instant.now();
+              private static final Instant I1 = new Instant();
+              // BUG: Diagnostic contains: Instant I2 = Instant.ofEpochMilli(42);
+              private static final Instant I2 = new Instant(42);
+            }
+            """)
         .doTest();
   }
 
@@ -199,12 +237,14 @@ public class JodaConstructorsTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "public class TestClass {",
-            "  // BUG: Diagnostic contains: I1 = org.joda.time.Instant.now();",
-            "  private static final org.joda.time.Instant I1 = new org.joda.time.Instant();",
-            "  // BUG: Diagnostic contains: I2 = org.joda.time.Instant.ofEpochMilli(42);",
-            "  private static final org.joda.time.Instant I2 = new org.joda.time.Instant(42);",
-            "}")
+            """
+            public class TestClass {
+              // BUG: Diagnostic contains: I1 = org.joda.time.Instant.now();
+              private static final org.joda.time.Instant I1 = new org.joda.time.Instant();
+              // BUG: Diagnostic contains: I2 = org.joda.time.Instant.ofEpochMilli(42);
+              private static final org.joda.time.Instant I2 = new org.joda.time.Instant(42);
+            }
+            """)
         .doTest();
   }
 
@@ -213,20 +253,23 @@ public class JodaConstructorsTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import org.joda.time.Chronology;",
-            "import org.joda.time.chrono.GregorianChronology;",
-            "import org.joda.time.DateTime;",
-            "import org.joda.time.DateTimeZone;",
-            "public class TestClass {",
-            "  private static final DateTimeZone NYC = DateTimeZone.forID(\"America/New_York\");",
-            "  private static final Chronology GREG = GregorianChronology.getInstance();",
-            "  // BUG: Diagnostic contains: DateTime NOW = DateTime.now();",
-            "  private static final DateTime NOW = new DateTime();",
-            "  // BUG: Diagnostic contains: DateTime NOW_NYC = DateTime.now(NYC);",
-            "  private static final DateTime NOW_NYC = new DateTime(NYC);",
-            "  // BUG: Diagnostic contains: DateTime NOW_GREG = DateTime.now(GREG);",
-            "  private static final DateTime NOW_GREG = new DateTime(GREG);",
-            "}")
+            """
+            import org.joda.time.Chronology;
+            import org.joda.time.chrono.GregorianChronology;
+            import org.joda.time.DateTime;
+            import org.joda.time.DateTimeZone;
+
+            public class TestClass {
+              private static final DateTimeZone NYC = DateTimeZone.forID("America/New_York");
+              private static final Chronology GREG = GregorianChronology.getInstance();
+              // BUG: Diagnostic contains: DateTime NOW = DateTime.now();
+              private static final DateTime NOW = new DateTime();
+              // BUG: Diagnostic contains: DateTime NOW_NYC = DateTime.now(NYC);
+              private static final DateTime NOW_NYC = new DateTime(NYC);
+              // BUG: Diagnostic contains: DateTime NOW_GREG = DateTime.now(GREG);
+              private static final DateTime NOW_GREG = new DateTime(GREG);
+            }
+            """)
         .doTest();
   }
 }

@@ -33,21 +33,33 @@ public class AutoValueConstructorOrderCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.auto.value.AutoValue;",
-            "@AutoValue",
-            "abstract class Test {",
-            "  abstract String valueOne();",
-            "  abstract String valueTwo();",
-            "  static Test create(String valueOne, String valueTwo) {",
-            "    // BUG: Diagnostic contains: new AutoValue_Test(valueOne, valueTwo)",
-            "    return new AutoValue_Test(valueTwo, valueOne);",
-            "  }",
-            "}",
-            "class AutoValue_Test extends Test {",
-            "  String valueOne() { return null; }",
-            "  String valueTwo() { return null; }",
-            "  AutoValue_Test(String valueOne, String valueTwo) {}",
-            "}")
+            """
+            import com.google.auto.value.AutoValue;
+
+            @AutoValue
+            abstract class Test {
+              abstract String valueOne();
+
+              abstract String valueTwo();
+
+              static Test create(String valueOne, String valueTwo) {
+                // BUG: Diagnostic contains: new AutoValue_Test(valueOne, valueTwo)
+                return new AutoValue_Test(valueTwo, valueOne);
+              }
+            }
+
+            class AutoValue_Test extends Test {
+              String valueOne() {
+                return null;
+              }
+
+              String valueTwo() {
+                return null;
+              }
+
+              AutoValue_Test(String valueOne, String valueTwo) {}
+            }
+            """)
         .doTest();
   }
 
@@ -56,20 +68,32 @@ public class AutoValueConstructorOrderCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.auto.value.AutoValue;",
-            "@AutoValue",
-            "abstract class Test {",
-            "  abstract String valueOne();",
-            "  abstract String valueTwo();",
-            "  static Test create(String valueOneArg, String valueTwoArg) {",
-            "    return new AutoValue_Test(valueTwoArg, valueOneArg);",
-            "  }",
-            "}",
-            "class AutoValue_Test extends Test {",
-            "  String valueOne() { return null; }",
-            "  String valueTwo() { return null; }",
-            "  AutoValue_Test(String valueOne, String valueTwo) {}",
-            "}")
+            """
+            import com.google.auto.value.AutoValue;
+
+            @AutoValue
+            abstract class Test {
+              abstract String valueOne();
+
+              abstract String valueTwo();
+
+              static Test create(String valueOneArg, String valueTwoArg) {
+                return new AutoValue_Test(valueTwoArg, valueOneArg);
+              }
+            }
+
+            class AutoValue_Test extends Test {
+              String valueOne() {
+                return null;
+              }
+
+              String valueTwo() {
+                return null;
+              }
+
+              AutoValue_Test(String valueOne, String valueTwo) {}
+            }
+            """)
         .doTest();
   }
 
@@ -78,20 +102,32 @@ public class AutoValueConstructorOrderCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.auto.value.AutoValue;",
-            "@AutoValue",
-            "abstract class Test {",
-            "  abstract String valueOne();",
-            "  abstract String valueTwo();",
-            "  static Test create(String valueOne, String valueTwo) {",
-            "    return new AutoValue_Test(valueOne, valueTwo);",
-            "  }",
-            "}",
-            "class AutoValue_Test extends Test {",
-            "  String valueOne() { return null; }",
-            "  String valueTwo() { return null; }",
-            "  AutoValue_Test(String valueOne, String valueTwo) {}",
-            "}")
+            """
+            import com.google.auto.value.AutoValue;
+
+            @AutoValue
+            abstract class Test {
+              abstract String valueOne();
+
+              abstract String valueTwo();
+
+              static Test create(String valueOne, String valueTwo) {
+                return new AutoValue_Test(valueOne, valueTwo);
+              }
+            }
+
+            class AutoValue_Test extends Test {
+              String valueOne() {
+                return null;
+              }
+
+              String valueTwo() {
+                return null;
+              }
+
+              AutoValue_Test(String valueOne, String valueTwo) {}
+            }
+            """)
         .doTest();
   }
 }

@@ -55,11 +55,13 @@ public class EqualsIncompatibleTypeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void something(boolean b, Object o) {",
-            "     o.equals(b);",
-            "  }",
-            "}")
+            """
+            class Test {
+              void something(boolean b, Object o) {
+                o.equals(b);
+              }
+            }
+            """)
         .setArgs(Arrays.asList("-source", "1.6", "-target", "1.6"))
         .doTest();
   }
@@ -69,13 +71,16 @@ public class EqualsIncompatibleTypeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  interface B {}",
-            "  <T extends B> void t(T x) {",
-            "    // BUG: Diagnostic contains: T and String",
-            "    x.equals(\"foo\");",
-            "  }",
-            "}")
+            """
+            class Test {
+              interface B {}
+
+              <T extends B> void t(T x) {
+                // BUG: Diagnostic contains: T and String
+                x.equals("foo");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -84,14 +89,18 @@ public class EqualsIncompatibleTypeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  interface B {}",
-            "  interface String {}",
-            "  void t(String x) {",
-            "    // BUG: Diagnostic contains: types Test.String and java.lang.String",
-            "    x.equals(\"foo\");",
-            "  }",
-            "}")
+            """
+            class Test {
+              interface B {}
+
+              interface String {}
+
+              void t(String x) {
+                // BUG: Diagnostic contains: types Test.String and java.lang.String
+                x.equals("foo");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -100,13 +109,16 @@ public class EqualsIncompatibleTypeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.stream.Stream;",
-            "class Test {",
-            "  boolean t(Stream<Integer> xs, String x) {",
-            "    // BUG: Diagnostic contains:",
-            "    return xs.anyMatch(x::equals);",
-            "  }",
-            "}")
+            """
+            import java.util.stream.Stream;
+
+            class Test {
+              boolean t(Stream<Integer> xs, String x) {
+                // BUG: Diagnostic contains:
+                return xs.anyMatch(x::equals);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -115,12 +127,15 @@ public class EqualsIncompatibleTypeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.stream.Stream;",
-            "class Test {",
-            "  boolean t(Stream<Integer> xs, Object x) {",
-            "    return xs.anyMatch(x::equals);",
-            "  }",
-            "}")
+            """
+            import java.util.stream.Stream;
+
+            class Test {
+              boolean t(Stream<Integer> xs, Object x) {
+                return xs.anyMatch(x::equals);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -129,13 +144,14 @@ public class EqualsIncompatibleTypeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "",
-            "public class Test {",
-            "  public void test(Class<? extends Integer> a, Class<? extends String> b) {",
-            "    // BUG: Diagnostic contains:",
-            "    a.equals(b);",
-            "  }",
-            "}")
+            """
+            public class Test {
+              public void test(Class<? extends Integer> a, Class<? extends String> b) {
+                // BUG: Diagnostic contains:
+                a.equals(b);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -144,14 +160,16 @@ public class EqualsIncompatibleTypeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
-            "",
-            "public class Test {",
-            "  public void test(java.lang.reflect.Method m, Class<?> c) {",
-            "    TestProtoMessage.class.equals(m.getParameterTypes()[0]);",
-            "    TestProtoMessage.class.equals(c);",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
+
+            public class Test {
+              public void test(java.lang.reflect.Method m, Class<?> c) {
+                TestProtoMessage.class.equals(m.getParameterTypes()[0]);
+                TestProtoMessage.class.equals(c);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -160,12 +178,18 @@ public class EqualsIncompatibleTypeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  enum E {A, B}",
-            "  public void test() {",
-            "    E.A.equals(E.B);",
-            "  }",
-            "}")
+            """
+            class Test {
+              enum E {
+                A,
+                B
+              }
+
+              public void test() {
+                E.A.equals(E.B);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -174,19 +198,21 @@ public class EqualsIncompatibleTypeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
-            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestOneOfMessage;",
-            "",
-            "public class Test {",
-            "  public void test() {",
-            "    // BUG: Diagnostic contains: . Though",
-            "    TestProtoMessage.newBuilder().equals(TestProtoMessage.newBuilder());",
-            "    // BUG: Diagnostic contains:",
-            "    TestProtoMessage.newBuilder().equals(TestOneOfMessage.newBuilder());",
-            "    // BUG: Diagnostic contains:",
-            "    TestProtoMessage.newBuilder().equals(TestOneOfMessage.getDefaultInstance());",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestOneOfMessage;
+
+            public class Test {
+              public void test() {
+                // BUG: Diagnostic contains: . Though
+                TestProtoMessage.newBuilder().equals(TestProtoMessage.newBuilder());
+                // BUG: Diagnostic contains:
+                TestProtoMessage.newBuilder().equals(TestOneOfMessage.newBuilder());
+                // BUG: Diagnostic contains:
+                TestProtoMessage.newBuilder().equals(TestOneOfMessage.getDefaultInstance());
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -195,12 +221,17 @@ public class EqualsIncompatibleTypeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "public class Test {",
-            "  enum FooBuilder { A }",
-            "  public boolean test(FooBuilder a, FooBuilder b) {",
-            "    return a.equals(b);",
-            "  }",
-            "}")
+            """
+            public class Test {
+              enum FooBuilder {
+                A
+              }
+
+              public boolean test(FooBuilder a, FooBuilder b) {
+                return a.equals(b);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -209,15 +240,16 @@ public class EqualsIncompatibleTypeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
-            "",
-            "public class Test {",
-            "  public void test() {",
-            "    TestProtoMessage.newBuilder().equals(TestProtoMessage.newBuilder());",
-            "    TestProtoMessage.getDefaultInstance()",
-            "        .equals(TestProtoMessage.getDefaultInstance());",
-            "  }",
-            "}")
+            """
+import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
+
+public class Test {
+  public void test() {
+    TestProtoMessage.newBuilder().equals(TestProtoMessage.newBuilder());
+    TestProtoMessage.getDefaultInstance().equals(TestProtoMessage.getDefaultInstance());
+  }
+}
+""")
         .setArgs("-XepOpt:TypeCompatibility:TreatBuildersAsIncomparable=false")
         .doTest();
   }
@@ -227,22 +259,28 @@ public class EqualsIncompatibleTypeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.auto.value.AutoValue;",
-            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
-            "@AutoValue",
-            "abstract class Test {",
-            "  abstract TestProtoMessage.Builder b();",
-            "}")
+            """
+            import com.google.auto.value.AutoValue;
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
+
+            @AutoValue
+            abstract class Test {
+              abstract TestProtoMessage.Builder b();
+            }
+            """)
         .addSourceLines(
             "AutoValue_Test.java",
-            "import javax.annotation.processing.Generated;",
-            "@Generated(\"com.google.auto.value.processor.AutoValueProcessor\")",
-            "abstract class AutoValue_Test extends Test {",
-            "  @Override",
-            "  public boolean equals(Object o) {",
-            "    return ((Test) o).b().equals(b());",
-            "  }",
-            "}")
+            """
+            import javax.annotation.processing.Generated;
+
+            @Generated("com.google.auto.value.processor.AutoValueProcessor")
+            abstract class AutoValue_Test extends Test {
+              @Override
+              public boolean equals(Object o) {
+                return ((Test) o).b().equals(b());
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -251,14 +289,17 @@ public class EqualsIncompatibleTypeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static java.util.function.Predicate.isEqual;",
-            "import java.util.stream.Stream;",
-            "class Test {",
-            "  boolean test(Stream<Long> xs) {",
-            "    // BUG: Diagnostic contains:",
-            "    return xs.allMatch(isEqual(1));",
-            "  }",
-            "}")
+            """
+            import static java.util.function.Predicate.isEqual;
+            import java.util.stream.Stream;
+
+            class Test {
+              boolean test(Stream<Long> xs) {
+                // BUG: Diagnostic contains:
+                return xs.allMatch(isEqual(1));
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -267,13 +308,16 @@ public class EqualsIncompatibleTypeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static java.util.function.Predicate.isEqual;",
-            "import java.util.stream.Stream;",
-            "class Test {",
-            "  boolean test(Stream<Long> xs) {",
-            "    return xs.allMatch(isEqual(1L));",
-            "  }",
-            "}")
+            """
+            import static java.util.function.Predicate.isEqual;
+            import java.util.stream.Stream;
+
+            class Test {
+              boolean test(Stream<Long> xs) {
+                return xs.allMatch(isEqual(1L));
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -282,15 +326,18 @@ public class EqualsIncompatibleTypeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.function.Function;",
-            "import java.util.function.Predicate;",
-            "import java.util.stream.Stream;",
-            "class Test {",
-            "  boolean test(Function<Long, Predicate<Integer>> fn) {",
-            "    // BUG: Diagnostic contains:",
-            "    return test(Predicate::isEqual);",
-            "  }",
-            "}")
+            """
+            import java.util.function.Function;
+            import java.util.function.Predicate;
+            import java.util.stream.Stream;
+
+            class Test {
+              boolean test(Function<Long, Predicate<Integer>> fn) {
+                // BUG: Diagnostic contains:
+                return test(Predicate::isEqual);
+              }
+            }
+            """)
         .doTest();
   }
 }

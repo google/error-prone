@@ -35,27 +35,28 @@ public class UnnecessaryMethodInvocationMatcherTest {
     refactoringTestHelper
         .addInputLines(
             "Test.java",
-            "import static com.google.errorprone.matchers.Matchers.*;",
-            "import com.google.errorprone.matchers.Matcher;",
-            "import com.sun.source.tree.ExpressionTree;",
-            "public class Test {",
-            "  private static final Matcher<ExpressionTree> TO_STRING = ",
-            "    methodInvocation(",
-            "      instanceMethod()",
-            "        .anyClass()",
-            "        .named(\"toString\"));",
-            "}")
+            """
+            import static com.google.errorprone.matchers.Matchers.*;
+            import com.google.errorprone.matchers.Matcher;
+            import com.sun.source.tree.ExpressionTree;
+
+            public class Test {
+              private static final Matcher<ExpressionTree> TO_STRING =
+                  methodInvocation(instanceMethod().anyClass().named("toString"));
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import static com.google.errorprone.matchers.Matchers.*;",
-            "import com.google.errorprone.matchers.Matcher;",
-            "import com.sun.source.tree.ExpressionTree;",
-            "public class Test {",
-            "  private static final Matcher<ExpressionTree> TO_STRING = ",
-            "    instanceMethod()",
-            "      .anyClass()",
-            "      .named(\"toString\");",
-            "}")
+            """
+            import static com.google.errorprone.matchers.Matchers.*;
+            import com.google.errorprone.matchers.Matcher;
+            import com.sun.source.tree.ExpressionTree;
+
+            public class Test {
+              private static final Matcher<ExpressionTree> TO_STRING =
+                  instanceMethod().anyClass().named("toString");
+            }
+            """)
         .doTest();
   }
 
@@ -64,33 +65,28 @@ public class UnnecessaryMethodInvocationMatcherTest {
     refactoringTestHelper
         .addInputLines(
             "Test.java",
-            "import static com.google.errorprone.matchers.Matchers.*;",
-            "import com.google.errorprone.matchers.Matcher;",
-            "import com.sun.source.tree.ExpressionTree;",
-            "public class Test {",
-            "  private static final Matcher<ExpressionTree> STRINGIFY = ",
-            "    methodInvocation(",
-            "      anyOf(",
-            "        instanceMethod()",
-            "          .anyClass()",
-            "          .named(\"toString\"),",
-            "        allOf(",
-            "          staticMethod())));",
-            "}")
+            """
+import static com.google.errorprone.matchers.Matchers.*;
+import com.google.errorprone.matchers.Matcher;
+import com.sun.source.tree.ExpressionTree;
+
+public class Test {
+  private static final Matcher<ExpressionTree> STRINGIFY =
+      methodInvocation(anyOf(instanceMethod().anyClass().named("toString"), allOf(staticMethod())));
+}
+""")
         .addOutputLines(
             "Test.java",
-            "import static com.google.errorprone.matchers.Matchers.*;",
-            "import com.google.errorprone.matchers.Matcher;",
-            "import com.sun.source.tree.ExpressionTree;",
-            "public class Test {",
-            "  private static final Matcher<ExpressionTree> STRINGIFY = ",
-            "    anyOf(",
-            "      instanceMethod()",
-            "        .anyClass()",
-            "        .named(\"toString\"),",
-            "      allOf(",
-            "        staticMethod()));",
-            "}")
+            """
+            import static com.google.errorprone.matchers.Matchers.*;
+            import com.google.errorprone.matchers.Matcher;
+            import com.sun.source.tree.ExpressionTree;
+
+            public class Test {
+              private static final Matcher<ExpressionTree> STRINGIFY =
+                  anyOf(instanceMethod().anyClass().named("toString"), allOf(staticMethod()));
+            }
+            """)
         .doTest();
   }
 
@@ -99,19 +95,19 @@ public class UnnecessaryMethodInvocationMatcherTest {
     refactoringTestHelper
         .addInputLines(
             "Test.java",
-            "import static com.google.errorprone.matchers.Matchers.*;",
-            "import com.google.errorprone.matchers.Matcher;",
-            "import com.sun.source.tree.ExpressionTree;",
-            "public class Test {",
-            "  private static final Matcher<ExpressionTree> STRINGIFY = ",
-            "    methodInvocation(",
-            "      anyOf(",
-            "        instanceMethod()",
-            "          .anyClass()",
-            "          .named(\"toString\"),",
-            "        allOf(",
-            "          hasAnnotation(\"java.lang.SuppressWarnings\"))));",
-            "}")
+            """
+            import static com.google.errorprone.matchers.Matchers.*;
+            import com.google.errorprone.matchers.Matcher;
+            import com.sun.source.tree.ExpressionTree;
+
+            public class Test {
+              private static final Matcher<ExpressionTree> STRINGIFY =
+                  methodInvocation(
+                      anyOf(
+                          instanceMethod().anyClass().named("toString"),
+                          allOf(hasAnnotation("java.lang.SuppressWarnings"))));
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -121,19 +117,17 @@ public class UnnecessaryMethodInvocationMatcherTest {
     refactoringTestHelper
         .addInputLines(
             "Test.java",
-            "import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.ALL;",
-            "import static com.google.errorprone.matchers.Matchers.*;",
-            "import com.google.errorprone.matchers.Matcher;",
-            "import com.sun.source.tree.ExpressionTree;",
-            "public class Test {",
-            "  private static final Matcher<ExpressionTree> TO_STRING = ",
-            "    methodInvocation(",
-            "      instanceMethod()",
-            "        .anyClass()",
-            "        .named(\"toString\"),",
-            "      ALL,",
-            "      isVariable());",
-            "}")
+            """
+import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.ALL;
+import static com.google.errorprone.matchers.Matchers.*;
+import com.google.errorprone.matchers.Matcher;
+import com.sun.source.tree.ExpressionTree;
+
+public class Test {
+  private static final Matcher<ExpressionTree> TO_STRING =
+      methodInvocation(instanceMethod().anyClass().named("toString"), ALL, isVariable());
+}
+""")
         .expectUnchanged()
         .doTest();
   }
@@ -143,31 +137,31 @@ public class UnnecessaryMethodInvocationMatcherTest {
     refactoringTestHelper
         .addInputLines(
             "Test.java",
-            "import static com.google.errorprone.matchers.Matchers.*;",
-            "import com.google.errorprone.matchers.Matcher;",
-            "import com.sun.source.tree.StatementTree;",
-            "public class Test {",
-            "  private static final Matcher<StatementTree> TARGETED =",
-            "      expressionStatement(",
-            "          methodInvocation(",
-            "              instanceMethod()",
-            "                  .onDescendantOfAny(",
-            "                      \"java.lang.Class\",",
-            "                      \"java.lang.String\")));",
-            "}")
+            """
+import static com.google.errorprone.matchers.Matchers.*;
+import com.google.errorprone.matchers.Matcher;
+import com.sun.source.tree.StatementTree;
+
+public class Test {
+  private static final Matcher<StatementTree> TARGETED =
+      expressionStatement(
+          methodInvocation(
+              instanceMethod().onDescendantOfAny("java.lang.Class", "java.lang.String")));
+}
+""")
         .addOutputLines(
             "Test.java",
-            "import static com.google.errorprone.matchers.Matchers.*;",
-            "import com.google.errorprone.matchers.Matcher;",
-            "import com.sun.source.tree.StatementTree;",
-            "public class Test {",
-            "  private static final Matcher<StatementTree> TARGETED =",
-            "      expressionStatement(",
-            "          instanceMethod()",
-            "              .onDescendantOfAny(",
-            "                  \"java.lang.Class\",",
-            "                  \"java.lang.String\"));",
-            "}")
+            """
+            import static com.google.errorprone.matchers.Matchers.*;
+            import com.google.errorprone.matchers.Matcher;
+            import com.sun.source.tree.StatementTree;
+
+            public class Test {
+              private static final Matcher<StatementTree> TARGETED =
+                  expressionStatement(
+                      instanceMethod().onDescendantOfAny("java.lang.Class", "java.lang.String"));
+            }
+            """)
         .doTest();
   }
 }

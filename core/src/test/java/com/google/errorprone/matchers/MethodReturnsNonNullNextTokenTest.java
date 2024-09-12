@@ -36,13 +36,16 @@ public class MethodReturnsNonNullNextTokenTest extends CompilerBasedAbstractTest
   public void shouldMatch() {
     writeFile(
         "A.java",
-        "import java.util.StringTokenizer;",
-        "public class A {",
-        "  public void testNextToken() {",
-        "    StringTokenizer st = new StringTokenizer(\"test string\");",
-        "    st.nextToken();",
-        "  }",
-        "}");
+        """
+        import java.util.StringTokenizer;
+
+        public class A {
+          public void testNextToken() {
+            StringTokenizer st = new StringTokenizer("test string");
+            st.nextToken();
+          }
+        }
+        """);
     assertCompiles(
         methodInvocationMatches(/* shouldMatch= */ true, Matchers.methodReturnsNonNull()));
   }
@@ -51,13 +54,16 @@ public class MethodReturnsNonNullNextTokenTest extends CompilerBasedAbstractTest
   public void shouldNotMatchOtherMethod() {
     writeFile(
         "A.java",
-        "import java.util.StringTokenizer;",
-        "public class A {",
-        "  public void testOtherMethod() {",
-        "    StringTokenizer st = new StringTokenizer(\"test string\");",
-        "    st.hasMoreTokens();",
-        "  }",
-        "}");
+        """
+        import java.util.StringTokenizer;
+
+        public class A {
+          public void testOtherMethod() {
+            StringTokenizer st = new StringTokenizer("test string");
+            st.hasMoreTokens();
+          }
+        }
+        """);
     assertCompiles(
         methodInvocationMatches(/* shouldMatch= */ false, Matchers.methodReturnsNonNull()));
   }
@@ -66,19 +72,24 @@ public class MethodReturnsNonNullNextTokenTest extends CompilerBasedAbstractTest
   public void shouldNotMatchOverriddenMethod() {
     writeFile(
         "A.java",
-        "import java.util.StringTokenizer;",
-        "public class A extends StringTokenizer {",
-        "  public A(String str, String delim, boolean returnDelims) {",
-        "    super(str, delim, returnDelims);",
-        "  }",
-        "  @Override",
-        "  public String nextToken() {",
-        "    return \"overridden method\";",
-        "  }",
-        "  public void testOverriddenNextToken() {",
-        "    nextToken();",
-        "  }",
-        "}");
+        """
+        import java.util.StringTokenizer;
+
+        public class A extends StringTokenizer {
+          public A(String str, String delim, boolean returnDelims) {
+            super(str, delim, returnDelims);
+          }
+
+          @Override
+          public String nextToken() {
+            return "overridden method";
+          }
+
+          public void testOverriddenNextToken() {
+            nextToken();
+          }
+        }
+        """);
     assertCompiles(
         methodInvocationMatches(/* shouldMatch= */ false, Matchers.methodReturnsNonNull()));
   }

@@ -30,22 +30,28 @@ public class DeduplicateConstantsTest {
     BugCheckerRefactoringTestHelper.newInstance(DeduplicateConstants.class, getClass())
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  static final String C = \"hello world\";",
-            "  void f() {",
-            "    System.err.println(\"hello world\");",
-            "    System.err.println(\"hello world\");",
-            "  }",
-            "}")
+            """
+            class Test {
+              static final String C = "hello world";
+
+              void f() {
+                System.err.println("hello world");
+                System.err.println("hello world");
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "class Test {",
-            "  static final String C = \"hello world\";",
-            "  void f() {",
-            "    System.err.println(C);",
-            "    System.err.println(C);",
-            "  }",
-            "}")
+            """
+            class Test {
+              static final String C = "hello world";
+
+              void f() {
+                System.err.println(C);
+                System.err.println(C);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -54,22 +60,26 @@ public class DeduplicateConstantsTest {
     BugCheckerRefactoringTestHelper.newInstance(DeduplicateConstants.class, getClass())
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  void f() {",
-            "    String C = \"hello world\";",
-            "    System.err.println(\"hello world\");",
-            "    System.err.println(\"hello world\");",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f() {
+                String C = "hello world";
+                System.err.println("hello world");
+                System.err.println("hello world");
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "class Test {",
-            "  void f() {",
-            "    String C = \"hello world\";",
-            "    System.err.println(C);",
-            "    System.err.println(C);",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f() {
+                String C = "hello world";
+                System.err.println(C);
+                System.err.println(C);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -78,15 +88,19 @@ public class DeduplicateConstantsTest {
     BugCheckerRefactoringTestHelper.newInstance(DeduplicateConstants.class, getClass())
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  static final String C = \"hello\";",
-            "  class One {",
-            "    static final String C = \"hello\";",
-            "  }",
-            "  class Two {",
-            "    static final String C = \"hello\";",
-            "  }",
-            "}")
+            """
+            class Test {
+              static final String C = "hello";
+
+              class One {
+                static final String C = "hello";
+              }
+
+              class Two {
+                static final String C = "hello";
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -96,12 +110,15 @@ public class DeduplicateConstantsTest {
     BugCheckerRefactoringTestHelper.newInstance(DeduplicateConstants.class, getClass())
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  static final String C = \"hello world\";",
-            "  void f() {",
-            "    System.err.println(\"hello world\");",
-            "  }",
-            "}")
+            """
+            class Test {
+              static final String C = "hello world";
+
+              void f() {
+                System.err.println("hello world");
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -111,14 +128,17 @@ public class DeduplicateConstantsTest {
     BugCheckerRefactoringTestHelper.newInstance(DeduplicateConstants.class, getClass())
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  static final String C = \".\";",
-            "  void f() {",
-            "    System.err.println(\".\");",
-            "    System.err.println(\".\");",
-            "    System.err.println(\".\");",
-            "  }",
-            "}")
+            """
+            class Test {
+              static final String C = ".";
+
+              void f() {
+                System.err.println(".");
+                System.err.println(".");
+                System.err.println(".");
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }

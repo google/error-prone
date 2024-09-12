@@ -38,18 +38,21 @@ public final class MixedMutabilityReturnTypeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.Collections;",
-            "import java.util.List;",
-            "import java.util.ArrayList;",
-            "class Test {",
-            "  // BUG: Diagnostic contains: MixedMutabilityReturnType",
-            "  List<Integer> foo() {",
-            "    if (hashCode() > 0) {",
-            "      return Collections.emptyList();",
-            "    }",
-            "    return new ArrayList<>();",
-            "  }",
-            "}")
+            """
+            import java.util.Collections;
+            import java.util.List;
+            import java.util.ArrayList;
+
+            class Test {
+              // BUG: Diagnostic contains: MixedMutabilityReturnType
+              List<Integer> foo() {
+                if (hashCode() > 0) {
+                  return Collections.emptyList();
+                }
+                return new ArrayList<>();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -58,18 +61,21 @@ public final class MixedMutabilityReturnTypeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.Collections;",
-            "import java.util.List;",
-            "import java.util.ArrayList;",
-            "class Test {",
-            "  @SuppressWarnings(\"MixedMutabilityReturnType\")",
-            "  List<Integer> foo() {",
-            "    if (hashCode() > 0) {",
-            "      return Collections.emptyList();",
-            "    }",
-            "    return new ArrayList<>();",
-            "  }",
-            "}")
+            """
+            import java.util.Collections;
+            import java.util.List;
+            import java.util.ArrayList;
+
+            class Test {
+              @SuppressWarnings("MixedMutabilityReturnType")
+              List<Integer> foo() {
+                if (hashCode() > 0) {
+                  return Collections.emptyList();
+                }
+                return new ArrayList<>();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -78,19 +84,22 @@ public final class MixedMutabilityReturnTypeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.Collections;",
-            "import java.util.List;",
-            "import java.util.ArrayList;",
-            "class Test {",
-            "  // BUG: Diagnostic contains: MixedMutabilityReturnType",
-            "  List<Integer> foo() {",
-            "    if (hashCode() > 0) {",
-            "      return Collections.emptyList();",
-            "    }",
-            "    List<Integer> ints = new ArrayList<>();",
-            "    return ints;",
-            "  }",
-            "}")
+            """
+            import java.util.Collections;
+            import java.util.List;
+            import java.util.ArrayList;
+
+            class Test {
+              // BUG: Diagnostic contains: MixedMutabilityReturnType
+              List<Integer> foo() {
+                if (hashCode() > 0) {
+                  return Collections.emptyList();
+                }
+                List<Integer> ints = new ArrayList<>();
+                return ints;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -99,20 +108,24 @@ public final class MixedMutabilityReturnTypeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.Collections;",
-            "import java.util.List;",
-            "import java.util.ArrayList;",
-            "class Test {",
-            "  List<Integer> foo() {",
-            "    if (hashCode() > 0) {",
-            "      return Collections.emptyList();",
-            "    }",
-            "    return bar();",
-            "  }",
-            "  List<Integer> bar() {",
-            "    return new ArrayList<>();",
-            "  }",
-            "}")
+            """
+            import java.util.Collections;
+            import java.util.List;
+            import java.util.ArrayList;
+
+            class Test {
+              List<Integer> foo() {
+                if (hashCode() > 0) {
+                  return Collections.emptyList();
+                }
+                return bar();
+              }
+
+              List<Integer> bar() {
+                return new ArrayList<>();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -121,17 +134,20 @@ public final class MixedMutabilityReturnTypeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.Collections;",
-            "import java.util.List;",
-            "import java.util.ArrayList;",
-            "class Test {",
-            "  List<Integer> foo() {",
-            "    if (hashCode() > 0) {",
-            "      return Collections.emptyList();",
-            "    }",
-            "    return Collections.singletonList(1);",
-            "  }",
-            "}")
+            """
+            import java.util.Collections;
+            import java.util.List;
+            import java.util.ArrayList;
+
+            class Test {
+              List<Integer> foo() {
+                if (hashCode() > 0) {
+                  return Collections.emptyList();
+                }
+                return Collections.singletonList(1);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -140,17 +156,20 @@ public final class MixedMutabilityReturnTypeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.Collections;",
-            "import java.util.List;",
-            "import java.util.ArrayList;",
-            "class Test {",
-            "  List<Integer> foo() {",
-            "    if (hashCode() > 0) {",
-            "      return null;",
-            "    }",
-            "    return Collections.singletonList(1);",
-            "  }",
-            "}")
+            """
+            import java.util.Collections;
+            import java.util.List;
+            import java.util.ArrayList;
+
+            class Test {
+              List<Integer> foo() {
+                if (hashCode() > 0) {
+                  return null;
+                }
+                return Collections.singletonList(1);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -159,14 +178,21 @@ public final class MixedMutabilityReturnTypeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.collect.Sets;",
-            "import java.util.Set;",
-            "class Test {",
-            "  enum E { A, B }",
-            "  Set<E> test() {",
-            "    return Sets.immutableEnumSet(E.A);",
-            "  }",
-            "}")
+            """
+            import com.google.common.collect.Sets;
+            import java.util.Set;
+
+            class Test {
+              enum E {
+                A,
+                B
+              }
+
+              Set<E> test() {
+                return Sets.immutableEnumSet(E.A);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -175,35 +201,41 @@ public final class MixedMutabilityReturnTypeTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "import java.util.ArrayList;",
-            "import java.util.Collections;",
-            "import java.util.List;",
-            "final class Test {",
-            "  List<Integer> foo() {",
-            "    if (hashCode() > 0) {",
-            "      return Collections.emptyList();",
-            "    }",
-            "    List<Integer> ints = new ArrayList<>();",
-            "    ints.add(1);",
-            "    return ints;",
-            "  }",
-            "}")
+            """
+            import java.util.ArrayList;
+            import java.util.Collections;
+            import java.util.List;
+
+            final class Test {
+              List<Integer> foo() {
+                if (hashCode() > 0) {
+                  return Collections.emptyList();
+                }
+                List<Integer> ints = new ArrayList<>();
+                ints.add(1);
+                return ints;
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import com.google.common.collect.ImmutableList;",
-            "import java.util.ArrayList;",
-            "import java.util.Collections;",
-            "import java.util.List;",
-            "final class Test {",
-            "  ImmutableList<Integer> foo() {",
-            "    if (hashCode() > 0) {",
-            "      return ImmutableList.of();",
-            "    }",
-            "    ImmutableList.Builder<Integer> ints = ImmutableList.builder();",
-            "    ints.add(1);",
-            "    return ints.build();",
-            "  }",
-            "}")
+            """
+            import com.google.common.collect.ImmutableList;
+            import java.util.ArrayList;
+            import java.util.Collections;
+            import java.util.List;
+
+            final class Test {
+              ImmutableList<Integer> foo() {
+                if (hashCode() > 0) {
+                  return ImmutableList.of();
+                }
+                ImmutableList.Builder<Integer> ints = ImmutableList.builder();
+                ints.add(1);
+                return ints.build();
+              }
+            }
+            """)
         .setFixChooser(FixChoosers.SECOND)
         .doTest();
   }
@@ -213,35 +245,41 @@ public final class MixedMutabilityReturnTypeTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "import java.util.ArrayList;",
-            "import java.util.Collections;",
-            "import java.util.List;",
-            "class Test {",
-            "  List<Integer> foo() {",
-            "    if (hashCode() > 0) {",
-            "      return Collections.emptyList();",
-            "    }",
-            "    List<Integer> ints = new ArrayList<>();",
-            "    ints.add(1);",
-            "    return ints;",
-            "  }",
-            "}")
+            """
+            import java.util.ArrayList;
+            import java.util.Collections;
+            import java.util.List;
+
+            class Test {
+              List<Integer> foo() {
+                if (hashCode() > 0) {
+                  return Collections.emptyList();
+                }
+                List<Integer> ints = new ArrayList<>();
+                ints.add(1);
+                return ints;
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import com.google.common.collect.ImmutableList;",
-            "import java.util.ArrayList;",
-            "import java.util.Collections;",
-            "import java.util.List;",
-            "class Test {",
-            "  List<Integer> foo() {",
-            "    if (hashCode() > 0) {",
-            "      return ImmutableList.of();",
-            "    }",
-            "    List<Integer> ints = new ArrayList<>();",
-            "    ints.add(1);",
-            "    return ImmutableList.copyOf(ints);",
-            "  }",
-            "}")
+            """
+            import com.google.common.collect.ImmutableList;
+            import java.util.ArrayList;
+            import java.util.Collections;
+            import java.util.List;
+
+            class Test {
+              List<Integer> foo() {
+                if (hashCode() > 0) {
+                  return ImmutableList.of();
+                }
+                List<Integer> ints = new ArrayList<>();
+                ints.add(1);
+                return ImmutableList.copyOf(ints);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -250,40 +288,46 @@ public final class MixedMutabilityReturnTypeTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "import com.google.common.collect.ImmutableList;",
-            "import java.util.ArrayList;",
-            "import java.util.Collections;",
-            "import java.util.List;",
-            "final class Test {",
-            "  List<Integer> foo() {",
-            "    if (hashCode() > 0) {",
-            "      return ImmutableList.of();",
-            "    }",
-            "    List<Integer> ints = new ArrayList<>();",
-            "    ints.add(1);",
-            "    ints.clear();",
-            "    ints.add(2);",
-            "    return ints;",
-            "  }",
-            "}")
+            """
+            import com.google.common.collect.ImmutableList;
+            import java.util.ArrayList;
+            import java.util.Collections;
+            import java.util.List;
+
+            final class Test {
+              List<Integer> foo() {
+                if (hashCode() > 0) {
+                  return ImmutableList.of();
+                }
+                List<Integer> ints = new ArrayList<>();
+                ints.add(1);
+                ints.clear();
+                ints.add(2);
+                return ints;
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import com.google.common.collect.ImmutableList;",
-            "import java.util.ArrayList;",
-            "import java.util.Collections;",
-            "import java.util.List;",
-            "final class Test {",
-            "  ImmutableList<Integer> foo() {",
-            "    if (hashCode() > 0) {",
-            "      return ImmutableList.of();",
-            "    }",
-            "    List<Integer> ints = new ArrayList<>();",
-            "    ints.add(1);",
-            "    ints.clear();",
-            "    ints.add(2);",
-            "    return ImmutableList.copyOf(ints);",
-            "  }",
-            "}")
+            """
+            import com.google.common.collect.ImmutableList;
+            import java.util.ArrayList;
+            import java.util.Collections;
+            import java.util.List;
+
+            final class Test {
+              ImmutableList<Integer> foo() {
+                if (hashCode() > 0) {
+                  return ImmutableList.of();
+                }
+                List<Integer> ints = new ArrayList<>();
+                ints.add(1);
+                ints.clear();
+                ints.add(2);
+                return ImmutableList.copyOf(ints);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -292,34 +336,40 @@ public final class MixedMutabilityReturnTypeTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "import com.google.common.collect.ImmutableMap;",
-            "import java.util.HashMap;",
-            "import java.util.Map;",
-            "final class Test {",
-            "  Map<Integer, Integer> foo() {",
-            "    if (hashCode() > 0) {",
-            "      return ImmutableMap.of(1, 1);",
-            "    }",
-            "    Map<Integer, Integer> ints = new HashMap<>();",
-            "    ints.put(2, 2);",
-            "    return ints;",
-            "  }",
-            "}")
+            """
+            import com.google.common.collect.ImmutableMap;
+            import java.util.HashMap;
+            import java.util.Map;
+
+            final class Test {
+              Map<Integer, Integer> foo() {
+                if (hashCode() > 0) {
+                  return ImmutableMap.of(1, 1);
+                }
+                Map<Integer, Integer> ints = new HashMap<>();
+                ints.put(2, 2);
+                return ints;
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import com.google.common.collect.ImmutableMap;",
-            "import java.util.HashMap;",
-            "import java.util.Map;",
-            "final class Test {",
-            "  ImmutableMap<Integer, Integer> foo() {",
-            "    if (hashCode() > 0) {",
-            "      return ImmutableMap.of(1, 1);",
-            "    }",
-            "    ImmutableMap.Builder<Integer, Integer> ints = ImmutableMap.builder();",
-            "    ints.put(2, 2);",
-            "    return ints.build();",
-            "  }",
-            "}")
+            """
+            import com.google.common.collect.ImmutableMap;
+            import java.util.HashMap;
+            import java.util.Map;
+
+            final class Test {
+              ImmutableMap<Integer, Integer> foo() {
+                if (hashCode() > 0) {
+                  return ImmutableMap.of(1, 1);
+                }
+                ImmutableMap.Builder<Integer, Integer> ints = ImmutableMap.builder();
+                ints.put(2, 2);
+                return ints.build();
+              }
+            }
+            """)
         .setFixChooser(FixChoosers.SECOND)
         .doTest();
   }
@@ -329,44 +379,50 @@ public final class MixedMutabilityReturnTypeTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "import com.google.common.collect.ImmutableList;",
-            "import com.google.common.collect.Lists;",
-            "import java.util.List;",
-            "final class Test {",
-            "  List<Integer> foo() {",
-            "    if (hashCode() > 0) {",
-            "      return ImmutableList.of(1);",
-            "    } else if (hashCode() < 0) {",
-            "      List<Integer> ints = Lists.newArrayList();",
-            "      ints.add(2);",
-            "      return ints;",
-            "    } else {",
-            "      List<Integer> ints = Lists.newArrayList(1, 3);",
-            "      ints.add(2);",
-            "      return ints;",
-            "    }",
-            "  }",
-            "}")
+            """
+            import com.google.common.collect.ImmutableList;
+            import com.google.common.collect.Lists;
+            import java.util.List;
+
+            final class Test {
+              List<Integer> foo() {
+                if (hashCode() > 0) {
+                  return ImmutableList.of(1);
+                } else if (hashCode() < 0) {
+                  List<Integer> ints = Lists.newArrayList();
+                  ints.add(2);
+                  return ints;
+                } else {
+                  List<Integer> ints = Lists.newArrayList(1, 3);
+                  ints.add(2);
+                  return ints;
+                }
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import com.google.common.collect.ImmutableList;",
-            "import com.google.common.collect.Lists;",
-            "import java.util.List;",
-            "final class Test {",
-            "  ImmutableList<Integer> foo() {",
-            "    if (hashCode() > 0) {",
-            "      return ImmutableList.of(1);",
-            "    } else if (hashCode() < 0) {",
-            "      ImmutableList.Builder<Integer> ints = ImmutableList.builder();",
-            "      ints.add(2);",
-            "      return ints.build();",
-            "    } else {",
-            "      List<Integer> ints = Lists.newArrayList(1, 3);",
-            "      ints.add(2);",
-            "      return ImmutableList.copyOf(ints);",
-            "    }",
-            "  }",
-            "}")
+            """
+            import com.google.common.collect.ImmutableList;
+            import com.google.common.collect.Lists;
+            import java.util.List;
+
+            final class Test {
+              ImmutableList<Integer> foo() {
+                if (hashCode() > 0) {
+                  return ImmutableList.of(1);
+                } else if (hashCode() < 0) {
+                  ImmutableList.Builder<Integer> ints = ImmutableList.builder();
+                  ints.add(2);
+                  return ints.build();
+                } else {
+                  List<Integer> ints = Lists.newArrayList(1, 3);
+                  ints.add(2);
+                  return ImmutableList.copyOf(ints);
+                }
+              }
+            }
+            """)
         .setFixChooser(FixChoosers.SECOND)
         .doTest();
   }
@@ -376,34 +432,40 @@ public final class MixedMutabilityReturnTypeTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "import com.google.common.collect.ImmutableMap;",
-            "import java.util.Map;",
-            "import java.util.TreeMap;",
-            "final class Test {",
-            "  Map<Integer, Integer> foo() {",
-            "    if (hashCode() > 0) {",
-            "      return ImmutableMap.of(1, 1);",
-            "    }",
-            "    Map<Integer, Integer> ints = new TreeMap<>();",
-            "    ints.put(2, 1);",
-            "    return ints;",
-            "  }",
-            "}")
+            """
+            import com.google.common.collect.ImmutableMap;
+            import java.util.Map;
+            import java.util.TreeMap;
+
+            final class Test {
+              Map<Integer, Integer> foo() {
+                if (hashCode() > 0) {
+                  return ImmutableMap.of(1, 1);
+                }
+                Map<Integer, Integer> ints = new TreeMap<>();
+                ints.put(2, 1);
+                return ints;
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import com.google.common.collect.ImmutableMap;",
-            "import java.util.Map;",
-            "import java.util.TreeMap;",
-            "final class Test {",
-            "  ImmutableMap<Integer, Integer> foo() {",
-            "    if (hashCode() > 0) {",
-            "      return ImmutableMap.of(1, 1);",
-            "    }",
-            "    Map<Integer, Integer> ints = new TreeMap<>();",
-            "    ints.put(2, 1);",
-            "    return ImmutableMap.copyOf(ints);",
-            "  }",
-            "}")
+            """
+            import com.google.common.collect.ImmutableMap;
+            import java.util.Map;
+            import java.util.TreeMap;
+
+            final class Test {
+              ImmutableMap<Integer, Integer> foo() {
+                if (hashCode() > 0) {
+                  return ImmutableMap.of(1, 1);
+                }
+                Map<Integer, Integer> ints = new TreeMap<>();
+                ints.put(2, 1);
+                return ImmutableMap.copyOf(ints);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -412,35 +474,43 @@ public final class MixedMutabilityReturnTypeTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "import java.util.ArrayList;",
-            "import java.util.Collections;",
-            "import java.util.List;",
-            "class Test {",
-            "  List<Integer> ints = new ArrayList<>();",
-            "  List<Integer> foo() {",
-            "    if (hashCode() > 0) {",
-            "      return Collections.emptyList();",
-            "    }",
-            "    ints.add(1);",
-            "    return ints;",
-            "  }",
-            "}")
+            """
+            import java.util.ArrayList;
+            import java.util.Collections;
+            import java.util.List;
+
+            class Test {
+              List<Integer> ints = new ArrayList<>();
+
+              List<Integer> foo() {
+                if (hashCode() > 0) {
+                  return Collections.emptyList();
+                }
+                ints.add(1);
+                return ints;
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import com.google.common.collect.ImmutableList;",
-            "import java.util.ArrayList;",
-            "import java.util.Collections;",
-            "import java.util.List;",
-            "class Test {",
-            "  List<Integer> ints = new ArrayList<>();",
-            "  List<Integer> foo() {",
-            "    if (hashCode() > 0) {",
-            "      return ImmutableList.of();",
-            "    }",
-            "    ints.add(1);",
-            "    return ImmutableList.copyOf(ints);",
-            "  }",
-            "}")
+            """
+            import com.google.common.collect.ImmutableList;
+            import java.util.ArrayList;
+            import java.util.Collections;
+            import java.util.List;
+
+            class Test {
+              List<Integer> ints = new ArrayList<>();
+
+              List<Integer> foo() {
+                if (hashCode() > 0) {
+                  return ImmutableList.of();
+                }
+                ints.add(1);
+                return ImmutableList.copyOf(ints);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -449,31 +519,37 @@ public final class MixedMutabilityReturnTypeTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "import java.util.ArrayList;",
-            "import java.util.Collections;",
-            "import java.util.List;",
-            "class Test {",
-            "  <T> List<T> foo(T a) {",
-            "    if (hashCode() > 0) {",
-            "      return new ArrayList<>(Collections.singleton(a));",
-            "    }",
-            "    return Collections.singletonList(a);",
-            "  }",
-            "}")
+            """
+            import java.util.ArrayList;
+            import java.util.Collections;
+            import java.util.List;
+
+            class Test {
+              <T> List<T> foo(T a) {
+                if (hashCode() > 0) {
+                  return new ArrayList<>(Collections.singleton(a));
+                }
+                return Collections.singletonList(a);
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import com.google.common.collect.ImmutableList;",
-            "import java.util.ArrayList;",
-            "import java.util.Collections;",
-            "import java.util.List;",
-            "class Test {",
-            "  <T> List<T> foo(T a) {",
-            "    if (hashCode() > 0) {",
-            "      return ImmutableList.copyOf(new ArrayList<>(Collections.singleton(a)));",
-            "    }",
-            "    return ImmutableList.of(a);",
-            "  }",
-            "}")
+            """
+            import com.google.common.collect.ImmutableList;
+            import java.util.ArrayList;
+            import java.util.Collections;
+            import java.util.List;
+
+            class Test {
+              <T> List<T> foo(T a) {
+                if (hashCode() > 0) {
+                  return ImmutableList.copyOf(new ArrayList<>(Collections.singleton(a)));
+                }
+                return ImmutableList.of(a);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -483,35 +559,41 @@ public final class MixedMutabilityReturnTypeTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "import java.util.ArrayList;",
-            "import java.util.Collections;",
-            "import java.util.List;",
-            "final class Test {",
-            "  List<Object> foo() {",
-            "    if (hashCode() > 0) {",
-            "      return Collections.emptyList();",
-            "    }",
-            "    var ints = new ArrayList<>();",
-            "    ints.add(1);",
-            "    return ints;",
-            "  }",
-            "}")
+            """
+            import java.util.ArrayList;
+            import java.util.Collections;
+            import java.util.List;
+
+            final class Test {
+              List<Object> foo() {
+                if (hashCode() > 0) {
+                  return Collections.emptyList();
+                }
+                var ints = new ArrayList<>();
+                ints.add(1);
+                return ints;
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import com.google.common.collect.ImmutableList;",
-            "import java.util.ArrayList;",
-            "import java.util.Collections;",
-            "import java.util.List;",
-            "final class Test {",
-            "  ImmutableList<Object> foo() {",
-            "    if (hashCode() > 0) {",
-            "      return ImmutableList.of();",
-            "    }",
-            "    var ints = ImmutableList.builder();",
-            "    ints.add(1);",
-            "    return ints.build();",
-            "  }",
-            "}")
+            """
+            import com.google.common.collect.ImmutableList;
+            import java.util.ArrayList;
+            import java.util.Collections;
+            import java.util.List;
+
+            final class Test {
+              ImmutableList<Object> foo() {
+                if (hashCode() > 0) {
+                  return ImmutableList.of();
+                }
+                var ints = ImmutableList.builder();
+                ints.add(1);
+                return ints.build();
+              }
+            }
+            """)
         .setFixChooser(FixChoosers.SECOND)
         .doTest();
   }
@@ -522,18 +604,21 @@ public final class MixedMutabilityReturnTypeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.collect.BiMap;",
-            "import com.google.common.collect.HashBiMap;",
-            "import com.google.common.collect.ImmutableBiMap;",
-            "class Test {",
-            "  // BUG: Diagnostic contains: MixedMutabilityReturnType",
-            "  public BiMap<String, String> foo() {",
-            "      if (hashCode() > 0) {",
-            "      return ImmutableBiMap.of();",
-            "    }",
-            "    return HashBiMap.create(5);",
-            "  }",
-            "}")
+            """
+            import com.google.common.collect.BiMap;
+            import com.google.common.collect.HashBiMap;
+            import com.google.common.collect.ImmutableBiMap;
+
+            class Test {
+              // BUG: Diagnostic contains: MixedMutabilityReturnType
+              public BiMap<String, String> foo() {
+                if (hashCode() > 0) {
+                  return ImmutableBiMap.of();
+                }
+                return HashBiMap.create(5);
+              }
+            }
+            """)
         .doTest();
   }
 }

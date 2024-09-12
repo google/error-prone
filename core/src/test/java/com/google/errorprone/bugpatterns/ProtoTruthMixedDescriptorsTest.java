@@ -38,17 +38,19 @@ public final class ProtoTruthMixedDescriptorsTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.truth.extensions.proto.ProtoTruth.assertThat;",
-            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;",
-            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
-            "final class Test {",
-            "  void test() {",
-            "    assertThat(TestFieldProtoMessage.getDefaultInstance())",
-            "        // BUG: Diagnostic contains:",
-            "        .ignoringFields(",
-            "            TestProtoMessage.MESSAGE_FIELD_NUMBER);",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.extensions.proto.ProtoTruth.assertThat;
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
+
+            final class Test {
+              void test() {
+                assertThat(TestFieldProtoMessage.getDefaultInstance())
+                    // BUG: Diagnostic contains:
+                    .ignoringFields(TestProtoMessage.MESSAGE_FIELD_NUMBER);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -57,18 +59,20 @@ public final class ProtoTruthMixedDescriptorsTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.truth.extensions.proto.ProtoTruth.assertThat;",
-            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;",
-            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
-            "final class Test {",
-            "  void test() {",
-            "    assertThat(TestFieldProtoMessage.getDefaultInstance())",
-            "        // BUG: Diagnostic contains:",
-            "        .ignoringFields(",
-            "            TestProtoMessage.MULTI_FIELD_FIELD_NUMBER,",
-            "            TestProtoMessage.MESSAGE_FIELD_NUMBER);",
-            "  }",
-            "}")
+            """
+import static com.google.common.truth.extensions.proto.ProtoTruth.assertThat;
+import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
+import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
+
+final class Test {
+  void test() {
+    assertThat(TestFieldProtoMessage.getDefaultInstance())
+        // BUG: Diagnostic contains:
+        .ignoringFields(
+            TestProtoMessage.MULTI_FIELD_FIELD_NUMBER, TestProtoMessage.MESSAGE_FIELD_NUMBER);
+  }
+}
+""")
         .doTest();
   }
 
@@ -77,17 +81,20 @@ public final class ProtoTruthMixedDescriptorsTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.truth.extensions.proto.ProtoTruth.assertThat;",
-            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;",
-            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
-            "final class Test {",
-            "  void test() {",
-            "    assertThat(TestFieldProtoMessage.getDefaultInstance())",
-            "        .ignoringFields(TestFieldProtoMessage.FIELD_FIELD_NUMBER)",
-            "        // BUG: Diagnostic contains:",
-            "        .ignoringFields(TestProtoMessage.MESSAGE_FIELD_NUMBER);",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.extensions.proto.ProtoTruth.assertThat;
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
+
+            final class Test {
+              void test() {
+                assertThat(TestFieldProtoMessage.getDefaultInstance())
+                    .ignoringFields(TestFieldProtoMessage.FIELD_FIELD_NUMBER)
+                    // BUG: Diagnostic contains:
+                    .ignoringFields(TestProtoMessage.MESSAGE_FIELD_NUMBER);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -96,20 +103,22 @@ public final class ProtoTruthMixedDescriptorsTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.truth.extensions.proto.ProtoTruth.assertThat;",
-            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;",
-            "import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;",
-            "import com.google.protobuf.Message;",
-            "final class Test {",
-            "  void test() {",
-            "    assertThat(TestProtoMessage.getDefaultInstance())",
-            "        .ignoringFields(",
-            "            TestProtoMessage.MULTI_FIELD_FIELD_NUMBER,",
-            "            TestProtoMessage.MESSAGE_FIELD_NUMBER);",
-            "    assertThat((Message) TestFieldProtoMessage.getDefaultInstance())",
-            "        .ignoringFields(TestProtoMessage.MULTI_FIELD_FIELD_NUMBER);",
-            "  }",
-            "}")
+            """
+import static com.google.common.truth.extensions.proto.ProtoTruth.assertThat;
+import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
+import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
+import com.google.protobuf.Message;
+
+final class Test {
+  void test() {
+    assertThat(TestProtoMessage.getDefaultInstance())
+        .ignoringFields(
+            TestProtoMessage.MULTI_FIELD_FIELD_NUMBER, TestProtoMessage.MESSAGE_FIELD_NUMBER);
+    assertThat((Message) TestFieldProtoMessage.getDefaultInstance())
+        .ignoringFields(TestProtoMessage.MULTI_FIELD_FIELD_NUMBER);
+  }
+}
+""")
         .doTest();
   }
 }

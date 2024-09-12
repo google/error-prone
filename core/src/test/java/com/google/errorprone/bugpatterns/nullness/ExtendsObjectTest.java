@@ -34,9 +34,12 @@ public final class ExtendsObjectTest {
             "Test.java", //
             "class Foo<T extends Object> {}")
         .addOutputLines(
-            "Test.java", //
-            "import org.checkerframework.checker.nullness.qual.NonNull;",
-            "class Foo<T extends @NonNull Object> {}")
+            "Test.java",
+            """
+            import org.checkerframework.checker.nullness.qual.NonNull;
+
+            class Foo<T extends @NonNull Object> {}
+            """)
         .doTest();
   }
 
@@ -54,9 +57,12 @@ public final class ExtendsObjectTest {
   public void negative() {
     helper
         .addInputLines(
-            "Test.java", //
-            "import org.checkerframework.checker.nullness.qual.NonNull;",
-            "class Foo<T extends @NonNull Object> {}")
+            "Test.java",
+            """
+            import org.checkerframework.checker.nullness.qual.NonNull;
+
+            class Foo<T extends @NonNull Object> {}
+            """)
         .expectUnchanged()
         .doTest();
   }

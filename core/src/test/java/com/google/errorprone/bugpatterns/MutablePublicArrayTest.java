@@ -33,10 +33,12 @@ public class MutablePublicArrayTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  // BUG: Diagnostic contains: MutablePublicArray",
-            "  public static final int[] array = new int[10];",
-            "}")
+            """
+            class Test {
+              // BUG: Diagnostic contains: MutablePublicArray
+              public static final int[] array = new int[10];
+            }
+            """)
         .doTest();
   }
 
@@ -45,10 +47,12 @@ public class MutablePublicArrayTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  // BUG: Diagnostic contains: MutablePublicArray",
-            "  public static final String[] array = {\"foo\", \"bar\"};",
-            "}")
+            """
+            class Test {
+              // BUG: Diagnostic contains: MutablePublicArray
+              public static final String[] array = {"foo", "bar"};
+            }
+            """)
         .doTest();
   }
 
@@ -57,10 +61,12 @@ public class MutablePublicArrayTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  // BUG: Diagnostic contains: MutablePublicArray",
-            "  public static final Test[] array = new Test[10];",
-            "}")
+            """
+            class Test {
+              // BUG: Diagnostic contains: MutablePublicArray
+              public static final Test[] array = new Test[10];
+            }
+            """)
         .doTest();
   }
 
@@ -69,10 +75,12 @@ public class MutablePublicArrayTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  // BUG: Diagnostic contains: MutablePublicArray",
-            "  public static final Test[][] array = new Test[10][10];",
-            "}")
+            """
+            class Test {
+              // BUG: Diagnostic contains: MutablePublicArray
+              public static final Test[][] array = new Test[10][10];
+            }
+            """)
         .doTest();
   }
 
@@ -80,10 +88,12 @@ public class MutablePublicArrayTest {
   public void privateStaticFinal_negative() {
     compilationHelper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  private static final int[] array = new int[10];",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              private static final int[] array = new int[10];
+            }
+            """)
         .doTest();
   }
 
@@ -91,10 +101,12 @@ public class MutablePublicArrayTest {
   public void privateStaticFinalEmptyInlineInitializer_negative() {
     compilationHelper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  public static final String[] array = {};",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              public static final String[] array = {};
+            }
+            """)
         .doTest();
   }
 
@@ -102,10 +114,12 @@ public class MutablePublicArrayTest {
   public void privateFinal_negative() {
     compilationHelper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  private final int[] array = new int[10];",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              private final int[] array = new int[10];
+            }
+            """)
         .doTest();
   }
 
@@ -113,10 +127,12 @@ public class MutablePublicArrayTest {
   public void staticFinal_negative() {
     compilationHelper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  static final int[] array = new int[10];",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              static final int[] array = new int[10];
+            }
+            """)
         .doTest();
   }
 
@@ -124,10 +140,12 @@ public class MutablePublicArrayTest {
   public void zeroSizeOneDimensionArray_negative() {
     compilationHelper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  public static final int[] array = new int[0];",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              public static final int[] array = new int[0];
+            }
+            """)
         .doTest();
   }
 
@@ -136,9 +154,11 @@ public class MutablePublicArrayTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  public static final int[][] array = new int[0][0];",
-            "}")
+            """
+            class Test {
+              public static final int[][] array = new int[0][0];
+            }
+            """)
         .doTest();
   }
 
@@ -147,11 +167,13 @@ public class MutablePublicArrayTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import org.junit.experimental.theories.DataPoints;",
-            "class Test {",
-            "  @DataPoints",
-            "  public static final int[] array = new int[10];",
-            "}")
+            """
+            import org.junit.experimental.theories.DataPoints;
+
+            class Test {
+              @DataPoints public static final int[] array = new int[10];
+            }
+            """)
         .doTest();
   }
 
@@ -160,12 +182,15 @@ public class MutablePublicArrayTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  public static final long[] l;",
-            "  static {",
-            "    l = new long[1];",
-            "  }",
-            "}")
+            """
+            class Test {
+              public static final long[] l;
+
+              static {
+                l = new long[1];
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -174,11 +199,13 @@ public class MutablePublicArrayTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  // BUG: Diagnostic contains: MutablePublicArray",
-            "  public static final long[] y = {0};",
-            "  public static final long[] l = y;",
-            "}")
+            """
+            class Test {
+              // BUG: Diagnostic contains: MutablePublicArray
+              public static final long[] y = {0};
+              public static final long[] l = y;
+            }
+            """)
         .doTest();
   }
 
@@ -187,16 +214,18 @@ public class MutablePublicArrayTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  public static final int zero = 0;",
-            "  public static final int one = 1;",
-            "  public static final long[] z1 = new long[zero];",
-            "  public static final long[][] z2 = new long[zero][zero];",
-            "  // BUG: Diagnostic contains: MutablePublicArray",
-            "  public static final long[] o1 = new long[one];",
-            "  // BUG: Diagnostic contains: MutablePublicArray",
-            "  public static final long[][] o2 = new long[one][zero];",
-            "}")
+            """
+            class Test {
+              public static final int zero = 0;
+              public static final int one = 1;
+              public static final long[] z1 = new long[zero];
+              public static final long[][] z2 = new long[zero][zero];
+              // BUG: Diagnostic contains: MutablePublicArray
+              public static final long[] o1 = new long[one];
+              // BUG: Diagnostic contains: MutablePublicArray
+              public static final long[][] o2 = new long[one][zero];
+            }
+            """)
         .doTest();
   }
 }

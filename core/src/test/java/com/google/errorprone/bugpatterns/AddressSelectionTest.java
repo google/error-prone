@@ -36,19 +36,22 @@ public class AddressSelectionTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.net.InetAddress;",
-            "import java.net.InetSocketAddress;",
-            "import java.net.Socket;",
-            "class Test {",
-            "  void f() throws Exception{",
-            "    // BUG: Diagnostic contains:",
-            "    InetAddress.getByName(\"example.com\");",
-            "    // BUG: Diagnostic contains:",
-            "    new Socket(\"example.com\", 80);",
-            "    // BUG: Diagnostic contains:",
-            "    new InetSocketAddress(\"example.com\", 80);",
-            "  }",
-            "}")
+            """
+            import java.net.InetAddress;
+            import java.net.InetSocketAddress;
+            import java.net.Socket;
+
+            class Test {
+              void f() throws Exception {
+                // BUG: Diagnostic contains:
+                InetAddress.getByName("example.com");
+                // BUG: Diagnostic contains:
+                new Socket("example.com", 80);
+                // BUG: Diagnostic contains:
+                new InetSocketAddress("example.com", 80);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -57,16 +60,19 @@ public class AddressSelectionTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.net.InetAddress;",
-            "import java.net.InetSocketAddress;",
-            "import java.net.Socket;",
-            "class Test {",
-            "  void f() throws Exception{",
-            "    new Socket(InetAddress.getLoopbackAddress(), 80);",
-            "    InetAddress.getAllByName(\"example.com\");",
-            "    new InetSocketAddress(InetAddress.getLoopbackAddress(), 80);",
-            "  }",
-            "}")
+            """
+            import java.net.InetAddress;
+            import java.net.InetSocketAddress;
+            import java.net.Socket;
+
+            class Test {
+              void f() throws Exception {
+                new Socket(InetAddress.getLoopbackAddress(), 80);
+                InetAddress.getAllByName("example.com");
+                new InetSocketAddress(InetAddress.getLoopbackAddress(), 80);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -75,16 +81,19 @@ public class AddressSelectionTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.net.InetAddress;",
-            "import java.net.InetSocketAddress;",
-            "import java.net.Socket;",
-            "class Test {",
-            "  void f() throws Exception{",
-            "    new Socket(\"localhost\", 80);",
-            "    InetAddress.getByName(\"localhost\");",
-            "    new InetSocketAddress(\"localhost\", 80);",
-            "  }",
-            "}")
+            """
+            import java.net.InetAddress;
+            import java.net.InetSocketAddress;
+            import java.net.Socket;
+
+            class Test {
+              void f() throws Exception {
+                new Socket("localhost", 80);
+                InetAddress.getByName("localhost");
+                new InetSocketAddress("localhost", 80);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -93,16 +102,19 @@ public class AddressSelectionTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.net.InetAddress;",
-            "import java.net.InetSocketAddress;",
-            "import java.net.Socket;",
-            "class Test {",
-            "  void f() throws Exception {",
-            "    new Socket(\"1.2.3.4\", 80);",
-            "    InetAddress.getByName(\"2001:db8:85a3:8d3:1319:8a2e:370:7348\");",
-            "    new InetSocketAddress(\"::ffff:192.0.2.128\", 80);",
-            "  }",
-            "}")
+            """
+            import java.net.InetAddress;
+            import java.net.InetSocketAddress;
+            import java.net.Socket;
+
+            class Test {
+              void f() throws Exception {
+                new Socket("1.2.3.4", 80);
+                InetAddress.getByName("2001:db8:85a3:8d3:1319:8a2e:370:7348");
+                new InetSocketAddress("::ffff:192.0.2.128", 80);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -111,34 +123,40 @@ public class AddressSelectionTest {
     refactoringTestHelper
         .addInputLines(
             "Test.java",
-            "import java.net.InetAddress;",
-            "import java.net.InetSocketAddress;",
-            "import java.net.Socket;",
-            "class Test {",
-            "  void f() throws Exception{",
-            "    new Socket(\"127.0.0.1\", 80);",
-            "    InetAddress.getByName(\"127.0.0.1\");",
-            "    new InetSocketAddress(\"127.0.0.1\", 80);",
-            "    new Socket(\"::1\", 80);",
-            "    InetAddress.getByName(\"::1\");",
-            "    new InetSocketAddress(\"::1\", 80);",
-            "  }",
-            "}")
+            """
+            import java.net.InetAddress;
+            import java.net.InetSocketAddress;
+            import java.net.Socket;
+
+            class Test {
+              void f() throws Exception {
+                new Socket("127.0.0.1", 80);
+                InetAddress.getByName("127.0.0.1");
+                new InetSocketAddress("127.0.0.1", 80);
+                new Socket("::1", 80);
+                InetAddress.getByName("::1");
+                new InetSocketAddress("::1", 80);
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import java.net.InetAddress;",
-            "import java.net.InetSocketAddress;",
-            "import java.net.Socket;",
-            "class Test {",
-            "  void f() throws Exception{",
-            "    new Socket(InetAddress.getLoopbackAddress(), 80);",
-            "    InetAddress.getLoopbackAddress();",
-            "    new InetSocketAddress(InetAddress.getLoopbackAddress(), 80);",
-            "    new Socket(InetAddress.getLoopbackAddress(), 80);",
-            "    InetAddress.getLoopbackAddress();",
-            "    new InetSocketAddress(InetAddress.getLoopbackAddress(), 80);",
-            "  }",
-            "}")
+            """
+            import java.net.InetAddress;
+            import java.net.InetSocketAddress;
+            import java.net.Socket;
+
+            class Test {
+              void f() throws Exception {
+                new Socket(InetAddress.getLoopbackAddress(), 80);
+                InetAddress.getLoopbackAddress();
+                new InetSocketAddress(InetAddress.getLoopbackAddress(), 80);
+                new Socket(InetAddress.getLoopbackAddress(), 80);
+                InetAddress.getLoopbackAddress();
+                new InetSocketAddress(InetAddress.getLoopbackAddress(), 80);
+              }
+            }
+            """)
         .doTest();
   }
 }

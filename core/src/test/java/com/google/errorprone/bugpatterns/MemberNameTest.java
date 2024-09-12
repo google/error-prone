@@ -35,20 +35,26 @@ public class MemberNameTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  private int foo_bar;",
-            "  int get() {",
-            "    return foo_bar;",
-            "  }",
-            "}")
+            """
+            class Test {
+              private int foo_bar;
+
+              int get() {
+                return foo_bar;
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "class Test {",
-            "  private int fooBar;",
-            "  int get() {",
-            "    return fooBar;",
-            "  }",
-            "}")
+            """
+            class Test {
+              private int fooBar;
+
+              int get() {
+                return fooBar;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -57,13 +63,16 @@ public class MemberNameTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  // BUG: Diagnostic contains: acronyms",
-            "  private int misnamedRPCClient;",
-            "  int get() {",
-            "    return misnamedRPCClient;",
-            "  }",
-            "}")
+            """
+            class Test {
+              // BUG: Diagnostic contains: acronyms
+              private int misnamedRPCClient;
+
+              int get() {
+                return misnamedRPCClient;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -72,18 +81,22 @@ public class MemberNameTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  private static int Foo;",
-            "  private static int FooBar;",
-            "  private static int Bar_Foo;",
-            "}")
+            """
+            class Test {
+              private static int Foo;
+              private static int FooBar;
+              private static int Bar_Foo;
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "class Test {",
-            "  private static int foo;",
-            "  private static int fooBar;",
-            "  private static int barFoo;",
-            "}")
+            """
+            class Test {
+              private static int foo;
+              private static int fooBar;
+              private static int barFoo;
+            }
+            """)
         .doTest();
   }
 
@@ -92,20 +105,26 @@ public class MemberNameTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  private int foo_barBaz;",
-            "  int get() {",
-            "    return foo_barBaz;",
-            "  }",
-            "}")
+            """
+            class Test {
+              private int foo_barBaz;
+
+              int get() {
+                return foo_barBaz;
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "class Test {",
-            "  private int fooBarBaz;",
-            "  int get() {",
-            "    return fooBarBaz;",
-            "  }",
-            "}")
+            """
+            class Test {
+              private int fooBarBaz;
+
+              int get() {
+                return fooBarBaz;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -114,20 +133,24 @@ public class MemberNameTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  int get() {",
-            "    int foo_bar = 1;",
-            "    return foo_bar;",
-            "  }",
-            "}")
+            """
+            class Test {
+              int get() {
+                int foo_bar = 1;
+                return foo_bar;
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "class Test {",
-            "  int get() {",
-            "    int fooBar = 1;",
-            "    return fooBar;",
-            "  }",
-            "}")
+            """
+            class Test {
+              int get() {
+                int fooBar = 1;
+                return fooBar;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -136,22 +159,28 @@ public class MemberNameTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "import java.io.ByteArrayOutputStream;",
-            "import java.io.IOException;",
-            "class Test {",
-            "  void run() throws IOException {",
-            "    try (var output_stream = new ByteArrayOutputStream()) {}",
-            "  }",
-            "}")
+            """
+            import java.io.ByteArrayOutputStream;
+            import java.io.IOException;
+
+            class Test {
+              void run() throws IOException {
+                try (var output_stream = new ByteArrayOutputStream()) {}
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import java.io.ByteArrayOutputStream;",
-            "import java.io.IOException;",
-            "class Test {",
-            "  void run() throws IOException {",
-            "    try (var outputStream = new ByteArrayOutputStream()) {}",
-            "  }",
-            "}")
+            """
+            import java.io.ByteArrayOutputStream;
+            import java.io.IOException;
+
+            class Test {
+              void run() throws IOException {
+                try (var outputStream = new ByteArrayOutputStream()) {}
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -160,24 +189,28 @@ public class MemberNameTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  void run() {",
-            "    try {",
-            "      run();",
-            "    } catch (StackOverflowError stack_overflow) {",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              void run() {
+                try {
+                  run();
+                } catch (StackOverflowError stack_overflow) {
+                }
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "class Test {",
-            "  void run() {",
-            "    try {",
-            "      run();",
-            "    } catch (StackOverflowError stackOverflow) {",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              void run() {
+                try {
+                  run();
+                } catch (StackOverflowError stackOverflow) {
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -186,12 +219,15 @@ public class MemberNameTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  public int foo_bar;",
-            "  int get() {",
-            "    return foo_bar;",
-            "  }",
-            "}")
+            """
+            class Test {
+              public int foo_bar;
+
+              int get() {
+                return foo_bar;
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -201,13 +237,16 @@ public class MemberNameTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  // BUG: Diagnostic contains: foo",
-            "  private int Foo;",
-            "  int get() {",
-            "    return Foo;",
-            "  }",
-            "}")
+            """
+            class Test {
+              // BUG: Diagnostic contains: foo
+              private int Foo;
+
+              int get() {
+                return Foo;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -215,10 +254,12 @@ public class MemberNameTest {
   public void upperCamelCaseAndNotStatic_noFinding() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  private int FOO;",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              private int FOO;
+            }
+            """)
         .doTest();
   }
 
@@ -226,10 +267,12 @@ public class MemberNameTest {
   public void upperCamelCaseAndStatic_noFinding() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  private static final int FOO_BAR = 1;",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              private static final int FOO_BAR = 1;
+            }
+            """)
         .doTest();
   }
 
@@ -237,10 +280,12 @@ public class MemberNameTest {
   public void methodNamedParametersFor_noFinding() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  public void parametersForMyFavouriteTest_whichHasUnderscores() {}",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              public void parametersForMyFavouriteTest_whichHasUnderscores() {}
+            }
+            """)
         .doTest();
   }
 
@@ -248,12 +293,15 @@ public class MemberNameTest {
   public void methodAnnotatedWithAnnotationContainingTest_exempted() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  @IAmATest",
-            "  public void possibly_a_test_name() {}",
-            "  private @interface IAmATest {}",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              @IAmATest
+              public void possibly_a_test_name() {}
+
+              private @interface IAmATest {}
+            }
+            """)
         .doTest();
   }
 
@@ -261,12 +309,15 @@ public class MemberNameTest {
   public void ignoreTestMissingTestAnnotation_exempted() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "import org.junit.Ignore;",
-            "class Test {",
-            "  @Ignore",
-            "  public void possibly_a_test_name() {}",
-            "}")
+            "Test.java",
+            """
+            import org.junit.Ignore;
+
+            class Test {
+              @Ignore
+              public void possibly_a_test_name() {}
+            }
+            """)
         .doTest();
   }
 
@@ -274,18 +325,23 @@ public class MemberNameTest {
   public void superMethodAnnotatedWithAnnotationContainingTest_exempted() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  @IAmATest",
-            "  public void possibly_a_test_name() {}",
-            "  private @interface IAmATest {}",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              @IAmATest
+              public void possibly_a_test_name() {}
+
+              private @interface IAmATest {}
+            }
+            """)
         .addSourceLines(
             "Test2.java",
-            "class Test2 extends Test {",
-            "  @Override",
-            "  public void possibly_a_test_name() {}",
-            "}")
+            """
+            class Test2 extends Test {
+              @Override
+              public void possibly_a_test_name() {}
+            }
+            """)
         .doTest();
   }
 
@@ -293,10 +349,12 @@ public class MemberNameTest {
   public void nativeMethod_ignored() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  public native void possibly_a_test_name();",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              public native void possibly_a_test_name();
+            }
+            """)
         .doTest();
   }
 
@@ -304,15 +362,20 @@ public class MemberNameTest {
   public void methodAnnotatedWithExemptedMethod_noMatch() {
     helper
         .addSourceLines(
-            "Property.java", //
-            "package com.pholser.junit.quickcheck;",
-            "public @interface Property {}")
+            "Property.java",
+            """
+            package com.pholser.junit.quickcheck;
+
+            public @interface Property {}
+            """)
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  @com.pholser.junit.quickcheck.Property",
-            "  public void possibly_a_test_name() {}",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              @com.pholser.junit.quickcheck.Property
+              public void possibly_a_test_name() {}
+            }
+            """)
         .doTest();
   }
 
@@ -327,12 +390,14 @@ public class MemberNameTest {
             "}")
         .addSourceLines(
             "Test.java",
-            "class Test extends Base {",
-            "  @Override",
-            "  public int get_some() {",
-            "    return 0;",
-            "  }",
-            "}")
+            """
+            class Test extends Base {
+              @Override
+              public int get_some() {
+                return 0;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -341,17 +406,22 @@ public class MemberNameTest {
     helper
         .addSourceLines(
             "Base.java",
-            "import javax.annotation.Generated;",
-            "@Generated(\"Hands\")",
-            "abstract class Base {}")
+            """
+            import javax.annotation.Generated;
+
+            @Generated("Hands")
+            abstract class Base {}
+            """)
         .addSourceLines(
             "Test.java",
-            "class Test extends Base {",
-            "  // BUG: Diagnostic contains: get_more",
-            "  public int get_more() {",
-            "    return 0;",
-            "  }",
-            "}")
+            """
+            class Test extends Base {
+              // BUG: Diagnostic contains: get_more
+              public int get_more() {
+                return 0;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -360,15 +430,19 @@ public class MemberNameTest {
     helper
         .addSourceLines(
             "Base.java",
-            "interface Base {",
-            "  // BUG: Diagnostic contains: a_b",
-            "  void foo(int a_b);",
-            "}")
+            """
+            interface Base {
+              // BUG: Diagnostic contains: a_b
+              void foo(int a_b);
+            }
+            """)
         .addSourceLines(
-            "Test.java", //
-            "class Test implements Base {",
-            "  public void foo(int a_b) {}",
-            "}")
+            "Test.java",
+            """
+            class Test implements Base {
+              public void foo(int a_b) {}
+            }
+            """)
         .doTest();
   }
 
@@ -377,16 +451,20 @@ public class MemberNameTest {
     helper
         .addSourceLines(
             "Base.java",
-            "interface Base {",
-            "  // BUG: Diagnostic contains:",
-            "  void foo(int a_b);",
-            "}")
+            """
+            interface Base {
+              // BUG: Diagnostic contains:
+              void foo(int a_b);
+            }
+            """)
         .addSourceLines(
             "Test.java",
-            "class Test implements Base {",
-            "  // BUG: Diagnostic contains:",
-            "  public void foo(int a_b_c) {}",
-            "}")
+            """
+            class Test implements Base {
+              // BUG: Diagnostic contains:
+              public void foo(int a_b_c) {}
+            }
+            """)
         .doTest();
   }
 
@@ -395,12 +473,15 @@ public class MemberNameTest {
     helper
         .addSourceLines(
             "Test.java",
-            "interface Test {",
-            "  // BUG: Diagnostic contains: getRpcPolicy",
-            "  int getRPCPolicy();",
-            "  // BUG: Diagnostic contains: getRpc",
-            "  int getRPC();",
-            "}")
+            """
+            interface Test {
+              // BUG: Diagnostic contains: getRpcPolicy
+              int getRPCPolicy();
+
+              // BUG: Diagnostic contains: getRpc
+              int getRPC();
+            }
+            """)
         .doTest();
   }
 
@@ -409,12 +490,14 @@ public class MemberNameTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  // BUG: Diagnostic contains: getRpcPolicy",
-            "  int getRPCPolicy;",
-            "  // BUG: Diagnostic contains: getRpc",
-            "  int getRPC;",
-            "}")
+            """
+            class Test {
+              // BUG: Diagnostic contains: getRpcPolicy
+              int getRPCPolicy;
+              // BUG: Diagnostic contains: getRpc
+              int getRPC;
+            }
+            """)
         .doTest();
   }
 
@@ -422,10 +505,12 @@ public class MemberNameTest {
   public void initialismsInVariableNames_magicNamesExempt() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  private static final long serialVersionUID = 0;",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              private static final long serialVersionUID = 0;
+            }
+            """)
         .doTest();
   }
 
@@ -434,15 +519,18 @@ public class MemberNameTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import java.util.function.Function;",
-            "class Test {",
-            "  @Override",
-            "  public String toString() {",
-            "    // BUG: Diagnostic contains: fooBar",
-            "    Function<String, String> f = foo_bar -> foo_bar;",
-            "    return f.apply(\"foo\");",
-            "  }",
-            "}")
+            """
+            import java.util.function.Function;
+
+            class Test {
+              @Override
+              public String toString() {
+                // BUG: Diagnostic contains: fooBar
+                Function<String, String> f = foo_bar -> foo_bar;
+                return f.apply("foo");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -451,16 +539,22 @@ public class MemberNameTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  private void foo_bar() {}",
-            "  private Runnable r = this::foo_bar;",
-            "}")
+            """
+            class Test {
+              private void foo_bar() {}
+
+              private Runnable r = this::foo_bar;
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "class Test {",
-            "  private void fooBar() {}",
-            "  private Runnable r = this::fooBar;",
-            "}")
+            """
+            class Test {
+              private void fooBar() {}
+
+              private Runnable r = this::fooBar;
+            }
+            """)
         .doTest();
   }
 
@@ -469,26 +563,30 @@ public class MemberNameTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  private Object Object() {",
-            "    return null;",
-            "  }",
-            "",
-            "  void call() {",
-            "     Object();",
-            "  }",
-            "}")
+            """
+            class Test {
+              private Object Object() {
+                return null;
+              }
+
+              void call() {
+                Object();
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "class Test {",
-            "  private Object object() {",
-            "    return null;",
-            "  }",
-            "",
-            "  void call() {",
-            "     object();",
-            "  }",
-            "}")
+            """
+            class Test {
+              private Object object() {
+                return null;
+              }
+
+              void call() {
+                object();
+              }
+            }
+            """)
         .doTest();
   }
 }

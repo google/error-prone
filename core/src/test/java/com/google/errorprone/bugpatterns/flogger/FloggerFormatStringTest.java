@@ -33,14 +33,18 @@ public class FloggerFormatStringTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "class Test {",
-            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "  public void f(Exception e, Throwable t) {",
-            "    // BUG: Diagnostic contains: 'java.lang.String' cannot be formatted using '%d'",
-            "    logger.atInfo().log(\"hello %d\", \"world\");",
-            "  }",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            class Test {
+              private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+
+              public void f(Exception e, Throwable t) {
+                // BUG: Diagnostic contains: 'java.lang.String' cannot be formatted using '%d'
+                logger.atInfo().log("hello %d", "world");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -49,16 +53,20 @@ public class FloggerFormatStringTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "class Test {",
-            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "  public void f(Exception e, Throwable t) {",
-            "    // BUG: Diagnostic contains: logger.atInfo().withCause(e).log(\"hello\");",
-            "    logger.atInfo().log(\"hello\", e);",
-            "    // BUG: Diagnostic contains: logger.atInfo().withCause(t).log(\"hello %s\", e);",
-            "    logger.atInfo().log(\"hello %s\", e, t);",
-            "  }",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            class Test {
+              private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+
+              public void f(Exception e, Throwable t) {
+                // BUG: Diagnostic contains: logger.atInfo().withCause(e).log("hello");
+                logger.atInfo().log("hello", e);
+                // BUG: Diagnostic contains: logger.atInfo().withCause(t).log("hello %s", e);
+                logger.atInfo().log("hello %s", e, t);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -67,13 +75,17 @@ public class FloggerFormatStringTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "class Test {",
-            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "  public void f(Exception e, Throwable t, String s) {",
-            "    logger.atInfo().withCause(e).log(\"hello %s\", e);",
-            "  }",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            class Test {
+              private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+
+              public void f(Exception e, Throwable t, String s) {
+                logger.atInfo().withCause(e).log("hello %s", e);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -82,16 +94,20 @@ public class FloggerFormatStringTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.flogger.LazyArgs.lazy;",
-            "import com.google.common.flogger.FluentLogger;",
-            "class Test {",
-            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "  public void f(String s, Integer i) {",
-            "    // BUG: Diagnostic contains: 'java.lang.String'",
-            "    logger.atInfo().log(\"hello %d\", lazy(() -> s));",
-            "    logger.atInfo().log(\"hello %d\", lazy(() -> i));",
-            "  }",
-            "}")
+            """
+            import static com.google.common.flogger.LazyArgs.lazy;
+            import com.google.common.flogger.FluentLogger;
+
+            class Test {
+              private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+
+              public void f(String s, Integer i) {
+                // BUG: Diagnostic contains: 'java.lang.String'
+                logger.atInfo().log("hello %d", lazy(() -> s));
+                logger.atInfo().log("hello %d", lazy(() -> i));
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -100,14 +116,18 @@ public class FloggerFormatStringTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "class Test {",
-            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "  public void f(Object... xs) {",
-            "    // BUG: Diagnostic contains:",
-            "    logger.atInfo().log(\"hello %s %s\", xs);",
-            "  }",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            class Test {
+              private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+
+              public void f(Object... xs) {
+                // BUG: Diagnostic contains:
+                logger.atInfo().log("hello %s %s", xs);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -117,14 +137,19 @@ public class FloggerFormatStringTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "package test;",
-            "import com.google.common.flogger.FluentLogger;",
-            "class Test {",
-            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "  public void f() {",
-            "    logger.atSevere().log(\"hello %s\");",
-            "  }",
-            "}")
+            """
+            package test;
+
+            import com.google.common.flogger.FluentLogger;
+
+            class Test {
+              private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+
+              public void f() {
+                logger.atSevere().log("hello %s");
+              }
+            }
+            """)
         .doTest();
   }
 }

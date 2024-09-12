@@ -53,22 +53,28 @@ public class UnnecessaryLongToIntConversionTest {
     refactoringHelper
         .addInputLines(
             "in/A.java",
-            "public class A {",
-            "  void acceptsLong(long value) {}",
-            "  void foo() {",
-            "    long x = 1L;",
-            "    acceptsLong((int) x);",
-            "  }",
-            "}")
+            """
+            public class A {
+              void acceptsLong(long value) {}
+
+              void foo() {
+                long x = 1L;
+                acceptsLong((int) x);
+              }
+            }
+            """)
         .addOutputLines(
             "out/A.java",
-            "public class A {",
-            "  void acceptsLong(long value) {}",
-            "  void foo() {",
-            "    long x = 1L;",
-            "    acceptsLong(x);",
-            "  }",
-            "}")
+            """
+            public class A {
+              void acceptsLong(long value) {}
+
+              void foo() {
+                long x = 1L;
+                acceptsLong(x);
+              }
+            }
+            """)
         .setFixChooser(FIRST)
         .doTest(TEXT_MATCH);
   }
@@ -78,22 +84,28 @@ public class UnnecessaryLongToIntConversionTest {
     refactoringHelper
         .addInputLines(
             "in/A.java",
-            "public class A {",
-            "  void acceptsLong(long value) {}",
-            "  void foo() {",
-            "    long x = 1L;",
-            "    acceptsLong((int)x);",
-            "  }",
-            "}")
+            """
+            public class A {
+              void acceptsLong(long value) {}
+
+              void foo() {
+                long x = 1L;
+                acceptsLong((int) x);
+              }
+            }
+            """)
         .addOutputLines(
             "out/A.java",
-            "public class A {",
-            "  void acceptsLong(long value) {}",
-            "  void foo() {",
-            "    long x = 1L;",
-            "    acceptsLong(x);",
-            "  }",
-            "}")
+            """
+            public class A {
+              void acceptsLong(long value) {}
+
+              void foo() {
+                long x = 1L;
+                acceptsLong(x);
+              }
+            }
+            """)
         .setFixChooser(FIRST)
         .doTest(TEXT_MATCH);
   }
@@ -103,23 +115,30 @@ public class UnnecessaryLongToIntConversionTest {
     refactoringHelper
         .addInputLines(
             "in/A.java",
-            "public class A {",
-            "  void acceptsLong(long value) {}",
-            "  void foo() {",
-            "    long x = 1L;",
-            "    acceptsLong((int) x);",
-            "  }",
-            "}")
+            """
+            public class A {
+              void acceptsLong(long value) {}
+
+              void foo() {
+                long x = 1L;
+                acceptsLong((int) x);
+              }
+            }
+            """)
         .addOutputLines(
             "out/A.java",
-            "import com.google.common.primitives.Longs;",
-            "public class A {",
-            "  void acceptsLong(long value) {}",
-            "  void foo() {",
-            "    long x = 1L;",
-            "    acceptsLong(Longs.constrainToRange(x, Integer.MIN_VALUE, Integer.MAX_VALUE));",
-            "  }",
-            "}")
+            """
+            import com.google.common.primitives.Longs;
+
+            public class A {
+              void acceptsLong(long value) {}
+
+              void foo() {
+                long x = 1L;
+                acceptsLong(Longs.constrainToRange(x, Integer.MIN_VALUE, Integer.MAX_VALUE));
+              }
+            }
+            """)
         .setFixChooser(SECOND)
         .doTest(TEXT_MATCH);
   }
@@ -129,23 +148,30 @@ public class UnnecessaryLongToIntConversionTest {
     refactoringHelper
         .addInputLines(
             "in/A.java",
-            "public class A {",
-            "  void acceptsLong(long value) {}",
-            "  void foo() {",
-            "    long x = 1L;",
-            "    acceptsLong((int)x);",
-            "  }",
-            "}")
+            """
+            public class A {
+              void acceptsLong(long value) {}
+
+              void foo() {
+                long x = 1L;
+                acceptsLong((int) x);
+              }
+            }
+            """)
         .addOutputLines(
             "out/A.java",
-            "import com.google.common.primitives.Longs;",
-            "public class A {",
-            "  void acceptsLong(long value) {}",
-            "  void foo() {",
-            "    long x = 1L;",
-            "    acceptsLong(Longs.constrainToRange(x, Integer.MIN_VALUE, Integer.MAX_VALUE));",
-            "  }",
-            "}")
+            """
+            import com.google.common.primitives.Longs;
+
+            public class A {
+              void acceptsLong(long value) {}
+
+              void foo() {
+                long x = 1L;
+                acceptsLong(Longs.constrainToRange(x, Integer.MIN_VALUE, Integer.MAX_VALUE));
+              }
+            }
+            """)
         .setFixChooser(SECOND)
         .doTest(TEXT_MATCH);
   }
@@ -155,24 +181,32 @@ public class UnnecessaryLongToIntConversionTest {
     refactoringHelper
         .addInputLines(
             "in/A.java",
-            "import com.google.common.primitives.Ints;",
-            "public class A {",
-            "  void acceptsLong(long value) {}",
-            "  void foo() {",
-            "    long x = 1L;",
-            "    acceptsLong(Ints.checkedCast(x));",
-            "  }",
-            "}")
+            """
+            import com.google.common.primitives.Ints;
+
+            public class A {
+              void acceptsLong(long value) {}
+
+              void foo() {
+                long x = 1L;
+                acceptsLong(Ints.checkedCast(x));
+              }
+            }
+            """)
         .addOutputLines(
             "out/A.java",
-            "import com.google.common.primitives.Ints;",
-            "public class A {",
-            "  void acceptsLong(long value) {}",
-            "  void foo() {",
-            "    long x = 1L;",
-            "    acceptsLong(x);",
-            "  }",
-            "}")
+            """
+            import com.google.common.primitives.Ints;
+
+            public class A {
+              void acceptsLong(long value) {}
+
+              void foo() {
+                long x = 1L;
+                acceptsLong(x);
+              }
+            }
+            """)
         .setFixChooser(FIRST)
         .doTest(TEXT_MATCH);
   }
@@ -182,24 +216,32 @@ public class UnnecessaryLongToIntConversionTest {
     refactoringHelper
         .addInputLines(
             "in/A.java",
-            "import com.google.common.primitives.Ints;",
-            "public class A {",
-            "  void acceptsLong(long value) {}",
-            "  void foo() {",
-            "    Long x = Long.valueOf(1);",
-            "    acceptsLong(Ints.checkedCast(x));",
-            "  }",
-            "}")
+            """
+            import com.google.common.primitives.Ints;
+
+            public class A {
+              void acceptsLong(long value) {}
+
+              void foo() {
+                Long x = Long.valueOf(1);
+                acceptsLong(Ints.checkedCast(x));
+              }
+            }
+            """)
         .addOutputLines(
             "out/A.java",
-            "import com.google.common.primitives.Ints;",
-            "public class A {",
-            "  void acceptsLong(long value) {}",
-            "  void foo() {",
-            "    Long x = Long.valueOf(1);",
-            "    acceptsLong(x);",
-            "  }",
-            "}")
+            """
+            import com.google.common.primitives.Ints;
+
+            public class A {
+              void acceptsLong(long value) {}
+
+              void foo() {
+                Long x = Long.valueOf(1);
+                acceptsLong(x);
+              }
+            }
+            """)
         .setFixChooser(FIRST)
         .doTest(TEXT_MATCH);
   }
@@ -209,25 +251,33 @@ public class UnnecessaryLongToIntConversionTest {
     refactoringHelper
         .addInputLines(
             "in/A.java",
-            "import java.lang.Math;",
-            "public class A {",
-            "  void acceptsLong(long value) {}",
-            "  void foo() {",
-            "    long x = 1L;",
-            "    acceptsLong(Math.toIntExact(x));",
-            "  }",
-            "}")
+            """
+            import java.lang.Math;
+
+            public class A {
+              void acceptsLong(long value) {}
+
+              void foo() {
+                long x = 1L;
+                acceptsLong(Math.toIntExact(x));
+              }
+            }
+            """)
         .addOutputLines(
             "out/A.java",
-            "import com.google.common.primitives.Longs;",
-            "import java.lang.Math;",
-            "public class A {",
-            "  void acceptsLong(long value) {}",
-            "  void foo() {",
-            "    long x = 1L;",
-            "    acceptsLong(Longs.constrainToRange(x, Integer.MIN_VALUE, Integer.MAX_VALUE));",
-            "  }",
-            "}")
+            """
+            import com.google.common.primitives.Longs;
+            import java.lang.Math;
+
+            public class A {
+              void acceptsLong(long value) {}
+
+              void foo() {
+                long x = 1L;
+                acceptsLong(Longs.constrainToRange(x, Integer.MIN_VALUE, Integer.MAX_VALUE));
+              }
+            }
+            """)
         .setFixChooser(SECOND)
         .doTest(TEXT_MATCH);
   }
@@ -237,22 +287,28 @@ public class UnnecessaryLongToIntConversionTest {
     refactoringHelper
         .addInputLines(
             "in/A.java",
-            "public class A {",
-            "  void acceptsLong(long value) {}",
-            "  void foo() {",
-            "    Long x = Long.valueOf(1);",
-            "    acceptsLong(x.intValue());",
-            "  }",
-            "}")
+            """
+            public class A {
+              void acceptsLong(long value) {}
+
+              void foo() {
+                Long x = Long.valueOf(1);
+                acceptsLong(x.intValue());
+              }
+            }
+            """)
         .addOutputLines(
             "out/A.java",
-            "public class A {",
-            "  void acceptsLong(long value) {}",
-            "  void foo() {",
-            "    Long x = Long.valueOf(1);",
-            "    acceptsLong(x);",
-            "  }",
-            "}")
+            """
+            public class A {
+              void acceptsLong(long value) {}
+
+              void foo() {
+                Long x = Long.valueOf(1);
+                acceptsLong(x);
+              }
+            }
+            """)
         .setFixChooser(FIRST)
         .doTest(TEXT_MATCH);
   }
@@ -262,23 +318,30 @@ public class UnnecessaryLongToIntConversionTest {
     refactoringHelper
         .addInputLines(
             "in/A.java",
-            "public class A {",
-            "  void acceptsLong(long value) {}",
-            "  void foo() {",
-            "    Long x = Long.valueOf(1);",
-            "    acceptsLong(x.intValue());",
-            "  }",
-            "}")
+            """
+            public class A {
+              void acceptsLong(long value) {}
+
+              void foo() {
+                Long x = Long.valueOf(1);
+                acceptsLong(x.intValue());
+              }
+            }
+            """)
         .addOutputLines(
             "out/A.java",
-            "import com.google.common.primitives.Longs;",
-            "public class A {",
-            "  void acceptsLong(long value) {}",
-            "  void foo() {",
-            "    Long x = Long.valueOf(1);",
-            "    acceptsLong(Longs.constrainToRange(x, Integer.MIN_VALUE, Integer.MAX_VALUE));",
-            "  }",
-            "}")
+            """
+            import com.google.common.primitives.Longs;
+
+            public class A {
+              void acceptsLong(long value) {}
+
+              void foo() {
+                Long x = Long.valueOf(1);
+                acceptsLong(Longs.constrainToRange(x, Integer.MIN_VALUE, Integer.MAX_VALUE));
+              }
+            }
+            """)
         .setFixChooser(SECOND)
         .doTest(TEXT_MATCH);
   }

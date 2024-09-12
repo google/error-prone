@@ -33,17 +33,21 @@ public final class FloggerLogWithCauseTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "class Test {",
-            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "  public void test() {",
-            "    try {}",
-            "    catch (Exception e) {",
-            "      // BUG: Diagnostic contains: logger.atWarning().withCause(e).log",
-            "      logger.atWarning().log(\"failed\");",
-            "    }",
-            "  }",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            class Test {
+              private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+
+              public void test() {
+                try {
+                } catch (Exception e) {
+                  // BUG: Diagnostic contains: logger.atWarning().withCause(e).log
+                  logger.atWarning().log("failed");
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -52,16 +56,20 @@ public final class FloggerLogWithCauseTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "class Test {",
-            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "  public void test() {",
-            "    try {}",
-            "    catch (Exception e) {",
-            "      logger.atInfo().log(\"failed\");",
-            "    }",
-            "  }",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            class Test {
+              private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+
+              public void test() {
+                try {
+                } catch (Exception e) {
+                  logger.atInfo().log("failed");
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -70,16 +78,20 @@ public final class FloggerLogWithCauseTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "class Test {",
-            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "  public void test() {",
-            "    try {}",
-            "    catch (Exception e) {",
-            "      logger.atWarning().withCause(e).log(\"failed\");",
-            "    }",
-            "  }",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            class Test {
+              private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+
+              public void test() {
+                try {
+                } catch (Exception e) {
+                  logger.atWarning().withCause(e).log("failed");
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -88,16 +100,20 @@ public final class FloggerLogWithCauseTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "class Test {",
-            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "  public void test() {",
-            "    try {}",
-            "    catch (Exception e) {",
-            "      logger.atWarning().log(e.getMessage());",
-            "    }",
-            "  }",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            class Test {
+              private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+
+              public void test() {
+                try {
+                } catch (Exception e) {
+                  logger.atWarning().log(e.getMessage());
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -106,16 +122,22 @@ public final class FloggerLogWithCauseTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "class Test {",
-            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "  public void test() {",
-            "    try {}",
-            "    catch (@SuppressWarnings(\"FloggerLogWithCause\") Exception e) {",
-            "      logger.atWarning().log(e.getMessage());",
-            "    }",
-            "  }",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            class Test {
+              private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+
+              public void test() {
+                try {
+                } catch (
+                    @SuppressWarnings("FloggerLogWithCause")
+                    Exception e) {
+                  logger.atWarning().log(e.getMessage());
+                }
+              }
+            }
+            """)
         .doTest();
   }
 }

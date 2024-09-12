@@ -31,14 +31,17 @@ public final class CheckNotNullMultipleTimesTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.base.Preconditions.checkNotNull;",
-            "class Test {",
-            "  Test(Integer a, Integer b) {",
-            "    checkNotNull(a);",
-            "    // BUG: Diagnostic contains:",
-            "    checkNotNull(a);",
-            "  }",
-            "}")
+            """
+            import static com.google.common.base.Preconditions.checkNotNull;
+
+            class Test {
+              Test(Integer a, Integer b) {
+                checkNotNull(a);
+                // BUG: Diagnostic contains:
+                checkNotNull(a);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -47,13 +50,16 @@ public final class CheckNotNullMultipleTimesTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.base.Preconditions.checkNotNull;",
-            "class Test {",
-            "  Test(Integer a, Integer b) {",
-            "    checkNotNull(a);",
-            "    checkNotNull(b);",
-            "  }",
-            "}")
+            """
+            import static com.google.common.base.Preconditions.checkNotNull;
+
+            class Test {
+              Test(Integer a, Integer b) {
+                checkNotNull(a);
+                checkNotNull(b);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -62,16 +68,19 @@ public final class CheckNotNullMultipleTimesTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.base.Preconditions.checkNotNull;",
-            "class Test {",
-            "  Test(Integer a) {",
-            "    if (hashCode() > 0) {",
-            "      checkNotNull(a);",
-            "    } else {",
-            "      checkNotNull(a);",
-            "    }",
-            "  }",
-            "}")
+            """
+            import static com.google.common.base.Preconditions.checkNotNull;
+
+            class Test {
+              Test(Integer a) {
+                if (hashCode() > 0) {
+                  checkNotNull(a);
+                } else {
+                  checkNotNull(a);
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -80,14 +89,18 @@ public final class CheckNotNullMultipleTimesTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.base.Preconditions.checkNotNull;",
-            "class Test {",
-            "  int a;",
-            "  Test(Integer a) {",
-            "    this.a = checkNotNull(a);",
-            "    checkNotNull(a);",
-            "  }",
-            "}")
+            """
+            import static com.google.common.base.Preconditions.checkNotNull;
+
+            class Test {
+              int a;
+
+              Test(Integer a) {
+                this.a = checkNotNull(a);
+                checkNotNull(a);
+              }
+            }
+            """)
         .doTest();
   }
 

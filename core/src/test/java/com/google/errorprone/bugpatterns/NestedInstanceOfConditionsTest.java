@@ -49,14 +49,17 @@ public class NestedInstanceOfConditionsTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "public class Test {",
-            "  record Struct(Object a) {}",
-            "  public void test(Object x, Object y) {",
-            "    if (x instanceof Struct(Integer a1)) {",
-            "      if (y instanceof Struct(Integer a2)) {}",
-            "    }",
-            "  }",
-            "}")
+            """
+            public class Test {
+              record Struct(Object a) {}
+
+              public void test(Object x, Object y) {
+                if (x instanceof Struct(Integer a1)) {
+                  if (y instanceof Struct(Integer a2)) {}
+                }
+              }
+            }
+            """)
         .doTest();
   }
 }

@@ -34,23 +34,27 @@ public final class PatternMatchingInstanceofTest {
     helper
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  void test(Object o) {",
-            "    if (o instanceof Test) {",
-            "      Test test = (Test) o;",
-            "      test(test);",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              void test(Object o) {
+                if (o instanceof Test) {
+                  Test test = (Test) o;
+                  test(test);
+                }
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "class Test {",
-            "  void test(Object o) {",
-            "    if (o instanceof Test test) {",
-            "      test(test);",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              void test(Object o) {
+                if (o instanceof Test test) {
+                  test(test);
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -59,14 +63,16 @@ public final class PatternMatchingInstanceofTest {
     helper
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  void test(Object o) {",
-            "    if (o instanceof Test || o.hashCode() > 0) {",
-            "      Test test = (Test) o;",
-            "      test(test);",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              void test(Object o) {
+                if (o instanceof Test || o.hashCode() > 0) {
+                  Test test = (Test) o;
+                  test(test);
+                }
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -77,23 +83,27 @@ public final class PatternMatchingInstanceofTest {
     helper
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  void test(Object o) {",
-            "    if (o instanceof Test && o.hashCode() != 1) {",
-            "      Test test = (Test) o;",
-            "      test(test);",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              void test(Object o) {
+                if (o instanceof Test && o.hashCode() != 1) {
+                  Test test = (Test) o;
+                  test(test);
+                }
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "class Test {",
-            "  void test(Object o) {",
-            "    if (o instanceof Test test && o.hashCode() != 1) {",
-            "      test(test);",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              void test(Object o) {
+                if (o instanceof Test test && o.hashCode() != 1) {
+                  test(test);
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -102,14 +112,16 @@ public final class PatternMatchingInstanceofTest {
     helper
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  void test(Object o) {",
-            "    if (o instanceof Test) {",
-            "      Integer test = (Integer) o;",
-            "      test(test);",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              void test(Object o) {
+                if (o instanceof Test) {
+                  Integer test = (Integer) o;
+                  test(test);
+                }
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -119,14 +131,16 @@ public final class PatternMatchingInstanceofTest {
     helper
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  void test(Object o) {",
-            "    if (o.hashCode() > 0) {",
-            "      Integer test = (Integer) o;",
-            "      test(test);",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              void test(Object o) {
+                if (o.hashCode() > 0) {
+                  Integer test = (Integer) o;
+                  test(test);
+                }
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -136,14 +150,16 @@ public final class PatternMatchingInstanceofTest {
     helper
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  void test(Object x, Object y) {",
-            "    if (x instanceof Test) {",
-            "      Test test = (Test) y;",
-            "      test(test, null);",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              void test(Object x, Object y) {
+                if (x instanceof Test) {
+                  Test test = (Test) y;
+                  test(test, null);
+                }
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -153,16 +169,19 @@ public final class PatternMatchingInstanceofTest {
     helper
         .addInputLines(
             "Test.java",
-            "import java.util.Map;",
-            "class Test {",
-            "  void test(Object x, String k) {",
-            "    if (x instanceof Map) {",
-            "      @SuppressWarnings(\"unchecked\")",
-            "      Map<String, Integer> m = (Map<String, Integer>) x;",
-            "      System.err.println(m.get(k));",
-            "    }",
-            "  }",
-            "}")
+            """
+            import java.util.Map;
+
+            class Test {
+              void test(Object x, String k) {
+                if (x instanceof Map) {
+                  @SuppressWarnings("unchecked")
+                  Map<String, Integer> m = (Map<String, Integer>) x;
+                  System.err.println(m.get(k));
+                }
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }

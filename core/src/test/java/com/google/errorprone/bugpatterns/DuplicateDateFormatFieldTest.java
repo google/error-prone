@@ -32,11 +32,14 @@ public final class DuplicateDateFormatFieldTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.text.SimpleDateFormat;",
-            "class Test {",
-            "  // BUG: Diagnostic contains: uses the field 'm' more than once",
-            "  SimpleDateFormat format = new SimpleDateFormat(\"mm/dd/yyyy hh:mm:ss\");",
-            "}")
+            """
+            import java.text.SimpleDateFormat;
+
+            class Test {
+              // BUG: Diagnostic contains: uses the field 'm' more than once
+              SimpleDateFormat format = new SimpleDateFormat("mm/dd/yyyy hh:mm:ss");
+            }
+            """)
         .doTest();
   }
 
@@ -45,11 +48,14 @@ public final class DuplicateDateFormatFieldTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.text.SimpleDateFormat;",
-            "class Test {",
-            "  // BUG: Diagnostic contains: uses the fields ['m', 's'] more than once",
-            "  SimpleDateFormat format = new SimpleDateFormat(\"mm/dd/yyyy" + " hh:mm:ss.sss\");",
-            "}")
+            """
+            import java.text.SimpleDateFormat;
+
+            class Test {
+              // BUG: Diagnostic contains: uses the fields ['m', 's'] more than once
+              SimpleDateFormat format = new SimpleDateFormat("mm/dd/yyyy hh:mm:ss.sss");
+            }
+            """)
         .doTest();
   }
 
@@ -58,12 +64,15 @@ public final class DuplicateDateFormatFieldTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.text.SimpleDateFormat;",
-            "class Test {",
-            "  static final String PATTERN = \"mm/dd/yyyy hh:mm:ss\";",
-            "  // BUG: Diagnostic contains: uses the field 'm' more than once",
-            "  SimpleDateFormat format = new SimpleDateFormat(PATTERN);",
-            "}")
+            """
+            import java.text.SimpleDateFormat;
+
+            class Test {
+              static final String PATTERN = "mm/dd/yyyy hh:mm:ss";
+              // BUG: Diagnostic contains: uses the field 'm' more than once
+              SimpleDateFormat format = new SimpleDateFormat(PATTERN);
+            }
+            """)
         .doTest();
   }
 
@@ -72,11 +81,14 @@ public final class DuplicateDateFormatFieldTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.time.format.DateTimeFormatter;",
-            "class Test {",
-            "  // BUG: Diagnostic contains: uses the field 'm' more than once",
-            "  DateTimeFormatter formatter = DateTimeFormatter.ofPattern(\"mm/dd/yyyy hh:mm:ss\");",
-            "}")
+            """
+            import java.time.format.DateTimeFormatter;
+
+            class Test {
+              // BUG: Diagnostic contains: uses the field 'm' more than once
+              DateTimeFormatter formatter = DateTimeFormatter.ofPattern("mm/dd/yyyy hh:mm:ss");
+            }
+            """)
         .doTest();
   }
 
@@ -85,14 +97,17 @@ public final class DuplicateDateFormatFieldTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.text.SimpleDateFormat;",
-            "class Test {",
-            "  public void foo() {",
-            "    SimpleDateFormat format = new SimpleDateFormat();",
-            "    // BUG: Diagnostic contains: uses the field 'm' more than once",
-            "    format.applyPattern(\"mm/dd/yyyy hh:mm:ss\");",
-            "  }",
-            "}")
+            """
+            import java.text.SimpleDateFormat;
+
+            class Test {
+              public void foo() {
+                SimpleDateFormat format = new SimpleDateFormat();
+                // BUG: Diagnostic contains: uses the field 'm' more than once
+                format.applyPattern("mm/dd/yyyy hh:mm:ss");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -101,14 +116,17 @@ public final class DuplicateDateFormatFieldTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.text.SimpleDateFormat;",
-            "class Test {",
-            "  public void foo() {",
-            "    SimpleDateFormat format = new SimpleDateFormat();",
-            "    // BUG: Diagnostic contains: uses the field 'm' more than once",
-            "    format.applyLocalizedPattern(\"mm/dd/yyyy hh:mm:ss\");",
-            "  }",
-            "}")
+            """
+            import java.text.SimpleDateFormat;
+
+            class Test {
+              public void foo() {
+                SimpleDateFormat format = new SimpleDateFormat();
+                // BUG: Diagnostic contains: uses the field 'm' more than once
+                format.applyLocalizedPattern("mm/dd/yyyy hh:mm:ss");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -117,11 +135,14 @@ public final class DuplicateDateFormatFieldTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.text.SimpleDateFormat;",
-            "class Test {",
-            "  // BUG: Diagnostic contains: uses the field 'W' more than once",
-            "  SimpleDateFormat format = new SimpleDateFormat(\"Week W ' of ' L\");",
-            "}")
+            """
+            import java.text.SimpleDateFormat;
+
+            class Test {
+              // BUG: Diagnostic contains: uses the field 'W' more than once
+              SimpleDateFormat format = new SimpleDateFormat("Week W ' of ' L");
+            }
+            """)
         .doTest();
   }
 
@@ -130,11 +151,14 @@ public final class DuplicateDateFormatFieldTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.text.SimpleDateFormat;",
-            "class Test {",
-            "  // BUG: Diagnostic contains: uses the field 'm' more than once",
-            "  SimpleDateFormat format = new SimpleDateFormat(\"hh:mm[:ss] yyyy/mm/dd\");",
-            "}")
+            """
+            import java.text.SimpleDateFormat;
+
+            class Test {
+              // BUG: Diagnostic contains: uses the field 'm' more than once
+              SimpleDateFormat format = new SimpleDateFormat("hh:mm[:ss] yyyy/mm/dd");
+            }
+            """)
         .doTest();
   }
 
@@ -143,11 +167,14 @@ public final class DuplicateDateFormatFieldTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.text.SimpleDateFormat;",
-            "class Test {",
-            "  // BUG: Diagnostic contains: uses the field 'm' more than once",
-            "  SimpleDateFormat format = new SimpleDateFormat(\"hh:mm[:ss[.SSS]] yyyy/mm/dd\");",
-            "}")
+            """
+            import java.text.SimpleDateFormat;
+
+            class Test {
+              // BUG: Diagnostic contains: uses the field 'm' more than once
+              SimpleDateFormat format = new SimpleDateFormat("hh:mm[:ss[.SSS]] yyyy/mm/dd");
+            }
+            """)
         .doTest();
   }
 
@@ -156,10 +183,13 @@ public final class DuplicateDateFormatFieldTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.text.SimpleDateFormat;",
-            "class Test {",
-            "  SimpleDateFormat format = new SimpleDateFormat(\"yyyy-MM-dd\");",
-            "}")
+            """
+            import java.text.SimpleDateFormat;
+
+            class Test {
+              SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            }
+            """)
         .doTest();
   }
 
@@ -168,10 +198,13 @@ public final class DuplicateDateFormatFieldTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.text.SimpleDateFormat;",
-            "class Test {",
-            "  SimpleDateFormat format = new SimpleDateFormat(\"'Week' W ' of ' L\");",
-            "}")
+            """
+            import java.text.SimpleDateFormat;
+
+            class Test {
+              SimpleDateFormat format = new SimpleDateFormat("'Week' W ' of ' L");
+            }
+            """)
         .doTest();
   }
 
@@ -180,11 +213,13 @@ public final class DuplicateDateFormatFieldTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.text.SimpleDateFormat;",
-            "class Test {",
-            "  SimpleDateFormat format = ",
-            "    new SimpleDateFormat(\"yyyy'-'MM'-'dd'T'HH':'mm[':'ss][XXX][X]\");",
-            "}")
+            """
+import java.text.SimpleDateFormat;
+
+class Test {
+  SimpleDateFormat format = new SimpleDateFormat("yyyy'-'MM'-'dd'T'HH':'mm[':'ss][XXX][X]");
+}
+""")
         .doTest();
   }
 }

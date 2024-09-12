@@ -35,12 +35,16 @@ public final class BugPatternNamingTest {
     helper
         .addSourceLines(
             "Test.java",
-            "package com.google.errorprone.bugpatterns;",
-            "import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;",
-            "import com.google.errorprone.BugPattern;",
-            "@BugPattern(name = \"Trololol\", severity = WARNING, summary = \"\")",
-            "// BUG: Diagnostic contains:",
-            "class Test extends BugChecker {}")
+            """
+            package com.google.errorprone.bugpatterns;
+
+            import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+            import com.google.errorprone.BugPattern;
+
+            @BugPattern(name = "Trololol", severity = WARNING, summary = "")
+            // BUG: Diagnostic contains:
+            class Test extends BugChecker {}
+            """)
         .doTest();
   }
 
@@ -49,11 +53,15 @@ public final class BugPatternNamingTest {
     helper
         .addSourceLines(
             "Test.java",
-            "package com.google.errorprone.bugpatterns;",
-            "import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;",
-            "import com.google.errorprone.BugPattern;",
-            "@BugPattern(severity = WARNING, summary = \"\")",
-            "class Test extends BugChecker {}")
+            """
+            package com.google.errorprone.bugpatterns;
+
+            import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+            import com.google.errorprone.BugPattern;
+
+            @BugPattern(severity = WARNING, summary = "")
+            class Test extends BugChecker {}
+            """)
         .doTest();
   }
 
@@ -62,18 +70,26 @@ public final class BugPatternNamingTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "package com.google.errorprone.bugpatterns;",
-            "import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;",
-            "import com.google.errorprone.BugPattern;",
-            "@BugPattern(name = \"Test\", severity = WARNING, summary = \"\")",
-            "class Test extends BugChecker {}")
+            """
+            package com.google.errorprone.bugpatterns;
+
+            import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+            import com.google.errorprone.BugPattern;
+
+            @BugPattern(name = "Test", severity = WARNING, summary = "")
+            class Test extends BugChecker {}
+            """)
         .addOutputLines(
             "Test.java",
-            "package com.google.errorprone.bugpatterns;",
-            "import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;",
-            "import com.google.errorprone.BugPattern;",
-            "@BugPattern(severity = WARNING, summary = \"\")",
-            "class Test extends BugChecker {}")
+            """
+            package com.google.errorprone.bugpatterns;
+
+            import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+            import com.google.errorprone.BugPattern;
+
+            @BugPattern(severity = WARNING, summary = "")
+            class Test extends BugChecker {}
+            """)
         .doTest();
   }
 
@@ -82,11 +98,15 @@ public final class BugPatternNamingTest {
     helper
         .addSourceLines(
             "Test.java",
-            "package com.google.errorprone.bugpatterns;",
-            "import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;",
-            "import com.google.errorprone.BugPattern;",
-            "@BugPattern(severity = WARNING, summary = \"\")",
-            "class Test extends BugChecker {}")
+            """
+            package com.google.errorprone.bugpatterns;
+
+            import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+            import com.google.errorprone.BugPattern;
+
+            @BugPattern(severity = WARNING, summary = "")
+            class Test extends BugChecker {}
+            """)
         .doTest();
   }
 }

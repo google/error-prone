@@ -43,38 +43,64 @@ public class JUnit3TestNotRunTest {
     refactorHelper
         .addInputLines(
             "in/PositiveCases.java",
-            "import junit.framework.TestCase;",
-            "import org.junit.Test;",
-            "public class PositiveCases extends TestCase {",
-            "  public void tesName1() {}",
-            "  public void ttestName2() {}",
-            "  public void teestName3() {}",
-            "  public void tstName4() {}",
-            "  public void tetName5() {}",
-            "  public void etstName6() {}",
-            "  public void tsetName7() {}",
-            "  public void teatName8() {}",
-            "  public void TestName9() {}",
-            "  public void TEST_NAME_10() {}",
-            "  public void tesname11() {}",
-            "}")
+            """
+            import junit.framework.TestCase;
+            import org.junit.Test;
+
+            public class PositiveCases extends TestCase {
+              public void tesName1() {}
+
+              public void ttestName2() {}
+
+              public void teestName3() {}
+
+              public void tstName4() {}
+
+              public void tetName5() {}
+
+              public void etstName6() {}
+
+              public void tsetName7() {}
+
+              public void teatName8() {}
+
+              public void TestName9() {}
+
+              public void TEST_NAME_10() {}
+
+              public void tesname11() {}
+            }
+            """)
         .addOutputLines(
             "out/PositiveCases.java",
-            "import junit.framework.TestCase;",
-            "import org.junit.Test;",
-            "public class PositiveCases extends TestCase {",
-            "  public void testName1() {}",
-            "  public void testName2() {}",
-            "  public void testName3() {}",
-            "  public void testName4() {}",
-            "  public void testName5() {}",
-            "  public void testName6() {}",
-            "  public void testName7() {}",
-            "  public void testName8() {}",
-            "  public void testName9() {}",
-            "  public void test_NAME_10() {}",
-            "  public void testname11() {}",
-            "}")
+            """
+            import junit.framework.TestCase;
+            import org.junit.Test;
+
+            public class PositiveCases extends TestCase {
+              public void testName1() {}
+
+              public void testName2() {}
+
+              public void testName3() {}
+
+              public void testName4() {}
+
+              public void testName5() {}
+
+              public void testName6() {}
+
+              public void testName7() {}
+
+              public void testName8() {}
+
+              public void testName9() {}
+
+              public void test_NAME_10() {}
+
+              public void testname11() {}
+            }
+            """)
         .doTest();
   }
 
@@ -83,23 +109,32 @@ public class JUnit3TestNotRunTest {
     refactorHelper
         .addInputLines(
             "in/PositiveCases.java",
-            "import junit.framework.TestCase;",
-            "import org.junit.Test;",
-            "public class PositiveCases extends TestCase {",
-            "  public void tesBasic() {}",
-            "  public    void    tesMoreSpaces(  )    {}",
-            "  public void",
-            "      tesMultiline() {}",
-            "}")
+            """
+            import junit.framework.TestCase;
+            import org.junit.Test;
+
+            public class PositiveCases extends TestCase {
+              public void tesBasic() {}
+
+              public void tesMoreSpaces() {}
+
+              public void tesMultiline() {}
+            }
+            """)
         .addOutputLines(
             "out/PositiveCases.java",
-            "import junit.framework.TestCase;",
-            "import org.junit.Test;",
-            "public class PositiveCases extends TestCase {",
-            "  public void testBasic() {}",
-            "  public void testMoreSpaces() {}",
-            "  public void testMultiline() {}",
-            "}")
+            """
+            import junit.framework.TestCase;
+            import org.junit.Test;
+
+            public class PositiveCases extends TestCase {
+              public void testBasic() {}
+
+              public void testMoreSpaces() {}
+
+              public void testMultiline() {}
+            }
+            """)
         .doTest();
   }
 
@@ -108,11 +143,14 @@ public class JUnit3TestNotRunTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import junit.framework.TestCase;",
-            "public class Test extends TestCase {",
-            "  // BUG: Diagnostic contains:",
-            "  private void testDoesStuff() {}",
-            "}")
+            """
+            import junit.framework.TestCase;
+
+            public class Test extends TestCase {
+              // BUG: Diagnostic contains:
+              private void testDoesStuff() {}
+            }
+            """)
         .doTest();
   }
 
@@ -121,11 +159,14 @@ public class JUnit3TestNotRunTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import junit.framework.TestCase;",
-            "public class Test extends TestCase {",
-            "  // BUG: Diagnostic contains:",
-            "  private void tsetDoesStuff() {}",
-            "}")
+            """
+            import junit.framework.TestCase;
+
+            public class Test extends TestCase {
+              // BUG: Diagnostic contains:
+              private void tsetDoesStuff() {}
+            }
+            """)
         .doTest();
   }
 
@@ -134,18 +175,24 @@ public class JUnit3TestNotRunTest {
     refactorHelper
         .addInputLines(
             "in/DoesStuffTest.java",
-            "import junit.framework.TestCase;",
-            "import org.junit.Test;",
-            "public class DoesStuffTest extends TestCase {",
-            "  private static void tsetDoesStuff() throws Exception {}",
-            "}")
+            """
+            import junit.framework.TestCase;
+            import org.junit.Test;
+
+            public class DoesStuffTest extends TestCase {
+              private static void tsetDoesStuff() throws Exception {}
+            }
+            """)
         .addOutputLines(
             "out/DoesStuffTest.java",
-            "import junit.framework.TestCase;",
-            "import org.junit.Test;",
-            "public class DoesStuffTest extends TestCase {",
-            "  public void testDoesStuff() throws Exception {}",
-            "}")
+            """
+            import junit.framework.TestCase;
+            import org.junit.Test;
+
+            public class DoesStuffTest extends TestCase {
+              public void testDoesStuff() throws Exception {}
+            }
+            """)
         .doTest();
   }
 
@@ -154,11 +201,14 @@ public class JUnit3TestNotRunTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import junit.framework.TestCase;",
-            "public class Test extends TestCase {",
-            "  // BUG: Diagnostic contains:",
-            "  public void testDoesStuff(boolean param) {}",
-            "}")
+            """
+            import junit.framework.TestCase;
+
+            public class Test extends TestCase {
+              // BUG: Diagnostic contains:
+              public void testDoesStuff(boolean param) {}
+            }
+            """)
         .doTest();
   }
 
@@ -167,11 +217,14 @@ public class JUnit3TestNotRunTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import junit.framework.TestCase;",
-            "public class Test extends TestCase {",
-            "  @SuppressWarnings(\"JUnit3TestNotRun\")",
-            "  public void testDoesStuff(boolean param) {}",
-            "}")
+            """
+            import junit.framework.TestCase;
+
+            public class Test extends TestCase {
+              @SuppressWarnings("JUnit3TestNotRun")
+              public void testDoesStuff(boolean param) {}
+            }
+            """)
         .doTest();
   }
 
@@ -180,10 +233,13 @@ public class JUnit3TestNotRunTest {
     compilationHelper
         .addSourceLines(
             "TestBase.java",
-            "import junit.framework.TestCase;",
-            "public class TestBase extends TestCase {",
-            "  public void testDoesStuff(boolean param) {}",
-            "}")
+            """
+            import junit.framework.TestCase;
+
+            public class TestBase extends TestCase {
+              public void testDoesStuff(boolean param) {}
+            }
+            """)
         .doTest();
   }
 
@@ -192,11 +248,17 @@ public class JUnit3TestNotRunTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import junit.framework.TestCase;",
-            "public class Test extends TestCase {",
-            "  public void testActually() { testDoesStuff(true); }",
-            "  public void testDoesStuff(boolean param) {}",
-            "}")
+            """
+            import junit.framework.TestCase;
+
+            public class Test extends TestCase {
+              public void testActually() {
+                testDoesStuff(true);
+              }
+
+              public void testDoesStuff(boolean param) {}
+            }
+            """)
         .doTest();
   }
 
@@ -204,16 +266,21 @@ public class JUnit3TestNotRunTest {
   public void hasParameters_isOverride_noFinding() {
     compilationHelper
         .addSourceLines(
-            "Foo.java", //
-            "interface Foo {",
-            "  void testDoesStuff(boolean param);",
-            "}")
+            "Foo.java",
+            """
+            interface Foo {
+              void testDoesStuff(boolean param);
+            }
+            """)
         .addSourceLines(
             "Test.java",
-            "import junit.framework.TestCase;",
-            "public class Test extends TestCase implements Foo {",
-            "  public void testDoesStuff(boolean param) {}",
-            "}")
+            """
+            import junit.framework.TestCase;
+
+            public class Test extends TestCase implements Foo {
+              public void testDoesStuff(boolean param) {}
+            }
+            """)
         .doTest();
   }
 
@@ -222,18 +289,24 @@ public class JUnit3TestNotRunTest {
     refactorHelper
         .addInputLines(
             "in/DoesStuffTest.java",
-            "import junit.framework.TestCase;",
-            "import org.junit.Test;",
-            "public class DoesStuffTest extends TestCase {",
-            "  void tsetDoesStuff() {}",
-            "}")
+            """
+            import junit.framework.TestCase;
+            import org.junit.Test;
+
+            public class DoesStuffTest extends TestCase {
+              void tsetDoesStuff() {}
+            }
+            """)
         .addOutputLines(
             "out/DoesStuffTest.java",
-            "import junit.framework.TestCase;",
-            "import org.junit.Test;",
-            "public class DoesStuffTest extends TestCase {",
-            "  public void testDoesStuff() {}",
-            "}")
+            """
+            import junit.framework.TestCase;
+            import org.junit.Test;
+
+            public class DoesStuffTest extends TestCase {
+              public void testDoesStuff() {}
+            }
+            """)
         .doTest();
   }
 

@@ -31,22 +31,33 @@ public class NonCanonicalStaticImportTest {
   public void positive() {
     compilationHelper
         .addSourceLines(
-            "a/A.java", //
-            "package a;",
-            "public class A {",
-            "  public static class Inner {}",
-            "}")
+            "a/A.java",
+            """
+            package a;
+
+            public class A {
+              public static class Inner {}
+            }
+            """)
         .addSourceLines(
-            "b/B.java", //
-            "package b;",
-            "import a.A;",
-            "public class B extends A {}")
+            "b/B.java",
+            """
+            package b;
+
+            import a.A;
+
+            public class B extends A {}
+            """)
         .addSourceLines(
             "b/Test.java",
-            "package b;",
-            "// BUG: Diagnostic contains: import a.A.Inner;",
-            "import static b.B.Inner;",
-            "class Test {}")
+            """
+            package b;
+
+            // BUG: Diagnostic contains: import a.A.Inner;
+            import static b.B.Inner;
+
+            class Test {}
+            """)
         .doTest();
   }
 
@@ -55,22 +66,33 @@ public class NonCanonicalStaticImportTest {
     compilationHelper
         .addSourceLines(
             "a/A.java",
-            "package a;",
-            "public class A {",
-            "  public static class Inner {",
-            "    public static void f() {}",
-            "  }",
-            "}")
+            """
+            package a;
+
+            public class A {
+              public static class Inner {
+                public static void f() {}
+              }
+            }
+            """)
         .addSourceLines(
-            "b/B.java", //
-            "package b;",
-            "import a.A;",
-            "public class B extends A {}")
+            "b/B.java",
+            """
+            package b;
+
+            import a.A;
+
+            public class B extends A {}
+            """)
         .addSourceLines(
-            "b/Test.java", //
-            "package b;",
-            "import static a.A.Inner.f;",
-            "class Test {}")
+            "b/Test.java",
+            """
+            package b;
+
+            import static a.A.Inner.f;
+
+            class Test {}
+            """)
         .doTest();
   }
 
@@ -79,22 +101,33 @@ public class NonCanonicalStaticImportTest {
     compilationHelper
         .addSourceLines(
             "a/A.java",
-            "package a;",
-            "public class A {",
-            "  public static class Inner<T> {",
-            "    public static void f() {}",
-            "  }",
-            "}")
+            """
+            package a;
+
+            public class A {
+              public static class Inner<T> {
+                public static void f() {}
+              }
+            }
+            """)
         .addSourceLines(
-            "b/B.java", //
-            "package b;",
-            "import a.A;",
-            "public class B extends A {}")
+            "b/B.java",
+            """
+            package b;
+
+            import a.A;
+
+            public class B extends A {}
+            """)
         .addSourceLines(
-            "b/Test.java", //
-            "package b;",
-            "import static a.A.Inner.f;",
-            "class Test {}")
+            "b/Test.java",
+            """
+            package b;
+
+            import static a.A.Inner.f;
+
+            class Test {}
+            """)
         .doTest();
   }
 
@@ -102,21 +135,32 @@ public class NonCanonicalStaticImportTest {
   public void negative() {
     compilationHelper
         .addSourceLines(
-            "a/A.java", //
-            "package a;",
-            "public class A {",
-            "  public static class Inner {}",
-            "}")
+            "a/A.java",
+            """
+            package a;
+
+            public class A {
+              public static class Inner {}
+            }
+            """)
         .addSourceLines(
-            "b/B.java", //
-            "package b;",
-            "import a.A;",
-            "public class B extends A {}")
+            "b/B.java",
+            """
+            package b;
+
+            import a.A;
+
+            public class B extends A {}
+            """)
         .addSourceLines(
-            "b/Test.java", //
-            "package b;",
-            "import static a.A.Inner;",
-            "class Test {}")
+            "b/Test.java",
+            """
+            package b;
+
+            import static a.A.Inner;
+
+            class Test {}
+            """)
         .doTest();
   }
 
@@ -124,21 +168,32 @@ public class NonCanonicalStaticImportTest {
   public void negativeOnDemand() {
     compilationHelper
         .addSourceLines(
-            "a/A.java", //
-            "package a;",
-            "public class A {",
-            "  public static class Inner {}",
-            "}")
+            "a/A.java",
+            """
+            package a;
+
+            public class A {
+              public static class Inner {}
+            }
+            """)
         .addSourceLines(
-            "b/B.java", //
-            "package b;",
-            "import a.A;",
-            "public class B extends A {}")
+            "b/B.java",
+            """
+            package b;
+
+            import a.A;
+
+            public class B extends A {}
+            """)
         .addSourceLines(
-            "b/Test.java", //
-            "package b;",
-            "import static a.A.Inner.*;",
-            "class Test {}")
+            "b/Test.java",
+            """
+            package b;
+
+            import static a.A.Inner.*;
+
+            class Test {}
+            """)
         .doTest();
   }
 }

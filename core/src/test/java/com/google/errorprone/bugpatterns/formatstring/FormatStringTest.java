@@ -164,15 +164,17 @@ public class FormatStringTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void f() {",
-            "    // BUG: Diagnostic contains: missing argument for format specifier '%s'",
-            "    String.format(\"%s %s %s\", 42);",
-            "    // BUG: Diagnostic contains: missing argument for format specifier '%s'",
-            "    String.format(\"%s %s %s\", 42, 42);",
-            "    String.format(\"%s %s %s\", 42, 42, 42);",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f() {
+                // BUG: Diagnostic contains: missing argument for format specifier '%s'
+                String.format("%s %s %s", 42);
+                // BUG: Diagnostic contains: missing argument for format specifier '%s'
+                String.format("%s %s %s", 42, 42);
+                String.format("%s %s %s", 42, 42, 42);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -181,17 +183,19 @@ public class FormatStringTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void f() {",
-            "    String.format(\"%s %s\", 1, 2);",
-            "    // BUG: Diagnostic contains: extra format arguments: used 2, provided 3",
-            "    String.format(\"%s %s\", 1, 2, 3);",
-            "    // BUG: Diagnostic contains: extra format arguments: used 2, provided 4",
-            "    String.format(\"%s %s\", 1, 2, 3, 4);",
-            "    // BUG: Diagnostic contains: extra format arguments: used 0, provided 1",
-            "    String.format(\"{0}\", 1);",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f() {
+                String.format("%s %s", 1, 2);
+                // BUG: Diagnostic contains: extra format arguments: used 2, provided 3
+                String.format("%s %s", 1, 2, 3);
+                // BUG: Diagnostic contains: extra format arguments: used 2, provided 4
+                String.format("%s %s", 1, 2, 3, 4);
+                // BUG: Diagnostic contains: extra format arguments: used 0, provided 1
+                String.format("{0}", 1);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -200,20 +204,22 @@ public class FormatStringTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void f(boolean b) {",
-            "    String.format(\"%d\", 42);",
-            "    String.format(\"%d\", 42L);",
-            "    String.format(\"%f\", 42.0f);",
-            "    String.format(\"%f\", 42.0d);",
-            "    String.format(\"%s\", \"hello\");",
-            "    String.format(\"%s\", 42);",
-            "    String.format(\"%s\", (Object) null);",
-            "    String.format(\"%s\", new Object());",
-            "    String.format(\"%c\", 'c');",
-            "    String.format(b ? \"%s\" : \"%d\", 42);",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f(boolean b) {
+                String.format("%d", 42);
+                String.format("%d", 42L);
+                String.format("%f", 42.0f);
+                String.format("%f", 42.0d);
+                String.format("%s", "hello");
+                String.format("%s", 42);
+                String.format("%s", (Object) null);
+                String.format("%s", new Object());
+                String.format("%c", 'c');
+                String.format(b ? "%s" : "%d", 42);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -288,11 +294,13 @@ public class FormatStringTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void f() {",
-            "    System.console().readLine();",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f() {
+                System.console().readLine();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -311,11 +319,13 @@ public class FormatStringTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void f() {",
-            "    String.format(\"%s %s\", null, null);",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f() {
+                String.format("%s %s", null, null);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -324,16 +334,20 @@ public class FormatStringTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.time.*;",
-            "class Test {",
-            "  void f() {",
-            "    System.err.printf(\"%tY\",",
-            "        LocalDateTime.ofInstant(Instant.now(), ZoneId.systemDefault()));",
-            "    System.err.printf(\"%tQ\", Instant.now());",
-            "    System.err.printf(\"%tZ\", ZonedDateTime.of(LocalDate.of(2018, 12, 27),"
-                + " LocalTime.of(17, 0), ZoneId.of(\"Europe/London\")));",
-            "  }",
-            "}")
+            """
+import java.time.*;
+
+class Test {
+  void f() {
+    System.err.printf("%tY", LocalDateTime.ofInstant(Instant.now(), ZoneId.systemDefault()));
+    System.err.printf("%tQ", Instant.now());
+    System.err.printf(
+        "%tZ",
+        ZonedDateTime.of(
+            LocalDate.of(2018, 12, 27), LocalTime.of(17, 0), ZoneId.of("Europe/London")));
+  }
+}
+""")
         .doTest();
   }
 
@@ -342,11 +356,13 @@ public class FormatStringTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void f(Number n) {",
-            "    System.err.printf(\"%x\", n);",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f(Number n) {
+                System.err.printf("%x", n);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -356,12 +372,14 @@ public class FormatStringTest {
     compilationHelper
         .addSourceLines(
             "T.java",
-            "class T {",
-            "  public static void main(String[] args) {",
-            "    // BUG: Diagnostic contains: Illegal format argument index",
-            "    System.err.printf(\" %0$2s) %s\", args[0], args[1]);",
-            "  }",
-            "}")
+            """
+            class T {
+              public static void main(String[] args) {
+                // BUG: Diagnostic contains: Illegal format argument index
+                System.err.printf(" %0$2s) %s", args[0], args[1]);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -371,11 +389,13 @@ public class FormatStringTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void f() {",
-            "    \"%s %s\".formatted(\"foo\", \"baz\");",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f() {
+                "%s %s".formatted("foo", "baz");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -385,12 +405,14 @@ public class FormatStringTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void f() {",
-            "    // BUG: Diagnostic contains: missing argument for format specifier",
-            "    \"%s %s %s\".formatted(\"foo\", \"baz\");",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f() {
+                // BUG: Diagnostic contains: missing argument for format specifier
+                "%s %s %s".formatted("foo", "baz");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -400,11 +422,13 @@ public class FormatStringTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void f(String f) {",
-            "    f.formatted(\"foo\", \"baz\");",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f(String f) {
+                f.formatted("foo", "baz");
+              }
+            }
+            """)
         .doTest();
   }
 }

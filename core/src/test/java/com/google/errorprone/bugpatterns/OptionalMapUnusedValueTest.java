@@ -30,24 +30,34 @@ public final class OptionalMapUnusedValueTest {
     helper
         .addInputLines(
             "Test.java",
-            "import java.util.Optional;",
-            "class Test {",
-            "  private Integer foo(Integer v) {return v;}",
-            "",
-            "  public void bar(Optional<Integer> optional) {",
-            "    optional.map(this::foo);",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            class Test {
+              private Integer foo(Integer v) {
+                return v;
+              }
+
+              public void bar(Optional<Integer> optional) {
+                optional.map(this::foo);
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import java.util.Optional;",
-            "class Test {",
-            "  private Integer foo(Integer v) {return v;}",
-            "",
-            "  public void bar(Optional<Integer> optional) {",
-            "    optional.ifPresent(this::foo);",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            class Test {
+              private Integer foo(Integer v) {
+                return v;
+              }
+
+              public void bar(Optional<Integer> optional) {
+                optional.ifPresent(this::foo);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -56,24 +66,34 @@ public final class OptionalMapUnusedValueTest {
     helper
         .addInputLines(
             "Test.java",
-            "import java.util.Optional;",
-            "class Test {",
-            "  private Integer foo(Integer v) {return v;}",
-            "",
-            "  public void bar(Optional<Integer> optional) {",
-            "    optional.map(v -> foo(v));",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            class Test {
+              private Integer foo(Integer v) {
+                return v;
+              }
+
+              public void bar(Optional<Integer> optional) {
+                optional.map(v -> foo(v));
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import java.util.Optional;",
-            "class Test {",
-            "  private Integer foo(Integer v) {return v;}",
-            "",
-            "  public void bar(Optional<Integer> optional) {",
-            "    optional.ifPresent(v -> foo(v));",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            class Test {
+              private Integer foo(Integer v) {
+                return v;
+              }
+
+              public void bar(Optional<Integer> optional) {
+                optional.ifPresent(v -> foo(v));
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -82,14 +102,19 @@ public final class OptionalMapUnusedValueTest {
     helper
         .addInputLines(
             "Test.java",
-            "import java.util.Optional;",
-            "class Test {",
-            "  private Integer foo(Integer v) {return v;}",
-            "",
-            "  public Optional<Integer> bar(Optional<Integer> optional) {",
-            "    return optional.map(this::foo);",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            class Test {
+              private Integer foo(Integer v) {
+                return v;
+              }
+
+              public Optional<Integer> bar(Optional<Integer> optional) {
+                return optional.map(this::foo);
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -99,14 +124,19 @@ public final class OptionalMapUnusedValueTest {
     helper
         .addInputLines(
             "Test.java",
-            "import java.util.Optional;",
-            "class Test {",
-            "  private Integer foo(Integer v) {return v;}",
-            "",
-            "  public void bar(Optional<Integer> optional) {",
-            "    Optional<Integer> result = optional.map(this::foo);",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            class Test {
+              private Integer foo(Integer v) {
+                return v;
+              }
+
+              public void bar(Optional<Integer> optional) {
+                Optional<Integer> result = optional.map(this::foo);
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -116,14 +146,19 @@ public final class OptionalMapUnusedValueTest {
     helper
         .addInputLines(
             "Test.java",
-            "import java.util.Optional;",
-            "class Test {",
-            "  private Integer foo(Integer v) {return v;}",
-            "",
-            "  public void bar(Optional<Integer> optional) {",
-            "    optional.map(this::foo).orElse(42);",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            class Test {
+              private Integer foo(Integer v) {
+                return v;
+              }
+
+              public void bar(Optional<Integer> optional) {
+                optional.map(this::foo).orElse(42);
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -133,12 +168,15 @@ public final class OptionalMapUnusedValueTest {
     helper
         .addInputLines(
             "Test.java",
-            "import java.util.Optional;",
-            "class Test {",
-            "  public void bar(Optional<Integer> optional) {",
-            "    optional.map(v -> v + 1);",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            class Test {
+              public void bar(Optional<Integer> optional) {
+                optional.map(v -> v + 1);
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -148,12 +186,18 @@ public final class OptionalMapUnusedValueTest {
     helper
         .addInputLines(
             "Test.java",
-            "import java.util.Optional;",
-            "class Test {",
-            "  public void bar(Optional<Integer> optional) {",
-            "    optional.map(v -> {return 2;});",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            class Test {
+              public void bar(Optional<Integer> optional) {
+                optional.map(
+                    v -> {
+                      return 2;
+                    });
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }

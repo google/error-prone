@@ -31,27 +31,33 @@ public class ASTHelpersSuggestionsTest {
     testHelper
         .addInputLines(
             "Test.java",
-            "import com.sun.tools.javac.code.Symbol;",
-            "class Test {",
-            "  void f(Symbol s) {",
-            "    s.isStatic();",
-            "    s.packge();",
-            "    s.members().anyMatch(x -> x.isStatic());",
-            "  }",
-            "}")
+            """
+            import com.sun.tools.javac.code.Symbol;
+
+            class Test {
+              void f(Symbol s) {
+                s.isStatic();
+                s.packge();
+                s.members().anyMatch(x -> x.isStatic());
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import static com.google.errorprone.util.ASTHelpers.enclosingPackage;",
-            "import static com.google.errorprone.util.ASTHelpers.isStatic;",
-            "import static com.google.errorprone.util.ASTHelpers.scope;",
-            "import com.sun.tools.javac.code.Symbol;",
-            "class Test {",
-            "  void f(Symbol s) {",
-            "    isStatic(s);",
-            "    enclosingPackage(s);",
-            "    scope(s.members()).anyMatch(x -> isStatic(x));",
-            "  }",
-            "}")
+            """
+            import static com.google.errorprone.util.ASTHelpers.enclosingPackage;
+            import static com.google.errorprone.util.ASTHelpers.isStatic;
+            import static com.google.errorprone.util.ASTHelpers.scope;
+            import com.sun.tools.javac.code.Symbol;
+
+            class Test {
+              void f(Symbol s) {
+                isStatic(s);
+                enclosingPackage(s);
+                scope(s.members()).anyMatch(x -> isStatic(x));
+              }
+            }
+            """)
         .addModules(
             "jdk.compiler/com.sun.tools.javac.code", "jdk.compiler/com.sun.tools.javac.util")
         .doTest();
@@ -62,27 +68,33 @@ public class ASTHelpersSuggestionsTest {
     testHelper
         .addInputLines(
             "Test.java",
-            "import com.sun.tools.javac.code.Symbol.VarSymbol;",
-            "class Test {",
-            "  void f(VarSymbol s) {",
-            "    s.isStatic();",
-            "    s.packge();",
-            "    s.members().anyMatch(x -> x.isStatic());",
-            "  }",
-            "}")
+            """
+            import com.sun.tools.javac.code.Symbol.VarSymbol;
+
+            class Test {
+              void f(VarSymbol s) {
+                s.isStatic();
+                s.packge();
+                s.members().anyMatch(x -> x.isStatic());
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import static com.google.errorprone.util.ASTHelpers.enclosingPackage;",
-            "import static com.google.errorprone.util.ASTHelpers.isStatic;",
-            "import static com.google.errorprone.util.ASTHelpers.scope;",
-            "import com.sun.tools.javac.code.Symbol.VarSymbol;",
-            "class Test {",
-            "  void f(VarSymbol s) {",
-            "    s.isStatic();",
-            "    enclosingPackage(s);",
-            "    scope(s.members()).anyMatch(x -> isStatic(x));",
-            "  }",
-            "}")
+            """
+            import static com.google.errorprone.util.ASTHelpers.enclosingPackage;
+            import static com.google.errorprone.util.ASTHelpers.isStatic;
+            import static com.google.errorprone.util.ASTHelpers.scope;
+            import com.sun.tools.javac.code.Symbol.VarSymbol;
+
+            class Test {
+              void f(VarSymbol s) {
+                s.isStatic();
+                enclosingPackage(s);
+                scope(s.members()).anyMatch(x -> isStatic(x));
+              }
+            }
+            """)
         .addModules(
             "jdk.compiler/com.sun.tools.javac.code", "jdk.compiler/com.sun.tools.javac.util")
         .doTest();
@@ -93,21 +105,27 @@ public class ASTHelpersSuggestionsTest {
     testHelper
         .addInputLines(
             "Test.java",
-            "import com.sun.tools.javac.code.Symbol.ClassSymbol;",
-            "class Test {",
-            "  void f(ClassSymbol s) {",
-            "    s.getEnclosedElements();",
-            "  }",
-            "}")
+            """
+            import com.sun.tools.javac.code.Symbol.ClassSymbol;
+
+            class Test {
+              void f(ClassSymbol s) {
+                s.getEnclosedElements();
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import static com.google.errorprone.util.ASTHelpers.getEnclosedElements;",
-            "import com.sun.tools.javac.code.Symbol.ClassSymbol;",
-            "class Test {",
-            "  void f(ClassSymbol s) {",
-            "    getEnclosedElements(s);",
-            "  }",
-            "}")
+            """
+            import static com.google.errorprone.util.ASTHelpers.getEnclosedElements;
+            import com.sun.tools.javac.code.Symbol.ClassSymbol;
+
+            class Test {
+              void f(ClassSymbol s) {
+                getEnclosedElements(s);
+              }
+            }
+            """)
         .addModules(
             "jdk.compiler/com.sun.tools.javac.code", "jdk.compiler/com.sun.tools.javac.util")
         .doTest();
@@ -118,13 +136,17 @@ public class ASTHelpersSuggestionsTest {
     testHelper
         .addInputLines(
             "ASTHelpers.java",
-            "package com.google.errorprone.util;",
-            "import com.sun.tools.javac.code.Symbol;",
-            "public final class ASTHelpers {",
-            "  public static boolean isStatic(Symbol symbol) {",
-            "    return symbol.isStatic();",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.util;
+
+            import com.sun.tools.javac.code.Symbol;
+
+            public final class ASTHelpers {
+              public static boolean isStatic(Symbol symbol) {
+                return symbol.isStatic();
+              }
+            }
+            """)
         .expectUnchanged()
         .addModules(
             "jdk.compiler/com.sun.tools.javac.code", "jdk.compiler/com.sun.tools.javac.util")

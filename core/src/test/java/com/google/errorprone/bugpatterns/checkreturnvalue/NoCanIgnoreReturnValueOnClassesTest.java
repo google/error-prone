@@ -38,24 +38,32 @@ public final class NoCanIgnoreReturnValueOnClassesTest {
     helper
         .addInputLines(
             "Client.java",
-            "package com.google.frobber;",
-            "import com.google.errorprone.annotations.CanIgnoreReturnValue;",
-            "@CanIgnoreReturnValue",
-            "public final class Client {",
-            "  public Client getValue() {",
-            "    return this;",
-            "  }",
-            "}")
+            """
+            package com.google.frobber;
+
+            import com.google.errorprone.annotations.CanIgnoreReturnValue;
+
+            @CanIgnoreReturnValue
+            public final class Client {
+              public Client getValue() {
+                return this;
+              }
+            }
+            """)
         .addOutputLines(
             "Client.java",
-            "package com.google.frobber;",
-            "import com.google.errorprone.annotations.CanIgnoreReturnValue;",
-            "public final class Client {",
-            "  @CanIgnoreReturnValue",
-            "  public Client getValue() {",
-            "    return this;",
-            "  }",
-            "}")
+            """
+            package com.google.frobber;
+
+            import com.google.errorprone.annotations.CanIgnoreReturnValue;
+
+            public final class Client {
+              @CanIgnoreReturnValue
+              public Client getValue() {
+                return this;
+              }
+            }
+            """)
         .doTest(TestMode.TEXT_MATCH);
   }
 
@@ -64,24 +72,32 @@ public final class NoCanIgnoreReturnValueOnClassesTest {
     helper
         .addInputLines(
             "Client.java",
-            "package com.google.frobber;",
-            "import com.google.errorprone.annotations.CanIgnoreReturnValue;",
-            "@CanIgnoreReturnValue",
-            "public final class Client {",
-            "  public Client getValue() {",
-            "    return ((Client) (this));",
-            "  }",
-            "}")
+            """
+            package com.google.frobber;
+
+            import com.google.errorprone.annotations.CanIgnoreReturnValue;
+
+            @CanIgnoreReturnValue
+            public final class Client {
+              public Client getValue() {
+                return ((Client) (this));
+              }
+            }
+            """)
         .addOutputLines(
             "Client.java",
-            "package com.google.frobber;",
-            "import com.google.errorprone.annotations.CanIgnoreReturnValue;",
-            "public final class Client {",
-            "  @CanIgnoreReturnValue",
-            "  public Client getValue() {",
-            "    return ((Client) (this));",
-            "  }",
-            "}")
+            """
+            package com.google.frobber;
+
+            import com.google.errorprone.annotations.CanIgnoreReturnValue;
+
+            public final class Client {
+              @CanIgnoreReturnValue
+              public Client getValue() {
+                return ((Client) (this));
+              }
+            }
+            """)
         .doTest(TestMode.TEXT_MATCH);
   }
 
@@ -90,31 +106,41 @@ public final class NoCanIgnoreReturnValueOnClassesTest {
     helper
         .addInputLines(
             "Client.java",
-            "package com.google.frobber;",
-            "import com.google.errorprone.annotations.CanIgnoreReturnValue;",
-            "@CanIgnoreReturnValue",
-            "public final class Client {",
-            "  public Client getValue() {",
-            "    return self();",
-            "  }",
-            "  private Client self() {",
-            "    return this;",
-            "  }",
-            "}")
+            """
+            package com.google.frobber;
+
+            import com.google.errorprone.annotations.CanIgnoreReturnValue;
+
+            @CanIgnoreReturnValue
+            public final class Client {
+              public Client getValue() {
+                return self();
+              }
+
+              private Client self() {
+                return this;
+              }
+            }
+            """)
         .addOutputLines(
             "Client.java",
-            "package com.google.frobber;",
-            "import com.google.errorprone.annotations.CanIgnoreReturnValue;",
-            "public final class Client {",
-            "  @CanIgnoreReturnValue",
-            "  public Client getValue() {",
-            "    return self();",
-            "  }",
-            "  @CanIgnoreReturnValue",
-            "  private Client self() {",
-            "    return this;",
-            "  }",
-            "}")
+            """
+            package com.google.frobber;
+
+            import com.google.errorprone.annotations.CanIgnoreReturnValue;
+
+            public final class Client {
+              @CanIgnoreReturnValue
+              public Client getValue() {
+                return self();
+              }
+
+              @CanIgnoreReturnValue
+              private Client self() {
+                return this;
+              }
+            }
+            """)
         .doTest(TestMode.TEXT_MATCH);
   }
 
@@ -123,31 +149,41 @@ public final class NoCanIgnoreReturnValueOnClassesTest {
     helper
         .addInputLines(
             "Client.java",
-            "package com.google.frobber;",
-            "import com.google.errorprone.annotations.CanIgnoreReturnValue;",
-            "@CanIgnoreReturnValue",
-            "public final class Client {",
-            "  public Client getValue() {",
-            "    return getThis();",
-            "  }",
-            "  private Client getThis() {",
-            "    return this;",
-            "  }",
-            "}")
+            """
+            package com.google.frobber;
+
+            import com.google.errorprone.annotations.CanIgnoreReturnValue;
+
+            @CanIgnoreReturnValue
+            public final class Client {
+              public Client getValue() {
+                return getThis();
+              }
+
+              private Client getThis() {
+                return this;
+              }
+            }
+            """)
         .addOutputLines(
             "Client.java",
-            "package com.google.frobber;",
-            "import com.google.errorprone.annotations.CanIgnoreReturnValue;",
-            "public final class Client {",
-            "  @CanIgnoreReturnValue",
-            "  public Client getValue() {",
-            "    return getThis();",
-            "  }",
-            "  @CanIgnoreReturnValue",
-            "  private Client getThis() {",
-            "    return this;",
-            "  }",
-            "}")
+            """
+            package com.google.frobber;
+
+            import com.google.errorprone.annotations.CanIgnoreReturnValue;
+
+            public final class Client {
+              @CanIgnoreReturnValue
+              public Client getValue() {
+                return getThis();
+              }
+
+              @CanIgnoreReturnValue
+              private Client getThis() {
+                return this;
+              }
+            }
+            """)
         .doTest(TestMode.TEXT_MATCH);
   }
 
@@ -156,14 +192,18 @@ public final class NoCanIgnoreReturnValueOnClassesTest {
     helper
         .addInputLines(
             "Client.java",
-            "package com.google.frobber;",
-            "import com.google.errorprone.annotations.CanIgnoreReturnValue;",
-            "@CanIgnoreReturnValue",
-            "public final class Client {",
-            "  public Client getValue() {",
-            "    return new Client();",
-            "  }",
-            "}")
+            """
+            package com.google.frobber;
+
+            import com.google.errorprone.annotations.CanIgnoreReturnValue;
+
+            @CanIgnoreReturnValue
+            public final class Client {
+              public Client getValue() {
+                return new Client();
+              }
+            }
+            """)
         .addOutputLines(
             "Client.java",
             "package com.google.frobber;",
@@ -182,15 +222,20 @@ public final class NoCanIgnoreReturnValueOnClassesTest {
     helper
         .addInputLines(
             "Client.java",
-            "package com.google.frobber;",
-            "import com.google.errorprone.annotations.CanIgnoreReturnValue;",
-            "@CanIgnoreReturnValue",
-            "public final class Client {",
-            "  Client() {}",
-            "  public Client getValue() {",
-            "    return this;",
-            "  }",
-            "}")
+            """
+            package com.google.frobber;
+
+            import com.google.errorprone.annotations.CanIgnoreReturnValue;
+
+            @CanIgnoreReturnValue
+            public final class Client {
+              Client() {}
+
+              public Client getValue() {
+                return this;
+              }
+            }
+            """)
         .addOutputLines(
             "Client.java",
             "package com.google.frobber;",
@@ -211,38 +256,48 @@ public final class NoCanIgnoreReturnValueOnClassesTest {
     helper
         .addInputLines(
             "Client.java",
-            "package com.google.frobber;",
-            "import com.google.errorprone.annotations.CanIgnoreReturnValue;",
-            "import com.google.errorprone.annotations.CheckReturnValue;",
-            "@CanIgnoreReturnValue",
-            "public final class Client {",
-            "  public Client getValue() {",
-            "    return this;",
-            "  }",
-            "  @CheckReturnValue",
-            "  public static final class Nested {",
-            "    public int getValue() {",
-            "      return 42;",
-            "    }",
-            "  }",
-            "}")
+            """
+            package com.google.frobber;
+
+            import com.google.errorprone.annotations.CanIgnoreReturnValue;
+            import com.google.errorprone.annotations.CheckReturnValue;
+
+            @CanIgnoreReturnValue
+            public final class Client {
+              public Client getValue() {
+                return this;
+              }
+
+              @CheckReturnValue
+              public static final class Nested {
+                public int getValue() {
+                  return 42;
+                }
+              }
+            }
+            """)
         .addOutputLines(
             "Client.java",
-            "package com.google.frobber;",
-            "import com.google.errorprone.annotations.CanIgnoreReturnValue;",
-            "import com.google.errorprone.annotations.CheckReturnValue;",
-            "public final class Client {",
-            "  @CanIgnoreReturnValue",
-            "  public Client getValue() {",
-            "    return this;",
-            "  }",
-            "  @CheckReturnValue",
-            "  public static final class Nested {",
-            "    public int getValue() {",
-            "      return 42;",
-            "    }",
-            "  }",
-            "}")
+            """
+            package com.google.frobber;
+
+            import com.google.errorprone.annotations.CanIgnoreReturnValue;
+            import com.google.errorprone.annotations.CheckReturnValue;
+
+            public final class Client {
+              @CanIgnoreReturnValue
+              public Client getValue() {
+                return this;
+              }
+
+              @CheckReturnValue
+              public static final class Nested {
+                public int getValue() {
+                  return 42;
+                }
+              }
+            }
+            """)
         .doTest(TestMode.TEXT_MATCH);
   }
 
@@ -251,35 +306,45 @@ public final class NoCanIgnoreReturnValueOnClassesTest {
     helper
         .addInputLines(
             "User.java",
-            "package com.google.gaia;",
-            "import com.google.errorprone.annotations.CanIgnoreReturnValue;",
-            "@CanIgnoreReturnValue",
-            "public final class User {",
-            "  public User persist() {",
-            "    return this;",
-            "  }",
-            "  public static final class Builder {",
-            "    public Builder setFirstName(String firstName) {",
-            "      return this;",
-            "    }",
-            "  }",
-            "}")
+            """
+            package com.google.gaia;
+
+            import com.google.errorprone.annotations.CanIgnoreReturnValue;
+
+            @CanIgnoreReturnValue
+            public final class User {
+              public User persist() {
+                return this;
+              }
+
+              public static final class Builder {
+                public Builder setFirstName(String firstName) {
+                  return this;
+                }
+              }
+            }
+            """)
         .addOutputLines(
             "User.java",
-            "package com.google.gaia;",
-            "import com.google.errorprone.annotations.CanIgnoreReturnValue;",
-            "public final class User {",
-            "  @CanIgnoreReturnValue",
-            "  public User persist() {",
-            "    return this;",
-            "  }",
-            "  public static final class Builder {",
-            "    @CanIgnoreReturnValue",
-            "    public Builder setFirstName(String firstName) {",
-            "      return this;",
-            "    }",
-            "  }",
-            "}")
+            """
+            package com.google.gaia;
+
+            import com.google.errorprone.annotations.CanIgnoreReturnValue;
+
+            public final class User {
+              @CanIgnoreReturnValue
+              public User persist() {
+                return this;
+              }
+
+              public static final class Builder {
+                @CanIgnoreReturnValue
+                public Builder setFirstName(String firstName) {
+                  return this;
+                }
+              }
+            }
+            """)
         .doTest(TestMode.TEXT_MATCH);
   }
 
@@ -288,33 +353,45 @@ public final class NoCanIgnoreReturnValueOnClassesTest {
     helper
         .addInputLines(
             "Animal.java",
-            "package com.google.frobber;",
-            "import com.google.auto.value.AutoValue;",
-            "import com.google.errorprone.annotations.CanIgnoreReturnValue;",
-            "@AutoValue",
-            "@CanIgnoreReturnValue",
-            "abstract class Animal {",
-            "  abstract String name();",
-            "  @AutoValue.Builder",
-            "  abstract static class Builder {",
-            "    abstract Builder setName(String value);",
-            "    abstract Animal build();",
-            "  }",
-            "}")
+            """
+            package com.google.frobber;
+
+            import com.google.auto.value.AutoValue;
+            import com.google.errorprone.annotations.CanIgnoreReturnValue;
+
+            @AutoValue
+            @CanIgnoreReturnValue
+            abstract class Animal {
+              abstract String name();
+
+              @AutoValue.Builder
+              abstract static class Builder {
+                abstract Builder setName(String value);
+
+                abstract Animal build();
+              }
+            }
+            """)
         .addOutputLines(
             "Animal.java",
-            "package com.google.frobber;",
-            "import com.google.auto.value.AutoValue;",
-            "import com.google.errorprone.annotations.CanIgnoreReturnValue;",
-            "@AutoValue",
-            "abstract class Animal {",
-            "  abstract String name();",
-            "  @AutoValue.Builder",
-            "  abstract static class Builder {",
-            "    abstract Builder setName(String value);",
-            "    abstract Animal build();",
-            "  }",
-            "}")
+            """
+            package com.google.frobber;
+
+            import com.google.auto.value.AutoValue;
+            import com.google.errorprone.annotations.CanIgnoreReturnValue;
+
+            @AutoValue
+            abstract class Animal {
+              abstract String name();
+
+              @AutoValue.Builder
+              abstract static class Builder {
+                abstract Builder setName(String value);
+
+                abstract Animal build();
+              }
+            }
+            """)
         .doTest(TestMode.TEXT_MATCH);
   }
 
@@ -323,33 +400,45 @@ public final class NoCanIgnoreReturnValueOnClassesTest {
     helper
         .addInputLines(
             "Animal.java",
-            "package com.google.frobber;",
-            "import com.google.auto.value.AutoValue;",
-            "import com.google.errorprone.annotations.CanIgnoreReturnValue;",
-            "@AutoValue",
-            "abstract class Animal {",
-            "  abstract String name();",
-            "  @CanIgnoreReturnValue",
-            "  @AutoValue.Builder",
-            "  abstract static class Builder {",
-            "    abstract Builder setName(String value);",
-            "    abstract Animal build();",
-            "  }",
-            "}")
+            """
+            package com.google.frobber;
+
+            import com.google.auto.value.AutoValue;
+            import com.google.errorprone.annotations.CanIgnoreReturnValue;
+
+            @AutoValue
+            abstract class Animal {
+              abstract String name();
+
+              @CanIgnoreReturnValue
+              @AutoValue.Builder
+              abstract static class Builder {
+                abstract Builder setName(String value);
+
+                abstract Animal build();
+              }
+            }
+            """)
         .addOutputLines(
             "Animal.java",
-            "package com.google.frobber;",
-            "import com.google.auto.value.AutoValue;",
-            "import com.google.errorprone.annotations.CanIgnoreReturnValue;",
-            "@AutoValue",
-            "abstract class Animal {",
-            "  abstract String name();",
-            "  @AutoValue.Builder",
-            "  abstract static class Builder {",
-            "    abstract Builder setName(String value);",
-            "    abstract Animal build();",
-            "  }",
-            "}")
+            """
+            package com.google.frobber;
+
+            import com.google.auto.value.AutoValue;
+            import com.google.errorprone.annotations.CanIgnoreReturnValue;
+
+            @AutoValue
+            abstract class Animal {
+              abstract String name();
+
+              @AutoValue.Builder
+              abstract static class Builder {
+                abstract Builder setName(String value);
+
+                abstract Animal build();
+              }
+            }
+            """)
         .doTest(TestMode.TEXT_MATCH);
   }
 
@@ -358,19 +447,24 @@ public final class NoCanIgnoreReturnValueOnClassesTest {
     helper
         .addInputLines(
             "Outer.java",
-            "package com.google.frobber;",
-            "import com.google.auto.value.AutoValue;",
-            "import com.google.errorprone.annotations.CanIgnoreReturnValue;",
-            "@CanIgnoreReturnValue",
-            "public class Outer {",
-            "  public String name() {",
-            "    return null;",
-            "  }",
-            "  @AutoValue",
-            "  abstract static class Inner {",
-            "    abstract String id();",
-            "  }",
-            "}")
+            """
+            package com.google.frobber;
+
+            import com.google.auto.value.AutoValue;
+            import com.google.errorprone.annotations.CanIgnoreReturnValue;
+
+            @CanIgnoreReturnValue
+            public class Outer {
+              public String name() {
+                return null;
+              }
+
+              @AutoValue
+              abstract static class Inner {
+                abstract String id();
+              }
+            }
+            """)
         .addOutputLines(
             "Outer.java",
             "package com.google.frobber;",

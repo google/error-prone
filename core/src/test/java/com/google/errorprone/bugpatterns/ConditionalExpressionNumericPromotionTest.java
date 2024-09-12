@@ -34,64 +34,84 @@ public class ConditionalExpressionNumericPromotionTest {
     testHelper
         .addInputLines(
             "in/Test.java",
-            "import java.io.Serializable;",
-            "class Test {",
-            "  Object returnObject(boolean b) {",
-            "    return b ? Integer.valueOf(0) : Long.valueOf(0);",
-            "  }",
-            "  Number returnNumber(boolean b) {",
-            "    // Extra parentheses, just for fun.",
-            "    return (b ? Integer.valueOf(0) : Long.valueOf(0));",
-            "  }",
-            "  Serializable returnSerializable(boolean b) {",
-            "    return b ? Integer.valueOf(0) : Long.valueOf(0);",
-            "  }",
-            "  void assignObject(boolean b, Object obj) {",
-            "    obj = b ? Integer.valueOf(0) : Long.valueOf(0);",
-            "  }",
-            "  void assignNumber(boolean b, Number obj) {",
-            "    obj = b ? Integer.valueOf(0) : Long.valueOf(0);",
-            "  }",
-            "  void variableObject(boolean b) {",
-            "    Object obj = b ? Integer.valueOf(0) : Long.valueOf(0);",
-            "  }",
-            "  void variableNumber(boolean b) {",
-            "    Number obj = b ? Integer.valueOf(0) : Long.valueOf(0);",
-            "  }",
-            "  void invokeMethod(boolean b, Number n) {",
-            "    invokeMethod(b, b ? Integer.valueOf(0) : Long.valueOf(0));",
-            "  }",
-            "}")
+            """
+            import java.io.Serializable;
+
+            class Test {
+              Object returnObject(boolean b) {
+                return b ? Integer.valueOf(0) : Long.valueOf(0);
+              }
+
+              Number returnNumber(boolean b) {
+                // Extra parentheses, just for fun.
+                return (b ? Integer.valueOf(0) : Long.valueOf(0));
+              }
+
+              Serializable returnSerializable(boolean b) {
+                return b ? Integer.valueOf(0) : Long.valueOf(0);
+              }
+
+              void assignObject(boolean b, Object obj) {
+                obj = b ? Integer.valueOf(0) : Long.valueOf(0);
+              }
+
+              void assignNumber(boolean b, Number obj) {
+                obj = b ? Integer.valueOf(0) : Long.valueOf(0);
+              }
+
+              void variableObject(boolean b) {
+                Object obj = b ? Integer.valueOf(0) : Long.valueOf(0);
+              }
+
+              void variableNumber(boolean b) {
+                Number obj = b ? Integer.valueOf(0) : Long.valueOf(0);
+              }
+
+              void invokeMethod(boolean b, Number n) {
+                invokeMethod(b, b ? Integer.valueOf(0) : Long.valueOf(0));
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "import java.io.Serializable;",
-            "class Test {",
-            "  Object returnObject(boolean b) {",
-            "    return b ? ((Number) Integer.valueOf(0)) : ((Number) Long.valueOf(0));",
-            "  }",
-            "  Number returnNumber(boolean b) {",
-            "    // Extra parentheses, just for fun.",
-            "    return (b ? ((Number) Integer.valueOf(0)) : ((Number) Long.valueOf(0)));",
-            "  }",
-            "  Serializable returnSerializable(boolean b) {",
-            "    return b ? ((Number) Integer.valueOf(0)) : ((Number) Long.valueOf(0));",
-            "  }",
-            "  void assignObject(boolean b, Object obj) {",
-            "    obj = b ? ((Number) Integer.valueOf(0)) : ((Number) Long.valueOf(0));",
-            "  }",
-            "  void assignNumber(boolean b, Number obj) {",
-            "    obj = b ? ((Number) Integer.valueOf(0)) : ((Number) Long.valueOf(0));",
-            "  }",
-            "  void variableObject(boolean b) {",
-            "    Object obj = b ? ((Number) Integer.valueOf(0)) : ((Number) Long.valueOf(0));",
-            "  }",
-            "  void variableNumber(boolean b) {",
-            "    Number obj = b ? ((Number) Integer.valueOf(0)) : ((Number) Long.valueOf(0));",
-            "  }",
-            "  void invokeMethod(boolean b, Number n) {",
-            "    invokeMethod(b, b ? ((Number) Integer.valueOf(0)) : ((Number) Long.valueOf(0)));",
-            "  }",
-            "}")
+            """
+            import java.io.Serializable;
+
+            class Test {
+              Object returnObject(boolean b) {
+                return b ? ((Number) Integer.valueOf(0)) : ((Number) Long.valueOf(0));
+              }
+
+              Number returnNumber(boolean b) {
+                // Extra parentheses, just for fun.
+                return (b ? ((Number) Integer.valueOf(0)) : ((Number) Long.valueOf(0)));
+              }
+
+              Serializable returnSerializable(boolean b) {
+                return b ? ((Number) Integer.valueOf(0)) : ((Number) Long.valueOf(0));
+              }
+
+              void assignObject(boolean b, Object obj) {
+                obj = b ? ((Number) Integer.valueOf(0)) : ((Number) Long.valueOf(0));
+              }
+
+              void assignNumber(boolean b, Number obj) {
+                obj = b ? ((Number) Integer.valueOf(0)) : ((Number) Long.valueOf(0));
+              }
+
+              void variableObject(boolean b) {
+                Object obj = b ? ((Number) Integer.valueOf(0)) : ((Number) Long.valueOf(0));
+              }
+
+              void variableNumber(boolean b) {
+                Number obj = b ? ((Number) Integer.valueOf(0)) : ((Number) Long.valueOf(0));
+              }
+
+              void invokeMethod(boolean b, Number n) {
+                invokeMethod(b, b ? ((Number) Integer.valueOf(0)) : ((Number) Long.valueOf(0)));
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -100,24 +120,30 @@ public class ConditionalExpressionNumericPromotionTest {
     testHelper
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  Long returnLong(boolean b) {",
-            "    // OK, because the return type is the correct type.",
-            "    return false ? Integer.valueOf(0) : Long.valueOf(0);",
-            "  }",
-            "  void assignLong(boolean b, Long obj) {",
-            "    obj = b ? Integer.valueOf(0) : Long.valueOf(0);",
-            "  }",
-            "  void variableLong(boolean b) {",
-            "    Long obj = b ? Integer.valueOf(0) : Long.valueOf(0);",
-            "  }",
-            "  void variablePrimitive(boolean b) {",
-            "    long obj = b ? Integer.valueOf(0) : Long.valueOf(0);",
-            "  }",
-            "  void invokeMethod(boolean b, Long n) {",
-            "    invokeMethod(b, b ? Integer.valueOf(0) : Long.valueOf(0));",
-            "  }",
-            "}")
+            """
+            class Test {
+              Long returnLong(boolean b) {
+                // OK, because the return type is the correct type.
+                return false ? Integer.valueOf(0) : Long.valueOf(0);
+              }
+
+              void assignLong(boolean b, Long obj) {
+                obj = b ? Integer.valueOf(0) : Long.valueOf(0);
+              }
+
+              void variableLong(boolean b) {
+                Long obj = b ? Integer.valueOf(0) : Long.valueOf(0);
+              }
+
+              void variablePrimitive(boolean b) {
+                long obj = b ? Integer.valueOf(0) : Long.valueOf(0);
+              }
+
+              void invokeMethod(boolean b, Long n) {
+                invokeMethod(b, b ? Integer.valueOf(0) : Long.valueOf(0));
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }

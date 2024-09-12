@@ -50,16 +50,19 @@ public class JUnit4TestNotRunTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static org.mockito.Mockito.verify;",
-            "import org.junit.runner.RunWith;",
-            "import org.junit.runners.JUnit4;",
-            "@RunWith(JUnit4.class)",
-            "public class Test {",
-            "  // BUG: Diagnostic contains: @Test",
-            "  public void shouldDoSomething() {",
-            "    verify(null);",
-            "  }",
-            "}")
+            """
+            import static org.mockito.Mockito.verify;
+            import org.junit.runner.RunWith;
+            import org.junit.runners.JUnit4;
+
+            @RunWith(JUnit4.class)
+            public class Test {
+              // BUG: Diagnostic contains: @Test
+              public void shouldDoSomething() {
+                verify(null);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -68,16 +71,19 @@ public class JUnit4TestNotRunTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import org.junit.runner.RunWith;",
-            "import org.junit.runners.JUnit4;",
-            "import org.mockito.Mockito;",
-            "@RunWith(JUnit4.class)",
-            "public class Test {",
-            "  // BUG: Diagnostic contains: @Test",
-            "  public void shouldDoSomething() {",
-            "    Mockito.verify(null);",
-            "  }",
-            "}")
+            """
+            import org.junit.runner.RunWith;
+            import org.junit.runners.JUnit4;
+            import org.mockito.Mockito;
+
+            @RunWith(JUnit4.class)
+            public class Test {
+              // BUG: Diagnostic contains: @Test
+              public void shouldDoSomething() {
+                Mockito.verify(null);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -86,22 +92,26 @@ public class JUnit4TestNotRunTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import org.junit.runner.RunWith;",
-            "import org.junit.runners.JUnit4;",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import java.util.Collections;",
-            "@RunWith(JUnit4.class)",
-            "public class Test {",
-            "  // BUG: Diagnostic contains: @Test",
-            "  public void shouldDoSomething() {",
-            "    assertThat(2).isEqualTo(2);",
-            "  }",
-            "  // BUG: Diagnostic contains: @Test",
-            "  public void shouldDoTwoThings() {",
-            "    Collections.sort(Collections.<Integer>emptyList());",
-            "    assertThat(3).isEqualTo(3);",
-            "  }",
-            "}")
+            """
+            import org.junit.runner.RunWith;
+            import org.junit.runners.JUnit4;
+            import static com.google.common.truth.Truth.assertThat;
+            import java.util.Collections;
+
+            @RunWith(JUnit4.class)
+            public class Test {
+              // BUG: Diagnostic contains: @Test
+              public void shouldDoSomething() {
+                assertThat(2).isEqualTo(2);
+              }
+
+              // BUG: Diagnostic contains: @Test
+              public void shouldDoTwoThings() {
+                Collections.sort(Collections.<Integer>emptyList());
+                assertThat(3).isEqualTo(3);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -110,16 +120,19 @@ public class JUnit4TestNotRunTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import org.junit.runner.RunWith;",
-            "import org.junit.runners.JUnit4;",
-            "import com.google.common.truth.Truth;",
-            "@RunWith(JUnit4.class)",
-            "public class Test {",
-            "  // BUG: Diagnostic contains: @Test",
-            "  public void shouldDoSomething() {",
-            "    Truth.assertThat(1).isEqualTo(1);",
-            "  }",
-            "}")
+            """
+            import org.junit.runner.RunWith;
+            import org.junit.runners.JUnit4;
+            import com.google.common.truth.Truth;
+
+            @RunWith(JUnit4.class)
+            public class Test {
+              // BUG: Diagnostic contains: @Test
+              public void shouldDoSomething() {
+                Truth.assertThat(1).isEqualTo(1);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -128,16 +141,19 @@ public class JUnit4TestNotRunTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.base.Preconditions.checkState;",
-            "import org.junit.runner.RunWith;",
-            "import org.junit.runners.JUnit4;",
-            "@RunWith(JUnit4.class)",
-            "public class Test {",
-            "  // BUG: Diagnostic contains: @Test",
-            "  public void shouldDoSomething() {",
-            "    checkState(false);",
-            "  }",
-            "}")
+            """
+            import static com.google.common.base.Preconditions.checkState;
+            import org.junit.runner.RunWith;
+            import org.junit.runners.JUnit4;
+
+            @RunWith(JUnit4.class)
+            public class Test {
+              // BUG: Diagnostic contains: @Test
+              public void shouldDoSomething() {
+                checkState(false);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -146,16 +162,19 @@ public class JUnit4TestNotRunTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.base.Preconditions;",
-            "import org.junit.runner.RunWith;",
-            "import org.junit.runners.JUnit4;",
-            "@RunWith(JUnit4.class)",
-            "public class Test {",
-            "  // BUG: Diagnostic contains: @Test",
-            "  public void shouldDoSomething() {",
-            "    Preconditions.checkState(false);",
-            "  }",
-            "}")
+            """
+            import com.google.common.base.Preconditions;
+            import org.junit.runner.RunWith;
+            import org.junit.runners.JUnit4;
+
+            @RunWith(JUnit4.class)
+            public class Test {
+              // BUG: Diagnostic contains: @Test
+              public void shouldDoSomething() {
+                Preconditions.checkState(false);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -164,16 +183,19 @@ public class JUnit4TestNotRunTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static org.junit.Assert.fail;",
-            "import org.junit.runner.RunWith;",
-            "import org.junit.runners.JUnit4;",
-            "@RunWith(JUnit4.class)",
-            "public class Test {",
-            "  // BUG: Diagnostic contains: @Test",
-            "  public void shouldDoSomething() {",
-            "    fail();",
-            "  }",
-            "}")
+            """
+            import static org.junit.Assert.fail;
+            import org.junit.runner.RunWith;
+            import org.junit.runners.JUnit4;
+
+            @RunWith(JUnit4.class)
+            public class Test {
+              // BUG: Diagnostic contains: @Test
+              public void shouldDoSomething() {
+                fail();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -182,16 +204,19 @@ public class JUnit4TestNotRunTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import org.junit.Assert;",
-            "import org.junit.runner.RunWith;",
-            "import org.junit.runners.JUnit4;",
-            "@RunWith(JUnit4.class)",
-            "public class Test {",
-            "  // BUG: Diagnostic contains: @Test",
-            "  public void shouldDoSomething() {",
-            "    Assert.fail();",
-            "  }",
-            "}")
+            """
+            import org.junit.Assert;
+            import org.junit.runner.RunWith;
+            import org.junit.runners.JUnit4;
+
+            @RunWith(JUnit4.class)
+            public class Test {
+              // BUG: Diagnostic contains: @Test
+              public void shouldDoSomething() {
+                Assert.fail();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -200,16 +225,19 @@ public class JUnit4TestNotRunTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static org.junit.Assert.assertThrows;",
-            "import org.junit.runner.RunWith;",
-            "import org.junit.runners.JUnit4;",
-            "@RunWith(JUnit4.class)",
-            "public class Test {",
-            "  // BUG: Diagnostic contains: @Test",
-            "  public void shouldDoSomething() {",
-            "    assertThrows(null, null);",
-            "  }",
-            "}")
+            """
+            import static org.junit.Assert.assertThrows;
+            import org.junit.runner.RunWith;
+            import org.junit.runners.JUnit4;
+
+            @RunWith(JUnit4.class)
+            public class Test {
+              // BUG: Diagnostic contains: @Test
+              public void shouldDoSomething() {
+                assertThrows(null, null);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -218,16 +246,19 @@ public class JUnit4TestNotRunTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import org.junit.Assert;",
-            "import org.junit.runner.RunWith;",
-            "import org.junit.runners.JUnit4;",
-            "@RunWith(JUnit4.class)",
-            "public class Test {",
-            "  // BUG: Diagnostic contains: @Test",
-            "  public void shouldDoSomething() {",
-            "    Assert.assertThrows(null, null);",
-            "  }",
-            "}")
+            """
+            import org.junit.Assert;
+            import org.junit.runner.RunWith;
+            import org.junit.runners.JUnit4;
+
+            @RunWith(JUnit4.class)
+            public class Test {
+              // BUG: Diagnostic contains: @Test
+              public void shouldDoSomething() {
+                Assert.assertThrows(null, null);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -236,15 +267,18 @@ public class JUnit4TestNotRunTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import org.junit.runner.RunWith;",
-            "import org.junit.runners.JUnit4;",
-            "import java.util.Collections;",
-            "@RunWith(JUnit4.class)",
-            "public class Test {",
-            "  public void shouldDoSomething() {",
-            "    Collections.sort(Collections.<Integer>emptyList());",
-            "  }",
-            "}")
+            """
+            import org.junit.runner.RunWith;
+            import org.junit.runners.JUnit4;
+            import java.util.Collections;
+
+            @RunWith(JUnit4.class)
+            public class Test {
+              public void shouldDoSomething() {
+                Collections.sort(Collections.<Integer>emptyList());
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -253,16 +287,20 @@ public class JUnit4TestNotRunTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import org.junit.runner.RunWith;",
-            "import org.junit.runners.JUnit4;",
-            "import java.util.Collections;",
-            "@RunWith(JUnit4.class)",
-            "public class Test {",
-            "  private static void assertDoesSomething() {}",
-            "  public static void shouldDoSomething() {",
-            "    assertDoesSomething();",
-            "  }",
-            "}")
+            """
+            import org.junit.runner.RunWith;
+            import org.junit.runners.JUnit4;
+            import java.util.Collections;
+
+            @RunWith(JUnit4.class)
+            public class Test {
+              private static void assertDoesSomething() {}
+
+              public static void shouldDoSomething() {
+                assertDoesSomething();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -271,16 +309,20 @@ public class JUnit4TestNotRunTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import org.junit.runner.RunWith;",
-            "import org.junit.runners.JUnit4;",
-            "@RunWith(JUnit4.class)",
-            "public class Test {",
-            "  @Deprecated",
-            "  public void shouldDoSomething() {",
-            "    verify();",
-            "  }",
-            "  private void verify() {}",
-            "}")
+            """
+            import org.junit.runner.RunWith;
+            import org.junit.runners.JUnit4;
+
+            @RunWith(JUnit4.class)
+            public class Test {
+              @Deprecated
+              public void shouldDoSomething() {
+                verify();
+              }
+
+              private void verify() {}
+            }
+            """)
         .doTest();
   }
 
@@ -289,18 +331,22 @@ public class JUnit4TestNotRunTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import org.junit.runner.RunWith;",
-            "import org.junit.runners.JUnit4;",
-            "import java.util.Collections;",
-            "@RunWith(JUnit4.class)",
-            "public class Test {",
-            "  @Deprecated",
-            "  // BUG: Diagnostic contains: @Test",
-            "  public void testShouldDoSomething() {",
-            "    Collections.sort(Collections.<Integer>emptyList());",
-            "  }",
-            "  private void verify() {}",
-            "}")
+            """
+            import org.junit.runner.RunWith;
+            import org.junit.runners.JUnit4;
+            import java.util.Collections;
+
+            @RunWith(JUnit4.class)
+            public class Test {
+              @Deprecated
+              // BUG: Diagnostic contains: @Test
+              public void testShouldDoSomething() {
+                Collections.sort(Collections.<Integer>emptyList());
+              }
+
+              private void verify() {}
+            }
+            """)
         .doTest();
   }
 
@@ -309,12 +355,15 @@ public class JUnit4TestNotRunTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import org.junit.runner.RunWith;",
-            "import org.junit.runners.JUnit4;",
-            "@RunWith(JUnit4.class)",
-            "public abstract class Test {",
-            "  public void testDoSomething() {}",
-            "}")
+            """
+            import org.junit.runner.RunWith;
+            import org.junit.runners.JUnit4;
+
+            @RunWith(JUnit4.class)
+            public abstract class Test {
+              public void testDoSomething() {}
+            }
+            """)
         .doTest();
   }
 
@@ -323,22 +372,28 @@ public class JUnit4TestNotRunTest {
     refactoringHelper
         .addInputLines(
             "in/TestStuff.java",
-            "import org.junit.runner.RunWith;",
-            "import org.junit.runners.JUnit4;",
-            "@RunWith(JUnit4.class)",
-            "public class TestStuff {",
-            "  public void testDoSomething() {}",
-            "}")
+            """
+            import org.junit.runner.RunWith;
+            import org.junit.runners.JUnit4;
+
+            @RunWith(JUnit4.class)
+            public class TestStuff {
+              public void testDoSomething() {}
+            }
+            """)
         .addOutputLines(
             "out/TestStuff.java",
-            "import org.junit.Test;",
-            "import org.junit.runner.RunWith;",
-            "import org.junit.runners.JUnit4;",
-            "@RunWith(JUnit4.class)",
-            "public class TestStuff {",
-            "  @Test",
-            "  public void testDoSomething() {}",
-            "}")
+            """
+            import org.junit.Test;
+            import org.junit.runner.RunWith;
+            import org.junit.runners.JUnit4;
+
+            @RunWith(JUnit4.class)
+            public class TestStuff {
+              @Test
+              public void testDoSomething() {}
+            }
+            """)
         .setFixChooser(FixChoosers.FIRST)
         .doTest();
   }
@@ -348,22 +403,30 @@ public class JUnit4TestNotRunTest {
     refactoringHelper
         .addInputLines(
             "in/TestStuff.java",
-            "import org.junit.runner.RunWith;",
-            "import org.junit.runners.JUnit4;",
-            "@RunWith(JUnit4.class)",
-            "public class TestStuff {",
-            "  public void testDoSomething() {}",
-            "}")
+            """
+            import org.junit.runner.RunWith;
+            import org.junit.runners.JUnit4;
+
+            @RunWith(JUnit4.class)
+            public class TestStuff {
+              public void testDoSomething() {}
+            }
+            """)
         .addOutputLines(
             "out/TestStuff.java",
-            "import org.junit.Ignore;",
-            "import org.junit.Test;",
-            "import org.junit.runner.RunWith;",
-            "import org.junit.runners.JUnit4;",
-            "@RunWith(JUnit4.class)",
-            "public class TestStuff {",
-            "  @Test @Ignore public void testDoSomething() {}",
-            "}")
+            """
+            import org.junit.Ignore;
+            import org.junit.Test;
+            import org.junit.runner.RunWith;
+            import org.junit.runners.JUnit4;
+
+            @RunWith(JUnit4.class)
+            public class TestStuff {
+              @Test
+              @Ignore
+              public void testDoSomething() {}
+            }
+            """)
         .setFixChooser(FixChoosers.SECOND)
         .doTest();
   }
@@ -373,20 +436,26 @@ public class JUnit4TestNotRunTest {
     refactoringHelper
         .addInputLines(
             "in/TestStuff.java",
-            "import org.junit.runner.RunWith;",
-            "import org.junit.runners.JUnit4;",
-            "@RunWith(JUnit4.class)",
-            "public class TestStuff {",
-            "  public void testDoSomething() {}",
-            "}")
+            """
+            import org.junit.runner.RunWith;
+            import org.junit.runners.JUnit4;
+
+            @RunWith(JUnit4.class)
+            public class TestStuff {
+              public void testDoSomething() {}
+            }
+            """)
         .addOutputLines(
             "out/TestStuff.java",
-            "import org.junit.runner.RunWith;",
-            "import org.junit.runners.JUnit4;",
-            "@RunWith(JUnit4.class)",
-            "public class TestStuff {",
-            "  private void testDoSomething() {}",
-            "}")
+            """
+            import org.junit.runner.RunWith;
+            import org.junit.runners.JUnit4;
+
+            @RunWith(JUnit4.class)
+            public class TestStuff {
+              private void testDoSomething() {}
+            }
+            """)
         .setFixChooser(FixChoosers.THIRD)
         .doTest();
   }
@@ -396,28 +465,38 @@ public class JUnit4TestNotRunTest {
     refactoringHelper
         .addInputLines(
             "in/TestStuff.java",
-            "import org.junit.runner.RunWith;",
-            "import org.junit.runners.JUnit4;",
-            "@RunWith(JUnit4.class)",
-            "public class TestStuff {",
-            "  public void disabledTestDoSomething() {",
-            "    verify();",
-            "  }",
-            "  void verify() {}",
-            "}")
+            """
+            import org.junit.runner.RunWith;
+            import org.junit.runners.JUnit4;
+
+            @RunWith(JUnit4.class)
+            public class TestStuff {
+              public void disabledTestDoSomething() {
+                verify();
+              }
+
+              void verify() {}
+            }
+            """)
         .addOutputLines(
             "out/TestStuff.java",
-            "import org.junit.Ignore;",
-            "import org.junit.Test;",
-            "import org.junit.runner.RunWith;",
-            "import org.junit.runners.JUnit4;",
-            "@RunWith(JUnit4.class)",
-            "public class TestStuff {",
-            "  @Test @Ignore public void disabledTestDoSomething() {",
-            "    verify();",
-            "  }",
-            "  void verify() {}",
-            "}")
+            """
+            import org.junit.Ignore;
+            import org.junit.Test;
+            import org.junit.runner.RunWith;
+            import org.junit.runners.JUnit4;
+
+            @RunWith(JUnit4.class)
+            public class TestStuff {
+              @Test
+              @Ignore
+              public void disabledTestDoSomething() {
+                verify();
+              }
+
+              void verify() {}
+            }
+            """)
         .setFixChooser(FixChoosers.FIRST)
         .doTest();
   }
@@ -427,20 +506,25 @@ public class JUnit4TestNotRunTest {
     compilationHelper
         .addSourceLines(
             "TestStuff.java",
-            "import org.junit.runner.RunWith;",
-            "import org.junit.runners.JUnit4;",
-            "import org.junit.Test;",
-            "@RunWith(JUnit4.class)",
-            "public class TestStuff {",
-            "  public void shouldDoSomething() {",
-            "    verify();",
-            "  }",
-            "  @Test",
-            "  public void testDoesSomething() {",
-            "    shouldDoSomething();",
-            "  }",
-            "  void verify() {}",
-            "}")
+            """
+            import org.junit.runner.RunWith;
+            import org.junit.runners.JUnit4;
+            import org.junit.Test;
+
+            @RunWith(JUnit4.class)
+            public class TestStuff {
+              public void shouldDoSomething() {
+                verify();
+              }
+
+              @Test
+              public void testDoesSomething() {
+                shouldDoSomething();
+              }
+
+              void verify() {}
+            }
+            """)
         .doTest();
   }
 
@@ -449,22 +533,28 @@ public class JUnit4TestNotRunTest {
     compilationHelper
         .addSourceLines(
             "TestStuff.java",
-            "import org.junit.runner.RunWith;",
-            "import org.junit.runners.JUnit4;",
-            "import org.junit.Test;",
-            "import java.util.function.Consumer;",
-            "@RunWith(JUnit4.class)",
-            "public class TestStuff {",
-            "  public void shouldDoSomething() {",
-            "    verify();",
-            "  }",
-            "  @Test",
-            "  public void testDoesSomething() {",
-            "    doSomething(u -> shouldDoSomething());",
-            "  }",
-            "  void doSomething(Consumer f) {}",
-            "  void verify() {}",
-            "}")
+            """
+            import org.junit.runner.RunWith;
+            import org.junit.runners.JUnit4;
+            import org.junit.Test;
+            import java.util.function.Consumer;
+
+            @RunWith(JUnit4.class)
+            public class TestStuff {
+              public void shouldDoSomething() {
+                verify();
+              }
+
+              @Test
+              public void testDoesSomething() {
+                doSomething(u -> shouldDoSomething());
+              }
+
+              void doSomething(Consumer f) {}
+
+              void verify() {}
+            }
+            """)
         .doTest();
   }
 
@@ -473,13 +563,17 @@ public class JUnit4TestNotRunTest {
     compilationHelper
         .addSourceLines(
             "TestStuff.java",
-            "import org.junit.Test;",
-            "public class TestStuff {",
-            "  // BUG: Diagnostic contains: @Test",
-            "  public void testDoesSomething() {}",
-            "  @Test",
-            "  public void foo() {}",
-            "}")
+            """
+            import org.junit.Test;
+
+            public class TestStuff {
+              // BUG: Diagnostic contains: @Test
+              public void testDoesSomething() {}
+
+              @Test
+              public void foo() {}
+            }
+            """)
         .doTest();
   }
 
@@ -488,13 +582,17 @@ public class JUnit4TestNotRunTest {
     compilationHelper
         .addSourceLines(
             "TestStuff.java",
-            "import org.junit.Test;",
-            "public class TestStuff {",
-            "  @SuppressWarnings(\"JUnit4TestNotRun\")",
-            "  public void testDoesSomething() {}",
-            "  @Test",
-            "  public void foo() {}",
-            "}")
+            """
+            import org.junit.Test;
+
+            public class TestStuff {
+              @SuppressWarnings("JUnit4TestNotRun")
+              public void testDoesSomething() {}
+
+              @Test
+              public void foo() {}
+            }
+            """)
         .doTest();
   }
 
@@ -531,14 +629,17 @@ public class JUnit4TestNotRunTest {
     compilationHelper
         .addSourceLines(
             "TestStuff.java",
-            "import org.junit.Ignore;",
-            "import org.junit.runner.RunWith;",
-            "import org.junit.runners.JUnit4;",
-            "@RunWith(JUnit4.class)",
-            "public class TestStuff {",
-            "  @Ignore",
-            "  public void testMethod() {}",
-            "}")
+            """
+            import org.junit.Ignore;
+            import org.junit.runner.RunWith;
+            import org.junit.runners.JUnit4;
+
+            @RunWith(JUnit4.class)
+            public class TestStuff {
+              @Ignore
+              public void testMethod() {}
+            }
+            """)
         .doTest();
   }
 
@@ -547,13 +648,17 @@ public class JUnit4TestNotRunTest {
     compilationHelper
         .addSourceLines(
             "TestTheories.java",
-            "import org.junit.runner.RunWith;",
-            "import org.junit.experimental.theories.Theories;",
-            "import org.junit.experimental.theories.Theory;",
-            "@RunWith(Theories.class)",
-            "public class TestTheories {",
-            "  @Theory public void testMyTheory() {}",
-            "}")
+            """
+            import org.junit.runner.RunWith;
+            import org.junit.experimental.theories.Theories;
+            import org.junit.experimental.theories.Theory;
+
+            @RunWith(Theories.class)
+            public class TestTheories {
+              @Theory
+              public void testMyTheory() {}
+            }
+            """)
         .doTest();
   }
 
@@ -562,17 +667,20 @@ public class JUnit4TestNotRunTest {
     compilationHelper
         .addSourceLines(
             "TestTheories.java",
-            "import static org.junit.Assert.fail;",
-            "import org.junit.runner.RunWith;",
-            "import org.junit.experimental.theories.Theories;",
-            "import org.junit.experimental.theories.FromDataPoints;",
-            "@RunWith(Theories.class)",
-            "public class TestTheories {",
-            "   // BUG: Diagnostic contains:",
-            "   public void testMyTheory(@FromDataPoints(\"foo\") Object foo) {",
-            "     fail();",
-            "  }",
-            "}")
+            """
+            import static org.junit.Assert.fail;
+            import org.junit.runner.RunWith;
+            import org.junit.experimental.theories.Theories;
+            import org.junit.experimental.theories.FromDataPoints;
+
+            @RunWith(Theories.class)
+            public class TestTheories {
+              // BUG: Diagnostic contains:
+              public void testMyTheory(@FromDataPoints("foo") Object foo) {
+                fail();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -581,18 +689,26 @@ public class JUnit4TestNotRunTest {
     compilationHelper
         .addSourceLines(
             "TestSuper.java",
-            "import org.junit.Test;",
-            "public class TestSuper {",
-            "  @Test public void testToOverride() {}",
-            "}")
+            """
+            import org.junit.Test;
+
+            public class TestSuper {
+              @Test
+              public void testToOverride() {}
+            }
+            """)
         .addSourceLines(
             "TestSub.java",
-            "import org.junit.runner.RunWith;",
-            "import org.junit.runners.JUnit4;",
-            "@RunWith(JUnit4.class)",
-            "public class TestSub extends TestSuper {",
-            "  @Override public void testToOverride() {}",
-            "}")
+            """
+            import org.junit.runner.RunWith;
+            import org.junit.runners.JUnit4;
+
+            @RunWith(JUnit4.class)
+            public class TestSub extends TestSuper {
+              @Override
+              public void testToOverride() {}
+            }
+            """)
         .doTest();
   }
 
@@ -601,14 +717,17 @@ public class JUnit4TestNotRunTest {
     compilationHelper
         .addSourceLines(
             "T.java",
-            "import org.junit.Test;",
-            "import org.junit.runner.RunWith;",
-            "import org.junit.runners.JUnit4;",
-            "@RunWith(JUnit4.class)",
-            "public class T {",
-            "  // BUG: Diagnostic contains:",
-            "  public void givenFoo_thenBar() {}",
-            "}")
+            """
+            import org.junit.Test;
+            import org.junit.runner.RunWith;
+            import org.junit.runners.JUnit4;
+
+            @RunWith(JUnit4.class)
+            public class T {
+              // BUG: Diagnostic contains:
+              public void givenFoo_thenBar() {}
+            }
+            """)
         .doTest();
   }
 }

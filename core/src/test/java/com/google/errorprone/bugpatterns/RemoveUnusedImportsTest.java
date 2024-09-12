@@ -42,55 +42,61 @@ public class RemoveUnusedImportsTest {
     testHelper
         .addInputLines(
             "in/Test.java",
-            "import static java.util.Collections.emptyList;",
-            "import static java.util.Collections.emptySet;",
-            "import static com.google.common.base.Preconditions.checkNotNull;",
-            "",
-            "import java.util.ArrayList;",
-            "import java.util.Collection;",
-            "import java.util.Collections;",
-            "import java.util.HashSet;",
-            "import java.util.List;",
-            "import java.util.Map;",
-            "import java.util.Set;",
-            "import java.util.UUID;",
-            "public class Test {",
-            "  private final Object object;",
-            "",
-            "  Test(Object object) {",
-            "    this.object = checkNotNull(object);",
-            "  }",
-            "",
-            "  Set<UUID> someMethod(Collection<UUID> collection) {",
-            "    if (collection.isEmpty()) {",
-            "      return emptySet();",
-            "    }",
-            "    return new HashSet<>(collection);",
-            "  }",
-            "}")
+            """
+            import static java.util.Collections.emptyList;
+            import static java.util.Collections.emptySet;
+            import static com.google.common.base.Preconditions.checkNotNull;
+
+            import java.util.ArrayList;
+            import java.util.Collection;
+            import java.util.Collections;
+            import java.util.HashSet;
+            import java.util.List;
+            import java.util.Map;
+            import java.util.Set;
+            import java.util.UUID;
+
+            public class Test {
+              private final Object object;
+
+              Test(Object object) {
+                this.object = checkNotNull(object);
+              }
+
+              Set<UUID> someMethod(Collection<UUID> collection) {
+                if (collection.isEmpty()) {
+                  return emptySet();
+                }
+                return new HashSet<>(collection);
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "import static java.util.Collections.emptySet;",
-            "import static com.google.common.base.Preconditions.checkNotNull;",
-            "",
-            "import java.util.Collection;",
-            "import java.util.HashSet;",
-            "import java.util.Set;",
-            "import java.util.UUID;",
-            "public class Test {",
-            "  private final Object object;",
-            "",
-            "  Test(Object object) {",
-            "    this.object = checkNotNull(object);",
-            "  }",
-            "",
-            "  Set<UUID> someMethod(Collection<UUID> collection) {",
-            "    if (collection.isEmpty()) {",
-            "      return emptySet();",
-            "    }",
-            "    return new HashSet<>(collection);",
-            "  }",
-            "}")
+            """
+            import static java.util.Collections.emptySet;
+            import static com.google.common.base.Preconditions.checkNotNull;
+
+            import java.util.Collection;
+            import java.util.HashSet;
+            import java.util.Set;
+            import java.util.UUID;
+
+            public class Test {
+              private final Object object;
+
+              Test(Object object) {
+                this.object = checkNotNull(object);
+              }
+
+              Set<UUID> someMethod(Collection<UUID> collection) {
+                if (collection.isEmpty()) {
+                  return emptySet();
+                }
+                return new HashSet<>(collection);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -99,17 +105,23 @@ public class RemoveUnusedImportsTest {
     testHelper
         .addInputLines(
             "in/Test.java",
-            "import java.util.Map;",
-            "import java.util.Map.Entry;",
-            "public class Test {",
-            "  Map.Entry<String, String> e;",
-            "}")
+            """
+            import java.util.Map;
+            import java.util.Map.Entry;
+
+            public class Test {
+              Map.Entry<String, String> e;
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "import java.util.Map;",
-            "public class Test {",
-            "  Map.Entry<String, String> e;",
-            "}")
+            """
+            import java.util.Map;
+
+            public class Test {
+              Map.Entry<String, String> e;
+            }
+            """)
         .doTest();
   }
 
@@ -117,10 +129,15 @@ public class RemoveUnusedImportsTest {
   public void useInJavadocSee() {
     testHelper
         .addInputLines(
-            "in/Test.java", //
-            "import java.util.Map;",
-            "/** @see Map */",
-            "public class Test {}")
+            "in/Test.java",
+            """
+            import java.util.Map;
+
+            /**
+             * @see Map
+             */
+            public class Test {}
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -129,10 +146,15 @@ public class RemoveUnusedImportsTest {
   public void useInJavadocSeeSelect() {
     testHelper
         .addInputLines(
-            "in/Test.java", //
-            "import java.util.Map;",
-            "/** @see Map#get */",
-            "public class Test {}")
+            "in/Test.java",
+            """
+            import java.util.Map;
+
+            /**
+             * @see Map#get
+             */
+            public class Test {}
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -141,10 +163,13 @@ public class RemoveUnusedImportsTest {
   public void useInJavadocLink() {
     testHelper
         .addInputLines(
-            "in/Test.java", //
-            "import java.util.Map;",
-            "/** {@link Map} */",
-            "public class Test {}")
+            "in/Test.java",
+            """
+            import java.util.Map;
+
+            /** {@link Map} */
+            public class Test {}
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -153,11 +178,13 @@ public class RemoveUnusedImportsTest {
   public void useInJavadocLink_selfReferenceDoesNotBreak() {
     testHelper
         .addInputLines(
-            "in/Test.java", //
-            "/** {@link #blah} */",
-            "public class Test {",
-            "  void blah() {}",
-            "}")
+            "in/Test.java",
+            """
+            /** {@link #blah} */
+            public class Test {
+              void blah() {}
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -167,9 +194,12 @@ public class RemoveUnusedImportsTest {
     testHelper
         .addInputLines(
             "in/Test.java",
-            "import java.util.Map;",
-            "/** {@link Map#get} */",
-            "public class Test {}")
+            """
+            import java.util.Map;
+
+            /** {@link Map#get} */
+            public class Test {}
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -179,14 +209,18 @@ public class RemoveUnusedImportsTest {
     CompilationTestHelper.newInstance(RemoveUnusedImports.class, getClass())
         .addSourceLines(
             "Test.java",
-            "package test;",
-            "import java.util.ArrayList;",
-            "import java.util.List;",
-            "// BUG: Diagnostic contains:",
-            "import java.util.LinkedList;",
-            "public class Test {",
-            "  List<String> xs = new ArrayList<>();",
-            "}")
+            """
+            package test;
+
+            import java.util.ArrayList;
+            import java.util.List;
+            // BUG: Diagnostic contains:
+            import java.util.LinkedList;
+
+            public class Test {
+              List<String> xs = new ArrayList<>();
+            }
+            """)
         .doTest();
   }
 
@@ -195,16 +229,20 @@ public class RemoveUnusedImportsTest {
     CompilationTestHelper.newInstance(RemoveUnusedImports.class, getClass())
         .addSourceLines(
             "Test.java",
-            "package test;",
-            "import java.util.ArrayList;",
-            "import java.util.List;",
-            "// BUG: Diagnostic contains: java.util.LinkedList, java.util.Map, java.util.Set",
-            "import java.util.LinkedList;",
-            "import java.util.Map;",
-            "import java.util.Set;",
-            "public class Test {",
-            "  List<String> xs = new ArrayList<>();",
-            "}")
+            """
+            package test;
+
+            import java.util.ArrayList;
+            import java.util.List;
+            // BUG: Diagnostic contains: java.util.LinkedList, java.util.Map, java.util.Set
+            import java.util.LinkedList;
+            import java.util.Map;
+            import java.util.Set;
+
+            public class Test {
+              List<String> xs = new ArrayList<>();
+            }
+            """)
         .doTest();
   }
 
@@ -213,10 +251,13 @@ public class RemoveUnusedImportsTest {
     testHelper
         .addInputLines(
             "in/Test.java",
-            "import java.util.List;",
-            "import java.util.Collection;",
-            "/** {@link List#containsAll(Collection)}  */",
-            "public class Test {}")
+            """
+            import java.util.List;
+            import java.util.Collection;
+
+            /** {@link List#containsAll(Collection)} */
+            public class Test {}
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -226,16 +267,22 @@ public class RemoveUnusedImportsTest {
     testHelper
         .addInputLines(
             "in/Test.java",
-            "import java.util.List;",
-            "import java.util.Map;",
-            "import java.util.Map.Entry;",
-            "/** {@link java.util.List} {@link Map.Entry} */",
-            "public class Test {}")
+            """
+            import java.util.List;
+            import java.util.Map;
+            import java.util.Map.Entry;
+
+            /** {@link java.util.List} {@link Map.Entry} */
+            public class Test {}
+            """)
         .addOutputLines(
             "out/Test.java",
-            "import java.util.Map;",
-            "/** {@link java.util.List} {@link Map.Entry} */",
-            "public class Test {}")
+            """
+            import java.util.Map;
+
+            /** {@link java.util.List} {@link Map.Entry} */
+            public class Test {}
+            """)
         .doTest();
   }
 
@@ -244,19 +291,25 @@ public class RemoveUnusedImportsTest {
     testHelper
         .addInputLines(
             "in/A.java",
-            "import java.util.Collection;",
-            "public class A<T extends Collection> {",
-            "  public void foo(T t) {}",
-            "}")
+            """
+            import java.util.Collection;
+
+            public class A<T extends Collection> {
+              public void foo(T t) {}
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
             "in/B.java",
-            "import java.util.Collection;",
-            "import java.util.List;",
-            "public class B extends A<List> {",
-            "  /** {@link #foo(Collection)} {@link #foo(List)} */",
-            "  public void foo(List t) {}",
-            "}")
+            """
+            import java.util.Collection;
+            import java.util.List;
+
+            public class B extends A<List> {
+              /** {@link #foo(Collection)} {@link #foo(List)} */
+              public void foo(List t) {}
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -266,18 +319,26 @@ public class RemoveUnusedImportsTest {
     testHelper
         .addInputLines(
             "Lib.java",
-            "import java.nio.file.Path;",
-            "class Lib {",
-            "  static void f(Path... ps) {}",
-            "}")
+            """
+            import java.nio.file.Path;
+
+            class Lib {
+              static void f(Path... ps) {}
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
             "in/Test.java",
-            "import java.nio.file.Path;",
-            "class Test {",
-            "  /** @see Lib#f(Path[]) */",
-            "  void f() {}",
-            "}")
+            """
+            import java.nio.file.Path;
+
+            class Test {
+              /**
+               * @see Lib#f(Path[])
+               */
+              void f() {}
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -287,10 +348,18 @@ public class RemoveUnusedImportsTest {
     CompilationTestHelper.newInstance(RemoveUnusedImports.class, getClass())
         .addSourceLines(
             "MultipleTopLevelClasses.java",
-            "import java.util.List;",
-            "import java.util.Set;",
-            "public class MultipleTopLevelClasses { List x; }",
-            "class Evil { Set x; }")
+            """
+            import java.util.List;
+            import java.util.Set;
+
+            public class MultipleTopLevelClasses {
+              List x;
+            }
+
+            class Evil {
+              Set x;
+            }
+            """)
         .doTest();
   }
 
@@ -298,11 +367,17 @@ public class RemoveUnusedImportsTest {
   public void unusedInPackageInfo() {
     testHelper
         .addInputLines(
-            "in/com/example/package-info.java", "package com.example;", "import java.util.Map;")
+            "in/com/example/package-info.java",
+            """
+            package com.example;
+
+            import java.util.Map;
+            """)
         .addOutputLines(
             "out/com/example/package-info.java",
-            "package com.example;",
-            "") // The package statement's trailing newline is retained
+            """
+            package com.example;
+            """) // The package statement's trailing newline is retained
         .doTest(TEXT_MATCH);
   }
 
@@ -311,22 +386,30 @@ public class RemoveUnusedImportsTest {
     testHelper
         .addInputLines(
             "android/app/PendingIntent.java",
-            "package android.app;",
-            "public class PendingIntent {",
-            "}")
+            """
+            package android.app;
+
+            public class PendingIntent {}
+            """)
         .expectUnchanged()
         .addInputLines(
             "android/app/AlarmManager.java",
-            "package android.app;",
-            "public class AlarmManager {",
-            "  public void set(int type, long triggerAtMillis, PendingIntent operation) {}",
-            "}")
+            """
+            package android.app;
+
+            public class AlarmManager {
+              public void set(int type, long triggerAtMillis, PendingIntent operation) {}
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
             "in/Test.java",
-            "import android.app.PendingIntent;",
-            "/** {@link android.app.AlarmManager#containsAll(int, long, PendingIntent)}  */",
-            "public class Test {}")
+            """
+            import android.app.PendingIntent;
+
+            /** {@link android.app.AlarmManager#containsAll(int, long, PendingIntent)} */
+            public class Test {}
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -335,44 +418,61 @@ public class RemoveUnusedImportsTest {
   public void b70690930() {
     testHelper
         .addInputLines(
-            "a/One.java", //
-            "package a;",
-            "public class One {}")
+            "a/One.java",
+            """
+            package a;
+
+            public class One {}
+            """)
         .expectUnchanged()
         .addInputLines(
-            "a/Two.java", //
-            "package a;",
-            "public class Two {}")
+            "a/Two.java",
+            """
+            package a;
+
+            public class Two {}
+            """)
         .expectUnchanged()
         .addInputLines(
             "p/Lib.java",
-            "package p;",
-            "import a.One;",
-            "import a.Two;",
-            "public class Lib {",
-            "  private static class I {",
-            "    public void f(One a) {}",
-            "  }",
-            "  public static class J {",
-            "    public void f(Two a) {}",
-            "  }",
-            "}")
+            """
+            package p;
+
+            import a.One;
+            import a.Two;
+
+            public class Lib {
+              private static class I {
+                public void f(One a) {}
+              }
+
+              public static class J {
+                public void f(Two a) {}
+              }
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
-            "p/Test.java", //
-            "package p;",
-            "import a.One;",
-            "import a.Two;",
-            "/** {@link Lib.I#f(One)} {@link Lib.J#f(Two)} */",
-            "public class Test {",
-            "}")
+            "p/Test.java",
+            """
+            package p;
+
+            import a.One;
+            import a.Two;
+
+            /** {@link Lib.I#f(One)} {@link Lib.J#f(Two)} */
+            public class Test {}
+            """)
         .addOutputLines(
-            "out/p/Test.java", //
-            "package p;",
-            "import a.Two;",
-            "/** {@link Lib.I#f(One)} {@link Lib.J#f(Two)} */",
-            "public class Test {",
-            "}")
+            "out/p/Test.java",
+            """
+            package p;
+
+            import a.Two;
+
+            /** {@link Lib.I#f(One)} {@link Lib.J#f(Two)} */
+            public class Test {}
+            """)
         .doTest();
   }
 }

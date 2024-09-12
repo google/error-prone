@@ -34,46 +34,47 @@ public class FloggerWithCauseTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "import java.io.IOException;",
-            "class Test {",
-            "  abstract static class MyException extends IOException {",
-            "    abstract public String foo();",
-            "  }",
-            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "  public void method(Exception e, MyException e2) {",
-            "    // BUG: Diagnostic contains:"
-                + " logger.atSevere().withStackTrace(MEDIUM).log(\"msg\");",
-            "    logger.atSevere().withCause(new Error()).log(\"msg\");",
-            "    logger.atSevere().withCause(new Error(e2.foo())).log(\"msg\");",
-            "    FluentLogger.Api severeLogger = logger.atSevere();",
-            "    // BUG: Diagnostic contains:"
-                + " severeLogger.withStackTrace(MEDIUM).log(\"message\");",
-            "    severeLogger.withCause(new IllegalArgumentException()).log(\"message\");",
-            "    // BUG: Diagnostic contains:",
-            "    // logger.atSevere().withCause(e).log(\"message\");",
-            "    // logger.atSevere().withStackTrace(MEDIUM).withCause(e).log(\"message\");",
-            "    logger.atSevere().withCause(new Throwable(e)).log(\"message\");",
-            "    // BUG: Diagnostic contains:",
-            "    // logger.atSevere().withCause(e).log(\"message\");",
-            "    // logger.atSevere().withStackTrace(MEDIUM).withCause(e).log(\"message\");",
-            "    logger.atSevere().withCause(new SecurityException(e)).log(\"message\");",
-            "    // BUG: Diagnostic contains:",
-            "    // logger.atSevere().withCause(e).log(\"msg\");",
-            "    // logger.atSevere().withStackTrace(MEDIUM).withCause(e).log(\"msg\");",
-            "    logger.atSevere().withCause(new"
-                + " NumberFormatException(e.getMessage())).log(\"msg\");",
-            "    // BUG: Diagnostic contains:",
-            "    // logger.atSevere().withCause(e).log(\"message\");",
-            "    // logger.atSevere().withStackTrace(MEDIUM).withCause(e).log(\"message\");",
-            "    logger.atSevere().withCause(new Exception(e.toString())).log(\"message\");",
-            "    // BUG: Diagnostic contains:",
-            "    // logger.atSevere().withCause(e.getCause()).log(\"message\");",
-            "    //"
-                + " logger.atSevere().withStackTrace(MEDIUM).withCause(e.getCause()).log(\"message\");",
-            "    logger.atSevere().withCause(new RuntimeException(e.getCause())).log(\"message\");",
-            "  }",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+            import java.io.IOException;
+
+            class Test {
+              abstract static class MyException extends IOException {
+                public abstract String foo();
+              }
+
+              private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+
+              public void method(Exception e, MyException e2) {
+                // BUG: Diagnostic contains: logger.atSevere().withStackTrace(MEDIUM).log("msg");
+                logger.atSevere().withCause(new Error()).log("msg");
+                logger.atSevere().withCause(new Error(e2.foo())).log("msg");
+                FluentLogger.Api severeLogger = logger.atSevere();
+                // BUG: Diagnostic contains: severeLogger.withStackTrace(MEDIUM).log("message");
+                severeLogger.withCause(new IllegalArgumentException()).log("message");
+                // BUG: Diagnostic contains:
+                // logger.atSevere().withCause(e).log("message");
+                // logger.atSevere().withStackTrace(MEDIUM).withCause(e).log("message");
+                logger.atSevere().withCause(new Throwable(e)).log("message");
+                // BUG: Diagnostic contains:
+                // logger.atSevere().withCause(e).log("message");
+                // logger.atSevere().withStackTrace(MEDIUM).withCause(e).log("message");
+                logger.atSevere().withCause(new SecurityException(e)).log("message");
+                // BUG: Diagnostic contains:
+                // logger.atSevere().withCause(e).log("msg");
+                // logger.atSevere().withStackTrace(MEDIUM).withCause(e).log("msg");
+                logger.atSevere().withCause(new NumberFormatException(e.getMessage())).log("msg");
+                // BUG: Diagnostic contains:
+                // logger.atSevere().withCause(e).log("message");
+                // logger.atSevere().withStackTrace(MEDIUM).withCause(e).log("message");
+                logger.atSevere().withCause(new Exception(e.toString())).log("message");
+                // BUG: Diagnostic contains:
+                // logger.atSevere().withCause(e.getCause()).log("message");
+                // logger.atSevere().withStackTrace(MEDIUM).withCause(e.getCause()).log("message");
+                logger.atSevere().withCause(new RuntimeException(e.getCause())).log("message");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -82,21 +83,25 @@ public class FloggerWithCauseTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.flogger.StackSize.FULL;",
-            "import static com.google.common.flogger.StackSize.MEDIUM;",
-            "import com.google.common.flogger.FluentLogger;",
-            "class Test {",
-            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "  public void method(Exception e) {",
-            "    logger.atSevere().log(null);",
-            "    logger.atSevere().log(\"hello\");",
-            "    logger.atSevere().log(\"hello %d\", 1);",
-            "    logger.atSevere().withCause(e).log(\"some log message\");",
-            "    logger.atSevere().withStackTrace(FULL).log(\"some log message\");",
-            "    logger.atSevere().withStackTrace(MEDIUM).withCause(e).log(\"some log message\");",
-            "    logger.atSevere().withCause(new NumberFormatException()).log(\"message\");",
-            "  }",
-            "}")
+            """
+            import static com.google.common.flogger.StackSize.FULL;
+            import static com.google.common.flogger.StackSize.MEDIUM;
+            import com.google.common.flogger.FluentLogger;
+
+            class Test {
+              private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+
+              public void method(Exception e) {
+                logger.atSevere().log(null);
+                logger.atSevere().log("hello");
+                logger.atSevere().log("hello %d", 1);
+                logger.atSevere().withCause(e).log("some log message");
+                logger.atSevere().withStackTrace(FULL).log("some log message");
+                logger.atSevere().withStackTrace(MEDIUM).withCause(e).log("some log message");
+                logger.atSevere().withCause(new NumberFormatException()).log("message");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -106,25 +111,31 @@ public class FloggerWithCauseTest {
     BugCheckerRefactoringTestHelper.newInstance(FloggerWithCause.class, getClass())
         .addInputLines(
             "in/Test.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "class Test {",
-            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "  public void method(Exception e) {",
-            "    logger.atSevere()",
-            "        .withCause(new IllegalArgumentException())",
-            "        .log(\"message\");",
-            "  }",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            class Test {
+              private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+
+              public void method(Exception e) {
+                logger.atSevere().withCause(new IllegalArgumentException()).log("message");
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "import static com.google.common.flogger.StackSize.MEDIUM;",
-            "import com.google.common.flogger.FluentLogger;",
-            "class Test {",
-            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "  public void method(Exception e) {",
-            "    logger.atSevere().withStackTrace(MEDIUM).log(\"message\");",
-            "  }",
-            "}")
+            """
+            import static com.google.common.flogger.StackSize.MEDIUM;
+            import com.google.common.flogger.FluentLogger;
+
+            class Test {
+              private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+
+              public void method(Exception e) {
+                logger.atSevere().withStackTrace(MEDIUM).log("message");
+              }
+            }
+            """)
         .doTest();
   }
 }

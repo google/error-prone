@@ -39,12 +39,14 @@ public class TypeParameterQualifierTest {
             "}")
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  // BUG: Diagnostic contains: populate(Foo.Builder builder)",
-            "  static <T extends Foo> T populate(T.Builder builder) {",
-            "    return null;",
-            "  }",
-            "}")
+            """
+            class Test {
+              // BUG: Diagnostic contains: populate(Foo.Builder builder)
+              static <T extends Foo> T populate(T.Builder builder) {
+                return null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -53,12 +55,14 @@ public class TypeParameterQualifierTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  static <T extends Enum<T>> T get(Class<T> clazz, String value) {",
-            "    // BUG: Diagnostic contains: Enum.valueOf(clazz, value);",
-            "    return T.valueOf(clazz, value);",
-            "  }",
-            "}")
+            """
+            class Test {
+              static <T extends Enum<T>> T get(Class<T> clazz, String value) {
+                // BUG: Diagnostic contains: Enum.valueOf(clazz, value);
+                return T.valueOf(clazz, value);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -73,11 +77,13 @@ public class TypeParameterQualifierTest {
             "}")
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  static <T extends Foo> T populate(T builder) {",
-            "    return null;",
-            "  }",
-            "}")
+            """
+            class Test {
+              static <T extends Foo> T populate(T builder) {
+                return null;
+              }
+            }
+            """)
         .doTest();
   }
 }

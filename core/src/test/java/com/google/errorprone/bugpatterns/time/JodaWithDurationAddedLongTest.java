@@ -33,15 +33,18 @@ public class JodaWithDurationAddedLongTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import org.joda.time.Duration;",
-            "import org.joda.time.Instant;",
-            "public class TestClass {",
-            "  private static final Instant NOW = Instant.now();",
-            "  private static final Instant A = NOW.withDurationAdded(Duration.millis(42), 1);",
-            "  private static final Instant B =",
-            "      // BUG: Diagnostic contains: NOW.plus(Duration.millis(42));",
-            "      NOW.withDurationAdded(Duration.millis(42).getMillis(), 1);",
-            "}")
+            """
+            import org.joda.time.Duration;
+            import org.joda.time.Instant;
+
+            public class TestClass {
+              private static final Instant NOW = Instant.now();
+              private static final Instant A = NOW.withDurationAdded(Duration.millis(42), 1);
+              private static final Instant B =
+                  // BUG: Diagnostic contains: NOW.plus(Duration.millis(42));
+                  NOW.withDurationAdded(Duration.millis(42).getMillis(), 1);
+            }
+            """)
         .doTest();
   }
 
@@ -50,23 +53,26 @@ public class JodaWithDurationAddedLongTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import org.joda.time.Duration;",
-            "import org.joda.time.Instant;",
-            "public class TestClass {",
-            "  private static final Instant NOW = Instant.now();",
-            "  // BUG: Diagnostic contains: NOW.withDurationAdded(Duration.millis(42), 2);",
-            "  private static final Instant A = NOW.withDurationAdded(42, 2);",
-            "  private static final Instant B =",
-            "      // BUG: Diagnostic contains: NOW.withDurationAdded(Duration.millis(42), 2);",
-            "      NOW.withDurationAdded(Duration.millis(42).getMillis(), 2);",
-            "",
-            "  // BUG: Diagnostic contains: NOW.plus(Duration.millis(42));",
-            "  private static final Instant PLUS = NOW.withDurationAdded(42, 1);",
-            "  // BUG: Diagnostic contains: NOW;",
-            "  private static final Instant ZERO = NOW.withDurationAdded(42, 0);",
-            "  // BUG: Diagnostic contains: NOW.minus(Duration.millis(42));",
-            "  private static final Instant MINUS = NOW.withDurationAdded(42, -1);",
-            "}")
+            """
+            import org.joda.time.Duration;
+            import org.joda.time.Instant;
+
+            public class TestClass {
+              private static final Instant NOW = Instant.now();
+              // BUG: Diagnostic contains: NOW.withDurationAdded(Duration.millis(42), 2);
+              private static final Instant A = NOW.withDurationAdded(42, 2);
+              private static final Instant B =
+                  // BUG: Diagnostic contains: NOW.withDurationAdded(Duration.millis(42), 2);
+                  NOW.withDurationAdded(Duration.millis(42).getMillis(), 2);
+
+              // BUG: Diagnostic contains: NOW.plus(Duration.millis(42));
+              private static final Instant PLUS = NOW.withDurationAdded(42, 1);
+              // BUG: Diagnostic contains: NOW;
+              private static final Instant ZERO = NOW.withDurationAdded(42, 0);
+              // BUG: Diagnostic contains: NOW.minus(Duration.millis(42));
+              private static final Instant MINUS = NOW.withDurationAdded(42, -1);
+            }
+            """)
         .doTest();
   }
 
@@ -75,10 +81,13 @@ public class JodaWithDurationAddedLongTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "package org.joda.time;",
-            "public class TestClass {",
-            "  private static final Instant A = Instant.now().withDurationAdded(42, 1);",
-            "}")
+            """
+            package org.joda.time;
+
+            public class TestClass {
+              private static final Instant A = Instant.now().withDurationAdded(42, 1);
+            }
+            """)
         .doTest();
   }
 
@@ -89,14 +98,17 @@ public class JodaWithDurationAddedLongTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import static org.joda.time.Duration.ZERO;",
-            "import org.joda.time.Duration;",
-            "public class TestClass {",
-            "  private static final Duration A = ZERO.withDurationAdded(Duration.millis(42), 1);",
-            "  private static final Duration B =",
-            "      // BUG: Diagnostic contains: ZERO.plus(Duration.millis(42));",
-            "      ZERO.withDurationAdded(Duration.millis(42).getMillis(), 1);",
-            "}")
+            """
+            import static org.joda.time.Duration.ZERO;
+            import org.joda.time.Duration;
+
+            public class TestClass {
+              private static final Duration A = ZERO.withDurationAdded(Duration.millis(42), 1);
+              private static final Duration B =
+                  // BUG: Diagnostic contains: ZERO.plus(Duration.millis(42));
+                  ZERO.withDurationAdded(Duration.millis(42).getMillis(), 1);
+            }
+            """)
         .doTest();
   }
 
@@ -105,22 +117,25 @@ public class JodaWithDurationAddedLongTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import static org.joda.time.Duration.ZERO;",
-            "import org.joda.time.Duration;",
-            "public class TestClass {",
-            "  // BUG: Diagnostic contains: ZERO.withDurationAdded(Duration.millis(42), 2);",
-            "  private static final Duration A = ZERO.withDurationAdded(42, 2);",
-            "  private static final Duration B =",
-            "      // BUG: Diagnostic contains: ZERO.withDurationAdded(Duration.millis(42), 2);",
-            "      ZERO.withDurationAdded(Duration.millis(42).getMillis(), 2);",
-            "",
-            "  // BUG: Diagnostic contains: ZERO.plus(Duration.millis(42));",
-            "  private static final Duration PLUS = ZERO.withDurationAdded(42, 1);",
-            "  // BUG: Diagnostic contains: ZERO;",
-            "  private static final Duration ZEROX = ZERO.withDurationAdded(42, 0);",
-            "  // BUG: Diagnostic contains: ZERO.minus(Duration.millis(42));",
-            "  private static final Duration MINUS = ZERO.withDurationAdded(42, -1);",
-            "}")
+            """
+            import static org.joda.time.Duration.ZERO;
+            import org.joda.time.Duration;
+
+            public class TestClass {
+              // BUG: Diagnostic contains: ZERO.withDurationAdded(Duration.millis(42), 2);
+              private static final Duration A = ZERO.withDurationAdded(42, 2);
+              private static final Duration B =
+                  // BUG: Diagnostic contains: ZERO.withDurationAdded(Duration.millis(42), 2);
+                  ZERO.withDurationAdded(Duration.millis(42).getMillis(), 2);
+
+              // BUG: Diagnostic contains: ZERO.plus(Duration.millis(42));
+              private static final Duration PLUS = ZERO.withDurationAdded(42, 1);
+              // BUG: Diagnostic contains: ZERO;
+              private static final Duration ZEROX = ZERO.withDurationAdded(42, 0);
+              // BUG: Diagnostic contains: ZERO.minus(Duration.millis(42));
+              private static final Duration MINUS = ZERO.withDurationAdded(42, -1);
+            }
+            """)
         .doTest();
   }
 
@@ -129,11 +144,15 @@ public class JodaWithDurationAddedLongTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "package org.joda.time;",
-            "import static org.joda.time.Duration.ZERO;",
-            "public class TestClass {",
-            "  private static final Duration A = ZERO.withDurationAdded(42, 1);",
-            "}")
+            """
+            package org.joda.time;
+
+            import static org.joda.time.Duration.ZERO;
+
+            public class TestClass {
+              private static final Duration A = ZERO.withDurationAdded(42, 1);
+            }
+            """)
         .doTest();
   }
 
@@ -144,15 +163,18 @@ public class JodaWithDurationAddedLongTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import org.joda.time.Duration;",
-            "import org.joda.time.DateTime;",
-            "public class TestClass {",
-            "  private static final DateTime NOW = DateTime.now();",
-            "  private static final DateTime A = NOW.withDurationAdded(Duration.millis(42), 1);",
-            "  private static final DateTime B =",
-            "      // BUG: Diagnostic contains: NOW.plus(Duration.millis(42));",
-            "      NOW.withDurationAdded(Duration.millis(42).getMillis(), 1);",
-            "}")
+            """
+            import org.joda.time.Duration;
+            import org.joda.time.DateTime;
+
+            public class TestClass {
+              private static final DateTime NOW = DateTime.now();
+              private static final DateTime A = NOW.withDurationAdded(Duration.millis(42), 1);
+              private static final DateTime B =
+                  // BUG: Diagnostic contains: NOW.plus(Duration.millis(42));
+                  NOW.withDurationAdded(Duration.millis(42).getMillis(), 1);
+            }
+            """)
         .doTest();
   }
 
@@ -161,23 +183,26 @@ public class JodaWithDurationAddedLongTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import org.joda.time.DateTime;",
-            "import org.joda.time.Duration;",
-            "public class TestClass {",
-            "  private static final DateTime NOW = DateTime.now();",
-            "  // BUG: Diagnostic contains: NOW.withDurationAdded(Duration.millis(42), 2);",
-            "  private static final DateTime A = NOW.withDurationAdded(42, 2);",
-            "  private static final DateTime B =",
-            "      // BUG: Diagnostic contains: NOW.withDurationAdded(Duration.millis(42), 2);",
-            "      NOW.withDurationAdded(Duration.millis(42).getMillis(), 2);",
-            "",
-            "  // BUG: Diagnostic contains: NOW.plus(Duration.millis(42));",
-            "  private static final DateTime PLUS = NOW.withDurationAdded(42, 1);",
-            "  // BUG: Diagnostic contains: NOW;",
-            "  private static final DateTime ZERO = NOW.withDurationAdded(42, 0);",
-            "  // BUG: Diagnostic contains: NOW.minus(Duration.millis(42));",
-            "  private static final DateTime MINUS = NOW.withDurationAdded(42, -1);",
-            "}")
+            """
+            import org.joda.time.DateTime;
+            import org.joda.time.Duration;
+
+            public class TestClass {
+              private static final DateTime NOW = DateTime.now();
+              // BUG: Diagnostic contains: NOW.withDurationAdded(Duration.millis(42), 2);
+              private static final DateTime A = NOW.withDurationAdded(42, 2);
+              private static final DateTime B =
+                  // BUG: Diagnostic contains: NOW.withDurationAdded(Duration.millis(42), 2);
+                  NOW.withDurationAdded(Duration.millis(42).getMillis(), 2);
+
+              // BUG: Diagnostic contains: NOW.plus(Duration.millis(42));
+              private static final DateTime PLUS = NOW.withDurationAdded(42, 1);
+              // BUG: Diagnostic contains: NOW;
+              private static final DateTime ZERO = NOW.withDurationAdded(42, 0);
+              // BUG: Diagnostic contains: NOW.minus(Duration.millis(42));
+              private static final DateTime MINUS = NOW.withDurationAdded(42, -1);
+            }
+            """)
         .doTest();
   }
 
@@ -186,10 +211,13 @@ public class JodaWithDurationAddedLongTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "package org.joda.time;",
-            "public class TestClass {",
-            "  private static final DateTime A = DateTime.now().withDurationAdded(42, 1);",
-            "}")
+            """
+            package org.joda.time;
+
+            public class TestClass {
+              private static final DateTime A = DateTime.now().withDurationAdded(42, 1);
+            }
+            """)
         .doTest();
   }
 }

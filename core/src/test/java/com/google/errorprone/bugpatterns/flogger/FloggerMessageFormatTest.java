@@ -33,21 +33,25 @@ public class FloggerMessageFormatTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "class Test {",
-            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "  private static final String FORMAT_STRING = \"hello {0}\";",
-            "  public void method(Exception e) {",
-            "    // BUG: Diagnostic contains:",
-            "    logger.atInfo().log(\"hello {0}\");",
-            "    // BUG: Diagnostic contains:",
-            "    logger.atInfo().log(\"hello {0}\", \"world\");",
-            "    // BUG: Diagnostic contains:",
-            "    logger.atInfo().log(\"\" + \"hello {0}\", \"world\");",
-            "    // BUG: Diagnostic contains:",
-            "    logger.atInfo().log(FORMAT_STRING, \"world\");",
-            "  }",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            class Test {
+              private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+              private static final String FORMAT_STRING = "hello {0}";
+
+              public void method(Exception e) {
+                // BUG: Diagnostic contains:
+                logger.atInfo().log("hello {0}");
+                // BUG: Diagnostic contains:
+                logger.atInfo().log("hello {0}", "world");
+                // BUG: Diagnostic contains:
+                logger.atInfo().log("" + "hello {0}", "world");
+                // BUG: Diagnostic contains:
+                logger.atInfo().log(FORMAT_STRING, "world");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -56,15 +60,19 @@ public class FloggerMessageFormatTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "class Test {",
-            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "  private static final String FORMAT_STRING = \"hello {0}\";",
-            "  public void method(Exception e) {",
-            "    logger.atInfo().log(\"hello %s\", \"world\");",
-            "    logger.atInfo().log();",
-            "  }",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            class Test {
+              private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+              private static final String FORMAT_STRING = "hello {0}";
+
+              public void method(Exception e) {
+                logger.atInfo().log("hello %s", "world");
+                logger.atInfo().log();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -73,28 +81,36 @@ public class FloggerMessageFormatTest {
     BugCheckerRefactoringTestHelper.newInstance(FloggerMessageFormat.class, getClass())
         .addInputLines(
             "in/Test.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "class Test {",
-            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "  private static final String FORMAT_STRING = \"hello {0}\";",
-            "  public void method(Exception e) {",
-            "    logger.atInfo().log(\"hello {0}\", \"world\");",
-            "    logger.atInfo().log(\"\" + \"hello {0}\", \"world\");",
-            "    logger.atInfo().log(FORMAT_STRING, \"world\");",
-            "  }",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            class Test {
+              private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+              private static final String FORMAT_STRING = "hello {0}";
+
+              public void method(Exception e) {
+                logger.atInfo().log("hello {0}", "world");
+                logger.atInfo().log("" + "hello {0}", "world");
+                logger.atInfo().log(FORMAT_STRING, "world");
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "class Test {",
-            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "  private static final String FORMAT_STRING = \"hello {0}\";",
-            "  public void method(Exception e) {",
-            "    logger.atInfo().log(\"hello %s\", \"world\");",
-            "    logger.atInfo().log(\"\" + \"hello %s\", \"world\");",
-            "    logger.atInfo().log(FORMAT_STRING, \"world\");",
-            "  }",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            class Test {
+              private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+              private static final String FORMAT_STRING = "hello {0}";
+
+              public void method(Exception e) {
+                logger.atInfo().log("hello %s", "world");
+                logger.atInfo().log("" + "hello %s", "world");
+                logger.atInfo().log(FORMAT_STRING, "world");
+              }
+            }
+            """)
         .doTest();
   }
 }

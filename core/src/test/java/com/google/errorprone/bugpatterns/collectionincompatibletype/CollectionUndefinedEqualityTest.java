@@ -32,13 +32,16 @@ public final class CollectionUndefinedEqualityTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import java.util.Collection;",
-            "class Test {",
-            "  boolean foo(Collection<Collection<Integer>> xs, Collection<Integer> x) {",
-            "    // BUG: Diagnostic contains:",
-            "    return xs.contains(x);",
-            "  }",
-            "}")
+            """
+            import java.util.Collection;
+
+            class Test {
+              boolean foo(Collection<Collection<Integer>> xs, Collection<Integer> x) {
+                // BUG: Diagnostic contains:
+                return xs.contains(x);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -47,13 +50,16 @@ public final class CollectionUndefinedEqualityTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import java.util.Collection;",
-            "import java.util.List;",
-            "class Test {",
-            "  boolean foo(Collection<List<Integer>> xs, List<Integer> x) {",
-            "    return xs.contains(x);",
-            "  }",
-            "}")
+            """
+            import java.util.Collection;
+            import java.util.List;
+
+            class Test {
+              boolean foo(Collection<List<Integer>> xs, List<Integer> x) {
+                return xs.contains(x);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -62,13 +68,16 @@ public final class CollectionUndefinedEqualityTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import java.util.Collection;",
-            "import java.util.TreeMap;",
-            "class Test {",
-            "  boolean foo(TreeMap<Collection<Integer>, Integer> xs, Collection<Integer> x) {",
-            "    return xs.containsKey(x);",
-            "  }",
-            "}")
+            """
+            import java.util.Collection;
+            import java.util.TreeMap;
+
+            class Test {
+              boolean foo(TreeMap<Collection<Integer>, Integer> xs, Collection<Integer> x) {
+                return xs.containsKey(x);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -77,13 +86,16 @@ public final class CollectionUndefinedEqualityTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import java.util.Collection;",
-            "import java.util.SortedMap;",
-            "class Test {",
-            "  boolean foo(SortedMap<Collection<Integer>, Integer> xs, Collection<Integer> x) {",
-            "    return xs.containsKey(x);",
-            "  }",
-            "}")
+            """
+            import java.util.Collection;
+            import java.util.SortedMap;
+
+            class Test {
+              boolean foo(SortedMap<Collection<Integer>, Integer> xs, Collection<Integer> x) {
+                return xs.containsKey(x);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -92,13 +104,16 @@ public final class CollectionUndefinedEqualityTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import java.util.Collection;",
-            "import java.util.SortedSet;",
-            "class Test {",
-            "  boolean foo(SortedSet<Collection<Integer>> xs, Collection<Integer> x) {",
-            "    return xs.contains(x);",
-            "  }",
-            "}")
+            """
+            import java.util.Collection;
+            import java.util.SortedSet;
+
+            class Test {
+              boolean foo(SortedSet<Collection<Integer>> xs, Collection<Integer> x) {
+                return xs.contains(x);
+              }
+            }
+            """)
         .doTest();
   }
 }

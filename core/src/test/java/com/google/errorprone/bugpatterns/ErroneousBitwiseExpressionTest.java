@@ -30,11 +30,13 @@ public final class ErroneousBitwiseExpressionTest {
   public void bitwiseAnd() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  // BUG: Diagnostic contains: 1 | 2",
-            "  double flags = 1 & 2;",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              // BUG: Diagnostic contains: 1 | 2
+              double flags = 1 & 2;
+            }
+            """)
         .doTest();
   }
 
@@ -42,10 +44,12 @@ public final class ErroneousBitwiseExpressionTest {
   public void bitwiseAnd_noFinding() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  double flags = 2 & 10;",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              double flags = 2 & 10;
+            }
+            """)
         .doTest();
   }
 }

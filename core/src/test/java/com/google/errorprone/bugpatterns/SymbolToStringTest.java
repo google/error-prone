@@ -32,20 +32,24 @@ public class SymbolToStringTest {
     testHelper
         .addSourceLines(
             "ExampleChecker.java",
-            "import com.google.errorprone.BugPattern;",
-            "import com.google.errorprone.BugPattern.SeverityLevel;",
-            "import com.google.errorprone.VisitorState;",
-            "import com.google.errorprone.bugpatterns.BugChecker;",
-            "import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;",
-            "import com.google.errorprone.matchers.Description;",
-            "import com.sun.source.tree.ClassTree;",
-            "import com.sun.tools.javac.code.Types;",
-            "@BugPattern(name = \"Example\", summary = \"\", severity = SeverityLevel.ERROR)",
-            "public class ExampleChecker extends BugChecker implements ClassTreeMatcher {",
-            "  @Override public Description matchClass(ClassTree t, VisitorState s) {",
-            "    return Description.NO_MATCH;",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.BugPattern;
+            import com.google.errorprone.BugPattern.SeverityLevel;
+            import com.google.errorprone.VisitorState;
+            import com.google.errorprone.bugpatterns.BugChecker;
+            import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
+            import com.google.errorprone.matchers.Description;
+            import com.sun.source.tree.ClassTree;
+            import com.sun.tools.javac.code.Types;
+
+            @BugPattern(name = "Example", summary = "", severity = SeverityLevel.ERROR)
+            public class ExampleChecker extends BugChecker implements ClassTreeMatcher {
+              @Override
+              public Description matchClass(ClassTree t, VisitorState s) {
+                return Description.NO_MATCH;
+              }
+            }
+            """)
         .addModules("jdk.compiler/com.sun.tools.javac.code")
         .doTest();
   }
@@ -55,46 +59,49 @@ public class SymbolToStringTest {
     testHelper
         .addSourceLines(
             "ExampleChecker.java",
-            "import com.google.errorprone.BugPattern;",
-            "import com.google.errorprone.BugPattern.SeverityLevel;",
-            "import com.google.errorprone.VisitorState;",
-            "import com.google.errorprone.bugpatterns.BugChecker;",
-            "import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;",
-            "import com.google.errorprone.fixes.SuggestedFix;",
-            "import com.google.errorprone.matchers.Description;",
-            "import com.google.errorprone.matchers.Matcher;",
-            "import com.sun.source.tree.ClassTree;",
-            "import com.sun.tools.javac.code.Symbol;",
-            "import com.sun.tools.javac.code.Symbol.ClassSymbol;",
-            "import com.sun.tools.javac.tree.TreeMaker;",
-            "import com.sun.tools.javac.code.Type;",
-            "import com.sun.tools.javac.code.Types;",
-            "import com.sun.tools.javac.tree.JCTree.JCClassDecl;",
-            "@BugPattern(name = \"Example\", summary = \"\", severity = SeverityLevel.ERROR)",
-            "public class ExampleChecker extends BugChecker implements ClassTreeMatcher {",
-            "  @Override",
-            "  public Description matchClass(ClassTree tree, VisitorState state) {",
-            "    Symbol classSymbol = ((JCClassDecl) tree).sym;",
-            "    if (classSymbol.toString().contains(\"matcha\")) {",
-            "      return describeMatch(tree);",
-            "    }",
-            "    // BUG: Diagnostic contains: SymbolToString",
-            "    if (classSymbol.toString().equals(\"match\")) {",
-            "      return describeMatch(tree);",
-            "    }",
-            "    if (new InnerClass().matchaMatcher(classSymbol)) {",
-            "      return describeMatch(tree);",
-            "    }",
-            "    return Description.NO_MATCH;",
-            "  }",
-            "",
-            "  class InnerClass {",
-            "    boolean matchaMatcher(Symbol sym) {",
-            "      // BUG: Diagnostic contains: SymbolToString",
-            "      return sym.toString().equals(\"match\");",
-            "    }",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.BugPattern;
+            import com.google.errorprone.BugPattern.SeverityLevel;
+            import com.google.errorprone.VisitorState;
+            import com.google.errorprone.bugpatterns.BugChecker;
+            import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
+            import com.google.errorprone.fixes.SuggestedFix;
+            import com.google.errorprone.matchers.Description;
+            import com.google.errorprone.matchers.Matcher;
+            import com.sun.source.tree.ClassTree;
+            import com.sun.tools.javac.code.Symbol;
+            import com.sun.tools.javac.code.Symbol.ClassSymbol;
+            import com.sun.tools.javac.tree.TreeMaker;
+            import com.sun.tools.javac.code.Type;
+            import com.sun.tools.javac.code.Types;
+            import com.sun.tools.javac.tree.JCTree.JCClassDecl;
+
+            @BugPattern(name = "Example", summary = "", severity = SeverityLevel.ERROR)
+            public class ExampleChecker extends BugChecker implements ClassTreeMatcher {
+              @Override
+              public Description matchClass(ClassTree tree, VisitorState state) {
+                Symbol classSymbol = ((JCClassDecl) tree).sym;
+                if (classSymbol.toString().contains("matcha")) {
+                  return describeMatch(tree);
+                }
+                // BUG: Diagnostic contains: SymbolToString
+                if (classSymbol.toString().equals("match")) {
+                  return describeMatch(tree);
+                }
+                if (new InnerClass().matchaMatcher(classSymbol)) {
+                  return describeMatch(tree);
+                }
+                return Description.NO_MATCH;
+              }
+
+              class InnerClass {
+                boolean matchaMatcher(Symbol sym) {
+                  // BUG: Diagnostic contains: SymbolToString
+                  return sym.toString().equals("match");
+                }
+              }
+            }
+            """)
         .addModules(
             "jdk.compiler/com.sun.tools.javac.code",
             "jdk.compiler/com.sun.tools.javac.tree",

@@ -33,26 +33,34 @@ public class UnsafeFinalizationTest {
     compilationTestHelper
         .addSourceLines(
             "MyAwesomeGame.java",
-            "class MyAwesomeGame {",
-            "  private long nativeResourcePtr;",
-            "  private static native long doNativeInit();",
-            "  private static native void cleanUpNativeResources(long nativeResourcePtr);",
-            "  private static native void playAwesomeGame(long nativeResourcePtr);",
-            "  public MyAwesomeGame() {",
-            "    nativeResourcePtr = doNativeInit();",
-            "  }",
-            "  @SuppressWarnings(\"removal\")",
-            "  @Override",
-            "  protected void finalize() throws Throwable {",
-            "    cleanUpNativeResources(nativeResourcePtr);",
-            "    nativeResourcePtr = 0;",
-            "    super.finalize();",
-            "  }",
-            "  public void run() {",
-            "    // BUG: Diagnostic contains:",
-            "    playAwesomeGame(nativeResourcePtr);",
-            "  }",
-            "}")
+            """
+            class MyAwesomeGame {
+              private long nativeResourcePtr;
+
+              private static native long doNativeInit();
+
+              private static native void cleanUpNativeResources(long nativeResourcePtr);
+
+              private static native void playAwesomeGame(long nativeResourcePtr);
+
+              public MyAwesomeGame() {
+                nativeResourcePtr = doNativeInit();
+              }
+
+              @SuppressWarnings("removal")
+              @Override
+              protected void finalize() throws Throwable {
+                cleanUpNativeResources(nativeResourcePtr);
+                nativeResourcePtr = 0;
+                super.finalize();
+              }
+
+              public void run() {
+                // BUG: Diagnostic contains:
+                playAwesomeGame(nativeResourcePtr);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -61,15 +69,21 @@ public class UnsafeFinalizationTest {
     compilationTestHelper
         .addSourceLines(
             "MyAwesomeGame.java",
-            "class MyAwesomeGame {",
-            "  private static long nativeResourcePtr;",
-            "  private native void playAwesomeGame(long nativeResourcePtr);",
-            "  @SuppressWarnings(\"removal\")",
-            "  @Override protected void finalize() {}",
-            "  public void run() {",
-            "    playAwesomeGame(nativeResourcePtr);",
-            "  }",
-            "}")
+            """
+            class MyAwesomeGame {
+              private static long nativeResourcePtr;
+
+              private native void playAwesomeGame(long nativeResourcePtr);
+
+              @SuppressWarnings("removal")
+              @Override
+              protected void finalize() {}
+
+              public void run() {
+                playAwesomeGame(nativeResourcePtr);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -78,19 +92,26 @@ public class UnsafeFinalizationTest {
     compilationTestHelper
         .addSourceLines(
             "NativeStuff.java",
-            "class NativeStuff {",
-            "  static native void doNative(long ctx, NativeResource instance);",
-            "}")
+            """
+            class NativeStuff {
+              static native void doNative(long ctx, NativeResource instance);
+            }
+            """)
         .addSourceLines(
             "NativeResource.java",
-            "class NativeResource {",
-            "  private static long ctx;",
-            "  @SuppressWarnings(\"removal\")",
-            "  @Override protected void finalize() {}",
-            "  public void run() {",
-            "    NativeStuff.doNative(ctx, this);",
-            "  }",
-            "}")
+            """
+            class NativeResource {
+              private static long ctx;
+
+              @SuppressWarnings("removal")
+              @Override
+              protected void finalize() {}
+
+              public void run() {
+                NativeStuff.doNative(ctx, this);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -99,15 +120,21 @@ public class UnsafeFinalizationTest {
     compilationTestHelper
         .addSourceLines(
             "MyAwesomeGame.java",
-            "class MyAwesomeGame {",
-            "  private static String nativeResourcePtr;",
-            "  private static native void playAwesomeGame(String nativeResourcePtr);",
-            "  @SuppressWarnings(\"removal\")",
-            "  @Override protected void finalize() {}",
-            "  public static void run() {",
-            "    playAwesomeGame(nativeResourcePtr);",
-            "  }",
-            "}")
+            """
+            class MyAwesomeGame {
+              private static String nativeResourcePtr;
+
+              private static native void playAwesomeGame(String nativeResourcePtr);
+
+              @SuppressWarnings("removal")
+              @Override
+              protected void finalize() {}
+
+              public static void run() {
+                playAwesomeGame(nativeResourcePtr);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -116,15 +143,21 @@ public class UnsafeFinalizationTest {
     compilationTestHelper
         .addSourceLines(
             "MyAwesomeGame.java",
-            "class MyAwesomeGame {",
-            "  private static long nativeResourcePtr;",
-            "  private static void playAwesomeGame(long nativeResourcePtr) {}",
-            "  @SuppressWarnings(\"removal\")",
-            "  @Override protected void finalize() {}",
-            "  public static void run() {",
-            "    playAwesomeGame(nativeResourcePtr);",
-            "  }",
-            "}")
+            """
+            class MyAwesomeGame {
+              private static long nativeResourcePtr;
+
+              private static void playAwesomeGame(long nativeResourcePtr) {}
+
+              @SuppressWarnings("removal")
+              @Override
+              protected void finalize() {}
+
+              public static void run() {
+                playAwesomeGame(nativeResourcePtr);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -133,25 +166,33 @@ public class UnsafeFinalizationTest {
     compilationTestHelper
         .addSourceLines(
             "MyAwesomeGame.java",
-            "class MyAwesomeGame {",
-            "  private long nativeResourcePtr;",
-            "  private static native long doNativeInit();",
-            "  private static native void cleanUpNativeResources(long nativeResourcePtr);",
-            "  private static native void playAwesomeGame();",
-            "  public MyAwesomeGame() {",
-            "    nativeResourcePtr = doNativeInit();",
-            "  }",
-            "  @SuppressWarnings(\"removal\")",
-            "  @Override",
-            "  protected void finalize() throws Throwable {",
-            "    cleanUpNativeResources(nativeResourcePtr);",
-            "    nativeResourcePtr = 0;",
-            "    super.finalize();",
-            "  }",
-            "  public void run() {",
-            "    playAwesomeGame();",
-            "  }",
-            "}")
+            """
+            class MyAwesomeGame {
+              private long nativeResourcePtr;
+
+              private static native long doNativeInit();
+
+              private static native void cleanUpNativeResources(long nativeResourcePtr);
+
+              private static native void playAwesomeGame();
+
+              public MyAwesomeGame() {
+                nativeResourcePtr = doNativeInit();
+              }
+
+              @SuppressWarnings("removal")
+              @Override
+              protected void finalize() throws Throwable {
+                cleanUpNativeResources(nativeResourcePtr);
+                nativeResourcePtr = 0;
+                super.finalize();
+              }
+
+              public void run() {
+                playAwesomeGame();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -160,30 +201,39 @@ public class UnsafeFinalizationTest {
     compilationTestHelper
         .addSourceLines(
             "MyAwesomeGame.java",
-            "import java.lang.ref.Reference;",
-            "class MyAwesomeGame {",
-            "  private long nativeResourcePtr;",
-            "  private static native long doNativeInit();",
-            "  private static native void cleanUpNativeResources(long nativeResourcePtr);",
-            "  private static native void playAwesomeGame(long nativeResourcePtr);",
-            "  public MyAwesomeGame() {",
-            "    nativeResourcePtr = doNativeInit();",
-            "  }",
-            "  @SuppressWarnings(\"removal\")",
-            "  @Override",
-            "  protected void finalize() throws Throwable {",
-            "    cleanUpNativeResources(nativeResourcePtr);",
-            "    nativeResourcePtr = 0;",
-            "    super.finalize();",
-            "  }",
-            "  public void run() {",
-            "    try {",
-            "      playAwesomeGame(nativeResourcePtr);",
-            "    } finally {",
-            "      Reference.reachabilityFence(this);",
-            "    }",
-            "  }",
-            "}")
+            """
+            import java.lang.ref.Reference;
+
+            class MyAwesomeGame {
+              private long nativeResourcePtr;
+
+              private static native long doNativeInit();
+
+              private static native void cleanUpNativeResources(long nativeResourcePtr);
+
+              private static native void playAwesomeGame(long nativeResourcePtr);
+
+              public MyAwesomeGame() {
+                nativeResourcePtr = doNativeInit();
+              }
+
+              @SuppressWarnings("removal")
+              @Override
+              protected void finalize() throws Throwable {
+                cleanUpNativeResources(nativeResourcePtr);
+                nativeResourcePtr = 0;
+                super.finalize();
+              }
+
+              public void run() {
+                try {
+                  playAwesomeGame(nativeResourcePtr);
+                } finally {
+                  Reference.reachabilityFence(this);
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -192,13 +242,16 @@ public class UnsafeFinalizationTest {
     compilationTestHelper
         .addSourceLines(
             "I.java",
-            "interface I {",
-            "  int duration = 1;",
-            "  default void f() throws Exception {",
-            "    // a native static method",
-            "    Thread.sleep(duration);",
-            "  }",
-            "}")
+            """
+            interface I {
+              int duration = 1;
+
+              default void f() throws Exception {
+                // a native static method
+                Thread.sleep(duration);
+              }
+            }
+            """)
         .doTest();
   }
 }

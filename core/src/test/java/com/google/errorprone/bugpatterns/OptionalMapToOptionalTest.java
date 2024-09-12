@@ -30,13 +30,16 @@ public final class OptionalMapToOptionalTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import java.util.Optional;",
-            "class Test {",
-            "  public boolean test(Optional<Integer> optional) {",
-            "    // BUG: Diagnostic contains:",
-            "    return optional.map(i -> Optional.of(1)).isPresent();",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            class Test {
+              public boolean test(Optional<Integer> optional) {
+                // BUG: Diagnostic contains:
+                return optional.map(i -> Optional.of(1)).isPresent();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -45,13 +48,16 @@ public final class OptionalMapToOptionalTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.base.Optional;",
-            "class Test {",
-            "  public boolean test(Optional<Integer> optional) {",
-            "    // BUG: Diagnostic contains:",
-            "    return optional.transform(i -> Optional.of(1)).isPresent();",
-            "  }",
-            "}")
+            """
+            import com.google.common.base.Optional;
+
+            class Test {
+              public boolean test(Optional<Integer> optional) {
+                // BUG: Diagnostic contains:
+                return optional.transform(i -> Optional.of(1)).isPresent();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -60,13 +66,16 @@ public final class OptionalMapToOptionalTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.base.Optional;",
-            "class Test {",
-            "  public Optional<Optional<Integer>> test(Optional<Integer> optional) {",
-            "    // BUG: Diagnostic contains:",
-            "    return optional.transform(i -> Optional.of(1));",
-            "  }",
-            "}")
+            """
+            import com.google.common.base.Optional;
+
+            class Test {
+              public Optional<Optional<Integer>> test(Optional<Integer> optional) {
+                // BUG: Diagnostic contains:
+                return optional.transform(i -> Optional.of(1));
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -75,12 +84,15 @@ public final class OptionalMapToOptionalTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import java.util.Optional;",
-            "class Test {",
-            "  public Optional<Integer> test(Optional<Integer> optional) {",
-            "    return optional.flatMap(i -> Optional.of(1));",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            class Test {
+              public Optional<Integer> test(Optional<Integer> optional) {
+                return optional.flatMap(i -> Optional.of(1));
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -89,12 +101,15 @@ public final class OptionalMapToOptionalTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import java.util.Optional;",
-            "class Test {",
-            "  public Optional<Integer> test(Optional<Integer> optional) {",
-            "    return optional.map(i -> 1);",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            class Test {
+              public Optional<Integer> test(Optional<Integer> optional) {
+                return optional.map(i -> 1);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -103,12 +118,15 @@ public final class OptionalMapToOptionalTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import java.util.Optional;",
-            "class Test {",
-            "  public Optional<Integer> test(Optional optional) {",
-            "    return optional.map(i -> 1);",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            class Test {
+              public Optional<Integer> test(Optional optional) {
+                return optional.map(i -> 1);
+              }
+            }
+            """)
         .doTest();
   }
 }

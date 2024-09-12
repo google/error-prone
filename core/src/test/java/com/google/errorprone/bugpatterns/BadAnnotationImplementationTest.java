@@ -33,13 +33,17 @@ public class BadAnnotationImplementationTest {
     compilationHelper
         .addSourceLines(
             "TestAnnotation.java",
-            "import java.lang.annotation.Annotation;",
-            "// BUG: Diagnostic contains:",
-            "public class TestAnnotation implements Annotation {",
-            "  @Override public Class<? extends Annotation> annotationType() {",
-            "    return TestAnnotation.class;",
-            "  }",
-            "}")
+            """
+            import java.lang.annotation.Annotation;
+
+            // BUG: Diagnostic contains:
+            public class TestAnnotation implements Annotation {
+              @Override
+              public Class<? extends Annotation> annotationType() {
+                return TestAnnotation.class;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -48,17 +52,21 @@ public class BadAnnotationImplementationTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.lang.annotation.Annotation;",
-            "public class Test {",
-            "  public Annotation getAnnotation() {",
-            "    // BUG: Diagnostic contains:",
-            "    return new Annotation() {",
-            "      @Override public Class<? extends Annotation> annotationType() {",
-            "        return Annotation.class;",
-            "      }",
-            "    };",
-            "  }",
-            "}")
+            """
+            import java.lang.annotation.Annotation;
+
+            public class Test {
+              public Annotation getAnnotation() {
+                // BUG: Diagnostic contains:
+                return new Annotation() {
+                  @Override
+                  public Class<? extends Annotation> annotationType() {
+                    return Annotation.class;
+                  }
+                };
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -68,17 +76,21 @@ public class BadAnnotationImplementationTest {
         .addSourceLines("MyAnnotation.java", "public @interface MyAnnotation {}")
         .addSourceLines(
             "AnonymousClass.java",
-            "import java.lang.annotation.Annotation;",
-            "public class AnonymousClass {",
-            "  public Annotation getAnnotation() {",
-            "    // BUG: Diagnostic contains:",
-            "    return new MyAnnotation() {",
-            "      @Override public Class<? extends Annotation> annotationType() {",
-            "        return Annotation.class;",
-            "      }",
-            "    };",
-            "  }",
-            "}")
+            """
+            import java.lang.annotation.Annotation;
+
+            public class AnonymousClass {
+              public Annotation getAnnotation() {
+                // BUG: Diagnostic contains:
+                return new MyAnnotation() {
+                  @Override
+                  public Class<? extends Annotation> annotationType() {
+                    return Annotation.class;
+                  }
+                };
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -87,16 +99,22 @@ public class BadAnnotationImplementationTest {
     compilationHelper
         .addSourceLines(
             "TestAnnotation.java",
-            "import java.lang.annotation.Annotation;",
-            "// BUG: Diagnostic contains:",
-            "public class TestAnnotation implements Annotation {",
-            "  @Override public Class<? extends Annotation> annotationType() {",
-            "    return TestAnnotation.class;",
-            "  }",
-            "  @Override public boolean equals(Object other) {",
-            "    return false;",
-            "  }",
-            "}")
+            """
+            import java.lang.annotation.Annotation;
+
+            // BUG: Diagnostic contains:
+            public class TestAnnotation implements Annotation {
+              @Override
+              public Class<? extends Annotation> annotationType() {
+                return TestAnnotation.class;
+              }
+
+              @Override
+              public boolean equals(Object other) {
+                return false;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -105,16 +123,22 @@ public class BadAnnotationImplementationTest {
     compilationHelper
         .addSourceLines(
             "TestAnnotation.java",
-            "import java.lang.annotation.Annotation;",
-            "// BUG: Diagnostic contains:",
-            "public class TestAnnotation implements Annotation {",
-            "  @Override public Class<? extends Annotation> annotationType() {",
-            "    return TestAnnotation.class;",
-            "  }",
-            "  @Override public int hashCode() {",
-            "    return 0;",
-            "  }",
-            "}")
+            """
+            import java.lang.annotation.Annotation;
+
+            // BUG: Diagnostic contains:
+            public class TestAnnotation implements Annotation {
+              @Override
+              public Class<? extends Annotation> annotationType() {
+                return TestAnnotation.class;
+              }
+
+              @Override
+              public int hashCode() {
+                return 0;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -123,19 +147,26 @@ public class BadAnnotationImplementationTest {
     compilationHelper
         .addSourceLines(
             "TestAnnotation.java",
-            "import java.lang.annotation.Annotation;",
-            "// BUG: Diagnostic contains:",
-            "public class TestAnnotation implements Annotation {",
-            "  @Override public Class<? extends Annotation> annotationType() {",
-            "    return TestAnnotation.class;",
-            "  }",
-            "  public boolean equals(TestAnnotation other) {",
-            "    return false;",
-            "  }",
-            "  @Override public int hashCode() {",
-            "    return 0;",
-            "  }",
-            "}")
+            """
+            import java.lang.annotation.Annotation;
+
+            // BUG: Diagnostic contains:
+            public class TestAnnotation implements Annotation {
+              @Override
+              public Class<? extends Annotation> annotationType() {
+                return TestAnnotation.class;
+              }
+
+              public boolean equals(TestAnnotation other) {
+                return false;
+              }
+
+              @Override
+              public int hashCode() {
+                return 0;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -144,19 +175,26 @@ public class BadAnnotationImplementationTest {
     compilationHelper
         .addSourceLines(
             "TestAnnotation.java",
-            "import java.lang.annotation.Annotation;",
-            "// BUG: Diagnostic contains:",
-            "public class TestAnnotation implements Annotation {",
-            "  @Override public Class<? extends Annotation> annotationType() {",
-            "    return TestAnnotation.class;",
-            "  }",
-            "  @Override public boolean equals(Object other) {",
-            "    return false;",
-            "  }",
-            "  public int hashCode(Object obj) {",
-            "    return 0;",
-            "  }",
-            "}")
+            """
+            import java.lang.annotation.Annotation;
+
+            // BUG: Diagnostic contains:
+            public class TestAnnotation implements Annotation {
+              @Override
+              public Class<? extends Annotation> annotationType() {
+                return TestAnnotation.class;
+              }
+
+              @Override
+              public boolean equals(Object other) {
+                return false;
+              }
+
+              public int hashCode(Object obj) {
+                return 0;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -165,18 +203,26 @@ public class BadAnnotationImplementationTest {
     compilationHelper
         .addSourceLines(
             "TestAnnotation.java",
-            "import java.lang.annotation.Annotation;",
-            "public class TestAnnotation implements Annotation {",
-            "  @Override public Class<? extends Annotation> annotationType() {",
-            "    return TestAnnotation.class;",
-            "  }",
-            "  @Override public boolean equals(Object other) {",
-            "    return false;",
-            "  }",
-            "  @Override public int hashCode() {",
-            "    return 0;",
-            "  }",
-            "}")
+            """
+            import java.lang.annotation.Annotation;
+
+            public class TestAnnotation implements Annotation {
+              @Override
+              public Class<? extends Annotation> annotationType() {
+                return TestAnnotation.class;
+              }
+
+              @Override
+              public boolean equals(Object other) {
+                return false;
+              }
+
+              @Override
+              public int hashCode() {
+                return 0;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -185,8 +231,11 @@ public class BadAnnotationImplementationTest {
     compilationHelper
         .addSourceLines(
             "TestAnnotation.java",
-            "import java.lang.annotation.Annotation;",
-            "public interface TestAnnotation extends Annotation {}")
+            """
+            import java.lang.annotation.Annotation;
+
+            public interface TestAnnotation extends Annotation {}
+            """)
         .doTest();
   }
 
@@ -195,15 +244,20 @@ public class BadAnnotationImplementationTest {
     compilationHelper
         .addSourceLines(
             "TestEnum.java",
-            "import java.lang.annotation.Annotation;",
-            "// BUG: Diagnostic contains: Enums cannot correctly implement Annotation",
-            "public enum TestEnum implements Annotation {",
-            "  VALUE_1,",
-            "  VALUE_2;",
-            "  @Override public Class<? extends Annotation> annotationType() {",
-            "    return TestEnum.class;",
-            "  }",
-            "}")
+            """
+            import java.lang.annotation.Annotation;
+
+            // BUG: Diagnostic contains: Enums cannot correctly implement Annotation
+            public enum TestEnum implements Annotation {
+              VALUE_1,
+              VALUE_2;
+
+              @Override
+              public Class<? extends Annotation> annotationType() {
+                return TestEnum.class;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -212,22 +266,33 @@ public class BadAnnotationImplementationTest {
     compilationHelper
         .addSourceLines(
             "BaseAnnotation.java",
-            "import java.lang.annotation.Annotation;",
-            "public class BaseAnnotation implements Annotation {",
-            "  @Override public Class<? extends Annotation> annotationType() {",
-            "    return Annotation.class;",
-            "  }",
-            "  @Override public boolean equals(Object other) {",
-            "    return false;",
-            "  }",
-            "  @Override public int hashCode() {",
-            "    return 0;",
-            "  }",
-            "}")
+            """
+            import java.lang.annotation.Annotation;
+
+            public class BaseAnnotation implements Annotation {
+              @Override
+              public Class<? extends Annotation> annotationType() {
+                return Annotation.class;
+              }
+
+              @Override
+              public boolean equals(Object other) {
+                return false;
+              }
+
+              @Override
+              public int hashCode() {
+                return 0;
+              }
+            }
+            """)
         .addSourceLines(
             "MyAnnotation.java",
-            "import java.lang.annotation.Annotation;",
-            "public class MyAnnotation extends BaseAnnotation {}")
+            """
+            import java.lang.annotation.Annotation;
+
+            public class MyAnnotation extends BaseAnnotation {}
+            """)
         .doTest();
   }
 }

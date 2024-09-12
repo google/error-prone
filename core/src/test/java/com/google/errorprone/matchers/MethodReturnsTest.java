@@ -46,19 +46,43 @@ public class MethodReturnsTest extends CompilerBasedAbstractTest {
 
   @Test
   public void returnsString() {
-    writeFile("A.java", "public class A {", "  static String foo() { return null; }", "}");
+    writeFile(
+        "A.java",
+        """
+        public class A {
+          static String foo() {
+            return null;
+          }
+        }
+        """);
     assertCompiles(fooReturnsType(/* shouldMatch= */ true, "java.lang.String"));
   }
 
   @Test
   public void notReturnsString() {
-    writeFile("A.java", "public class A {", "  static int foo() { return 0; }", "}");
+    writeFile(
+        "A.java",
+        """
+        public class A {
+          static int foo() {
+            return 0;
+          }
+        }
+        """);
     assertCompiles(fooReturnsType(/* shouldMatch= */ false, "java.lang.String"));
   }
 
   @Test
   public void returnsInt() {
-    writeFile("A.java", "public class A {", "  static int foo() { return 0; }", "}");
+    writeFile(
+        "A.java",
+        """
+        public class A {
+          static int foo() {
+            return 0;
+          }
+        }
+        """);
     assertCompiles(fooReturnsType(/* shouldMatch= */ true, "int"));
   }
 

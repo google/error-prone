@@ -78,11 +78,14 @@ public class DateCheckerTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import static java.util.Calendar.JULY;",
-            "import java.util.Date;",
-            "public class TestClass {",
-            "  Date good = new Date(120, JULY, 10);",
-            "}")
+            """
+            import static java.util.Calendar.JULY;
+            import java.util.Date;
+
+            public class TestClass {
+              Date good = new Date(120, JULY, 10);
+            }
+            """)
         .doTest();
   }
 
@@ -91,11 +94,14 @@ public class DateCheckerTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import java.util.Date;",
-            "public class TestClass {",
-            "  // BUG: Diagnostic contains: Use Calendar.MAY instead of 4 to represent the month.",
-            "  Date good = new Date(120, 4, 10);",
-            "}")
+            """
+            import java.util.Date;
+
+            public class TestClass {
+              // BUG: Diagnostic contains: Use Calendar.MAY instead of 4 to represent the month.
+              Date good = new Date(120, 4, 10);
+            }
+            """)
         .doTest();
   }
 
@@ -105,11 +111,14 @@ public class DateCheckerTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import java.util.Date;",
-            "public class TestClass {",
-            "  private static final int MAY = 4;",
-            "  Date good = new Date(120, MAY, 31);",
-            "}")
+            """
+            import java.util.Date;
+
+            public class TestClass {
+              private static final int MAY = 4;
+              Date good = new Date(120, MAY, 31);
+            }
+            """)
         .doTest();
   }
 
@@ -118,13 +127,25 @@ public class DateCheckerTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import java.util.Date;",
-            "public class TestClass {",
-            "  Date good = new Date(getYear(), getMonth(), getDay());",
-            "  int getYear() { return 120; }",
-            "  int getMonth() { return 0; }",
-            "  int getDay() { return 1; }",
-            "}")
+            """
+            import java.util.Date;
+
+            public class TestClass {
+              Date good = new Date(getYear(), getMonth(), getDay());
+
+              int getYear() {
+                return 120;
+              }
+
+              int getMonth() {
+                return 0;
+              }
+
+              int getDay() {
+                return 1;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -133,26 +154,24 @@ public class DateCheckerTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import java.util.Date;",
-            "public class TestClass {",
-            "  // BUG: Diagnostic contains: "
-                + "The 1900-based year value (2020) is out of bounds [1..300].  "
-                + "The 0-based month value (13) is out of bounds [0..11].",
-            "  Date bad1 = new Date(2020, 13, 31);",
-            "  // BUG: Diagnostic contains: "
-                + "The 1900-based year value (2020) is out of bounds [1..300].  "
-                + "The 0-based month value (13) is out of bounds [0..11].  "
-                + "The hours value (-2) is out of bounds [0..23].  "
-                + "The minutes value (61) is out of bounds [0..59].",
-            "  Date bad2 = new Date(2020, 13, 31, -2, 61);",
-            "  // BUG: Diagnostic contains: "
-                + "The 1900-based year value (2020) is out of bounds [1..300].  "
-                + "The 0-based month value (13) is out of bounds [0..11].  "
-                + "The hours value (-2) is out of bounds [0..23].  "
-                + "The minutes value (61) is out of bounds [0..59].  "
-                + "The seconds value (75) is out of bounds [0..59].",
-            "  Date bad3 = new Date(2020, 13, 31, -2, 61, 75);",
-            "}")
+            """
+import java.util.Date;
+
+public class TestClass {
+  // BUG: Diagnostic contains: The 1900-based year value (2020) is out of bounds [1..300].  The
+  // 0-based month value (13) is out of bounds [0..11].
+  Date bad1 = new Date(2020, 13, 31);
+  // BUG: Diagnostic contains: The 1900-based year value (2020) is out of bounds [1..300].  The
+  // 0-based month value (13) is out of bounds [0..11].  The hours value (-2) is out of bounds
+  // [0..23].  The minutes value (61) is out of bounds [0..59].
+  Date bad2 = new Date(2020, 13, 31, -2, 61);
+  // BUG: Diagnostic contains: The 1900-based year value (2020) is out of bounds [1..300].  The
+  // 0-based month value (13) is out of bounds [0..11].  The hours value (-2) is out of bounds
+  // [0..23].  The minutes value (61) is out of bounds [0..59].  The seconds value (75) is out of
+  // bounds [0..59].
+  Date bad3 = new Date(2020, 13, 31, -2, 61, 75);
+}
+""")
         .doTest();
   }
 
@@ -161,13 +180,15 @@ public class DateCheckerTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import static java.util.Calendar.JULY;",
-            "import java.util.Date;",
-            "public class TestClass {",
-            "  // BUG: Diagnostic contains: "
-                + "The 1900-based year value (2020) is out of bounds [1..300].",
-            "  Date bad = new Date(2020, JULY, 10);",
-            "}")
+            """
+import static java.util.Calendar.JULY;
+import java.util.Date;
+
+public class TestClass {
+  // BUG: Diagnostic contains: The 1900-based year value (2020) is out of bounds [1..300].
+  Date bad = new Date(2020, JULY, 10);
+}
+""")
         .doTest();
   }
 
@@ -176,20 +197,22 @@ public class DateCheckerTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import java.util.Date;",
-            "public class TestClass {",
-            "  // BUG: Diagnostic contains: The 0-based month value (12) is out of bounds [0..11].",
-            "  Date bad1 = new Date(120, 12, 10);",
-            "  // BUG: Diagnostic contains: The 0-based month value (13) is out of bounds [0..11].",
-            "  Date bad2 = new Date(120, 13, 10);",
-            "  // BUG: Diagnostic contains: The 0-based month value (-1) is out of bounds [0..11].",
-            "  Date bad3 = new Date(120, -1, 10);",
-            "  // BUG: Diagnostic contains: The 0-based month value (-13) is out of bounds"
-                + " [0..11].",
-            "  Date bad4 = new Date(120, -13, 10);",
-            "  // BUG: Diagnostic contains: Use Calendar.MAY instead of 4 to represent the month.",
-            "  Date bad5 = new Date(120, 4, 10);",
-            "}")
+            """
+            import java.util.Date;
+
+            public class TestClass {
+              // BUG: Diagnostic contains: The 0-based month value (12) is out of bounds [0..11].
+              Date bad1 = new Date(120, 12, 10);
+              // BUG: Diagnostic contains: The 0-based month value (13) is out of bounds [0..11].
+              Date bad2 = new Date(120, 13, 10);
+              // BUG: Diagnostic contains: The 0-based month value (-1) is out of bounds [0..11].
+              Date bad3 = new Date(120, -1, 10);
+              // BUG: Diagnostic contains: The 0-based month value (-13) is out of bounds [0..11].
+              Date bad4 = new Date(120, -13, 10);
+              // BUG: Diagnostic contains: Use Calendar.MAY instead of 4 to represent the month.
+              Date bad5 = new Date(120, 4, 10);
+            }
+            """)
         .doTest();
   }
 
@@ -198,16 +221,19 @@ public class DateCheckerTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import static java.util.Calendar.JULY;",
-            "import java.util.Date;",
-            "public class TestClass {",
-            "  // BUG: Diagnostic contains: The day value (32) is out of bounds [1..31].",
-            "  Date bad1 = new Date(120, JULY, 32);",
-            "  // BUG: Diagnostic contains: The day value (0) is out of bounds [1..31].",
-            "  Date bad2 = new Date(120, JULY, 0);",
-            "  // BUG: Diagnostic contains: The day value (-32) is out of bounds [1..31].",
-            "  Date bad3 = new Date(120, JULY, -32);",
-            "}")
+            """
+            import static java.util.Calendar.JULY;
+            import java.util.Date;
+
+            public class TestClass {
+              // BUG: Diagnostic contains: The day value (32) is out of bounds [1..31].
+              Date bad1 = new Date(120, JULY, 32);
+              // BUG: Diagnostic contains: The day value (0) is out of bounds [1..31].
+              Date bad2 = new Date(120, JULY, 0);
+              // BUG: Diagnostic contains: The day value (-32) is out of bounds [1..31].
+              Date bad3 = new Date(120, JULY, -32);
+            }
+            """)
         .doTest();
   }
 
@@ -216,39 +242,42 @@ public class DateCheckerTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import static java.util.Calendar.*;",
-            "import java.util.Date;",
-            "public class TestClass {",
-            "  public void foo(Date date) {",
-            "    date.setYear(1);",
-            "    date.setYear(120);",
-            "    date.setYear(300);",
-            "    date.setMonth(JANUARY);",
-            "    date.setMonth(FEBRUARY);",
-            "    date.setMonth(MARCH);",
-            "    date.setMonth(APRIL);",
-            "    date.setMonth(MAY);",
-            "    date.setMonth(JUNE);",
-            "    date.setMonth(JULY);",
-            "    date.setMonth(AUGUST);",
-            "    date.setMonth(SEPTEMBER);",
-            "    date.setMonth(OCTOBER);",
-            "    date.setMonth(NOVEMBER);",
-            "    date.setMonth(DECEMBER);",
-            "    date.setDate(1);",
-            "    date.setDate(15);",
-            "    date.setDate(31);",
-            "    date.setHours(0);",
-            "    date.setHours(12);",
-            "    date.setHours(23);",
-            "    date.setMinutes(0);",
-            "    date.setMinutes(30);",
-            "    date.setMinutes(59);",
-            "    date.setSeconds(0);",
-            "    date.setSeconds(30);",
-            "    date.setSeconds(59);",
-            "  }",
-            "}")
+            """
+            import static java.util.Calendar.*;
+            import java.util.Date;
+
+            public class TestClass {
+              public void foo(Date date) {
+                date.setYear(1);
+                date.setYear(120);
+                date.setYear(300);
+                date.setMonth(JANUARY);
+                date.setMonth(FEBRUARY);
+                date.setMonth(MARCH);
+                date.setMonth(APRIL);
+                date.setMonth(MAY);
+                date.setMonth(JUNE);
+                date.setMonth(JULY);
+                date.setMonth(AUGUST);
+                date.setMonth(SEPTEMBER);
+                date.setMonth(OCTOBER);
+                date.setMonth(NOVEMBER);
+                date.setMonth(DECEMBER);
+                date.setDate(1);
+                date.setDate(15);
+                date.setDate(31);
+                date.setHours(0);
+                date.setHours(12);
+                date.setHours(23);
+                date.setMinutes(0);
+                date.setMinutes(30);
+                date.setMinutes(59);
+                date.setSeconds(0);
+                date.setSeconds(30);
+                date.setSeconds(59);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -257,20 +286,20 @@ public class DateCheckerTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import java.util.Date;",
-            "public class TestClass {",
-            "  public void foo(Date date) {",
-            "    // BUG: Diagnostic contains: "
-                + "The 1900-based year value (0) is out of bounds [1..300].",
-            "    date.setYear(0);",
-            "    // BUG: Diagnostic contains: "
-                + "The 1900-based year value (-1) is out of bounds [1..300].",
-            "    date.setYear(-1);",
-            "    // BUG: Diagnostic contains: "
-                + "The 1900-based year value (2020) is out of bounds [1..300].",
-            "    date.setYear(2020);",
-            "  }",
-            "}")
+            """
+import java.util.Date;
+
+public class TestClass {
+  public void foo(Date date) {
+    // BUG: Diagnostic contains: The 1900-based year value (0) is out of bounds [1..300].
+    date.setYear(0);
+    // BUG: Diagnostic contains: The 1900-based year value (-1) is out of bounds [1..300].
+    date.setYear(-1);
+    // BUG: Diagnostic contains: The 1900-based year value (2020) is out of bounds [1..300].
+    date.setYear(2020);
+  }
+}
+""")
         .doTest();
   }
 
@@ -279,20 +308,20 @@ public class DateCheckerTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import java.util.Date;",
-            "public class TestClass {",
-            "  public void foo(Date date) {",
-            "    // BUG: Diagnostic contains: The 0-based month value (-13) is out of bounds"
-                + " [0..11].",
-            "    date.setMonth(-13);",
-            "    // BUG: Diagnostic contains: The 0-based month value (-1) is out of bounds"
-                + " [0..11].",
-            "    date.setMonth(-1);",
-            "    // BUG: Diagnostic contains: The 0-based month value (12) is out of bounds"
-                + " [0..11].",
-            "    date.setMonth(12);",
-            "  }",
-            "}")
+            """
+import java.util.Date;
+
+public class TestClass {
+  public void foo(Date date) {
+    // BUG: Diagnostic contains: The 0-based month value (-13) is out of bounds [0..11].
+    date.setMonth(-13);
+    // BUG: Diagnostic contains: The 0-based month value (-1) is out of bounds [0..11].
+    date.setMonth(-1);
+    // BUG: Diagnostic contains: The 0-based month value (12) is out of bounds [0..11].
+    date.setMonth(12);
+  }
+}
+""")
         .doTest();
   }
 
@@ -301,17 +330,20 @@ public class DateCheckerTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import java.util.Date;",
-            "public class TestClass {",
-            "  public void foo(Date date) {",
-            "    // BUG: Diagnostic contains: The day value (-32) is out of bounds [1..31].",
-            "    date.setDate(-32);",
-            "    // BUG: Diagnostic contains: The day value (0) is out of bounds [1..31].",
-            "    date.setDate(0);",
-            "    // BUG: Diagnostic contains: The day value (32) is out of bounds [1..31].",
-            "    date.setDate(32);",
-            "  }",
-            "}")
+            """
+            import java.util.Date;
+
+            public class TestClass {
+              public void foo(Date date) {
+                // BUG: Diagnostic contains: The day value (-32) is out of bounds [1..31].
+                date.setDate(-32);
+                // BUG: Diagnostic contains: The day value (0) is out of bounds [1..31].
+                date.setDate(0);
+                // BUG: Diagnostic contains: The day value (32) is out of bounds [1..31].
+                date.setDate(32);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -320,15 +352,18 @@ public class DateCheckerTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import java.util.Date;",
-            "public class TestClass {",
-            "  public void foo(Date date) {",
-            "    // BUG: Diagnostic contains: The hours value (-1) is out of bounds [0..23].",
-            "    date.setHours(-1);",
-            "    // BUG: Diagnostic contains: The hours value (24) is out of bounds [0..23].",
-            "    date.setHours(24);",
-            "  }",
-            "}")
+            """
+            import java.util.Date;
+
+            public class TestClass {
+              public void foo(Date date) {
+                // BUG: Diagnostic contains: The hours value (-1) is out of bounds [0..23].
+                date.setHours(-1);
+                // BUG: Diagnostic contains: The hours value (24) is out of bounds [0..23].
+                date.setHours(24);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -337,15 +372,18 @@ public class DateCheckerTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import java.util.Date;",
-            "public class TestClass {",
-            "  public void foo(Date date) {",
-            "    // BUG: Diagnostic contains: The minutes value (-1) is out of bounds [0..59].",
-            "    date.setMinutes(-1);",
-            "    // BUG: Diagnostic contains: The minutes value (60) is out of bounds [0..59].",
-            "    date.setMinutes(60);",
-            "  }",
-            "}")
+            """
+            import java.util.Date;
+
+            public class TestClass {
+              public void foo(Date date) {
+                // BUG: Diagnostic contains: The minutes value (-1) is out of bounds [0..59].
+                date.setMinutes(-1);
+                // BUG: Diagnostic contains: The minutes value (60) is out of bounds [0..59].
+                date.setMinutes(60);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -354,15 +392,18 @@ public class DateCheckerTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import java.util.Date;",
-            "public class TestClass {",
-            "  public void foo(Date date) {",
-            "    // BUG: Diagnostic contains: The seconds value (-1) is out of bounds [0..59].",
-            "    date.setSeconds(-1);",
-            "    // BUG: Diagnostic contains: The seconds value (60) is out of bounds [0..59].",
-            "    date.setSeconds(60);",
-            "  }",
-            "}")
+            """
+            import java.util.Date;
+
+            public class TestClass {
+              public void foo(Date date) {
+                // BUG: Diagnostic contains: The seconds value (-1) is out of bounds [0..59].
+                date.setSeconds(-1);
+                // BUG: Diagnostic contains: The seconds value (60) is out of bounds [0..59].
+                date.setSeconds(60);
+              }
+            }
+            """)
         .doTest();
   }
 }

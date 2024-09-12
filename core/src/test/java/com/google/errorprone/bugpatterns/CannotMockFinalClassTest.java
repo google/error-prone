@@ -45,16 +45,20 @@ public class CannotMockFinalClassTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import org.junit.runner.RunWith;",
-            "import org.junit.runners.JUnit4;",
-            "import org.mockito.Mock;",
-            "import org.mockito.Mockito;",
-            "@RunWith(JUnit4.class)",
-            "public class Test {",
-            "  record Record() {}",
-            "  // BUG: Diagnostic contains: ",
-            "  @Mock Record record;",
-            "}")
+            """
+            import org.junit.runner.RunWith;
+            import org.junit.runners.JUnit4;
+            import org.mockito.Mock;
+            import org.mockito.Mockito;
+
+            @RunWith(JUnit4.class)
+            public class Test {
+              record Record() {}
+
+              // BUG: Diagnostic contains:
+              @Mock Record record;
+            }
+            """)
         .doTest();
   }
 

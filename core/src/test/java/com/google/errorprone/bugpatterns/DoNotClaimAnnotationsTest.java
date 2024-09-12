@@ -34,32 +34,36 @@ public class DoNotClaimAnnotationsTest {
     testHelper
         .addInputLines(
             "Test.java",
-            "import java.util.Set;",
-            "import javax.annotation.processing.Processor;",
-            "import javax.annotation.processing.RoundEnvironment;",
-            "import javax.annotation.processing.RoundEnvironment;",
-            "import javax.lang.model.element.TypeElement;",
-            "abstract class Test implements Processor {",
-            "  @Override",
-            "  public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment"
-                + " roundEnv) {",
-            "    return true;",
-            "  }",
-            "}")
+            """
+import java.util.Set;
+import javax.annotation.processing.Processor;
+import javax.annotation.processing.RoundEnvironment;
+import javax.annotation.processing.RoundEnvironment;
+import javax.lang.model.element.TypeElement;
+
+abstract class Test implements Processor {
+  @Override
+  public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+    return true;
+  }
+}
+""")
         .addOutputLines(
             "Test.java",
-            "import java.util.Set;",
-            "import javax.annotation.processing.Processor;",
-            "import javax.annotation.processing.RoundEnvironment;",
-            "import javax.annotation.processing.RoundEnvironment;",
-            "import javax.lang.model.element.TypeElement;",
-            "abstract class Test implements Processor {",
-            "  @Override",
-            "  public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment"
-                + " roundEnv) {",
-            "    return false;",
-            "  }",
-            "}")
+            """
+import java.util.Set;
+import javax.annotation.processing.Processor;
+import javax.annotation.processing.RoundEnvironment;
+import javax.annotation.processing.RoundEnvironment;
+import javax.lang.model.element.TypeElement;
+
+abstract class Test implements Processor {
+  @Override
+  public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+    return false;
+  }
+}
+""")
         .doTest();
   }
 
@@ -68,18 +72,20 @@ public class DoNotClaimAnnotationsTest {
     testHelper
         .addInputLines(
             "Test.java",
-            "import java.util.Set;",
-            "import javax.annotation.processing.Processor;",
-            "import javax.annotation.processing.RoundEnvironment;",
-            "import javax.annotation.processing.RoundEnvironment;",
-            "import javax.lang.model.element.TypeElement;",
-            "abstract class Test implements Processor {",
-            "  @Override",
-            "  public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment"
-                + " roundEnv) {",
-            "    return false;",
-            "  }",
-            "}")
+            """
+import java.util.Set;
+import javax.annotation.processing.Processor;
+import javax.annotation.processing.RoundEnvironment;
+import javax.annotation.processing.RoundEnvironment;
+import javax.lang.model.element.TypeElement;
+
+abstract class Test implements Processor {
+  @Override
+  public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+    return false;
+  }
+}
+""")
         .expectUnchanged()
         .doTest();
   }
@@ -89,16 +95,18 @@ public class DoNotClaimAnnotationsTest {
     testHelper
         .addInputLines(
             "Test.java",
-            "import java.util.Set;",
-            "import javax.annotation.processing.RoundEnvironment;",
-            "import javax.annotation.processing.RoundEnvironment;",
-            "import javax.lang.model.element.TypeElement;",
-            "abstract class Test {",
-            "  public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment"
-                + " roundEnv) {",
-            "    return true;",
-            "  }",
-            "}")
+            """
+import java.util.Set;
+import javax.annotation.processing.RoundEnvironment;
+import javax.annotation.processing.RoundEnvironment;
+import javax.lang.model.element.TypeElement;
+
+abstract class Test {
+  public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+    return true;
+  }
+}
+""")
         .expectUnchanged()
         .doTest();
   }
@@ -108,23 +116,27 @@ public class DoNotClaimAnnotationsTest {
     CompilationTestHelper.newInstance(DoNotClaimAnnotations.class, getClass())
         .addSourceLines(
             "Test.java",
-            "import java.util.Set;",
-            "import javax.annotation.processing.Processor;",
-            "import javax.annotation.processing.RoundEnvironment;",
-            "import javax.annotation.processing.RoundEnvironment;",
-            "import javax.lang.model.element.TypeElement;",
-            "abstract class Test implements Processor {",
-            "  abstract boolean helper();",
-            "  @Override",
-            "  public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment"
-                + " roundEnv) {",
-            "    try {",
-            "      // BUG: Diagnostic contains:",
-            "      return helper();",
-            "    } catch (Throwable t) {}",
-            "    return false;",
-            "  }",
-            "}")
+            """
+import java.util.Set;
+import javax.annotation.processing.Processor;
+import javax.annotation.processing.RoundEnvironment;
+import javax.annotation.processing.RoundEnvironment;
+import javax.lang.model.element.TypeElement;
+
+abstract class Test implements Processor {
+  abstract boolean helper();
+
+  @Override
+  public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+    try {
+      // BUG: Diagnostic contains:
+      return helper();
+    } catch (Throwable t) {
+    }
+    return false;
+  }
+}
+""")
         .doTest();
   }
 }

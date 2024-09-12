@@ -39,24 +39,30 @@ public class NewFileSystemTest {
     refactoringTestHelper
         .addInputLines(
             "Test.java",
-            "import java.nio.file.FileSystems;",
-            "import java.nio.file.Paths;",
-            "import java.io.IOException;",
-            "class Test {",
-            "  void f() throws IOException {",
-            "    FileSystems.newFileSystem(Paths.get(\".\"), null);",
-            "  }",
-            "}")
+            """
+            import java.nio.file.FileSystems;
+            import java.nio.file.Paths;
+            import java.io.IOException;
+
+            class Test {
+              void f() throws IOException {
+                FileSystems.newFileSystem(Paths.get("."), null);
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import java.nio.file.FileSystems;",
-            "import java.nio.file.Paths;",
-            "import java.io.IOException;",
-            "class Test {",
-            "  void f() throws IOException {",
-            "    FileSystems.newFileSystem(Paths.get(\".\"), (ClassLoader) null);",
-            "  }",
-            "}")
+            """
+            import java.nio.file.FileSystems;
+            import java.nio.file.Paths;
+            import java.io.IOException;
+
+            class Test {
+              void f() throws IOException {
+                FileSystems.newFileSystem(Paths.get("."), (ClassLoader) null);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -65,14 +71,17 @@ public class NewFileSystemTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import java.nio.file.FileSystems;",
-            "import java.nio.file.Paths;",
-            "import java.io.IOException;",
-            "class Test {",
-            "  void f() throws IOException {",
-            "    FileSystems.newFileSystem(Paths.get(\".\"), (ClassLoader) null);",
-            "  }",
-            "}")
+            """
+            import java.nio.file.FileSystems;
+            import java.nio.file.Paths;
+            import java.io.IOException;
+
+            class Test {
+              void f() throws IOException {
+                FileSystems.newFileSystem(Paths.get("."), (ClassLoader) null);
+              }
+            }
+            """)
         .doTest();
   }
 }

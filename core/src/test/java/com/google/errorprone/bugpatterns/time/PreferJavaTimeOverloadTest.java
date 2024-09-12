@@ -31,15 +31,17 @@ public class PreferJavaTimeOverloadTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import com.google.common.cache.CacheBuilder;",
-            "import java.util.concurrent.TimeUnit;",
-            "public class TestClass {",
-            "  public CacheBuilder foo(CacheBuilder builder) {",
-            "    // BUG: Diagnostic contains: builder.expireAfterAccess(Duration.of(42,"
-                + " ChronoUnit.MICROS));",
-            "    return builder.expireAfterAccess(42, TimeUnit.MICROSECONDS);",
-            "  }",
-            "}")
+            """
+import com.google.common.cache.CacheBuilder;
+import java.util.concurrent.TimeUnit;
+
+public class TestClass {
+  public CacheBuilder foo(CacheBuilder builder) {
+    // BUG: Diagnostic contains: builder.expireAfterAccess(Duration.of(42, ChronoUnit.MICROS));
+    return builder.expireAfterAccess(42, TimeUnit.MICROSECONDS);
+  }
+}
+""")
         .doTest();
   }
 
@@ -48,14 +50,17 @@ public class PreferJavaTimeOverloadTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import com.google.common.cache.CacheBuilder;",
-            "import java.util.concurrent.TimeUnit;",
-            "public class TestClass {",
-            "  public CacheBuilder foo(CacheBuilder builder) {",
-            "    // BUG: Diagnostic contains: builder.expireAfterAccess(Duration.ofSeconds(42L));",
-            "    return builder.expireAfterAccess(42L, TimeUnit.SECONDS);",
-            "  }",
-            "}")
+            """
+            import com.google.common.cache.CacheBuilder;
+            import java.util.concurrent.TimeUnit;
+
+            public class TestClass {
+              public CacheBuilder foo(CacheBuilder builder) {
+                // BUG: Diagnostic contains: builder.expireAfterAccess(Duration.ofSeconds(42L));
+                return builder.expireAfterAccess(42L, TimeUnit.SECONDS);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -64,16 +69,19 @@ public class PreferJavaTimeOverloadTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import com.google.common.cache.CacheBuilder;",
-            "import java.time.Duration;",
-            "import java.util.concurrent.TimeUnit;",
-            "public class TestClass {",
-            "  public CacheBuilder foo(CacheBuilder builder) {",
-            "    Duration duration = Duration.ofMillis(12345);",
-            "    // BUG: Diagnostic contains: builder.expireAfterAccess(duration);",
-            "    return builder.expireAfterAccess(duration.getSeconds(), TimeUnit.SECONDS);",
-            "  }",
-            "}")
+            """
+            import com.google.common.cache.CacheBuilder;
+            import java.time.Duration;
+            import java.util.concurrent.TimeUnit;
+
+            public class TestClass {
+              public CacheBuilder foo(CacheBuilder builder) {
+                Duration duration = Duration.ofMillis(12345);
+                // BUG: Diagnostic contains: builder.expireAfterAccess(duration);
+                return builder.expireAfterAccess(duration.getSeconds(), TimeUnit.SECONDS);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -84,17 +92,20 @@ public class PreferJavaTimeOverloadTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import com.google.common.cache.CacheBuilder;",
-            "import java.time.Duration;",
-            "import java.util.concurrent.TimeUnit;",
-            "public class TestClass {",
-            "  public CacheBuilder foo(CacheBuilder builder) {",
-            "    Duration duration = Duration.ofMillis(12345);",
-            "    // BUG: Diagnostic contains: return"
-                + " builder.expireAfterAccess(Duration.ofSeconds(duration.hashCode()));",
-            "    return builder.expireAfterAccess(duration.hashCode(), TimeUnit.SECONDS);",
-            "  }",
-            "}")
+            """
+            import com.google.common.cache.CacheBuilder;
+            import java.time.Duration;
+            import java.util.concurrent.TimeUnit;
+
+            public class TestClass {
+              public CacheBuilder foo(CacheBuilder builder) {
+                Duration duration = Duration.ofMillis(12345);
+                // BUG: Diagnostic contains: return
+                // builder.expireAfterAccess(Duration.ofSeconds(duration.hashCode()));
+                return builder.expireAfterAccess(duration.hashCode(), TimeUnit.SECONDS);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -103,14 +114,17 @@ public class PreferJavaTimeOverloadTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import com.google.common.cache.CacheBuilder;",
-            "import java.util.concurrent.TimeUnit;",
-            "public class TestClass {",
-            "  public CacheBuilder foo(CacheBuilder builder) {",
-            "    // BUG: Diagnostic contains: builder.expireAfterAccess(Duration.ofSeconds(42));",
-            "    return builder.expireAfterAccess(42, TimeUnit.SECONDS);",
-            "  }",
-            "}")
+            """
+            import com.google.common.cache.CacheBuilder;
+            import java.util.concurrent.TimeUnit;
+
+            public class TestClass {
+              public CacheBuilder foo(CacheBuilder builder) {
+                // BUG: Diagnostic contains: builder.expireAfterAccess(Duration.ofSeconds(42));
+                return builder.expireAfterAccess(42, TimeUnit.SECONDS);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -137,18 +151,21 @@ public class PreferJavaTimeOverloadTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import java.time.Duration;",
-            "import java.util.concurrent.TimeUnit;",
-            "public class TestClass {",
-            "  private void bar(long v, TimeUnit tu) {",
-            "  }",
-            "  private void bar(Duration d) {",
-            "  }",
-            "  public void foo() {",
-            "    // BUG: Diagnostic contains: bar(Duration.ofSeconds(42L));",
-            "    bar(42L, TimeUnit.SECONDS);",
-            "  }",
-            "}")
+            """
+            import java.time.Duration;
+            import java.util.concurrent.TimeUnit;
+
+            public class TestClass {
+              private void bar(long v, TimeUnit tu) {}
+
+              private void bar(Duration d) {}
+
+              public void foo() {
+                // BUG: Diagnostic contains: bar(Duration.ofSeconds(42L));
+                bar(42L, TimeUnit.SECONDS);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -157,13 +174,16 @@ public class PreferJavaTimeOverloadTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import java.util.concurrent.Future;",
-            "import java.util.concurrent.TimeUnit;",
-            "public class TestClass {",
-            "  public String foo(Future<String> future) throws Exception {",
-            "    return future.get(42L, TimeUnit.SECONDS);",
-            "  }",
-            "}")
+            """
+            import java.util.concurrent.Future;
+            import java.util.concurrent.TimeUnit;
+
+            public class TestClass {
+              public String foo(Future<String> future) throws Exception {
+                return future.get(42L, TimeUnit.SECONDS);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -210,17 +230,20 @@ public class PreferJavaTimeOverloadTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import java.time.Duration;",
-            "public class TestClass {",
-            "  private void bar(org.joda.time.Duration d) {",
-            "  }",
-            "  private void bar(Duration d) {",
-            "  }",
-            "  public void foo() {",
-            "    // BUG: Diagnostic contains: bar(Duration.ofMillis(42));",
-            "    bar(org.joda.time.Duration.millis(42));",
-            "  }",
-            "}")
+            """
+            import java.time.Duration;
+
+            public class TestClass {
+              private void bar(org.joda.time.Duration d) {}
+
+              private void bar(Duration d) {}
+
+              public void foo() {
+                // BUG: Diagnostic contains: bar(Duration.ofMillis(42));
+                bar(org.joda.time.Duration.millis(42));
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -229,17 +252,20 @@ public class PreferJavaTimeOverloadTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import java.time.Duration;",
-            "public class TestClass {",
-            "  private void bar(org.joda.time.Duration d) {",
-            "  }",
-            "  private void bar(Duration d) {",
-            "  }",
-            "  public void foo() {",
-            "    // BUG: Diagnostic contains: bar(Duration.ofMillis(42));",
-            "    bar(new org.joda.time.Duration(42));",
-            "  }",
-            "}")
+            """
+            import java.time.Duration;
+
+            public class TestClass {
+              private void bar(org.joda.time.Duration d) {}
+
+              private void bar(Duration d) {}
+
+              public void foo() {
+                // BUG: Diagnostic contains: bar(Duration.ofMillis(42));
+                bar(new org.joda.time.Duration(42));
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -248,17 +274,20 @@ public class PreferJavaTimeOverloadTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import java.time.Instant;",
-            "public class TestClass {",
-            "  private void bar(org.joda.time.Instant i) {",
-            "  }",
-            "  private void bar(Instant i) {",
-            "  }",
-            "  public void foo() {",
-            "    // BUG: Diagnostic contains: bar(Instant.ofEpochMilli(42));",
-            "    bar(new org.joda.time.Instant(42));",
-            "  }",
-            "}")
+            """
+            import java.time.Instant;
+
+            public class TestClass {
+              private void bar(org.joda.time.Instant i) {}
+
+              private void bar(Instant i) {}
+
+              public void foo() {
+                // BUG: Diagnostic contains: bar(Instant.ofEpochMilli(42));
+                bar(new org.joda.time.Instant(42));
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -267,17 +296,20 @@ public class PreferJavaTimeOverloadTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import java.time.Duration;",
-            "public class TestClass {",
-            "  private void bar(org.joda.time.Duration d) {",
-            "  }",
-            "  private void bar(Duration d) {",
-            "  }",
-            "  public void foo() {",
-            "    // BUG: Diagnostic contains: bar(Duration.ofSeconds(42));",
-            "    bar(org.joda.time.Duration.standardSeconds(42));",
-            "  }",
-            "}")
+            """
+            import java.time.Duration;
+
+            public class TestClass {
+              private void bar(org.joda.time.Duration d) {}
+
+              private void bar(Duration d) {}
+
+              public void foo() {
+                // BUG: Diagnostic contains: bar(Duration.ofSeconds(42));
+                bar(org.joda.time.Duration.standardSeconds(42));
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -286,13 +318,15 @@ public class PreferJavaTimeOverloadTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "public class TestClass {",
-            "  private void bar(org.joda.time.Duration d) {",
-            "  }",
-            "  public void foo(org.joda.time.Duration jodaDuration) {",
-            "    bar(jodaDuration);",
-            "  }",
-            "}")
+            """
+            public class TestClass {
+              private void bar(org.joda.time.Duration d) {}
+
+              public void foo(org.joda.time.Duration jodaDuration) {
+                bar(jodaDuration);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -301,16 +335,20 @@ public class PreferJavaTimeOverloadTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "public class TestClass extends SuperClass {",
-            "  @Override",
-            "  public void bar(java.time.Duration d) {",
-            "    bar(org.joda.time.Duration.standardSeconds(d.getSeconds()));",
-            "  }",
-            "  public void bar(org.joda.time.Duration jodaDuration) {}",
-            "}",
-            "class SuperClass {",
-            "  public void bar(java.time.Duration d) {}",
-            "}")
+            """
+            public class TestClass extends SuperClass {
+              @Override
+              public void bar(java.time.Duration d) {
+                bar(org.joda.time.Duration.standardSeconds(d.getSeconds()));
+              }
+
+              public void bar(org.joda.time.Duration jodaDuration) {}
+            }
+
+            class SuperClass {
+              public void bar(java.time.Duration d) {}
+            }
+            """)
         .doTest();
   }
 
@@ -338,13 +376,15 @@ public class PreferJavaTimeOverloadTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "public class TestClass {",
-            "  private void bar(org.joda.time.ReadableDuration d) {",
-            "  }",
-            "  public void foo(org.joda.time.Duration jodaDuration) {",
-            "    bar(jodaDuration);",
-            "  }",
-            "}")
+            """
+            public class TestClass {
+              private void bar(org.joda.time.ReadableDuration d) {}
+
+              public void foo(org.joda.time.Duration jodaDuration) {
+                bar(jodaDuration);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -353,16 +393,18 @@ public class PreferJavaTimeOverloadTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "public class TestClass {",
-            "  static {",
-            "    // BUG: Diagnostic contains: call bar(Duration) instead",
-            "    bar(42);",
-            "  }",
-            "  private static void bar(java.time.Duration d) {",
-            "  }",
-            "  private static void bar(long d) {",
-            "  }",
-            "}")
+            """
+            public class TestClass {
+              static {
+                // BUG: Diagnostic contains: call bar(Duration) instead
+                bar(42);
+              }
+
+              private static void bar(java.time.Duration d) {}
+
+              private static void bar(long d) {}
+            }
+            """)
         .doTest();
   }
 
@@ -371,16 +413,18 @@ public class PreferJavaTimeOverloadTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "public class TestClass {",
-            "  private void bar(java.time.Duration d) {",
-            "  }",
-            "  private void bar(long d) {",
-            "  }",
-            "  public void foo() {",
-            "    // BUG: Diagnostic contains: call bar(Duration) instead",
-            "    bar(42);",
-            "  }",
-            "}")
+            """
+            public class TestClass {
+              private void bar(java.time.Duration d) {}
+
+              private void bar(long d) {}
+
+              public void foo() {
+                // BUG: Diagnostic contains: call bar(Duration) instead
+                bar(42);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -389,16 +433,18 @@ public class PreferJavaTimeOverloadTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "public class TestClass {",
-            "  private void bar(java.time.Instant i) {",
-            "  }",
-            "  private void bar(long timestamp) {",
-            "  }",
-            "  public void foo() {",
-            "    // BUG: Diagnostic contains: call bar(Instant) instead",
-            "    bar(42);",
-            "  }",
-            "}")
+            """
+            public class TestClass {
+              private void bar(java.time.Instant i) {}
+
+              private void bar(long timestamp) {}
+
+              public void foo() {
+                // BUG: Diagnostic contains: call bar(Instant) instead
+                bar(42);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -414,19 +460,24 @@ public class PreferJavaTimeOverloadTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import java.time.Duration;",
-            "public class TestClass {",
-            "  public static Duration dividedBy(long divisor) {",
-            "    return Duration.ZERO;",
-            "  }",
-            "  public static long dividedBy(Duration divisor) {",
-            "    return 0L;",
-            "  }",
-            "  public void foo() {",
-            "    dividedBy(42L);",
-            "    dividedBy(Duration.ZERO);",
-            "  }",
-            "}")
+            """
+            import java.time.Duration;
+
+            public class TestClass {
+              public static Duration dividedBy(long divisor) {
+                return Duration.ZERO;
+              }
+
+              public static long dividedBy(Duration divisor) {
+                return 0L;
+              }
+
+              public void foo() {
+                dividedBy(42L);
+                dividedBy(Duration.ZERO);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -439,14 +490,17 @@ public class PreferJavaTimeOverloadTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "public class TestClass {",
-            "  public void testAssertThat() {",
-            "    org.assertj.core.api.Assertions.assertThat(1).isEqualTo(1);",
-            "  }",
-            "  public void testAssumeThat() {",
-            "    org.assertj.core.api.Assumptions.assumeThat(1).isEqualTo(1);",
-            "  }",
-            "}")
+            """
+            public class TestClass {
+              public void testAssertThat() {
+                org.assertj.core.api.Assertions.assertThat(1).isEqualTo(1);
+              }
+
+              public void testAssumeThat() {
+                org.assertj.core.api.Assumptions.assumeThat(1).isEqualTo(1);
+              }
+            }
+            """)
         .doTest();
   }
 }

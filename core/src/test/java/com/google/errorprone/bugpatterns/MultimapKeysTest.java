@@ -31,20 +31,26 @@ public final class MultimapKeysTest {
     refactoring
         .addInputLines(
             "Test.java",
-            "import com.google.common.collect.Multimap;",
-            "class Test {",
-            "  void test(Multimap<String, String> m) {",
-            "    for (String k : m.keys()) {}",
-            "  }",
-            "}")
+            """
+            import com.google.common.collect.Multimap;
+
+            class Test {
+              void test(Multimap<String, String> m) {
+                for (String k : m.keys()) {}
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import com.google.common.collect.Multimap;",
-            "class Test {",
-            "  void test(Multimap<String, String> m) {",
-            "    for (String k : m.keySet()) {}",
-            "  }",
-            "}")
+            """
+            import com.google.common.collect.Multimap;
+
+            class Test {
+              void test(Multimap<String, String> m) {
+                for (String k : m.keySet()) {}
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -53,20 +59,26 @@ public final class MultimapKeysTest {
     refactoring
         .addInputLines(
             "Test.java",
-            "import com.google.common.collect.SetMultimap;",
-            "class Test {",
-            "  void test(SetMultimap<String, String> m) {",
-            "    for (String k : m.keys()) {}",
-            "  }",
-            "}")
+            """
+            import com.google.common.collect.SetMultimap;
+
+            class Test {
+              void test(SetMultimap<String, String> m) {
+                for (String k : m.keys()) {}
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import com.google.common.collect.SetMultimap;",
-            "class Test {",
-            "  void test(SetMultimap<String, String> m) {",
-            "    for (String k : m.keySet()) {}",
-            "  }",
-            "}")
+            """
+            import com.google.common.collect.SetMultimap;
+
+            class Test {
+              void test(SetMultimap<String, String> m) {
+                for (String k : m.keySet()) {}
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -75,20 +87,26 @@ public final class MultimapKeysTest {
     refactoring
         .addInputLines(
             "Test.java",
-            "import com.google.common.collect.Multimap;",
-            "class Test {",
-            "  void test(Multimap<String, String> m) {",
-            "     m.keys().forEach(x -> {});",
-            "  }",
-            "}")
+            """
+            import com.google.common.collect.Multimap;
+
+            class Test {
+              void test(Multimap<String, String> m) {
+                m.keys().forEach(x -> {});
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import com.google.common.collect.Multimap;",
-            "class Test {",
-            "  void test(Multimap<String, String> m) {",
-            "     m.keySet().forEach(x -> {});",
-            "  }",
-            "}")
+            """
+            import com.google.common.collect.Multimap;
+
+            class Test {
+              void test(Multimap<String, String> m) {
+                m.keySet().forEach(x -> {});
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -97,13 +115,16 @@ public final class MultimapKeysTest {
     refactoring
         .addInputLines(
             "Test.java",
-            "import com.google.common.collect.Multimap;",
-            "import com.google.common.collect.Multiset;",
-            "class Test {",
-            "  Multiset<String> test(Multimap<String, String> m) {",
-            "    return m.keys();",
-            "  }",
-            "}")
+            """
+            import com.google.common.collect.Multimap;
+            import com.google.common.collect.Multiset;
+
+            class Test {
+              Multiset<String> test(Multimap<String, String> m) {
+                return m.keys();
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }

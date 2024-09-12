@@ -35,16 +35,18 @@ public final class NamedLikeContextualKeywordTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  static Throwable foo;",
-            "  public Test() {",
-            "  }",
-            " ",
-            "  // BUG: Diagnostic contains: [NamedLikeContextualKeyword]",
-            "  public void yield() { ",
-            "    foo = new NullPointerException(\"uh oh\");",
-            "  }",
-            "}")
+            """
+            class Test {
+              static Throwable foo;
+
+              public Test() {}
+
+              // BUG: Diagnostic contains: [NamedLikeContextualKeyword]
+              public void yield() {
+                foo = new NullPointerException("uh oh");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -53,16 +55,18 @@ public final class NamedLikeContextualKeywordTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  static Throwable foo;",
-            "  public Test() {",
-            "  }",
-            " ",
-            "  // BUG: Diagnostic contains: [NamedLikeContextualKeyword]",
-            "  public static void yield() { ",
-            "    foo = new NullPointerException(\"uh oh\");",
-            "  }",
-            "}")
+            """
+            class Test {
+              static Throwable foo;
+
+              public Test() {}
+
+              // BUG: Diagnostic contains: [NamedLikeContextualKeyword]
+              public static void yield() {
+                foo = new NullPointerException("uh oh");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -71,17 +75,20 @@ public final class NamedLikeContextualKeywordTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import javax.annotation.processing.Generated;",
-            "@Generated(\"com.google.auto.value.processor.AutoOneOfProcessor\")",
-            "class Test  {",
-            "  static Throwable foo;",
-            "  public Test() {",
-            "  }",
-            " ",
-            "  public static void yield() { ",
-            "    foo = new NullPointerException(\"uh oh\");",
-            "  }",
-            "}")
+            """
+            import javax.annotation.processing.Generated;
+
+            @Generated("com.google.auto.value.processor.AutoOneOfProcessor")
+            class Test {
+              static Throwable foo;
+
+              public Test() {}
+
+              public static void yield() {
+                foo = new NullPointerException("uh oh");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -90,17 +97,20 @@ public final class NamedLikeContextualKeywordTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import javax.annotation.processing.Generated;",
-            "@Generated(\"com.google.auto.value.processor.AutoValueProcessor\")",
-            "class Test  {",
-            "  static Throwable foo;",
-            "  public Test() {",
-            "  }",
-            " ",
-            "  public static void yield() { ",
-            "    foo = new NullPointerException(\"uh oh\");",
-            "  }",
-            "}")
+            """
+            import javax.annotation.processing.Generated;
+
+            @Generated("com.google.auto.value.processor.AutoValueProcessor")
+            class Test {
+              static Throwable foo;
+
+              public Test() {}
+
+              public static void yield() {
+                foo = new NullPointerException("uh oh");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -109,18 +119,21 @@ public final class NamedLikeContextualKeywordTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import javax.annotation.processing.Generated;",
-            "@Generated(\"com.google.foo.Bar\")",
-            "class Test  {",
-            "  static Throwable foo;",
-            "  public Test() {",
-            "  }",
-            " ",
-            "  // BUG: Diagnostic contains: [NamedLikeContextualKeyword]",
-            "  public static void yield() { ",
-            "    foo = new NullPointerException(\"uh oh\");",
-            "  }",
-            "}")
+            """
+            import javax.annotation.processing.Generated;
+
+            @Generated("com.google.foo.Bar")
+            class Test {
+              static Throwable foo;
+
+              public Test() {}
+
+              // BUG: Diagnostic contains: [NamedLikeContextualKeyword]
+              public static void yield() {
+                foo = new NullPointerException("uh oh");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -129,11 +142,12 @@ public final class NamedLikeContextualKeywordTest {
     helper
         .addSourceLines(
             "module.java",
-            "// BUG: Diagnostic contains: [NamedLikeContextualKeyword]",
-            "class module {",
-            "  public module() {",
-            "  }",
-            "}")
+            """
+            // BUG: Diagnostic contains: [NamedLikeContextualKeyword]
+            class module {
+              public module() {}
+            }
+            """)
         .doTest();
   }
 
@@ -144,16 +158,19 @@ public final class NamedLikeContextualKeywordTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  public Test(int foo) {",
-            "    int x = switch(foo) {",
-            "      case 17: ",
-            "        yield 17;",
-            "      default:",
-            "        yield 0;",
-            "    };",
-            "  }",
-            "}")
+            """
+            class Test {
+              public Test(int foo) {
+                int x =
+                    switch (foo) {
+                      case 17:
+                        yield 17;
+                      default:
+                        yield 0;
+                    };
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -162,21 +179,25 @@ public final class NamedLikeContextualKeywordTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test implements RegrettablyNamedInterface {",
-            "  static Throwable foo;",
-            "  public Test() {",
-            "  }",
-            " ",
-            "  public void yield() { ",
-            "    foo = new NullPointerException(\"uh oh\");",
-            "  }",
-            "}")
+            """
+            class Test implements RegrettablyNamedInterface {
+              static Throwable foo;
+
+              public Test() {}
+
+              public void yield() {
+                foo = new NullPointerException("uh oh");
+              }
+            }
+            """)
         .addSourceLines(
             "RegrettablyNamedInterface.java",
-            "interface RegrettablyNamedInterface {",
-            "  @SuppressWarnings(\"NamedLikeContextualKeyword\")",
-            "  void yield();",
-            "}")
+            """
+            interface RegrettablyNamedInterface {
+              @SuppressWarnings("NamedLikeContextualKeyword")
+              void yield();
+            }
+            """)
         .doTest();
   }
 
@@ -185,21 +206,25 @@ public final class NamedLikeContextualKeywordTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test extends RegrettablyNamedClass {",
-            "  static Throwable foo;",
-            "  public Test() {",
-            "  }",
-            " ",
-            "  public void yield() { ",
-            "    foo = new NullPointerException(\"uh oh\");",
-            "  }",
-            "}")
+            """
+            class Test extends RegrettablyNamedClass {
+              static Throwable foo;
+
+              public Test() {}
+
+              public void yield() {
+                foo = new NullPointerException("uh oh");
+              }
+            }
+            """)
         .addSourceLines(
             "RegrettablyNamedClass.java",
-            "class RegrettablyNamedClass {",
-            "  @SuppressWarnings(\"NamedLikeContextualKeyword\")",
-            "  void yield() {}",
-            "}")
+            """
+            class RegrettablyNamedClass {
+              @SuppressWarnings("NamedLikeContextualKeyword")
+              void yield() {}
+            }
+            """)
         .doTest();
   }
 
@@ -208,22 +233,26 @@ public final class NamedLikeContextualKeywordTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test extends RegrettablyNamedClass {",
-            "  static Throwable foo;",
-            "  public Test() {",
-            "  }",
-            " ",
-            "  @Override",
-            "  public void yield() { ",
-            "    foo = new NullPointerException(\"uh oh\");",
-            "  }",
-            "}")
+            """
+            class Test extends RegrettablyNamedClass {
+              static Throwable foo;
+
+              public Test() {}
+
+              @Override
+              public void yield() {
+                foo = new NullPointerException("uh oh");
+              }
+            }
+            """)
         .addSourceLines(
             "RegrettablyNamedClass.java",
-            "class RegrettablyNamedClass {",
-            "  @SuppressWarnings(\"NamedLikeContextualKeyword\")",
-            "  void yield() {}",
-            "}")
+            """
+            class RegrettablyNamedClass {
+              @SuppressWarnings("NamedLikeContextualKeyword")
+              void yield() {}
+            }
+            """)
         .doTest();
   }
 

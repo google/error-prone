@@ -33,31 +33,34 @@ public class UnusedCollectionModifiedInPlaceTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.Collections;",
-            "import java.util.ArrayList;",
-            "import java.util.List;",
-            "class Test {",
-            "  void doIt(List<String> myList) {",
-            "    // BUG: Diagnostic contains:",
-            "    Collections.copy(new ArrayList<>(myList), null);",
-            "    // BUG: Diagnostic contains:",
-            "    Collections.fill(new ArrayList<>(myList), null);",
-            "    // BUG: Diagnostic contains:",
-            "    Collections.reverse(new ArrayList<>(myList));",
-            "    // BUG: Diagnostic contains:",
-            "    Collections.rotate(new ArrayList<>(myList), 5);",
-            "    // BUG: Diagnostic contains:",
-            "    Collections.shuffle(new ArrayList<>(myList));",
-            "    // BUG: Diagnostic contains:",
-            "    Collections.shuffle(new ArrayList<>(myList), null);",
-            "    // BUG: Diagnostic contains:",
-            "    Collections.sort(new ArrayList<>(myList));",
-            "    // BUG: Diagnostic contains:",
-            "    Collections.sort(new ArrayList<>(myList), null);",
-            "    // BUG: Diagnostic contains:",
-            "    Collections.swap(new ArrayList<>(myList), 1, 2);",
-            "  }",
-            "}")
+            """
+            import java.util.Collections;
+            import java.util.ArrayList;
+            import java.util.List;
+
+            class Test {
+              void doIt(List<String> myList) {
+                // BUG: Diagnostic contains:
+                Collections.copy(new ArrayList<>(myList), null);
+                // BUG: Diagnostic contains:
+                Collections.fill(new ArrayList<>(myList), null);
+                // BUG: Diagnostic contains:
+                Collections.reverse(new ArrayList<>(myList));
+                // BUG: Diagnostic contains:
+                Collections.rotate(new ArrayList<>(myList), 5);
+                // BUG: Diagnostic contains:
+                Collections.shuffle(new ArrayList<>(myList));
+                // BUG: Diagnostic contains:
+                Collections.shuffle(new ArrayList<>(myList), null);
+                // BUG: Diagnostic contains:
+                Collections.sort(new ArrayList<>(myList));
+                // BUG: Diagnostic contains:
+                Collections.sort(new ArrayList<>(myList), null);
+                // BUG: Diagnostic contains:
+                Collections.swap(new ArrayList<>(myList), 1, 2);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -66,17 +69,20 @@ public class UnusedCollectionModifiedInPlaceTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.collect.Lists;",
-            "import java.util.Collections;",
-            "import java.util.List;",
-            "class Test {",
-            "  void doIt(List<String> myList) {",
-            "    // BUG: Diagnostic contains:",
-            "    Collections.sort(Lists.newArrayList(myList));",
-            "    // BUG: Diagnostic contains:",
-            "    Collections.sort(Lists.newArrayList(myList), null);",
-            "  }",
-            "}")
+            """
+            import com.google.common.collect.Lists;
+            import java.util.Collections;
+            import java.util.List;
+
+            class Test {
+              void doIt(List<String> myList) {
+                // BUG: Diagnostic contains:
+                Collections.sort(Lists.newArrayList(myList));
+                // BUG: Diagnostic contains:
+                Collections.sort(Lists.newArrayList(myList), null);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -85,17 +91,20 @@ public class UnusedCollectionModifiedInPlaceTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.collect.Lists;",
-            "import java.util.Collections;",
-            "import java.util.List;",
-            "class Test {",
-            "  void doIt(List<String> myList) {",
-            "    // BUG: Diagnostic contains:",
-            "    Collections.sort(Lists.newLinkedList(myList));",
-            "    // BUG: Diagnostic contains:",
-            "    Collections.sort(Lists.newLinkedList(myList), null);",
-            "  }",
-            "}")
+            """
+            import com.google.common.collect.Lists;
+            import java.util.Collections;
+            import java.util.List;
+
+            class Test {
+              void doIt(List<String> myList) {
+                // BUG: Diagnostic contains:
+                Collections.sort(Lists.newLinkedList(myList));
+                // BUG: Diagnostic contains:
+                Collections.sort(Lists.newLinkedList(myList), null);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -104,13 +113,16 @@ public class UnusedCollectionModifiedInPlaceTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.Collections;",
-            "import java.util.List;",
-            "class Test {",
-            "  void doIt(List<String> myList) {",
-            "    Collections.sort(myList);",
-            "  }",
-            "}")
+            """
+            import java.util.Collections;
+            import java.util.List;
+
+            class Test {
+              void doIt(List<String> myList) {
+                Collections.sort(myList);
+              }
+            }
+            """)
         .doTest();
   }
 }

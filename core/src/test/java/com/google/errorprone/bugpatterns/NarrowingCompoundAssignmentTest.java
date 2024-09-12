@@ -34,26 +34,28 @@ public class NarrowingCompoundAssignmentTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void m() {",
-            "    short s = 0;",
-            "    char t = 0;",
-            "    byte u = 0;",
-            "    float v = 0;",
-            "    // BUG: Diagnostic contains: s = (short) (s * 1)",
-            "    s *= 1;",
-            "    // BUG: Diagnostic contains: t = (char) (t * 1)",
-            "    t *= 1;",
-            "    // BUG: Diagnostic contains: u = (byte) (u * 1)",
-            "    u *= 1;",
-            "    // BUG: Diagnostic contains: u = (byte) (u * 1L)",
-            "    u *= 1L;",
-            "    // BUG: Diagnostic contains: v = (float) (v * 1.0)",
-            "    v *= 1.0;",
-            "    // BUG: Diagnostic contains: v = (float) (v * 1.0d)",
-            "    v *= 1.0d;",
-            "  }",
-            "}")
+            """
+            class Test {
+              void m() {
+                short s = 0;
+                char t = 0;
+                byte u = 0;
+                float v = 0;
+                // BUG: Diagnostic contains: s = (short) (s * 1)
+                s *= 1;
+                // BUG: Diagnostic contains: t = (char) (t * 1)
+                t *= 1;
+                // BUG: Diagnostic contains: u = (byte) (u * 1)
+                u *= 1;
+                // BUG: Diagnostic contains: u = (byte) (u * 1L)
+                u *= 1L;
+                // BUG: Diagnostic contains: v = (float) (v * 1.0)
+                v *= 1.0;
+                // BUG: Diagnostic contains: v = (float) (v * 1.0d)
+                v *= 1.0d;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -62,27 +64,29 @@ public class NarrowingCompoundAssignmentTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void m() {",
-            "    short s = 0;",
-            "    // BUG: Diagnostic contains: s = (short) (s * 1)",
-            "    s *= 1;",
-            "    // BUG: Diagnostic contains: s = (short) (s / 1)",
-            "    s /= 1;",
-            "    // BUG: Diagnostic contains: s = (short) (s % 1)",
-            "    s %= 1;",
-            "    // BUG: Diagnostic contains: s = (short) (s + 1)",
-            "    s += 1;",
-            "    // BUG: Diagnostic contains: s = (short) (s - 1)",
-            "    s -= 1;",
-            "    // BUG: Diagnostic contains: s = (short) (s << 1)",
-            "    s <<= 1;",
-            "    // Signed right shifts are OK",
-            "    s >>= 1;",
-            "    // BUG: Diagnostic contains: s = (short) (s >>> 1)",
-            "    s >>>= 1;",
-            "  }",
-            "}")
+            """
+            class Test {
+              void m() {
+                short s = 0;
+                // BUG: Diagnostic contains: s = (short) (s * 1)
+                s *= 1;
+                // BUG: Diagnostic contains: s = (short) (s / 1)
+                s /= 1;
+                // BUG: Diagnostic contains: s = (short) (s % 1)
+                s %= 1;
+                // BUG: Diagnostic contains: s = (short) (s + 1)
+                s += 1;
+                // BUG: Diagnostic contains: s = (short) (s - 1)
+                s -= 1;
+                // BUG: Diagnostic contains: s = (short) (s << 1)
+                s <<= 1;
+                // Signed right shifts are OK
+                s >>= 1;
+                // BUG: Diagnostic contains: s = (short) (s >>> 1)
+                s >>>= 1;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -91,12 +95,15 @@ public class NarrowingCompoundAssignmentTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void m() {",
-            "    // BUG: Diagnostic contains: i = (short) (i >>> 1)",
-            "    for (short i = -1; i != 0; i >>>= 1);",
-            "  }",
-            "}")
+            """
+            class Test {
+              void m() {
+                // BUG: Diagnostic contains: i = (short) (i >>> 1)
+                for (short i = -1; i != 0; i >>>= 1)
+                  ;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -105,16 +112,18 @@ public class NarrowingCompoundAssignmentTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void m() {",
-            "    int s = 0;",
-            "    long t = 0;",
-            "    double u = 0;",
-            "    s *= 1;",
-            "    t *= 1;",
-            "    u *= 1;",
-            "  }",
-            "}")
+            """
+            class Test {
+              void m() {
+                int s = 0;
+                long t = 0;
+                double u = 0;
+                s *= 1;
+                t *= 1;
+                u *= 1;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -123,15 +132,17 @@ public class NarrowingCompoundAssignmentTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void m() {",
-            "    float a = 0;",
-            "    float b = 0;",
-            "    Float c = Float.valueOf(0);",
-            "    a += b;",
-            "    a += c;",
-            "  }",
-            "}")
+            """
+            class Test {
+              void m() {
+                float a = 0;
+                float b = 0;
+                Float c = Float.valueOf(0);
+                a += b;
+                a += c;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -141,27 +152,29 @@ public class NarrowingCompoundAssignmentTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void m() {",
-            "    short smask = 0b1;",
-            "    byte bmask = 0b1;",
-            "",
-            "    short s = 0;",
-            "    byte b = 0;",
-            "",
-            "    s &= smask;",
-            "    s |= smask;",
-            "    s ^= smask;",
-            "",
-            "    s &= bmask;",
-            "    s |= bmask;",
-            "    s ^= bmask;",
-            "",
-            "    b &= bmask;",
-            "    b |= bmask;",
-            "    b ^= bmask;",
-            "  }",
-            "}")
+            """
+            class Test {
+              void m() {
+                short smask = 0b1;
+                byte bmask = 0b1;
+
+                short s = 0;
+                byte b = 0;
+
+                s &= smask;
+                s |= smask;
+                s ^= smask;
+
+                s &= bmask;
+                s |= bmask;
+                s ^= bmask;
+
+                b &= bmask;
+                b |= bmask;
+                b ^= bmask;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -171,34 +184,36 @@ public class NarrowingCompoundAssignmentTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void m() {",
-            "    short s = 0;",
-            "    byte b = 0;",
-            "",
-            "    s &= ~1;",
-            "    s |= 1;",
-            "    s ^= 1;",
-            "",
-            "    b &= ~1;",
-            "    b |= 1;",
-            "    b ^= 1;",
-            "",
-            "    b |= 128;",
-            "    b &= 128;",
-            "    b ^= 128;",
-            "    b |= 1L;",
-            "    b &= 1L;",
-            "    b ^= 1L;",
-            "",
-            "    // BUG: Diagnostic contains: b = (byte) (b | 256)",
-            "    b |= 256;",
-            "    // BUG: Diagnostic contains: b = (byte) (b & ~256)",
-            "    b &= ~256;",
-            "    // BUG: Diagnostic contains: b = (byte) (b ^ 256)",
-            "    b ^= 256;",
-            "  }",
-            "}")
+            """
+            class Test {
+              void m() {
+                short s = 0;
+                byte b = 0;
+
+                s &= ~1;
+                s |= 1;
+                s ^= 1;
+
+                b &= ~1;
+                b |= 1;
+                b ^= 1;
+
+                b |= 128;
+                b &= 128;
+                b ^= 128;
+                b |= 1L;
+                b &= 1L;
+                b ^= 1L;
+
+                // BUG: Diagnostic contains: b = (byte) (b | 256)
+                b |= 256;
+                // BUG: Diagnostic contains: b = (byte) (b & ~256)
+                b &= ~256;
+                // BUG: Diagnostic contains: b = (byte) (b ^ 256)
+                b ^= 256;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -207,27 +222,29 @@ public class NarrowingCompoundAssignmentTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void m() {",
-            "    short smask = 0b1;",
-            "    byte bmask = 0b1;",
-            "",
-            "    short s = 0;",
-            "    byte b = 0;",
-            "",
-            "    s += smask;",
-            "    s -= smask;",
-            "    s *= smask;",
-            "",
-            "    s += bmask;",
-            "    s -= bmask;",
-            "    s *= bmask;",
-            "",
-            "    b -= bmask;",
-            "    b += bmask;",
-            "    b /= bmask;",
-            "  }",
-            "}")
+            """
+            class Test {
+              void m() {
+                short smask = 0b1;
+                byte bmask = 0b1;
+
+                short s = 0;
+                byte b = 0;
+
+                s += smask;
+                s -= smask;
+                s *= smask;
+
+                s += bmask;
+                s -= bmask;
+                s *= bmask;
+
+                b -= bmask;
+                b += bmask;
+                b /= bmask;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -236,13 +253,15 @@ public class NarrowingCompoundAssignmentTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void m() {",
-            "    float f = 0;",
-            "    // BUG: Diagnostic contains: f = (float) (f - (3.0 - 2.0))",
-            "    f -= 3.0 - 2.0;",
-            "  }",
-            "}")
+            """
+            class Test {
+              void m() {
+                float f = 0;
+                // BUG: Diagnostic contains: f = (float) (f - (3.0 - 2.0))
+                f -= 3.0 - 2.0;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -251,13 +270,15 @@ public class NarrowingCompoundAssignmentTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void m() {",
-            "    float f = 0;",
-            "    // BUG: Diagnostic contains: f = (float) (f - 3.0 * 2.0)",
-            "    f -= 3.0 * 2.0;",
-            "  }",
-            "}")
+            """
+            class Test {
+              void m() {
+                float f = 0;
+                // BUG: Diagnostic contains: f = (float) (f - 3.0 * 2.0)
+                f -= 3.0 * 2.0;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -266,13 +287,15 @@ public class NarrowingCompoundAssignmentTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void m() {",
-            "    float f = 0;",
-            "    // BUG: Diagnostic contains: f = (float) (f - (3.0 > 0 ? 1.0 : 2.0))",
-            "    f -= 3.0 > 0 ? 1.0 : 2.0;",
-            "  }",
-            "}")
+            """
+            class Test {
+              void m() {
+                float f = 0;
+                // BUG: Diagnostic contains: f = (float) (f - (3.0 > 0 ? 1.0 : 2.0))
+                f -= 3.0 > 0 ? 1.0 : 2.0;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -429,14 +452,16 @@ public class NarrowingCompoundAssignmentTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void m() {",
-            "    long a = 1;",
-            "    double b = 2;",
-            "    // BUG: Diagnostic contains: Compound assignments from double to long",
-            "    a *= b;",
-            "  }",
-            "}")
+            """
+            class Test {
+              void m() {
+                long a = 1;
+                double b = 2;
+                // BUG: Diagnostic contains: Compound assignments from double to long
+                a *= b;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -445,14 +470,16 @@ public class NarrowingCompoundAssignmentTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void m() {",
-            "    int a = 1;",
-            "    double b = 2;",
-            "    // BUG: Diagnostic contains: Compound assignments from double to int",
-            "    a *= b;",
-            "  }",
-            "}")
+            """
+            class Test {
+              void m() {
+                int a = 1;
+                double b = 2;
+                // BUG: Diagnostic contains: Compound assignments from double to int
+                a *= b;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -461,14 +488,16 @@ public class NarrowingCompoundAssignmentTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void m() {",
-            "    long a = 1;",
-            "    float b = 2;",
-            "    // BUG: Diagnostic contains: Compound assignments from float to long",
-            "    a *= b;",
-            "  }",
-            "}")
+            """
+            class Test {
+              void m() {
+                long a = 1;
+                float b = 2;
+                // BUG: Diagnostic contains: Compound assignments from float to long
+                a *= b;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -477,14 +506,16 @@ public class NarrowingCompoundAssignmentTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void m() {",
-            "    int a = 1;",
-            "    float b = 2;",
-            "    // BUG: Diagnostic contains:" + " Compound assignments from float to int",
-            "    a *= b;",
-            "  }",
-            "}")
+            """
+            class Test {
+              void m() {
+                int a = 1;
+                float b = 2;
+                // BUG: Diagnostic contains: Compound assignments from float to int
+                a *= b;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -493,82 +524,84 @@ public class NarrowingCompoundAssignmentTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void f(short s, byte b, char c, int i, long l, float f, double d) {",
-            "    s += s;",
-            "    s += b;",
-            "    // BUG: Diagnostic contains:",
-            "    s += c;",
-            "    // BUG: Diagnostic contains:",
-            "    s += i;",
-            "    // BUG: Diagnostic contains:",
-            "    s += l;",
-            "    // BUG: Diagnostic contains:",
-            "    s += f;",
-            "    // BUG: Diagnostic contains:",
-            "    s += d;",
-            "    // BUG: Diagnostic contains:",
-            "    b += s;",
-            "    b += b;",
-            "    // BUG: Diagnostic contains:",
-            "    b += c;",
-            "    // BUG: Diagnostic contains:",
-            "    b += i;",
-            "    // BUG: Diagnostic contains:",
-            "    b += l;",
-            "    // BUG: Diagnostic contains:",
-            "    b += f;",
-            "    // BUG: Diagnostic contains:",
-            "    b += d;",
-            "    // BUG: Diagnostic contains:",
-            "    c += s;",
-            "    // BUG: Diagnostic contains:",
-            "    c += b;",
-            "    c += c;",
-            "    // BUG: Diagnostic contains:",
-            "    c += i;",
-            "    // BUG: Diagnostic contains:",
-            "    c += l;",
-            "    // BUG: Diagnostic contains:",
-            "    c += f;",
-            "    // BUG: Diagnostic contains:",
-            "    c += d;",
-            "    i += s;",
-            "    i += b;",
-            "    i += c;",
-            "    i += i;",
-            "    // BUG: Diagnostic contains:",
-            "    i += l;",
-            "    // BUG: Diagnostic contains:",
-            "    i += f;",
-            "    // BUG: Diagnostic contains:",
-            "    i += d;",
-            "    l += s;",
-            "    l += b;",
-            "    l += c;",
-            "    l += i;",
-            "    l += l;",
-            "    // BUG: Diagnostic contains:",
-            "    l += f;",
-            "    // BUG: Diagnostic contains:",
-            "    l += d;",
-            "    f += s;",
-            "    f += b;",
-            "    f += c;",
-            "    f += i;",
-            "    f += l;",
-            "    f += f;",
-            "    // BUG: Diagnostic contains:",
-            "    f += d;",
-            "    d += s;",
-            "    d += b;",
-            "    d += c;",
-            "    d += i;",
-            "    d += l;",
-            "    d += f;",
-            "    d += d;",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f(short s, byte b, char c, int i, long l, float f, double d) {
+                s += s;
+                s += b;
+                // BUG: Diagnostic contains:
+                s += c;
+                // BUG: Diagnostic contains:
+                s += i;
+                // BUG: Diagnostic contains:
+                s += l;
+                // BUG: Diagnostic contains:
+                s += f;
+                // BUG: Diagnostic contains:
+                s += d;
+                // BUG: Diagnostic contains:
+                b += s;
+                b += b;
+                // BUG: Diagnostic contains:
+                b += c;
+                // BUG: Diagnostic contains:
+                b += i;
+                // BUG: Diagnostic contains:
+                b += l;
+                // BUG: Diagnostic contains:
+                b += f;
+                // BUG: Diagnostic contains:
+                b += d;
+                // BUG: Diagnostic contains:
+                c += s;
+                // BUG: Diagnostic contains:
+                c += b;
+                c += c;
+                // BUG: Diagnostic contains:
+                c += i;
+                // BUG: Diagnostic contains:
+                c += l;
+                // BUG: Diagnostic contains:
+                c += f;
+                // BUG: Diagnostic contains:
+                c += d;
+                i += s;
+                i += b;
+                i += c;
+                i += i;
+                // BUG: Diagnostic contains:
+                i += l;
+                // BUG: Diagnostic contains:
+                i += f;
+                // BUG: Diagnostic contains:
+                i += d;
+                l += s;
+                l += b;
+                l += c;
+                l += i;
+                l += l;
+                // BUG: Diagnostic contains:
+                l += f;
+                // BUG: Diagnostic contains:
+                l += d;
+                f += s;
+                f += b;
+                f += c;
+                f += i;
+                f += l;
+                f += f;
+                // BUG: Diagnostic contains:
+                f += d;
+                d += s;
+                d += b;
+                d += c;
+                d += i;
+                d += l;
+                d += f;
+                d += d;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -577,13 +610,15 @@ public class NarrowingCompoundAssignmentTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void m() {",
-            "    int a = 1;",
-            "    // BUG: Diagnostic contains: from Long to int",
-            "    a += (Long) 0L;",
-            "  }",
-            "}")
+            """
+            class Test {
+              void m() {
+                int a = 1;
+                // BUG: Diagnostic contains: from Long to int
+                a += (Long) 0L;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -592,12 +627,14 @@ public class NarrowingCompoundAssignmentTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void m() {",
-            "    String a = \"\";",
-            "    a += (char) 0;",
-            "  }",
-            "}")
+            """
+            class Test {
+              void m() {
+                String a = "";
+                a += (char) 0;
+              }
+            }
+            """)
         .doTest();
   }
 }

@@ -43,35 +43,42 @@ public class InlinerTest {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "public final class Client {",
-            "  @Deprecated",
-            "  @InlineMe(replacement = \"this.foo2(value)\")",
-            "  public void foo1(String value) {",
-            "    foo2(value);",
-            "  }",
-            "  public void foo2(String value) {",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class Client {
+              @Deprecated
+              @InlineMe(replacement = "this.foo2(value)")
+              public void foo1(String value) {
+                foo2(value);
+              }
+
+              public void foo2(String value) {}
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
             "Caller.java",
-            "public final class Caller {",
-            "  public void doTest() {",
-            "    Client client = new Client();",
-            "    client.foo1(\"frobber!\");",
-            "    client.foo1(\"don't change this!\");",
-            "  }",
-            "}")
+            """
+            public final class Caller {
+              public void doTest() {
+                Client client = new Client();
+                client.foo1("frobber!");
+                client.foo1("don't change this!");
+              }
+            }
+            """)
         .addOutputLines(
             "out/Caller.java",
-            "public final class Caller {",
-            "  public void doTest() {",
-            "    Client client = new Client();",
-            "    client.foo2(\"frobber!\");",
-            "    client.foo2(\"don't change this!\");",
-            "  }",
-            "}")
+            """
+            public final class Caller {
+              public void doTest() {
+                Client client = new Client();
+                client.foo2("frobber!");
+                client.foo2("don't change this!");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -80,17 +87,21 @@ public class InlinerTest {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "public final class Client {",
-            "  @Deprecated",
-            "  @InlineMe(replacement = \"this.after(foo)\")",
-            "  public String before(String foo) {",
-            "    return after(foo);",
-            "  }",
-            "  public String after(String foo) {",
-            "    return \"frobber\";",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class Client {
+              @Deprecated
+              @InlineMe(replacement = "this.after(foo)")
+              public String before(String foo) {
+                return after(foo);
+              }
+
+              public String after(String foo) {
+                return "frobber";
+              }
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
             "Caller.java",
@@ -102,12 +113,14 @@ public class InlinerTest {
             "}")
         .addOutputLines(
             "out/Caller.java",
-            "public final class Caller {",
-            "  public void doTest() {",
-            "    Client client = new Client();",
-            "    String result = client.after(\"\\\"\");",
-            "  }",
-            "}")
+            """
+            public final class Caller {
+              public void doTest() {
+                Client client = new Client();
+                String result = client.after("\\"");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -116,39 +129,48 @@ public class InlinerTest {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "public final class Client {",
-            "  @Deprecated",
-            "  @InlineMe(replacement = \"this.after(paramB, paramA)\")",
-            "  public void before(String paramA, String paramB) {",
-            "    after(paramB, paramA);",
-            "  }",
-            "  public void after(String paramB, String paramA) {",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class Client {
+              @Deprecated
+              @InlineMe(replacement = "this.after(paramB, paramA)")
+              public void before(String paramA, String paramB) {
+                after(paramB, paramA);
+              }
+
+              public void after(String paramB, String paramA) {}
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
             "Caller.java",
-            "import java.time.Duration;",
-            "public final class Caller {",
-            "  public void doTest() {",
-            "    Client client = new Client();",
-            "    String a = \"a\";",
-            "    String b = \"b\";",
-            "    client.before(a, b);",
-            "  }",
-            "}")
+            """
+            import java.time.Duration;
+
+            public final class Caller {
+              public void doTest() {
+                Client client = new Client();
+                String a = "a";
+                String b = "b";
+                client.before(a, b);
+              }
+            }
+            """)
         .addOutputLines(
             "out/Caller.java",
-            "import java.time.Duration;",
-            "public final class Caller {",
-            "  public void doTest() {",
-            "    Client client = new Client();",
-            "    String a = \"a\";",
-            "    String b = \"b\";",
-            "    client.after(b, a);",
-            "  }",
-            "}")
+            """
+            import java.time.Duration;
+
+            public final class Caller {
+              public void doTest() {
+                Client client = new Client();
+                String a = "a";
+                String b = "b";
+                client.after(b, a);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -157,34 +179,42 @@ public class InlinerTest {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "public final class Client {",
-            "  @Deprecated",
-            "  @InlineMe(replacement = \"this.after()\")",
-            "  public String before() {",
-            "    return after();",
-            "  }",
-            "  public String after() {",
-            "    return \"frobber\";",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class Client {
+              @Deprecated
+              @InlineMe(replacement = "this.after()")
+              public String before() {
+                return after();
+              }
+
+              public String after() {
+                return "frobber";
+              }
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
             "Caller.java",
-            "public final class Caller {",
-            "  public void doTest() {",
-            "    Client client = new Client();",
-            "    String result = client.before();",
-            "  }",
-            "}")
+            """
+            public final class Caller {
+              public void doTest() {
+                Client client = new Client();
+                String result = client.before();
+              }
+            }
+            """)
         .addOutputLines(
             "out/Caller.java",
-            "public final class Caller {",
-            "  public void doTest() {",
-            "    Client client = new Client();",
-            "    String result = client.after();",
-            "  }",
-            "}")
+            """
+            public final class Caller {
+              public void doTest() {
+                Client client = new Client();
+                String result = client.after();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -193,29 +223,37 @@ public class InlinerTest {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
-            "package com.google.foo;",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "public final class Client {",
-            "  @Deprecated",
-            "  @InlineMe(",
-            "      replacement = \"Client.after()\",",
-            "      imports = {\"com.google.foo.Client\"})",
-            "  public static <T> T before() {",
-            "    return after();",
-            "  }",
-            "  public static <T> T after() {",
-            "    return (T) null;",
-            "  }",
-            "}")
+            """
+            package com.google.foo;
+
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class Client {
+              @Deprecated
+              @InlineMe(
+                  replacement = "Client.after()",
+                  imports = {"com.google.foo.Client"})
+              public static <T> T before() {
+                return after();
+              }
+
+              public static <T> T after() {
+                return (T) null;
+              }
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
             "Caller.java",
-            "package com.google.foo;",
-            "public final class Caller {",
-            "  public void doTest() {",
-            "    String str = Client.<String>before();",
-            "  }",
-            "}")
+            """
+            package com.google.foo;
+
+            public final class Caller {
+              public void doTest() {
+                String str = Client.<String>before();
+              }
+            }
+            """)
         .addOutputLines(
             "out/Caller.java",
             "package com.google.foo;",
@@ -233,42 +271,53 @@ public class InlinerTest {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "import java.time.Duration;",
-            "public final class Client {",
-            "  private Duration deadline = Duration.ofSeconds(5);",
-            "  @Deprecated",
-            "  @InlineMe(",
-            "      replacement = \"this.setDeadline(Duration.ofMillis(millis))\",",
-            "      imports = {\"java.time.Duration\"})",
-            "  public void setDeadline(long millis) {",
-            "    setDeadline(Duration.ofMillis(millis));",
-            "  }",
-            "  public void setDeadline(Duration deadline) {",
-            "    this.deadline = deadline;",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.InlineMe;
+            import java.time.Duration;
+
+            public final class Client {
+              private Duration deadline = Duration.ofSeconds(5);
+
+              @Deprecated
+              @InlineMe(
+                  replacement = "this.setDeadline(Duration.ofMillis(millis))",
+                  imports = {"java.time.Duration"})
+              public void setDeadline(long millis) {
+                setDeadline(Duration.ofMillis(millis));
+              }
+
+              public void setDeadline(Duration deadline) {
+                this.deadline = deadline;
+              }
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
             "Caller.java",
-            "import org.joda.time.Duration;",
-            "public final class Caller {",
-            "  public void doTest() {",
-            "    Duration jodaDuration = Duration.millis(42);",
-            "    Client client = new Client();",
-            "    client.setDeadline(42);",
-            "  }",
-            "}")
+            """
+            import org.joda.time.Duration;
+
+            public final class Caller {
+              public void doTest() {
+                Duration jodaDuration = Duration.millis(42);
+                Client client = new Client();
+                client.setDeadline(42);
+              }
+            }
+            """)
         .addOutputLines(
             "out/Caller.java",
-            "import org.joda.time.Duration;",
-            "public final class Caller {",
-            "  public void doTest() {",
-            "    Duration jodaDuration = Duration.millis(42);",
-            "    Client client = new Client();",
-            "    client.setDeadline(java.time.Duration.ofMillis(42));",
-            "  }",
-            "}")
+            """
+            import org.joda.time.Duration;
+
+            public final class Caller {
+              public void doTest() {
+                Duration jodaDuration = Duration.millis(42);
+                Client client = new Client();
+                client.setDeadline(java.time.Duration.ofMillis(42));
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -277,43 +326,53 @@ public class InlinerTest {
     refactoringTestHelper
         .addInputLines(
             "A.java",
-            "package com.google;",
-            "public class A {",
-            "  public static class Inner {",
-            "    public static void foo() {",
-            "    }",
-            "  }",
-            "}")
+            """
+            package com.google;
+
+            public class A {
+              public static class Inner {
+                public static void foo() {}
+              }
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
             "Client.java",
-            "import com.google.A;",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "public final class Client {",
-            "  @Deprecated",
-            "  @InlineMe(replacement = \"A.Inner.foo()\", imports = \"com.google.A\")",
-            "  public void something() {",
-            "    A.Inner.foo();",
-            "  }",
-            "}")
+            """
+            import com.google.A;
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class Client {
+              @Deprecated
+              @InlineMe(replacement = "A.Inner.foo()", imports = "com.google.A")
+              public void something() {
+                A.Inner.foo();
+              }
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
             "Caller.java",
-            "public final class Caller {",
-            "  public void doTest() {",
-            "    Client client = new Client();",
-            "    client.something();",
-            "  }",
-            "}")
+            """
+            public final class Caller {
+              public void doTest() {
+                Client client = new Client();
+                client.something();
+              }
+            }
+            """)
         .addOutputLines(
             "out/Caller.java",
-            "import com.google.A;",
-            "public final class Caller {",
-            "  public void doTest() {",
-            "    Client client = new Client();",
-            "    A.Inner.foo();",
-            "  }",
-            "}")
+            """
+            import com.google.A;
+
+            public final class Caller {
+              public void doTest() {
+                Client client = new Client();
+                A.Inner.foo();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -322,35 +381,44 @@ public class InlinerTest {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "public final class Client {",
-            "  private long deadline = 5000;",
-            "  @Deprecated",
-            "  @InlineMe(replacement = \"this.millis(millis)\")",
-            "  public void setDeadline(long millis) {",
-            "    millis(millis);",
-            "  }",
-            "  public void millis(long millis) {",
-            "    this.deadline = millis;",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class Client {
+              private long deadline = 5000;
+
+              @Deprecated
+              @InlineMe(replacement = "this.millis(millis)")
+              public void setDeadline(long millis) {
+                millis(millis);
+              }
+
+              public void millis(long millis) {
+                this.deadline = millis;
+              }
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
             "Caller.java",
-            "public final class Caller {",
-            "  public void doTest() {",
-            "    Client client = new Client();",
-            "    client.setDeadline(42);",
-            "  }",
-            "}")
+            """
+            public final class Caller {
+              public void doTest() {
+                Client client = new Client();
+                client.setDeadline(42);
+              }
+            }
+            """)
         .addOutputLines(
             "out/Caller.java",
-            "public final class Caller {",
-            "  public void doTest() {",
-            "    Client client = new Client();",
-            "    client.millis(42);",
-            "  }",
-            "}")
+            """
+            public final class Caller {
+              public void doTest() {
+                Client client = new Client();
+                client.millis(42);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -359,37 +427,47 @@ public class InlinerTest {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
-            "package com.google.test;",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "public final class Client {",
-            "  @Deprecated",
-            "  @InlineMe(",
-            "      replacement = \"Client.after(value)\", ",
-            "      imports = {\"com.google.test.Client\"})",
-            "  public static void before(int value) {",
-            "    after(value);",
-            "  }",
-            "  public static void after(int value) {",
-            "  }",
-            "}")
+            """
+            package com.google.test;
+
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class Client {
+              @Deprecated
+              @InlineMe(
+                  replacement = "Client.after(value)",
+                  imports = {"com.google.test.Client"})
+              public static void before(int value) {
+                after(value);
+              }
+
+              public static void after(int value) {}
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
             "Caller.java",
-            "import static com.google.test.Client.before;",
-            "public final class Caller {",
-            "  public void doTest() {",
-            "    before(42);",
-            "  }",
-            "}")
+            """
+            import static com.google.test.Client.before;
+
+            public final class Caller {
+              public void doTest() {
+                before(42);
+              }
+            }
+            """)
         .addOutputLines(
             "Caller.java",
-            "import static com.google.test.Client.before;",
-            "import com.google.test.Client;",
-            "public final class Caller {",
-            "  public void doTest() {",
-            "    Client.after(42);",
-            "  }",
-            "}")
+            """
+            import static com.google.test.Client.before;
+            import com.google.test.Client;
+
+            public final class Caller {
+              public void doTest() {
+                Client.after(42);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -401,37 +479,47 @@ public class InlinerTest {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
-            "package com.google.test;",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "public final class Client {",
-            "  @Deprecated",
-            "  @InlineMe(",
-            "      replacement = \"after(value)\", ",
-            "      staticImports = {\"com.google.test.Client.after\"})",
-            "  public static void before(int value) {",
-            "    after(value);",
-            "  }",
-            "  public static void after(int value) {",
-            "  }",
-            "}")
+            """
+            package com.google.test;
+
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class Client {
+              @Deprecated
+              @InlineMe(
+                  replacement = "after(value)",
+                  staticImports = {"com.google.test.Client.after"})
+              public static void before(int value) {
+                after(value);
+              }
+
+              public static void after(int value) {}
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
             "Caller.java",
-            "import static com.google.test.Client.before;",
-            "public final class Caller {",
-            "  public void doTest() {",
-            "    before(42);",
-            "  }",
-            "}")
+            """
+            import static com.google.test.Client.before;
+
+            public final class Caller {
+              public void doTest() {
+                before(42);
+              }
+            }
+            """)
         .addOutputLines(
             "Caller.java",
-            "import static com.google.test.Client.after;",
-            "import static com.google.test.Client.before;",
-            "public final class Caller {",
-            "  public void doTest() {",
-            "    after(42);",
-            "  }",
-            "}")
+            """
+            import static com.google.test.Client.after;
+            import static com.google.test.Client.before;
+
+            public final class Caller {
+              public void doTest() {
+                after(42);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -440,38 +528,49 @@ public class InlinerTest {
     refactoringTestHelper
         .addInputLines(
             "Parent.java",
-            "package com.google.test;",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "import java.time.Duration;",
-            "public class Parent {",
-            "  @Deprecated",
-            "  @InlineMe(",
-            "      replacement = \"this.after(Duration.ofMillis(value))\", ",
-            "      imports = {\"java.time.Duration\"})",
-            "  protected final void before(int value) {",
-            "    after(Duration.ofMillis(value));",
-            "  }",
-            "  protected void after(Duration value) {",
-            "  }",
-            "}")
+            """
+            package com.google.test;
+
+            import com.google.errorprone.annotations.InlineMe;
+            import java.time.Duration;
+
+            public class Parent {
+              @Deprecated
+              @InlineMe(
+                  replacement = "this.after(Duration.ofMillis(value))",
+                  imports = {"java.time.Duration"})
+              protected final void before(int value) {
+                after(Duration.ofMillis(value));
+              }
+
+              protected void after(Duration value) {}
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
             "Child.java",
-            "package com.google.test;",
-            "public final class Child extends Parent {",
-            "  public void doTest() {",
-            "    before(42);",
-            "  }",
-            "}")
+            """
+            package com.google.test;
+
+            public final class Child extends Parent {
+              public void doTest() {
+                before(42);
+              }
+            }
+            """)
         .addOutputLines(
             "Child.java",
-            "package com.google.test;",
-            "import java.time.Duration;",
-            "public final class Child extends Parent {",
-            "  public void doTest() {",
-            "    after(Duration.ofMillis(42));",
-            "  }",
-            "}")
+            """
+            package com.google.test;
+
+            import java.time.Duration;
+
+            public final class Child extends Parent {
+              public void doTest() {
+                after(Duration.ofMillis(42));
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -480,38 +579,49 @@ public class InlinerTest {
     refactoringTestHelper
         .addInputLines(
             "Parent.java",
-            "package com.google.test;",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "import java.time.Duration;",
-            "public class Parent {",
-            "  @Deprecated",
-            "  @InlineMe(",
-            "      replacement = \"this(Duration.ofMillis(value))\", ",
-            "      imports = {\"java.time.Duration\"})",
-            "  protected Parent(int value) {",
-            "    this(Duration.ofMillis(value));",
-            "  }",
-            "  protected Parent(Duration value) {",
-            "  }",
-            "}")
+            """
+            package com.google.test;
+
+            import com.google.errorprone.annotations.InlineMe;
+            import java.time.Duration;
+
+            public class Parent {
+              @Deprecated
+              @InlineMe(
+                  replacement = "this(Duration.ofMillis(value))",
+                  imports = {"java.time.Duration"})
+              protected Parent(int value) {
+                this(Duration.ofMillis(value));
+              }
+
+              protected Parent(Duration value) {}
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
             "Child.java",
-            "package com.google.test;",
-            "public final class Child extends Parent {",
-            "  public Child() {",
-            "    super(42);",
-            "  }",
-            "}")
+            """
+            package com.google.test;
+
+            public final class Child extends Parent {
+              public Child() {
+                super(42);
+              }
+            }
+            """)
         .addOutputLines(
             "Child.java",
-            "package com.google.test;",
-            "import java.time.Duration;",
-            "public final class Child extends Parent {",
-            "  public Child() {",
-            "    super(Duration.ofMillis(42));",
-            "  }",
-            "}")
+            """
+            package com.google.test;
+
+            import java.time.Duration;
+
+            public final class Child extends Parent {
+              public Child() {
+                super(Duration.ofMillis(42));
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -520,37 +630,46 @@ public class InlinerTest {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "public final class Client {",
-            "  @Deprecated",
-            "  @InlineMe(replacement = \"this.baz()\")",
-            "  public Client foo() {",
-            "    return baz();",
-            "  }",
-            "  @Deprecated",
-            "  @InlineMe(replacement = \"this.baz()\")",
-            "  public Client bar() {",
-            "    return baz();",
-            "  }",
-            "  public Client baz() {",
-            "    return this;",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class Client {
+              @Deprecated
+              @InlineMe(replacement = "this.baz()")
+              public Client foo() {
+                return baz();
+              }
+
+              @Deprecated
+              @InlineMe(replacement = "this.baz()")
+              public Client bar() {
+                return baz();
+              }
+
+              public Client baz() {
+                return this;
+              }
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
             "Caller.java",
-            "public final class Caller {",
-            "  public void doTest() {",
-            "    Client client = new Client().foo().bar();",
-            "  }",
-            "}")
+            """
+            public final class Caller {
+              public void doTest() {
+                Client client = new Client().foo().bar();
+              }
+            }
+            """)
         .addOutputLines(
             "out/Caller.java",
-            "public final class Caller {",
-            "  public void doTest() {",
-            "    Client client = new Client().baz().baz();",
-            "  }",
-            "}")
+            """
+            public final class Caller {
+              public void doTest() {
+                Client client = new Client().baz().baz();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -559,34 +678,43 @@ public class InlinerTest {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "import java.time.Duration;",
-            "public final class Client {",
-            "  @Deprecated",
-            "  @InlineMe(replacement = \"this.setTimeout(Duration.ZERO)\", imports ="
-                + " {\"java.time.Duration\"})",
-            "  public void clearTimeout() {",
-            "    setTimeout(Duration.ZERO);",
-            "  }",
-            "  public void setTimeout(Duration timeout) {",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.InlineMe;
+            import java.time.Duration;
+
+            public final class Client {
+              @Deprecated
+              @InlineMe(
+                  replacement = "this.setTimeout(Duration.ZERO)",
+                  imports = {"java.time.Duration"})
+              public void clearTimeout() {
+                setTimeout(Duration.ZERO);
+              }
+
+              public void setTimeout(Duration timeout) {}
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
             "Caller.java",
-            "public final class Caller {",
-            "  public void doTest() {",
-            "    new Client().clearTimeout();",
-            "  }",
-            "}")
+            """
+            public final class Caller {
+              public void doTest() {
+                new Client().clearTimeout();
+              }
+            }
+            """)
         .addOutputLines(
             "out/Caller.java",
-            "import java.time.Duration;",
-            "public final class Caller {",
-            "  public void doTest() {",
-            "    new Client().setTimeout(Duration.ZERO);",
-            "  }",
-            "}")
+            """
+            import java.time.Duration;
+
+            public final class Caller {
+              public void doTest() {
+                new Client().setTimeout(Duration.ZERO);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -595,31 +723,38 @@ public class InlinerTest {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "public final class Client {",
-            "  @Deprecated",
-            "  @InlineMe(replacement = \"this\")",
-            "  public Client noOp() {",
-            "    return this;",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class Client {
+              @Deprecated
+              @InlineMe(replacement = "this")
+              public Client noOp() {
+                return this;
+              }
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
             "Caller.java",
-            "public final class Caller {",
-            "  public void doTest() {",
-            "    Client client = new Client();",
-            "    client = client.noOp();",
-            "  }",
-            "}")
+            """
+            public final class Caller {
+              public void doTest() {
+                Client client = new Client();
+                client = client.noOp();
+              }
+            }
+            """)
         .addOutputLines(
             "out/Caller.java",
-            "public final class Caller {",
-            "  public void doTest() {",
-            "    Client client = new Client();",
-            "    client = client;",
-            "  }",
-            "}")
+            """
+            public final class Caller {
+              public void doTest() {
+                Client client = new Client();
+                client = client;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -628,29 +763,36 @@ public class InlinerTest {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "public final class Client {",
-            "  @Deprecated",
-            "  @InlineMe(replacement = \"this\")",
-            "  public Client noOp() {",
-            "    return this;",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class Client {
+              @Deprecated
+              @InlineMe(replacement = "this")
+              public Client noOp() {
+                return this;
+              }
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
             "Caller.java",
-            "public final class Caller {",
-            "  public void doTest() {",
-            "    Client client = new Client().noOp();",
-            "  }",
-            "}")
+            """
+            public final class Caller {
+              public void doTest() {
+                Client client = new Client().noOp();
+              }
+            }
+            """)
         .addOutputLines(
             "out/Caller.java",
-            "public final class Caller {",
-            "  public void doTest() {",
-            "    Client client = new Client();",
-            "  }",
-            "}")
+            """
+            public final class Caller {
+              public void doTest() {
+                Client client = new Client();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -659,31 +801,38 @@ public class InlinerTest {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "public final class Client {",
-            "  @Deprecated",
-            "  @InlineMe(replacement = \"this\")",
-            "  public Client noOp() {",
-            "    return this;",
-            "  }",
-            "  public void bar() {",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class Client {
+              @Deprecated
+              @InlineMe(replacement = "this")
+              public Client noOp() {
+                return this;
+              }
+
+              public void bar() {}
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
             "Caller.java",
-            "public final class Caller {",
-            "  public void doTest() {",
-            "    new Client().noOp().bar();",
-            "  }",
-            "}")
+            """
+            public final class Caller {
+              public void doTest() {
+                new Client().noOp().bar();
+              }
+            }
+            """)
         .addOutputLines(
             "out/Caller.java",
-            "public final class Caller {",
-            "  public void doTest() {",
-            "    new Client().bar();",
-            "  }",
-            "}")
+            """
+            public final class Caller {
+              public void doTest() {
+                new Client().bar();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -692,30 +841,37 @@ public class InlinerTest {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "public final class Client {",
-            "  @Deprecated",
-            "  @InlineMe(replacement = \"this\")",
-            "  public Client noOp() {",
-            "    return this;",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class Client {
+              @Deprecated
+              @InlineMe(replacement = "this")
+              public Client noOp() {
+                return this;
+              }
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
             "Caller.java",
-            "public final class Caller {",
-            "  public void doTest() {",
-            "    Client client = new Client();",
-            "    client.noOp();",
-            "  }",
-            "}")
+            """
+            public final class Caller {
+              public void doTest() {
+                Client client = new Client();
+                client.noOp();
+              }
+            }
+            """)
         .addOutputLines(
             "out/Caller.java",
-            "public final class Caller {",
-            "  public void doTest() {",
-            "    Client client = new Client();",
-            "  }",
-            "}")
+            """
+            public final class Caller {
+              public void doTest() {
+                Client client = new Client();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -740,20 +896,26 @@ public class InlinerTest {
         .expectUnchanged()
         .addInputLines(
             "Caller.java",
-            "import foo.Client;",
-            "public final class Caller {",
-            "  public void doTest() {",
-            "    Client client = new Client();",
-            "  }",
-            "}")
+            """
+            import foo.Client;
+
+            public final class Caller {
+              public void doTest() {
+                Client client = new Client();
+              }
+            }
+            """)
         .addOutputLines(
             "out/Caller.java",
-            "import foo.Client;",
-            "public final class Caller {",
-            "  public void doTest() {",
-            "    Client client = Client.create();",
-            "  }",
-            "}")
+            """
+            import foo.Client;
+
+            public final class Caller {
+              public void doTest() {
+                Client client = Client.create();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -777,14 +939,17 @@ public class InlinerTest {
             "}")
         .addSourceLines(
             "Caller.java",
-            "import foo.Client;",
-            "public final class Caller {",
-            "  public void doTest() {",
-            "    // BUG: Diagnostic contains: NOTE: this is an unvalidated inlining!"
-                + " Reasoning: Migrating to factory method",
-            "    Client client = new Client();",
-            "  }",
-            "}")
+            """
+import foo.Client;
+
+public final class Caller {
+  public void doTest() {
+    // BUG: Diagnostic contains: NOTE: this is an unvalidated inlining! Reasoning: Migrating to
+    // factory method
+    Client client = new Client();
+  }
+}
+""")
         .doTest();
   }
 
@@ -793,58 +958,68 @@ public class InlinerTest {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "public final class Client {",
-            "  @Deprecated",
-            "  @InlineMe(replacement = \"this.after(inputs)\")",
-            "  public void before(int... inputs) {",
-            "    after(inputs);",
-            "  }",
-            "  public void after(int... inputs) {}",
-            "  @Deprecated",
-            "  @InlineMe(replacement = \"this.after(inputs)\")",
-            "  public void extraBefore(int first, int... inputs) {",
-            "    after(inputs);",
-            "  }",
-            "  @Deprecated",
-            "  @InlineMe(replacement = \"this.after(first)\")",
-            "  public void ignoreVarargs(int first, int... inputs) {",
-            "    after(first);",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class Client {
+              @Deprecated
+              @InlineMe(replacement = "this.after(inputs)")
+              public void before(int... inputs) {
+                after(inputs);
+              }
+
+              public void after(int... inputs) {}
+
+              @Deprecated
+              @InlineMe(replacement = "this.after(inputs)")
+              public void extraBefore(int first, int... inputs) {
+                after(inputs);
+              }
+
+              @Deprecated
+              @InlineMe(replacement = "this.after(first)")
+              public void ignoreVarargs(int first, int... inputs) {
+                after(first);
+              }
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
             "Caller.java",
-            "public final class Caller {",
-            "  public void doTest() {",
-            "    Client client = new Client();",
-            "    client.before(1);",
-            "    client.before();",
-            "    client.before(1, 2, 3);",
-            "    client.extraBefore(42, 1);",
-            "    client.extraBefore(42);",
-            "    client.extraBefore(42, 1, 2, 3);",
-            "    client.ignoreVarargs(42, 1);",
-            "    client.ignoreVarargs(42);",
-            "    client.ignoreVarargs(42, 1, 2, 3);",
-            "  }",
-            "}")
+            """
+            public final class Caller {
+              public void doTest() {
+                Client client = new Client();
+                client.before(1);
+                client.before();
+                client.before(1, 2, 3);
+                client.extraBefore(42, 1);
+                client.extraBefore(42);
+                client.extraBefore(42, 1, 2, 3);
+                client.ignoreVarargs(42, 1);
+                client.ignoreVarargs(42);
+                client.ignoreVarargs(42, 1, 2, 3);
+              }
+            }
+            """)
         .addOutputLines(
             "out/Caller.java",
-            "public final class Caller {",
-            "  public void doTest() {",
-            "    Client client = new Client();",
-            "    client.after(1);",
-            "    client.after();",
-            "    client.after(1, 2, 3);",
-            "    client.after(1);",
-            "    client.after();",
-            "    client.after(1, 2, 3);",
-            "    client.after(42);",
-            "    client.after(42);",
-            "    client.after(42);",
-            "  }",
-            "}")
+            """
+            public final class Caller {
+              public void doTest() {
+                Client client = new Client();
+                client.after(1);
+                client.after();
+                client.after(1, 2, 3);
+                client.after(1);
+                client.after();
+                client.after(1, 2, 3);
+                client.after(42);
+                client.after(42);
+                client.after(42);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -853,34 +1028,42 @@ public class InlinerTest {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "public final class Client {",
-            "  @Deprecated",
-            "  @InlineMe(replacement = \"this.after(first, inputs)\")",
-            "  public void before(int first, int... inputs) {",
-            "    after(first, inputs);",
-            "  }",
-            "  public void after(int first, int... inputs) {}",
-            "}")
+            """
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class Client {
+              @Deprecated
+              @InlineMe(replacement = "this.after(first, inputs)")
+              public void before(int first, int... inputs) {
+                after(first, inputs);
+              }
+
+              public void after(int first, int... inputs) {}
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
             "Caller.java",
-            "public final class Caller {",
-            "  public void doTest() {",
-            "    Client client = new Client();",
-            "    client.before(1);",
-            "    client.before(1, 2, 3);",
-            "  }",
-            "}")
+            """
+            public final class Caller {
+              public void doTest() {
+                Client client = new Client();
+                client.before(1);
+                client.before(1, 2, 3);
+              }
+            }
+            """)
         .addOutputLines(
             "out/Caller.java",
-            "public final class Caller {",
-            "  public void doTest() {",
-            "    Client client = new Client();",
-            "    client.after(1);",
-            "    client.after(1, 2, 3);",
-            "  }",
-            "}")
+            """
+            public final class Caller {
+              public void doTest() {
+                Client client = new Client();
+                client.after(1);
+                client.after(1, 2, 3);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -890,32 +1073,39 @@ public class InlinerTest {
         .allowBreakingChanges()
         .addInputLines(
             "Client.java",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "import java.time.Duration;",
-            "public final class Client {",
-            "  @Deprecated",
-            "  @InlineMe(replacement = \"x\")",
-            "  public final int identity(int x) {",
-            "    return x;",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.InlineMe;
+            import java.time.Duration;
+
+            public final class Client {
+              @Deprecated
+              @InlineMe(replacement = "x")
+              public final int identity(int x) {
+                return x;
+              }
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
             "Caller.java",
-            "public final class Caller {",
-            "  public void doTest() {",
-            "    Client client = new Client();",
-            "    int x = client.identity(42);",
-            "  }",
-            "}")
+            """
+            public final class Caller {
+              public void doTest() {
+                Client client = new Client();
+                int x = client.identity(42);
+              }
+            }
+            """)
         .addOutputLines(
             "out/Caller.java",
-            "public final class Caller {",
-            "  public void doTest() {",
-            "    Client client = new Client();",
-            "    int x = 42;",
-            "  }",
-            "}")
+            """
+            public final class Caller {
+              public void doTest() {
+                Client client = new Client();
+                int x = 42;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -925,23 +1115,28 @@ public class InlinerTest {
         .allowBreakingChanges()
         .addInputLines(
             "Client.java",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "public final class Client {",
-            "  @Deprecated",
-            "  @InlineMe(replacement = \"x * y\")",
-            "  public int multiply(int x, int y) {",
-            "    return x * y;",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class Client {
+              @Deprecated
+              @InlineMe(replacement = "x * y")
+              public int multiply(int x, int y) {
+                return x * y;
+              }
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
             "Caller.java",
-            "public final class Caller {",
-            "  public void doTest() {",
-            "    Client client = new Client();",
-            "    int x = client.multiply(5, 10);",
-            "  }",
-            "}")
+            """
+            public final class Caller {
+              public void doTest() {
+                Client client = new Client();
+                int x = client.multiply(5, 10);
+              }
+            }
+            """)
         .addOutputLines(
             "out/Caller.java",
             "public final class Caller {",
@@ -960,23 +1155,28 @@ public class InlinerTest {
         .allowBreakingChanges()
         .addInputLines(
             "Client.java",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "public final class Client {",
-            "  @Deprecated",
-            "  @InlineMe(replacement = \"x * y\")",
-            "  public int multiply(int x, int y) {",
-            "    return x * y;",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class Client {
+              @Deprecated
+              @InlineMe(replacement = "x * y")
+              public int multiply(int x, int y) {
+                return x * y;
+              }
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
             "Caller.java",
-            "public final class Caller {",
-            "  public void doTest() {",
-            "    Client client = new Client();",
-            "    int x = client.multiply(5 + 3, 10);",
-            "  }",
-            "}")
+            """
+            public final class Caller {
+              public void doTest() {
+                Client client = new Client();
+                int x = client.multiply(5 + 3, 10);
+              }
+            }
+            """)
         .addOutputLines(
             "out/Caller.java",
             "public final class Caller {",
@@ -995,23 +1195,28 @@ public class InlinerTest {
         .allowBreakingChanges()
         .addInputLines(
             "Client.java",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "public final class Client {",
-            "  @Deprecated",
-            "  @InlineMe(replacement = \"x * y\")",
-            "  public int multiply(int x, int y) {",
-            "    return x * y;",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class Client {
+              @Deprecated
+              @InlineMe(replacement = "x * y")
+              public int multiply(int x, int y) {
+                return x * y;
+              }
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
             "Caller.java",
-            "public final class Caller {",
-            "  public void doTest() {",
-            "    Client client = new Client();",
-            "    int x = client.multiply(5 + 3, 10) * 5;",
-            "  }",
-            "}")
+            """
+            public final class Caller {
+              public void doTest() {
+                Client client = new Client();
+                int x = client.multiply(5 + 3, 10) * 5;
+              }
+            }
+            """)
         .addOutputLines(
             "out/Caller.java",
             "public final class Caller {",
@@ -1029,25 +1234,30 @@ public class InlinerTest {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "public final class Client {",
-            "  @InlineMe(replacement = \"this.after(/* isAdmin = */ isAdmin)\")",
-            "  @Deprecated",
-            "  public void before(boolean isAdmin) {",
-            "    after(/* isAdmin= */ isAdmin);",
-            "  }",
-            "  public void after(boolean isAdmin) {",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class Client {
+              @InlineMe(replacement = "this.after(/* isAdmin = */ isAdmin)")
+              @Deprecated
+              public void before(boolean isAdmin) {
+                after(/* isAdmin= */ isAdmin);
+              }
+
+              public void after(boolean isAdmin) {}
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
             "Caller.java",
-            "public final class Caller {",
-            "  public void doTest() {",
-            "    Client client = new Client();",
-            "    client.before(false);",
-            "  }",
-            "}")
+            """
+            public final class Caller {
+              public void doTest() {
+                Client client = new Client();
+                client.before(false);
+              }
+            }
+            """)
         .addOutputLines(
             "out/Caller.java",
             "public final class Caller {",
@@ -1065,32 +1275,42 @@ public class InlinerTest {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "public final class Client {",
-            "  @InlineMe(replacement = \"this.after(/* foo= */ isAdmin);;;;\")",
-            "  @Deprecated",
-            "  public boolean before(boolean isAdmin) {",
-            "    return after(/* foo= */ isAdmin);",
-            "  }",
-            "  public boolean after(boolean isAdmin) { return isAdmin; }",
-            "}")
+            """
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class Client {
+              @InlineMe(replacement = "this.after(/* foo= */ isAdmin);;;;")
+              @Deprecated
+              public boolean before(boolean isAdmin) {
+                return after(/* foo= */ isAdmin);
+              }
+
+              public boolean after(boolean isAdmin) {
+                return isAdmin;
+              }
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
             "Caller.java",
-            "public final class Caller {",
-            "  public void doTest() {",
-            "    Client client = new Client();",
-            "    boolean x = (client.before(false) || true);",
-            "  }",
-            "}")
+            """
+            public final class Caller {
+              public void doTest() {
+                Client client = new Client();
+                boolean x = (client.before(false) || true);
+              }
+            }
+            """)
         .addOutputLines(
             "out/Caller.java",
-            "public final class Caller {",
-            "  public void doTest() {",
-            "    Client client = new Client();",
-            "    boolean x = (client.after(/* false = */ false) || true);",
-            "  }",
-            "}")
+            """
+            public final class Caller {
+              public void doTest() {
+                Client client = new Client();
+                boolean x = (client.after(/* false= */ false) || true);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1098,45 +1318,57 @@ public class InlinerTest {
   public void customInlineMe() {
     refactoringTestHelper
         .addInputLines(
-            "InlineMe.java", //
-            "package bespoke;",
-            "public @interface InlineMe {",
-            "  String replacement();",
-            "  String[] imports() default {};",
-            "  String[] staticImports() default {};",
-            "}")
+            "InlineMe.java",
+            """
+            package bespoke;
+
+            public @interface InlineMe {
+              String replacement();
+
+              String[] imports() default {};
+
+              String[] staticImports() default {};
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
             "Client.java",
-            "import bespoke.InlineMe;",
-            "public final class Client {",
-            "  @Deprecated",
-            "  @InlineMe(replacement = \"this.foo2(value)\")",
-            "  public void foo1(String value) {",
-            "    foo2(value);",
-            "  }",
-            "  public void foo2(String value) {",
-            "  }",
-            "}")
+            """
+            import bespoke.InlineMe;
+
+            public final class Client {
+              @Deprecated
+              @InlineMe(replacement = "this.foo2(value)")
+              public void foo1(String value) {
+                foo2(value);
+              }
+
+              public void foo2(String value) {}
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
             "Caller.java",
-            "public final class Caller {",
-            "  public void doTest() {",
-            "    Client client = new Client();",
-            "    client.foo1(\"frobber!\");",
-            "    client.foo1(\"don't change this!\");",
-            "  }",
-            "}")
+            """
+            public final class Caller {
+              public void doTest() {
+                Client client = new Client();
+                client.foo1("frobber!");
+                client.foo1("don't change this!");
+              }
+            }
+            """)
         .addOutputLines(
             "out/Caller.java",
-            "public final class Caller {",
-            "  public void doTest() {",
-            "    Client client = new Client();",
-            "    client.foo2(\"frobber!\");",
-            "    client.foo2(\"don't change this!\");",
-            "  }",
-            "}")
+            """
+            public final class Caller {
+              public void doTest() {
+                Client client = new Client();
+                client.foo2("frobber!");
+                client.foo2("don't change this!");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1145,36 +1377,47 @@ public class InlinerTest {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
-            "package com.google.foo;",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "public final class Client {",
-            "  @InlineMe(",
-            "      replacement = \"Client.execute2(format, args)\",",
-            "      imports = {\"com.google.foo.Client\"})",
-            "  public static void execute1(String format, Object... args) {",
-            "    execute2(format, args);",
-            "  }",
-            "  public static void execute2(String format, Object... args) {",
-            "    // do nothing",
-            "  }",
-            "}")
+            """
+            package com.google.foo;
+
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class Client {
+              @InlineMe(
+                  replacement = "Client.execute2(format, args)",
+                  imports = {"com.google.foo.Client"})
+              public static void execute1(String format, Object... args) {
+                execute2(format, args);
+              }
+
+              public static void execute2(String format, Object... args) {
+                // do nothing
+              }
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
             "Caller.java",
-            "import com.google.foo.Client;",
-            "public final class Caller {",
-            "  public void doTest() {",
-            "    Client.execute1(\"hi %s\");",
-            "  }",
-            "}")
+            """
+            import com.google.foo.Client;
+
+            public final class Caller {
+              public void doTest() {
+                Client.execute1("hi %s");
+              }
+            }
+            """)
         .addOutputLines(
             "Caller.java",
-            "import com.google.foo.Client;",
-            "public final class Caller {",
-            "  public void doTest() {",
-            "    Client.execute2(\"hi %s\");",
-            "  }",
-            "}")
+            """
+            import com.google.foo.Client;
+
+            public final class Caller {
+              public void doTest() {
+                Client.execute2("hi %s");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1183,29 +1426,37 @@ public class InlinerTest {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
-            "package com.google.foo;",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "public final class Client {",
-            "  @InlineMe(",
-            "      replacement = \"Client.after(value.doubleValue())\",",
-            "      imports = {\"com.google.foo.Client\"})",
-            "  public static void before(Long value) {",
-            "    after(value.doubleValue());",
-            "  }",
-            "  public static void after(double value) {",
-            "    // do nothing",
-            "  }",
-            "}")
+            """
+            package com.google.foo;
+
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class Client {
+              @InlineMe(
+                  replacement = "Client.after(value.doubleValue())",
+                  imports = {"com.google.foo.Client"})
+              public static void before(Long value) {
+                after(value.doubleValue());
+              }
+
+              public static void after(double value) {
+                // do nothing
+              }
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
             "Caller.java",
-            "import com.google.foo.Client;",
-            "public final class Caller {",
-            "  public void doTest() {",
-            "    Object value = 42L;",
-            "    Client.before((Long) value);",
-            "  }",
-            "}")
+            """
+            import com.google.foo.Client;
+
+            public final class Caller {
+              public void doTest() {
+                Object value = 42L;
+                Client.before((Long) value);
+              }
+            }
+            """)
         .addOutputLines(
             "Caller.java",
             "import com.google.foo.Client;",

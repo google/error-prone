@@ -36,24 +36,30 @@ public final class YodaConditionTest {
     refactoring
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  boolean yoda(int a) {",
-            "    return 4 == a;",
-            "  }",
-            "  boolean notYoda(int a) {",
-            "    return a == 4;",
-            "  }",
-            "}")
+            """
+            class Test {
+              boolean yoda(int a) {
+                return 4 == a;
+              }
+
+              boolean notYoda(int a) {
+                return a == 4;
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "class Test {",
-            "  boolean yoda(int a) {",
-            "    return a == 4;",
-            "  }",
-            "  boolean notYoda(int a) {",
-            "    return a == 4;",
-            "  }",
-            "}")
+            """
+            class Test {
+              boolean yoda(int a) {
+                return a == 4;
+              }
+
+              boolean notYoda(int a) {
+                return a == 4;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -62,19 +68,24 @@ public final class YodaConditionTest {
     refactoring
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  boolean yoda(Boolean a) {",
-            "    return Boolean.TRUE.equals(a);",
-            "  }",
-            "}")
+            """
+            class Test {
+              boolean yoda(Boolean a) {
+                return Boolean.TRUE.equals(a);
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import java.util.Objects;",
-            "class Test {",
-            "  boolean yoda(Boolean a) {",
-            "    return Objects.equals(a, Boolean.TRUE);",
-            "  }",
-            "}")
+            """
+            import java.util.Objects;
+
+            class Test {
+              boolean yoda(Boolean a) {
+                return Objects.equals(a, Boolean.TRUE);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -83,11 +94,13 @@ public final class YodaConditionTest {
     refactoring
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  boolean yoda(boolean a) {",
-            "    return Boolean.TRUE.equals(a);",
-            "  }",
-            "}")
+            """
+            class Test {
+              boolean yoda(boolean a) {
+                return Boolean.TRUE.equals(a);
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
             "class Test {",
@@ -106,33 +119,43 @@ public final class YodaConditionTest {
     refactoring
         .addInputLines(
             "E.java",
-            "enum E {",
-            "  A, B;",
-            "  boolean foo(E e) {",
-            "    return this == e;",
-            "  }",
-            "}")
+            """
+            enum E {
+              A,
+              B;
+
+              boolean foo(E e) {
+                return this == e;
+              }
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  boolean yoda(E a) {",
-            "    return E.A == a;",
-            "  }",
-            "  boolean notYoda(E a) {",
-            "    return a == E.A;",
-            "  }",
-            "}")
+            """
+            class Test {
+              boolean yoda(E a) {
+                return E.A == a;
+              }
+
+              boolean notYoda(E a) {
+                return a == E.A;
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "class Test {",
-            "  boolean yoda(E a) {",
-            "    return a == E.A;",
-            "  }",
-            "  boolean notYoda(E a) {",
-            "    return a == E.A;",
-            "  }",
-            "}")
+            """
+            class Test {
+              boolean yoda(E a) {
+                return a == E.A;
+              }
+
+              boolean notYoda(E a) {
+                return a == E.A;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -143,18 +166,22 @@ public final class YodaConditionTest {
         .expectUnchanged()
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  boolean yoda(E a) {",
-            "    return E.A.equals(a);",
-            "  }",
-            "}")
+            """
+            class Test {
+              boolean yoda(E a) {
+                return E.A.equals(a);
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "class Test {",
-            "  boolean yoda(E a) {",
-            "    return a.equals(E.A);",
-            "  }",
-            "}")
+            """
+            class Test {
+              boolean yoda(E a) {
+                return a.equals(E.A);
+              }
+            }
+            """)
         .setFixChooser(FixChoosers.SECOND)
         .doTest();
   }
@@ -166,19 +193,24 @@ public final class YodaConditionTest {
         .expectUnchanged()
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  boolean yoda(E a) {",
-            "    return E.A.equals(a);",
-            "  }",
-            "}")
+            """
+            class Test {
+              boolean yoda(E a) {
+                return E.A.equals(a);
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import java.util.Objects;",
-            "class Test {",
-            "  boolean yoda(E a) {",
-            "    return Objects.equals(a, E.A);",
-            "  }",
-            "}")
+            """
+            import java.util.Objects;
+
+            class Test {
+              boolean yoda(E a) {
+                return Objects.equals(a, E.A);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -189,24 +221,28 @@ public final class YodaConditionTest {
         .expectUnchanged()
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  boolean yoda(E a) {",
-            "    if (a != null) {",
-            "      return E.A.equals(a);",
-            "    }",
-            "    return true;",
-            "  }",
-            "}")
+            """
+            class Test {
+              boolean yoda(E a) {
+                if (a != null) {
+                  return E.A.equals(a);
+                }
+                return true;
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "class Test {",
-            "  boolean yoda(E a) {",
-            "    if (a != null) {",
-            "      return a.equals(E.A);",
-            "    }",
-            "    return true;",
-            "  }",
-            "}")
+            """
+            class Test {
+              boolean yoda(E a) {
+                if (a != null) {
+                  return a.equals(E.A);
+                }
+                return true;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -215,12 +251,15 @@ public final class YodaConditionTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  private static final String CONST = null;",
-            "  public static boolean f() {",
-            "    return CONST != null;",
-            "  }",
-            "}")
+            """
+            class Test {
+              private static final String CONST = null;
+
+              public static boolean f() {
+                return CONST != null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -229,26 +268,34 @@ public final class YodaConditionTest {
     refactoring
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  private static final String CONST = \"hello\";",
-            "  public static boolean f(String foo) {",
-            "    return null != foo;",
-            "  }",
-            "  public static boolean g() {",
-            "    return null != CONST;",
-            "  }",
-            "}")
+            """
+            class Test {
+              private static final String CONST = "hello";
+
+              public static boolean f(String foo) {
+                return null != foo;
+              }
+
+              public static boolean g() {
+                return null != CONST;
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "class Test {",
-            "  private static final String CONST = \"hello\";",
-            "  public static boolean f(String foo) {",
-            "    return foo != null;",
-            "  }",
-            "  public static boolean g() {",
-            "    return CONST != null;",
-            "  }",
-            "}")
+            """
+            class Test {
+              private static final String CONST = "hello";
+
+              public static boolean f(String foo) {
+                return foo != null;
+              }
+
+              public static boolean g() {
+                return CONST != null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -257,16 +304,20 @@ public final class YodaConditionTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.base.Objects;",
-            "class Test {",
-            "  @Override",
-            "  public boolean equals(Object other) {",
-            "    return Objects.equal(this, other);",
-            "  }",
-            "  public boolean foo(Object other) {",
-            "    return equals(other);",
-            "  }",
-            "}")
+            """
+            import com.google.common.base.Objects;
+
+            class Test {
+              @Override
+              public boolean equals(Object other) {
+                return Objects.equal(this, other);
+              }
+
+              public boolean foo(Object other) {
+                return equals(other);
+              }
+            }
+            """)
         .doTest();
   }
 }

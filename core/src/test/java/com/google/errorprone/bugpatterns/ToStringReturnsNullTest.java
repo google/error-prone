@@ -36,12 +36,14 @@ public final class ToStringReturnsNullTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  // BUG: Diagnostic contains: ToStringReturnsNull",
-            "  public String toString() {",
-            "    return null;",
-            "  }",
-            "}")
+            """
+            class Test {
+              // BUG: Diagnostic contains: ToStringReturnsNull
+              public String toString() {
+                return null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -50,13 +52,16 @@ public final class ToStringReturnsNullTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  final boolean cond = false;",
-            "  // BUG: Diagnostic contains: ToStringReturnsNull",
-            "  public String toString() {",
-            "    return cond ? null : \"foo\";",
-            "  }",
-            "}")
+            """
+            class Test {
+              final boolean cond = false;
+
+              // BUG: Diagnostic contains: ToStringReturnsNull
+              public String toString() {
+                return cond ? null : "foo";
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -65,11 +70,13 @@ public final class ToStringReturnsNullTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  public String toString() {",
-            "    return \"foo\";",
-            "  }",
-            "}")
+            """
+            class Test {
+              public String toString() {
+                return "foo";
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -78,11 +85,13 @@ public final class ToStringReturnsNullTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  public String thisIsNotAToStringMethod() {",
-            "    return \"bar\";",
-            "  }",
-            "}")
+            """
+            class Test {
+              public String thisIsNotAToStringMethod() {
+                return "bar";
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -91,16 +100,18 @@ public final class ToStringReturnsNullTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  public String toString() {",
-            "    class InnerTest {",
-            "      String getter() {",
-            "        return null;",
-            "      }",
-            "    }",
-            "    return \"bar\";",
-            "  }",
-            "}")
+            """
+            class Test {
+              public String toString() {
+                class InnerTest {
+                  String getter() {
+                    return null;
+                  }
+                }
+                return "bar";
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -109,18 +120,22 @@ public final class ToStringReturnsNullTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  interface MyGreeting {",
-            "    String processName();",
-            "  }",
-            "  public String toString() {",
-            "    MyGreeting lol = () -> {",
-            "      String lolz = \"\";",
-            "      return null;",
-            "    };",
-            "    return \"bar\";",
-            "  }",
-            "}")
+            """
+            class Test {
+              interface MyGreeting {
+                String processName();
+              }
+
+              public String toString() {
+                MyGreeting lol =
+                    () -> {
+                      String lolz = "";
+                      return null;
+                    };
+                return "bar";
+              }
+            }
+            """)
         .doTest();
   }
 }

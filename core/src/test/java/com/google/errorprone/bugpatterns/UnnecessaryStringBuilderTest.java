@@ -34,26 +34,30 @@ public class UnnecessaryStringBuilderTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  void f(String hello) {",
-            "    System.err.println(new StringBuilder().append(hello).append(\"world\"));",
-            "    System.err.println(new StringBuilder(hello).append(\"world\"));",
-            "    System.err.println(new StringBuilder(10).append(hello).append(\"world\"));",
-            "    System.err.println(new StringBuilder(hello).append(\"world\").toString());",
-            "    System.err.println(new StringBuilder().toString());",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f(String hello) {
+                System.err.println(new StringBuilder().append(hello).append("world"));
+                System.err.println(new StringBuilder(hello).append("world"));
+                System.err.println(new StringBuilder(10).append(hello).append("world"));
+                System.err.println(new StringBuilder(hello).append("world").toString());
+                System.err.println(new StringBuilder().toString());
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "class Test {",
-            "  void f(String hello) {",
-            "    System.err.println(hello + \"world\");",
-            "    System.err.println(hello + \"world\");",
-            "    System.err.println(hello + \"world\");",
-            "    System.err.println(hello + \"world\");",
-            "    System.err.println(\"\");",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f(String hello) {
+                System.err.println(hello + "world");
+                System.err.println(hello + "world");
+                System.err.println(hello + "world");
+                System.err.println(hello + "world");
+                System.err.println("");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -62,30 +66,34 @@ public class UnnecessaryStringBuilderTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  void f(String hello) {",
-            "    String a = new StringBuilder().append(hello).append(\"world\").toString();",
-            "    StringBuilder b = new StringBuilder().append(hello).append(\"world\");",
-            "    StringBuilder c = new StringBuilder().append(hello).append(\"world\");",
-            "    System.err.println(b);",
-            "    System.err.println(b + \"\");",
-            "    System.err.println(c);",
-            "    c.append(\"goodbye\");",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f(String hello) {
+                String a = new StringBuilder().append(hello).append("world").toString();
+                StringBuilder b = new StringBuilder().append(hello).append("world");
+                StringBuilder c = new StringBuilder().append(hello).append("world");
+                System.err.println(b);
+                System.err.println(b + "");
+                System.err.println(c);
+                c.append("goodbye");
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "class Test {",
-            "  void f(String hello) {",
-            "    String a = hello + \"world\";",
-            "    String b = hello + \"world\";",
-            "    StringBuilder c = new StringBuilder().append(hello).append(\"world\");",
-            "    System.err.println(b);",
-            "    System.err.println(b + \"\");",
-            "    System.err.println(c);",
-            "    c.append(\"goodbye\");",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f(String hello) {
+                String a = hello + "world";
+                String b = hello + "world";
+                StringBuilder c = new StringBuilder().append(hello).append("world");
+                System.err.println(b);
+                System.err.println(b + "");
+                System.err.println(c);
+                c.append("goodbye");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -94,15 +102,17 @@ public class UnnecessaryStringBuilderTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void f(Iterable<String> xs) {",
-            "    StringBuilder sb = new StringBuilder();",
-            "    for (String s : xs) {",
-            "      sb.append(s);",
-            "    }",
-            "    System.err.println(sb);",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f(Iterable<String> xs) {
+                StringBuilder sb = new StringBuilder();
+                for (String s : xs) {
+                  sb.append(s);
+                }
+                System.err.println(sb);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -111,13 +121,15 @@ public class UnnecessaryStringBuilderTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void f(Iterable<String> xs) {",
-            "    StringBuilder sb = new StringBuilder();",
-            "    xs.forEach(sb::append);",
-            "    System.err.println(sb);",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f(Iterable<String> xs) {
+                StringBuilder sb = new StringBuilder();
+                xs.forEach(sb::append);
+                System.err.println(sb);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -126,20 +138,26 @@ public class UnnecessaryStringBuilderTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "abstract class Test {",
-            "  abstract void g(String x);",
-            "  void f(boolean b, String hello) {",
-            "    g(new StringBuilder().append(b ? hello : \"\").append(\"world\").toString());",
-            "  }",
-            "}")
+            """
+            abstract class Test {
+              abstract void g(String x);
+
+              void f(boolean b, String hello) {
+                g(new StringBuilder().append(b ? hello : "").append("world").toString());
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "abstract class Test {",
-            "  abstract void g(String x);",
-            "  void f(boolean b, String hello) {",
-            "    g((b ? hello : \"\") + \"world\");",
-            "  }",
-            "}")
+            """
+            abstract class Test {
+              abstract void g(String x);
+
+              void f(boolean b, String hello) {
+                g((b ? hello : "") + "world");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -148,20 +166,24 @@ public class UnnecessaryStringBuilderTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "abstract class Test {",
-            "  void f() {",
-            "    var sb = new StringBuilder().append(\"hello\");",
-            "    System.err.println(sb);",
-            "  }",
-            "}")
+            """
+            abstract class Test {
+              void f() {
+                var sb = new StringBuilder().append("hello");
+                System.err.println(sb);
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "abstract class Test {",
-            "  void f() {",
-            "    var sb = \"hello\";",
-            "    System.err.println(sb);",
-            "  }",
-            "}")
+            """
+            abstract class Test {
+              void f() {
+                var sb = "hello";
+                System.err.println(sb);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -170,11 +192,13 @@ public class UnnecessaryStringBuilderTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void f() {",
-            "    new StringBuilder().append(\"foo\");",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f() {
+                new StringBuilder().append("foo");
+              }
+            }
+            """)
         .doTest();
   }
 }

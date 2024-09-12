@@ -35,14 +35,18 @@ public class MathAbsoluteNegativeTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import java.util.Random;",
-            "class Test {",
-            "  private static final Random random = new Random();",
-            "  void f() {",
-            "    // BUG: Diagnostic contains: MathAbsoluteNegative",
-            "    Math.abs(random.nextInt());",
-            "  }",
-            "}")
+            """
+            import java.util.Random;
+
+            class Test {
+              private static final Random random = new Random();
+
+              void f() {
+                // BUG: Diagnostic contains: MathAbsoluteNegative
+                Math.abs(random.nextInt());
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -51,13 +55,17 @@ public class MathAbsoluteNegativeTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import java.util.Random;",
-            "class Test {",
-            "  private static final Random random = new Random();",
-            "  void f() {",
-            "    Math.abs(random.nextInt(10));",
-            "  }",
-            "}")
+            """
+            import java.util.Random;
+
+            class Test {
+              private static final Random random = new Random();
+
+              void f() {
+                Math.abs(random.nextInt(10));
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -65,12 +73,14 @@ public class MathAbsoluteNegativeTest {
   public void negativeNumber() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  void f() {",
-            "    Math.abs(-9549451);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              void f() {
+                Math.abs(-9549451);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -78,12 +88,14 @@ public class MathAbsoluteNegativeTest {
   public void negativeMethod() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  void f() {",
-            "    Math.abs(Math.sin(0) * 10.0);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              void f() {
+                Math.abs(Math.sin(0) * 10.0);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -92,11 +104,13 @@ public class MathAbsoluteNegativeTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void f() {",
-            "    long random = Math.round(Math.random() * 10000);",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f() {
+                long random = Math.round(Math.random() * 10000);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -105,12 +119,15 @@ public class MathAbsoluteNegativeTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import java.util.Random;",
-            "class Test {",
-            "  void f() {",
-            "    double random = Math.abs(new Random().nextDouble());",
-            "  }",
-            "}")
+            """
+            import java.util.Random;
+
+            class Test {
+              void f() {
+                double random = Math.abs(new Random().nextDouble());
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -119,13 +136,16 @@ public class MathAbsoluteNegativeTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.hash.Hashing.goodFastHash;",
-            "class Test {",
-            "  void f() {",
-            "    // BUG: Diagnostic contains: MathAbsoluteNegative",
-            "    int foo = Math.abs(goodFastHash(64).hashUnencodedChars(\"\").asInt());",
-            "  }",
-            "}")
+            """
+            import static com.google.common.hash.Hashing.goodFastHash;
+
+            class Test {
+              void f() {
+                // BUG: Diagnostic contains: MathAbsoluteNegative
+                int foo = Math.abs(goodFastHash(64).hashUnencodedChars("").asInt());
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -134,13 +154,16 @@ public class MathAbsoluteNegativeTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.hash.Hashing.goodFastHash;",
-            "class Test {",
-            "  void f() {",
-            "    // BUG: Diagnostic contains: MathAbsoluteNegative",
-            "    long foo = Math.abs(goodFastHash(64).hashUnencodedChars(\"\").asLong());",
-            "  }",
-            "}")
+            """
+            import static com.google.common.hash.Hashing.goodFastHash;
+
+            class Test {
+              void f() {
+                // BUG: Diagnostic contains: MathAbsoluteNegative
+                long foo = Math.abs(goodFastHash(64).hashUnencodedChars("").asLong());
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -149,13 +172,16 @@ public class MathAbsoluteNegativeTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.hash.Hashing.goodFastHash;",
-            "class Test {",
-            "  void f() {",
-            "    // BUG: Diagnostic contains: MathAbsoluteNegative",
-            "    long foo = Math.abs(goodFastHash(64).hashUnencodedChars(\"\").padToLong());",
-            "  }",
-            "}")
+            """
+            import static com.google.common.hash.Hashing.goodFastHash;
+
+            class Test {
+              void f() {
+                // BUG: Diagnostic contains: MathAbsoluteNegative
+                long foo = Math.abs(goodFastHash(64).hashUnencodedChars("").padToLong());
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -164,12 +190,14 @@ public class MathAbsoluteNegativeTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void f(String s) {",
-            "    // BUG: Diagnostic contains: MathAbsoluteNegative",
-            "    long foo = Math.abs(s.hashCode());",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f(String s) {
+                // BUG: Diagnostic contains: MathAbsoluteNegative
+                long foo = Math.abs(s.hashCode());
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -178,12 +206,14 @@ public class MathAbsoluteNegativeTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void f(Object o) {",
-            "    // BUG: Diagnostic contains: MathAbsoluteNegative",
-            "    long foo = Math.abs(System.identityHashCode(o));",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f(Object o) {
+                // BUG: Diagnostic contains: MathAbsoluteNegative
+                long foo = Math.abs(System.identityHashCode(o));
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -192,15 +222,18 @@ public class MathAbsoluteNegativeTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import java.util.UUID;",
-            "class Test {",
-            "  void f(UUID uuid) {",
-            "    // BUG: Diagnostic contains: MathAbsoluteNegative",
-            "    long foo = Math.abs(uuid.getLeastSignificantBits());",
-            "    // BUG: Diagnostic contains: MathAbsoluteNegative",
-            "    long bar = Math.abs(uuid.getMostSignificantBits());",
-            "  }",
-            "}")
+            """
+            import java.util.UUID;
+
+            class Test {
+              void f(UUID uuid) {
+                // BUG: Diagnostic contains: MathAbsoluteNegative
+                long foo = Math.abs(uuid.getLeastSignificantBits());
+                // BUG: Diagnostic contains: MathAbsoluteNegative
+                long bar = Math.abs(uuid.getMostSignificantBits());
+              }
+            }
+            """)
         .doTest();
   }
 }

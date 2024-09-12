@@ -35,11 +35,13 @@ public final class NarrowCalculationTest {
   public void integerDivision() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  // BUG: Diagnostic contains:",
-            "  final float a = 1 / 2;",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              // BUG: Diagnostic contains:
+              final float a = 1 / 2;
+            }
+            """)
         .doTest();
   }
 
@@ -47,10 +49,12 @@ public final class NarrowCalculationTest {
   public void integerDivision_actuallyInteger() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  final float a = 8 / 2;",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              final float a = 8 / 2;
+            }
+            """)
         .doTest();
   }
 
@@ -58,15 +62,19 @@ public final class NarrowCalculationTest {
   public void integerDivision_fix() {
     refactoring
         .addInputLines(
-            "Test.java", //
-            "class Test {",
-            "  final float a = 1 / 2;",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              final float a = 1 / 2;
+            }
+            """)
         .addOutputLines(
-            "Test.java", //
-            "class Test {",
-            "  final float a = 1 / 2f;",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              final float a = 1 / 2f;
+            }
+            """)
         .doTest();
   }
 
@@ -74,15 +82,19 @@ public final class NarrowCalculationTest {
   public void longDivision_fix() {
     refactoring
         .addInputLines(
-            "Test.java", //
-            "class Test {",
-            "  final double a = 1 / 2L;",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              final double a = 1 / 2L;
+            }
+            """)
         .addOutputLines(
-            "Test.java", //
-            "class Test {",
-            "  final double a = 1 / 2.0;",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              final double a = 1 / 2.0;
+            }
+            """)
         .doTest();
   }
 
@@ -90,10 +102,12 @@ public final class NarrowCalculationTest {
   public void targetTypeInteger_noFinding() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  final int a = 1 / 2;",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              final int a = 1 / 2;
+            }
+            """)
         .doTest();
   }
 
@@ -101,10 +115,12 @@ public final class NarrowCalculationTest {
   public void multiplication_doesNotOverflow() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  final long a = 2 * 100;",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              final long a = 2 * 100;
+            }
+            """)
         .doTest();
   }
 
@@ -112,11 +128,13 @@ public final class NarrowCalculationTest {
   public void multiplication_wouldOverflow() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  // BUG: Diagnostic contains:",
-            "  final long a = 1_000_000_000 * 1_000_000_000;",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              // BUG: Diagnostic contains:
+              final long a = 1_000_000_000 * 1_000_000_000;
+            }
+            """)
         .doTest();
   }
 
@@ -124,13 +142,15 @@ public final class NarrowCalculationTest {
   public void multiplication_couldOverflow() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  void t(int a) {",
-            "    // BUG: Diagnostic contains: 2L * a",
-            "    long b = 2 * a;",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              void t(int a) {
+                // BUG: Diagnostic contains: 2L * a
+                long b = 2 * a;
+              }
+            }
+            """)
         .doTest();
   }
 }

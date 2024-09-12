@@ -32,34 +32,43 @@ public class BuilderReturnThisTest {
     testHelper
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  static class TestBuilder {",
-            "    static TestBuilder builder() {",
-            "      return new TestBuilder();",
-            "    }",
-            "    Test build() {",
-            "      return new Test();",
-            "    }",
-            "    TestBuilder setFoo(String foo) {",
-            "      return this;",
-            "    }",
-            "    TestBuilder setBar(String bar) {",
-            "      return this;",
-            "    }",
-            "    TestBuilder setBaz(String baz) {",
-            "      return setFoo(baz).setBar(baz);",
-            "    }",
-            "    TestBuilder setTernary(String baz) {",
-            "      return true ? setFoo(baz) : this;",
-            "    }",
-            "    TestBuilder setCast(String baz) {",
-            "      return (TestBuilder) this;",
-            "    }",
-            "    TestBuilder setParens(String bar) {",
-            "      return (this);",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              static class TestBuilder {
+                static TestBuilder builder() {
+                  return new TestBuilder();
+                }
+
+                Test build() {
+                  return new Test();
+                }
+
+                TestBuilder setFoo(String foo) {
+                  return this;
+                }
+
+                TestBuilder setBar(String bar) {
+                  return this;
+                }
+
+                TestBuilder setBaz(String baz) {
+                  return setFoo(baz).setBar(baz);
+                }
+
+                TestBuilder setTernary(String baz) {
+                  return true ? setFoo(baz) : this;
+                }
+
+                TestBuilder setCast(String baz) {
+                  return (TestBuilder) this;
+                }
+
+                TestBuilder setParens(String bar) {
+                  return (this);
+                }
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -69,31 +78,38 @@ public class BuilderReturnThisTest {
     testHelper
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  static class TestBuilder {",
-            "    TestBuilder setBar(String bar) {",
-            "      return new TestBuilder();",
-            "    }",
-            "    TestBuilder setTernary(String baz) {",
-            "      return true ? new TestBuilder() : this;",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              static class TestBuilder {
+                TestBuilder setBar(String bar) {
+                  return new TestBuilder();
+                }
+
+                TestBuilder setTernary(String baz) {
+                  return true ? new TestBuilder() : this;
+                }
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import com.google.errorprone.annotations.CheckReturnValue;",
-            "class Test {",
-            "  static class TestBuilder {",
-            "    @CheckReturnValue",
-            "    TestBuilder setBar(String bar) {",
-            "      return new TestBuilder();",
-            "    }",
-            "    @CheckReturnValue",
-            "    TestBuilder setTernary(String baz) {",
-            "      return true ? new TestBuilder() : this;",
-            "    }",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.CheckReturnValue;
+
+            class Test {
+              static class TestBuilder {
+                @CheckReturnValue
+                TestBuilder setBar(String bar) {
+                  return new TestBuilder();
+                }
+
+                @CheckReturnValue
+                TestBuilder setTernary(String baz) {
+                  return true ? new TestBuilder() : this;
+                }
+              }
+            }
+            """)
         .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 }

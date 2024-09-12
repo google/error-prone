@@ -41,20 +41,26 @@ public final class ProtoBuilderReturnValueIgnoredTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "import com.google.protobuf.Duration;",
-            "final class Test {",
-            "  private void singleField(Duration.Builder proto) {",
-            "    proto.clearSeconds().build();",
-            "  }",
-            "}")
+            """
+            import com.google.protobuf.Duration;
+
+            final class Test {
+              private void singleField(Duration.Builder proto) {
+                proto.clearSeconds().build();
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import com.google.protobuf.Duration;",
-            "final class Test {",
-            "  private void singleField(Duration.Builder proto) {",
-            "    proto.clearSeconds();",
-            "  }",
-            "}")
+            """
+            import com.google.protobuf.Duration;
+
+            final class Test {
+              private void singleField(Duration.Builder proto) {
+                proto.clearSeconds();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -63,12 +69,15 @@ public final class ProtoBuilderReturnValueIgnoredTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import com.google.protobuf.Duration;",
-            "final class Test {",
-            "  private void singleField(Duration proto) {",
-            "    proto.toBuilder().clearSeconds().build();",
-            "  }",
-            "}")
+            """
+            import com.google.protobuf.Duration;
+
+            final class Test {
+              private void singleField(Duration proto) {
+                proto.toBuilder().clearSeconds().build();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -77,19 +86,24 @@ public final class ProtoBuilderReturnValueIgnoredTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "import com.google.protobuf.Duration;",
-            "final class Test {",
-            "  private void singleField(Duration.Builder proto) {",
-            "    proto.build();",
-            "  }",
-            "}")
+            """
+            import com.google.protobuf.Duration;
+
+            final class Test {
+              private void singleField(Duration.Builder proto) {
+                proto.build();
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import com.google.protobuf.Duration;",
-            "final class Test {",
-            "  private void singleField(Duration.Builder proto) {",
-            "  }",
-            "}")
+            """
+            import com.google.protobuf.Duration;
+
+            final class Test {
+              private void singleField(Duration.Builder proto) {}
+            }
+            """)
         .doTest();
   }
 
@@ -98,21 +112,27 @@ public final class ProtoBuilderReturnValueIgnoredTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "import com.google.protobuf.Duration;",
-            "final class Test {",
-            "  private void singleField(Duration.Builder proto) {",
-            "    proto.build();",
-            "  }",
-            "}")
+            """
+            import com.google.protobuf.Duration;
+
+            final class Test {
+              private void singleField(Duration.Builder proto) {
+                proto.build();
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import static com.google.common.base.Preconditions.checkState;",
-            "import com.google.protobuf.Duration;",
-            "final class Test {",
-            "  private void singleField(Duration.Builder proto) {",
-            "    checkState(proto.isInitialized());",
-            "  }",
-            "}")
+            """
+            import static com.google.common.base.Preconditions.checkState;
+            import com.google.protobuf.Duration;
+
+            final class Test {
+              private void singleField(Duration.Builder proto) {
+                checkState(proto.isInitialized());
+              }
+            }
+            """)
         .setFixChooser(FixChoosers.SECOND)
         .doTest();
   }

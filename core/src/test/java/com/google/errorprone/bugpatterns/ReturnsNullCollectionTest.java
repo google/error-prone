@@ -33,41 +33,49 @@ public class ReturnsNullCollectionTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.collect.Multimap;",
-            "import com.google.common.collect.Table;",
-            "import java.util.Collection;",
-            "import java.util.ArrayList;",
-            "import java.util.List;",
-            "import java.util.Map;",
-            "class Test {",
-            "  Collection<String> methodReturnsNullCollection() {",
-            "  // BUG: Diagnostic contains: ReturnsNullCollection",
-            "    return null;",
-            "  }",
-            "  List<String> methodReturnsNullList() {",
-            "  // BUG: Diagnostic contains: ReturnsNullCollection",
-            "    return null;",
-            "  }",
-            "  Map<String, String> methodReturnsNullMap() {",
-            "  // BUG: Diagnostic contains: ReturnsNullCollection",
-            "    return null;",
-            "  }",
-            "  Multimap<String, String> methodReturnsNullMultimap() {",
-            "  // BUG: Diagnostic contains: ReturnsNullCollection",
-            "    return null;",
-            "  }",
-            "  Table<String, String, String> methodReturnsNullTable() {",
-            "  // BUG: Diagnostic contains: ReturnsNullCollection",
-            "    return null;",
-            "  }",
-            "  List<String> methodReturnsNullListConditionally(boolean foo) {",
-            "    if (foo) {",
-            "      // BUG: Diagnostic contains: ReturnsNullCollection",
-            "      return null;",
-            "    }",
-            "    return new ArrayList();",
-            "  }",
-            "}")
+            """
+            import com.google.common.collect.Multimap;
+            import com.google.common.collect.Table;
+            import java.util.Collection;
+            import java.util.ArrayList;
+            import java.util.List;
+            import java.util.Map;
+
+            class Test {
+              Collection<String> methodReturnsNullCollection() {
+                // BUG: Diagnostic contains: ReturnsNullCollection
+                return null;
+              }
+
+              List<String> methodReturnsNullList() {
+                // BUG: Diagnostic contains: ReturnsNullCollection
+                return null;
+              }
+
+              Map<String, String> methodReturnsNullMap() {
+                // BUG: Diagnostic contains: ReturnsNullCollection
+                return null;
+              }
+
+              Multimap<String, String> methodReturnsNullMultimap() {
+                // BUG: Diagnostic contains: ReturnsNullCollection
+                return null;
+              }
+
+              Table<String, String, String> methodReturnsNullTable() {
+                // BUG: Diagnostic contains: ReturnsNullCollection
+                return null;
+              }
+
+              List<String> methodReturnsNullListConditionally(boolean foo) {
+                if (foo) {
+                  // BUG: Diagnostic contains: ReturnsNullCollection
+                  return null;
+                }
+                return new ArrayList();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -76,29 +84,35 @@ public class ReturnsNullCollectionTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.Collection;",
-            "import java.util.HashMap;",
-            "import java.util.List;",
-            "import java.util.Map;",
-            "import javax.annotation.Nullable;",
-            "class Test {",
-            "  @Nullable",
-            "  Collection<String> methodReturnsNullCollection() {",
-            "    return null;",
-            "  }",
-            "  @Nullable",
-            "  List<String> methodReturnsNullList() {",
-            "    return null;",
-            "  }",
-            "  @Nullable",
-            "  Map<String, String> methodReturnsNullMap() {",
-            "    return null;",
-            "  }",
-            "  @Nullable",
-            "  HashMap<String, String> methodReturnsNullHashMap() {",
-            "    return null;",
-            "  }",
-            "}")
+            """
+            import java.util.Collection;
+            import java.util.HashMap;
+            import java.util.List;
+            import java.util.Map;
+            import javax.annotation.Nullable;
+
+            class Test {
+              @Nullable
+              Collection<String> methodReturnsNullCollection() {
+                return null;
+              }
+
+              @Nullable
+              List<String> methodReturnsNullList() {
+                return null;
+              }
+
+              @Nullable
+              Map<String, String> methodReturnsNullMap() {
+                return null;
+              }
+
+              @Nullable
+              HashMap<String, String> methodReturnsNullHashMap() {
+                return null;
+              }
+            }
+            """)
         .doTest();
   }
 }

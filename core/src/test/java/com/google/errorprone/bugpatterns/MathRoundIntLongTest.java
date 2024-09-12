@@ -31,19 +31,23 @@ public class MathRoundIntLongTest {
   public void deleteRoundMethodInt() {
     helper
         .addInputLines(
-            "Test.java", //
-            "class Test {",
-            "  void f() {",
-            "    int y = Math.round(3);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              void f() {
+                int y = Math.round(3);
+              }
+            }
+            """)
         .addOutputLines(
-            "Test.java", //
-            "class Test {",
-            "  void f() {",
-            "    int y = 3;",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              void f() {
+                int y = 3;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -51,21 +55,25 @@ public class MathRoundIntLongTest {
   public void deleteRoundMethodIntClass() {
     helper
         .addInputLines(
-            "Test.java", //
-            "class Test {",
-            "  void f() {",
-            "    Integer i = Integer.valueOf(3);",
-            "    int y = Math.round(i);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              void f() {
+                Integer i = Integer.valueOf(3);
+                int y = Math.round(i);
+              }
+            }
+            """)
         .addOutputLines(
-            "Test.java", //
-            "class Test {",
-            "  void f() {",
-            "    Integer i = Integer.valueOf(3);",
-            "    int y = i;",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              void f() {
+                Integer i = Integer.valueOf(3);
+                int y = i;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -73,22 +81,27 @@ public class MathRoundIntLongTest {
   public void replaceRoundMethodLong() {
     helper
         .addInputLines(
-            "Test.java", //
-            "class Test {",
-            "  void f() {",
-            "    long l = 3L;",
-            "    int y = Math.round(l);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              void f() {
+                long l = 3L;
+                int y = Math.round(l);
+              }
+            }
+            """)
         .addOutputLines(
-            "Test.java", //
-            "import com.google.common.primitives.Ints;",
-            "class Test {",
-            "  void f() {",
-            "    long l = 3L;",
-            "    int y = Ints.saturatedCast(l);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            import com.google.common.primitives.Ints;
+
+            class Test {
+              void f() {
+                long l = 3L;
+                int y = Ints.saturatedCast(l);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -96,22 +109,27 @@ public class MathRoundIntLongTest {
   public void replaceRoundMethodLongClass() {
     helper
         .addInputLines(
-            "Test.java", //
-            "class Test {",
-            "  void f() {",
-            "    Long l = Long.valueOf(\"3\");",
-            "    int y = Math.round(l);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              void f() {
+                Long l = Long.valueOf("3");
+                int y = Math.round(l);
+              }
+            }
+            """)
         .addOutputLines(
-            "Test.java", //
-            "import com.google.common.primitives.Ints;",
-            "class Test {",
-            "  void f() {",
-            "    Long l = Long.valueOf(\"3\");",
-            "    int y = Ints.saturatedCast(l);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            import com.google.common.primitives.Ints;
+
+            class Test {
+              void f() {
+                Long l = Long.valueOf("3");
+                int y = Ints.saturatedCast(l);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -119,13 +137,15 @@ public class MathRoundIntLongTest {
   public void roundingFloatNegative() {
     helper
         .addInputLines(
-            "Test.java", //
-            "class Test {",
-            "  void f() {",
-            "    Float f = Float.valueOf(\"3\");",
-            "    int y = Math.round(f);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              void f() {
+                Float f = Float.valueOf("3");
+                int y = Math.round(f);
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -134,13 +154,15 @@ public class MathRoundIntLongTest {
   public void roundingDoubleNegative() {
     helper
         .addInputLines(
-            "Test.java", //
-            "class Test {",
-            "  void f() {",
-            "    Double d = Double.valueOf(\"3\");",
-            "    Long y = Math.round(d);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              void f() {
+                Double d = Double.valueOf("3");
+                Long y = Math.round(d);
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -149,25 +171,31 @@ public class MathRoundIntLongTest {
   public void replaceRoundMethodAddParenthesis() {
     helper
         .addInputLines(
-            "Test.java", //
-            "import com.google.common.primitives.Ints;",
-            "class Test {",
-            "  void f() {",
-            "    long l = 3L;",
-            "    long x = 6L;",
-            "    int y = Math.round(l/x);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            import com.google.common.primitives.Ints;
+
+            class Test {
+              void f() {
+                long l = 3L;
+                long x = 6L;
+                int y = Math.round(l / x);
+              }
+            }
+            """)
         .addOutputLines(
-            "Test.java", //
-            "import com.google.common.primitives.Ints;",
-            "class Test {",
-            "  void f() {",
-            "    long l = 3L;",
-            "    long x = 6L;",
-            "    int y = Ints.saturatedCast(l/x);",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            import com.google.common.primitives.Ints;
+
+            class Test {
+              void f() {
+                long l = 3L;
+                long x = 6L;
+                int y = Ints.saturatedCast(l / x);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -175,19 +203,23 @@ public class MathRoundIntLongTest {
   public void removeMathRoundLeaveParenthesisIfUnary() {
     helper
         .addInputLines(
-            "Test.java", //
-            "class Test {",
-            "  void f() {",
-            "    int y = Math.round(1 + 3) * 3;",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              void f() {
+                int y = Math.round(1 + 3) * 3;
+              }
+            }
+            """)
         .addOutputLines(
-            "Test.java", //
-            "class Test {",
-            "  void f() {",
-            "    int y = (1 + 3) * 3;",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              void f() {
+                int y = (1 + 3) * 3;
+              }
+            }
+            """)
         .doTest();
   }
 }

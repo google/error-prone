@@ -37,17 +37,20 @@ public class BigDecimalLiteralDoubleTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.math.BigDecimal;",
-            "class Test {",
-            "  void test() {",
-            "    new BigDecimal(\"99\");",
-            "    new BigDecimal(\"99.0\");",
-            "    new BigDecimal(123_459);",
-            "    new BigDecimal(123_456L);",
-            "    BigDecimal.valueOf(123);",
-            "    BigDecimal.valueOf(123L);",
-            "  }",
-            "}")
+            """
+            import java.math.BigDecimal;
+
+            class Test {
+              void test() {
+                new BigDecimal("99");
+                new BigDecimal("99.0");
+                new BigDecimal(123_459);
+                new BigDecimal(123_456L);
+                BigDecimal.valueOf(123);
+                BigDecimal.valueOf(123L);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -56,17 +59,20 @@ public class BigDecimalLiteralDoubleTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.math.BigDecimal;",
-            "class Test {",
-            "  void test() {",
-            "    // BUG: Diagnostic matches: A",
-            "    new BigDecimal(-0.012);",
-            "    // BUG: Diagnostic matches: B",
-            "    new BigDecimal(0.1f);",
-            "    // BUG: Diagnostic matches: C",
-            "    new BigDecimal(0.99);",
-            "  }",
-            "}")
+            """
+            import java.math.BigDecimal;
+
+            class Test {
+              void test() {
+                // BUG: Diagnostic matches: A
+                new BigDecimal(-0.012);
+                // BUG: Diagnostic matches: B
+                new BigDecimal(0.1f);
+                // BUG: Diagnostic matches: C
+                new BigDecimal(0.99);
+              }
+            }
+            """)
         .expectErrorMessage(
             "A",
             message ->

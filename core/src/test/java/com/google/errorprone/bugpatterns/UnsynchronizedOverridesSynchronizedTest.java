@@ -32,22 +32,29 @@ public class UnsynchronizedOverridesSynchronizedTest {
   public void positive() {
     compilationHelper
         .addSourceLines(
-            "test/Super.java", //
-            "package test;",
-            "class Super {",
-            "  synchronized void f() {}",
-            "}")
+            "test/Super.java",
+            """
+            package test;
+
+            class Super {
+              synchronized void f() {}
+            }
+            """)
         .addSourceLines(
             "test/Test.java",
-            "package test;",
-            "class Test extends Super {",
-            "  int counter;",
-            "  // BUG: Diagnostic contains: f overrides synchronized method in Super",
-            "  // synchronized void f()",
-            "  void f() {",
-            "    counter++;",
-            "  }",
-            "}")
+            """
+            package test;
+
+            class Test extends Super {
+              int counter;
+
+              // BUG: Diagnostic contains: f overrides synchronized method in Super
+              // synchronized void f()
+              void f() {
+                counter++;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -55,20 +62,27 @@ public class UnsynchronizedOverridesSynchronizedTest {
   public void negative() {
     compilationHelper
         .addSourceLines(
-            "test/Super.java", //
-            "package test;",
-            "class Super {",
-            "  synchronized void f() {}",
-            "}")
+            "test/Super.java",
+            """
+            package test;
+
+            class Super {
+              synchronized void f() {}
+            }
+            """)
         .addSourceLines(
             "test/Test.java",
-            "package test;",
-            "class Test extends Super {",
-            "  int counter;",
-            "  synchronized void f() {",
-            "    counter++;",
-            "  }",
-            "}")
+            """
+            package test;
+
+            class Test extends Super {
+              int counter;
+
+              synchronized void f() {
+                counter++;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -77,15 +91,22 @@ public class UnsynchronizedOverridesSynchronizedTest {
     compilationHelper
         .addSourceLines(
             "test/Test.java",
-            "package test;",
-            "import java.io.InputStream;",
-            "import java.io.IOException;",
-            "class Test extends InputStream {",
-            "  @Override public int read() throws IOException {",
-            "    throw new IOException();",
-            "  }",
-            "  @Override public /*unsynchronized*/ void mark(int readlimit) {}",
-            "}")
+            """
+            package test;
+
+            import java.io.InputStream;
+            import java.io.IOException;
+
+            class Test extends InputStream {
+              @Override
+              public int read() throws IOException {
+                throw new IOException();
+              }
+
+              @Override
+              public /*unsynchronized*/ void mark(int readlimit) {}
+            }
+            """)
         .doTest();
   }
 
@@ -94,23 +115,27 @@ public class UnsynchronizedOverridesSynchronizedTest {
     compilationHelper
         .addSourceLines(
             "test/Test.java",
-            "package test;",
-            "class Test {",
-            "  class B extends Throwable {",
-            "    // BUG: Diagnostic contains:",
-            "    public Throwable getCause() {",
-            "      System.err.println();",
-            "      return super.getCause();",
-            "    }",
-            "  }",
-            "  class C extends Throwable {",
-            "    // BUG: Diagnostic contains:",
-            "    public Exception getCause() {",
-            "      System.err.println();",
-            "      return (Exception) super.getCause();",
-            "    }",
-            "  }",
-            "}")
+            """
+            package test;
+
+            class Test {
+              class B extends Throwable {
+                // BUG: Diagnostic contains:
+                public Throwable getCause() {
+                  System.err.println();
+                  return super.getCause();
+                }
+              }
+
+              class C extends Throwable {
+                // BUG: Diagnostic contains:
+                public Exception getCause() {
+                  System.err.println();
+                  return (Exception) super.getCause();
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -119,19 +144,23 @@ public class UnsynchronizedOverridesSynchronizedTest {
     compilationHelper
         .addSourceLines(
             "test/Test.java",
-            "package test;",
-            "class Test {",
-            "  class B extends Throwable {",
-            "    public Throwable getCause() {",
-            "      return super.getCause();",
-            "    }",
-            "  }",
-            "  class C extends Throwable {",
-            "    public Exception getCause() {",
-            "      return (Exception) super.getCause();",
-            "    }",
-            "  }",
-            "}")
+            """
+            package test;
+
+            class Test {
+              class B extends Throwable {
+                public Throwable getCause() {
+                  return super.getCause();
+                }
+              }
+
+              class C extends Throwable {
+                public Exception getCause() {
+                  return (Exception) super.getCause();
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -140,29 +169,36 @@ public class UnsynchronizedOverridesSynchronizedTest {
     compilationHelper
         .addSourceLines(
             "test/Lib.java",
-            "package test;",
-            "class Lib {",
-            "  public synchronized void f() {}",
-            "}")
+            """
+            package test;
+
+            class Lib {
+              public synchronized void f() {}
+            }
+            """)
         .addSourceLines(
             "test/Test.java",
-            "package test;",
-            "class Test {",
-            "  class B extends Lib {",
-            "    public void f() {",
-            "    }",
-            "  }",
-            "  class C extends Lib {",
-            "    public void f() {",
-            "      super.f();",
-            "    }",
-            "  }",
-            "  class D extends Lib {",
-            "    public void f() {",
-            "      return;",
-            "    }",
-            "  }",
-            "}")
+            """
+            package test;
+
+            class Test {
+              class B extends Lib {
+                public void f() {}
+              }
+
+              class C extends Lib {
+                public void f() {
+                  super.f();
+                }
+              }
+
+              class D extends Lib {
+                public void f() {
+                  return;
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -171,13 +207,16 @@ public class UnsynchronizedOverridesSynchronizedTest {
     compilationHelper
         .addSourceLines(
             "test/Test.java",
-            "package test;",
-            "abstract class Test extends Throwable {",
-            "  @Override",
-            "  public Throwable fillInStackTrace() {",
-            "    return this;",
-            "  }",
-            "}")
+            """
+            package test;
+
+            abstract class Test extends Throwable {
+              @Override
+              public Throwable fillInStackTrace() {
+                return this;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -185,20 +224,24 @@ public class UnsynchronizedOverridesSynchronizedTest {
   public void ignoreOverrideThatReturnsConstant() {
     compilationHelper
         .addSourceLines(
-            "A.java", //
-            "class A {",
-            "  synchronized int f() {",
-            "    return -1;",
-            "  }",
-            "}")
+            "A.java",
+            """
+            class A {
+              synchronized int f() {
+                return -1;
+              }
+            }
+            """)
         .addSourceLines(
             "B.java",
-            "class B extends A {",
-            "  @Override",
-            "  public int f() {",
-            "    return 42;",
-            "  }",
-            "}")
+            """
+            class B extends A {
+              @Override
+              public int f() {
+                return 42;
+              }
+            }
+            """)
         .doTest();
   }
 }

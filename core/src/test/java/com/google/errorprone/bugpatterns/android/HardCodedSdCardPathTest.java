@@ -44,9 +44,11 @@ public class HardCodedSdCardPathTest {
         .setArgs(ImmutableList.of("-XDandroidCompatible=false"))
         .addSourceLines(
             "HardCodedSdCardPathMatchingCode.java",
-            "public class HardCodedSdCardPathMatchingCode {",
-            "  static final String PATH1 = \"/sdcard\";",
-            "}")
+            """
+            public class HardCodedSdCardPathMatchingCode {
+              static final String PATH1 = "/sdcard";
+            }
+            """)
         .doTest();
   }
 

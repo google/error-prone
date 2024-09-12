@@ -41,10 +41,12 @@ public class EqualsMissingNullableTest {
     aggressiveHelper
         .addSourceLines(
             "Foo.java",
-            "abstract class Foo {",
-            "  // BUG: Diagnostic contains: @Nullable",
-            "  public abstract boolean equals(Object o);",
-            "}")
+            """
+            abstract class Foo {
+              // BUG: Diagnostic contains: @Nullable
+              public abstract boolean equals(Object o);
+            }
+            """)
         .doTest();
   }
 
@@ -53,16 +55,22 @@ public class EqualsMissingNullableTest {
     aggressiveRefactoringHelper
         .addInputLines(
             "in/Foo.java",
-            "import javax.annotation.Nullable;",
-            "abstract class Foo {",
-            "  public abstract boolean equals(final Object o);",
-            "}")
+            """
+            import javax.annotation.Nullable;
+
+            abstract class Foo {
+              public abstract boolean equals(final Object o);
+            }
+            """)
         .addOutputLines(
             "out/Foo.java",
-            "import javax.annotation.Nullable;",
-            "abstract class Foo {",
-            "  public abstract boolean equals(@Nullable final Object o);",
-            "}")
+            """
+            import javax.annotation.Nullable;
+
+            abstract class Foo {
+              public abstract boolean equals(@Nullable final Object o);
+            }
+            """)
         .doTest(TEXT_MATCH);
   }
 
@@ -71,16 +79,22 @@ public class EqualsMissingNullableTest {
     aggressiveRefactoringHelper
         .addInputLines(
             "in/Foo.java",
-            "import org.checkerframework.checker.nullness.qual.Nullable;",
-            "abstract class Foo {",
-            "  public abstract boolean equals(final Object o);",
-            "}")
+            """
+            import org.checkerframework.checker.nullness.qual.Nullable;
+
+            abstract class Foo {
+              public abstract boolean equals(final Object o);
+            }
+            """)
         .addOutputLines(
             "out/Foo.java",
-            "import org.checkerframework.checker.nullness.qual.Nullable;",
-            "abstract class Foo {",
-            "  public abstract boolean equals(final @Nullable Object o);",
-            "}")
+            """
+            import org.checkerframework.checker.nullness.qual.Nullable;
+
+            abstract class Foo {
+              public abstract boolean equals(final @Nullable Object o);
+            }
+            """)
         .doTest(TEXT_MATCH);
   }
 
@@ -89,10 +103,13 @@ public class EqualsMissingNullableTest {
     aggressiveHelper
         .addSourceLines(
             "Foo.java",
-            "import javax.annotation.Nullable;",
-            "abstract class Foo {",
-            "  public abstract boolean equals(@Nullable Object o);",
-            "}")
+            """
+            import javax.annotation.Nullable;
+
+            abstract class Foo {
+              public abstract boolean equals(@Nullable Object o);
+            }
+            """)
         .doTest();
   }
 
@@ -103,9 +120,11 @@ public class EqualsMissingNullableTest {
             "ProtoMethodAcceptsNullParameter.java", "@interface ProtoMethodAcceptsNullParameter {}")
         .addSourceLines(
             "Foo.java",
-            "abstract class Foo {",
-            "  public abstract boolean equals(@ProtoMethodAcceptsNullParameter Object o);",
-            "}")
+            """
+            abstract class Foo {
+              public abstract boolean equals(@ProtoMethodAcceptsNullParameter Object o);
+            }
+            """)
         .doTest();
   }
 
@@ -114,9 +133,11 @@ public class EqualsMissingNullableTest {
     aggressiveHelper
         .addSourceLines(
             "Foo.java",
-            "abstract class Foo {",
-            "  public abstract boolean equals(String s, int i);",
-            "}")
+            """
+            abstract class Foo {
+              public abstract boolean equals(String s, int i);
+            }
+            """)
         .doTest();
   }
 
@@ -125,12 +146,15 @@ public class EqualsMissingNullableTest {
     conservativeHelper
         .addSourceLines(
             "Foo.java",
-            "import org.jspecify.annotations.NullMarked;",
-            "@NullMarked",
-            "abstract class Foo {",
-            "  // BUG: Diagnostic contains: @Nullable",
-            "  public abstract boolean equals(Object o);",
-            "}")
+            """
+            import org.jspecify.annotations.NullMarked;
+
+            @NullMarked
+            abstract class Foo {
+              // BUG: Diagnostic contains: @Nullable
+              public abstract boolean equals(Object o);
+            }
+            """)
         .doTest();
   }
 
@@ -138,10 +162,12 @@ public class EqualsMissingNullableTest {
   public void negativeConservativeNotNullMarked() {
     conservativeHelper
         .addSourceLines(
-            "Foo.java", //
-            "abstract class Foo {",
-            "  public abstract boolean equals(Object o);",
-            "}")
+            "Foo.java",
+            """
+            abstract class Foo {
+              public abstract boolean equals(Object o);
+            }
+            """)
         .doTest();
   }
 }

@@ -32,14 +32,18 @@ public final class PrimitiveAtomicReferenceTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import java.util.concurrent.atomic.AtomicReference;",
-            "class Test {",
-            "  private AtomicReference<Integer> ref = new AtomicReference<>();",
-            "  public boolean cas(int i) {",
-            "    // BUG: Diagnostic contains:",
-            "    return ref.compareAndSet(i, 10);",
-            "  }",
-            "}")
+            """
+            import java.util.concurrent.atomic.AtomicReference;
+
+            class Test {
+              private AtomicReference<Integer> ref = new AtomicReference<>();
+
+              public boolean cas(int i) {
+                // BUG: Diagnostic contains:
+                return ref.compareAndSet(i, 10);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -48,13 +52,17 @@ public final class PrimitiveAtomicReferenceTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import java.util.concurrent.atomic.AtomicReference;",
-            "class Test {",
-            "  private AtomicReference<Integer> ref = new AtomicReference<>();",
-            "  public boolean cas() {",
-            "    return ref.compareAndSet(null, 10);",
-            "  }",
-            "}")
+            """
+            import java.util.concurrent.atomic.AtomicReference;
+
+            class Test {
+              private AtomicReference<Integer> ref = new AtomicReference<>();
+
+              public boolean cas() {
+                return ref.compareAndSet(null, 10);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -63,13 +71,17 @@ public final class PrimitiveAtomicReferenceTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import java.util.concurrent.atomic.AtomicReference;",
-            "class Test {",
-            "  private AtomicReference<String> ref = new AtomicReference<>();",
-            "  public boolean cas(String s) {",
-            "    return ref.compareAndSet(s, \"foo\");",
-            "  }",
-            "}")
+            """
+            import java.util.concurrent.atomic.AtomicReference;
+
+            class Test {
+              private AtomicReference<String> ref = new AtomicReference<>();
+
+              public boolean cas(String s) {
+                return ref.compareAndSet(s, "foo");
+              }
+            }
+            """)
         .doTest();
   }
 }

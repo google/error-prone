@@ -44,9 +44,12 @@ public class ExtendsAutoValueTest {
   public void extendsAutoValue_goodSuperclass() {
     helper
         .addSourceLines(
-            "TestClass.java", //
-            "class SuperClass {}",
-            "public class TestClass extends SuperClass {}")
+            "TestClass.java",
+            """
+            class SuperClass {}
+
+            public class TestClass extends SuperClass {}
+            """)
         .doTest();
   }
 
@@ -55,9 +58,14 @@ public class ExtendsAutoValueTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import com.google.auto.value.AutoValue;",
-            "public class TestClass {}",
-            "@AutoValue class AutoClass extends TestClass {}")
+            """
+            import com.google.auto.value.AutoValue;
+
+            public class TestClass {}
+
+            @AutoValue
+            class AutoClass extends TestClass {}
+            """)
         .doTest();
   }
 
@@ -66,10 +74,16 @@ public class ExtendsAutoValueTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import com.google.auto.value.AutoValue;",
-            "import javax.annotation.processing.Generated;",
-            "@AutoValue class AutoClass {}",
-            "@Generated(value=\"hi\") public class TestClass extends AutoClass {}")
+            """
+            import com.google.auto.value.AutoValue;
+            import javax.annotation.processing.Generated;
+
+            @AutoValue
+            class AutoClass {}
+
+            @Generated(value = "hi")
+            public class TestClass extends AutoClass {}
+            """)
         .doTest();
   }
 
@@ -78,10 +92,15 @@ public class ExtendsAutoValueTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import com.google.auto.value.AutoValue;",
-            "@AutoValue class AutoClass {}",
-            "// BUG: Diagnostic contains: ExtendsAutoValue",
-            "public class TestClass extends AutoClass {}")
+            """
+            import com.google.auto.value.AutoValue;
+
+            @AutoValue
+            class AutoClass {}
+
+            // BUG: Diagnostic contains: ExtendsAutoValue
+            public class TestClass extends AutoClass {}
+            """)
         .doTest();
   }
 
@@ -90,13 +109,17 @@ public class ExtendsAutoValueTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import com.google.auto.value.AutoOneOf;",
-            "@AutoOneOf(AutoClass.Kind.class) class AutoClass {",
-            "  enum Kind {}",
-            "}",
-            "// BUG: Diagnostic contains: ExtendsAutoValue",
-            "public class TestClass extends AutoClass {",
-            "}")
+            """
+            import com.google.auto.value.AutoOneOf;
+
+            @AutoOneOf(AutoClass.Kind.class)
+            class AutoClass {
+              enum Kind {}
+            }
+
+            // BUG: Diagnostic contains: ExtendsAutoValue
+            public class TestClass extends AutoClass {}
+            """)
         .doTest();
   }
 
@@ -105,9 +128,13 @@ public class ExtendsAutoValueTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "@com.google.auto.value.AutoValue class AutoClass {}",
-            "// BUG: Diagnostic contains: ExtendsAutoValue",
-            "public class TestClass extends AutoClass {}")
+            """
+            @com.google.auto.value.AutoValue
+            class AutoClass {}
+
+            // BUG: Diagnostic contains: ExtendsAutoValue
+            public class TestClass extends AutoClass {}
+            """)
         .doTest();
   }
 
@@ -116,12 +143,17 @@ public class ExtendsAutoValueTest {
     helper
         .addSourceLines(
             "OuterClass.java",
-            "import com.google.auto.value.AutoValue;",
-            "public class OuterClass { ",
-            "  @AutoValue abstract static class AutoClass {}",
-            "  // BUG: Diagnostic contains: ExtendsAutoValue",
-            "  class TestClass extends AutoClass {}",
-            "}")
+            """
+            import com.google.auto.value.AutoValue;
+
+            public class OuterClass {
+              @AutoValue
+              abstract static class AutoClass {}
+
+              // BUG: Diagnostic contains: ExtendsAutoValue
+              class TestClass extends AutoClass {}
+            }
+            """)
         .doTest();
   }
 
@@ -130,12 +162,17 @@ public class ExtendsAutoValueTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import com.google.auto.value.AutoValue;",
-            "class OuterClass { ",
-            "  @AutoValue static class AutoClass {}",
-            "}",
-            "// BUG: Diagnostic contains: ExtendsAutoValue",
-            "public class TestClass extends OuterClass.AutoClass {}")
+            """
+            import com.google.auto.value.AutoValue;
+
+            class OuterClass {
+              @AutoValue
+              static class AutoClass {}
+            }
+
+            // BUG: Diagnostic contains: ExtendsAutoValue
+            public class TestClass extends OuterClass.AutoClass {}
+            """)
         .doTest();
   }
 
@@ -144,10 +181,15 @@ public class ExtendsAutoValueTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import com.google.auto.value.AutoValue;",
-            "@AutoValue class AutoClass {}",
-            "@SuppressWarnings(\"ExtendsAutoValue\")",
-            "public class TestClass extends AutoClass {}")
+            """
+            import com.google.auto.value.AutoValue;
+
+            @AutoValue
+            class AutoClass {}
+
+            @SuppressWarnings("ExtendsAutoValue")
+            public class TestClass extends AutoClass {}
+            """)
         .doTest();
   }
 
@@ -156,13 +198,17 @@ public class ExtendsAutoValueTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import com.google.auto.value.AutoValue;",
-            "@AutoValue class AutoClass {}",
-            "",
-            "public class TestClass {",
-            "  // BUG: Diagnostic contains: ExtendsAutoValue",
-            "  public class Extends extends AutoClass {}",
-            "}")
+            """
+            import com.google.auto.value.AutoValue;
+
+            @AutoValue
+            class AutoClass {}
+
+            public class TestClass {
+              // BUG: Diagnostic contains: ExtendsAutoValue
+              public class Extends extends AutoClass {}
+            }
+            """)
         .doTest();
   }
 
@@ -171,14 +217,18 @@ public class ExtendsAutoValueTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import com.google.auto.value.AutoValue;",
-            "import javax.annotation.processing.Generated;",
-            "@AutoValue class AutoClass {}",
-            "",
-            "@Generated(\"generator\")",
-            "public class TestClass {",
-            "  public class Extends extends AutoClass {}",
-            "}")
+            """
+            import com.google.auto.value.AutoValue;
+            import javax.annotation.processing.Generated;
+
+            @AutoValue
+            class AutoClass {}
+
+            @Generated("generator")
+            public class TestClass {
+              public class Extends extends AutoClass {}
+            }
+            """)
         .doTest();
   }
 }

@@ -33,23 +33,26 @@ public class RandomCastTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.Random;",
-            "class Test {",
-            "  {",
-            "    // BUG: Diagnostic contains:",
-            "    int x = (int) new Random().nextFloat();",
-            "    // BUG: Diagnostic contains:",
-            "    x = (int) new Random().nextDouble();",
-            "    // BUG: Diagnostic contains:",
-            "    long y = (long) new Random().nextFloat();",
-            "    // BUG: Diagnostic contains:",
-            "    y = (long) new Random().nextDouble();",
-            "    // BUG: Diagnostic contains:",
-            "    y = (long) (new Random().nextDouble());",
-            "    // BUG: Diagnostic contains:",
-            "    int z = (int) Math.random();",
-            "  }",
-            "}")
+            """
+            import java.util.Random;
+
+            class Test {
+              {
+                // BUG: Diagnostic contains:
+                int x = (int) new Random().nextFloat();
+                // BUG: Diagnostic contains:
+                x = (int) new Random().nextDouble();
+                // BUG: Diagnostic contains:
+                long y = (long) new Random().nextFloat();
+                // BUG: Diagnostic contains:
+                y = (long) new Random().nextDouble();
+                // BUG: Diagnostic contains:
+                y = (long) (new Random().nextDouble());
+                // BUG: Diagnostic contains:
+                int z = (int) Math.random();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -58,20 +61,23 @@ public class RandomCastTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.Random;",
-            "class Test {",
-            "  {",
-            "    float x = new Random().nextFloat();",
-            "    x = (float) new Random().nextDouble();",
-            "    double y = new Random().nextFloat();",
-            "    y = new Random().nextDouble();",
-            "    double z = Math.random();",
-            "    int i = (int) new Random().nextInt();",
-            "    i = (int) new Random().nextLong();",
-            "    long l = (long) new Random().nextInt();",
-            "    l = (long) new Random().nextLong();",
-            "  }",
-            "}")
+            """
+            import java.util.Random;
+
+            class Test {
+              {
+                float x = new Random().nextFloat();
+                x = (float) new Random().nextDouble();
+                double y = new Random().nextFloat();
+                y = new Random().nextDouble();
+                double z = Math.random();
+                int i = (int) new Random().nextInt();
+                i = (int) new Random().nextLong();
+                long l = (long) new Random().nextInt();
+                l = (long) new Random().nextLong();
+              }
+            }
+            """)
         .doTest();
   }
 }

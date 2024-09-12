@@ -32,76 +32,100 @@ public final class UnnecessarilyUsedValueTest {
     helper
         .addInputLines(
             "Client.java",
-            "package com.google.frobber;",
-            "public final class Client {",
-            "  public void varNotUnused() {",
-            "    var notUnused = ignorable();",
-            "  }",
-            "  public void varUnused() {",
-            "    var unused = ignorable();",
-            "  }",
-            "  public void varUnusedFoo() {",
-            "    var unusedFoo = ignorable();",
-            "  }",
-            "  public void varUnused0() {",
-            "    var unused0 = ignorable();",
-            "  }",
-            "  public void varUnused1() {",
-            "    var unused1 = ignorable();",
-            "  }",
-            "  public void varUnused10() {",
-            "    var unused10 = ignorable();",
-            "  }",
-            "  public void objectUnused() {",
-            "    Object unused = ignorable();",
-            "  }",
-            "  public void objectUnusedFoo() {",
-            "    Object unusedFoo = ignorable();",
-            "  }",
-            "  public void reuseOfUnusedVariable(String unused) {",
-            "    unused = ignorable();",
-            "  }",
-            "  @com.google.errorprone.annotations.CanIgnoreReturnValue",
-            "  public String ignorable() {",
-            "    return \"hi\";",
-            "  }",
-            "}")
+            """
+            package com.google.frobber;
+
+            public final class Client {
+              public void varNotUnused() {
+                var notUnused = ignorable();
+              }
+
+              public void varUnused() {
+                var unused = ignorable();
+              }
+
+              public void varUnusedFoo() {
+                var unusedFoo = ignorable();
+              }
+
+              public void varUnused0() {
+                var unused0 = ignorable();
+              }
+
+              public void varUnused1() {
+                var unused1 = ignorable();
+              }
+
+              public void varUnused10() {
+                var unused10 = ignorable();
+              }
+
+              public void objectUnused() {
+                Object unused = ignorable();
+              }
+
+              public void objectUnusedFoo() {
+                Object unusedFoo = ignorable();
+              }
+
+              public void reuseOfUnusedVariable(String unused) {
+                unused = ignorable();
+              }
+
+              @com.google.errorprone.annotations.CanIgnoreReturnValue
+              public String ignorable() {
+                return "hi";
+              }
+            }
+            """)
         .addOutputLines(
             "Client.java",
-            "package com.google.frobber;",
-            "public final class Client {",
-            "  public void varNotUnused() {",
-            "    var notUnused = ignorable();",
-            "  }",
-            "  public void varUnused() {",
-            "    ignorable();",
-            "  }",
-            "  public void varUnusedFoo() {",
-            "    var unusedFoo = ignorable();",
-            "  }",
-            "  public void varUnused0() {",
-            "    ignorable();",
-            "  }",
-            "  public void varUnused1() {",
-            "    ignorable();",
-            "  }",
-            "  public void varUnused10() {",
-            "    ignorable();",
-            "  }",
-            "  public void objectUnused() {",
-            "    ignorable();",
-            "  }",
-            "  public void objectUnusedFoo() {",
-            "    Object unusedFoo = ignorable();",
-            "  }",
-            "  public void reuseOfUnusedVariable(String unused) {",
-            "    ignorable();",
-            "  }",
-            "  @com.google.errorprone.annotations.CanIgnoreReturnValue",
-            "  public String ignorable() {",
-            "    return \"hi\";",
-            "  }",
-            "}")
+            """
+            package com.google.frobber;
+
+            public final class Client {
+              public void varNotUnused() {
+                var notUnused = ignorable();
+              }
+
+              public void varUnused() {
+                ignorable();
+              }
+
+              public void varUnusedFoo() {
+                var unusedFoo = ignorable();
+              }
+
+              public void varUnused0() {
+                ignorable();
+              }
+
+              public void varUnused1() {
+                ignorable();
+              }
+
+              public void varUnused10() {
+                ignorable();
+              }
+
+              public void objectUnused() {
+                ignorable();
+              }
+
+              public void objectUnusedFoo() {
+                Object unusedFoo = ignorable();
+              }
+
+              public void reuseOfUnusedVariable(String unused) {
+                ignorable();
+              }
+
+              @com.google.errorprone.annotations.CanIgnoreReturnValue
+              public String ignorable() {
+                return "hi";
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -110,56 +134,72 @@ public final class UnnecessarilyUsedValueTest {
     helper
         .addInputLines(
             "Client.java",
-            "package com.google.frobber;",
-            "public final class Client {",
-            "  public void varNotUnused() {",
-            "    var notUnused = new Client();",
-            "  }",
-            "  public void varUnused() {",
-            "    var unused = new Client();",
-            "  }",
-            "  public void varUnusedFoo() {",
-            "    var unusedFoo = new Client();",
-            "  }",
-            "  public void objectUnused() {",
-            "    Object unused = new Client();",
-            "  }",
-            "  public void objectUnusedFoo() {",
-            "    Object unusedFoo = new Client();",
-            "  }",
-            "  public void reuseOfUnusedVariable(Client unused) {",
-            "    unused = new Client();",
-            "  }",
-            "  @com.google.errorprone.annotations.CanIgnoreReturnValue",
-            "  public Client() {",
-            "  }",
-            "}")
+            """
+            package com.google.frobber;
+
+            public final class Client {
+              public void varNotUnused() {
+                var notUnused = new Client();
+              }
+
+              public void varUnused() {
+                var unused = new Client();
+              }
+
+              public void varUnusedFoo() {
+                var unusedFoo = new Client();
+              }
+
+              public void objectUnused() {
+                Object unused = new Client();
+              }
+
+              public void objectUnusedFoo() {
+                Object unusedFoo = new Client();
+              }
+
+              public void reuseOfUnusedVariable(Client unused) {
+                unused = new Client();
+              }
+
+              @com.google.errorprone.annotations.CanIgnoreReturnValue
+              public Client() {}
+            }
+            """)
         .addOutputLines(
             "Client.java",
-            "package com.google.frobber;",
-            "public final class Client {",
-            "  public void varNotUnused() {",
-            "    var notUnused = new Client();",
-            "  }",
-            "  public void varUnused() {",
-            "    new Client();",
-            "  }",
-            "  public void varUnusedFoo() {",
-            "    var unusedFoo = new Client();",
-            "  }",
-            "  public void objectUnused() {",
-            "    new Client();",
-            "  }",
-            "  public void objectUnusedFoo() {",
-            "    Object unusedFoo = new Client();",
-            "  }",
-            "  public void reuseOfUnusedVariable(Client unused) {",
-            "    new Client();",
-            "  }",
-            "  @com.google.errorprone.annotations.CanIgnoreReturnValue",
-            "  public Client() {",
-            "  }",
-            "}")
+            """
+            package com.google.frobber;
+
+            public final class Client {
+              public void varNotUnused() {
+                var notUnused = new Client();
+              }
+
+              public void varUnused() {
+                new Client();
+              }
+
+              public void varUnusedFoo() {
+                var unusedFoo = new Client();
+              }
+
+              public void objectUnused() {
+                new Client();
+              }
+
+              public void objectUnusedFoo() {
+                Object unusedFoo = new Client();
+              }
+
+              public void reuseOfUnusedVariable(Client unused) {
+                new Client();
+              }
+
+              @com.google.errorprone.annotations.CanIgnoreReturnValue
+              public Client() {}
+            }
+            """)
         .doTest();
   }
 
@@ -168,17 +208,20 @@ public final class UnnecessarilyUsedValueTest {
     helper
         .addInputLines(
             "Client.java",
-            "package com.google.frobber;",
-            "public final class Client {",
-            "  public void varNotUnused() throws Exception  {",
-            "    try (java.io.Closeable unused = getCloseable()) {",
-            "    }",
-            "  }",
-            "  @com.google.errorprone.annotations.CanIgnoreReturnValue",
-            "  private java.io.Closeable getCloseable() {",
-            "    return null;",
-            "  }",
-            "}")
+            """
+            package com.google.frobber;
+
+            public final class Client {
+              public void varNotUnused() throws Exception {
+                try (java.io.Closeable unused = getCloseable()) {}
+              }
+
+              @com.google.errorprone.annotations.CanIgnoreReturnValue
+              private java.io.Closeable getCloseable() {
+                return null;
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }

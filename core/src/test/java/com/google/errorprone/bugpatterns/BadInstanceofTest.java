@@ -37,26 +37,34 @@ public final class BadInstanceofTest {
     BugCheckerRefactoringTestHelper.newInstance(BadInstanceof.class, getClass())
         .addInputLines(
             "Test.java",
-            "class A {",
-            "  boolean foo(C c) {",
-            "    return c instanceof A;",
-            "  }",
-            "  boolean notFoo(C c) {",
-            "    return !(c instanceof A);",
-            "  }",
-            "  static class C extends A {}",
-            "}")
+            """
+            class A {
+              boolean foo(C c) {
+                return c instanceof A;
+              }
+
+              boolean notFoo(C c) {
+                return !(c instanceof A);
+              }
+
+              static class C extends A {}
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "class A {",
-            "  boolean foo(C c) {",
-            "    return c != null;",
-            "  }",
-            "  boolean notFoo(C c) {",
-            "    return c == null;",
-            "  }",
-            "  static class C extends A {}",
-            "}")
+            """
+            class A {
+              boolean foo(C c) {
+                return c != null;
+              }
+
+              boolean notFoo(C c) {
+                return c == null;
+              }
+
+              static class C extends A {}
+            }
+            """)
         .doTest();
   }
 
@@ -65,20 +73,24 @@ public final class BadInstanceofTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class A {",
-            "  // BUG: Diagnostic contains: `new C()` is a non-null instance of C "
-                + "which is a subtype of A",
-            "  boolean t = new C() instanceof A;",
-            "  boolean foo(C c) {",
-            "    // BUG: Diagnostic contains: `c` is an instance of C which is a subtype of A",
-            "    return c instanceof A;",
-            "  }",
-            "  boolean notFoo(C c) {",
-            "    // BUG: Diagnostic contains: `c` is an instance of C which is a subtype of A",
-            "    return !(c instanceof A);",
-            "  }",
-            "}",
-            "class C extends A {}")
+            """
+class A {
+  // BUG: Diagnostic contains: `new C()` is a non-null instance of C which is a subtype of A
+  boolean t = new C() instanceof A;
+
+  boolean foo(C c) {
+    // BUG: Diagnostic contains: `c` is an instance of C which is a subtype of A
+    return c instanceof A;
+  }
+
+  boolean notFoo(C c) {
+    // BUG: Diagnostic contains: `c` is an instance of C which is a subtype of A
+    return !(c instanceof A);
+  }
+}
+
+class C extends A {}
+""")
         .doTest();
   }
 
@@ -87,12 +99,15 @@ public final class BadInstanceofTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class A {",
-            "  boolean foo(A a) {",
-            "    return a instanceof C;",
-            "  }",
-            "}",
-            "class C extends A {}")
+            """
+            class A {
+              boolean foo(A a) {
+                return a instanceof C;
+              }
+            }
+
+            class C extends A {}
+            """)
         .doTest();
   }
 }

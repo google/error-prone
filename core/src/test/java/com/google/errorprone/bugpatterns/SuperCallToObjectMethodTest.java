@@ -30,17 +30,20 @@ public class SuperCallToObjectMethodTest {
     helper()
         .addSourceLines(
             "Foo.java",
-            "class Foo {",
-            "  int i;",
-            "  @Override",
-            "  public boolean equals(Object obj) {",
-            "    if (obj instanceof Foo) {",
-            "      return i == ((Foo) obj).i;",
-            "    }",
-            "    // BUG: Diagnostic contains: equals",
-            "    return super.equals(obj);",
-            "  }",
-            "}")
+            """
+            class Foo {
+              int i;
+
+              @Override
+              public boolean equals(Object obj) {
+                if (obj instanceof Foo) {
+                  return i == ((Foo) obj).i;
+                }
+                // BUG: Diagnostic contains: equals
+                return super.equals(obj);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -49,17 +52,20 @@ public class SuperCallToObjectMethodTest {
     helper()
         .addSourceLines(
             "Foo.java",
-            "class Foo extends Exception {",
-            "  int i;",
-            "  @Override",
-            "  public boolean equals(Object obj) {",
-            "    if (obj instanceof Foo) {",
-            "      return i == ((Foo) obj).i;",
-            "    }",
-            "    // BUG: Diagnostic contains: ",
-            "    return super.equals(obj);",
-            "  }",
-            "}")
+            """
+            class Foo extends Exception {
+              int i;
+
+              @Override
+              public boolean equals(Object obj) {
+                if (obj instanceof Foo) {
+                  return i == ((Foo) obj).i;
+                }
+                // BUG: Diagnostic contains:
+                return super.equals(obj);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -68,17 +74,21 @@ public class SuperCallToObjectMethodTest {
     helper()
         .addSourceLines(
             "Foo.java",
-            "import java.util.AbstractSet;",
-            "abstract class Foo extends AbstractSet<String> {",
-            "  int i;",
-            "  @Override",
-            "  public boolean equals(Object obj) {",
-            "    if (obj instanceof Foo) {",
-            "      return i == ((Foo) obj).i;",
-            "    }",
-            "    return super.equals(obj);",
-            "  }",
-            "}")
+            """
+            import java.util.AbstractSet;
+
+            abstract class Foo extends AbstractSet<String> {
+              int i;
+
+              @Override
+              public boolean equals(Object obj) {
+                if (obj instanceof Foo) {
+                  return i == ((Foo) obj).i;
+                }
+                return super.equals(obj);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -87,12 +97,14 @@ public class SuperCallToObjectMethodTest {
     helper()
         .addSourceLines(
             "Foo.java",
-            "class Foo {",
-            "  @Override",
-            "  public boolean equals(Object obj) {",
-            "    return super.equals(obj);",
-            "  }",
-            "}")
+            """
+            class Foo {
+              @Override
+              public boolean equals(Object obj) {
+                return super.equals(obj);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -101,28 +113,34 @@ public class SuperCallToObjectMethodTest {
     refactoringHelper()
         .addInputLines(
             "Foo.java",
-            "class Foo {",
-            "  int i;",
-            "  @Override",
-            "  public boolean equals(Object obj) {",
-            "    if (obj instanceof Foo) {",
-            "      return i == ((Foo) obj).i;",
-            "    }",
-            "    return super.equals(obj);",
-            "  }",
-            "}")
+            """
+            class Foo {
+              int i;
+
+              @Override
+              public boolean equals(Object obj) {
+                if (obj instanceof Foo) {
+                  return i == ((Foo) obj).i;
+                }
+                return super.equals(obj);
+              }
+            }
+            """)
         .addOutputLines(
             "Foo.java",
-            "class Foo {",
-            "  int i;",
-            "  @Override",
-            "  public boolean equals(Object obj) {",
-            "    if (obj instanceof Foo) {",
-            "      return i == ((Foo) obj).i;",
-            "    }",
-            "    return this == obj;",
-            "  }",
-            "}")
+            """
+            class Foo {
+              int i;
+
+              @Override
+              public boolean equals(Object obj) {
+                if (obj instanceof Foo) {
+                  return i == ((Foo) obj).i;
+                }
+                return this == obj;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -131,26 +149,32 @@ public class SuperCallToObjectMethodTest {
     refactoringHelper()
         .addInputLines(
             "Foo.java",
-            "class Foo {",
-            "  int i;",
-            "  boolean notEquals(Object obj) {",
-            "    if (obj instanceof Foo) {",
-            "      return i != ((Foo) obj).i;",
-            "    }",
-            "    return !super.equals(obj);",
-            "  }",
-            "}")
+            """
+            class Foo {
+              int i;
+
+              boolean notEquals(Object obj) {
+                if (obj instanceof Foo) {
+                  return i != ((Foo) obj).i;
+                }
+                return !super.equals(obj);
+              }
+            }
+            """)
         .addOutputLines(
             "Foo.java",
-            "class Foo {",
-            "  int i;",
-            "  boolean notEquals(Object obj) {",
-            "    if (obj instanceof Foo) {",
-            "      return i != ((Foo) obj).i;",
-            "    }",
-            "    return !(this == obj);",
-            "  }",
-            "}")
+            """
+            class Foo {
+              int i;
+
+              boolean notEquals(Object obj) {
+                if (obj instanceof Foo) {
+                  return i != ((Foo) obj).i;
+                }
+                return !(this == obj);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -159,22 +183,28 @@ public class SuperCallToObjectMethodTest {
     refactoringHelper()
         .addInputLines(
             "Foo.java",
-            "class Foo {",
-            "  int i;",
-            "  @Override",
-            "  public int hashCode() {",
-            "    return super.hashCode() * 31 + i;",
-            "  }",
-            "}")
+            """
+            class Foo {
+              int i;
+
+              @Override
+              public int hashCode() {
+                return super.hashCode() * 31 + i;
+              }
+            }
+            """)
         .addOutputLines(
             "Foo.java",
-            "class Foo {",
-            "  int i;",
-            "  @Override",
-            "  public int hashCode() {",
-            "    return System.identityHashCode(this) * 31 + i;",
-            "  }",
-            "}")
+            """
+            class Foo {
+              int i;
+
+              @Override
+              public int hashCode() {
+                return System.identityHashCode(this) * 31 + i;
+              }
+            }
+            """)
         .doTest();
   }
 

@@ -34,18 +34,25 @@ public class MissingCasesInEnumSwitchTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  enum Case { ONE, TWO, THREE }",
-            "  void m(Case c) {",
-            "    switch (c) {",
-            "      case ONE:",
-            "      case TWO:",
-            "      case THREE:",
-            "        System.err.println(\"found it!\");",
-            "        break;",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              enum Case {
+                ONE,
+                TWO,
+                THREE
+              }
+
+              void m(Case c) {
+                switch (c) {
+                  case ONE:
+                  case TWO:
+                  case THREE:
+                    System.err.println("found it!");
+                    break;
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -55,14 +62,20 @@ public class MissingCasesInEnumSwitchTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  enum Case { ONE, TWO }",
-            "  void m(Case c) {",
-            "    switch (c) {",
-            "      case ONE, TWO -> {}",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              enum Case {
+                ONE,
+                TWO
+              }
+
+              void m(Case c) {
+                switch (c) {
+                  case ONE, TWO -> {}
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -71,19 +84,26 @@ public class MissingCasesInEnumSwitchTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  enum Case { ONE, TWO, THREE }",
-            "  void m(Case c) {",
-            "    switch (c) {",
-            "      case ONE:",
-            "      case TWO:",
-            "        System.err.println(\"found it!\");",
-            "        break;",
-            "      default:",
-            "        break;",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              enum Case {
+                ONE,
+                TWO,
+                THREE
+              }
+
+              void m(Case c) {
+                switch (c) {
+                  case ONE:
+                  case TWO:
+                    System.err.println("found it!");
+                    break;
+                  default:
+                    break;
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -92,18 +112,25 @@ public class MissingCasesInEnumSwitchTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  enum Case { ONE, TWO, THREE }",
-            "  void m(Case c) {",
-            "    // BUG: Diagnostic contains: THREE",
-            "    switch (c) {",
-            "      case ONE:",
-            "      case TWO:",
-            "        System.err.println(\"found it!\");",
-            "        break;",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              enum Case {
+                ONE,
+                TWO,
+                THREE
+              }
+
+              void m(Case c) {
+                // BUG: Diagnostic contains: THREE
+                switch (c) {
+                  case ONE:
+                  case TWO:
+                    System.err.println("found it!");
+                    break;
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -112,17 +139,29 @@ public class MissingCasesInEnumSwitchTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  enum Case { ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT }",
-            "  void m(Case c) {",
-            "    // BUG: Diagnostic contains: TWO, THREE, FOUR, and 4 others",
-            "    switch (c) {",
-            "      case ONE:",
-            "        System.err.println(\"found it!\");",
-            "        break;",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              enum Case {
+                ONE,
+                TWO,
+                THREE,
+                FOUR,
+                FIVE,
+                SIX,
+                SEVEN,
+                EIGHT
+              }
+
+              void m(Case c) {
+                // BUG: Diagnostic contains: TWO, THREE, FOUR, and 4 others
+                switch (c) {
+                  case ONE:
+                    System.err.println("found it!");
+                    break;
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -131,16 +170,18 @@ public class MissingCasesInEnumSwitchTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void m(int i) {",
-            "    switch (i) {",
-            "      case 1:",
-            "      case 2:",
-            "        System.err.println(\"found it!\");",
-            "        break;",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              void m(int i) {
+                switch (i) {
+                  case 1:
+                  case 2:
+                    System.err.println("found it!");
+                    break;
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -149,14 +190,20 @@ public class MissingCasesInEnumSwitchTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  enum Case { ONE, TWO }",
-            "  void m(Case e) {",
-            "    // BUG: Diagnostic contains: ONE, TWO",
-            "    switch (e) {",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              enum Case {
+                ONE,
+                TWO
+              }
+
+              void m(Case e) {
+                // BUG: Diagnostic contains: ONE, TWO
+                switch (e) {
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -166,17 +213,23 @@ public class MissingCasesInEnumSwitchTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  enum Case { ONE, TWO }",
-            "  void m(Case c) {",
-            "    // BUG: Diagnostic contains: TWO",
-            "    switch (c) {",
-            "      case ONE -> {",
-            "        System.err.println(\"found it!\");",
-            "      }",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              enum Case {
+                ONE,
+                TWO
+              }
+
+              void m(Case c) {
+                // BUG: Diagnostic contains: TWO
+                switch (c) {
+                  case ONE -> {
+                    System.err.println("found it!");
+                  }
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -186,16 +239,23 @@ public class MissingCasesInEnumSwitchTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  enum Case { ONE, TWO, THREE }",
-            "  void m(Case c) {",
-            "    // BUG: Diagnostic contains: THREE",
-            "    switch (c) {",
-            "      case ONE, TWO:",
-            "        System.err.println(\"found it!\");",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              enum Case {
+                ONE,
+                TWO,
+                THREE
+              }
+
+              void m(Case c) {
+                // BUG: Diagnostic contains: THREE
+                switch (c) {
+                  case ONE, TWO:
+                    System.err.println("found it!");
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -205,17 +265,24 @@ public class MissingCasesInEnumSwitchTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  enum Case { ONE, TWO, THREE }",
-            "  void m(Case c) {",
-            "    // BUG: Diagnostic contains: THREE",
-            "    switch (c) {",
-            "      case ONE, TWO -> {",
-            "        System.err.println(\"found it!\");",
-            "      }",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              enum Case {
+                ONE,
+                TWO,
+                THREE
+              }
+
+              void m(Case c) {
+                // BUG: Diagnostic contains: THREE
+                switch (c) {
+                  case ONE, TWO -> {
+                    System.err.println("found it!");
+                  }
+                }
+              }
+            }
+            """)
         .doTest();
   }
 }

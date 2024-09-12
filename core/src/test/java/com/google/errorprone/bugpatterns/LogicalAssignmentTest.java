@@ -32,24 +32,28 @@ public class LogicalAssignmentTest {
     BugCheckerRefactoringTestHelper.newInstance(LogicalAssignment.class, getClass())
         .addInputLines(
             "in/Test.java",
-            "class Test {",
-            "  void f(boolean x){",
-            "    if (x = true) {}",
-            "    while (x = true) {}",
-            "    for (; x = true; ) {}",
-            "    do {} while (x = true);",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f(boolean x) {
+                if (x = true) {}
+                while (x = true) {}
+                for (; x = true; ) {}
+                do {} while (x = true);
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "class Test {",
-            "  void f(boolean x){",
-            "    if ((x = true)) {}",
-            "    while ((x = true)) {}",
-            "    for (; (x = true); ) {}",
-            "    do {} while ((x = true));",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f(boolean x) {
+                if ((x = true)) {}
+                while ((x = true)) {}
+                for (; (x = true); ) {}
+                do {} while ((x = true));
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -58,18 +62,20 @@ public class LogicalAssignmentTest {
     CompilationTestHelper.newInstance(LogicalAssignment.class, getClass())
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void f(boolean x){",
-            "    if ((x = true)) {}",
-            "    while ((x = true)) {}",
-            "    for (; (x = true); ) {}",
-            "    do {} while (x == true);",
-            "    if (x == true) {}",
-            "    while (x == true) {}",
-            "    for (; x == true; ) {}",
-            "    do {} while (x == true);",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f(boolean x) {
+                if ((x = true)) {}
+                while ((x = true)) {}
+                for (; (x = true); ) {}
+                do {} while (x == true);
+                if (x == true) {}
+                while (x == true) {}
+                for (; x == true; ) {}
+                do {} while (x == true);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -78,20 +84,24 @@ public class LogicalAssignmentTest {
     BugCheckerRefactoringTestHelper.newInstance(LogicalAssignment.class, getClass())
         .addInputLines(
             "in/Test.java",
-            "class Test {",
-            "  void f(boolean x){",
-            "    if (x = true) {}",
-            "    if ((x = true)) {}",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f(boolean x) {
+                if (x = true) {}
+                if ((x = true)) {}
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "class Test {",
-            "  void f(boolean x){",
-            "    if (x == true) {}",
-            "    if ((x = true)) {}",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f(boolean x) {
+                if (x == true) {}
+                if ((x = true)) {}
+              }
+            }
+            """)
         .setFixChooser(FixChoosers.SECOND)
         .doTest();
   }

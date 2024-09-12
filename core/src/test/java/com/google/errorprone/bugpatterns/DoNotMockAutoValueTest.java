@@ -32,16 +32,22 @@ public final class DoNotMockAutoValueTest {
     helper
         .addSourceLines(
             "AV.java",
-            "import com.google.auto.value.AutoValue;",
-            "@AutoValue",
-            "public abstract class AV {}")
+            """
+            import com.google.auto.value.AutoValue;
+
+            @AutoValue
+            public abstract class AV {}
+            """)
         .addSourceLines(
             "Test.java",
-            "import static org.mockito.Mockito.mock;",
-            "class Test {",
-            "  // BUG: Diagnostic contains:",
-            "  private final AV av = mock(AV.class);",
-            "}")
+            """
+            import static org.mockito.Mockito.mock;
+
+            class Test {
+              // BUG: Diagnostic contains:
+              private final AV av = mock(AV.class);
+            }
+            """)
         .doTest();
   }
 }

@@ -60,13 +60,16 @@ public class EnclosedByReverseHeuristicTest {
     CompilationTestHelper.newInstance(EnclosedByReverseHeuristicChecker.class, getClass())
         .addSourceLines(
             "Test.java",
-            "abstract class Test {",
-            "  abstract void target(Object first, Object second);",
-            "  void test(Object first, Object second) {",
-            "     // BUG: Diagnostic contains: false",
-            "     target(second, first);",
-            "  }",
-            "}")
+            """
+            abstract class Test {
+              abstract void target(Object first, Object second);
+
+              void test(Object first, Object second) {
+                // BUG: Diagnostic contains: false
+                target(second, first);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -75,13 +78,16 @@ public class EnclosedByReverseHeuristicTest {
     CompilationTestHelper.newInstance(EnclosedByReverseHeuristicChecker.class, getClass())
         .addSourceLines(
             "Test.java",
-            "abstract class Test {",
-            "  abstract void target(Object first, Object second);",
-            "  void reverse(Object first, Object second) {",
-            "     // BUG: Diagnostic contains: true",
-            "     target(second, first);",
-            "  }",
-            "}")
+            """
+            abstract class Test {
+              abstract void target(Object first, Object second);
+
+              void reverse(Object first, Object second) {
+                // BUG: Diagnostic contains: true
+                target(second, first);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -90,13 +96,16 @@ public class EnclosedByReverseHeuristicTest {
     CompilationTestHelper.newInstance(EnclosedByReverseHeuristicChecker.class, getClass())
         .addSourceLines(
             "Test.java",
-            "abstract class Reverse {",
-            "  abstract void target(Object first, Object second);",
-            "  void test(Object first, Object second) {",
-            "     // BUG: Diagnostic contains: true",
-            "     target(second, first);",
-            "  }",
-            "}")
+            """
+            abstract class Reverse {
+              abstract void target(Object first, Object second);
+
+              void test(Object first, Object second) {
+                // BUG: Diagnostic contains: true
+                target(second, first);
+              }
+            }
+            """)
         .doTest();
   }
 }

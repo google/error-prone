@@ -32,14 +32,18 @@ public class HashtableContainsTest {
     compilationHelper
         .addSourceLines(
             "test/Test.java",
-            "package test;",
-            "import java.util.concurrent.ConcurrentHashMap;",
-            "class Test {",
-            "  void f(ConcurrentHashMap<String, Integer> m, Integer v) {",
-            "    // BUG: Diagnostic contains: containsValue(v)",
-            "    m.contains(v);",
-            "  }",
-            "}")
+            """
+            package test;
+
+            import java.util.concurrent.ConcurrentHashMap;
+
+            class Test {
+              void f(ConcurrentHashMap<String, Integer> m, Integer v) {
+                // BUG: Diagnostic contains: containsValue(v)
+                m.contains(v);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -48,14 +52,18 @@ public class HashtableContainsTest {
     compilationHelper
         .addSourceLines(
             "test/Test.java",
-            "package test;",
-            "import java.util.Hashtable;",
-            "class Test {",
-            "  void f(Hashtable<String, Integer> m, Integer v) {",
-            "    // BUG: Diagnostic contains: containsValue(v)",
-            "    m.contains(v);",
-            "  }",
-            "}")
+            """
+            package test;
+
+            import java.util.Hashtable;
+
+            class Test {
+              void f(Hashtable<String, Integer> m, Integer v) {
+                // BUG: Diagnostic contains: containsValue(v)
+                m.contains(v);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -64,14 +72,18 @@ public class HashtableContainsTest {
     compilationHelper
         .addSourceLines(
             "test/Test.java",
-            "package test;",
-            "import java.util.Hashtable;",
-            "class Test {",
-            "  void f(Hashtable<String, ? extends Number> m, Integer v) {",
-            "    // BUG: Diagnostic contains: containsValue(v)",
-            "    m.contains(v);",
-            "  }",
-            "}")
+            """
+            package test;
+
+            import java.util.Hashtable;
+
+            class Test {
+              void f(Hashtable<String, ? extends Number> m, Integer v) {
+                // BUG: Diagnostic contains: containsValue(v)
+                m.contains(v);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -80,14 +92,18 @@ public class HashtableContainsTest {
     compilationHelper
         .addSourceLines(
             "test/Test.java",
-            "package test;",
-            "import java.util.Hashtable;",
-            "class Test {",
-            "  void f(Hashtable<String, ? super Integer> m, Integer v) {",
-            "    // BUG: Diagnostic contains: containsValue(v)",
-            "    m.contains(v);",
-            "  }",
-            "}")
+            """
+            package test;
+
+            import java.util.Hashtable;
+
+            class Test {
+              void f(Hashtable<String, ? super Integer> m, Integer v) {
+                // BUG: Diagnostic contains: containsValue(v)
+                m.contains(v);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -96,15 +112,19 @@ public class HashtableContainsTest {
     compilationHelper
         .addSourceLines(
             "test/Test.java",
-            "package test;",
-            "import java.util.Hashtable;",
-            "class Test {",
-            "  void f(Hashtable<String, ?> m, String k) {",
-            "    // BUG: Diagnostic contains: 'java.lang.String' could be a key or a value",
-            "    // Did you mean 'm.containsValue(k);' or 'm.containsKey(k);'?",
-            "    m.contains(k);",
-            "  }",
-            "}")
+            """
+            package test;
+
+            import java.util.Hashtable;
+
+            class Test {
+              void f(Hashtable<String, ?> m, String k) {
+                // BUG: Diagnostic contains: 'java.lang.String' could be a key or a value
+                // Did you mean 'm.containsValue(k);' or 'm.containsKey(k);'?
+                m.contains(k);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -113,16 +133,20 @@ public class HashtableContainsTest {
     compilationHelper
         .addSourceLines(
             "test/Test.java",
-            "package test;",
-            "import java.util.Hashtable;",
-            "class Test {",
-            "  void f(Hashtable<String, Integer> m, String k) {",
-            "    // BUG: Diagnostic contains:",
-            "    // argument type 'java.lang.String' looks like a key",
-            "    // Did you mean 'm.containsKey(k);'",
-            "    m.contains(k);",
-            "  }",
-            "}")
+            """
+            package test;
+
+            import java.util.Hashtable;
+
+            class Test {
+              void f(Hashtable<String, Integer> m, String k) {
+                // BUG: Diagnostic contains:
+                // argument type 'java.lang.String' looks like a key
+                // Did you mean 'm.containsKey(k);'
+                m.contains(k);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -131,15 +155,20 @@ public class HashtableContainsTest {
     compilationHelper
         .addSourceLines(
             "test/Test.java",
-            "package test;",
-            "import java.util.Hashtable;",
-            "class MyHashTable<K, V> extends Hashtable<K, V> {",
-            "  @Override public boolean contains(Object v) {",
-            "    // BUG: Diagnostic contains:",
-            "    // Did you mean 'return containsValue(v);' or 'return containsKey(v);'?",
-            "    return contains(v);",
-            "  }",
-            "}")
+            """
+            package test;
+
+            import java.util.Hashtable;
+
+            class MyHashTable<K, V> extends Hashtable<K, V> {
+              @Override
+              public boolean contains(Object v) {
+                // BUG: Diagnostic contains:
+                // Did you mean 'return containsValue(v);' or 'return containsKey(v);'?
+                return contains(v);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -148,15 +177,19 @@ public class HashtableContainsTest {
     compilationHelper
         .addSourceLines(
             "test/Test.java",
-            "package test;",
-            "import java.util.Hashtable;",
-            "class Test {",
-            "  void f(Hashtable<Number, Integer> m, Integer v) {",
-            "    // BUG: Diagnostic contains: 'java.lang.Number' could be a key or a value",
-            "    // Did you mean 'm.containsValue(v);' or 'm.containsKey(v);'?",
-            "    m.contains(v);",
-            "  }",
-            "}")
+            """
+            package test;
+
+            import java.util.Hashtable;
+
+            class Test {
+              void f(Hashtable<Number, Integer> m, Integer v) {
+                // BUG: Diagnostic contains: 'java.lang.Number' could be a key or a value
+                // Did you mean 'm.containsValue(v);' or 'm.containsKey(v);'?
+                m.contains(v);
+              }
+            }
+            """)
         .doTest();
   }
 }

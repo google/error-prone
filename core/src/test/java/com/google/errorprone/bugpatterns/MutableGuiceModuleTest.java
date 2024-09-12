@@ -31,11 +31,14 @@ public class MutableGuiceModuleTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.inject.AbstractModule;",
-            "class Test extends AbstractModule {",
-            "  // BUG: Diagnostic contains:",
-            "  String x = new String();",
-            "}")
+            """
+            import com.google.inject.AbstractModule;
+
+            class Test extends AbstractModule {
+              // BUG: Diagnostic contains:
+              String x = new String();
+            }
+            """)
         .doTest();
   }
 
@@ -44,11 +47,14 @@ public class MutableGuiceModuleTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.inject.AbstractModule;",
-            "class Test extends AbstractModule {",
-            "  // BUG: Diagnostic contains: Object is mutable",
-            "  final Object x = new Object();",
-            "}")
+            """
+            import com.google.inject.AbstractModule;
+
+            class Test extends AbstractModule {
+              // BUG: Diagnostic contains: Object is mutable
+              final Object x = new Object();
+            }
+            """)
         .doTest();
   }
 
@@ -57,10 +63,13 @@ public class MutableGuiceModuleTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.inject.AbstractModule;",
-            "class Test extends AbstractModule {",
-            "  final String x = new String();",
-            "}")
+            """
+            import com.google.inject.AbstractModule;
+
+            class Test extends AbstractModule {
+              final String x = new String();
+            }
+            """)
         .doTest();
   }
 
@@ -68,10 +77,12 @@ public class MutableGuiceModuleTest {
   public void negativeNotAModule() {
     testHelper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  String x = new String();",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              String x = new String();
+            }
+            """)
         .doTest();
   }
 }

@@ -42,14 +42,17 @@ public class MockitoUsageTest {
         .addSourceLines("Foo.java", FOO_SOURCE)
         .addSourceLines(
             "Test.java",
-            "import static org.mockito.Mockito.mock;",
-            "import static org.mockito.Mockito.when;",
-            "class Test {",
-            "  void test() {",
-            "    Foo mock = mock(Foo.class);",
-            "    when(mock.get()).thenReturn(null);",
-            "  }",
-            "}")
+            """
+            import static org.mockito.Mockito.mock;
+            import static org.mockito.Mockito.when;
+
+            class Test {
+              void test() {
+                Foo mock = mock(Foo.class);
+                when(mock.get()).thenReturn(null);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -59,14 +62,17 @@ public class MockitoUsageTest {
         .addSourceLines("Foo.java", FOO_SOURCE)
         .addSourceLines(
             "Test.java",
-            "import static org.mockito.Mockito.mock;",
-            "import static org.mockito.Mockito.verify;",
-            "class Test {",
-            "  void test() {",
-            "    Foo mock = mock(Foo.class);",
-            "    verify(mock).execute();",
-            "  }",
-            "}")
+            """
+            import static org.mockito.Mockito.mock;
+            import static org.mockito.Mockito.verify;
+
+            class Test {
+              void test() {
+                Foo mock = mock(Foo.class);
+                verify(mock).execute();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -76,18 +82,21 @@ public class MockitoUsageTest {
         .addSourceLines("Foo.java", FOO_SOURCE)
         .addSourceLines(
             "Test.java",
-            "import static org.mockito.Mockito.mock;",
-            "import static org.mockito.Mockito.verify;",
-            "import static org.mockito.Mockito.never;",
-            "class Test {",
-            "  void test() {",
-            "    Foo mock = mock(Foo.class);",
-            "    // BUG: Diagnostic contains:",
-            "    // Missing method call for verify(mock, never())",
-            "    // verifyZeroInteractions(mock);",
-            "    verify(mock, never());",
-            "  }",
-            "}")
+            """
+            import static org.mockito.Mockito.mock;
+            import static org.mockito.Mockito.verify;
+            import static org.mockito.Mockito.never;
+
+            class Test {
+              void test() {
+                Foo mock = mock(Foo.class);
+                // BUG: Diagnostic contains:
+                // Missing method call for verify(mock, never())
+                // verifyZeroInteractions(mock);
+                verify(mock, never());
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -97,18 +106,21 @@ public class MockitoUsageTest {
         .addSourceLines("Foo.java", FOO_SOURCE)
         .addSourceLines(
             "Test.java",
-            "import static org.mockito.Mockito.mock;",
-            "import static org.mockito.Mockito.verify;",
-            "import static org.mockito.Mockito.never;",
-            "class Test {",
-            "  void test() {",
-            "    Foo mock = mock(Foo.class);",
-            "    // BUG: Diagnostic contains:",
-            "    // Missing method call for verify(mock.execute(), never())",
-            "    // verify(mock, never()).execute();",
-            "    verify(mock.execute(), never());",
-            "  }",
-            "}")
+            """
+            import static org.mockito.Mockito.mock;
+            import static org.mockito.Mockito.verify;
+            import static org.mockito.Mockito.never;
+
+            class Test {
+              void test() {
+                Foo mock = mock(Foo.class);
+                // BUG: Diagnostic contains:
+                // Missing method call for verify(mock.execute(), never())
+                // verify(mock, never()).execute();
+                verify(mock.execute(), never());
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -118,17 +130,20 @@ public class MockitoUsageTest {
         .addSourceLines("Foo.java", FOO_SOURCE)
         .addSourceLines(
             "Test.java",
-            "import static org.mockito.Mockito.mock;",
-            "import static org.mockito.Mockito.when;",
-            "class Test {",
-            "  void test() {",
-            "    Foo mock = mock(Foo.class);",
-            "    // BUG: Diagnostic contains:",
-            "    // Missing method call for when(mock.get()) here",
-            "    // remove this line",
-            "    when(mock.get());",
-            "  }",
-            "}")
+            """
+            import static org.mockito.Mockito.mock;
+            import static org.mockito.Mockito.when;
+
+            class Test {
+              void test() {
+                Foo mock = mock(Foo.class);
+                // BUG: Diagnostic contains:
+                // Missing method call for when(mock.get()) here
+                // remove this line
+                when(mock.get());
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -138,17 +153,20 @@ public class MockitoUsageTest {
         .addSourceLines("Foo.java", FOO_SOURCE)
         .addSourceLines(
             "Test.java",
-            "import static org.mockito.Mockito.mock;",
-            "import static org.mockito.Mockito.verify;",
-            "class Test {",
-            "  void test() {",
-            "    Foo mock = mock(Foo.class);",
-            "    // BUG: Diagnostic contains:",
-            "    // Missing method call for verify(mock.execute()) here",
-            "    // verify(mock).execute();",
-            "    verify(mock.execute());",
-            "  }",
-            "}")
+            """
+            import static org.mockito.Mockito.mock;
+            import static org.mockito.Mockito.verify;
+
+            class Test {
+              void test() {
+                Foo mock = mock(Foo.class);
+                // BUG: Diagnostic contains:
+                // Missing method call for verify(mock.execute()) here
+                // verify(mock).execute();
+                verify(mock.execute());
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -158,17 +176,20 @@ public class MockitoUsageTest {
         .addSourceLines("Foo.java", FOO_SOURCE)
         .addSourceLines(
             "Test.java",
-            "import static org.mockito.Mockito.mock;",
-            "import static org.mockito.Mockito.verify;",
-            "class Test {",
-            "  void test() {",
-            "    Foo mock = mock(Foo.class);",
-            "    // BUG: Diagnostic contains:",
-            "    // Missing method call for verify(mock) here",
-            "    // remove this line",
-            "    verify(mock);",
-            "  }",
-            "}")
+            """
+            import static org.mockito.Mockito.mock;
+            import static org.mockito.Mockito.verify;
+
+            class Test {
+              void test() {
+                Foo mock = mock(Foo.class);
+                // BUG: Diagnostic contains:
+                // Missing method call for verify(mock) here
+                // remove this line
+                verify(mock);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -178,18 +199,21 @@ public class MockitoUsageTest {
         .addSourceLines("Foo.java", FOO_SOURCE)
         .addSourceLines(
             "Test.java",
-            "import static org.mockito.Mockito.mock;",
-            "import static org.mockito.Mockito.verify;",
-            "import static org.mockito.Mockito.times;",
-            "class Test {",
-            "  void test() {",
-            "    Foo mock = mock(Foo.class);",
-            "    // BUG: Diagnostic contains:",
-            "    // Missing method call for verify(mock.execute(), times(1))",
-            "    // verify(mock, times(1)).execute();",
-            "    verify(mock.execute(), times(1));",
-            "  }",
-            "}")
+            """
+            import static org.mockito.Mockito.mock;
+            import static org.mockito.Mockito.verify;
+            import static org.mockito.Mockito.times;
+
+            class Test {
+              void test() {
+                Foo mock = mock(Foo.class);
+                // BUG: Diagnostic contains:
+                // Missing method call for verify(mock.execute(), times(1))
+                // verify(mock, times(1)).execute();
+                verify(mock.execute(), times(1));
+              }
+            }
+            """)
         .doTest();
   }
 }

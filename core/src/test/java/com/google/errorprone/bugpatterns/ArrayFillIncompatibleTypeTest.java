@@ -38,12 +38,15 @@ public class ArrayFillIncompatibleTypeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.Arrays;",
-            "class Test {",
-            "  void something(boolean b, Object[] o) {",
-            "     Arrays.fill(o, b);",
-            "  }",
-            "}")
+            """
+            import java.util.Arrays;
+
+            class Test {
+              void something(boolean b, Object[] o) {
+                Arrays.fill(o, b);
+              }
+            }
+            """)
         .setArgs(Arrays.asList("-source", "1.6", "-target", "1.6"))
         .doTest();
   }
@@ -53,17 +56,20 @@ public class ArrayFillIncompatibleTypeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.Arrays;",
-            "class Test {",
-            "  void something(String b, Integer[] o, Number n) {",
-            "     // BUG: Diagnostic contains: ",
-            "     Arrays.fill(o, b);",
-            "     // BUG: Diagnostic contains: ",
-            "     Arrays.fill(o, 2.0d);",
-            "     // BUG: Diagnostic contains: ",
-            "     Arrays.fill(o, n);",
-            "  }",
-            "}")
+            """
+            import java.util.Arrays;
+
+            class Test {
+              void something(String b, Integer[] o, Number n) {
+                // BUG: Diagnostic contains:
+                Arrays.fill(o, b);
+                // BUG: Diagnostic contains:
+                Arrays.fill(o, 2.0d);
+                // BUG: Diagnostic contains:
+                Arrays.fill(o, n);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -72,16 +78,23 @@ public class ArrayFillIncompatibleTypeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.Arrays;",
-            "class Test {",
-            "  enum Foo {BAR, BAZ};",
-            "  void something(Foo[] o, String[] s) {",
-            "     Arrays.fill(o, true ? Foo.BAR : Foo.BAZ);",
-            "     Arrays.fill(s, true ? \"a\" : \"b\");",
-            "     // BUG: Diagnostic contains: ",
-            "     Arrays.fill(s, true ? \"a\" : 123);",
-            "  }",
-            "}")
+            """
+            import java.util.Arrays;
+
+            class Test {
+              enum Foo {
+                BAR,
+                BAZ
+              };
+
+              void something(Foo[] o, String[] s) {
+                Arrays.fill(o, true ? Foo.BAR : Foo.BAZ);
+                Arrays.fill(s, true ? "a" : "b");
+                // BUG: Diagnostic contains:
+                Arrays.fill(s, true ? "a" : 123);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -90,20 +103,23 @@ public class ArrayFillIncompatibleTypeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.Arrays;",
-            "class Test {",
-            "  void something(int i, long l, Integer[] o) {",
-            "     Arrays.fill(o, 1);",
-            "     Arrays.fill(o, i);",
-            "     Arrays.fill(o, 0, 4, i);",
-            "     // BUG: Diagnostic contains: ",
-            "     Arrays.fill(o, l);",
-            "     // BUG: Diagnostic contains: ",
-            "     Arrays.fill(o, 4L);",
-            "     // BUG: Diagnostic contains: ",
-            "     Arrays.fill(o, 0, 4, l);",
-            "  }",
-            "}")
+            """
+            import java.util.Arrays;
+
+            class Test {
+              void something(int i, long l, Integer[] o) {
+                Arrays.fill(o, 1);
+                Arrays.fill(o, i);
+                Arrays.fill(o, 0, 4, i);
+                // BUG: Diagnostic contains:
+                Arrays.fill(o, l);
+                // BUG: Diagnostic contains:
+                Arrays.fill(o, 4L);
+                // BUG: Diagnostic contains:
+                Arrays.fill(o, 0, 4, l);
+              }
+            }
+            """)
         .doTest();
   }
 }

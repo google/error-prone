@@ -128,12 +128,15 @@ public class JUnit3FloatingPointComparisonWithoutDeltaTest {
     compilationHelper
         .addSourceLines(
             "SampleClass.java",
-            "public class SampleClass {",
-            "  public void assertEquals(double d1, double d2) {}",
-            "  public void f() {",
-            "    assertEquals(1.0, 1.0);",
-            "  }",
-            "}")
+            """
+            public class SampleClass {
+              public void assertEquals(double d1, double d2) {}
+
+              public void f() {
+                assertEquals(1.0, 1.0);
+              }
+            }
+            """)
         .doTest();
   }
 

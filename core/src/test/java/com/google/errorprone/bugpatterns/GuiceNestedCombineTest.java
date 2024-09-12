@@ -31,35 +31,42 @@ public final class GuiceNestedCombineTest {
     refactoringTestHelper
         .addInputLines(
             "Test.java",
-            "import com.google.inject.AbstractModule;",
-            "import com.google.inject.Guice;",
-            "import com.google.inject.util.Modules;",
-            "class Test {",
-            "  private class ModuleA extends AbstractModule {}",
-            "  private class ModuleB extends AbstractModule {}",
-            "  private class ModuleC extends AbstractModule {}",
-            "  public void test() {",
-            "    Guice.createInjector(",
-            "      new ModuleA(),",
-            "      Modules.combine(new ModuleB(), new ModuleC()));",
-            "  }",
-            "}")
+            """
+            import com.google.inject.AbstractModule;
+            import com.google.inject.Guice;
+            import com.google.inject.util.Modules;
+
+            class Test {
+              private class ModuleA extends AbstractModule {}
+
+              private class ModuleB extends AbstractModule {}
+
+              private class ModuleC extends AbstractModule {}
+
+              public void test() {
+                Guice.createInjector(new ModuleA(), Modules.combine(new ModuleB(), new ModuleC()));
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import com.google.inject.AbstractModule;",
-            "import com.google.inject.Guice;",
-            "import com.google.inject.util.Modules;",
-            "class Test {",
-            "  private class ModuleA extends AbstractModule {}",
-            "  private class ModuleB extends AbstractModule {}",
-            "  private class ModuleC extends AbstractModule {}",
-            "  public void test() {",
-            "    Guice.createInjector(",
-            "      new ModuleA(),",
-            "      new ModuleB(),",
-            "      new ModuleC());",
-            "  }",
-            "}")
+            """
+            import com.google.inject.AbstractModule;
+            import com.google.inject.Guice;
+            import com.google.inject.util.Modules;
+
+            class Test {
+              private class ModuleA extends AbstractModule {}
+
+              private class ModuleB extends AbstractModule {}
+
+              private class ModuleC extends AbstractModule {}
+
+              public void test() {
+                Guice.createInjector(new ModuleA(), new ModuleB(), new ModuleC());
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -68,36 +75,46 @@ public final class GuiceNestedCombineTest {
     refactoringTestHelper
         .addInputLines(
             "Test.java",
-            "import com.google.inject.AbstractModule;",
-            "import com.google.inject.Module;",
-            "import com.google.inject.util.Modules;",
-            "class Test {",
-            "  private class ModuleA extends AbstractModule {}",
-            "  private class ModuleB extends AbstractModule {}",
-            "  private class ModuleC extends AbstractModule {}",
-            "  public void test() {",
-            "    foo(",
-            "      new ModuleA(),",
-            "      Modules.combine(new ModuleB(), new ModuleC()));",
-            "  }",
-            "  public void foo(Module... xs) {}",
-            "}")
+            """
+            import com.google.inject.AbstractModule;
+            import com.google.inject.Module;
+            import com.google.inject.util.Modules;
+
+            class Test {
+              private class ModuleA extends AbstractModule {}
+
+              private class ModuleB extends AbstractModule {}
+
+              private class ModuleC extends AbstractModule {}
+
+              public void test() {
+                foo(new ModuleA(), Modules.combine(new ModuleB(), new ModuleC()));
+              }
+
+              public void foo(Module... xs) {}
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import com.google.inject.AbstractModule;",
-            "import com.google.inject.Module;",
-            "import com.google.inject.util.Modules;",
-            "class Test {",
-            "  private class ModuleA extends AbstractModule {}",
-            "  private class ModuleB extends AbstractModule {}",
-            "  private class ModuleC extends AbstractModule {}",
-            "  public void test() {",
-            "    foo(",
-            "      new ModuleA(),",
-            "      new ModuleB(), new ModuleC());",
-            "  }",
-            "  public void foo(Module... xs) {}",
-            "}")
+            """
+            import com.google.inject.AbstractModule;
+            import com.google.inject.Module;
+            import com.google.inject.util.Modules;
+
+            class Test {
+              private class ModuleA extends AbstractModule {}
+
+              private class ModuleB extends AbstractModule {}
+
+              private class ModuleC extends AbstractModule {}
+
+              public void test() {
+                foo(new ModuleA(), new ModuleB(), new ModuleC());
+              }
+
+              public void foo(Module... xs) {}
+            }
+            """)
         .doTest();
   }
 
@@ -106,32 +123,38 @@ public final class GuiceNestedCombineTest {
     refactoringTestHelper
         .addInputLines(
             "Test.java",
-            "import com.google.inject.AbstractModule;",
-            "import com.google.inject.Module;",
-            "import com.google.inject.util.Modules;",
-            "class Test {",
-            "  private class ModuleA extends AbstractModule {}",
-            "  public void test() {",
-            "    foo(",
-            "      new ModuleA(),",
-            "      Modules.combine(new ModuleA()));",
-            "  }",
-            "  public void foo(Module... xs) {}",
-            "}")
+            """
+            import com.google.inject.AbstractModule;
+            import com.google.inject.Module;
+            import com.google.inject.util.Modules;
+
+            class Test {
+              private class ModuleA extends AbstractModule {}
+
+              public void test() {
+                foo(new ModuleA(), Modules.combine(new ModuleA()));
+              }
+
+              public void foo(Module... xs) {}
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import com.google.inject.AbstractModule;",
-            "import com.google.inject.Module;",
-            "import com.google.inject.util.Modules;",
-            "class Test {",
-            "  private class ModuleA extends AbstractModule {}",
-            "  public void test() {",
-            "    foo(",
-            "      new ModuleA(),",
-            "      new ModuleA());",
-            "  }",
-            "  public void foo(Module... xs) {}",
-            "}")
+            """
+            import com.google.inject.AbstractModule;
+            import com.google.inject.Module;
+            import com.google.inject.util.Modules;
+
+            class Test {
+              private class ModuleA extends AbstractModule {}
+
+              public void test() {
+                foo(new ModuleA(), new ModuleA());
+              }
+
+              public void foo(Module... xs) {}
+            }
+            """)
         .doTest();
   }
 
@@ -140,18 +163,21 @@ public final class GuiceNestedCombineTest {
     refactoringTestHelper
         .addInputLines(
             "Test.java",
-            "import com.google.inject.AbstractModule;",
-            "import com.google.inject.Module;",
-            "import com.google.inject.util.Modules;",
-            "class Test {",
-            "  private class ModuleA extends AbstractModule {}",
-            "  public void test() {",
-            "    foo(",
-            "      new ModuleA(),",
-            "      Modules.combine());",
-            "  }",
-            "  public void foo(Module... xs) {}",
-            "}")
+            """
+            import com.google.inject.AbstractModule;
+            import com.google.inject.Module;
+            import com.google.inject.util.Modules;
+
+            class Test {
+              private class ModuleA extends AbstractModule {}
+
+              public void test() {
+                foo(new ModuleA(), Modules.combine());
+              }
+
+              public void foo(Module... xs) {}
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -161,19 +187,22 @@ public final class GuiceNestedCombineTest {
     refactoringTestHelper
         .addInputLines(
             "Test.java",
-            "import com.google.common.collect.ImmutableList;",
-            "import com.google.inject.AbstractModule;",
-            "import com.google.inject.Module;",
-            "import com.google.inject.util.Modules;",
-            "class Test {",
-            "  private class ModuleA extends AbstractModule {}",
-            "  public void test() {",
-            "    foo(",
-            "      new ModuleA(),",
-            "      Modules.combine(ImmutableList.of(new ModuleA())));",
-            "  }",
-            "  public void foo(Module... xs) {}",
-            "}")
+            """
+            import com.google.common.collect.ImmutableList;
+            import com.google.inject.AbstractModule;
+            import com.google.inject.Module;
+            import com.google.inject.util.Modules;
+
+            class Test {
+              private class ModuleA extends AbstractModule {}
+
+              public void test() {
+                foo(new ModuleA(), Modules.combine(ImmutableList.of(new ModuleA())));
+              }
+
+              public void foo(Module... xs) {}
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -183,15 +212,19 @@ public final class GuiceNestedCombineTest {
     refactoringTestHelper
         .addInputLines(
             "Test.java",
-            "import com.google.inject.AbstractModule;",
-            "import com.google.inject.Module;",
-            "import com.google.inject.util.Modules;",
-            "class Test {",
-            "  public void test(Module[] ms) {",
-            "    foo(Modules.combine(ms));",
-            "  }",
-            "  public void foo(Module... xs) {}",
-            "}")
+            """
+            import com.google.inject.AbstractModule;
+            import com.google.inject.Module;
+            import com.google.inject.util.Modules;
+
+            class Test {
+              public void test(Module[] ms) {
+                foo(Modules.combine(ms));
+              }
+
+              public void foo(Module... xs) {}
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -201,20 +234,25 @@ public final class GuiceNestedCombineTest {
     refactoringTestHelper
         .addInputLines(
             "Test.java",
-            "import com.google.inject.AbstractModule;",
-            "import com.google.inject.Module;",
-            "import com.google.inject.util.Modules;",
-            "class Test {",
-            "  private class ModuleA extends AbstractModule {}",
-            "  private class ModuleB extends AbstractModule {}",
-            "  private class ModuleC extends AbstractModule {}",
-            "  public void test() {",
-            "    foo(",
-            "      new ModuleA(),",
-            "      Modules.combine(new ModuleB(), new ModuleC()));",
-            "  }",
-            "  public void foo(Module a, Module b) {}",
-            "}")
+            """
+            import com.google.inject.AbstractModule;
+            import com.google.inject.Module;
+            import com.google.inject.util.Modules;
+
+            class Test {
+              private class ModuleA extends AbstractModule {}
+
+              private class ModuleB extends AbstractModule {}
+
+              private class ModuleC extends AbstractModule {}
+
+              public void test() {
+                foo(new ModuleA(), Modules.combine(new ModuleB(), new ModuleC()));
+              }
+
+              public void foo(Module a, Module b) {}
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -224,38 +262,49 @@ public final class GuiceNestedCombineTest {
     refactoringTestHelper
         .addInputLines(
             "Test.java",
-            "import com.google.inject.AbstractModule;",
-            "import com.google.inject.Module;",
-            "import com.google.inject.util.Modules;",
-            "class Test {",
-            "  private class ModuleA extends AbstractModule {}",
-            "  private class ModuleB extends AbstractModule {}",
-            "  private class ModuleC extends AbstractModule {}",
-            "  public void test() {",
-            "    foo(",
-            "      new ModuleA(),",
-            "      Modules.combine(new ModuleB(), new ModuleC()),",
-            "      Modules.combine(new ModuleB(), new ModuleC()));",
-            "  }",
-            "  public void foo(Module a, Module... b) {}",
-            "}")
+            """
+            import com.google.inject.AbstractModule;
+            import com.google.inject.Module;
+            import com.google.inject.util.Modules;
+
+            class Test {
+              private class ModuleA extends AbstractModule {}
+
+              private class ModuleB extends AbstractModule {}
+
+              private class ModuleC extends AbstractModule {}
+
+              public void test() {
+                foo(
+                    new ModuleA(),
+                    Modules.combine(new ModuleB(), new ModuleC()),
+                    Modules.combine(new ModuleB(), new ModuleC()));
+              }
+
+              public void foo(Module a, Module... b) {}
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import com.google.inject.AbstractModule;",
-            "import com.google.inject.Module;",
-            "import com.google.inject.util.Modules;",
-            "class Test {",
-            "  private class ModuleA extends AbstractModule {}",
-            "  private class ModuleB extends AbstractModule {}",
-            "  private class ModuleC extends AbstractModule {}",
-            "  public void test() {",
-            "    foo(",
-            "      new ModuleA(),",
-            "      new ModuleB(), new ModuleC(),",
-            "      new ModuleB(), new ModuleC());",
-            "  }",
-            "  public void foo(Module a, Module... b) {}",
-            "}")
+            """
+            import com.google.inject.AbstractModule;
+            import com.google.inject.Module;
+            import com.google.inject.util.Modules;
+
+            class Test {
+              private class ModuleA extends AbstractModule {}
+
+              private class ModuleB extends AbstractModule {}
+
+              private class ModuleC extends AbstractModule {}
+
+              public void test() {
+                foo(new ModuleA(), new ModuleB(), new ModuleC(), new ModuleB(), new ModuleC());
+              }
+
+              public void foo(Module a, Module... b) {}
+            }
+            """)
         .doTest();
   }
 
@@ -264,20 +313,23 @@ public final class GuiceNestedCombineTest {
     refactoringTestHelper
         .addInputLines(
             "Test.java",
-            "import com.google.inject.AbstractModule;",
-            "import com.google.inject.Guice;",
-            "import com.google.inject.util.Modules;",
-            "class Test {",
-            "  private class ModuleA extends AbstractModule {}",
-            "  private class ModuleB extends AbstractModule {}",
-            "  private class ModuleC extends AbstractModule {}",
-            "  public void test() {",
-            "    Guice.createInjector(",
-            "      new ModuleA(),",
-            "      new ModuleB(),",
-            "      new ModuleC());",
-            "  }",
-            "}")
+            """
+            import com.google.inject.AbstractModule;
+            import com.google.inject.Guice;
+            import com.google.inject.util.Modules;
+
+            class Test {
+              private class ModuleA extends AbstractModule {}
+
+              private class ModuleB extends AbstractModule {}
+
+              private class ModuleC extends AbstractModule {}
+
+              public void test() {
+                Guice.createInjector(new ModuleA(), new ModuleB(), new ModuleC());
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -287,20 +339,23 @@ public final class GuiceNestedCombineTest {
     refactoringTestHelper
         .addInputLines(
             "Test.java",
-            "import com.google.inject.AbstractModule;",
-            "import com.google.inject.Module;",
-            "import com.google.inject.util.Modules;",
-            "class Test {",
-            "  private class ModuleA extends AbstractModule {}",
-            "  private class ModuleB extends AbstractModule {}",
-            "  private class ModuleC extends AbstractModule {}",
-            "  public void test() {",
-            "    Module extraModule = Modules.combine(",
-            "      new ModuleA(),",
-            "      new ModuleB(),",
-            "      new ModuleC());",
-            "  }",
-            "}")
+            """
+            import com.google.inject.AbstractModule;
+            import com.google.inject.Module;
+            import com.google.inject.util.Modules;
+
+            class Test {
+              private class ModuleA extends AbstractModule {}
+
+              private class ModuleB extends AbstractModule {}
+
+              private class ModuleC extends AbstractModule {}
+
+              public void test() {
+                Module extraModule = Modules.combine(new ModuleA(), new ModuleB(), new ModuleC());
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }

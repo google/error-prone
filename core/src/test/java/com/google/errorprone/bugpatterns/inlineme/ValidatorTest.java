@@ -34,17 +34,23 @@ public class ValidatorTest {
     helper
         .addSourceLines(
             "Client.java",
-            "package com.google.foo;",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "public final class Client {",
-            "  @InlineMe(replacement = \"new Client();\", imports ={\"com.google.foo.Client\"})",
-            "  @Deprecated",
-            "  public static Client create() {",
-            "    return new Client();",
-            "  }",
-            "  public Client() {",
-            "  }",
-            "}")
+            """
+            package com.google.foo;
+
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class Client {
+              @InlineMe(
+                  replacement = "new Client();",
+                  imports = {"com.google.foo.Client"})
+              @Deprecated
+              public static Client create() {
+                return new Client();
+              }
+
+              public Client() {}
+            }
+            """)
         .doTest();
   }
 
@@ -53,17 +59,21 @@ public class ValidatorTest {
     helper
         .addSourceLines(
             "Client.java",
-            "package com.google.foo;",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "public final class Client {",
-            "  @InlineMe(replacement = \"new Client();\", imports = \"com.google.foo.Client\")",
-            "  @Deprecated",
-            "  public static Client create() {",
-            "    return new Client();",
-            "  }",
-            "  public Client() {",
-            "  }",
-            "}")
+            """
+            package com.google.foo;
+
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class Client {
+              @InlineMe(replacement = "new Client();", imports = "com.google.foo.Client")
+              @Deprecated
+              public static Client create() {
+                return new Client();
+              }
+
+              public Client() {}
+            }
+            """)
         .doTest();
   }
 
@@ -72,16 +82,20 @@ public class ValidatorTest {
     helper
         .addSourceLines(
             "Foo.java",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "import java.time.Duration;",
-            "public final class Foo {",
-            "  @InlineMe(replacement = \"new Duration[size]\", ",
-            "      imports = {\"java.time.Duration\"})",
-            "  @Deprecated",
-            "  public Duration[] someDurations(int size) {",
-            "    return new Duration[size];",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.InlineMe;
+            import java.time.Duration;
+
+            public final class Foo {
+              @InlineMe(
+                  replacement = "new Duration[size]",
+                  imports = {"java.time.Duration"})
+              @Deprecated
+              public Duration[] someDurations(int size) {
+                return new Duration[size];
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -90,16 +104,20 @@ public class ValidatorTest {
     helper
         .addSourceLines(
             "Foo.java",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "import java.time.Duration;",
-            "public final class Foo {",
-            "  @InlineMe(replacement = \"new Duration[size]\", ",
-            "      imports = {\"java.time.Duration\"})",
-            "  @Deprecated",
-            "  public static Duration[] someDurations(int size) {",
-            "    return new Duration[size];",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.InlineMe;
+            import java.time.Duration;
+
+            public final class Foo {
+              @InlineMe(
+                  replacement = "new Duration[size]",
+                  imports = {"java.time.Duration"})
+              @Deprecated
+              public static Duration[] someDurations(int size) {
+                return new Duration[size];
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -108,17 +126,20 @@ public class ValidatorTest {
     helper
         .addSourceLines(
             "Client.java",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "import java.util.function.Supplier;",
-            "public final class Client {",
-            "  @InlineMe(replacement = \"this.after(string);\")",
-            "  @Deprecated",
-            "  public void before(String string) {",
-            "    after(/* string= */ string);",
-            "  }",
-            "  public void after(String string) {",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.InlineMe;
+            import java.util.function.Supplier;
+
+            public final class Client {
+              @InlineMe(replacement = "this.after(string);")
+              @Deprecated
+              public void before(String string) {
+                after(/* string= */ string);
+              }
+
+              public void after(String string) {}
+            }
+            """)
         .doTest();
   }
 
@@ -127,17 +148,20 @@ public class ValidatorTest {
     helper
         .addSourceLines(
             "Client.java",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "import java.util.function.Supplier;",
-            "public final class Client {",
-            "  @InlineMe(replacement = \"this.after(/* name= */ name);\")",
-            "  @Deprecated",
-            "  public void before(String name) {",
-            "    after(/* name= */ name);",
-            "  }",
-            "  public void after(String name) {",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.InlineMe;
+            import java.util.function.Supplier;
+
+            public final class Client {
+              @InlineMe(replacement = "this.after(/* name= */ name);")
+              @Deprecated
+              public void before(String name) {
+                after(/* name= */ name);
+              }
+
+              public void after(String name) {}
+            }
+            """)
         .doTest();
   }
 
@@ -146,17 +170,20 @@ public class ValidatorTest {
     helper
         .addSourceLines(
             "Client.java",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "import java.util.function.Supplier;",
-            "public final class Client {",
-            "  @InlineMe(replacement = \"this.after(/* name1= */ name1, /* name2= */ name2);\")",
-            "  @Deprecated",
-            "  public void before(String name1, String name2) {",
-            "    after(/* name1= */ name1, /* name2= */ name2);",
-            "  }",
-            "  public void after(String name1, String name2) {",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.InlineMe;
+            import java.util.function.Supplier;
+
+            public final class Client {
+              @InlineMe(replacement = "this.after(/* name1= */ name1, /* name2= */ name2);")
+              @Deprecated
+              public void before(String name1, String name2) {
+                after(/* name1= */ name1, /* name2= */ name2);
+              }
+
+              public void after(String name1, String name2) {}
+            }
+            """)
         .doTest();
   }
 
@@ -165,18 +192,21 @@ public class ValidatorTest {
     helper
         .addSourceLines(
             "Client.java",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "import java.util.function.Supplier;",
-            "public final class Client {",
-            "  @InlineMe(replacement = \"this.after(string);\")",
-            "  @Deprecated",
-            "  public void before(String string) {",
-            "    after( // string",
-            "        string);",
-            "  }",
-            "  public void after(String string) {",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.InlineMe;
+            import java.util.function.Supplier;
+
+            public final class Client {
+              @InlineMe(replacement = "this.after(string);")
+              @Deprecated
+              public void before(String string) {
+                after( // string
+                    string);
+              }
+
+              public void after(String string) {}
+            }
+            """)
         .doTest();
   }
 
@@ -185,18 +215,21 @@ public class ValidatorTest {
     helper
         .addSourceLines(
             "Client.java",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "import java.util.function.Supplier;",
-            "public final class Client {",
-            "  @InlineMe(replacement = \"this.after(() -> string);\")",
-            "  @Deprecated",
-            "  // BUG: Diagnostic contains: evaluation timing",
-            "  public void before(String string) {",
-            "    after(() -> string);",
-            "  }",
-            "  public void after(Supplier<String> supplier) {",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.InlineMe;
+            import java.util.function.Supplier;
+
+            public final class Client {
+              @InlineMe(replacement = "this.after(() -> string);")
+              @Deprecated
+              // BUG: Diagnostic contains: evaluation timing
+              public void before(String string) {
+                after(() -> string);
+              }
+
+              public void after(Supplier<String> supplier) {}
+            }
+            """)
         .doTest();
   }
 
@@ -225,18 +258,22 @@ public class ValidatorTest {
     helper
         .addSourceLines(
             "Client.java",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "public final class Client {",
-            "  @InlineMe(replacement = \"this.after(x > 0 ? y : false)\")",
-            "  @Deprecated",
-            "  // BUG: Diagnostic contains: evaluation timing",
-            "  public boolean before(int x, boolean y) {",
-            "    return after(x > 0 ? y : true);",
-            "  }",
-            "  public boolean after(boolean b) {",
-            "    return !b;",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class Client {
+              @InlineMe(replacement = "this.after(x > 0 ? y : false)")
+              @Deprecated
+              // BUG: Diagnostic contains: evaluation timing
+              public boolean before(int x, boolean y) {
+                return after(x > 0 ? y : true);
+              }
+
+              public boolean after(boolean b) {
+                return !b;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -245,20 +282,25 @@ public class ValidatorTest {
     helper
         .addSourceLines(
             "Client.java",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "public final class Client {",
-            "  @InlineMe(replacement = \"x == y ? this.a() : this.b()\")",
-            "  // BUG: Diagnostic contains: complex statement",
-            "  public boolean before(int x, int y) {",
-            "    return x == y ? a() : b();",
-            "  }",
-            "  public boolean a() {",
-            "    return true;",
-            "  }",
-            "  public boolean b() {",
-            "    return false;",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class Client {
+              @InlineMe(replacement = "x == y ? this.a() : this.b()")
+              // BUG: Diagnostic contains: complex statement
+              public boolean before(int x, int y) {
+                return x == y ? a() : b();
+              }
+
+              public boolean a() {
+                return true;
+              }
+
+              public boolean b() {
+                return false;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -267,17 +309,20 @@ public class ValidatorTest {
     helper
         .addSourceLines(
             "Client.java",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "import java.util.function.Function;",
-            "public final class Client {",
-            "  @InlineMe(replacement = \"this.after(str -> Integer.parseInt(str));\")",
-            "  @Deprecated",
-            "  public void before() {",
-            "    after(str -> Integer.parseInt(str));",
-            "  }",
-            "  public void after(Function<String, Integer> function) {",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.InlineMe;
+            import java.util.function.Function;
+
+            public final class Client {
+              @InlineMe(replacement = "this.after(str -> Integer.parseInt(str));")
+              @Deprecated
+              public void before() {
+                after(str -> Integer.parseInt(str));
+              }
+
+              public void after(Function<String, Integer> function) {}
+            }
+            """)
         .doTest();
   }
 
@@ -286,16 +331,20 @@ public class ValidatorTest {
     helper
         .addSourceLines(
             "Client.java",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "public final class Client {",
-            "  private final String str = null;",
-            "  @InlineMe(replacement = \"str;\")",
-            "  @Deprecated",
-            "  // BUG: Diagnostic contains: deprecated or less visible API elements: str",
-            "  public String before() {",
-            "    return str;",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class Client {
+              private final String str = null;
+
+              @InlineMe(replacement = "str;")
+              @Deprecated
+              // BUG: Diagnostic contains: deprecated or less visible API elements: str
+              public String before() {
+                return str;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -304,15 +353,19 @@ public class ValidatorTest {
     helper
         .addSourceLines(
             "Client.java",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "public final class Client {",
-            "  public final String str = null;",
-            "  @InlineMe(replacement = \"this.str;\")",
-            "  @Deprecated",
-            "  public String before() {",
-            "    return str;",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class Client {
+              public final String str = null;
+
+              @InlineMe(replacement = "this.str;")
+              @Deprecated
+              public String before() {
+                return str;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -321,19 +374,22 @@ public class ValidatorTest {
     helper
         .addSourceLines(
             "Client.java",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "public final class Client {",
-            "  @InlineMe(replacement = \"this.privateMethod();\")",
-            "  @Deprecated",
-            "  // BUG: Diagnostic contains: deprecated or less visible API elements:"
-                + " privateMethod()",
-            "  public String before() {",
-            "    return privateMethod();",
-            "  }",
-            "  private String privateMethod() {",
-            "    return null;",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class Client {
+              @InlineMe(replacement = "this.privateMethod();")
+              @Deprecated
+              // BUG: Diagnostic contains: deprecated or less visible API elements: privateMethod()
+              public String before() {
+                return privateMethod();
+              }
+
+              private String privateMethod() {
+                return null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -342,19 +398,21 @@ public class ValidatorTest {
     helper
         .addSourceLines(
             "Client.java",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "import java.util.function.Supplier;",
-            "public final class Client {",
-            "  @InlineMe(replacement = \"this.after(() -> string);\")",
-            "  @Deprecated",
-            "  // BUG: Diagnostic contains: evaluation timing",
-            "  public void before(String string) {",
-            "    after(() ->",
-            "      string);",
-            "  }",
-            "  public void after(Supplier<String> supplier) {",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.InlineMe;
+            import java.util.function.Supplier;
+
+            public final class Client {
+              @InlineMe(replacement = "this.after(() -> string);")
+              @Deprecated
+              // BUG: Diagnostic contains: evaluation timing
+              public void before(String string) {
+                after(() -> string);
+              }
+
+              public void after(Supplier<String> supplier) {}
+            }
+            """)
         .doTest();
   }
 
@@ -365,19 +423,22 @@ public class ValidatorTest {
     helper
         .addSourceLines(
             "ProfileTimer.java",
-            "import com.google.common.base.Ticker;",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "public final class ProfileTimer {",
-            "  @InlineMe(",
-            "      replacement = \"this(Ticker.systemTicker(), name)\", ",
-            "      imports = {\"com.google.common.base.Ticker\"})",
-            "  @Deprecated",
-            "  public ProfileTimer(String name) {",
-            "    this(Ticker.systemTicker(), name);",
-            "  }",
-            "  public ProfileTimer(Ticker ticker, String name) {",
-            "  }",
-            "}")
+            """
+            import com.google.common.base.Ticker;
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class ProfileTimer {
+              @InlineMe(
+                  replacement = "this(Ticker.systemTicker(), name)",
+                  imports = {"com.google.common.base.Ticker"})
+              @Deprecated
+              public ProfileTimer(String name) {
+                this(Ticker.systemTicker(), name);
+              }
+
+              public ProfileTimer(Ticker ticker, String name) {}
+            }
+            """)
         .doTest();
   }
 
@@ -386,18 +447,21 @@ public class ValidatorTest {
     helper
         .addSourceLines(
             "Client.java",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "import java.time.Duration;",
-            "public final class Client {",
-            "  @InlineMe(replacement = \"this.setDeadline(Duration.ofMillis(millis))\")",
-            "  @Deprecated",
-            "  // BUG: Diagnostic matches: BAR",
-            "  public void setDeadlineInMillis(long millis) {",
-            "    this.setDeadline(Duration.ofMillis(millis));",
-            "  }",
-            "  public void setDeadline(Duration deadline) {",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.InlineMe;
+            import java.time.Duration;
+
+            public final class Client {
+              @InlineMe(replacement = "this.setDeadline(Duration.ofMillis(millis))")
+              @Deprecated
+              // BUG: Diagnostic matches: BAR
+              public void setDeadlineInMillis(long millis) {
+                this.setDeadline(Duration.ofMillis(millis));
+              }
+
+              public void setDeadline(Duration deadline) {}
+            }
+            """)
         .expectErrorMessage(
             "BAR",
             str ->
@@ -411,16 +475,19 @@ public class ValidatorTest {
     helper
         .addSourceLines(
             "Client.java",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "public final class Client {",
-            "  @InlineMe(replacement = \"this.setDeadline(java.time.Duration.ofMillis(millis))\")",
-            "  @Deprecated",
-            "  public void setDeadlineInMillis(long millis) {",
-            "    this.setDeadline(java.time.Duration.ofMillis(millis));",
-            "  }",
-            "  public void setDeadline(java.time.Duration deadline) {",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class Client {
+              @InlineMe(replacement = "this.setDeadline(java.time.Duration.ofMillis(millis))")
+              @Deprecated
+              public void setDeadlineInMillis(long millis) {
+                this.setDeadline(java.time.Duration.ofMillis(millis));
+              }
+
+              public void setDeadline(java.time.Duration deadline) {}
+            }
+            """)
         .doTest();
   }
 
@@ -429,16 +496,19 @@ public class ValidatorTest {
     helper
         .addSourceLines(
             "Client.java",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "public final class Client {",
-            "  @Deprecated",
-            "  @InlineMe(replacement = \"this.after(String.valueOf(value))\")",
-            "  public void before(long value) {",
-            "    after(String.valueOf(value));",
-            "  }",
-            "  public void after(String string) {",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class Client {
+              @Deprecated
+              @InlineMe(replacement = "this.after(String.valueOf(value))")
+              public void before(long value) {
+                after(String.valueOf(value));
+              }
+
+              public void after(String string) {}
+            }
+            """)
         .doTest();
   }
 
@@ -447,16 +517,19 @@ public class ValidatorTest {
     helper
         .addSourceLines(
             "Client.java",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "public final class Client {",
-            "  @InlineMe(replacement = \"this.after(\\\"not actually() a method call\\\")\")",
-            "  @Deprecated",
-            "  public void before() {",
-            "    after(\"not actually() a method call\");",
-            "  }",
-            "  public void after(String string) {",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class Client {
+              @InlineMe(replacement = "this.after(\\"not actually() a method call\\")")
+              @Deprecated
+              public void before() {
+                after("not actually() a method call");
+              }
+
+              public void after(String string) {}
+            }
+            """)
         .doTest();
   }
 
@@ -465,15 +538,21 @@ public class ValidatorTest {
     helper
         .addSourceLines(
             "Client.java",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "public final class Client {",
-            "  @InlineMe(replacement = \"try { int x = 0; } catch (RuntimeException e) {}\")",
-            "  @Deprecated",
-            "  // BUG: Diagnostic contains: InlineMe cannot inline complex statements",
-            "  public void before() {",
-            "    try { int x = 0; } catch (RuntimeException e) {}",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class Client {
+              @InlineMe(replacement = "try { int x = 0; } catch (RuntimeException e) {}")
+              @Deprecated
+              // BUG: Diagnostic contains: InlineMe cannot inline complex statements
+              public void before() {
+                try {
+                  int x = 0;
+                } catch (RuntimeException e) {
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -482,15 +561,19 @@ public class ValidatorTest {
     helper
         .addSourceLines(
             "RpcClient.java",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "import java.time.Duration;",
-            "public final class RpcClient {",
-            "  @InlineMe(replacement = \"\")",
-            "  @Deprecated",
-            "  // BUG: Diagnostic contains: cannot inline methods with more than 1 statement",
-            "  public void setDeadline(org.joda.time.Duration deadline) {}",
-            "  public void setDeadline(Duration deadline) {}",
-            "}")
+            """
+            import com.google.errorprone.annotations.InlineMe;
+            import java.time.Duration;
+
+            public final class RpcClient {
+              @InlineMe(replacement = "")
+              @Deprecated
+              // BUG: Diagnostic contains: cannot inline methods with more than 1 statement
+              public void setDeadline(org.joda.time.Duration deadline) {}
+
+              public void setDeadline(Duration deadline) {}
+            }
+            """)
         .doTest();
   }
 
@@ -499,18 +582,22 @@ public class ValidatorTest {
     helper
         .addSourceLines(
             "Client.java",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "import java.time.Duration;",
-            "public final class Client {",
-            "  @InlineMe(replacement = \"this.after(Duration.ZERO);\", ",
-            "      imports = {\"java.time.Duration\"})",
-            "  @Deprecated",
-            "  public void before() {",
-            "    after(Duration.ZERO);",
-            "  }",
-            "  public void after(Duration duration) {",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.InlineMe;
+            import java.time.Duration;
+
+            public final class Client {
+              @InlineMe(
+                  replacement = "this.after(Duration.ZERO);",
+                  imports = {"java.time.Duration"})
+              @Deprecated
+              public void before() {
+                after(Duration.ZERO);
+              }
+
+              public void after(Duration duration) {}
+            }
+            """)
         .doTest();
   }
 
@@ -519,19 +606,23 @@ public class ValidatorTest {
     helper
         .addSourceLines(
             "Client.java",
-            "import static java.time.Duration.ZERO;",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "import java.time.Duration;",
-            "public final class Client {",
-            "  @InlineMe(replacement = \"this.after(ZERO);\", ",
-            "      staticImports = {\"java.time.Duration.ZERO\"})",
-            "  @Deprecated",
-            "  public void before() {",
-            "    after(ZERO);",
-            "  }",
-            "  public void after(Duration duration) {",
-            "  }",
-            "}")
+            """
+            import static java.time.Duration.ZERO;
+            import com.google.errorprone.annotations.InlineMe;
+            import java.time.Duration;
+
+            public final class Client {
+              @InlineMe(
+                  replacement = "this.after(ZERO);",
+                  staticImports = {"java.time.Duration.ZERO"})
+              @Deprecated
+              public void before() {
+                after(ZERO);
+              }
+
+              public void after(Duration duration) {}
+            }
+            """)
         .doTest();
   }
 
@@ -540,20 +631,25 @@ public class ValidatorTest {
     helper
         .addSourceLines(
             "Client.java",
-            "package com.google.foo;",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "public final class Client {",
-            "  @Deprecated",
-            "  @InlineMe(",
-            "      replacement = \"Client.after()\",",
-            "      imports = {\"com.google.foo.Client\"})",
-            "  public static <T> T before() {",
-            "    return after();",
-            "  }",
-            "  public static <T> T after() {",
-            "    return (T) null;",
-            "  }",
-            "}")
+            """
+            package com.google.foo;
+
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class Client {
+              @Deprecated
+              @InlineMe(
+                  replacement = "Client.after()",
+                  imports = {"com.google.foo.Client"})
+              public static <T> T before() {
+                return after();
+              }
+
+              public static <T> T after() {
+                return (T) null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -595,25 +691,30 @@ public class ValidatorTest {
     helper
         .addSourceLines(
             "Client.java",
-            "package com.google.frobber;",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "import java.time.Duration;",
-            "public final class Client {",
-            "  public static final class Builder {",
-            "    @InlineMe(",
-            "        replacement = \"this.setDeadline(Client.Builder.parseDuration(deadline));\",",
-            "        imports = {\"com.google.frobber.Client\"})",
-            "    @Deprecated",
-            "    public void setDeadline(String deadline) {",
-            "      setDeadline(Client.Builder.parseDuration(deadline));",
-            "    }",
-            "    public void setDeadline(Duration deadline) {",
-            "    }",
-            "    public static Duration parseDuration(String string) {",
-            "      return Duration.parse(string);",
-            "    }",
-            "  }",
-            "}")
+            """
+            package com.google.frobber;
+
+            import com.google.errorprone.annotations.InlineMe;
+            import java.time.Duration;
+
+            public final class Client {
+              public static final class Builder {
+                @InlineMe(
+                    replacement = "this.setDeadline(Client.Builder.parseDuration(deadline));",
+                    imports = {"com.google.frobber.Client"})
+                @Deprecated
+                public void setDeadline(String deadline) {
+                  setDeadline(Client.Builder.parseDuration(deadline));
+                }
+
+                public void setDeadline(Duration deadline) {}
+
+                public static Duration parseDuration(String string) {
+                  return Duration.parse(string);
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -622,16 +723,20 @@ public class ValidatorTest {
     helper
         .addSourceLines(
             "RpcClient.java",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "public final class RpcClient {",
-            "  private String name;",
-            "  @InlineMe(replacement = \"this.name = name;\")",
-            "  @Deprecated",
-            "  // BUG: Diagnostic contains: deprecated or less visible API elements: this.name",
-            "  public void setName(String name) {",
-            "    this.name = name;",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class RpcClient {
+              private String name;
+
+              @InlineMe(replacement = "this.name = name;")
+              @Deprecated
+              // BUG: Diagnostic contains: deprecated or less visible API elements: this.name
+              public void setName(String name) {
+                this.name = name;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -640,15 +745,19 @@ public class ValidatorTest {
     helper
         .addSourceLines(
             "RpcClient.java",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "public final class RpcClient {",
-            "  public String name;",
-            "  @InlineMe(replacement = \"this.name = name;\")",
-            "  @Deprecated",
-            "  public void setName(String name) {",
-            "    this.name = name;",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class RpcClient {
+              public String name;
+
+              @InlineMe(replacement = "this.name = name;")
+              @Deprecated
+              public void setName(String name) {
+                this.name = name;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -657,16 +766,21 @@ public class ValidatorTest {
     helper
         .addSourceLines(
             "Client.java",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "public final class Client {",
-            "  @SuppressWarnings(\"InlineMeValidator\")",
-            "  @Deprecated",
-            "  @InlineMe(replacement = \"Client.create()\", imports = \"foo.Client\")",
-            "  // BUG: Diagnostic contains: cannot be applied",
-            "  public Client() {}",
-            "  ",
-            "  public static Client create() { return new Client(); }",
-            "}")
+            """
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class Client {
+              @SuppressWarnings("InlineMeValidator")
+              @Deprecated
+              @InlineMe(replacement = "Client.create()", imports = "foo.Client")
+              // BUG: Diagnostic contains: cannot be applied
+              public Client() {}
+
+              public static Client create() {
+                return new Client();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -675,16 +789,21 @@ public class ValidatorTest {
     helper
         .addSourceLines(
             "Client.java",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "import com.google.errorprone.annotations." + "InlineMeValidationDisabled;",
-            "public final class Client {",
-            "  @InlineMeValidationDisabled(\"Migrating to factory method\")",
-            "  @Deprecated",
-            "  @InlineMe(replacement = \"Client.create()\", imports = \"foo.Client\")",
-            "  public Client() {}",
-            "  ",
-            "  public static Client create() { return new Client(); }",
-            "}")
+            """
+            import com.google.errorprone.annotations.InlineMe;
+            import com.google.errorprone.annotations.InlineMeValidationDisabled;
+
+            public final class Client {
+              @InlineMeValidationDisabled("Migrating to factory method")
+              @Deprecated
+              @InlineMe(replacement = "Client.create()", imports = "foo.Client")
+              public Client() {}
+
+              public static Client create() {
+                return new Client();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -722,16 +841,20 @@ public class ValidatorTest {
     helper
         .addSourceLines(
             "Client.java",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "public final class Client {",
-            "  @Deprecated",
-            "  @InlineMe(replacement = \"this.after(inputs)\")",
-            "    // BUG: Diagnostic contains: varargs",
-            "  public void before(int... inputs) {",
-            "    after(inputs);",
-            "  }",
-            "  public void after(int[] inputs) {}",
-            "}")
+            """
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class Client {
+              @Deprecated
+              @InlineMe(replacement = "this.after(inputs)")
+              // BUG: Diagnostic contains: varargs
+              public void before(int... inputs) {
+                after(inputs);
+              }
+
+              public void after(int[] inputs) {}
+            }
+            """)
         .doTest();
   }
 
@@ -740,15 +863,18 @@ public class ValidatorTest {
     helper
         .addSourceLines(
             "Client.java",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "public final class Client {",
-            "  @Deprecated",
-            "  @InlineMe(replacement = \"return\")",
-            "  // BUG: Diagnostic contains: no-op",
-            "  public void noOp() {",
-            "    return;",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class Client {
+              @Deprecated
+              @InlineMe(replacement = "return")
+              // BUG: Diagnostic contains: no-op
+              public void noOp() {
+                return;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -757,14 +883,17 @@ public class ValidatorTest {
     helper
         .addSourceLines(
             "Client.java",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "public final class Client {",
-            "  @Deprecated",
-            "  @InlineMe(replacement = \"x * y\")",
-            "  public final int multiply(int x, int y) {",
-            "    return x * y;",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class Client {
+              @Deprecated
+              @InlineMe(replacement = "x * y")
+              public final int multiply(int x, int y) {
+                return x * y;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -772,13 +901,18 @@ public class ValidatorTest {
   public void customInlineMe() {
     helper
         .addSourceLines(
-            "InlineMe.java", //
-            "package bespoke;",
-            "public @interface InlineMe {",
-            "  String replacement();",
-            "  String[] imports() default {};",
-            "  String[] staticImports() default {};",
-            "}")
+            "InlineMe.java",
+            """
+            package bespoke;
+
+            public @interface InlineMe {
+              String replacement();
+
+              String[] imports() default {};
+
+              String[] staticImports() default {};
+            }
+            """)
         .addSourceLines(
             "Client.java",
             "import bespoke.InlineMe;",

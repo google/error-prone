@@ -32,12 +32,14 @@ public class IsInstanceOfClassTest {
     compilationHelper
         .addSourceLines(
             "pkg/A.java",
-            "class A {",
-            "  boolean m(Class<?> clazz) {",
-            "    // BUG: Diagnostic contains: clazz.isAssignableFrom(getClass())",
-            "    return getClass().isInstance(clazz);",
-            "  }",
-            "}")
+            """
+            class A {
+              boolean m(Class<?> clazz) {
+                // BUG: Diagnostic contains: clazz.isAssignableFrom(getClass())
+                return getClass().isInstance(clazz);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -46,12 +48,14 @@ public class IsInstanceOfClassTest {
     compilationHelper
         .addSourceLines(
             "pkg/A.java",
-            "class A {",
-            "  boolean m(Class<?> clazz) {",
-            "    // BUG: Diagnostic contains: getClass().isAssignableFrom(clazz)",
-            "    return clazz.isInstance(getClass());",
-            "  }",
-            "}")
+            """
+            class A {
+              boolean m(Class<?> clazz) {
+                // BUG: Diagnostic contains: getClass().isAssignableFrom(clazz)
+                return clazz.isInstance(getClass());
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -60,12 +64,14 @@ public class IsInstanceOfClassTest {
     compilationHelper
         .addSourceLines(
             "pkg/A.java",
-            "class A {",
-            "  boolean m(Object a, Object b) {",
-            "    // BUG: Diagnostic contains: b.getClass().isInstance(a)",
-            "    return a.getClass().isInstance(b.getClass());",
-            "  }",
-            "}")
+            """
+            class A {
+              boolean m(Object a, Object b) {
+                // BUG: Diagnostic contains: b.getClass().isInstance(a)
+                return a.getClass().isInstance(b.getClass());
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -74,12 +80,14 @@ public class IsInstanceOfClassTest {
     compilationHelper
         .addSourceLines(
             "pkg/A.java",
-            "class A {",
-            "  boolean m(Object obj) {",
-            "    // BUG: Diagnostic contains: obj instanceof String",
-            "    return obj.getClass().isInstance(String.class);",
-            "  }",
-            "}")
+            """
+            class A {
+              boolean m(Object obj) {
+                // BUG: Diagnostic contains: obj instanceof String
+                return obj.getClass().isInstance(String.class);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -88,12 +96,14 @@ public class IsInstanceOfClassTest {
     compilationHelper
         .addSourceLines(
             "pkg/A.java",
-            "class A {",
-            "  boolean m(Object obj) {",
-            "    // BUG: Diagnostic contains: obj instanceof String",
-            "    return String.class.isInstance(obj.getClass());",
-            "  }",
-            "}")
+            """
+            class A {
+              boolean m(Object obj) {
+                // BUG: Diagnostic contains: obj instanceof String
+                return String.class.isInstance(obj.getClass());
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -102,12 +112,14 @@ public class IsInstanceOfClassTest {
     compilationHelper
         .addSourceLines(
             "pkg/A.java",
-            "class A {",
-            "  boolean m(Object obj) {",
-            "    // BUG: Diagnostic contains: String.class == Class.class",
-            "    return Number.class.isInstance(String.class);",
-            "  }",
-            "}")
+            """
+            class A {
+              boolean m(Object obj) {
+                // BUG: Diagnostic contains: String.class == Class.class
+                return Number.class.isInstance(String.class);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -116,12 +128,14 @@ public class IsInstanceOfClassTest {
     compilationHelper
         .addSourceLines(
             "pkg/A.java",
-            "class A {",
-            "  boolean m(Object o, Class<?> clazz) {",
-            "    // BUG: Diagnostic contains: clazz.isInstance(o)",
-            "    return clazz.isInstance(o.getClass());",
-            "  }",
-            "}")
+            """
+            class A {
+              boolean m(Object o, Class<?> clazz) {
+                // BUG: Diagnostic contains: clazz.isInstance(o)
+                return clazz.isInstance(o.getClass());
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -130,12 +144,14 @@ public class IsInstanceOfClassTest {
     compilationHelper
         .addSourceLines(
             "pkg/A.java",
-            "class A {",
-            "  boolean m(Object o, Class<?> clazz) {",
-            "    // BUG: Diagnostic contains: clazz.isInstance(o)",
-            "    return o.getClass().isInstance(clazz);",
-            "  }",
-            "}")
+            """
+            class A {
+              boolean m(Object o, Class<?> clazz) {
+                // BUG: Diagnostic contains: clazz.isInstance(o)
+                return o.getClass().isInstance(clazz);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -144,12 +160,14 @@ public class IsInstanceOfClassTest {
     compilationHelper
         .addSourceLines(
             "pkg/A.java",
-            "class A {",
-            "  boolean m(Class<?> a, Class<?> b) {",
-            "    // BUG: Diagnostic contains: b.isAssignableFrom(a)",
-            "    return a.isInstance(b);",
-            "  }",
-            "}")
+            """
+            class A {
+              boolean m(Class<?> a, Class<?> b) {
+                // BUG: Diagnostic contains: b.isAssignableFrom(a)
+                return a.isInstance(b);
+              }
+            }
+            """)
         .doTest();
   }
 }

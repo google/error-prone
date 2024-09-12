@@ -43,20 +43,24 @@ public class OptionalNotPresentTest {
   public void b80065837() {
     compilationTestHelper
         .addSourceLines(
-            "Test.java", //
-            "import java.util.Optional;",
-            "import java.util.Map;",
-            "class Test {",
-            "  <T> Optional<T> f(T t) {",
-            "    return Optional.ofNullable(t);",
-            "  }",
-            "  int g(Map<String, Optional<Integer>> m) {",
-            "    if (!m.get(\"one\").isPresent()) {",
-            "      return m.get(\"two\").get();",
-            "    }",
-            "    return -1;",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            import java.util.Optional;
+            import java.util.Map;
+
+            class Test {
+              <T> Optional<T> f(T t) {
+                return Optional.ofNullable(t);
+              }
+
+              int g(Map<String, Optional<Integer>> m) {
+                if (!m.get("one").isPresent()) {
+                  return m.get("two").get();
+                }
+                return -1;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -65,15 +69,18 @@ public class OptionalNotPresentTest {
     compilationTestHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.Optional;",
-            "class Test {",
-            "  int g(Optional<Integer> o) {",
-            "    if (!equals(this) && o.isPresent()) {",
-            "      return o.orElseThrow();",
-            "    }",
-            "    return -1;",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            class Test {
+              int g(Optional<Integer> o) {
+                if (!equals(this) && o.isPresent()) {
+                  return o.orElseThrow();
+                }
+                return -1;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -82,16 +89,19 @@ public class OptionalNotPresentTest {
     compilationTestHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.Optional;",
-            "class Test {",
-            "  int g(Optional<Integer> o) {",
-            "    if (o.isEmpty()) {",
-            "      // BUG: Diagnostic contains:",
-            "      return o.get();",
-            "    }",
-            "    return -1;",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            class Test {
+              int g(Optional<Integer> o) {
+                if (o.isEmpty()) {
+                  // BUG: Diagnostic contains:
+                  return o.get();
+                }
+                return -1;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -100,16 +110,19 @@ public class OptionalNotPresentTest {
     compilationTestHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.Optional;",
-            "class Test {",
-            "  int g(Optional<Integer> o) {",
-            "    if (o.isEmpty()) {",
-            "      // BUG: Diagnostic contains:",
-            "      return o.orElseThrow();",
-            "    }",
-            "    return -1;",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            class Test {
+              int g(Optional<Integer> o) {
+                if (o.isEmpty()) {
+                  // BUG: Diagnostic contains:
+                  return o.orElseThrow();
+                }
+                return -1;
+              }
+            }
+            """)
         .doTest();
   }
 }

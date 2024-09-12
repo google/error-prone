@@ -30,31 +30,33 @@ public class ShortCircuitBooleanTest {
     CompilationTestHelper.newInstance(ShortCircuitBoolean.class, getClass())
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void f(boolean b1, boolean b2, boolean b3, int i1, int i2) {",
-            "    // BUG: Diagnostic contains: b1 && b2",
-            "    boolean r = b1 & b2;",
-            "    // BUG: Diagnostic contains: b1 || b2",
-            "    r = b1 | b2;",
-            "    // BUG: Diagnostic contains: b1 || !b2 || b3 && b1 && b2",
-            "    r = b1 | !b2 | b3 & b1 & b2;",
-            "    // BUG: Diagnostic contains: b1 || (b2 && b3) && (b1 || b2)",
-            "    r = b1 | (b2 & b3) & (b1 | b2);",
-            "    // BUG: Diagnostic contains: b1 || (b2 && b3)",
-            "    r = b1 | (b2 & b3);",
-            "    // BUG: Diagnostic contains: (b1 || b2) && b3",
-            "    r = (b1 | b2) & b3;",
-            "    // BUG: Diagnostic contains: b1 || b3 && b3",
-            "    r = b1 | b3 && b3;",
-            "    // BUG: Diagnostic contains: b1 || b2 == b3",
-            "    r = b1 | b2 == b3;",
-            "    // BUG: Diagnostic contains: (b1 || b2) != b3",
-            "    r = (b1 | b2) != b3;",
-            "    int i = i1 | i2;",
-            "    i = i1 & i2;",
-            "    i = i1 & i2 | i1;",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f(boolean b1, boolean b2, boolean b3, int i1, int i2) {
+                // BUG: Diagnostic contains: b1 && b2
+                boolean r = b1 & b2;
+                // BUG: Diagnostic contains: b1 || b2
+                r = b1 | b2;
+                // BUG: Diagnostic contains: b1 || !b2 || b3 && b1 && b2
+                r = b1 | !b2 | b3 & b1 & b2;
+                // BUG: Diagnostic contains: b1 || (b2 && b3) && (b1 || b2)
+                r = b1 | (b2 & b3) & (b1 | b2);
+                // BUG: Diagnostic contains: b1 || (b2 && b3)
+                r = b1 | (b2 & b3);
+                // BUG: Diagnostic contains: (b1 || b2) && b3
+                r = (b1 | b2) & b3;
+                // BUG: Diagnostic contains: b1 || b3 && b3
+                r = b1 | b3 && b3;
+                // BUG: Diagnostic contains: b1 || b2 == b3
+                r = b1 | b2 == b3;
+                // BUG: Diagnostic contains: (b1 || b2) != b3
+                r = (b1 | b2) != b3;
+                int i = i1 | i2;
+                i = i1 & i2;
+                i = i1 & i2 | i1;
+              }
+            }
+            """)
         .doTest();
   }
 }

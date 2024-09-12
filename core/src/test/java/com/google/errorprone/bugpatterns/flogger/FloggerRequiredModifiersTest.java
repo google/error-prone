@@ -33,21 +33,39 @@ public class FloggerRequiredModifiersTest {
     refactoringHelper()
         .addInputLines(
             "Holder.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "class Holder {",
-            "  public FluentLogger logger;",
-            "  public FluentLogger get() {return logger;}",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            class Holder {
+              public FluentLogger logger;
+
+              public FluentLogger get() {
+                return logger;
+              }
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
             "Test.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "class Test {",
-            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "  public void log(FluentLogger l) {l.atInfo().log(\"bland\");}",
-            "  public void delegate(Holder h) {h.logger.atInfo().log(\"held\");}",
-            "  public void read(Holder h) {h.get().atInfo().log(\"got\");}",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            class Test {
+              private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+
+              public void log(FluentLogger l) {
+                l.atInfo().log("bland");
+              }
+
+              public void delegate(Holder h) {
+                h.logger.atInfo().log("held");
+              }
+
+              public void read(Holder h) {
+                h.get().atInfo().log("got");
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -57,16 +75,22 @@ public class FloggerRequiredModifiersTest {
     refactoringHelper()
         .addInputLines(
             "in/Test.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "class Test {",
-            "  final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            class Test {
+              final FluentLogger logger = FluentLogger.forEnclosingClass();
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "class Test {",
-            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            class Test {
+              private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+            }
+            """)
         .doTest();
   }
 
@@ -75,17 +99,28 @@ public class FloggerRequiredModifiersTest {
     refactoringHelper()
         .addInputLines(
             "in/Test.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "class Test {",
-            "  void doIt() {FluentLogger.forEnclosingClass().atInfo().log();}",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            class Test {
+              void doIt() {
+                FluentLogger.forEnclosingClass().atInfo().log();
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "class Test {",
-            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "  void doIt() {logger.atInfo().log();}",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            class Test {
+              private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+
+              void doIt() {
+                logger.atInfo().log();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -94,14 +129,21 @@ public class FloggerRequiredModifiersTest {
     refactoringHelper()
         .addInputLines(
             "in/Test.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "class Test {",
-            "  private static final FluentLogger logger;",
-            "  static {",
-            "    logger = register(FluentLogger.forEnclosingClass());",
-            "  }",
-            "  private static <T> T register(T t) {return t;}",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            class Test {
+              private static final FluentLogger logger;
+
+              static {
+                logger = register(FluentLogger.forEnclosingClass());
+              }
+
+              private static <T> T register(T t) {
+                return t;
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -111,19 +153,30 @@ public class FloggerRequiredModifiersTest {
     refactoringHelper()
         .addInputLines(
             "in/Test.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "class Test {",
-            "  private static FluentLogger logger = register(FluentLogger.forEnclosingClass());",
-            "  private static <T> T register(T t) {return t;}",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            class Test {
+              private static FluentLogger logger = register(FluentLogger.forEnclosingClass());
+
+              private static <T> T register(T t) {
+                return t;
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "class Test {",
-            "  private static final FluentLogger logger ="
-                + " register(FluentLogger.forEnclosingClass());",
-            "  private static <T> T register(T t) {return t;}",
-            "}")
+            """
+import com.google.common.flogger.FluentLogger;
+
+class Test {
+  private static final FluentLogger logger = register(FluentLogger.forEnclosingClass());
+
+  private static <T> T register(T t) {
+    return t;
+  }
+}
+""")
         .doTest();
   }
 
@@ -133,13 +186,21 @@ public class FloggerRequiredModifiersTest {
     refactoringHelper()
         .addInputLines(
             "in/Test.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "class Test {",
-            "  static class A { public A() {B.logger.atInfo().log();}}",
-            "  static class B {",
-            "    private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "  }",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            class Test {
+              static class A {
+                public A() {
+                  B.logger.atInfo().log();
+                }
+              }
+
+              static class B {
+                private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -149,23 +210,34 @@ public class FloggerRequiredModifiersTest {
     refactoringHelper()
         .addInputLines(
             "in/Test.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "interface Test {",
-            "  static FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "  default void foo() {logger.atInfo().log();}",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            interface Test {
+              static FluentLogger logger = FluentLogger.forEnclosingClass();
+
+              default void foo() {
+                logger.atInfo().log();
+              }
+            }
+            """)
         .addOutputLines(
             "in/Test.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "interface Test {",
-            "  default void foo() {",
-            "    Private.logger.atInfo().log();",
-            "  }",
-            "  public static final class Private {",
-            "    private Private() {}",
-            "    private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "  }",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            interface Test {
+              default void foo() {
+                Private.logger.atInfo().log();
+              }
+
+              public static final class Private {
+                private Private() {}
+
+                private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -174,22 +246,32 @@ public class FloggerRequiredModifiersTest {
     refactoringHelper()
         .addInputLines(
             "in/Test.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "interface Test {",
-            "  default void foo() {FluentLogger.forEnclosingClass().atInfo().log();}",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            interface Test {
+              default void foo() {
+                FluentLogger.forEnclosingClass().atInfo().log();
+              }
+            }
+            """)
         .addOutputLines(
             "in/Test.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "interface Test {",
-            "  default void foo() {",
-            "    Private.logger.atInfo().log();",
-            "  }",
-            "  public static final class Private {",
-            "    private Private() {}",
-            "    private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "  }",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            interface Test {
+              default void foo() {
+                Private.logger.atInfo().log();
+              }
+
+              public static final class Private {
+                private Private() {}
+
+                private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -198,16 +280,22 @@ public class FloggerRequiredModifiersTest {
     refactoringHelper()
         .addInputLines(
             "in/Test.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "class Test {",
-            "  public static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            class Test {
+              public static final FluentLogger logger = FluentLogger.forEnclosingClass();
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "class Test {",
-            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            class Test {
+              private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+            }
+            """)
         .doTest();
   }
 
@@ -216,16 +304,22 @@ public class FloggerRequiredModifiersTest {
     refactoringHelper()
         .addInputLines(
             "in/Test.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "class Test {",
-            "  public FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            class Test {
+              public FluentLogger logger = FluentLogger.forEnclosingClass();
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "class Test {",
-            "  private final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            class Test {
+              private final FluentLogger logger = FluentLogger.forEnclosingClass();
+            }
+            """)
         .doTest();
   }
 
@@ -234,28 +328,41 @@ public class FloggerRequiredModifiersTest {
     refactoringHelper()
         .addInputLines(
             "in/Parent.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "@SuppressWarnings(\"FloggerRequiredModifiers\")",
-            "class Parent {",
-            "  protected static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            @SuppressWarnings("FloggerRequiredModifiers")
+            class Parent {
+              protected static final FluentLogger logger = FluentLogger.forEnclosingClass();
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
             "in/Child.java",
-            "class Child extends Parent {",
-            "  Child() {logger.atInfo().log(\"child\");",
-            "           super.logger.atInfo().log(\"super\");",
-            "           Parent.logger.atInfo().log(\"parent\");}",
-            "}")
+            """
+            class Child extends Parent {
+              Child() {
+                logger.atInfo().log("child");
+                super.logger.atInfo().log("super");
+                Parent.logger.atInfo().log("parent");
+              }
+            }
+            """)
         .addOutputLines(
             "out/Child.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "class Child extends Parent {",
-            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "  Child() {logger.atInfo().log(\"child\");",
-            "           logger.atInfo().log(\"super\");",
-            "           logger.atInfo().log(\"parent\");}",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            class Child extends Parent {
+              private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+
+              Child() {
+                logger.atInfo().log("child");
+                logger.atInfo().log("super");
+                logger.atInfo().log("parent");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -264,27 +371,42 @@ public class FloggerRequiredModifiersTest {
     refactoringHelper()
         .addInputLines(
             "in/Parent.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "@SuppressWarnings(\"FloggerRequiredModifiers\")",
-            "class Parent {",
-            "  protected static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            @SuppressWarnings("FloggerRequiredModifiers")
+            class Parent {
+              protected static final FluentLogger logger = FluentLogger.forEnclosingClass();
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
             "in/Child.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "class Child extends Parent {",
-            "  private static final FluentLogger logger = Parent.logger;",
-            "  Child() {logger.atInfo().log(\"child\");}",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            class Child extends Parent {
+              private static final FluentLogger logger = Parent.logger;
+
+              Child() {
+                logger.atInfo().log("child");
+              }
+            }
+            """)
         .addOutputLines(
             "out/Child.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "class Child extends Parent {",
-            "  private static final FluentLogger flogger = FluentLogger.forEnclosingClass();",
-            "  private static final FluentLogger logger = flogger;",
-            "  Child() {logger.atInfo().log(\"child\");}",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            class Child extends Parent {
+              private static final FluentLogger flogger = FluentLogger.forEnclosingClass();
+              private static final FluentLogger logger = flogger;
+
+              Child() {
+                logger.atInfo().log("child");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -293,44 +415,72 @@ public class FloggerRequiredModifiersTest {
     refactoringHelper()
         .addInputLines(
             "in/Parent.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "interface Parent {",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            interface Parent {}
+            """)
         .expectUnchanged()
         .addInputLines(
             "in/Child.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "interface Child extends Parent {",
-            "  static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "  default void go() {logger.atInfo().log();}",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            interface Child extends Parent {
+              static final FluentLogger logger = FluentLogger.forEnclosingClass();
+
+              default void go() {
+                logger.atInfo().log();
+              }
+            }
+            """)
         .addOutputLines(
             "out/Child.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "interface Child extends Parent {",
-            "  default void go() {Private.logger.atInfo().log();}",
-            "  public static final class Private {",
-            "    private Private() {}",
-            "    private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "  }",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            interface Child extends Parent {
+              default void go() {
+                Private.logger.atInfo().log();
+              }
+
+              public static final class Private {
+                private Private() {}
+
+                private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+              }
+            }
+            """)
         .addInputLines(
             "in/Sibling.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "interface Sibling extends Parent {",
-            "  static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "  default void go() {logger.atInfo().log();}",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            interface Sibling extends Parent {
+              static final FluentLogger logger = FluentLogger.forEnclosingClass();
+
+              default void go() {
+                logger.atInfo().log();
+              }
+            }
+            """)
         .addOutputLines(
             "out/Sibling.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "interface Sibling extends Parent {",
-            "  default void go() {Private.logger.atInfo().log();}",
-            "  public static final class Private {",
-            "    private Private() {}",
-            "    private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "  }",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            interface Sibling extends Parent {
+              default void go() {
+                Private.logger.atInfo().log();
+              }
+
+              public static final class Private {
+                private Private() {}
+
+                private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -339,13 +489,19 @@ public class FloggerRequiredModifiersTest {
     refactoringHelper()
         .addInputLines(
             "in/Test.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "class Test {",
-            "  private static final class Inner {",
-            "    private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "  }",
-            "  private void go() {Inner.logger.atInfo().log();}",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            class Test {
+              private static final class Inner {
+                private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+              }
+
+              private void go() {
+                Inner.logger.atInfo().log();
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -355,15 +511,21 @@ public class FloggerRequiredModifiersTest {
     refactoringHelper()
         .addInputLines(
             "in/Test.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "interface Test {",
-            "  class Inner {",
-            "    private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "    private static final class MoreInner {",
-            "      private void go() {logger.atInfo().log();}",
-            "    }",
-            "  }",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            interface Test {
+              class Inner {
+                private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+
+                private static final class MoreInner {
+                  private void go() {
+                    logger.atInfo().log();
+                  }
+                }
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }

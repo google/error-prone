@@ -33,17 +33,20 @@ public class StaticGuardedByInstanceTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  final Object lock = new Object();",
-            "  static boolean init = false;",
-            "  void m() {",
-            "    synchronized (lock) {",
-            "      // BUG: Diagnostic contains:",
-            "      // static variable should not be guarded by instance lock 'lock'",
-            "      init = true;",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              final Object lock = new Object();
+              static boolean init = false;
+
+              void m() {
+                synchronized (lock) {
+                  // BUG: Diagnostic contains:
+                  // static variable should not be guarded by instance lock 'lock'
+                  init = true;
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -52,20 +55,23 @@ public class StaticGuardedByInstanceTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  final Object lock = new Object();",
-            "  static int x = 0;",
-            "  void m() {",
-            "    synchronized (lock) {",
-            "      // BUG: Diagnostic contains:",
-            "      // static variable should not be guarded by instance lock 'lock'",
-            "      x++;",
-            "      // BUG: Diagnostic contains:",
-            "      // static variable should not be guarded by instance lock 'lock'",
-            "      x++;",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              final Object lock = new Object();
+              static int x = 0;
+
+              void m() {
+                synchronized (lock) {
+                  // BUG: Diagnostic contains:
+                  // static variable should not be guarded by instance lock 'lock'
+                  x++;
+                  // BUG: Diagnostic contains:
+                  // static variable should not be guarded by instance lock 'lock'
+                  x++;
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -74,15 +80,18 @@ public class StaticGuardedByInstanceTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  static final Object lock = new Object();",
-            "  static boolean init = false;",
-            "  void m() {",
-            "    synchronized (lock) {",
-            "      init = true;",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              static final Object lock = new Object();
+              static boolean init = false;
+
+              void m() {
+                synchronized (lock) {
+                  init = true;
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -91,15 +100,18 @@ public class StaticGuardedByInstanceTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  final Object lock = new Object();",
-            "  boolean init = false;",
-            "  void m() {",
-            "    synchronized (lock) {",
-            "      init = true;",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              final Object lock = new Object();
+              boolean init = false;
+
+              void m() {
+                synchronized (lock) {
+                  init = true;
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -108,14 +120,17 @@ public class StaticGuardedByInstanceTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  static boolean init = false;",
-            "  void m() {",
-            "    synchronized (getClass()) {",
-            "      init = true;",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              static boolean init = false;
+
+              void m() {
+                synchronized (getClass()) {
+                  init = true;
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -124,20 +139,25 @@ public class StaticGuardedByInstanceTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  final Object lock = new Object();",
-            "  static boolean init = false;",
-            "  void m() {",
-            "    synchronized (lock) {",
-            "      synchronized (Test.class) {",
-            "        init = true;",
-            "      }",
-            "      new Test() {{",
-            "        init = true;",
-            "      }};",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              final Object lock = new Object();
+              static boolean init = false;
+
+              void m() {
+                synchronized (lock) {
+                  synchronized (Test.class) {
+                    init = true;
+                  }
+                  new Test() {
+                    {
+                      init = true;
+                    }
+                  };
+                }
+              }
+            }
+            """)
         .doTest();
   }
 }

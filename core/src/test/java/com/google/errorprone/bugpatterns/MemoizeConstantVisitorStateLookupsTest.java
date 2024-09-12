@@ -40,25 +40,31 @@ public class MemoizeConstantVisitorStateLookupsTest {
     refactoringTestHelper
         .addInputLines(
             "Test.java",
-            "import com.google.errorprone.VisitorState;",
-            "import com.sun.tools.javac.util.Name;",
-            "class Test {",
-            "  public Test(VisitorState state) {",
-            "    Name me = state.getName(\"Test\");",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.VisitorState;
+            import com.sun.tools.javac.util.Name;
+
+            class Test {
+              public Test(VisitorState state) {
+                Name me = state.getName("Test");
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import com.google.errorprone.VisitorState;",
-            "import com.google.errorprone.suppliers.Supplier;",
-            "import com.sun.tools.javac.util.Name;",
-            "class Test {",
-            "  public Test(VisitorState state) {",
-            "    Name me = TEST.get(state);",
-            "  }",
-            "  private static final Supplier<Name> TEST = ",
-            "    VisitorState.memoize(state -> state.getName(\"Test\"));",
-            "}")
+            """
+import com.google.errorprone.VisitorState;
+import com.google.errorprone.suppliers.Supplier;
+import com.sun.tools.javac.util.Name;
+
+class Test {
+  public Test(VisitorState state) {
+    Name me = TEST.get(state);
+  }
+
+  private static final Supplier<Name> TEST = VisitorState.memoize(state -> state.getName("Test"));
+}
+""")
         .doTest();
   }
 
@@ -67,29 +73,38 @@ public class MemoizeConstantVisitorStateLookupsTest {
     refactoringTestHelper
         .addInputLines(
             "Test.java",
-            "import com.google.errorprone.VisitorState;",
-            "import com.sun.tools.javac.code.Type;",
-            "class Test {",
-            "  private static final String MAP = \"java.util.Map\";",
-            "  public Test(VisitorState state) {",
-            "    Type map = state.getTypeFromString(MAP);",
-            "    Type map2 = state.getTypeFromString(\"java.util.Map\");",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.VisitorState;
+            import com.sun.tools.javac.code.Type;
+
+            class Test {
+              private static final String MAP = "java.util.Map";
+
+              public Test(VisitorState state) {
+                Type map = state.getTypeFromString(MAP);
+                Type map2 = state.getTypeFromString("java.util.Map");
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import com.google.errorprone.VisitorState;",
-            "import com.google.errorprone.suppliers.Supplier;",
-            "import com.sun.tools.javac.code.Type;",
-            "class Test {",
-            "  private static final String MAP = \"java.util.Map\";",
-            "  public Test(VisitorState state) {",
-            "    Type map = JAVA_UTIL_MAP.get(state);",
-            "    Type map2 = JAVA_UTIL_MAP.get(state);",
-            "  }",
-            "  private static final Supplier<Type> JAVA_UTIL_MAP = ",
-            "    VisitorState.memoize(state -> state.getTypeFromString(MAP));",
-            "}")
+            """
+            import com.google.errorprone.VisitorState;
+            import com.google.errorprone.suppliers.Supplier;
+            import com.sun.tools.javac.code.Type;
+
+            class Test {
+              private static final String MAP = "java.util.Map";
+
+              public Test(VisitorState state) {
+                Type map = JAVA_UTIL_MAP.get(state);
+                Type map2 = JAVA_UTIL_MAP.get(state);
+              }
+
+              private static final Supplier<Type> JAVA_UTIL_MAP =
+                  VisitorState.memoize(state -> state.getTypeFromString(MAP));
+            }
+            """)
         .doTest();
   }
 
@@ -98,33 +113,40 @@ public class MemoizeConstantVisitorStateLookupsTest {
     refactoringTestHelper
         .addInputLines(
             "Test.java",
-            "import com.google.errorprone.VisitorState;",
-            "import com.sun.tools.javac.code.Type;",
-            "import com.sun.tools.javac.util.Name;",
-            "class Test {",
-            "  public Test(VisitorState state) {",
-            "    Name className = state.getName(\"java.lang.Class\");",
-            "    Type classType = state.getTypeFromString(\"java.lang.Class\");",
-            "    Name lookupAgain = state.getName(\"java.lang.Class\");",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.VisitorState;
+            import com.sun.tools.javac.code.Type;
+            import com.sun.tools.javac.util.Name;
+
+            class Test {
+              public Test(VisitorState state) {
+                Name className = state.getName("java.lang.Class");
+                Type classType = state.getTypeFromString("java.lang.Class");
+                Name lookupAgain = state.getName("java.lang.Class");
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import com.google.errorprone.VisitorState;",
-            "import com.google.errorprone.suppliers.Supplier;",
-            "import com.sun.tools.javac.code.Type;",
-            "import com.sun.tools.javac.util.Name;",
-            "class Test {",
-            "  public Test(VisitorState state) {",
-            "    Name className = JAVA_LANG_CLASS_NAME.get(state);",
-            "    Type classType = JAVA_LANG_CLASS_TYPE.get(state);",
-            "    Name lookupAgain = JAVA_LANG_CLASS_NAME.get(state);",
-            "  }",
-            "  private static final Supplier<Name> JAVA_LANG_CLASS_NAME = ",
-            "    VisitorState.memoize(state -> state.getName(\"java.lang.Class\"));",
-            "  private static final Supplier<Type> JAVA_LANG_CLASS_TYPE = ",
-            "    VisitorState.memoize(state -> state.getTypeFromString(\"java.lang.Class\"));",
-            "}")
+            """
+            import com.google.errorprone.VisitorState;
+            import com.google.errorprone.suppliers.Supplier;
+            import com.sun.tools.javac.code.Type;
+            import com.sun.tools.javac.util.Name;
+
+            class Test {
+              public Test(VisitorState state) {
+                Name className = JAVA_LANG_CLASS_NAME.get(state);
+                Type classType = JAVA_LANG_CLASS_TYPE.get(state);
+                Name lookupAgain = JAVA_LANG_CLASS_NAME.get(state);
+              }
+
+              private static final Supplier<Name> JAVA_LANG_CLASS_NAME =
+                  VisitorState.memoize(state -> state.getName("java.lang.Class"));
+              private static final Supplier<Type> JAVA_LANG_CLASS_TYPE =
+                  VisitorState.memoize(state -> state.getTypeFromString("java.lang.Class"));
+            }
+            """)
         .doTest();
   }
 
@@ -133,15 +155,18 @@ public class MemoizeConstantVisitorStateLookupsTest {
     compilationTestHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.VisitorState;",
-            "import com.sun.tools.javac.code.Type;",
-            "import com.sun.tools.javac.util.Name;",
-            "class Test {",
-            "  public Test(VisitorState state) {",
-            "    // BUG: Diagnostic contains:",
-            "    Name className = state.getName(\"java.lang.Class\");",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.VisitorState;
+            import com.sun.tools.javac.code.Type;
+            import com.sun.tools.javac.util.Name;
+
+            class Test {
+              public Test(VisitorState state) {
+                // BUG: Diagnostic contains:
+                Name className = state.getName("java.lang.Class");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -150,15 +175,18 @@ public class MemoizeConstantVisitorStateLookupsTest {
     refactoringTestHelper
         .addInputLines(
             "Test.java",
-            "import com.google.common.collect.ImmutableSet;\n",
-            "import com.google.errorprone.VisitorState;",
-            "import com.google.errorprone.suppliers.Supplier;",
-            "import com.sun.tools.javac.util.Name;",
-            "class Test {",
-            "  private static final Supplier<ImmutableSet<Name>> ALLOWED_NAMES ",
-            "    = VisitorState.memoize(state -> ",
-            "        ImmutableSet.of(state.getName(\"foo\"), state.getName(\"bar\")));",
-            "}")
+            """
+import com.google.common.collect.ImmutableSet;
+
+import com.google.errorprone.VisitorState;
+import com.google.errorprone.suppliers.Supplier;
+import com.sun.tools.javac.util.Name;
+
+class Test {
+  private static final Supplier<ImmutableSet<Name>> ALLOWED_NAMES =
+      VisitorState.memoize(state -> ImmutableSet.of(state.getName("foo"), state.getName("bar")));
+}
+""")
         .expectUnchanged()
         .doTest();
   }
@@ -168,25 +196,30 @@ public class MemoizeConstantVisitorStateLookupsTest {
     compilationTestHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.VisitorState;",
-            "import com.sun.tools.javac.code.Type;",
-            "import com.sun.tools.javac.util.Name;",
-            "class Test {",
-            "  @SuppressWarnings(\"MemoizeConstantVisitorStateLookups\")",
-            "  public Test(VisitorState state) {",
-            "    Name className = state.getName(\"java.lang.Class\");",
-            "  }",
-            "  @SuppressWarnings(\"MemoizeConstantVisitorStateLookups\")",
-            "  public void testMethod(VisitorState state) {",
-            "    Name className = state.getName(\"java.lang.Class\");",
-            "  }",
-            "  @SuppressWarnings(\"MemoizeConstantVisitorStateLookups\")",
-            "  class InnerClass {",
-            "    void innerMethod(VisitorState state) {",
-            "      Name className = state.getName(\"java.lang.Class\");",
-            "    }",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.VisitorState;
+            import com.sun.tools.javac.code.Type;
+            import com.sun.tools.javac.util.Name;
+
+            class Test {
+              @SuppressWarnings("MemoizeConstantVisitorStateLookups")
+              public Test(VisitorState state) {
+                Name className = state.getName("java.lang.Class");
+              }
+
+              @SuppressWarnings("MemoizeConstantVisitorStateLookups")
+              public void testMethod(VisitorState state) {
+                Name className = state.getName("java.lang.Class");
+              }
+
+              @SuppressWarnings("MemoizeConstantVisitorStateLookups")
+              class InnerClass {
+                void innerMethod(VisitorState state) {
+                  Name className = state.getName("java.lang.Class");
+                }
+              }
+            }
+            """)
         .doTest();
   }
 }

@@ -36,14 +36,18 @@ public class FieldMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/FieldMissingNullTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "public class FieldMissingNullTest {",
-            "  private String message = \"hello\";",
-            "  public void reset() {",
-            "    // BUG: Diagnostic contains: @Nullable",
-            "    message = null;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+
+            public class FieldMissingNullTest {
+              private String message = "hello";
+
+              public void reset() {
+                // BUG: Diagnostic contains: @Nullable
+                message = null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -52,14 +56,18 @@ public class FieldMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/FieldMissingNullTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "public class FieldMissingNullTest {",
-            "  private String message = \"hello\";",
-            "  public void setMessage(String message) {",
-            "    // BUG: Diagnostic contains: @Nullable",
-            "    this.message = message != null ? null : message;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+
+            public class FieldMissingNullTest {
+              private String message = "hello";
+
+              public void setMessage(String message) {
+                // BUG: Diagnostic contains: @Nullable
+                this.message = message != null ? null : message;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -68,18 +76,22 @@ public class FieldMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/FieldMissingNullTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "public class FieldMissingNullTest {",
-            "  private String message;",
-            "  public void setMessage(String message) {",
-            "    if (message == null) {",
-            "      // BUG: Diagnostic contains: @Nullable",
-            "      this.message = message;",
-            "    } else {",
-            "      this.message = \"hello\";",
-            "    }",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+
+            public class FieldMissingNullTest {
+              private String message;
+
+              public void setMessage(String message) {
+                if (message == null) {
+                  // BUG: Diagnostic contains: @Nullable
+                  this.message = message;
+                } else {
+                  this.message = "hello";
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -88,14 +100,18 @@ public class FieldMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/FieldMissingNullTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "public class FieldMissingNullTest {",
-            "  private String message = \"hello\";",
-            "  public void setMessage(int x) {",
-            "    // BUG: Diagnostic contains: @Nullable",
-            "    message = x >= 0 ? null : \"negative\";",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+
+            public class FieldMissingNullTest {
+              private String message = "hello";
+
+              public void setMessage(int x) {
+                // BUG: Diagnostic contains: @Nullable
+                message = x >= 0 ? null : "negative";
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -104,12 +120,16 @@ public class FieldMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/NullableParameterTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "import javax.annotation.Nullable;",
-            "public class NullableParameterTest {",
-            "  // BUG: Diagnostic contains: @Nullable",
-            "  public static final String MESSAGE = null;",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+
+            import javax.annotation.Nullable;
+
+            public class NullableParameterTest {
+              // BUG: Diagnostic contains: @Nullable
+              public static final String MESSAGE = null;
+            }
+            """)
         .doTest();
   }
 
@@ -136,15 +156,18 @@ public class FieldMissingNullableTest {
     createAggressiveCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/FieldMissingNullTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "public class FieldMissingNullTest {",
-            "  private String message;",
-            "  public void reset() {",
-            "    // BUG: Diagnostic contains: @Nullable",
-            "    if (message != null) {",
-            "    }",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+
+            public class FieldMissingNullTest {
+              private String message;
+
+              public void reset() {
+                // BUG: Diagnostic contains: @Nullable
+                if (message != null) {}
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -153,15 +176,18 @@ public class FieldMissingNullableTest {
     createAggressiveCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/FieldMissingNullTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "public class FieldMissingNullTest {",
-            "  private String message;",
-            "  public void reset(FieldMissingNullTest other) {",
-            "    // BUG: Diagnostic contains: @Nullable",
-            "    if (other.message != null) {",
-            "    }",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+
+            public class FieldMissingNullTest {
+              private String message;
+
+              public void reset(FieldMissingNullTest other) {
+                // BUG: Diagnostic contains: @Nullable
+                if (other.message != null) {}
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -171,21 +197,28 @@ public class FieldMissingNullableTest {
     createAggressiveRefactoringTestHelper()
         .addInputLines(
             "com/google/errorprone/bugpatterns/nullness/FieldMissingNullTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "record FieldMissingNullTest(String message) {",
-            "  boolean hasMessage() {",
-            "    return message != null;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+
+            record FieldMissingNullTest(String message) {
+              boolean hasMessage() {
+                return message != null;
+              }
+            }
+            """)
         .addOutputLines(
             "com/google/errorprone/bugpatterns/nullness/FieldMissingNullTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "import org.jspecify.annotations.Nullable;",
-            "record FieldMissingNullTest(@Nullable String message) {",
-            "  boolean hasMessage() {",
-            "    return message != null;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+
+            import org.jspecify.annotations.Nullable;
+
+            record FieldMissingNullTest(@Nullable String message) {
+              boolean hasMessage() {
+                return message != null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -194,14 +227,17 @@ public class FieldMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/FieldMissingNullTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "public class FieldMissingNullTest {",
-            "  private String message;",
-            "  public void reset() {",
-            "    if (message != null) {",
-            "    }",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+
+            public class FieldMissingNullTest {
+              private String message;
+
+              public void reset() {
+                if (message != null) {}
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -210,14 +246,19 @@ public class FieldMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/FieldMissingNullTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "import javax.annotation.Nullable;",
-            "public class FieldMissingNullTest {",
-            "  @Nullable String message;",
-            "  public void reset() {",
-            "    this.message = null;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+
+            import javax.annotation.Nullable;
+
+            public class FieldMissingNullTest {
+              @Nullable String message;
+
+              public void reset() {
+                this.message = null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -226,21 +267,30 @@ public class FieldMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/anno/my/Nullable.java",
-            "package com.google.anno.my;",
-            "import java.lang.annotation.ElementType;",
-            "import java.lang.annotation.Target;",
-            "@Target({ElementType.TYPE_USE})",
-            "public @interface Nullable {}")
+            """
+            package com.google.anno.my;
+
+            import java.lang.annotation.ElementType;
+            import java.lang.annotation.Target;
+
+            @Target({ElementType.TYPE_USE})
+            public @interface Nullable {}
+            """)
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/FieldMissingNullTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "import com.google.anno.my.Nullable;",
-            "public class FieldMissingNullTest {",
-            "  @Nullable String message;",
-            "  public void reset() {",
-            "    this.message = null;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+
+            import com.google.anno.my.Nullable;
+
+            public class FieldMissingNullTest {
+              @Nullable String message;
+
+              public void reset() {
+                this.message = null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -249,15 +299,19 @@ public class FieldMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/FieldMissingNullTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "import org.checkerframework.checker.nullness.qual.MonotonicNonNull;",
-            "public class FieldMissingNullTest {",
-            "  private @MonotonicNonNull String message;",
-            "  public void reset() {",
-            "    if (message != null) {",
-            "    }",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+
+            import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+
+            public class FieldMissingNullTest {
+              private @MonotonicNonNull String message;
+
+              public void reset() {
+                if (message != null) {}
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -266,15 +320,21 @@ public class FieldMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/FieldMissingNullTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "import org.checkerframework.checker.nullness.qual.Nullable;",
-            "public class FieldMissingNullTest {",
-            "  class Inner {}",
-            "  @Nullable Inner message;",
-            "  public void reset() {",
-            "    this.message = null;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+
+            import org.checkerframework.checker.nullness.qual.Nullable;
+
+            public class FieldMissingNullTest {
+              class Inner {}
+
+              @Nullable Inner message;
+
+              public void reset() {
+                this.message = null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -284,13 +344,17 @@ public class FieldMissingNullableTest {
     createAggressiveCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/FieldMissingNullTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "import org.jspecify.annotations.Nullable;",
-            "record FieldMissingNullTest(@Nullable String message) {",
-            "  boolean hasMessage() {",
-            "    return message != null;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+
+            import org.jspecify.annotations.Nullable;
+
+            record FieldMissingNullTest(@Nullable String message) {
+              boolean hasMessage() {
+                return message != null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -299,13 +363,17 @@ public class FieldMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/FieldMissingNullTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "public class FieldMissingNullTest {",
-            "  private final String message;",
-            "  public FieldMissingNullTest() {",
-            "    message = \"hello\";",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+
+            public class FieldMissingNullTest {
+              private final String message;
+
+              public FieldMissingNullTest() {
+                message = "hello";
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -314,10 +382,13 @@ public class FieldMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/FieldMissingNullTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "public class FieldMissingNullTest {",
-            "  private String message = \"hello\";",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+
+            public class FieldMissingNullTest {
+              private String message = "hello";
+            }
+            """)
         .doTest();
   }
 
@@ -326,18 +397,28 @@ public class FieldMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/FieldMissingNullTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "import java.util.function.Predicate;",
-            "import java.util.function.Function;",
-            "public class FieldMissingNullTest {",
-            "  private Runnable runnable = () -> {};",
-            "  private Predicate<?> predicate1 = p -> true;",
-            "  private Predicate<?> predicate2 = (p -> true);",
-            "  private Predicate<?> predicate3 = (String p) -> { return false; };",
-            "  private Function<?, ?> function1 = p -> null;",
-            "  private Function<?, ?> function2 = (p -> null);",
-            "  private Function<?, ?> function3 = (String p) -> { return null; };",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+
+            import java.util.function.Predicate;
+            import java.util.function.Function;
+
+            public class FieldMissingNullTest {
+              private Runnable runnable = () -> {};
+              private Predicate<?> predicate1 = p -> true;
+              private Predicate<?> predicate2 = (p -> true);
+              private Predicate<?> predicate3 =
+                  (String p) -> {
+                    return false;
+                  };
+              private Function<?, ?> function1 = p -> null;
+              private Function<?, ?> function2 = (p -> null);
+              private Function<?, ?> function3 =
+                  (String p) -> {
+                    return null;
+                  };
+            }
+            """)
         .doTest();
   }
 
@@ -346,13 +427,17 @@ public class FieldMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/NonNullMethodTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "public class NonNullMethodTest {",
-            "  private String message = \"hello\";",
-            "  public void setMessage(int x) {",
-            "    message = String.valueOf(x);",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+
+            public class NonNullMethodTest {
+              private String message = "hello";
+
+              public void setMessage(int x) {
+                message = String.valueOf(x);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -361,14 +446,18 @@ public class FieldMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/NonNullFieldTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "public class NonNullFieldTest {",
-            "  private String message = \"hello\";",
-            "  private String previous = \"\";",
-            "  public void save() {",
-            "    previous = message;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+
+            public class NonNullFieldTest {
+              private String message = "hello";
+              private String previous = "";
+
+              public void save() {
+                previous = message;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -377,13 +466,17 @@ public class FieldMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/NonNullParameterTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "public class NonNullParameterTest {",
-            "  private String message = \"hello\";",
-            "  public void setMessage(String message) {",
-            "    this.message = message;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+
+            public class NonNullParameterTest {
+              private String message = "hello";
+
+              public void setMessage(String message) {
+                this.message = message;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -392,13 +485,17 @@ public class FieldMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/ThisTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "public class ThisTest {",
-            "  private static ThisTest theInstance = new ThisTest();",
-            "  public void makeDefault() {",
-            "    this.theInstance = this;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+
+            public class ThisTest {
+              private static ThisTest theInstance = new ThisTest();
+
+              public void makeDefault() {
+                this.theInstance = this;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -411,10 +508,13 @@ public class FieldMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/PrimitiveReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "public class PrimitiveReturnTest {",
-            "  private int count = (Integer) null;",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+
+            public class PrimitiveReturnTest {
+              private int count = (Integer) null;
+            }
+            """)
         .doTest();
   }
 
@@ -423,14 +523,22 @@ public class FieldMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/NullableParameterTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "import javax.annotation.Nullable;",
-            "public class NullableParameterTest {",
-            "  private String message = \"hello\";",
-            "  public void setMessageIfPresent(java.util.Optional<String> message) {",
-            "    message.ifPresent(s -> { this.message = s; });",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+
+            import javax.annotation.Nullable;
+
+            public class NullableParameterTest {
+              private String message = "hello";
+
+              public void setMessageIfPresent(java.util.Optional<String> message) {
+                message.ifPresent(
+                    s -> {
+                      this.message = s;
+                    });
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -440,11 +548,14 @@ public class FieldMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "Test.java",
-            "import java.util.regex.Pattern;",
-            "class T {",
-            "  private static final Pattern FULLY_QUALIFIED_METHOD_NAME_PATTERN =",
-            "      Pattern.compile(\"(.+)#([^()]+?)(\\\\((.*)\\\\))?\");",
-            "}")
+            """
+            import java.util.regex.Pattern;
+
+            class T {
+              private static final Pattern FULLY_QUALIFIED_METHOD_NAME_PATTERN =
+                  Pattern.compile("(.+)#([^()]+?)(\\\\((.*)\\\\))?");
+            }
+            """)
         .doTest();
   }
 
@@ -453,18 +564,24 @@ public class FieldMissingNullableTest {
     createRefactoringTestHelper()
         .addInputLines(
             "in/Test.java",
-            "class T {",
-            "  @Nullable private final Object obj1 = null;",
-            "  private final Object obj2 = null;",
-            "  @interface Nullable {}",
-            "}")
+            """
+            class T {
+              @Nullable private final Object obj1 = null;
+              private final Object obj2 = null;
+
+              @interface Nullable {}
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "class T {",
-            "  @Nullable private final Object obj1 = null;",
-            "  @Nullable private final Object obj2 = null;",
-            "  @interface Nullable {}",
-            "}")
+            """
+            class T {
+              @Nullable private final Object obj1 = null;
+              @Nullable private final Object obj2 = null;
+
+              @interface Nullable {}
+            }
+            """)
         .doTest(TEXT_MATCH);
   }
 
@@ -473,16 +590,22 @@ public class FieldMissingNullableTest {
     createRefactoringTestHelper()
         .addInputLines(
             "in/Test.java",
-            "import org.checkerframework.checker.nullness.qual.Nullable;",
-            "class T {",
-            "  private final Object obj1 = null;",
-            "}")
+            """
+            import org.checkerframework.checker.nullness.qual.Nullable;
+
+            class T {
+              private final Object obj1 = null;
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "import org.checkerframework.checker.nullness.qual.Nullable;",
-            "class T {",
-            "  private final @Nullable Object obj1 = null;",
-            "}")
+            """
+            import org.checkerframework.checker.nullness.qual.Nullable;
+
+            class T {
+              private final @Nullable Object obj1 = null;
+            }
+            """)
         .doTest(TEXT_MATCH);
   }
 
@@ -491,16 +614,22 @@ public class FieldMissingNullableTest {
     createRefactoringTestHelper()
         .addInputLines(
             "in/Test.java",
-            "class T {",
-            "  private final Object obj2 = null;",
-            "  class Nullable {}",
-            "}")
+            """
+            class T {
+              private final Object obj2 = null;
+
+              class Nullable {}
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "class T {",
-            "  private final @org.jspecify.annotations.Nullable Object obj2 = null;",
-            "  class Nullable {}",
-            "}")
+            """
+            class T {
+              private final @org.jspecify.annotations.Nullable Object obj2 = null;
+
+              class Nullable {}
+            }
+            """)
         .doTest();
   }
 

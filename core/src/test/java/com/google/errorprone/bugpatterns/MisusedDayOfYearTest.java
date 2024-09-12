@@ -36,20 +36,26 @@ public final class MisusedDayOfYearTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "import java.time.format.DateTimeFormatter;",
-            "class Test {",
-            "  static {",
-            "    DateTimeFormatter.ofPattern(\"yy-MM-DD\");",
-            "  }",
-            "}")
+            """
+            import java.time.format.DateTimeFormatter;
+
+            class Test {
+              static {
+                DateTimeFormatter.ofPattern("yy-MM-DD");
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import java.time.format.DateTimeFormatter;",
-            "class Test {",
-            "  static {",
-            "    DateTimeFormatter.ofPattern(\"yy-MM-dd\");",
-            "  }",
-            "}")
+            """
+            import java.time.format.DateTimeFormatter;
+
+            class Test {
+              static {
+                DateTimeFormatter.ofPattern("yy-MM-dd");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -58,12 +64,15 @@ public final class MisusedDayOfYearTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import java.time.format.DateTimeFormatter;",
-            "class Test {",
-            "  static {",
-            "    DateTimeFormatter.ofPattern(\"yy-MM-dd\");",
-            "  }",
-            "}")
+            """
+            import java.time.format.DateTimeFormatter;
+
+            class Test {
+              static {
+                DateTimeFormatter.ofPattern("yy-MM-dd");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -72,12 +81,15 @@ public final class MisusedDayOfYearTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import java.time.format.DateTimeFormatter;",
-            "class Test {",
-            "  static {",
-            "    DateTimeFormatter.ofPattern(\"yy-DD\");",
-            "  }",
-            "}")
+            """
+            import java.time.format.DateTimeFormatter;
+
+            class Test {
+              static {
+                DateTimeFormatter.ofPattern("yy-DD");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -86,15 +98,18 @@ public final class MisusedDayOfYearTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import java.time.format.DateTimeFormatter;",
-            "class Test {",
-            "  static {",
-            "    DateTimeFormatter.ofPattern(\"'D'yy-MM-dd\");",
-            "    DateTimeFormatter.ofPattern(\"'D'''yy-MM-dd\");",
-            "    DateTimeFormatter.ofPattern(\"'''D'yy-MM-dd\");",
-            "    DateTimeFormatter.ofPattern(\"'D''D'yy-MM-dd\");",
-            "  }",
-            "}")
+            """
+            import java.time.format.DateTimeFormatter;
+
+            class Test {
+              static {
+                DateTimeFormatter.ofPattern("'D'yy-MM-dd");
+                DateTimeFormatter.ofPattern("'D'''yy-MM-dd");
+                DateTimeFormatter.ofPattern("'''D'yy-MM-dd");
+                DateTimeFormatter.ofPattern("'D''D'yy-MM-dd");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -103,28 +118,34 @@ public final class MisusedDayOfYearTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "import java.time.format.DateTimeFormatter;",
-            "class Test {",
-            "  static {",
-            "    DateTimeFormatter.ofPattern(\"'D'yy-MM-DD\");",
-            "    DateTimeFormatter.ofPattern(\"'D'''yy-MM-DD\");",
-            "    DateTimeFormatter.ofPattern(\"'''D'yy-MM-DD\");",
-            "    DateTimeFormatter.ofPattern(\"'D''D'yy-MM-DD\");",
-            "    DateTimeFormatter.ofPattern(\"'M'yy-DD\");",
-            "  }",
-            "}")
+            """
+            import java.time.format.DateTimeFormatter;
+
+            class Test {
+              static {
+                DateTimeFormatter.ofPattern("'D'yy-MM-DD");
+                DateTimeFormatter.ofPattern("'D'''yy-MM-DD");
+                DateTimeFormatter.ofPattern("'''D'yy-MM-DD");
+                DateTimeFormatter.ofPattern("'D''D'yy-MM-DD");
+                DateTimeFormatter.ofPattern("'M'yy-DD");
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import java.time.format.DateTimeFormatter;",
-            "class Test {",
-            "  static {",
-            "    DateTimeFormatter.ofPattern(\"'D'yy-MM-dd\");",
-            "    DateTimeFormatter.ofPattern(\"'D'''yy-MM-dd\");",
-            "    DateTimeFormatter.ofPattern(\"'''D'yy-MM-dd\");",
-            "    DateTimeFormatter.ofPattern(\"'D''D'yy-MM-dd\");",
-            "    DateTimeFormatter.ofPattern(\"'M'yy-DD\");",
-            "  }",
-            "}")
+            """
+            import java.time.format.DateTimeFormatter;
+
+            class Test {
+              static {
+                DateTimeFormatter.ofPattern("'D'yy-MM-dd");
+                DateTimeFormatter.ofPattern("'D'''yy-MM-dd");
+                DateTimeFormatter.ofPattern("'''D'yy-MM-dd");
+                DateTimeFormatter.ofPattern("'D''D'yy-MM-dd");
+                DateTimeFormatter.ofPattern("'M'yy-DD");
+              }
+            }
+            """)
         .doTest();
   }
 }

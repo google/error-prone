@@ -37,11 +37,14 @@ public class TypeParameterShadowingTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "package foo.bar;",
-            "class Test<T> {",
-            "  // BUG: Diagnostic contains: T declared in Test",
-            "  <T> void something() {}",
-            "}")
+            """
+            package foo.bar;
+
+            class Test<T> {
+              // BUG: Diagnostic contains: T declared in Test
+              <T> void something() {}
+            }
+            """)
         .doTest();
   }
 
@@ -50,10 +53,13 @@ public class TypeParameterShadowingTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "package foo.bar;",
-            "class Test<T> {",
-            "  static <T> void something() {}",
-            "}")
+            """
+            package foo.bar;
+
+            class Test<T> {
+              static <T> void something() {}
+            }
+            """)
         .doTest();
   }
 
@@ -81,11 +87,14 @@ public class TypeParameterShadowingTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "package foo.bar;",
-            "class Test<D> {",
-            "  // BUG: Diagnostic contains: D declared in Test",
-            "  class Test2<D> {}",
-            "}")
+            """
+            package foo.bar;
+
+            class Test<D> {
+              // BUG: Diagnostic contains: D declared in Test
+              class Test2<D> {}
+            }
+            """)
         .doTest();
   }
 
@@ -94,13 +103,16 @@ public class TypeParameterShadowingTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "package foo.bar;",
-            "class Test<T> {",
-            "  class MyTest<J> {",
-            "  // BUG: Diagnostic matches: combo",
-            "  public <T,J> void something() {}",
-            " }",
-            "}")
+            """
+            package foo.bar;
+
+            class Test<T> {
+              class MyTest<J> {
+                // BUG: Diagnostic matches: combo
+                public <T, J> void something() {}
+              }
+            }
+            """)
         .expectErrorMessage(
             "combo", s -> s.contains("J declared in MyTest") && s.contains("T declared in Test"))
         .doTest();
@@ -111,18 +123,32 @@ public class TypeParameterShadowingTest {
     refactoring
         .addInputLines(
             "in/Test.java",
-            "package foo.bar;",
-            "class Test<T> {",
-            "  /** @param <T> foo */",
-            "  <T> void something(T t) { T other = t;}",
-            "}")
+            """
+            package foo.bar;
+
+            class Test<T> {
+              /**
+               * @param <T> foo
+               */
+              <T> void something(T t) {
+                T other = t;
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "package foo.bar;",
-            "class Test<T> {",
-            "  /** @param <T2> foo */",
-            "  <T2> void something(T2 t) { T2 other = t;}",
-            "}")
+            """
+            package foo.bar;
+
+            class Test<T> {
+              /**
+               * @param <T2> foo
+               */
+              <T2> void something(T2 t) {
+                T2 other = t;
+              }
+            }
+            """)
         .doTest(TestMode.TEXT_MATCH);
   }
 
@@ -131,16 +157,26 @@ public class TypeParameterShadowingTest {
     refactoring
         .addInputLines(
             "in/Test.java",
-            "package foo.bar;",
-            "class Test<T> {",
-            "  <T extends Comparable<T>> void something(T t) { T other = t;}",
-            "}")
+            """
+            package foo.bar;
+
+            class Test<T> {
+              <T extends Comparable<T>> void something(T t) {
+                T other = t;
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "package foo.bar;",
-            "class Test<T> {",
-            "  <T2 extends Comparable<T2>> void something(T2 t) { T2 other = t;}",
-            "}")
+            """
+            package foo.bar;
+
+            class Test<T> {
+              <T2 extends Comparable<T2>> void something(T2 t) {
+                T2 other = t;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -149,18 +185,34 @@ public class TypeParameterShadowingTest {
     refactoring
         .addInputLines(
             "in/Test.java",
-            "package foo.bar;",
-            "class Test<T> {",
-            "  <T> void something(T t) { T other = t;}",
-            "  <T> T identity(T t) { return t; }",
-            "}")
+            """
+            package foo.bar;
+
+            class Test<T> {
+              <T> void something(T t) {
+                T other = t;
+              }
+
+              <T> T identity(T t) {
+                return t;
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "package foo.bar;",
-            "class Test<T> {",
-            "  <T2> void something(T2 t) { T2 other = t;}",
-            "  <T2> T2 identity(T2 t) { return t; }",
-            "}")
+            """
+            package foo.bar;
+
+            class Test<T> {
+              <T2> void something(T2 t) {
+                T2 other = t;
+              }
+
+              <T2> T2 identity(T2 t) {
+                return t;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -169,24 +221,30 @@ public class TypeParameterShadowingTest {
     refactoring
         .addInputLines(
             "in/Test.java",
-            "package foo.bar;",
-            "class Test<T,D> {",
-            "  <T,D> void something(T t) { ",
-            "    T other = t;",
-            "    java.util.List<T> ts = new java.util.ArrayList<T>();",
-            "    D d = null; ",
-            "  }",
-            "}")
+            """
+            package foo.bar;
+
+            class Test<T, D> {
+              <T, D> void something(T t) {
+                T other = t;
+                java.util.List<T> ts = new java.util.ArrayList<T>();
+                D d = null;
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "package foo.bar;",
-            "class Test<T,D> {",
-            "  <T2,D2> void something(T2 t) { ",
-            "    T2 other = t;",
-            "    java.util.List<T2> ts = new java.util.ArrayList<T2>();",
-            "    D2 d = null; ",
-            "  }",
-            "}")
+            """
+            package foo.bar;
+
+            class Test<T, D> {
+              <T2, D2> void something(T2 t) {
+                T2 other = t;
+                java.util.List<T2> ts = new java.util.ArrayList<T2>();
+                D2 d = null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -199,38 +257,50 @@ public class TypeParameterShadowingTest {
     refactoring
         .addInputLines(
             "in/Test.java",
-            "package foo.bar;",
-            "class Test<T> {",
-            "  <T,T2> void something(T t) { ",
-            "    T var = t;",
-            "    @SuppressWarnings(\"TypeParameterShadowing\")",
-            "    class MethodInnerWithGeneric<T> {}",
-            "    MethodInnerWithGeneric<T> innerVar = null;",
-            "    class MethodInner {",
-            "       @SuppressWarnings(\"TypeParameterShadowing\")",
-            "       <T> void doSomething() {}",
-            "       void doSomethingElse(T t) { this.<T>doSomething(); }",
-            "    }",
-            "    MethodInner myInner = null;",
-            "  }",
-            "}")
+            """
+            package foo.bar;
+
+            class Test<T> {
+              <T, T2> void something(T t) {
+                T var = t;
+                @SuppressWarnings("TypeParameterShadowing")
+                class MethodInnerWithGeneric<T> {}
+                MethodInnerWithGeneric<T> innerVar = null;
+                class MethodInner {
+                  @SuppressWarnings("TypeParameterShadowing")
+                  <T> void doSomething() {}
+
+                  void doSomethingElse(T t) {
+                    this.<T>doSomething();
+                  }
+                }
+                MethodInner myInner = null;
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "package foo.bar;",
-            "class Test<T> {",
-            "  <T3,T2> void something(T3 t) { ",
-            "    T3 var = t;",
-            "    @SuppressWarnings(\"TypeParameterShadowing\")",
-            "    class MethodInnerWithGeneric<T> {}",
-            "    MethodInnerWithGeneric<T3> innerVar = null;",
-            "    class MethodInner {",
-            "       @SuppressWarnings(\"TypeParameterShadowing\")",
-            "       <T> void doSomething() {}",
-            "       void doSomethingElse(T3 t) { this.<T3>doSomething(); }",
-            "    }",
-            "    MethodInner myInner = null;",
-            "  }",
-            "}")
+            """
+            package foo.bar;
+
+            class Test<T> {
+              <T3, T2> void something(T3 t) {
+                T3 var = t;
+                @SuppressWarnings("TypeParameterShadowing")
+                class MethodInnerWithGeneric<T> {}
+                MethodInnerWithGeneric<T3> innerVar = null;
+                class MethodInner {
+                  @SuppressWarnings("TypeParameterShadowing")
+                  <T> void doSomething() {}
+
+                  void doSomethingElse(T3 t) {
+                    this.<T3>doSomething();
+                  }
+                }
+                MethodInner myInner = null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -239,24 +309,30 @@ public class TypeParameterShadowingTest {
     refactoring
         .addInputLines(
             "in/Test.java",
-            "package foo.bar;",
-            "class Test<T> {",
-            "  class A<T2,T3,T4> {",
-            "    <T> void something(T t) { ",
-            "      T var = t;",
-            "    }",
-            "  }",
-            "}")
+            """
+            package foo.bar;
+
+            class Test<T> {
+              class A<T2, T3, T4> {
+                <T> void something(T t) {
+                  T var = t;
+                }
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "package foo.bar;",
-            "class Test<T> {",
-            "  class A<T2,T3,T4> {",
-            "    <T5> void something(T5 t) { ",
-            "      T5 var = t;",
-            "    }",
-            "  }",
-            "}")
+            """
+            package foo.bar;
+
+            class Test<T> {
+              class A<T2, T3, T4> {
+                <T5> void something(T5 t) {
+                  T5 var = t;
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -265,14 +341,17 @@ public class TypeParameterShadowingTest {
     refactoring
         .addInputLines(
             "in/Test.java",
-            "package foo.bar;",
-            "class Test<T> {",
-            "  static <D> void something(D t) {",
-            "    class B {",
-            "      class C<T,D> {}",
-            "    }",
-            "  }",
-            "}")
+            """
+            package foo.bar;
+
+            class Test<T> {
+              static <D> void something(D t) {
+                class B {
+                  class C<T, D> {}
+                }
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
             "package foo.bar;",
@@ -293,21 +372,25 @@ public class TypeParameterShadowingTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "package foo.bar;",
-            "import java.util.Map;",
-            "import java.util.Comparator;",
-            "class Test {",
-            "  static Comparator<Map.Entry<Integer, String>> ENTRY_COMPARATOR =",
-            "    new Comparator<Map.Entry<Integer, String>>() {",
-            "      public int compare(",
-            "          Map.Entry<Integer, String> o1, Map.Entry<Integer, String> o2) {",
-            "        return 0;",
-            "      }",
-            "      private <T extends Comparable> int c(T o1, T o2) {",
-            "        return 0;",
-            "      }",
-            "    };",
-            "}")
+            """
+package foo.bar;
+
+import java.util.Map;
+import java.util.Comparator;
+
+class Test {
+  static Comparator<Map.Entry<Integer, String>> ENTRY_COMPARATOR =
+      new Comparator<Map.Entry<Integer, String>>() {
+        public int compare(Map.Entry<Integer, String> o1, Map.Entry<Integer, String> o2) {
+          return 0;
+        }
+
+        private <T extends Comparable> int c(T o1, T o2) {
+          return 0;
+        }
+      };
+}
+""")
         .doTest();
   }
 
@@ -316,26 +399,34 @@ public class TypeParameterShadowingTest {
     refactoring
         .addInputLines(
             "in/A.java",
-            "import java.util.function.Consumer;",
-            "class A<T> {",
-            "  abstract class B<T> {",
-            "    void f() {",
-            "      g(t -> {});",
-            "    }",
-            "    abstract void g(Consumer<T> c);",
-            "  }",
-            "}")
+            """
+            import java.util.function.Consumer;
+
+            class A<T> {
+              abstract class B<T> {
+                void f() {
+                  g(t -> {});
+                }
+
+                abstract void g(Consumer<T> c);
+              }
+            }
+            """)
         .addOutputLines(
             "out/A.java",
-            "import java.util.function.Consumer;",
-            "class A<T> {",
-            "  abstract class B<T2> {",
-            "    void f() {",
-            "      g(t -> {});",
-            "    }",
-            "    abstract void g(Consumer<T2> c);",
-            "  }",
-            "}")
+            """
+            import java.util.function.Consumer;
+
+            class A<T> {
+              abstract class B<T2> {
+                void f() {
+                  g(t -> {});
+                }
+
+                abstract void g(Consumer<T2> c);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -344,26 +435,36 @@ public class TypeParameterShadowingTest {
     refactoring
         .addInputLines(
             "in/Test.java",
-            "import java.util.function.Predicate;",
-            "class Test<T> {",
-            "  <B extends Object & Comparable> void something(B b) {",
-            "    class Foo<B extends Object & Comparable> implements Predicate<B> {",
-            "        public boolean test(B b) { return false; }",
-            "    }",
-            "    new Foo<>();",
-            "  }",
-            "}")
+            """
+            import java.util.function.Predicate;
+
+            class Test<T> {
+              <B extends Object & Comparable> void something(B b) {
+                class Foo<B extends Object & Comparable> implements Predicate<B> {
+                  public boolean test(B b) {
+                    return false;
+                  }
+                }
+                new Foo<>();
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "import java.util.function.Predicate;",
-            "class Test<T> {",
-            "  <B extends Object & Comparable> void something(B b) {",
-            "    class Foo<B2 extends Object & Comparable> implements Predicate<B2> {",
-            "      public boolean test(B2 b) { return false; }",
-            "    }",
-            "    new Foo<>();",
-            "  }",
-            "}")
+            """
+            import java.util.function.Predicate;
+
+            class Test<T> {
+              <B extends Object & Comparable> void something(B b) {
+                class Foo<B2 extends Object & Comparable> implements Predicate<B2> {
+                  public boolean test(B2 b) {
+                    return false;
+                  }
+                }
+                new Foo<>();
+              }
+            }
+            """)
         .doTest();
   }
 }

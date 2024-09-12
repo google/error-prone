@@ -39,13 +39,16 @@ public final class UndefinedEqualsTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.Queue;",
-            "class Test {",
-            "  void f(Queue a, Queue b) {",
-            "  // BUG: Diagnostic contains: Subtypes of Queue are not guaranteed",
-            "    a.equals(b);",
-            "  }",
-            "}")
+            """
+            import java.util.Queue;
+
+            class Test {
+              void f(Queue a, Queue b) {
+                // BUG: Diagnostic contains: Subtypes of Queue are not guaranteed
+                a.equals(b);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -54,14 +57,17 @@ public final class UndefinedEqualsTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.Collection;",
-            "import java.util.Objects;",
-            "class Test {",
-            "  void f(Collection a, Collection b) {",
-            "     // BUG: Diagnostic contains: Collection",
-            "    Objects.equals(a,b);",
-            "  }",
-            "}")
+            """
+            import java.util.Collection;
+            import java.util.Objects;
+
+            class Test {
+              void f(Collection a, Collection b) {
+                // BUG: Diagnostic contains: Collection
+                Objects.equals(a, b);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -70,14 +76,17 @@ public final class UndefinedEqualsTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.collect.ImmutableCollection;",
-            "import java.util.Objects;",
-            "class Test {",
-            "  void f(ImmutableCollection a, ImmutableCollection b) {",
-            "     // BUG: Diagnostic contains: ImmutableCollection",
-            "    Objects.equals(a,b);",
-            "  }",
-            "}")
+            """
+            import com.google.common.collect.ImmutableCollection;
+            import java.util.Objects;
+
+            class Test {
+              void f(ImmutableCollection a, ImmutableCollection b) {
+                // BUG: Diagnostic contains: ImmutableCollection
+                Objects.equals(a, b);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -86,23 +95,26 @@ public final class UndefinedEqualsTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.List;",
-            "import com.google.common.collect.FluentIterable;",
-            "import com.google.common.collect.Iterables;",
-            "import static org.junit.Assert.assertEquals;",
-            "import static org.junit.Assert.assertNotEquals;",
-            "class Test {",
-            "  void test(List myList, List otherList) {",
-            "    // BUG: Diagnostic contains: Iterable",
-            "    assertEquals(FluentIterable.of(1), FluentIterable.of(1));",
-            "    // BUG: Diagnostic contains: Iterable",
-            "    assertEquals(Iterables.skip(myList, 1), Iterables.skip(myList, 2));",
-            "    // BUG: Diagnostic contains: Iterable",
-            "    assertNotEquals(Iterables.skip(myList, 1), Iterables.skip(myList, 2));",
-            "    // BUG: Diagnostic contains: Iterable",
-            "    assertEquals(\"foo\", Iterables.skip(myList, 1), Iterables.skip(myList, 2));",
-            "  }",
-            "}")
+            """
+            import java.util.List;
+            import com.google.common.collect.FluentIterable;
+            import com.google.common.collect.Iterables;
+            import static org.junit.Assert.assertEquals;
+            import static org.junit.Assert.assertNotEquals;
+
+            class Test {
+              void test(List myList, List otherList) {
+                // BUG: Diagnostic contains: Iterable
+                assertEquals(FluentIterable.of(1), FluentIterable.of(1));
+                // BUG: Diagnostic contains: Iterable
+                assertEquals(Iterables.skip(myList, 1), Iterables.skip(myList, 2));
+                // BUG: Diagnostic contains: Iterable
+                assertNotEquals(Iterables.skip(myList, 1), Iterables.skip(myList, 2));
+                // BUG: Diagnostic contains: Iterable
+                assertEquals("foo", Iterables.skip(myList, 1), Iterables.skip(myList, 2));
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -111,13 +123,16 @@ public final class UndefinedEqualsTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.Queue;",
-            "class Test {",
-            "  <T> void f(Queue<String> a, Queue<T> b) {",
-            "    // BUG: Diagnostic contains: Queue",
-            "    a.equals(b);",
-            "  }",
-            "}")
+            """
+            import java.util.Queue;
+
+            class Test {
+              <T> void f(Queue<String> a, Queue<T> b) {
+                // BUG: Diagnostic contains: Queue
+                a.equals(b);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -126,16 +141,19 @@ public final class UndefinedEqualsTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import java.util.Queue;",
-            "class Test {",
-            "  <T> void f(Queue<String> a, Queue<T> b) {",
-            "    // BUG: Diagnostic contains: Queue",
-            "    assertThat(a).isEqualTo(b);",
-            "    // BUG: Diagnostic contains: Queue",
-            "    assertThat(a).isNotEqualTo(b);",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import java.util.Queue;
+
+            class Test {
+              <T> void f(Queue<String> a, Queue<T> b) {
+                // BUG: Diagnostic contains: Queue
+                assertThat(a).isEqualTo(b);
+                // BUG: Diagnostic contains: Queue
+                assertThat(a).isNotEqualTo(b);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -342,22 +360,28 @@ public final class UndefinedEqualsTest {
     BugCheckerRefactoringTestHelper.newInstance(UndefinedEquals.class, getClass())
         .addInputLines(
             "Test.java",
-            "import static com.google.common.truth.Truth.assertWithMessage;",
-            "import java.lang.Iterable;",
-            "class Test {",
-            "  void f(Iterable a, Iterable b) {",
-            "    assertWithMessage(\"message\").that(a).isEqualTo(b);",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertWithMessage;
+            import java.lang.Iterable;
+
+            class Test {
+              void f(Iterable a, Iterable b) {
+                assertWithMessage("message").that(a).isEqualTo(b);
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import static com.google.common.truth.Truth.assertWithMessage;",
-            "import java.lang.Iterable;",
-            "class Test {",
-            "  void f(Iterable a, Iterable b) {",
-            "    assertWithMessage(\"message\").that(a).containsExactlyElementsIn(b);",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertWithMessage;
+            import java.lang.Iterable;
+
+            class Test {
+              void f(Iterable a, Iterable b) {
+                assertWithMessage("message").that(a).containsExactlyElementsIn(b);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -366,22 +390,28 @@ public final class UndefinedEqualsTest {
     BugCheckerRefactoringTestHelper.newInstance(UndefinedEquals.class, getClass())
         .addInputLines(
             "Test.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import java.lang.Iterable;",
-            "class Test {",
-            "  void f(Iterable a, Iterable b) {",
-            "    assertThat(a).isNotEqualTo(b);",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import java.lang.Iterable;
+
+            class Test {
+              void f(Iterable a, Iterable b) {
+                assertThat(a).isNotEqualTo(b);
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import java.lang.Iterable;",
-            "class Test {",
-            "  void f(Iterable a, Iterable b) {",
-            "    assertThat(a).isNotEqualTo(b);",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import java.lang.Iterable;
+
+            class Test {
+              void f(Iterable a, Iterable b) {
+                assertThat(a).isNotEqualTo(b);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -400,14 +430,16 @@ public final class UndefinedEqualsTest {
             "}")
         .addOutputLines(
             "Test.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import java.lang.Iterable;",
-            "class Test {",
-            "  void f(Iterable a, Iterable b) {",
-            "    assertThat(a).",
-            "      containsExactlyElementsIn(b);",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import java.lang.Iterable;
+
+            class Test {
+              void f(Iterable a, Iterable b) {
+                assertThat(a).containsExactlyElementsIn(b);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -415,18 +447,24 @@ public final class UndefinedEqualsTest {
   public void positiveSparseArray() {
     compilationHelper
         .addSourceLines(
-            "SparseArray.java", //
-            "package android.util;",
-            "public class SparseArray <T> {}")
+            "SparseArray.java",
+            """
+            package android.util;
+
+            public class SparseArray<T> {}
+            """)
         .addSourceLines(
             "Test.java",
-            "import android.util.SparseArray;",
-            "class Test {",
-            "  <T> boolean f(SparseArray<T> a, SparseArray<T> b) {",
-            "    // BUG: Diagnostic contains: SparseArray",
-            "    return a.equals(b);",
-            "  }",
-            "}")
+            """
+            import android.util.SparseArray;
+
+            class Test {
+              <T> boolean f(SparseArray<T> a, SparseArray<T> b) {
+                // BUG: Diagnostic contains: SparseArray
+                return a.equals(b);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -435,12 +473,15 @@ public final class UndefinedEqualsTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.PriorityQueue;",
-            "class Test {",
-            "  void f(PriorityQueue a, PriorityQueue b) {",
-            "    a.equals(b);",
-            "  }",
-            "}")
+            """
+            import java.util.PriorityQueue;
+
+            class Test {
+              void f(PriorityQueue a, PriorityQueue b) {
+                a.equals(b);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -449,22 +490,28 @@ public final class UndefinedEqualsTest {
     BugCheckerRefactoringTestHelper.newInstance(UndefinedEquals.class, getClass())
         .addInputLines(
             "Test.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "class Test {",
-            "  void f(CharSequence a, String b) {",
-            "    assertThat(a).isEqualTo(b);",
-            "    assertThat(b).isEqualTo(a);",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+
+            class Test {
+              void f(CharSequence a, String b) {
+                assertThat(a).isEqualTo(b);
+                assertThat(b).isEqualTo(a);
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "class Test {",
-            "  void f(CharSequence a, String b) {",
-            "    assertThat(a.toString()).isEqualTo(b);",
-            "    assertThat(b).isEqualTo(a.toString());",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+
+            class Test {
+              void f(CharSequence a, String b) {
+                assertThat(a.toString()).isEqualTo(b);
+                assertThat(b).isEqualTo(a.toString());
+              }
+            }
+            """)
         .doTest();
   }
 }

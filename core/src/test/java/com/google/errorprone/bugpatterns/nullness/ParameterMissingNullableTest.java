@@ -41,14 +41,16 @@ public class ParameterMissingNullableTest {
     aggressiveHelper
         .addSourceLines(
             "Foo.java",
-            "class Foo {",
-            "  void foo(Integer i) {",
-            "    // BUG: Diagnostic contains: @Nullable",
-            "    if (i == null) {",
-            "      i = 0;",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Foo {
+              void foo(Integer i) {
+                // BUG: Diagnostic contains: @Nullable
+                if (i == null) {
+                  i = 0;
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -57,17 +59,19 @@ public class ParameterMissingNullableTest {
     aggressiveHelper
         .addSourceLines(
             "Foo.java",
-            "class Foo {",
-            "  void foo(boolean b, Integer i) {",
-            "    if (b) {",
-            "      // BUG: Diagnostic contains: @Nullable",
-            "      int val = i == null ? 0 : i;",
-            "      if (val < 0) {",
-            "        throw new RuntimeException();",
-            "      }",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Foo {
+              void foo(boolean b, Integer i) {
+                if (b) {
+                  // BUG: Diagnostic contains: @Nullable
+                  int val = i == null ? 0 : i;
+                  if (val < 0) {
+                    throw new RuntimeException();
+                  }
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -78,13 +82,15 @@ public class ParameterMissingNullableTest {
     aggressiveHelper
         .addSourceLines(
             "Foo.java",
-            "import static com.google.common.base.Preconditions.checkArgument;",
-            "class Foo {",
-            "  void foo(Object o) {",
-            "    while (true)",
-            "      checkArgument(o != null);",
-            "  }",
-            "}")
+            """
+            import static com.google.common.base.Preconditions.checkArgument;
+
+            class Foo {
+              void foo(Object o) {
+                while (true) checkArgument(o != null);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -93,13 +99,16 @@ public class ParameterMissingNullableTest {
     aggressiveHelper
         .addSourceLines(
             "Foo.java",
-            "class Foo {",
-            "  int i;",
-            "  void foo(Integer i) {",
-            "    // BUG: Diagnostic contains: @Nullable",
-            "    this.i = i == null ? 0 : i;",
-            "  }",
-            "}")
+            """
+            class Foo {
+              int i;
+
+              void foo(Integer i) {
+                // BUG: Diagnostic contains: @Nullable
+                this.i = i == null ? 0 : i;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -108,13 +117,16 @@ public class ParameterMissingNullableTest {
     conservativeHelper
         .addSourceLines(
             "Foo.java",
-            "class Foo {",
-            "  void foo(Integer i) {}",
-            "  void bar() {",
-            "    // BUG: Diagnostic contains: @Nullable",
-            "    foo(null);",
-            "  }",
-            "}")
+            """
+            class Foo {
+              void foo(Integer i) {}
+
+              void bar() {
+                // BUG: Diagnostic contains: @Nullable
+                foo(null);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -123,13 +135,16 @@ public class ParameterMissingNullableTest {
     conservativeHelper
         .addSourceLines(
             "Foo.java",
-            "class Foo {",
-            "  Foo(Integer i) {}",
-            "  void bar() {",
-            "    // BUG: Diagnostic contains: @Nullable",
-            "    new Foo(null);",
-            "  }",
-            "}")
+            """
+            class Foo {
+              Foo(Integer i) {}
+
+              void bar() {
+                // BUG: Diagnostic contains: @Nullable
+                new Foo(null);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -138,15 +153,18 @@ public class ParameterMissingNullableTest {
     conservativeHelper
         .addSourceLines(
             "Foo.java",
-            "class Foo {",
-            "  static class Nested {",
-            "    Nested(Integer i) {}",
-            "  }",
-            "  void bar() {",
-            "    // BUG: Diagnostic contains: @Nullable",
-            "    new Foo.Nested(null);",
-            "  }",
-            "}")
+            """
+            class Foo {
+              static class Nested {
+                Nested(Integer i) {}
+              }
+
+              void bar() {
+                // BUG: Diagnostic contains: @Nullable
+                new Foo.Nested(null);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -172,24 +190,30 @@ public class ParameterMissingNullableTest {
     aggressiveRefactoringHelper
         .addInputLines(
             "in/Foo.java",
-            "import javax.annotation.Nullable;",
-            "class Foo {",
-            "  void foo(java.lang.Integer i) {",
-            "    if (i == null) {",
-            "      i = 0;",
-            "    }",
-            "  }",
-            "}")
+            """
+            import javax.annotation.Nullable;
+
+            class Foo {
+              void foo(java.lang.Integer i) {
+                if (i == null) {
+                  i = 0;
+                }
+              }
+            }
+            """)
         .addOutputLines(
             "out/Foo.java",
-            "import javax.annotation.Nullable;",
-            "class Foo {",
-            "  void foo(@Nullable java.lang.Integer i) {",
-            "    if (i == null) {",
-            "      i = 0;",
-            "    }",
-            "  }",
-            "}")
+            """
+            import javax.annotation.Nullable;
+
+            class Foo {
+              void foo(@Nullable java.lang.Integer i) {
+                if (i == null) {
+                  i = 0;
+                }
+              }
+            }
+            """)
         .doTest(TEXT_MATCH);
   }
 
@@ -198,24 +222,30 @@ public class ParameterMissingNullableTest {
     aggressiveRefactoringHelper
         .addInputLines(
             "in/Foo.java",
-            "import org.checkerframework.checker.nullness.qual.Nullable;",
-            "class Foo {",
-            "  void foo(java.lang.Integer i) {",
-            "    if (i == null) {",
-            "      i = 0;",
-            "    }",
-            "  }",
-            "}")
+            """
+            import org.checkerframework.checker.nullness.qual.Nullable;
+
+            class Foo {
+              void foo(java.lang.Integer i) {
+                if (i == null) {
+                  i = 0;
+                }
+              }
+            }
+            """)
         .addOutputLines(
             "out/Foo.java",
-            "import org.checkerframework.checker.nullness.qual.Nullable;",
-            "class Foo {",
-            "  void foo(java.lang.@Nullable Integer i) {",
-            "    if (i == null) {",
-            "      i = 0;",
-            "    }",
-            "  }",
-            "}")
+            """
+            import org.checkerframework.checker.nullness.qual.Nullable;
+
+            class Foo {
+              void foo(java.lang.@Nullable Integer i) {
+                if (i == null) {
+                  i = 0;
+                }
+              }
+            }
+            """)
         .doTest(TEXT_MATCH);
   }
 
@@ -224,14 +254,17 @@ public class ParameterMissingNullableTest {
     aggressiveHelper
         .addSourceLines(
             "Foo.java",
-            "import javax.annotation.Nullable;",
-            "class Foo {",
-            "  void foo(@Nullable Integer i) {",
-            "    if (i == null) {",
-            "      i = 0;",
-            "    }",
-            "  }",
-            "}")
+            """
+            import javax.annotation.Nullable;
+
+            class Foo {
+              void foo(@Nullable Integer i) {
+                if (i == null) {
+                  i = 0;
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -240,16 +273,21 @@ public class ParameterMissingNullableTest {
     aggressiveHelper
         .addSourceLines(
             "Foo.java",
-            "import org.checkerframework.checker.nullness.qual.Nullable;",
-            "public class Foo {",
-            "  class Inner {}",
-            "  @Nullable Inner message;",
-            "  void foo(@Nullable Inner i) {",
-            "    if (i == null) {",
-            "      return;",
-            "    }",
-            "  }",
-            "}")
+            """
+            import org.checkerframework.checker.nullness.qual.Nullable;
+
+            public class Foo {
+              class Inner {}
+
+              @Nullable Inner message;
+
+              void foo(@Nullable Inner i) {
+                if (i == null) {
+                  return;
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -258,12 +296,15 @@ public class ParameterMissingNullableTest {
     aggressiveHelper
         .addSourceLines(
             "Foo.java",
-            "import static com.google.common.base.Preconditions.checkArgument;",
-            "class Foo {",
-            "  void foo(Integer i) {",
-            "    checkArgument(i != null);",
-            "  }",
-            "}")
+            """
+            import static com.google.common.base.Preconditions.checkArgument;
+
+            class Foo {
+              void foo(Integer i) {
+                checkArgument(i != null);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -272,12 +313,15 @@ public class ParameterMissingNullableTest {
     aggressiveHelper
         .addSourceLines(
             "Foo.java",
-            "class Foo {",
-            "  void assertNot(boolean b) {}",
-            "  void foo(Integer i) {",
-            "    assertNot(i == null);",
-            "  }",
-            "}")
+            """
+            class Foo {
+              void assertNot(boolean b) {}
+
+              void foo(Integer i) {
+                assertNot(i == null);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -286,11 +330,13 @@ public class ParameterMissingNullableTest {
     aggressiveHelper
         .addSourceLines(
             "Foo.java",
-            "class Foo {",
-            "  void foo(Integer i) {",
-            "    assert (i != null);",
-            "  }",
-            "}")
+            """
+            class Foo {
+              void foo(Integer i) {
+                assert (i != null);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -299,13 +345,15 @@ public class ParameterMissingNullableTest {
     aggressiveHelper
         .addSourceLines(
             "Foo.java",
-            "class Foo {",
-            "  void foo(Integer i) {",
-            "    if (i == 7) {",
-            "      i = 0;",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Foo {
+              void foo(Integer i) {
+                if (i == 7) {
+                  i = 0;
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -314,14 +362,16 @@ public class ParameterMissingNullableTest {
     aggressiveHelper
         .addSourceLines(
             "Foo.java",
-            "class Foo {",
-            "  void foo(Integer i) {",
-            "    Integer j = 7;",
-            "    if (j == null) {",
-            "      i = 0;",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Foo {
+              void foo(Integer i) {
+                Integer j = 7;
+                if (j == null) {
+                  i = 0;
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -330,16 +380,19 @@ public class ParameterMissingNullableTest {
     aggressiveHelper
         .addSourceLines(
             "Foo.java",
-            "class Foo {",
-            "  void foo(Integer i) {",
-            "    if (i == null) {",
-            "      throw something();",
-            "    }",
-            "  }",
-            "  RuntimeException something() {",
-            "    return new RuntimeException();",
-            "  }",
-            "}")
+            """
+            class Foo {
+              void foo(Integer i) {
+                if (i == null) {
+                  throw something();
+                }
+              }
+
+              RuntimeException something() {
+                return new RuntimeException();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -348,16 +401,19 @@ public class ParameterMissingNullableTest {
     aggressiveHelper
         .addSourceLines(
             "Foo.java",
-            "class Foo {",
-            "  void foo(Integer i) {",
-            "    if (i == null) {",
-            "      throwIt(new RuntimeException());",
-            "    }",
-            "  }",
-            "  void throwIt(RuntimeException x) {",
-            "    throw x;",
-            "  }",
-            "}")
+            """
+            class Foo {
+              void foo(Integer i) {
+                if (i == null) {
+                  throwIt(new RuntimeException());
+                }
+              }
+
+              void throwIt(RuntimeException x) {
+                throw x;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -366,10 +422,13 @@ public class ParameterMissingNullableTest {
     aggressiveHelper
         .addSourceLines(
             "Foo.java",
-            "interface Foo {",
-            "  Foo FOO = o -> o == null ? 0 : o;",
-            "  int toInt(Integer o);",
-            "}")
+            """
+            interface Foo {
+              Foo FOO = o -> o == null ? 0 : o;
+
+              int toInt(Integer o);
+            }
+            """)
         .doTest();
   }
 
@@ -378,14 +437,17 @@ public class ParameterMissingNullableTest {
     aggressiveHelper
         .addSourceLines(
             "Foo.java",
-            "class Foo {",
-            "  Foo next;",
-            "  void foo(Foo foo) {",
-            "    do {",
-            "      foo = foo.next;",
-            "    } while (foo != null);",
-            "  }",
-            "}")
+            """
+            class Foo {
+              Foo next;
+
+              void foo(Foo foo) {
+                do {
+                  foo = foo.next;
+                } while (foo != null);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -399,14 +461,17 @@ public class ParameterMissingNullableTest {
     aggressiveHelper
         .addSourceLines(
             "Foo.java",
-            "class Foo {",
-            "  Foo next;",
-            "  void foo(Foo foo) {",
-            "    while (foo != null) {",
-            "      foo = foo.next;",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Foo {
+              Foo next;
+
+              void foo(Foo foo) {
+                while (foo != null) {
+                  foo = foo.next;
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -416,12 +481,15 @@ public class ParameterMissingNullableTest {
     aggressiveHelper
         .addSourceLines(
             "Foo.java",
-            "class Foo {",
-            "  Foo next;",
-            "  void foo(Foo foo) {",
-            "    for (; foo != null; foo = foo.next) {}",
-            "  }",
-            "}")
+            """
+            class Foo {
+              Foo next;
+
+              void foo(Foo foo) {
+                for (; foo != null; foo = foo.next) {}
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -430,12 +498,15 @@ public class ParameterMissingNullableTest {
     conservativeHelper
         .addSourceLines(
             "Foo.java",
-            "class Foo {",
-            "  void foo(Integer i) {}",
-            "  void bar() {",
-            "    foo(1);",
-            "  }",
-            "}")
+            """
+            class Foo {
+              void foo(Integer i) {}
+
+              void bar() {
+                foo(1);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -444,13 +515,17 @@ public class ParameterMissingNullableTest {
     conservativeHelper
         .addSourceLines(
             "Foo.java",
-            "import javax.annotation.Nullable;",
-            "class Foo {",
-            "  void foo(@Nullable Integer i) {}",
-            "  void bar() {",
-            "    foo(null);",
-            "  }",
-            "}")
+            """
+            import javax.annotation.Nullable;
+
+            class Foo {
+              void foo(@Nullable Integer i) {}
+
+              void bar() {
+                foo(null);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -459,12 +534,15 @@ public class ParameterMissingNullableTest {
     conservativeHelper
         .addSourceLines(
             "Foo.java",
-            "class Foo {",
-            "  <T> void foo(T t) {}",
-            "  void bar() {",
-            "    foo(null);",
-            "  }",
-            "}")
+            """
+            class Foo {
+              <T> void foo(T t) {}
+
+              void bar() {
+                foo(null);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -472,17 +550,21 @@ public class ParameterMissingNullableTest {
   public void negativeCallOtherCompilationUnit() {
     conservativeHelper
         .addSourceLines(
-            "Foo.java", //
-            "class Foo {",
-            "  void foo(Integer i) {}",
-            "}")
+            "Foo.java",
+            """
+            class Foo {
+              void foo(Integer i) {}
+            }
+            """)
         .addSourceLines(
-            "Bar.java", //
-            "class Bar {",
-            "  void bar(Foo foo) {",
-            "    foo.foo(null);",
-            "  }",
-            "}")
+            "Bar.java",
+            """
+            class Bar {
+              void bar(Foo foo) {
+                foo.foo(null);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -491,12 +573,15 @@ public class ParameterMissingNullableTest {
     conservativeHelper
         .addSourceLines(
             "Foo.java",
-            "class Foo {",
-            "  void foo(Integer... i) {}",
-            "  void bar() {",
-            "    foo(null, 1);",
-            "  }",
-            "}")
+            """
+            class Foo {
+              void foo(Integer... i) {}
+
+              void bar() {
+                foo(null, 1);
+              }
+            }
+            """)
         .doTest();
   }
 }

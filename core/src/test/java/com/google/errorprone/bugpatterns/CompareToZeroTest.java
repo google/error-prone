@@ -35,12 +35,14 @@ public final class CompareToZeroTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  boolean test(Integer i) {",
-            "    // BUG: Diagnostic contains: compared",
-            "    return i.compareTo(2) == -1;",
-            "  }",
-            "}")
+            """
+            class Test {
+              boolean test(Integer i) {
+                // BUG: Diagnostic contains: compared
+                return i.compareTo(2) == -1;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -49,12 +51,14 @@ public final class CompareToZeroTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  boolean test(boolean x, boolean y) {",
-            "    // BUG: Diagnostic contains: compared",
-            "    return Boolean.compare(x, y) == -1;",
-            "  }",
-            "}")
+            """
+            class Test {
+              boolean test(boolean x, boolean y) {
+                // BUG: Diagnostic contains: compared
+                return Boolean.compare(x, y) == -1;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -63,12 +67,14 @@ public final class CompareToZeroTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  boolean test(Integer i) {",
-            "    // BUG: Diagnostic contains: consistency",
-            "    return i.compareTo(2) <= -1;",
-            "  }",
-            "}")
+            """
+            class Test {
+              boolean test(Integer i) {
+                // BUG: Diagnostic contains: consistency
+                return i.compareTo(2) <= -1;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -77,12 +83,14 @@ public final class CompareToZeroTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  boolean test(Integer i) {",
-            "    // BUG: Diagnostic matches: KEY",
-            "    return i.compareTo(2) >= 1;",
-            "  }",
-            "}")
+            """
+            class Test {
+              boolean test(Integer i) {
+                // BUG: Diagnostic matches: KEY
+                return i.compareTo(2) >= 1;
+              }
+            }
+            """)
         .expectErrorMessage(
             "KEY", msg -> msg.contains("consistency") && !msg.contains("implementation"))
         .doTest();
@@ -93,12 +101,14 @@ public final class CompareToZeroTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  int test(Integer i) {",
-            "    // BUG: Diagnostic contains:",
-            "    return i.compareTo(2) + i.compareTo(3);",
-            "  }",
-            "}")
+            """
+            class Test {
+              int test(Integer i) {
+                // BUG: Diagnostic contains:
+                return i.compareTo(2) + i.compareTo(3);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -107,11 +117,13 @@ public final class CompareToZeroTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  String test(Integer i) {",
-            "    return \"\" + i.compareTo(3);",
-            "  }",
-            "}")
+            """
+            class Test {
+              String test(Integer i) {
+                return "" + i.compareTo(3);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -120,32 +132,36 @@ public final class CompareToZeroTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  void test(Integer i) {",
-            "    boolean b1 = i.compareTo(2) == -1;",
-            "    boolean b2 = i.compareTo(2) > -1;",
-            "    boolean b3 = -1 < i.compareTo(2);",
-            "    boolean b4 = i.compareTo(2) < 1;",
-            "    boolean b5 = i.compareTo(2) != -1;",
-            "    boolean b6 = i.compareTo(2) != 1;",
-            "    boolean b7 = i.compareTo(2) <= -1;",
-            "    boolean b8 = ((i.compareTo(2))) >= 1;",
-            "  }",
-            "}")
+            """
+            class Test {
+              void test(Integer i) {
+                boolean b1 = i.compareTo(2) == -1;
+                boolean b2 = i.compareTo(2) > -1;
+                boolean b3 = -1 < i.compareTo(2);
+                boolean b4 = i.compareTo(2) < 1;
+                boolean b5 = i.compareTo(2) != -1;
+                boolean b6 = i.compareTo(2) != 1;
+                boolean b7 = i.compareTo(2) <= -1;
+                boolean b8 = ((i.compareTo(2))) >= 1;
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "class Test {",
-            "  void test(Integer i) {",
-            "    boolean b1 = i.compareTo(2) < 0;",
-            "    boolean b2 = i.compareTo(2) >= 0;",
-            "    boolean b3 = i.compareTo(2) >= 0;",
-            "    boolean b4 = i.compareTo(2) <= 0;",
-            "    boolean b5 = i.compareTo(2) >= 0;",
-            "    boolean b6 = i.compareTo(2) <= 0;",
-            "    boolean b7 = i.compareTo(2) < 0;",
-            "    boolean b8 = ((i.compareTo(2))) > 0;",
-            "  }",
-            "}")
+            """
+            class Test {
+              void test(Integer i) {
+                boolean b1 = i.compareTo(2) < 0;
+                boolean b2 = i.compareTo(2) >= 0;
+                boolean b3 = i.compareTo(2) >= 0;
+                boolean b4 = i.compareTo(2) <= 0;
+                boolean b5 = i.compareTo(2) >= 0;
+                boolean b6 = i.compareTo(2) <= 0;
+                boolean b7 = i.compareTo(2) < 0;
+                boolean b8 = ((i.compareTo(2))) > 0;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -154,13 +170,15 @@ public final class CompareToZeroTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void test(Integer i) {",
-            "    boolean b1 = i.compareTo(2) < 0;",
-            "    boolean b2 = i.compareTo(2) > 0;",
-            "    boolean b3 = i.compareTo(2) == 0;",
-            "  }",
-            "}")
+            """
+            class Test {
+              void test(Integer i) {
+                boolean b1 = i.compareTo(2) < 0;
+                boolean b2 = i.compareTo(2) > 0;
+                boolean b3 = i.compareTo(2) == 0;
+              }
+            }
+            """)
         .doTest();
   }
 }

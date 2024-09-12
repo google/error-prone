@@ -35,37 +35,44 @@ public class InvalidTimeZoneIDTest {
     compilationHelper
         .addSourceLines(
             "a/A.java",
-            "package a;",
-            "import java.util.TimeZone;",
-            "class A {",
-            "  private static final String TIMEZONE_ID = \"unknown\";",
-            "  public static void test() {",
-            "    // BUG: Diagnostic contains:",
-            "    TimeZone.getTimeZone(\"\");",
-            "    // BUG: Diagnostic contains:",
-            "    TimeZone.getTimeZone(\"unknown\");",
-            "    // BUG: Diagnostic contains:",
-            "    TimeZone.getTimeZone(TIMEZONE_ID);",
-            "    // BUG: Diagnostic contains:",
-            "    TimeZone.getTimeZone(\"America/Los_Angele\");",
-            "    // BUG: Diagnostic contains:",
-            "    TimeZone.getTimeZone(\"KST\");",
-            "  }",
-            "  public static void invalidCustomIDs() {",
-            "    // BUG: Diagnostic contains:",
-            "    TimeZone.getTimeZone(\"UTC+0\");",
-            "    // BUG: Diagnostic contains:",
-            "    TimeZone.getTimeZone(\"GMT+24\");",
-            "    // BUG: Diagnostic contains:",
-            "    TimeZone.getTimeZone(\"GMT1\");",
-            "    // BUG: Diagnostic contains:",
-            "    TimeZone.getTimeZone(\"GMT/0\");",
-            "  }",
-            "  public static void underscoreSuggestion() {",
-            "    // BUG: Diagnostic contains: America/Los_Angeles",
-            "    TimeZone.getTimeZone(\"America/Los Angeles\");",
-            "  }",
-            "}")
+            """
+            package a;
+
+            import java.util.TimeZone;
+
+            class A {
+              private static final String TIMEZONE_ID = "unknown";
+
+              public static void test() {
+                // BUG: Diagnostic contains:
+                TimeZone.getTimeZone("");
+                // BUG: Diagnostic contains:
+                TimeZone.getTimeZone("unknown");
+                // BUG: Diagnostic contains:
+                TimeZone.getTimeZone(TIMEZONE_ID);
+                // BUG: Diagnostic contains:
+                TimeZone.getTimeZone("America/Los_Angele");
+                // BUG: Diagnostic contains:
+                TimeZone.getTimeZone("KST");
+              }
+
+              public static void invalidCustomIDs() {
+                // BUG: Diagnostic contains:
+                TimeZone.getTimeZone("UTC+0");
+                // BUG: Diagnostic contains:
+                TimeZone.getTimeZone("GMT+24");
+                // BUG: Diagnostic contains:
+                TimeZone.getTimeZone("GMT1");
+                // BUG: Diagnostic contains:
+                TimeZone.getTimeZone("GMT/0");
+              }
+
+              public static void underscoreSuggestion() {
+                // BUG: Diagnostic contains: America/Los_Angeles
+                TimeZone.getTimeZone("America/Los Angeles");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -74,28 +81,35 @@ public class InvalidTimeZoneIDTest {
     compilationHelper
         .addSourceLines(
             "a/A.java",
-            "package a;",
-            "import java.util.TimeZone;",
-            "class A {",
-            "  private static final String TIMEZONE_ID = \"America/New_York\";",
-            "  public static void ianaIDs() {",
-            "    TimeZone.getTimeZone(\"America/Los_Angeles\");",
-            "    TimeZone.getTimeZone(TIMEZONE_ID);",
-            "    TimeZone.getTimeZone(\"Europe/London\");",
-            "  }",
-            "  public static void customIDs() {",
-            "    // Custom IDs",
-            "    TimeZone.getTimeZone(\"GMT+0\");",
-            "    TimeZone.getTimeZone(\"GMT+00\");",
-            "    TimeZone.getTimeZone(\"GMT+00:00\");",
-            "  }",
-            "  public static void threeLetterIDs() {",
-            "    TimeZone.getTimeZone(\"GMT\");",
-            "    TimeZone.getTimeZone(\"UTC\");",
-            "    // Some 3-letter IDs are deprecated, but are still recognized.",
-            "    TimeZone.getTimeZone(\"PST\");",
-            "  }",
-            "}")
+            """
+            package a;
+
+            import java.util.TimeZone;
+
+            class A {
+              private static final String TIMEZONE_ID = "America/New_York";
+
+              public static void ianaIDs() {
+                TimeZone.getTimeZone("America/Los_Angeles");
+                TimeZone.getTimeZone(TIMEZONE_ID);
+                TimeZone.getTimeZone("Europe/London");
+              }
+
+              public static void customIDs() {
+                // Custom IDs
+                TimeZone.getTimeZone("GMT+0");
+                TimeZone.getTimeZone("GMT+00");
+                TimeZone.getTimeZone("GMT+00:00");
+              }
+
+              public static void threeLetterIDs() {
+                TimeZone.getTimeZone("GMT");
+                TimeZone.getTimeZone("UTC");
+                // Some 3-letter IDs are deprecated, but are still recognized.
+                TimeZone.getTimeZone("PST");
+              }
+            }
+            """)
         .doTest();
   }
 }

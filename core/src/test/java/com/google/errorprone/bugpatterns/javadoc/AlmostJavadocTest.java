@@ -37,29 +37,35 @@ public final class AlmostJavadocTest {
   public void refactoring() {
     refactoring
         .addInputLines(
-            "Test.java", //
-            "public class Test {",
-            "  /* Foo {@link Test}. */",
-            "  void foo() {}",
-            "  /*",
-            "   * Bar.",
-            "   *",
-            "   * @param bar bar",
-            "   */",
-            "  void bar (int bar) {}",
-            "}")
+            "Test.java",
+            """
+            public class Test {
+              /* Foo {@link Test}. */
+              void foo() {}
+
+              /*
+               * Bar.
+               *
+               * @param bar bar
+               */
+              void bar(int bar) {}
+            }
+            """)
         .addOutputLines(
-            "Test.java", //
-            "public class Test {",
-            "  /** Foo {@link Test}. */",
-            "  void foo() {}",
-            "  /**",
-            "   * Bar.",
-            "   *",
-            "   * @param bar bar",
-            "   */",
-            "  void bar (int bar) {}",
-            "}")
+            "Test.java",
+            """
+            public class Test {
+              /** Foo {@link Test}. */
+              void foo() {}
+
+              /**
+               * Bar.
+               *
+               * @param bar bar
+               */
+              void bar(int bar) {}
+            }
+            """)
         .doTest(TEXT_MATCH);
   }
 
@@ -67,11 +73,13 @@ public final class AlmostJavadocTest {
   public void notJavadocButNoTag() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "public class Test {",
-            "  /* Foo. */",
-            "  void foo() {}",
-            "}")
+            "Test.java",
+            """
+            public class Test {
+              /* Foo. */
+              void foo() {}
+            }
+            """)
         .doTest();
   }
 
@@ -79,25 +87,33 @@ public final class AlmostJavadocTest {
   public void blockCommentWithMultilineClose() {
     refactoring
         .addInputLines(
-            "Test.java", //
-            "interface Test {",
-            "  // Foo. {@link Test} */",
-            "  void foo();",
-            "  // ** Bar. {@link Test} */",
-            "  void bar();",
-            "  // /** Baz. {@link Test} */",
-            "  void baz();",
-            "}")
+            "Test.java",
+            """
+            interface Test {
+              // Foo. {@link Test} */
+              void foo();
+
+              // ** Bar. {@link Test} */
+              void bar();
+
+              // /** Baz. {@link Test} */
+              void baz();
+            }
+            """)
         .addOutputLines(
-            "Test.java", //
-            "interface Test {",
-            "  /** Foo. {@link Test} */",
-            "  void foo();",
-            "  /** Bar. {@link Test} */",
-            "  void bar();",
-            "  /** Baz. {@link Test} */",
-            "  void baz();",
-            "}")
+            "Test.java",
+            """
+            interface Test {
+              /** Foo. {@link Test} */
+              void foo();
+
+              /** Bar. {@link Test} */
+              void bar();
+
+              /** Baz. {@link Test} */
+              void baz();
+            }
+            """)
         .doTest(TEXT_MATCH);
   }
 
@@ -105,19 +121,25 @@ public final class AlmostJavadocTest {
   public void pathlogicalBlockCommentCases() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "interface Test {",
-            "  // */",
-            "  void foo();",
-            "  // bar /* bar */",
-            "  void bar();",
-            "  // Baz. */",
-            "  void baz();",
-            "  // ** Foobar. */",
-            "  void foobar();",
-            "  // /** Barbaz. */",
-            "  void barbaz();",
-            "}")
+            "Test.java",
+            """
+            interface Test {
+              // */
+              void foo();
+
+              // bar /* bar */
+              void bar();
+
+              // Baz. */
+              void baz();
+
+              // ** Foobar. */
+              void foobar();
+
+              // /** Barbaz. */
+              void barbaz();
+            }
+            """)
         .doTest();
   }
 
@@ -125,12 +147,14 @@ public final class AlmostJavadocTest {
   public void suppression() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "public class Test {",
-            "  /* Foo {@link Test}. */",
-            "  @SuppressWarnings(\"AlmostJavadoc\")",
-            "  void foo() {}",
-            "}")
+            "Test.java",
+            """
+            public class Test {
+              /* Foo {@link Test}. */
+              @SuppressWarnings("AlmostJavadoc")
+              void foo() {}
+            }
+            """)
         .doTest();
   }
 
@@ -138,12 +162,14 @@ public final class AlmostJavadocTest {
   public void alreadyHasJavadoc_noMatch() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "public class Test {",
-            "  /** Foo. */",
-            "  /* Strange extra documentation with {@link tags}. */",
-            "  void foo() {}",
-            "}")
+            "Test.java",
+            """
+            public class Test {
+              /** Foo. */
+              /* Strange extra documentation with {@link tags}. */
+              void foo() {}
+            }
+            """)
         .doTest();
   }
 
@@ -151,12 +177,14 @@ public final class AlmostJavadocTest {
   public void htmlTag() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "public class Test {",
-            "  // BUG: Diagnostic contains:",
-            "  /* Foo <em>Test</em>. */",
-            "  void foo() {}",
-            "}")
+            "Test.java",
+            """
+            public class Test {
+              // BUG: Diagnostic contains:
+              /* Foo <em>Test</em>. */
+              void foo() {}
+            }
+            """)
         .doTest();
   }
 
@@ -164,12 +192,14 @@ public final class AlmostJavadocTest {
   public void enumConstant() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "public enum Test {",
-            "  // BUG: Diagnostic contains:",
-            "  /* Foo <em>Test</em>. */",
-            "  FOO",
-            "}")
+            "Test.java",
+            """
+            public enum Test {
+              // BUG: Diagnostic contains:
+              /* Foo <em>Test</em>. */
+              FOO
+            }
+            """)
         .doTest();
   }
 
@@ -177,16 +207,19 @@ public final class AlmostJavadocTest {
   public void abstractEnumConstant() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "public enum Test {",
-            "  // BUG: Diagnostic contains:",
-            "  /* Foo <em>Test</em>. */",
-            "  FOO {",
-            "    @Override public String toString() {",
-            "      return null;",
-            "    }",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            public enum Test {
+              // BUG: Diagnostic contains:
+              /* Foo <em>Test</em>. */
+              FOO {
+                @Override
+                public String toString() {
+                  return null;
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -194,12 +227,14 @@ public final class AlmostJavadocTest {
   public void multiField() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "public class Test {",
-            "  // BUG: Diagnostic contains:",
-            "  /* Foo <em>Test</em>. */",
-            "  int x = 1, y = 2;",
-            "}")
+            "Test.java",
+            """
+            public class Test {
+              // BUG: Diagnostic contains:
+              /* Foo <em>Test</em>. */
+              int x = 1, y = 2;
+            }
+            """)
         .doTest();
   }
 
@@ -207,11 +242,13 @@ public final class AlmostJavadocTest {
   public void doesNotFireOnTemplateParameters() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "public class Test {",
-            "  /* Foo<T>. */",
-            "  int x = 1, y = 2;",
-            "}")
+            "Test.java",
+            """
+            public class Test {
+              /* Foo<T>. */
+              int x = 1, y = 2;
+            }
+            """)
         .doTest();
   }
 }

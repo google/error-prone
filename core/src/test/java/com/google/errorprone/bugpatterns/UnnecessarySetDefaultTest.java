@@ -39,31 +39,37 @@ public class UnnecessarySetDefaultTest {
     testHelper
         .addInputLines(
             "in/Test.java",
-            "import com.google.common.collect.ImmutableList;",
-            "import com.google.common.testing.NullPointerTester;",
-            "class Test {",
-            "  {",
-            "    NullPointerTester tester = new NullPointerTester();",
-            "    tester.setDefault(String.class, \"\");",
-            "    tester",
-            "        .setDefault(ImmutableList.class, ImmutableList.of(42))",
-            "        .setDefault(ImmutableList.class, ImmutableList.of())",
-            "        .setDefault(ImmutableList.class, ImmutableList.<String>of())",
-            "        .setDefault(ImmutableList.class, ImmutableList.of(42));",
-            "  }",
-            "}")
+            """
+            import com.google.common.collect.ImmutableList;
+            import com.google.common.testing.NullPointerTester;
+
+            class Test {
+              {
+                NullPointerTester tester = new NullPointerTester();
+                tester.setDefault(String.class, "");
+                tester
+                    .setDefault(ImmutableList.class, ImmutableList.of(42))
+                    .setDefault(ImmutableList.class, ImmutableList.of())
+                    .setDefault(ImmutableList.class, ImmutableList.<String>of())
+                    .setDefault(ImmutableList.class, ImmutableList.of(42));
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "import com.google.common.collect.ImmutableList;",
-            "import com.google.common.testing.NullPointerTester;",
-            "class Test {",
-            "  {",
-            "    NullPointerTester tester = new NullPointerTester();",
-            "    tester",
-            "        .setDefault(ImmutableList.class, ImmutableList.of(42))",
-            "        .setDefault(ImmutableList.class, ImmutableList.of(42));",
-            "  }",
-            "}")
+            """
+            import com.google.common.collect.ImmutableList;
+            import com.google.common.testing.NullPointerTester;
+
+            class Test {
+              {
+                NullPointerTester tester = new NullPointerTester();
+                tester
+                    .setDefault(ImmutableList.class, ImmutableList.of(42))
+                    .setDefault(ImmutableList.class, ImmutableList.of(42));
+              }
+            }
+            """)
         .doTest();
   }
 

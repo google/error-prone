@@ -47,15 +47,17 @@ public class ArrayToStringTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void f(int[] xs) {",
-            "    // BUG: Diagnostic contains: (\"\" + Arrays.toString(xs));",
-            "    System.err.println(\"\" + xs);",
-            "    String s = \"\";",
-            "    // BUG: Diagnostic contains: s += Arrays.toString(xs);",
-            "    s += xs;",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f(int[] xs) {
+                // BUG: Diagnostic contains: ("" + Arrays.toString(xs));
+                System.err.println("" + xs);
+                String s = "";
+                // BUG: Diagnostic contains: s += Arrays.toString(xs);
+                s += xs;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -64,25 +66,36 @@ public class ArrayToStringTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  int[] g() { return null; }",
-            "  void f(int[] xs) {",
-            "    System.err.println(xs);",
-            "    System.err.println(String.valueOf(xs));",
-            "    System.err.println(String.valueOf(g()));",
-            "  }",
-            "}")
+            """
+            class Test {
+              int[] g() {
+                return null;
+              }
+
+              void f(int[] xs) {
+                System.err.println(xs);
+                System.err.println(String.valueOf(xs));
+                System.err.println(String.valueOf(g()));
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import java.util.Arrays;",
-            "class Test {",
-            "  int[] g() { return null; }",
-            "  void f(int[] xs) {",
-            "    System.err.println(Arrays.toString(xs));",
-            "    System.err.println(Arrays.toString(xs));",
-            "    System.err.println(Arrays.toString(g()));",
-            "  }",
-            "}")
+            """
+            import java.util.Arrays;
+
+            class Test {
+              int[] g() {
+                return null;
+              }
+
+              void f(int[] xs) {
+                System.err.println(Arrays.toString(xs));
+                System.err.println(Arrays.toString(xs));
+                System.err.println(Arrays.toString(g()));
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -91,11 +104,13 @@ public class ArrayToStringTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void f(char[] xs) {",
-            "    System.err.println(String.valueOf(xs));",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f(char[] xs) {
+                System.err.println(String.valueOf(xs));
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -104,12 +119,14 @@ public class ArrayToStringTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void f(int[] xs) {",
-            "    // BUG: Diagnostic contains: append(Arrays.toString(xs))",
-            "    new StringBuilder().append(xs);",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f(int[] xs) {
+                // BUG: Diagnostic contains: append(Arrays.toString(xs))
+                new StringBuilder().append(xs);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -122,16 +139,20 @@ public class ArrayToStringTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.FormatMethod;",
-            "class Test {",
-            "  private void test(Object[] arr) {",
-            "    format(\"%s %s\", arr, 2);",
-            "  }",
-            "  @FormatMethod",
-            "  String format(String format, Object... args) {",
-            "    return String.format(format, args);",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.FormatMethod;
+
+            class Test {
+              private void test(Object[] arr) {
+                format("%s %s", arr, 2);
+              }
+
+              @FormatMethod
+              String format(String format, Object... args) {
+                return String.format(format, args);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -140,15 +161,18 @@ public class ArrayToStringTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  private void test() {",
-            "    // BUG: Diagnostic contains:",
-            "    String.format(\"%s %s\", arr(), 1);",
-            "  }",
-            "  Object[] arr() {",
-            "    return null;",
-            "  }",
-            "}")
+            """
+            class Test {
+              private void test() {
+                // BUG: Diagnostic contains:
+                String.format("%s %s", arr(), 1);
+              }
+
+              Object[] arr() {
+                return null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -157,12 +181,14 @@ public class ArrayToStringTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void test(Exception e) {",
-            "    // BUG: Diagnostic contains: Throwables.getStackTraceAsString(e)",
-            "    String.format(\"%s, %s\", 1, e.getStackTrace());",
-            "  }",
-            "}")
+            """
+            class Test {
+              void test(Exception e) {
+                // BUG: Diagnostic contains: Throwables.getStackTraceAsString(e)
+                String.format("%s, %s", 1, e.getStackTrace());
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -191,12 +217,15 @@ public class ArrayToStringTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.base.Joiner;",
-            "class Test {",
-            "  String test(Joiner j, Object[] a) {",
-            "    return j.join(a);",
-            "  }",
-            "}")
+            """
+            import com.google.common.base.Joiner;
+
+            class Test {
+              String test(Joiner j, Object[] a) {
+                return j.join(a);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -205,12 +234,15 @@ public class ArrayToStringTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.base.Joiner;",
-            "class Test {",
-            "  String test(Joiner j, Object first, Object second, Object[] rest) {",
-            "    return j.join(first, second, rest);",
-            "  }",
-            "}")
+            """
+            import com.google.common.base.Joiner;
+
+            class Test {
+              String test(Joiner j, Object first, Object second, Object[] rest) {
+                return j.join(first, second, rest);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -219,13 +251,16 @@ public class ArrayToStringTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.base.Joiner;",
-            "class Test {",
-            "  String test(Joiner j, Object first, Object second, Object third, Object[] rest) {",
-            "    // BUG: Diagnostic contains:",
-            "    return j.join(first, second, third, rest);",
-            "  }",
-            "}")
+            """
+            import com.google.common.base.Joiner;
+
+            class Test {
+              String test(Joiner j, Object first, Object second, Object third, Object[] rest) {
+                // BUG: Diagnostic contains:
+                return j.join(first, second, third, rest);
+              }
+            }
+            """)
         .doTest();
   }
 }

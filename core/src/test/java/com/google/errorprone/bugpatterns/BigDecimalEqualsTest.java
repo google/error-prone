@@ -33,18 +33,21 @@ public final class BigDecimalEqualsTest {
     CompilationTestHelper.newInstance(BigDecimalEquals.class, getClass())
         .addSourceLines(
             "Test.java",
-            "import com.google.common.base.Objects;",
-            "import java.math.BigDecimal;",
-            "class Test {",
-            "  void test(BigDecimal a, BigDecimal b) {",
-            "    // BUG: Diagnostic contains:",
-            "    boolean foo = a.equals(b);",
-            "    // BUG: Diagnostic contains:",
-            "    boolean bar = !a.equals(b);",
-            "    // BUG: Diagnostic contains:",
-            "    boolean baz = Objects.equal(a, b);",
-            "  }",
-            "}")
+            """
+            import com.google.common.base.Objects;
+            import java.math.BigDecimal;
+
+            class Test {
+              void test(BigDecimal a, BigDecimal b) {
+                // BUG: Diagnostic contains:
+                boolean foo = a.equals(b);
+                // BUG: Diagnostic contains:
+                boolean bar = !a.equals(b);
+                // BUG: Diagnostic contains:
+                boolean baz = Objects.equal(a, b);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -53,17 +56,23 @@ public final class BigDecimalEqualsTest {
     CompilationTestHelper.newInstance(BigDecimalEquals.class, getClass())
         .addSourceLines(
             "Test.java",
-            "import java.math.BigDecimal;",
-            "class Test {",
-            "  BigDecimal a;",
-            "  BigDecimal b;",
-            "  boolean f(String a, String b) {",
-            "    return a.equals(b);",
-            "  }",
-            "  @Override public boolean equals(Object o) {",
-            "    return a.equals(b);",
-            "  }",
-            "}")
+            """
+            import java.math.BigDecimal;
+
+            class Test {
+              BigDecimal a;
+              BigDecimal b;
+
+              boolean f(String a, String b) {
+                return a.equals(b);
+              }
+
+              @Override
+              public boolean equals(Object o) {
+                return a.equals(b);
+              }
+            }
+            """)
         .doTest();
   }
 }

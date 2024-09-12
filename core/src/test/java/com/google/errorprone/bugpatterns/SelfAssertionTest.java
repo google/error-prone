@@ -52,17 +52,22 @@ public class SelfAssertionTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import com.google.common.truth.IntegerSubject;",
-            "import java.util.Arrays;",
-            "abstract class Test {",
-            "  abstract IntegerSubject f(int i);",
-            "  abstract IntegerSubject g();",
-            "  void test(int x) {",
-            "    f(x).isEqualTo(x);",
-            "    g().isEqualTo(x);",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import com.google.common.truth.IntegerSubject;
+            import java.util.Arrays;
+
+            abstract class Test {
+              abstract IntegerSubject f(int i);
+
+              abstract IntegerSubject g();
+
+              void test(int x) {
+                f(x).isEqualTo(x);
+                g().isEqualTo(x);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -71,14 +76,17 @@ public class SelfAssertionTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import java.util.List;",
-            "abstract class Test {",
-            "  void test(List<String> xs) {",
-            "    // BUG: Diagnostic contains:",
-            "    assertThat(xs).containsExactlyElementsIn(xs);",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import java.util.List;
+
+            abstract class Test {
+              void test(List<String> xs) {
+                // BUG: Diagnostic contains:
+                assertThat(xs).containsExactlyElementsIn(xs);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -87,15 +95,18 @@ public class SelfAssertionTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import java.time.Duration;",
-            "abstract class Test {",
-            "  void test(int x) {",
-            "    x = 2;",
-            "    // BUG: Diagnostic contains:",
-            "    assertThat(x).isEqualTo(x);",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import java.time.Duration;
+
+            abstract class Test {
+              void test(int x) {
+                x = 2;
+                // BUG: Diagnostic contains:
+                assertThat(x).isEqualTo(x);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -104,14 +115,17 @@ public class SelfAssertionTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.truth.Truth.assertThat;",
-            "import java.time.Duration;",
-            "abstract class Test {",
-            "  void test(int x) {",
-            "    // BUG: Diagnostic contains:",
-            "    assertThat(Duration.ofMillis(x)).isEqualTo(Duration.ofMillis(x));",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import java.time.Duration;
+
+            abstract class Test {
+              void test(int x) {
+                // BUG: Diagnostic contains:
+                assertThat(Duration.ofMillis(x)).isEqualTo(Duration.ofMillis(x));
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -120,15 +134,18 @@ public class SelfAssertionTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static org.junit.Assert.assertEquals;",
-            "abstract class Test {",
-            "  void test(int x) {",
-            "    // BUG: Diagnostic contains: pass",
-            "    assertEquals(x, x);",
-            "    // BUG: Diagnostic contains: pass",
-            "    assertEquals(\"foo\", x, x);",
-            "  }",
-            "}")
+            """
+            import static org.junit.Assert.assertEquals;
+
+            abstract class Test {
+              void test(int x) {
+                // BUG: Diagnostic contains: pass
+                assertEquals(x, x);
+                // BUG: Diagnostic contains: pass
+                assertEquals("foo", x, x);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -137,15 +154,18 @@ public class SelfAssertionTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static org.junit.Assert.assertNotEquals;",
-            "abstract class Test {",
-            "  void test(int x) {",
-            "    // BUG: Diagnostic contains: fail",
-            "    assertNotEquals(x, x);",
-            "    // BUG: Diagnostic contains: fail",
-            "    assertNotEquals(\"foo\", x, x);",
-            "  }",
-            "}")
+            """
+            import static org.junit.Assert.assertNotEquals;
+
+            abstract class Test {
+              void test(int x) {
+                // BUG: Diagnostic contains: fail
+                assertNotEquals(x, x);
+                // BUG: Diagnostic contains: fail
+                assertNotEquals("foo", x, x);
+              }
+            }
+            """)
         .doTest();
   }
 }

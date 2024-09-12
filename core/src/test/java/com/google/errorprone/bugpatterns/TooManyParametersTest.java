@@ -62,27 +62,28 @@ public class TooManyParametersTest {
         .setArgs(ImmutableList.of("-XepOpt:" + TOO_MANY_PARAMETERS_FLAG_NAME + "=3"))
         .addSourceLines(
             "ConstructorTest.java",
-            "public class ConstructorTest {",
-            "  public ConstructorTest() {",
-            "  }",
-            "  public ConstructorTest(int a) {",
-            "  }",
-            "  public ConstructorTest(int a, int b) {",
-            "  }",
-            "  public ConstructorTest(int a, int b, int c) {",
-            "  }",
-            "  // BUG: Diagnostic contains: 4 parameters",
-            "  public ConstructorTest(int a, int b, int c, int d) {",
-            "  }",
-            "  // BUG: Diagnostic contains: 5 parameters",
-            "  public ConstructorTest(int a, int b, int c, int d, int e) {",
-            "  }",
-            "  // BUG: Diagnostic contains: 6 parameters",
-            "  public ConstructorTest(int a, int b, int c, int d, int e, int f) {",
-            "  }",
-            "  private ConstructorTest(int a, int b, int c, int d, int e, int f, int g) {",
-            "  }",
-            "}")
+            """
+            public class ConstructorTest {
+              public ConstructorTest() {}
+
+              public ConstructorTest(int a) {}
+
+              public ConstructorTest(int a, int b) {}
+
+              public ConstructorTest(int a, int b, int c) {}
+
+              // BUG: Diagnostic contains: 4 parameters
+              public ConstructorTest(int a, int b, int c, int d) {}
+
+              // BUG: Diagnostic contains: 5 parameters
+              public ConstructorTest(int a, int b, int c, int d, int e) {}
+
+              // BUG: Diagnostic contains: 6 parameters
+              public ConstructorTest(int a, int b, int c, int d, int e, int f) {}
+
+              private ConstructorTest(int a, int b, int c, int d, int e, int f, int g) {}
+            }
+            """)
         .doTest();
   }
 
@@ -92,19 +93,22 @@ public class TooManyParametersTest {
         .setArgs(ImmutableList.of("-XepOpt:" + TOO_MANY_PARAMETERS_FLAG_NAME + "=3"))
         .addSourceLines(
             "ConstructorTest.java",
-            "import javax.inject.Inject;",
-            "public class ConstructorTest {",
-            "  public ConstructorTest() {",
-            "  }",
-            "  public ConstructorTest(int a) {",
-            "  }",
-            "  public ConstructorTest(int a, int b) {",
-            "  }",
-            "  public ConstructorTest(int a, int b, int c) {",
-            "  }",
-            "  @Inject ConstructorTest(int a, int b, int c, int d) {",
-            "  }",
-            "}")
+            """
+            import javax.inject.Inject;
+
+            public class ConstructorTest {
+              public ConstructorTest() {}
+
+              public ConstructorTest(int a) {}
+
+              public ConstructorTest(int a, int b) {}
+
+              public ConstructorTest(int a, int b, int c) {}
+
+              @Inject
+              ConstructorTest(int a, int b, int c, int d) {}
+            }
+            """)
         .doTest();
   }
 
@@ -114,27 +118,28 @@ public class TooManyParametersTest {
         .setArgs(ImmutableList.of("-XepOpt:" + TOO_MANY_PARAMETERS_FLAG_NAME + "=3"))
         .addSourceLines(
             "MethodTest.java",
-            "public class MethodTest {",
-            "  public void foo() {",
-            "  }",
-            "  public void foo(int a) {",
-            "  }",
-            "  public void foo(int a, int b) {",
-            "  }",
-            "  public void foo(int a, int b, int c) {",
-            "  }",
-            "  // BUG: Diagnostic contains: 4 parameters",
-            "  public void foo(int a, int b, int c, int d) {",
-            "  }",
-            "  // BUG: Diagnostic contains: 5 parameters",
-            "  public void foo(int a, int b, int c, int d, int e) {",
-            "  }",
-            "  // BUG: Diagnostic contains: 6 parameters",
-            "  public void foo(int a, int b, int c, int d, int e, int f) {",
-            "  }",
-            "  private void foo(int a, int b, int c, int d, int e, int f, int g) {",
-            "  }",
-            "}")
+            """
+            public class MethodTest {
+              public void foo() {}
+
+              public void foo(int a) {}
+
+              public void foo(int a, int b) {}
+
+              public void foo(int a, int b, int c) {}
+
+              // BUG: Diagnostic contains: 4 parameters
+              public void foo(int a, int b, int c, int d) {}
+
+              // BUG: Diagnostic contains: 5 parameters
+              public void foo(int a, int b, int c, int d, int e) {}
+
+              // BUG: Diagnostic contains: 6 parameters
+              public void foo(int a, int b, int c, int d, int e, int f) {}
+
+              private void foo(int a, int b, int c, int d, int e, int f, int g) {}
+            }
+            """)
         .doTest();
   }
 
@@ -143,36 +148,38 @@ public class TooManyParametersTest {
     compilationHelper
         .addSourceLines(
             "ExampleWithTestParametersTest.java",
-            "import com.google.common.collect.ImmutableList;",
-            "import com.google.testing.junit.testparameterinjector.TestParameters;",
-            "import com.google.testing.junit.testparameterinjector.TestParametersValuesProvider;",
-            "import org.junit.Test;",
-            "public class ExampleWithTestParametersTest {",
-            "  @Test",
-            "  @TestParameters(valuesProvider = TestArgs.class)",
-            "  public void myTest(",
-            "      String a,",
-            "      String b,",
-            "      String c,",
-            "      String d,",
-            "      String e,",
-            "      String f,",
-            "      String g,",
-            "      String h,",
-            "      String i,",
-            "      String j,",
-            "      String k,",
-            "      String l)",
-            "      throws Exception {",
-            "  }",
-            "  static class TestArgs extends TestParametersValuesProvider {",
-            "    @Override",
-            "    public ImmutableList<TestParameters.TestParametersValues> provideValues(",
-            "          Context context) {",
-            "      return ImmutableList.of();",
-            "    }",
-            "  }",
-            "}")
+            """
+import com.google.common.collect.ImmutableList;
+import com.google.testing.junit.testparameterinjector.TestParameters;
+import com.google.testing.junit.testparameterinjector.TestParametersValuesProvider;
+import org.junit.Test;
+
+public class ExampleWithTestParametersTest {
+  @Test
+  @TestParameters(valuesProvider = TestArgs.class)
+  public void myTest(
+      String a,
+      String b,
+      String c,
+      String d,
+      String e,
+      String f,
+      String g,
+      String h,
+      String i,
+      String j,
+      String k,
+      String l)
+      throws Exception {}
+
+  static class TestArgs extends TestParametersValuesProvider {
+    @Override
+    public ImmutableList<TestParameters.TestParametersValues> provideValues(Context context) {
+      return ImmutableList.of();
+    }
+  }
+}
+""")
         .doTest();
   }
 }

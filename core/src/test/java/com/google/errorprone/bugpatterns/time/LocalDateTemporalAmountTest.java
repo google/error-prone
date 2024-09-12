@@ -31,15 +31,18 @@ public final class LocalDateTemporalAmountTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import java.time.LocalDate;",
-            "import java.time.Period;",
-            "import java.time.temporal.ChronoUnit;",
-            "public class TestClass {",
-            "  private static final LocalDate LD = LocalDate.of(1985, 5, 31);",
-            "  private static final Period PERIOD = Period.ofDays(1);",
-            "  private static final LocalDate LD1 = LD.plus(PERIOD);",
-            "  private static final LocalDate LD2 = LD.plus(1, ChronoUnit.DAYS);",
-            "}")
+            """
+            import java.time.LocalDate;
+            import java.time.Period;
+            import java.time.temporal.ChronoUnit;
+
+            public class TestClass {
+              private static final LocalDate LD = LocalDate.of(1985, 5, 31);
+              private static final Period PERIOD = Period.ofDays(1);
+              private static final LocalDate LD1 = LD.plus(PERIOD);
+              private static final LocalDate LD2 = LD.plus(1, ChronoUnit.DAYS);
+            }
+            """)
         .doTest();
   }
 
@@ -48,14 +51,17 @@ public final class LocalDateTemporalAmountTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import java.time.Duration;",
-            "import java.time.LocalDate;",
-            "public class TestClass {",
-            "  private static final LocalDate LD = LocalDate.of(1985, 5, 31);",
-            "  private static final Duration DURATION = Duration.ofDays(1);",
-            "  // BUG: Diagnostic contains: LocalDateTemporalAmount",
-            "  private static final LocalDate LD0 = LD.plus(DURATION);",
-            "}")
+            """
+            import java.time.Duration;
+            import java.time.LocalDate;
+
+            public class TestClass {
+              private static final LocalDate LD = LocalDate.of(1985, 5, 31);
+              private static final Duration DURATION = Duration.ofDays(1);
+              // BUG: Diagnostic contains: LocalDateTemporalAmount
+              private static final LocalDate LD0 = LD.plus(DURATION);
+            }
+            """)
         .doTest();
   }
 
@@ -80,15 +86,18 @@ public final class LocalDateTemporalAmountTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import java.time.LocalDate;",
-            "import java.time.Period;",
-            "import java.time.temporal.ChronoUnit;",
-            "public class TestClass {",
-            "  private static final LocalDate LD = LocalDate.of(1985, 5, 31);",
-            "  private static final Period PERIOD = Period.ofDays(1);",
-            "  private static final LocalDate LD1 = LD.minus(PERIOD);",
-            "  private static final LocalDate LD2 = LD.minus(1, ChronoUnit.DAYS);",
-            "}")
+            """
+            import java.time.LocalDate;
+            import java.time.Period;
+            import java.time.temporal.ChronoUnit;
+
+            public class TestClass {
+              private static final LocalDate LD = LocalDate.of(1985, 5, 31);
+              private static final Period PERIOD = Period.ofDays(1);
+              private static final LocalDate LD1 = LD.minus(PERIOD);
+              private static final LocalDate LD2 = LD.minus(1, ChronoUnit.DAYS);
+            }
+            """)
         .doTest();
   }
 
@@ -97,14 +106,17 @@ public final class LocalDateTemporalAmountTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import java.time.Duration;",
-            "import java.time.LocalDate;",
-            "public class TestClass {",
-            "  private static final LocalDate LD = LocalDate.of(1985, 5, 31);",
-            "  private static final Duration DURATION = Duration.ofDays(1);",
-            "  // BUG: Diagnostic contains: LocalDateTemporalAmount",
-            "  private static final LocalDate LD0 = LD.minus(DURATION);",
-            "}")
+            """
+            import java.time.Duration;
+            import java.time.LocalDate;
+
+            public class TestClass {
+              private static final LocalDate LD = LocalDate.of(1985, 5, 31);
+              private static final Duration DURATION = Duration.ofDays(1);
+              // BUG: Diagnostic contains: LocalDateTemporalAmount
+              private static final LocalDate LD0 = LD.minus(DURATION);
+            }
+            """)
         .doTest();
   }
 

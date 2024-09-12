@@ -33,16 +33,20 @@ public class MissingOverrideTest {
   public void simple() {
     compilationHelper
         .addSourceLines(
-            "Super.java", //
-            "public class Super {",
-            "  void f() {}",
-            "}")
+            "Super.java",
+            """
+            public class Super {
+              void f() {}
+            }
+            """)
         .addSourceLines(
             "Test.java",
-            "public class Test extends Super {",
-            "  // BUG: Diagnostic contains: f overrides method in Super; expected @Override",
-            "  public void f() {}",
-            "}")
+            """
+            public class Test extends Super {
+              // BUG: Diagnostic contains: f overrides method in Super; expected @Override
+              public void f() {}
+            }
+            """)
         .doTest();
   }
 
@@ -50,16 +54,20 @@ public class MissingOverrideTest {
   public void abstractMethod() {
     compilationHelper
         .addSourceLines(
-            "Super.java", //
-            "public abstract class Super {",
-            "  abstract void f();",
-            "}")
+            "Super.java",
+            """
+            public abstract class Super {
+              abstract void f();
+            }
+            """)
         .addSourceLines(
             "Test.java",
-            "public class Test extends Super {",
-            "  // BUG: Diagnostic contains: f implements method in Super; expected @Override",
-            "  public void f() {}",
-            "}")
+            """
+            public class Test extends Super {
+              // BUG: Diagnostic contains: f implements method in Super; expected @Override
+              public void f() {}
+            }
+            """)
         .doTest();
   }
 
@@ -67,12 +75,15 @@ public class MissingOverrideTest {
   public void generatedMethod() {
     compilationHelper
         .addSourceLines(
-            "Test.java", //
-            "import javax.annotation.processing.Generated;",
-            "@Generated(\"foo\")",
-            "public abstract class Test {",
-            "  public abstract int hashCode();",
-            "}")
+            "Test.java",
+            """
+            import javax.annotation.processing.Generated;
+
+            @Generated("foo")
+            public abstract class Test {
+              public abstract int hashCode();
+            }
+            """)
         .doTest();
   }
 
@@ -80,16 +91,20 @@ public class MissingOverrideTest {
   public void interfaceMethod() {
     compilationHelper
         .addSourceLines(
-            "Super.java", //
-            "interface Super {",
-            "  void f();",
-            "}")
+            "Super.java",
+            """
+            interface Super {
+              void f();
+            }
+            """)
         .addSourceLines(
             "Test.java",
-            "public class Test implements Super {",
-            "  // BUG: Diagnostic contains: f implements method in Super; expected @Override",
-            "  public void f() {}",
-            "}")
+            """
+            public class Test implements Super {
+              // BUG: Diagnostic contains: f implements method in Super; expected @Override
+              public void f() {}
+            }
+            """)
         .doTest();
   }
 
@@ -97,15 +112,19 @@ public class MissingOverrideTest {
   public void bothStatic() {
     compilationHelper
         .addSourceLines(
-            "Super.java", //
-            "public class Super {",
-            "  static void f() {}",
-            "}")
+            "Super.java",
+            """
+            public class Super {
+              static void f() {}
+            }
+            """)
         .addSourceLines(
-            "Test.java", //
-            "public class Test extends Super {",
-            "  static public void f() {}",
-            "}")
+            "Test.java",
+            """
+            public class Test extends Super {
+              public static void f() {}
+            }
+            """)
         .doTest();
   }
 
@@ -113,15 +132,20 @@ public class MissingOverrideTest {
   public void deprecatedMethod() {
     compilationHelper
         .addSourceLines(
-            "Super.java", //
-            "public class Super {",
-            "  @Deprecated void f() {}",
-            "}")
+            "Super.java",
+            """
+            public class Super {
+              @Deprecated
+              void f() {}
+            }
+            """)
         .addSourceLines(
-            "Test.java", //
-            "public class Test extends Super {",
-            "  public void f() {}",
-            "}")
+            "Test.java",
+            """
+            public class Test extends Super {
+              public void f() {}
+            }
+            """)
         .doTest();
   }
 
@@ -129,16 +153,20 @@ public class MissingOverrideTest {
   public void interfaceOverride() {
     compilationHelper
         .addSourceLines(
-            "Super.java", //
-            "interface Super {",
-            "  void f();",
-            "}")
+            "Super.java",
+            """
+            interface Super {
+              void f();
+            }
+            """)
         .addSourceLines(
             "Test.java",
-            "public interface Test extends Super {",
-            "  // BUG: Diagnostic contains: f implements method in Super; expected @Override",
-            "  void f();",
-            "}")
+            """
+            public interface Test extends Super {
+              // BUG: Diagnostic contains: f implements method in Super; expected @Override
+              void f();
+            }
+            """)
         .doTest();
   }
 
@@ -147,15 +175,19 @@ public class MissingOverrideTest {
     compilationHelper
         .setArgs(ImmutableList.of("-XepOpt:MissingOverride:IgnoreInterfaceOverrides=true"))
         .addSourceLines(
-            "Super.java", //
-            "interface Super {",
-            "  void f();",
-            "}")
+            "Super.java",
+            """
+            interface Super {
+              void f();
+            }
+            """)
         .addSourceLines(
-            "Test.java", //
-            "public interface Test extends Super {",
-            "  void f();",
-            "}")
+            "Test.java",
+            """
+            public interface Test extends Super {
+              void f();
+            }
+            """)
         .doTest();
   }
 }

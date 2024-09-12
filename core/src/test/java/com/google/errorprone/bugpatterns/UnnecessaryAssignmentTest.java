@@ -35,12 +35,15 @@ public final class UnnecessaryAssignmentTest {
   public void positive() {
     testHelper
         .addSourceLines(
-            "Test.java", //
-            "import org.mockito.Mock;",
-            "class Test {",
-            "  // BUG: Diagnostic contains:",
-            "  @Mock Object mockObject = new Object();",
-            "}")
+            "Test.java",
+            """
+            import org.mockito.Mock;
+
+            class Test {
+              // BUG: Diagnostic contains:
+              @Mock Object mockObject = new Object();
+            }
+            """)
         .doTest();
   }
 
@@ -48,11 +51,14 @@ public final class UnnecessaryAssignmentTest {
   public void negative() {
     testHelper
         .addSourceLines(
-            "Test.java", //
-            "import org.mockito.Mock;",
-            "class Test {",
-            "  @Mock Object mockObject;",
-            "}")
+            "Test.java",
+            """
+            import org.mockito.Mock;
+
+            class Test {
+              @Mock Object mockObject;
+            }
+            """)
         .doTest();
   }
 
@@ -60,13 +66,16 @@ public final class UnnecessaryAssignmentTest {
   public void doubleAnnotation() {
     testHelper
         .addSourceLines(
-            "Test.java", //
-            "import com.google.inject.Inject;",
-            "import org.mockito.Mock;",
-            "class Test {",
-            "  // BUG: Diagnostic contains: both",
-            "  @Mock @Inject Object mockObject;",
-            "}")
+            "Test.java",
+            """
+            import com.google.inject.Inject;
+            import org.mockito.Mock;
+
+            class Test {
+              // BUG: Diagnostic contains: both
+              @Mock @Inject Object mockObject;
+            }
+            """)
         .doTest();
   }
 
@@ -74,17 +83,23 @@ public final class UnnecessaryAssignmentTest {
   public void refactoring() {
     refactoringHelper
         .addInputLines(
-            "Test.java", //
-            "import org.mockito.Mock;",
-            "class Test {",
-            "  @Mock Object mockObject = new Object();",
-            "}")
+            "Test.java",
+            """
+            import org.mockito.Mock;
+
+            class Test {
+              @Mock Object mockObject = new Object();
+            }
+            """)
         .addOutputLines(
-            "Test.java", //
-            "import org.mockito.Mock;",
-            "class Test {",
-            "  @Mock Object mockObject;",
-            "}")
+            "Test.java",
+            """
+            import org.mockito.Mock;
+
+            class Test {
+              @Mock Object mockObject;
+            }
+            """)
         .doTest();
   }
 
@@ -93,26 +108,34 @@ public final class UnnecessaryAssignmentTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "import org.mockito.Mock;",
-            "import org.mockito.Mockito;",
-            "import org.mockito.MockitoAnnotations;",
-            "class Test {",
-            "  @Mock Object mockObject = Mockito.mock(Object.class);",
-            "  void before() {",
-            "    MockitoAnnotations.initMocks(this);",
-            "  }",
-            "}")
+            """
+            import org.mockito.Mock;
+            import org.mockito.Mockito;
+            import org.mockito.MockitoAnnotations;
+
+            class Test {
+              @Mock Object mockObject = Mockito.mock(Object.class);
+
+              void before() {
+                MockitoAnnotations.initMocks(this);
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import org.mockito.Mock;",
-            "import org.mockito.Mockito;",
-            "import org.mockito.MockitoAnnotations;",
-            "class Test {",
-            "  @Mock Object mockObject;",
-            "  void before() {",
-            "    MockitoAnnotations.initMocks(this);",
-            "  }",
-            "}")
+            """
+            import org.mockito.Mock;
+            import org.mockito.Mockito;
+            import org.mockito.MockitoAnnotations;
+
+            class Test {
+              @Mock Object mockObject;
+
+              void before() {
+                MockitoAnnotations.initMocks(this);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -120,19 +143,25 @@ public final class UnnecessaryAssignmentTest {
   public void noInitializerPresent_retainManualInitialization() {
     refactoringHelper
         .addInputLines(
-            "Test.java", //
-            "import org.mockito.Mock;",
-            "import org.mockito.Mockito;",
-            "class Test {",
-            "  @Mock Object mockObject = Mockito.mock(Object.class);",
-            "}")
+            "Test.java",
+            """
+            import org.mockito.Mock;
+            import org.mockito.Mockito;
+
+            class Test {
+              @Mock Object mockObject = Mockito.mock(Object.class);
+            }
+            """)
         .addOutputLines(
-            "Test.java", //
-            "import org.mockito.Mock;",
-            "import org.mockito.Mockito;",
-            "class Test {",
-            "  Object mockObject = Mockito.mock(Object.class);",
-            "}")
+            "Test.java",
+            """
+            import org.mockito.Mock;
+            import org.mockito.Mockito;
+
+            class Test {
+              Object mockObject = Mockito.mock(Object.class);
+            }
+            """)
         .doTest();
   }
 
@@ -140,25 +169,31 @@ public final class UnnecessaryAssignmentTest {
   public void initializedViaRunner() {
     refactoringHelper
         .addInputLines(
-            "Test.java", //
-            "import org.junit.runner.RunWith;",
-            "import org.mockito.Mock;",
-            "import org.mockito.Mockito;",
-            "import org.mockito.junit.MockitoJUnitRunner;",
-            "@RunWith(MockitoJUnitRunner.class)",
-            "public class Test {",
-            "  @Mock Object mockObject = Mockito.mock(Object.class);",
-            "}")
+            "Test.java",
+            """
+            import org.junit.runner.RunWith;
+            import org.mockito.Mock;
+            import org.mockito.Mockito;
+            import org.mockito.junit.MockitoJUnitRunner;
+
+            @RunWith(MockitoJUnitRunner.class)
+            public class Test {
+              @Mock Object mockObject = Mockito.mock(Object.class);
+            }
+            """)
         .addOutputLines(
-            "Test.java", //
-            "import org.junit.runner.RunWith;",
-            "import org.mockito.Mock;",
-            "import org.mockito.Mockito;",
-            "import org.mockito.junit.MockitoJUnitRunner;",
-            "@RunWith(MockitoJUnitRunner.class)",
-            "public class Test {",
-            "  @Mock Object mockObject;",
-            "}")
+            "Test.java",
+            """
+            import org.junit.runner.RunWith;
+            import org.mockito.Mock;
+            import org.mockito.Mockito;
+            import org.mockito.junit.MockitoJUnitRunner;
+
+            @RunWith(MockitoJUnitRunner.class)
+            public class Test {
+              @Mock Object mockObject;
+            }
+            """)
         .doTest();
   }
 
@@ -166,12 +201,15 @@ public final class UnnecessaryAssignmentTest {
   public void positiveOnTestParameter() {
     testHelper
         .addSourceLines(
-            "Test.java", //
-            "import com.google.testing.junit.testparameterinjector.TestParameter;",
-            "class Test {",
-            "  // BUG: Diagnostic contains: @TestParameter",
-            "  @TestParameter boolean myFoo = false;",
-            "}")
+            "Test.java",
+            """
+            import com.google.testing.junit.testparameterinjector.TestParameter;
+
+            class Test {
+              // BUG: Diagnostic contains: @TestParameter
+              @TestParameter boolean myFoo = false;
+            }
+            """)
         .doTest();
   }
 
@@ -179,11 +217,15 @@ public final class UnnecessaryAssignmentTest {
   public void optionalInject_notFlagged() {
     testHelper
         .addSourceLines(
-            "Test.java", //
-            "import com.google.inject.Inject;",
-            "class Test {",
-            "  @Inject(optional = true) boolean myFoo = false;",
-            "}")
+            "Test.java",
+            """
+            import com.google.inject.Inject;
+
+            class Test {
+              @Inject(optional = true)
+              boolean myFoo = false;
+            }
+            """)
         .doTest();
   }
 
@@ -191,17 +233,23 @@ public final class UnnecessaryAssignmentTest {
   public void fixForTestParameter_deletesAssignment() {
     refactoringHelper
         .addInputLines(
-            "Test.java", //
-            "import com.google.testing.junit.testparameterinjector.TestParameter;",
-            "class Test {",
-            "  @TestParameter boolean myFoo = false;",
-            "}")
+            "Test.java",
+            """
+            import com.google.testing.junit.testparameterinjector.TestParameter;
+
+            class Test {
+              @TestParameter boolean myFoo = false;
+            }
+            """)
         .addOutputLines(
-            "Test.java", //
-            "import com.google.testing.junit.testparameterinjector.TestParameter;",
-            "class Test {",
-            "  @TestParameter boolean myFoo;",
-            "}")
+            "Test.java",
+            """
+            import com.google.testing.junit.testparameterinjector.TestParameter;
+
+            class Test {
+              @TestParameter boolean myFoo;
+            }
+            """)
         .doTest();
   }
 
@@ -209,17 +257,23 @@ public final class UnnecessaryAssignmentTest {
   public void fixForTestParameter_ifFinal_deletesAnnotation() {
     refactoringHelper
         .addInputLines(
-            "Test.java", //
-            "import com.google.testing.junit.testparameterinjector.TestParameter;",
-            "class Test {",
-            "  @TestParameter final boolean myFoo = false;",
-            "}")
+            "Test.java",
+            """
+            import com.google.testing.junit.testparameterinjector.TestParameter;
+
+            class Test {
+              @TestParameter final boolean myFoo = false;
+            }
+            """)
         .addOutputLines(
-            "Test.java", //
-            "import com.google.testing.junit.testparameterinjector.TestParameter;",
-            "class Test {",
-            "  final boolean myFoo = false;",
-            "}")
+            "Test.java",
+            """
+            import com.google.testing.junit.testparameterinjector.TestParameter;
+
+            class Test {
+              final boolean myFoo = false;
+            }
+            """)
         .doTest();
   }
 }

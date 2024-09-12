@@ -55,10 +55,13 @@ public class SuppressLintTest {
     JavaFileObject stub =
         forSourceLines(
             "SuppressLint.java",
-            "package android.annotation;",
-            "public @interface SuppressLint {",
-            " public String[] value() default {};",
-            "}");
+            """
+            package android.annotation;
+
+            public @interface SuppressLint {
+              public String[] value() default {};
+            }
+            """);
     List<JavaFileObject> thingsToCompile = new ArrayList<>(sources);
     thingsToCompile.add(stub);
     assertThat(compiler.compile(thingsToCompile)).isEqualTo(Result.OK);

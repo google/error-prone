@@ -37,13 +37,16 @@ public class OptionalOfRedundantMethodTest {
     compilationTestHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.Optional;",
-            "class Test {",
-            " void f() {",
-            "    // BUG: Diagnostic contains: ifPresent",
-            "    Optional.of(\"test\").ifPresent(String::length);",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            class Test {
+              void f() {
+                // BUG: Diagnostic contains: ifPresent
+                Optional.of("test").ifPresent(String::length);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -52,20 +55,26 @@ public class OptionalOfRedundantMethodTest {
     refactoringTestHelper
         .addInputLines(
             "Test.java",
-            "import java.util.Optional;",
-            "class Test {",
-            " void f() {",
-            "    Optional.of(\"test\").ifPresent(String::length);",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            class Test {
+              void f() {
+                Optional.of("test").ifPresent(String::length);
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import java.util.Optional;",
-            "class Test {",
-            " void f() {",
-            "    Optional.ofNullable(\"test\").ifPresent(String::length);",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            class Test {
+              void f() {
+                Optional.ofNullable("test").ifPresent(String::length);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -74,13 +83,16 @@ public class OptionalOfRedundantMethodTest {
     compilationTestHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.Optional;",
-            "class Test {",
-            " void f() {",
-            "    // BUG: Diagnostic contains: orElse",
-            "    Optional.of(\"test\").orElse(\"test2\");",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            class Test {
+              void f() {
+                // BUG: Diagnostic contains: orElse
+                Optional.of("test").orElse("test2");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -89,20 +101,26 @@ public class OptionalOfRedundantMethodTest {
     refactoringTestHelper
         .addInputLines(
             "Test.java",
-            "import java.util.Optional;",
-            "class Test {",
-            " String f() {",
-            "    return Optional.of(\"test\").orElse(\"test2\");",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            class Test {
+              String f() {
+                return Optional.of("test").orElse("test2");
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import java.util.Optional;",
-            "class Test {",
-            " String f() {",
-            "    return Optional.ofNullable(\"test\").orElse(\"test2\");",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            class Test {
+              String f() {
+                return Optional.ofNullable("test").orElse("test2");
+              }
+            }
+            """)
         .setFixChooser(FixChoosers.FIRST)
         .doTest();
   }
@@ -112,20 +130,26 @@ public class OptionalOfRedundantMethodTest {
     refactoringTestHelper
         .addInputLines(
             "Test.java",
-            "import java.util.Optional;",
-            "class Test {",
-            " String f() {",
-            "    return Optional.of(\"test\").orElse(\"test2\");",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            class Test {
+              String f() {
+                return Optional.of("test").orElse("test2");
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import java.util.Optional;",
-            "class Test {",
-            " String f() {",
-            "    return \"test\";",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            class Test {
+              String f() {
+                return "test";
+              }
+            }
+            """)
         .setFixChooser(FixChoosers.SECOND)
         .doTest();
   }
@@ -135,13 +159,16 @@ public class OptionalOfRedundantMethodTest {
     compilationTestHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.Optional;",
-            "class Test {",
-            " void f() {",
-            "    // BUG: Diagnostic contains: orElseGet",
-            "    Optional.of(\"test\").orElseGet(() -> \"test2\");",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            class Test {
+              void f() {
+                // BUG: Diagnostic contains: orElseGet
+                Optional.of("test").orElseGet(() -> "test2");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -150,20 +177,26 @@ public class OptionalOfRedundantMethodTest {
     refactoringTestHelper
         .addInputLines(
             "Test.java",
-            "import java.util.Optional;",
-            "class Test {",
-            " String f() {",
-            "    return Optional.of(\"test\").orElseGet(() -> \"test2\");",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            class Test {
+              String f() {
+                return Optional.of("test").orElseGet(() -> "test2");
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import java.util.Optional;",
-            "class Test {",
-            " String f() {",
-            "    return Optional.ofNullable(\"test\").orElseGet(() -> \"test2\");",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            class Test {
+              String f() {
+                return Optional.ofNullable("test").orElseGet(() -> "test2");
+              }
+            }
+            """)
         .setFixChooser(FixChoosers.FIRST)
         .doTest();
   }
@@ -173,20 +206,26 @@ public class OptionalOfRedundantMethodTest {
     refactoringTestHelper
         .addInputLines(
             "Test.java",
-            "import java.util.Optional;",
-            "class Test {",
-            " String f() {",
-            "    return Optional.of(\"test\").orElseGet(() -> \"test2\");",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            class Test {
+              String f() {
+                return Optional.of("test").orElseGet(() -> "test2");
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import java.util.Optional;",
-            "class Test {",
-            " String f() {",
-            "    return \"test\";",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            class Test {
+              String f() {
+                return "test";
+              }
+            }
+            """)
         .setFixChooser(FixChoosers.SECOND)
         .doTest();
   }
@@ -196,14 +235,17 @@ public class OptionalOfRedundantMethodTest {
     compilationTestHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.Optional;",
-            "import com.google.common.collect.ImmutableMap;",
-            "class Test {",
-            " static String f(ImmutableMap<String,String> map){",
-            "    // BUG: Diagnostic contains: orElseThrow",
-            "    return Optional.of(map.get(\"test\")).orElseThrow(IllegalArgumentException::new);",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+            import com.google.common.collect.ImmutableMap;
+
+            class Test {
+              static String f(ImmutableMap<String, String> map) {
+                // BUG: Diagnostic contains: orElseThrow
+                return Optional.of(map.get("test")).orElseThrow(IllegalArgumentException::new);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -212,23 +254,28 @@ public class OptionalOfRedundantMethodTest {
     refactoringTestHelper
         .addInputLines(
             "Test.java",
-            "import java.util.Optional;",
-            "import com.google.common.collect.ImmutableMap;",
-            "class Test {",
-            " static String f(ImmutableMap<String,String> map){",
-            "    return Optional.of(map.get(\"test\")).orElseThrow(IllegalArgumentException::new);",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+            import com.google.common.collect.ImmutableMap;
+
+            class Test {
+              static String f(ImmutableMap<String, String> map) {
+                return Optional.of(map.get("test")).orElseThrow(IllegalArgumentException::new);
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import java.util.Optional;",
-            "import com.google.common.collect.ImmutableMap;",
-            "class Test {",
-            " static String f(ImmutableMap<String,String> map){",
-            "    return"
-                + " Optional.ofNullable(map.get(\"test\")).orElseThrow(IllegalArgumentException::new);",
-            "  }",
-            "}")
+            """
+import java.util.Optional;
+import com.google.common.collect.ImmutableMap;
+
+class Test {
+  static String f(ImmutableMap<String, String> map) {
+    return Optional.ofNullable(map.get("test")).orElseThrow(IllegalArgumentException::new);
+  }
+}
+""")
         .setFixChooser(FixChoosers.FIRST)
         .doTest();
   }
@@ -238,22 +285,28 @@ public class OptionalOfRedundantMethodTest {
     refactoringTestHelper
         .addInputLines(
             "Test.java",
-            "import java.util.Optional;",
-            "import com.google.common.collect.ImmutableMap;",
-            "class Test {",
-            " static String f(ImmutableMap<String,String> map){",
-            "    return Optional.of(map.get(\"test\")).orElseThrow(IllegalArgumentException::new);",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+            import com.google.common.collect.ImmutableMap;
+
+            class Test {
+              static String f(ImmutableMap<String, String> map) {
+                return Optional.of(map.get("test")).orElseThrow(IllegalArgumentException::new);
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import java.util.Optional;",
-            "import com.google.common.collect.ImmutableMap;",
-            "class Test {",
-            " static String f(ImmutableMap<String,String> map){",
-            "    return map.get(\"test\");",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+            import com.google.common.collect.ImmutableMap;
+
+            class Test {
+              static String f(ImmutableMap<String, String> map) {
+                return map.get("test");
+              }
+            }
+            """)
         .setFixChooser(FixChoosers.SECOND)
         .doTest();
   }
@@ -263,13 +316,16 @@ public class OptionalOfRedundantMethodTest {
     compilationTestHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.Optional;",
-            "class Test {",
-            " void f() {",
-            "    // BUG: Diagnostic contains: isPresent",
-            "    if(Optional.of(\"test\").isPresent()) {}",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            class Test {
+              void f() {
+                // BUG: Diagnostic contains: isPresent
+                if (Optional.of("test").isPresent()) {}
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -278,20 +334,26 @@ public class OptionalOfRedundantMethodTest {
     refactoringTestHelper
         .addInputLines(
             "Test.java",
-            "import java.util.Optional;",
-            "class Test {",
-            " void f() {",
-            "    if(Optional.of(\"test\").isPresent()) {}",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            class Test {
+              void f() {
+                if (Optional.of("test").isPresent()) {}
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import java.util.Optional;",
-            "class Test {",
-            " void f() {",
-            "    if(Optional.ofNullable(\"test\").isPresent()) {}",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            class Test {
+              void f() {
+                if (Optional.ofNullable("test").isPresent()) {}
+              }
+            }
+            """)
         .setFixChooser(FixChoosers.FIRST)
         .doTest();
   }
@@ -301,20 +363,26 @@ public class OptionalOfRedundantMethodTest {
     refactoringTestHelper
         .addInputLines(
             "Test.java",
-            "import java.util.Optional;",
-            "class Test {",
-            " void f() {",
-            "    if(Optional.of(\"test\").isPresent()) {}",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            class Test {
+              void f() {
+                if (Optional.of("test").isPresent()) {}
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import java.util.Optional;",
-            "class Test {",
-            " void f() {",
-            "    if(true) {}",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            class Test {
+              void f() {
+                if (true) {}
+              }
+            }
+            """)
         .setFixChooser(FixChoosers.SECOND)
         .doTest();
   }
@@ -324,13 +392,16 @@ public class OptionalOfRedundantMethodTest {
     compilationTestHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.base.Optional;",
-            "class Test {",
-            " void f() {",
-            "    // BUG: Diagnostic contains: isPresent",
-            "    Optional.of(\"test\").isPresent();",
-            "  }",
-            "}")
+            """
+            import com.google.common.base.Optional;
+
+            class Test {
+              void f() {
+                // BUG: Diagnostic contains: isPresent
+                Optional.of("test").isPresent();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -339,20 +410,26 @@ public class OptionalOfRedundantMethodTest {
     refactoringTestHelper
         .addInputLines(
             "Test.java",
-            "import com.google.common.base.Optional;",
-            "class Test {",
-            " void f() {",
-            "    Optional.of(\"test\").isPresent();",
-            "  }",
-            "}")
+            """
+            import com.google.common.base.Optional;
+
+            class Test {
+              void f() {
+                Optional.of("test").isPresent();
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import com.google.common.base.Optional;",
-            "class Test {",
-            " void f() {",
-            "    Optional.fromNullable(\"test\").isPresent();",
-            "  }",
-            "}")
+            """
+            import com.google.common.base.Optional;
+
+            class Test {
+              void f() {
+                Optional.fromNullable("test").isPresent();
+              }
+            }
+            """)
         .setFixChooser(FixChoosers.FIRST)
         .doTest();
   }
@@ -362,20 +439,26 @@ public class OptionalOfRedundantMethodTest {
     refactoringTestHelper
         .addInputLines(
             "Test.java",
-            "import com.google.common.base.Optional;",
-            "class Test {",
-            " void f() {",
-            "    if(Optional.of(\"test\").isPresent()){}",
-            "  }",
-            "}")
+            """
+            import com.google.common.base.Optional;
+
+            class Test {
+              void f() {
+                if (Optional.of("test").isPresent()) {}
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import com.google.common.base.Optional;",
-            "class Test {",
-            " void f() {",
-            "    if(true){}",
-            "  }",
-            "}")
+            """
+            import com.google.common.base.Optional;
+
+            class Test {
+              void f() {
+                if (true) {}
+              }
+            }
+            """)
         .setFixChooser(FixChoosers.SECOND)
         .doTest();
   }
@@ -385,13 +468,16 @@ public class OptionalOfRedundantMethodTest {
     compilationTestHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.base.Optional;",
-            "class Test {",
-            " void f() {",
-            "    // BUG: Diagnostic contains: or",
-            "    Optional.of(\"test\").or(\"\");",
-            "  }",
-            "}")
+            """
+            import com.google.common.base.Optional;
+
+            class Test {
+              void f() {
+                // BUG: Diagnostic contains: or
+                Optional.of("test").or("");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -400,20 +486,26 @@ public class OptionalOfRedundantMethodTest {
     refactoringTestHelper
         .addInputLines(
             "Test.java",
-            "import com.google.common.base.Optional;",
-            "class Test {",
-            " void f() {",
-            "    Optional.of(\"test\").or(\"\");",
-            "  }",
-            "}")
+            """
+            import com.google.common.base.Optional;
+
+            class Test {
+              void f() {
+                Optional.of("test").or("");
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import com.google.common.base.Optional;",
-            "class Test {",
-            " void f() {",
-            "    Optional.fromNullable(\"test\").or(\"\");",
-            "  }",
-            "}")
+            """
+            import com.google.common.base.Optional;
+
+            class Test {
+              void f() {
+                Optional.fromNullable("test").or("");
+              }
+            }
+            """)
         .setFixChooser(FixChoosers.FIRST)
         .doTest();
   }
@@ -423,20 +515,26 @@ public class OptionalOfRedundantMethodTest {
     refactoringTestHelper
         .addInputLines(
             "Test.java",
-            "import com.google.common.base.Optional;",
-            "class Test {",
-            " String f() {",
-            "    return Optional.of(\"test\").or(\"\");",
-            "  }",
-            "}")
+            """
+            import com.google.common.base.Optional;
+
+            class Test {
+              String f() {
+                return Optional.of("test").or("");
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import com.google.common.base.Optional;",
-            "class Test {",
-            " String f() {",
-            "    return \"test\";",
-            "  }",
-            "}")
+            """
+            import com.google.common.base.Optional;
+
+            class Test {
+              String f() {
+                return "test";
+              }
+            }
+            """)
         .setFixChooser(FixChoosers.SECOND)
         .doTest();
   }
@@ -446,13 +544,16 @@ public class OptionalOfRedundantMethodTest {
     compilationTestHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.base.Optional;",
-            "class Test {",
-            " void f() {",
-            "    // BUG: Diagnostic contains: orNull",
-            "    Optional.of(\"test\").orNull();",
-            "  }",
-            "}")
+            """
+            import com.google.common.base.Optional;
+
+            class Test {
+              void f() {
+                // BUG: Diagnostic contains: orNull
+                Optional.of("test").orNull();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -461,20 +562,26 @@ public class OptionalOfRedundantMethodTest {
     refactoringTestHelper
         .addInputLines(
             "Test.java",
-            "import com.google.common.base.Optional;",
-            "class Test {",
-            " void f() {",
-            "    Optional.of(\"test\").orNull();",
-            "  }",
-            "}")
+            """
+            import com.google.common.base.Optional;
+
+            class Test {
+              void f() {
+                Optional.of("test").orNull();
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import com.google.common.base.Optional;",
-            "class Test {",
-            " void f() {",
-            "    Optional.fromNullable(\"test\").orNull();",
-            "  }",
-            "}")
+            """
+            import com.google.common.base.Optional;
+
+            class Test {
+              void f() {
+                Optional.fromNullable("test").orNull();
+              }
+            }
+            """)
         .setFixChooser(FixChoosers.FIRST)
         .doTest();
   }
@@ -484,20 +591,26 @@ public class OptionalOfRedundantMethodTest {
     refactoringTestHelper
         .addInputLines(
             "Test.java",
-            "import com.google.common.base.Optional;",
-            "class Test {",
-            " String f() {",
-            "    return Optional.of(\"test\").orNull();",
-            "  }",
-            "}")
+            """
+            import com.google.common.base.Optional;
+
+            class Test {
+              String f() {
+                return Optional.of("test").orNull();
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import com.google.common.base.Optional;",
-            "class Test {",
-            " String f() {",
-            "    return \"test\";",
-            "  }",
-            "}")
+            """
+            import com.google.common.base.Optional;
+
+            class Test {
+              String f() {
+                return "test";
+              }
+            }
+            """)
         .setFixChooser(FixChoosers.SECOND)
         .doTest();
   }
@@ -507,12 +620,15 @@ public class OptionalOfRedundantMethodTest {
     compilationTestHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.Optional;",
-            "class Test {",
-            " void f(Optional<String> maybeString) {",
-            "    maybeString.ifPresent(String::length);",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            class Test {
+              void f(Optional<String> maybeString) {
+                maybeString.ifPresent(String::length);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -521,12 +637,15 @@ public class OptionalOfRedundantMethodTest {
     compilationTestHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.Optional;",
-            "class Test {",
-            " void f(String value) {",
-            "    Optional.of(value).filter(x -> x.length() < 5).orElse(\"test\");",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            class Test {
+              void f(String value) {
+                Optional.of(value).filter(x -> x.length() < 5).orElse("test");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -535,12 +654,15 @@ public class OptionalOfRedundantMethodTest {
     compilationTestHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.base.Optional;",
-            "class Test {",
-            " boolean f(Optional<String> maybeString) {",
-            "    return maybeString.isPresent();",
-            "  }",
-            "}")
+            """
+            import com.google.common.base.Optional;
+
+            class Test {
+              boolean f(Optional<String> maybeString) {
+                return maybeString.isPresent();
+              }
+            }
+            """)
         .doTest();
   }
 }

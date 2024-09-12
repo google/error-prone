@@ -76,11 +76,14 @@ public final class InconsistentOverloadsTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  public void foo(Object object) {}",
-            "  @SuppressWarnings(\"InconsistentOverloads\")",
-            "  public void foo(int i, Object object) {}",
-            "}")
+            """
+            class Test {
+              public void foo(Object object) {}
+
+              @SuppressWarnings("InconsistentOverloads")
+              public void foo(int i, Object object) {}
+            }
+            """)
         .doTest();
   }
 }

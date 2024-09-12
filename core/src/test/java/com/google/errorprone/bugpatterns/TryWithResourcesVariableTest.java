@@ -32,24 +32,28 @@ public class TryWithResourcesVariableTest {
     testHelper
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  void f (AutoCloseable r1) {",
-            "    try (AutoCloseable r2 = r1) {",
-            "      System.err.println(r2);",
-            "    } catch (Exception e) {",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f(AutoCloseable r1) {
+                try (AutoCloseable r2 = r1) {
+                  System.err.println(r2);
+                } catch (Exception e) {
+                }
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "class Test {",
-            "  void f (AutoCloseable r1) {",
-            "    try (r1) {",
-            "      System.err.println(r1);",
-            "    } catch (Exception e) {",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f(AutoCloseable r1) {
+                try (r1) {
+                  System.err.println(r1);
+                } catch (Exception e) {
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -58,26 +62,32 @@ public class TryWithResourcesVariableTest {
     testHelper
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  void f (AutoCloseable a1, AutoCloseable a2) {",
-            "    try (AutoCloseable b1 = a1; AutoCloseable b2 = a2) {",
-            "      System.err.println(b1);",
-            "      System.err.println(b2);",
-            "    } catch (Exception e) {",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f(AutoCloseable a1, AutoCloseable a2) {
+                try (AutoCloseable b1 = a1;
+                    AutoCloseable b2 = a2) {
+                  System.err.println(b1);
+                  System.err.println(b2);
+                } catch (Exception e) {
+                }
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "class Test {",
-            "  void f (AutoCloseable a1, AutoCloseable a2) {",
-            "    try (a1; a2) {",
-            "      System.err.println(a1);",
-            "      System.err.println(a2);",
-            "    } catch (Exception e) {",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f(AutoCloseable a1, AutoCloseable a2) {
+                try (a1;
+                    a2) {
+                  System.err.println(a1);
+                  System.err.println(a2);
+                } catch (Exception e) {
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -86,16 +96,19 @@ public class TryWithResourcesVariableTest {
     testHelper
         .addInputLines(
             "Test.java",
-            "abstract class Test {",
-            "  abstract AutoCloseable reassign(AutoCloseable r);",
-            "  void f (AutoCloseable r1) {",
-            "    r1 = reassign(r1);",
-            "    try (AutoCloseable r2 = r1) {",
-            "      System.err.println(r2);",
-            "    } catch (Exception e) {",
-            "    }",
-            "  }",
-            "}")
+            """
+            abstract class Test {
+              abstract AutoCloseable reassign(AutoCloseable r);
+
+              void f(AutoCloseable r1) {
+                r1 = reassign(r1);
+                try (AutoCloseable r2 = r1) {
+                  System.err.println(r2);
+                } catch (Exception e) {
+                }
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }

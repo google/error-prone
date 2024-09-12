@@ -36,12 +36,14 @@ public class MethodReturnsNonNullToStringTest extends CompilerBasedAbstractTest 
   public void shouldMatch() {
     writeFile(
         "A.java",
-        "public class A {",
-        "  public String testToString() {",
-        "    Object obj = new Object();",
-        "    return obj.toString();",
-        "  }",
-        "}");
+        """
+        public class A {
+          public String testToString() {
+            Object obj = new Object();
+            return obj.toString();
+          }
+        }
+        """);
     assertCompiles(
         methodInvocationMatches(/* shouldMatch= */ true, Matchers.methodReturnsNonNull()));
   }
@@ -50,19 +52,23 @@ public class MethodReturnsNonNullToStringTest extends CompilerBasedAbstractTest 
   public void shouldMatchDescendants() {
     writeFile(
         "A.java",
-        "public class A {",
-        "  public String testThisToString() {",
-        "    return toString();",
-        "  }",
-        "  public String testInstanceToString() {",
-        "    Object o = new Object();",
-        "    return o.toString();",
-        "  }",
-        "  public String testStringToString() {",
-        "    String str = \"a string\";",
-        "    return str.toString();",
-        "  }",
-        "}");
+        """
+        public class A {
+          public String testThisToString() {
+            return toString();
+          }
+
+          public String testInstanceToString() {
+            Object o = new Object();
+            return o.toString();
+          }
+
+          public String testStringToString() {
+            String str = "a string";
+            return str.toString();
+          }
+        }
+        """);
     assertCompiles(
         methodInvocationMatches(/* shouldMatch= */ true, Matchers.methodReturnsNonNull()));
   }
@@ -71,14 +77,17 @@ public class MethodReturnsNonNullToStringTest extends CompilerBasedAbstractTest 
   public void shouldMatchBareOverride() {
     writeFile(
         "A.java",
-        "public class A {",
-        "  public String toString() {",
-        "    return \"a string\";",
-        "  }",
-        "  public String testToString() {",
-        "    return toString();",
-        "  }",
-        "}");
+        """
+        public class A {
+          public String toString() {
+            return "a string";
+          }
+
+          public String testToString() {
+            return toString();
+          }
+        }
+        """);
     assertCompiles(
         methodInvocationMatches(/* shouldMatch= */ true, Matchers.methodReturnsNonNull()));
   }
@@ -87,14 +96,17 @@ public class MethodReturnsNonNullToStringTest extends CompilerBasedAbstractTest 
   public void shouldNotMatchWhenMethodNameDiffers() {
     writeFile(
         "A.java",
-        "public class A {",
-        "  public String ToString() {",
-        "    return \"match should be case sensitive\";",
-        "  }",
-        "  public String testMethodWithDifferentCase() {",
-        "    return ToString();",
-        "  }",
-        "}");
+        """
+        public class A {
+          public String ToString() {
+            return "match should be case sensitive";
+          }
+
+          public String testMethodWithDifferentCase() {
+            return ToString();
+          }
+        }
+        """);
     assertCompiles(
         methodInvocationMatches(/* shouldMatch= */ false, Matchers.methodReturnsNonNull()));
   }

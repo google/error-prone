@@ -33,18 +33,20 @@ public class OrphanedFormatStringTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void f() {",
-            "    // BUG: Diagnostic contains:",
-            "    System.err.println(\"%s\");",
-            "    // BUG: Diagnostic contains:",
-            "    new Exception(\"%s\");",
-            "    // BUG: Diagnostic contains:",
-            "    new StringBuilder(\"%s\");",
-            "    // BUG: Diagnostic contains:",
-            "    new StringBuilder().append(\"%s\", 0, 0);",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f() {
+                // BUG: Diagnostic contains:
+                System.err.println("%s");
+                // BUG: Diagnostic contains:
+                new Exception("%s");
+                // BUG: Diagnostic contains:
+                new StringBuilder("%s");
+                // BUG: Diagnostic contains:
+                new StringBuilder().append("%s", 0, 0);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -53,21 +55,25 @@ public class OrphanedFormatStringTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  static class FormatException extends Exception {",
-            "    FormatException(String f, Object... xs) {",
-            "      super(String.format(f, xs));",
-            "    }",
-            "  }",
-            "  void f() {",
-            "    String s = \"%s\";",
-            "    new FormatException(\"%s\");",
-            "    System.err.printf(\"%s\");",
-            "  }",
-            "  void appendToStringBuilder(StringBuilder b) {",
-            "    b.append(\"%s\");",
-            "  }",
-            "}")
+            """
+            class Test {
+              static class FormatException extends Exception {
+                FormatException(String f, Object... xs) {
+                  super(String.format(f, xs));
+                }
+              }
+
+              void f() {
+                String s = "%s";
+                new FormatException("%s");
+                System.err.printf("%s");
+              }
+
+              void appendToStringBuilder(StringBuilder b) {
+                b.append("%s");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -111,12 +117,14 @@ public class OrphanedFormatStringTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void f() {",
-            "    // BUG: Diagnostic contains:",
-            "    StringBuilder messageBuilder = new StringBuilder(\"more than 50% finished\");",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f() {
+                // BUG: Diagnostic contains:
+                StringBuilder messageBuilder = new StringBuilder("more than 50% finished");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -125,13 +133,16 @@ public class OrphanedFormatStringTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import static com.google.common.truth.Truth.assertWithMessage;",
-            "class Test {",
-            "  void test() {",
-            "    // BUG: Diagnostic contains:",
-            "    assertWithMessage(\"%s\").that(\"\").isNull();",
-            "  }",
-            "}")
+            """
+            import static com.google.common.truth.Truth.assertWithMessage;
+
+            class Test {
+              void test() {
+                // BUG: Diagnostic contains:
+                assertWithMessage("%s").that("").isNull();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -140,14 +151,18 @@ public class OrphanedFormatStringTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "class Test {",
-            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "  public void f() {",
-            "    // BUG: Diagnostic contains:",
-            "    logger.atInfo().log(\"hello %d\");",
-            "  }",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            class Test {
+              private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+
+              public void f() {
+                // BUG: Diagnostic contains:
+                logger.atInfo().log("hello %d");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -156,13 +171,17 @@ public class OrphanedFormatStringTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "class Test {",
-            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "  public void f(String arg) {",
-            "    logger.atInfo().log(\"hello %d\", arg);",
-            "  }",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            class Test {
+              private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+
+              public void f(String arg) {
+                logger.atInfo().log("hello %d", arg);
+              }
+            }
+            """)
         .doTest();
   }
 }

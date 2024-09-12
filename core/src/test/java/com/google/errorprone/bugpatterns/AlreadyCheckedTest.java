@@ -32,13 +32,16 @@ public final class AlreadyCheckedTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  public void test(boolean a) {",
-            "    if (a) {",
-            "    // BUG: Diagnostic contains: false",
-            "    } else if (a) {}",
-            "  }",
-            "}")
+            """
+            class Test {
+              public void test(boolean a) {
+                if (a) {
+                  // BUG: Diagnostic contains: false
+                } else if (a) {
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -47,13 +50,16 @@ public final class AlreadyCheckedTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  public void test(boolean a, boolean b) {",
-            "    if (a && b) {",
-            "    } else if (a) {",
-            "    } else if (b) {}",
-            "  }",
-            "}")
+            """
+            class Test {
+              public void test(boolean a, boolean b) {
+                if (a && b) {
+                } else if (a) {
+                } else if (b) {
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -62,15 +68,17 @@ public final class AlreadyCheckedTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  public void test(boolean a) {",
-            "    if (a) {",
-            "      return;",
-            "    }",
-            "    // BUG: Diagnostic contains: false",
-            "    if (a) {}",
-            "  }",
-            "}")
+            """
+            class Test {
+              public void test(boolean a) {
+                if (a) {
+                  return;
+                }
+                // BUG: Diagnostic contains: false
+                if (a) {}
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -79,16 +87,18 @@ public final class AlreadyCheckedTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  public void test(boolean a) {",
-            "    if (!a) {",
-            "    } else {",
-            "      return;",
-            "    }",
-            "    // BUG: Diagnostic contains: false",
-            "    if (a) {}",
-            "  }",
-            "}")
+            """
+            class Test {
+              public void test(boolean a) {
+                if (!a) {
+                } else {
+                  return;
+                }
+                // BUG: Diagnostic contains: false
+                if (a) {}
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -97,17 +107,20 @@ public final class AlreadyCheckedTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import java.util.stream.Stream;",
-            "class Test {",
-            "  public Stream<String> test(Stream<String> xs, String x) {",
-            "    if (x.isEmpty()) {",
-            "      return Stream.empty();",
-            "    }",
-            "    return xs.filter(",
-            "        // BUG: Diagnostic contains: x.isEmpty()",
-            "        y -> x.isEmpty() || y.equals(x));",
-            "  }",
-            "}")
+            """
+            import java.util.stream.Stream;
+
+            class Test {
+              public Stream<String> test(Stream<String> xs, String x) {
+                if (x.isEmpty()) {
+                  return Stream.empty();
+                }
+                return xs.filter(
+                    // BUG: Diagnostic contains: x.isEmpty()
+                    y -> x.isEmpty() || y.equals(x));
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -116,19 +129,24 @@ public final class AlreadyCheckedTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.collect.ImmutableList;",
-            "class Test {",
-            "  private final ImmutableList<Integer> foos = null;",
-            "  public boolean a() {",
-            "    if (foos.isEmpty()) {",
-            "      return true;",
-            "    }",
-            "    return false;",
-            "  }",
-            "  public boolean b() {",
-            "    return foos.isEmpty();",
-            "  }",
-            "}")
+            """
+            import com.google.common.collect.ImmutableList;
+
+            class Test {
+              private final ImmutableList<Integer> foos = null;
+
+              public boolean a() {
+                if (foos.isEmpty()) {
+                  return true;
+                }
+                return false;
+              }
+
+              public boolean b() {
+                return foos.isEmpty();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -137,18 +155,22 @@ public final class AlreadyCheckedTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.collect.ImmutableList;",
-            "class Test {",
-            "  private final ImmutableList<Integer> foos = null;",
-            "  public boolean a() {",
-            "    ImmutableList.of().stream().anyMatch(x -> true);",
-            "    if (foos.isEmpty()) {",
-            "      return true;",
-            "    }",
-            "    // BUG: Diagnostic contains:",
-            "    return foos.isEmpty();",
-            "  }",
-            "}")
+            """
+            import com.google.common.collect.ImmutableList;
+
+            class Test {
+              private final ImmutableList<Integer> foos = null;
+
+              public boolean a() {
+                ImmutableList.of().stream().anyMatch(x -> true);
+                if (foos.isEmpty()) {
+                  return true;
+                }
+                // BUG: Diagnostic contains:
+                return foos.isEmpty();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -157,14 +179,16 @@ public final class AlreadyCheckedTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  public void test(boolean a) {",
-            "    if (a) {",
-            "      // BUG: Diagnostic contains: true",
-            "      if (a) {}",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              public void test(boolean a) {
+                if (a) {
+                  // BUG: Diagnostic contains: true
+                  if (a) {}
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -173,16 +197,18 @@ public final class AlreadyCheckedTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  public void test(boolean a) {",
-            "    if (a) {",
-            "      // BUG: Diagnostic contains: true",
-            "      if (a) {}",
-            "      // BUG: Diagnostic contains: true",
-            "      if (a) {}",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              public void test(boolean a) {
+                if (a) {
+                  // BUG: Diagnostic contains: true
+                  if (a) {}
+                  // BUG: Diagnostic contains: true
+                  if (a) {}
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -191,14 +217,16 @@ public final class AlreadyCheckedTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  public void test(boolean a) {",
-            "    if (a) {",
-            "      // BUG: Diagnostic contains: true",
-            "      if (!a) {}",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              public void test(boolean a) {
+                if (a) {
+                  // BUG: Diagnostic contains: true
+                  if (!a) {}
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -207,12 +235,14 @@ public final class AlreadyCheckedTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  public void test(boolean a) {",
-            "    if (a) {}",
-            "    if (a) {}",
-            "  }",
-            "}")
+            """
+            class Test {
+              public void test(boolean a) {
+                if (a) {}
+                if (a) {}
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -221,14 +251,16 @@ public final class AlreadyCheckedTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  public void test(boolean a, boolean b, boolean c) {",
-            "    if (a && b) {",
-            "      // BUG: Diagnostic contains: true",
-            "      if (a && c) {}",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              public void test(boolean a, boolean b, boolean c) {
+                if (a && b) {
+                  // BUG: Diagnostic contains: true
+                  if (a && c) {}
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -237,13 +269,15 @@ public final class AlreadyCheckedTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  public void test(boolean a, boolean b, boolean c) {",
-            "    if ((a && b) || b) {",
-            "      if (a && c) {}",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              public void test(boolean a, boolean b, boolean c) {
+                if ((a && b) || b) {
+                  if (a && c) {}
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -252,12 +286,15 @@ public final class AlreadyCheckedTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  public void test(boolean a, boolean b, boolean c) {",
-            "    if (!a || (b && c)) {",
-            "    } else if (b) {}",
-            "  }",
-            "}")
+            """
+            class Test {
+              public void test(boolean a, boolean b, boolean c) {
+                if (!a || (b && c)) {
+                } else if (b) {
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -266,13 +303,16 @@ public final class AlreadyCheckedTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  public void test(boolean a) {",
-            "    a = true;",
-            "    if (a) {",
-            "    } else if (a) {}",
-            "  }",
-            "}")
+            """
+            class Test {
+              public void test(boolean a) {
+                a = true;
+                if (a) {
+                } else if (a) {
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -281,15 +321,17 @@ public final class AlreadyCheckedTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  public int test(boolean a) {",
-            "    if (a) {",
-            "      // BUG: Diagnostic contains: true",
-            "      return a ? 1 : 2;",
-            "    }",
-            "    return 0;",
-            "  }",
-            "}")
+            """
+            class Test {
+              public int test(boolean a) {
+                if (a) {
+                  // BUG: Diagnostic contains: true
+                  return a ? 1 : 2;
+                }
+                return 0;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -298,15 +340,17 @@ public final class AlreadyCheckedTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  public int test(String a) {",
-            "    if (a.equals(\"a\")) {",
-            "      // BUG: Diagnostic contains: true",
-            "      return a.equals(\"a\") ? 1 : 2;",
-            "    }",
-            "    return 0;",
-            "  }",
-            "}")
+            """
+            class Test {
+              public int test(String a) {
+                if (a.equals("a")) {
+                  // BUG: Diagnostic contains: true
+                  return a.equals("a") ? 1 : 2;
+                }
+                return 0;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -315,14 +359,16 @@ public final class AlreadyCheckedTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  public int test(String a) {",
-            "    if (a.equals(\"b\")) {",
-            "      return a.equals(\"a\") ? 1 : 2;",
-            "    }",
-            "    return 0;",
-            "  }",
-            "}")
+            """
+            class Test {
+              public int test(String a) {
+                if (a.equals("b")) {
+                  return a.equals("a") ? 1 : 2;
+                }
+                return 0;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -331,18 +377,20 @@ public final class AlreadyCheckedTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  public int test(int a, int b) {",
-            "    if (a == 1) {",
-            "      if (a == b) {",
-            "        return 3;",
-            "      }",
-            "      // BUG: Diagnostic contains:",
-            "      return a != 1 ? 1 : 2;",
-            "    }",
-            "    return 0;",
-            "  }",
-            "}")
+            """
+            class Test {
+              public int test(int a, int b) {
+                if (a == 1) {
+                  if (a == b) {
+                    return 3;
+                  }
+                  // BUG: Diagnostic contains:
+                  return a != 1 ? 1 : 2;
+                }
+                return 0;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -351,12 +399,14 @@ public final class AlreadyCheckedTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  public int test(int a) {",
-            "    // BUG: Diagnostic contains:",
-            "    return a == 1 ? (a == 1 ? 1 : 2) : 2;",
-            "  }",
-            "}")
+            """
+            class Test {
+              public int test(int a) {
+                // BUG: Diagnostic contains:
+                return a == 1 ? (a == 1 ? 1 : 2) : 2;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -365,16 +415,19 @@ public final class AlreadyCheckedTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import java.time.Duration;",
-            "class Test {",
-            "  public void test(Duration a, Duration b) {",
-            "    if (a.equals(Duration.ofSeconds(1))) {",
-            "      if (a.equals(Duration.ofSeconds(2))) {}",
-            "      // BUG: Diagnostic contains:",
-            "      if (a.equals(Duration.ofSeconds(1))) {}",
-            "    }",
-            "  }",
-            "}")
+            """
+            import java.time.Duration;
+
+            class Test {
+              public void test(Duration a, Duration b) {
+                if (a.equals(Duration.ofSeconds(1))) {
+                  if (a.equals(Duration.ofSeconds(2))) {}
+                  // BUG: Diagnostic contains:
+                  if (a.equals(Duration.ofSeconds(1))) {}
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -383,19 +436,22 @@ public final class AlreadyCheckedTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import static java.time.Duration.ofSeconds;",
-            "import java.time.Duration;",
-            "class Test {",
-            "  public void test(Duration a, Duration b) {",
-            "    if (a.equals(Duration.ofSeconds(1))) {",
-            "      if (a.equals(Duration.ofSeconds(2))) {}",
-            "      // BUG: Diagnostic contains:",
-            "      if (a.equals(ofSeconds(1))) {}",
-            "      // BUG: Diagnostic contains:",
-            "      if (a.equals(java.time.Duration.ofSeconds(1))) {}",
-            "    }",
-            "  }",
-            "}")
+            """
+            import static java.time.Duration.ofSeconds;
+            import java.time.Duration;
+
+            class Test {
+              public void test(Duration a, Duration b) {
+                if (a.equals(Duration.ofSeconds(1))) {
+                  if (a.equals(Duration.ofSeconds(2))) {}
+                  // BUG: Diagnostic contains:
+                  if (a.equals(ofSeconds(1))) {}
+                  // BUG: Diagnostic contains:
+                  if (a.equals(java.time.Duration.ofSeconds(1))) {}
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -404,20 +460,25 @@ public final class AlreadyCheckedTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import com.google.auto.value.AutoValue;",
-            "class Test {",
-            "  public void test(Foo a, Foo b) {",
-            "    if (a.bar().equals(\"foo\") && a.bar().equals(b.bar())) {",
-            "      // BUG: Diagnostic contains:",
-            "      if (a.bar().equals(\"foo\")) {}",
-            "      // BUG: Diagnostic contains:",
-            "      if (a.bar().equals(b.bar())) {}",
-            "    }",
-            "  }",
-            "  @AutoValue abstract static class Foo {",
-            "    abstract String bar();",
-            "  }",
-            "}")
+            """
+            import com.google.auto.value.AutoValue;
+
+            class Test {
+              public void test(Foo a, Foo b) {
+                if (a.bar().equals("foo") && a.bar().equals(b.bar())) {
+                  // BUG: Diagnostic contains:
+                  if (a.bar().equals("foo")) {}
+                  // BUG: Diagnostic contains:
+                  if (a.bar().equals(b.bar())) {}
+                }
+              }
+
+              @AutoValue
+              abstract static class Foo {
+                abstract String bar();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -426,23 +487,29 @@ public final class AlreadyCheckedTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import com.google.auto.value.AutoValue;",
-            "import com.google.errorprone.annotations.Immutable;",
-            "class Test {",
-            "  public void test(Foo a, Foo b) {",
-            "    if (a.bar().equals(E.A)) {",
-            "      // BUG: Diagnostic contains:",
-            "      if (a.bar().equals(E.A)) {}",
-            "    }",
-            "  }",
-            "  @AutoValue abstract static class Foo {",
-            "    abstract E bar();",
-            "  }",
-            "  @Immutable",
-            "  private enum E {",
-            "    A",
-            "  }",
-            "}")
+            """
+            import com.google.auto.value.AutoValue;
+            import com.google.errorprone.annotations.Immutable;
+
+            class Test {
+              public void test(Foo a, Foo b) {
+                if (a.bar().equals(E.A)) {
+                  // BUG: Diagnostic contains:
+                  if (a.bar().equals(E.A)) {}
+                }
+              }
+
+              @AutoValue
+              abstract static class Foo {
+                abstract E bar();
+              }
+
+              @Immutable
+              private enum E {
+                A
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -451,16 +518,20 @@ public final class AlreadyCheckedTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import com.google.auto.value.AutoValue;",
-            "class Test {",
-            "  private final String a = \"foo\";",
-            "  public void test(String a) {",
-            "    if (this.a.equals(a)) {",
-            "      // BUG: Diagnostic contains:",
-            "      if (this.a.equals(a)) {}",
-            "    }",
-            "  }",
-            "}")
+            """
+            import com.google.auto.value.AutoValue;
+
+            class Test {
+              private final String a = "foo";
+
+              public void test(String a) {
+                if (this.a.equals(a)) {
+                  // BUG: Diagnostic contains:
+                  if (this.a.equals(a)) {}
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -469,15 +540,19 @@ public final class AlreadyCheckedTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import com.google.auto.value.AutoValue;",
-            "class Test {",
-            "  void test(boolean a) {",
-            "    if (a) {",
-            "      set(a);",
-            "    }",
-            "  }",
-            "  void set(boolean a) {}",
-            "}")
+            """
+            import com.google.auto.value.AutoValue;
+
+            class Test {
+              void test(boolean a) {
+                if (a) {
+                  set(a);
+                }
+              }
+
+              void set(boolean a) {}
+            }
+            """)
         .doTest();
   }
 
@@ -486,16 +561,20 @@ public final class AlreadyCheckedTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import java.util.List;",
-            "class Test {",
-            "  private final List<String> xs = null;",
-            "  public boolean e(List<String> ys) {",
-            "    if (xs.equals(ys)) {",
-            "      return true;",
-            "    }",
-            "    return xs.equals(ys);",
-            "  }",
-            "}")
+            """
+            import java.util.List;
+
+            class Test {
+              private final List<String> xs = null;
+
+              public boolean e(List<String> ys) {
+                if (xs.equals(ys)) {
+                  return true;
+                }
+                return xs.equals(ys);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -504,16 +583,18 @@ public final class AlreadyCheckedTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import java.util.List;",
-            "class Test {",
-            "  void test(boolean a, boolean b) {",
-            "    if (a && b)",
-            "      return;",
-            "    if (a) {",
-            "    } else if (b) {",
-            "    }",
-            "  }",
-            "}")
+            """
+            import java.util.List;
+
+            class Test {
+              void test(boolean a, boolean b) {
+                if (a && b) return;
+                if (a) {
+                } else if (b) {
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -522,16 +603,20 @@ public final class AlreadyCheckedTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void test() {",
-            "    boolean a = true;",
-            "    loop: while (true) {",
-            "      if (false && a) {",
-            "        a = false;",
-            "      } else {}",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              void test() {
+                boolean a = true;
+                loop:
+                while (true) {
+                  if (false && a) {
+                    a = false;
+                  } else {
+                  }
+                }
+              }
+            }
+            """)
         .doTest();
   }
 }

@@ -33,26 +33,29 @@ public class CacheLoaderNullTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.cache.CacheLoader;",
-            "class Test {",
-            "  {",
-            "    new CacheLoader<String, String>() {",
-            "      @Override",
-            "      public String load(String key) {",
-            "        // BUG: Diagnostic contains:",
-            "        return null;",
-            "      }",
-            "    };",
-            "    abstract class MyCacheLoader extends CacheLoader<String, String> {}",
-            "    new MyCacheLoader() {",
-            "      @Override",
-            "      public String load(String key) {",
-            "        // BUG: Diagnostic contains:",
-            "        return null;",
-            "      }",
-            "    };",
-            "  }",
-            "}")
+            """
+            import com.google.common.cache.CacheLoader;
+
+            class Test {
+              {
+                new CacheLoader<String, String>() {
+                  @Override
+                  public String load(String key) {
+                    // BUG: Diagnostic contains:
+                    return null;
+                  }
+                };
+                abstract class MyCacheLoader extends CacheLoader<String, String> {}
+                new MyCacheLoader() {
+                  @Override
+                  public String load(String key) {
+                    // BUG: Diagnostic contains:
+                    return null;
+                  }
+                };
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -61,32 +64,41 @@ public class CacheLoaderNullTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.cache.CacheLoader;",
-            "import java.util.function.Supplier;",
-            "class Test {",
-            "  public String load(String key) {",
-            "    return null;",
-            "  }",
-            "  {",
-            "    new CacheLoader<String, String>() {",
-            "      @Override",
-            "      public String load(String key) {",
-            "        Supplier<String> s = () -> { return null; };",
-            "        Supplier<String> t = new Supplier<String>() {",
-            "          public String get() {",
-            "            return null;",
-            "          }",
-            "        };",
-            "        class MySupplier implements Supplier<String> {",
-            "          public String get() {",
-            "            return null;",
-            "          }",
-            "        };",
-            "        return \"\";",
-            "      }",
-            "    };",
-            "  }",
-            "}")
+            """
+            import com.google.common.cache.CacheLoader;
+            import java.util.function.Supplier;
+
+            class Test {
+              public String load(String key) {
+                return null;
+              }
+
+              {
+                new CacheLoader<String, String>() {
+                  @Override
+                  public String load(String key) {
+                    Supplier<String> s =
+                        () -> {
+                          return null;
+                        };
+                    Supplier<String> t =
+                        new Supplier<String>() {
+                          public String get() {
+                            return null;
+                          }
+                        };
+                    class MySupplier implements Supplier<String> {
+                      public String get() {
+                        return null;
+                      }
+                    }
+                    ;
+                    return "";
+                  }
+                };
+              }
+            }
+            """)
         .doTest();
   }
 }

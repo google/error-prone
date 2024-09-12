@@ -31,14 +31,17 @@ public class DurationGetTemporalUnitTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import java.time.Duration;",
-            "import java.time.temporal.ChronoUnit;",
-            "public class TestClass {",
-            "  private static final long seconds = Duration.ZERO.get(ChronoUnit.SECONDS);",
-            "  private static final long nanos = Duration.ZERO.get(ChronoUnit.NANOS);",
-            "  // BUG: Diagnostic contains: Duration.ZERO.toDays();",
-            "  private static final long days = Duration.ZERO.get(ChronoUnit.DAYS);",
-            "}")
+            """
+            import java.time.Duration;
+            import java.time.temporal.ChronoUnit;
+
+            public class TestClass {
+              private static final long seconds = Duration.ZERO.get(ChronoUnit.SECONDS);
+              private static final long nanos = Duration.ZERO.get(ChronoUnit.NANOS);
+              // BUG: Diagnostic contains: Duration.ZERO.toDays();
+              private static final long days = Duration.ZERO.get(ChronoUnit.DAYS);
+            }
+            """)
         .doTest();
   }
 
@@ -47,16 +50,19 @@ public class DurationGetTemporalUnitTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import static java.time.temporal.ChronoUnit.MILLIS;",
-            "import static java.time.temporal.ChronoUnit.NANOS;",
-            "import static java.time.temporal.ChronoUnit.SECONDS;",
-            "import java.time.Duration;",
-            "public class TestClass {",
-            "  private static final long seconds = Duration.ZERO.get(SECONDS);",
-            "  private static final long nanos = Duration.ZERO.get(NANOS);",
-            "  // BUG: Diagnostic contains: Duration.ZERO.toMillis();",
-            "  private static final long days = Duration.ZERO.get(MILLIS);",
-            "}")
+            """
+            import static java.time.temporal.ChronoUnit.MILLIS;
+            import static java.time.temporal.ChronoUnit.NANOS;
+            import static java.time.temporal.ChronoUnit.SECONDS;
+            import java.time.Duration;
+
+            public class TestClass {
+              private static final long seconds = Duration.ZERO.get(SECONDS);
+              private static final long nanos = Duration.ZERO.get(NANOS);
+              // BUG: Diagnostic contains: Duration.ZERO.toMillis();
+              private static final long days = Duration.ZERO.get(MILLIS);
+            }
+            """)
         .doTest();
   }
 

@@ -32,14 +32,19 @@ public class SynchronizeOnNonFinalFieldTest {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
-            "package threadsafety.Test;",
-            "class Test {",
-            "  Object lock = new Object();",
-            "  void m() {",
-            "    // BUG: Diagnostic contains: Synchronizing on non-final fields is not safe",
-            "    synchronized (lock) {}",
-            "  }",
-            "}")
+            """
+            package threadsafety.Test;
+
+            class Test {
+              Object lock = new Object();
+
+              void m() {
+                // BUG: Diagnostic contains: Synchronizing on non-final fields is not safe
+                synchronized (lock) {
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -48,15 +53,20 @@ public class SynchronizeOnNonFinalFieldTest {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
-            "package threadsafety.Test;",
-            "class Test {",
-            "  Object lock = new Object();",
-            "  Test[] tx = null;",
-            "  void m(int i) {",
-            "    // BUG: Diagnostic contains: Synchronizing on non-final fields is not safe",
-            "    synchronized (this.tx[i].lock) {}",
-            "  }",
-            "}")
+            """
+            package threadsafety.Test;
+
+            class Test {
+              Object lock = new Object();
+              Test[] tx = null;
+
+              void m(int i) {
+                // BUG: Diagnostic contains: Synchronizing on non-final fields is not safe
+                synchronized (this.tx[i].lock) {
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -65,14 +75,19 @@ public class SynchronizeOnNonFinalFieldTest {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
-            "package threadsafety.Test;",
-            "class Test {",
-            "  Object lock = new Object();",
-            "  void m(Test t) {",
-            "    // BUG: Diagnostic contains: Synchronizing on non-final fields is not safe",
-            "    synchronized (t.lock) {}",
-            "  }",
-            "}")
+            """
+            package threadsafety.Test;
+
+            class Test {
+              Object lock = new Object();
+
+              void m(Test t) {
+                // BUG: Diagnostic contains: Synchronizing on non-final fields is not safe
+                synchronized (t.lock) {
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -81,13 +96,18 @@ public class SynchronizeOnNonFinalFieldTest {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
-            "package threadsafety.Test;",
-            "class Test {",
-            "  final Object lock = new Object();",
-            "  void m() {",
-            "    synchronized (lock) {}",
-            "  }",
-            "}")
+            """
+            package threadsafety.Test;
+
+            class Test {
+              final Object lock = new Object();
+
+              void m() {
+                synchronized (lock) {
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -96,14 +116,20 @@ public class SynchronizeOnNonFinalFieldTest {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
-            "package threadsafety.Test;",
-            "import com.google.errorprone.annotations.concurrent.LazyInit;",
-            "class Test {",
-            "  @LazyInit transient Object lock = new Object();",
-            "  void m() {",
-            "    synchronized (lock) {}",
-            "  }",
-            "}")
+            """
+            package threadsafety.Test;
+
+            import com.google.errorprone.annotations.concurrent.LazyInit;
+
+            class Test {
+              @LazyInit transient Object lock = new Object();
+
+              void m() {
+                synchronized (lock) {
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -112,12 +138,16 @@ public class SynchronizeOnNonFinalFieldTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.io.Writer;",
-            "abstract class Test extends Writer {",
-            "  void m() {",
-            "    synchronized (lock) {}",
-            "  }",
-            "}")
+            """
+            import java.io.Writer;
+
+            abstract class Test extends Writer {
+              void m() {
+                synchronized (lock) {
+                }
+              }
+            }
+            """)
         .doTest();
   }
 }

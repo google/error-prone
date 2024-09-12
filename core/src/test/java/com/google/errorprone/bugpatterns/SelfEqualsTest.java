@@ -51,14 +51,16 @@ public class SelfEqualsTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  <T> boolean f() {",
-            "    T t = null;",
-            "    int y = 0;",
-            "    // BUG: Diagnostic contains:",
-            "    return t.equals(t);",
-            "  }",
-            "}")
+            """
+            class Test {
+              <T> boolean f() {
+                T t = null;
+                int y = 0;
+                // BUG: Diagnostic contains:
+                return t.equals(t);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -77,12 +79,15 @@ public class SelfEqualsTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.base.Objects;",
-            "class Test {",
-            "  Object a = new Object();",
-            "  // BUG: Diagnostic contains:",
-            "  boolean b = Objects.equal(a, a);",
-            "}")
+            """
+            import com.google.common.base.Objects;
+
+            class Test {
+              Object a = new Object();
+              // BUG: Diagnostic contains:
+              boolean b = Objects.equal(a, a);
+            }
+            """)
         .doTest();
   }
 }

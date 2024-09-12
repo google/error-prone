@@ -31,12 +31,15 @@ public final class UnusedLabelTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void test() {",
-            "    // BUG: Diagnostic contains:",
-            "    label: while(true) {}",
-            "  }",
-            "}")
+            """
+            class Test {
+              void test() {
+                // BUG: Diagnostic contains:
+                label:
+                while (true) {}
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -45,13 +48,16 @@ public final class UnusedLabelTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void test() {",
-            "    label: while(true) {",
-            "      break label;",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              void test() {
+                label:
+                while (true) {
+                  break label;
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -60,13 +66,16 @@ public final class UnusedLabelTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void test() {",
-            "    label: while(true) {",
-            "      continue label;",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              void test() {
+                label:
+                while (true) {
+                  continue label;
+                }
+              }
+            }
+            """)
         .doTest();
   }
 }

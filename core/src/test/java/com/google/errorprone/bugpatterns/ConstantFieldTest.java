@@ -34,19 +34,20 @@ public class ConstantFieldTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  // BUG: Diagnostic contains: static final Object CONSTANT1 = 42;",
-            "  Object CONSTANT1 = 42;",
-            "  // BUG: Diagnostic contains: @Deprecated static final Object CONSTANT2 = 42;",
-            "  @Deprecated Object CONSTANT2 = 42;",
-            "  // BUG: Diagnostic contains: static final Object CONSTANT3 = 42;",
-            "  static Object CONSTANT3 = 42;",
-            "  // BUG: Diagnostic contains: static final Object CONSTANT4 = 42;",
-            "  final Object CONSTANT4 = 42;",
-            "  // BUG: Diagnostic contains:"
-                + " @Deprecated private static final Object CONSTANT5 = 42;",
-            "  @Deprecated private Object CONSTANT5 = 42;",
-            "}")
+            """
+            class Test {
+              // BUG: Diagnostic contains: static final Object CONSTANT1 = 42;
+              Object CONSTANT1 = 42;
+              // BUG: Diagnostic contains: @Deprecated static final Object CONSTANT2 = 42;
+              @Deprecated Object CONSTANT2 = 42;
+              // BUG: Diagnostic contains: static final Object CONSTANT3 = 42;
+              static Object CONSTANT3 = 42;
+              // BUG: Diagnostic contains: static final Object CONSTANT4 = 42;
+              final Object CONSTANT4 = 42;
+              // BUG: Diagnostic contains: @Deprecated private static final Object CONSTANT5 = 42;
+              @Deprecated private Object CONSTANT5 = 42;
+            }
+            """)
         .doTest();
   }
 
@@ -55,10 +56,12 @@ public class ConstantFieldTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  // BUG: Diagnostic contains: 'Object constantCaseName = 42;'",
-            "  Object CONSTANT_CASE_NAME = 42;",
-            "}")
+            """
+            class Test {
+              // BUG: Diagnostic contains: 'Object constantCaseName = 42;'
+              Object CONSTANT_CASE_NAME = 42;
+            }
+            """)
         .doTest();
   }
 
@@ -67,20 +70,23 @@ public class ConstantFieldTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  class Inner {",
-            "    // BUG: Diagnostic matches: F",
-            "    final String CONSTANT_CASE_NAME = \"a\";",
-            "  }",
-            "  enum InnerEnum {",
-            "   FOO {",
-            "     // BUG: Diagnostic matches: F",
-            "     final String CONSTANT_CASE_NAME = \"a\";",
-            "   };",
-            "   // BUG: Diagnostic contains: static final String CAN_MAKE_STATIC",
-            "   final String CAN_MAKE_STATIC = \"\";",
-            "  }",
-            "}")
+            """
+            class Test {
+              class Inner {
+                // BUG: Diagnostic matches: F
+                final String CONSTANT_CASE_NAME = "a";
+              }
+
+              enum InnerEnum {
+                FOO {
+                  // BUG: Diagnostic matches: F
+                  final String CONSTANT_CASE_NAME = "a";
+                };
+                // BUG: Diagnostic contains: static final String CAN_MAKE_STATIC
+                final String CAN_MAKE_STATIC = "";
+              }
+            }
+            """)
         .expectErrorMessage(
             "F", d -> !d.contains("static final String") && d.contains("ConstantField"))
         .doTest();
@@ -91,15 +97,17 @@ public class ConstantFieldTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  static final Object CONSTANT = 42;",
-            "  Object nonConst = 42;",
-            "  public static final Object FLAG_foo = new Object();",
-            "  protected static final int FOO_BAR = 100;",
-            "  static final int FOO_BAR2 = 100;",
-            "  private static final int[] intArray = {0};",
-            "  private static final Object mutable = new Object();",
-            "}")
+            """
+            class Test {
+              static final Object CONSTANT = 42;
+              Object nonConst = 42;
+              public static final Object FLAG_foo = new Object();
+              protected static final int FOO_BAR = 100;
+              static final int FOO_BAR2 = 100;
+              private static final int[] intArray = {0};
+              private static final Object mutable = new Object();
+            }
+            """)
         .doTest();
   }
 
@@ -108,20 +116,26 @@ public class ConstantFieldTest {
     BugCheckerRefactoringTestHelper.newInstance(ConstantField.class, getClass())
         .addInputLines(
             "in/Test.java",
-            "class Test {",
-            "  Object CONSTANT_CASE = 42;",
-            "  void f() {",
-            "    System.err.println(CONSTANT_CASE);",
-            "  }",
-            "}")
+            """
+            class Test {
+              Object CONSTANT_CASE = 42;
+
+              void f() {
+                System.err.println(CONSTANT_CASE);
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "class Test {",
-            "  Object constantCase = 42;",
-            "  void f() {",
-            "    System.err.println(constantCase);",
-            "  }",
-            "}")
+            """
+            class Test {
+              Object constantCase = 42;
+
+              void f() {
+                System.err.println(constantCase);
+              }
+            }
+            """)
         .setFixChooser(FixChoosers.SECOND)
         .doTest();
   }
@@ -131,11 +145,13 @@ public class ConstantFieldTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  static final int CONSTANT = 42;",
-            "  static final Integer BOXED_CONSTANT = 42;",
-            "  static final String STRING_CONSTANT = \"\";",
-            "}")
+            """
+            class Test {
+              static final int CONSTANT = 42;
+              static final Integer BOXED_CONSTANT = 42;
+              static final String STRING_CONSTANT = "";
+            }
+            """)
         .doTest();
   }
 
@@ -144,12 +160,15 @@ public class ConstantFieldTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.io.ObjectStreamField;",
-            "import java.io.Serializable;",
-            "class Test implements Serializable {",
-            "  private static final long serialVersionUID = 1L;",
-            "  private static final ObjectStreamField[] serialPersistentFields = {};",
-            "}")
+            """
+            import java.io.ObjectStreamField;
+            import java.io.Serializable;
+
+            class Test implements Serializable {
+              private static final long serialVersionUID = 1L;
+              private static final ObjectStreamField[] serialPersistentFields = {};
+            }
+            """)
         .doTest();
   }
 }

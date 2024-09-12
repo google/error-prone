@@ -30,22 +30,30 @@ public final class FloggerLogVarargsTest {
     BugCheckerRefactoringTestHelper.newInstance(FloggerLogVarargs.class, getClass())
         .addInputLines(
             "Test.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "class Test {",
-            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "  void log(String s, Object... a) {",
-            "    logger.atInfo().log(s, a);",
-            "  }",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            class Test {
+              private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+
+              void log(String s, Object... a) {
+                logger.atInfo().log(s, a);
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "class Test {",
-            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "  void log(String s, Object... a) {",
-            "    logger.atInfo().logVarargs(s, a);",
-            "  }",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            class Test {
+              private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+
+              void log(String s, Object... a) {
+                logger.atInfo().logVarargs(s, a);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -54,34 +62,44 @@ public final class FloggerLogVarargsTest {
     BugCheckerRefactoringTestHelper.newInstance(FloggerLogVarargs.class, getClass())
         .addInputLines(
             "Test.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "import java.util.function.Predicate;",
-            "class Test {",
-            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "  Predicate<Void> log(String s, Object... a) {",
-            "    return new Predicate<Void>() {",
-            "      @Override public boolean test(Void unused) {",
-            "        logger.atInfo().log(s, a);",
-            "        return true;",
-            "      }",
-            "    };",
-            "  }",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+            import java.util.function.Predicate;
+
+            class Test {
+              private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+
+              Predicate<Void> log(String s, Object... a) {
+                return new Predicate<Void>() {
+                  @Override
+                  public boolean test(Void unused) {
+                    logger.atInfo().log(s, a);
+                    return true;
+                  }
+                };
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "import java.util.function.Predicate;",
-            "class Test {",
-            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "  Predicate<Void> log(String s, Object... a) {",
-            "    return new Predicate<Void>() {",
-            "      @Override public boolean test(Void unused) {",
-            "        logger.atInfo().logVarargs(s, a);",
-            "        return true;",
-            "      }",
-            "    };",
-            "  }",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+            import java.util.function.Predicate;
+
+            class Test {
+              private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+
+              Predicate<Void> log(String s, Object... a) {
+                return new Predicate<Void>() {
+                  @Override
+                  public boolean test(Void unused) {
+                    logger.atInfo().logVarargs(s, a);
+                    return true;
+                  }
+                };
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -90,16 +108,21 @@ public final class FloggerLogVarargsTest {
     CompilationTestHelper.newInstance(FloggerLogVarargs.class, getClass())
         .addSourceLines(
             "Test.java",
-            "import com.google.common.flogger.FluentLogger;",
-            "class Test {",
-            "  private static final FluentLogger logger = FluentLogger.forEnclosingClass();",
-            "  void log(String s, Object a) {",
-            "    logger.atInfo().log(s, a);",
-            "  }",
-            "  void bar() {",
-            "    logger.atInfo().log(\"foo\", new Object[] {1});",
-            "  }",
-            "}")
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            class Test {
+              private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+
+              void log(String s, Object a) {
+                logger.atInfo().log(s, a);
+              }
+
+              void bar() {
+                logger.atInfo().log("foo", new Object[] {1});
+              }
+            }
+            """)
         .doTest();
   }
 }

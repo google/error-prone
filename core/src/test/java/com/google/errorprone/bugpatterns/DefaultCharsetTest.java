@@ -41,14 +41,17 @@ public class DefaultCharsetTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.io.*;",
-            "class Test {",
-            "  byte[] f(String s) {",
-            "    // BUG: Diagnostic contains: 'return s.getBytes(UTF_8);'"
-                + " or 'return s.getBytes(Charset.defaultCharset());'",
-            "    return s.getBytes();",
-            "  }",
-            "}")
+            """
+            import java.io.*;
+
+            class Test {
+              byte[] f(String s) {
+                // BUG: Diagnostic contains: 'return s.getBytes(UTF_8);' or 'return
+                // s.getBytes(Charset.defaultCharset());'
+                return s.getBytes();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -57,21 +60,24 @@ public class DefaultCharsetTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.io.*;",
-            "class Test {",
-            "  void f(String s, byte[] b, OutputStream out, InputStream in) throws Exception {",
-            "    // BUG: Diagnostic contains: s.getBytes(UTF_8);",
-            "    s.getBytes();",
-            "    // BUG: Diagnostic contains: new String(b, UTF_8);",
-            "    new String(b);",
-            "    // BUG: Diagnostic contains: new String(b, 0, 0, UTF_8);",
-            "    new String(b, 0, 0);",
-            "    // BUG: Diagnostic contains: new OutputStreamWriter(out, UTF_8);",
-            "    new OutputStreamWriter(out);",
-            "    // BUG: Diagnostic contains: new InputStreamReader(in, UTF_8);",
-            "    new InputStreamReader(in);",
-            "  }",
-            "}")
+            """
+            import java.io.*;
+
+            class Test {
+              void f(String s, byte[] b, OutputStream out, InputStream in) throws Exception {
+                // BUG: Diagnostic contains: s.getBytes(UTF_8);
+                s.getBytes();
+                // BUG: Diagnostic contains: new String(b, UTF_8);
+                new String(b);
+                // BUG: Diagnostic contains: new String(b, 0, 0, UTF_8);
+                new String(b, 0, 0);
+                // BUG: Diagnostic contains: new OutputStreamWriter(out, UTF_8);
+                new OutputStreamWriter(out);
+                // BUG: Diagnostic contains: new InputStreamReader(in, UTF_8);
+                new InputStreamReader(in);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -80,15 +86,18 @@ public class DefaultCharsetTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.io.*;",
-            "class Test {",
-            "  void f(String s, File f) throws Exception {",
-            "    // BUG: Diagnostic contains: Files.newBufferedReader(Paths.get(s), UTF_8);",
-            "    new FileReader(s);",
-            "    // BUG: Diagnostic contains: Files.newBufferedReader(f.toPath(), UTF_8);",
-            "    new FileReader(f);",
-            "  }",
-            "}")
+            """
+            import java.io.*;
+
+            class Test {
+              void f(String s, File f) throws Exception {
+                // BUG: Diagnostic contains: Files.newBufferedReader(Paths.get(s), UTF_8);
+                new FileReader(s);
+                // BUG: Diagnostic contains: Files.newBufferedReader(f.toPath(), UTF_8);
+                new FileReader(f);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -97,32 +106,31 @@ public class DefaultCharsetTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.io.*;",
-            "class Test {",
-            "  static final boolean CONST = true;",
-            "  void f(File f, String s, boolean flag) throws Exception {",
-            "    // BUG: Diagnostic contains: Files.newBufferedWriter(Paths.get(s), UTF_8);",
-            "    new FileWriter(s);",
-            "    // BUG: Diagnostic contains:"
-                + " Files.newBufferedWriter(Paths.get(s), UTF_8, CREATE, APPEND);",
-            "    new FileWriter(s, true);",
-            "    // BUG: Diagnostic contains:"
-                + " Files.newBufferedWriter(Paths.get(s), UTF_8, CREATE, APPEND);",
-            "    new FileWriter(s, CONST);",
-            "    // BUG: Diagnostic contains: Files.newBufferedWriter(f.toPath(), UTF_8);",
-            "    new FileWriter(f);",
-            "    // BUG: Diagnostic contains:"
-                + " Files.newBufferedWriter(f.toPath(), UTF_8, CREATE, APPEND);",
-            "    new FileWriter(f, true);",
-            "    // BUG: Diagnostic contains: Files.newBufferedWriter(f.toPath(), UTF_8);",
-            "    new FileWriter(f, false);",
-            "    // BUG: Diagnostic contains:"
-                + " Files.newBufferedWriter(f.toPath(), UTF_8, flag"
-                + " ? new StandardOpenOption[] {CREATE, APPEND}"
-                + " : new StandardOpenOption[] {CREATE}",
-            "    new FileWriter(f, flag);",
-            "  }",
-            "}")
+            """
+import java.io.*;
+
+class Test {
+  static final boolean CONST = true;
+
+  void f(File f, String s, boolean flag) throws Exception {
+    // BUG: Diagnostic contains: Files.newBufferedWriter(Paths.get(s), UTF_8);
+    new FileWriter(s);
+    // BUG: Diagnostic contains: Files.newBufferedWriter(Paths.get(s), UTF_8, CREATE, APPEND);
+    new FileWriter(s, true);
+    // BUG: Diagnostic contains: Files.newBufferedWriter(Paths.get(s), UTF_8, CREATE, APPEND);
+    new FileWriter(s, CONST);
+    // BUG: Diagnostic contains: Files.newBufferedWriter(f.toPath(), UTF_8);
+    new FileWriter(f);
+    // BUG: Diagnostic contains: Files.newBufferedWriter(f.toPath(), UTF_8, CREATE, APPEND);
+    new FileWriter(f, true);
+    // BUG: Diagnostic contains: Files.newBufferedWriter(f.toPath(), UTF_8);
+    new FileWriter(f, false);
+    // BUG: Diagnostic contains: Files.newBufferedWriter(f.toPath(), UTF_8, flag ? new
+    // StandardOpenOption[] {CREATE, APPEND} : new StandardOpenOption[] {CREATE}
+    new FileWriter(f, flag);
+  }
+}
+""")
         .doTest();
   }
 
@@ -131,17 +139,20 @@ public class DefaultCharsetTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.io.*;",
-            "class Test {",
-            "  void f(String s) throws Exception {",
-            "    // BUG: Diagnostic contains: "
-                + "try (BufferedReader reader = Files.newBufferedReader(Paths.get(s), UTF_8)) {}'",
-            "    try (BufferedReader reader = new BufferedReader(new FileReader(s))) {}",
-            "    // BUG: Diagnostic contains: "
-                + "try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(s), UTF_8)) {}",
-            "    try (BufferedWriter writer = new BufferedWriter(new FileWriter(s))) {}",
-            "  }",
-            "}")
+            """
+import java.io.*;
+
+class Test {
+  void f(String s) throws Exception {
+    // BUG: Diagnostic contains: try (BufferedReader reader = Files.newBufferedReader(Paths.get(s),
+    // UTF_8)) {}'
+    try (BufferedReader reader = new BufferedReader(new FileReader(s))) {}
+    // BUG: Diagnostic contains: try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(s),
+    // UTF_8)) {}
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter(s))) {}
+  }
+}
+""")
         .doTest();
   }
 
@@ -150,18 +161,20 @@ public class DefaultCharsetTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static java.nio.charset.StandardCharsets.UTF_8;",
-            "import java.io.*;",
-            "class Test {",
-            "  void f(String s, byte[] b, OutputStream out, InputStream in, File f)",
-            "      throws Exception {",
-            "    s.getBytes(UTF_8);",
-            "    new String(b, UTF_8);",
-            "    new String(b, 0, 0, UTF_8);",
-            "    new OutputStreamWriter(out, UTF_8);",
-            "    new InputStreamReader(in, UTF_8);",
-            "  }",
-            "}")
+            """
+import static java.nio.charset.StandardCharsets.UTF_8;
+import java.io.*;
+
+class Test {
+  void f(String s, byte[] b, OutputStream out, InputStream in, File f) throws Exception {
+    s.getBytes(UTF_8);
+    new String(b, UTF_8);
+    new String(b, 0, 0, UTF_8);
+    new OutputStreamWriter(out, UTF_8);
+    new InputStreamReader(in, UTF_8);
+  }
+}
+""")
         .doTest();
   }
 
@@ -170,13 +183,16 @@ public class DefaultCharsetTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.io.*;",
-            "class Test {",
-            "  void f(FileDescriptor fd) throws Exception {",
-            "    try (BufferedReader reader = new BufferedReader(new FileReader(fd))) {}",
-            "    try (BufferedWriter writer = new BufferedWriter(new FileWriter(fd))) {}",
-            "  }",
-            "}")
+            """
+            import java.io.*;
+
+            class Test {
+              void f(FileDescriptor fd) throws Exception {
+                try (BufferedReader reader = new BufferedReader(new FileReader(fd))) {}
+                try (BufferedWriter writer = new BufferedWriter(new FileWriter(fd))) {}
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -185,26 +201,32 @@ public class DefaultCharsetTest {
     refactoringTest()
         .addInputLines(
             "in/Test.java",
-            "import java.io.*;",
-            "import com.google.common.io.Files;",
-            "class Test {",
-            "  void f(String s, File f) throws Exception {",
-            "    new FileReader(s);",
-            "    new FileReader(f);",
-            "  }",
-            "}")
+            """
+            import java.io.*;
+            import com.google.common.io.Files;
+
+            class Test {
+              void f(String s, File f) throws Exception {
+                new FileReader(s);
+                new FileReader(f);
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "import static java.nio.charset.StandardCharsets.UTF_8;",
-            "import com.google.common.io.Files;",
-            "import java.io.*;",
-            "import java.io.File;",
-            "class Test {",
-            "  void f(String s, File f) throws Exception {",
-            "    Files.newReader(new File(s), UTF_8);",
-            "    Files.newReader(f, UTF_8);",
-            "  }",
-            "}")
+            """
+            import static java.nio.charset.StandardCharsets.UTF_8;
+            import com.google.common.io.Files;
+            import java.io.*;
+            import java.io.File;
+
+            class Test {
+              void f(String s, File f) throws Exception {
+                Files.newReader(new File(s), UTF_8);
+                Files.newReader(f, UTF_8);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -213,28 +235,34 @@ public class DefaultCharsetTest {
     refactoringTest()
         .addInputLines(
             "in/Test.java",
-            "import java.io.*;",
-            "import com.google.common.io.Files;",
-            "class Test {",
-            "  void f(String s, File f) throws Exception {",
-            "    new FileWriter(s, true);",
-            "    new FileWriter(f, true);",
-            "  }",
-            "}")
+            """
+            import java.io.*;
+            import com.google.common.io.Files;
+
+            class Test {
+              void f(String s, File f) throws Exception {
+                new FileWriter(s, true);
+                new FileWriter(f, true);
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "import static java.nio.charset.StandardCharsets.UTF_8;",
-            "import static java.nio.file.StandardOpenOption.APPEND;",
-            "import static java.nio.file.StandardOpenOption.CREATE;",
-            "import com.google.common.io.Files;",
-            "import java.io.*;",
-            "import java.nio.file.Paths;",
-            "class Test {",
-            "  void f(String s, File f) throws Exception {",
-            "    java.nio.file.Files.newBufferedWriter(Paths.get(s), UTF_8, CREATE, APPEND);",
-            "    java.nio.file.Files.newBufferedWriter(f.toPath(), UTF_8, CREATE, APPEND);",
-            "  }",
-            "}")
+            """
+            import static java.nio.charset.StandardCharsets.UTF_8;
+            import static java.nio.file.StandardOpenOption.APPEND;
+            import static java.nio.file.StandardOpenOption.CREATE;
+            import com.google.common.io.Files;
+            import java.io.*;
+            import java.nio.file.Paths;
+
+            class Test {
+              void f(String s, File f) throws Exception {
+                java.nio.file.Files.newBufferedWriter(Paths.get(s), UTF_8, CREATE, APPEND);
+                java.nio.file.Files.newBufferedWriter(f.toPath(), UTF_8, CREATE, APPEND);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -243,26 +271,32 @@ public class DefaultCharsetTest {
     refactoringTest()
         .addInputLines(
             "in/Test.java",
-            "import java.io.*;",
-            "import com.google.common.io.Files;",
-            "class Test {",
-            "  void f(String s, File f) throws Exception {",
-            "    new FileWriter(s);",
-            "    new FileWriter(f);",
-            "  }",
-            "}")
+            """
+            import java.io.*;
+            import com.google.common.io.Files;
+
+            class Test {
+              void f(String s, File f) throws Exception {
+                new FileWriter(s);
+                new FileWriter(f);
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "import static java.nio.charset.StandardCharsets.UTF_8;",
-            "import com.google.common.io.Files;",
-            "import java.io.*;",
-            "import java.io.File;",
-            "class Test {",
-            "  void f(String s, File f) throws Exception {",
-            "    Files.newWriter(new File(s), UTF_8);",
-            "    Files.newWriter(f, UTF_8);",
-            "  }",
-            "}")
+            """
+            import static java.nio.charset.StandardCharsets.UTF_8;
+            import com.google.common.io.Files;
+            import java.io.*;
+            import java.io.File;
+
+            class Test {
+              void f(String s, File f) throws Exception {
+                Files.newWriter(new File(s), UTF_8);
+                Files.newWriter(f, UTF_8);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -271,13 +305,16 @@ public class DefaultCharsetTest {
     refactoringTest()
         .addInputLines(
             "in/Test.java",
-            "import java.io.*;",
-            "class Test {",
-            "  void f(String s, File f) throws Exception {",
-            "    new FileReader(s);",
-            "    new FileReader(f);",
-            "  }",
-            "}")
+            """
+            import java.io.*;
+
+            class Test {
+              void f(String s, File f) throws Exception {
+                new FileReader(s);
+                new FileReader(f);
+              }
+            }
+            """)
         .expectUnchanged()
         .setArgs("-XDandroidCompatible=true")
         .doTest();
@@ -288,13 +325,16 @@ public class DefaultCharsetTest {
     refactoringTest()
         .addInputLines(
             "in/Test.java",
-            "import java.io.*;",
-            "class Test {",
-            "  void f(String s, File f) throws Exception {",
-            "    new FileWriter(s);",
-            "    new FileWriter(f);",
-            "  }",
-            "}")
+            """
+            import java.io.*;
+
+            class Test {
+              void f(String s, File f) throws Exception {
+                new FileWriter(s);
+                new FileWriter(f);
+              }
+            }
+            """)
         .expectUnchanged()
         .setArgs("-XDandroidCompatible=true")
         .doTest();
@@ -305,26 +345,32 @@ public class DefaultCharsetTest {
     refactoringTest()
         .addInputLines(
             "in/Test.java",
-            "import java.io.*;",
-            "class Test {",
-            "  void f(File f) throws Exception {",
-            "    FileWriter w = new FileWriter(f);",
-            "    FileReader r = new FileReader(f);",
-            "  }",
-            "}")
+            """
+            import java.io.*;
+
+            class Test {
+              void f(File f) throws Exception {
+                FileWriter w = new FileWriter(f);
+                FileReader r = new FileReader(f);
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "import static java.nio.charset.StandardCharsets.UTF_8;",
-            "import java.io.*;",
-            "import java.io.Reader;",
-            "import java.io.Writer;",
-            "import java.nio.file.Files;",
-            "class Test {",
-            "  void f(File f) throws Exception {",
-            "    Writer w = Files.newBufferedWriter(f.toPath(), UTF_8);",
-            "    Reader r = Files.newBufferedReader(f.toPath(), UTF_8);",
-            "  }",
-            "}")
+            """
+            import static java.nio.charset.StandardCharsets.UTF_8;
+            import java.io.*;
+            import java.io.Reader;
+            import java.io.Writer;
+            import java.nio.file.Files;
+
+            class Test {
+              void f(File f) throws Exception {
+                Writer w = Files.newBufferedWriter(f.toPath(), UTF_8);
+                Reader r = Files.newBufferedReader(f.toPath(), UTF_8);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -333,30 +379,38 @@ public class DefaultCharsetTest {
     refactoringTest()
         .addInputLines(
             "in/Test.java",
-            "import java.io.*;",
-            "class Test {",
-            "  FileWriter w = null;",
-            "  FileReader r = null;",
-            "  void f(File f) throws Exception {",
-            "    w = new FileWriter(f);",
-            "    r = new FileReader(f);",
-            "  }",
-            "}")
+            """
+            import java.io.*;
+
+            class Test {
+              FileWriter w = null;
+              FileReader r = null;
+
+              void f(File f) throws Exception {
+                w = new FileWriter(f);
+                r = new FileReader(f);
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "import static java.nio.charset.StandardCharsets.UTF_8;",
-            "import java.io.*;",
-            "import java.io.Reader;",
-            "import java.io.Writer;",
-            "import java.nio.file.Files;",
-            "class Test {",
-            "  Writer w = null;",
-            "  Reader r = null;",
-            "  void f(File f) throws Exception {",
-            "    w = Files.newBufferedWriter(f.toPath(), UTF_8);",
-            "    r = Files.newBufferedReader(f.toPath(), UTF_8);",
-            "  }",
-            "}")
+            """
+            import static java.nio.charset.StandardCharsets.UTF_8;
+            import java.io.*;
+            import java.io.Reader;
+            import java.io.Writer;
+            import java.nio.file.Files;
+
+            class Test {
+              Writer w = null;
+              Reader r = null;
+
+              void f(File f) throws Exception {
+                w = Files.newBufferedWriter(f.toPath(), UTF_8);
+                r = Files.newBufferedReader(f.toPath(), UTF_8);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -365,33 +419,39 @@ public class DefaultCharsetTest {
     refactoringTest()
         .addInputLines(
             "in/Test.java",
-            "import java.io.File;",
-            "import java.io.PrintWriter;",
-            "class Test {",
-            "  void f() throws Exception {",
-            "    PrintWriter pw1 = new PrintWriter(System.err, true);",
-            "    PrintWriter pw2 = new PrintWriter(System.err);",
-            "    PrintWriter pw3 = new PrintWriter(\"test\");",
-            "    PrintWriter pw4 = new PrintWriter(new File(\"test\"));",
-            "  }",
-            "}")
+            """
+            import java.io.File;
+            import java.io.PrintWriter;
+
+            class Test {
+              void f() throws Exception {
+                PrintWriter pw1 = new PrintWriter(System.err, true);
+                PrintWriter pw2 = new PrintWriter(System.err);
+                PrintWriter pw3 = new PrintWriter("test");
+                PrintWriter pw4 = new PrintWriter(new File("test"));
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "import static java.nio.charset.StandardCharsets.UTF_8;",
-            "import java.io.BufferedWriter;",
-            "import java.io.File;",
-            "import java.io.OutputStreamWriter;",
-            "import java.io.PrintWriter;",
-            "class Test {",
-            "  void f() throws Exception {",
-            "    PrintWriter pw1 = new PrintWriter(",
-            "        new BufferedWriter(new OutputStreamWriter(System.err, UTF_8)), true);",
-            "    PrintWriter pw2 = new PrintWriter(",
-            "        new BufferedWriter(new OutputStreamWriter(System.err, UTF_8)));",
-            "    PrintWriter pw3 = new PrintWriter(\"test\", UTF_8);",
-            "    PrintWriter pw4 = new PrintWriter(new File(\"test\"), UTF_8);",
-            "  }",
-            "}")
+            """
+import static java.nio.charset.StandardCharsets.UTF_8;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+
+class Test {
+  void f() throws Exception {
+    PrintWriter pw1 =
+        new PrintWriter(new BufferedWriter(new OutputStreamWriter(System.err, UTF_8)), true);
+    PrintWriter pw2 =
+        new PrintWriter(new BufferedWriter(new OutputStreamWriter(System.err, UTF_8)));
+    PrintWriter pw3 = new PrintWriter("test", UTF_8);
+    PrintWriter pw4 = new PrintWriter(new File("test"), UTF_8);
+  }
+}
+""")
         .doTest();
   }
 
@@ -400,20 +460,26 @@ public class DefaultCharsetTest {
     refactoringTest()
         .addInputLines(
             "in/Test.java",
-            "import com.google.protobuf.ByteString;",
-            "class Test {",
-            "  void f() throws Exception {",
-            "    ByteString.copyFrom(\"hello\".getBytes());",
-            "  }",
-            "}")
+            """
+            import com.google.protobuf.ByteString;
+
+            class Test {
+              void f() throws Exception {
+                ByteString.copyFrom("hello".getBytes());
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "import com.google.protobuf.ByteString;",
-            "class Test {",
-            "  void f() throws Exception {",
-            "    ByteString.copyFromUtf8(\"hello\");",
-            "  }",
-            "}")
+            """
+            import com.google.protobuf.ByteString;
+
+            class Test {
+              void f() throws Exception {
+                ByteString.copyFromUtf8("hello");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -422,21 +488,27 @@ public class DefaultCharsetTest {
     refactoringTest()
         .addInputLines(
             "in/Test.java",
-            "import com.google.protobuf.ByteString;",
-            "class Test {",
-            "  void f() throws Exception {",
-            "    ByteString.copyFrom(\"hello\".getBytes());",
-            "  }",
-            "}")
+            """
+            import com.google.protobuf.ByteString;
+
+            class Test {
+              void f() throws Exception {
+                ByteString.copyFrom("hello".getBytes());
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "import com.google.protobuf.ByteString;",
-            "import java.nio.charset.Charset;",
-            "class Test {",
-            "  void f() throws Exception {",
-            "    ByteString.copyFrom(\"hello\", Charset.defaultCharset());",
-            "  }",
-            "}")
+            """
+            import com.google.protobuf.ByteString;
+            import java.nio.charset.Charset;
+
+            class Test {
+              void f() throws Exception {
+                ByteString.copyFrom("hello", Charset.defaultCharset());
+              }
+            }
+            """)
         .setFixChooser(FixChoosers.SECOND)
         .doTest();
   }
@@ -446,21 +518,27 @@ public class DefaultCharsetTest {
     refactoringTest()
         .addInputLines(
             "in/Test.java",
-            "import static com.google.protobuf.ByteString.copyFrom;",
-            "class Test {",
-            "  void f() throws Exception {",
-            "    copyFrom(\"hello\".getBytes());",
-            "  }",
-            "}")
+            """
+            import static com.google.protobuf.ByteString.copyFrom;
+
+            class Test {
+              void f() throws Exception {
+                copyFrom("hello".getBytes());
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "import static com.google.protobuf.ByteString.copyFrom;",
-            "import java.nio.charset.Charset;",
-            "class Test {",
-            "  void f() throws Exception {",
-            "    copyFrom(\"hello\", Charset.defaultCharset());",
-            "  }",
-            "}")
+            """
+            import static com.google.protobuf.ByteString.copyFrom;
+            import java.nio.charset.Charset;
+
+            class Test {
+              void f() throws Exception {
+                copyFrom("hello", Charset.defaultCharset());
+              }
+            }
+            """)
         .setFixChooser(FixChoosers.SECOND)
         .doTest();
   }
@@ -470,35 +548,41 @@ public class DefaultCharsetTest {
     refactoringTest()
         .addInputLines(
             "in/Test.java",
-            "import java.util.Scanner;",
-            "import java.io.File;",
-            "import java.io.InputStream;",
-            "import java.nio.channels.ReadableByteChannel;",
-            "import java.nio.file.Path;",
-            "class Test {",
-            "  void f() throws Exception {",
-            "    new Scanner((InputStream) null);",
-            "    new Scanner((File) null);",
-            "    new Scanner((Path) null);",
-            "    new Scanner((ReadableByteChannel) null);",
-            "  }",
-            "}")
+            """
+            import java.util.Scanner;
+            import java.io.File;
+            import java.io.InputStream;
+            import java.nio.channels.ReadableByteChannel;
+            import java.nio.file.Path;
+
+            class Test {
+              void f() throws Exception {
+                new Scanner((InputStream) null);
+                new Scanner((File) null);
+                new Scanner((Path) null);
+                new Scanner((ReadableByteChannel) null);
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "import static java.nio.charset.StandardCharsets.UTF_8;",
-            "import java.io.File;",
-            "import java.io.InputStream;",
-            "import java.nio.channels.ReadableByteChannel;",
-            "import java.nio.file.Path;",
-            "import java.util.Scanner;",
-            "class Test {",
-            "  void f() throws Exception {",
-            "    new Scanner((InputStream) null, UTF_8);",
-            "    new Scanner((File) null, UTF_8);",
-            "    new Scanner((Path) null, UTF_8);",
-            "    new Scanner((ReadableByteChannel) null, UTF_8);",
-            "  }",
-            "}")
+            """
+            import static java.nio.charset.StandardCharsets.UTF_8;
+            import java.io.File;
+            import java.io.InputStream;
+            import java.nio.channels.ReadableByteChannel;
+            import java.nio.file.Path;
+            import java.util.Scanner;
+
+            class Test {
+              void f() throws Exception {
+                new Scanner((InputStream) null, UTF_8);
+                new Scanner((File) null, UTF_8);
+                new Scanner((Path) null, UTF_8);
+                new Scanner((ReadableByteChannel) null, UTF_8);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -508,24 +592,30 @@ public class DefaultCharsetTest {
     refactoringTest()
         .addInputLines(
             "in/Test.java",
-            "import java.io.File;",
-            "import java.io.FileWriter;",
-            "class Test {",
-            "  void f(File file) throws Exception {",
-            "    var fileWriter = new FileWriter(file);",
-            "  }",
-            "}")
+            """
+            import java.io.File;
+            import java.io.FileWriter;
+
+            class Test {
+              void f(File file) throws Exception {
+                var fileWriter = new FileWriter(file);
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "import static java.nio.charset.StandardCharsets.UTF_8;",
-            "import java.io.File;",
-            "import java.io.FileWriter;",
-            "import java.nio.file.Files;",
-            "class Test {",
-            "  void f(File file) throws Exception {",
-            "    var fileWriter = Files.newBufferedWriter(file.toPath(), UTF_8);",
-            "  }",
-            "}")
+            """
+            import static java.nio.charset.StandardCharsets.UTF_8;
+            import java.io.File;
+            import java.io.FileWriter;
+            import java.nio.file.Files;
+
+            class Test {
+              void f(File file) throws Exception {
+                var fileWriter = Files.newBufferedWriter(file.toPath(), UTF_8);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -534,21 +624,27 @@ public class DefaultCharsetTest {
     refactoringTest()
         .addInputLines(
             "in/Test.java",
-            "import java.io.ByteArrayOutputStream;",
-            "class Test {",
-            "  String f(ByteArrayOutputStream b) throws Exception {",
-            "    return b.toString();",
-            "  }",
-            "}")
+            """
+            import java.io.ByteArrayOutputStream;
+
+            class Test {
+              String f(ByteArrayOutputStream b) throws Exception {
+                return b.toString();
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "import static java.nio.charset.StandardCharsets.UTF_8;",
-            "import java.io.ByteArrayOutputStream;",
-            "class Test {",
-            "  String f(ByteArrayOutputStream b) throws Exception {",
-            "    return b.toString(UTF_8);",
-            "  }",
-            "}")
+            """
+            import static java.nio.charset.StandardCharsets.UTF_8;
+            import java.io.ByteArrayOutputStream;
+
+            class Test {
+              String f(ByteArrayOutputStream b) throws Exception {
+                return b.toString(UTF_8);
+              }
+            }
+            """)
         .doTest();
   }
 }

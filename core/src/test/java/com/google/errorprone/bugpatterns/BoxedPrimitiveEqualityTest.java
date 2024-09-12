@@ -35,12 +35,14 @@ public class BoxedPrimitiveEqualityTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  boolean f(Boolean a, Boolean b) {",
-            "    // BUG: Diagnostic contains:",
-            "    return a == b;",
-            "  }",
-            "}")
+            """
+            class Test {
+              boolean f(Boolean a, Boolean b) {
+                // BUG: Diagnostic contains:
+                return a == b;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -49,11 +51,13 @@ public class BoxedPrimitiveEqualityTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  boolean f(Number a, Number b) {",
-            "    return a == b;",
-            "  }",
-            "}")
+            """
+            class Test {
+              boolean f(Number a, Number b) {
+                return a == b;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -62,14 +66,17 @@ public class BoxedPrimitiveEqualityTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  boolean f(boolean a, boolean b) {",
-            "    return a == b;",
-            "  }",
-            "  boolean g(String a, String b) {",
-            "    return a == b;",
-            "  }",
-            "}")
+            """
+            class Test {
+              boolean f(boolean a, boolean b) {
+                return a == b;
+              }
+
+              boolean g(String a, String b) {
+                return a == b;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -78,12 +85,15 @@ public class BoxedPrimitiveEqualityTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  private static final Number SENTINEL = 1L;",
-            "  boolean f(Number a) {",
-            "    return a == SENTINEL;",
-            "  }",
-            "}")
+            """
+            class Test {
+              private static final Number SENTINEL = 1L;
+
+              boolean f(Number a) {
+                return a == SENTINEL;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -93,15 +103,16 @@ public class BoxedPrimitiveEqualityTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void f() {",
-            "    final Long constValue = Long.valueOf(1000L);",
-            "    Long assignedValue;",
-            "    // BUG: Diagnostic contains:"
-                + " (!(assignedValue = Long.valueOf(1000L)).equals(constValue))",
-            "    boolean retVal = ((assignedValue = Long.valueOf(1000L)) != constValue);",
-            "  }",
-            "}")
+            """
+class Test {
+  void f() {
+    final Long constValue = Long.valueOf(1000L);
+    Long assignedValue;
+    // BUG: Diagnostic contains: (!(assignedValue = Long.valueOf(1000L)).equals(constValue))
+    boolean retVal = ((assignedValue = Long.valueOf(1000L)) != constValue);
+  }
+}
+""")
         .doTest();
   }
 
@@ -110,12 +121,15 @@ public class BoxedPrimitiveEqualityTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.concurrent.atomic.AtomicInteger;",
-            "class Test {",
-            "  boolean f(AtomicInteger a, AtomicInteger b) {",
-            "    return a == b;",
-            "  }",
-            "}")
+            """
+            import java.util.concurrent.atomic.AtomicInteger;
+
+            class Test {
+              boolean f(AtomicInteger a, AtomicInteger b) {
+                return a == b;
+              }
+            }
+            """)
         .doTest();
   }
 }

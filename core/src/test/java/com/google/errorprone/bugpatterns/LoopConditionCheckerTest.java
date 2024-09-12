@@ -33,19 +33,21 @@ public class LoopConditionCheckerTest {
     compilationTestHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  int h9() {",
-            "    int sum = 0;",
-            "    int i, j;",
-            "    for (i = 0; i < 10; ++i) {",
-            "      // BUG: Diagnostic contains:",
-            "      for (j = 0; j < 10; ++i) {",
-            "        sum += j;",
-            "      }",
-            "    }",
-            "    return sum;",
-            "  }",
-            "}")
+            """
+            class Test {
+              int h9() {
+                int sum = 0;
+                int i, j;
+                for (i = 0; i < 10; ++i) {
+                  // BUG: Diagnostic contains:
+                  for (j = 0; j < 10; ++i) {
+                    sum += j;
+                  }
+                }
+                return sum;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -54,13 +56,14 @@ public class LoopConditionCheckerTest {
     compilationTestHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void f() {",
-            "    // BUG: Diagnostic contains:",
-            "    for (int i = 0; i < 10; ) {",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f() {
+                // BUG: Diagnostic contains:
+                for (int i = 0; i < 10; ) {}
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -69,19 +72,21 @@ public class LoopConditionCheckerTest {
     compilationTestHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  int h9() {",
-            "    int sum = 0;",
-            "    int i, j;",
-            "    for (i = 0; i < 10; ++i) {",
-            "      for (j = 0; j < 10; ++i) {",
-            "        sum += j;",
-            "        j++;",
-            "      }",
-            "    }",
-            "    return sum;",
-            "  }",
-            "}")
+            """
+            class Test {
+              int h9() {
+                int sum = 0;
+                int i, j;
+                for (i = 0; i < 10; ++i) {
+                  for (j = 0; j < 10; ++i) {
+                    sum += j;
+                    j++;
+                  }
+                }
+                return sum;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -90,13 +95,15 @@ public class LoopConditionCheckerTest {
     compilationTestHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void f() {",
-            "    for (int i = 0; i < 10; i++) {",
-            "      System.err.println(i);",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f() {
+                for (int i = 0; i < 10; i++) {
+                  System.err.println(i);
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -105,15 +112,18 @@ public class LoopConditionCheckerTest {
     compilationTestHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.Iterator;",
-            "class Test {",
-            "  void f(Iterable<String> xs) {",
-            "    Iterator<String> it = xs.iterator();",
-            "    while (it.hasNext()) {",
-            "      System.err.println(it.next());",
-            "    }",
-            "  }",
-            "}")
+            """
+            import java.util.Iterator;
+
+            class Test {
+              void f(Iterable<String> xs) {
+                Iterator<String> it = xs.iterator();
+                while (it.hasNext()) {
+                  System.err.println(it.next());
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -121,12 +131,14 @@ public class LoopConditionCheckerTest {
   public void negative_noCondition() {
     compilationTestHelper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  void f() {",
-            "    for (;;) {}",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              void f() {
+                for (; ; ) {}
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -135,13 +147,15 @@ public class LoopConditionCheckerTest {
     compilationTestHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void f() {",
-            "    for (int i = 0; i < 10; ) {",
-            "      i++;",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f() {
+                for (int i = 0; i < 10; ) {
+                  i++;
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -150,12 +164,14 @@ public class LoopConditionCheckerTest {
     compilationTestHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void f() {",
-            "    int i = 0;",
-            "    while (i++ < 10) {}",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f() {
+                int i = 0;
+                while (i++ < 10) {}
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -164,17 +180,21 @@ public class LoopConditionCheckerTest {
     compilationTestHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  int i = 0;",
-            "  void f() {",
-            "    while (i < 10) {",
-            "      g();",
-            "    }",
-            "  }",
-            "  void g() {",
-            "    i++;",
-            "  }",
-            "}")
+            """
+            class Test {
+              int i = 0;
+
+              void f() {
+                while (i < 10) {
+                  g();
+                }
+              }
+
+              void g() {
+                i++;
+              }
+            }
+            """)
         .doTest();
   }
 }

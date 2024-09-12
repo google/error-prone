@@ -31,16 +31,20 @@ public final class CannotMockMethodTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static org.mockito.Mockito.when;",
-            "class Test {",
-            "  final Integer foo() {",
-            "    return 1;",
-            "  }",
-            "  void test() {",
-            "    // BUG: Diagnostic contains:",
-            "    when(this.foo());",
-            "  }",
-            "}")
+            """
+            import static org.mockito.Mockito.when;
+
+            class Test {
+              final Integer foo() {
+                return 1;
+              }
+
+              void test() {
+                // BUG: Diagnostic contains:
+                when(this.foo());
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -49,16 +53,20 @@ public final class CannotMockMethodTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static org.mockito.Mockito.when;",
-            "class Test {",
-            "  static Integer foo() {",
-            "    return 1;",
-            "  }",
-            "  void test() {",
-            "    // BUG: Diagnostic contains:",
-            "    when(foo());",
-            "  }",
-            "}")
+            """
+            import static org.mockito.Mockito.when;
+
+            class Test {
+              static Integer foo() {
+                return 1;
+              }
+
+              void test() {
+                // BUG: Diagnostic contains:
+                when(foo());
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -67,16 +75,20 @@ public final class CannotMockMethodTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static org.mockito.Mockito.verify;",
-            "class Test {",
-            "  final Integer foo() {",
-            "    return 1;",
-            "  }",
-            "  void test() {",
-            "    // BUG: Diagnostic contains:",
-            "    verify(this).foo();",
-            "  }",
-            "}")
+            """
+            import static org.mockito.Mockito.verify;
+
+            class Test {
+              final Integer foo() {
+                return 1;
+              }
+
+              void test() {
+                // BUG: Diagnostic contains:
+                verify(this).foo();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -85,15 +97,19 @@ public final class CannotMockMethodTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static org.mockito.Mockito.when;",
-            "class Test {",
-            "  Integer foo() {",
-            "    return 1;",
-            "  }",
-            "  void test() {",
-            "    when(this.foo());",
-            "  }",
-            "}")
+            """
+            import static org.mockito.Mockito.when;
+
+            class Test {
+              Integer foo() {
+                return 1;
+              }
+
+              void test() {
+                when(this.foo());
+              }
+            }
+            """)
         .doTest();
   }
 }

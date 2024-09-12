@@ -37,13 +37,17 @@ public final class UnescapedEntityTest {
   public void positive() {
     refactoring
         .addInputLines(
-            "Test.java", //
-            "/** List<Foo>, Map<Foo, Bar> */",
-            "interface Test {}")
+            "Test.java",
+            """
+            /** List<Foo>, Map<Foo, Bar> */
+            interface Test {}
+            """)
         .addOutputLines(
-            "Test.java", //
-            "/** {@code List<Foo>}, {@code Map<Foo, Bar>} */",
-            "interface Test {}")
+            "Test.java",
+            """
+            /** {@code List<Foo>}, {@code Map<Foo, Bar>} */
+            interface Test {}
+            """)
         .doTest(TestMode.AST_MATCH);
   }
 
@@ -51,9 +55,11 @@ public final class UnescapedEntityTest {
   public void negative() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "/** {@code List<Foo>, Map<Foo, Bar>} */",
-            "interface Test {}")
+            "Test.java",
+            """
+            /** {@code List<Foo>, Map<Foo, Bar>} */
+            interface Test {}
+            """)
         .doTest();
   }
 
@@ -61,9 +67,11 @@ public final class UnescapedEntityTest {
   public void unescapedEntities_off() {
     refactoring
         .addInputLines(
-            "Test.java", //
-            "/** Foo & bar < */",
-            "interface Test {}")
+            "Test.java",
+            """
+            /** Foo & bar < */
+            interface Test {}
+            """)
         .expectUnchanged()
         .doTest(TestMode.TEXT_MATCH);
   }
@@ -73,20 +81,32 @@ public final class UnescapedEntityTest {
     refactoring
         .addInputLines(
             "Test.java",
-            "/**",
-            "  * <pre>Foo</pre>",
-            "  * <pre>Use an ImmutableMap<String,Object> please</pre>",
-            "  * <pre>bar</pre>",
-            "  */",
-            "interface Test {}")
+            """
+            /**
+             *
+             *
+             * <pre>Foo</pre>
+             *
+             * <pre>Use an ImmutableMap<String,Object> please</pre>
+             *
+             * <pre>bar</pre>
+             */
+            interface Test {}
+            """)
         .addOutputLines(
             "Test.java",
-            "/**",
-            "  * <pre>Foo</pre>",
-            "  * <pre>{@code Use an ImmutableMap<String,Object> please}</pre>",
-            "  * <pre>bar</pre>",
-            "  */",
-            "interface Test {}")
+            """
+            /**
+             *
+             *
+             * <pre>Foo</pre>
+             *
+             * <pre>{@code Use an ImmutableMap<String,Object> please}</pre>
+             *
+             * <pre>bar</pre>
+             */
+            interface Test {}
+            """)
         .doTest(TestMode.TEXT_MATCH);
   }
 
@@ -94,17 +114,25 @@ public final class UnescapedEntityTest {
   public void withinPre_singleChar() {
     refactoring
         .addInputLines(
-            "Test.java", //
-            "/**",
-            "  * <pre>n < 3</pre>",
-            "  */",
-            "interface Test {}")
+            "Test.java",
+            """
+            /**
+             *
+             *
+             * <pre>n < 3</pre>
+             */
+            interface Test {}
+            """)
         .addOutputLines(
-            "Test.java", //
-            "/**",
-            "  * <pre>{@code n < 3}</pre>",
-            "  */",
-            "interface Test {}")
+            "Test.java",
+            """
+            /**
+             *
+             *
+             * <pre>{@code n < 3}</pre>
+             */
+            interface Test {}
+            """)
         .doTest(TestMode.TEXT_MATCH);
   }
 
@@ -116,17 +144,24 @@ public final class UnescapedEntityTest {
     refactoring
         .addInputLines(
             "Test.java",
-            "/**",
-            "  * <pre>Use an ImmutableMap<String, Object> not a Map&lt;String, Object&gt;</pre>",
-            "  */",
-            "interface Test {}")
+            """
+            /**
+             *
+             *
+             * <pre>Use an ImmutableMap<String, Object> not a Map&lt;String, Object&gt;</pre>
+             */
+            interface Test {}
+            """)
         .addOutputLines(
             "Test.java",
-            "/**",
-            "  * <pre>Use an ImmutableMap&lt;String, Object&gt; not a"
-                + " Map&lt;String, Object&gt;</pre>",
-            "  */",
-            "interface Test {}")
+            """
+            /**
+             *
+             *
+             * <pre>Use an ImmutableMap&lt;String, Object&gt; not a Map&lt;String, Object&gt;</pre>
+             */
+            interface Test {}
+            """)
         .doTest(TestMode.TEXT_MATCH);
   }
 
@@ -138,26 +173,30 @@ public final class UnescapedEntityTest {
     refactoring
         .addInputLines(
             "Test.java",
-            "/**",
-            "  * Foo",
-            "  *",
-            "  * <pre>",
-            "  *   @Override",
-            "  *   ImmutableMap<String, Object>",
-            "  * </pre>",
-            "  */",
-            "interface Test {}")
+            """
+            /**
+             * Foo
+             *
+             * <pre>
+             *   @Override
+             *   ImmutableMap<String, Object>
+             * </pre>
+             */
+            interface Test {}
+            """)
         .addOutputLines(
             "Test.java",
-            "/**",
-            "  * Foo",
-            "  *",
-            "  * <pre>",
-            "  *   @Override",
-            "  *   ImmutableMap&lt;String, Object&gt;",
-            "  * </pre>",
-            "  */",
-            "interface Test {}")
+            """
+            /**
+             * Foo
+             *
+             * <pre>
+             *   @Override
+             *   ImmutableMap&lt;String, Object&gt;
+             * </pre>
+             */
+            interface Test {}
+            """)
         .doTest(TestMode.TEXT_MATCH);
   }
 
@@ -169,26 +208,30 @@ public final class UnescapedEntityTest {
     refactoring
         .addInputLines(
             "Test.java",
-            "/**",
-            "  * Foo",
-            "  *",
-            "  * <pre>",
-            "  *  {@literal @}Override",
-            "  *   ImmutableMap<String, Object>",
-            "  * </pre>",
-            "  */",
-            "interface Test {}")
+            """
+            /**
+             * Foo
+             *
+             * <pre>
+             *  {@literal @}Override
+             *   ImmutableMap<String, Object>
+             * </pre>
+             */
+            interface Test {}
+            """)
         .addOutputLines(
             "Test.java",
-            "/**",
-            "  * Foo",
-            "  *",
-            "  * <pre>",
-            "  *  {@literal @}Override",
-            "  *   ImmutableMap&lt;String, Object&gt;",
-            "  * </pre>",
-            "  */",
-            "interface Test {}")
+            """
+            /**
+             * Foo
+             *
+             * <pre>
+             *  {@literal @}Override
+             *   ImmutableMap&lt;String, Object&gt;
+             * </pre>
+             */
+            interface Test {}
+            """)
         .doTest(TestMode.TEXT_MATCH);
   }
 
@@ -197,16 +240,18 @@ public final class UnescapedEntityTest {
     helper
         .addSourceLines(
             "Test.java",
-            "/**",
-            "  * Foo",
-            "  *",
-            "  * <pre>",
-            "  *  {@literal @}Override",
-            "  // BUG: Diagnostic contains: UnescapedEntity",
-            "  *   ImmutableMap<String, Object>",
-            "  * </pre>",
-            "  */",
-            "interface Test {}")
+            """
+            /**
+             * Foo
+             *
+             * <pre>
+             *  {@literal @}Override
+             * // BUG: Diagnostic contains: UnescapedEntity
+             *   ImmutableMap<String, Object>
+             * </pre>
+             */
+            interface Test {}
+            """)
         .doTest();
   }
 
@@ -214,9 +259,11 @@ public final class UnescapedEntityTest {
   public void withinLink() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "/** {@link List<Foo>} */",
-            "interface Test {}")
+            "Test.java",
+            """
+            /** {@link List<Foo>} */
+            interface Test {}
+            """)
         .doTest();
   }
 
@@ -224,12 +271,17 @@ public final class UnescapedEntityTest {
   public void withinSee() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "import java.util.List;",
-            "interface Test {",
-            "  /** @see #foo(List<Integer>) */",
-            "  void foo(List<Integer> foos);",
-            "}")
+            "Test.java",
+            """
+            import java.util.List;
+
+            interface Test {
+              /**
+               * @see #foo(List<Integer>)
+               */
+              void foo(List<Integer> foos);
+            }
+            """)
         .doTest();
   }
 
@@ -237,12 +289,17 @@ public final class UnescapedEntityTest {
   public void badSee() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "import java.util.List;",
-            "interface Test {",
-            "  /** @see <a href=\"http://google.com\">google</a> */",
-            "  void foo(List<Integer> foos);",
-            "}")
+            "Test.java",
+            """
+            import java.util.List;
+
+            interface Test {
+              /**
+               * @see <a href="http://google.com">google</a>
+               */
+              void foo(List<Integer> foos);
+            }
+            """)
         .doTest();
   }
 
@@ -250,13 +307,29 @@ public final class UnescapedEntityTest {
   public void extraClosingTag() {
     refactoring
         .addInputLines(
-            "Test.java", //
-            "/** <pre>Foo List<Foo> bar</pre></pre> */",
-            "interface Test {}")
+            "Test.java",
+            """
+            /**
+             *
+             *
+             * <pre>Foo List<Foo> bar</pre>
+             *
+             * </pre>
+             */
+            interface Test {}
+            """)
         .addOutputLines(
-            "Test.java", //
-            "/** <pre>{@code Foo List<Foo> bar}</pre></pre> */",
-            "interface Test {}")
+            "Test.java",
+            """
+            /**
+             *
+             *
+             * <pre>{@code Foo List<Foo> bar}</pre>
+             *
+             * </pre>
+             */
+            interface Test {}
+            """)
         .doTest(TestMode.TEXT_MATCH);
   }
 
@@ -264,13 +337,17 @@ public final class UnescapedEntityTest {
   public void nestedGenericType_properlyEscaped() {
     refactoring
         .addInputLines(
-            "Test.java", //
-            "/** List<List<Integer>> */",
-            "interface Test {}")
+            "Test.java",
+            """
+            /** List<List<Integer>> */
+            interface Test {}
+            """)
         .addOutputLines(
-            "Test.java", //
-            "/** {@code List<List<Integer>>} */",
-            "interface Test {}")
+            "Test.java",
+            """
+            /** {@code List<List<Integer>>} */
+            interface Test {}
+            """)
         .doTest(TestMode.TEXT_MATCH);
   }
 }

@@ -109,37 +109,40 @@ public class FromTemporalAccessorTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import java.time.DayOfWeek;",
-            "import java.time.Instant;",
-            "import java.time.LocalDate;",
-            "import java.time.LocalDateTime;",
-            "import java.time.LocalTime;",
-            "import java.time.Month;",
-            "import java.time.MonthDay;",
-            "import java.time.OffsetDateTime;",
-            "import java.time.OffsetTime;",
-            "import java.time.Year;",
-            "import java.time.YearMonth;",
-            "import java.time.ZonedDateTime;",
-            "import java.time.ZoneOffset;",
-            "import java.time.temporal.TemporalAccessor;",
-            "public class TestClass {",
-            "  void from(TemporalAccessor value) {",
-            "    DayOfWeek.from(value);",
-            "    Instant.from(value);",
-            "    LocalDate.from(value);",
-            "    LocalDateTime.from(value);",
-            "    LocalTime.from(value);",
-            "    Month.from(value);",
-            "    MonthDay.from(value);",
-            "    OffsetDateTime.from(value);",
-            "    OffsetTime.from(value);",
-            "    Year.from(value);",
-            "    YearMonth.from(value);",
-            "    ZonedDateTime.from(value);",
-            "    ZoneOffset.from(value);",
-            "  }",
-            "}")
+            """
+            import java.time.DayOfWeek;
+            import java.time.Instant;
+            import java.time.LocalDate;
+            import java.time.LocalDateTime;
+            import java.time.LocalTime;
+            import java.time.Month;
+            import java.time.MonthDay;
+            import java.time.OffsetDateTime;
+            import java.time.OffsetTime;
+            import java.time.Year;
+            import java.time.YearMonth;
+            import java.time.ZonedDateTime;
+            import java.time.ZoneOffset;
+            import java.time.temporal.TemporalAccessor;
+
+            public class TestClass {
+              void from(TemporalAccessor value) {
+                DayOfWeek.from(value);
+                Instant.from(value);
+                LocalDate.from(value);
+                LocalDateTime.from(value);
+                LocalTime.from(value);
+                Month.from(value);
+                MonthDay.from(value);
+                OffsetDateTime.from(value);
+                OffsetTime.from(value);
+                Year.from(value);
+                YearMonth.from(value);
+                ZonedDateTime.from(value);
+                ZoneOffset.from(value);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -148,13 +151,16 @@ public class FromTemporalAccessorTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import java.time.LocalDate;",
-            "import java.time.Year;",
-            "public class TestClass {",
-            "  void from(LocalDate value) {",
-            "    Year.from(value);",
-            "  }",
-            "}")
+            """
+            import java.time.LocalDate;
+            import java.time.Year;
+
+            public class TestClass {
+              void from(LocalDate value) {
+                Year.from(value);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -163,13 +169,16 @@ public class FromTemporalAccessorTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import java.time.LocalTime;",
-            "import org.threeten.extra.AmPm;",
-            "public class TestClass {",
-            "  void from(LocalTime value) {",
-            "    AmPm.from(value);",
-            "  }",
-            "}")
+            """
+            import java.time.LocalTime;
+            import org.threeten.extra.AmPm;
+
+            public class TestClass {
+              void from(LocalTime value) {
+                AmPm.from(value);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -178,13 +187,16 @@ public class FromTemporalAccessorTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import org.threeten.extra.AmPm;",
-            "public class TestClass {",
-            "  void from(AmPm value) {",
-            "    // BUG: Diagnostic contains: Did you mean 'value;'",
-            "    AmPm.from(value);",
-            "  }",
-            "}")
+            """
+            import org.threeten.extra.AmPm;
+
+            public class TestClass {
+              void from(AmPm value) {
+                // BUG: Diagnostic contains: Did you mean 'value;'
+                AmPm.from(value);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -193,26 +205,39 @@ public class FromTemporalAccessorTest {
     helper
         .addSourceLines(
             "Frobber.java",
-            "import java.time.DateTimeException;",
-            "import java.time.temporal.TemporalAccessor;",
-            "import java.time.temporal.TemporalField;",
-            "public class Frobber implements TemporalAccessor {",
-            "  static Frobber from(TemporalAccessor temporalAccessor) {",
-            "    if (temporalAccessor instanceof Frobber) {",
-            "      return (Frobber) temporalAccessor;",
-            "    }",
-            "    throw new DateTimeException(\"failure\");",
-            "  }",
-            "  @Override public long getLong(TemporalField field) { return 0; }",
-            "  @Override public boolean isSupported(TemporalField field) { return false; }",
-            "}")
+            """
+            import java.time.DateTimeException;
+            import java.time.temporal.TemporalAccessor;
+            import java.time.temporal.TemporalField;
+
+            public class Frobber implements TemporalAccessor {
+              static Frobber from(TemporalAccessor temporalAccessor) {
+                if (temporalAccessor instanceof Frobber) {
+                  return (Frobber) temporalAccessor;
+                }
+                throw new DateTimeException("failure");
+              }
+
+              @Override
+              public long getLong(TemporalField field) {
+                return 0;
+              }
+
+              @Override
+              public boolean isSupported(TemporalField field) {
+                return false;
+              }
+            }
+            """)
         .addSourceLines(
             "TestClass.java",
-            "public class TestClass {",
-            "  void from(Frobber value) {",
-            "    Frobber frobber = Frobber.from(value);",
-            "  }",
-            "}")
+            """
+            public class TestClass {
+              void from(Frobber value) {
+                Frobber frobber = Frobber.from(value);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -221,17 +246,20 @@ public class FromTemporalAccessorTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import java.time.LocalDate;",
-            "import java.time.LocalDateTime;",
-            "import org.threeten.extra.Quarter;",
-            "public class TestClass {",
-            "  void from(LocalDate localDate, Quarter quarter) {",
-            "    // BUG: Diagnostic contains: FromTemporalAccessor",
-            "    LocalDateTime.from(localDate);",
-            "    // BUG: Diagnostic contains: FromTemporalAccessor",
-            "    LocalDateTime.from(quarter);",
-            "  }",
-            "}")
+            """
+            import java.time.LocalDate;
+            import java.time.LocalDateTime;
+            import org.threeten.extra.Quarter;
+
+            public class TestClass {
+              void from(LocalDate localDate, Quarter quarter) {
+                // BUG: Diagnostic contains: FromTemporalAccessor
+                LocalDateTime.from(localDate);
+                // BUG: Diagnostic contains: FromTemporalAccessor
+                LocalDateTime.from(quarter);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -242,14 +270,18 @@ public class FromTemporalAccessorTest {
       helper
           .addSourceLines(
               "TestClass.java",
-              "package java.time;",
-              "import java.time.LocalDate;",
-              "import java.time.LocalDateTime;",
-              "public class TestClass {",
-              "  void from(LocalDate localDate) {",
-              "    LocalDateTime.from(localDate);",
-              "  }",
-              "}")
+              """
+              package java.time;
+
+              import java.time.LocalDate;
+              import java.time.LocalDateTime;
+
+              public class TestClass {
+                void from(LocalDate localDate) {
+                  LocalDateTime.from(localDate);
+                }
+              }
+              """)
           .doTest();
     }
   }
@@ -259,13 +291,17 @@ public class FromTemporalAccessorTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "package org.threeten.extra;",
-            "import java.time.LocalDateTime;",
-            "public class TestClass {",
-            "  void from(Quarter quarter) {",
-            "    LocalDateTime.from(quarter);",
-            "  }",
-            "}")
+            """
+            package org.threeten.extra;
+
+            import java.time.LocalDateTime;
+
+            public class TestClass {
+              void from(Quarter quarter) {
+                LocalDateTime.from(quarter);
+              }
+            }
+            """)
         .doTest();
   }
 }

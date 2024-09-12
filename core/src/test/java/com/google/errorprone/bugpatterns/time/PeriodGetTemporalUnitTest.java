@@ -31,15 +31,18 @@ public class PeriodGetTemporalUnitTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import java.time.Period;",
-            "import java.time.temporal.ChronoUnit;",
-            "public class TestClass {",
-            "  private static final long years = Period.ZERO.get(ChronoUnit.YEARS);",
-            "  private static final long months = Period.ZERO.get(ChronoUnit.MONTHS);",
-            "  private static final long days = Period.ZERO.get(ChronoUnit.DAYS);",
-            "  // BUG: Diagnostic contains: PeriodGetTemporalUnit",
-            "  private static final long seconds = Period.ZERO.get(ChronoUnit.SECONDS);",
-            "}")
+            """
+            import java.time.Period;
+            import java.time.temporal.ChronoUnit;
+
+            public class TestClass {
+              private static final long years = Period.ZERO.get(ChronoUnit.YEARS);
+              private static final long months = Period.ZERO.get(ChronoUnit.MONTHS);
+              private static final long days = Period.ZERO.get(ChronoUnit.DAYS);
+              // BUG: Diagnostic contains: PeriodGetTemporalUnit
+              private static final long seconds = Period.ZERO.get(ChronoUnit.SECONDS);
+            }
+            """)
         .doTest();
   }
 
@@ -48,18 +51,21 @@ public class PeriodGetTemporalUnitTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            "import static java.time.temporal.ChronoUnit.DAYS;",
-            "import static java.time.temporal.ChronoUnit.MONTHS;",
-            "import static java.time.temporal.ChronoUnit.SECONDS;",
-            "import static java.time.temporal.ChronoUnit.YEARS;",
-            "import java.time.Period;",
-            "public class TestClass {",
-            "  private static final long years = Period.ZERO.get(YEARS);",
-            "  private static final long months = Period.ZERO.get(MONTHS);",
-            "  private static final long days = Period.ZERO.get(DAYS);",
-            "  // BUG: Diagnostic contains: PeriodGetTemporalUnit",
-            "  private static final long seconds = Period.ZERO.get(SECONDS);",
-            "}")
+            """
+            import static java.time.temporal.ChronoUnit.DAYS;
+            import static java.time.temporal.ChronoUnit.MONTHS;
+            import static java.time.temporal.ChronoUnit.SECONDS;
+            import static java.time.temporal.ChronoUnit.YEARS;
+            import java.time.Period;
+
+            public class TestClass {
+              private static final long years = Period.ZERO.get(YEARS);
+              private static final long months = Period.ZERO.get(MONTHS);
+              private static final long days = Period.ZERO.get(DAYS);
+              // BUG: Diagnostic contains: PeriodGetTemporalUnit
+              private static final long seconds = Period.ZERO.get(SECONDS);
+            }
+            """)
         .doTest();
   }
 

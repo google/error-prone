@@ -35,12 +35,15 @@ public final class NonApiTypeTest {
     helper
         .addSourceLines(
             "Test.java",
-            "public class Test {",
-            "  // BUG: Diagnostic contains: java.util.List",
-            "  private void test1(java.util.ArrayList value) {}",
-            "  // BUG: Diagnostic contains: java.util.List",
-            "  private void test1(java.util.LinkedList value) {}",
-            "}")
+            """
+            public class Test {
+              // BUG: Diagnostic contains: java.util.List
+              private void test1(java.util.ArrayList value) {}
+
+              // BUG: Diagnostic contains: java.util.List
+              private void test1(java.util.LinkedList value) {}
+            }
+            """)
         .doTest();
   }
 
@@ -49,14 +52,18 @@ public final class NonApiTypeTest {
     helper
         .addSourceLines(
             "Test.java",
-            "public class Test {",
-            "  // BUG: Diagnostic contains: java.util.Set",
-            "  private void test1(java.util.HashSet value) {}",
-            "  // BUG: Diagnostic contains: java.util.Set",
-            "  private void test1(java.util.LinkedHashSet value) {}",
-            "  // BUG: Diagnostic contains: java.util.Set",
-            "  private void test1(java.util.TreeSet value) {}",
-            "}")
+            """
+            public class Test {
+              // BUG: Diagnostic contains: java.util.Set
+              private void test1(java.util.HashSet value) {}
+
+              // BUG: Diagnostic contains: java.util.Set
+              private void test1(java.util.LinkedHashSet value) {}
+
+              // BUG: Diagnostic contains: java.util.Set
+              private void test1(java.util.TreeSet value) {}
+            }
+            """)
         .doTest();
   }
 
@@ -65,14 +72,18 @@ public final class NonApiTypeTest {
     helper
         .addSourceLines(
             "Test.java",
-            "public class Test {",
-            "  // BUG: Diagnostic contains: java.util.Map",
-            "  private void test1(java.util.HashMap value) {}",
-            "  // BUG: Diagnostic contains: java.util.Map",
-            "  private void test1(java.util.LinkedHashMap value) {}",
-            "  // BUG: Diagnostic contains: java.util.Map",
-            "  private void test1(java.util.TreeMap value) {}",
-            "}")
+            """
+            public class Test {
+              // BUG: Diagnostic contains: java.util.Map
+              private void test1(java.util.HashMap value) {}
+
+              // BUG: Diagnostic contains: java.util.Map
+              private void test1(java.util.LinkedHashMap value) {}
+
+              // BUG: Diagnostic contains: java.util.Map
+              private void test1(java.util.TreeMap value) {}
+            }
+            """)
         .doTest();
   }
 
@@ -81,13 +92,19 @@ public final class NonApiTypeTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.base.Optional;",
-            "public class Test {",
-            "  // BUG: Diagnostic contains: java.util.Optional",
-            "  public Optional<String> middleName() { return Optional.of(\"alfred\"); }",
-            "  // BUG: Diagnostic contains: java.util.Optional",
-            "  public void setMiddleName(Optional<String> middleName) {}",
-            "}")
+            """
+            import com.google.common.base.Optional;
+
+            public class Test {
+              // BUG: Diagnostic contains: java.util.Optional
+              public Optional<String> middleName() {
+                return Optional.of("alfred");
+              }
+
+              // BUG: Diagnostic contains: java.util.Optional
+              public void setMiddleName(Optional<String> middleName) {}
+            }
+            """)
         .doTest();
   }
 
@@ -96,12 +113,18 @@ public final class NonApiTypeTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import java.util.Optional;",
-            "public class Test {",
-            "  public Optional<String> middleName() { return Optional.of(\"alfred\"); }",
-            "  // BUG: Diagnostic contains: Avoid Optional parameters",
-            "  public void setMiddleName(Optional<String> middleName) {}",
-            "}")
+            """
+            import java.util.Optional;
+
+            public class Test {
+              public Optional<String> middleName() {
+                return Optional.of("alfred");
+              }
+
+              // BUG: Diagnostic contains: Avoid Optional parameters
+              public void setMiddleName(Optional<String> middleName) {}
+            }
+            """)
         .doTest();
   }
 
@@ -138,14 +161,20 @@ public final class NonApiTypeTest {
     helper
         .addSourceLines(
             "Test.java",
-            "public class Test {",
-            "  // BUG: Diagnostic contains: ImmutableIntArray",
-            "  public int[] testInts() { return null; }",
-            "  // BUG: Diagnostic contains: ImmutableDoubleArray",
-            "  public void testDoubles1(double[] values) {}",
-            "  // BUG: Diagnostic contains: ImmutableDoubleArray",
-            "  public void testDoubles2(Double[] values) {}",
-            "}")
+            """
+            public class Test {
+              // BUG: Diagnostic contains: ImmutableIntArray
+              public int[] testInts() {
+                return null;
+              }
+
+              // BUG: Diagnostic contains: ImmutableDoubleArray
+              public void testDoubles1(double[] values) {}
+
+              // BUG: Diagnostic contains: ImmutableDoubleArray
+              public void testDoubles2(Double[] values) {}
+            }
+            """)
         .doTest();
   }
 
@@ -154,14 +183,20 @@ public final class NonApiTypeTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import com.google.protobuf.Duration;",
-            "import com.google.protobuf.Timestamp;",
-            "public class Test {",
-            "  // BUG: Diagnostic contains: java.time.Duration",
-            "  public Duration test() { return null; }",
-            "  // BUG: Diagnostic contains: java.time.Instant",
-            "  public void test(Timestamp timestamp) {}",
-            "}")
+            """
+            import com.google.protobuf.Duration;
+            import com.google.protobuf.Timestamp;
+
+            public class Test {
+              // BUG: Diagnostic contains: java.time.Duration
+              public Duration test() {
+                return null;
+              }
+
+              // BUG: Diagnostic contains: java.time.Instant
+              public void test(Timestamp timestamp) {}
+            }
+            """)
         .doTest();
   }
 
@@ -183,15 +218,19 @@ public final class NonApiTypeTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import com.google.protobuf.Timestamp;",
-            "import java.util.List;",
-            "import java.util.Map;",
-            "public class Test {",
-            "  // BUG: Diagnostic contains: java.time.Instant",
-            "  public void test1(List<Timestamp> timestamps) {}",
-            "  // BUG: Diagnostic contains: java.time.Instant",
-            "  public void test2(List<Map<String, Timestamp>> timestamps) {}",
-            "}")
+            """
+            import com.google.protobuf.Timestamp;
+            import java.util.List;
+            import java.util.Map;
+
+            public class Test {
+              // BUG: Diagnostic contains: java.time.Instant
+              public void test1(List<Timestamp> timestamps) {}
+
+              // BUG: Diagnostic contains: java.time.Instant
+              public void test2(List<Map<String, Timestamp>> timestamps) {}
+            }
+            """)
         .doTest();
   }
 
@@ -200,12 +239,17 @@ public final class NonApiTypeTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import com.google.protobuf.Timestamp;",
-            "public class Test {",
-            "  void test1(Timestamp timestamp) {}",
-            "  protected void test2(Timestamp timestamp) {}",
-            "  private void test3(Timestamp timestamp) {}",
-            "}")
+            """
+            import com.google.protobuf.Timestamp;
+
+            public class Test {
+              void test1(Timestamp timestamp) {}
+
+              protected void test2(Timestamp timestamp) {}
+
+              private void test3(Timestamp timestamp) {}
+            }
+            """)
         .doTest();
   }
 
@@ -214,10 +258,13 @@ public final class NonApiTypeTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import com.google.protobuf.Timestamp;",
-            "class Test {",
-            "  public void test1(Timestamp timestamp) {}",
-            "}")
+            """
+            import com.google.protobuf.Timestamp;
+
+            class Test {
+              public void test1(Timestamp timestamp) {}
+            }
+            """)
         .doTest();
   }
 
@@ -226,11 +273,17 @@ public final class NonApiTypeTest {
     helper
         .addSourceLines(
             "Test.java",
-            "public class Test {",
-            "  public Test(int a) {}",
-            "  public int doSomething() { return 42; }",
-            "  public void doSomething(int a) {}",
-            "}")
+            """
+            public class Test {
+              public Test(int a) {}
+
+              public int doSomething() {
+                return 42;
+              }
+
+              public void doSomething(int a) {}
+            }
+            """)
         .doTest();
   }
 
@@ -239,13 +292,17 @@ public final class NonApiTypeTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import java.util.stream.Stream;",
-            "public class Test {",
-            "  // BUG: Diagnostic contains: NonApiType",
-            "  public Test(Stream<String> iterator) {}",
-            "  // BUG: Diagnostic contains: NonApiType",
-            "  public void methodParam(Stream<String> iterator) {}",
-            "}")
+            """
+            import java.util.stream.Stream;
+
+            public class Test {
+              // BUG: Diagnostic contains: NonApiType
+              public Test(Stream<String> iterator) {}
+
+              // BUG: Diagnostic contains: NonApiType
+              public void methodParam(Stream<String> iterator) {}
+            }
+            """)
         .doTest();
   }
 
@@ -254,11 +311,16 @@ public final class NonApiTypeTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import java.util.Iterator;",
-            "public class Test {",
-            "  // BUG: Diagnostic contains: NonApiType",
-            "  public Iterator<String> returnType() { return null; }",
-            "}")
+            """
+            import java.util.Iterator;
+
+            public class Test {
+              // BUG: Diagnostic contains: NonApiType
+              public Iterator<String> returnType() {
+                return null;
+              }
+            }
+            """)
         .doTest();
   }
 }

@@ -31,16 +31,24 @@ public final class UnnecessaryTestMethodPrefixTest {
     helper
         .addInputLines(
             "T.java",
-            "import org.junit.Test;",
-            "class T {",
-            "  @Test public void testFoo() {}",
-            "}")
+            """
+            import org.junit.Test;
+
+            class T {
+              @Test
+              public void testFoo() {}
+            }
+            """)
         .addOutputLines(
-            "T.java", //
-            "import org.junit.Test;",
-            "class T {",
-            "  @Test public void foo() {}",
-            "}")
+            "T.java",
+            """
+            import org.junit.Test;
+
+            class T {
+              @Test
+              public void foo() {}
+            }
+            """)
         .doTest();
   }
 
@@ -48,17 +56,25 @@ public final class UnnecessaryTestMethodPrefixTest {
   public void negative() {
     helper
         .addInputLines(
-            "T.java", //
-            "import org.junit.Test;",
-            "class T {",
-            "  @Test public void foo() {}",
-            "}")
+            "T.java",
+            """
+            import org.junit.Test;
+
+            class T {
+              @Test
+              public void foo() {}
+            }
+            """)
         .addOutputLines(
-            "T.java", //
-            "import org.junit.Test;",
-            "class T {",
-            "  @Test public void foo() {}",
-            "}")
+            "T.java",
+            """
+            import org.junit.Test;
+
+            class T {
+              @Test
+              public void foo() {}
+            }
+            """)
         .doTest();
   }
 
@@ -66,11 +82,15 @@ public final class UnnecessaryTestMethodPrefixTest {
   public void namedTest_noRename() {
     helper
         .addInputLines(
-            "T.java", //
-            "import org.junit.Test;",
-            "class T {",
-            "  @Test public void test() {}",
-            "}")
+            "T.java",
+            """
+            import org.junit.Test;
+
+            class T {
+              @Test
+              public void test() {}
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }

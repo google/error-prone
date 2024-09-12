@@ -31,14 +31,17 @@ public final class InjectOnBugCheckersTest {
     compilationTestHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.BugPattern;",
-            "import com.google.errorprone.ErrorProneFlags;",
-            "import com.google.errorprone.bugpatterns.BugChecker;",
-            "@BugPattern(summary = \"\", severity = BugPattern.SeverityLevel.WARNING)",
-            "public class Test extends BugChecker {",
-            "  // BUG: Diagnostic contains: @Inject",
-            "  public Test(ErrorProneFlags f) {}",
-            "}")
+            """
+            import com.google.errorprone.BugPattern;
+            import com.google.errorprone.ErrorProneFlags;
+            import com.google.errorprone.bugpatterns.BugChecker;
+
+            @BugPattern(summary = "", severity = BugPattern.SeverityLevel.WARNING)
+            public class Test extends BugChecker {
+              // BUG: Diagnostic contains: @Inject
+              public Test(ErrorProneFlags f) {}
+            }
+            """)
         .doTest();
   }
 
@@ -47,11 +50,14 @@ public final class InjectOnBugCheckersTest {
     compilationTestHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.ErrorProneFlags;",
-            "import com.google.errorprone.bugpatterns.BugChecker;",
-            "public class Test extends BugChecker {",
-            "  public Test(ErrorProneFlags f) {}",
-            "}")
+            """
+            import com.google.errorprone.ErrorProneFlags;
+            import com.google.errorprone.bugpatterns.BugChecker;
+
+            public class Test extends BugChecker {
+              public Test(ErrorProneFlags f) {}
+            }
+            """)
         .doTest();
   }
 
@@ -60,12 +66,15 @@ public final class InjectOnBugCheckersTest {
     compilationTestHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.BugPattern;",
-            "import com.google.errorprone.bugpatterns.BugChecker;",
-            "@BugPattern(summary = \"\", severity = BugPattern.SeverityLevel.WARNING)",
-            "public class Test extends BugChecker {",
-            "  public Test() {}",
-            "}")
+            """
+            import com.google.errorprone.BugPattern;
+            import com.google.errorprone.bugpatterns.BugChecker;
+
+            @BugPattern(summary = "", severity = BugPattern.SeverityLevel.WARNING)
+            public class Test extends BugChecker {
+              public Test() {}
+            }
+            """)
         .doTest();
   }
 
@@ -74,15 +83,18 @@ public final class InjectOnBugCheckersTest {
     compilationTestHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.BugPattern;",
-            "import com.google.errorprone.ErrorProneFlags;",
-            "import com.google.errorprone.bugpatterns.BugChecker;",
-            "import javax.inject.Inject;",
-            "@BugPattern(summary = \"\", severity = BugPattern.SeverityLevel.WARNING)",
-            "public class Test extends BugChecker {",
-            "  @Inject",
-            "  public Test(ErrorProneFlags f) {}",
-            "}")
+            """
+            import com.google.errorprone.BugPattern;
+            import com.google.errorprone.ErrorProneFlags;
+            import com.google.errorprone.bugpatterns.BugChecker;
+            import javax.inject.Inject;
+
+            @BugPattern(summary = "", severity = BugPattern.SeverityLevel.WARNING)
+            public class Test extends BugChecker {
+              @Inject
+              public Test(ErrorProneFlags f) {}
+            }
+            """)
         .doTest();
   }
 }

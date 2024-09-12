@@ -32,30 +32,36 @@ public final class UnnecessaryOptionalGetTest {
     refactoringTestHelper
         .addInputLines(
             "Test.java",
-            "import java.util.Optional;",
-            "public class Test {",
-            "  private void home() {",
-            "    Optional<String> op = Optional.of(\"hello\");",
-            "    op.ifPresent(x -> System.out.println(op.get()));",
-            "    op.map(x -> Long.parseLong(op.get()));",
-            "    op.filter(x -> op.get().isEmpty());",
-            "    op.flatMap(x -> Optional.of(op.get()));",
-            "    op.flatMap(x -> Optional.of(op.orElseThrow()));",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            public class Test {
+              private void home() {
+                Optional<String> op = Optional.of("hello");
+                op.ifPresent(x -> System.out.println(op.get()));
+                op.map(x -> Long.parseLong(op.get()));
+                op.filter(x -> op.get().isEmpty());
+                op.flatMap(x -> Optional.of(op.get()));
+                op.flatMap(x -> Optional.of(op.orElseThrow()));
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import java.util.Optional;",
-            "public class Test {",
-            "  private void home() {",
-            "    Optional<String> op = Optional.of(\"hello\");",
-            "    op.ifPresent(x -> System.out.println(x));",
-            "    op.map(x -> Long.parseLong(x));",
-            "    op.filter(x -> x.isEmpty());",
-            "    op.flatMap(x -> Optional.of(x));",
-            "    op.flatMap(x -> Optional.of(x));",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            public class Test {
+              private void home() {
+                Optional<String> op = Optional.of("hello");
+                op.ifPresent(x -> System.out.println(x));
+                op.map(x -> Long.parseLong(x));
+                op.filter(x -> x.isEmpty());
+                op.flatMap(x -> Optional.of(x));
+                op.flatMap(x -> Optional.of(x));
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -64,22 +70,28 @@ public final class UnnecessaryOptionalGetTest {
     refactoringTestHelper
         .addInputLines(
             "Test.java",
-            "import com.google.common.base.Optional;",
-            "public class Test {",
-            "  private void home() {",
-            "    Optional<String> op = Optional.of(\"hello\");",
-            "    op.transform(x -> Long.parseLong(op.get()));",
-            "  }",
-            "}")
+            """
+            import com.google.common.base.Optional;
+
+            public class Test {
+              private void home() {
+                Optional<String> op = Optional.of("hello");
+                op.transform(x -> Long.parseLong(op.get()));
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import com.google.common.base.Optional;",
-            "public class Test {",
-            "  private void home() {",
-            "    Optional<String> op = Optional.of(\"hello\");",
-            "    op.transform(x -> Long.parseLong(x));",
-            "  }",
-            "}")
+            """
+            import com.google.common.base.Optional;
+
+            public class Test {
+              private void home() {
+                Optional<String> op = Optional.of("hello");
+                op.transform(x -> Long.parseLong(x));
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -88,26 +100,32 @@ public final class UnnecessaryOptionalGetTest {
     refactoringTestHelper
         .addInputLines(
             "Test.java",
-            "import java.util.Optional;",
-            "public class Test {",
-            "  private void home() {",
-            "    Optional<String> op = Optional.of(\"hello\");",
-            "    op.ifPresent(x -> System.out.println(op.orElse(\"other\")));",
-            "    op.ifPresent(x -> System.out.println(op.orElseGet(() -> \"other\")));",
-            "    op.ifPresent(x -> System.out.println(op.orElseThrow(RuntimeException::new)));",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            public class Test {
+              private void home() {
+                Optional<String> op = Optional.of("hello");
+                op.ifPresent(x -> System.out.println(op.orElse("other")));
+                op.ifPresent(x -> System.out.println(op.orElseGet(() -> "other")));
+                op.ifPresent(x -> System.out.println(op.orElseThrow(RuntimeException::new)));
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import java.util.Optional;",
-            "public class Test {",
-            "  private void home() {",
-            "    Optional<String> op = Optional.of(\"hello\");",
-            "    op.ifPresent(x -> System.out.println(x));",
-            "    op.ifPresent(x -> System.out.println(x));",
-            "    op.ifPresent(x -> System.out.println(x));",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            public class Test {
+              private void home() {
+                Optional<String> op = Optional.of("hello");
+                op.ifPresent(x -> System.out.println(x));
+                op.ifPresent(x -> System.out.println(x));
+                op.ifPresent(x -> System.out.println(x));
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -116,24 +134,30 @@ public final class UnnecessaryOptionalGetTest {
     refactoringTestHelper
         .addInputLines(
             "Test.java",
-            "import com.google.common.base.Optional;",
-            "public class Test {",
-            "  private void home() {",
-            "    Optional<String> op = Optional.of(\"hello\");",
-            "    op.transform(x -> Long.parseLong(op.or(\"other\")));",
-            "    op.transform(x -> Long.parseLong(op.or(() -> \"other\")));",
-            "  }",
-            "}")
+            """
+            import com.google.common.base.Optional;
+
+            public class Test {
+              private void home() {
+                Optional<String> op = Optional.of("hello");
+                op.transform(x -> Long.parseLong(op.or("other")));
+                op.transform(x -> Long.parseLong(op.or(() -> "other")));
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import com.google.common.base.Optional;",
-            "public class Test {",
-            "  private void home() {",
-            "    Optional<String> op = Optional.of(\"hello\");",
-            "    op.transform(x -> Long.parseLong(x));",
-            "    op.transform(x -> Long.parseLong(x));",
-            "  }",
-            "}")
+            """
+            import com.google.common.base.Optional;
+
+            public class Test {
+              private void home() {
+                Optional<String> op = Optional.of("hello");
+                op.transform(x -> Long.parseLong(x));
+                op.transform(x -> Long.parseLong(x));
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -142,28 +166,58 @@ public final class UnnecessaryOptionalGetTest {
     refactoringTestHelper
         .addInputLines(
             "Test.java",
-            "import java.util.Optional;",
-            "public class Test {",
-            "  private void home() {",
-            "    Optional<String> op = Optional.of(\"hello\");",
-            "    op.ifPresent(x -> { System.out.println(op.get()); });",
-            "    op.map(x -> { return Long.parseLong(op.get()); });",
-            "    op.filter(x -> { return op.get().isEmpty(); });",
-            "    op.flatMap(x -> { return Optional.of(op.get()); });",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            public class Test {
+              private void home() {
+                Optional<String> op = Optional.of("hello");
+                op.ifPresent(
+                    x -> {
+                      System.out.println(op.get());
+                    });
+                op.map(
+                    x -> {
+                      return Long.parseLong(op.get());
+                    });
+                op.filter(
+                    x -> {
+                      return op.get().isEmpty();
+                    });
+                op.flatMap(
+                    x -> {
+                      return Optional.of(op.get());
+                    });
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import java.util.Optional;",
-            "public class Test {",
-            "  private void home() {",
-            "    Optional<String> op = Optional.of(\"hello\");",
-            "    op.ifPresent(x -> { System.out.println(x); });",
-            "    op.map(x -> { return Long.parseLong(x); });",
-            "    op.filter(x -> { return x.isEmpty(); });",
-            "    op.flatMap(x -> { return Optional.of(x); });",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            public class Test {
+              private void home() {
+                Optional<String> op = Optional.of("hello");
+                op.ifPresent(
+                    x -> {
+                      System.out.println(x);
+                    });
+                op.map(
+                    x -> {
+                      return Long.parseLong(x);
+                    });
+                op.filter(
+                    x -> {
+                      return x.isEmpty();
+                    });
+                op.flatMap(
+                    x -> {
+                      return Optional.of(x);
+                    });
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -172,14 +226,17 @@ public final class UnnecessaryOptionalGetTest {
     refactoringTestHelper
         .addInputLines(
             "Test.java",
-            "import java.util.Optional;",
-            "public class Test {",
-            "  private void home() {",
-            "    Optional<String> op1 = Optional.of(\"hello\");",
-            "    Optional<String> op2 = Optional.of(\"hello\");",
-            "    op1.ifPresent(x -> System.out.println(op2.get()));",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            public class Test {
+              private void home() {
+                Optional<String> op1 = Optional.of("hello");
+                Optional<String> op2 = Optional.of("hello");
+                op1.ifPresent(x -> System.out.println(op2.get()));
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -189,18 +246,23 @@ public final class UnnecessaryOptionalGetTest {
     refactoringTestHelper
         .addInputLines(
             "Test.java",
-            "import java.util.Optional;",
-            "public class Test {",
-            "  private void home() {",
-            "    myOpFunc1().ifPresent(x -> System.out.println(myOpFunc2().get()));",
-            "  }",
-            "  private Optional<String> myOpFunc1() {",
-            "    return Optional.of(\"hello\");",
-            "  }",
-            "  private Optional<String> myOpFunc2() {",
-            "    return Optional.of(\"hello\");",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            public class Test {
+              private void home() {
+                myOpFunc1().ifPresent(x -> System.out.println(myOpFunc2().get()));
+              }
+
+              private Optional<String> myOpFunc1() {
+                return Optional.of("hello");
+              }
+
+              private Optional<String> myOpFunc2() {
+                return Optional.of("hello");
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -210,15 +272,19 @@ public final class UnnecessaryOptionalGetTest {
     refactoringTestHelper
         .addInputLines(
             "Test.java",
-            "import java.util.Optional;",
-            "public class Test {",
-            "  private void home() {",
-            "    myOpFunc().ifPresent(x -> System.out.println(myOpFunc().get()));",
-            "  }",
-            "  private Optional<String> myOpFunc() {",
-            "    return Optional.of(\"hello\");",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            public class Test {
+              private void home() {
+                myOpFunc().ifPresent(x -> System.out.println(myOpFunc().get()));
+              }
+
+              private Optional<String> myOpFunc() {
+                return Optional.of("hello");
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -228,34 +294,40 @@ public final class UnnecessaryOptionalGetTest {
     refactoringTestHelper
         .addInputLines(
             "Test.java",
-            "import java.util.OptionalDouble;",
-            "import java.util.OptionalInt;",
-            "import java.util.OptionalLong;",
-            "public class Test {",
-            "  private void home() {",
-            "    OptionalDouble opDouble = OptionalDouble.of(1.0);",
-            "    OptionalInt opInt = OptionalInt.of(1);",
-            "    OptionalLong opLong = OptionalLong.of(1L);",
-            "    opDouble.ifPresent(x -> System.out.println(opDouble.getAsDouble()));",
-            "    opInt.ifPresent(x -> System.out.println(opInt.getAsInt()));",
-            "    opLong.ifPresent(x -> System.out.println(opLong.getAsLong()));",
-            "  }",
-            "}")
+            """
+            import java.util.OptionalDouble;
+            import java.util.OptionalInt;
+            import java.util.OptionalLong;
+
+            public class Test {
+              private void home() {
+                OptionalDouble opDouble = OptionalDouble.of(1.0);
+                OptionalInt opInt = OptionalInt.of(1);
+                OptionalLong opLong = OptionalLong.of(1L);
+                opDouble.ifPresent(x -> System.out.println(opDouble.getAsDouble()));
+                opInt.ifPresent(x -> System.out.println(opInt.getAsInt()));
+                opLong.ifPresent(x -> System.out.println(opLong.getAsLong()));
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import java.util.OptionalDouble;",
-            "import java.util.OptionalInt;",
-            "import java.util.OptionalLong;",
-            "public class Test {",
-            "  private void home() {",
-            "    OptionalDouble opDouble = OptionalDouble.of(1.0);",
-            "    OptionalInt opInt = OptionalInt.of(1);",
-            "    OptionalLong opLong = OptionalLong.of(1L);",
-            "    opDouble.ifPresent(x -> System.out.println(x));",
-            "    opInt.ifPresent(x -> System.out.println(x));",
-            "    opLong.ifPresent(x -> System.out.println(x));",
-            "  }",
-            "}")
+            """
+            import java.util.OptionalDouble;
+            import java.util.OptionalInt;
+            import java.util.OptionalLong;
+
+            public class Test {
+              private void home() {
+                OptionalDouble opDouble = OptionalDouble.of(1.0);
+                OptionalInt opInt = OptionalInt.of(1);
+                OptionalLong opLong = OptionalLong.of(1L);
+                opDouble.ifPresent(x -> System.out.println(x));
+                opInt.ifPresent(x -> System.out.println(x));
+                opLong.ifPresent(x -> System.out.println(x));
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -264,21 +336,25 @@ public final class UnnecessaryOptionalGetTest {
     refactoringTestHelper
         .addInputLines(
             "Test.java",
-            "import java.util.Optional;",
-            "public class Test {",
-            "  abstract static class T {",
-            "    abstract Optional<String> getValue();",
-            "  }",
-            "  static void test(T actual, T expected) {",
-            "    actual",
-            "        .getValue()",
-            "        .ifPresent(",
-            "            actualValue -> {",
-            "              String expectedValue = expected.getValue().get();",
-            "              actualValue.equals(expectedValue);",
-            "            });",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            public class Test {
+              abstract static class T {
+                abstract Optional<String> getValue();
+              }
+
+              static void test(T actual, T expected) {
+                actual
+                    .getValue()
+                    .ifPresent(
+                        actualValue -> {
+                          String expectedValue = expected.getValue().get();
+                          actualValue.equals(expectedValue);
+                        });
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -288,22 +364,28 @@ public final class UnnecessaryOptionalGetTest {
     refactoringTestHelper
         .addInputLines(
             "Test.java",
-            "import java.util.Optional;",
-            "public class Test {",
-            "  private void home() {",
-            "    Optional<String> op = Optional.of(\"hello\");",
-            "    op.flatMap(x -> Optional.of(op.orElseThrow()));",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            public class Test {
+              private void home() {
+                Optional<String> op = Optional.of("hello");
+                op.flatMap(x -> Optional.of(op.orElseThrow()));
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import java.util.Optional;",
-            "public class Test {",
-            "  private void home() {",
-            "    Optional<String> op = Optional.of(\"hello\");",
-            "    op.flatMap(x -> Optional.of(x));",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            public class Test {
+              private void home() {
+                Optional<String> op = Optional.of("hello");
+                op.flatMap(x -> Optional.of(x));
+              }
+            }
+            """)
         .doTest();
   }
 }

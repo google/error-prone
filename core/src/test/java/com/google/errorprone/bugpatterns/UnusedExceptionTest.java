@@ -40,15 +40,17 @@ public final class UnusedExceptionTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void test() {",
-            "    try {",
-            "      // BUG: Diagnostic contains: ",
-            "    } catch (Exception e) {",
-            "      throw new RuntimeException(\"foo\");",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              void test() {
+                try {
+                  // BUG: Diagnostic contains:
+                } catch (Exception e) {
+                  throw new RuntimeException("foo");
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -57,32 +59,36 @@ public final class UnusedExceptionTest {
     refactoringHelper
         .addInputLines(
             "in/Test.java",
-            "class Test {",
-            "  void test() {",
-            "    try {",
-            "    } catch (Exception e) {",
-            "      if (equals(this)) {",
-            "        throw new RuntimeException(toString());",
-            "      } else {",
-            "        throw new RuntimeException();",
-            "      }",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              void test() {
+                try {
+                } catch (Exception e) {
+                  if (equals(this)) {
+                    throw new RuntimeException(toString());
+                  } else {
+                    throw new RuntimeException();
+                  }
+                }
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "class Test {",
-            "  void test() {",
-            "    try {",
-            "    } catch (Exception e) {",
-            "      if (equals(this)) {",
-            "        throw new RuntimeException(toString(), e);",
-            "      } else {",
-            "        throw new RuntimeException(e);",
-            "      }",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              void test() {
+                try {
+                } catch (Exception e) {
+                  if (equals(this)) {
+                    throw new RuntimeException(toString(), e);
+                  } else {
+                    throw new RuntimeException(e);
+                  }
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -91,14 +97,16 @@ public final class UnusedExceptionTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void test() {",
-            "    try {",
-            "    } catch (Exception e) {",
-            "      throw new RuntimeException(e);",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              void test() {
+                try {
+                } catch (Exception e) {
+                  throw new RuntimeException(e);
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -107,14 +115,16 @@ public final class UnusedExceptionTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void test() {",
-            "    try {",
-            "    } catch (Exception e) {",
-            "      throw e;",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              void test() {
+                try {
+                } catch (Exception e) {
+                  throw e;
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -123,15 +133,17 @@ public final class UnusedExceptionTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void test() {",
-            "    try {",
-            "    } catch (Exception e) {",
-            "      System.err.println(e.toString());",
-            "      throw new RuntimeException();",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              void test() {
+                try {
+                } catch (Exception e) {
+                  System.err.println(e.toString());
+                  throw new RuntimeException();
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -140,20 +152,22 @@ public final class UnusedExceptionTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void test() {",
-            "    try {",
-            "    } catch (Exception e) {",
-            "      try {",
-            "      // BUG: Diagnostic contains: ",
-            "      } catch (Exception e2) {",
-            "        System.err.println(e.toString());",
-            "        throw new RuntimeException();",
-            "      }",
-            "      throw new RuntimeException();",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              void test() {
+                try {
+                } catch (Exception e) {
+                  try {
+                    // BUG: Diagnostic contains:
+                  } catch (Exception e2) {
+                    System.err.println(e.toString());
+                    throw new RuntimeException();
+                  }
+                  throw new RuntimeException();
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -162,14 +176,16 @@ public final class UnusedExceptionTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void test() {",
-            "    try {",
-            "    } catch (Exception e) {",
-            "      String ohNo = null;",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              void test() {
+                try {
+                } catch (Exception e) {
+                  String ohNo = null;
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -178,15 +194,17 @@ public final class UnusedExceptionTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  @SuppressWarnings(\"UnusedException\")",
-            "  void test() {",
-            "    try {",
-            "    } catch (Exception e) {",
-            "      throw new RuntimeException(\"foo\");",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              @SuppressWarnings("UnusedException")
+              void test() {
+                try {
+                } catch (Exception e) {
+                  throw new RuntimeException("foo");
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -195,14 +213,18 @@ public final class UnusedExceptionTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void test() {",
-            "    try {",
-            "    } catch (@SuppressWarnings(\"UnusedException\") Exception e) {",
-            "      throw new RuntimeException(\"foo\");",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              void test() {
+                try {
+                } catch (
+                    @SuppressWarnings("UnusedException")
+                    Exception e) {
+                  throw new RuntimeException("foo");
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -211,14 +233,16 @@ public final class UnusedExceptionTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void test() {",
-            "    try {",
-            "    } catch (Exception unusedException) {",
-            "      throw new RuntimeException(\"foo\");",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              void test() {
+                try {
+                } catch (Exception unusedException) {
+                  throw new RuntimeException("foo");
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -227,24 +251,28 @@ public final class UnusedExceptionTest {
     refactoringHelper
         .addInputLines(
             "in/Test.java",
-            "class Test {",
-            "  void test() {",
-            "    try {",
-            "    } catch (Exception e) {",
-            "      throw new RuntimeException() {};",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              void test() {
+                try {
+                } catch (Exception e) {
+                  throw new RuntimeException() {};
+                }
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "class Test {",
-            "  void test() {",
-            "    try {",
-            "    } catch (Exception e) {",
-            "      throw new RuntimeException(e) {};",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              void test() {
+                try {
+                } catch (Exception e) {
+                  throw new RuntimeException(e) {};
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -253,10 +281,13 @@ public final class UnusedExceptionTest {
     refactoringHelper
         .addInputLines(
             "in/MyException.java",
-            "class MyException extends RuntimeException {",
-            "  public MyException(int a) {}",
-            "  protected MyException(int a, Throwable th) {}",
-            "}")
+            """
+            class MyException extends RuntimeException {
+              public MyException(int a) {}
+
+              protected MyException(int a, Throwable th) {}
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
             "in/Test.java",
@@ -278,15 +309,17 @@ public final class UnusedExceptionTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void test() {",
-            "    try {",
-            "      throw new InterruptedException();",
-            "    } catch (InterruptedException e) {",
-            "      throw new IllegalStateException(\"foo\");",
-            "    }",
-            "  }",
-            "}")
+            """
+            class Test {
+              void test() {
+                try {
+                  throw new InterruptedException();
+                } catch (InterruptedException e) {
+                  throw new IllegalStateException("foo");
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -295,17 +328,21 @@ public final class UnusedExceptionTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.io.InterruptedIOException;",
-            "abstract class Test {",
-            "  abstract void foo() throws InterruptedIOException;",
-            "  void test() throws InterruptedIOException {",
-            "    try {",
-            "      foo();",
-            "    } catch (InterruptedIOException e) {",
-            "      throw new InterruptedIOException();",
-            "    }",
-            "  }",
-            "}")
+            """
+            import java.io.InterruptedIOException;
+
+            abstract class Test {
+              abstract void foo() throws InterruptedIOException;
+
+              void test() throws InterruptedIOException {
+                try {
+                  foo();
+                } catch (InterruptedIOException e) {
+                  throw new InterruptedIOException();
+                }
+              }
+            }
+            """)
         .doTest();
   }
 }
