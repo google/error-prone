@@ -65,6 +65,7 @@ public class EmptyCatchTest {
               public void testNG() {
                 try {
                   System.err.println();
+                // BUG: Diagnostic contains:
                 } catch (Exception doNotCare) {
                 }
               }

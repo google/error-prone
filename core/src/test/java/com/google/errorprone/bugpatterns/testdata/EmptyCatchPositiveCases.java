@@ -16,6 +16,10 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static org.junit.Assert.fail;
+
+import org.junit.Test;
+
 /**
  * @author yuan@ece.toronto.edu (Ding Yuan)
  */
@@ -30,6 +34,16 @@ public class EmptyCatchPositiveCases {
     } // BUG: Diagnostic contains:
     catch (Throwable t) {
 
+    }
+  }
+
+  @Test
+  public void expectedException() {
+    try {
+      System.err.println();
+      fail();
+      // BUG: Diagnostic contains:
+    } catch (Exception expected) {
     }
   }
 }

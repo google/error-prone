@@ -16,10 +16,8 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static org.junit.Assert.fail;
 
 import java.io.FileNotFoundException;
-import org.junit.Test;
 
 /**
  * @author yuan@ece.toronto.edu (Ding Yuan)
@@ -124,15 +122,6 @@ public class EmptyCatchNegativeCases {
       error();
     } catch (Throwable t) {
       System.out.println("Caught an exception: " + t);
-    }
-  }
-
-  @Test
-  public void expectedException() {
-    try {
-      System.err.println();
-      fail();
-    } catch (Exception expected) {
     }
   }
 }

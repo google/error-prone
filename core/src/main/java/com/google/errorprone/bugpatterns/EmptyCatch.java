@@ -24,7 +24,6 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CatchTreeMatcher;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.CatchTree;
 
@@ -45,12 +44,6 @@ public class EmptyCatch extends BugChecker implements CatchTreeMatcher {
       return NO_MATCH;
     }
     if (state.getTokensForNode(block).stream().anyMatch(t -> !t.comments().isEmpty())) {
-      return NO_MATCH;
-    }
-    if (ASTHelpers.isJUnitTestCode(state)) {
-      return NO_MATCH;
-    }
-    if (ASTHelpers.isTestNgTestCode(state)) {
       return NO_MATCH;
     }
     return describeMatch(tree);
