@@ -34,18 +34,22 @@ public final class ImmutableRefactoringTest {
     compilationHelper
         .addInputLines(
             "Test.java",
-            "import javax.annotation.concurrent.Immutable;",
-            "@Immutable class Test {",
-            "  final int a = 42;",
-            "  final String b = null;",
-            "}")
+            """
+            import javax.annotation.concurrent.Immutable;
+            @Immutable class Test {
+              final int a = 42;
+              final String b = null;
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable class Test {",
-            "  final int a = 42;",
-            "  final String b = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable class Test {
+              final int a = 42;
+              final String b = null;
+            }
+            """)
         .doTest();
   }
 
@@ -54,13 +58,15 @@ public final class ImmutableRefactoringTest {
     compilationHelper
         .addInputLines(
             "Test.java",
-            "import javax.annotation.concurrent.Immutable;",
-            "@Immutable class Test {",
-            "  int a = 42;",
-            "  @Immutable static class Inner {",
-            "    final int a = 43;",
-            "  }",
-            "}")
+            """
+            import javax.annotation.concurrent.Immutable;
+            @Immutable class Test {
+              int a = 42;
+              @Immutable static class Inner {
+                final int a = 43;
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
             "import com.google.errorprone.annotations.Immutable;",
@@ -81,10 +87,12 @@ public final class ImmutableRefactoringTest {
     compilationHelper
         .addInputLines(
             "Test.java",
-            "import javax.annotation.concurrent.Immutable;",
-            "@Immutable class Test {",
-            "  int a = 42;",
-            "}")
+            """
+            import javax.annotation.concurrent.Immutable;
+            @Immutable class Test {
+              int a = 42;
+            }
+            """)
         .addOutputLines(
             "Test.java",
             "import com.google.errorprone.annotations.Immutable;",
@@ -101,13 +109,15 @@ public final class ImmutableRefactoringTest {
     compilationHelper
         .addInputLines(
             "Test.java",
-            "import javax.annotation.concurrent.Immutable;",
-            "@Immutable class Test {",
-            "  int a = 42;",
-            "  @Immutable static class Inner {",
-            "    int a = 43;",
-            "  }",
-            "}")
+            """
+            import javax.annotation.concurrent.Immutable;
+            @Immutable class Test {
+              int a = 42;
+              @Immutable static class Inner {
+                int a = 43;
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
             "import com.google.errorprone.annotations.Immutable;",

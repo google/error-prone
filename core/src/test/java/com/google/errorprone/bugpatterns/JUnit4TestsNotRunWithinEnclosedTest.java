@@ -37,13 +37,15 @@ public final class JUnit4TestsNotRunWithinEnclosedTest {
     helper
         .addSourceLines(
             "FooTest.java",
-            "import org.junit.Test;",
-            "import org.junit.runner.RunWith;",
-            "import org.junit.runners.JUnit4;",
-            "@RunWith(JUnit4.class)",
-            "public final class FooTest {",
-            "  @Test public void test() {}",
-            "}")
+            """
+            import org.junit.Test;
+            import org.junit.runner.RunWith;
+            import org.junit.runners.JUnit4;
+            @RunWith(JUnit4.class)
+            public final class FooTest {
+              @Test public void test() {}
+            }
+            """)
         .doTest();
   }
 
@@ -52,14 +54,16 @@ public final class JUnit4TestsNotRunWithinEnclosedTest {
     helper
         .addSourceLines(
             "FooTest.java",
-            "import org.junit.Test;",
-            "import org.junit.experimental.runners.Enclosed;",
-            "import org.junit.runner.RunWith;",
-            "@RunWith(Enclosed.class)",
-            "public final class FooTest {",
-            "  // BUG: Diagnostic contains:",
-            "  @Test public void test() {}",
-            "}")
+            """
+            import org.junit.Test;
+            import org.junit.experimental.runners.Enclosed;
+            import org.junit.runner.RunWith;
+            @RunWith(Enclosed.class)
+            public final class FooTest {
+              // BUG: Diagnostic contains:
+              @Test public void test() {}
+            }
+            """)
         .doTest();
   }
 
@@ -68,23 +72,27 @@ public final class JUnit4TestsNotRunWithinEnclosedTest {
     refactoring
         .addInputLines(
             "FooTest.java",
-            "import org.junit.Test;",
-            "import org.junit.experimental.runners.Enclosed;",
-            "import org.junit.runner.RunWith;",
-            "@RunWith(Enclosed.class)",
-            "public final class FooTest {",
-            "  @Test public void test() {}",
-            "}")
+            """
+            import org.junit.Test;
+            import org.junit.experimental.runners.Enclosed;
+            import org.junit.runner.RunWith;
+            @RunWith(Enclosed.class)
+            public final class FooTest {
+              @Test public void test() {}
+            }
+            """)
         .addOutputLines(
             "FooTest.java",
-            "import org.junit.Test;",
-            "import org.junit.experimental.runners.Enclosed;",
-            "import org.junit.runner.RunWith;",
-            "import org.junit.runners.JUnit4;",
-            "@RunWith(JUnit4.class)",
-            "public final class FooTest {",
-            "  @Test public void test() {}",
-            "}")
+            """
+            import org.junit.Test;
+            import org.junit.experimental.runners.Enclosed;
+            import org.junit.runner.RunWith;
+            import org.junit.runners.JUnit4;
+            @RunWith(JUnit4.class)
+            public final class FooTest {
+              @Test public void test() {}
+            }
+            """)
         .doTest();
   }
 
@@ -93,14 +101,16 @@ public final class JUnit4TestsNotRunWithinEnclosedTest {
     helper
         .addSourceLines(
             "FooTest.java",
-            "import org.junit.experimental.runners.Enclosed;",
-            "import org.junit.Test;",
-            "import org.junit.runner.RunWith;",
-            "@RunWith(Enclosed.class)",
-            "public class FooTest {",
-            "  @Test public void test() {}",
-            "  public class FooInnerTest extends FooTest {}",
-            "}")
+            """
+            import org.junit.experimental.runners.Enclosed;
+            import org.junit.Test;
+            import org.junit.runner.RunWith;
+            @RunWith(Enclosed.class)
+            public class FooTest {
+              @Test public void test() {}
+              public class FooInnerTest extends FooTest {}
+            }
+            """)
         .doTest();
   }
 
@@ -109,15 +119,17 @@ public final class JUnit4TestsNotRunWithinEnclosedTest {
     helper
         .addSourceLines(
             "FooTest.java",
-            "import org.junit.experimental.runners.Enclosed;",
-            "import org.junit.Test;",
-            "import org.junit.runner.RunWith;",
-            "@RunWith(Enclosed.class)",
-            "public class FooTest {",
-            "  public static class BarTest {",
-            "    @Test public void test() {}",
-            "  }",
-            "}")
+            """
+            import org.junit.experimental.runners.Enclosed;
+            import org.junit.Test;
+            import org.junit.runner.RunWith;
+            @RunWith(Enclosed.class)
+            public class FooTest {
+              public static class BarTest {
+                @Test public void test() {}
+              }
+            }
+            """)
         .doTest();
   }
 }

@@ -35,13 +35,15 @@ public class MisplacedScopeAnnotationsTest {
     compilationHelper
         .addSourceLines(
             "Foo.java",
-            "import javax.inject.Inject;",
-            "import javax.inject.Named;",
-            "import javax.inject.Singleton;",
-            "class Foo {",
-            "  // BUG: Diagnostic contains: @Inject void someMethod( String foo) {}",
-            "  @Inject void someMethod(@Singleton String foo) {}",
-            "}")
+            """
+            import javax.inject.Inject;
+            import javax.inject.Named;
+            import javax.inject.Singleton;
+            class Foo {
+              // BUG: Diagnostic contains: @Inject void someMethod( String foo) {}
+              @Inject void someMethod(@Singleton String foo) {}
+            }
+            """)
         .doTest();
   }
 
@@ -50,24 +52,28 @@ public class MisplacedScopeAnnotationsTest {
     refactoringHelper
         .addInputLines(
             "in/Foo.java",
-            "import com.google.inject.Provides;",
-            "import javax.inject.Named;",
-            "import javax.inject.Singleton;",
-            "class Foo {",
-            "  @Provides String provideString(@Singleton @Named(\"foo\") String foo) {",
-            "    return foo;",
-            "  }",
-            "}")
+            """
+            import com.google.inject.Provides;
+            import javax.inject.Named;
+            import javax.inject.Singleton;
+            class Foo {
+              @Provides String provideString(@Singleton @Named("foo") String foo) {
+                return foo;
+              }
+            }
+            """)
         .addOutputLines(
             "out/Foo.java",
-            "import com.google.inject.Provides;",
-            "import javax.inject.Named;",
-            "import javax.inject.Singleton;",
-            "class Foo {",
-            "  @Provides String provideString( @Named(\"foo\") String foo) {",
-            "    return foo;",
-            "  }",
-            "}")
+            """
+            import com.google.inject.Provides;
+            import javax.inject.Named;
+            import javax.inject.Singleton;
+            class Foo {
+              @Provides String provideString( @Named("foo") String foo) {
+                return foo;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -76,20 +82,24 @@ public class MisplacedScopeAnnotationsTest {
     refactoringHelper
         .addInputLines(
             "in/Foo.java",
-            "import javax.inject.Inject;",
-            "import javax.inject.Named;",
-            "import javax.inject.Singleton;",
-            "class Foo {",
-            "  @Inject Foo(@Singleton @Named(\"bar\") String bar) {}",
-            "}")
+            """
+            import javax.inject.Inject;
+            import javax.inject.Named;
+            import javax.inject.Singleton;
+            class Foo {
+              @Inject Foo(@Singleton @Named("bar") String bar) {}
+            }
+            """)
         .addOutputLines(
             "out/Foo.java",
-            "import javax.inject.Inject;",
-            "import javax.inject.Named;",
-            "import javax.inject.Singleton;",
-            "class Foo {",
-            "  @Inject Foo( @Named(\"bar\") String bar) {}",
-            "}")
+            """
+            import javax.inject.Inject;
+            import javax.inject.Named;
+            import javax.inject.Singleton;
+            class Foo {
+              @Inject Foo( @Named("bar") String bar) {}
+            }
+            """)
         .doTest();
   }
 
@@ -98,20 +108,24 @@ public class MisplacedScopeAnnotationsTest {
     refactoringHelper
         .addInputLines(
             "in/Foo.java",
-            "import javax.inject.Inject;",
-            "import javax.inject.Named;",
-            "import javax.inject.Singleton;",
-            "class Foo {",
-            "  @Inject Foo(@Singleton String bar, Integer i, @Singleton Long c) {}",
-            "}")
+            """
+            import javax.inject.Inject;
+            import javax.inject.Named;
+            import javax.inject.Singleton;
+            class Foo {
+              @Inject Foo(@Singleton String bar, Integer i, @Singleton Long c) {}
+            }
+            """)
         .addOutputLines(
             "out/Foo.java",
-            "import javax.inject.Inject;",
-            "import javax.inject.Named;",
-            "import javax.inject.Singleton;",
-            "class Foo {",
-            "  @Inject Foo( String bar, Integer i,  Long c) {}",
-            "}")
+            """
+            import javax.inject.Inject;
+            import javax.inject.Named;
+            import javax.inject.Singleton;
+            class Foo {
+              @Inject Foo( String bar, Integer i,  Long c) {}
+            }
+            """)
         .doTest();
   }
 
@@ -120,20 +134,24 @@ public class MisplacedScopeAnnotationsTest {
     refactoringHelper
         .addInputLines(
             "in/Foo.java",
-            "import javax.inject.Inject;",
-            "import javax.inject.Named;",
-            "import javax.inject.Singleton;",
-            "class Foo {",
-            "  @Inject @Singleton String foo;",
-            "}")
+            """
+            import javax.inject.Inject;
+            import javax.inject.Named;
+            import javax.inject.Singleton;
+            class Foo {
+              @Inject @Singleton String foo;
+            }
+            """)
         .addOutputLines(
             "out/Foo.java",
-            "import javax.inject.Inject;",
-            "import javax.inject.Named;",
-            "import javax.inject.Singleton;",
-            "class Foo {",
-            "  @Inject  String foo;",
-            "}")
+            """
+            import javax.inject.Inject;
+            import javax.inject.Named;
+            import javax.inject.Singleton;
+            class Foo {
+              @Inject  String foo;
+            }
+            """)
         .doTest();
   }
 
@@ -142,18 +160,20 @@ public class MisplacedScopeAnnotationsTest {
     compilationHelper
         .addSourceLines(
             "Foo.java",
-            "import dagger.Provides;",
-            "import dagger.Module;",
-            "import javax.inject.Inject;",
-            "import javax.inject.Named;",
-            "import javax.inject.Singleton;",
-            "@Module",
-            "class Foo {",
-            "  @Provides @Singleton @Named(\"bar\")",
-            "  int something(@Named(\"bar\") Integer bar) {",
-            "    return 42;",
-            "  }",
-            "}")
+            """
+            import dagger.Provides;
+            import dagger.Module;
+            import javax.inject.Inject;
+            import javax.inject.Named;
+            import javax.inject.Singleton;
+            @Module
+            class Foo {
+              @Provides @Singleton @Named("bar")
+              int something(@Named("bar") Integer bar) {
+                return 42;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -162,26 +182,28 @@ public class MisplacedScopeAnnotationsTest {
     compilationHelper
         .addSourceLines(
             "Foo.java",
-            "import dagger.Provides;",
-            "import dagger.Module;",
-            "import javax.inject.Inject;",
-            "import javax.inject.Named;",
-            "import javax.inject.Qualifier;",
-            "import javax.inject.Scope;",
-            "import java.lang.annotation.Retention;",
-            "import java.lang.annotation.RetentionPolicy;",
-            "@Module",
-            "class Foo {",
-            "  @Qualifier",
-            "  @Scope",
-            "  @Retention(RetentionPolicy.RUNTIME)",
-            "  @interface RequestScoped {}",
-            "                             ",
-            "  @Provides",
-            "  int something(@RequestScoped Integer bar) {",
-            "    return 42;",
-            "  }",
-            "}")
+            """
+            import dagger.Provides;
+            import dagger.Module;
+            import javax.inject.Inject;
+            import javax.inject.Named;
+            import javax.inject.Qualifier;
+            import javax.inject.Scope;
+            import java.lang.annotation.Retention;
+            import java.lang.annotation.RetentionPolicy;
+            @Module
+            class Foo {
+              @Qualifier
+              @Scope
+              @Retention(RetentionPolicy.RUNTIME)
+              @interface RequestScoped {}
+
+              @Provides
+              int something(@RequestScoped Integer bar) {
+                return 42;
+              }
+            }
+            """)
         .doTest();
   }
 }

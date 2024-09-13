@@ -33,14 +33,16 @@ public class UnnecessaryTypeArgumentTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "package foo.bar;",
-            "class Test {",
-            "  void f() {}",
-            "  void m() {",
-            "    // BUG: Diagnostic contains: this.f()",
-            "    this.<String>f();",
-            "  }",
-            "}")
+            """
+            package foo.bar;
+            class Test {
+              void f() {}
+              void m() {
+                // BUG: Diagnostic contains: this.f()
+                this.<String>f();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -49,17 +51,19 @@ public class UnnecessaryTypeArgumentTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "package foo.bar;",
-            "class Test {",
-            "  static class C {",
-            "    public <T> C() {",
-            "      // BUG: Diagnostic contains: /*START*/this(42)",
-            "      /*START*/<String>this(42);",
-            "    }",
-            "    public C(int i) {",
-            "    }",
-            "  }",
-            "}")
+            """
+            package foo.bar;
+            class Test {
+              static class C {
+                public <T> C() {
+                  // BUG: Diagnostic contains: /*START*/this(42)
+                  /*START*/<String>this(42);
+                }
+                public C(int i) {
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -68,19 +72,21 @@ public class UnnecessaryTypeArgumentTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "package foo.bar;",
-            "class Test {",
-            "  static class B {",
-            "    public B() {",
-            "    }",
-            "  }",
-            "  static class C extends B {",
-            "    public <T> C() {",
-            "      // BUG: Diagnostic contains: /*START*/super()",
-            "      /*START*/<String>super();",
-            "    }",
-            "  }",
-            "}")
+            """
+            package foo.bar;
+            class Test {
+              static class B {
+                public B() {
+                }
+              }
+              static class C extends B {
+                public <T> C() {
+                  // BUG: Diagnostic contains: /*START*/super()
+                  /*START*/<String>super();
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -89,16 +95,18 @@ public class UnnecessaryTypeArgumentTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "package foo.bar;",
-            "class Test {",
-            "  static class C {",
-            "    public C() {}",
-            "  }",
-            "  void m() {",
-            "    // BUG: Diagnostic contains: new C()",
-            "    new <String, Integer>C();",
-            "  }",
-            "}")
+            """
+            package foo.bar;
+            class Test {
+              static class C {
+                public C() {}
+              }
+              void m() {
+                // BUG: Diagnostic contains: new C()
+                new <String, Integer>C();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -107,13 +115,15 @@ public class UnnecessaryTypeArgumentTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "package foo.bar;",
-            "class Test {",
-            "  <T> void f() {}",
-            "  void m() {",
-            "    this.<String>f();",
-            "  }",
-            "}")
+            """
+            package foo.bar;
+            class Test {
+              <T> void f() {}
+              void m() {
+                this.<String>f();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -121,20 +131,29 @@ public class UnnecessaryTypeArgumentTest {
   public void negativeGenericSuper() {
     compilationHelper
         .addSourceLines(
-            "Super.java", "public class Super {", "  public <T> T f(T x) { return x; }", "}")
+            "Super.java",
+            """
+            public class Super {
+              public <T> T f(T x) { return x; }
+            }
+            """)
         .addSourceLines(
             "Sub.java",
-            "@SuppressWarnings(\"unchecked\")",
-            "public class Sub extends Super {",
-            "  public Object f(Object x) { return x; }",
-            "}")
+            """
+            @SuppressWarnings("unchecked")
+            public class Sub extends Super {
+              public Object f(Object x) { return x; }
+            }
+            """)
         .addSourceLines(
             "Test.java",
-            "public class Test {",
-            "  void m(Sub s) {",
-            "    s.<String>f(null);",
-            "  }",
-            "}")
+            """
+            public class Test {
+              void m(Sub s) {
+                s.<String>f(null);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -143,14 +162,16 @@ public class UnnecessaryTypeArgumentTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "package foo.bar;",
-            "class Test {",
-            "  void f() {}",
-            "  void m() {",
-            "    // BUG: Diagnostic contains: this.f()",
-            "    this.<  /*  */ String  /*  */ >f();",
-            "  }",
-            "}")
+            """
+            package foo.bar;
+            class Test {
+              void f() {}
+              void m() {
+                // BUG: Diagnostic contains: this.f()
+                this.<  /*  */ String  /*  */ >f();
+              }
+            }
+            """)
         .doTest();
   }
 }

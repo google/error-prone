@@ -51,20 +51,22 @@ public class ThreadSafeCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.collect.ImmutableList;",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "import java.util.concurrent.ConcurrentMap;",
-            "import java.util.concurrent.atomic.AtomicLong;",
-            "@ThreadSafe class Test {",
-            "  final int a = 42;",
-            "  final String b = null;",
-            "  final java.lang.String c = null;",
-            "  final com.google.common.collect.ImmutableList<String> d = null;",
-            "  final ImmutableList<Integer> e = null;",
-            "  final Deprecated dep = null;",
-            "  final Class<?> clazz = Class.class;",
-            "  final ConcurrentMap<Long, AtomicLong> concurrentMap = null;",
-            "}")
+            """
+            import com.google.common.collect.ImmutableList;
+            import com.google.errorprone.annotations.ThreadSafe;
+            import java.util.concurrent.ConcurrentMap;
+            import java.util.concurrent.atomic.AtomicLong;
+            @ThreadSafe class Test {
+              final int a = 42;
+              final String b = null;
+              final java.lang.String c = null;
+              final com.google.common.collect.ImmutableList<String> d = null;
+              final ImmutableList<Integer> e = null;
+              final Deprecated dep = null;
+              final Class<?> clazz = Class.class;
+              final ConcurrentMap<Long, AtomicLong> concurrentMap = null;
+            }
+            """)
         .doTest();
   }
 
@@ -91,13 +93,17 @@ public class ThreadSafeCheckerTest {
             "@com.google.errorprone.annotations.ThreadSafe interface I {}")
         .expectUnchanged()
         .addInputLines(
-            "ThreadSafe.java", //
-            "class ThreadSafe implements I {",
-            "}")
+            "ThreadSafe.java",
+            """
+            class ThreadSafe implements I {
+            }
+            """)
         .addOutputLines(
             "ThreadSafe.java",
-            "@com.google.errorprone.annotations.ThreadSafe class ThreadSafe implements I {",
-            "}")
+            """
+            @com.google.errorprone.annotations.ThreadSafe class ThreadSafe implements I {
+            }
+            """)
         .doTest();
   }
 
@@ -106,8 +112,10 @@ public class ThreadSafeCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "@ThreadSafe @interface Test {}")
+            """
+            import com.google.errorprone.annotations.ThreadSafe;
+            @ThreadSafe @interface Test {}
+            """)
         .doTest();
   }
 
@@ -116,19 +124,23 @@ public class ThreadSafeCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "@ThreadSafe @interface Test {}")
+            """
+            import com.google.errorprone.annotations.ThreadSafe;
+            @ThreadSafe @interface Test {}
+            """)
         .addSourceLines(
             "MyTest.java",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "import java.lang.annotation.Annotation;",
-            "@ThreadSafe final class MyTest implements Test {",
-            "  // BUG: Diagnostic contains: should be final or annotated",
-            "  public Object[] xs = {};",
-            "  public Class<? extends Annotation> annotationType() {",
-            "    return null;",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.ThreadSafe;
+            import java.lang.annotation.Annotation;
+            @ThreadSafe final class MyTest implements Test {
+              // BUG: Diagnostic contains: should be final or annotated
+              public Object[] xs = {};
+              public Class<? extends Annotation> annotationType() {
+                return null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -137,19 +149,23 @@ public class ThreadSafeCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "@ThreadSafe @interface Test {}")
+            """
+            import com.google.errorprone.annotations.ThreadSafe;
+            @ThreadSafe @interface Test {}
+            """)
         .addSourceLines(
             "MyTest.java",
-            "import java.lang.annotation.Annotation;",
-            "// BUG: Diagnostic contains:",
-            "// extends @ThreadSafe type Test, but is not annotated as threadsafe",
-            "final class MyTest implements Test {",
-            "  public Object[] xs = {};",
-            "  public Class<? extends Annotation> annotationType() {",
-            "    return null;",
-            "  }",
-            "}")
+            """
+            import java.lang.annotation.Annotation;
+            // BUG: Diagnostic contains:
+            // extends @ThreadSafe type Test, but is not annotated as threadsafe
+            final class MyTest implements Test {
+              public Object[] xs = {};
+              public Class<? extends Annotation> annotationType() {
+                return null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -158,11 +174,13 @@ public class ThreadSafeCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "import javax.lang.model.element.ElementKind;",
-            "@ThreadSafe class Test {",
-            "  private final Override override = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.ThreadSafe;
+            import javax.lang.model.element.ElementKind;
+            @ThreadSafe class Test {
+              private final Override override = null;
+            }
+            """)
         .doTest();
   }
 
@@ -171,11 +189,13 @@ public class ThreadSafeCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "import javax.lang.model.element.ElementKind;",
-            "@ThreadSafe class Test {",
-            "  private final ElementKind ek = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.ThreadSafe;
+            import javax.lang.model.element.ElementKind;
+            @ThreadSafe class Test {
+              private final ElementKind ek = null;
+            }
+            """)
         .doTest();
   }
 
@@ -184,14 +204,18 @@ public class ThreadSafeCheckerTest {
     compilationHelper
         .addSourceLines(
             "Kind.java",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "@ThreadSafe enum Kind { A, B, C; }")
+            """
+            import com.google.errorprone.annotations.ThreadSafe;
+            @ThreadSafe enum Kind { A, B, C; }
+            """)
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "@ThreadSafe class Test {",
-            "  private final Kind k = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.ThreadSafe;
+            @ThreadSafe class Test {
+              private final Kind k = null;
+            }
+            """)
         .doTest();
   }
 
@@ -200,11 +224,13 @@ public class ThreadSafeCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "@ThreadSafe class Test {",
-            "  // BUG: Diagnostic contains:",
-            "  final int[] xs = {42};",
-            "}")
+            """
+            import com.google.errorprone.annotations.ThreadSafe;
+            @ThreadSafe class Test {
+              // BUG: Diagnostic contains:
+              final int[] xs = {42};
+            }
+            """)
         .doTest();
   }
 
@@ -213,10 +239,12 @@ public class ThreadSafeCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable class Test {",
-            "  final int[] xs = {42};",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable class Test {
+              final int[] xs = {42};
+            }
+            """)
         .doTest();
   }
 
@@ -225,13 +253,17 @@ public class ThreadSafeCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable interface Test {}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable interface Test {}
+            """)
         .addSourceLines(
             "MyTest.java",
-            "final class MyTest implements Test {",
-            "  public Object[] xs = {};",
-            "}")
+            """
+            final class MyTest implements Test {
+              public Object[] xs = {};
+            }
+            """)
         .doTest();
   }
 
@@ -240,8 +272,10 @@ public class ThreadSafeCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "@ThreadSafe interface Test {}")
+            """
+            import com.google.errorprone.annotations.ThreadSafe;
+            @ThreadSafe interface Test {}
+            """)
         .doTest();
   }
 
@@ -250,14 +284,18 @@ public class ThreadSafeCheckerTest {
     compilationHelper
         .addSourceLines(
             "MyInterface.java",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "@ThreadSafe interface MyInterface {}")
+            """
+            import com.google.errorprone.annotations.ThreadSafe;
+            @ThreadSafe interface MyInterface {}
+            """)
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "@ThreadSafe class Test {",
-            "  final MyInterface i = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.ThreadSafe;
+            @ThreadSafe class Test {
+              final MyInterface i = null;
+            }
+            """)
         .doTest();
   }
 
@@ -266,14 +304,18 @@ public class ThreadSafeCheckerTest {
     compilationHelper
         .addSourceLines(
             "MyInterface.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable interface MyInterface {}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable interface MyInterface {}
+            """)
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "@ThreadSafe class Test {",
-            "  final MyInterface i = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.ThreadSafe;
+            @ThreadSafe class Test {
+              final MyInterface i = null;
+            }
+            """)
         .doTest();
   }
 
@@ -282,11 +324,13 @@ public class ThreadSafeCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.collect.ImmutableList;",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "@ThreadSafe class Test {",
-            "  final ImmutableList<ImmutableList<ImmutableList<String>>> l = null;",
-            "}")
+            """
+            import com.google.common.collect.ImmutableList;
+            import com.google.errorprone.annotations.ThreadSafe;
+            @ThreadSafe class Test {
+              final ImmutableList<ImmutableList<ImmutableList<String>>> l = null;
+            }
+            """)
         .doTest();
   }
 
@@ -295,14 +339,16 @@ public class ThreadSafeCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.collect.ImmutableList;",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "import java.util.concurrent.ConcurrentMap;",
-            "import java.util.concurrent.atomic.AtomicInteger;",
-            "@ThreadSafe class Test {",
-            "  final ConcurrentMap<String, ConcurrentMap<Long,",
-            "      ImmutableList<AtomicInteger>>> l = null;",
-            "}")
+            """
+            import com.google.common.collect.ImmutableList;
+            import com.google.errorprone.annotations.ThreadSafe;
+            import java.util.concurrent.ConcurrentMap;
+            import java.util.concurrent.atomic.AtomicInteger;
+            @ThreadSafe class Test {
+              final ConcurrentMap<String, ConcurrentMap<Long,
+                  ImmutableList<AtomicInteger>>> l = null;
+            }
+            """)
         .doTest();
   }
 
@@ -311,11 +357,13 @@ public class ThreadSafeCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "@ThreadSafe class Test {",
-            "  // BUG: Diagnostic contains: should be final or annotated",
-            "  int a = 42;",
-            "}")
+            """
+            import com.google.errorprone.annotations.ThreadSafe;
+            @ThreadSafe class Test {
+              // BUG: Diagnostic contains: should be final or annotated
+              int a = 42;
+            }
+            """)
         .doTest();
   }
 
@@ -324,13 +372,15 @@ public class ThreadSafeCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "import java.util.List;",
-            "import java.util.Map;",
-            "@ThreadSafe class Test {",
-            "  static int a = 42;",
-            "  static final Map<Long, List<Long>> b = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.ThreadSafe;
+            import java.util.List;
+            import java.util.Map;
+            @ThreadSafe class Test {
+              static int a = 42;
+              static final Map<Long, List<Long>> b = null;
+            }
+            """)
         .doTest();
   }
 
@@ -339,15 +389,17 @@ public class ThreadSafeCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "import java.util.List;",
-            "import java.util.Map;",
-            "import javax.annotation.concurrent.GuardedBy;",
-            "@ThreadSafe class Test {",
-            "  @GuardedBy(\"this\") int a = 42;",
-            "  @GuardedBy(\"this\") final Map<Long, List<Long>> b = null;",
-            "  @GuardedBy(\"this\") volatile int c = 42;",
-            "}")
+            """
+            import com.google.errorprone.annotations.ThreadSafe;
+            import java.util.List;
+            import java.util.Map;
+            import javax.annotation.concurrent.GuardedBy;
+            @ThreadSafe class Test {
+              @GuardedBy("this") int a = 42;
+              @GuardedBy("this") final Map<Long, List<Long>> b = null;
+              @GuardedBy("this") volatile int c = 42;
+            }
+            """)
         .doTest();
   }
 
@@ -356,15 +408,17 @@ public class ThreadSafeCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "import com.google.errorprone.annotations.concurrent.GuardedBy;",
-            "import java.util.List;",
-            "import java.util.Map;",
-            "@ThreadSafe class Test {",
-            "  @GuardedBy(\"this\") int a = 42;",
-            "  @GuardedBy(\"this\") final Map<Long, List<Long>> b = null;",
-            "  @GuardedBy(\"this\") volatile int c = 42;",
-            "}")
+            """
+            import com.google.errorprone.annotations.ThreadSafe;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
+            import java.util.List;
+            import java.util.Map;
+            @ThreadSafe class Test {
+              @GuardedBy("this") int a = 42;
+              @GuardedBy("this") final Map<Long, List<Long>> b = null;
+              @GuardedBy("this") volatile int c = 42;
+            }
+            """)
         .doTest();
   }
 
@@ -373,12 +427,14 @@ public class ThreadSafeCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "import javax.annotation.concurrent.GuardedBy;",
-            "@ThreadSafe class Test {",
-            "  // BUG: Diagnostic contains: @GuardedBy",
-            "  volatile int a = 42;",
-            "}")
+            """
+            import com.google.errorprone.annotations.ThreadSafe;
+            import javax.annotation.concurrent.GuardedBy;
+            @ThreadSafe class Test {
+              // BUG: Diagnostic contains: @GuardedBy
+              volatile int a = 42;
+            }
+            """)
         .doTest();
   }
 
@@ -387,12 +443,14 @@ public class ThreadSafeCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "import java.util.Map;",
-            "@ThreadSafe class Test {",
-            "  // BUG: Diagnostic contains:",
-            "  final Map<String, String> a = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.ThreadSafe;
+            import java.util.Map;
+            @ThreadSafe class Test {
+              // BUG: Diagnostic contains:
+              final Map<String, String> a = null;
+            }
+            """)
         .doTest();
   }
 
@@ -401,13 +459,15 @@ public class ThreadSafeCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.collect.ImmutableList;",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "import java.util.Map;",
-            "@ThreadSafe class Test {",
-            "  // BUG: Diagnostic contains: instantiated with non-thread-safe type for 'E'",
-            "  final ImmutableList<ImmutableList<ImmutableList<Map<String, String>>>> l = null;",
-            "}")
+            """
+            import com.google.common.collect.ImmutableList;
+            import com.google.errorprone.annotations.ThreadSafe;
+            import java.util.Map;
+            @ThreadSafe class Test {
+              // BUG: Diagnostic contains: instantiated with non-thread-safe type for 'E'
+              final ImmutableList<ImmutableList<ImmutableList<Map<String, String>>>> l = null;
+            }
+            """)
         .doTest();
   }
 
@@ -416,12 +476,14 @@ public class ThreadSafeCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.collect.ImmutableList;",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "@ThreadSafe class Test {",
-            "  // BUG: Diagnostic contains: was raw",
-            "  final ImmutableList l = null;",
-            "}")
+            """
+            import com.google.common.collect.ImmutableList;
+            import com.google.errorprone.annotations.ThreadSafe;
+            @ThreadSafe class Test {
+              // BUG: Diagnostic contains: was raw
+              final ImmutableList l = null;
+            }
+            """)
         .doTest();
   }
 
@@ -430,15 +492,19 @@ public class ThreadSafeCheckerTest {
     compilationHelper
         .addSourceLines(
             "Super.java",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "@ThreadSafe public class Super {",
-            "  public final int x = 42;",
-            "}")
+            """
+            import com.google.errorprone.annotations.ThreadSafe;
+            @ThreadSafe public class Super {
+              public final int x = 42;
+            }
+            """)
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "@ThreadSafe class Test extends Super {",
-            "}")
+            """
+            import com.google.errorprone.annotations.ThreadSafe;
+            @ThreadSafe class Test extends Super {
+            }
+            """)
         .doTest();
   }
 
@@ -447,15 +513,19 @@ public class ThreadSafeCheckerTest {
     compilationHelper
         .addSourceLines(
             "Super.java",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "@ThreadSafe public class Super {",
-            "  public final int x = 42;",
-            "}")
+            """
+            import com.google.errorprone.annotations.ThreadSafe;
+            @ThreadSafe public class Super {
+              public final int x = 42;
+            }
+            """)
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable class Test extends Super {",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable class Test extends Super {
+            }
+            """)
         .doTest();
   }
 
@@ -463,16 +533,20 @@ public class ThreadSafeCheckerTest {
   public void extendsMutable() {
     compilationHelper
         .addSourceLines(
-            "Super.java", //
-            "public class Super {",
-            "  public int x = 42;",
-            "}")
+            "Super.java",
+            """
+            public class Super {
+              public int x = 42;
+            }
+            """)
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "// BUG: Diagnostic contains: 'Super' has non-final field 'x'",
-            "@ThreadSafe class Test extends Super {",
-            "}")
+            """
+            import com.google.errorprone.annotations.ThreadSafe;
+            // BUG: Diagnostic contains: 'Super' has non-final field 'x'
+            @ThreadSafe class Test extends Super {
+            }
+            """)
         .doTest();
   }
 
@@ -481,17 +555,21 @@ public class ThreadSafeCheckerTest {
     compilationHelper
         .addSourceLines(
             "Holder.java",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "public class Holder<T> {",
-            "  public final T t = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.ThreadSafe;
+            public class Holder<T> {
+              public final T t = null;
+            }
+            """)
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "@ThreadSafe class Test {",
-            "  // BUG: Diagnostic contains:",
-            "  final Holder<Object> h = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.ThreadSafe;
+            @ThreadSafe class Test {
+              // BUG: Diagnostic contains:
+              final Holder<Object> h = null;
+            }
+            """)
         .doTest();
   }
 
@@ -500,17 +578,21 @@ public class ThreadSafeCheckerTest {
     compilationHelper
         .addSourceLines(
             "Holder.java",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "public class Holder<T> {",
-            "  public final T t = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.ThreadSafe;
+            public class Holder<T> {
+              public final T t = null;
+            }
+            """)
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "@ThreadSafe class Test {",
-            "  // BUG: Diagnostic contains: not annotated",
-            "  final Holder<Object> h = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.ThreadSafe;
+            @ThreadSafe class Test {
+              // BUG: Diagnostic contains: not annotated
+              final Holder<Object> h = null;
+            }
+            """)
         .doTest();
   }
 
@@ -519,12 +601,14 @@ public class ThreadSafeCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "import java.util.List;",
-            "@ThreadSafe class Test<T> {",
-            "  // BUG: Diagnostic contains: 'T' is a non-thread-safe type variable",
-            "  private final T t = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.ThreadSafe;
+            import java.util.List;
+            @ThreadSafe class Test<T> {
+              // BUG: Diagnostic contains: 'T' is a non-thread-safe type variable
+              private final T t = null;
+            }
+            """)
         .doTest();
   }
 
@@ -533,15 +617,19 @@ public class ThreadSafeCheckerTest {
     compilationHelper
         .addSourceLines(
             "X.java",
-            "import com.google.common.collect.ImmutableList;",
-            "public class X<T> { final ImmutableList<T> xs = null; }")
+            """
+            import com.google.common.collect.ImmutableList;
+            public class X<T> { final ImmutableList<T> xs = null; }
+            """)
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "@ThreadSafe class Test {",
-            "// BUG: Diagnostic contains:",
-            "  final X<Object> x = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.ThreadSafe;
+            @ThreadSafe class Test {
+            // BUG: Diagnostic contains:
+              final X<Object> x = null;
+            }
+            """)
         .doTest();
   }
 
@@ -550,16 +638,20 @@ public class ThreadSafeCheckerTest {
     compilationHelper
         .addSourceLines(
             "X.java",
-            "import com.google.common.collect.ImmutableList;",
-            "public class X<T> { final ImmutableList<? super T> xs = null; }")
+            """
+            import com.google.common.collect.ImmutableList;
+            public class X<T> { final ImmutableList<? super T> xs = null; }
+            """)
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "import java.util.List;",
-            "@ThreadSafe class Test {",
-            "  // BUG: Diagnostic contains:",
-            "  final X<String> x = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.ThreadSafe;
+            import java.util.List;
+            @ThreadSafe class Test {
+              // BUG: Diagnostic contains:
+              final X<String> x = null;
+            }
+            """)
         .doTest();
   }
 
@@ -568,16 +660,20 @@ public class ThreadSafeCheckerTest {
     compilationHelper
         .addSourceLines(
             "X.java",
-            "import com.google.common.collect.ImmutableList;",
-            "public class X<T> { final ImmutableList<? super T> xs = null; }")
+            """
+            import com.google.common.collect.ImmutableList;
+            public class X<T> { final ImmutableList<? super T> xs = null; }
+            """)
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "import java.util.List;",
-            "@ThreadSafe class Test {",
-            "  // BUG: Diagnostic contains: is not annotated",
-            "  final X<String> x = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.ThreadSafe;
+            import java.util.List;
+            @ThreadSafe class Test {
+              // BUG: Diagnostic contains: is not annotated
+              final X<String> x = null;
+            }
+            """)
         .doTest();
   }
 
@@ -585,22 +681,28 @@ public class ThreadSafeCheckerTest {
   public void mutableInstantiation_inferredImmutableType() {
     compilationHelper
         .addSourceLines(
-            "X.java", //
-            "public class X<T> {",
-            "  final T xs = null;",
-            "}")
+            "X.java",
+            """
+            public class X<T> {
+              final T xs = null;
+            }
+            """)
         .addSourceLines(
-            "Y.java", //
-            "public class Y<T> {",
-            "  final X<? extends T> xs = null;",
-            "}")
+            "Y.java",
+            """
+            public class Y<T> {
+              final X<? extends T> xs = null;
+            }
+            """)
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "@ThreadSafe class Test {",
-            "  // BUG: Diagnostic contains:",
-            "  final Y<Object> x = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.ThreadSafe;
+            @ThreadSafe class Test {
+              // BUG: Diagnostic contains:
+              final Y<Object> x = null;
+            }
+            """)
         .doTest();
   }
 
@@ -609,11 +711,13 @@ public class ThreadSafeCheckerTest {
     compilationHelper
         .addSourceLines(
             "com/google/common/collect/ImmutableList.java",
-            "package com.google.common.collect;",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "@ThreadSafe class ImmutableList<E> {",
-            "  public Object[] veryMutable = null;",
-            "}")
+            """
+            package com.google.common.collect;
+            import com.google.errorprone.annotations.ThreadSafe;
+            @ThreadSafe class ImmutableList<E> {
+              public Object[] veryMutable = null;
+            }
+            """)
         .doTest();
   }
 
@@ -622,23 +726,27 @@ public class ThreadSafeCheckerTest {
     compilationHelper
         .addSourceLines(
             "threadsafety/Super.java",
-            "package threadsafety;",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "@ThreadSafe class Super {",
-            "}")
+            """
+            package threadsafety;
+            import com.google.errorprone.annotations.ThreadSafe;
+            @ThreadSafe class Super {
+            }
+            """)
         .addSourceLines(
             "threadsafety/Test.java",
-            "package threadsafety;",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "class Test {{",
-            "  new Super() {",
-            "    // BUG: Diagnostic contains: should be final or annotated",
-            "    int x = 0;",
-            "    {",
-            "      x++;",
-            "    }",
-            "  };",
-            "}}")
+            """
+            package threadsafety;
+            import com.google.errorprone.annotations.ThreadSafe;
+            class Test {{
+              new Super() {
+                // BUG: Diagnostic contains: should be final or annotated
+                int x = 0;
+                {
+                  x++;
+                }
+              };
+            }}
+            """)
         .doTest();
   }
 
@@ -647,23 +755,27 @@ public class ThreadSafeCheckerTest {
     compilationHelper
         .addSourceLines(
             "threadsafety/Super.java",
-            "package threadsafety;",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "@ThreadSafe interface Super {",
-            "}")
+            """
+            package threadsafety;
+            import com.google.errorprone.annotations.ThreadSafe;
+            @ThreadSafe interface Super {
+            }
+            """)
         .addSourceLines(
             "threadsafety/Test.java",
-            "package threadsafety;",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "class Test {{",
-            "  new Super() {",
-            "    // BUG: Diagnostic contains: should be final or annotated",
-            "    int x = 0;",
-            "    {",
-            "      x++;",
-            "    }",
-            "  };",
-            "}}")
+            """
+            package threadsafety;
+            import com.google.errorprone.annotations.ThreadSafe;
+            class Test {{
+              new Super() {
+                // BUG: Diagnostic contains: should be final or annotated
+                int x = 0;
+                {
+                  x++;
+                }
+              };
+            }}
+            """)
         .doTest();
   }
 
@@ -674,17 +786,21 @@ public class ThreadSafeCheckerTest {
     compilationHelper
         .addSourceLines(
             "threadsafety/Super.java",
-            "package threadsafety;",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "@ThreadSafe class Super {",
-            "}")
+            """
+            package threadsafety;
+            import com.google.errorprone.annotations.ThreadSafe;
+            @ThreadSafe class Super {
+            }
+            """)
         .addSourceLines(
             "threadsafety/Test.java",
-            "package threadsafety;",
-            "class Test extends Super {",
-            "  // BUG: Diagnostic contains: should be final or annotated",
-            "  public int x = 0;",
-            "}")
+            """
+            package threadsafety;
+            class Test extends Super {
+              // BUG: Diagnostic contains: should be final or annotated
+              public int x = 0;
+            }
+            """)
         .doTest();
   }
 
@@ -693,16 +809,20 @@ public class ThreadSafeCheckerTest {
     compilationHelper
         .addSourceLines(
             "threadsafety/Super.java",
-            "package threadsafety;",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "@ThreadSafe class Super {",
-            "}")
+            """
+            package threadsafety;
+            import com.google.errorprone.annotations.ThreadSafe;
+            @ThreadSafe class Super {
+            }
+            """)
         .addSourceLines(
             "threadsafety/Test.java",
-            "package threadsafety;",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "@ThreadSafe class Test extends Super {",
-            "}")
+            """
+            package threadsafety;
+            import com.google.errorprone.annotations.ThreadSafe;
+            @ThreadSafe class Test extends Super {
+            }
+            """)
         .doTest();
   }
 
@@ -713,23 +833,29 @@ public class ThreadSafeCheckerTest {
     compilationHelper
         .addSourceLines(
             "threadsafety/I.java",
-            "package threadsafety;",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "@ThreadSafe interface I {",
-            "}")
+            """
+            package threadsafety;
+            import com.google.errorprone.annotations.ThreadSafe;
+            @ThreadSafe interface I {
+            }
+            """)
         .addSourceLines(
             "threadsafety/Test.java",
-            "package threadsafety;",
-            "// BUG: Diagnostic contains: extends @ThreadSafe",
-            "class Test implements J {",
-            "  public int x = 0;",
-            "}")
+            """
+            package threadsafety;
+            // BUG: Diagnostic contains: extends @ThreadSafe
+            class Test implements J {
+              public int x = 0;
+            }
+            """)
         .addSourceLines(
             "threadsafety/J.java",
-            "package threadsafety;",
-            "// BUG: Diagnostic contains: extends @ThreadSafe",
-            "interface J extends I {",
-            "}")
+            """
+            package threadsafety;
+            // BUG: Diagnostic contains: extends @ThreadSafe
+            interface J extends I {
+            }
+            """)
         .doTest();
   }
 
@@ -740,17 +866,21 @@ public class ThreadSafeCheckerTest {
     compilationHelper
         .addSourceLines(
             "threadsafety/Super.java",
-            "package threadsafety;",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "@ThreadSafe class Super {",
-            "}")
+            """
+            package threadsafety;
+            import com.google.errorprone.annotations.ThreadSafe;
+            @ThreadSafe class Super {
+            }
+            """)
         .addSourceLines(
             "threadsafety/Test.java",
-            "package threadsafety;",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "class Test {{",
-            "  new Super() {};",
-            "}}")
+            """
+            package threadsafety;
+            import com.google.errorprone.annotations.ThreadSafe;
+            class Test {{
+              new Super() {};
+            }}
+            """)
         .doTest();
   }
 
@@ -759,24 +889,28 @@ public class ThreadSafeCheckerTest {
     compilationHelper
         .addSourceLines(
             "threadsafety/Super.java",
-            "package threadsafety;",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "@ThreadSafe interface Super {",
-            "  int f();",
-            "}")
+            """
+            package threadsafety;
+            import com.google.errorprone.annotations.ThreadSafe;
+            @ThreadSafe interface Super {
+              int f();
+            }
+            """)
         .addSourceLines(
             "threadsafety/Test.java",
-            "package threadsafety;",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "@ThreadSafe enum Test implements Super {",
-            "  INSTANCE {",
-            "    // BUG: Diagnostic contains: should be final or annotated",
-            "    public int x = 0;",
-            "    public int f() {",
-            "      return x++;",
-            "    }",
-            "  }",
-            "}")
+            """
+            package threadsafety;
+            import com.google.errorprone.annotations.ThreadSafe;
+            @ThreadSafe enum Test implements Super {
+              INSTANCE {
+                // BUG: Diagnostic contains: should be final or annotated
+                public int x = 0;
+                public int f() {
+                  return x++;
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -785,21 +919,25 @@ public class ThreadSafeCheckerTest {
     compilationHelper
         .addSourceLines(
             "threadsafety/Super.java",
-            "package threadsafety;",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "@ThreadSafe interface Super {",
-            "  void f();",
-            "}")
+            """
+            package threadsafety;
+            import com.google.errorprone.annotations.ThreadSafe;
+            @ThreadSafe interface Super {
+              void f();
+            }
+            """)
         .addSourceLines(
             "threadsafety/Test.java",
-            "package threadsafety;",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "@ThreadSafe enum Test implements Super {",
-            "  INSTANCE {",
-            "    public void f() {",
-            "    }",
-            "  }",
-            "}")
+            """
+            package threadsafety;
+            import com.google.errorprone.annotations.ThreadSafe;
+            @ThreadSafe enum Test implements Super {
+              INSTANCE {
+                public void f() {
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -822,10 +960,12 @@ public class ThreadSafeCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "@ThreadSafe class Test {",
-            "  final int[] xs = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.ThreadSafe;
+            @ThreadSafe class Test {
+              final int[] xs = null;
+            }
+            """)
         .doTest();
   }
 
@@ -834,13 +974,15 @@ public class ThreadSafeCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "@ThreadSafe class Test {",
-            "  // BUG: Diagnostic contains: arrays are not thread-safe",
-            "  final int[] xs = {1};",
-            "  // BUG: Diagnostic contains: arrays are not thread-safe",
-            "  final int[] ys = {1};",
-            "}")
+            """
+            import com.google.errorprone.annotations.ThreadSafe;
+            @ThreadSafe class Test {
+              // BUG: Diagnostic contains: arrays are not thread-safe
+              final int[] xs = {1};
+              // BUG: Diagnostic contains: arrays are not thread-safe
+              final int[] ys = {1};
+            }
+            """)
         .doTest();
   }
 
@@ -849,15 +991,17 @@ public class ThreadSafeCheckerTest {
     compilationHelper
         .addSourceLines(
             "com/google/errorprone/annotations/ThreadSafe.java",
-            "package com.google.errorprone.annotations;",
-            "import static java.lang.annotation.ElementType.TYPE;",
-            "import static java.lang.annotation.RetentionPolicy.RUNTIME;",
-            "import java.lang.annotation.Retention;",
-            "import java.lang.annotation.Target;",
-            "@Target(TYPE)",
-            "@Retention(RUNTIME)",
-            "public @interface ThreadSafe {",
-            "}")
+            """
+            package com.google.errorprone.annotations;
+            import static java.lang.annotation.ElementType.TYPE;
+            import static java.lang.annotation.RetentionPolicy.RUNTIME;
+            import java.lang.annotation.Retention;
+            import java.lang.annotation.Target;
+            @Target(TYPE)
+            @Retention(RUNTIME)
+            public @interface ThreadSafe {
+            }
+            """)
         .addSourceLines("Foo.java", "class Foo {}")
         .addSourceLines(
             "Test.java",
@@ -876,17 +1020,18 @@ public class ThreadSafeCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "public class Test {",
-            "  int x = 0;",
-            "  // BUG: Diagnostic contains: 'Inner' has non-thread-safe "
-                + "enclosing instance 'Test'",
-            "  @ThreadSafe public class Inner {",
-            "    public int count() {",
-            "      return x++;",
-            "    }",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.ThreadSafe;
+            public class Test {
+              int x = 0;
+              // BUG: Diagnostic contains: 'Inner' has non-thread-safe enclosing instance 'Test'
+              @ThreadSafe public class Inner {
+                public int count() {
+                  return x++;
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -915,11 +1060,13 @@ public class ThreadSafeCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "import com.google.errorprone.annotations.concurrent.LazyInit;",
-            "@ThreadSafe class Test {",
-            "  @LazyInit int a = 42;",
-            "}")
+            """
+            import com.google.errorprone.annotations.ThreadSafe;
+            import com.google.errorprone.annotations.concurrent.LazyInit;
+            @ThreadSafe class Test {
+              @LazyInit int a = 42;
+            }
+            """)
         .doTest();
   }
 
@@ -928,13 +1075,15 @@ public class ThreadSafeCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "import com.google.errorprone.annotations.concurrent.LazyInit;",
-            "import java.util.List;",
-            "@ThreadSafe class Test {",
-            "  // BUG: Diagnostic contains: 'List' is not thread-safe",
-            "  @LazyInit List<Integer> a = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.ThreadSafe;
+            import com.google.errorprone.annotations.concurrent.LazyInit;
+            import java.util.List;
+            @ThreadSafe class Test {
+              // BUG: Diagnostic contains: 'List' is not thread-safe
+              @LazyInit List<Integer> a = null;
+            }
+            """)
         .doTest();
   }
 
@@ -943,10 +1092,12 @@ public class ThreadSafeCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "@ThreadSafe class Test {",
-            "  final Class clazz = Test.class;",
-            "}")
+            """
+            import com.google.errorprone.annotations.ThreadSafe;
+            @ThreadSafe class Test {
+              final Class clazz = Test.class;
+            }
+            """)
         .doTest();
   }
 
@@ -956,20 +1107,24 @@ public class ThreadSafeCheckerTest {
     compilationHelper
         .addSourceLines(
             "X.java",
-            "import com.google.common.collect.ImmutableList;",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "public class X {",
-            "  final ImmutableList<@ThreadSafeTypeParameter ?> unknownSafeType;",
-            "  X (ImmutableList<@ThreadSafeTypeParameter ?> unknownSafeType) {",
-            "      this.unknownSafeType = unknownSafeType;",
-            "  }",
-            "}")
+            """
+            import com.google.common.collect.ImmutableList;
+            import com.google.errorprone.annotations.ThreadSafe;
+            public class X {
+              final ImmutableList<@ThreadSafeTypeParameter ?> unknownSafeType;
+              X (ImmutableList<@ThreadSafeTypeParameter ?> unknownSafeType) {
+                  this.unknownSafeType = unknownSafeType;
+              }
+            }
+            """)
         .addSourceLines(
             "Test.java",
-            "import com.google.common.collect.ImmutableList;",
-            "class Test {",
-            "  final X badX = new X(ImmutableList.of(ImmutableList.<String>of()));",
-            "}")
+            """
+            import com.google.common.collect.ImmutableList;
+            class Test {
+              final X badX = new X(ImmutableList.of(ImmutableList.<String>of()));
+            }
+            """)
         .doTest();
   }
 
@@ -979,22 +1134,26 @@ public class ThreadSafeCheckerTest {
     compilationHelper
         .addSourceLines(
             "X.java",
-            "import com.google.common.collect.ImmutableList;",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "public class X {",
-            "  final ImmutableList<@ThreadSafe ?> unknownSafeType;",
-            "  X (ImmutableList<@ThreadSafe ?> unknownSafeType) {",
-            "      this.unknownSafeType = unknownSafeType;",
-            "  }",
-            "}")
+            """
+            import com.google.common.collect.ImmutableList;
+            import com.google.errorprone.annotations.ThreadSafe;
+            public class X {
+              final ImmutableList<@ThreadSafe ?> unknownSafeType;
+              X (ImmutableList<@ThreadSafe ?> unknownSafeType) {
+                  this.unknownSafeType = unknownSafeType;
+              }
+            }
+            """)
         .addSourceLines(
             "Test.java",
-            "import java.util.ArrayList;",
-            "import com.google.common.collect.ImmutableList;",
-            "class Test {",
-            "// BUG: Diagnostic contains:",
-            "  final X badX = new X(ImmutableList.of(new ArrayList<String>()));",
-            "}")
+            """
+            import java.util.ArrayList;
+            import com.google.common.collect.ImmutableList;
+            class Test {
+            // BUG: Diagnostic contains:
+              final X badX = new X(ImmutableList.of(new ArrayList<String>()));
+            }
+            """)
         .doTest();
   }
 
@@ -1013,14 +1172,20 @@ public class ThreadSafeCheckerTest {
     CompilationTestHelper.newInstance(ThreadSafeChecker.class, getClass())
         .setArgs(ImmutableList.of("-XepOpt:ThreadSafe:KnownThreadSafe=threadsafety.SomeImmutable"))
         .addSourceLines(
-            "threadsafety/SomeImmutable.java", "package threadsafety;", "class SomeImmutable {}")
+            "threadsafety/SomeImmutable.java",
+            """
+            package threadsafety;
+            class SomeImmutable {}
+            """)
         .addSourceLines(
             "threadsafety/Test.java",
-            "package threadsafety;",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "@ThreadSafe class Test {",
-            "  public final SomeImmutable s = new SomeImmutable();",
-            "}")
+            """
+            package threadsafety;
+            import com.google.errorprone.annotations.ThreadSafe;
+            @ThreadSafe class Test {
+              public final SomeImmutable s = new SomeImmutable();
+            }
+            """)
         .doTest();
   }
 
@@ -1029,11 +1194,13 @@ public class ThreadSafeCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "import com.google.errorprone.annotations.ThreadSafeTypeParameter;",
-            "@ThreadSafe class Test<@ThreadSafeTypeParameter T> {",
-            "  final T t = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.ThreadSafe;
+            import com.google.errorprone.annotations.ThreadSafeTypeParameter;
+            @ThreadSafe class Test<@ThreadSafeTypeParameter T> {
+              final T t = null;
+            }
+            """)
         .doTest();
   }
 
@@ -1042,22 +1209,25 @@ public class ThreadSafeCheckerTest {
     compilationHelper
         .addSourceLines(
             "A.java",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "import com.google.errorprone.annotations.ThreadSafeTypeParameter;",
-            "@ThreadSafe class A<@ThreadSafeTypeParameter T> {",
-            "}")
+            """
+            import com.google.errorprone.annotations.ThreadSafe;
+            import com.google.errorprone.annotations.ThreadSafeTypeParameter;
+            @ThreadSafe class A<@ThreadSafeTypeParameter T> {
+            }
+            """)
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  A<String> f() {",
-            "    return new A<>();",
-            "  }",
-            "  A<Object> g() {",
-            "    // BUG: Diagnostic contains: instantiation of 'T' is not "
-                + "thread-safe, 'Object' is not thread-safe",
-            "    return new A<>();",
-            "  }",
-            "}")
+            """
+class Test {
+  A<String> f() {
+    return new A<>();
+  }
+  A<Object> g() {
+    // BUG: Diagnostic contains: instantiation of 'T' is not thread-safe, 'Object' is not thread-safe
+    return new A<>();
+  }
+}
+""")
         .doTest();
   }
 
@@ -1066,10 +1236,12 @@ public class ThreadSafeCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.ThreadSafeTypeParameter;",
-            "class Test {",
-            "  static <@ThreadSafeTypeParameter T> void f() {}",
-            "}")
+            """
+            import com.google.errorprone.annotations.ThreadSafeTypeParameter;
+            class Test {
+              static <@ThreadSafeTypeParameter T> void f() {}
+            }
+            """)
         .doTest();
   }
 
@@ -1078,10 +1250,12 @@ public class ThreadSafeCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "import com.google.errorprone.annotations.ThreadSafeTypeParameter;",
-            "@ThreadSafe interface Test<@ThreadSafeTypeParameter T> {",
-            "}")
+            """
+            import com.google.errorprone.annotations.ThreadSafe;
+            import com.google.errorprone.annotations.ThreadSafeTypeParameter;
+            @ThreadSafe interface Test<@ThreadSafeTypeParameter T> {
+            }
+            """)
         .doTest();
   }
 
@@ -1090,9 +1264,11 @@ public class ThreadSafeCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.ThreadSafeTypeParameter;",
-            "// BUG: Diagnostic contains: @ThreadSafeTypeParameter is only supported on",
-            "class A<@ThreadSafeTypeParameter T> {}")
+            """
+            import com.google.errorprone.annotations.ThreadSafeTypeParameter;
+            // BUG: Diagnostic contains: @ThreadSafeTypeParameter is only supported on
+            class A<@ThreadSafeTypeParameter T> {}
+            """)
         .doTest();
   }
 
@@ -1101,12 +1277,14 @@ public class ThreadSafeCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static java.lang.annotation.ElementType.TYPE_USE;",
-            "import java.lang.annotation.Target;",
-            "@Target(TYPE_USE) @interface A {}",
-            "class Test {",
-            "  Object o = new @A Object();",
-            "}")
+            """
+            import static java.lang.annotation.ElementType.TYPE_USE;
+            import java.lang.annotation.Target;
+            @Target(TYPE_USE) @interface A {}
+            class Test {
+              Object o = new @A Object();
+            }
+            """)
         .doTest();
   }
 
@@ -1115,12 +1293,14 @@ public class ThreadSafeCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.collect.ImmutableList;",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "import com.google.errorprone.annotations.ThreadSafeTypeParameter;",
-            "@ThreadSafe public class Test<@ThreadSafeTypeParameter T> {",
-            "  final ImmutableList<T> xs = ImmutableList.of();",
-            "}")
+            """
+            import com.google.common.collect.ImmutableList;
+            import com.google.errorprone.annotations.ThreadSafe;
+            import com.google.errorprone.annotations.ThreadSafeTypeParameter;
+            @ThreadSafe public class Test<@ThreadSafeTypeParameter T> {
+              final ImmutableList<T> xs = ImmutableList.of();
+            }
+            """)
         .doTest();
   }
 
@@ -1130,19 +1310,21 @@ public class ThreadSafeCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.ThreadSafeTypeParameter;",
-            "import java.util.function.Function;",
-            "class Test {",
-            "  public final <A> void f1(A transform) {}",
-            "  public <B, @ThreadSafeTypeParameter C> C f2(Function<B, C> fn) {",
-            "    return null;",
-            "  }",
-            "  public final <D, E> void f3(Function<D, E> fn) {",
-            "    // BUG: Diagnostic contains: instantiation of 'C' is not thread-safe",
-            "    // 'E' is a non-thread-safe type variable",
-            "    f1(f2(fn));",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.ThreadSafeTypeParameter;
+            import java.util.function.Function;
+            class Test {
+              public final <A> void f1(A transform) {}
+              public <B, @ThreadSafeTypeParameter C> C f2(Function<B, C> fn) {
+                return null;
+              }
+              public final <D, E> void f3(Function<D, E> fn) {
+                // BUG: Diagnostic contains: instantiation of 'C' is not thread-safe
+                // 'E' is a non-thread-safe type variable
+                f1(f2(fn));
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1154,19 +1336,21 @@ public class ThreadSafeCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.ThreadSafeTypeParameter;",
-            "import java.util.function.Function;",
-            "class Test {",
-            "  public final <A> void f1(A transform) {}",
-            "  public <@ThreadSafeTypeParameter B, C> C f2(Function<B, C> fn) {",
-            "    return null;",
-            "  }",
-            "  public final <D, E> void f3(Function<D, E> fn) {",
-            "    // BUG: Diagnostic contains: instantiation of 'B' is not thread-safe",
-            "    // 'D' is a non-thread-safe type variable",
-            "    f1(f2(fn));",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.ThreadSafeTypeParameter;
+            import java.util.function.Function;
+            class Test {
+              public final <A> void f1(A transform) {}
+              public <@ThreadSafeTypeParameter B, C> C f2(Function<B, C> fn) {
+                return null;
+              }
+              public final <D, E> void f3(Function<D, E> fn) {
+                // BUG: Diagnostic contains: instantiation of 'B' is not thread-safe
+                // 'D' is a non-thread-safe type variable
+                f1(f2(fn));
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1175,14 +1359,18 @@ public class ThreadSafeCheckerTest {
     compilationHelper
         .addSourceLines(
             "MyThreadSafeType.java",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "@ThreadSafe class MyThreadSafeType {}")
+            """
+            import com.google.errorprone.annotations.ThreadSafe;
+            @ThreadSafe class MyThreadSafeType {}
+            """)
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "@ThreadSafe class Test<T extends MyThreadSafeType> {",
-            "  final T x = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.ThreadSafe;
+            @ThreadSafe class Test<T extends MyThreadSafeType> {
+              final T x = null;
+            }
+            """)
         .doTest();
   }
 
@@ -1191,11 +1379,13 @@ public class ThreadSafeCheckerTest {
     compilationHelper
         .addSourceLines(
             "Recursive.java",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "@ThreadSafe",
-            "abstract class Recursive<T extends Recursive<T>> {",
-            "  final T x = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.ThreadSafe;
+            @ThreadSafe
+            abstract class Recursive<T extends Recursive<T>> {
+              final T x = null;
+            }
+            """)
         .doTest();
   }
 
@@ -1204,15 +1394,16 @@ public class ThreadSafeCheckerTest {
     compilationHelper
         .addSourceLines(
             "Recursive.java",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "import java.util.List;",
-            "@ThreadSafe",
-            "abstract class Recursive<T extends Recursive<T>> {",
-            "  final T x = null;",
-            "  // BUG: Diagnostic contains: @ThreadSafe class has "
-                + "non-thread-safe field, 'List' is not thread-safe",
-            "  final List<T> y = null;",
-            "}")
+            """
+import com.google.errorprone.annotations.ThreadSafe;
+import java.util.List;
+@ThreadSafe
+abstract class Recursive<T extends Recursive<T>> {
+  final T x = null;
+  // BUG: Diagnostic contains: @ThreadSafe class has non-thread-safe field, 'List' is not thread-safe
+  final List<T> y = null;
+}
+""")
         .doTest();
   }
 
@@ -1221,15 +1412,19 @@ public class ThreadSafeCheckerTest {
     compilationHelper
         .addSourceLines(
             "E.java",
-            "import com.google.protobuf.ProtocolMessageEnum;",
-            "abstract class E implements ProtocolMessageEnum {",
-            "}")
+            """
+            import com.google.protobuf.ProtocolMessageEnum;
+            abstract class E implements ProtocolMessageEnum {
+            }
+            """)
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.ThreadSafe;",
-            "@ThreadSafe class Test {",
-            "  final E x = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.ThreadSafe;
+            @ThreadSafe class Test {
+              final E x = null;
+            }
+            """)
         .doTest();
   }
 }

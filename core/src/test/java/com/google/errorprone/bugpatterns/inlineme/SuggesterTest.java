@@ -73,6 +73,7 @@ public class SuggesterTest {
                 this.deadline = deadline;
               }
             }
+
             """)
         .addOutputLines(
             "Client.java",
@@ -97,6 +98,7 @@ public class SuggesterTest {
                 this.deadline = deadline;
               }
             }
+
             """)
         .doTest();
   }
@@ -117,6 +119,7 @@ public class SuggesterTest {
                 return Duration.ofMillis(millis);
               }
             }
+
             """)
         .addOutputLines(
             "Client.java",
@@ -133,6 +136,7 @@ public class SuggesterTest {
                 return Duration.ofMillis(millis);
               }
             }
+
             """)
         .doTest();
   }
@@ -153,6 +157,7 @@ public class SuggesterTest {
                 return STR.length();
               }
             }
+
             """)
         .addOutputLines(
             "Client.java",
@@ -186,6 +191,7 @@ public class SuggesterTest {
                 return Client.STR.length();
               }
             }
+
             """)
         .addOutputLines(
             "Client.java",
@@ -203,6 +209,7 @@ public class SuggesterTest {
                 return Client.STR.length();
               }
             }
+
             """)
         .doTest();
   }
@@ -219,6 +226,7 @@ public class SuggesterTest {
               @Deprecated
               protected Client() {}
             }
+
             """)
         .expectUnchanged()
         .doTest();
@@ -240,6 +248,7 @@ public class SuggesterTest {
                 return Duration.ZERO;
               }
             }
+
             """)
         .addOutputLines(
             "Client.java",
@@ -256,6 +265,7 @@ public class SuggesterTest {
                 return Duration.ZERO;
               }
             }
+
             """)
         .doTest();
   }
@@ -277,6 +287,7 @@ public class SuggesterTest {
                 return Duration.between(Instant.ofEpochMilli(42), Instant.now());
               }
             }
+
             """)
         .addOutputLines(
             "Client.java",
@@ -296,6 +307,7 @@ public class SuggesterTest {
                 return Duration.between(Instant.ofEpochMilli(42), Instant.now());
               }
             }
+
             """)
         .doTest();
   }
@@ -319,6 +331,7 @@ public class SuggesterTest {
                 };
               }
             }
+
             """)
         .expectUnchanged()
         .doTest();
@@ -341,6 +354,7 @@ public class SuggesterTest {
                 return input.map(Duration::ofMillis);
               }
             }
+
             """)
         .addOutputLines(
             "Client.java",
@@ -358,6 +372,7 @@ public final class Client {
     return input.map(Duration::ofMillis);
   }
 }
+
 """)
         .doTest();
   }
@@ -378,6 +393,7 @@ public final class Client {
                 return new Instant();
               }
             }
+
             """)
         .addOutputLines(
             "Client.java",
@@ -394,6 +410,7 @@ public final class Client {
                 return new Instant();
               }
             }
+
             """)
         .doTest();
   }
@@ -414,6 +431,7 @@ public final class Client {
                 return new Instant[42];
               }
             }
+
             """)
         .addOutputLines(
             "Client.java",
@@ -430,6 +448,7 @@ public final class Client {
                 return new Instant[42];
               }
             }
+
             """)
         .doTest();
   }
@@ -450,6 +469,7 @@ public final class Client {
 
               public static class NestedClass {}
             }
+
             """)
         .addOutputLines(
             "Client.java",
@@ -467,6 +487,7 @@ public final class Client {
 
   public static class NestedClass {}
 }
+
 """)
         .doTest();
   }
@@ -485,6 +506,7 @@ public final class Client {
                 return "kurt";
               }
             }
+
             """)
         .addOutputLines(
             "Client.java",
@@ -500,6 +522,7 @@ public final class Client {
                 return "kurt";
               }
             }
+
             """)
         .doTest();
   }
@@ -522,6 +545,7 @@ public final class Client {
                 return "test";
               }
             }
+
             """)
         .addOutputLines(
             "Client.java",
@@ -541,6 +565,7 @@ public final class Client {
                 return "test";
               }
             }
+
             """)
         .doTest();
   }
@@ -563,6 +588,7 @@ public final class Client {
                 return myDuration;
               }
             }
+
             """)
         .expectUnchanged()
         .doTest();
@@ -586,6 +612,7 @@ public final class Client {
                 return this.myDuration;
               }
             }
+
             """)
         .expectUnchanged()
         .doTest();
@@ -609,6 +636,7 @@ public final class Client {
                 this.duration = duration;
               }
             }
+
             """)
         .expectUnchanged()
         .doTest();
@@ -631,6 +659,7 @@ public final class Client {
                 return duration;
               }
             }
+
             """)
         .expectUnchanged()
         .addInputLines(
@@ -648,6 +677,7 @@ public final class Client {
                 return after();
               }
             }
+
             """)
         .addOutputLines(
             "Client.java",
@@ -666,6 +696,7 @@ public final class Client {
                 return after();
               }
             }
+
             """)
         .doTest();
   }
@@ -688,6 +719,7 @@ public final class Client {
 
               public void foo(Duration duration) {}
             }
+
             """)
         .addOutputLines(
             "Client.java",
@@ -706,6 +738,7 @@ public final class Client {
 
   public void foo(Duration duration) {}
 }
+
 """)
         .doTest();
   }
@@ -728,6 +761,7 @@ public final class Client {
                 return myDuration.isZero();
               }
             }
+
             """)
         .expectUnchanged()
         .doTest();
@@ -751,6 +785,7 @@ public final class Client {
                 return false;
               }
             }
+
             """)
         .expectUnchanged()
         .doTest();
@@ -774,6 +809,7 @@ public final class Client {
                 }
               }
             }
+
             """)
         .expectUnchanged()
         .doTest();
@@ -793,6 +829,7 @@ public final class Client {
                 }
               }
             }
+
             """)
         .expectUnchanged()
         .doTest();
@@ -812,6 +849,7 @@ public final class Client {
                 }
               }
             }
+
             """)
         .expectUnchanged()
         .doTest();
@@ -833,6 +871,7 @@ public final class Client {
     return (deadline.compareTo(Duration.ZERO) > 0 ? Duration.ofSeconds(42) : Duration.ZERO);
   }
 }
+
 """)
         .addOutputLines(
             "Client.java",
@@ -852,6 +891,7 @@ public final class Client {
     return (deadline.compareTo(Duration.ZERO) > 0 ? Duration.ofSeconds(42) : Duration.ZERO);
   }
 }
+
 """)
         .doTest();
   }
@@ -876,6 +916,7 @@ public final class Client {
                 return Duration.ZERO;
               }
             }
+
             """)
         .addOutputLines(
             "Client.java",
@@ -896,6 +937,7 @@ public final class Client {
     return Duration.ZERO;
   }
 }
+
 """)
         .doTest();
   }
@@ -916,6 +958,7 @@ public final class Client {
                 return format(template, arg);
               }
             }
+
             """)
         .addOutputLines(
             "Client.java",
@@ -932,6 +975,7 @@ public final class Client {
     return format(template, arg);
   }
 }
+
 """)
         .doTest();
   }
@@ -953,6 +997,7 @@ public final class Client {
                 return new ArrayList<Void>();
               }
             }
+
             """)
         .addOutputLines(
             "Client.java",
@@ -970,6 +1015,7 @@ public final class Client {
                 return new ArrayList<Void>();
               }
             }
+
             """)
         .doTest();
   }
@@ -988,6 +1034,7 @@ public final class Client {
                 return 42;
               }
             }
+
             """)
         .addOutputLines(
             "Client.java",
@@ -1003,6 +1050,7 @@ public final class Client {
                 return 42;
               }
             }
+
             """)
         .doTest();
   }
@@ -1021,6 +1069,7 @@ public final class Client {
                 return 42;
               }
             }
+
             """)
         .expectUnchanged()
         .doTest();
@@ -1044,6 +1093,7 @@ public final class Client {
 
               public Client(int value) {}
             }
+
             """)
         .addOutputLines(
             "Client.java",
@@ -1061,6 +1111,7 @@ public final class Client {
 
               public Client(int value) {}
             }
+
             """)
         .doTest();
   }
@@ -1081,6 +1132,7 @@ public final class Client {
 
               private Client() {}
             }
+
             """)
         .expectUnchanged()
         .doTest();
@@ -1105,6 +1157,7 @@ public final class Client {
 
               public void after() {}
             }
+
             """)
         .expectUnchanged()
         .doTest();
@@ -1132,6 +1185,7 @@ public final class Client {
                 return value;
               }
             }
+
             """)
         .addOutputLines(
             "Client.java",
@@ -1154,6 +1208,7 @@ public class Client {
     return value;
   }
 }
+
 """)
         .doTest();
   }
@@ -1182,6 +1237,7 @@ public class Client {
                 return input.map(Duration::ofMillis);
               }
             }
+
             """)
         .expectUnchanged()
         .doTest();
@@ -1208,6 +1264,7 @@ public class Client {
                 return plaintext;
               }
             }
+
             """)
         .addOutputLines(
             "KeymasterEncrypter.java",
@@ -1230,6 +1287,7 @@ public class Client {
                 return plaintext;
               }
             }
+
             """)
         .doTest();
   }
@@ -1255,6 +1313,7 @@ public class Client {
                 return ciphertext;
               }
             }
+
             """)
         .addOutputLines(
             "KeymasterCrypter.java",
@@ -1285,14 +1344,16 @@ public class Client {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
-            "public final class Client {",
-            "  @Deprecated",
-            "  public void before(int arg0, int arg1) {",
-            "    after(arg0, arg1);",
-            "  }",
-            "  public void after(int arg0, int arg1) {",
-            "  }",
-            "}")
+            """
+            public final class Client {
+              @Deprecated
+              public void before(int arg0, int arg1) {
+                after(arg0, arg1);
+              }
+              public void after(int arg0, int arg1) {
+              }
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -1302,26 +1363,30 @@ public class Client {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
-            "public final class Client {",
-            "  @Deprecated",
-            "  public void before(int int0, int int1) {",
-            "    after(int0, int1);",
-            "  }",
-            "  public void after(int int0, int int1) {",
-            "  }",
-            "}")
+            """
+            public final class Client {
+              @Deprecated
+              public void before(int int0, int int1) {
+                after(int0, int1);
+              }
+              public void after(int int0, int int1) {
+              }
+            }
+            """)
         .addOutputLines(
             "Client.java",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "public final class Client {",
-            "  @InlineMe(replacement = \"this.after(int0, int1)\")",
-            "  @Deprecated",
-            "  public void before(int int0, int int1) {",
-            "    after(int0, int1);",
-            "  }",
-            "  public void after(int int0, int int1) {",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.InlineMe;
+            public final class Client {
+              @InlineMe(replacement = "this.after(int0, int1)")
+              @Deprecated
+              public void before(int int0, int int1) {
+                after(int0, int1);
+              }
+              public void after(int int0, int int1) {
+              }
+            }
+            """)
         .doTest();
   }
 }

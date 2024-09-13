@@ -31,23 +31,25 @@ public class MultipleNullnessAnnotationsTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import org.checkerframework.checker.nullness.compatqual.NonNullDecl;",
-            "import org.checkerframework.checker.nullness.compatqual.NullableDecl;",
-            "import org.checkerframework.checker.nullness.qual.NonNull;",
-            "import org.checkerframework.checker.nullness.qual.Nullable;",
-            "import java.util.List;",
-            "abstract class Test {",
-            "  // BUG: Diagnostic contains:",
-            "  @Nullable @NonNull Object x;",
-            "  // BUG: Diagnostic contains:",
-            "  @NullableDecl static @NonNull Object y;",
-            "  // BUG: Diagnostic contains:",
-            "  List<@Nullable @NonNull String> z;",
-            "  // BUG: Diagnostic contains:",
-            "  @NullableDecl abstract @NonNull Object f();",
-            "  // BUG: Diagnostic contains:",
-            "  abstract void f(@NullableDecl Object @NonNull[] x);",
-            "}")
+            """
+            import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
+            import org.checkerframework.checker.nullness.compatqual.NullableDecl;
+            import org.checkerframework.checker.nullness.qual.NonNull;
+            import org.checkerframework.checker.nullness.qual.Nullable;
+            import java.util.List;
+            abstract class Test {
+              // BUG: Diagnostic contains:
+              @Nullable @NonNull Object x;
+              // BUG: Diagnostic contains:
+              @NullableDecl static @NonNull Object y;
+              // BUG: Diagnostic contains:
+              List<@Nullable @NonNull String> z;
+              // BUG: Diagnostic contains:
+              @NullableDecl abstract @NonNull Object f();
+              // BUG: Diagnostic contains:
+              abstract void f(@NullableDecl Object @NonNull[] x);
+            }
+            """)
         .doTest();
   }
 
@@ -56,15 +58,17 @@ public class MultipleNullnessAnnotationsTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import org.checkerframework.checker.nullness.compatqual.NonNullDecl;",
-            "import org.checkerframework.checker.nullness.compatqual.NullableDecl;",
-            "import org.checkerframework.checker.nullness.qual.NonNull;",
-            "import org.checkerframework.checker.nullness.qual.Nullable;",
-            "import java.util.List;",
-            "abstract class Test {",
-            "  @NonNullDecl @NonNull Object x;",
-            "  @NullableDecl static @Nullable Object y;",
-            "}")
+            """
+            import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
+            import org.checkerframework.checker.nullness.compatqual.NullableDecl;
+            import org.checkerframework.checker.nullness.qual.NonNull;
+            import org.checkerframework.checker.nullness.qual.Nullable;
+            import java.util.List;
+            abstract class Test {
+              @NonNullDecl @NonNull Object x;
+              @NullableDecl static @Nullable Object y;
+            }
+            """)
         .doTest();
   }
 
@@ -73,12 +77,14 @@ public class MultipleNullnessAnnotationsTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import org.checkerframework.checker.nullness.qual.Nullable;",
-            "import java.util.List;",
-            "abstract class Test {",
-            "  @Nullable Object @Nullable [] x;",
-            "  abstract void f(@Nullable Object @Nullable ... x);",
-            "}")
+            """
+            import org.checkerframework.checker.nullness.qual.Nullable;
+            import java.util.List;
+            abstract class Test {
+              @Nullable Object @Nullable [] x;
+              abstract void f(@Nullable Object @Nullable ... x);
+            }
+            """)
         .doTest();
   }
 
@@ -87,23 +93,27 @@ public class MultipleNullnessAnnotationsTest {
     testHelper
         .addSourceLines(
             "Nullable.java",
-            "import java.lang.annotation.Target;",
-            "import java.lang.annotation.ElementType;",
-            "@Target({",
-            "  ElementType.METHOD,",
-            "  ElementType.FIELD,",
-            "  ElementType.PARAMETER,",
-            "  ElementType.LOCAL_VARIABLE,",
-            "  ElementType.TYPE_USE",
-            "})",
-            "public @interface Nullable {}")
+            """
+            import java.lang.annotation.Target;
+            import java.lang.annotation.ElementType;
+            @Target({
+              ElementType.METHOD,
+              ElementType.FIELD,
+              ElementType.PARAMETER,
+              ElementType.LOCAL_VARIABLE,
+              ElementType.TYPE_USE
+            })
+            public @interface Nullable {}
+            """)
         .addSourceLines(
             "Test.java",
-            "abstract class Test {",
-            "  abstract void f(@Nullable Object x);",
-            "  abstract @Nullable Object g();",
-            "  @Nullable Object f;",
-            "}")
+            """
+            abstract class Test {
+              abstract void f(@Nullable Object x);
+              abstract @Nullable Object g();
+              @Nullable Object f;
+            }
+            """)
         .doTest();
   }
 
@@ -112,16 +122,18 @@ public class MultipleNullnessAnnotationsTest {
     testHelper
         .addSourceLines(
             "T.java",
-            "import org.checkerframework.checker.nullness.compatqual.NullableDecl;",
-            "import org.checkerframework.checker.nullness.qual.NonNull;",
-            "class T<X> {",
-            "  // BUG: Diagnostic contains:",
-            "  @NullableDecl @NonNull X f;",
-            "  // BUG: Diagnostic contains:",
-            "  @NullableDecl @NonNull X g() {",
-            "    return null;",
-            "  }",
-            "}")
+            """
+            import org.checkerframework.checker.nullness.compatqual.NullableDecl;
+            import org.checkerframework.checker.nullness.qual.NonNull;
+            class T<X> {
+              // BUG: Diagnostic contains:
+              @NullableDecl @NonNull X f;
+              // BUG: Diagnostic contains:
+              @NullableDecl @NonNull X g() {
+                return null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -130,12 +142,14 @@ public class MultipleNullnessAnnotationsTest {
     testHelper
         .addSourceLines(
             "T.java",
-            "import javax.annotation.CheckForNull;",
-            "import org.checkerframework.checker.nullness.qual.NonNull;",
-            "class T {",
-            "  // BUG: Diagnostic contains:",
-            "  @CheckForNull Object @NonNull [] f;",
-            "}")
+            """
+            import javax.annotation.CheckForNull;
+            import org.checkerframework.checker.nullness.qual.NonNull;
+            class T {
+              // BUG: Diagnostic contains:
+              @CheckForNull Object @NonNull [] f;
+            }
+            """)
         .doTest();
   }
 }

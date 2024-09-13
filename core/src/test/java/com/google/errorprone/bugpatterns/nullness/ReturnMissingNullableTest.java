@@ -34,17 +34,19 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "public class LiteralNullReturnTest {",
-            "  public String getMessage(boolean b) {",
-            "    if (b) {",
-            "      // BUG: Diagnostic contains: @Nullable",
-            "      return null;",
-            "    } else {",
-            "      return \"negative\";",
-            "    }",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            public class LiteralNullReturnTest {
+              public String getMessage(boolean b) {
+                if (b) {
+                  // BUG: Diagnostic contains: @Nullable
+                  return null;
+                } else {
+                  return "negative";
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -53,17 +55,19 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "public class LiteralNullReturnTest {",
-            "  public String getMessage(boolean b) {",
-            "    if (b) {",
-            "      // BUG: Diagnostic contains: @Nullable",
-            "      return (null);",
-            "    } else {",
-            "      return \"negative\";",
-            "    }",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            public class LiteralNullReturnTest {
+              public String getMessage(boolean b) {
+                if (b) {
+                  // BUG: Diagnostic contains: @Nullable
+                  return (null);
+                } else {
+                  return "negative";
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -72,18 +76,20 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "public class LiteralNullReturnTest {",
-            "  String cachedMessage;",
-            "  public String getMessage(boolean b) {",
-            "    if (b) {",
-            "      // BUG: Diagnostic contains: @Nullable",
-            "      return cachedMessage = null;",
-            "    } else {",
-            "      return \"negative\";",
-            "    }",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            public class LiteralNullReturnTest {
+              String cachedMessage;
+              public String getMessage(boolean b) {
+                if (b) {
+                  // BUG: Diagnostic contains: @Nullable
+                  return cachedMessage = null;
+                } else {
+                  return "negative";
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -92,17 +98,19 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "public class LiteralNullReturnTest {",
-            "  public String getMessage(boolean b) {",
-            "    if (b) {",
-            "      // BUG: Diagnostic contains: @Nullable",
-            "      return (String) null;",
-            "    } else {",
-            "      return \"negative\";",
-            "    }",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            public class LiteralNullReturnTest {
+              public String getMessage(boolean b) {
+                if (b) {
+                  // BUG: Diagnostic contains: @Nullable
+                  return (String) null;
+                } else {
+                  return "negative";
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -111,13 +119,15 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "public class LiteralNullReturnTest {",
-            "  public String getMessage(int x) {",
-            "    // BUG: Diagnostic contains: @Nullable",
-            "    return x >= 0 ? null : \"negative\";",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            public class LiteralNullReturnTest {
+              public String getMessage(int x) {
+                // BUG: Diagnostic contains: @Nullable
+                return x >= 0 ? null : "negative";
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -126,13 +136,15 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "public class LiteralNullReturnTest {",
-            "  public String getMessage(int x) {",
-            "    // BUG: Diagnostic contains: @Nullable",
-            "    return (x >= 0 ? null : \"negative\");",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            public class LiteralNullReturnTest {
+              public String getMessage(int x) {
+                // BUG: Diagnostic contains: @Nullable
+                return (x >= 0 ? null : "negative");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -143,16 +155,18 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "public class LiteralNullReturnTest {",
-            "  public String getMessage(int x) {",
-            "    // BUG: Diagnostic contains: @Nullable",
-            "    return switch (x) {",
-            "      case 0 -> null;",
-            "      default -> \"non-zero\";",
-            "    };",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            public class LiteralNullReturnTest {
+              public String getMessage(int x) {
+                // BUG: Diagnostic contains: @Nullable
+                return switch (x) {
+                  case 0 -> null;
+                  default -> "non-zero";
+                };
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -163,15 +177,17 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "public class LiteralNullReturnTest {",
-            "  public String getMessage(int x) {",
-            "    return switch (x) {",
-            "      case 0 -> \"zero\";",
-            "      default -> \"non-zero\";",
-            "    };",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            public class LiteralNullReturnTest {
+              public String getMessage(int x) {
+                return switch (x) {
+                  case 0 -> "zero";
+                  default -> "non-zero";
+                };
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -180,18 +196,20 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "public class LiteralNullReturnTest {",
-            "  public String getMessage(int x) {",
-            "    switch (x) {",
-            "      case 0:",
-            "        // BUG: Diagnostic contains: @Nullable",
-            "        return null;",
-            "      default:",
-            "        return \"non-zero\";",
-            "    }",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            public class LiteralNullReturnTest {
+              public String getMessage(int x) {
+                switch (x) {
+                  case 0:
+                    // BUG: Diagnostic contains: @Nullable
+                    return null;
+                  default:
+                    return "non-zero";
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -200,17 +218,19 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "public class LiteralNullReturnTest {",
-            "  public String getMessage(int x) {",
-            "    switch (x) {",
-            "      case 0:",
-            "        return \"zero\";",
-            "      default:",
-            "        return \"non-zero\";",
-            "    }",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            public class LiteralNullReturnTest {
+              public String getMessage(int x) {
+                switch (x) {
+                  case 0:
+                    return "zero";
+                  default:
+                    return "non-zero";
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -219,14 +239,16 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "abstract class LiteralNullReturnTest {",
-            "  Object get() {",
-            "    // BUG: Diagnostic contains: @Nullable",
-            "    return getVoid();",
-            "  }",
-            "  abstract Void getVoid();",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            abstract class LiteralNullReturnTest {
+              Object get() {
+                // BUG: Diagnostic contains: @Nullable
+                return getVoid();
+              }
+              abstract Void getVoid();
+            }
+            """)
         .doTest();
   }
 
@@ -235,16 +257,18 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "abstract class LiteralNullReturnTest {",
-            "  Object get(Supplier<? extends Void> s) {",
-            "    // BUG: Diagnostic contains: @Nullable",
-            "    return s.get();",
-            "  }",
-            "  interface Supplier<T> {",
-            "    T get();",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            abstract class LiteralNullReturnTest {
+              Object get(Supplier<? extends Void> s) {
+                // BUG: Diagnostic contains: @Nullable
+                return s.get();
+              }
+              interface Supplier<T> {
+                T get();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -253,14 +277,16 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "abstract class LiteralNullReturnTest {",
-            "  static final Object NULL = null;",
-            "  Object get() {",
-            "    // BUG: Diagnostic contains: @Nullable",
-            "    return NULL;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            abstract class LiteralNullReturnTest {
+              static final Object NULL = null;
+              Object get() {
+                // BUG: Diagnostic contains: @Nullable
+                return NULL;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -269,14 +295,16 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "abstract class LiteralNullReturnTest {",
-            "  Object get() {",
-            "    // BUG: Diagnostic contains: @Nullable",
-            "    return NULL;",
-            "  }",
-            "  static final Object NULL = null;",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            abstract class LiteralNullReturnTest {
+              Object get() {
+                // BUG: Diagnostic contains: @Nullable
+                return NULL;
+              }
+              static final Object NULL = null;
+            }
+            """)
         .doTest();
   }
 
@@ -285,14 +313,16 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "abstract class LiteralNullReturnTest {",
-            "  final Object nullObject = null;",
-            "  Object get() {",
-            "    // BUG: Diagnostic contains: @Nullable",
-            "    return nullObject;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            abstract class LiteralNullReturnTest {
+              final Object nullObject = null;
+              Object get() {
+                // BUG: Diagnostic contains: @Nullable
+                return nullObject;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -301,14 +331,16 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "abstract class LiteralNullReturnTest {",
-            "  final Object nullObject = null;",
-            "  Object get() {",
-            "    // BUG: Diagnostic contains: @Nullable",
-            "    return this.nullObject;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            abstract class LiteralNullReturnTest {
+              final Object nullObject = null;
+              Object get() {
+                // BUG: Diagnostic contains: @Nullable
+                return this.nullObject;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -317,22 +349,26 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "Foo.java",
-            "class Foo {",
-            "  final Object nullObject = null;",
-            "  Object get() {",
-            "    // BUG: Diagnostic contains: @Nullable",
-            "    return nullObject;",
-            "  }",
-            "}")
+            """
+            class Foo {
+              final Object nullObject = null;
+              Object get() {
+                // BUG: Diagnostic contains: @Nullable
+                return nullObject;
+              }
+            }
+            """)
         .addSourceLines(
             "Bar.java",
-            "class Bar {",
-            "  final Object nullObject = null;",
-            "  Object get() {",
-            "    // BUG: Diagnostic contains: @Nullable",
-            "    return nullObject;",
-            "  }",
-            "}")
+            """
+            class Bar {
+              final Object nullObject = null;
+              Object get() {
+                // BUG: Diagnostic contains: @Nullable
+                return nullObject;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -341,14 +377,16 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "abstract class LiteralNullReturnTest {",
-            "  Void nullObject;",
-            "  Object get() {",
-            "    // BUG: Diagnostic contains: @Nullable",
-            "    return nullObject;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            abstract class LiteralNullReturnTest {
+              Void nullObject;
+              Object get() {
+                // BUG: Diagnostic contains: @Nullable
+                return nullObject;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -357,22 +395,26 @@ public class ReturnMissingNullableTest {
     createRefactoringTestHelper()
         .addInputLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "import org.checkerframework.checker.nullness.qual.Nullable;",
-            "public class LiteralNullReturnTest {",
-            "  @Nullable String[] getMessage(boolean b, String[] s) {",
-            "    return b ? s : null;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            import org.checkerframework.checker.nullness.qual.Nullable;
+            public class LiteralNullReturnTest {
+              @Nullable String[] getMessage(boolean b, String[] s) {
+                return b ? s : null;
+              }
+            }
+            """)
         .addOutputLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "import org.checkerframework.checker.nullness.qual.Nullable;",
-            "public class LiteralNullReturnTest {",
-            "  @Nullable String @Nullable [] getMessage(boolean b, String[] s) {",
-            "    return b ? s : null;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            import org.checkerframework.checker.nullness.qual.Nullable;
+            public class LiteralNullReturnTest {
+              @Nullable String @Nullable [] getMessage(boolean b, String[] s) {
+                return b ? s : null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -381,22 +423,26 @@ public class ReturnMissingNullableTest {
     createRefactoringTestHelper()
         .addInputLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "import org.checkerframework.checker.nullness.qual.Nullable;",
-            "public class LiteralNullReturnTest {",
-            "  String [] @Nullable [] getMessage(boolean b, String[][] s) {",
-            "    return b ? s : null;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            import org.checkerframework.checker.nullness.qual.Nullable;
+            public class LiteralNullReturnTest {
+              String [] @Nullable [] getMessage(boolean b, String[][] s) {
+                return b ? s : null;
+              }
+            }
+            """)
         .addOutputLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "import org.checkerframework.checker.nullness.qual.Nullable;",
-            "public class LiteralNullReturnTest {",
-            "  String @Nullable [] @Nullable [] getMessage(boolean b, String[][] s) {",
-            "    return b ? s : null;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            import org.checkerframework.checker.nullness.qual.Nullable;
+            public class LiteralNullReturnTest {
+              String @Nullable [] @Nullable [] getMessage(boolean b, String[][] s) {
+                return b ? s : null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -405,14 +451,16 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "abstract class LiteralNullReturnTest {",
-            "  Object get() {",
-            "    final Object nullObject = null;",
-            "    // BUG: Diagnostic contains: @Nullable",
-            "    return nullObject;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            abstract class LiteralNullReturnTest {
+              Object get() {
+                final Object nullObject = null;
+                // BUG: Diagnostic contains: @Nullable
+                return nullObject;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -421,14 +469,16 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "abstract class LiteralNullReturnTest {",
-            "  Object get() {",
-            "    Object nullObject = null;",
-            "    // BUG: Diagnostic contains: @Nullable",
-            "    return nullObject;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            abstract class LiteralNullReturnTest {
+              Object get() {
+                Object nullObject = null;
+                // BUG: Diagnostic contains: @Nullable
+                return nullObject;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -437,14 +487,16 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "abstract class LiteralNullReturnTest {",
-            "  Object get(boolean b1, boolean b2, Object someObject) {",
-            "    final Object nullObject = null;",
-            "    // BUG: Diagnostic contains: @Nullable",
-            "    return (b1 ? someObject : b2 ? nullObject : \"\");",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            abstract class LiteralNullReturnTest {
+              Object get(boolean b1, boolean b2, Object someObject) {
+                final Object nullObject = null;
+                // BUG: Diagnostic contains: @Nullable
+                return (b1 ? someObject : b2 ? nullObject : "");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -453,13 +505,15 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "abstract class LiteralNullReturnTest {",
-            "  Object foo(Object o) {",
-            "    // BUG: Diagnostic contains: @Nullable",
-            "    return (o == null ? o : \"\");",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            abstract class LiteralNullReturnTest {
+              Object foo(Object o) {
+                // BUG: Diagnostic contains: @Nullable
+                return (o == null ? o : "");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -468,13 +522,15 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "abstract class LiteralNullReturnTest {",
-            "  Object foo(Object o) {",
-            "    // BUG: Diagnostic contains: @Nullable",
-            "    return (o != null ? \"\" : o);",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            abstract class LiteralNullReturnTest {
+              Object foo(Object o) {
+                // BUG: Diagnostic contains: @Nullable
+                return (o != null ? "" : o);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -483,16 +539,18 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "abstract class LiteralNullReturnTest {",
-            "  Object foo(Object o) {",
-            "    if (o == null) {",
-            "      // BUG: Diagnostic contains: @Nullable",
-            "      return o;",
-            "    }",
-            "    return \"\";",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            abstract class LiteralNullReturnTest {
+              Object foo(Object o) {
+                if (o == null) {
+                  // BUG: Diagnostic contains: @Nullable
+                  return o;
+                }
+                return "";
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -501,17 +559,19 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "abstract class LiteralNullReturnTest {",
-            "  Object foo(Object o) {",
-            "    if (o != null) {",
-            "      return \"\";",
-            "    } else {",
-            "      // BUG: Diagnostic contains: @Nullable",
-            "      return o;",
-            "    }",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            abstract class LiteralNullReturnTest {
+              Object foo(Object o) {
+                if (o != null) {
+                  return "";
+                } else {
+                  // BUG: Diagnostic contains: @Nullable
+                  return o;
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -520,17 +580,19 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "abstract class LiteralNullReturnTest {",
-            "  Object o;",
-            "  Object foo() {",
-            "    if (o == null) {",
-            "      // BUG: Diagnostic contains: @Nullable",
-            "      return o;",
-            "    }",
-            "    return \"\";",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            abstract class LiteralNullReturnTest {
+              Object o;
+              Object foo() {
+                if (o == null) {
+                  // BUG: Diagnostic contains: @Nullable
+                  return o;
+                }
+                return "";
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -539,15 +601,17 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "import static com.google.common.base.Verify.verify;",
-            "class LiteralNullReturnTest {",
-            "  public String getMessage(boolean b) {",
-            "    verify(b);",
-            "    // BUG: Diagnostic contains: @Nullable",
-            "    return null;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            import static com.google.common.base.Verify.verify;
+            class LiteralNullReturnTest {
+              public String getMessage(boolean b) {
+                verify(b);
+                // BUG: Diagnostic contains: @Nullable
+                return null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -556,14 +620,16 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "import com.google.common.base.Optional;",
-            "class LiteralNullReturnTest {",
-            "  public String getMessage(Optional<String> m) {",
-            "    // BUG: Diagnostic contains: @Nullable",
-            "    return m.orNull();",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            import com.google.common.base.Optional;
+            class LiteralNullReturnTest {
+              public String getMessage(Optional<String> m) {
+                // BUG: Diagnostic contains: @Nullable
+                return m.orNull();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -572,14 +638,16 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "import java.util.Optional;",
-            "class LiteralNullReturnTest {",
-            "  public String getMessage(Optional<String> m) {",
-            "    // BUG: Diagnostic contains: @Nullable",
-            "    return m.orElse(null);",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            import java.util.Optional;
+            class LiteralNullReturnTest {
+              public String getMessage(Optional<String> m) {
+                // BUG: Diagnostic contains: @Nullable
+                return m.orElse(null);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -588,13 +656,15 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "MyMap.java",
-            "import java.util.Map;",
-            "abstract class MyMap<K, V> implements Map<K, V> {",
-            "  @Override",
-            "  public V put(K k, V v) {",
-            "    throw new UnsupportedOperationException();",
-            "  }",
-            "}")
+            """
+            import java.util.Map;
+            abstract class MyMap<K, V> implements Map<K, V> {
+              @Override
+              public V put(K k, V v) {
+                throw new UnsupportedOperationException();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -603,13 +673,15 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "MyMap.java",
-            "import com.google.errorprone.annotations.DoNotCall;",
-            "import java.util.Map;",
-            "interface MyMap<K, V> extends Map<K, V> {",
-            "  @DoNotCall",
-            "  @Override",
-            "  V put(K k, V v);",
-            "}")
+            """
+            import com.google.errorprone.annotations.DoNotCall;
+            import java.util.Map;
+            interface MyMap<K, V> extends Map<K, V> {
+              @DoNotCall
+              @Override
+              V put(K k, V v);
+            }
+            """)
         .doTest();
   }
 
@@ -619,14 +691,16 @@ public class ReturnMissingNullableTest {
         .setArgs("-XepOpt:Nullness:OnlyIfAnnotationAlreadyInScope=true")
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "import org.checkerframework.checker.nullness.qual.Nullable;",
-            "public class LiteralNullReturnTest {",
-            "  String getMessage(boolean b) {",
-            "    // BUG: Diagnostic contains: @Nullable",
-            "    return b ? \"\" : null;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            import org.checkerframework.checker.nullness.qual.Nullable;
+            public class LiteralNullReturnTest {
+              String getMessage(boolean b) {
+                // BUG: Diagnostic contains: @Nullable
+                return b ? "" : null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -635,13 +709,15 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "public final class LiteralNullReturnTest {",
-            "  public String getMessage() {",
-            "    // BUG: Diagnostic contains: @Nullable",
-            "    return null;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            public final class LiteralNullReturnTest {
+              public String getMessage() {
+                // BUG: Diagnostic contains: @Nullable
+                return null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -650,22 +726,26 @@ public class ReturnMissingNullableTest {
     createRefactoringTestHelper()
         .addInputLines(
             "in/com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "import javax.annotation.Nullable;",
-            "public class LiteralNullReturnTest {",
-            "  public String[] getMessage(boolean b) {",
-            "    return b ? null : new String[0];",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            import javax.annotation.Nullable;
+            public class LiteralNullReturnTest {
+              public String[] getMessage(boolean b) {
+                return b ? null : new String[0];
+              }
+            }
+            """)
         .addOutputLines(
             "out/com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "import javax.annotation.Nullable;",
-            "public class LiteralNullReturnTest {",
-            "  @Nullable public String[] getMessage(boolean b) {",
-            "    return b ? null : new String[0];",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            import javax.annotation.Nullable;
+            public class LiteralNullReturnTest {
+              @Nullable public String[] getMessage(boolean b) {
+                return b ? null : new String[0];
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -674,22 +754,26 @@ public class ReturnMissingNullableTest {
     createRefactoringTestHelper()
         .addInputLines(
             "in/com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "import org.checkerframework.checker.nullness.qual.Nullable;",
-            "public class LiteralNullReturnTest {",
-            "  public String[] getMessage(boolean b) {",
-            "    return b ? null : new String[0];",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            import org.checkerframework.checker.nullness.qual.Nullable;
+            public class LiteralNullReturnTest {
+              public String[] getMessage(boolean b) {
+                return b ? null : new String[0];
+              }
+            }
+            """)
         .addOutputLines(
             "out/com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "import org.checkerframework.checker.nullness.qual.Nullable;",
-            "public class LiteralNullReturnTest {",
-            "  public String @Nullable [] getMessage(boolean b) {",
-            "    return b ? null : new String[0];",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            import org.checkerframework.checker.nullness.qual.Nullable;
+            public class LiteralNullReturnTest {
+              public String @Nullable [] getMessage(boolean b) {
+                return b ? null : new String[0];
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -698,22 +782,26 @@ public class ReturnMissingNullableTest {
     createRefactoringTestHelper()
         .addInputLines(
             "in/com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "import org.checkerframework.checker.nullness.qual.Nullable;",
-            "public class LiteralNullReturnTest {",
-            "  public String[][] getMessage(boolean b, String[][] s) {",
-            "    return b ? null : s;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            import org.checkerframework.checker.nullness.qual.Nullable;
+            public class LiteralNullReturnTest {
+              public String[][] getMessage(boolean b, String[][] s) {
+                return b ? null : s;
+              }
+            }
+            """)
         .addOutputLines(
             "out/com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "import org.checkerframework.checker.nullness.qual.Nullable;",
-            "public class LiteralNullReturnTest {",
-            "  public String @Nullable [][] getMessage(boolean b, String[][] s) {",
-            "    return b ? null : s;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            import org.checkerframework.checker.nullness.qual.Nullable;
+            public class LiteralNullReturnTest {
+              public String @Nullable [][] getMessage(boolean b, String[][] s) {
+                return b ? null : s;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -722,14 +810,16 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "import org.checkerframework.checker.nullness.qual.Nullable;",
-            "public class LiteralNullReturnTest {",
-            "  class Inner {}",
-            "  LiteralNullReturnTest.@Nullable Inner getMessage(boolean b, Inner i) {",
-            "    return b ? i : null;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            import org.checkerframework.checker.nullness.qual.Nullable;
+            public class LiteralNullReturnTest {
+              class Inner {}
+              LiteralNullReturnTest.@Nullable Inner getMessage(boolean b, Inner i) {
+                return b ? i : null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -738,14 +828,16 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "import org.checkerframework.checker.nullness.qual.Nullable;",
-            "public class LiteralNullReturnTest {",
-            "  class Inner {}",
-            "  @Nullable Inner getMessage(boolean b, Inner i) {",
-            "    return b ? i : null;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            import org.checkerframework.checker.nullness.qual.Nullable;
+            public class LiteralNullReturnTest {
+              class Inner {}
+              @Nullable Inner getMessage(boolean b, Inner i) {
+                return b ? i : null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -754,16 +846,18 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "abstract class LiteralNullReturnTest {",
-            "  static final Object NULL;",
-            "  static {",
-            "    NULL = null;",
-            "  }",
-            "  Object get() {",
-            "    return NULL;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            abstract class LiteralNullReturnTest {
+              static final Object NULL;
+              static {
+                NULL = null;
+              }
+              Object get() {
+                return NULL;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -790,14 +884,16 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "abstract class LiteralNullReturnTest {",
-            "  Object get() {",
-            "    final Object nullObject;",
-            "    nullObject = null;",
-            "    return nullObject;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            abstract class LiteralNullReturnTest {
+              Object get() {
+                final Object nullObject;
+                nullObject = null;
+                return nullObject;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -806,16 +902,18 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "abstract class LiteralNullReturnTest {",
-            "  Object o;",
-            "  Object foo() {",
-            "    if (this.o == null) {",
-            "      return this.o;",
-            "    }",
-            "    return \"\";",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            abstract class LiteralNullReturnTest {
+              Object o;
+              Object foo() {
+                if (this.o == null) {
+                  return this.o;
+                }
+                return "";
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -825,31 +923,35 @@ public class ReturnMissingNullableTest {
         .setArgs("-XepOpt:Nullness:RemoveSuppressWarnings=true")
         .addInputLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "public class LiteralNullReturnTest {",
-            "  @SuppressWarnings(\"nullness:return\")",
-            "  public String getMessage(boolean b) {",
-            "    if (b) {",
-            "      return null;",
-            "    } else {",
-            "      return \"negative\";",
-            "    }",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            public class LiteralNullReturnTest {
+              @SuppressWarnings("nullness:return")
+              public String getMessage(boolean b) {
+                if (b) {
+                  return null;
+                } else {
+                  return "negative";
+                }
+              }
+            }
+            """)
         .addOutputLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "import org.jspecify.annotations.Nullable;",
-            "public class LiteralNullReturnTest {",
-            "",
-            "  public @Nullable String getMessage(boolean b) {",
-            "    if (b) {",
-            "      return null;",
-            "    } else {",
-            "      return \"negative\";",
-            "    }",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            import org.jspecify.annotations.Nullable;
+            public class LiteralNullReturnTest {
+
+              public @Nullable String getMessage(boolean b) {
+                if (b) {
+                  return null;
+                } else {
+                  return "negative";
+                }
+              }
+            }
+            """)
         .doTest(TEXT_MATCH);
   }
 
@@ -858,12 +960,14 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "public class LiteralNullReturnTest {",
-            "  public String getMessage() {",
-            "    return null;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            public class LiteralNullReturnTest {
+              public String getMessage() {
+                return null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -872,12 +976,14 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "public class LiteralNullReturnTest {",
-            "  public <T> T getMessage(boolean b, T t) {",
-            "    return b ? null : t;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            public class LiteralNullReturnTest {
+              public <T> T getMessage(boolean b, T t) {
+                return b ? null : t;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -886,14 +992,16 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "import javax.annotation.Nullable;",
-            "public class LiteralNullReturnTest {",
-            "  @Nullable",
-            "  public String getMessage(boolean b) {",
-            "    return b ? \"\" :null;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            import javax.annotation.Nullable;
+            public class LiteralNullReturnTest {
+              @Nullable
+              public String getMessage(boolean b) {
+                return b ? "" :null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -902,18 +1010,22 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/anno/my/NullableDecl.java",
-            "package com.google.anno.my;",
-            "public @interface NullableDecl {}")
+            """
+            package com.google.anno.my;
+            public @interface NullableDecl {}
+            """)
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "import com.google.anno.my.NullableDecl;",
-            "public class LiteralNullReturnTest {",
-            "  @NullableDecl",
-            "  public String getMessage(boolean b) {",
-            "    return b ? \"\" :null;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            import com.google.anno.my.NullableDecl;
+            public class LiteralNullReturnTest {
+              @NullableDecl
+              public String getMessage(boolean b) {
+                return b ? "" :null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -922,13 +1034,15 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "import org.checkerframework.checker.nullness.compatqual.NullableType;",
-            "public class LiteralNullReturnTest {",
-            "  public @NullableType String getMessage(boolean b) {",
-            "    return b ? \"\" : null;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            import org.checkerframework.checker.nullness.compatqual.NullableType;
+            public class LiteralNullReturnTest {
+              public @NullableType String getMessage(boolean b) {
+                return b ? "" : null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -937,19 +1051,23 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/anno/my/Nullable.java",
-            "package com.google.anno.my;",
-            "import java.lang.annotation.ElementType;",
-            "import java.lang.annotation.Target;",
-            "@Target({ElementType.TYPE_USE})",
-            "public @interface Nullable {}")
+            """
+            package com.google.anno.my;
+            import java.lang.annotation.ElementType;
+            import java.lang.annotation.Target;
+            @Target({ElementType.TYPE_USE})
+            public @interface Nullable {}
+            """)
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/TypeAnnoReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "public class TypeAnnoReturnTest {",
-            "  public @com.google.anno.my.Nullable String getMessage(boolean b) {",
-            "    return b ? \"\" : null;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            public class TypeAnnoReturnTest {
+              public @com.google.anno.my.Nullable String getMessage(boolean b) {
+                return b ? "" : null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -958,14 +1076,16 @@ public class ReturnMissingNullableTest {
     createAggressiveCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "import javax.annotation.Nullable;",
-            "public class LiteralNullReturnTest {",
-            "  @Nullable",
-            "  String[] getMessage(boolean b, String[] s) {",
-            "    return b ? s : null;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            import javax.annotation.Nullable;
+            public class LiteralNullReturnTest {
+              @Nullable
+              String[] getMessage(boolean b, String[] s) {
+                return b ? s : null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -974,13 +1094,15 @@ public class ReturnMissingNullableTest {
     createAggressiveCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "import org.checkerframework.checker.nullness.qual.Nullable;",
-            "public class LiteralNullReturnTest {",
-            "  String @Nullable [] getMessage(boolean b, String[] s) {",
-            "    return b ? s : null;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            import org.checkerframework.checker.nullness.qual.Nullable;
+            public class LiteralNullReturnTest {
+              String @Nullable [] getMessage(boolean b, String[] s) {
+                return b ? s : null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -989,13 +1111,15 @@ public class ReturnMissingNullableTest {
     createAggressiveCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "import org.checkerframework.checker.nullness.qual.Nullable;",
-            "public class LiteralNullReturnTest {",
-            "  java.lang.@Nullable String getMessage(boolean b) {",
-            "    return b ? \"\" : null;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            import org.checkerframework.checker.nullness.qual.Nullable;
+            public class LiteralNullReturnTest {
+              java.lang.@Nullable String getMessage(boolean b) {
+                return b ? "" : null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1026,20 +1150,24 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/anno/my/Nullable.java",
-            "package com.google.anno.my;",
-            "import java.lang.annotation.ElementType;",
-            "import java.lang.annotation.Target;",
-            "@Target({ElementType.TYPE_USE})",
-            "public @interface Nullable {}")
+            """
+            package com.google.anno.my;
+            import java.lang.annotation.ElementType;
+            import java.lang.annotation.Target;
+            @Target({ElementType.TYPE_USE})
+            public @interface Nullable {}
+            """)
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/NullableParameterTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "import com.google.anno.my.Nullable;",
-            "public class NullableParameterTest {",
-            "  public String[] apply(@Nullable String[] message) {",
-            "    return message;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            import com.google.anno.my.Nullable;
+            public class NullableParameterTest {
+              public String[] apply(@Nullable String[] message) {
+                return message;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1048,12 +1176,14 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "public class LiteralNullReturnTest {",
-            "  public String getMessage() {",
-            "    return \"hello\";",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            public class LiteralNullReturnTest {
+              public String getMessage() {
+                return "hello";
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1062,12 +1192,14 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/NonNullMethodTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "public class NonNullMethodTest {",
-            "  public String getMessage(int x) {",
-            "    return String.valueOf(x);",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            public class NonNullMethodTest {
+              public String getMessage(int x) {
+                return String.valueOf(x);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1076,13 +1208,15 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/NonNullFieldTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "public class NonNullFieldTest {",
-            "  private String message;",
-            "  public String getMessage() {",
-            "    return message;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            public class NonNullFieldTest {
+              private String message;
+              public String getMessage() {
+                return message;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1091,12 +1225,14 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/NonNullParameterTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "public class NonNullParameterTest {",
-            "  public String apply(String message) {",
-            "    return message;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            public class NonNullParameterTest {
+              public String apply(String message) {
+                return message;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1105,14 +1241,16 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/ThisTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "public class ThisTest {",
-            "  private String message;",
-            "  public ThisTest setMessage(String message) {",
-            "    this.message = message;",
-            "    return this;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            public class ThisTest {
+              private String message;
+              public ThisTest setMessage(String message) {
+                this.message = message;
+                return this;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1121,17 +1259,19 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/CapturedLocalTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "public abstract class CapturedLocalTest {",
-            "  public abstract String getMessage();",
-            "  public CapturedLocalTest withMessage(final String message) {",
-            "    return new CapturedLocalTest() {",
-            "      public String getMessage() {",
-            "        return message;",
-            "      }",
-            "    };",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            public abstract class CapturedLocalTest {
+              public abstract String getMessage();
+              public CapturedLocalTest withMessage(final String message) {
+                return new CapturedLocalTest() {
+                  public String getMessage() {
+                    return message;
+                  }
+                };
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1144,12 +1284,14 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/PrimitiveReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "public class PrimitiveReturnTest {",
-            "  public int getCount() {",
-            "    return (Integer) null;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            public class PrimitiveReturnTest {
+              public int getCount() {
+                return (Integer) null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1158,13 +1300,15 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/VoidMethodTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "public class VoidMethodTest {",
-            "  public void run(int iterations) {",
-            "    if (iterations <= 0) { return; }",
-            "    run(iterations - 1);",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            public class VoidMethodTest {
+              public void run(int iterations) {
+                if (iterations <= 0) { return; }
+                run(iterations - 1);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1173,14 +1317,16 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/VoidTypeTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "public class VoidTypeTest {",
-            "  public Void run(int iterations) {",
-            "    if (iterations <= 0) { return null; }",
-            "    run(iterations - 1);",
-            "    return null;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            public class VoidTypeTest {
+              public Void run(int iterations) {
+                if (iterations <= 0) { return null; }
+                run(iterations - 1);
+                return null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1189,12 +1335,14 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/MissingNullableReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "import javax.annotation.Nullable;",
-            "public class MissingNullableReturnTest {",
-            "  public static final java.util.function.Function<String, String> IDENTITY =",
-            "      (s -> { return s != null ? s : null; });",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            import javax.annotation.Nullable;
+            public class MissingNullableReturnTest {
+              public static final java.util.function.Function<String, String> IDENTITY =
+                  (s -> { return s != null ? s : null; });
+            }
+            """)
         .doTest();
   }
 
@@ -1203,13 +1351,15 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/MissingNullableReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "import javax.annotation.Nullable;",
-            "public class MissingNullableReturnTest {",
-            "  public static java.util.function.Function<String, String> identity() {",
-            "    return s -> s;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            import javax.annotation.Nullable;
+            public class MissingNullableReturnTest {
+              public static java.util.function.Function<String, String> identity() {
+                return s -> s;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1218,13 +1368,15 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/MissingNullableReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "import javax.annotation.Nullable;",
-            "public class MissingNullableReturnTest {",
-            "  public static java.util.function.Function<String, String> identity() {",
-            "    return (s -> s);",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            import javax.annotation.Nullable;
+            public class MissingNullableReturnTest {
+              public static java.util.function.Function<String, String> identity() {
+                return (s -> s);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1235,17 +1387,19 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/MissingNullableReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "import javax.annotation.Nonnull;",
-            "public class MissingNullableReturnTest {",
-            "  public @Nonnull MyClass test() {",
-            "    return ((MyClass) null).myMethod().myField;",
-            "  }",
-            "  abstract class MyClass {",
-            "    abstract MyClass myMethod();",
-            "    MyClass myField;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            import javax.annotation.Nonnull;
+            public class MissingNullableReturnTest {
+              public @Nonnull MyClass test() {
+                return ((MyClass) null).myMethod().myField;
+              }
+              abstract class MyClass {
+                abstract MyClass myMethod();
+                MyClass myField;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1255,17 +1409,19 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/MissingNullableReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "import javax.annotation.Nullable;",
-            "import java.util.Optional;",
-            "public class MissingNullableReturnTest {",
-            "  public String get() {",
-            "    return getInternal(true, null);",
-            "  }",
-            "  private String getInternal(boolean flag, @Nullable Integer i) {",
-            "    return \"hello\";",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            import javax.annotation.Nullable;
+            import java.util.Optional;
+            public class MissingNullableReturnTest {
+              public String get() {
+                return getInternal(true, null);
+              }
+              private String getInternal(boolean flag, @Nullable Integer i) {
+                return "hello";
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1274,14 +1430,16 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/MissingNullableReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "import javax.annotation.Nullable;",
-            "import java.util.concurrent.Callable;",
-            "public class MissingNullableReturnTest {",
-            "  public Callable<?> get() {",
-            "    return () -> { return null; };",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            import javax.annotation.Nullable;
+            import java.util.concurrent.Callable;
+            public class MissingNullableReturnTest {
+              public Callable<?> get() {
+                return () -> { return null; };
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1290,13 +1448,15 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "abstract class LiteralNullReturnTest {",
-            "  static Object NULL = null;",
-            "  Object get() {",
-            "    return NULL;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            abstract class LiteralNullReturnTest {
+              static Object NULL = null;
+              Object get() {
+                return NULL;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1305,17 +1465,19 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "import org.checkerframework.checker.nullness.qual.PolyNull;",
-            "public class LiteralNullReturnTest {",
-            "  public @PolyNull String getMessage(@PolyNull String s) {",
-            "    if (s == null) {",
-            "      return null;",
-            "    } else {",
-            "      return \"negative\";",
-            "    }",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            import org.checkerframework.checker.nullness.qual.PolyNull;
+            public class LiteralNullReturnTest {
+              public @PolyNull String getMessage(@PolyNull String s) {
+                if (s == null) {
+                  return null;
+                } else {
+                  return "negative";
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1324,13 +1486,15 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "class LiteralNullReturnTest {",
-            "  public String getMessage() {",
-            "    System.exit(1);",
-            "    return null;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            class LiteralNullReturnTest {
+              public String getMessage() {
+                System.exit(1);
+                return null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1339,14 +1503,16 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "import static org.junit.Assert.fail;",
-            "class LiteralNullReturnTest {",
-            "  public String getMessage() {",
-            "    fail();",
-            "    return null;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            import static org.junit.Assert.fail;
+            class LiteralNullReturnTest {
+              public String getMessage() {
+                fail();
+                return null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1355,14 +1521,16 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "import static junit.framework.TestCase.fail;",
-            "class LiteralNullReturnTest {",
-            "  public String getMessage() {",
-            "    fail();",
-            "    return null;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            import static junit.framework.TestCase.fail;
+            class LiteralNullReturnTest {
+              public String getMessage() {
+                fail();
+                return null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1371,20 +1539,24 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/foo/BarTestCase.java",
-            "package foo;",
-            "import junit.framework.TestCase;",
-            "class BarTestCase extends TestCase {",
-            "}")
+            """
+            package foo;
+            import junit.framework.TestCase;
+            class BarTestCase extends TestCase {
+            }
+            """)
         .addSourceLines(
             "com/foo/OtherTestCase.java",
-            "package foo;",
-            "import static foo.BarTestCase.fail;",
-            "class OtherTestCase {",
-            "  public String getMessage() {",
-            "    fail();",
-            "    return null;",
-            "  }",
-            "}")
+            """
+            package foo;
+            import static foo.BarTestCase.fail;
+            class OtherTestCase {
+              public String getMessage() {
+                fail();
+                return null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1393,15 +1565,17 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "import static org.junit.Assert.fail;",
-            "class LiteralNullReturnTest {",
-            "  void throwRuntimeException() {}",
-            "  public String getMessage() {",
-            "    throwRuntimeException();",
-            "    return null;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            import static org.junit.Assert.fail;
+            class LiteralNullReturnTest {
+              void throwRuntimeException() {}
+              public String getMessage() {
+                throwRuntimeException();
+                return null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1410,14 +1584,16 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "import static com.google.common.base.Preconditions.checkState;",
-            "class LiteralNullReturnTest {",
-            "  public String getMessage() {",
-            "    checkState(false);",
-            "    return null;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            import static com.google.common.base.Preconditions.checkState;
+            class LiteralNullReturnTest {
+              public String getMessage() {
+                checkState(false);
+                return null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1426,14 +1602,16 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "import static com.google.common.base.Verify.verify;",
-            "class LiteralNullReturnTest {",
-            "  public String getMessage() {",
-            "    verify(false);",
-            "    return null;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            import static com.google.common.base.Verify.verify;
+            class LiteralNullReturnTest {
+              public String getMessage() {
+                verify(false);
+                return null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1442,13 +1620,15 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "abstract class LiteralNullReturnTest {",
-            "  static final Object SOMETHING = 1;",
-            "  Object get() {",
-            "    return SOMETHING;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            abstract class LiteralNullReturnTest {
+              static final Object SOMETHING = 1;
+              Object get() {
+                return SOMETHING;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1457,12 +1637,14 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "abstract class LiteralNullReturnTest {",
-            "  Object foo(Object o) {",
-            "    return (o != null ? o : \"\");",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            abstract class LiteralNullReturnTest {
+              Object foo(Object o) {
+                return (o != null ? o : "");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1471,13 +1653,15 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "abstract class LiteralNullReturnTest {",
-            "  Object o;",
-            "  Object foo(LiteralNullReturnTest other) {",
-            "    return (o == null ? other.o : \"\");",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            abstract class LiteralNullReturnTest {
+              Object o;
+              Object foo(LiteralNullReturnTest other) {
+                return (o == null ? other.o : "");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1486,12 +1670,14 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "abstract class LiteralNullReturnTest {",
-            "  Object foo(Object o) {",
-            "    return (o == null ? \"\" : o);",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            abstract class LiteralNullReturnTest {
+              Object foo(Object o) {
+                return (o == null ? "" : o);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1500,15 +1686,17 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "abstract class LiteralNullReturnTest {",
-            "  Object foo(Object o) {",
-            "    if (o != null) {",
-            "      return o;",
-            "    }",
-            "    return \"\";",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            abstract class LiteralNullReturnTest {
+              Object foo(Object o) {
+                if (o != null) {
+                  return o;
+                }
+                return "";
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1517,16 +1705,18 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "abstract class LiteralNullReturnTest {",
-            "  Object foo(Object o) {",
-            "    if (o == null) {",
-            "      return \"\";",
-            "    } else {",
-            "      return o;",
-            "    }",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            abstract class LiteralNullReturnTest {
+              Object foo(Object o) {
+                if (o == null) {
+                  return "";
+                } else {
+                  return o;
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1535,16 +1725,18 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "abstract class LiteralNullReturnTest {",
-            "  Object foo(Object o) {",
-            "    if (o == null) {",
-            "      o = \"\";",
-            "      return o;",
-            "    }",
-            "    return \"\";",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            abstract class LiteralNullReturnTest {
+              Object foo(Object o) {
+                if (o == null) {
+                  o = "";
+                  return o;
+                }
+                return "";
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1554,12 +1746,14 @@ public class ReturnMissingNullableTest {
         .setArgs("-XepOpt:Nullness:OnlyIfAnnotationAlreadyInScope=true")
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "public class LiteralNullReturnTest {",
-            "  String getMessage(boolean b) {",
-            "    return b ? \"\" : null;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            public class LiteralNullReturnTest {
+              String getMessage(boolean b) {
+                return b ? "" : null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1568,13 +1762,15 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "import java.util.Optional;",
-            "class LiteralNullReturnTest {",
-            "  public String getMessage(Optional<String> m) {",
-            "    return m.orElse(\"\");",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            import java.util.Optional;
+            class LiteralNullReturnTest {
+              public String getMessage(Optional<String> m) {
+                return m.orElse("");
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1583,16 +1779,20 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "NotMap.java",
-            "interface NotMap<K, V> {",
-            "  String get(Object o);",
-            "  V replace(K k, V v);",
-            "}")
+            """
+            interface NotMap<K, V> {
+              String get(Object o);
+              V replace(K k, V v);
+            }
+            """)
         .addSourceLines(
             "MyMap.java",
-            "interface MyMap extends NotMap<Integer, Double> {",
-            "  @Override String get(Object o);",
-            "  @Override Double replace(Integer k, Double v);",
-            "}")
+            """
+            interface MyMap extends NotMap<Integer, Double> {
+              @Override String get(Object o);
+              @Override Double replace(Integer k, Double v);
+            }
+            """)
         .doTest();
   }
 
@@ -1601,14 +1801,16 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "import java.util.Optional;",
-            "class LiteralNullReturnTest {",
-            "  @SuppressWarnings(\"ReturnMissingNullable\")",
-            "  public String getMessage(Optional<String> m) {",
-            "    return m.orElse(null);",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            import java.util.Optional;
+            class LiteralNullReturnTest {
+              @SuppressWarnings("ReturnMissingNullable")
+              public String getMessage(Optional<String> m) {
+                return m.orElse(null);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1616,17 +1818,21 @@ public class ReturnMissingNullableTest {
   public void negativeCases_suppressionForMethodTreeBased() {
     createCompilationTestHelper()
         .addSourceLines(
-            "NotMap.java", //
-            "interface NotMap {",
-            "  Integer get(String o);",
-            "}")
+            "NotMap.java",
+            """
+            interface NotMap {
+              Integer get(String o);
+            }
+            """)
         .addSourceLines(
             "MyMap.java",
-            "import java.util.Map;",
-            "interface MyMap<K, V> extends Map<K, V>, NotMap {",
-            "  @SuppressWarnings(\"ReturnMissingNullable\")",
-            "  @Override V get(Object o);",
-            "}")
+            """
+            import java.util.Map;
+            interface MyMap<K, V> extends Map<K, V>, NotMap {
+              @SuppressWarnings("ReturnMissingNullable")
+              @Override V get(Object o);
+            }
+            """)
         .doTest();
   }
 
@@ -1634,17 +1840,21 @@ public class ReturnMissingNullableTest {
   public void negativeCases_suppressionAboveMethodLevel() {
     createCompilationTestHelper()
         .addSourceLines(
-            "NotMap.java", //
-            "interface NotMap {",
-            "  Integer get(String o);",
-            "}")
+            "NotMap.java",
+            """
+            interface NotMap {
+              Integer get(String o);
+            }
+            """)
         .addSourceLines(
             "MyMap.java",
-            "import java.util.Map;",
-            "@SuppressWarnings(\"ReturnMissingNullable\")",
-            "interface MyMap<K, V> extends Map<K, V>, NotMap {",
-            "  @Override V get(Object o);",
-            "}")
+            """
+            import java.util.Map;
+            @SuppressWarnings("ReturnMissingNullable")
+            interface MyMap<K, V> extends Map<K, V>, NotMap {
+              @Override V get(Object o);
+            }
+            """)
         .doTest();
   }
 
@@ -1653,10 +1863,12 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "MyMap.java",
-            "import java.util.Map;",
-            "interface MyMap<K, V> extends Map<K, V> {",
-            "  @Override V get(Object o);",
-            "}")
+            """
+            import java.util.Map;
+            interface MyMap<K, V> extends Map<K, V> {
+              @Override V get(Object o);
+            }
+            """)
         .doTest();
   }
 
@@ -1665,16 +1877,18 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "abstract class LiteralNullReturnTest {",
-            "  Object o;",
-            "  Object foo(LiteralNullReturnTest other) {",
-            "    if (o == null) {",
-            "      return other.o;",
-            "    }",
-            "    return \"\";",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            abstract class LiteralNullReturnTest {
+              Object o;
+              Object foo(LiteralNullReturnTest other) {
+                if (o == null) {
+                  return other.o;
+                }
+                return "";
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1683,18 +1897,22 @@ public class ReturnMissingNullableTest {
     createRefactoringTestHelper()
         .addInputLines(
             "in/Test.java",
-            "class T {",
-            "  @Nullable private final Object obj1 = null;",
-            "  private final Object method(boolean b) { return b ? null : 0; }",
-            "  @interface Nullable {}",
-            "}")
+            """
+            class T {
+              @Nullable private final Object obj1 = null;
+              private final Object method(boolean b) { return b ? null : 0; }
+              @interface Nullable {}
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "class T {",
-            "  @Nullable private final Object obj1 = null;",
-            "  @Nullable private final Object method(boolean b) { return b ? null : 0; }",
-            "  @interface Nullable {}",
-            "}")
+            """
+            class T {
+              @Nullable private final Object obj1 = null;
+              @Nullable private final Object method(boolean b) { return b ? null : 0; }
+              @interface Nullable {}
+            }
+            """)
         .doTest();
   }
 
@@ -1703,17 +1921,20 @@ public class ReturnMissingNullableTest {
     createRefactoringTestHelper()
         .addInputLines(
             "in/Test.java",
-            "class T {",
-            "  private final Object method(boolean b) { return b ? null : 0; }",
-            "  class Nullable {}",
-            "}")
+            """
+            class T {
+              private final Object method(boolean b) { return b ? null : 0; }
+              class Nullable {}
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "class T {",
-            "  @org.jspecify.annotations.Nullable private final Object method(boolean b) { return b"
-                + " ? null : 0; }",
-            "  class Nullable {}",
-            "}")
+            """
+class T {
+  @org.jspecify.annotations.Nullable private final Object method(boolean b) { return b ? null : 0; }
+  class Nullable {}
+}
+""")
         .doTest();
   }
 
@@ -1722,27 +1943,31 @@ public class ReturnMissingNullableTest {
     createRefactoringTestHelper()
         .addInputLines(
             "in/Test.java",
-            "class T {",
-            "  private final Object method(boolean b) {",
-            "    if (b) {",
-            "      return null;",
-            "    } else {",
-            "      return null;",
-            "    }",
-            "  }",
-            "}")
+            """
+            class T {
+              private final Object method(boolean b) {
+                if (b) {
+                  return null;
+                } else {
+                  return null;
+                }
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "import org.jspecify.annotations.Nullable;",
-            "class T {",
-            "  private final @Nullable Object method(boolean b) {",
-            "    if (b) {",
-            "      return null;",
-            "    } else {",
-            "      return null;",
-            "    }",
-            "  }",
-            "}")
+            """
+            import org.jspecify.annotations.Nullable;
+            class T {
+              private final @Nullable Object method(boolean b) {
+                if (b) {
+                  return null;
+                } else {
+                  return null;
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1751,28 +1976,32 @@ public class ReturnMissingNullableTest {
     createRefactoringTestHelper()
         .addInputLines(
             "in/Test.java",
-            "import org.checkerframework.checker.nullness.qual.Nullable;",
-            "class T {",
-            "  java.lang.Object method(boolean b) {",
-            "    if (b) {",
-            "      return null;",
-            "    } else {",
-            "      return null;",
-            "    }",
-            "  }",
-            "}")
+            """
+            import org.checkerframework.checker.nullness.qual.Nullable;
+            class T {
+              java.lang.Object method(boolean b) {
+                if (b) {
+                  return null;
+                } else {
+                  return null;
+                }
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "import org.checkerframework.checker.nullness.qual.Nullable;",
-            "class T {",
-            "  java.lang.@Nullable Object method(boolean b) {",
-            "    if (b) {",
-            "      return null;",
-            "    } else {",
-            "      return null;",
-            "    }",
-            "  }",
-            "}")
+            """
+            import org.checkerframework.checker.nullness.qual.Nullable;
+            class T {
+              java.lang.@Nullable Object method(boolean b) {
+                if (b) {
+                  return null;
+                } else {
+                  return null;
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1781,28 +2010,32 @@ public class ReturnMissingNullableTest {
     createRefactoringTestHelper()
         .addInputLines(
             "in/Test.java",
-            "import org.checkerframework.checker.nullness.qual.Nullable;",
-            "class T {",
-            "  final Object method(boolean b) {",
-            "    if (b) {",
-            "      return null;",
-            "    } else {",
-            "      return null;",
-            "    }",
-            "  }",
-            "}")
+            """
+            import org.checkerframework.checker.nullness.qual.Nullable;
+            class T {
+              final Object method(boolean b) {
+                if (b) {
+                  return null;
+                } else {
+                  return null;
+                }
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "import org.checkerframework.checker.nullness.qual.Nullable;",
-            "class T {",
-            "  final @Nullable Object method(boolean b) {",
-            "    if (b) {",
-            "      return null;",
-            "    } else {",
-            "      return null;",
-            "    }",
-            "  }",
-            "}")
+            """
+            import org.checkerframework.checker.nullness.qual.Nullable;
+            class T {
+              final @Nullable Object method(boolean b) {
+                if (b) {
+                  return null;
+                } else {
+                  return null;
+                }
+              }
+            }
+            """)
         .doTest(TEXT_MATCH);
   }
 
@@ -1811,28 +2044,32 @@ public class ReturnMissingNullableTest {
     createRefactoringTestHelper()
         .addInputLines(
             "in/Test.java",
-            "import org.checkerframework.checker.nullness.qual.Nullable;",
-            "class T {",
-            "  java.util.List<java.lang.Object> method(boolean b) {",
-            "    if (b) {",
-            "      return null;",
-            "    } else {",
-            "      return null;",
-            "    }",
-            "  }",
-            "}")
+            """
+            import org.checkerframework.checker.nullness.qual.Nullable;
+            class T {
+              java.util.List<java.lang.Object> method(boolean b) {
+                if (b) {
+                  return null;
+                } else {
+                  return null;
+                }
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "import org.checkerframework.checker.nullness.qual.Nullable;",
-            "class T {",
-            "  java.util.@Nullable List<java.lang.Object> method(boolean b) {",
-            "    if (b) {",
-            "      return null;",
-            "    } else {",
-            "      return null;",
-            "    }",
-            "  }",
-            "}")
+            """
+            import org.checkerframework.checker.nullness.qual.Nullable;
+            class T {
+              java.util.@Nullable List<java.lang.Object> method(boolean b) {
+                if (b) {
+                  return null;
+                } else {
+                  return null;
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1841,30 +2078,34 @@ public class ReturnMissingNullableTest {
     createRefactoringTestHelper()
         .addInputLines(
             "in/Test.java",
-            "import org.checkerframework.checker.initialization.qual.UnderInitialization;",
-            "import org.checkerframework.checker.nullness.qual.Nullable;",
-            "class T {",
-            "  java.lang.@UnderInitialization Object method(boolean b) {",
-            "    if (b) {",
-            "      return null;",
-            "    } else {",
-            "      return null;",
-            "    }",
-            "  }",
-            "}")
+            """
+            import org.checkerframework.checker.initialization.qual.UnderInitialization;
+            import org.checkerframework.checker.nullness.qual.Nullable;
+            class T {
+              java.lang.@UnderInitialization Object method(boolean b) {
+                if (b) {
+                  return null;
+                } else {
+                  return null;
+                }
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "import org.checkerframework.checker.initialization.qual.UnderInitialization;",
-            "import org.checkerframework.checker.nullness.qual.Nullable;",
-            "class T {",
-            "  java.lang.@Nullable @UnderInitialization Object method(boolean b) {",
-            "    if (b) {",
-            "      return null;",
-            "    } else {",
-            "      return null;",
-            "    }",
-            "  }",
-            "}")
+            """
+            import org.checkerframework.checker.initialization.qual.UnderInitialization;
+            import org.checkerframework.checker.nullness.qual.Nullable;
+            class T {
+              java.lang.@Nullable @UnderInitialization Object method(boolean b) {
+                if (b) {
+                  return null;
+                } else {
+                  return null;
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1874,27 +2115,31 @@ public class ReturnMissingNullableTest {
         .setArgs("-XepOpt:Nullness:DefaultNullnessAnnotation=javax.annotation.CheckForNull")
         .addInputLines(
             "in/Test.java",
-            "class T {",
-            "  Object method(boolean b) {",
-            "    if (b) {",
-            "      return null;",
-            "    } else {",
-            "      return null;",
-            "    }",
-            "  }",
-            "}")
+            """
+            class T {
+              Object method(boolean b) {
+                if (b) {
+                  return null;
+                } else {
+                  return null;
+                }
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "import javax.annotation.CheckForNull;",
-            "class T {",
-            "  @CheckForNull Object method(boolean b) {",
-            "    if (b) {",
-            "      return null;",
-            "    } else {",
-            "      return null;",
-            "    }",
-            "  }",
-            "}")
+            """
+            import javax.annotation.CheckForNull;
+            class T {
+              @CheckForNull Object method(boolean b) {
+                if (b) {
+                  return null;
+                } else {
+                  return null;
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1903,13 +2148,15 @@ public class ReturnMissingNullableTest {
     createAggressiveCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "public class LiteralNullReturnTest {",
-            "  public String getMessage() {",
-            "    // BUG: Diagnostic contains: @Nullable",
-            "    return null;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            public class LiteralNullReturnTest {
+              public String getMessage() {
+                // BUG: Diagnostic contains: @Nullable
+                return null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1918,13 +2165,15 @@ public class ReturnMissingNullableTest {
     createAggressiveCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "public class LiteralNullReturnTest {",
-            "  public <T> T getMessage(boolean b, T t) {",
-            "    // BUG: Diagnostic contains: @Nullable",
-            "    return b ? null : t;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            public class LiteralNullReturnTest {
+              public <T> T getMessage(boolean b, T t) {
+                // BUG: Diagnostic contains: @Nullable
+                return b ? null : t;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1933,16 +2182,18 @@ public class ReturnMissingNullableTest {
     createAggressiveCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/VoidTypeTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "public class VoidTypeTest {",
-            "  public Void run(int iterations) {",
-            "    // BUG: Diagnostic contains: @Nullable",
-            "    if (iterations <= 0) { return null; }",
-            "    run(iterations - 1);",
-            "    // BUG: Diagnostic contains: @Nullable",
-            "    return null;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            public class VoidTypeTest {
+              public Void run(int iterations) {
+                // BUG: Diagnostic contains: @Nullable
+                if (iterations <= 0) { return null; }
+                run(iterations - 1);
+                // BUG: Diagnostic contains: @Nullable
+                return null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1952,38 +2203,42 @@ public class ReturnMissingNullableTest {
         .setArgs("-XepOpt:Nullness:RemoveSuppressWarnings=true")
         .addInputLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "public class LiteralNullReturnTest {",
-            "  @SuppressWarnings(\"nullness:argument\")",
-            "  public String getMessage(boolean b) {",
-            "    if (b) {",
-            "      doSomethingElse(null);",
-            "     return \"negative\";",
-            "    } else {",
-            "      return \"negative\";",
-            "    }",
-            "  }",
-            "  public void doSomethingElse(Object c) {",
-            "      return;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            public class LiteralNullReturnTest {
+              @SuppressWarnings("nullness:argument")
+              public String getMessage(boolean b) {
+                if (b) {
+                  doSomethingElse(null);
+                 return "negative";
+                } else {
+                  return "negative";
+                }
+              }
+              public void doSomethingElse(Object c) {
+                  return;
+              }
+            }
+            """)
         .addOutputLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "public class LiteralNullReturnTest {",
-            "  @SuppressWarnings(\"nullness:argument\")",
-            "  public String getMessage(boolean b) {",
-            "    if (b) {",
-            "      doSomethingElse(null);",
-            "     return \"negative\";",
-            "    } else {",
-            "      return \"negative\";",
-            "    }",
-            "  }",
-            "  public void doSomethingElse(Object c) {",
-            "      return;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            public class LiteralNullReturnTest {
+              @SuppressWarnings("nullness:argument")
+              public String getMessage(boolean b) {
+                if (b) {
+                  doSomethingElse(null);
+                 return "negative";
+                } else {
+                  return "negative";
+                }
+              }
+              public void doSomethingElse(Object c) {
+                  return;
+              }
+            }
+            """)
         .doTest(TEXT_MATCH);
   }
 
@@ -1991,21 +2246,25 @@ public class ReturnMissingNullableTest {
   public void aggressive_implementsMap() {
     createAggressiveCompilationTestHelper()
         .addSourceLines(
-            "NotMap.java", //
-            "interface NotMap {",
-            "  Integer get(String o);",
-            "}")
+            "NotMap.java",
+            """
+            interface NotMap {
+              Integer get(String o);
+            }
+            """)
         .addSourceLines(
             "MyMap.java",
-            "import java.util.Map;",
-            "interface MyMap<K, V> extends Map<K, V>, NotMap {",
-            "  // BUG: Diagnostic contains: @Nullable",
-            "  @Override V get(Object o);",
-            "  // BUG: Diagnostic contains: @Nullable",
-            "  @Override V replace(K k, V v);",
-            "  @Override boolean replace(K k, V expect, V update);",
-            "  @Override Integer get(String o);",
-            "}")
+            """
+            import java.util.Map;
+            interface MyMap<K, V> extends Map<K, V>, NotMap {
+              // BUG: Diagnostic contains: @Nullable
+              @Override V get(Object o);
+              // BUG: Diagnostic contains: @Nullable
+              @Override V replace(K k, V v);
+              @Override boolean replace(K k, V expect, V update);
+              @Override Integer get(String o);
+            }
+            """)
         .doTest();
   }
 

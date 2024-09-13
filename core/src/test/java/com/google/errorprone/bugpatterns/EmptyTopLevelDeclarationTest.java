@@ -30,7 +30,14 @@ public class EmptyTopLevelDeclarationTest {
 
   @Test
   public void negative() {
-    compilationHelper.addSourceLines("a/A.java", "package a;", "class One {}").doTest();
+    compilationHelper
+        .addSourceLines(
+            "a/A.java",
+            """
+            package a;
+            class One {}
+            """)
+        .doTest();
   }
 
   @Test
@@ -38,9 +45,11 @@ public class EmptyTopLevelDeclarationTest {
     compilationHelper
         .addSourceLines(
             "a/A.java",
-            "package a;",
-            "// BUG: Diagnostic contains: Did you mean 'class One {}'?",
-            "class One {};")
+            """
+            package a;
+            // BUG: Diagnostic contains: Did you mean 'class One {}'?
+            class One {};
+            """)
         .doTest();
   }
 
@@ -49,11 +58,13 @@ public class EmptyTopLevelDeclarationTest {
   public void noImports() {
     compilationHelper
         .addSourceLines(
-            "ReproFile.java", //
-            "package errorpronecrash;",
-            "// BUG: Diagnostic contains: Did you mean to remove this line?",
-            ";",
-            "public class ReproFile {}")
+            "ReproFile.java",
+            """
+            package errorpronecrash;
+            // BUG: Diagnostic contains: Did you mean to remove this line?
+            ;
+            public class ReproFile {}
+            """)
         .doTest();
   }
 }

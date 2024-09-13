@@ -37,10 +37,12 @@ public final class UnicodeEscapeTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  // BUG: Diagnostic contains:",
-            "  private static final String FOO = \"\\u0020\";",
-            "}")
+            """
+            class Test {
+              // BUG: Diagnostic contains:
+              private static final String FOO = "\\u0020";
+            }
+            """)
         .doTest();
   }
 
@@ -49,10 +51,12 @@ public final class UnicodeEscapeTest {
     helper
         .addSourceLines(
             "Test.java",
-            "@SuppressWarnings(\"UnicodeEscape\")",
-            "class Test {",
-            "  private static final String FOO = \"\\u0020\";",
-            "}")
+            """
+            @SuppressWarnings("UnicodeEscape")
+            class Test {
+              private static final String FOO = "\\u0020";
+            }
+            """)
         .doTest();
   }
 
@@ -60,17 +64,21 @@ public final class UnicodeEscapeTest {
   public void unicodeEscapeRefactoredToLiteral() {
     refactoring
         .addInputLines(
-            "Test.java", //
-            "class Test {",
-            "  private static final String FOO = \"\\u0020\";",
-            "  private static final String BAR = \"\\uuuuu0020\";",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              private static final String FOO = "\\u0020";
+              private static final String BAR = "\\uuuuu0020";
+            }
+            """)
         .addOutputLines(
-            "Test.java", //
-            "class Test {",
-            "  private static final String FOO = \" \";",
-            "  private static final String BAR = \" \";",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              private static final String FOO = " ";
+              private static final String BAR = " ";
+            }
+            """)
         .doTest(TEXT_MATCH);
   }
 
@@ -78,15 +86,19 @@ public final class UnicodeEscapeTest {
   public void jdk8269150() {
     refactoring
         .addInputLines(
-            "Test.java", //
-            "class Test {",
-            "  private static final String FOO = \"\\u005c\\\\u005d\";",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              private static final String FOO = "\\u005c\\\\u005d";
+            }
+            """)
         .addOutputLines(
-            "Test.java", //
-            "class Test {",
-            "  private static final String FOO = \"\\\\]\";",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              private static final String FOO = "\\\\]";
+            }
+            """)
         .doTest(TEXT_MATCH);
   }
 
@@ -108,10 +120,12 @@ public final class UnicodeEscapeTest {
   public void nonPrintableAsciiCharacter_noFinding() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  private static final String FOO = \"\\u0312\";",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              private static final String FOO = "\\u0312";
+            }
+            """)
         .doTest();
   }
 
@@ -119,10 +133,12 @@ public final class UnicodeEscapeTest {
   public void extraEscapes_noFinding() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  private static final String FOO = \"\\\\u0020\";",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              private static final String FOO = "\\\\u0020";
+            }
+            """)
         .doTest();
   }
 
@@ -138,9 +154,11 @@ public final class UnicodeEscapeTest {
   public void escapedLiteralBackslashU() {
     refactoring
         .addInputLines(
-            "A.java", //
-            "/** \\u005Cu */",
-            "class A {}")
+            "A.java",
+            """
+            /** \\u005Cu */
+            class A {}
+            """)
         .expectUnchanged()
         .doTest(TEXT_MATCH);
   }

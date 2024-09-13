@@ -41,17 +41,19 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "import com.google.common.collect.ImmutableList;",
-            "@Immutable class Test {",
-            "  final int a = 42;",
-            "  final String b = null;",
-            "  final java.lang.String c = null;",
-            "  final com.google.common.collect.ImmutableList<String> d = null;",
-            "  final ImmutableList<Integer> e = null;",
-            "  final Deprecated dep = null;",
-            "  final Class<?> clazz = Class.class;",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            import com.google.common.collect.ImmutableList;
+            @Immutable class Test {
+              final int a = 42;
+              final String b = null;
+              final java.lang.String c = null;
+              final com.google.common.collect.ImmutableList<String> d = null;
+              final ImmutableList<Integer> e = null;
+              final Deprecated dep = null;
+              final Class<?> clazz = Class.class;
+            }
+            """)
         .doTest();
   }
 
@@ -61,12 +63,13 @@ public class ImmutableCheckerTest {
         .addSourceLines("I.java", "interface I {}")
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable class Test {",
-            "  // BUG: Diagnostic contains:"
-                + " 'I' is not annotated with @com.google.errorprone.annotations.Immutable",
-            "  private final I i = new I() {};",
-            "}")
+            """
+import com.google.errorprone.annotations.Immutable;
+@Immutable class Test {
+  // BUG: Diagnostic contains: 'I' is not annotated with @com.google.errorprone.annotations.Immutable
+  private final I i = new I() {};
+}
+""")
         .doTest();
   }
 
@@ -75,8 +78,10 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable @interface Test {}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable @interface Test {}
+            """)
         .doTest();
   }
 
@@ -85,19 +90,23 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable @interface Test {}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable @interface Test {}
+            """)
         .addSourceLines(
             "MyTest.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "import java.lang.annotation.Annotation;",
-            "@Immutable final class MyTest implements Test {",
-            "  // BUG: Diagnostic contains: non-final",
-            "  public Object[] xs = {};",
-            "  public Class<? extends Annotation> annotationType() {",
-            "    return null;",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            import java.lang.annotation.Annotation;
+            @Immutable final class MyTest implements Test {
+              // BUG: Diagnostic contains: non-final
+              public Object[] xs = {};
+              public Class<? extends Annotation> annotationType() {
+                return null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -108,20 +117,24 @@ public class ImmutableCheckerTest {
         .addSourceLines("Anno.java", "@interface Anno {}")
         .addSourceLines(
             "MyAnno.java",
-            "import java.lang.annotation.Annotation;",
-            "final class MyAnno implements Anno {",
-            "  // BUG: Diagnostic contains:",
-            "  public Object[] xs = {};",
-            "  public Class<? extends Annotation> annotationType() {",
-            "    return null;",
-            "  }",
-            "}")
+            """
+            import java.lang.annotation.Annotation;
+            final class MyAnno implements Anno {
+              // BUG: Diagnostic contains:
+              public Object[] xs = {};
+              public Class<? extends Annotation> annotationType() {
+                return null;
+              }
+            }
+            """)
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable class Test {",
-            "  private final Anno anno = new MyAnno();",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable class Test {
+              private final Anno anno = new MyAnno();
+            }
+            """)
         .doTest();
   }
 
@@ -130,18 +143,22 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable @interface Test {}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable @interface Test {}
+            """)
         .addSourceLines(
             "MyTest.java",
-            "import java.lang.annotation.Annotation;",
-            "final class MyTest implements Test {",
-            "  // BUG: Diagnostic contains: non-final field 'xs'",
-            "  public Object[] xs = {};",
-            "  public Class<? extends Annotation> annotationType() {",
-            "    return null;",
-            "  }",
-            "}")
+            """
+            import java.lang.annotation.Annotation;
+            final class MyTest implements Test {
+              // BUG: Diagnostic contains: non-final field 'xs'
+              public Object[] xs = {};
+              public Class<? extends Annotation> annotationType() {
+                return null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -150,11 +167,13 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import javax.lang.model.element.ElementKind;",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable class Test {",
-            "  private final Override override = null;",
-            "}")
+            """
+            import javax.lang.model.element.ElementKind;
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable class Test {
+              private final Override override = null;
+            }
+            """)
         .doTest();
   }
 
@@ -163,11 +182,13 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import javax.lang.model.element.ElementKind;",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable class Test {",
-            "  private final ElementKind ek = null;",
-            "}")
+            """
+            import javax.lang.model.element.ElementKind;
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable class Test {
+              private final ElementKind ek = null;
+            }
+            """)
         .doTest();
   }
 
@@ -176,14 +197,18 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Kind.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable enum Kind { A, B, C; }")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable enum Kind { A, B, C; }
+            """)
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable class Test {",
-            "  private final Kind k = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable class Test {
+              private final Kind k = null;
+            }
+            """)
         .doTest();
   }
 
@@ -192,11 +217,13 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable class Test {",
-            "  // BUG: Diagnostic contains:",
-            "  final int[] xs = {42};",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable class Test {
+              // BUG: Diagnostic contains:
+              final int[] xs = {42};
+            }
+            """)
         .doTest();
   }
 
@@ -205,8 +232,10 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable interface Test {}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable interface Test {}
+            """)
         .doTest();
   }
 
@@ -215,14 +244,18 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "MyInterface.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable interface MyInterface {}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable interface MyInterface {}
+            """)
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable class Test {",
-            "  final MyInterface i = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable class Test {
+              final MyInterface i = null;
+            }
+            """)
         .doTest();
   }
 
@@ -231,11 +264,13 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "import com.google.common.collect.ImmutableList;",
-            "@Immutable class Test {",
-            "  final ImmutableList<ImmutableList<ImmutableList<String>>> l = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            import com.google.common.collect.ImmutableList;
+            @Immutable class Test {
+              final ImmutableList<ImmutableList<ImmutableList<String>>> l = null;
+            }
+            """)
         .doTest();
   }
 
@@ -244,11 +279,13 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable class Test {",
-            "  // BUG: Diagnostic contains: non-final",
-            "  int a = 42;",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable class Test {
+              // BUG: Diagnostic contains: non-final
+              int a = 42;
+            }
+            """)
         .doTest();
   }
 
@@ -257,10 +294,12 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable class Test {",
-            "  static int a = 42;",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable class Test {
+              static int a = 42;
+            }
+            """)
         .doTest();
   }
 
@@ -269,12 +308,14 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "import java.util.Map;",
-            "@Immutable class Test {",
-            "  // BUG: Diagnostic contains:",
-            "  final Map<String, String> a = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            import java.util.Map;
+            @Immutable class Test {
+              // BUG: Diagnostic contains:
+              final Map<String, String> a = null;
+            }
+            """)
         .doTest();
   }
 
@@ -283,13 +324,15 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "import java.util.Map;",
-            "import com.google.common.collect.ImmutableList;",
-            "@Immutable class Test {",
-            "  // BUG: Diagnostic contains: instantiated with mutable type for 'E'",
-            "  final ImmutableList<ImmutableList<ImmutableList<Map<String, String>>>> l = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            import java.util.Map;
+            import com.google.common.collect.ImmutableList;
+            @Immutable class Test {
+              // BUG: Diagnostic contains: instantiated with mutable type for 'E'
+              final ImmutableList<ImmutableList<ImmutableList<Map<String, String>>>> l = null;
+            }
+            """)
         .doTest();
   }
 
@@ -298,12 +341,14 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "import com.google.common.collect.ImmutableList;",
-            "@Immutable class Test {",
-            "  // BUG: Diagnostic contains:",
-            "  final ImmutableList l = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            import com.google.common.collect.ImmutableList;
+            @Immutable class Test {
+              // BUG: Diagnostic contains:
+              final ImmutableList l = null;
+            }
+            """)
         .doTest();
   }
 
@@ -312,28 +357,40 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Super.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable public class Super {",
-            "  public final int x = 42;",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable public class Super {
+              public final int x = 42;
+            }
+            """)
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable class Test extends Super {",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable class Test extends Super {
+            }
+            """)
         .doTest();
   }
 
   @Test
   public void extendsMutable() {
     compilationHelper
-        .addSourceLines("Super.java", "public class Super {", "  public int x = 42;", "}")
+        .addSourceLines(
+            "Super.java",
+            """
+            public class Super {
+              public int x = 42;
+            }
+            """)
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "// BUG: Diagnostic contains: 'Super' has non-final field 'x'",
-            "@Immutable class Test extends Super {",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            // BUG: Diagnostic contains: 'Super' has non-final field 'x'
+            @Immutable class Test extends Super {
+            }
+            """)
         .doTest();
   }
 
@@ -342,17 +399,21 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "SuperMost.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "public class SuperMost<B> {",
-            "  public final B x = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            public class SuperMost<B> {
+              public final B x = null;
+            }
+            """)
         .addSourceLines(
             "Super.java",
-            "import java.util.List;",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable(containerOf={\"A\"}) public class Super<A, B> extends SuperMost<A> {",
-            "  public final int x = 42;",
-            "}")
+            """
+            import java.util.List;
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable(containerOf={"A"}) public class Super<A, B> extends SuperMost<A> {
+              public final int x = 42;
+            }
+            """)
         .doTest();
   }
 
@@ -361,17 +422,21 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "SuperMost.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable(containerOf={\"A\"})",
-            "public class SuperMost<A>  {",
-            "  public final A x = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable(containerOf={"A"})
+            public class SuperMost<A>  {
+              public final A x = null;
+            }
+            """)
         .addSourceLines(
             "SubClass.java",
-            "import java.util.List;",
-            "import com.google.errorprone.annotations.Immutable;",
-            "  // BUG: Diagnostic contains: instantiated with mutable type for 'A'",
-            "@Immutable public class SubClass extends SuperMost<List<String>> {}")
+            """
+            import java.util.List;
+            import com.google.errorprone.annotations.Immutable;
+              // BUG: Diagnostic contains: instantiated with mutable type for 'A'
+            @Immutable public class SubClass extends SuperMost<List<String>> {}
+            """)
         .doTest();
   }
 
@@ -380,18 +445,20 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "A.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "import java.util.ArrayList;",
-            "import java.util.List;",
-            "class A {",
-            "  List<Integer> xs = new ArrayList<>();",
-            "  // BUG: Diagnostic contains: has mutable enclosing instance",
-            "  @Immutable class B {",
-            "    int get() {",
-            "      return xs.get(0);",
-            "    }",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            import java.util.ArrayList;
+            import java.util.List;
+            class A {
+              List<Integer> xs = new ArrayList<>();
+              // BUG: Diagnostic contains: has mutable enclosing instance
+              @Immutable class B {
+                int get() {
+                  return xs.get(0);
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -400,25 +467,26 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "A.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "import java.util.ArrayList;",
-            "import java.util.List;",
-            "@Immutable",
-            "class A {",
-            "  @Immutable interface B { int get(); }",
-            "  void test() {",
-            "    List<Integer> xs = new ArrayList<>();",
-            "    @Immutable",
-            "    // BUG: Diagnostic contains: This anonymous class implements @Immutable interface"
-                + " 'B', but closes over 'xs', which is not @Immutable because 'List' is mutable",
-            "    class C implements B {",
-            "      @Override",
-            "      public int get() {",
-            "        return xs.get(0);",
-            "      }",
-            "    }",
-            "  }",
-            "}")
+            """
+import com.google.errorprone.annotations.Immutable;
+import java.util.ArrayList;
+import java.util.List;
+@Immutable
+class A {
+  @Immutable interface B { int get(); }
+  void test() {
+    List<Integer> xs = new ArrayList<>();
+    @Immutable
+    // BUG: Diagnostic contains: This anonymous class implements @Immutable interface 'B', but closes over 'xs', which is not @Immutable because 'List' is mutable
+    class C implements B {
+      @Override
+      public int get() {
+        return xs.get(0);
+      }
+    }
+  }
+}
+""")
         .doTest();
   }
 
@@ -427,11 +495,13 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "import com.google.common.collect.ImmutableList;",
-            "@Immutable(containerOf=\"T\") class Test<T extends ImmutableList<String>> {",
-            "  final T t = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            import com.google.common.collect.ImmutableList;
+            @Immutable(containerOf="T") class Test<T extends ImmutableList<String>> {
+              final T t = null;
+            }
+            """)
         .doTest();
   }
 
@@ -440,16 +510,20 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Holder.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable(containerOf=\"T\") public class Holder<T> {",
-            "  public final T t = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable(containerOf="T") public class Holder<T> {
+              public final T t = null;
+            }
+            """)
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable class Test {",
-            "  final Holder<String> h = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable class Test {
+              final Holder<String> h = null;
+            }
+            """)
         .doTest();
   }
 
@@ -458,17 +532,21 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Holder.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "public class Holder<T> {",
-            "  public final T t = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            public class Holder<T> {
+              public final T t = null;
+            }
+            """)
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable class Test {",
-            "  // BUG: Diagnostic contains:",
-            "  final Holder<Object> h = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable class Test {
+              // BUG: Diagnostic contains:
+              final Holder<Object> h = null;
+            }
+            """)
         .doTest();
   }
 
@@ -477,17 +555,21 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Holder.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "public class Holder<T> {",
-            "  public final T t = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            public class Holder<T> {
+              public final T t = null;
+            }
+            """)
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable class Test {",
-            "  // BUG: Diagnostic contains: not annotated",
-            "  final Holder<Object> h = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable class Test {
+              // BUG: Diagnostic contains: not annotated
+              final Holder<Object> h = null;
+            }
+            """)
         .doTest();
   }
 
@@ -496,22 +578,28 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "SuperMostType.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable(containerOf=\"N\") public class SuperMostType<N> {",
-            "  public final N f = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable(containerOf="N") public class SuperMostType<N> {
+              public final N f = null;
+            }
+            """)
         .addSourceLines(
             "MiddleClass.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable(containerOf=\"M\") public class MiddleClass<M> extends SuperMostType<M> {",
-            "  // Empty",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable(containerOf="M") public class MiddleClass<M> extends SuperMostType<M> {
+              // Empty
+            }
+            """)
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable class Test extends MiddleClass<String> {",
-            "  final MiddleClass<String> f = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable class Test extends MiddleClass<String> {
+              final MiddleClass<String> f = null;
+            }
+            """)
         .doTest();
   }
 
@@ -521,25 +609,31 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "X.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable class X<V> {",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable class X<V> {
+            }
+            """)
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "  // BUG: Diagnostic contains: 'V' is a mutable type variable",
-            "@Immutable(containerOf=\"V\") class Test<V> extends X<V> {",
-            "  private final V t = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+              // BUG: Diagnostic contains: 'V' is a mutable type variable
+            @Immutable(containerOf="V") class Test<V> extends X<V> {
+              private final V t = null;
+            }
+            """)
         .addSourceLines(
             "MutableLeak.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable class MutableLeak {",
-            "  private static class Mutable {",
-            "    int mutableInt;",
-            "  }",
-            "  private final X<Mutable> bad = new Test<Mutable>();",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable class MutableLeak {
+              private static class Mutable {
+                int mutableInt;
+              }
+              private final X<Mutable> bad = new Test<Mutable>();
+            }
+            """)
         .doTest();
   }
 
@@ -548,19 +642,23 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "X.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable(containerOf=\"V\") class X<V> {",
-            "  private final V t = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable(containerOf="V") class X<V> {
+              private final V t = null;
+            }
+            """)
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable class Test<T> {",
-            "  // BUG: Diagnostic contains:",
-            "  // 'X' was instantiated with mutable type for 'V'",
-            "  // 'T' is a mutable type variable",
-            "  private final X<T> t = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable class Test<T> {
+              // BUG: Diagnostic contains:
+              // 'X' was instantiated with mutable type for 'V'
+              // 'T' is a mutable type variable
+              private final X<T> t = null;
+            }
+            """)
         .doTest();
   }
 
@@ -569,12 +667,14 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "import java.util.List;",
-            "@Immutable class Test<T> {",
-            "  // BUG: Diagnostic contains: 'T' is a mutable type variable",
-            "  private final T t = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            import java.util.List;
+            @Immutable class Test<T> {
+              // BUG: Diagnostic contains: 'T' is a mutable type variable
+              private final T t = null;
+            }
+            """)
         .doTest();
   }
 
@@ -583,23 +683,29 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "SuperMostType.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable(containerOf=\"N\") public class SuperMostType<N> {",
-            "  public final N f = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable(containerOf="N") public class SuperMostType<N> {
+              public final N f = null;
+            }
+            """)
         .addSourceLines(
             "MiddleClass.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable(containerOf=\"M\") public class MiddleClass<M> extends SuperMostType<M> {",
-            "  // Empty",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable(containerOf="M") public class MiddleClass<M> extends SuperMostType<M> {
+              // Empty
+            }
+            """)
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "import java.util.List;",
-            "// BUG: Diagnostic contains: instantiated with mutable type for 'M'",
-            "@Immutable class Test extends MiddleClass<List> {",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            import java.util.List;
+            // BUG: Diagnostic contains: instantiated with mutable type for 'M'
+            @Immutable class Test extends MiddleClass<List> {
+            }
+            """)
         .doTest();
   }
 
@@ -608,18 +714,22 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "X.java",
-            "import com.google.common.collect.ImmutableList;",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable(containerOf=\"T\") public class X<T> {",
-            "  final ImmutableList<T> xs = null;",
-            "}")
+            """
+            import com.google.common.collect.ImmutableList;
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable(containerOf="T") public class X<T> {
+              final ImmutableList<T> xs = null;
+            }
+            """)
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "import java.util.List;",
-            "@Immutable class Test {",
-            "  final X<String> x = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            import java.util.List;
+            @Immutable class Test {
+              final X<String> x = null;
+            }
+            """)
         .doTest();
   }
 
@@ -628,15 +738,19 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "X.java",
-            "import com.google.common.collect.ImmutableList;",
-            "public class X<T> { final ImmutableList<T> xs = null; }")
+            """
+            import com.google.common.collect.ImmutableList;
+            public class X<T> { final ImmutableList<T> xs = null; }
+            """)
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable class Test {",
-            "// BUG: Diagnostic contains:",
-            "  final X<Object> x = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable class Test {
+            // BUG: Diagnostic contains:
+              final X<Object> x = null;
+            }
+            """)
         .doTest();
   }
 
@@ -645,16 +759,20 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "X.java",
-            "import com.google.common.collect.ImmutableList;",
-            "public class X<T> { final ImmutableList<? super T> xs = null; }")
+            """
+            import com.google.common.collect.ImmutableList;
+            public class X<T> { final ImmutableList<? super T> xs = null; }
+            """)
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "import java.util.List;",
-            "@Immutable class Test {",
-            "  // BUG: Diagnostic contains:",
-            "  final X<String> x = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            import java.util.List;
+            @Immutable class Test {
+              // BUG: Diagnostic contains:
+              final X<String> x = null;
+            }
+            """)
         .doTest();
   }
 
@@ -663,16 +781,20 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "X.java",
-            "import com.google.common.collect.ImmutableList;",
-            "public class X<T> { final ImmutableList<? super T> xs = null; }")
+            """
+            import com.google.common.collect.ImmutableList;
+            public class X<T> { final ImmutableList<? super T> xs = null; }
+            """)
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "import java.util.List;",
-            "@Immutable class Test {",
-            "  // BUG: Diagnostic contains: is not annotated",
-            "  final X<String> x = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            import java.util.List;
+            @Immutable class Test {
+              // BUG: Diagnostic contains: is not annotated
+              final X<String> x = null;
+            }
+            """)
         .doTest();
   }
 
@@ -681,18 +803,22 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "X.java",
-            "import com.google.common.collect.ImmutableList;",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable(containerOf=\"T\") public class X<T> {",
-            "  final ImmutableList<? extends T> xs = null;",
-            "}")
+            """
+            import com.google.common.collect.ImmutableList;
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable(containerOf="T") public class X<T> {
+              final ImmutableList<? extends T> xs = null;
+            }
+            """)
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "import java.util.List;",
-            "@Immutable class Test {",
-            "  final X<String> x = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            import java.util.List;
+            @Immutable class Test {
+              final X<String> x = null;
+            }
+            """)
         .doTest();
   }
 
@@ -701,19 +827,23 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "X.java",
-            "import com.google.common.collect.ImmutableList;",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable(containerOf=\"T\") public class X<T> {",
-            "  // BUG: Diagnostic contains: mutable type for 'E', 'Object' is mutable",
-            "  final ImmutableList<?> xs = null;",
-            "}")
+            """
+            import com.google.common.collect.ImmutableList;
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable(containerOf="T") public class X<T> {
+              // BUG: Diagnostic contains: mutable type for 'E', 'Object' is mutable
+              final ImmutableList<?> xs = null;
+            }
+            """)
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "import java.util.List;",
-            "@Immutable class Test {",
-            "  final X<String> x = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            import java.util.List;
+            @Immutable class Test {
+              final X<String> x = null;
+            }
+            """)
         .doTest();
   }
 
@@ -722,19 +852,23 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "X.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "import com.google.common.collect.ImmutableList;",
-            "@Immutable(containerOf=\"T\") public class X<T> {",
-            "  final ImmutableList<? extends T> xs = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            import com.google.common.collect.ImmutableList;
+            @Immutable(containerOf="T") public class X<T> {
+              final ImmutableList<? extends T> xs = null;
+            }
+            """)
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "import java.util.List;",
-            "@Immutable class Test {",
-            "  // BUG: Diagnostic contains: instantiated with mutable type",
-            "  final X<Object> x = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            import java.util.List;
+            @Immutable class Test {
+              // BUG: Diagnostic contains: instantiated with mutable type
+              final X<Object> x = null;
+            }
+            """)
         .doTest();
   }
 
@@ -743,11 +877,13 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "X.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "// BUG: Diagnostic contains: could not find type(s) referenced by containerOf: Z",
-            "@Immutable(containerOf=\"Z\") public class X<T> {",
-            "  final int xs = 1;",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            // BUG: Diagnostic contains: could not find type(s) referenced by containerOf: Z
+            @Immutable(containerOf="Z") public class X<T> {
+              final int xs = 1;
+            }
+            """)
         .doTest();
   }
 
@@ -756,37 +892,57 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "X.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable(containerOf=\"T\") public class X<T> {",
-            "  final T xs = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable(containerOf="T") public class X<T> {
+              final T xs = null;
+            }
+            """)
         .addSourceLines(
             "Y.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable(containerOf=\"T\") public class Y<T> {",
-            "  final X<? extends T> xs = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable(containerOf="T") public class Y<T> {
+              final X<? extends T> xs = null;
+            }
+            """)
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable class Test {",
-            "  final Y<String> x = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable class Test {
+              final Y<String> x = null;
+            }
+            """)
         .doTest();
   }
 
   @Test
   public void mutableInstantiation_inferredImmutableType() {
     compilationHelper
-        .addSourceLines("X.java", "public class X<T> {", "  final T xs = null;", "}")
-        .addSourceLines("Y.java", "public class Y<T> {", "  final X<? extends T> xs = null;", "}")
+        .addSourceLines(
+            "X.java",
+            """
+            public class X<T> {
+              final T xs = null;
+            }
+            """)
+        .addSourceLines(
+            "Y.java",
+            """
+            public class Y<T> {
+              final X<? extends T> xs = null;
+            }
+            """)
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable class Test {",
-            "  // BUG: Diagnostic contains:",
-            "  final Y<Object> x = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable class Test {
+              // BUG: Diagnostic contains:
+              final Y<Object> x = null;
+            }
+            """)
         .doTest();
   }
 
@@ -795,18 +951,22 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "X.java",
-            "import com.google.common.collect.ImmutableList;",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable(containerOf=\"T\") public class X<T> {",
-            "  final ImmutableList<T> xs = null;",
-            "}")
+            """
+            import com.google.common.collect.ImmutableList;
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable(containerOf="T") public class X<T> {
+              final ImmutableList<T> xs = null;
+            }
+            """)
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable class Test {",
-            "  // BUG: Diagnostic contains: instantiated",
-            "  final X<?> x = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable class Test {
+              // BUG: Diagnostic contains: instantiated
+              final X<?> x = null;
+            }
+            """)
         .doTest();
   }
 
@@ -815,18 +975,22 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "A.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
-            "@Immutable",
-            "class A<@ImmutableTypeParameter T> {}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            import com.google.errorprone.annotations.ImmutableTypeParameter;
+            @Immutable
+            class A<@ImmutableTypeParameter T> {}
+            """)
         .addSourceLines(
             "B.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable",
-            "class B {",
-            "  private final A<?> a;",
-            "  public B(A<?> a) { this.a = a; }",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable
+            class B {
+              private final A<?> a;
+              public B(A<?> a) { this.a = a; }
+            }
+            """)
         .doTest();
   }
 
@@ -835,18 +999,22 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "X.java",
-            "import com.google.common.collect.ImmutableList;",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable(containerOf=\"T\") public class X<T> {",
-            "  final ImmutableList<T> xs = null;",
-            "}")
+            """
+            import com.google.common.collect.ImmutableList;
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable(containerOf="T") public class X<T> {
+              final ImmutableList<T> xs = null;
+            }
+            """)
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable class Test {",
-            "  // BUG: Diagnostic contains: raw",
-            "  final X x = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable class Test {
+              // BUG: Diagnostic contains: raw
+              final X x = null;
+            }
+            """)
         .doTest();
   }
 
@@ -855,11 +1023,13 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "com/google/common/collect/ImmutableList.java",
-            "package com.google.common.collect;",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable class ImmutableList<E> {",
-            "  public Object[] veryMutable = null;",
-            "}")
+            """
+            package com.google.common.collect;
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable class ImmutableList<E> {
+              public Object[] veryMutable = null;
+            }
+            """)
         .doTest();
   }
 
@@ -868,23 +1038,27 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "threadsafety/Super.java",
-            "package threadsafety;",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable class Super {",
-            "}")
+            """
+            package threadsafety;
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable class Super {
+            }
+            """)
         .addSourceLines(
             "threadsafety/Test.java",
-            "package threadsafety;",
-            "import com.google.errorprone.annotations.Immutable;",
-            "class Test {{",
-            "  new Super() {",
-            "    // BUG: Diagnostic contains: non-final",
-            "    int x = 0;",
-            "    {",
-            "      x++;",
-            "    }",
-            "  };",
-            "}}")
+            """
+            package threadsafety;
+            import com.google.errorprone.annotations.Immutable;
+            class Test {{
+              new Super() {
+                // BUG: Diagnostic contains: non-final
+                int x = 0;
+                {
+                  x++;
+                }
+              };
+            }}
+            """)
         .doTest();
   }
 
@@ -893,23 +1067,27 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "threadsafety/Super.java",
-            "package threadsafety;",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable interface Super {",
-            "}")
+            """
+            package threadsafety;
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable interface Super {
+            }
+            """)
         .addSourceLines(
             "threadsafety/Test.java",
-            "package threadsafety;",
-            "import com.google.errorprone.annotations.Immutable;",
-            "class Test {{",
-            "  new Super() {",
-            "    // BUG: Diagnostic contains: non-final",
-            "    int x = 0;",
-            "    {",
-            "      x++;",
-            "    }",
-            "  };",
-            "}}")
+            """
+            package threadsafety;
+            import com.google.errorprone.annotations.Immutable;
+            class Test {{
+              new Super() {
+                // BUG: Diagnostic contains: non-final
+                int x = 0;
+                {
+                  x++;
+                }
+              };
+            }}
+            """)
         .doTest();
   }
 
@@ -918,20 +1096,24 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "threadsafety/Super.java",
-            "package threadsafety;",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable(containerOf=\"T\") class Super<T> {",
-            "  private final T t = null;",
-            "}")
+            """
+            package threadsafety;
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable(containerOf="T") class Super<T> {
+              private final T t = null;
+            }
+            """)
         .addSourceLines(
             "threadsafety/Test.java",
-            "package threadsafety;",
-            "import com.google.errorprone.annotations.Immutable;",
-            "class Test {",
-            "  static <T> Super<T> get() {",
-            "    return new Super<T>() {};",
-            "  }",
-            "}")
+            """
+            package threadsafety;
+            import com.google.errorprone.annotations.Immutable;
+            class Test {
+              static <T> Super<T> get() {
+                return new Super<T>() {};
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -940,16 +1122,20 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "MyList.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable(containerOf=\"T\") public interface MyList<T> {",
-            "  T get(int i);",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable(containerOf="T") public interface MyList<T> {
+              T get(int i);
+            }
+            """)
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "public class Test {",
-            "  private final MyList<Integer> l = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            public class Test {
+              private final MyList<Integer> l = null;
+            }
+            """)
         .doTest();
   }
 
@@ -958,17 +1144,21 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "MyList.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable(containerOf=\"T\") public interface MyList<T> {",
-            "  T get(int i);",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable(containerOf="T") public interface MyList<T> {
+              T get(int i);
+            }
+            """)
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable public class Test<X> {",
-            "  // BUG: Diagnostic contains: mutable type for 'T'",
-            "  private final MyList<X> l = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable public class Test<X> {
+              // BUG: Diagnostic contains: mutable type for 'T'
+              private final MyList<X> l = null;
+            }
+            """)
         .doTest();
   }
 
@@ -977,17 +1167,21 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "MyList.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable(containerOf=\"T\") public interface MyList<T> {",
-            "  T get(int i);",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable(containerOf="T") public interface MyList<T> {
+              T get(int i);
+            }
+            """)
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "// BUG: Diagnostic contains: 'X' is a mutable type",
-            "@Immutable public class Test<X> implements MyList<X> {",
-            "  public X get(int i) { return null; }",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            // BUG: Diagnostic contains: 'X' is a mutable type
+            @Immutable public class Test<X> implements MyList<X> {
+              public X get(int i) { return null; }
+            }
+            """)
         .doTest();
   }
 
@@ -998,19 +1192,21 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "threadsafety/Super.java",
-            "package threadsafety;",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable class Super {",
-            "}")
+            """
+            package threadsafety;
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable class Super {
+            }
+            """)
         .addSourceLines(
             "threadsafety/Test.java",
-            "package threadsafety;",
-            "class Test extends Super {",
-            "  // BUG: Diagnostic contains:"
-                + " Class extends @Immutable type threadsafety.Super, but is not immutable: 'Test'"
-                + " has non-final field 'x'",
-            "  public int x = 0;",
-            "}")
+            """
+package threadsafety;
+class Test extends Super {
+  // BUG: Diagnostic contains: Class extends @Immutable type threadsafety.Super, but is not immutable: 'Test' has non-final field 'x'
+  public int x = 0;
+}
+""")
         .doTest();
   }
 
@@ -1019,17 +1215,21 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "threadsafety/Super.java",
-            "package threadsafety;",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable(containerOf={\"T\"}) class Super<T> {",
-            "}")
+            """
+            package threadsafety;
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable(containerOf={"T"}) class Super<T> {
+            }
+            """)
         .addSourceLines(
             "threadsafety/Test.java",
-            "package threadsafety;",
-            "class Test extends Super<Integer> {",
-            "  // BUG: Diagnostic contains: non-final",
-            "  public int x = 0;",
-            "}")
+            """
+            package threadsafety;
+            class Test extends Super<Integer> {
+              // BUG: Diagnostic contains: non-final
+              public int x = 0;
+            }
+            """)
         .doTest();
   }
 
@@ -1038,17 +1238,21 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "threadsafety/Super.java",
-            "package threadsafety;",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable(containerOf={\"T\"}) class Super<T> {",
-            "}")
+            """
+            package threadsafety;
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable(containerOf={"T"}) class Super<T> {
+            }
+            """)
         .addSourceLines(
             "threadsafety/Test.java",
-            "package threadsafety;",
-            "class Test<U> extends Super<U> {",
-            "  // BUG: Diagnostic contains: mutable type for 'U'",
-            "  public final Test<Object> x = null;",
-            "}")
+            """
+            package threadsafety;
+            class Test<U> extends Super<U> {
+              // BUG: Diagnostic contains: mutable type for 'U'
+              public final Test<Object> x = null;
+            }
+            """)
         .doTest();
   }
 
@@ -1057,16 +1261,20 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "threadsafety/Super.java",
-            "package threadsafety;",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable class Super {",
-            "}")
+            """
+            package threadsafety;
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable class Super {
+            }
+            """)
         .addSourceLines(
             "threadsafety/Test.java",
-            "package threadsafety;",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable class Test extends Super {",
-            "}")
+            """
+            package threadsafety;
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable class Test extends Super {
+            }
+            """)
         .doTest();
   }
 
@@ -1077,22 +1285,28 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "threadsafety/I.java",
-            "package threadsafety;",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable interface I {",
-            "}")
+            """
+            package threadsafety;
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable interface I {
+            }
+            """)
         .addSourceLines(
             "threadsafety/Test.java",
-            "package threadsafety;",
-            "class Test implements J {",
-            "  // BUG: Diagnostic contains: non-final field 'x'",
-            "  public int x = 0;",
-            "}")
+            """
+            package threadsafety;
+            class Test implements J {
+              // BUG: Diagnostic contains: non-final field 'x'
+              public int x = 0;
+            }
+            """)
         .addSourceLines(
-            "threadsafety/J.java", //
-            "package threadsafety;",
-            "interface J extends I {",
-            "}")
+            "threadsafety/J.java",
+            """
+            package threadsafety;
+            interface J extends I {
+            }
+            """)
         .doTest();
   }
 
@@ -1102,18 +1316,22 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "threadsafety/Super.java",
-            "package threadsafety;",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable(containerOf=\"T\") class Super<T> {",
-            "  private final T t = null;",
-            "}")
+            """
+            package threadsafety;
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable(containerOf="T") class Super<T> {
+              private final T t = null;
+            }
+            """)
         .addSourceLines(
             "threadsafety/Test.java",
-            "package threadsafety;",
-            "import com.google.errorprone.annotations.Immutable;",
-            "class Test {{",
-            "  new Super<Object>() {};",
-            "}}")
+            """
+            package threadsafety;
+            import com.google.errorprone.annotations.Immutable;
+            class Test {{
+              new Super<Object>() {};
+            }}
+            """)
         .doTest();
   }
 
@@ -1122,18 +1340,22 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "threadsafety/Super.java",
-            "package threadsafety;",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable(containerOf=\"X\") class Super<X> {",
-            "  private final X t = null;",
-            "}")
+            """
+            package threadsafety;
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable(containerOf="X") class Super<X> {
+              private final X t = null;
+            }
+            """)
         .addSourceLines(
             "threadsafety/Test.java",
-            "package threadsafety;",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable(containerOf=\"T\") class Test<T> {{",
-            "  new Super<T>() {};",
-            "}}")
+            """
+            package threadsafety;
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable(containerOf="T") class Test<T> {{
+              new Super<T>() {};
+            }}
+            """)
         .doTest();
   }
 
@@ -1142,21 +1364,25 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "threadsafety/Super.java",
-            "package threadsafety;",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable(containerOf=\"Y\") class Super<Y> {",
-            "  @Immutable(containerOf=\"X\") class Inner1<X> {",
-            "    private final X x = null;",
-            "    private final Y y = null;",
-            "  }",
-            "}")
+            """
+            package threadsafety;
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable(containerOf="Y") class Super<Y> {
+              @Immutable(containerOf="X") class Inner1<X> {
+                private final X x = null;
+                private final Y y = null;
+              }
+            }
+            """)
         .addSourceLines(
             "threadsafety/Test.java",
-            "package threadsafety;",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable(containerOf=\"U\") class Test<U> extends Super<U> {",
-            "  @Immutable class Inner2 extends Inner1<U> {}",
-            "}")
+            """
+            package threadsafety;
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable(containerOf="U") class Test<U> extends Super<U> {
+              @Immutable class Inner2 extends Inner1<U> {}
+            }
+            """)
         .doTest();
   }
 
@@ -1165,18 +1391,22 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "threadsafety/Super.java",
-            "package threadsafety;",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable(containerOf=\"X\") class Super<X> {",
-            "  private final X t = null;",
-            "}")
+            """
+            package threadsafety;
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable(containerOf="X") class Super<X> {
+              private final X t = null;
+            }
+            """)
         .addSourceLines(
             "threadsafety/Test.java",
-            "package threadsafety;",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable(containerOf=\"T\") class Test<T> {",
-            "  @Immutable class Inner extends Super<T> {}",
-            "}")
+            """
+            package threadsafety;
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable(containerOf="T") class Test<T> {
+              @Immutable class Inner extends Super<T> {}
+            }
+            """)
         .doTest();
   }
 
@@ -1185,18 +1415,22 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "threadsafety/Super.java",
-            "package threadsafety;",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable(containerOf=\"T\") class Super<T> {",
-            "  private final T t = null;",
-            "}")
+            """
+            package threadsafety;
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable(containerOf="T") class Super<T> {
+              private final T t = null;
+            }
+            """)
         .addSourceLines(
             "threadsafety/Test.java",
-            "package threadsafety;",
-            "import com.google.errorprone.annotations.Immutable;",
-            "class Test {{",
-            "  new Super<String>() {};",
-            "}}")
+            """
+            package threadsafety;
+            import com.google.errorprone.annotations.Immutable;
+            class Test {{
+              new Super<String>() {};
+            }}
+            """)
         .doTest();
   }
 
@@ -1205,17 +1439,21 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "threadsafety/Super.java",
-            "package threadsafety;",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable class Super {",
-            "}")
+            """
+            package threadsafety;
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable class Super {
+            }
+            """)
         .addSourceLines(
             "threadsafety/Test.java",
-            "package threadsafety;",
-            "import com.google.errorprone.annotations.Immutable;",
-            "class Test {{",
-            "  new Super() {};",
-            "}}")
+            """
+            package threadsafety;
+            import com.google.errorprone.annotations.Immutable;
+            class Test {{
+              new Super() {};
+            }}
+            """)
         .doTest();
   }
 
@@ -1224,24 +1462,28 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "threadsafety/Super.java",
-            "package threadsafety;",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable interface Super {",
-            "  int f();",
-            "}")
+            """
+            package threadsafety;
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable interface Super {
+              int f();
+            }
+            """)
         .addSourceLines(
             "threadsafety/Test.java",
-            "package threadsafety;",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable enum Test implements Super {",
-            "  INSTANCE {",
-            "    // BUG: Diagnostic contains: non-final",
-            "    public int x = 0;",
-            "    public int f() {",
-            "      return x++;",
-            "    }",
-            "  }",
-            "}")
+            """
+            package threadsafety;
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable enum Test implements Super {
+              INSTANCE {
+                // BUG: Diagnostic contains: non-final
+                public int x = 0;
+                public int f() {
+                  return x++;
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1250,21 +1492,25 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "threadsafety/Super.java",
-            "package threadsafety;",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable interface Super {",
-            "  void f();",
-            "}")
+            """
+            package threadsafety;
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable interface Super {
+              void f();
+            }
+            """)
         .addSourceLines(
             "threadsafety/Test.java",
-            "package threadsafety;",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable enum Test implements Super {",
-            "  INSTANCE {",
-            "    public void f() {",
-            "    }",
-            "  }",
-            "}")
+            """
+            package threadsafety;
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable enum Test implements Super {
+              INSTANCE {
+                public void f() {
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1279,10 +1525,12 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable class Test {",
-            "  final int[] xs = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable class Test {
+              final int[] xs = null;
+            }
+            """)
         .doTest();
   }
 
@@ -1291,11 +1539,13 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable class Test {",
-            "  @SuppressWarnings(\"Immutable\")",
-            "  final int[] xs = {1};",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable class Test {
+              @SuppressWarnings("Immutable")
+              final int[] xs = {1};
+            }
+            """)
         .doTest();
   }
 
@@ -1304,13 +1554,15 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable class Test {",
-            "  @SuppressWarnings(\"Immutable\")",
-            "  final int[] xs = {1};",
-            "  // BUG: Diagnostic contains: arrays are mutable",
-            "  final int[] ys = {1};",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable class Test {
+              @SuppressWarnings("Immutable")
+              final int[] xs = {1};
+              // BUG: Diagnostic contains: arrays are mutable
+              final int[] ys = {1};
+            }
+            """)
         .doTest();
   }
 
@@ -1319,13 +1571,15 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable class Test {",
-            "  // BUG: Diagnostic contains: arrays are mutable",
-            "  final int[] xs = {1};",
-            "  // BUG: Diagnostic contains: arrays are mutable",
-            "  final int[] ys = {1};",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable class Test {
+              // BUG: Diagnostic contains: arrays are mutable
+              final int[] xs = {1};
+              // BUG: Diagnostic contains: arrays are mutable
+              final int[] ys = {1};
+            }
+            """)
         .doTest();
   }
 
@@ -1334,25 +1588,28 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "com/google/errorprone/annotations/Immutable.java",
-            "package com.google.errorprone.annotations;",
-            "import static java.lang.annotation.ElementType.TYPE;",
-            "import static java.lang.annotation.RetentionPolicy.RUNTIME;",
-            "import java.lang.annotation.Retention;",
-            "import java.lang.annotation.Target;",
-            "@Target(TYPE)",
-            "@Retention(RUNTIME)",
-            "public @interface Immutable {",
-            "  String[] containerOf() default {};",
-            "}")
+            """
+            package com.google.errorprone.annotations;
+            import static java.lang.annotation.ElementType.TYPE;
+            import static java.lang.annotation.RetentionPolicy.RUNTIME;
+            import java.lang.annotation.Retention;
+            import java.lang.annotation.Target;
+            @Target(TYPE)
+            @Retention(RUNTIME)
+            public @interface Immutable {
+              String[] containerOf() default {};
+            }
+            """)
         .addSourceLines("Foo.java", "class Foo {}")
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable class Test {",
-            "  // BUG: Diagnostic contains:"
-                + " 'Foo' is not annotated with @com.google.errorprone.annotations.Immutable",
-            "  final Foo f = null;",
-            "}")
+            """
+import com.google.errorprone.annotations.Immutable;
+@Immutable class Test {
+  // BUG: Diagnostic contains: 'Foo' is not annotated with @com.google.errorprone.annotations.Immutable
+  final Foo f = null;
+}
+""")
         .setArgs(Arrays.asList("-cp", "NOSUCH"))
         .doTest();
   }
@@ -1363,12 +1620,14 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "enum Test {",
-            "  ;",
-            "  // BUG: Diagnostic contains: @Immutable class has mutable field",
-            "  private final Object o = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            enum Test {
+              ;
+              // BUG: Diagnostic contains: @Immutable class has mutable field
+              private final Object o = null;
+            }
+            """)
         .doTest();
   }
 
@@ -1378,13 +1637,15 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "enum Test {",
-            "  ONE {",
-            "    // BUG: Diagnostic contains: @Immutable class has mutable field",
-            "    private final Object o = null;",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            enum Test {
+              ONE {
+                // BUG: Diagnostic contains: @Immutable class has mutable field
+                private final Object o = null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1397,10 +1658,12 @@ public class ImmutableCheckerTest {
             "@interface Anno {}")
         .addSourceLines(
             "Test.java",
-            "abstract class Test implements Anno {",
-            "  // BUG: Diagnostic contains: @Immutable class has mutable field",
-            "  final Object o = null;",
-            "}")
+            """
+            abstract class Test implements Anno {
+              // BUG: Diagnostic contains: @Immutable class has mutable field
+              final Object o = null;
+            }
+            """)
         .doTest();
   }
 
@@ -1409,16 +1672,18 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "public class Test {",
-            "  int x = 0;",
-            "  // BUG: Diagnostic contains: 'Inner' has mutable enclosing instance 'Test'",
-            "  @Immutable public class Inner {",
-            "    public int count() {",
-            "      return x++;",
-            "    }",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            public class Test {
+              int x = 0;
+              // BUG: Diagnostic contains: 'Inner' has mutable enclosing instance 'Test'
+              @Immutable public class Inner {
+                public int count() {
+                  return x++;
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1447,10 +1712,12 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable class Test {",
-            "  final Class clazz = Test.class;",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable class Test {
+              final Class clazz = Test.class;
+            }
+            """)
         .doTest();
   }
 
@@ -1477,14 +1744,20 @@ public class ImmutableCheckerTest {
     CompilationTestHelper.newInstance(ImmutableChecker.class, getClass())
         .setArgs(ImmutableList.of("-XepOpt:Immutable:KnownImmutable=threadsafety.SomeImmutable"))
         .addSourceLines(
-            "threadsafety/SomeImmutable.java", "package threadsafety;", "class SomeImmutable {}")
+            "threadsafety/SomeImmutable.java",
+            """
+            package threadsafety;
+            class SomeImmutable {}
+            """)
         .addSourceLines(
             "threadsafety/Test.java",
-            "package threadsafety;",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable class Test {",
-            "  public final SomeImmutable s = new SomeImmutable();",
-            "}")
+            """
+            package threadsafety;
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable class Test {
+              public final SomeImmutable s = new SomeImmutable();
+            }
+            """)
         .doTest();
   }
 
@@ -1493,15 +1766,21 @@ public class ImmutableCheckerTest {
     CompilationTestHelper.newInstance(ImmutableChecker.class, getClass())
         .setArgs(ImmutableList.of("-XepOpt:Immutable:KnownMutable=threadsafety.SomeUnsafe"))
         .addSourceLines(
-            "threadsafety/SomeUnsafe.java", "package threadsafety;", "class SomeUnsafe {}")
+            "threadsafety/SomeUnsafe.java",
+            """
+            package threadsafety;
+            class SomeUnsafe {}
+            """)
         .addSourceLines(
             "threadsafety/Test.java",
-            "package threadsafety;",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable class Test {",
-            "  // BUG: Diagnostic contains: 'SomeUnsafe' is mutable",
-            "  public final SomeUnsafe s = new SomeUnsafe();",
-            "}")
+            """
+            package threadsafety;
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable class Test {
+              // BUG: Diagnostic contains: 'SomeUnsafe' is mutable
+              public final SomeUnsafe s = new SomeUnsafe();
+            }
+            """)
         .doTest();
   }
 
@@ -1510,11 +1789,13 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "import com.google.errorprone.annotations.concurrent.LazyInit;",
-            "@Immutable class Test {",
-            "  @LazyInit int a = 42;",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            import com.google.errorprone.annotations.concurrent.LazyInit;
+            @Immutable class Test {
+              @LazyInit int a = 42;
+            }
+            """)
         .doTest();
   }
 
@@ -1523,13 +1804,15 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "import com.google.errorprone.annotations.concurrent.LazyInit;",
-            "import java.util.List;",
-            "@Immutable class Test {",
-            "  // BUG: Diagnostic contains: 'List' is mutable",
-            "  @LazyInit List<Integer> a = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            import com.google.errorprone.annotations.concurrent.LazyInit;
+            import java.util.List;
+            @Immutable class Test {
+              // BUG: Diagnostic contains: 'List' is mutable
+              @LazyInit List<Integer> a = null;
+            }
+            """)
         .doTest();
   }
 
@@ -1538,12 +1821,14 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
-            "import com.google.errorprone.annotations.Immutable;",
-            "import com.google.common.collect.ImmutableList;",
-            "@Immutable class Test<@ImmutableTypeParameter T> {",
-            "  final T t = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.ImmutableTypeParameter;
+            import com.google.errorprone.annotations.Immutable;
+            import com.google.common.collect.ImmutableList;
+            @Immutable class Test<@ImmutableTypeParameter T> {
+              final T t = null;
+            }
+            """)
         .doTest();
   }
 
@@ -1552,18 +1837,22 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "A.java",
-            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
-            "import com.google.errorprone.annotations.Immutable;",
-            "import com.google.common.collect.ImmutableList;",
-            "@Immutable class A<@ImmutableTypeParameter T> {}")
+            """
+            import com.google.errorprone.annotations.ImmutableTypeParameter;
+            import com.google.errorprone.annotations.Immutable;
+            import com.google.common.collect.ImmutableList;
+            @Immutable class A<@ImmutableTypeParameter T> {}
+            """)
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
-            "class Test<@ImmutableTypeParameter T> {",
-            "  A<T> n() {",
-            "    return new A<>();",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.ImmutableTypeParameter;
+            class Test<@ImmutableTypeParameter T> {
+              A<T> n() {
+                return new A<>();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1572,19 +1861,22 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "A.java",
-            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
-            "import com.google.errorprone.annotations.Immutable;",
-            "import com.google.common.collect.ImmutableList;",
-            "@Immutable class A<@ImmutableTypeParameter T> {}")
+            """
+            import com.google.errorprone.annotations.ImmutableTypeParameter;
+            import com.google.errorprone.annotations.Immutable;
+            import com.google.common.collect.ImmutableList;
+            @Immutable class A<@ImmutableTypeParameter T> {}
+            """)
         .addSourceLines(
             "Test.java",
-            "class Test<T> {",
-            "  A<T> n() {",
-            "    // BUG: Diagnostic contains: instantiation of 'T' is mutable, 'T' is a mutable"
-                + " type variable",
-            "    return new A<>();",
-            "  }",
-            "}")
+            """
+class Test<T> {
+  A<T> n() {
+    // BUG: Diagnostic contains: instantiation of 'T' is mutable, 'T' is a mutable type variable
+    return new A<>();
+  }
+}
+""")
         .doTest();
   }
 
@@ -1594,19 +1886,22 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "A.java",
-            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
-            "import com.google.errorprone.annotations.Immutable;",
-            "import com.google.common.collect.ImmutableList;",
-            "@Immutable class A<@ImmutableTypeParameter T> {}")
+            """
+            import com.google.errorprone.annotations.ImmutableTypeParameter;
+            import com.google.errorprone.annotations.Immutable;
+            import com.google.common.collect.ImmutableList;
+            @Immutable class A<@ImmutableTypeParameter T> {}
+            """)
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  static <T> A<T> m() {",
-            "    // BUG: Diagnostic contains: instantiation of 'T' is mutable, 'T' is a mutable"
-                + " type variable",
-            "    return new A<>();",
-            "  }",
-            "}")
+            """
+class Test {
+  static <T> A<T> m() {
+    // BUG: Diagnostic contains: instantiation of 'T' is mutable, 'T' is a mutable type variable
+    return new A<>();
+  }
+}
+""")
         .doTest();
   }
 
@@ -1615,18 +1910,22 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "A.java",
-            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
-            "import com.google.errorprone.annotations.Immutable;",
-            "import com.google.common.collect.ImmutableList;",
-            "@Immutable class A<@ImmutableTypeParameter T> {}")
+            """
+            import com.google.errorprone.annotations.ImmutableTypeParameter;
+            import com.google.errorprone.annotations.Immutable;
+            import com.google.common.collect.ImmutableList;
+            @Immutable class A<@ImmutableTypeParameter T> {}
+            """)
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
-            "class Test {",
-            "  static <@ImmutableTypeParameter T> A<T> l() {",
-            "    return new A<>();",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.ImmutableTypeParameter;
+            class Test {
+              static <@ImmutableTypeParameter T> A<T> l() {
+                return new A<>();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1635,19 +1934,22 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "A.java",
-            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
-            "import com.google.errorprone.annotations.Immutable;",
-            "import com.google.common.collect.ImmutableList;",
-            "@Immutable class A<@ImmutableTypeParameter T> {}")
+            """
+            import com.google.errorprone.annotations.ImmutableTypeParameter;
+            import com.google.errorprone.annotations.Immutable;
+            import com.google.common.collect.ImmutableList;
+            @Immutable class A<@ImmutableTypeParameter T> {}
+            """)
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  <T> A<T> k() {",
-            "    // BUG: Diagnostic contains: instantiation of 'T' is mutable, 'T' is a mutable"
-                + " type variable",
-            "    return new A<>();",
-            "  }",
-            "}")
+            """
+class Test {
+  <T> A<T> k() {
+    // BUG: Diagnostic contains: instantiation of 'T' is mutable, 'T' is a mutable type variable
+    return new A<>();
+  }
+}
+""")
         .doTest();
   }
 
@@ -1656,18 +1958,22 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "A.java",
-            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
-            "import com.google.errorprone.annotations.Immutable;",
-            "import com.google.common.collect.ImmutableList;",
-            "@Immutable class A<@ImmutableTypeParameter T> {}")
+            """
+            import com.google.errorprone.annotations.ImmutableTypeParameter;
+            import com.google.errorprone.annotations.Immutable;
+            import com.google.common.collect.ImmutableList;
+            @Immutable class A<@ImmutableTypeParameter T> {}
+            """)
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
-            "class Test {",
-            "  <@ImmutableTypeParameter T> A<T> k() {",
-            "    return new A<>();",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.ImmutableTypeParameter;
+            class Test {
+              <@ImmutableTypeParameter T> A<T> k() {
+                return new A<>();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1676,23 +1982,28 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "MyMutableType.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "class MyMutableType {}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            class MyMutableType {}
+            """)
         .addSourceLines(
             "A.java",
-            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
-            "import com.google.errorprone.annotations.Immutable;",
-            "import com.google.common.collect.ImmutableList;",
-            "@Immutable class A<@ImmutableTypeParameter T> {}")
+            """
+            import com.google.errorprone.annotations.ImmutableTypeParameter;
+            import com.google.errorprone.annotations.Immutable;
+            import com.google.common.collect.ImmutableList;
+            @Immutable class A<@ImmutableTypeParameter T> {}
+            """)
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  <T extends MyMutableType> A<T> i() {",
-            "    // BUG: Diagnostic contains: instantiation of 'T' is mutable, 'T' is a mutable"
-                + " type variable",
-            "    return new A<>();",
-            "  }",
-            "}")
+            """
+class Test {
+  <T extends MyMutableType> A<T> i() {
+    // BUG: Diagnostic contains: instantiation of 'T' is mutable, 'T' is a mutable type variable
+    return new A<>();
+  }
+}
+""")
         .doTest();
   }
 
@@ -1701,21 +2012,27 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "MyImmutableType.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable class MyImmutableType {}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable class MyImmutableType {}
+            """)
         .addSourceLines(
             "A.java",
-            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
-            "import com.google.errorprone.annotations.Immutable;",
-            "import com.google.common.collect.ImmutableList;",
-            "@Immutable class A<@ImmutableTypeParameter T> {}")
+            """
+            import com.google.errorprone.annotations.ImmutableTypeParameter;
+            import com.google.errorprone.annotations.Immutable;
+            import com.google.common.collect.ImmutableList;
+            @Immutable class A<@ImmutableTypeParameter T> {}
+            """)
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  <T extends MyImmutableType> A<T> h() {",
-            "    return new A<>();",
-            "  }",
-            "}")
+            """
+            class Test {
+              <T extends MyImmutableType> A<T> h() {
+                return new A<>();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1724,18 +2041,22 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "A.java",
-            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
-            "import com.google.errorprone.annotations.Immutable;",
-            "import com.google.common.collect.ImmutableList;",
-            "@Immutable class A<@ImmutableTypeParameter T> {}")
+            """
+            import com.google.errorprone.annotations.ImmutableTypeParameter;
+            import com.google.errorprone.annotations.Immutable;
+            import com.google.common.collect.ImmutableList;
+            @Immutable class A<@ImmutableTypeParameter T> {}
+            """)
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  A<Object> g() {",
-            "    // BUG: Diagnostic contains: instantiation of 'T' is mutable, 'Object' is mutable",
-            "    return new A<>();",
-            "  }",
-            "}")
+            """
+            class Test {
+              A<Object> g() {
+                // BUG: Diagnostic contains: instantiation of 'T' is mutable, 'Object' is mutable
+                return new A<>();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1744,12 +2065,21 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "A.java",
-            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
-            "import com.google.errorprone.annotations.Immutable;",
-            "import com.google.common.collect.ImmutableList;",
-            "@Immutable class A<@ImmutableTypeParameter T> {}")
+            """
+            import com.google.errorprone.annotations.ImmutableTypeParameter;
+            import com.google.errorprone.annotations.Immutable;
+            import com.google.common.collect.ImmutableList;
+            @Immutable class A<@ImmutableTypeParameter T> {}
+            """)
         .addSourceLines(
-            "Test.java", "class Test {", "  A<String> f() {", "    return new A<>();", "  }", "}")
+            "Test.java",
+            """
+            class Test {
+              A<String> f() {
+                return new A<>();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1758,10 +2088,12 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
-            "class T {",
-            "  static <@ImmutableTypeParameter T> void f() {}",
-            "}")
+            """
+            import com.google.errorprone.annotations.ImmutableTypeParameter;
+            class T {
+              static <@ImmutableTypeParameter T> void f() {}
+            }
+            """)
         .doTest();
   }
 
@@ -1770,10 +2102,12 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
-            "@Immutable interface T<@ImmutableTypeParameter T> {",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            import com.google.errorprone.annotations.ImmutableTypeParameter;
+            @Immutable interface T<@ImmutableTypeParameter T> {
+            }
+            """)
         .doTest();
   }
 
@@ -1782,8 +2116,10 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
-            "class A<@ImmutableTypeParameter T> {}")
+            """
+            import com.google.errorprone.annotations.ImmutableTypeParameter;
+            class A<@ImmutableTypeParameter T> {}
+            """)
         .doTest();
   }
 
@@ -1792,20 +2128,22 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
-            "import com.google.errorprone.annotations.Immutable;",
-            "import java.util.function.Function;",
-            "class Test {",
-            "  public final <A> void f1(A transform) {}",
-            "  public <B, @ImmutableTypeParameter C> C f2(Function<B, C> fn) {",
-            "    return null;",
-            "  }",
-            "  public final <D, E> void f3(Function<D, E> fn) {",
-            "    // BUG: Diagnostic contains: instantiation of 'C' is mutable",
-            "    // 'E' is a mutable type variable",
-            "    f1(f2(fn));",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.ImmutableTypeParameter;
+            import com.google.errorprone.annotations.Immutable;
+            import java.util.function.Function;
+            class Test {
+              public final <A> void f1(A transform) {}
+              public <B, @ImmutableTypeParameter C> C f2(Function<B, C> fn) {
+                return null;
+              }
+              public final <D, E> void f3(Function<D, E> fn) {
+                // BUG: Diagnostic contains: instantiation of 'C' is mutable
+                // 'E' is a mutable type variable
+                f1(f2(fn));
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1817,20 +2155,22 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
-            "import com.google.errorprone.annotations.Immutable;",
-            "import java.util.function.Function;",
-            "class Test {",
-            "  public final <A> void f1(A transform) {}",
-            "  public <@ImmutableTypeParameter B, C> C f2(Function<B, C> fn) {",
-            "    return null;",
-            "  }",
-            "  public final <D, E> void f3(Function<D, E> fn) {",
-            "    // BUG: Diagnostic contains: instantiation of 'B' is mutable",
-            "    // 'D' is a mutable type variable",
-            "    f1(f2(fn));",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.ImmutableTypeParameter;
+            import com.google.errorprone.annotations.Immutable;
+            import java.util.function.Function;
+            class Test {
+              public final <A> void f1(A transform) {}
+              public <@ImmutableTypeParameter B, C> C f2(Function<B, C> fn) {
+                return null;
+              }
+              public final <D, E> void f3(Function<D, E> fn) {
+                // BUG: Diagnostic contains: instantiation of 'B' is mutable
+                // 'D' is a mutable type variable
+                f1(f2(fn));
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1839,15 +2179,19 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "X.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable class X<V> {}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable class X<V> {}
+            """)
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "// BUG: Diagnostic contains: 'X' is not a container of 'V'",
-            "@Immutable(containerOf = {\"Y\"}) class Test<Y> extends X<Y> {",
-            "  private final Y t = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            // BUG: Diagnostic contains: 'X' is not a container of 'V'
+            @Immutable(containerOf = {"Y"}) class Test<Y> extends X<Y> {
+              private final Y t = null;
+            }
+            """)
         .doTest();
   }
 
@@ -1856,14 +2200,18 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "X.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable(containerOf = {\"V\"}) class X<V> {}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable(containerOf = {"V"}) class X<V> {}
+            """)
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable(containerOf = {\"Y\"}) class Test<Y> extends X<Y> {",
-            "  private final Y t = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable(containerOf = {"Y"}) class Test<Y> extends X<Y> {
+              private final Y t = null;
+            }
+            """)
         .doTest();
   }
 
@@ -1872,14 +2220,18 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "X.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable(containerOf = {\"V\"}) class X<U, V> {}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable(containerOf = {"V"}) class X<U, V> {}
+            """)
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable(containerOf = {\"Y\"}) class Test<Y> extends X<Object, Y> {",
-            "  private final Y t = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable(containerOf = {"Y"}) class Test<Y> extends X<Object, Y> {
+              private final Y t = null;
+            }
+            """)
         .doTest();
   }
 
@@ -1888,15 +2240,19 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "X.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable interface X<V> {}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable interface X<V> {}
+            """)
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "// BUG: Diagnostic contains: 'X' is not a container of 'V'",
-            "@Immutable(containerOf = {\"Y\"}) class Test<Y> implements X<Y> {",
-            "  private final Y t = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            // BUG: Diagnostic contains: 'X' is not a container of 'V'
+            @Immutable(containerOf = {"Y"}) class Test<Y> implements X<Y> {
+              private final Y t = null;
+            }
+            """)
         .doTest();
   }
 
@@ -1904,15 +2260,19 @@ public class ImmutableCheckerTest {
   public void containerOf_field() {
     compilationHelper
         .addSourceLines(
-            "X.java", //
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable interface X<Y> {}")
+            "X.java",
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable interface X<Y> {}
+            """)
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable(containerOf=\"V\") class Test<V> {",
-            "  private final X<V> t = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable(containerOf="V") class Test<V> {
+              private final X<V> t = null;
+            }
+            """)
         .doTest();
   }
 
@@ -1921,12 +2281,14 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import static java.lang.annotation.ElementType.TYPE_USE;",
-            "import java.lang.annotation.Target;",
-            "@Target(TYPE_USE) @interface A {}",
-            "class Test {",
-            "  Object o = new @A Object();",
-            "}")
+            """
+            import static java.lang.annotation.ElementType.TYPE_USE;
+            import java.lang.annotation.Target;
+            @Target(TYPE_USE) @interface A {}
+            class Test {
+              Object o = new @A Object();
+            }
+            """)
         .doTest();
   }
 
@@ -1936,19 +2298,21 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable interface I {",
-            "  int f();",
-            "}",
-            "class Test {",
-            "  int x;",
-            "  I one = new I() {",
-            "    public int f() {",
-            "      return x++;",
-            "    }",
-            "  };",
-            "  I two = () -> x++;",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable interface I {
+              int f();
+            }
+            class Test {
+              int x;
+              I one = new I() {
+                public int f() {
+                  return x++;
+                }
+              };
+              I two = () -> x++;
+            }
+            """)
         .doTest();
   }
 
@@ -1957,17 +2321,21 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "MyImmutableType.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable class MyImmutableType {}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable class MyImmutableType {}
+            """)
         .addSourceLines(
             "Test.java",
-            "import com.google.common.collect.ImmutableList;",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable class Test<T extends MyImmutableType, U extends T> {",
-            "  final T t = null;",
-            "  final U u = null;",
-            "  final ImmutableList<? extends U> v = null;",
-            "}")
+            """
+            import com.google.common.collect.ImmutableList;
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable class Test<T extends MyImmutableType, U extends T> {
+              final T t = null;
+              final U u = null;
+              final ImmutableList<? extends U> v = null;
+            }
+            """)
         .doTest();
   }
 
@@ -1976,11 +2344,13 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Recursive.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable",
-            "abstract class Recursive<T extends Recursive<T>> {",
-            "  final T x = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable
+            abstract class Recursive<T extends Recursive<T>> {
+              final T x = null;
+            }
+            """)
         .doTest();
   }
 
@@ -1989,14 +2359,16 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Recursive.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "import java.util.List;",
-            "@Immutable",
-            "abstract class Recursive<T extends Recursive<T>> {",
-            "  final T x = null;",
-            "  // BUG: Diagnostic contains: 'Recursive' has field 'y' of type 'java.util.List<T>'",
-            "  final List<T> y = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            import java.util.List;
+            @Immutable
+            abstract class Recursive<T extends Recursive<T>> {
+              final T x = null;
+              // BUG: Diagnostic contains: 'Recursive' has field 'y' of type 'java.util.List<T>'
+              final List<T> y = null;
+            }
+            """)
         .doTest();
   }
 
@@ -2005,34 +2377,44 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "ImmutableInterface.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable interface ImmutableInterface {}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable interface ImmutableInterface {}
+            """)
         .addSourceLines(
             "MutableImpl.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@SuppressWarnings(\"Immutable\") class MutableImpl implements ImmutableInterface {",
-            "  int mutableField;",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @SuppressWarnings("Immutable") class MutableImpl implements ImmutableInterface {
+              int mutableField;
+            }
+            """)
         .addSourceLines(
             "WithContainerOf.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable(containerOf=\"T\")",
-            "class WithContainerOf<T extends ImmutableInterface> { final T x = null; }")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable(containerOf="T")
+            class WithContainerOf<T extends ImmutableInterface> { final T x = null; }
+            """)
         .addSourceLines(
             "WithoutContainerOf.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable",
-            "class WithoutContainerOf<T extends ImmutableInterface> { final T x = null; }")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable
+            class WithoutContainerOf<T extends ImmutableInterface> { final T x = null; }
+            """)
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable class Test {",
-            "  final WithContainerOf<ImmutableInterface> a = null;",
-            "  final WithoutContainerOf<ImmutableInterface> b = null;",
-            "  // BUG: Diagnostic contains: field 'c' of type 'WithContainerOf<MutableImpl>'",
-            "  final WithContainerOf<MutableImpl> c = null;",
-            "  final WithoutContainerOf<MutableImpl> d = null;",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable class Test {
+              final WithContainerOf<ImmutableInterface> a = null;
+              final WithoutContainerOf<ImmutableInterface> b = null;
+              // BUG: Diagnostic contains: field 'c' of type 'WithContainerOf<MutableImpl>'
+              final WithContainerOf<MutableImpl> c = null;
+              final WithoutContainerOf<MutableImpl> d = null;
+            }
+            """)
         .doTest();
   }
 
@@ -2042,17 +2424,19 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
-            "import com.google.errorprone.annotations.Immutable;",
-            "import com.google.common.collect.ImmutableList;",
-            "@Immutable class Test<@ImmutableTypeParameter T> {",
-            "  <@ImmutableTypeParameter T> T f(T t) { return t; }",
-            "  <@ImmutableTypeParameter T> void g(T a, T b) {}",
-            "  @Immutable interface I {}",
-            "  void test(I i) {",
-            "    g(f(i), f(i));",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.ImmutableTypeParameter;
+            import com.google.errorprone.annotations.Immutable;
+            import com.google.common.collect.ImmutableList;
+            @Immutable class Test<@ImmutableTypeParameter T> {
+              <@ImmutableTypeParameter T> T f(T t) { return t; }
+              <@ImmutableTypeParameter T> void g(T a, T b) {}
+              @Immutable interface I {}
+              void test(I i) {
+                g(f(i), f(i));
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -2062,22 +2446,24 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
-            "import com.google.errorprone.annotations.Immutable;",
-            "abstract class T {",
-            "  interface S<T> {}",
-            "  interface L<T> {}",
-            "  interface A {}",
-            "  @Immutable interface B extends A {}",
-            "  @Immutable interface C extends B {}",
-            "  abstract <X, Y, Z> void h(S<X> firstType, S<Y> secondType, S<Z> thirdType);",
-            "  abstract <@ImmutableTypeParameter E extends A> S<E> f(Class<E> entityClass);",
-            "  abstract <T> S<L<T>> g(S<T> element);",
-            "  void test() {",
-            "    // BUG: Diagnostic contains: the declaration of type 'T.A' is not annotated",
-            "    h(f(A.class), g(f(B.class)), g(f(C.class)));",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.ImmutableTypeParameter;
+            import com.google.errorprone.annotations.Immutable;
+            abstract class T {
+              interface S<T> {}
+              interface L<T> {}
+              interface A {}
+              @Immutable interface B extends A {}
+              @Immutable interface C extends B {}
+              abstract <X, Y, Z> void h(S<X> firstType, S<Y> secondType, S<Z> thirdType);
+              abstract <@ImmutableTypeParameter E extends A> S<E> f(Class<E> entityClass);
+              abstract <T> S<L<T>> g(S<T> element);
+              void test() {
+                // BUG: Diagnostic contains: the declaration of type 'T.A' is not annotated
+                h(f(A.class), g(f(B.class)), g(f(C.class)));
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -2087,16 +2473,19 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "A.java",
-            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable class S<@ImmutableTypeParameter X> {}")
+            """
+            import com.google.errorprone.annotations.ImmutableTypeParameter;
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable class S<@ImmutableTypeParameter X> {}
+            """)
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
-            "import com.google.errorprone.annotations.Immutable;",
-            "// BUG: Diagnostic contains: 'S' required instantiation of 'X' with type parameters,"
-                + " but was raw",
-            "@Immutable class T<@ImmutableTypeParameter X> extends S {}")
+            """
+import com.google.errorprone.annotations.ImmutableTypeParameter;
+import com.google.errorprone.annotations.Immutable;
+// BUG: Diagnostic contains: 'S' required instantiation of 'X' with type parameters, but was raw
+@Immutable class T<@ImmutableTypeParameter X> extends S {}
+""")
         .doTest();
   }
 
@@ -2117,8 +2506,10 @@ public class ImmutableCheckerTest {
     withImmutableTypeParameterGeneric()
         .addSourceLines(
             "ImmutableContainer.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable(containerOf = \"T\") class ImmutableContainer<T> { }")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable(containerOf = "T") class ImmutableContainer<T> { }
+            """)
         .addSourceLines(
             "Test.class",
             "class Test {",
@@ -2280,8 +2671,10 @@ public class ImmutableCheckerTest {
     withImmutableTypeParameterGeneric()
         .addSourceLines(
             "ImmutableClass.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable class ImmutableClass { }")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable class ImmutableClass { }
+            """)
         .addSourceLines(
             "Test.class",
             "class Test {",
@@ -2297,8 +2690,10 @@ public class ImmutableCheckerTest {
     withImmutableTypeParameterGeneric()
         .addSourceLines(
             "ImmutableClass.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable class ImmutableClass { }")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable class ImmutableClass { }
+            """)
         .addSourceLines(
             "Test.class",
             "class Test {",
@@ -2314,8 +2709,10 @@ public class ImmutableCheckerTest {
     withImmutableTypeParameterGeneric()
         .addSourceLines(
             "ImmutableClass.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable class ImmutableClass { }")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable class ImmutableClass { }
+            """)
         .addSourceLines(
             "ChildGenericWithImmutableParam.java",
             "class ChildGenericWithImmutableParam<T extends ImmutableClass> extends"
@@ -2329,20 +2726,22 @@ public class ImmutableCheckerTest {
         .addSourceLines("MutableClass.java", "class MutableClass { }")
         .addSourceLines(
             "Clazz.java",
-            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
-            "class Clazz {",
-            "  public <@ImmutableTypeParameter T> void method(int m, T v) { }",
-            "}")
+            """
+            import com.google.errorprone.annotations.ImmutableTypeParameter;
+            class Clazz {
+              public <@ImmutableTypeParameter T> void method(int m, T v) { }
+            }
+            """)
         .addSourceLines(
             "Invoker.java",
-            "class Invoker {",
-            "  public void method() {",
-            "    // BUG: Diagnostic contains: instantiation of 'T' is mutable, the declaration of"
-                + " type 'MutableClass' is not annotated with"
-                + " @com.google.errorprone.annotations.Immutable",
-            "    new Clazz().method(78, new MutableClass());",
-            "  }",
-            "}")
+            """
+class Invoker {
+  public void method() {
+    // BUG: Diagnostic contains: instantiation of 'T' is mutable, the declaration of type 'MutableClass' is not annotated with @com.google.errorprone.annotations.Immutable
+    new Clazz().method(78, new MutableClass());
+  }
+}
+""")
         .doTest();
   }
 
@@ -2351,8 +2750,10 @@ public class ImmutableCheckerTest {
     withImmutableTypeParameterGeneric()
         .addSourceLines(
             "Container.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable(containerOf = {\"T\"}) class Container<T> {}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable(containerOf = {"T"}) class Container<T> {}
+            """)
         .addSourceLines(
             "Clazz.java",
             "class Clazz<T> { private GenericWithImmutableParam<Container<T>> container; }")
@@ -2364,10 +2765,12 @@ public class ImmutableCheckerTest {
     withImmutableTypeParameterGeneric()
         .addSourceLines(
             "Container.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable(containerOf = {\"T\"}) class Container<T> { ",
-            "   GenericWithImmutableParam<T> method() { return null; }",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable(containerOf = {"T"}) class Container<T> {
+               GenericWithImmutableParam<T> method() { return null; }
+            }
+            """)
         .doTest();
   }
 
@@ -2376,9 +2779,11 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "B.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable",
-            "abstract class B<T extends B<T>> {}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable
+            abstract class B<T extends B<T>> {}
+            """)
         .doTest();
   }
 
@@ -2387,13 +2792,17 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "B.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable",
-            "interface B<T extends B<T>> {}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable
+            interface B<T extends B<T>> {}
+            """)
         .addSourceLines(
             "A.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable class A implements B<A> { final B<A> value = null; }")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable class A implements B<A> { final B<A> value = null; }
+            """)
         .doTest();
   }
 
@@ -2413,11 +2822,12 @@ public class ImmutableCheckerTest {
     withImmutableTypeParameterGeneric()
         .addSourceLines(
             "Clazz.java",
-            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
-            "class Clazz {",
-            "  private static final GenericWithImmutableParam<String> value = new"
-                + " GenericWithImmutableParam<String>() {};",
-            "}")
+            """
+import com.google.errorprone.annotations.ImmutableTypeParameter;
+class Clazz {
+  private static final GenericWithImmutableParam<String> value = new GenericWithImmutableParam<String>() {};
+}
+""")
         .doTest();
   }
 
@@ -2426,15 +2836,14 @@ public class ImmutableCheckerTest {
     withImmutableTypeParameterGeneric()
         .addSourceLines(
             "Clazz.java",
-            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
-            "class Clazz {",
-            "  // BUG: Diagnostic contains: instantiation of 'T' is mutable, the declaration of"
-                + " type 'Clazz.MutableClass' is not annotated with"
-                + " @com.google.errorprone.annotations.Immutable",
-            "  private static final GenericWithImmutableParam<MutableClass> value = new"
-                + " GenericWithImmutableParam<MutableClass>() {};",
-            "  private static class MutableClass {}",
-            "}")
+            """
+import com.google.errorprone.annotations.ImmutableTypeParameter;
+class Clazz {
+  // BUG: Diagnostic contains: instantiation of 'T' is mutable, the declaration of type 'Clazz.MutableClass' is not annotated with @com.google.errorprone.annotations.Immutable
+  private static final GenericWithImmutableParam<MutableClass> value = new GenericWithImmutableParam<MutableClass>() {};
+  private static class MutableClass {}
+}
+""")
         .doTest();
   }
 
@@ -2453,11 +2862,10 @@ public class ImmutableCheckerTest {
         .addSourceLines("MutableClass.java", "class MutableClass {}")
         .addSourceLines(
             "ChildGenericWithImmutableParam.java",
-            "// BUG: Diagnostic contains: instantiation of 'T' is mutable, the declaration of type"
-                + " 'MutableClass' is not annotated with"
-                + " @com.google.errorprone.annotations.Immutable",
-            "class ChildGenericWithImmutableParam extends GenericWithImmutableParam<MutableClass> {"
-                + " }")
+            """
+// BUG: Diagnostic contains: instantiation of 'T' is mutable, the declaration of type 'MutableClass' is not annotated with @com.google.errorprone.annotations.Immutable
+class ChildGenericWithImmutableParam extends GenericWithImmutableParam<MutableClass> { }
+""")
         .doTest();
   }
 
@@ -2466,8 +2874,10 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "GenericWithImmutableParamIface.java",
-            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
-            "interface GenericWithImmutableParamIface<@ImmutableTypeParameter T> {}")
+            """
+            import com.google.errorprone.annotations.ImmutableTypeParameter;
+            interface GenericWithImmutableParamIface<@ImmutableTypeParameter T> {}
+            """)
         .addSourceLines(
             "ChildGenericWithImmutableParam.java",
             "class ChildGenericWithImmutableParam implements GenericWithImmutableParamIface<String>"
@@ -2480,16 +2890,17 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "GenericWithImmutableParamIface.java",
-            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
-            "interface GenericWithImmutableParamIface<@ImmutableTypeParameter T> {}")
+            """
+            import com.google.errorprone.annotations.ImmutableTypeParameter;
+            interface GenericWithImmutableParamIface<@ImmutableTypeParameter T> {}
+            """)
         .addSourceLines("MutableClass.java", "class MutableClass {}")
         .addSourceLines(
             "ChildGenericWithImmutableParam.java",
-            "// BUG: Diagnostic contains: instantiation of 'T' is mutable, the declaration of type"
-                + " 'MutableClass' is not annotated with"
-                + " @com.google.errorprone.annotations.Immutable",
-            "class ChildGenericWithImmutableParam implements"
-                + " GenericWithImmutableParamIface<MutableClass> { }")
+            """
+// BUG: Diagnostic contains: instantiation of 'T' is mutable, the declaration of type 'MutableClass' is not annotated with @com.google.errorprone.annotations.Immutable
+class ChildGenericWithImmutableParam implements GenericWithImmutableParamIface<MutableClass> { }
+""")
         .doTest();
   }
 
@@ -2498,9 +2909,10 @@ public class ImmutableCheckerTest {
     withImmutableTypeParameterGeneric()
         .addSourceLines(
             "ChildGenericWithImmutableParam.java",
-            "// BUG: Diagnostic contains: instantiation of 'T' is mutable, 'T' is a mutable type"
-                + " variable",
-            "class ChildGenericWithImmutableParam<T> extends GenericWithImmutableParam<T> { }")
+            """
+// BUG: Diagnostic contains: instantiation of 'T' is mutable, 'T' is a mutable type variable
+class ChildGenericWithImmutableParam<T> extends GenericWithImmutableParam<T> { }
+""")
         .doTest();
   }
 
@@ -2509,9 +2921,10 @@ public class ImmutableCheckerTest {
     withImmutableTypeParameterGeneric()
         .addSourceLines(
             "ChildGenericWithImmutableParam.java",
-            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
-            "class ChildGenericWithImmutableParam<@ImmutableTypeParameter T> extends"
-                + " GenericWithImmutableParam<T> { }")
+            """
+import com.google.errorprone.annotations.ImmutableTypeParameter;
+class ChildGenericWithImmutableParam<@ImmutableTypeParameter T> extends GenericWithImmutableParam<T> { }
+""")
         .doTest();
   }
 
@@ -2520,14 +2933,16 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "GenericWithImmutableParamIface.java",
-            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
-            "interface GenericWithImmutableParamIface<@ImmutableTypeParameter T> {}")
+            """
+            import com.google.errorprone.annotations.ImmutableTypeParameter;
+            interface GenericWithImmutableParamIface<@ImmutableTypeParameter T> {}
+            """)
         .addSourceLines(
             "ChildGenericWithImmutableParam.java",
-            "// BUG: Diagnostic contains: instantiation of 'T' is mutable, 'T' is a mutable type"
-                + " variable",
-            "class ChildGenericWithImmutableParam<T> implements GenericWithImmutableParamIface<T> {"
-                + " }")
+            """
+// BUG: Diagnostic contains: instantiation of 'T' is mutable, 'T' is a mutable type variable
+class ChildGenericWithImmutableParam<T> implements GenericWithImmutableParamIface<T> { }
+""")
         .doTest();
   }
 
@@ -2536,13 +2951,16 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "GenericWithImmutableParamIface.java",
-            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
-            "interface GenericWithImmutableParamIface<@ImmutableTypeParameter T> {}")
+            """
+            import com.google.errorprone.annotations.ImmutableTypeParameter;
+            interface GenericWithImmutableParamIface<@ImmutableTypeParameter T> {}
+            """)
         .addSourceLines(
             "ChildGenericWithImmutableParam.java",
-            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
-            "class ChildGenericWithImmutableParam<@ImmutableTypeParameter T> implements"
-                + " GenericWithImmutableParamIface<T> { }")
+            """
+import com.google.errorprone.annotations.ImmutableTypeParameter;
+class ChildGenericWithImmutableParam<@ImmutableTypeParameter T> implements GenericWithImmutableParamIface<T> { }
+""")
         .doTest();
   }
 
@@ -2550,8 +2968,10 @@ public class ImmutableCheckerTest {
   private CompilationTestHelper withImmutableTypeParameterGeneric() {
     return compilationHelper.addSourceLines(
         "GenericWithImmutableParam.java",
-        "import com.google.errorprone.annotations.ImmutableTypeParameter;",
-        "class GenericWithImmutableParam<@ImmutableTypeParameter T> {}");
+        """
+        import com.google.errorprone.annotations.ImmutableTypeParameter;
+        class GenericWithImmutableParam<@ImmutableTypeParameter T> {}
+        """);
   }
 
   @Test
@@ -2559,17 +2979,19 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "import java.util.ArrayList;",
-            "import java.util.List;",
-            "class Test {",
-            "  @Immutable interface ImmutableFunction<A, B> { A apply(B b); }",
-            "  private int a = 0;",
-            "  void test(ImmutableFunction<Integer, Integer> f) {",
-            "    // BUG: Diagnostic contains:",
-            "    test(x -> ++a);",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            import java.util.ArrayList;
+            import java.util.List;
+            class Test {
+              @Immutable interface ImmutableFunction<A, B> { A apply(B b); }
+              private int a = 0;
+              void test(ImmutableFunction<Integer, Integer> f) {
+                // BUG: Diagnostic contains:
+                test(x -> ++a);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -2578,17 +3000,19 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "import java.util.ArrayList;",
-            "import java.util.List;",
-            "class Test {",
-            "  @Immutable interface ImmutableFunction<A, B> { A apply(B b); }",
-            "  private final int b = 1;",
-            "  void test(ImmutableFunction<Integer, Integer> f) {",
-            "    test(x -> b);",
-            "    test(x -> this.b);",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            import java.util.ArrayList;
+            import java.util.List;
+            class Test {
+              @Immutable interface ImmutableFunction<A, B> { A apply(B b); }
+              private final int b = 1;
+              void test(ImmutableFunction<Integer, Integer> f) {
+                test(x -> b);
+                test(x -> this.b);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -2597,17 +3021,19 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "import java.util.ArrayList;",
-            "import java.util.List;",
-            "class Test {",
-            "  @Immutable interface ImmutableFunction<A, B> { A apply(B b); }",
-            "  private int b = 1;",
-            "  void test(ImmutableFunction<Integer, Integer> f) {",
-            "    // BUG: Diagnostic contains:",
-            "    test(x -> this.b);",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            import java.util.ArrayList;
+            import java.util.List;
+            class Test {
+              @Immutable interface ImmutableFunction<A, B> { A apply(B b); }
+              private int b = 1;
+              void test(ImmutableFunction<Integer, Integer> f) {
+                // BUG: Diagnostic contains:
+                test(x -> this.b);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -2616,17 +3042,19 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "import java.util.List;",
-            "import java.util.ArrayList;",
-            "class Test {",
-            "  @Immutable interface ImmutableFunction<A, B> { A apply(B b); }",
-            "  void test(ImmutableFunction<Integer, Integer> f) {",
-            "    List<Integer> xs = new ArrayList<>();",
-            "    // BUG: Diagnostic contains:",
-            "    test(x -> xs.get(x));",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            import java.util.List;
+            import java.util.ArrayList;
+            class Test {
+              @Immutable interface ImmutableFunction<A, B> { A apply(B b); }
+              void test(ImmutableFunction<Integer, Integer> f) {
+                List<Integer> xs = new ArrayList<>();
+                // BUG: Diagnostic contains:
+                test(x -> xs.get(x));
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -2635,15 +3063,17 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.ArrayList;",
-            "import java.util.List;",
-            "import java.util.function.Function;",
-            "class Test {",
-            "  void test(Function<Integer, Integer> f) {",
-            "    List<Integer> xs = new ArrayList<>();",
-            "    test(x -> xs.get(x));",
-            "  }",
-            "}")
+            """
+            import java.util.ArrayList;
+            import java.util.List;
+            import java.util.function.Function;
+            class Test {
+              void test(Function<Integer, Integer> f) {
+                List<Integer> xs = new ArrayList<>();
+                test(x -> xs.get(x));
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -2652,15 +3082,17 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "import java.util.ArrayList;",
-            "import java.util.List;",
-            "class Test {",
-            "  @Immutable interface ImmutableFunction<A, B> { A apply(B b); }",
-            "  void test(ImmutableFunction<Integer, Integer> f) {",
-            "    test(x -> { List<Integer> xs = new ArrayList<>(); return xs.get(x); });",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            import java.util.ArrayList;
+            import java.util.List;
+            class Test {
+              @Immutable interface ImmutableFunction<A, B> { A apply(B b); }
+              void test(ImmutableFunction<Integer, Integer> f) {
+                test(x -> { List<Integer> xs = new ArrayList<>(); return xs.get(x); });
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -2669,16 +3101,18 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "class Test {",
-            "  @Immutable interface ImmutableFunction<A, B> { A apply(B b); }",
-            "  static class A {",
-            "    public static int FOO = 1;",
-            "  }",
-            "  void test(ImmutableFunction<Integer, Integer> f) {",
-            "    test(x -> A.FOO);",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            class Test {
+              @Immutable interface ImmutableFunction<A, B> { A apply(B b); }
+              static class A {
+                public static int FOO = 1;
+              }
+              void test(ImmutableFunction<Integer, Integer> f) {
+                test(x -> A.FOO);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -2687,22 +3121,19 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "abstract class Test {",
-            "  @Immutable interface ImmutableFunction<A, B> { A apply(B b); }",
-            "  abstract int mutable(int a);",
-            "  void test(ImmutableFunction<Integer, Integer> f) {",
-            "    // BUG: Diagnostic contains: This lambda implements @Immutable interface"
-                + " 'ImmutableFunction', but accesses instance method(s) 'mutable' on 'Test' which"
-                + " is not @Immutable",
-            "    test(x -> mutable(x));",
-            "    // BUG: Diagnostic contains: This lambda implements @Immutable interface"
-                + " 'ImmutableFunction', but closes over 'this', which is not @Immutable because"
-                + " 'Test' has field 'this' of type 'Test', the declaration of type 'Test' is not"
-                + " annotated with @com.google.errorprone.annotations.Immutable",
-            "    test(x -> this.mutable(x));",
-            "  }",
-            "}")
+            """
+import com.google.errorprone.annotations.Immutable;
+abstract class Test {
+  @Immutable interface ImmutableFunction<A, B> { A apply(B b); }
+  abstract int mutable(int a);
+  void test(ImmutableFunction<Integer, Integer> f) {
+    // BUG: Diagnostic contains: This lambda implements @Immutable interface 'ImmutableFunction', but accesses instance method(s) 'mutable' on 'Test' which is not @Immutable
+    test(x -> mutable(x));
+    // BUG: Diagnostic contains: This lambda implements @Immutable interface 'ImmutableFunction', but closes over 'this', which is not @Immutable because 'Test' has field 'this' of type 'Test', the declaration of type 'Test' is not annotated with @com.google.errorprone.annotations.Immutable
+    test(x -> this.mutable(x));
+  }
+}
+""")
         .doTest();
   }
 
@@ -2711,16 +3142,18 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable",
-            "abstract class Test {",
-            "  @Immutable interface ImmutableFunction<A, B> { A apply(B b); }",
-            "  abstract int mutable(int a);",
-            "  void test(ImmutableFunction<Integer, Integer> f) {",
-            "    test(x -> mutable(x));",
-            "    test(x -> this.mutable(x));",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable
+            abstract class Test {
+              @Immutable interface ImmutableFunction<A, B> { A apply(B b); }
+              abstract int mutable(int a);
+              void test(ImmutableFunction<Integer, Integer> f) {
+                test(x -> mutable(x));
+                test(x -> this.mutable(x));
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -2729,16 +3162,18 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "import java.util.function.Function;",
-            "@Immutable",
-            "abstract class Test {",
-            "  @Immutable interface ImmutableFunction<A, B> extends Function<A, B> {",
-            "    default <C> ImmutableFunction<A, C> andThen(ImmutableFunction<B, C> fn) {",
-            "      return x -> fn.apply(apply(x));",
-            "    }",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            import java.util.function.Function;
+            @Immutable
+            abstract class Test {
+              @Immutable interface ImmutableFunction<A, B> extends Function<A, B> {
+                default <C> ImmutableFunction<A, C> andThen(ImmutableFunction<B, C> fn) {
+                  return x -> fn.apply(apply(x));
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -2747,17 +3182,19 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "import java.util.function.Function;",
-            "@Immutable",
-            "abstract class Test implements Function<String, String> {",
-            "  @Immutable interface ImmutableFunction { String apply(String a); }",
-            "  class A {",
-            "    ImmutableFunction asImmutable() {",
-            "      return x -> apply(x);",
-            "    }",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            import java.util.function.Function;
+            @Immutable
+            abstract class Test implements Function<String, String> {
+              @Immutable interface ImmutableFunction { String apply(String a); }
+              class A {
+                ImmutableFunction asImmutable() {
+                  return x -> apply(x);
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -2766,15 +3203,17 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.collect.ImmutableMap;",
-            "import com.google.errorprone.annotations.Immutable;",
-            "abstract class Test {",
-            "  @Immutable interface ImmutableFunction { String apply(String b); }",
-            "  void test(ImmutableFunction f) {",
-            "    ImmutableMap<String, String> map = ImmutableMap.of();",
-            "    test(map::get);",
-            "  }",
-            "}")
+            """
+            import com.google.common.collect.ImmutableMap;
+            import com.google.errorprone.annotations.Immutable;
+            abstract class Test {
+              @Immutable interface ImmutableFunction { String apply(String b); }
+              void test(ImmutableFunction f) {
+                ImmutableMap<String, String> map = ImmutableMap.of();
+                test(map::get);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -2783,17 +3222,19 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "import java.util.HashMap;",
-            "import java.util.Map;",
-            "abstract class Test {",
-            "  @Immutable interface ImmutableFunction { String apply(String b); }",
-            "  void test(ImmutableFunction f) {",
-            "    Map<String, String> map = new HashMap<>();",
-            "    // BUG: Diagnostic contains:",
-            "    test(map::get);",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            import java.util.HashMap;
+            import java.util.Map;
+            abstract class Test {
+              @Immutable interface ImmutableFunction { String apply(String b); }
+              void test(ImmutableFunction f) {
+                Map<String, String> map = new HashMap<>();
+                // BUG: Diagnostic contains:
+                test(map::get);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -2802,15 +3243,17 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.collect.Maps;",
-            "import com.google.errorprone.annotations.Immutable;",
-            "abstract class Test {",
-            "  @Immutable interface ImmutableFunction { String apply(String b); }",
-            "  void test(ImmutableFunction f) {",
-            "    // BUG: Diagnostic contains:",
-            "    test(Maps.<String, String>newHashMap()::get);",
-            "  }",
-            "}")
+            """
+            import com.google.common.collect.Maps;
+            import com.google.errorprone.annotations.Immutable;
+            abstract class Test {
+              @Immutable interface ImmutableFunction { String apply(String b); }
+              void test(ImmutableFunction f) {
+                // BUG: Diagnostic contains:
+                test(Maps.<String, String>newHashMap()::get);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -2819,14 +3262,16 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.collect.Lists;",
-            "import com.google.errorprone.annotations.Immutable;",
-            "abstract class Test {",
-            "  @Immutable interface ImmutableProvider { Object get(); }",
-            "  void test(ImmutableProvider f) {",
-            "    test(Lists::newArrayList);",
-            "  }",
-            "}")
+            """
+            import com.google.common.collect.Lists;
+            import com.google.errorprone.annotations.Immutable;
+            abstract class Test {
+              @Immutable interface ImmutableProvider { Object get(); }
+              void test(ImmutableProvider f) {
+                test(Lists::newArrayList);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -2835,14 +3280,16 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "import java.util.Set;",
-            "abstract class Test {",
-            "  @Immutable interface ImmutableBiConsumer { void accept(Set<String> xs, String x); }",
-            "  void test(ImmutableBiConsumer c) {",
-            "    test(Set::add);",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            import java.util.Set;
+            abstract class Test {
+              @Immutable interface ImmutableBiConsumer { void accept(Set<String> xs, String x); }
+              void test(ImmutableBiConsumer c) {
+                test(Set::add);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -2851,14 +3298,16 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "import java.util.ArrayList;",
-            "abstract class Test {",
-            "  @Immutable interface ImmutableProvider { Object get(); }",
-            "  void test(ImmutableProvider f) {",
-            "    test(ArrayList::new);",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            import java.util.ArrayList;
+            abstract class Test {
+              @Immutable interface ImmutableProvider { Object get(); }
+              void test(ImmutableProvider f) {
+                test(ArrayList::new);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -2867,15 +3316,17 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
-            "import java.util.ArrayList;",
-            "abstract class Test {",
-            "  interface ImmutableProvider<@ImmutableTypeParameter T> { T get(); }",
-            "  void test(ImmutableProvider<?> f) {",
-            "    // BUG: Diagnostic contains:",
-            "    test(ArrayList::new);",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.ImmutableTypeParameter;
+            import java.util.ArrayList;
+            abstract class Test {
+              interface ImmutableProvider<@ImmutableTypeParameter T> { T get(); }
+              void test(ImmutableProvider<?> f) {
+                // BUG: Diagnostic contains:
+                test(ArrayList::new);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -2884,15 +3335,17 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
-            "import java.util.ArrayList;",
-            "abstract class Test {",
-            "  interface ImmutableProvider<@ImmutableTypeParameter T> { T get(); }",
-            "  void test(ImmutableProvider<?> f) {",
-            "    // BUG: Diagnostic contains:",
-            "    test(() -> new ArrayList<>());",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.ImmutableTypeParameter;
+            import java.util.ArrayList;
+            abstract class Test {
+              interface ImmutableProvider<@ImmutableTypeParameter T> { T get(); }
+              void test(ImmutableProvider<?> f) {
+                // BUG: Diagnostic contains:
+                test(() -> new ArrayList<>());
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -2901,23 +3354,25 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "import java.util.ArrayList;",
-            "import java.util.List;",
-            "class Test {",
-            "  final Test t = null;",
-            "  final List<String> xs = new ArrayList<>();",
-            "  final List<String> getXs() {",
-            "    return xs;",
-            "  }",
-            "  @Immutable interface ImmutableFunction { String apply(String b); }",
-            "  void test(ImmutableFunction f) {",
-            "    test(x -> {",
-            "      Test t = new Test();",
-            "      return t.xs.get(0) + t.getXs().get(0) + t.t.t.xs.get(0);",
-            "    });",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            import java.util.ArrayList;
+            import java.util.List;
+            class Test {
+              final Test t = null;
+              final List<String> xs = new ArrayList<>();
+              final List<String> getXs() {
+                return xs;
+              }
+              @Immutable interface ImmutableFunction { String apply(String b); }
+              void test(ImmutableFunction f) {
+                test(x -> {
+                  Test t = new Test();
+                  return t.xs.get(0) + t.getXs().get(0) + t.t.t.xs.get(0);
+                });
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -2926,21 +3381,23 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "import java.util.List;",
-            "import java.util.ArrayList;",
-            "class Test {",
-            "  @Immutable interface ImmutableFunction<A, B> { A apply(B b); }",
-            "  void test(ImmutableFunction<Integer, Integer> f) {",
-            "    List<Integer> xs = new ArrayList<>();",
-            "    // BUG: Diagnostic contains:",
-            "    test(new ImmutableFunction<>() {",
-            "      @Override public Integer apply(Integer x) {",
-            "        return xs.get(x);",
-            "      }",
-            "    });",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            import java.util.List;
+            import java.util.ArrayList;
+            class Test {
+              @Immutable interface ImmutableFunction<A, B> { A apply(B b); }
+              void test(ImmutableFunction<Integer, Integer> f) {
+                List<Integer> xs = new ArrayList<>();
+                // BUG: Diagnostic contains:
+                test(new ImmutableFunction<>() {
+                  @Override public Integer apply(Integer x) {
+                    return xs.get(x);
+                  }
+                });
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -2949,21 +3406,23 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "import java.util.List;",
-            "import java.util.ArrayList;",
-            "class Test {",
-            "  @Immutable interface ImmutableFunction<A, B> { A apply(B b); }",
-            "  void test(ImmutableFunction<Integer, Integer> f) {",
-            "    test(new ImmutableFunction<>() {",
-            "      @Override public Integer apply(Integer x) {",
-            "        return xs.get(x);",
-            "      }",
-            "      @SuppressWarnings(\"Immutable\")",
-            "      List<Integer> xs = new ArrayList<>();",
-            "    });",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            import java.util.List;
+            import java.util.ArrayList;
+            class Test {
+              @Immutable interface ImmutableFunction<A, B> { A apply(B b); }
+              void test(ImmutableFunction<Integer, Integer> f) {
+                test(new ImmutableFunction<>() {
+                  @Override public Integer apply(Integer x) {
+                    return xs.get(x);
+                  }
+                  @SuppressWarnings("Immutable")
+                  List<Integer> xs = new ArrayList<>();
+                });
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -2972,22 +3431,23 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "import java.util.List;",
-            "import java.util.ArrayList;",
-            "class Test {",
-            "  interface Function<A, B> { default void foo() {} }",
-            "  @Immutable interface ImmutableFunction<A, B> extends Function<A, B> { A apply(B b);"
-                + " }",
-            "  void test(ImmutableFunction<Integer, Integer> f) {",
-            "    test(new ImmutableFunction<>() {",
-            "      @Override public Integer apply(Integer x) {",
-            "        foo();",
-            "        return 0;",
-            "      }",
-            "    });",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            import java.util.List;
+            import java.util.ArrayList;
+            class Test {
+              interface Function<A, B> { default void foo() {} }
+              @Immutable interface ImmutableFunction<A, B> extends Function<A, B> { A apply(B b); }
+              void test(ImmutableFunction<Integer, Integer> f) {
+                test(new ImmutableFunction<>() {
+                  @Override public Integer apply(Integer x) {
+                    foo();
+                    return 0;
+                  }
+                });
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -2997,20 +3457,24 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Kind.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable enum Kind { A, B; }")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable enum Kind { A, B; }
+            """)
         .addSourceLines(
             "Test.java",
-            "import java.util.Optional;",
-            "import java.util.function.Supplier;",
-            "class Test {",
-            "  Supplier<Optional<String>> test(Kind kind) {",
-            "    return switch (kind) {",
-            "      case A -> Optional::empty;",
-            "      case B -> () -> Optional.of(\"\");",
-            "    };",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+            import java.util.function.Supplier;
+            class Test {
+              Supplier<Optional<String>> test(Kind kind) {
+                return switch (kind) {
+                  case A -> Optional::empty;
+                  case B -> () -> Optional.of("");
+                };
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -3020,17 +3484,19 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.function.Supplier;",
-            "class Test {",
-            "  String test(String mode) {",
-            "    return switch (mode) {",
-            "      case \"random\" -> {",
-            "        yield \"foo\";",
-            "      }",
-            "      default -> throw new IllegalArgumentException();",
-            "    };",
-            "  }",
-            "}")
+            """
+            import java.util.function.Supplier;
+            class Test {
+              String test(String mode) {
+                return switch (mode) {
+                  case "random" -> {
+                    yield "foo";
+                  }
+                  default -> throw new IllegalArgumentException();
+                };
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -3040,15 +3506,17 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.function.Supplier;",
-            "class Test {",
-            "  Supplier<Double> test(String mode) {",
-            "    return switch (mode) {",
-            "      case \"random\" -> Math::random;",
-            "      default -> throw new IllegalArgumentException();",
-            "    };",
-            "  }",
-            "}")
+            """
+            import java.util.function.Supplier;
+            class Test {
+              Supplier<Double> test(String mode) {
+                return switch (mode) {
+                  case "random" -> Math::random;
+                  default -> throw new IllegalArgumentException();
+                };
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -3058,17 +3526,19 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.function.Supplier;",
-            "class Test {",
-            "  Supplier<Double> test(String mode) {",
-            "    return switch (mode) {",
-            "      case \"random\" -> {",
-            "        yield Math::random;",
-            "      }",
-            "      default -> throw new IllegalArgumentException();",
-            "    };",
-            "  }",
-            "}")
+            """
+            import java.util.function.Supplier;
+            class Test {
+              Supplier<Double> test(String mode) {
+                return switch (mode) {
+                  case "random" -> {
+                    yield Math::random;
+                  }
+                  default -> throw new IllegalArgumentException();
+                };
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -3077,11 +3547,13 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.Immutable;",
-            "@Immutable class Test<E extends Enum<E>> {",
-            "  private final E e;",
-            "  Test(E e) { this.e = e; }",
-            "}")
+            """
+            import com.google.errorprone.annotations.Immutable;
+            @Immutable class Test<E extends Enum<E>> {
+              private final E e;
+              Test(E e) { this.e = e; }
+            }
+            """)
         .doTest();
   }
 }

@@ -50,6 +50,7 @@ public class ValidatorTest {
 
               public Client() {}
             }
+
             """)
         .doTest();
   }
@@ -73,6 +74,7 @@ public class ValidatorTest {
 
               public Client() {}
             }
+
             """)
         .doTest();
   }
@@ -95,6 +97,7 @@ public class ValidatorTest {
                 return new Duration[size];
               }
             }
+
             """)
         .doTest();
   }
@@ -117,6 +120,7 @@ public class ValidatorTest {
                 return new Duration[size];
               }
             }
+
             """)
         .doTest();
   }
@@ -139,6 +143,7 @@ public class ValidatorTest {
 
               public void after(String string) {}
             }
+
             """)
         .doTest();
   }
@@ -161,6 +166,7 @@ public class ValidatorTest {
 
               public void after(String name) {}
             }
+
             """)
         .doTest();
   }
@@ -183,6 +189,7 @@ public class ValidatorTest {
 
               public void after(String name1, String name2) {}
             }
+
             """)
         .doTest();
   }
@@ -206,6 +213,7 @@ public class ValidatorTest {
 
               public void after(String string) {}
             }
+
             """)
         .doTest();
   }
@@ -229,6 +237,7 @@ public class ValidatorTest {
 
               public void after(Supplier<String> supplier) {}
             }
+
             """)
         .doTest();
   }
@@ -273,6 +282,7 @@ public class ValidatorTest {
                 return !b;
               }
             }
+
             """)
         .doTest();
   }
@@ -300,6 +310,7 @@ public class ValidatorTest {
                 return false;
               }
             }
+
             """)
         .doTest();
   }
@@ -322,6 +333,7 @@ public class ValidatorTest {
 
               public void after(Function<String, Integer> function) {}
             }
+
             """)
         .doTest();
   }
@@ -344,6 +356,7 @@ public class ValidatorTest {
                 return str;
               }
             }
+
             """)
         .doTest();
   }
@@ -365,6 +378,7 @@ public class ValidatorTest {
                 return str;
               }
             }
+
             """)
         .doTest();
   }
@@ -389,6 +403,7 @@ public class ValidatorTest {
                 return null;
               }
             }
+
             """)
         .doTest();
   }
@@ -412,6 +427,7 @@ public class ValidatorTest {
 
               public void after(Supplier<String> supplier) {}
             }
+
             """)
         .doTest();
   }
@@ -438,6 +454,7 @@ public class ValidatorTest {
 
               public ProfileTimer(Ticker ticker, String name) {}
             }
+
             """)
         .doTest();
   }
@@ -461,6 +478,7 @@ public class ValidatorTest {
 
               public void setDeadline(Duration deadline) {}
             }
+
             """)
         .expectErrorMessage(
             "BAR",
@@ -487,6 +505,7 @@ public class ValidatorTest {
 
               public void setDeadline(java.time.Duration deadline) {}
             }
+
             """)
         .doTest();
   }
@@ -508,6 +527,7 @@ public class ValidatorTest {
 
               public void after(String string) {}
             }
+
             """)
         .doTest();
   }
@@ -529,6 +549,7 @@ public class ValidatorTest {
 
               public void after(String string) {}
             }
+
             """)
         .doTest();
   }
@@ -552,6 +573,7 @@ public class ValidatorTest {
                 }
               }
             }
+
             """)
         .doTest();
   }
@@ -573,6 +595,7 @@ public class ValidatorTest {
 
               public void setDeadline(Duration deadline) {}
             }
+
             """)
         .doTest();
   }
@@ -597,6 +620,7 @@ public class ValidatorTest {
 
               public void after(Duration duration) {}
             }
+
             """)
         .doTest();
   }
@@ -622,6 +646,7 @@ public class ValidatorTest {
 
               public void after(Duration duration) {}
             }
+
             """)
         .doTest();
   }
@@ -649,6 +674,7 @@ public class ValidatorTest {
                 return (T) null;
               }
             }
+
             """)
         .doTest();
   }
@@ -714,6 +740,7 @@ public class ValidatorTest {
                 }
               }
             }
+
             """)
         .doTest();
   }
@@ -736,6 +763,7 @@ public class ValidatorTest {
                 this.name = name;
               }
             }
+
             """)
         .doTest();
   }
@@ -757,6 +785,7 @@ public class ValidatorTest {
                 this.name = name;
               }
             }
+
             """)
         .doTest();
   }
@@ -780,6 +809,7 @@ public class ValidatorTest {
                 return new Client();
               }
             }
+
             """)
         .doTest();
   }
@@ -803,6 +833,7 @@ public class ValidatorTest {
                 return new Client();
               }
             }
+
             """)
         .doTest();
   }
@@ -854,6 +885,7 @@ public class ValidatorTest {
 
               public void after(int[] inputs) {}
             }
+
             """)
         .doTest();
   }
@@ -874,6 +906,7 @@ public class ValidatorTest {
                 return;
               }
             }
+
             """)
         .doTest();
   }
@@ -893,6 +926,7 @@ public class ValidatorTest {
                 return x * y;
               }
             }
+
             """)
         .doTest();
   }
@@ -912,6 +946,7 @@ public class ValidatorTest {
 
               String[] staticImports() default {};
             }
+
             """)
         .addSourceLines(
             "Client.java",
@@ -934,17 +969,19 @@ public class ValidatorTest {
     helper
         .addSourceLines(
             "Client.java",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "public final class Client {",
-            "  @Deprecated",
-            "  @InlineMe(replacement = \"this.after(arg0, arg1)\")",
-            "  // BUG: Diagnostic contains: `arg[0-9]+`",
-            "  public void before(int arg0, int arg1) {",
-            "    after(arg0, arg1);",
-            "  }",
-            "  public void after(int arg0, int arg1) {",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.InlineMe;
+            public final class Client {
+              @Deprecated
+              @InlineMe(replacement = "this.after(arg0, arg1)")
+              // BUG: Diagnostic contains: `arg[0-9]+`
+              public void before(int arg0, int arg1) {
+                after(arg0, arg1);
+              }
+              public void after(int arg0, int arg1) {
+              }
+            }
+            """)
         .doTest();
   }
 

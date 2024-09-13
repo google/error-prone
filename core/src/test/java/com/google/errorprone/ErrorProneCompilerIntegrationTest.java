@@ -278,10 +278,12 @@ public class ErrorProneCompilerIntegrationTest {
         compiler.compile(
             Arrays.asList(
                 forSourceLines(
-                    "Test.java", //
-                    "public class Test {",
-                    "  public Test() {}",
-                    "}")));
+                    "Test.java",
+                    """
+                    public class Test {
+                      public Test() {}
+                    }
+                    """)));
 
     assertWithMessage("[SuperCallMatcher]")
         .that(diagnosticHelper.getDiagnostics())
@@ -301,10 +303,12 @@ public class ErrorProneCompilerIntegrationTest {
                 args,
                 Arrays.asList(
                     forSourceLines(
-                        "Test.java", //
-                        "public class Test {",
-                        "  public Test() {}",
-                        "}"))));
+                        "Test.java",
+                        """
+                        public class Test {
+                          public Test() {}
+                        }
+                        """))));
   }
 
   @Test
@@ -494,12 +498,14 @@ public class ErrorProneCompilerIntegrationTest {
             Arrays.asList(
                 forSourceLines(
                     "test/Test.java",
-                    "package Test;",
-                    "class Test {",
-                    "  void f() {",
-                    "    return;",
-                    "  }",
-                    "}")));
+                    """
+                    package Test;
+                    class Test {
+                      void f() {
+                        return;
+                      }
+                    }
+                    """)));
     assertWithMessage(outputStream.toString()).that(exitCode).isEqualTo(Result.ERROR);
     assertThat(diagnosticHelper.getDiagnostics()).hasSize(1);
     Diagnostic<? extends JavaFileObject> diag =
@@ -530,9 +536,11 @@ public class ErrorProneCompilerIntegrationTest {
             new String[] {"-XDcompilePolicy=byfile"},
             Arrays.asList(
                 forSourceLines(
-                    "Test.java", //
-                    "package test;",
-                    "class Test {}")));
+                    "Test.java",
+                    """
+                    package test;
+                    class Test {}
+                    """)));
     outputStream.flush();
     assertWithMessage(outputStream.toString()).that(exitCode).isEqualTo(Result.OK);
   }
@@ -544,9 +552,11 @@ public class ErrorProneCompilerIntegrationTest {
             new String[] {"-XDcompilePolicy=simple"},
             Arrays.asList(
                 forSourceLines(
-                    "Test.java", //
-                    "package test;",
-                    "class Test {}")));
+                    "Test.java",
+                    """
+                    package test;
+                    class Test {}
+                    """)));
     outputStream.flush();
     assertWithMessage(outputStream.toString()).that(exitCode).isEqualTo(Result.OK);
   }
@@ -573,10 +583,12 @@ public class ErrorProneCompilerIntegrationTest {
         Arrays.asList(
             forSourceLines(
                 "Test.java",
-                "package test;",
-                "public class Test {",
-                "  Object f() { return new NoSuch(); }",
-                "}")));
+                """
+                package test;
+                public class Test {
+                  Object f() { return new NoSuch(); }
+                }
+                """)));
     outputStream.flush();
     String output = diagnosticHelper.getDiagnostics().toString();
     assertThat(output).contains("error: cannot find symbol");
@@ -616,10 +628,12 @@ public class ErrorProneCompilerIntegrationTest {
         Arrays.asList(
             forSourceLines(
                 "Test.java",
-                "package test;",
-                "public class Test {",
-                "  Object f() { return \"XYLOPHONE\"; }",
-                "}"));
+                """
+                package test;
+                public class Test {
+                  Object f() { return "XYLOPHONE"; }
+                }
+                """));
 
     compilerBuilder.report(ScannerSupplier.fromBugCheckerClasses(ForbiddenString.class));
     compiler = compilerBuilder.build();
@@ -636,10 +650,12 @@ public class ErrorProneCompilerIntegrationTest {
         Arrays.asList(
             forSourceLines(
                 "Test.java",
-                "package test;",
-                "public class Test {",
-                "  Object f() { return \"BANANAS\"; }",
-                "}"));
+                """
+                package test;
+                public class Test {
+                  Object f() { return "BANANAS"; }
+                }
+                """));
 
     // First compile forbids "bananas", should fail.
     compilerBuilder.report(ScannerSupplier.fromBugCheckerClasses(ForbiddenString.class));

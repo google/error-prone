@@ -38,12 +38,14 @@ public class QualifierOrScopeOnInjectMethodTest {
     compilationHelper
         .addSourceLines(
             "Foo.java",
-            "import javax.inject.Inject;",
-            "import javax.inject.Named;",
-            "class Foo {",
-            "  // BUG: Diagnostic contains: @Inject  void someMethod() {}",
-            "  @Inject @Named(\"bar\") void someMethod() {}",
-            "}")
+            """
+            import javax.inject.Inject;
+            import javax.inject.Named;
+            class Foo {
+              // BUG: Diagnostic contains: @Inject  void someMethod() {}
+              @Inject @Named("bar") void someMethod() {}
+            }
+            """)
         .doTest();
   }
 
@@ -52,20 +54,24 @@ public class QualifierOrScopeOnInjectMethodTest {
     refactoringHelper
         .addInputLines(
             "in/Foo.java",
-            "import javax.inject.Inject;",
-            "import javax.inject.Named;",
-            "import javax.inject.Singleton;",
-            "class Foo {",
-            "  @Inject @Singleton @Named(\"bar\") Foo() {}",
-            "}")
+            """
+            import javax.inject.Inject;
+            import javax.inject.Named;
+            import javax.inject.Singleton;
+            class Foo {
+              @Inject @Singleton @Named("bar") Foo() {}
+            }
+            """)
         .addOutputLines(
             "out/Foo.java",
-            "import javax.inject.Inject;",
-            "import javax.inject.Named;",
-            "import javax.inject.Singleton;",
-            "@Singleton class Foo {",
-            "  @Inject Foo() {}",
-            "}")
+            """
+            import javax.inject.Inject;
+            import javax.inject.Named;
+            import javax.inject.Singleton;
+            @Singleton class Foo {
+              @Inject Foo() {}
+            }
+            """)
         .doTest();
   }
 
@@ -74,13 +80,15 @@ public class QualifierOrScopeOnInjectMethodTest {
     compilationHelper
         .addSourceLines(
             "Foo.java",
-            "import dagger.Provides;",
-            "import dagger.Module;",
-            "import javax.inject.Named;",
-            "@Module",
-            "class Foo {",
-            "  @Provides @Named(\"bar\") int something() { return 42; }",
-            "}")
+            """
+            import dagger.Provides;
+            import dagger.Module;
+            import javax.inject.Named;
+            @Module
+            class Foo {
+              @Provides @Named("bar") int something() { return 42; }
+            }
+            """)
         .doTest();
   }
 }

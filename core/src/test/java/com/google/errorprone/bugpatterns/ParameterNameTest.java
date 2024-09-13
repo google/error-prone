@@ -38,22 +38,26 @@ public class ParameterNameTest {
     BugCheckerRefactoringTestHelper.newInstance(ParameterName.class, getClass())
         .addInputLines(
             "in/Test.java",
-            "class Test {",
-            "  void f(int foo, int bar) {}",
-            "  {",
-            "    f(/* bar= */ 1, /* foo= */ 2);",
-            "    f(/** bar= */ 3, /** foo= */ 4);",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f(int foo, int bar) {}
+              {
+                f(/* bar= */ 1, /* foo= */ 2);
+                f(/** bar= */ 3, /** foo= */ 4);
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "class Test {",
-            "  void f(int foo, int bar) {}",
-            "  {",
-            "    f(/* foo= */ 1, /* bar= */ 2);",
-            "    f(/* foo= */ 3, /* bar= */ 4);",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f(int foo, int bar) {}
+              {
+                f(/* foo= */ 1, /* bar= */ 2);
+                f(/* foo= */ 3, /* bar= */ 4);
+              }
+            }
+            """)
         .doTest(TEXT_MATCH);
   }
 
@@ -62,12 +66,14 @@ public class ParameterNameTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void f(int foo, int bar) {}",
-            "  {",
-            "    f(/* foo= */ 1, 2);",
-            "  }",
-            "}")
+            """
+            class Test {
+              void f(int foo, int bar) {}
+              {
+                f(/* foo= */ 1, 2);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -76,33 +82,37 @@ public class ParameterNameTest {
     testHelper
         .addSourceLines(
             "a/Baz.java",
-            "package a.b;",
-            "import a.AbstractFoo;",
-            "class Baz extends AbstractFoo {",
-            "  @Override",
-            "  protected String getFoo() {",
-            "    return \"foo\";",
-            "  }",
-            "}")
+            """
+            package a.b;
+            import a.AbstractFoo;
+            class Baz extends AbstractFoo {
+              @Override
+              protected String getFoo() {
+                return "foo";
+              }
+            }
+            """)
         .addSourceLines(
             "a/AbstractFoo.java",
-            "package a;",
-            "import java.util.function.Function;",
-            "class Bar {",
-            "  private final Function<String, String> args;",
-            "  public Bar(Function<String, String> args) {",
-            "    this.args = args;",
-            "  }",
-            "}",
-            "public abstract class AbstractFoo {",
-            "  protected abstract String getFoo();",
-            "  private String getCommandArguments(String parameters) {",
-            "    return null;",
-            "  }",
-            "  public AbstractFoo() {",
-            "    new Bar(this::getCommandArguments);",
-            "  }",
-            "}")
+            """
+            package a;
+            import java.util.function.Function;
+            class Bar {
+              private final Function<String, String> args;
+              public Bar(Function<String, String> args) {
+                this.args = args;
+              }
+            }
+            public abstract class AbstractFoo {
+              protected abstract String getFoo();
+              private String getCommandArguments(String parameters) {
+                return null;
+              }
+              public AbstractFoo() {
+                new Bar(this::getCommandArguments);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -111,17 +121,25 @@ public class ParameterNameTest {
     testHelper
         .addSourceLines(
             "a/Foo.java",
-            "package a;",
-            "class Bar {",
-            "}",
-            "public class Foo {",
-            "  public void setInteger(Integer i) {",
-            "  }",
-            "  public void callSetInteger() {",
-            "    setInteger(0);",
-            " }",
-            "}")
-        .addSourceLines("a/Baz.java", "package a;", "public class Baz extends Foo {", "}")
+            """
+            package a;
+            class Bar {
+            }
+            public class Foo {
+              public void setInteger(Integer i) {
+              }
+              public void callSetInteger() {
+                setInteger(0);
+             }
+            }
+            """)
+        .addSourceLines(
+            "a/Baz.java",
+            """
+            package a;
+            public class Baz extends Foo {
+            }
+            """)
         .doTest();
   }
 
@@ -130,12 +148,14 @@ public class ParameterNameTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "abstract class Test {",
-            "  abstract void target(Object param1, Object param2);",
-            "  void test(Object arg1, Object arg2) {",
-            "    target(arg1, arg2);",
-            "  }",
-            "}")
+            """
+            abstract class Test {
+              abstract void target(Object param1, Object param2);
+              void test(Object arg1, Object arg2) {
+                target(arg1, arg2);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -144,13 +164,15 @@ public class ParameterNameTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "abstract class Test {",
-            "  abstract void target(Object param1, Object param2);",
-            "  void test(Object arg1, Object arg2) {",
-            "    // BUG: Diagnostic contains: 'target(/* param1= */arg1, arg2);'",
-            "    target(/* param2= */arg1, arg2);",
-            "  }",
-            "}")
+            """
+            abstract class Test {
+              abstract void target(Object param1, Object param2);
+              void test(Object arg1, Object arg2) {
+                // BUG: Diagnostic contains: 'target(/* param1= */arg1, arg2);'
+                target(/* param2= */arg1, arg2);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -159,13 +181,15 @@ public class ParameterNameTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "abstract class Test {",
-            "  abstract void target(Object $param$);",
-            "  void test(Object arg) {",
-            "    // BUG: Diagnostic contains: 'target(/* $param$= */arg);'",
-            "    target(/* param= */arg);",
-            "  }",
-            "}")
+            """
+            abstract class Test {
+              abstract void target(Object $param$);
+              void test(Object arg) {
+                // BUG: Diagnostic contains: 'target(/* $param$= */arg);'
+                target(/* param= */arg);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -174,13 +198,15 @@ public class ParameterNameTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "abstract class Test {",
-            "  abstract void target(Object param1, Object param2);",
-            "  void test(Object arg1, Object arg2) {",
-            "    // BUG: Diagnostic contains: 'target(/* param1= */arg2",
-            "    target(/* param2= */arg2, /* param1= */arg1);",
-            "  }",
-            "}")
+            """
+            abstract class Test {
+              abstract void target(Object param1, Object param2);
+              void test(Object arg1, Object arg2) {
+                // BUG: Diagnostic contains: 'target(/* param1= */arg2
+                target(/* param2= */arg2, /* param1= */arg1);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -189,13 +215,15 @@ public class ParameterNameTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "abstract class Test {",
-            "  abstract void target(Object param1, Object param2);",
-            "  void test(Object arg1, Object arg2) {",
-            "    // BUG: Diagnostic contains: 'target(/* param1= */arg2, arg1);'",
-            "    target(/* param2= */arg2, arg1);",
-            "  }",
-            "}")
+            """
+            abstract class Test {
+              abstract void target(Object param1, Object param2);
+              void test(Object arg1, Object arg2) {
+                // BUG: Diagnostic contains: 'target(/* param1= */arg2, arg1);'
+                target(/* param2= */arg2, arg1);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -204,12 +232,14 @@ public class ParameterNameTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "abstract class Test {",
-            "  abstract void target(Object param);",
-            "  void test(Object arg) {",
-            "    target(/*note param = */arg);",
-            "  }",
-            "}")
+            """
+            abstract class Test {
+              abstract void target(Object param);
+              void test(Object arg) {
+                target(/*note param = */arg);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -218,12 +248,14 @@ public class ParameterNameTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "abstract class Test {",
-            "  abstract void target(Object param);",
-            "  void test(Object arg) {",
-            "    target(/*param*/arg);",
-            "  }",
-            "}")
+            """
+            abstract class Test {
+              abstract void target(Object param);
+              void test(Object arg) {
+                target(/*param*/arg);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -232,12 +264,14 @@ public class ParameterNameTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "abstract class Test {",
-            "  abstract void target(Object param);",
-            "  void test(Object arg) {",
-            "    target(arg/*param*/);",
-            "  }",
-            "}")
+            """
+            abstract class Test {
+              abstract void target(Object param);
+              void test(Object arg) {
+                target(arg/*param*/);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -246,12 +280,14 @@ public class ParameterNameTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "abstract class Test {",
-            "  abstract void target(Object param);",
-            "  void test(Object arg) {",
-            "    target(arg/*imprecise match for param*/);",
-            "  }",
-            "}")
+            """
+            abstract class Test {
+              abstract void target(Object param);
+              void test(Object arg) {
+                target(arg/*imprecise match for param*/);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -260,12 +296,14 @@ public class ParameterNameTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "abstract class Test {",
-            "  abstract void target(Object param);",
-            "  void test(Object arg) {",
-            "    target(arg); //param",
-            "  }",
-            "}")
+            """
+            abstract class Test {
+              abstract void target(Object param);
+              void test(Object arg) {
+                target(arg); //param
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -279,12 +317,14 @@ public class ParameterNameTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void test(Object x) {",
-            "    test(/* y= */ /* x= */ x);",
-            "    test(/* x= */ /* y= */ x);",
-            "  }",
-            "}")
+            """
+            class Test {
+              void test(Object x) {
+                test(/* y= */ /* x= */ x);
+                test(/* x= */ /* y= */ x);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -293,12 +333,14 @@ public class ParameterNameTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void test(Object x) {",
-            "    // BUG: Diagnostic contains: does not match",
-            "    test(/* y= */ /* z= */ x);",
-            "  }",
-            "}")
+            """
+            class Test {
+              void test(Object x) {
+                // BUG: Diagnostic contains: does not match
+                test(/* y= */ /* z= */ x);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -307,12 +349,14 @@ public class ParameterNameTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "abstract class Test {",
-            "  abstract void target(Object param);",
-            "  void test(Object arg) {",
-            "    target(arg); // some_other_comment",
-            "  }",
-            "}")
+            """
+            abstract class Test {
+              abstract void target(Object param);
+              void test(Object arg) {
+                target(arg); // some_other_comment
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -321,14 +365,16 @@ public class ParameterNameTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "abstract class Test {",
-            "  abstract void target(Object param1, Object param2);",
-            "  void test(Object arg1, Object arg2) {",
-            "    target(arg1,",
-            "    /* ---- param1 <-> param2 ---- */",
-            "           arg2);",
-            "  }",
-            "}")
+            """
+            abstract class Test {
+              abstract void target(Object param1, Object param2);
+              void test(Object arg1, Object arg2) {
+                target(arg1,
+                /* ---- param1 <-> param2 ---- */
+                       arg2);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -337,14 +383,16 @@ public class ParameterNameTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void test(int x) {",
-            "    test(",
-            "      // newX =",
-            "      //   (x ^ 2)",
-            "      x * x);",
-            "  }",
-            "}")
+            """
+            class Test {
+              void test(int x) {
+                test(
+                  // newX =
+                  //   (x ^ 2)
+                  x * x);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -353,12 +401,14 @@ public class ParameterNameTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "abstract class Test {",
-            "  abstract void target(Object param);",
-            "  void test(Object arg) {",
-            "    target(/* some_other_comment */arg);",
-            "  }",
-            "}")
+            """
+            abstract class Test {
+              abstract void target(Object param);
+              void test(Object arg) {
+                target(/* some_other_comment */arg);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -367,12 +417,14 @@ public class ParameterNameTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "abstract class Test {",
-            "  abstract void target(Object... param);",
-            "  void test(Object arg) {",
-            "    target(/* param.!.= */arg);",
-            "  }",
-            "}")
+            """
+            abstract class Test {
+              abstract void target(Object... param);
+              void test(Object arg) {
+                target(/* param.!.= */arg);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -381,13 +433,15 @@ public class ParameterNameTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "abstract class Test {",
-            "  abstract Test getTest(Object param);",
-            "  abstract void target(Object param2);",
-            "  void test(Object arg, Object arg2) {",
-            "    getTest(/* param= */arg).target(arg2);",
-            "  }",
-            "}")
+            """
+            abstract class Test {
+              abstract Test getTest(Object param);
+              abstract void target(Object param2);
+              void test(Object arg, Object arg2) {
+                getTest(/* param= */arg).target(arg2);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -396,15 +450,17 @@ public class ParameterNameTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "abstract class Test {",
-            "  abstract void target(Object param1, Object param2);",
-            "  void test(Object arg1, Object arg2) {",
-            "    // BUG: Diagnostic contains:",
-            "    // target(/* param1= */arg1, arg2)",
-            "    // `/* notMatching= */` does not match formal parameter name `param1`",
-            "    target(/* notMatching= */arg1, arg2);",
-            "  }",
-            "}")
+            """
+            abstract class Test {
+              abstract void target(Object param1, Object param2);
+              void test(Object arg1, Object arg2) {
+                // BUG: Diagnostic contains:
+                // target(/* param1= */arg1, arg2)
+                // `/* notMatching= */` does not match formal parameter name `param1`
+                target(/* notMatching= */arg1, arg2);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -493,15 +549,17 @@ public class ParameterNameTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  public static class AnnotatedParametersTestClass {",
-            "    public @interface Annotated {}",
-            "    public static void target(@Annotated int foo) {}",
-            "  }",
-            "  void test() {",
-            "    AnnotatedParametersTestClass.target(/* foo= */ 1);",
-            "  }",
-            "}")
+            """
+            class Test {
+              public static class AnnotatedParametersTestClass {
+                public @interface Annotated {}
+                public static void target(@Annotated int foo) {}
+              }
+              void test() {
+                AnnotatedParametersTestClass.target(/* foo= */ 1);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -510,16 +568,18 @@ public class ParameterNameTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  public static class AnnotatedParametersTestClass {",
-            "    public @interface Annotated {}",
-            "    public static void target(@Annotated int foo) {}",
-            "  }",
-            "  void test() {",
-            "    // BUG: Diagnostic contains: target(/* foo= */ 1)",
-            "    AnnotatedParametersTestClass.target(/* bar= */ 1);",
-            "  }",
-            "}")
+            """
+            class Test {
+              public static class AnnotatedParametersTestClass {
+                public @interface Annotated {}
+                public static void target(@Annotated int foo) {}
+              }
+              void test() {
+                // BUG: Diagnostic contains: target(/* foo= */ 1)
+                AnnotatedParametersTestClass.target(/* bar= */ 1);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -568,15 +628,17 @@ public class ParameterNameTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void foo(int... args) {}",
-            "",
-            "  void bar() {",
-            "    // BUG: Diagnostic contains: /* args...= */",
-            "    // /* argh */",
-            "    foo(/* argh...= */ 1, 2, 3);",
-            "  }",
-            "}")
+            """
+            class Test {
+              void foo(int... args) {}
+
+              void bar() {
+                // BUG: Diagnostic contains: /* args...= */
+                // /* argh */
+                foo(/* argh...= */ 1, 2, 3);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -585,15 +647,17 @@ public class ParameterNameTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void foo(int first, int... rest) {}",
-            "",
-            "  void bar() {",
-            "    foo(/* first= */ 1);",
-            " // BUG: Diagnostic contains: /* first= */",
-            "    foo(/* second= */ 1);",
-            "  }",
-            "}")
+            """
+            class Test {
+              void foo(int first, int... rest) {}
+
+              void bar() {
+                foo(/* first= */ 1);
+             // BUG: Diagnostic contains: /* first= */
+                foo(/* second= */ 1);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -602,13 +666,15 @@ public class ParameterNameTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void foo(int... args) {}",
-            "",
-            "  void bar() {",
-            "    foo(/* args...= */ 1, 2);",
-            "  }",
-            "}")
+            """
+            class Test {
+              void foo(int... args) {}
+
+              void bar() {
+                foo(/* args...= */ 1, 2);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -617,14 +683,16 @@ public class ParameterNameTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void foo(int... args) {}",
-            "",
-            "  void bar() {",
-            "    int[] myInts = {1, 2, 3};",
-            "    foo(/* args...= */ myInts);",
-            "  }",
-            "}")
+            """
+            class Test {
+              void foo(int... args) {}
+
+              void bar() {
+                int[] myInts = {1, 2, 3};
+                foo(/* args...= */ myInts);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -634,15 +702,17 @@ public class ParameterNameTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void foo(int... args) {}",
-            "",
-            "  void bar() {",
-            "    int[] myInts = {1, 2, 3};",
-            "    // BUG: Diagnostic contains: /* args...= */",
-            "    foo(/* args= */ myInts);",
-            "  }",
-            "}")
+            """
+            class Test {
+              void foo(int... args) {}
+
+              void bar() {
+                int[] myInts = {1, 2, 3};
+                // BUG: Diagnostic contains: /* args...= */
+                foo(/* args= */ myInts);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -651,15 +721,16 @@ public class ParameterNameTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void foo(int... args) {}",
-            "",
-            "  void bar() {",
-            "    // BUG: Diagnostic contains: parameter name comment only allowed on first varargs"
-                + " argument",
-            "    foo(1, /* args...= */ 2);",
-            "  }",
-            "}")
+            """
+class Test {
+  void foo(int... args) {}
+
+  void bar() {
+    // BUG: Diagnostic contains: parameter name comment only allowed on first varargs argument
+    foo(1, /* args...= */ 2);
+  }
+}
+""")
         .doTest();
   }
 
@@ -668,22 +739,26 @@ public class ParameterNameTest {
     BugCheckerRefactoringTestHelper.newInstance(ParameterName.class, getClass())
         .addInputLines(
             "in/Test.java",
-            "class Test {",
-            "  void foo(int... args) {}",
-            "",
-            "  void bar() {",
-            "    foo(/* args= */ 1, 2);",
-            "  }",
-            "}")
+            """
+            class Test {
+              void foo(int... args) {}
+
+              void bar() {
+                foo(/* args= */ 1, 2);
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "class Test {",
-            "  void foo(int... args) {}",
-            "",
-            "  void bar() {",
-            "    foo(/* args...= */ 1, 2);",
-            "  }",
-            "}")
+            """
+            class Test {
+              void foo(int... args) {}
+
+              void bar() {
+                foo(/* args...= */ 1, 2);
+              }
+            }
+            """)
         .doTest(TEXT_MATCH);
   }
 
@@ -692,24 +767,28 @@ public class ParameterNameTest {
     BugCheckerRefactoringTestHelper.newInstance(ParameterName.class, getClass())
         .addInputLines(
             "in/Test.java",
-            "class Test {",
-            "  void foo(int... args) {}",
-            "",
-            "  void bar() {",
-            "    foo(1, /* foo= */ 2);",
-            "    foo(1, /* foo...= */ 2);",
-            "  }",
-            "}")
+            """
+            class Test {
+              void foo(int... args) {}
+
+              void bar() {
+                foo(1, /* foo= */ 2);
+                foo(1, /* foo...= */ 2);
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "class Test {",
-            "  void foo(int... args) {}",
-            "",
-            "  void bar() {",
-            "    foo(1, /* foo */ 2);",
-            "    foo(1, /* foo... */ 2);",
-            "  }",
-            "}")
+            """
+            class Test {
+              void foo(int... args) {}
+
+              void bar() {
+                foo(1, /* foo */ 2);
+                foo(1, /* foo... */ 2);
+              }
+            }
+            """)
         .doTest(TEXT_MATCH);
   }
 
@@ -718,13 +797,15 @@ public class ParameterNameTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void foo(int... args) {}",
-            "",
-            "  void bar() {",
-            "    foo(/* fake */ 1, 2);",
-            "  }",
-            "}")
+            """
+            class Test {
+              void foo(int... args) {}
+
+              void bar() {
+                foo(/* fake */ 1, 2);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -733,15 +814,17 @@ public class ParameterNameTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void foo(int... args) {}",
-            "",
-            "  void bar() {",
-            "    // BUG: Diagnostic contains: /* args...= */",
-            "    // /* argh */",
-            "    foo(/* argh= */ 1, 2);",
-            "  }",
-            "}")
+            """
+            class Test {
+              void foo(int... args) {}
+
+              void bar() {
+                // BUG: Diagnostic contains: /* args...= */
+                // /* argh */
+                foo(/* argh= */ 1, 2);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -750,14 +833,16 @@ public class ParameterNameTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void foo(int i) {}",
-            "",
-            "  void bar() {",
-            "    // BUG: Diagnostic contains: /* i= */",
-            "    foo(/* i...= */ 1);",
-            "  }",
-            "}")
+            """
+            class Test {
+              void foo(int i) {}
+
+              void bar() {
+                // BUG: Diagnostic contains: /* i= */
+                foo(/* i...= */ 1);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -789,35 +874,43 @@ public class ParameterNameTest {
     CompilationTestHelper.newInstance(ParameterName.class, getClass())
         .addSourceLines(
             "test/a/A.java",
-            "package test.a;",
-            "public class A {",
-            "  public static void f(int value) {}",
-            "}")
+            """
+            package test.a;
+            public class A {
+              public static void f(int value) {}
+            }
+            """)
         .addSourceLines(
             "test/b/nested/B.java",
-            "package test.b.nested;",
-            "public class B {",
-            "  public static void f(int value) {}",
-            "}")
+            """
+            package test.b.nested;
+            public class B {
+              public static void f(int value) {}
+            }
+            """)
         .addSourceLines(
             "test/c/C.java",
-            "package test.c;",
-            "public class C {",
-            "  public static void f(int value) {}",
-            "}")
+            """
+            package test.c;
+            public class C {
+              public static void f(int value) {}
+            }
+            """)
         .addSourceLines(
             "Test.java",
-            "import test.a.A;",
-            "import test.b.nested.B;",
-            "import test.c.C;",
-            "class Test {",
-            "  void f() {",
-            "    A.f(/* typo= */ 1);",
-            "    B.f(/* typo= */ 1);",
-            "    // BUG: Diagnostic contains: 'C.f(/* value= */ 1);'",
-            "    C.f(/* typo= */ 1);",
-            "  }",
-            "}")
+            """
+            import test.a.A;
+            import test.b.nested.B;
+            import test.c.C;
+            class Test {
+              void f() {
+                A.f(/* typo= */ 1);
+                B.f(/* typo= */ 1);
+                // BUG: Diagnostic contains: 'C.f(/* value= */ 1);'
+                C.f(/* typo= */ 1);
+              }
+            }
+            """)
         .setArgs(ImmutableList.of("-XepOpt:ParameterName:exemptPackagePrefixes=test.a,test.b"))
         .doTest();
   }
@@ -827,12 +920,14 @@ public class ParameterNameTest {
     testHelper
         .addSourceLines(
             "test/a/A.java",
-            "package test.a;",
-            "import static org.mockito.Mockito.eq;",
-            "public class A {",
-            "  // BUG: Diagnostic contains:",
-            "  Object x = eq(/* notValue= */ 1);",
-            "}")
+            """
+            package test.a;
+            import static org.mockito.Mockito.eq;
+            public class A {
+              // BUG: Diagnostic contains:
+              Object x = eq(/* notValue= */ 1);
+            }
+            """)
         .doTest();
   }
 }

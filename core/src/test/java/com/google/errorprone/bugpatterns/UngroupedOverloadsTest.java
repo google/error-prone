@@ -102,20 +102,24 @@ public final class UngroupedOverloadsTest {
     refactoringHelper
         .addInputLines(
             "in/BelowLimit.java",
-            "class BelowLimit {",
-            "  BelowLimit() {}",
-            "  void foo() {}",
-            "  void bar() {}",
-            "  void foo(int x) {}",
-            "}")
+            """
+            class BelowLimit {
+              BelowLimit() {}
+              void foo() {}
+              void bar() {}
+              void foo(int x) {}
+            }
+            """)
         .addOutputLines(
             "out/BelowLimit.java",
-            "class BelowLimit {",
-            "  BelowLimit() {}",
-            "  void foo() {}",
-            "  void foo(int x) {}",
-            "  void bar() {}",
-            "}")
+            """
+            class BelowLimit {
+              BelowLimit() {}
+              void foo() {}
+              void foo(int x) {}
+              void bar() {}
+            }
+            """)
         .doTest();
   }
 
@@ -124,22 +128,26 @@ public final class UngroupedOverloadsTest {
     refactoringHelper
         .addInputLines(
             "in/AboveLimit.java",
-            "class AboveLimit {",
-            "  AboveLimit() {}",
-            "  void foo() {}",
-            "  void bar() {}",
-            "  void foo(int x) {}",
-            "  void baz() {}",
-            "}")
+            """
+            class AboveLimit {
+              AboveLimit() {}
+              void foo() {}
+              void bar() {}
+              void foo(int x) {}
+              void baz() {}
+            }
+            """)
         .addOutputLines(
             "out/AboveLimit.java",
-            "class AboveLimit {",
-            "  AboveLimit() {}",
-            "  void foo() {}",
-            "  void foo(int x) {}",
-            "  void bar() {}",
-            "  void baz() {}",
-            "}")
+            """
+            class AboveLimit {
+              AboveLimit() {}
+              void foo() {}
+              void foo(int x) {}
+              void bar() {}
+              void baz() {}
+            }
+            """)
         .doTest();
   }
 
@@ -149,11 +157,13 @@ public final class UngroupedOverloadsTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            "class Test {",
-            "  void foo() {}",
-            "  void bar() {}",
-            "  static void foo(int x) {}",
-            "}")
+            """
+            class Test {
+              void foo() {}
+              void bar() {}
+              static void foo(int x) {}
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
@@ -163,11 +173,13 @@ public final class UngroupedOverloadsTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  private void foo(int x) {}",
-            "  private static void foo(int x, int y, int z) {}",
-            "  private void foo(int x, int y) {}",
-            "}")
+            """
+            class Test {
+              private void foo(int x) {}
+              private static void foo(int x, int y, int z) {}
+              private void foo(int x, int y) {}
+            }
+            """)
         .doTest();
   }
 
@@ -176,11 +188,13 @@ public final class UngroupedOverloadsTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void foo() {}",
-            "  void bar() {}",
-            "  @SuppressWarnings(\"UngroupedOverloads\") void foo(int x) {}",
-            "}")
+            """
+            class Test {
+              void foo() {}
+              void bar() {}
+              @SuppressWarnings("UngroupedOverloads") void foo(int x) {}
+            }
+            """)
         .doTest();
   }
 
@@ -189,22 +203,26 @@ public final class UngroupedOverloadsTest {
     refactoringHelper
         .addInputLines(
             "in/Test.java",
-            "class Test {",
-            "  void foo() {}",
-            "  void bar() {}",
-            "  /** doc */",
-            "  void foo(int x) {}",
-            "}")
+            """
+            class Test {
+              void foo() {}
+              void bar() {}
+              /** doc */
+              void foo(int x) {}
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "class Test {",
-            "",
-            "  void foo() {}",
-            "  /** doc */",
-            "  void foo(int x) {}",
-            "",
-            "  void bar() {}",
-            "}")
+            """
+            class Test {
+
+              void foo() {}
+              /** doc */
+              void foo(int x) {}
+
+              void bar() {}
+            }
+            """)
         .doTest(TestMode.TEXT_MATCH);
   }
 
@@ -213,19 +231,21 @@ public final class UngroupedOverloadsTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  // BUG: Diagnostic contains: ungrouped overloads of 'foo' on line(s): 8, 10, 12",
-            "  private void foo() {}",
-            "  // BUG: Diagnostic contains: ungrouped overloads of 'foo' on line(s): 8, 10, 12",
-            "  private void foo(int a) {}",
-            "  private void bar() {}",
-            "  // BUG: Diagnostic contains: ungrouped overloads of 'foo' on line(s): 3, 5",
-            "  private void foo(int a, int b) {}",
-            "  // BUG: Diagnostic contains: ungrouped overloads of 'foo' on line(s): 3, 5",
-            "  private void foo(int a, int b, int c) {}",
-            "  // BUG: Diagnostic contains: ungrouped overloads of 'foo' on line(s): 3, 5",
-            "  private void foo(int a, int b, int c, int d) {}",
-            "}")
+            """
+            class Test {
+              // BUG: Diagnostic contains: ungrouped overloads of 'foo' on line(s): 8, 10, 12
+              private void foo() {}
+              // BUG: Diagnostic contains: ungrouped overloads of 'foo' on line(s): 8, 10, 12
+              private void foo(int a) {}
+              private void bar() {}
+              // BUG: Diagnostic contains: ungrouped overloads of 'foo' on line(s): 3, 5
+              private void foo(int a, int b) {}
+              // BUG: Diagnostic contains: ungrouped overloads of 'foo' on line(s): 3, 5
+              private void foo(int a, int b, int c) {}
+              // BUG: Diagnostic contains: ungrouped overloads of 'foo' on line(s): 3, 5
+              private void foo(int a, int b, int c, int d) {}
+            }
+            """)
         .doTest();
   }
 
@@ -234,43 +254,47 @@ public final class UngroupedOverloadsTest {
     refactoringHelper
         .addInputLines(
             "in/Test.java",
-            "class Test {",
-            "  void foo() {",
-            "    System.err.println();",
-            "  }",
-            "",
-            "  void bar() {",
-            "    System.err.println();",
-            "  }",
-            "",
-            "  void foo(int x) {",
-            "    System.err.println();",
-            "  }",
-            "",
-            "  void bar(int x) {",
-            "    System.err.println();",
-            "  }",
-            "}")
+            """
+            class Test {
+              void foo() {
+                System.err.println();
+              }
+
+              void bar() {
+                System.err.println();
+              }
+
+              void foo(int x) {
+                System.err.println();
+              }
+
+              void bar(int x) {
+                System.err.println();
+              }
+            }
+            """)
         .addOutputLines(
             "out/Test.java",
-            "class Test {",
-            "",
-            "  void foo() {",
-            "    System.err.println();",
-            "  }",
-            "",
-            "  void foo(int x) {",
-            "    System.err.println();",
-            "  }",
-            "",
-            "  void bar() {",
-            "    System.err.println();",
-            "  }",
-            "",
-            "  void bar(int x) {",
-            "    System.err.println();",
-            "  }",
-            "}")
+            """
+            class Test {
+
+              void foo() {
+                System.err.println();
+              }
+
+              void foo(int x) {
+                System.err.println();
+              }
+
+              void bar() {
+                System.err.println();
+              }
+
+              void bar(int x) {
+                System.err.println();
+              }
+            }
+            """)
         .setArgs("-XepOpt:UngroupedOverloads:BatchFindings")
         .doTest(TestMode.TEXT_MATCH);
   }
@@ -280,13 +304,15 @@ public final class UngroupedOverloadsTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  // BUG: Diagnostic contains: constructor overloads",
-            "  Test() {}",
-            "  private void bar() {}",
-            "  // BUG: Diagnostic contains: constructor overloads",
-            "  Test(int i) {}",
-            "}")
+            """
+            class Test {
+              // BUG: Diagnostic contains: constructor overloads
+              Test() {}
+              private void bar() {}
+              // BUG: Diagnostic contains: constructor overloads
+              Test(int i) {}
+            }
+            """)
         .doTest();
   }
 
@@ -297,14 +323,16 @@ public final class UngroupedOverloadsTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.collect.ImmutableSet;",
-            "import java.util.Set;",
-            "",
-            "record MyRecord(ImmutableSet<String> strings) {",
-            "  MyRecord(Set<String> strings) {",
-            "    this(strings == null ? ImmutableSet.of() : ImmutableSet.copyOf(strings));",
-            "  }",
-            "}")
+            """
+            import com.google.common.collect.ImmutableSet;
+            import java.util.Set;
+
+            record MyRecord(ImmutableSet<String> strings) {
+              MyRecord(Set<String> strings) {
+                this(strings == null ? ImmutableSet.of() : ImmutableSet.copyOf(strings));
+              }
+            }
+            """)
         .doTest();
   }
 }

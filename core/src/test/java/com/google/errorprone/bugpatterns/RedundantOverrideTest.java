@@ -32,20 +32,24 @@ public final class RedundantOverrideTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "class Test extends foo.Bar {",
-            "  // BUG: Diagnostic contains:",
-            "  @Override public boolean frob(Object o) {",
-            "    return super.frob(o);",
-            "  }",
-            "}")
+            """
+            class Test extends foo.Bar {
+              // BUG: Diagnostic contains:
+              @Override public boolean frob(Object o) {
+                return super.frob(o);
+              }
+            }
+            """)
         .addSourceLines(
             "foo/Bar.java",
-            "package foo;",
-            "public class Bar {",
-            "  public boolean frob(Object o) {",
-            "    return false;",
-            "  }",
-            "}")
+            """
+            package foo;
+            public class Bar {
+              public boolean frob(Object o) {
+                return false;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -54,20 +58,24 @@ public final class RedundantOverrideTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "class Test extends foo.Bar {",
-            "  /** Adding javadoc. */",
-            "  @Override public boolean frob(Object o) {",
-            "    return super.frob(o);",
-            "  }",
-            "}")
+            """
+            class Test extends foo.Bar {
+              /** Adding javadoc. */
+              @Override public boolean frob(Object o) {
+                return super.frob(o);
+              }
+            }
+            """)
         .addSourceLines(
             "foo/Bar.java",
-            "package foo;",
-            "public class Bar {",
-            "  public boolean frob(Object o) {",
-            "    return false;",
-            "  }",
-            "}")
+            """
+            package foo;
+            public class Bar {
+              public boolean frob(Object o) {
+                return false;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -76,20 +84,24 @@ public final class RedundantOverrideTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "class Test extends foo.Bar {",
-            "  @Override public boolean frob(Object o) {",
-            "    // TODO..",
-            "    return super.frob(o);",
-            "  }",
-            "}")
+            """
+            class Test extends foo.Bar {
+              @Override public boolean frob(Object o) {
+                // TODO..
+                return super.frob(o);
+              }
+            }
+            """)
         .addSourceLines(
             "foo/Bar.java",
-            "package foo;",
-            "public class Bar {",
-            "  public boolean frob(Object o) {",
-            "    return false;",
-            "  }",
-            "}")
+            """
+            package foo;
+            public class Bar {
+              public boolean frob(Object o) {
+                return false;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -97,17 +109,21 @@ public final class RedundantOverrideTest {
   public void considersParameterOrder() {
     testHelper
         .addSourceLines(
-            "A.java", //
-            "class A {",
-            "  public void swap(int a, int b) {}",
-            "}")
+            "A.java",
+            """
+            class A {
+              public void swap(int a, int b) {}
+            }
+            """)
         .addSourceLines(
             "B.java",
-            "class B extends A {",
-            "  @Override public void swap(int a, int b) {",
-            "    super.swap(b, a);",
-            "  }",
-            "}")
+            """
+            class B extends A {
+              @Override public void swap(int a, int b) {
+                super.swap(b, a);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -115,17 +131,21 @@ public final class RedundantOverrideTest {
   public void wideningVisibilityNoMatch() {
     testHelper
         .addSourceLines(
-            "A.java", //
-            "class A {",
-            "  void swap(int a, int b) {}",
-            "}")
+            "A.java",
+            """
+            class A {
+              void swap(int a, int b) {}
+            }
+            """)
         .addSourceLines(
             "B.java",
-            "class B extends A {",
-            "  @Override public void swap(int a, int b) {",
-            "    super.swap(a, b);",
-            "  }",
-            "}")
+            """
+            class B extends A {
+              @Override public void swap(int a, int b) {
+                super.swap(a, b);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -133,21 +153,25 @@ public final class RedundantOverrideTest {
   public void addingAnnotations() {
     testHelper
         .addSourceLines(
-            "A.java", //
-            "class A {",
-            "  Object swap(int a, int b) {",
-            "    return null;",
-            "  }",
-            "}")
+            "A.java",
+            """
+            class A {
+              Object swap(int a, int b) {
+                return null;
+              }
+            }
+            """)
         .addSourceLines(
             "B.java",
-            "import javax.annotation.Nullable;",
-            "class B extends A {",
-            "  @Nullable",
-            "  @Override public Object swap(int a, int b) {",
-            "    return super.swap(a, b);",
-            "  }",
-            "}")
+            """
+            import javax.annotation.Nullable;
+            class B extends A {
+              @Nullable
+              @Override public Object swap(int a, int b) {
+                return super.swap(a, b);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -155,23 +179,27 @@ public final class RedundantOverrideTest {
   public void sameAnnotation() {
     testHelper
         .addSourceLines(
-            "A.java", //
-            "import javax.annotation.Nullable;",
-            "class A {",
-            "  @Nullable Object swap(int a, int b) {",
-            "    return null;",
-            "  }",
-            "}")
+            "A.java",
+            """
+            import javax.annotation.Nullable;
+            class A {
+              @Nullable Object swap(int a, int b) {
+                return null;
+              }
+            }
+            """)
         .addSourceLines(
             "B.java",
-            "import javax.annotation.Nullable;",
-            "class B extends A {",
-            "  @Nullable",
-            "  // BUG: Diagnostic contains:",
-            "  @Override Object swap(int a, int b) {",
-            "    return super.swap(a, b);",
-            "  }",
-            "}")
+            """
+            import javax.annotation.Nullable;
+            class B extends A {
+              @Nullable
+              // BUG: Diagnostic contains:
+              @Override Object swap(int a, int b) {
+                return super.swap(a, b);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -179,21 +207,25 @@ public final class RedundantOverrideTest {
   public void removesAnnotation() {
     testHelper
         .addSourceLines(
-            "A.java", //
-            "import javax.annotation.Nullable;",
-            "class A {",
-            "  @Nullable Object swap(int a, int b) {",
-            "    return null;",
-            "  }",
-            "}")
+            "A.java",
+            """
+            import javax.annotation.Nullable;
+            class A {
+              @Nullable Object swap(int a, int b) {
+                return null;
+              }
+            }
+            """)
         .addSourceLines(
             "B.java",
-            "import javax.annotation.Nullable;",
-            "class B extends A {",
-            "  @Override Object swap(int a, int b) {",
-            "    return super.swap(a, b);",
-            "  }",
-            "}")
+            """
+            import javax.annotation.Nullable;
+            class B extends A {
+              @Override Object swap(int a, int b) {
+                return super.swap(a, b);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -201,21 +233,25 @@ public final class RedundantOverrideTest {
   public void addsAnnotation() {
     testHelper
         .addSourceLines(
-            "A.java", //
-            "class A {",
-            "  Object swap(int a, int b) {",
-            "    return null;",
-            "  }",
-            "}")
+            "A.java",
+            """
+            class A {
+              Object swap(int a, int b) {
+                return null;
+              }
+            }
+            """)
         .addSourceLines(
             "B.java",
-            "import javax.annotation.Nullable;",
-            "class B extends A {",
-            "  @Nullable",
-            "  @Override Object swap(int a, int b) {",
-            "    return super.swap(a, b);",
-            "  }",
-            "}")
+            """
+            import javax.annotation.Nullable;
+            class B extends A {
+              @Nullable
+              @Override Object swap(int a, int b) {
+                return super.swap(a, b);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -223,19 +259,23 @@ public final class RedundantOverrideTest {
   public void protectedOverrideInDifferentPackage() {
     testHelper
         .addSourceLines(
-            "A.java", //
-            "package foo;",
-            "public class A {",
-            "  protected void swap() {}",
-            "}")
+            "A.java",
+            """
+            package foo;
+            public class A {
+              protected void swap() {}
+            }
+            """)
         .addSourceLines(
             "B.java",
-            "package bar;",
-            "public class B extends foo.A {",
-            "  @Override protected void swap() {",
-            "    super.swap();",
-            "  }",
-            "}")
+            """
+            package bar;
+            public class B extends foo.A {
+              @Override protected void swap() {
+                super.swap();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -243,20 +283,24 @@ public final class RedundantOverrideTest {
   public void protectedOverrideInSamePackage() {
     testHelper
         .addSourceLines(
-            "A.java", //
-            "package foo;",
-            "class A {",
-            "  protected void swap() {}",
-            "}")
+            "A.java",
+            """
+            package foo;
+            class A {
+              protected void swap() {}
+            }
+            """)
         .addSourceLines(
             "B.java",
-            "package foo;",
-            "class B extends A {",
-            "  // BUG: Diagnostic contains:",
-            "  @Override protected void swap() {",
-            "    super.swap();",
-            "  }",
-            "}")
+            """
+            package foo;
+            class B extends A {
+              // BUG: Diagnostic contains:
+              @Override protected void swap() {
+                super.swap();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -264,24 +308,30 @@ public final class RedundantOverrideTest {
   public void paramAnnotationAddedInOverride() {
     testHelper
         .addSourceLines(
-            "DemoAnnotation.java", //
-            "package foo;",
-            "@interface DemoAnnotation {}")
+            "DemoAnnotation.java",
+            """
+            package foo;
+            @interface DemoAnnotation {}
+            """)
         .addSourceLines(
-            "A.java", //
-            "package foo;",
-            "class A {",
-            "  protected void swap(int a) {}",
-            "}")
+            "A.java",
+            """
+            package foo;
+            class A {
+              protected void swap(int a) {}
+            }
+            """)
         .addSourceLines(
             "B.java",
-            "package foo;",
-            "class B extends A {",
-            "  @Override",
-            "  protected void swap(@DemoAnnotation int a) {",
-            "    super.swap(a);",
-            "  }",
-            "}")
+            """
+            package foo;
+            class B extends A {
+              @Override
+              protected void swap(@DemoAnnotation int a) {
+                super.swap(a);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -289,24 +339,30 @@ public final class RedundantOverrideTest {
   public void paramAnnotationOmittedInOverride() {
     testHelper
         .addSourceLines(
-            "DemoAnnotation.java", //
-            "package foo;",
-            "@interface DemoAnnotation {}")
+            "DemoAnnotation.java",
+            """
+            package foo;
+            @interface DemoAnnotation {}
+            """)
         .addSourceLines(
-            "A.java", //
-            "package foo;",
-            "class A {",
-            "  protected void swap(@DemoAnnotation int a) {}",
-            "}")
+            "A.java",
+            """
+            package foo;
+            class A {
+              protected void swap(@DemoAnnotation int a) {}
+            }
+            """)
         .addSourceLines(
             "B.java",
-            "package foo;",
-            "class B extends A {",
-            "  @Override",
-            "  protected void swap(int a) {",
-            "    super.swap(a);",
-            "  }",
-            "}")
+            """
+            package foo;
+            class B extends A {
+              @Override
+              protected void swap(int a) {
+                super.swap(a);
+              }
+            }
+            """)
         .doTest();
   }
 }

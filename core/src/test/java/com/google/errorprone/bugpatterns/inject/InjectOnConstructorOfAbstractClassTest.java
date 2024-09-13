@@ -35,11 +35,13 @@ public class InjectOnConstructorOfAbstractClassTest {
     compilationHelper
         .addSourceLines(
             "Foo.java",
-            "import javax.inject.Inject;",
-            "abstract class Foo {",
-            "  // BUG: Diagnostic contains: Foo() {}",
-            "  @Inject Foo() {}",
-            "}")
+            """
+            import javax.inject.Inject;
+            abstract class Foo {
+              // BUG: Diagnostic contains: Foo() {}
+              @Inject Foo() {}
+            }
+            """)
         .doTest();
   }
 
@@ -48,11 +50,13 @@ public class InjectOnConstructorOfAbstractClassTest {
     compilationHelper
         .addSourceLines(
             "Foo.java",
-            "import com.google.inject.Inject;",
-            "abstract class Foo {",
-            "  // BUG: Diagnostic contains: Foo() {}",
-            "  @Inject Foo() {}",
-            "}")
+            """
+            import com.google.inject.Inject;
+            abstract class Foo {
+              // BUG: Diagnostic contains: Foo() {}
+              @Inject Foo() {}
+            }
+            """)
         .doTest();
   }
 
@@ -61,13 +65,15 @@ public class InjectOnConstructorOfAbstractClassTest {
     compilationHelper
         .addSourceLines(
             "Foo.java",
-            "import javax.inject.Inject;",
-            "class Bar {",
-            "  abstract static class Foo {",
-            "     // BUG: Diagnostic contains: Foo() {}",
-            "     @Inject Foo() {}",
-            "  }",
-            "}")
+            """
+            import javax.inject.Inject;
+            class Bar {
+              abstract static class Foo {
+                 // BUG: Diagnostic contains: Foo() {}
+                 @Inject Foo() {}
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -75,11 +81,13 @@ public class InjectOnConstructorOfAbstractClassTest {
   public void negativeCase() {
     compilationHelper
         .addSourceLines(
-            "Foo.java", //
-            "import javax.inject.Inject;",
-            "class Foo {",
-            "  @Inject Foo() {}",
-            "}")
+            "Foo.java",
+            """
+            import javax.inject.Inject;
+            class Foo {
+              @Inject Foo() {}
+            }
+            """)
         .doTest();
   }
 
@@ -88,12 +96,14 @@ public class InjectOnConstructorOfAbstractClassTest {
     compilationHelper
         .addSourceLines(
             "Foo.java",
-            "import javax.inject.Inject;",
-            "abstract class Bar {",
-            "  static class Foo {",
-            "    @Inject Foo() {}",
-            "  }",
-            "}")
+            """
+            import javax.inject.Inject;
+            abstract class Bar {
+              static class Foo {
+                @Inject Foo() {}
+              }
+            }
+            """)
         .doTest();
   }
 }

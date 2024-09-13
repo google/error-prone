@@ -37,24 +37,28 @@ public final class MissingSummaryTest {
   public void replaceReturn() {
     refactoring
         .addInputLines(
-            "Test.java", //
-            "interface Test {",
-            "  /**",
-            "   * @param n foo",
-            "   * @return n",
-            "   */",
-            "  int test(int n);",
-            "}")
+            "Test.java",
+            """
+            interface Test {
+              /**
+               * @param n foo
+               * @return n
+               */
+              int test(int n);
+            }
+            """)
         .addOutputLines(
-            "Test.java", //
-            "interface Test {",
-            "  /**",
-            "   * Returns n.",
-            "   *",
-            "   * @param n foo",
-            "   */",
-            "  int test(int n);",
-            "}")
+            "Test.java",
+            """
+            interface Test {
+              /**
+               * Returns n.
+               *
+               * @param n foo
+               */
+              int test(int n);
+            }
+            """)
         .doTest(TestMode.TEXT_MATCH);
   }
 
@@ -63,34 +67,38 @@ public final class MissingSummaryTest {
     refactoring
         .addInputLines(
             "Test.java",
-            "interface Test {",
-            "  /**",
-            "   * @param n foo",
-            "   * @see List other impl",
-            "   */",
-            "  void test(int n);",
-            "  /**",
-            "   * @param n foo",
-            "   * @see List",
-            "   */",
-            "  void test2(int n);",
-            "}")
+            """
+            interface Test {
+              /**
+               * @param n foo
+               * @see List other impl
+               */
+              void test(int n);
+              /**
+               * @param n foo
+               * @see List
+               */
+              void test2(int n);
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "interface Test {",
-            "  /**",
-            "   * See {@link List other impl}.",
-            "   *",
-            "   * @param n foo",
-            "   */",
-            "  void test(int n);",
-            "  /**",
-            "   * See {@link List}.",
-            "   *",
-            "   * @param n foo",
-            "   */",
-            "  void test2(int n);",
-            "}")
+            """
+            interface Test {
+              /**
+               * See {@link List other impl}.
+               *
+               * @param n foo
+               */
+              void test(int n);
+              /**
+               * See {@link List}.
+               *
+               * @param n foo
+               */
+              void test2(int n);
+            }
+            """)
         .doTest(TestMode.TEXT_MATCH);
   }
 
@@ -99,13 +107,15 @@ public final class MissingSummaryTest {
     helper
         .addSourceLines(
             "Test.java",
-            "// BUG: Diagnostic contains: @see",
-            "/** @see another thing */",
-            "public interface Test {",
-            "  // BUG: Diagnostic contains: @return",
-            "  /** @return foo */",
-            "  int test();",
-            "}")
+            """
+            // BUG: Diagnostic contains: @see
+            /** @see another thing */
+            public interface Test {
+              // BUG: Diagnostic contains: @return
+              /** @return foo */
+              int test();
+            }
+            """)
         .doTest();
   }
 
@@ -113,11 +123,13 @@ public final class MissingSummaryTest {
   public void privateCase() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  /** @throws IllegalStateException */",
-            "  private void test() {}",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              /** @throws IllegalStateException */
+              private void test() {}
+            }
+            """)
         .doTest();
   }
 
@@ -125,13 +137,15 @@ public final class MissingSummaryTest {
   public void effectivelyPrivateCase() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  private class Inner {",
-            "    /** @throws IllegalStateException */",
-            "    public void test() {}",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              private class Inner {
+                /** @throws IllegalStateException */
+                public void test() {}
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -140,14 +154,16 @@ public final class MissingSummaryTest {
     helper
         .addSourceLines(
             "Test.java",
-            "interface Test {",
-            "  /**",
-            "   * Summary line!",
-            "   *",
-            "   * @return n",
-            "   */",
-            "  int test();",
-            "}")
+            """
+            interface Test {
+              /**
+               * Summary line!
+               *
+               * @return n
+               */
+              int test();
+            }
+            """)
         .doTest();
   }
 
@@ -156,12 +172,14 @@ public final class MissingSummaryTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  /** @param o thing to compare */",
-            "  @Override public boolean equals(Object o) { return true; }",
-            "  /** @deprecated use something else */",
-            "  @Deprecated public void frobnicate() {}",
-            "}")
+            """
+            class Test {
+              /** @param o thing to compare */
+              @Override public boolean equals(Object o) { return true; }
+              /** @deprecated use something else */
+              @Deprecated public void frobnicate() {}
+            }
+            """)
         .doTest();
   }
 
@@ -170,10 +188,12 @@ public final class MissingSummaryTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  /** @param o thing to compare */",
-            "  public Test(Object o) {}",
-            "}")
+            """
+            class Test {
+              /** @param o thing to compare */
+              public Test(Object o) {}
+            }
+            """)
         .doTest();
   }
 
@@ -182,10 +202,12 @@ public final class MissingSummaryTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  /** @param o thing to compare */",
-            "  private Test(Object o) {}",
-            "}")
+            """
+            class Test {
+              /** @param o thing to compare */
+              private Test(Object o) {}
+            }
+            """)
         .doTest();
   }
 
@@ -194,10 +216,12 @@ public final class MissingSummaryTest {
     helper
         .addSourceLines(
             "Test.java",
-            "class Test implements java.util.function.Predicate<Object> {",
-            "  /** @param o thing to compare */",
-            "  public boolean test(Object o) { return false; }",
-            "}")
+            """
+            class Test implements java.util.function.Predicate<Object> {
+              /** @param o thing to compare */
+              public boolean test(Object o) { return false; }
+            }
+            """)
         .doTest();
   }
 
@@ -206,9 +230,11 @@ public final class MissingSummaryTest {
     helper
         .addSourceLines(
             "Test.java",
-            "// BUG: Diagnostic contains:",
-            "/** @see <a href=\"foo\">bar</a> */",
-            "public interface Test {}")
+            """
+            // BUG: Diagnostic contains:
+            /** @see <a href="foo">bar</a> */
+            public interface Test {}
+            """)
         .doTest();
   }
 
@@ -216,12 +242,14 @@ public final class MissingSummaryTest {
   public void emptyReturn() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "interface Test {",
-            "  // BUG: Diagnostic contains:",
-            "  /** @return */",
-            "  int test(int n);",
-            "}")
+            "Test.java",
+            """
+            interface Test {
+              // BUG: Diagnostic contains:
+              /** @return */
+              int test(int n);
+            }
+            """)
         .doTest();
   }
 
@@ -229,12 +257,14 @@ public final class MissingSummaryTest {
   public void emptyComment() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "package test;",
-            "/** */",
-            "// BUG: Diagnostic contains: summary line is required",
-            "public class Test {",
-            "}")
+            "Test.java",
+            """
+            package test;
+            /** */
+            // BUG: Diagnostic contains: summary line is required
+            public class Test {
+            }
+            """)
         .doTest();
   }
 }

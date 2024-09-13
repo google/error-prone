@@ -36,17 +36,21 @@ public final class InvalidBlockTagTest {
   public void typo() {
     refactoring
         .addInputLines(
-            "Test.java", //
-            "interface Test {",
-            "  /** @return anything */",
-            "  void foo();",
-            "}")
+            "Test.java",
+            """
+            interface Test {
+              /** @return anything */
+              void foo();
+            }
+            """)
         .addOutputLines(
-            "Test.java", //
-            "interface Test {",
-            "  /** @return anything */",
-            "  void foo();",
-            "}")
+            "Test.java",
+            """
+            interface Test {
+              /** @return anything */
+              void foo();
+            }
+            """)
         .doTest(TestMode.TEXT_MATCH);
   }
 
@@ -54,11 +58,13 @@ public final class InvalidBlockTagTest {
   public void veryBadTypo_noSuggestion() {
     refactoring
         .addInputLines(
-            "Test.java", //
-            "interface Test {",
-            "  /** @returnFnargleBlargle anything */",
-            "  void foo();",
-            "}")
+            "Test.java",
+            """
+            interface Test {
+              /** @returnFnargleBlargle anything */
+              void foo();
+            }
+            """)
         .expectUnchanged()
         .doTest(TestMode.TEXT_MATCH);
   }
@@ -67,11 +73,13 @@ public final class InvalidBlockTagTest {
   public void otherAcceptedTags() {
     helper
         .addSourceLines(
-            "Test.java", //
-            "class Test {",
-            "  /** @hide */",
-            "  void test() {}",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              /** @hide */
+              void test() {}
+            }
+            """)
         .doTest();
   }
 
@@ -80,36 +88,40 @@ public final class InvalidBlockTagTest {
     refactoring
         .addInputLines(
             "Test.java",
-            "interface Test {",
-            "  /**",
-            "   * <code>",
-            "   *    @Override",
-            "   *    boolean equals(Object o);",
-            "   *  </code>",
-            "   * @See Test",
-            "   * <pre>",
-            "   *    @Override",
-            "   *    boolean equals(Object o);",
-            "   *  </pre>",
-            "   */",
-            "  void bar();",
-            "}")
+            """
+            interface Test {
+              /**
+               * <code>
+               *    @Override
+               *    boolean equals(Object o);
+               *  </code>
+               * @See Test
+               * <pre>
+               *    @Override
+               *    boolean equals(Object o);
+               *  </pre>
+               */
+              void bar();
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "interface Test {",
-            "  /**",
-            "   * <code>",
-            "   *    {@literal @}Override",
-            "   *    boolean equals(Object o);",
-            "   *  </code>",
-            "   * @see Test",
-            "   * <pre>",
-            "   *    {@literal @}Override",
-            "   *    boolean equals(Object o);",
-            "   *  </pre>",
-            "   */",
-            "  void bar();",
-            "}")
+            """
+            interface Test {
+              /**
+               * <code>
+               *    {@literal @}Override
+               *    boolean equals(Object o);
+               *  </code>
+               * @see Test
+               * <pre>
+               *    {@literal @}Override
+               *    boolean equals(Object o);
+               *  </pre>
+               */
+              void bar();
+            }
+            """)
         .doTest(TestMode.TEXT_MATCH);
   }
 
@@ -118,20 +130,24 @@ public final class InvalidBlockTagTest {
     refactoring
         .addInputLines(
             "Test.java",
-            "interface Test {",
-            "  /**",
-            "   * @a blah",
-            "   */",
-            "  void foo(int a);",
-            "}")
+            """
+            interface Test {
+              /**
+               * @a blah
+               */
+              void foo(int a);
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "interface Test {",
-            "  /**",
-            "   * @param a blah",
-            "   */",
-            "  void foo(int a);",
-            "}")
+            """
+            interface Test {
+              /**
+               * @param a blah
+               */
+              void foo(int a);
+            }
+            """)
         .doTest(TestMode.TEXT_MATCH);
   }
 
@@ -140,13 +156,15 @@ public final class InvalidBlockTagTest {
     helper
         .addSourceLines(
             "Test.java",
-            "interface Test {",
-            "  /**",
-            "   // BUG: Diagnostic contains: {@code a}",
-            "   * @a blah",
-            "   */",
-            "  void foo(int a);",
-            "}")
+            """
+            interface Test {
+              /**
+               // BUG: Diagnostic contains: {@code a}
+               * @a blah
+               */
+              void foo(int a);
+            }
+            """)
         .doTest();
   }
 
@@ -155,16 +173,20 @@ public final class InvalidBlockTagTest {
     refactoring
         .addInputLines(
             "Test.java",
-            "interface Test {",
-            "  /** @inheritDoc */",
-            "  void frobnicate(String foo);",
-            "}")
+            """
+            interface Test {
+              /** @inheritDoc */
+              void frobnicate(String foo);
+            }
+            """)
         .addOutputLines(
             "Test.java",
-            "interface Test {",
-            "  /** {@inheritDoc} */",
-            "  void frobnicate(String foo);",
-            "}")
+            """
+            interface Test {
+              /** {@inheritDoc} */
+              void frobnicate(String foo);
+            }
+            """)
         .doTest(TestMode.TEXT_MATCH);
   }
 
@@ -173,11 +195,13 @@ public final class InvalidBlockTagTest {
     helper
         .addSourceLines(
             "Test.java",
-            "/**",
-            "  * @apiNote does nothing",
-            "  * @implNote not implemented",
-            "  */",
-            "class Test {}")
+            """
+            /**
+              * @apiNote does nothing
+              * @implNote not implemented
+              */
+            class Test {}
+            """)
         .doTest();
   }
 }

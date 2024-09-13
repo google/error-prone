@@ -41,22 +41,24 @@ public class DoNotCallCheckerTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.DoNotCall;",
-            "class Test {",
-            "  @DoNotCall(\"satisfying explanation\") final void f() {}",
-            "  @DoNotCall final void g() {}",
-            "  void m() {",
-            "    // BUG: Diagnostic contains:",
-            "    // Test.f() should not be called: satisfying explanation",
-            "    f();",
-            "    // BUG: Diagnostic contains:",
-            "    // Test.g() should not be called, see its documentation for details.",
-            "    g();",
-            "    // BUG: Diagnostic contains:",
-            "    // Test.g() should not be called, see its documentation for details.",
-            "    Runnable r = this::g;",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.annotations.DoNotCall;
+            class Test {
+              @DoNotCall("satisfying explanation") final void f() {}
+              @DoNotCall final void g() {}
+              void m() {
+                // BUG: Diagnostic contains:
+                // Test.f() should not be called: satisfying explanation
+                f();
+                // BUG: Diagnostic contains:
+                // Test.g() should not be called, see its documentation for details.
+                g();
+                // BUG: Diagnostic contains:
+                // Test.g() should not be called, see its documentation for details.
+                Runnable r = this::g;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -65,15 +67,17 @@ public class DoNotCallCheckerTest {
     testHelperWithImmutableList()
         .addSourceLines(
             "Test.java",
-            "import java.util.List;",
-            "class Test {",
-            "  void foo() {",
-            "    List<Integer> xs = ImmutableList.of();",
-            "    // BUG: Diagnostic contains:",
-            "    xs.add(1);",
-            "    xs.get(1);",
-            "  }",
-            "}")
+            """
+            import java.util.List;
+            class Test {
+              void foo() {
+                List<Integer> xs = ImmutableList.of();
+                // BUG: Diagnostic contains:
+                xs.add(1);
+                xs.get(1);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -82,20 +86,22 @@ public class DoNotCallCheckerTest {
     testHelperWithImmutableList()
         .addSourceLines(
             "Test.java",
-            "import java.util.List;",
-            "class Test {",
-            "  void foo() {",
-            "    List<Integer> xs;",
-            "    if (hashCode() == 0) {",
-            "      xs = ImmutableList.of();",
-            "    } else {",
-            "      xs = ImmutableList.of();",
-            "    }",
-            "    // BUG: Diagnostic contains:",
-            "    xs.add(1);",
-            "    xs.get(1);",
-            "  }",
-            "}")
+            """
+            import java.util.List;
+            class Test {
+              void foo() {
+                List<Integer> xs;
+                if (hashCode() == 0) {
+                  xs = ImmutableList.of();
+                } else {
+                  xs = ImmutableList.of();
+                }
+                // BUG: Diagnostic contains:
+                xs.add(1);
+                xs.get(1);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -104,21 +110,24 @@ public class DoNotCallCheckerTest {
     return testHelper
         .addSourceLines(
             "ImmutableCollection.java",
-            "import com.google.errorprone.annotations.DoNotCall;",
-            "import java.util.List;",
-            "abstract class ImmutableCollection<T> implements java.util.Collection<T> {",
-            "  @DoNotCall @Override public final boolean add(T t) { throw new"
-                + " UnsupportedOperationException(); }",
-            "}")
+            """
+import com.google.errorprone.annotations.DoNotCall;
+import java.util.List;
+abstract class ImmutableCollection<T> implements java.util.Collection<T> {
+  @DoNotCall @Override public final boolean add(T t) { throw new UnsupportedOperationException(); }
+}
+""")
         .addSourceLines(
             "ImmutableList.java",
-            "import com.google.errorprone.annotations.DoNotCall;",
-            "import java.util.List;",
-            "abstract class ImmutableList<T> extends ImmutableCollection<T> implements List<T> {",
-            "  public static <T> ImmutableList<T> of() {",
-            "    return null;",
-            "  }",
-            "}");
+            """
+            import com.google.errorprone.annotations.DoNotCall;
+            import java.util.List;
+            abstract class ImmutableList<T> extends ImmutableCollection<T> implements List<T> {
+              public static <T> ImmutableList<T> of() {
+                return null;
+              }
+            }
+            """);
   }
 
   @Test
@@ -126,20 +135,22 @@ public class DoNotCallCheckerTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.collect.ImmutableList;",
-            "import java.util.ArrayList;",
-            "import java.util.List;",
-            "class Test {",
-            "  void foo() {",
-            "    List<Integer> xs;",
-            "    if (true) {",
-            "      xs = ImmutableList.of();",
-            "    } else {",
-            "      xs = new ArrayList<>();",
-            "      xs.add(2);",
-            "    }",
-            "  }",
-            "}")
+            """
+            import com.google.common.collect.ImmutableList;
+            import java.util.ArrayList;
+            import java.util.List;
+            class Test {
+              void foo() {
+                List<Integer> xs;
+                if (true) {
+                  xs = ImmutableList.of();
+                } else {
+                  xs = new ArrayList<>();
+                  xs.add(2);
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -148,12 +159,14 @@ public class DoNotCallCheckerTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.DoNotCall;",
-            "public class Test {",
-            "  // BUG: Diagnostic contains: should be final",
-            "  @DoNotCall public void f() {}",
-            "  @DoNotCall public final void g() {}",
-            "}")
+            """
+            import com.google.errorprone.annotations.DoNotCall;
+            public class Test {
+              // BUG: Diagnostic contains: should be final
+              @DoNotCall public void f() {}
+              @DoNotCall public final void g() {}
+            }
+            """)
         .doTest();
   }
 
@@ -162,16 +175,20 @@ public class DoNotCallCheckerTest {
     testHelper
         .addSourceLines(
             "A.java",
-            "import com.google.errorprone.annotations.DoNotCall;",
-            "public interface A {",
-            "  @DoNotCall public void f();",
-            "}")
+            """
+            import com.google.errorprone.annotations.DoNotCall;
+            public interface A {
+              @DoNotCall public void f();
+            }
+            """)
         .addSourceLines(
             "B.java",
-            "public class B implements A {",
-            "  // BUG: Diagnostic contains: overrides f in A which is annotated",
-            "  @Override public void f() {}",
-            "}")
+            """
+            public class B implements A {
+              // BUG: Diagnostic contains: overrides f in A which is annotated
+              @Override public void f() {}
+            }
+            """)
         .doTest();
   }
 
@@ -180,16 +197,20 @@ public class DoNotCallCheckerTest {
     testHelper
         .addSourceLines(
             "A.java",
-            "import com.google.errorprone.annotations.DoNotCall;",
-            "public interface A {",
-            "  @DoNotCall public void f();",
-            "}")
+            """
+            import com.google.errorprone.annotations.DoNotCall;
+            public interface A {
+              @DoNotCall public void f();
+            }
+            """)
         .addSourceLines(
             "B.java",
-            "import com.google.errorprone.annotations.DoNotCall;",
-            "public class B implements A {",
-            "  @DoNotCall @Override public final void f() {}",
-            "}")
+            """
+            import com.google.errorprone.annotations.DoNotCall;
+            public class B implements A {
+              @DoNotCall @Override public final void f() {}
+            }
+            """)
         .doTest();
   }
 
@@ -204,24 +225,30 @@ public class DoNotCallCheckerTest {
     testHelper
         .addSourceLines(
             "I.java",
-            "import com.google.errorprone.annotations.DoNotCall;",
-            "public interface I {",
-            "  @DoNotCall public String toString();",
-            "}")
+            """
+            import com.google.errorprone.annotations.DoNotCall;
+            public interface I {
+              @DoNotCall public String toString();
+            }
+            """)
         .addSourceLines(
-            "B.java", //
-            "public class B implements I {",
-            "}")
+            "B.java",
+            """
+            public class B implements I {
+            }
+            """)
         .addSourceLines(
-            "Test.java", //
-            "public class Test {",
-            "  void f(B b) {",
-            "    b.toString();",
-            "    I i = b;",
-            "    // BUG: Diagnostic contains:",
-            "    i.toString();",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            public class Test {
+              void f(B b) {
+                b.toString();
+                I i = b;
+                // BUG: Diagnostic contains:
+                i.toString();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -230,10 +257,12 @@ public class DoNotCallCheckerTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.DoNotCall;",
-            "public final class Test {",
-            "  @DoNotCall public void f() {}",
-            "}")
+            """
+            import com.google.errorprone.annotations.DoNotCall;
+            public final class Test {
+              @DoNotCall public void f() {}
+            }
+            """)
         .doTest();
   }
 
@@ -242,11 +271,13 @@ public class DoNotCallCheckerTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.errorprone.annotations.DoNotCall;",
-            "public final class Test {",
-            "  // BUG: Diagnostic contains: private method",
-            "  @DoNotCall private void f() {}",
-            "}")
+            """
+            import com.google.errorprone.annotations.DoNotCall;
+            public final class Test {
+              // BUG: Diagnostic contains: private method
+              @DoNotCall private void f() {}
+            }
+            """)
         .doTest();
   }
 
@@ -263,14 +294,14 @@ public class DoNotCallCheckerTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  void m() {",
-            "    // BUG: Diagnostic contains:"
-                + " com.google.errorprone.bugpatterns.DoNotCallCheckerTest.DNCTest.f() should not"
-                + " be called, see its documentation for details.",
-            "    com.google.errorprone.bugpatterns.DoNotCallCheckerTest.DNCTest.f();",
-            "  }",
-            "}")
+            """
+class Test {
+  void m() {
+    // BUG: Diagnostic contains: com.google.errorprone.bugpatterns.DoNotCallCheckerTest.DNCTest.f() should not be called, see its documentation for details.
+    com.google.errorprone.bugpatterns.DoNotCallCheckerTest.DNCTest.f();
+  }
+}
+""")
         .withClasspath(DNCTest.class, DoNotCallCheckerTest.class)
         .doTest();
   }
@@ -301,14 +332,16 @@ public class DoNotCallCheckerTest {
     testHelper
         .addSourceLines(
             "TestClass.java",
-            "import java.sql.Date;",
-            "import java.time.Instant;",
-            "public class TestClass {",
-            "  public void badApis(Date date) {",
-            "    // BUG: Diagnostic contains: toLocalDate()",
-            "    Instant instant = date.toInstant();",
-            "  }",
-            "}")
+            """
+            import java.sql.Date;
+            import java.time.Instant;
+            public class TestClass {
+              public void badApis(Date date) {
+                // BUG: Diagnostic contains: toLocalDate()
+                Instant instant = date.toInstant();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -321,17 +354,19 @@ public class DoNotCallCheckerTest {
     testHelper
         .addSourceLines(
             "TestClass.java",
-            "import java.sql.Date;",
-            "public class TestClass {",
-            "  public void badApis(Date date) {",
-            "    // BUG: Diagnostic contains: DoNotCall",
-            "    int hour = date.getHours();",
-            "    // BUG: Diagnostic contains: DoNotCall",
-            "    int mins = date.getMinutes();",
-            "    // BUG: Diagnostic contains: DoNotCall",
-            "    int secs = date.getSeconds();",
-            "  }",
-            "}")
+            """
+            import java.sql.Date;
+            public class TestClass {
+              public void badApis(Date date) {
+                // BUG: Diagnostic contains: DoNotCall
+                int hour = date.getHours();
+                // BUG: Diagnostic contains: DoNotCall
+                int mins = date.getMinutes();
+                // BUG: Diagnostic contains: DoNotCall
+                int secs = date.getSeconds();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -344,17 +379,19 @@ public class DoNotCallCheckerTest {
     testHelper
         .addSourceLines(
             "TestClass.java",
-            "import java.sql.Date;",
-            "public class TestClass {",
-            "  public void badApis(Date date) {",
-            "    // BUG: Diagnostic contains: DoNotCall",
-            "    date.setHours(1);",
-            "    // BUG: Diagnostic contains: DoNotCall",
-            "    date.setMinutes(1);",
-            "    // BUG: Diagnostic contains: DoNotCall",
-            "    date.setSeconds(1);",
-            "  }",
-            "}")
+            """
+            import java.sql.Date;
+            public class TestClass {
+              public void badApis(Date date) {
+                // BUG: Diagnostic contains: DoNotCall
+                date.setHours(1);
+                // BUG: Diagnostic contains: DoNotCall
+                date.setMinutes(1);
+                // BUG: Diagnostic contains: DoNotCall
+                date.setSeconds(1);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -363,20 +400,22 @@ public class DoNotCallCheckerTest {
     testHelper
         .addSourceLines(
             "TestClass.java",
-            "import java.time.Instant;",
-            "import java.util.Date;",
-            "public class TestClass {",
-            "  public void badApis() {",
-            "    Date date = new java.sql.Date(1234567890L);",
-            "    Instant instant = date.toInstant();",
-            "    int hour = date.getHours();",
-            "    int mins = date.getMinutes();",
-            "    int secs = date.getSeconds();",
-            "    date.setHours(1);",
-            "    date.setMinutes(1);",
-            "    date.setSeconds(1);",
-            "  }",
-            "}")
+            """
+            import java.time.Instant;
+            import java.util.Date;
+            public class TestClass {
+              public void badApis() {
+                Date date = new java.sql.Date(1234567890L);
+                Instant instant = date.toInstant();
+                int hour = date.getHours();
+                int mins = date.getMinutes();
+                int secs = date.getSeconds();
+                date.setHours(1);
+                date.setMinutes(1);
+                date.setSeconds(1);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -386,14 +425,16 @@ public class DoNotCallCheckerTest {
     testHelper
         .addSourceLines(
             "TestClass.java",
-            "import java.sql.Time;",
-            "import java.time.Instant;",
-            "public class TestClass {",
-            "  public void badApis(Time time) {",
-            "    // BUG: Diagnostic contains: toLocalTime()",
-            "    Instant instant = time.toInstant();",
-            "  }",
-            "}")
+            """
+            import java.sql.Time;
+            import java.time.Instant;
+            public class TestClass {
+              public void badApis(Time time) {
+                // BUG: Diagnostic contains: toLocalTime()
+                Instant instant = time.toInstant();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -407,19 +448,21 @@ public class DoNotCallCheckerTest {
     testHelper
         .addSourceLines(
             "TestClass.java",
-            "import java.sql.Time;",
-            "public class TestClass {",
-            "  public void badApis(Time time) {",
-            "    // BUG: Diagnostic contains: DoNotCall",
-            "    int year = time.getYear();",
-            "    // BUG: Diagnostic contains: DoNotCall",
-            "    int month = time.getMonth();",
-            "    // BUG: Diagnostic contains: DoNotCall",
-            "    int day = time.getDay();",
-            "    // BUG: Diagnostic contains: DoNotCall",
-            "    int date = time.getDate();",
-            "  }",
-            "}")
+            """
+            import java.sql.Time;
+            public class TestClass {
+              public void badApis(Time time) {
+                // BUG: Diagnostic contains: DoNotCall
+                int year = time.getYear();
+                // BUG: Diagnostic contains: DoNotCall
+                int month = time.getMonth();
+                // BUG: Diagnostic contains: DoNotCall
+                int day = time.getDay();
+                // BUG: Diagnostic contains: DoNotCall
+                int date = time.getDate();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -432,17 +475,19 @@ public class DoNotCallCheckerTest {
     testHelper
         .addSourceLines(
             "TestClass.java",
-            "import java.sql.Time;",
-            "public class TestClass {",
-            "  public void badApis(Time time) {",
-            "    // BUG: Diagnostic contains: DoNotCall",
-            "    time.setYear(1);",
-            "    // BUG: Diagnostic contains: DoNotCall",
-            "    time.setMonth(1);",
-            "    // BUG: Diagnostic contains: DoNotCall",
-            "    time.setDate(1);",
-            "  }",
-            "}")
+            """
+            import java.sql.Time;
+            public class TestClass {
+              public void badApis(Time time) {
+                // BUG: Diagnostic contains: DoNotCall
+                time.setYear(1);
+                // BUG: Diagnostic contains: DoNotCall
+                time.setMonth(1);
+                // BUG: Diagnostic contains: DoNotCall
+                time.setDate(1);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -451,21 +496,23 @@ public class DoNotCallCheckerTest {
     testHelper
         .addSourceLines(
             "TestClass.java",
-            "import java.time.Instant;",
-            "import java.util.Date;",
-            "public class TestClass {",
-            "  public void badApis() {",
-            "    Date time = new java.sql.Time(1234567890L);",
-            "    Instant instant = time.toInstant();",
-            "    int year = time.getYear();",
-            "    int month = time.getMonth();",
-            "    int date = time.getDate();",
-            "    int day = time.getDay();",
-            "    time.setYear(1);",
-            "    time.setMonth(1);",
-            "    time.setDate(1);",
-            "  }",
-            "}")
+            """
+            import java.time.Instant;
+            import java.util.Date;
+            public class TestClass {
+              public void badApis() {
+                Date time = new java.sql.Time(1234567890L);
+                Instant instant = time.toInstant();
+                int year = time.getYear();
+                int month = time.getMonth();
+                int date = time.getDate();
+                int day = time.getDay();
+                time.setYear(1);
+                time.setMonth(1);
+                time.setDate(1);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -477,14 +524,16 @@ public class DoNotCallCheckerTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.concurrent.locks.ReentrantReadWriteLock;",
-            "public class Test {",
-            "  public void foo() {",
-            "    ReentrantReadWriteLock.ReadLock lock = new ReentrantReadWriteLock().readLock();",
-            "    // BUG: Diagnostic contains: DoNotCall",
-            "    lock.newCondition();",
-            "  }",
-            "}")
+            """
+            import java.util.concurrent.locks.ReentrantReadWriteLock;
+            public class Test {
+              public void foo() {
+                ReentrantReadWriteLock.ReadLock lock = new ReentrantReadWriteLock().readLock();
+                // BUG: Diagnostic contains: DoNotCall
+                lock.newCondition();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -495,14 +544,16 @@ public class DoNotCallCheckerTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.concurrent.ThreadLocalRandom;",
-            "public class Test {",
-            "  public void foo() {",
-            "    ThreadLocalRandom random = ThreadLocalRandom.current();",
-            "    // BUG: Diagnostic contains: DoNotCall",
-            "    random.setSeed(42L);",
-            "  }",
-            "}")
+            """
+            import java.util.concurrent.ThreadLocalRandom;
+            public class Test {
+              public void foo() {
+                ThreadLocalRandom random = ThreadLocalRandom.current();
+                // BUG: Diagnostic contains: DoNotCall
+                random.setSeed(42L);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -511,15 +562,17 @@ public class DoNotCallCheckerTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.concurrent.ThreadLocalRandom;",
-            "import java.util.Optional;",
-            "public class Test {",
-            "  public void foo(Optional<Long> x) {",
-            "    ThreadLocalRandom random = ThreadLocalRandom.current();",
-            "    // BUG: Diagnostic contains: DoNotCall",
-            "    x.ifPresent(random::setSeed);",
-            "  }",
-            "}")
+            """
+            import java.util.concurrent.ThreadLocalRandom;
+            import java.util.Optional;
+            public class Test {
+              public void foo(Optional<Long> x) {
+                ThreadLocalRandom random = ThreadLocalRandom.current();
+                // BUG: Diagnostic contains: DoNotCall
+                x.ifPresent(random::setSeed);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -528,13 +581,15 @@ public class DoNotCallCheckerTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.List;",
-            "class Test<T extends java.util.Collection<Object>> {",
-            "  @Override public boolean equals(Object o) {",
-            "    T foo = (T) o;",
-            "    return foo.equals(1);",
-            "  }",
-            "}")
+            """
+            import java.util.List;
+            class Test<T extends java.util.Collection<Object>> {
+              @Override public boolean equals(Object o) {
+                T foo = (T) o;
+                return foo.equals(1);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -543,16 +598,18 @@ public class DoNotCallCheckerTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "class Test{",
-            " void f() {",
-            "   try {",
-            "     throw new Exception();",
-            "   } catch (Exception ex) {",
-            "     // BUG: Diagnostic contains: getClassName",
-            "     ex.getStackTrace()[0].getClass().getSimpleName();",
-            "   }",
-            " }",
-            "}")
+            """
+            class Test{
+             void f() {
+               try {
+                 throw new Exception();
+               } catch (Exception ex) {
+                 // BUG: Diagnostic contains: getClassName
+                 ex.getStackTrace()[0].getClass().getSimpleName();
+               }
+             }
+            }
+            """)
         .doTest();
   }
 
@@ -561,12 +618,14 @@ public class DoNotCallCheckerTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "class Test{",
-            " void f(StackWalker w) {",
-            "   // BUG: Diagnostic contains: getCallerClass",
-            "   w.getClass();",
-            " }",
-            "}")
+            """
+            class Test{
+             void f(StackWalker w) {
+               // BUG: Diagnostic contains: getCallerClass
+               w.getClass();
+             }
+            }
+            """)
         .doTest();
   }
 
@@ -575,13 +634,15 @@ public class DoNotCallCheckerTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import java.lang.StackWalker.StackFrame;",
-            "class Test{",
-            " void f(StackFrame f) {",
-            "   // BUG: Diagnostic contains: getClassName",
-            "   f.getClass();",
-            " }",
-            "}")
+            """
+            import java.lang.StackWalker.StackFrame;
+            class Test{
+             void f(StackFrame f) {
+               // BUG: Diagnostic contains: getClassName
+               f.getClass();
+             }
+            }
+            """)
         .doTest();
   }
 
@@ -590,13 +651,15 @@ public class DoNotCallCheckerTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import java.lang.reflect.Constructor;",
-            "class Test{",
-            " void f(Constructor<?> c) {",
-            "   // BUG: Diagnostic contains: getDeclaringClass",
-            "   c.getClass();",
-            " }",
-            "}")
+            """
+            import java.lang.reflect.Constructor;
+            class Test{
+             void f(Constructor<?> c) {
+               // BUG: Diagnostic contains: getDeclaringClass
+               c.getClass();
+             }
+            }
+            """)
         .doTest();
   }
 
@@ -605,13 +668,15 @@ public class DoNotCallCheckerTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import java.lang.reflect.Field;",
-            "class Test{",
-            " void f(Field f) {",
-            "   // BUG: Diagnostic contains: getDeclaringClass",
-            "   f.getClass();",
-            " }",
-            "}")
+            """
+            import java.lang.reflect.Field;
+            class Test{
+             void f(Field f) {
+               // BUG: Diagnostic contains: getDeclaringClass
+               f.getClass();
+             }
+            }
+            """)
         .doTest();
   }
 
@@ -620,13 +685,15 @@ public class DoNotCallCheckerTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import java.lang.reflect.Method;",
-            "class Test{",
-            " void f(Method m) {",
-            "   // BUG: Diagnostic contains: getDeclaringClass",
-            "   m.getClass();",
-            " }",
-            "}")
+            """
+            import java.lang.reflect.Method;
+            class Test{
+             void f(Method m) {
+               // BUG: Diagnostic contains: getDeclaringClass
+               m.getClass();
+             }
+            }
+            """)
         .doTest();
   }
 
@@ -635,13 +702,15 @@ public class DoNotCallCheckerTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import java.beans.BeanDescriptor;",
-            "class Test{",
-            " void f(BeanDescriptor b) {",
-            "   // BUG: Diagnostic contains: getBeanClass",
-            "   b.getClass();",
-            " }",
-            "}")
+            """
+            import java.beans.BeanDescriptor;
+            class Test{
+             void f(BeanDescriptor b) {
+               // BUG: Diagnostic contains: getBeanClass
+               b.getClass();
+             }
+            }
+            """)
         .doTest();
   }
 
@@ -650,16 +719,18 @@ public class DoNotCallCheckerTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import java.lang.management.LockInfo;",
-            "import java.lang.management.MonitorInfo;",
-            "class Test{",
-            " void f(LockInfo l, MonitorInfo m) {",
-            "   // BUG: Diagnostic contains: getClassName",
-            "   l.getClass();",
-            "   // BUG: Diagnostic contains: getClassName",
-            "   m.getClass();",
-            " }",
-            "}")
+            """
+            import java.lang.management.LockInfo;
+            import java.lang.management.MonitorInfo;
+            class Test{
+             void f(LockInfo l, MonitorInfo m) {
+               // BUG: Diagnostic contains: getClassName
+               l.getClass();
+               // BUG: Diagnostic contains: getClassName
+               m.getClass();
+             }
+            }
+            """)
         .doTest();
   }
 
@@ -668,13 +739,15 @@ public class DoNotCallCheckerTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import java.lang.reflect.ParameterizedType;",
-            "class Test{",
-            " void f(ParameterizedType t) {",
-            "   // BUG: Diagnostic contains: getRawType",
-            "   t.getClass();",
-            " }",
-            "}")
+            """
+            import java.lang.reflect.ParameterizedType;
+            class Test{
+             void f(ParameterizedType t) {
+               // BUG: Diagnostic contains: getRawType
+               t.getClass();
+             }
+            }
+            """)
         .doTest();
   }
 
@@ -683,13 +756,15 @@ public class DoNotCallCheckerTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.reflect.ClassPath.ClassInfo;",
-            "class Test{",
-            " void f(ClassInfo i) {",
-            "   // BUG: Diagnostic contains: getName",
-            "   i.getClass();",
-            " }",
-            "}")
+            """
+            import com.google.common.reflect.ClassPath.ClassInfo;
+            class Test{
+             void f(ClassInfo i) {
+               // BUG: Diagnostic contains: getName
+               i.getClass();
+             }
+            }
+            """)
         .doTest();
   }
 
@@ -698,13 +773,15 @@ public class DoNotCallCheckerTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.reflect.TypeToken;",
-            "class Test{",
-            " void f(TypeToken<?> t) {",
-            "   // BUG: Diagnostic contains: getRawType",
-            "   t.getClass();",
-            " }",
-            "}")
+            """
+            import com.google.common.reflect.TypeToken;
+            class Test{
+             void f(TypeToken<?> t) {
+               // BUG: Diagnostic contains: getRawType
+               t.getClass();
+             }
+            }
+            """)
         .doTest();
   }
 
@@ -713,12 +790,14 @@ public class DoNotCallCheckerTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            " void f(Thread t) {",
-            "   // BUG: Diagnostic contains: start",
-            "   t.run();",
-            " }",
-            "}")
+            """
+            class Test {
+             void f(Thread t) {
+               // BUG: Diagnostic contains: start
+               t.run();
+             }
+            }
+            """)
         .doTest();
   }
 
@@ -727,11 +806,13 @@ public class DoNotCallCheckerTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "class Test extends Thread {",
-            " @Override public void run() {",
-            "   super.run();",
-            " }",
-            "}")
+            """
+            class Test extends Thread {
+             @Override public void run() {
+               super.run();
+             }
+            }
+            """)
         .doTest();
   }
 }
