@@ -181,6 +181,28 @@ public class UnusedVariableTest {
   }
 
   @Test
+  public void unusedFieldRefactoringInEnum() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            "enum UnusedField {",
+            "  A, B, C;",
+            "  private int notUsedInt;",
+            "  UnusedField() {",
+            "    notUsedInt = 1;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java", //
+            "enum UnusedField {",
+            "  A, B, C;",
+            "  UnusedField() {",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void unusedLocalVarInitialized() {
     helper
         .addSourceLines(

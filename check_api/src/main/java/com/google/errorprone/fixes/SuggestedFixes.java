@@ -1681,6 +1681,15 @@ public final class SuggestedFixes {
     if (previousMember == null) {
       tokens = getTokensAfterOpeningBrace(tokens);
     }
+    // There can be a lingering semi as the last token of the previous member in enums, e.g.:
+    // enum {
+    //  A, B, C; <-- extra semi
+    //  int deletingThisVariable;
+    // }
+    // Treat this as morally part of the previous member.
+    if (!tokens.isEmpty() && tokens.get(0).kind() == TokenKind.SEMI) {
+      tokens = tokens.subList(1, tokens.size());
+    }
     if (tokens.isEmpty()) {
       return SuggestedFix.replace(tree, replacement);
     }
