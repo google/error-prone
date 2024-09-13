@@ -575,6 +575,9 @@ Arguments are in the wrong order or could be commented for clarity.
 __[ArrayAsKeyOfSetOrMap](bugpattern/ArrayAsKeyOfSetOrMap)__<br>
 Arrays do not override equals() or hashCode, so comparisons will be done on reference equality only. If neither deduplication nor lookup are needed, consider using a List instead. Otherwise, use IdentityHashMap/Set, a Map from a library that handles object arrays, or an Iterable/List of pairs.
 
+__[ArrayRecordComponent](bugpattern/ArrayRecordComponent)__<br>
+Record components should not be arrays.
+
 __[AssertEqualsArgumentOrderChecker](bugpattern/AssertEqualsArgumentOrderChecker)__<br>
 Arguments are swapped in assertEquals-like call
 
