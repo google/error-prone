@@ -38,6 +38,25 @@ Users who call the method tagged with `@InlineMe` (e.g.,
 `myClass.setDeadline(3000)`) will be migrated to the new method:
 `myClass.setDeadline(Duration.ofMillis(3000))`
 
+## `-parameters` flag is required for use!
+
+InlineMe requires the use of the `-parameters` flag because it relies on
+parameter name information at runtime --- see
+[JEP 118](https://openjdk.org/jeps/118).
+
+Maven users should add the `<parameters>true</parameters>` option to their
+`maven-compiler-plugin`.
+
+Gradle
+[does not currently enable this flag by default](https://github.com/gradle/gradle/issues/14781),
+so users should add the following to their `build.gradle`:
+
+```
+tasks.withType(JavaCompile) {
+    options.compilerArgs << '-parameters'
+}
+```
+
 <!-- TODO(kak): add instructions on how to run the Inliner in patch mode -->
 
 ## Example Usage
