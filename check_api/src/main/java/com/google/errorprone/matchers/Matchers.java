@@ -1354,12 +1354,12 @@ public class Matchers {
                       "org.junit.function.ThrowingRunnable",
                       "org.junit.jupiter.api.function.Executable",
                       "org.assertj.core.api.ThrowableAssert$ThrowingCallable",
+                      "com.google.common.truth.ExpectFailure.AssertionCallback",
+                      "com.google.common.truth.ExpectFailure.DelegatedAssertionCallback",
+                      "com.google.common.truth.ExpectFailure.StandardSubjectBuilderCallback",
+                      "com.google.common.truth.ExpectFailure.SimpleSubjectBuilderCallback",
                       "com.google.devtools.build.lib.testutil.MoreAsserts$ThrowingRunnable",
-                      "com.google.gerrit.testing.GerritJUnit$ThrowingRunnable",
-                      "com.google.truth.ExpectFailure.AssertionCallback",
-                      "com.google.truth.ExpectFailure.DelegatedAssertionCallback",
-                      "com.google.truth.ExpectFailure.StandardSubjectBuilderCallback",
-                      "com.google.truth.ExpectFailure.SimpleSubjectBuilderCallback")
+                      "com.google.gerrit.testing.GerritJUnit$ThrowingRunnable")
                   .map(state::getTypeFromString)
                   .filter(Objects::nonNull)
                   .collect(toImmutableSet()));
