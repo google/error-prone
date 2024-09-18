@@ -42,16 +42,19 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.bugpatterns.argumentselectiondefects.NamedParameterComment;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
+import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.util.Name;
@@ -66,7 +69,8 @@ import javax.lang.model.element.Modifier;
     summary = "Methods and non-static variables should be named in lowerCamelCase",
     linkType = CUSTOM,
     link = "https://google.github.io/styleguide/javaguide.html#s5.2-specific-identifier-names")
-public final class MemberName extends BugChecker implements MethodTreeMatcher, VariableTreeMatcher {
+public final class MemberName extends BugChecker
+    implements ClassTreeMatcher, MethodTreeMatcher, VariableTreeMatcher {
   private static final Supplier<ImmutableSet<Name>> EXEMPTED_CLASS_ANNOTATIONS =
       VisitorState.memoize(
           s ->
@@ -92,6 +96,28 @@ public final class MemberName extends BugChecker implements MethodTreeMatcher, V
   private static final String INITIALISM_DETAIL =
       ", with acronyms treated as words"
           + " (https://google.github.io/styleguide/javaguide.html#s5.3-camel-case)";
+
+  @Override
+  public Description matchClass(ClassTree tree, VisitorState state) {
+    ClassSymbol symbol = getSymbol(tree);
+    String name = tree.getSimpleName().toString();
+    if (isConformantUpperCamelName(name)) {
+      return NO_MATCH;
+    }
+    String renamed = suggestedClassRename(name);
+    String suggested = fixInitialisms(renamed);
+    boolean fixable = !suggested.equals(name) && canBeRemoved(symbol);
+    String diagnostic =
+        "Classes should be named in UpperCamelCase"
+            + (suggested.equals(renamed) ? "" : INITIALISM_DETAIL);
+    return buildDescription(tree)
+        .setMessage(
+            fixable
+                ? diagnostic
+                : diagnostic + String.format("; did you" + " mean '%s'?", suggested))
+        .addFix(emptyFix())
+        .build();
+  }
 
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
@@ -216,6 +242,18 @@ public final class MemberName extends BugChecker implements MethodTreeMatcher, V
             .collect(joining("")));
   }
 
+  private static String suggestedClassRename(String name) {
+    if (LOWER_UNDERSCORE_PATTERN.matcher(name).matches()) {
+      return CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, name);
+    }
+    return CaseFormat.LOWER_CAMEL.to(
+        CaseFormat.UPPER_CAMEL,
+        UNDERSCORE_SPLITTER
+            .splitToStream(name)
+            .map(c -> CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_CAMEL, c))
+            .collect(joining("")));
+  }
+
   private static boolean canBeRenamed(Symbol symbol) {
     return symbol.isPrivate() || LOCAL_VARIABLE_KINDS.contains(symbol.getKind());
   }
@@ -237,6 +275,12 @@ public final class MemberName extends BugChecker implements MethodTreeMatcher, V
   private static boolean isConformantLowerCamelName(String name) {
     return !name.contains("_")
         && !isUpperCase(name.charAt(0))
+        && !PROBABLE_INITIALISM.matcher(name).find();
+  }
+
+  private static boolean isConformantUpperCamelName(String name) {
+    return !name.contains("_")
+        && isUpperCase(name.charAt(0))
         && !PROBABLE_INITIALISM.matcher(name).find();
   }
 

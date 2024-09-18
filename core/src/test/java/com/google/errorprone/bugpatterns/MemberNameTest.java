@@ -589,4 +589,37 @@ public class MemberNameTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void className_badInitialism() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            "// BUG: Diagnostic contains: RpcServiceTester",
+            "class RPCServiceTester {",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void className_lowerCamelCase() {
+    helper
+        .addSourceLines(
+            "Test.java", //
+            "// BUG: Diagnostic contains: FooBar",
+            "class fooBar {",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void className_underscore() {
+    helper
+        .addSourceLines(
+            "Test.java", //
+            "// BUG: Diagnostic contains:",
+            "class Foo_Bar {",
+            "}")
+        .doTest();
+  }
 }
