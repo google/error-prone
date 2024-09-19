@@ -78,6 +78,27 @@ public class TestClass {
               public CacheBuilder foo(CacheBuilder builder) {
                 Duration duration = Duration.ofMillis(12345);
                 // BUG: Diagnostic contains: builder.expireAfterAccess(duration);
+                return builder.expireAfterAccess(duration.toSeconds(), TimeUnit.SECONDS);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void callingLongTimeUnitMethodWithDurationOverload_durationDecompose_getSeconds() {
+    helper
+        .addSourceLines(
+            "TestClass.java",
+            """
+            import com.google.common.cache.CacheBuilder;
+            import java.time.Duration;
+            import java.util.concurrent.TimeUnit;
+
+            public class TestClass {
+              public CacheBuilder foo(CacheBuilder builder) {
+                Duration duration = Duration.ofMillis(12345);
+                // BUG: Diagnostic contains: builder.expireAfterAccess(duration);
                 return builder.expireAfterAccess(duration.getSeconds(), TimeUnit.SECONDS);
               }
             }
