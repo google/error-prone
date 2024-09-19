@@ -78,6 +78,7 @@ public final class DurationToLongTimeUnit extends BugChecker
           // JavaTime
           .put(instanceMethod().onExactClass(JAVA_DURATION).named("toNanos"), NANOSECONDS)
           .put(instanceMethod().onExactClass(JAVA_DURATION).named("toMillis"), MILLISECONDS)
+          .put(instanceMethod().onExactClass(JAVA_DURATION).named("toSeconds"), SECONDS)
           .put(instanceMethod().onExactClass(JAVA_DURATION).named("getSeconds"), SECONDS)
           .put(instanceMethod().onExactClass(JAVA_DURATION).named("toMinutes"), MINUTES)
           .put(instanceMethod().onExactClass(JAVA_DURATION).named("toHours"), HOURS)

@@ -43,6 +43,7 @@ public class DurationToLongTimeUnitTest {
                 f.get(42L, TimeUnit.SECONDS);
                 f.get(d.toNanos(), TimeUnit.NANOSECONDS);
                 f.get(d.toMillis(), TimeUnit.MILLISECONDS);
+                f.get(d.toSeconds(), TimeUnit.SECONDS);
                 f.get(d.getSeconds(), TimeUnit.SECONDS);
                 f.get(d.toMinutes(), TimeUnit.MINUTES);
                 f.get(d.toHours(), TimeUnit.HOURS);
@@ -104,6 +105,7 @@ public class DurationToLongTimeUnitTest {
                 f.get(42L, SECONDS);
                 f.get(d.toNanos(), NANOSECONDS);
                 f.get(d.toMillis(), MILLISECONDS);
+                f.get(d.toSeconds(), SECONDS);
                 f.get(d.getSeconds(), SECONDS);
                 f.get(d.toMinutes(), MINUTES);
                 f.get(d.toHours(), HOURS);
@@ -161,6 +163,8 @@ public class DurationToLongTimeUnitTest {
                 f.get(d.toNanos(), TimeUnit.MILLISECONDS);
                 // BUG: Diagnostic contains: f.get(d.toMillis(), TimeUnit.MILLISECONDS)
                 f.get(d.toMillis(), TimeUnit.NANOSECONDS);
+                // BUG: Diagnostic contains: f.get(d.toSeconds(), TimeUnit.SECONDS)
+                f.get(d.toSeconds(), TimeUnit.MINUTES);
                 // BUG: Diagnostic contains: f.get(d.getSeconds(), TimeUnit.SECONDS)
                 f.get(d.getSeconds(), TimeUnit.MINUTES);
                 // BUG: Diagnostic contains: f.get(d.toMinutes(), TimeUnit.MINUTES)
@@ -233,6 +237,8 @@ public class DurationToLongTimeUnitTest {
                 f.get(d.toNanos(), MILLISECONDS);
                 // BUG: Diagnostic contains: f.get(d.toMillis(), TimeUnit.MILLISECONDS)
                 f.get(d.toMillis(), NANOSECONDS);
+                // BUG: Diagnostic contains: f.get(d.toSeconds(), TimeUnit.SECONDS)
+                f.get(d.toSeconds(), MINUTES);
                 // BUG: Diagnostic contains: f.get(d.getSeconds(), TimeUnit.SECONDS)
                 f.get(d.getSeconds(), MINUTES);
                 // BUG: Diagnostic contains: f.get(d.toMinutes(), TimeUnit.MINUTES)
