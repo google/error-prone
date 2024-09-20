@@ -16,11 +16,14 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.getEnclosedElements;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.streamSuperMethods;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.ErrorProneFlags;
@@ -30,6 +33,8 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.MethodTree;
+import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.util.Name;
 import javax.inject.Inject;
 import javax.lang.model.element.Modifier;
 
@@ -60,6 +65,25 @@ public class MissingOverride extends BugChecker implements MethodTreeMatcher {
     }
     if (ignoreInterfaceOverrides && sym.enclClass().isInterface()) {
       return NO_MATCH;
+    }
+    if (ASTHelpers.isRecord(sym.owner)
+        && sym.getModifiers().contains(Modifier.PUBLIC)
+        && sym.getParameters().isEmpty()) {
+      ImmutableSet<Name> components =
+          getEnclosedElements(sym.owner).stream()
+              .filter(ASTHelpers::isRecord)
+              .map(Symbol::getSimpleName)
+              .collect(toImmutableSet());
+      if (components.contains(sym.getSimpleName())) {
+        return buildDescription(tree)
+            .addFix(SuggestedFix.prefixWith(tree, "@Override "))
+            .setMessage(
+                String.format(
+                    "%s is an explicitly declared accessor method for a record component; expected"
+                        + " @Override",
+                    sym.getSimpleName()))
+            .build();
+      }
     }
     return streamSuperMethods(sym, state.getTypes())
         .findFirst()

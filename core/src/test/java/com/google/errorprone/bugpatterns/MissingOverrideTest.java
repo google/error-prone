@@ -16,6 +16,8 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.truth.TruthJUnit.assume;
+
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
@@ -186,6 +188,30 @@ public class MissingOverrideTest {
             """
             public interface Test extends Super {
               void f();
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void explicitRecordAccessor() {
+    assume().that(Runtime.version().feature()).isAtLeast(16);
+
+    compilationHelper
+        .addSourceLines(
+            "Baz.java",
+            """
+            public record Baz(int x) {
+              // BUG: Diagnostic contains: x is an explicitly declared accessor method
+              public int x() {
+                return x;
+              }
+              public int x(int y) {
+                return y;
+              }
+              public int y() {
+                return x;
+              }
             }
             """)
         .doTest();
