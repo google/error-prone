@@ -761,7 +761,7 @@ public class VisitorState {
    * Like {@link Elements#getConstantExpression}, but doesn't over-escape single quotes in strings.
    */
   public String getConstantExpression(Object value) {
-    if (!(value instanceof String str)) {
+    if (!(value instanceof CharSequence str)) {
       return getElements().getConstantExpression(value);
     }
 
