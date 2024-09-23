@@ -73,8 +73,6 @@ loadScripts(document, 'script');</script>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
-<li><a href="#newInstance(com.google.protobuf.GeneratedMessageV3.UnusedPrivateParameter)" tabindex="0">newInstance(GeneratedMessageV3.UnusedPrivateParameter)</a></li>
-<li><a href="#getUnknownFields()" tabindex="0">getUnknownFields()</a></li>
 <li><a href="#getDescriptor()" tabindex="0">getDescriptor()</a></li>
 <li><a href="#internalGetFieldAccessorTable()" tabindex="0">internalGetFieldAccessorTable()</a></li>
 <li><a href="#getClassName()" tabindex="0">getClassName()</a></li>
@@ -100,7 +98,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#newBuilder()" tabindex="0">newBuilder()</a></li>
 <li><a href="#newBuilder(com.google.errorprone.bugpatterns.apidiff.ApiDiffProto.EverythingDiff)" tabindex="0">newBuilder(ApiDiffProto.EverythingDiff)</a></li>
 <li><a href="#toBuilder()" tabindex="0">toBuilder()</a></li>
-<li><a href="#newBuilderForType(com.google.protobuf.GeneratedMessageV3.BuilderParent)" tabindex="0">newBuilderForType(GeneratedMessageV3.BuilderParent)</a></li>
+<li><a href="#newBuilderForType(com.google.protobuf.AbstractMessage.BuilderParent)" tabindex="0">newBuilderForType(AbstractMessage.BuilderParent)</a></li>
 <li><a href="#getDefaultInstance()" tabindex="0">getDefaultInstance()</a></li>
 <li><a href="#parser()" tabindex="0">parser()</a></li>
 <li><a href="#getParserForType()" tabindex="0">getParserForType()</a></li>
@@ -117,7 +115,7 @@ loadScripts(document, 'script');</script>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
 <div class="inheritance">com.google.protobuf.AbstractMessageLite
 <div class="inheritance">com.google.protobuf.AbstractMessage
-<div class="inheritance">com.google.protobuf.GeneratedMessageV3
+<div class="inheritance">com.google.protobuf.GeneratedMessage
 <div class="inheritance">com.google.errorprone.bugpatterns.apidiff.ApiDiffProto.EverythingDiff</div>
 </div>
 </div>
@@ -135,7 +133,7 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public static final class </span><span class="element-name type-name-label">ApiDiffProto.EverythingDiff</span>
-<span class="extends-implements">extends com.google.protobuf.GeneratedMessageV3
+<span class="extends-implements">extends com.google.protobuf.GeneratedMessage
 implements <a href="ApiDiffProto.EverythingDiffOrBuilder.html" title="interface in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.EverythingDiffOrBuilder</a></span></div>
 <div class="block">Protobuf type <code>devtools.staticanalysis.errorprone.apidiff.EverythingDiff</code></div>
 <dl class="notes">
@@ -166,8 +164,11 @@ implements <a href="ApiDiffProto.EverythingDiffOrBuilder.html" title="interface 
 </div>
 </div>
 <div class="inherited-list">
-<h3 id="nested-classes-inherited-from-class-com.google.protobuf.GeneratedMessageV3">Nested classes/interfaces inherited from class&nbsp;com.google.protobuf.GeneratedMessageV3</h3>
-<code>com.google.protobuf.GeneratedMessageV3.BuilderParent, com.google.protobuf.GeneratedMessageV3.ExtendableBuilder&lt;MessageType extends com.google.protobuf.GeneratedMessageV3.ExtendableMessage,<wbr>BuilderType extends com.google.protobuf.GeneratedMessageV3.ExtendableBuilder&lt;MessageType,<wbr>BuilderType&gt;&gt;, com.google.protobuf.GeneratedMessageV3.ExtendableMessage&lt;MessageType extends com.google.protobuf.GeneratedMessageV3.ExtendableMessage&gt;, com.google.protobuf.GeneratedMessageV3.ExtendableMessageOrBuilder&lt;MessageType extends com.google.protobuf.GeneratedMessageV3.ExtendableMessage&gt;, com.google.protobuf.GeneratedMessageV3.FieldAccessorTable, com.google.protobuf.GeneratedMessageV3.UnusedPrivateParameter</code></div>
+<h3 id="nested-classes-inherited-from-class-com.google.protobuf.GeneratedMessage">Nested classes/interfaces inherited from class&nbsp;com.google.protobuf.GeneratedMessage</h3>
+<code>com.google.protobuf.GeneratedMessage.ExtendableBuilder&lt;MessageT extends com.google.protobuf.GeneratedMessage.ExtendableMessage&lt;MessageT&gt;,<wbr>BuilderT extends com.google.protobuf.GeneratedMessage.ExtendableBuilder&lt;MessageT,<wbr>BuilderT&gt;&gt;, com.google.protobuf.GeneratedMessage.ExtendableMessage&lt;MessageT extends com.google.protobuf.GeneratedMessage.ExtendableMessage&lt;MessageT&gt;&gt;, com.google.protobuf.GeneratedMessage.ExtendableMessageOrBuilder&lt;MessageT extends com.google.protobuf.GeneratedMessage.ExtendableMessage&lt;MessageT&gt;&gt;, com.google.protobuf.GeneratedMessage.FieldAccessorTable, com.google.protobuf.GeneratedMessage.GeneratedExtension&lt;ContainingT extends com.google.protobuf.Message,<wbr>T&gt;, com.google.protobuf.GeneratedMessage.UnusedPrivateParameter</code></div>
+<div class="inherited-list">
+<h3 id="nested-classes-inherited-from-class-com.google.protobuf.AbstractMessage">Nested classes/interfaces inherited from class&nbsp;com.google.protobuf.AbstractMessage</h3>
+<code>com.google.protobuf.AbstractMessage.BuilderParent</code></div>
 <div class="inherited-list">
 <h3 id="nested-classes-inherited-from-class-com.google.protobuf.AbstractMessageLite">Nested classes/interfaces inherited from class&nbsp;com.google.protobuf.AbstractMessageLite</h3>
 <code>com.google.protobuf.AbstractMessageLite.InternalOneOfEnum</code></div>
@@ -187,7 +188,7 @@ implements <a href="ApiDiffProto.EverythingDiffOrBuilder.html" title="interface 
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 <div class="inherited-list">
-<h3 id="fields-inherited-from-class-com.google.protobuf.GeneratedMessageV3">Fields inherited from class&nbsp;com.google.protobuf.GeneratedMessageV3</h3>
+<h3 id="fields-inherited-from-class-com.google.protobuf.GeneratedMessage">Fields inherited from class&nbsp;com.google.protobuf.GeneratedMessage</h3>
 <code>alwaysUseFieldBuilders, unknownFields</code></div>
 <div class="inherited-list">
 <h3 id="fields-inherited-from-class-com.google.protobuf.AbstractMessage">Fields inherited from class&nbsp;com.google.protobuf.AbstractMessage</h3>
@@ -236,32 +237,26 @@ implements <a href="ApiDiffProto.EverythingDiffOrBuilder.html" title="interface 
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSerializedSize()" class="member-name-link">getSerializedSize</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final com.google.protobuf.UnknownFieldSet</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getUnknownFields()" class="member-name-link">getUnknownFields</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hashCode()" class="member-name-link">hashCode</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hashCode()" class="member-name-link">hashCode</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected com.google.protobuf.GeneratedMessage.FieldAccessorTable</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#internalGetFieldAccessorTable()" class="member-name-link">internalGetFieldAccessorTable</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#internalGetFieldAccessorTable()" class="member-name-link">internalGetFieldAccessorTable</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isInitialized()" class="member-name-link">isInitialized</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isInitialized()" class="member-name-link">isInitialized</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="ApiDiffProto.EverythingDiff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.EverythingDiff.Builder</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#newBuilder()" class="member-name-link">newBuilder</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="ApiDiffProto.EverythingDiff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.EverythingDiff.Builder</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#newBuilder(com.google.errorprone.bugpatterns.apidiff.ApiDiffProto.EverythingDiff)" class="member-name-link">newBuilder</a><wbr>(<a href="ApiDiffProto.EverythingDiff.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.EverythingDiff</a>&nbsp;prototype)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#newBuilder()" class="member-name-link">newBuilder</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="ApiDiffProto.EverythingDiff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.EverythingDiff.Builder</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#newBuilderForType()" class="member-name-link">newBuilderForType</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="ApiDiffProto.EverythingDiff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.EverythingDiff.Builder</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#newBuilderForType(com.google.protobuf.GeneratedMessageV3.BuilderParent)" class="member-name-link">newBuilderForType</a><wbr>(com.google.protobuf.GeneratedMessageV3.BuilderParent&nbsp;parent)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="ApiDiffProto.EverythingDiff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.EverythingDiff.Builder</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#newBuilder(com.google.errorprone.bugpatterns.apidiff.ApiDiffProto.EverythingDiff)" class="member-name-link">newBuilder</a><wbr>(<a href="ApiDiffProto.EverythingDiff.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.EverythingDiff</a>&nbsp;prototype)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="ApiDiffProto.EverythingDiff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.EverythingDiff.Builder</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#newBuilderForType()" class="member-name-link">newBuilderForType</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#newInstance(com.google.protobuf.GeneratedMessageV3.UnusedPrivateParameter)" class="member-name-link">newInstance</a><wbr>(com.google.protobuf.GeneratedMessageV3.UnusedPrivateParameter&nbsp;unused)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="ApiDiffProto.EverythingDiff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.EverythingDiff.Builder</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#newBuilderForType(com.google.protobuf.AbstractMessage.BuilderParent)" class="member-name-link">newBuilderForType</a><wbr>(com.google.protobuf.AbstractMessage.BuilderParent&nbsp;parent)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="ApiDiffProto.EverythingDiff.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.EverythingDiff</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#parseDelimitedFrom(java.io.InputStream)" class="member-name-link">parseDelimitedFrom</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/io/InputStream.html" title="class or interface in java.io" class="external-link">InputStream</a>&nbsp;input)</code></div>
@@ -318,14 +313,14 @@ implements <a href="ApiDiffProto.EverythingDiffOrBuilder.html" title="interface 
 </div>
 </div>
 <div class="inherited-list">
-<h3 id="methods-inherited-from-class-com.google.protobuf.GeneratedMessageV3">Methods inherited from class&nbsp;com.google.protobuf.GeneratedMessageV3</h3>
-<code>canUseUnsafe, computeStringSize, computeStringSizeNoTag, emptyBooleanList, emptyDoubleList, emptyFloatList, emptyIntList, emptyLongList, getAllFields, getDescriptorForType, getField, getOneofFieldDescriptor, getRepeatedField, getRepeatedFieldCount, hasField, hasOneof, internalGetMapField, isStringEmpty, makeExtensionsImmutable, mergeFromAndMakeImmutableInternal, mutableCopy, mutableCopy, mutableCopy, mutableCopy, mutableCopy, newBooleanList, newBuilderForType, newDoubleList, newFloatList, newIntList, newLongList, parseDelimitedWithIOException, parseDelimitedWithIOException, parseUnknownField, parseUnknownFieldProto3, parseWithIOException, parseWithIOException, parseWithIOException, parseWithIOException, serializeBooleanMapTo, serializeIntegerMapTo, serializeLongMapTo, serializeStringMapTo, writeReplace, writeString, writeStringNoTag</code></div>
+<h3 id="methods-inherited-from-class-com.google.protobuf.GeneratedMessage">Methods inherited from class&nbsp;com.google.protobuf.GeneratedMessage</h3>
+<code>canUseUnsafe, computeStringSize, computeStringSizeNoTag, emptyBooleanList, emptyDoubleList, emptyFloatList, emptyIntList, emptyList, emptyLongList, getAllFields, getDescriptorForType, getField, getOneofFieldDescriptor, getRepeatedField, getRepeatedFieldCount, getUnknownFields, hasField, hasOneof, internalGetMapField, internalGetMapFieldReflection, isStringEmpty, makeMutableCopy, makeMutableCopy, mergeFromAndMakeImmutableInternal, newFileScopedGeneratedExtension, newInstance, newMessageScopedGeneratedExtension, parseDelimitedWithIOException, parseDelimitedWithIOException, parseUnknownField, parseUnknownFieldProto3, parseWithIOException, parseWithIOException, parseWithIOException, parseWithIOException, serializeBooleanMapTo, serializeIntegerMapTo, serializeLongMapTo, serializeStringMapTo, writeReplace, writeString, writeStringNoTag</code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-com.google.protobuf.AbstractMessage">Methods inherited from class&nbsp;com.google.protobuf.AbstractMessage</h3>
-<code>findInitializationErrors, getInitializationErrorString, hashBoolean, hashEnum, hashEnumList, hashFields, hashLong, toString</code></div>
+<code>findInitializationErrors, getInitializationErrorString, hashFields, toString</code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-com.google.protobuf.AbstractMessageLite">Methods inherited from class&nbsp;com.google.protobuf.AbstractMessageLite</h3>
-<code>addAll, addAll, checkByteStringIsUtf8, toByteArray, toByteString, writeDelimitedTo, writeTo</code></div>
+<code>addAll, checkByteStringIsUtf8, toByteArray, toByteString, writeDelimitedTo, writeTo</code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
 <code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#clone--" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#finalize--" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#getClass--" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#notify--" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#notifyAll--" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait--" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait-long-" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait-long-int-" title="class or interface in java.lang" class="external-link">wait</a></code></div>
@@ -334,7 +329,7 @@ implements <a href="ApiDiffProto.EverythingDiffOrBuilder.html" title="interface 
 <code>toByteArray, toByteString, writeDelimitedTo, writeTo</code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-com.google.protobuf.MessageOrBuilder">Methods inherited from interface&nbsp;com.google.protobuf.MessageOrBuilder</h3>
-<code>findInitializationErrors, getAllFields, getDescriptorForType, getField, getInitializationErrorString, getOneofFieldDescriptor, getRepeatedField, getRepeatedFieldCount, hasField, hasOneof</code></div>
+<code>findInitializationErrors, getAllFields, getDescriptorForType, getField, getInitializationErrorString, getOneofFieldDescriptor, getRepeatedField, getRepeatedFieldCount, getUnknownFields, hasField, hasOneof</code></div>
 </section>
 </li>
 </ul>
@@ -371,32 +366,6 @@ implements <a href="ApiDiffProto.EverythingDiffOrBuilder.html" title="interface 
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="newInstance(com.google.protobuf.GeneratedMessageV3.UnusedPrivateParameter)">
-<h3>newInstance</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span>&nbsp;<span class="element-name">newInstance</span><wbr><span class="parameters">(com.google.protobuf.GeneratedMessageV3.UnusedPrivateParameter&nbsp;unused)</span></div>
-<dl class="notes">
-<dt>Overrides:</dt>
-<dd><code>newInstance</code>&nbsp;in class&nbsp;<code>com.google.protobuf.GeneratedMessageV3</code></dd>
-</dl>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="getUnknownFields()">
-<h3>getUnknownFields</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type">com.google.protobuf.UnknownFieldSet</span>&nbsp;<span class="element-name">getUnknownFields</span>()</div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code>getUnknownFields</code>&nbsp;in interface&nbsp;<code>com.google.protobuf.MessageOrBuilder</code></dd>
-<dt>Overrides:</dt>
-<dd><code>getUnknownFields</code>&nbsp;in class&nbsp;<code>com.google.protobuf.GeneratedMessageV3</code></dd>
-</dl>
-</div>
-</section>
-</li>
-<li>
 <section class="detail" id="getDescriptor()">
 <h3>getDescriptor</h3>
 <div class="horizontal-scroll">
@@ -408,10 +377,10 @@ implements <a href="ApiDiffProto.EverythingDiffOrBuilder.html" title="interface 
 <section class="detail" id="internalGetFieldAccessorTable()">
 <h3>internalGetFieldAccessorTable</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">com.google.protobuf.GeneratedMessageV3.FieldAccessorTable</span>&nbsp;<span class="element-name">internalGetFieldAccessorTable</span>()</div>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">com.google.protobuf.GeneratedMessage.FieldAccessorTable</span>&nbsp;<span class="element-name">internalGetFieldAccessorTable</span>()</div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code>internalGetFieldAccessorTable</code>&nbsp;in class&nbsp;<code>com.google.protobuf.GeneratedMessageV3</code></dd>
+<dd><code>internalGetFieldAccessorTable</code>&nbsp;in class&nbsp;<code>com.google.protobuf.GeneratedMessage</code></dd>
 </dl>
 </div>
 </section>
@@ -455,7 +424,7 @@ implements <a href="ApiDiffProto.EverythingDiffOrBuilder.html" title="interface 
 <dt>Specified by:</dt>
 <dd><code>isInitialized</code>&nbsp;in interface&nbsp;<code>com.google.protobuf.MessageLiteOrBuilder</code></dd>
 <dt>Overrides:</dt>
-<dd><code>isInitialized</code>&nbsp;in class&nbsp;<code>com.google.protobuf.GeneratedMessageV3</code></dd>
+<dd><code>isInitialized</code>&nbsp;in class&nbsp;<code>com.google.protobuf.GeneratedMessage</code></dd>
 </dl>
 </div>
 </section>
@@ -470,7 +439,7 @@ implements <a href="ApiDiffProto.EverythingDiffOrBuilder.html" title="interface 
 <dt>Specified by:</dt>
 <dd><code>writeTo</code>&nbsp;in interface&nbsp;<code>com.google.protobuf.MessageLite</code></dd>
 <dt>Overrides:</dt>
-<dd><code>writeTo</code>&nbsp;in class&nbsp;<code>com.google.protobuf.GeneratedMessageV3</code></dd>
+<dd><code>writeTo</code>&nbsp;in class&nbsp;<code>com.google.protobuf.GeneratedMessage</code></dd>
 <dt>Throws:</dt>
 <dd><code><a href="https://docs.oracle.com/javase/8/docs/api/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a></code></dd>
 </dl>
@@ -486,7 +455,7 @@ implements <a href="ApiDiffProto.EverythingDiffOrBuilder.html" title="interface 
 <dt>Specified by:</dt>
 <dd><code>getSerializedSize</code>&nbsp;in interface&nbsp;<code>com.google.protobuf.MessageLite</code></dd>
 <dt>Overrides:</dt>
-<dd><code>getSerializedSize</code>&nbsp;in class&nbsp;<code>com.google.protobuf.GeneratedMessageV3</code></dd>
+<dd><code>getSerializedSize</code>&nbsp;in class&nbsp;<code>com.google.protobuf.GeneratedMessage</code></dd>
 </dl>
 </div>
 </section>
@@ -726,13 +695,13 @@ implements <a href="ApiDiffProto.EverythingDiffOrBuilder.html" title="interface 
 </section>
 </li>
 <li>
-<section class="detail" id="newBuilderForType(com.google.protobuf.GeneratedMessageV3.BuilderParent)">
+<section class="detail" id="newBuilderForType(com.google.protobuf.AbstractMessage.BuilderParent)">
 <h3>newBuilderForType</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="ApiDiffProto.EverythingDiff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.EverythingDiff.Builder</a></span>&nbsp;<span class="element-name">newBuilderForType</span><wbr><span class="parameters">(com.google.protobuf.GeneratedMessageV3.BuilderParent&nbsp;parent)</span></div>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="ApiDiffProto.EverythingDiff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.EverythingDiff.Builder</a></span>&nbsp;<span class="element-name">newBuilderForType</span><wbr><span class="parameters">(com.google.protobuf.AbstractMessage.BuilderParent&nbsp;parent)</span></div>
 <dl class="notes">
-<dt>Specified by:</dt>
-<dd><code>newBuilderForType</code>&nbsp;in class&nbsp;<code>com.google.protobuf.GeneratedMessageV3</code></dd>
+<dt>Overrides:</dt>
+<dd><code>newBuilderForType</code>&nbsp;in class&nbsp;<code>com.google.protobuf.AbstractMessage</code></dd>
 </dl>
 </div>
 </section>
@@ -764,7 +733,7 @@ implements <a href="ApiDiffProto.EverythingDiffOrBuilder.html" title="interface 
 <dt>Specified by:</dt>
 <dd><code>getParserForType</code>&nbsp;in interface&nbsp;<code>com.google.protobuf.MessageLite</code></dd>
 <dt>Overrides:</dt>
-<dd><code>getParserForType</code>&nbsp;in class&nbsp;<code>com.google.protobuf.GeneratedMessageV3</code></dd>
+<dd><code>getParserForType</code>&nbsp;in class&nbsp;<code>com.google.protobuf.GeneratedMessage</code></dd>
 </dl>
 </div>
 </section>
