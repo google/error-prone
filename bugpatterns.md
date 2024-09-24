@@ -918,7 +918,7 @@ __[JavaLangClash](bugpattern/JavaLangClash)__<br>
 Never reuse class names from java.lang
 
 __[JavaLocalDateTimeGetNano](bugpattern/JavaLocalDateTimeGetNano)__<br>
-localDateTime.getNano() only accesss the nanos-of-second field. It&#39;s rare to only use getNano() without a nearby getSecond() call.
+localDateTime.getNano() only access the nanos-of-second field. It&#39;s rare to only use getNano() without a nearby getSecond() call.
 
 __[JavaLocalTimeGetNano](bugpattern/JavaLocalTimeGetNano)__<br>
 localTime.getNano() only accesses the nanos-of-second field. It&#39;s rare to only use getNano() without a nearby getSecond() call.
