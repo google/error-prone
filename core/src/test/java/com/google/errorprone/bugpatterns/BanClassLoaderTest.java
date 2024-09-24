@@ -33,11 +33,11 @@ public class BanClassLoaderTest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("BanClassLoaderPositiveCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/BanClassLoaderPositiveCases.java").doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("BanClassLoaderNegativeCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/BanClassLoaderNegativeCases.java").doTest();
   }
 }

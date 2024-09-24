@@ -33,14 +33,14 @@ public class OverlappingQualifierAndScopeAnnotationTest {
   @Test
   public void positiveCase() {
     compilationHelper
-        .addSourceFile("OverlappingQualifierAndScopeAnnotationPositiveCases.java")
+        .addSourceFile("testdata/OverlappingQualifierAndScopeAnnotationPositiveCases.java")
         .doTest();
   }
 
   @Test
   public void negativeCase() {
     compilationHelper
-        .addSourceFile("OverlappingQualifierAndScopeAnnotationNegativeCases.java")
+        .addSourceFile("testdata/OverlappingQualifierAndScopeAnnotationNegativeCases.java")
         .doTest();
   }
 }

@@ -32,16 +32,16 @@ public class SelfAssignmentTest {
 
   @Test
   public void positiveCases1() {
-    compilationHelper.addSourceFile("SelfAssignmentPositiveCases1.java").doTest();
+    compilationHelper.addSourceFile("testdata/SelfAssignmentPositiveCases1.java").doTest();
   }
 
   @Test
   public void positiveCases2() {
-    compilationHelper.addSourceFile("SelfAssignmentPositiveCases2.java").doTest();
+    compilationHelper.addSourceFile("testdata/SelfAssignmentPositiveCases2.java").doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("SelfAssignmentNegativeCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/SelfAssignmentNegativeCases.java").doTest();
   }
 }

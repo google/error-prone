@@ -38,12 +38,12 @@ public class SelfAssertionTest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("SelfAssertionPositiveCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/SelfAssertionPositiveCases.java").doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("SelfAssertionNegativeCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/SelfAssertionNegativeCases.java").doTest();
   }
 
   // regression test for b/32107126

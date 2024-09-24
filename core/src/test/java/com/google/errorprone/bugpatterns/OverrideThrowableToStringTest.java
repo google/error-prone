@@ -32,19 +32,23 @@ public class OverrideThrowableToStringTest {
 
   @Test
   public void positiveCases() {
-    compilationHelper.addSourceFile("OverrideThrowableToStringPositiveCases.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/OverrideThrowableToStringPositiveCases.java")
+        .doTest();
   }
 
   @Test
   public void negativeCases() {
-    compilationHelper.addSourceFile("OverrideThrowableToStringNegativeCases.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/OverrideThrowableToStringNegativeCases.java")
+        .doTest();
   }
 
   @Test
   public void fixes() {
     BugCheckerRefactoringTestHelper.newInstance(OverrideThrowableToString.class, getClass())
-        .addInput("OverrideThrowableToStringPositiveCases.java")
-        .addOutput("OverrideThrowableToStringPositiveCases_expected.java")
+        .addInput("testdata/OverrideThrowableToStringPositiveCases.java")
+        .addOutput("testdata/OverrideThrowableToStringPositiveCases_expected.java")
         .doTest(TestMode.AST_MATCH);
   }
 }

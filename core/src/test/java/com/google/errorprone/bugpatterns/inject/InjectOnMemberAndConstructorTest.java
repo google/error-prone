@@ -79,6 +79,8 @@ public class InjectOnMemberAndConstructorPositiveCases {
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("InjectOnMemberAndConstructorNegativeCases.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/InjectOnMemberAndConstructorNegativeCases.java")
+        .doTest();
   }
 }

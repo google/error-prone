@@ -31,11 +31,15 @@ public class OverridesJavaxInjectableMethodTest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("OverridesJavaxInjectableMethodPositiveCases.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/OverridesJavaxInjectableMethodPositiveCases.java")
+        .doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("OverridesJavaxInjectableMethodNegativeCases.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/OverridesJavaxInjectableMethodNegativeCases.java")
+        .doTest();
   }
 }

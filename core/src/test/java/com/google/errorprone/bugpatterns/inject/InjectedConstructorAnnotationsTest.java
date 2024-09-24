@@ -30,11 +30,15 @@ public class InjectedConstructorAnnotationsTest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("InjectedConstructorAnnotationsPositiveCases.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/InjectedConstructorAnnotationsPositiveCases.java")
+        .doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("InjectedConstructorAnnotationsNegativeCases.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/InjectedConstructorAnnotationsNegativeCases.java")
+        .doTest();
   }
 }

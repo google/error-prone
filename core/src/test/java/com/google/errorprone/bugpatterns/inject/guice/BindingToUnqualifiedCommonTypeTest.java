@@ -31,11 +31,15 @@ public class BindingToUnqualifiedCommonTypeTest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("BindingToUnqualifiedCommonTypePositiveCases.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/BindingToUnqualifiedCommonTypePositiveCases.java")
+        .doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("BindingToUnqualifiedCommonTypeNegativeCases.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/BindingToUnqualifiedCommonTypeNegativeCases.java")
+        .doTest();
   }
 }

@@ -35,19 +35,19 @@ public class MustBeClosedCheckerTest {
 
   @Test
   public void positiveCases() {
-    compilationHelper.addSourceFile("MustBeClosedCheckerPositiveCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/MustBeClosedCheckerPositiveCases.java").doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("MustBeClosedCheckerNegativeCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/MustBeClosedCheckerNegativeCases.java").doTest();
   }
 
   @Test
   public void refactoring() {
     refactoringHelper
-        .addInput("MustBeClosedCheckerPositiveCases.java")
-        .addOutput("MustBeClosedCheckerPositiveCases_expected.java")
+        .addInput("testdata/MustBeClosedCheckerPositiveCases.java")
+        .addOutput("testdata/MustBeClosedCheckerPositiveCases_expected.java")
         .allowBreakingChanges() // The fix is best-effort, and some variable names may clash
         .doTest();
   }

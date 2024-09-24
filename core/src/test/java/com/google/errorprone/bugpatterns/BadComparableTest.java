@@ -31,11 +31,11 @@ public class BadComparableTest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("BadComparablePositiveCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/BadComparablePositiveCases.java").doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("BadComparableNegativeCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/BadComparableNegativeCases.java").doTest();
   }
 }

@@ -29,11 +29,15 @@ public class ThrowIfUncheckedKnownCheckedTest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("ThrowIfUncheckedKnownCheckedTestPositiveCases.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/ThrowIfUncheckedKnownCheckedTestPositiveCases.java")
+        .doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("ThrowIfUncheckedKnownCheckedTestNegativeCases.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/ThrowIfUncheckedKnownCheckedTestNegativeCases.java")
+        .doTest();
   }
 }

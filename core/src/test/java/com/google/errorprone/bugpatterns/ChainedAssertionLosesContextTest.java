@@ -31,11 +31,15 @@ public class ChainedAssertionLosesContextTest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("ChainedAssertionLosesContextPositiveCases.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/ChainedAssertionLosesContextPositiveCases.java")
+        .doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("ChainedAssertionLosesContextNegativeCases.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/ChainedAssertionLosesContextNegativeCases.java")
+        .doTest();
   }
 }

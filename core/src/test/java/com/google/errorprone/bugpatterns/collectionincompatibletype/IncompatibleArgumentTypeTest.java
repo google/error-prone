@@ -30,22 +30,28 @@ public class IncompatibleArgumentTypeTest {
 
   @Test
   public void genericMethod() {
-    compilationHelper.addSourceFile("IncompatibleArgumentTypeGenericMethod.java").doTest();
+    compilationHelper.addSourceFile("testdata/IncompatibleArgumentTypeGenericMethod.java").doTest();
   }
 
   @Test
   public void owningTypes() {
-    compilationHelper.addSourceFile("IncompatibleArgumentTypeEnclosingTypes.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/IncompatibleArgumentTypeEnclosingTypes.java")
+        .doTest();
   }
 
   @Test
   public void multimapIntegration() {
-    compilationHelper.addSourceFile("IncompatibleArgumentTypeMultimapIntegration.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/IncompatibleArgumentTypeMultimapIntegration.java")
+        .doTest();
   }
 
   @Test
   public void intersectionTypes() {
-    compilationHelper.addSourceFile("IncompatibleArgumentTypeIntersectionTypes.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/IncompatibleArgumentTypeIntersectionTypes.java")
+        .doTest();
   }
 
   @Test

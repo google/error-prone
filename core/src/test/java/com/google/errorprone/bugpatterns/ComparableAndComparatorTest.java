@@ -31,11 +31,11 @@ public class ComparableAndComparatorTest {
 
   @Test
   public void positive() {
-    compilationHelper.addSourceFile("ComparableAndComparatorPositiveCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/ComparableAndComparatorPositiveCases.java").doTest();
   }
 
   @Test
   public void negative() {
-    compilationHelper.addSourceFile("ComparableAndComparatorNegativeCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/ComparableAndComparatorNegativeCases.java").doTest();
   }
 }

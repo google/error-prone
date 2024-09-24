@@ -33,7 +33,9 @@ public class InconsistentCapitalizationTest {
 
   @Test
   public void negativeCases() {
-    compilationHelper.addSourceFile("InconsistentCapitalizationNegativeCases.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/InconsistentCapitalizationNegativeCases.java")
+        .doTest();
   }
 
   @Test

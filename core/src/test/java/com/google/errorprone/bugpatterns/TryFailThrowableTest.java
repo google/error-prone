@@ -31,11 +31,11 @@ public class TryFailThrowableTest {
 
   @Test
   public void positiveCases() {
-    compilationHelper.addSourceFile("TryFailThrowablePositiveCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/TryFailThrowablePositiveCases.java").doTest();
   }
 
   @Test
   public void negativeCases() {
-    compilationHelper.addSourceFile("TryFailThrowableNegativeCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/TryFailThrowableNegativeCases.java").doTest();
   }
 }

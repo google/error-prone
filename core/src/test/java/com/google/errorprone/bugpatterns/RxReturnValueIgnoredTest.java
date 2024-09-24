@@ -98,12 +98,12 @@ public class RxReturnValueIgnoredTest {
 
   @Test
   public void positiveCases() {
-    compilationHelper.addSourceFile("RxReturnValueIgnoredPositiveCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/RxReturnValueIgnoredPositiveCases.java").doTest();
   }
 
   @Test
   public void negativeCases() {
-    compilationHelper.addSourceFile("RxReturnValueIgnoredNegativeCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/RxReturnValueIgnoredNegativeCases.java").doTest();
   }
 
   @Test

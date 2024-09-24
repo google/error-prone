@@ -38,19 +38,19 @@ public class ThreadJoinLoopTest {
 
   @Test
   public void positiveCases() {
-    compilationTestHelper.addSourceFile("ThreadJoinLoopPositiveCases.java").doTest();
+    compilationTestHelper.addSourceFile("testdata/ThreadJoinLoopPositiveCases.java").doTest();
   }
 
   @Test
   public void negativeCases() {
-    compilationTestHelper.addSourceFile("ThreadJoinLoopNegativeCases.java").doTest();
+    compilationTestHelper.addSourceFile("testdata/ThreadJoinLoopNegativeCases.java").doTest();
   }
 
   @Test
   public void fixes() {
     BugCheckerRefactoringTestHelper.newInstance(ThreadJoinLoop.class, getClass())
-        .addInput("ThreadJoinLoopPositiveCases.java")
-        .addOutput("ThreadJoinLoopPositiveCases_expected.java")
+        .addInput("testdata/ThreadJoinLoopPositiveCases.java")
+        .addOutput("testdata/ThreadJoinLoopPositiveCases_expected.java")
         .doTest(TestMode.AST_MATCH);
   }
 }

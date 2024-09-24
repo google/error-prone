@@ -32,11 +32,15 @@ public class MoreThanOneInjectableConstructorTest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("MoreThanOneInjectableConstructorPositiveCases.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/MoreThanOneInjectableConstructorPositiveCases.java")
+        .doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("MoreThanOneInjectableConstructorNegativeCases.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/MoreThanOneInjectableConstructorNegativeCases.java")
+        .doTest();
   }
 }

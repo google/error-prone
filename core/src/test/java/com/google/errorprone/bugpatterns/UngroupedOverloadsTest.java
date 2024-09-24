@@ -41,58 +41,64 @@ public final class UngroupedOverloadsTest {
 
   @Test
   public void ungroupedOverloadsPositiveCasesSingle() {
-    compilationHelper.addSourceFile("UngroupedOverloadsPositiveCasesSingle.java").doTest();
+    compilationHelper.addSourceFile("testdata/UngroupedOverloadsPositiveCasesSingle.java").doTest();
   }
 
   @Test
   public void ungroupedOverloadsPositiveCasesMultiple() {
-    compilationHelper.addSourceFile("UngroupedOverloadsPositiveCasesMultiple.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/UngroupedOverloadsPositiveCasesMultiple.java")
+        .doTest();
   }
 
   @Test
   public void ungroupedOverloadsPositiveCasesInterleaved() {
-    compilationHelper.addSourceFile("UngroupedOverloadsPositiveCasesInterleaved.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/UngroupedOverloadsPositiveCasesInterleaved.java")
+        .doTest();
   }
 
   @Test
   public void ungroupedOverloadsPositiveCasesCovering() {
-    compilationHelper.addSourceFile("UngroupedOverloadsPositiveCasesCovering.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/UngroupedOverloadsPositiveCasesCovering.java")
+        .doTest();
   }
 
   @Test
   public void ungroupedOverloadsPositiveCasesCoveringOnlyFirstOverload() {
     compilationHelper
-        .addSourceFile("UngroupedOverloadsPositiveCasesCoveringOnlyOnFirst.java")
+        .addSourceFile("testdata/UngroupedOverloadsPositiveCasesCoveringOnlyOnFirst.java")
         .setArgs(ImmutableList.of("-XepOpt:UngroupedOverloads:BatchFindings"))
         .doTest();
   }
 
   @Test
   public void ungroupedOverloadsNegativeCases() {
-    compilationHelper.addSourceFile("UngroupedOverloadsNegativeCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/UngroupedOverloadsNegativeCases.java").doTest();
   }
 
   @Test
   public void ungroupedOverloadsRefactoringComments() {
     refactoringHelper
-        .addInput("UngroupedOverloadsRefactoringComments.java")
-        .addOutput("UngroupedOverloadsRefactoringComments_expected.java")
+        .addInput("testdata/UngroupedOverloadsRefactoringComments.java")
+        .addOutput("testdata/UngroupedOverloadsRefactoringComments_expected.java")
         .doTest();
   }
 
   @Test
   public void ungroupedOverloadsRefactoringMultiple() {
     refactoringHelper
-        .addInput("UngroupedOverloadsRefactoringMultiple.java")
-        .addOutput("UngroupedOverloadsRefactoringMultiple_expected.java")
+        .addInput("testdata/UngroupedOverloadsRefactoringMultiple.java")
+        .addOutput("testdata/UngroupedOverloadsRefactoringMultiple_expected.java")
         .doTest();
   }
 
   @Test
   public void ungroupedOverloadsRefactoringInterleaved() {
     refactoringHelper
-        .addInput("UngroupedOverloadsRefactoringInterleaved.java")
-        .addOutput("UngroupedOverloadsRefactoringInterleaved_expected.java")
+        .addInput("testdata/UngroupedOverloadsRefactoringInterleaved.java")
+        .addOutput("testdata/UngroupedOverloadsRefactoringInterleaved_expected.java")
         .doTest();
   }
 

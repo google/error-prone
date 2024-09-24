@@ -32,14 +32,14 @@ public class ChainingConstructorIgnoresParameterTest {
   @Test
   public void positiveCase() {
     compilationHelper
-        .addSourceFile("ChainingConstructorIgnoresParameterPositiveCases.java")
+        .addSourceFile("testdata/ChainingConstructorIgnoresParameterPositiveCases.java")
         .doTest();
   }
 
   @Test
   public void negativeCase() {
     compilationHelper
-        .addSourceFile("ChainingConstructorIgnoresParameterNegativeCases.java")
+        .addSourceFile("testdata/ChainingConstructorIgnoresParameterNegativeCases.java")
         .doTest();
   }
 }

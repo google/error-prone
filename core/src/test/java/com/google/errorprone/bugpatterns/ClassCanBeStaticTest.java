@@ -33,24 +33,24 @@ public class ClassCanBeStaticTest {
   @Test
   public void negativeCase() {
     compilationHelper
-        .addSourceFile("ClassCanBeStaticNegativeCases.java")
+        .addSourceFile("testdata/ClassCanBeStaticNegativeCases.java")
         .setArgs("--release", "11")
         .doTest();
   }
 
   @Test
   public void positiveCase1() {
-    compilationHelper.addSourceFile("ClassCanBeStaticPositiveCase1.java").doTest();
+    compilationHelper.addSourceFile("testdata/ClassCanBeStaticPositiveCase1.java").doTest();
   }
 
   @Test
   public void positiveCase2() {
-    compilationHelper.addSourceFile("ClassCanBeStaticPositiveCase2.java").doTest();
+    compilationHelper.addSourceFile("testdata/ClassCanBeStaticPositiveCase2.java").doTest();
   }
 
   @Test
   public void positiveCase3() {
-    compilationHelper.addSourceFile("ClassCanBeStaticPositiveCase3.java").doTest();
+    compilationHelper.addSourceFile("testdata/ClassCanBeStaticPositiveCase3.java").doTest();
   }
 
   @Test

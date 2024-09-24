@@ -30,11 +30,11 @@ public class IterableAndIteratorTest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("IterableAndIteratorPositiveCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/IterableAndIteratorPositiveCases.java").doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("IterableAndIteratorNegativeCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/IterableAndIteratorNegativeCases.java").doTest();
   }
 }

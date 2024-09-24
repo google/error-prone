@@ -34,11 +34,15 @@ public class RectIntersectReturnValueIgnoredTest {
 
   @Test
   public void positiveCases() {
-    compilationHelper.addSourceFile("RectIntersectReturnValueIgnoredPositiveCases.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/RectIntersectReturnValueIgnoredPositiveCases.java")
+        .doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("RectIntersectReturnValueIgnoredNegativeCases.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/RectIntersectReturnValueIgnoredNegativeCases.java")
+        .doTest();
   }
 }

@@ -32,12 +32,12 @@ public class DeadExceptionTest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("DeadExceptionPositiveCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/DeadExceptionPositiveCases.java").doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("DeadExceptionNegativeCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/DeadExceptionNegativeCases.java").doTest();
   }
 
   /**
@@ -46,6 +46,6 @@ public class DeadExceptionTest {
    */
   @Test
   public void negativeCaseWhenExceptionsUnthrownInTests() {
-    compilationHelper.addSourceFile("DeadExceptionTestingNegativeCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/DeadExceptionTestingNegativeCases.java").doTest();
   }
 }

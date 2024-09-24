@@ -46,32 +46,32 @@ public class FragmentNotInstantiableTest {
   @Test
   public void positiveCases() {
     createCompilationTestHelper(FragmentNotInstantiable.class)
-        .addSourceFile("FragmentNotInstantiablePositiveCases.java")
+        .addSourceFile("testdata/FragmentNotInstantiablePositiveCases.java")
         .doTest();
   }
 
   @Test
   public void negativeCase() {
     createCompilationTestHelper(FragmentNotInstantiable.class)
-        .addSourceFile("FragmentNotInstantiableNegativeCases.java")
+        .addSourceFile("testdata/FragmentNotInstantiableNegativeCases.java")
         .doTest();
   }
 
   @Test
   public void positiveCases_custom() {
     createCompilationTestHelper(CustomFragmentNotInstantiable.class)
-        .addSourceFile("FragmentNotInstantiablePositiveCases.java")
-        .addSourceFile("CustomFragment.java")
-        .addSourceFile("CustomFragmentNotInstantiablePositiveCases.java")
+        .addSourceFile("testdata/FragmentNotInstantiablePositiveCases.java")
+        .addSourceFile("testdata/CustomFragment.java")
+        .addSourceFile("testdata/CustomFragmentNotInstantiablePositiveCases.java")
         .doTest();
   }
 
   @Test
   public void negativeCase_custom() {
     createCompilationTestHelper(CustomFragmentNotInstantiable.class)
-        .addSourceFile("FragmentNotInstantiableNegativeCases.java")
-        .addSourceFile("CustomFragment.java")
-        .addSourceFile("CustomFragmentNotInstantiableNegativeCases.java")
+        .addSourceFile("testdata/FragmentNotInstantiableNegativeCases.java")
+        .addSourceFile("testdata/CustomFragment.java")
+        .addSourceFile("testdata/CustomFragmentNotInstantiableNegativeCases.java")
         .doTest();
   }
 

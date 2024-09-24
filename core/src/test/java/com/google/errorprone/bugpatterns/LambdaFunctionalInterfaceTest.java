@@ -34,12 +34,16 @@ public class LambdaFunctionalInterfaceTest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("LambdaFunctionalInterfacePositiveCases.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/LambdaFunctionalInterfacePositiveCases.java")
+        .doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("LambdaFunctionalInterfaceNegativeCases.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/LambdaFunctionalInterfaceNegativeCases.java")
+        .doTest();
   }
 
   @Test

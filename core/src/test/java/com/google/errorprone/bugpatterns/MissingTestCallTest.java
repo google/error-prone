@@ -53,13 +53,13 @@ public final class MissingTestCallTest {
               @Test
               // BUG: Diagnostic contains:
               void test2(CompilationTestHelper helper) {
-                helper.addSourceFile("Foo.java");
+                helper.addSourceFile("testdata/Foo.java");
               }
 
               @Test
               // BUG: Diagnostic contains:
               void test3(BugCheckerRefactoringTestHelper helper) {
-                helper.addInput("Foo.java");
+                helper.addInput("testdata/Foo.java");
               }
             }
             """)
@@ -86,7 +86,7 @@ public final class MissingTestCallTest {
 
               @Test
               void doesNotMatchIfNotAtEnd() {
-                helper.addSourceFile("Foo.java");
+                helper.addSourceFile("testdata/Foo.java");
                 hashCode();
               }
             }

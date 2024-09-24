@@ -33,14 +33,14 @@ public class InvalidTargetingOnScopingAnnotationTest {
   @Test
   public void positiveCase() {
     compilationHelper
-        .addSourceFile("InvalidTargetingOnScopingAnnotationPositiveCases.java")
+        .addSourceFile("testdata/InvalidTargetingOnScopingAnnotationPositiveCases.java")
         .doTest();
   }
 
   @Test
   public void negativeCase() {
     compilationHelper
-        .addSourceFile("InvalidTargetingOnScopingAnnotationNegativeCases.java")
+        .addSourceFile("testdata/InvalidTargetingOnScopingAnnotationNegativeCases.java")
         .doTest();
   }
 }

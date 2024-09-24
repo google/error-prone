@@ -33,14 +33,14 @@ public class AssistedInjectAndInjectOnSameConstructorTest {
   @Test
   public void positiveCase() {
     compilationHelper
-        .addSourceFile("AssistedInjectAndInjectOnSameConstructorPositiveCases.java")
+        .addSourceFile("testdata/AssistedInjectAndInjectOnSameConstructorPositiveCases.java")
         .doTest();
   }
 
   @Test
   public void negativeCase() {
     compilationHelper
-        .addSourceFile("AssistedInjectAndInjectOnSameConstructorNegativeCases.java")
+        .addSourceFile("testdata/AssistedInjectAndInjectOnSameConstructorNegativeCases.java")
         .doTest();
   }
 }

@@ -32,11 +32,11 @@ public class InvalidPatternSyntaxTest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("InvalidPatternSyntaxPositiveCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/InvalidPatternSyntaxPositiveCases.java").doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("InvalidPatternSyntaxNegativeCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/InvalidPatternSyntaxNegativeCases.java").doTest();
   }
 }

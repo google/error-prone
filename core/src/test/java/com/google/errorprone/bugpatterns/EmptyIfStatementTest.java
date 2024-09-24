@@ -32,11 +32,11 @@ public class EmptyIfStatementTest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("EmptyIfStatementPositiveCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/EmptyIfStatementPositiveCases.java").doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("EmptyIfStatementNegativeCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/EmptyIfStatementNegativeCases.java").doTest();
   }
 }

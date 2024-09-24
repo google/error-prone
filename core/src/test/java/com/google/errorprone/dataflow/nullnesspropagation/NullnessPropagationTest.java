@@ -123,42 +123,42 @@ public class NullnessPropagationTest {
 
   @Test
   public void transferFunctions1() {
-    compilationHelper.addSourceFile("NullnessPropagationTransferCases1.java").doTest();
+    compilationHelper.addSourceFile("testdata/NullnessPropagationTransferCases1.java").doTest();
   }
 
   @Test
   public void transferFunctions2() {
-    compilationHelper.addSourceFile("NullnessPropagationTransferCases2.java").doTest();
+    compilationHelper.addSourceFile("testdata/NullnessPropagationTransferCases2.java").doTest();
   }
 
   @Test
   public void transferFunctions3() {
-    compilationHelper.addSourceFile("NullnessPropagationTransferCases3.java").doTest();
+    compilationHelper.addSourceFile("testdata/NullnessPropagationTransferCases3.java").doTest();
   }
 
   @Test
   public void transferFunctions4() {
-    compilationHelper.addSourceFile("NullnessPropagationTransferCases4.java").doTest();
+    compilationHelper.addSourceFile("testdata/NullnessPropagationTransferCases4.java").doTest();
   }
 
   @Test
   public void transferFunctions5() {
-    compilationHelper.addSourceFile("NullnessPropagationTransferCases5.java").doTest();
+    compilationHelper.addSourceFile("testdata/NullnessPropagationTransferCases5.java").doTest();
   }
 
   @Test
   public void transferFunctions6() {
-    compilationHelper.addSourceFile("NullnessPropagationTransferCases6.java").doTest();
+    compilationHelper.addSourceFile("testdata/NullnessPropagationTransferCases6.java").doTest();
   }
 
   @Test
   public void transferFunctions7() {
-    compilationHelper.addSourceFile("NullnessPropagationTransferCases7.java").doTest();
+    compilationHelper.addSourceFile("testdata/NullnessPropagationTransferCases7.java").doTest();
   }
 
   @Test
   public void transferFunctions8() {
-    compilationHelper.addSourceFile("NullnessPropagationTransferCases8.java").doTest();
+    compilationHelper.addSourceFile("testdata/NullnessPropagationTransferCases8.java").doTest();
   }
 
   @Test

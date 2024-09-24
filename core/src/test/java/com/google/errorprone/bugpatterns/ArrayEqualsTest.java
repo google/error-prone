@@ -32,21 +32,21 @@ public class ArrayEqualsTest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("ArrayEqualsPositiveCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/ArrayEqualsPositiveCases.java").doTest();
   }
 
   @Test
   public void java7PositiveCase() {
-    compilationHelper.addSourceFile("ArrayEqualsPositiveCases2.java").doTest();
+    compilationHelper.addSourceFile("testdata/ArrayEqualsPositiveCases2.java").doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("ArrayEqualsNegativeCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/ArrayEqualsNegativeCases.java").doTest();
   }
 
   @Test
   public void java7NegativeCase() {
-    compilationHelper.addSourceFile("ArrayEqualsNegativeCases2.java").doTest();
+    compilationHelper.addSourceFile("testdata/ArrayEqualsNegativeCases2.java").doTest();
   }
 }

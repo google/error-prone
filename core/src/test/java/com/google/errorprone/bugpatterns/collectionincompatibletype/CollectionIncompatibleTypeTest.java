@@ -38,22 +38,26 @@ public class CollectionIncompatibleTypeTest {
 
   @Test
   public void positiveCases() {
-    compilationHelper.addSourceFile("CollectionIncompatibleTypePositiveCases.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/CollectionIncompatibleTypePositiveCases.java")
+        .doTest();
   }
 
   @Test
   public void negativeCases() {
-    compilationHelper.addSourceFile("CollectionIncompatibleTypeNegativeCases.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/CollectionIncompatibleTypeNegativeCases.java")
+        .doTest();
   }
 
   @Test
   public void outOfBounds() {
-    compilationHelper.addSourceFile("CollectionIncompatibleTypeOutOfBounds.java").doTest();
+    compilationHelper.addSourceFile("testdata/CollectionIncompatibleTypeOutOfBounds.java").doTest();
   }
 
   @Test
   public void classCast() {
-    compilationHelper.addSourceFile("CollectionIncompatibleTypeClassCast.java").doTest();
+    compilationHelper.addSourceFile("testdata/CollectionIncompatibleTypeClassCast.java").doTest();
   }
 
   @Test

@@ -32,11 +32,11 @@ public class ComparisonOutOfRangeTest {
 
   @Test
   public void positiveCases() {
-    compilationHelper.addSourceFile("ComparisonOutOfRangePositiveCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/ComparisonOutOfRangePositiveCases.java").doTest();
   }
 
   @Test
   public void negativeCases() {
-    compilationHelper.addSourceFile("ComparisonOutOfRangeNegativeCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/ComparisonOutOfRangeNegativeCases.java").doTest();
   }
 }

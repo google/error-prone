@@ -31,11 +31,11 @@ public class EqualsReferenceTest {
 
   @Test
   public void positiveCases() {
-    compilationTestHelper.addSourceFile("EqualsReferencePositiveCases.java").doTest();
+    compilationTestHelper.addSourceFile("testdata/EqualsReferencePositiveCases.java").doTest();
   }
 
   @Test
   public void negativeCases() {
-    compilationTestHelper.addSourceFile("EqualsReferenceNegativeCases.java").doTest();
+    compilationTestHelper.addSourceFile("testdata/EqualsReferenceNegativeCases.java").doTest();
   }
 }

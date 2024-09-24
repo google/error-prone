@@ -32,11 +32,15 @@ public class ModifySourceCollectionInStreamTest {
 
   @Test
   public void positiveCases() {
-    compilationHelper.addSourceFile("ModifySourceCollectionInStreamPositiveCases.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/ModifySourceCollectionInStreamPositiveCases.java")
+        .doTest();
   }
 
   @Test
   public void negativeCasse() {
-    compilationHelper.addSourceFile("ModifySourceCollectionInStreamNegativeCases.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/ModifySourceCollectionInStreamNegativeCases.java")
+        .doTest();
   }
 }

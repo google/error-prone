@@ -35,17 +35,23 @@ public class StaticQualifiedUsingExpressionTest {
 
   @Test
   public void positiveCase1() {
-    compilationHelper.addSourceFile("StaticQualifiedUsingExpressionPositiveCase1.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/StaticQualifiedUsingExpressionPositiveCase1.java")
+        .doTest();
   }
 
   @Test
   public void positiveCase2() {
-    compilationHelper.addSourceFile("StaticQualifiedUsingExpressionPositiveCase2.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/StaticQualifiedUsingExpressionPositiveCase2.java")
+        .doTest();
   }
 
   @Test
   public void negativeCases() {
-    compilationHelper.addSourceFile("StaticQualifiedUsingExpressionNegativeCases.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/StaticQualifiedUsingExpressionNegativeCases.java")
+        .doTest();
   }
 
   @Test

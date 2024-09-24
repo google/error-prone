@@ -32,14 +32,14 @@ public class FuzzyEqualsShouldNotBeUsedInEqualsMethodTest {
   @Test
   public void positiveCase() {
     compilationHelper
-        .addSourceFile("FuzzyEqualsShouldNotBeUsedInEqualsMethodPositiveCases.java")
+        .addSourceFile("testdata/FuzzyEqualsShouldNotBeUsedInEqualsMethodPositiveCases.java")
         .doTest();
   }
 
   @Test
   public void negativeCase() {
     compilationHelper
-        .addSourceFile("FuzzyEqualsShouldNotBeUsedInEqualsMethodNegativeCases.java")
+        .addSourceFile("testdata/FuzzyEqualsShouldNotBeUsedInEqualsMethodNegativeCases.java")
         .doTest();
   }
 }

@@ -28,11 +28,11 @@ public class ComparableTypeTest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("ComparableTypePositiveCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/ComparableTypePositiveCases.java").doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("ComparableTypeNegativeCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/ComparableTypeNegativeCases.java").doTest();
   }
 }

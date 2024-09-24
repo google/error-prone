@@ -31,41 +31,41 @@ public class OverridesTest {
 
   @Test
   public void positiveCase1() {
-    compilationHelper.addSourceFile("OverridesPositiveCase1.java").doTest();
+    compilationHelper.addSourceFile("testdata/OverridesPositiveCase1.java").doTest();
   }
 
   @Test
   public void positiveCase2() {
-    compilationHelper.addSourceFile("OverridesPositiveCase2.java").doTest();
+    compilationHelper.addSourceFile("testdata/OverridesPositiveCase2.java").doTest();
   }
 
   @Test
   public void positiveCase3() {
-    compilationHelper.addSourceFile("OverridesPositiveCase3.java").doTest();
+    compilationHelper.addSourceFile("testdata/OverridesPositiveCase3.java").doTest();
   }
 
   @Test
   public void positiveCase4() {
-    compilationHelper.addSourceFile("OverridesPositiveCase4.java").doTest();
+    compilationHelper.addSourceFile("testdata/OverridesPositiveCase4.java").doTest();
   }
 
   @Test
   public void positiveCase5() {
-    compilationHelper.addSourceFile("OverridesPositiveCase5.java").doTest();
+    compilationHelper.addSourceFile("testdata/OverridesPositiveCase5.java").doTest();
   }
 
   @Test
   public void negativeCase1() {
-    compilationHelper.addSourceFile("OverridesNegativeCase1.java").doTest();
+    compilationHelper.addSourceFile("testdata/OverridesNegativeCase1.java").doTest();
   }
 
   @Test
   public void negativeCase2() {
-    compilationHelper.addSourceFile("OverridesNegativeCase2.java").doTest();
+    compilationHelper.addSourceFile("testdata/OverridesNegativeCase2.java").doTest();
   }
 
   @Test
   public void negativeCase3() {
-    compilationHelper.addSourceFile("OverridesNegativeCase3.java").doTest();
+    compilationHelper.addSourceFile("testdata/OverridesNegativeCase3.java").doTest();
   }
 }

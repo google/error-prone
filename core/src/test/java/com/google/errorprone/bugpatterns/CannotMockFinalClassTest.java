@@ -35,7 +35,7 @@ public class CannotMockFinalClassTest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("CannotMockFinalClassPositiveCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/CannotMockFinalClassPositiveCases.java").doTest();
   }
 
   @Test
@@ -64,11 +64,11 @@ public class CannotMockFinalClassTest {
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("CannotMockFinalClassNegativeCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/CannotMockFinalClassNegativeCases.java").doTest();
   }
 
   @Test
   public void negativeCase2() {
-    compilationHelper.addSourceFile("CannotMockFinalClassNegativeCases2.java").doTest();
+    compilationHelper.addSourceFile("testdata/CannotMockFinalClassNegativeCases2.java").doTest();
   }
 }

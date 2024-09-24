@@ -37,12 +37,12 @@ public class JUnit4TestNotRunTest {
 
   @Test
   public void positiveCase1() {
-    compilationHelper.addSourceFile("JUnit4TestNotRunPositiveCase1.java").doTest();
+    compilationHelper.addSourceFile("testdata/JUnit4TestNotRunPositiveCase1.java").doTest();
   }
 
   @Test
   public void positiveCase2() {
-    compilationHelper.addSourceFile("JUnit4TestNotRunPositiveCase2.java").doTest();
+    compilationHelper.addSourceFile("testdata/JUnit4TestNotRunPositiveCase2.java").doTest();
   }
 
   @Test
@@ -598,29 +598,29 @@ public class JUnit4TestNotRunTest {
 
   @Test
   public void negativeCase1() {
-    compilationHelper.addSourceFile("JUnit4TestNotRunNegativeCase1.java").doTest();
+    compilationHelper.addSourceFile("testdata/JUnit4TestNotRunNegativeCase1.java").doTest();
   }
 
   @Test
   public void negativeCase2() {
-    compilationHelper.addSourceFile("JUnit4TestNotRunNegativeCase2.java").doTest();
+    compilationHelper.addSourceFile("testdata/JUnit4TestNotRunNegativeCase2.java").doTest();
   }
 
   @Test
   public void negativeCase3() {
-    compilationHelper.addSourceFile("JUnit4TestNotRunNegativeCase3.java").doTest();
+    compilationHelper.addSourceFile("testdata/JUnit4TestNotRunNegativeCase3.java").doTest();
   }
 
   @Test
   public void negativeCase4() {
-    compilationHelper.addSourceFile("JUnit4TestNotRunNegativeCase4.java").doTest();
+    compilationHelper.addSourceFile("testdata/JUnit4TestNotRunNegativeCase4.java").doTest();
   }
 
   @Test
   public void negativeCase5() {
     compilationHelper
-        .addSourceFile("JUnit4TestNotRunBaseClass.java")
-        .addSourceFile("JUnit4TestNotRunNegativeCase5.java")
+        .addSourceFile("testdata/JUnit4TestNotRunBaseClass.java")
+        .addSourceFile("testdata/JUnit4TestNotRunNegativeCase5.java")
         .doTest();
   }
 

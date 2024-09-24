@@ -29,14 +29,14 @@ public class PrivateSecurityContractProtoAccessTest {
   @Test
   public void positiveCase() {
     compilationHelper
-        .addSourceFile("PrivateSecurityContractProtoAccessPositiveCases.java")
+        .addSourceFile("testdata/PrivateSecurityContractProtoAccessPositiveCases.java")
         .doTest();
   }
 
   @Test
   public void negativeCase() {
     compilationHelper
-        .addSourceFile("PrivateSecurityContractProtoAccessNegativeCases.java")
+        .addSourceFile("testdata/PrivateSecurityContractProtoAccessNegativeCases.java")
         .doTest();
   }
 

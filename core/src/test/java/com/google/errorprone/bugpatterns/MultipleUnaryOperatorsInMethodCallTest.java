@@ -31,14 +31,14 @@ public class MultipleUnaryOperatorsInMethodCallTest {
   @Test
   public void positiveCase() {
     compilationHelper
-        .addSourceFile("MultipleUnaryOperatorsInMethodCallPositiveCases.java")
+        .addSourceFile("testdata/MultipleUnaryOperatorsInMethodCallPositiveCases.java")
         .doTest();
   }
 
   @Test
   public void negativeCase() {
     compilationHelper
-        .addSourceFile("MultipleUnaryOperatorsInMethodCallNegativeCases.java")
+        .addSourceFile("testdata/MultipleUnaryOperatorsInMethodCallNegativeCases.java")
         .doTest();
   }
 }

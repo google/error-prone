@@ -32,11 +32,11 @@ public class AssistedParametersTest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("AssistedParametersPositiveCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/AssistedParametersPositiveCases.java").doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("AssistedParametersNegativeCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/AssistedParametersNegativeCases.java").doTest();
   }
 }

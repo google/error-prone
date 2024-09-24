@@ -108,13 +108,13 @@ public class TreeToStringTest {
 
   @Test
   public void positiveCases() {
-    testHelper.addSourceFile("TreeToStringPositiveCases.java").doTest();
+    testHelper.addSourceFile("testdata/TreeToStringPositiveCases.java").doTest();
   }
 
   @Test
   public void negativeCases() {
     testHelper
-        .addSourceFile("TreeToStringNegativeCases.java")
+        .addSourceFile("testdata/TreeToStringNegativeCases.java")
         .addModules(
             "jdk.compiler/com.sun.tools.javac.code", "jdk.compiler/com.sun.tools.javac.util")
         .doTest();

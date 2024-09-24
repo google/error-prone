@@ -31,11 +31,15 @@ public class ProvidesMethodOutsideOfModuleTest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("ProvidesMethodOutsideOfModulePositiveCases.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/ProvidesMethodOutsideOfModulePositiveCases.java")
+        .doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("ProvidesMethodOutsideOfModuleNegativeCases.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/ProvidesMethodOutsideOfModuleNegativeCases.java")
+        .doTest();
   }
 }

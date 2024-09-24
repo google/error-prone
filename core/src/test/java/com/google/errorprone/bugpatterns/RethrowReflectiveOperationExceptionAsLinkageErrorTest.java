@@ -31,14 +31,16 @@ public class RethrowReflectiveOperationExceptionAsLinkageErrorTest {
   @Test
   public void positive() {
     testHelper
-        .addSourceFile("RethrowReflectiveOperationExceptionAsLinkageErrorPositiveCases.java")
+        .addSourceFile(
+            "testdata/RethrowReflectiveOperationExceptionAsLinkageErrorPositiveCases.java")
         .doTest();
   }
 
   @Test
   public void negative() {
     testHelper
-        .addSourceFile("RethrowReflectiveOperationExceptionAsLinkageErrorNegativeCases.java")
+        .addSourceFile(
+            "testdata/RethrowReflectiveOperationExceptionAsLinkageErrorNegativeCases.java")
         .doTest();
   }
 }

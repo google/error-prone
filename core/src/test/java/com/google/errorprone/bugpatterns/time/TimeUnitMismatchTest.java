@@ -38,12 +38,12 @@ public class TimeUnitMismatchTest {
 
   @Test
   public void testPositiveCase() {
-    compilationHelper.addSourceFile("TimeUnitMismatchPositiveCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/TimeUnitMismatchPositiveCases.java").doTest();
   }
 
   @Test
   public void testNegativeCase() {
-    compilationHelper.addSourceFile("TimeUnitMismatchNegativeCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/TimeUnitMismatchNegativeCases.java").doTest();
   }
 
   @Test

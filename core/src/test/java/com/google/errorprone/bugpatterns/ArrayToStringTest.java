@@ -34,12 +34,12 @@ public class ArrayToStringTest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("ArrayToStringPositiveCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/ArrayToStringPositiveCases.java").doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("ArrayToStringNegativeCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/ArrayToStringNegativeCases.java").doTest();
   }
 
   @Test
@@ -194,22 +194,30 @@ public class ArrayToStringTest {
 
   @Test
   public void positiveCompoundAssignment() {
-    compilationHelper.addSourceFile("ArrayToStringCompoundAssignmentPositiveCases.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/ArrayToStringCompoundAssignmentPositiveCases.java")
+        .doTest();
   }
 
   @Test
   public void negativeCompoundAssignment() {
-    compilationHelper.addSourceFile("ArrayToStringCompoundAssignmentNegativeCases.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/ArrayToStringCompoundAssignmentNegativeCases.java")
+        .doTest();
   }
 
   @Test
   public void positiveConcat() {
-    compilationHelper.addSourceFile("ArrayToStringConcatenationPositiveCases.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/ArrayToStringConcatenationPositiveCases.java")
+        .doTest();
   }
 
   @Test
   public void negativeConcat() {
-    compilationHelper.addSourceFile("ArrayToStringConcatenationNegativeCases.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/ArrayToStringConcatenationNegativeCases.java")
+        .doTest();
   }
 
   @Test

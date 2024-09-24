@@ -31,11 +31,15 @@ public class PreconditionsInvalidPlaceholderTest {
 
   @Test
   public void positiveCase1() {
-    compilationHelper.addSourceFile("PreconditionsInvalidPlaceholderPositiveCase1.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/PreconditionsInvalidPlaceholderPositiveCase1.java")
+        .doTest();
   }
 
   @Test
   public void negativeCase1() {
-    compilationHelper.addSourceFile("PreconditionsInvalidPlaceholderNegativeCase1.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/PreconditionsInvalidPlaceholderNegativeCase1.java")
+        .doTest();
   }
 }

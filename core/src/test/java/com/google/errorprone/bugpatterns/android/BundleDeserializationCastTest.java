@@ -126,7 +126,7 @@ public class BundleDeserializationCastTest {
   @Test
   public void negativeCaseGetParcelableList() {
     compilationHelper
-        .addSourceFile("CustomParcelableList.java")
+        .addSourceFile("testdata/CustomParcelableList.java")
         .addSourceLines(
             "Test.java",
             """

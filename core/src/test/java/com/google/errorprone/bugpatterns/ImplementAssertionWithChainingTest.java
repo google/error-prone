@@ -31,11 +31,15 @@ public class ImplementAssertionWithChainingTest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("ImplementAssertionWithChainingPositiveCases.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/ImplementAssertionWithChainingPositiveCases.java")
+        .doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("ImplementAssertionWithChainingNegativeCases.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/ImplementAssertionWithChainingNegativeCases.java")
+        .doTest();
   }
 }

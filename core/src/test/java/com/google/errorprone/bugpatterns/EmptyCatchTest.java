@@ -37,12 +37,12 @@ public class EmptyCatchTest {
 
   @Test
   public void positiveCase() throws Exception {
-    compilationHelper.addSourceFile("EmptyCatchPositiveCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/EmptyCatchPositiveCases.java").doTest();
   }
 
   @Test
   public void negativeCase() throws Exception {
-    compilationHelper.addSourceFile("EmptyCatchNegativeCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/EmptyCatchNegativeCases.java").doTest();
   }
 
   @Test

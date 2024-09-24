@@ -38,11 +38,11 @@ public class URLEqualsHashCodeTest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("URLEqualsHashCodePositiveCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/URLEqualsHashCodePositiveCases.java").doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("URLEqualsHashCodeNegativeCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/URLEqualsHashCodeNegativeCases.java").doTest();
   }
 }

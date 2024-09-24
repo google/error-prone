@@ -32,11 +32,11 @@ public class BadShiftAmountTest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("BadShiftAmountPositiveCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/BadShiftAmountPositiveCases.java").doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("BadShiftAmountNegativeCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/BadShiftAmountNegativeCases.java").doTest();
   }
 }

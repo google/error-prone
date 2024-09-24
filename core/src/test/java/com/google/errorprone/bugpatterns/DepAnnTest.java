@@ -32,17 +32,26 @@ public class DepAnnTest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.setArgs(JAVACOPTS).addSourceFile("DepAnnPositiveCases.java").doTest();
+    compilationHelper
+        .setArgs(JAVACOPTS)
+        .addSourceFile("testdata/DepAnnPositiveCases.java")
+        .doTest();
   }
 
   @Test
   public void negativeCase1() {
-    compilationHelper.setArgs(JAVACOPTS).addSourceFile("DepAnnNegativeCase1.java").doTest();
+    compilationHelper
+        .setArgs(JAVACOPTS)
+        .addSourceFile("testdata/DepAnnNegativeCase1.java")
+        .doTest();
   }
 
   @Test
   public void negativeCase2() {
-    compilationHelper.setArgs(JAVACOPTS).addSourceFile("DepAnnNegativeCase2.java").doTest();
+    compilationHelper
+        .setArgs(JAVACOPTS)
+        .addSourceFile("testdata/DepAnnNegativeCase2.java")
+        .doTest();
   }
 
   @Test
@@ -50,7 +59,7 @@ public class DepAnnTest {
     compilationHelper
         .setArgs(ImmutableList.of("-Xlint:-dep-ann", "-Xep:DepAnn:OFF"))
         .expectNoDiagnostics()
-        .addSourceFile("DepAnnPositiveCases.java")
+        .addSourceFile("testdata/DepAnnPositiveCases.java")
         .doTest();
   }
 }

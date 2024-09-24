@@ -30,7 +30,7 @@ public class UnsafeWildcardTest {
 
   @Test
   public void unsoundGenericMethod() {
-    compilationHelper.addSourceFile("UnsoundGenericMethod.java").doTest();
+    compilationHelper.addSourceFile("testdata/UnsoundGenericMethod.java").doTest();
   }
 
   @Test

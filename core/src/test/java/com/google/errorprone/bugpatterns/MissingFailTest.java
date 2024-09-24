@@ -35,27 +35,27 @@ public class MissingFailTest {
 
   @Test
   public void positiveCases() {
-    compilationHelper.addSourceFile("MissingFailPositiveCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/MissingFailPositiveCases.java").doTest();
   }
 
   @Test
   public void positiveCases2() {
-    compilationHelper.addSourceFile("MissingFailPositiveCases2.java").doTest();
+    compilationHelper.addSourceFile("testdata/MissingFailPositiveCases2.java").doTest();
   }
 
   @Test
   public void positiveCases3() {
-    compilationHelper.addSourceFile("MissingFailPositiveCases3.java").doTest();
+    compilationHelper.addSourceFile("testdata/MissingFailPositiveCases3.java").doTest();
   }
 
   @Test
   public void negativeCases() {
-    compilationHelper.addSourceFile("MissingFailNegativeCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/MissingFailNegativeCases.java").doTest();
   }
 
   @Test
   public void negativeCases2() {
-    compilationHelper.addSourceFile("MissingFailNegativeCases2.java").doTest();
+    compilationHelper.addSourceFile("testdata/MissingFailNegativeCases2.java").doTest();
   }
 
   @Test

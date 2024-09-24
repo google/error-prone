@@ -30,12 +30,16 @@ public class CollectionToArraySafeParameterTest {
 
   @Test
   public void positiveCases() {
-    compilationHelper.addSourceFile("CollectionToArraySafeParameterPositiveCases.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/CollectionToArraySafeParameterPositiveCases.java")
+        .doTest();
   }
 
   @Test
   public void negativeCases() {
-    compilationHelper.addSourceFile("CollectionToArraySafeParameterNegativeCases.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/CollectionToArraySafeParameterNegativeCases.java")
+        .doTest();
   }
 
   // regression test for b/67022899

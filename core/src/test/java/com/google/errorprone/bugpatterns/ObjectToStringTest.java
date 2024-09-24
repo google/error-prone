@@ -40,12 +40,12 @@ public class ObjectToStringTest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("ObjectToStringPositiveCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/ObjectToStringPositiveCases.java").doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("ObjectToStringNegativeCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/ObjectToStringNegativeCases.java").doTest();
   }
 
   /** A class that will be missing at compile-time for {@link #testIncompleteClasspath}. */

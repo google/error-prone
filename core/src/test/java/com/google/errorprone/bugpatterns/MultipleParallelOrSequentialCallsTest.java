@@ -42,22 +42,22 @@ public class MultipleParallelOrSequentialCallsTest {
   @Test
   public void positiveCases() {
     compilationTestHelper
-        .addSourceFile("MultipleParallelOrSequentialCallsPositiveCases.java")
+        .addSourceFile("testdata/MultipleParallelOrSequentialCallsPositiveCases.java")
         .doTest();
   }
 
   @Test
   public void negativeCases() {
     compilationTestHelper
-        .addSourceFile("MultipleParallelOrSequentialCallsNegativeCases.java")
+        .addSourceFile("testdata/MultipleParallelOrSequentialCallsNegativeCases.java")
         .doTest();
   }
 
   @Test
   public void fixes() {
     BugCheckerRefactoringTestHelper.newInstance(MultipleParallelOrSequentialCalls.class, getClass())
-        .addInput("MultipleParallelOrSequentialCallsPositiveCases.java")
-        .addOutput("MultipleParallelOrSequentialCallsPositiveCases_expected.java")
+        .addInput("testdata/MultipleParallelOrSequentialCallsPositiveCases.java")
+        .addOutput("testdata/MultipleParallelOrSequentialCallsPositiveCases_expected.java")
         .doTest(TestMode.AST_MATCH);
   }
 }

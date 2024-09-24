@@ -31,11 +31,15 @@ public class OverridesGuiceInjectableMethodTest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("OverridesGuiceInjectableMethodPositiveCases.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/OverridesGuiceInjectableMethodPositiveCases.java")
+        .doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("OverridesGuiceInjectableMethodNegativeCases.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/OverridesGuiceInjectableMethodNegativeCases.java")
+        .doTest();
   }
 }

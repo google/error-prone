@@ -32,11 +32,11 @@ public class AutoFactoryAtInjectTest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("AutoFactoryAtInjectPositiveCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/AutoFactoryAtInjectPositiveCases.java").doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("AutoFactoryAtInjectNegativeCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/AutoFactoryAtInjectNegativeCases.java").doTest();
   }
 }

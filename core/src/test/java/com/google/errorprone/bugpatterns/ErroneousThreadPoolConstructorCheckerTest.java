@@ -36,14 +36,14 @@ public class ErroneousThreadPoolConstructorCheckerTest {
   @Test
   public void positiveCases() {
     compilationHelper
-        .addSourceFile("ErroneousThreadPoolConstructorCheckerPositiveCases.java")
+        .addSourceFile("testdata/ErroneousThreadPoolConstructorCheckerPositiveCases.java")
         .doTest();
   }
 
   @Test
   public void negativeCases() {
     compilationHelper
-        .addSourceFile("ErroneousThreadPoolConstructorCheckerNegativeCases.java")
+        .addSourceFile("testdata/ErroneousThreadPoolConstructorCheckerNegativeCases.java")
         .doTest();
   }
 

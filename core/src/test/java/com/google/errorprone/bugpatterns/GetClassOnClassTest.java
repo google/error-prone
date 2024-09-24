@@ -32,11 +32,11 @@ public class GetClassOnClassTest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("GetClassOnClassPositiveCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/GetClassOnClassPositiveCases.java").doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("GetClassOnClassNegativeCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/GetClassOnClassNegativeCases.java").doTest();
   }
 }

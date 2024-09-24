@@ -38,12 +38,16 @@ public class UnnecessaryLongToIntConversionTest {
 
   @Test
   public void longParameterLongToIntPositiveCases() {
-    compilationHelper.addSourceFile("UnnecessaryLongToIntConversionPositiveCases.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/UnnecessaryLongToIntConversionPositiveCases.java")
+        .doTest();
   }
 
   @Test
   public void longParameterLongToIntNegativeCases() {
-    compilationHelper.addSourceFile("UnnecessaryLongToIntConversionNegativeCases.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/UnnecessaryLongToIntConversionNegativeCases.java")
+        .doTest();
   }
 
   // Test the suggested fixes, first removing the conversion and second replacing it with a call to

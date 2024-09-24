@@ -32,11 +32,11 @@ public class AssertFalseTest {
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("AssertFalseNegativeCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/AssertFalseNegativeCases.java").doTest();
   }
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("AssertFalsePositiveCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/AssertFalsePositiveCases.java").doTest();
   }
 }

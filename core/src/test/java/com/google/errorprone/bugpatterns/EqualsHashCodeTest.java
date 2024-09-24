@@ -30,12 +30,12 @@ public class EqualsHashCodeTest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("EqualsHashCodeTestPositiveCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/EqualsHashCodeTestPositiveCases.java").doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("EqualsHashCodeTestNegativeCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/EqualsHashCodeTestNegativeCases.java").doTest();
   }
 
   @Test

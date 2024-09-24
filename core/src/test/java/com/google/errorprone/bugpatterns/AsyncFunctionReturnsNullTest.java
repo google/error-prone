@@ -29,11 +29,11 @@ public class AsyncFunctionReturnsNullTest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("AsyncFunctionReturnsNullPositiveCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/AsyncFunctionReturnsNullPositiveCases.java").doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("AsyncFunctionReturnsNullNegativeCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/AsyncFunctionReturnsNullNegativeCases.java").doTest();
   }
 }

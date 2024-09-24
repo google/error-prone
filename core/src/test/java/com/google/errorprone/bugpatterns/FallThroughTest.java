@@ -33,12 +33,12 @@ public class FallThroughTest {
 
   @Test
   public void positive() {
-    testHelper.addSourceFile("FallThroughPositiveCases.java").doTest();
+    testHelper.addSourceFile("testdata/FallThroughPositiveCases.java").doTest();
   }
 
   @Test
   public void negative() {
-    testHelper.addSourceFile("FallThroughNegativeCases.java").doTest();
+    testHelper.addSourceFile("testdata/FallThroughNegativeCases.java").doTest();
   }
 
   @Test

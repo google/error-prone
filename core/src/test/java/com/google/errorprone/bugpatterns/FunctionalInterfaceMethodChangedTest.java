@@ -32,11 +32,15 @@ public class FunctionalInterfaceMethodChangedTest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("FunctionalInterfaceMethodChangedPositiveCases.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/FunctionalInterfaceMethodChangedPositiveCases.java")
+        .doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("FunctionalInterfaceMethodChangedNegativeCases.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/FunctionalInterfaceMethodChangedNegativeCases.java")
+        .doTest();
   }
 }

@@ -34,17 +34,17 @@ public class EqualsIncompatibleTypeTest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("EqualsIncompatibleTypePositiveCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/EqualsIncompatibleTypePositiveCases.java").doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("EqualsIncompatibleTypeNegativeCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/EqualsIncompatibleTypeNegativeCases.java").doTest();
   }
 
   @Test
   public void negativeCase_recursive() {
-    compilationHelper.addSourceFile("EqualsIncompatibleTypeRecursiveTypes.java").doTest();
+    compilationHelper.addSourceFile("testdata/EqualsIncompatibleTypeRecursiveTypes.java").doTest();
   }
 
   @Test

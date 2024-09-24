@@ -29,26 +29,30 @@ public class JUnitParameterMethodNotFoundTest {
 
   @Test
   public void negativeCase_noErrorsFound() {
-    compilationHelper.addSourceFile("JUnitParameterMethodNotFoundNegativeCase.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/JUnitParameterMethodNotFoundNegativeCase.java")
+        .doTest();
   }
 
   @Test
   public void negativeCase_nonJUnitParamsRunner_noErrorsFound() {
     compilationHelper
-        .addSourceFile("JUnitParameterMethodNotFoundNegativeCaseNonJUnitParamsRunner.java")
+        .addSourceFile("testdata/JUnitParameterMethodNotFoundNegativeCaseNonJUnitParamsRunner.java")
         .doTest();
   }
 
   @Test
   public void negativeCase_inheritedMethods_noErrorsFound() {
     compilationHelper
-        .addSourceFile("JUnitParameterMethodNotFoundNegativeCaseBaseClass.java")
-        .addSourceFile("JUnitParameterMethodNotFoundNegativeCaseSuperClass.java")
+        .addSourceFile("testdata/JUnitParameterMethodNotFoundNegativeCaseBaseClass.java")
+        .addSourceFile("testdata/JUnitParameterMethodNotFoundNegativeCaseSuperClass.java")
         .doTest();
   }
 
   @Test
   public void positiveCase_errorReported() {
-    compilationHelper.addSourceFile("JUnitParameterMethodNotFoundPositiveCase.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/JUnitParameterMethodNotFoundPositiveCase.java")
+        .doTest();
   }
 }

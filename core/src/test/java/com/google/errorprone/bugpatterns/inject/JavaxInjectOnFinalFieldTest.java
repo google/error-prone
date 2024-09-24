@@ -31,11 +31,11 @@ public class JavaxInjectOnFinalFieldTest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("JavaxInjectOnFinalFieldPositiveCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/JavaxInjectOnFinalFieldPositiveCases.java").doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("JavaxInjectOnFinalFieldNegativeCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/JavaxInjectOnFinalFieldNegativeCases.java").doTest();
   }
 }

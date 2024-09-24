@@ -31,11 +31,11 @@ public class InsecureCipherModeTest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("InsecureCipherModePositiveCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/InsecureCipherModePositiveCases.java").doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("InsecureCipherModeNegativeCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/InsecureCipherModeNegativeCases.java").doTest();
   }
 }

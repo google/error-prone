@@ -30,12 +30,16 @@ public class ModifyCollectionInEnhancedForLoopTest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("ModifyCollectionInEnhancedForLoopPositiveCases.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/ModifyCollectionInEnhancedForLoopPositiveCases.java")
+        .doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("ModifyCollectionInEnhancedForLoopNegativeCases.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/ModifyCollectionInEnhancedForLoopNegativeCases.java")
+        .doTest();
   }
 
   @Test

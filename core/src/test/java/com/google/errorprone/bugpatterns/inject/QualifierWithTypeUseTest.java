@@ -32,11 +32,11 @@ public class QualifierWithTypeUseTest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("QualifierWithTypeUsePositiveCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/QualifierWithTypeUsePositiveCases.java").doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("QualifierWithTypeUseNegativeCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/QualifierWithTypeUseNegativeCases.java").doTest();
   }
 }

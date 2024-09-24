@@ -34,7 +34,7 @@ public class HardCodedSdCardPathTest {
   public void matchingCode_onAndroid() {
     compilationHelper
         .setArgs(ImmutableList.of("-XDandroidCompatible=true"))
-        .addSourceFile("HardCodedSdCardPathPositiveCases.java")
+        .addSourceFile("testdata/HardCodedSdCardPathPositiveCases.java")
         .doTest();
   }
 
@@ -56,7 +56,7 @@ public class HardCodedSdCardPathTest {
   public void negativeCase() {
     compilationHelper
         .setArgs(ImmutableList.of("-XDandroidCompatible=true"))
-        .addSourceFile("HardCodedSdCardPathNegativeCases.java")
+        .addSourceFile("testdata/HardCodedSdCardPathNegativeCases.java")
         .doTest();
   }
 }

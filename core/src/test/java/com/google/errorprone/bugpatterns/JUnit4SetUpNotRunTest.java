@@ -38,12 +38,14 @@ public class JUnit4SetUpNotRunTest {
 
   @Test
   public void positiveCases() {
-    compilationHelper.addSourceFile("JUnit4SetUpNotRunPositiveCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/JUnit4SetUpNotRunPositiveCases.java").doTest();
   }
 
   @Test
   public void positiveCase_customBefore() {
-    compilationHelper.addSourceFile("JUnit4SetUpNotRunPositiveCaseCustomBefore.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/JUnit4SetUpNotRunPositiveCaseCustomBefore.java")
+        .doTest();
   }
 
   @Test
@@ -87,12 +89,14 @@ public class JUnit4SetUpNotRunTest {
 
   @Test
   public void positiveCase_customBeforeDifferentName() {
-    compilationHelper.addSourceFile("JUnit4SetUpNotRunPositiveCaseCustomBefore2.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/JUnit4SetUpNotRunPositiveCaseCustomBefore2.java")
+        .doTest();
   }
 
   @Test
   public void negativeCases() {
-    compilationHelper.addSourceFile("JUnit4SetUpNotRunNegativeCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/JUnit4SetUpNotRunNegativeCases.java").doTest();
   }
 
   public abstract static class SuperTest {

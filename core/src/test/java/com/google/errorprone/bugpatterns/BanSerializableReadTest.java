@@ -33,18 +33,18 @@ public class BanSerializableReadTest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("BanSerializableReadPositiveCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/BanSerializableReadPositiveCases.java").doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("BanSerializableReadNegativeCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/BanSerializableReadNegativeCases.java").doTest();
   }
 
   @Test
   public void negativeCaseUnchanged() {
     refactoringHelper
-        .addInput("BanSerializableReadNegativeCases.java")
+        .addInput("testdata/BanSerializableReadNegativeCases.java")
         .expectUnchanged()
         .setArgs("-XepCompilingTestOnlyCode")
         .doTest();

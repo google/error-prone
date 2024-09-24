@@ -38,16 +38,16 @@ public final class AndroidInjectionBeforeSuperTest {
   @Test
   public void positiveCase() {
     compilationHelper
-        .addSourceFile("AndroidInjectionBeforeSuperPositiveCases.java")
-        .addSourceFile("AndroidInjection.java")
+        .addSourceFile("testdata/AndroidInjectionBeforeSuperPositiveCases.java")
+        .addSourceFile("testdata/AndroidInjection.java")
         .doTest();
   }
 
   @Test
   public void negativeCase() {
     compilationHelper
-        .addSourceFile("AndroidInjectionBeforeSuperNegativeCases.java")
-        .addSourceFile("AndroidInjection.java")
+        .addSourceFile("testdata/AndroidInjectionBeforeSuperNegativeCases.java")
+        .addSourceFile("testdata/AndroidInjection.java")
         .doTest();
   }
 }

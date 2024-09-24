@@ -31,11 +31,15 @@ public class MoreThanOneScopeAnnotationOnClassTest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("MoreThanOneScopeAnnotationOnClassPositiveCases.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/MoreThanOneScopeAnnotationOnClassPositiveCases.java")
+        .doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("MoreThanOneScopeAnnotationOnClassNegativeCases.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/MoreThanOneScopeAnnotationOnClassNegativeCases.java")
+        .doTest();
   }
 }

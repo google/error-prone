@@ -31,17 +31,17 @@ public class MisusedWeekYearTest {
 
   @Test
   public void positiveCases() {
-    compilationHelper.addSourceFile("MisusedWeekYearPositiveCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/MisusedWeekYearPositiveCases.java").doTest();
   }
 
   @Test
   public void positiveCases2() {
-    compilationHelper.addSourceFile("MisusedWeekYearPositiveCases2.java").doTest();
+    compilationHelper.addSourceFile("testdata/MisusedWeekYearPositiveCases2.java").doTest();
   }
 
   @Test
   public void negativeCases() {
-    compilationHelper.addSourceFile("MisusedWeekYearNegativeCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/MisusedWeekYearNegativeCases.java").doTest();
   }
 
   @Test

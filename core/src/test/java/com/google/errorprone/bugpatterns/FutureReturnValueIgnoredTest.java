@@ -32,12 +32,12 @@ public class FutureReturnValueIgnoredTest {
 
   @Test
   public void positiveCases() {
-    compilationHelper.addSourceFile("FutureReturnValueIgnoredPositiveCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/FutureReturnValueIgnoredPositiveCases.java").doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("FutureReturnValueIgnoredNegativeCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/FutureReturnValueIgnoredNegativeCases.java").doTest();
   }
 
   @Test

@@ -170,7 +170,7 @@ public class CommandLineFlagTest {
     ErrorProneTestCompiler compiler =
         builder.report(ScannerSupplier.fromBugCheckerClasses(WarningChecker.class)).build();
     ImmutableList<JavaFileObject> sources =
-        forResources(getClass(), "CommandLineFlagTestFile.java");
+        forResources(getClass(), "testdata/CommandLineFlagTestFile.java");
 
     Result exitCode = compiler.compile(sources);
     assertThat(exitCode).isEqualTo(Result.OK);
@@ -185,7 +185,7 @@ public class CommandLineFlagTest {
     ErrorProneTestCompiler compiler =
         builder.report(ScannerSupplier.fromBugCheckerClasses(ErrorChecker.class)).build();
     ImmutableList<JavaFileObject> sources =
-        forResources(getClass(), "CommandLineFlagTestFile.java");
+        forResources(getClass(), "testdata/CommandLineFlagTestFile.java");
 
     Result exitCode = compiler.compile(sources);
     assertThat(exitCode).isEqualTo(Result.ERROR);
@@ -201,7 +201,7 @@ public class CommandLineFlagTest {
     ErrorProneTestCompiler compiler =
         builder.report(ScannerSupplier.fromBugCheckerClasses(DisableableChecker.class)).build();
     ImmutableList<JavaFileObject> sources =
-        forResources(getClass(), "CommandLineFlagTestFile.java");
+        forResources(getClass(), "testdata/CommandLineFlagTestFile.java");
 
     Result exitCode = compiler.compile(sources);
     assertThat(exitCode).isEqualTo(Result.ERROR);
@@ -217,7 +217,7 @@ public class CommandLineFlagTest {
     ErrorProneTestCompiler compiler =
         builder.report(ScannerSupplier.fromBugCheckerClasses(NondisableableChecker.class)).build();
     ImmutableList<JavaFileObject> sources =
-        forResources(getClass(), "CommandLineFlagTestFile.java");
+        forResources(getClass(), "testdata/CommandLineFlagTestFile.java");
 
     InvalidCommandLineOptionException expected =
         assertThrows(
@@ -230,7 +230,7 @@ public class CommandLineFlagTest {
   public void cantOverrideNonexistentCheck() {
     ErrorProneTestCompiler compiler = builder.build();
     ImmutableList<JavaFileObject> sources =
-        forResources(getClass(), "CommandLineFlagTestFile.java");
+        forResources(getClass(), "testdata/CommandLineFlagTestFile.java");
     List<String> badOptions =
         Arrays.asList(
             "-Xep:BogusChecker:ERROR",
@@ -251,7 +251,7 @@ public class CommandLineFlagTest {
   public void ignoreUnknownChecksFlagAllowsOverridingUnknownCheck() {
     ErrorProneTestCompiler compiler = builder.build();
     ImmutableList<JavaFileObject> sources =
-        forResources(getClass(), "CommandLineFlagTestFile.java");
+        forResources(getClass(), "testdata/CommandLineFlagTestFile.java");
     List<String> badOptions =
         Arrays.asList(
             "-Xep:BogusChecker:ERROR",

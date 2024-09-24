@@ -31,11 +31,15 @@ public class ComparisonContractViolatedTest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("ComparisonContractViolatedPositiveCases.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/ComparisonContractViolatedPositiveCases.java")
+        .doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("ComparisonContractViolatedNegativeCases.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/ComparisonContractViolatedNegativeCases.java")
+        .doTest();
   }
 }

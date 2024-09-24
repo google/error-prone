@@ -168,22 +168,26 @@ public class UnnecessaryCheckNotNullTest extends CompilerBasedAbstractTest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("UnnecessaryCheckNotNullPositiveCase.java").doTest();
+    compilationHelper.addSourceFile("testdata/UnnecessaryCheckNotNullPositiveCase.java").doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("UnnecessaryCheckNotNullNegativeCase.java").doTest();
+    compilationHelper.addSourceFile("testdata/UnnecessaryCheckNotNullNegativeCase.java").doTest();
   }
 
   @Test
   public void primitivePositiveCases() {
-    compilationHelper.addSourceFile("UnnecessaryCheckNotNullPrimitivePositiveCases.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/UnnecessaryCheckNotNullPrimitivePositiveCases.java")
+        .doTest();
   }
 
   @Test
   public void primitiveNegativeCases() {
-    compilationHelper.addSourceFile("UnnecessaryCheckNotNullPrimitiveNegativeCases.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/UnnecessaryCheckNotNullPrimitiveNegativeCases.java")
+        .doTest();
   }
 
   @Test

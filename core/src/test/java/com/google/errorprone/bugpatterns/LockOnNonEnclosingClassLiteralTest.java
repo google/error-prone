@@ -29,11 +29,15 @@ public final class LockOnNonEnclosingClassLiteralTest {
 
   @Test
   public void lockOnNonEnclosingClassLiteralPositiveCases() {
-    compilationHelper.addSourceFile("LockOnNonEnclosingClassLiteralPositiveCases.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/LockOnNonEnclosingClassLiteralPositiveCases.java")
+        .doTest();
   }
 
   @Test
   public void lockOnNonEnclosingClassLiteralNegativeCases() {
-    compilationHelper.addSourceFile("LockOnNonEnclosingClassLiteralNegativeCases.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/LockOnNonEnclosingClassLiteralNegativeCases.java")
+        .doTest();
   }
 }

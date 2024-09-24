@@ -34,12 +34,12 @@ public class ReturnValueIgnoredTest {
 
   @Test
   public void positiveCases() {
-    compilationHelper.addSourceFile("ReturnValueIgnoredPositiveCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/ReturnValueIgnoredPositiveCases.java").doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("ReturnValueIgnoredNegativeCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/ReturnValueIgnoredNegativeCases.java").doTest();
   }
 
   @Test

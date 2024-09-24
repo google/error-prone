@@ -38,11 +38,11 @@ public class SelfComparisonTest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("SelfComparisonPositiveCase.java").doTest();
+    compilationHelper.addSourceFile("testdata/SelfComparisonPositiveCase.java").doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("SelfComparisonNegativeCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/SelfComparisonNegativeCases.java").doTest();
   }
 }

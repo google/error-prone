@@ -38,11 +38,11 @@ public class JUnitAssertSameCheckTest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("JUnitAssertSameCheckPositiveCase.java").doTest();
+    compilationHelper.addSourceFile("testdata/JUnitAssertSameCheckPositiveCase.java").doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("JUnitAssertSameCheckNegativeCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/JUnitAssertSameCheckNegativeCases.java").doTest();
   }
 }

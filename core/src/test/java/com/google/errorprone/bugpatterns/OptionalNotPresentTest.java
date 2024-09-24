@@ -31,12 +31,12 @@ public class OptionalNotPresentTest {
 
   @Test
   public void negativeCases() {
-    compilationTestHelper.addSourceFile("OptionalNotPresentNegativeCases.java").doTest();
+    compilationTestHelper.addSourceFile("testdata/OptionalNotPresentNegativeCases.java").doTest();
   }
 
   @Test
   public void positiveCases() {
-    compilationTestHelper.addSourceFile("OptionalNotPresentPositiveCases.java").doTest();
+    compilationTestHelper.addSourceFile("testdata/OptionalNotPresentPositiveCases.java").doTest();
   }
 
   @Test

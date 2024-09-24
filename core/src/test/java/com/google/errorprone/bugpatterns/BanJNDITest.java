@@ -33,18 +33,18 @@ public class BanJNDITest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("BanJNDIPositiveCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/BanJNDIPositiveCases.java").doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("BanJNDINegativeCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/BanJNDINegativeCases.java").doTest();
   }
 
   @Test
   public void negativeCaseUnchanged() {
     refactoringHelper
-        .addInput("BanJNDINegativeCases.java")
+        .addInput("testdata/BanJNDINegativeCases.java")
         .expectUnchanged()
         .setArgs("-XepCompilingTestOnlyCode")
         .doTest();

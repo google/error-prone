@@ -142,6 +142,8 @@ class Test {
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("UnsafeReflectiveConstructionCastNegativeCases.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/UnsafeReflectiveConstructionCastNegativeCases.java")
+        .doTest();
   }
 }

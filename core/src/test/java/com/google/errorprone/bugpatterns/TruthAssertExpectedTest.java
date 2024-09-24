@@ -33,11 +33,11 @@ public final class TruthAssertExpectedTest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("TruthAssertExpectedPositiveCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/TruthAssertExpectedPositiveCases.java").doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("TruthAssertExpectedNegativeCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/TruthAssertExpectedNegativeCases.java").doTest();
   }
 }

@@ -37,12 +37,12 @@ public class MissingRuntimeRetentionTest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("MissingRuntimeRetentionPositiveCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/MissingRuntimeRetentionPositiveCases.java").doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("MissingRuntimeRetentionNegativeCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/MissingRuntimeRetentionNegativeCases.java").doTest();
   }
 
   @Test

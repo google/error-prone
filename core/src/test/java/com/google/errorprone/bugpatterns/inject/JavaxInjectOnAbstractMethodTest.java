@@ -32,11 +32,15 @@ public class JavaxInjectOnAbstractMethodTest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("JavaxInjectOnAbstractMethodPositiveCases.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/JavaxInjectOnAbstractMethodPositiveCases.java")
+        .doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("JavaxInjectOnAbstractMethodNegativeCases.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/JavaxInjectOnAbstractMethodNegativeCases.java")
+        .doTest();
   }
 }

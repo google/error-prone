@@ -37,11 +37,11 @@ public class ParcelableCreatorTest {
 
   @Test
   public void positive() {
-    compilationHelper.addSourceFile("ParcelableCreatorPositiveCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/ParcelableCreatorPositiveCases.java").doTest();
   }
 
   @Test
   public void negative() {
-    compilationHelper.addSourceFile("ParcelableCreatorNegativeCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/ParcelableCreatorNegativeCases.java").doTest();
   }
 }

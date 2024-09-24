@@ -34,14 +34,14 @@ public class ScopeAnnotationOnInterfaceOrAbstractClassTest {
   @Test
   public void positiveCase() {
     compilationHelper
-        .addSourceFile("ScopeAnnotationOnInterfaceOrAbstractClassPositiveCases.java")
+        .addSourceFile("testdata/ScopeAnnotationOnInterfaceOrAbstractClassPositiveCases.java")
         .doTest();
   }
 
   @Test
   public void negativeCase() {
     compilationHelper
-        .addSourceFile("ScopeAnnotationOnInterfaceOrAbstractClassNegativeCases.java")
+        .addSourceFile("testdata/ScopeAnnotationOnInterfaceOrAbstractClassNegativeCases.java")
         .doTest();
   }
 }

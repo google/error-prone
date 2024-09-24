@@ -36,14 +36,14 @@ public final class FloatingPointAssertionWithinEpsilonTest {
   @Test
   public void positiveCase() {
     compilationHelper
-        .addSourceFile("FloatingPointAssertionWithinEpsilonPositiveCases.java")
+        .addSourceFile("testdata/FloatingPointAssertionWithinEpsilonPositiveCases.java")
         .doTest();
   }
 
   @Test
   public void negativeCase() {
     compilationHelper
-        .addSourceFile("FloatingPointAssertionWithinEpsilonNegativeCases.java")
+        .addSourceFile("testdata/FloatingPointAssertionWithinEpsilonNegativeCases.java")
         .doTest();
   }
 
@@ -51,8 +51,8 @@ public final class FloatingPointAssertionWithinEpsilonTest {
   public void fixes() {
     BugCheckerRefactoringTestHelper.newInstance(
             FloatingPointAssertionWithinEpsilon.class, getClass())
-        .addInput("FloatingPointAssertionWithinEpsilonPositiveCases.java")
-        .addOutput("FloatingPointAssertionWithinEpsilonPositiveCases_expected.java")
+        .addInput("testdata/FloatingPointAssertionWithinEpsilonPositiveCases.java")
+        .addOutput("testdata/FloatingPointAssertionWithinEpsilonPositiveCases_expected.java")
         .doTest(TestMode.AST_MATCH);
   }
 }

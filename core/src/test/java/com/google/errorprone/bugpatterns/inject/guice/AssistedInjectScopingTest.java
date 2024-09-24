@@ -32,11 +32,11 @@ public class AssistedInjectScopingTest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("AssistedInjectScopingPositiveCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/AssistedInjectScopingPositiveCases.java").doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("AssistedInjectScopingNegativeCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/AssistedInjectScopingNegativeCases.java").doTest();
   }
 }

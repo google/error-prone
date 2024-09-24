@@ -47,7 +47,7 @@ public class CheckReturnValueTest {
 
   @Test
   public void positiveCases() {
-    compilationHelper.addSourceFile("CheckReturnValuePositiveCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/CheckReturnValuePositiveCases.java").doTest();
   }
 
   @Test
@@ -108,7 +108,7 @@ public class CheckReturnValueTest {
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("CheckReturnValueNegativeCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/CheckReturnValueNegativeCases.java").doTest();
   }
 
   @Test

@@ -32,11 +32,11 @@ public class SwigMemoryLeakTest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("SwigMemoryLeakPositiveCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/SwigMemoryLeakPositiveCases.java").doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("SwigMemoryLeakNegativeCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/SwigMemoryLeakNegativeCases.java").doTest();
   }
 }

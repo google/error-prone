@@ -32,11 +32,15 @@ public class StringBuilderInitWithCharTest {
 
   @Test
   public void positiveCases() {
-    compilationHelper.addSourceFile("StringBuilderInitWithCharPositiveCases.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/StringBuilderInitWithCharPositiveCases.java")
+        .doTest();
   }
 
   @Test
   public void negativeCases() {
-    compilationHelper.addSourceFile("StringBuilderInitWithCharNegativeCases.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/StringBuilderInitWithCharNegativeCases.java")
+        .doTest();
   }
 }

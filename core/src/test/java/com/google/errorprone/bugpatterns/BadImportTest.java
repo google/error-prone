@@ -181,7 +181,7 @@ class Test {
 
   @Test
   public void positive_nested() {
-    compilationTestHelper.addSourceFile("BadImportPositiveCases.java").doTest();
+    compilationTestHelper.addSourceFile("testdata/BadImportPositiveCases.java").doTest();
   }
 
   @Test
@@ -262,7 +262,7 @@ class Test {
 
   @Test
   public void negative_nested() {
-    compilationTestHelper.addSourceFile("BadImportNegativeCases.java").doTest();
+    compilationTestHelper.addSourceFile("testdata/BadImportNegativeCases.java").doTest();
   }
 
   @Test
@@ -284,8 +284,8 @@ class Test {
   @Test
   public void nestedFixes() {
     refactoringTestHelper
-        .addInput("BadImportPositiveCases.java")
-        .addOutput("BadImportPositiveCases_expected.java")
+        .addInput("testdata/BadImportPositiveCases.java")
+        .addOutput("testdata/BadImportPositiveCases_expected.java")
         .doTest(TestMode.AST_MATCH);
   }
 

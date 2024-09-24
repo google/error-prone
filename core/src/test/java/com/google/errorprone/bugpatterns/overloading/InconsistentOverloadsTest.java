@@ -33,42 +33,56 @@ public final class InconsistentOverloadsTest {
 
   @Test
   public void inconsistentOverloadsNegativeCases() {
-    compilationHelper.addSourceFile("InconsistentOverloadsNegativeCases.java").doTest();
+    compilationHelper.addSourceFile("testdata/InconsistentOverloadsNegativeCases.java").doTest();
   }
 
   @Test
   public void inconsistentOverloadsPositiveCasesAnnotations() {
-    compilationHelper.addSourceFile("InconsistentOverloadsPositiveCasesAnnotations.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/InconsistentOverloadsPositiveCasesAnnotations.java")
+        .doTest();
   }
 
   @Test
   public void inconsistentOverloadsPositiveCasesGeneral() {
-    compilationHelper.addSourceFile("InconsistentOverloadsPositiveCasesGeneral.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/InconsistentOverloadsPositiveCasesGeneral.java")
+        .doTest();
   }
 
   @Test
   public void inconsistentOverloadsPositiveCasesGenerics() {
-    compilationHelper.addSourceFile("InconsistentOverloadsPositiveCasesGenerics.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/InconsistentOverloadsPositiveCasesGenerics.java")
+        .doTest();
   }
 
   @Test
   public void inconsistentOverloadsPositiveCasesInterleaved() {
-    compilationHelper.addSourceFile("InconsistentOverloadsPositiveCasesInterleaved.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/InconsistentOverloadsPositiveCasesInterleaved.java")
+        .doTest();
   }
 
   @Test
   public void inconsistentOverloadsPositiveCasesSimple() {
-    compilationHelper.addSourceFile("InconsistentOverloadsPositiveCasesSimple.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/InconsistentOverloadsPositiveCasesSimple.java")
+        .doTest();
   }
 
   @Test
   public void inconsistentOverloadsPositiveCasesVarargs() {
-    compilationHelper.addSourceFile("InconsistentOverloadsPositiveCasesVarargs.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/InconsistentOverloadsPositiveCasesVarargs.java")
+        .doTest();
   }
 
   @Test
   public void inconsistentOverloadsOverrides() {
-    compilationHelper.addSourceFile("InconsistentOverloadsPositiveCasesOverrides.java").doTest();
+    compilationHelper
+        .addSourceFile("testdata/InconsistentOverloadsPositiveCasesOverrides.java")
+        .doTest();
   }
 
   @Test

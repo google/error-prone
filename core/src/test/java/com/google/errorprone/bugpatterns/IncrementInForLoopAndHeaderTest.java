@@ -36,11 +36,15 @@ public class IncrementInForLoopAndHeaderTest {
 
   @Test
   public void positiveCases() {
-    compilationTestHelper.addSourceFile("IncrementInForLoopAndHeaderPositiveCases.java").doTest();
+    compilationTestHelper
+        .addSourceFile("testdata/IncrementInForLoopAndHeaderPositiveCases.java")
+        .doTest();
   }
 
   @Test
   public void negativeCases() {
-    compilationTestHelper.addSourceFile("IncrementInForLoopAndHeaderNegativeCases.java").doTest();
+    compilationTestHelper
+        .addSourceFile("testdata/IncrementInForLoopAndHeaderNegativeCases.java")
+        .doTest();
   }
 }

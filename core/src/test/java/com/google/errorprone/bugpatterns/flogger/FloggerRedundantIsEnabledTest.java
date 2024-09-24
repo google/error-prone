@@ -34,19 +34,23 @@ public class FloggerRedundantIsEnabledTest {
 
   @Test
   public void doPositiveCases() {
-    compilationTestHelper.addSourceFile("FloggerRedundantIsEnabledPositiveCases.java").doTest();
+    compilationTestHelper
+        .addSourceFile("testdata/FloggerRedundantIsEnabledPositiveCases.java")
+        .doTest();
   }
 
   @Test
   public void doNegativeCases() {
-    compilationTestHelper.addSourceFile("FloggerRedundantIsEnabledNegativeCases.java").doTest();
+    compilationTestHelper
+        .addSourceFile("testdata/FloggerRedundantIsEnabledNegativeCases.java")
+        .doTest();
   }
 
   @Test
   public void fixes() {
     BugCheckerRefactoringTestHelper.newInstance(FloggerRedundantIsEnabled.class, getClass())
-        .addInput("FloggerRedundantIsEnabledPositiveCases.java")
-        .addOutput("FloggerRedundantIsEnabledPositiveCases_expected.java")
+        .addInput("testdata/FloggerRedundantIsEnabledPositiveCases.java")
+        .addOutput("testdata/FloggerRedundantIsEnabledPositiveCases_expected.java")
         .doTest(TestMode.AST_MATCH);
   }
 }
