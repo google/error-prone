@@ -67,7 +67,7 @@ public class FinallyNegativeCase2 {
         // but we don't do exception analysis and have no way of knowing that.
         // Xlint:finally doesn't handle this either, since it only reports
         // situations where the end of a finally block is unreachable as
-        // definied by JLS 14.21.
+        // defined by JLS 14.21.
         throw new IOException();
       } catch (Exception e) {
       }

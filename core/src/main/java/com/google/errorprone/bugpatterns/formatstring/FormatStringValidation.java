@@ -145,8 +145,8 @@ public final class FormatStringValidation {
 
   /**
    * Return an instance of the given type if it receives special handling by {@code String.format}.
-   * For example, an intance of {@link Integer} will be returned for an input of type {@code int} or
-   * {@link Integer}.
+   * For example, an instance of {@link Integer} will be returned for an input of type {@code int}
+   * or {@link Integer}.
    */
   private static @Nullable Object getInstance(Tree tree, VisitorState state) {
     Object value = ASTHelpers.constValue(tree);

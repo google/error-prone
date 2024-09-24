@@ -156,7 +156,7 @@ public class NullnessAnnotations {
   // Note this may be a good candidate for caching
   public static Optional<Nullness> fromDefaultAnnotations(@Nullable Element sym) {
     while (sym != null) {
-      // Just look through declaration annotations here for simplicitly; default annotations aren't
+      // Just look through declaration annotations here for simplicity; default annotations aren't
       // type annotations.  For now we're just using a hard-coded simple name.
       // TODO(b/121272440): Look for existing default annotations
       if (sym.getAnnotationMirrors().stream()

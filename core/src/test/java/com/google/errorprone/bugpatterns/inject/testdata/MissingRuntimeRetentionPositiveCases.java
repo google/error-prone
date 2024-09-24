@@ -45,21 +45,21 @@ public class MissingRuntimeRetentionPositiveCases {
   @Retention(SOURCE)
   public @interface TestAnnotation2 {}
 
-  /** A qualifer(@Qualifier) annotation with SOURCE retention. */
+  /** A qualifier (@Qualifier) annotation with SOURCE retention. */
   @Qualifier
   @Target({TYPE, METHOD})
   // BUG: Diagnostic contains: @Retention(RUNTIME)
   @Retention(SOURCE)
   public @interface TestAnnotation3 {}
 
-  /** A qualifer(@BindingAnnotation) annotation with SOURCE retention. */
+  /** A qualifier (@BindingAnnotation) annotation with SOURCE retention. */
   @BindingAnnotation
   @Target({TYPE, METHOD})
   // BUG: Diagnostic contains: @Retention(RUNTIME)
   @Retention(SOURCE)
   public @interface TestAnnotation4 {}
 
-  /** A qualifer annotation with default retention. */
+  /** A qualifier annotation with default retention. */
   @BindingAnnotation
   @Target({TYPE, METHOD})
   // BUG: Diagnostic contains: @Retention(RUNTIME)

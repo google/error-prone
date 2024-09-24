@@ -44,7 +44,7 @@ public class OverridesGuiceInjectableMethodNegativeCases {
 
   /**
    * Class with a method foo() annotated with @com.google.inject.Inject that overrides a method
-   * annoted with @javax.inject.Inject.
+   * annotated with @javax.inject.Inject.
    */
   public class TestClass4 extends TestClass2 {
     @com.google.inject.Inject

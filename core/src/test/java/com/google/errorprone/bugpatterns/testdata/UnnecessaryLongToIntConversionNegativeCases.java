@@ -101,7 +101,7 @@ public class UnnecessaryLongToIntConversionNegativeCases {
 
   public void checkedCastMultipleArgs() {
     long x = 1;
-    // The method expects an int for the first parameter and a long for the second paremeter.
+    // The method expects an int for the first parameter and a long for the second parameter.
     acceptsMultipleParams(Ints.checkedCast(x), x);
   }
 

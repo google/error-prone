@@ -35,7 +35,7 @@ class Costs {
   /** Formal parameters for the method being called. */
   private final ImmutableList<Parameter> formals;
 
-  /** Actual parameters (argments) for the method call. */
+  /** Actual parameters (arguments) for the method call. */
   private final ImmutableList<Parameter> actuals;
 
   /**

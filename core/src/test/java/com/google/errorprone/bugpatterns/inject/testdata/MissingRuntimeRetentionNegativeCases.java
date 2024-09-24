@@ -44,19 +44,19 @@ public class MissingRuntimeRetentionNegativeCases {
   @Retention(RUNTIME)
   public @interface TestAnnotation2 {}
 
-  /** A qualifer(@Qualifier) annotation with runtime retention. */
+  /** A qualifier (@Qualifier) annotation with runtime retention. */
   @Qualifier
   @Target({TYPE, METHOD})
   @Retention(RUNTIME)
   public @interface TestAnnotation3 {}
 
-  /** A qualifer(@BindingAnnotation) annotation with runtime retention. */
+  /** A qualifier (@BindingAnnotation) annotation with runtime retention. */
   @BindingAnnotation
   @Target({TYPE, METHOD})
   @Retention(RUNTIME)
   public @interface TestAnnotation4 {}
 
-  /** A non-qualifer, non-scoping annotation without runtime retention. */
+  /** A non-qualifier, non-scoping annotation without runtime retention. */
   @Retention(SOURCE)
   public @interface TestAnnotation5 {}
 

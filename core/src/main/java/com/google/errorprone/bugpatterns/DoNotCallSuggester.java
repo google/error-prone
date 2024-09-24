@@ -138,7 +138,7 @@ public class DoNotCallSuggester extends BugChecker implements MethodTreeMatcher 
       }
     }
 
-    // if a method name contais a banned substring, exit
+    // if a method name contains a banned substring, exit
     for (String methodSubstring : METHOD_SUBSTRINGS_TO_IGNORE) {
       if (methodName.contains(methodSubstring)) {
         return NO_MATCH;
