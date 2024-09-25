@@ -105,21 +105,24 @@ public class StringSplitterTest {
         .addOutputLines(
             "Test.java",
             """
-            import com.google.common.base.Splitter;
+import com.google.common.base.Splitter;
+import java.util.regex.Pattern;
 
-            class Test {
-              static final String NON_REGEX_PATTERN_STRING = ":";
-              static final String REGEX_PATTERN_STRING = ".*";
-              static final String CONVERTIBLE_PATTERN_STRING = "\\\\Q\\\\E:";
+class Test {
+  static final String NON_REGEX_PATTERN_STRING = ":";
+  static final String REGEX_PATTERN_STRING = ".*";
+  static final String CONVERTIBLE_PATTERN_STRING = "\\\\Q\\\\E:";
 
-              void f() {
-                for (String s : Splitter.onPattern(NON_REGEX_PATTERN_STRING).split("")) {}
-                for (String s : Splitter.onPattern(REGEX_PATTERN_STRING).split("")) {}
-                for (String s : Splitter.onPattern(CONVERTIBLE_PATTERN_STRING).split("")) {}
-                for (String s : Splitter.onPattern((CONVERTIBLE_PATTERN_STRING)).split("")) {}
-              }
-            }
-            """)
+  void f() {
+    for (String s : Splitter.on(Pattern.compile(NON_REGEX_PATTERN_STRING)).split("")) {}
+    for (String s : Splitter.on(Pattern.compile(REGEX_PATTERN_STRING)).split("")) {}
+    for (String s :
+             Splitter.on(Pattern.compile(CONVERTIBLE_PATTERN_STRING)).split("")) {}
+    for (String s :
+             Splitter.on(Pattern.compile((CONVERTIBLE_PATTERN_STRING))).split("")) {}
+  }
+}
+""")
         .doTest(TestMode.TEXT_MATCH);
   }
 
@@ -139,10 +142,11 @@ public class StringSplitterTest {
             "Test.java",
             """
             import com.google.common.base.Splitter;
+            import java.util.regex.Pattern;
 
             class Test {
               void f() {
-                for (String s : Splitter.onPattern(":" + 0).split("")) {}
+                for (String s : Splitter.on(Pattern.compile(":" + 0)).split("")) {}
               }
             }
             """)
@@ -166,11 +170,12 @@ public class StringSplitterTest {
             "Test.java",
             """
             import com.google.common.base.Splitter;
+            import java.util.regex.Pattern;
 
             class Test {
               void f() {
                 String pattern = ":";
-                for (String s : Splitter.onPattern(pattern).split("")) {}
+                for (String s : Splitter.on(Pattern.compile(pattern)).split("")) {}
               }
             }
             """)
@@ -307,10 +312,11 @@ public class StringSplitterTest {
             "Test.java",
             """
             import com.google.common.base.Splitter;
+            import java.util.regex.Pattern;
 
             class Test {
               void f() {
-                for (String s : Splitter.onPattern(".*foo\\\\t").split("")) {}
+                for (String s : Splitter.on(Pattern.compile(".*foo\\\\t")).split("")) {}
               }
             }
             """)
@@ -408,16 +414,17 @@ public class StringSplitterTest {
         .addOutputLines(
             "Test.java",
             """
-            import com.google.common.base.Splitter;
-            import java.util.List;
+import com.google.common.base.Splitter;
+import java.util.List;
+import java.util.regex.Pattern;
 
-            class Test {
-              void f(String input) {
-                List<String> lines = Splitter.onPattern("\\\\r?\\\\n").splitToList(input);
-                System.err.println(lines.get(0));
-              }
-            }
-            """)
+class Test {
+  void f(String input) {
+    List<String> lines = Splitter.on(Pattern.compile("\\\\r?\\\\n")).splitToList(input);
+    System.err.println(lines.get(0));
+  }
+}
+""")
         .doTest();
   }
 

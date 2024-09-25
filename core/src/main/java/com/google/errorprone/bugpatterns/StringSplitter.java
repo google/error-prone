@@ -226,31 +226,37 @@ public class StringSplitter extends BugChecker implements MethodInvocationTreeMa
     return Optional.of(fix.build());
   }
 
-  private static String getMethodAndArgument(Tree origArg, VisitorState state) {
+  private static String getMethodAndArgument(
+      SuggestedFix.Builder fix, Tree origArg, VisitorState state) {
     String argSource = state.getSourceForNode(origArg);
     Tree arg = ASTHelpers.stripParentheses(origArg);
     if (arg.getKind() != Tree.Kind.STRING_LITERAL) {
       // Even if the regex is a constant, it still needs to be treated as a regex, since the
       // value comes from the symbol and/or a concatenation; the values of the subexpressions may be
       // changed subsequently.
-      return String.format("onPattern(%s)", argSource);
+      return onPattern(fix, argSource);
     }
     String constValue = ASTHelpers.constValue(arg, String.class);
     if (constValue == null) {
       // Not a constant value, so we can't assume anything about pattern: have to treat it as a
       // regex.
-      return String.format("onPattern(%s)", argSource);
+      return onPattern(fix, argSource);
     }
     Optional<String> regexAsLiteral = convertRegexToLiteral(constValue);
     if (!regexAsLiteral.isPresent()) {
       // Can't convert the regex to a literal string: have to treat it as a regex.
-      return String.format("onPattern(%s)", argSource);
+      return onPattern(fix, argSource);
     }
     String escaped = SourceCodeEscapers.javaCharEscaper().escape(regexAsLiteral.get());
     if (regexAsLiteral.get().length() == 1) {
       return String.format("on('%s')", escaped);
     }
     return String.format("on(\"%s\")", escaped);
+  }
+
+  private static String onPattern(SuggestedFix.Builder fix, String argSource) {
+    fix.addImport("java.util.regex.Pattern");
+    return String.format("on(Pattern.compile(%s))", argSource);
   }
 
   private static SuggestedFix.Builder replaceWithSplitter(
@@ -267,7 +273,7 @@ public class StringSplitter extends BugChecker implements MethodInvocationTreeMa
     fix.addImport("com.google.common.base.Splitter");
     Type receiverType = getType(receiver);
     if (isSubtype(receiverType, state.getSymtab().stringType, state)) {
-      String methodAndArgument = getMethodAndArgument(arg, state);
+      String methodAndArgument = getMethodAndArgument(fix, arg, state);
       return fix.prefixWith(
               receiver,
               String.format(
