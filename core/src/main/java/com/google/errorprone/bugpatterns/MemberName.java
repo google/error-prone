@@ -101,7 +101,8 @@ public final class MemberName extends BugChecker
   public Description matchClass(ClassTree tree, VisitorState state) {
     ClassSymbol symbol = getSymbol(tree);
     String name = tree.getSimpleName().toString();
-    if (isConformantUpperCamelName(name)) {
+    if (name.isEmpty() || isConformantUpperCamelName(name)) {
+      // name.isEmpty() should not happen normally but could if there are errors.
       return NO_MATCH;
     }
     String renamed = suggestedClassRename(name);
