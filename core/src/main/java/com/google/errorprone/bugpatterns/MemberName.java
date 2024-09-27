@@ -91,7 +91,7 @@ public final class MemberName extends BugChecker
 
   private static final String STATIC_VARIABLE_FINDING =
       "Static variables should be named in UPPER_SNAKE_CASE if deeply immutable or lowerCamelCase"
-          + " if not.";
+          + " if not";
 
   private static final String INITIALISM_DETAIL =
       ", with acronyms treated as words"
