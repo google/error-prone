@@ -102,7 +102,8 @@ public final class MemberName extends BugChecker
     ClassSymbol symbol = getSymbol(tree);
     String name = tree.getSimpleName().toString();
     if (name.isEmpty() || isConformantUpperCamelName(name)) {
-      // name.isEmpty() should not happen normally but could if there are errors.
+      // The name can be empty for enum member declarations, which are desugared early to class
+      // declarations.
       return NO_MATCH;
     }
     String renamed = suggestedClassRename(name);

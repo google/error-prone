@@ -622,4 +622,17 @@ public class MemberNameTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void enumName() {
+    helper
+        .addSourceLines(
+            "Test.java", //
+            "enum Test {",
+            "  ONE {",
+            "    void f() {}",
+            "  }",
+            "}")
+        .doTest();
+  }
 }
