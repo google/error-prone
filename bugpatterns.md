@@ -794,6 +794,9 @@ Subclasses of Fragment must be instantiable via Class#newInstance(): the class m
 __[FutureReturnValueIgnored](bugpattern/FutureReturnValueIgnored)__<br>
 Return value of methods returning Future must be checked. Ignoring returned Futures suppresses exceptions thrown from the code that completes the Future.
 
+__[FutureTransformAsync](bugpattern/FutureTransformAsync)__<br>
+Use transform instead of transformAsync when all returns are an immediate future.
+
 __[GetClassOnEnum](bugpattern/GetClassOnEnum)__<br>
 Calling getClass() on an enum may return a subclass of the enum type
 
