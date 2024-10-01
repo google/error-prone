@@ -61,18 +61,13 @@ public final class FileObjects {
     };
   }
 
-  // TODO(b/176096448): the testdata/ fallback is a hack, fix affected tests and remove it
   @MustBeClosed
   private static InputStream findResource(Class<?> clazz, String name) {
     InputStream is = clazz.getResourceAsStream(name);
-    if (is != null) {
-      return is;
+    if (is == null) {
+      throw new AssertionError("could not find resource: " + name + " for: " + clazz);
     }
-    is = clazz.getResourceAsStream("testdata/" + name);
-    if (is != null) {
-      return is;
-    }
-    throw new AssertionError("could not find resource: " + name + " for: " + clazz);
+    return is;
   }
 
   /** Creates a {@link JavaFileObject} with the given name and content. */
