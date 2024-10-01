@@ -22,7 +22,6 @@ import static org.junit.Assert.assertThrows;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.ErrorProneFlags;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -30,13 +29,8 @@ import org.junit.runners.JUnit4;
 /** Tests for {@link TooManyParameters}. */
 @RunWith(JUnit4.class)
 public class TooManyParametersTest {
-
-  private CompilationTestHelper compilationHelper;
-
-  @Before
-  public void setup() {
-    compilationHelper = CompilationTestHelper.newInstance(TooManyParameters.class, getClass());
-  }
+  private final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(TooManyParameters.class, getClass());
 
   @Test
   public void zeroLimit() {
@@ -107,6 +101,27 @@ public class TooManyParametersTest {
 
               @Inject
               ConstructorTest(int a, int b, int c, int d) {}
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void ignoresAutoFactory() {
+    compilationHelper
+        .setArgs(ImmutableList.of("-XepOpt:" + TOO_MANY_PARAMETERS_FLAG_NAME + "=3"))
+        .addSourceLines(
+            "AutoFactory.java",
+            """
+            package com.google.auto.factory;
+            public @interface AutoFactory {}
+            """)
+        .addSourceLines(
+            "Test.java",
+            """
+            @com.google.auto.factory.AutoFactory
+            public class Test {
+              Test(int a, int b, int c, int d) {}
             }
             """)
         .doTest();

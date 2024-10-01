@@ -30,6 +30,7 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.MethodTree;
+import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import javax.inject.Inject;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
@@ -46,7 +47,7 @@ public class TooManyParameters extends BugChecker implements MethodTreeMatcher {
 
   static final String TOO_MANY_PARAMETERS_FLAG_NAME = "TooManyParameters:ParameterLimit";
 
-  private static final ImmutableSet<String> ANNOTATIONS_TO_IGNORE =
+  private static final ImmutableSet<String> METHOD_ANNOTATIONS_TO_IGNORE =
       ImmutableSet.of(
           "java.lang.Deprecated",
           "java.lang.Override",
@@ -60,8 +61,10 @@ public class TooManyParameters extends BugChecker implements MethodTreeMatcher {
           "org.junit.Test",
           // dagger provider / producers
           "dagger.Provides",
-          "dagger.producers.Produces",
-          "com.google.auto.factory.AutoFactory");
+          "dagger.producers.Produces");
+
+  private static final ImmutableSet<String> CLASS_ANNOTATIONS_TO_IGNORE =
+      ImmutableSet.of("com.google.auto.factory.AutoFactory");
 
   private final int limit;
 
@@ -91,11 +94,13 @@ public class TooManyParameters extends BugChecker implements MethodTreeMatcher {
   }
 
   private static boolean shouldApplyApiChecks(MethodTree tree, VisitorState state) {
-    for (String annotation : ANNOTATIONS_TO_IGNORE) {
-      if (hasAnnotation(tree, annotation, state)) {
-        return false;
-      }
+    var symbol = getSymbol(tree);
+    if (symbol.owner instanceof ClassSymbol
+        && CLASS_ANNOTATIONS_TO_IGNORE.stream()
+            .anyMatch(a -> hasAnnotation(symbol.owner, a, state))) {
+      return false;
     }
-    return methodIsPublicAndNotAnOverride(getSymbol(tree), state);
+    return METHOD_ANNOTATIONS_TO_IGNORE.stream().noneMatch(a -> hasAnnotation(tree, a, state))
+        && methodIsPublicAndNotAnOverride(symbol, state);
   }
 }
