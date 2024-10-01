@@ -156,6 +156,7 @@ import com.google.errorprone.bugpatterns.ForOverrideChecker;
 import com.google.errorprone.bugpatterns.FunctionalInterfaceClash;
 import com.google.errorprone.bugpatterns.FunctionalInterfaceMethodChanged;
 import com.google.errorprone.bugpatterns.FutureReturnValueIgnored;
+import com.google.errorprone.bugpatterns.FutureTransformAsync;
 import com.google.errorprone.bugpatterns.FuturesGetCheckedIllegalExceptionType;
 import com.google.errorprone.bugpatterns.FuzzyEqualsShouldNotBeUsedInEqualsMethod;
 import com.google.errorprone.bugpatterns.GetClassOnAnnotation;
@@ -929,6 +930,7 @@ public class BuiltInCheckerSuppliers {
           FragmentInjection.class,
           FragmentNotInstantiable.class,
           FutureReturnValueIgnored.class,
+          FutureTransformAsync.class,
           GetClassOnEnum.class,
           GuiceNestedCombine.class,
           HidingField.class,
