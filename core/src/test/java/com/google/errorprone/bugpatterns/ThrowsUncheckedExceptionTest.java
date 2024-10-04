@@ -33,12 +33,70 @@ public final class ThrowsUncheckedExceptionTest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("testdata/ThrowsUncheckedExceptionPositiveCases.java").doTest();
+    compilationHelper
+        .addSourceLines(
+            "ThrowsUncheckedExceptionPositiveCases.java",
+            """
+package com.google.errorprone.bugpatterns.testdata;
+
+import java.io.IOException;
+
+/**
+ * @author yulissa@google.com (Yulissa Arroyo-Paredes)
+ */
+public class ThrowsUncheckedExceptionPositiveCases {
+  // BUG: Diagnostic contains: 'public void doSomething() {'
+  public void doSomething() throws IllegalArgumentException {
+    throw new IllegalArgumentException("thrown");
+  }
+
+  // BUG: Diagnostic contains: 'public void doSomethingElse() {'
+  public void doSomethingElse() throws RuntimeException, NullPointerException {
+    throw new NullPointerException("thrown");
+  }
+
+  // BUG: Diagnostic contains: Unchecked exceptions do not need to be declared
+  public void doMore() throws RuntimeException, IOException {
+    throw new IllegalArgumentException("thrown");
+  }
+
+  // BUG: Diagnostic contains: Unchecked exceptions do not need to be declared
+  public void doEverything() throws RuntimeException, IOException, IndexOutOfBoundsException {
+    throw new IllegalArgumentException("thrown");
+  }
+
+  // BUG: Diagnostic contains: 'public void doBetter() {'
+  public void doBetter() throws RuntimeException, AssertionError {
+    throw new RuntimeException("thrown");
+  }
+}""")
+        .doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("testdata/ThrowsUncheckedExceptionNegativeCases.java").doTest();
+    compilationHelper
+        .addSourceLines(
+            "ThrowsUncheckedExceptionNegativeCases.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            import java.io.FileNotFoundException;
+            import java.io.IOException;
+
+            /**
+             * @author yulissa@google.com (Yulissa Arroyo-Paredes)
+             */
+            public class ThrowsUncheckedExceptionNegativeCases {
+              public void doSomething() {
+                throw new IllegalArgumentException("thrown");
+              }
+
+              public void doMore() throws IOException {
+                throw new FileNotFoundException("thrown");
+              }
+            }""")
+        .doTest();
   }
 
   @Test

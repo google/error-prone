@@ -32,11 +32,66 @@ public class GetClassOnClassTest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("testdata/GetClassOnClassPositiveCases.java").doTest();
+    compilationHelper
+        .addSourceLines(
+            "GetClassOnClassPositiveCases.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            /**
+             * @author chy@google.com (Christine Yang)
+             * @author kmuhlrad@google.com (Katy Muhlrad)
+             */
+            public class GetClassOnClassPositiveCases {
+
+              public void getClassOnClass(Class clazz) {
+                // BUG: Diagnostic contains: clazz.getName()
+                System.out.println(clazz.getClass().getName());
+              }
+
+              public void getClassOnClass2() {
+                String s = "hi";
+                // BUG: Diagnostic contains: s.getClass().getName()
+                s.getClass().getClass().getName();
+              }
+
+              public void getClassOnClass3() {
+                // BUG: Diagnostic contains: String.class.getName()
+                System.out.println(String.class.getClass().getName());
+              }
+            }""")
+        .doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("testdata/GetClassOnClassNegativeCases.java").doTest();
+    compilationHelper
+        .addSourceLines(
+            "GetClassOnClassNegativeCases.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            /**
+             * @author chy@google.com (Christine Yang)
+             * @author kmuhlrad@google.com (Katy Muhlrad)
+             */
+            public class GetClassOnClassNegativeCases {
+
+              public void getClassOnClass(Object obj) {
+                System.out.println(obj.getClass().getName());
+              }
+
+              public void getClassOnClass2() {
+                String s = "hi";
+                DummyObject.getClass(s);
+              }
+
+              public static class DummyObject {
+                public static boolean getClass(Object a) {
+                  return true;
+                }
+              }
+            }""")
+        .doTest();
   }
 }

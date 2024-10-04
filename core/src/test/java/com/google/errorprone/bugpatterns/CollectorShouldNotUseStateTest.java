@@ -31,14 +31,102 @@ public class CollectorShouldNotUseStateTest {
   @Test
   public void positiveCases() {
     compilationHelper
-        .addSourceFile("testdata/CollectorShouldNotUseStatePositiveCases.java")
+        .addSourceLines(
+            "CollectorShouldNotUseStatePositiveCases.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            import com.google.common.collect.ImmutableList;
+            import com.google.common.collect.ImmutableList.Builder;
+            import java.util.function.BiConsumer;
+            import java.util.stream.Collector;
+
+            /**
+             * @author sulku@google.com (Marsela Sulku)
+             */
+            public class CollectorShouldNotUseStatePositiveCases {
+              public void test() {
+                // BUG: Diagnostic contains: Collector.of() should not use state
+                Collector.of(
+                    ImmutableList::builder,
+                    new BiConsumer<ImmutableList.Builder<Object>, Object>() {
+
+                      boolean isFirst = true;
+                      private static final String bob = "bob";
+
+                      @Override
+                      public void accept(Builder<Object> objectBuilder, Object o) {
+                        if (isFirst) {
+                          System.out.println("it's first");
+                        } else {
+                          objectBuilder.add(o);
+                        }
+                      }
+                    },
+                    (left, right) -> left.addAll(right.build()),
+                    ImmutableList.Builder::build);
+
+                // BUG: Diagnostic contains: Collector.of() should not use state
+                Collector.of(
+                    ImmutableList::builder,
+                    new BiConsumer<ImmutableList.Builder<Object>, Object>() {
+
+                      boolean isFirst = true;
+                      private final String bob = "bob";
+                      private final String joe = "joe";
+
+                      @Override
+                      public void accept(Builder<Object> objectBuilder, Object o) {
+                        if (isFirst) {
+                          System.out.println("it's first");
+                        } else {
+                          objectBuilder.add(o);
+                        }
+                      }
+                    },
+                    (left, right) -> left.addAll(right.build()),
+                    ImmutableList.Builder::build);
+              }
+            }""")
         .doTest();
   }
 
   @Test
   public void negativeCases() {
     compilationHelper
-        .addSourceFile("testdata/CollectorShouldNotUseStateNegativeCases.java")
+        .addSourceLines(
+            "CollectorShouldNotUseStateNegativeCases.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            import com.google.common.collect.ImmutableList;
+            import com.google.common.collect.ImmutableList.Builder;
+            import java.util.function.BiConsumer;
+            import java.util.stream.Collector;
+
+            /**
+             * @author sulku@google.com (Marsela Sulku)
+             */
+            public class CollectorShouldNotUseStateNegativeCases {
+              public void test() {
+                Collector.of(
+                    ImmutableList::builder,
+                    new BiConsumer<ImmutableList.Builder<Object>, Object>() {
+                      private static final String bob = "bob";
+
+                      @Override
+                      public void accept(Builder<Object> objectBuilder, Object o) {
+                        if (bob.equals("bob")) {
+                          System.out.println("bob");
+                        } else {
+                          objectBuilder.add(o);
+                        }
+                      }
+                    },
+                    (left, right) -> left.addAll(right.build()),
+                    ImmutableList.Builder::build);
+              }
+            }""")
         .doTest();
   }
 }

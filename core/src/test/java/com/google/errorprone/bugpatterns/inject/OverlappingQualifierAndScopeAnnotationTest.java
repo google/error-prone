@@ -33,14 +33,85 @@ public class OverlappingQualifierAndScopeAnnotationTest {
   @Test
   public void positiveCase() {
     compilationHelper
-        .addSourceFile("testdata/OverlappingQualifierAndScopeAnnotationPositiveCases.java")
+        .addSourceLines(
+            "OverlappingQualifierAndScopeAnnotationPositiveCases.java",
+            """
+            package com.google.errorprone.bugpatterns.inject.testdata;
+
+            /**
+             * @author sgoldfeder@google.com (Steven Goldfeder)
+             */
+            public class OverlappingQualifierAndScopeAnnotationPositiveCases {
+
+              @javax.inject.Scope
+              @javax.inject.Qualifier
+              // BUG: Diagnostic contains: OverlappingQualifierAndScopeAnnotation
+              @interface JavaxScopeAndJavaxQualifier {}
+
+              @com.google.inject.ScopeAnnotation
+              @javax.inject.Qualifier
+              // BUG: Diagnostic contains: OverlappingQualifierAndScopeAnnotation
+              @interface GuiceScopeAndJavaxQualifier {}
+
+              @com.google.inject.ScopeAnnotation
+              @com.google.inject.BindingAnnotation
+              // BUG: Diagnostic contains: OverlappingQualifierAndScopeAnnotation
+              @interface GuiceScopeAndGuiceBindingAnnotation {}
+
+              @javax.inject.Scope
+              @com.google.inject.BindingAnnotation
+              // BUG: Diagnostic contains: OverlappingQualifierAndScopeAnnotation
+              @interface JavaxScopeAndGuiceBindingAnnotation {}
+            }""")
         .doTest();
   }
 
   @Test
   public void negativeCase() {
     compilationHelper
-        .addSourceFile("testdata/OverlappingQualifierAndScopeAnnotationNegativeCases.java")
+        .addSourceLines(
+            "OverlappingQualifierAndScopeAnnotationNegativeCases.java",
+            """
+            package com.google.errorprone.bugpatterns.inject.testdata;
+
+            /**
+             * @author sgoldfeder@google.com (Steven Goldfeder)
+             */
+            public class OverlappingQualifierAndScopeAnnotationNegativeCases {
+
+              @javax.inject.Scope
+              @interface MyJavaxScope {}
+
+              @com.google.inject.ScopeAnnotation
+              @interface MyGuiceScope {}
+
+              @javax.inject.Qualifier
+              @interface MyJavaxQualifier {}
+
+              @com.google.inject.BindingAnnotation
+              @interface MyGuiceBindingAnnotation {}
+
+              // suppression tests
+              @SuppressWarnings("OverlappingQualifierAndScopeAnnotation")
+              @javax.inject.Scope
+              @javax.inject.Qualifier
+              @interface JavaxScopeAndJavaxQualifier {}
+
+              @SuppressWarnings("OverlappingQualifierAndScopeAnnotation")
+              @com.google.inject.ScopeAnnotation
+              @javax.inject.Qualifier
+              @interface GuiceScopeAndJavaxQualifier {}
+
+              @SuppressWarnings("OverlappingQualifierAndScopeAnnotation")
+              @com.google.inject.ScopeAnnotation
+              @com.google.inject.BindingAnnotation
+              @interface GuiceScopeAndGuiceBindingAnnotation {}
+
+              @SuppressWarnings("OverlappingQualifierAndScopeAnnotation")
+              @javax.inject.Scope
+              @com.google.inject.BindingAnnotation
+              @interface JavaxScopeAndGuiceBindingAnnotation {}
+            }""")
         .doTest();
   }
 }

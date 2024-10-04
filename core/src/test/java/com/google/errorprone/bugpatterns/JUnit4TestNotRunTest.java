@@ -37,12 +37,54 @@ public class JUnit4TestNotRunTest {
 
   @Test
   public void positiveCase1() {
-    compilationHelper.addSourceFile("testdata/JUnit4TestNotRunPositiveCase1.java").doTest();
+    compilationHelper
+        .addSourceLines(
+            "JUnit4TestNotRunPositiveCase1.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            import org.junit.runner.RunWith;
+            import org.junit.runners.JUnit4;
+
+            /**
+             * @author eaftan@google.com (Eddie Aftandilian)
+             */
+            @RunWith(JUnit4.class)
+            public class JUnit4TestNotRunPositiveCase1 {
+              // BUG: Diagnostic contains: @Test
+              public void testThisIsATest() {}
+
+              // BUG: Diagnostic contains: @Test
+              public static void testThisIsAStaticTest() {}
+            }""")
+        .doTest();
   }
 
   @Test
   public void positiveCase2() {
-    compilationHelper.addSourceFile("testdata/JUnit4TestNotRunPositiveCase2.java").doTest();
+    compilationHelper
+        .addSourceLines(
+            "JUnit4TestNotRunPositiveCase2.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            import org.junit.runner.RunWith;
+            import org.mockito.junit.MockitoJUnitRunner;
+
+            /**
+             * Mockito test runner that uses JUnit 4.
+             *
+             * @author eaftan@google.com (Eddie Aftandilian)
+             */
+            @RunWith(MockitoJUnitRunner.class)
+            public class JUnit4TestNotRunPositiveCase2 {
+              // BUG: Diagnostic contains: @Test
+              public void testThisIsATest() {}
+
+              // BUG: Diagnostic contains: @Test
+              public static void testThisIsAStaticTest() {}
+            }""")
+        .doTest();
   }
 
   @Test
@@ -598,29 +640,174 @@ public class JUnit4TestNotRunTest {
 
   @Test
   public void negativeCase1() {
-    compilationHelper.addSourceFile("testdata/JUnit4TestNotRunNegativeCase1.java").doTest();
+    compilationHelper
+        .addSourceLines(
+            "JUnit4TestNotRunNegativeCase1.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            /**
+             * Not a JUnit 4 test (no @RunWith annotation on the class).
+             *
+             * @author eaftan@google.com (Eddie Aftandilian)
+             */
+            public class JUnit4TestNotRunNegativeCase1 {
+              public void testThisIsATest() {}
+            }""")
+        .doTest();
   }
 
   @Test
   public void negativeCase2() {
-    compilationHelper.addSourceFile("testdata/JUnit4TestNotRunNegativeCase2.java").doTest();
+    compilationHelper
+        .addSourceLines(
+            "JUnit4TestNotRunNegativeCase2.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            import org.junit.internal.runners.JUnit38ClassRunner;
+            import org.junit.runner.RunWith;
+
+            /**
+             * Not a JUnit 4 test (run with a JUnit3 test runner).
+             *
+             * @author eaftan@google.com (Eddie Aftandilian)
+             */
+            @RunWith(JUnit38ClassRunner.class)
+            public class JUnit4TestNotRunNegativeCase2 {
+              public void testThisIsATest() {}
+            }""")
+        .doTest();
   }
 
   @Test
   public void negativeCase3() {
-    compilationHelper.addSourceFile("testdata/JUnit4TestNotRunNegativeCase3.java").doTest();
+    compilationHelper
+        .addSourceLines(
+            "JUnit4TestNotRunNegativeCase3.java",
+            """
+package com.google.errorprone.bugpatterns.testdata;
+
+import org.junit.*;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
+
+/**
+ * @author eaftan@google.com (Eddie Aftandilian)
+ */
+@RunWith(JUnit4.class)
+public class JUnit4TestNotRunNegativeCase3 {
+  // Doesn't begin with "test", and doesn't contain any assertion-like method invocations.
+  public void thisIsATest() {}
+
+  // Isn't public.
+  void testTest1() {}
+
+  // Have checked annotation.
+  @Test
+  public void testTest2() {}
+
+  @Before
+  public void testBefore() {}
+
+  @After
+  public void testAfter() {}
+
+  @BeforeClass
+  public void testBeforeClass() {}
+
+  @AfterClass
+  public void testAfterClass() {}
+
+  // Has parameters.
+  public void testTest3(int foo) {}
+
+  // Doesn't return void
+  public int testSomething() {
+    return 42;
+  }
+}""")
+        .doTest();
   }
 
   @Test
   public void negativeCase4() {
-    compilationHelper.addSourceFile("testdata/JUnit4TestNotRunNegativeCase4.java").doTest();
+    compilationHelper
+        .addSourceLines(
+            "JUnit4TestNotRunNegativeCase4.java",
+            """
+package com.google.errorprone.bugpatterns.testdata;
+
+import junit.framework.TestCase;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
+
+/**
+ * May be a JUnit 3 test -- has @RunWith annotation on the class but also extends TestCase.
+ *
+ * @author eaftan@google.com (Eddie Aftandilian)
+ */
+@RunWith(JUnit4.class)
+public class JUnit4TestNotRunNegativeCase4 extends TestCase {
+  public void testThisIsATest() {}
+}""")
+        .doTest();
   }
 
   @Test
   public void negativeCase5() {
     compilationHelper
-        .addSourceFile("testdata/JUnit4TestNotRunBaseClass.java")
-        .addSourceFile("testdata/JUnit4TestNotRunNegativeCase5.java")
+        .addSourceLines(
+            "JUnit4TestNotRunBaseClass.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            import org.junit.After;
+            import org.junit.Before;
+            import org.junit.Test;
+            import org.junit.runner.RunWith;
+            import org.junit.runners.JUnit4;
+
+            /**
+             * Base class for test cases to extend.
+             *
+             * @author eaftan@google.com (Eddie Aftandilian)
+             */
+            @RunWith(JUnit4.class)
+            public class JUnit4TestNotRunBaseClass {
+              @Before
+              public void testSetUp() {}
+
+              @After
+              public void testTearDown() {}
+
+              @Test
+              public void testOverrideThis() {}
+            }""")
+        .addSourceLines(
+            "JUnit4TestNotRunNegativeCase5.java",
+            """
+package com.google.errorprone.bugpatterns.testdata;
+
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
+
+/**
+ * Methods that override methods with @Test should not trigger an error (JUnit 4 will run them).
+ *
+ * @author eaftan@google.com (Eddie Aftandilian)
+ */
+@RunWith(JUnit4.class)
+public class JUnit4TestNotRunNegativeCase5 extends JUnit4TestNotRunBaseClass {
+  @Override
+  public void testSetUp() {}
+
+  @Override
+  public void testTearDown() {}
+
+  @Override
+  public void testOverrideThis() {}
+}""")
         .doTest();
   }
 

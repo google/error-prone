@@ -38,11 +38,78 @@ public final class TruthConstantAssertsTest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("testdata/TruthConstantAssertsPositiveCases.java").doTest();
+    compilationHelper
+        .addSourceLines(
+            "TruthConstantAssertsPositiveCases.java",
+            """
+package com.google.errorprone.bugpatterns.testdata;
+
+import static com.google.common.truth.Truth.assertThat;
+
+/**
+ * Positive test cases for TruthConstantAsserts check.
+ *
+ * @author bhagwani@google.com (Sumit Bhagwani)
+ */
+public class TruthConstantAssertsPositiveCases {
+
+  public void testAssertThat() {
+    // BUG: Diagnostic contains: assertThat(new TruthConstantAssertsPositiveCases()).isEqualTo(1);
+    assertThat(1).isEqualTo(new TruthConstantAssertsPositiveCases());
+
+    // BUG: Diagnostic contains: assertThat(someStaticMethod()).isEqualTo("my string");
+    assertThat("my string").isEqualTo(someStaticMethod());
+
+    // BUG: Diagnostic contains: assertThat(memberMethod()).isEqualTo(42);
+    assertThat(42).isEqualTo(memberMethod());
+
+    // BUG: Diagnostic contains: assertThat(someStaticMethod()).isEqualTo(42L);
+    assertThat(42L).isEqualTo(someStaticMethod());
+
+    // BUG: Diagnostic contains: assertThat(new Object()).isEqualTo(4.2);
+    assertThat(4.2).isEqualTo(new Object());
+  }
+
+  private static TruthConstantAssertsPositiveCases someStaticMethod() {
+    return new TruthConstantAssertsPositiveCases();
+  }
+
+  private TruthConstantAssertsPositiveCases memberMethod() {
+    return new TruthConstantAssertsPositiveCases();
+  }
+}""")
+        .doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("testdata/TruthConstantAssertsNegativeCases.java").doTest();
+    compilationHelper
+        .addSourceLines(
+            "TruthConstantAssertsNegativeCases.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            import static com.google.common.truth.Truth.assertThat;
+
+            /**
+             * Negative test cases for TruthConstantAsserts check.
+             *
+             * @author bhagwani@google.com (Sumit Bhagwani)
+             */
+            public class TruthConstantAssertsNegativeCases {
+
+              public void testNegativeCases() {
+                assertThat(new TruthConstantAssertsNegativeCases()).isEqualTo(Boolean.TRUE);
+                assertThat(getObject()).isEqualTo(Boolean.TRUE);
+
+                // assertion called on constant with constant expectation is ignored.
+                assertThat(Boolean.FALSE).isEqualTo(4.2);
+              }
+
+              private static TruthConstantAssertsNegativeCases getObject() {
+                return new TruthConstantAssertsNegativeCases();
+              }
+            }""")
+        .doTest();
   }
 }

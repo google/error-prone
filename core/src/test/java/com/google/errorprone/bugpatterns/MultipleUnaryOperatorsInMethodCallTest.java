@@ -31,14 +31,77 @@ public class MultipleUnaryOperatorsInMethodCallTest {
   @Test
   public void positiveCase() {
     compilationHelper
-        .addSourceFile("testdata/MultipleUnaryOperatorsInMethodCallPositiveCases.java")
+        .addSourceLines(
+            "MultipleUnaryOperatorsInMethodCallPositiveCases.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            /**
+             * @author sulku@google.com (Marsela Sulku)
+             */
+            public class MultipleUnaryOperatorsInMethodCallPositiveCases {
+              /** these cases do not have suggested fixes */
+              public static void tests(int a, int b) {
+
+                // BUG: Diagnostic contains: Avoid having multiple unary operators acting
+                twoArgs(a++, a--);
+                // BUG: Diagnostic contains: Avoid having multiple unary operators acting
+                twoArgs(a--, ++a);
+                // BUG: Diagnostic contains: Avoid having multiple unary operators acting
+                twoArgs(++a, a++);
+                // BUG: Diagnostic contains: Avoid having multiple unary operators acting
+                twoArgs(--a, --a);
+
+                // BUG: Diagnostic contains: Avoid having multiple unary operators acting
+                threeArgs(a++, b++, b++);
+                // BUG: Diagnostic contains: Avoid having multiple unary operators acting
+                threeArgs(a++, b, a++);
+                // BUG: Diagnostic contains: Avoid having multiple unary operators acting
+                threeArgs(++a, b++, --b);
+                // BUG: Diagnostic contains: Avoid having multiple unary operators acting
+                threeArgs(++a, a++, b);
+                // BUG: Diagnostic contains: Avoid having multiple unary operators acting
+                threeArgs(++a, a++, a);
+                // BUG: Diagnostic contains: Avoid having multiple unary operators acting
+                threeArgs(++a, a++, a--);
+              }
+
+              public static void twoArgs(int a, int b) {}
+
+              public static void threeArgs(int a, int b, int c) {}
+
+              public static int someFunction(int a) {
+                return 0;
+              }
+            }""")
         .doTest();
   }
 
   @Test
   public void negativeCase() {
     compilationHelper
-        .addSourceFile("testdata/MultipleUnaryOperatorsInMethodCallNegativeCases.java")
+        .addSourceLines(
+            "MultipleUnaryOperatorsInMethodCallNegativeCases.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            /**
+             * @author sulku@google.com (Marsela Sulku)
+             */
+            public class MultipleUnaryOperatorsInMethodCallNegativeCases {
+              public static void tests(int a, int b, int[] xs) {
+                testMethod(a, b);
+                testMethod(a + 1, b);
+                testMethod(b, a + 1);
+                testMethod(a++, b);
+                testMethod(--a, b);
+                testMethod(a, b--);
+                testMethod(a, ++b);
+                testMethod(xs[0]++, xs[0]++);
+              }
+
+              public static void testMethod(int one, int two) {}
+            }""")
         .doTest();
   }
 }

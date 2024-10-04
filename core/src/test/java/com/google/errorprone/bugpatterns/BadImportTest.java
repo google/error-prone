@@ -181,7 +181,70 @@ class Test {
 
   @Test
   public void positive_nested() {
-    compilationTestHelper.addSourceFile("testdata/BadImportPositiveCases.java").doTest();
+    compilationTestHelper
+        .addSourceLines(
+            "BadImportPositiveCases.java",
+            """
+package com.google.errorprone.bugpatterns.testdata;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableList.Builder;
+import org.jspecify.annotations.Nullable;
+
+/**
+ * Tests for {@link BadImport}.
+ *
+ * @author awturner@google.com (Andy Turner)
+ */
+class BadImportPositiveCases {
+  public void variableDeclarations() {
+    // Only the first match is reported; but all occurrences are fixed.
+    // BUG: Diagnostic contains: ImmutableList.Builder
+    Builder<String> qualified;
+    Builder raw;
+  }
+
+  public void variableDeclarationsNestedGenerics() {
+    Builder<Builder<String>> builder1;
+    Builder<Builder> builder1Raw;
+    ImmutableList.Builder<Builder<String>> builder2;
+    ImmutableList.Builder<Builder> builder2Raw;
+  }
+
+  @Nullable
+      Builder<@Nullable Builder<@Nullable String>> parameterizedWithTypeUseAnnotationMethod() {
+    return null;
+  }
+
+  public void variableDeclarationsNestedGenericsAndTypeUseAnnotations() {
+
+    @Nullable Builder<@Nullable String> parameterizedWithTypeUseAnnotation1;
+
+    @Nullable Builder<@Nullable Builder<@Nullable String>> parameterizedWithTypeUseAnnotation2;
+  }
+
+  public void newClass() {
+    new Builder<String>();
+    new Builder<Builder<String>>();
+  }
+
+  Builder<String> returnGenericExplicit() {
+    return new Builder<String>();
+  }
+
+  Builder<String> returnGenericDiamond() {
+    return new Builder<>();
+  }
+
+  Builder returnRaw() {
+    return new Builder();
+  }
+
+  void classLiteral() {
+    System.out.println(Builder.class);
+  }
+}""")
+        .doTest();
   }
 
   @Test
@@ -262,7 +325,37 @@ class Test {
 
   @Test
   public void negative_nested() {
-    compilationTestHelper.addSourceFile("testdata/BadImportNegativeCases.java").doTest();
+    compilationTestHelper
+        .addSourceLines(
+            "BadImportNegativeCases.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            import com.google.common.collect.ImmutableList;
+
+            /**
+             * Tests for {@link BadImport}.
+             *
+             * @author awturner@google.com (Andy Turner)
+             */
+            public class BadImportNegativeCases {
+              public void qualified() {
+                ImmutableList.Builder<String> qualified;
+                com.google.common.collect.ImmutableList.Builder<String> fullyQualified;
+                ImmutableList.Builder raw;
+
+                new ImmutableList.Builder<String>();
+              }
+
+              static class Nested {
+                static class Builder {}
+
+                void useNestedBuilder() {
+                  new Builder();
+                }
+              }
+            }""")
+        .doTest();
   }
 
   @Test
@@ -284,8 +377,128 @@ class Test {
   @Test
   public void nestedFixes() {
     refactoringTestHelper
-        .addInput("testdata/BadImportPositiveCases.java")
-        .addOutput("testdata/BadImportPositiveCases_expected.java")
+        .addInputLines(
+            "BadImportPositiveCases.java",
+            """
+package com.google.errorprone.bugpatterns.testdata;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableList.Builder;
+import org.jspecify.annotations.Nullable;
+
+/**
+ * Tests for {@link BadImport}.
+ *
+ * @author awturner@google.com (Andy Turner)
+ */
+class BadImportPositiveCases {
+  public void variableDeclarations() {
+    // Only the first match is reported; but all occurrences are fixed.
+    // BUG: Diagnostic contains: ImmutableList.Builder
+    Builder<String> qualified;
+    Builder raw;
+  }
+
+  public void variableDeclarationsNestedGenerics() {
+    Builder<Builder<String>> builder1;
+    Builder<Builder> builder1Raw;
+    ImmutableList.Builder<Builder<String>> builder2;
+    ImmutableList.Builder<Builder> builder2Raw;
+  }
+
+  @Nullable
+      Builder<@Nullable Builder<@Nullable String>> parameterizedWithTypeUseAnnotationMethod() {
+    return null;
+  }
+
+  public void variableDeclarationsNestedGenericsAndTypeUseAnnotations() {
+
+    @Nullable Builder<@Nullable String> parameterizedWithTypeUseAnnotation1;
+
+    @Nullable Builder<@Nullable Builder<@Nullable String>> parameterizedWithTypeUseAnnotation2;
+  }
+
+  public void newClass() {
+    new Builder<String>();
+    new Builder<Builder<String>>();
+  }
+
+  Builder<String> returnGenericExplicit() {
+    return new Builder<String>();
+  }
+
+  Builder<String> returnGenericDiamond() {
+    return new Builder<>();
+  }
+
+  Builder returnRaw() {
+    return new Builder();
+  }
+
+  void classLiteral() {
+    System.out.println(Builder.class);
+  }
+}""")
+        .addOutputLines(
+            "BadImportPositiveCases_expected.java",
+            """
+package com.google.errorprone.bugpatterns.testdata;
+
+import com.google.common.collect.ImmutableList;
+import org.jspecify.annotations.Nullable;
+
+/**
+ * Tests for {@link BadImport}.
+ *
+ * @author awturner@google.com (Andy Turner)
+ */
+class BadImportPositiveCases {
+  public void variableDeclarations() {
+    ImmutableList.Builder<String> qualified;
+    ImmutableList.Builder raw;
+  }
+
+  public void variableDeclarationsNestedGenerics() {
+    ImmutableList.Builder<ImmutableList.Builder<String>> builder1;
+    ImmutableList.Builder<ImmutableList.Builder> builder1Raw;
+    ImmutableList.Builder<ImmutableList.Builder<String>> builder2;
+    ImmutableList.Builder<ImmutableList.Builder> builder2Raw;
+  }
+
+  ImmutableList.@Nullable Builder<ImmutableList.@Nullable Builder<@Nullable String>>
+      parameterizedWithTypeUseAnnotationMethod() {
+    return null;
+  }
+
+  public void variableDeclarationsNestedGenericsAndTypeUseAnnotations() {
+
+    ImmutableList.@Nullable Builder<@Nullable String> parameterizedWithTypeUseAnnotation1;
+
+    ImmutableList.@Nullable Builder<ImmutableList.@Nullable Builder<@Nullable String>>
+        parameterizedWithTypeUseAnnotation2;
+  }
+
+  public void newClass() {
+    new ImmutableList.Builder<String>();
+    new ImmutableList.Builder<ImmutableList.Builder<String>>();
+  }
+
+  ImmutableList.Builder<String> returnGenericExplicit() {
+    return new ImmutableList.Builder<String>();
+  }
+
+  ImmutableList.Builder<String> returnGenericDiamond() {
+    return new ImmutableList.Builder<>();
+  }
+
+  ImmutableList.Builder returnRaw() {
+    return new ImmutableList.Builder();
+  }
+
+  void classLiteral() {
+    System.out.println(ImmutableList.Builder.class);
+  }
+}""")
         .doTest(TestMode.AST_MATCH);
   }
 

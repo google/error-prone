@@ -32,11 +32,49 @@ public class WakelockReleasedDangerouslyTest {
   private final BugCheckerRefactoringTestHelper refactoringHelper =
       BugCheckerRefactoringTestHelper.newInstance(WakelockReleasedDangerously.class, getClass())
           .setArgs(ImmutableList.of("-XDandroidCompatible=true"))
-          .addInput("testdata/stubs/android/os/PowerManager.java")
+          .addInputLines(
+              "PowerManager.java",
+              """
+              package android.os;
+
+              public interface PowerManager {
+                class WakeLock {
+                  public void acquire() {}
+
+                  public void acquire(int timeout) {}
+
+                  public boolean isHeld() {
+                    return true;
+                  }
+
+                  public void release() {}
+
+                  public void setReferenceCounted(boolean referenceCounted) {}
+                }
+              }""")
           .expectUnchanged();
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(WakelockReleasedDangerously.class, getClass())
-          .addSourceFile("testdata/stubs/android/os/PowerManager.java")
+          .addSourceLines(
+              "PowerManager.java",
+              """
+              package android.os;
+
+              public interface PowerManager {
+                class WakeLock {
+                  public void acquire() {}
+
+                  public void acquire(int timeout) {}
+
+                  public boolean isHeld() {
+                    return true;
+                  }
+
+                  public void release() {}
+
+                  public void setReferenceCounted(boolean referenceCounted) {}
+                }
+              }""")
           .setArgs(ImmutableList.of("-XDandroidCompatible=true"));
 
   @Test

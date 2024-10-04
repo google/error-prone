@@ -33,14 +33,177 @@ public class FunctionalInterfaceMethodChangedTest {
   @Test
   public void positiveCase() {
     compilationHelper
-        .addSourceFile("testdata/FunctionalInterfaceMethodChangedPositiveCases.java")
+        .addSourceLines(
+            "FunctionalInterfaceMethodChangedPositiveCases.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            public class FunctionalInterfaceMethodChangedPositiveCases {
+              @FunctionalInterface
+              interface SuperFI {
+                void superSam();
+              }
+
+              @FunctionalInterface
+              interface OtherSuperFI {
+                void otherSuperSam();
+              }
+
+              @FunctionalInterface
+              interface SubFI extends SuperFI {
+                void subSam();
+
+                @Override
+                // BUG: Diagnostic contains:
+                default void superSam() {
+                  subSam();
+                  System.out.println("do something else");
+                }
+              }
+
+              @FunctionalInterface
+              interface MultipleInheritanceSubFIOneBad extends SuperFI, OtherSuperFI {
+                void subSam();
+
+                @Override
+                default void superSam() {
+                  subSam();
+                }
+
+                @Override
+                // BUG: Diagnostic contains:
+                default void otherSuperSam() {
+                  subSam();
+                  System.out.println("do something else");
+                }
+              }
+
+              @FunctionalInterface
+              interface MultipleInheritanceSubFIBothBad extends SuperFI, OtherSuperFI {
+                void subSam();
+
+                @Override
+                // BUG: Diagnostic contains:
+                default void superSam() {
+                  superSam();
+                  System.out.println("do something else");
+                }
+
+                @Override
+                // BUG: Diagnostic contains:
+                default void otherSuperSam() {
+                  subSam();
+                  System.out.println("do something else");
+                }
+              }
+
+              @FunctionalInterface
+              interface ValueReturningSuperFI {
+                String superSam();
+              }
+
+              @FunctionalInterface
+              interface ValueReturningSubFI extends ValueReturningSuperFI {
+                String subSam();
+
+                @Override
+                // BUG: Diagnostic contains:
+                default String superSam() {
+                  System.out.println("do something else");
+                  return subSam();
+                }
+              }
+
+              @FunctionalInterface
+              public interface ValueReturningSubFI2 extends ValueReturningSuperFI {
+
+                String subSam();
+
+                @Override
+                // BUG: Diagnostic contains:
+                default String superSam() {
+                  subSam();
+                  return null;
+                }
+              }
+            }""")
         .doTest();
   }
 
   @Test
   public void negativeCase() {
     compilationHelper
-        .addSourceFile("testdata/FunctionalInterfaceMethodChangedNegativeCases.java")
+        .addSourceLines(
+            "FunctionalInterfaceMethodChangedNegativeCases.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            import java.util.concurrent.Callable;
+
+            public class FunctionalInterfaceMethodChangedNegativeCases {
+              @FunctionalInterface
+              interface SuperFI {
+                void superSam();
+              }
+
+              @FunctionalInterface
+              interface OtherSuperFI {
+                void otherSuperSam();
+              }
+
+              @FunctionalInterface
+              interface SubFI extends SuperFI {
+                void subSam();
+
+                @Override
+                default void superSam() {
+                  subSam();
+                }
+              }
+
+              @FunctionalInterface
+              interface MultipleInheritanceSubFI extends SuperFI, OtherSuperFI {
+                void subSam();
+
+                @Override
+                default void superSam() {
+                  subSam();
+                }
+
+                @Override
+                default void otherSuperSam() {
+                  subSam();
+                }
+              }
+
+              @FunctionalInterface
+              interface ValueReturningSuperFI {
+                String superSam();
+              }
+
+              @FunctionalInterface
+              interface ValueReturningSubFI extends ValueReturningSuperFI {
+                String subSam();
+
+                @Override
+                default String superSam() {
+                  return subSam();
+                }
+              }
+
+              // Regression test for b/68075767
+              @FunctionalInterface
+              public interface VoidCallable extends Callable<Void> {
+
+                void voidCall() throws Exception;
+
+                @Override
+                default Void call() throws Exception {
+                  voidCall();
+                  return null;
+                }
+              }
+            }""")
         .doTest();
   }
 }

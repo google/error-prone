@@ -32,14 +32,173 @@ public class ImplementAssertionWithChainingTest {
   @Test
   public void positiveCase() {
     compilationHelper
-        .addSourceFile("testdata/ImplementAssertionWithChainingPositiveCases.java")
+        .addSourceLines(
+            "ImplementAssertionWithChainingPositiveCases.java",
+            """
+package com.google.errorprone.bugpatterns.testdata;
+
+import com.google.common.truth.FailureMetadata;
+import com.google.common.truth.Subject;
+
+/**
+ * @author cpovirk@google.com (Chris Povirk)
+ */
+public class ImplementAssertionWithChainingPositiveCases {
+  static final class FooSubject extends Subject {
+    private final Foo actual;
+
+    private FooSubject(FailureMetadata metadata, Foo actual) {
+      super(metadata, actual);
+      this.actual = actual;
+    }
+
+    void hasString(String expected) {
+      // BUG: Diagnostic contains: check("string()").that(actual.string()).isEqualTo(expected)
+      if (!actual.string().equals(expected)) {
+        failWithActual("expected to have string", expected);
+      }
+    }
+
+    void hasStringGuavaObjectsEqual(String expected) {
+      // BUG: Diagnostic contains: check("string()").that(actual.string()).isEqualTo(expected)
+      if (!com.google.common.base.Objects.equal(actual.string(), expected)) {
+        failWithActual("expected to have string", expected);
+      }
+    }
+
+    void hasStringJavaObjectsEquals(String expected) {
+      // BUG: Diagnostic contains: check("string()").that(actual.string()).isEqualTo(expected)
+      if (!java.util.Objects.equals(actual.string(), expected)) {
+        failWithActual("expected to have string", expected);
+      }
+    }
+
+    void hasInteger(int expected) {
+      // BUG: Diagnostic contains: check("integer()").that(actual.integer()).isEqualTo(expected)
+      if (actual.integer() != expected) {
+        failWithActual("expected to have integer", expected);
+      }
+    }
+
+    void hasKind(Kind expected) {
+      // BUG: Diagnostic contains: check("kind()").that(actual.kind()).isEqualTo(expected)
+      if (actual.kind() != expected) {
+        failWithActual("expected to have kind", expected);
+      }
+    }
+
+    void hasOtherFooInteger(int expected) {
+      // BUG: Diagnostic contains:
+      // check("otherFoo().integer()").that(actual.otherFoo().integer()).isEqualTo(expected)
+      if (actual.otherFoo().integer() != expected) {
+        failWithActual("expected to have other foo with integer", expected);
+      }
+    }
+  }
+
+  private static final class Foo {
+    final String string;
+    final int integer;
+    final Kind kind;
+
+    Foo(String string, int integer, Kind kind) {
+      this.string = string;
+      this.integer = integer;
+      this.kind = kind;
+    }
+
+    String string() {
+      return string;
+    }
+
+    int integer() {
+      return integer;
+    }
+
+    Kind kind() {
+      return kind;
+    }
+
+    Foo otherFoo() {
+      return this;
+    }
+  }
+
+  private enum Kind {}
+}""")
         .doTest();
   }
 
   @Test
   public void negativeCase() {
     compilationHelper
-        .addSourceFile("testdata/ImplementAssertionWithChainingNegativeCases.java")
+        .addSourceLines(
+            "ImplementAssertionWithChainingNegativeCases.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            import com.google.common.truth.FailureMetadata;
+            import com.google.common.truth.Subject;
+
+            /**
+             * @author cpovirk@google.com (Chris Povirk)
+             */
+            public class ImplementAssertionWithChainingNegativeCases {
+              static final class FooSubject extends Subject {
+                private final Foo actual;
+
+                private FooSubject(FailureMetadata metadata, Foo actual) {
+                  super(metadata, actual);
+                  this.actual = actual;
+                }
+
+                void doesNotHaveString(String other) {
+                  if (actual.string().equals(other)) {
+                    failWithActual("expected not to have string", other);
+                  }
+                }
+
+                void doesNotHaveInteger(int other) {
+                  if (actual.integer() == other) {
+                    failWithActual("expected not to have integer", other);
+                  }
+                }
+
+                void hasBoxedIntegerSameInstance(Integer expected) {
+                  if (actual.boxedInteger() != expected) {
+                    failWithActual("expected to have boxed integer", expected);
+                  }
+                }
+              }
+
+              private static final class Foo {
+                final String string;
+                final int integer;
+                final Integer boxedInteger;
+
+                Foo(String string, int integer, Integer boxedInteger) {
+                  this.string = string;
+                  this.integer = integer;
+                  this.boxedInteger = boxedInteger;
+                }
+
+                String string() {
+                  return string;
+                }
+
+                int integer() {
+                  return integer;
+                }
+
+                Integer boxedInteger() {
+                  return boxedInteger;
+                }
+
+                Foo otherFoo() {
+                  return this;
+                }
+              }
+            }""")
         .doTest();
   }
 }

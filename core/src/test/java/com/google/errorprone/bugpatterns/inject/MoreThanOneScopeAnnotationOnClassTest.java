@@ -32,14 +32,120 @@ public class MoreThanOneScopeAnnotationOnClassTest {
   @Test
   public void positiveCase() {
     compilationHelper
-        .addSourceFile("testdata/MoreThanOneScopeAnnotationOnClassPositiveCases.java")
+        .addSourceLines(
+            "MoreThanOneScopeAnnotationOnClassPositiveCases.java",
+            """
+            package com.google.errorprone.bugpatterns.inject.testdata;
+
+            import com.google.inject.Singleton;
+            import com.google.inject.servlet.SessionScoped;
+            import javax.inject.Scope;
+
+            /**
+             * @author sgoldfeder@google.com(Steven Goldfeder)
+             */
+            public class MoreThanOneScopeAnnotationOnClassPositiveCases {
+
+              /** Class has two scope annotations */
+              @Singleton
+              @SessionScoped
+              // BUG: Diagnostic contains:
+              class TestClass1 {}
+
+              /** Class has three annotations, two of which are scope annotations. */
+              @Singleton
+              @SuppressWarnings("foo")
+              @SessionScoped
+              // BUG: Diagnostic contains:
+              class TestClass2 {}
+
+              @Scope
+              @interface CustomScope {}
+
+              @Singleton
+              @CustomScope
+              @SessionScoped
+              // BUG: Diagnostic contains:
+              class TestClass3 {}
+            }""")
         .doTest();
   }
 
   @Test
   public void negativeCase() {
     compilationHelper
-        .addSourceFile("testdata/MoreThanOneScopeAnnotationOnClassNegativeCases.java")
+        .addSourceLines(
+            "MoreThanOneScopeAnnotationOnClassNegativeCases.java",
+            """
+package com.google.errorprone.bugpatterns.inject.testdata;
+
+import com.google.inject.Provides;
+import com.google.inject.Singleton;
+import com.google.inject.servlet.SessionScoped;
+import dagger.Component;
+import dagger.Subcomponent;
+import dagger.producers.ProductionComponent;
+import dagger.producers.ProductionSubcomponent;
+
+/**
+ * @author sgoldfeder@google.com(Steven Goldfeder)
+ */
+public class MoreThanOneScopeAnnotationOnClassNegativeCases {
+
+  /** Class has no annotation. */
+  public class TestClass1 {}
+  /** Class has a single non scoping annotation. */
+  @SuppressWarnings("foo")
+  public class TestClass2 {}
+
+  /** Class hasa single scoping annotation. */
+  @Singleton
+  public class TestClass3 {}
+
+  /** Class has two annotations, one of which is a scoping annotation. */
+  @Singleton
+  @SuppressWarnings("foo")
+  public class TestClass4 {}
+
+  /**
+   * Class has two annotations, one of which is a scoping annotation. Class also has a method with a
+   * scoping annotation.
+   */
+  @SuppressWarnings("foo")
+  public class TestClass5 {
+    @Singleton
+    @Provides
+    public void foo() {}
+  }
+
+  /** Class has two scoped annotations, but is a Dagger component */
+  @Singleton
+  @SessionScoped
+  @Component
+  public class DaggerComponent {}
+
+  /** Class has two scoped annotations, but is a Dagger subcomponent */
+  @Singleton
+  @SessionScoped
+  @Subcomponent
+  public class DaggerSubcomponent {}
+
+  /** Class has two scoped annotations, but is a Dagger component */
+  @Singleton
+  @SessionScoped
+  @ProductionComponent
+  public class DaggerProductionComponent {}
+
+  /** Class has two scoped annotations, but is a Dagger subcomponent */
+  @Singleton
+  @SessionScoped
+  @ProductionSubcomponent
+  public class DaggerProductionSubcomponent {}
+
+  /** Suppression through secondary name */
+  @SuppressWarnings("MoreThanOneScopeAnnotationOnClass")
+  public class TestClass6 {}
+}""")
         .doTest();
   }
 }

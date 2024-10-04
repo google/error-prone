@@ -143,7 +143,44 @@ class Test {
   @Test
   public void negativeCase() {
     compilationHelper
-        .addSourceFile("testdata/UnsafeReflectiveConstructionCastNegativeCases.java")
+        .addSourceLines(
+            "UnsafeReflectiveConstructionCastNegativeCases.java",
+            """
+package com.google.errorprone.bugpatterns.testdata;
+
+/**
+ * Negative cases for {@link UnsafeReflectiveConstructionCast}.
+ *
+ * @author bhagwani@google.com (Sumit Bhagwani)
+ */
+public class UnsafeReflectiveConstructionCastNegativeCases {
+
+  public String newInstanceDirectCall() throws Exception {
+    return (String) Class.forName("java.lang.String").newInstance();
+  }
+
+  public String newInstanceDirectlyOnClassAndGetDeclaredConstructor() throws Exception {
+    return (String) String.class.getDeclaredConstructor().newInstance();
+  }
+
+  public String newInstanceDirectlyOnClassAndNewInstance() throws Exception {
+    return (String) String.class.newInstance();
+  }
+
+  public String invocationWithAsSubclass() throws Exception {
+    return Class.forName("java.lang.String").asSubclass(String.class).newInstance();
+  }
+
+  public class Supplier<T> {
+    public T get(String className) {
+      try {
+        return (T) Class.forName(className).getDeclaredConstructor().newInstance();
+      } catch (ReflectiveOperationException e) {
+        throw new IllegalStateException(e);
+      }
+    }
+  }
+}""")
         .doTest();
   }
 }

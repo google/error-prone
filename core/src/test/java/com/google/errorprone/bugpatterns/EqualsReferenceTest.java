@@ -31,11 +31,122 @@ public class EqualsReferenceTest {
 
   @Test
   public void positiveCases() {
-    compilationTestHelper.addSourceFile("testdata/EqualsReferencePositiveCases.java").doTest();
+    compilationTestHelper
+        .addSourceLines(
+            "EqualsReferencePositiveCases.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            /** Created by mariasam on 6/22/17. */
+            public class EqualsReferencePositiveCases {
+
+              @Override
+              // BUG: Diagnostic contains: ==
+              public boolean equals(Object o) {
+                System.out.println(this.equals(o));
+                return true;
+              }
+
+              class EqualsInElse {
+                @Override
+                // BUG: Diagnostic contains: ==
+                public boolean equals(Object o) {
+                  System.out.println(o == this);
+                  return this.equals(o);
+                }
+              }
+
+              class FinalObject {
+                @Override
+                // BUG: Diagnostic contains: ==
+                public boolean equals(final Object object) {
+                  return this.equals(object);
+                }
+              }
+
+              class NoThis {
+                @Override
+                // BUG: Diagnostic contains: ==
+                public boolean equals(Object o) {
+                  return equals(o);
+                }
+              }
+            }""")
+        .doTest();
   }
 
   @Test
   public void negativeCases() {
-    compilationTestHelper.addSourceFile("testdata/EqualsReferenceNegativeCases.java").doTest();
+    compilationTestHelper
+        .addSourceLines(
+            "EqualsReferenceNegativeCases.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            /** Created by mariasam on 6/23/17. */
+            public class EqualsReferenceNegativeCases {
+
+              @Override
+              public boolean equals(Object o) {
+                return (this == o);
+              }
+
+              class OtherEquals {
+                @Override
+                public boolean equals(Object o) {
+                  if (o.equals("hi")) {
+                    return true;
+                  } else {
+                    return o == this;
+                  }
+                }
+              }
+
+              class EqualsThisLast {
+                @Override
+                public boolean equals(Object o) {
+                  if (o instanceof EqualsThisLast) {
+                    return true;
+                  }
+                  return o.equals(this);
+                }
+              }
+
+              class Foo {
+                @Override
+                public boolean equals(Object o) {
+                  return o instanceof Foo && this.equals((Foo) o);
+                }
+
+                public boolean equals(Foo o) {
+                  return true;
+                }
+              }
+
+              class OtherEqualsMethod {
+                @Override
+                public boolean equals(Object o) {
+                  return equals((String) o);
+                }
+
+                public boolean equals(String o) {
+                  return true;
+                }
+              }
+
+              class CodeBase {
+                public CodeBase(Object o) {}
+
+                public boolean equals(Object obj) {
+                  CodeBase other = (CodeBase) obj;
+                  return equals(new CodeBase(other.getValue()));
+                }
+
+                public Object getValue() {
+                  return null;
+                }
+              }
+            }""")
+        .doTest();
   }
 }

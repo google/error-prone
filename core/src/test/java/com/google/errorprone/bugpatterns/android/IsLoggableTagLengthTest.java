@@ -30,7 +30,18 @@ public final class IsLoggableTagLengthTest {
 
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(IsLoggableTagLength.class, getClass())
-          .addSourceFile("testdata/stubs/android/util/Log.java")
+          .addSourceLines(
+              "Log.java",
+              """
+              package android.util;
+
+              public class Log {
+                public static boolean isLoggable(String tag, int level) {
+                  return false;
+                }
+
+                public static final int INFO = 0;
+              }""")
           .setArgs(ImmutableList.of("-XDandroidCompatible=true"));
 
   @Test

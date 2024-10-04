@@ -32,11 +32,76 @@ public class SwigMemoryLeakTest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("testdata/SwigMemoryLeakPositiveCases.java").doTest();
+    compilationHelper
+        .addSourceLines(
+            "SwigMemoryLeakPositiveCases.java",
+            """
+package com.google.errorprone.bugpatterns.testdata;
+
+/**
+ * @author irogers@google.com (Ian Rogers)
+ */
+public class SwigMemoryLeakPositiveCases {
+  private long swigCPtr;
+  protected boolean swigCMemOwn;
+
+  public SwigMemoryLeakPositiveCases(long cPtr, boolean cMemoryOwn) {
+    swigCMemOwn = cMemoryOwn;
+    swigCPtr = cPtr;
+  }
+
+  public synchronized void delete() {
+    if (swigCPtr != 0) {
+      if (swigCMemOwn) {
+        swigCMemOwn = false;
+        // BUG: Diagnostic contains: SWIG generated code that can't call a C++ destructor will leak
+        // memory
+        throw new UnsupportedOperationException("C++ destructor does not have public access");
+      }
+      swigCPtr = 0;
+    }
+  }
+}""")
+        .doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("testdata/SwigMemoryLeakNegativeCases.java").doTest();
+    compilationHelper
+        .addSourceLines(
+            "SwigMemoryLeakNegativeCases.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            /**
+             * @author irogers@google.com (Ian Rogers)
+             */
+            public class SwigMemoryLeakNegativeCases {
+              private long swigCPtr;
+              protected boolean swigCMemOwn;
+
+              public SwigMemoryLeakNegativeCases(long cPtr, boolean cMemoryOwn) {
+                swigCMemOwn = cMemoryOwn;
+                swigCPtr = cPtr;
+              }
+
+              @SuppressWarnings("removal") // deprecated for removal starting in JDK 18
+              protected void finalize() {
+                delete();
+              }
+
+              public synchronized void delete() {
+                if (swigCPtr != 0) {
+                  if (swigCMemOwn) {
+                    swigCMemOwn = false;
+                    nativeDelete(swigCPtr);
+                  }
+                  swigCPtr = 0;
+                }
+              }
+
+              private static native void nativeDelete(long cptr);
+            }""")
+        .doTest();
   }
 }

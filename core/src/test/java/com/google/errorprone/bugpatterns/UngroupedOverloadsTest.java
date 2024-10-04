@@ -41,64 +41,579 @@ public final class UngroupedOverloadsTest {
 
   @Test
   public void ungroupedOverloadsPositiveCasesSingle() {
-    compilationHelper.addSourceFile("testdata/UngroupedOverloadsPositiveCasesSingle.java").doTest();
+    compilationHelper
+        .addSourceLines(
+            "UngroupedOverloadsPositiveCasesSingle.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            /**
+             * @author hanuszczak@google.com (Łukasz Hanuszczak)
+             */
+            public class UngroupedOverloadsPositiveCasesSingle {
+
+              public void quux() {
+                foo();
+              }
+
+              // BUG: Diagnostic contains: ungrouped overloads of 'foo'
+              public void foo() {
+                foo(42);
+              }
+
+              // BUG: Diagnostic contains: ungrouped overloads of 'foo'
+              public void foo(int x) {
+                foo(x, x);
+              }
+
+              public void bar() {
+                bar(42);
+              }
+
+              public void bar(int x) {
+                foo(x);
+              }
+
+              // BUG: Diagnostic contains: ungrouped overloads of 'foo'
+              public void foo(int x, int y) {
+                System.out.println(x + y);
+              }
+
+              public void norf() {}
+            }""")
+        .doTest();
   }
 
   @Test
   public void ungroupedOverloadsPositiveCasesMultiple() {
     compilationHelper
-        .addSourceFile("testdata/UngroupedOverloadsPositiveCasesMultiple.java")
+        .addSourceLines(
+            "UngroupedOverloadsPositiveCasesMultiple.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            /**
+             * @author hanuszczak@google.com (Łukasz Hanuszczak)
+             */
+            public class UngroupedOverloadsPositiveCasesMultiple {
+
+              private int foo;
+
+              // BUG: Diagnostic contains: ungrouped overloads of 'bar'
+              public void bar(int x, String z, int y) {
+                System.out.println(String.format("z: %s, x: %d, y: %d", z, x, y));
+              }
+
+              private UngroupedOverloadsPositiveCasesMultiple(int foo) {
+                this.foo = foo;
+              }
+
+              // BUG: Diagnostic contains: ungrouped overloads of 'bar'
+              public void bar(int x) {
+                bar(foo, x);
+              }
+
+              public void baz(String x) {
+                bar(42, x, 42);
+              }
+
+              // BUG: Diagnostic contains: ungrouped overloads of 'bar'
+              public void bar(int x, int y) {
+                bar(y, FOO, x);
+              }
+
+              public static final String FOO = "foo";
+
+              // BUG: Diagnostic contains: ungrouped overloads of 'bar'
+              public void bar(int x, int y, int z) {
+                bar(x, String.valueOf(y), z);
+              }
+
+              // BUG: Diagnostic contains: ungrouped overloads of 'quux'
+              public int quux() {
+                return quux(quux);
+              }
+
+              public int quux = 42;
+
+              // BUG: Diagnostic contains: ungrouped overloads of 'quux'
+              public int quux(int x) {
+                return x + quux;
+              }
+
+              private static class Quux {}
+
+              // BUG: Diagnostic contains: ungrouped overloads of 'quux'
+              public int quux(int x, int y) {
+                return quux(x + y);
+              }
+
+              // BUG: Diagnostic contains: ungrouped overloads of 'norf'
+              public int norf(int x) {
+                return quux(x, x);
+              }
+
+              // BUG: Diagnostic contains: ungrouped overloads of 'norf'
+              public int norf(int x, int y) {
+                return norf(x + y);
+              }
+
+              public void foo() {
+                System.out.println("foo");
+              }
+
+              // BUG: Diagnostic contains: ungrouped overloads of 'norf'
+              public void norf(int x, int y, int w) {
+                norf(x + w, y + w);
+              }
+            }""")
         .doTest();
   }
 
   @Test
   public void ungroupedOverloadsPositiveCasesInterleaved() {
     compilationHelper
-        .addSourceFile("testdata/UngroupedOverloadsPositiveCasesInterleaved.java")
+        .addSourceLines(
+            "UngroupedOverloadsPositiveCasesInterleaved.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            /**
+             * @author hanuszczak@google.com (Łukasz Hanuszczak)
+             */
+            public class UngroupedOverloadsPositiveCasesInterleaved {
+
+              private int foo;
+
+              // BUG: Diagnostic contains: ungrouped overloads of 'bar'
+              public void bar(int x, String z, int y) {
+                System.out.println(String.format("z: %s, x: %d, y: %d", z, x, y));
+              }
+
+              public UngroupedOverloadsPositiveCasesInterleaved(int foo) {
+                this.foo = foo;
+              }
+
+              // BUG: Diagnostic contains: ungrouped overloads of 'bar'
+              public void bar(int x) {
+                bar(foo, x);
+              }
+
+              // BUG: Diagnostic contains: ungrouped overloads of 'baz'
+              public void baz(String x) {
+                baz(x, FOO);
+              }
+
+              // BUG: Diagnostic contains: ungrouped overloads of 'bar'
+              public void bar(int x, int y) {
+                bar(y, FOO, x);
+              }
+
+              public static final String FOO = "foo";
+
+              // BUG: Diagnostic contains: ungrouped overloads of 'baz'
+              public void baz(String x, String y) {
+                bar(foo, x + y, foo);
+              }
+
+              public void foo(int x) {}
+
+              public void foo() {
+                foo(foo);
+              }
+            }""")
         .doTest();
   }
 
   @Test
   public void ungroupedOverloadsPositiveCasesCovering() {
     compilationHelper
-        .addSourceFile("testdata/UngroupedOverloadsPositiveCasesCovering.java")
+        .addSourceLines(
+            "UngroupedOverloadsPositiveCasesCovering.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            /**
+             * @author hanuszczak@google.com (Łukasz Hanuszczak)
+             */
+            public class UngroupedOverloadsPositiveCasesCovering {
+
+              // BUG: Diagnostic contains: ungrouped overloads of 'foo'
+              public void foo(int x) {
+                System.out.println(x);
+              }
+
+              // BUG: Diagnostic contains: ungrouped overloads of 'bar'
+              public void bar() {
+                foo();
+              }
+
+              public void baz() {
+                bar();
+              }
+
+              // BUG: Diagnostic contains: ungrouped overloads of 'bar'
+              public void bar(int x) {
+                foo(x);
+              }
+
+              // BUG: Diagnostic contains: ungrouped overloads of 'quux'
+              private void quux() {
+                norf();
+              }
+
+              private void norf() {
+                quux();
+              }
+
+              // BUG: Diagnostic contains: ungrouped overloads of 'quux'
+              public void quux(int x) {
+                bar(x);
+              }
+
+              // BUG: Diagnostic contains: ungrouped overloads of 'foo'
+              public void foo() {
+                foo(42);
+              }
+            }""")
         .doTest();
   }
 
   @Test
   public void ungroupedOverloadsPositiveCasesCoveringOnlyFirstOverload() {
     compilationHelper
-        .addSourceFile("testdata/UngroupedOverloadsPositiveCasesCoveringOnlyOnFirst.java")
+        .addSourceLines(
+            "UngroupedOverloadsPositiveCasesCoveringOnlyOnFirst.java",
+            """
+package com.google.errorprone.bugpatterns.testdata;
+
+/**
+ * @author hanuszczak@google.com (Łukasz Hanuszczak)
+ */
+public class UngroupedOverloadsPositiveCasesCoveringOnlyOnFirst {
+
+  // BUG: Diagnostic contains: Constructors and methods with the same name should appear
+  public void foo(int x) {
+    System.out.println(x);
+  }
+
+  public void bar() {
+    foo();
+  }
+
+  public void baz() {
+    bar();
+  }
+
+  public void bar(int x) {
+    foo(x);
+  }
+
+  private void quux() {
+    norf();
+  }
+
+  private void norf() {
+    quux();
+  }
+
+  public void quux(int x) {
+    bar(x);
+  }
+
+  public void foo() {
+    foo(42);
+  }
+}""")
         .setArgs(ImmutableList.of("-XepOpt:UngroupedOverloads:BatchFindings"))
         .doTest();
   }
 
   @Test
   public void ungroupedOverloadsNegativeCases() {
-    compilationHelper.addSourceFile("testdata/UngroupedOverloadsNegativeCases.java").doTest();
+    compilationHelper
+        .addSourceLines(
+            "UngroupedOverloadsNegativeCases.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            /**
+             * @author hanuszczak@google.com (Łukasz Hanuszczak)
+             */
+            public class UngroupedOverloadsNegativeCases {
+
+              private int foo;
+
+              public UngroupedOverloadsNegativeCases(int foo) {
+                this.foo = foo;
+              }
+
+              public void bar(int x) {
+                bar(foo, x);
+              }
+
+              public void bar(int x, String z, int y) {
+                System.out.println(String.format("z: %s, x: %d, y: %d", z, x, y));
+              }
+
+              public void bar(int x, int y) {
+                bar(y, FOO, x);
+              }
+
+              public static class Baz {}
+
+              public static final String FOO = "foo";
+
+              public void baz(String x) {
+                baz(x, FOO);
+              }
+
+              public void baz(String x, String y) {
+                bar(foo, x + y, foo);
+              }
+
+              public int foo() {
+                return this.foo;
+              }
+            }""")
+        .doTest();
   }
 
   @Test
   public void ungroupedOverloadsRefactoringComments() {
     refactoringHelper
-        .addInput("testdata/UngroupedOverloadsRefactoringComments.java")
-        .addOutput("testdata/UngroupedOverloadsRefactoringComments_expected.java")
+        .addInputLines(
+            "UngroupedOverloadsRefactoringComments.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            /**
+             * @author hanuszczak@google.com (Łukasz Hanuszczak)
+             */
+            class UngroupedOverloadsRefactoringComments {
+
+              private void bar() {}
+
+              public static final String FOO = "foo"; // This is super-important comment for `foo`.
+
+              // Something about `bar`.
+              /** Does something. */
+              public void bar(int x) {}
+
+              // Something about this `bar`.
+              public void bar(int x, int y) {}
+
+              // Something about `baz`.
+              public static final String BAZ = "baz"; // Stuff about `baz` continues.
+
+              // More stuff about `bar`.
+              public void bar(int x, int y, int z) {
+                // Some internal comments too.
+              }
+
+              public void quux() {}
+
+              public void bar(String s) {}
+            }""")
+        .addOutputLines(
+            "UngroupedOverloadsRefactoringComments_expected.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            /**
+             * @author hanuszczak@google.com (Łukasz Hanuszczak)
+             */
+            class UngroupedOverloadsRefactoringComments {
+
+              private void bar() {}
+
+              // Something about `bar`.
+              /** Does something. */
+              public void bar(int x) {}
+
+              // Something about this `bar`.
+              public void bar(int x, int y) {}
+
+              // More stuff about `bar`.
+              public void bar(int x, int y, int z) {
+                // Some internal comments too.
+              }
+
+              public void bar(String s) {}
+
+              public static final String FOO = "foo"; // This is super-important comment for `foo`.
+
+              // Something about `baz`.
+              public static final String BAZ = "baz"; // Stuff about `baz` continues.
+
+              public void quux() {}
+            }""")
         .doTest();
   }
 
   @Test
   public void ungroupedOverloadsRefactoringMultiple() {
     refactoringHelper
-        .addInput("testdata/UngroupedOverloadsRefactoringMultiple.java")
-        .addOutput("testdata/UngroupedOverloadsRefactoringMultiple_expected.java")
+        .addInputLines(
+            "UngroupedOverloadsRefactoringMultiple.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            /**
+             * @author hanuszczak@google.com (Łukasz Hanuszczak)
+             */
+            class UngroupedOverloadsRefactoringMultiple {
+
+              public void foo() {}
+
+              public void foo(int x) {}
+
+              private static class foo {}
+
+              public void foo(int x, int y) {}
+
+              public void bar() {}
+
+              public static final String BAZ = "baz";
+
+              public void foo(int x, int y, int z) {}
+
+              public void quux() {}
+
+              public void quux(int x) {}
+
+              public static final int X = 0;
+              public static final int Y = 1;
+
+              public void quux(int x, int y) {}
+
+              private int quux;
+
+              public void norf() {}
+
+              public void quux(int x, int y, int z) {}
+
+              public void thud() {}
+            }""")
+        .addOutputLines(
+            "UngroupedOverloadsRefactoringMultiple_expected.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            /**
+             * @author hanuszczak@google.com (Łukasz Hanuszczak)
+             */
+            class UngroupedOverloadsRefactoringMultiple {
+
+              public void foo() {}
+
+              public void foo(int x) {}
+
+              public void foo(int x, int y) {}
+
+              public void foo(int x, int y, int z) {}
+
+              private static class foo {}
+
+              public void bar() {}
+
+              public static final String BAZ = "baz";
+
+              public void quux() {}
+
+              public void quux(int x) {}
+
+              public void quux(int x, int y) {}
+
+              public void quux(int x, int y, int z) {}
+
+              public static final int X = 0;
+              public static final int Y = 1;
+
+              private int quux;
+
+              public void norf() {}
+
+              public void thud() {}
+            }""")
         .doTest();
   }
 
   @Test
   public void ungroupedOverloadsRefactoringInterleaved() {
     refactoringHelper
-        .addInput("testdata/UngroupedOverloadsRefactoringInterleaved.java")
-        .addOutput("testdata/UngroupedOverloadsRefactoringInterleaved_expected.java")
+        .addInputLines(
+            "UngroupedOverloadsRefactoringInterleaved.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            /**
+             * @author hanuszczak@google.com (Łukasz Hanuszczak)
+             */
+            class UngroupedOverloadsRefactoringInterleaved {
+
+              public void foo() {}
+
+              public void baz() {}
+
+              public void bar() {}
+
+              public void foo(int x) {}
+
+              public void baz(int x) {}
+
+              public void foo(int x, int y) {}
+
+              public void quux() {}
+
+              public void baz(int x, int y) {}
+
+              public void quux(int x) {}
+
+              public void bar(int x) {}
+
+              public void quux(int x, int y) {}
+
+              public void foo(int x, int y, int z) {}
+
+              public void bar(int x, int y) {}
+            }""")
+        .addOutputLines(
+            "UngroupedOverloadsRefactoringInterleaved_expected.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            /**
+             * @author hanuszczak@google.com (Łukasz Hanuszczak)
+             */
+            class UngroupedOverloadsRefactoringInterleaved {
+
+              public void foo() {}
+
+              public void foo(int x) {}
+
+              public void foo(int x, int y) {}
+
+              public void foo(int x, int y, int z) {}
+
+              public void baz() {}
+
+              public void baz(int x) {}
+
+              public void baz(int x, int y) {}
+
+              public void bar() {}
+
+              public void bar(int x) {}
+
+              public void bar(int x, int y) {}
+
+              public void quux() {}
+
+              public void quux(int x) {}
+
+              public void quux(int x, int y) {}
+            }""")
         .doTest();
   }
 

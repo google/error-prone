@@ -30,7 +30,17 @@ public final class FragmentInjectionTest {
 
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(FragmentInjection.class, getClass())
-          .addSourceFile("testdata/stubs/android/preference/PreferenceActivity.java")
+          .addSourceLines(
+              "PreferenceActivity.java",
+              """
+              package android.preference;
+
+              @SuppressWarnings("FragmentInjection")
+              public class PreferenceActivity {
+                protected boolean isValidFragment(String className) {
+                  return true;
+                }
+              }""")
           .setArgs(ImmutableList.of("-XDandroidCompatible=true"));
 
   @Test

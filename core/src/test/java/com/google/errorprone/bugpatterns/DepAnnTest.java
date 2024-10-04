@@ -34,7 +34,49 @@ public class DepAnnTest {
   public void positiveCase() {
     compilationHelper
         .setArgs(JAVACOPTS)
-        .addSourceFile("testdata/DepAnnPositiveCases.java")
+        .addSourceLines(
+            "DepAnnPositiveCases.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            /**
+             * @deprecated
+             */
+            // BUG: Diagnostic contains: @Deprecated
+            public class DepAnnPositiveCases {
+
+              /**
+               * @deprecated
+               */
+              // BUG: Diagnostic contains: @Deprecated
+              public DepAnnPositiveCases() {}
+
+              /**
+               * @deprecated
+               */
+              // BUG: Diagnostic contains: @Deprecated
+              int myField;
+
+              /**
+               * @deprecated
+               */
+              // BUG: Diagnostic contains: @Deprecated
+              enum Enum {
+                VALUE,
+              }
+
+              /**
+               * @deprecated
+               */
+              // BUG: Diagnostic contains: @Deprecated
+              interface Interface {}
+
+              /**
+               * @deprecated
+               */
+              // BUG: Diagnostic contains: @Deprecated
+              public void deprecatedMethood() {}
+            }""")
         .doTest();
   }
 
@@ -42,7 +84,62 @@ public class DepAnnTest {
   public void negativeCase1() {
     compilationHelper
         .setArgs(JAVACOPTS)
-        .addSourceFile("testdata/DepAnnNegativeCase1.java")
+        .addSourceLines(
+            "DepAnnNegativeCase1.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            /**
+             * @deprecated
+             */
+            @Deprecated
+            public class DepAnnNegativeCase1 {
+
+              /**
+               * @deprecated
+               */
+              @Deprecated
+              public DepAnnNegativeCase1() {}
+
+              /**
+               * @deprecated
+               */
+              @Deprecated int myField;
+
+              /**
+               * @deprecated
+               */
+              @Deprecated
+              enum Enum {
+                VALUE,
+              }
+
+              /**
+               * @deprecated
+               */
+              @Deprecated
+              interface Interface {}
+
+              /**
+               * @deprecated
+               */
+              @Deprecated
+              public void deprecatedMethood() {}
+
+              @Deprecated
+              public void deprecatedMethoodWithoutComment() {}
+
+              /** deprecated */
+              public void deprecatedMethodWithMalformedComment() {}
+
+              /**
+               * @deprecated
+               */
+              @SuppressWarnings("dep-ann")
+              public void suppressed() {}
+
+              public void newMethod() {}
+            }""")
         .doTest();
   }
 
@@ -50,7 +147,35 @@ public class DepAnnTest {
   public void negativeCase2() {
     compilationHelper
         .setArgs(JAVACOPTS)
-        .addSourceFile("testdata/DepAnnNegativeCase2.java")
+        .addSourceLines(
+            "DepAnnNegativeCase2.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            /**
+             * @deprecated
+             */
+            @Deprecated
+            public class DepAnnNegativeCase2 {
+
+              abstract class Builder2<P> {
+                class SummaryRowKey<P> {}
+
+                @Deprecated
+                /**
+                 * @deprecated use {@link Selector.Builder#withSummary()}
+                 */
+                public abstract void withSummaryRowKeys(int summaryRowKeys);
+
+                /**
+                 * @deprecated use {@link Selector.Builder#withSummary()}
+                 */
+                @Deprecated
+                public abstract void m1();
+
+                public abstract void m2();
+              }
+            }""")
         .doTest();
   }
 
@@ -59,7 +184,49 @@ public class DepAnnTest {
     compilationHelper
         .setArgs(ImmutableList.of("-Xlint:-dep-ann", "-Xep:DepAnn:OFF"))
         .expectNoDiagnostics()
-        .addSourceFile("testdata/DepAnnPositiveCases.java")
+        .addSourceLines(
+            "DepAnnPositiveCases.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            /**
+             * @deprecated
+             */
+            // BUG: Diagnostic contains: @Deprecated
+            public class DepAnnPositiveCases {
+
+              /**
+               * @deprecated
+               */
+              // BUG: Diagnostic contains: @Deprecated
+              public DepAnnPositiveCases() {}
+
+              /**
+               * @deprecated
+               */
+              // BUG: Diagnostic contains: @Deprecated
+              int myField;
+
+              /**
+               * @deprecated
+               */
+              // BUG: Diagnostic contains: @Deprecated
+              enum Enum {
+                VALUE,
+              }
+
+              /**
+               * @deprecated
+               */
+              // BUG: Diagnostic contains: @Deprecated
+              interface Interface {}
+
+              /**
+               * @deprecated
+               */
+              // BUG: Diagnostic contains: @Deprecated
+              public void deprecatedMethood() {}
+            }""")
         .doTest();
   }
 }

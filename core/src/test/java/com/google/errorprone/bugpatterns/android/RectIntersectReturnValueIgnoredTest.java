@@ -29,20 +29,134 @@ import org.junit.runners.JUnit4;
 public class RectIntersectReturnValueIgnoredTest {
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(RectIntersectReturnValueIgnored.class, getClass())
-          .addSourceFile("testdata/stubs/android/graphics/Rect.java")
+          .addSourceLines(
+              "Rect.java",
+              """
+              package android.graphics;
+
+              public class Rect {
+                public boolean intersect(int x, int y, int x2, int y2) {
+                  return false;
+                }
+
+                public boolean intersect(Rect other) {
+                  return false;
+                }
+
+                public void setEmpty() {}
+              }""")
           .setArgs(ImmutableList.of("-XDandroidCompatible=true"));
 
   @Test
   public void positiveCases() {
     compilationHelper
-        .addSourceFile("testdata/RectIntersectReturnValueIgnoredPositiveCases.java")
+        .addSourceLines(
+            "RectIntersectReturnValueIgnoredPositiveCases.java",
+            """
+package com.google.errorprone.bugpatterns.android.testdata;
+
+import android.graphics.Rect;
+
+/**
+ * @author avenet@google.com (Arnaud J. Venet)
+ */
+public class RectIntersectReturnValueIgnoredPositiveCases {
+  void checkSimpleCall(Rect rect, int aLeft, int aTop, int aRight, int aBottom) {
+    // BUG: Diagnostic contains: Return value of android.graphics.Rect.intersect() must be checked
+    rect.intersect(aLeft, aTop, aRight, aBottom);
+  }
+
+  void checkOverload(Rect rect1, Rect rect2) {
+    // BUG: Diagnostic contains: Return value of android.graphics.Rect.intersect() must be checked
+    rect1.intersect(rect2);
+  }
+
+  class RectContainer {
+    int xPos;
+    int yPos;
+    Rect rect;
+
+    boolean intersect(int length, int width) {
+      // BUG: Diagnostic contains: Return value of android.graphics.Rect.intersect() must be checked
+      rect.intersect(xPos, yPos, xPos + length, yPos + width);
+      return true;
+    }
+  }
+
+  void checkInMethod(int length, int width) {
+    RectContainer container = new RectContainer();
+    container.intersect(length, width);
+  }
+
+  void checkInField(RectContainer container) {
+    // BUG: Diagnostic contains: Return value of android.graphics.Rect.intersect() must be checked
+    container.rect.intersect(
+        container.xPos, container.yPos, container.xPos + 10, container.yPos + 20);
+  }
+}""")
         .doTest();
   }
 
   @Test
   public void negativeCase() {
     compilationHelper
-        .addSourceFile("testdata/RectIntersectReturnValueIgnoredNegativeCases.java")
+        .addSourceLines(
+            "RectIntersectReturnValueIgnoredNegativeCases.java",
+            """
+            package com.google.errorprone.bugpatterns.android.testdata;
+
+            import android.graphics.Rect;
+
+            /**
+             * @author avenet@google.com (Arnaud J. Venet)
+             */
+            public class RectIntersectReturnValueIgnoredNegativeCases {
+              boolean checkSimpleCall(Rect rect, int aLeft, int aTop, int aRight, int aBottom) {
+                return rect.intersect(aLeft, aTop, aRight, aBottom);
+              }
+
+              boolean checkOverload(Rect rect1, Rect rect2) {
+                return rect1.intersect(rect2);
+              }
+
+              void checkInTest(Rect rect, int aLeft, int aTop, int aRight, int aBottom) {
+                if (!rect.intersect(aLeft, aTop, aRight, aBottom)) {
+                  rect.setEmpty();
+                }
+              }
+
+              class InternalScope {
+                class Rect {
+                  int left;
+                  int right;
+                  int top;
+                  int bottom;
+
+                  boolean intersect(int aLeft, int aTop, int aRight, int aBottom) {
+                    throw new RuntimeException("Not implemented");
+                  }
+                }
+
+                void checkHomonym(Rect rect, int aLeft, int aTop, int aRight, int aBottom) {
+                  rect.intersect(aLeft, aTop, aRight, aBottom);
+                }
+              }
+
+              class RectContainer {
+                int xPos;
+                int yPos;
+                Rect rect;
+
+                boolean intersect(int length, int width) {
+                  return rect.intersect(xPos, yPos, xPos + length, yPos + width);
+                }
+              }
+
+              void checkInMethod(int length, int width) {
+                RectContainer container = new RectContainer();
+                container.intersect(length, width);
+              }
+            }""")
         .doTest();
   }
 }

@@ -38,11 +38,58 @@ public class JUnitAssertSameCheckTest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("testdata/JUnitAssertSameCheckPositiveCase.java").doTest();
+    compilationHelper
+        .addSourceLines(
+            "JUnitAssertSameCheckPositiveCase.java",
+            """
+package com.google.errorprone.bugpatterns.testdata;
+
+/**
+ * Positive test cases for {@link JUnitAssertSameCheck} check.
+ *
+ * @author bhagwani@google.com (Sumit Bhagwani)
+ */
+public class JUnitAssertSameCheckPositiveCase {
+
+  public void test(Object obj) {
+    // BUG: Diagnostic contains: An object is tested for reference equality to itself using JUnit
+    org.junit.Assert.assertSame(obj, obj);
+
+    // BUG: Diagnostic contains: An object is tested for reference equality to itself using JUnit
+    org.junit.Assert.assertSame("message", obj, obj);
+
+    // BUG: Diagnostic contains: An object is tested for reference equality to itself using JUnit
+    junit.framework.Assert.assertSame(obj, obj);
+
+    // BUG: Diagnostic contains: An object is tested for reference equality to itself using JUnit
+    junit.framework.Assert.assertSame("message", obj, obj);
+  }
+}""")
+        .doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("testdata/JUnitAssertSameCheckNegativeCases.java").doTest();
+    compilationHelper
+        .addSourceLines(
+            "JUnitAssertSameCheckNegativeCases.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            /**
+             * Negative test cases for {@link JUnitAssertSameCheck} check.
+             *
+             * @author bhagwani@google.com (Sumit Bhagwani)
+             */
+            public class JUnitAssertSameCheckNegativeCases {
+
+              public void test(Object obj1, Object obj2) {
+                org.junit.Assert.assertSame(obj1, obj2);
+                org.junit.Assert.assertSame("message", obj1, obj2);
+                junit.framework.Assert.assertSame(obj1, obj2);
+                junit.framework.Assert.assertSame("message", obj1, obj2);
+              }
+            }""")
+        .doTest();
   }
 }

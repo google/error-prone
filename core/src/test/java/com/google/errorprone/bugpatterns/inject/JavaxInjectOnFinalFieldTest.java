@@ -31,11 +31,65 @@ public class JavaxInjectOnFinalFieldTest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("testdata/JavaxInjectOnFinalFieldPositiveCases.java").doTest();
+    compilationHelper
+        .addSourceLines(
+            "JavaxInjectOnFinalFieldPositiveCases.java",
+            """
+            package com.google.errorprone.bugpatterns.inject.testdata;
+
+            import javax.inject.Inject;
+
+            /**
+             * @author sgoldfeder@google.com (Steven Goldfeder)
+             */
+            public class JavaxInjectOnFinalFieldPositiveCases {
+
+              /**
+               * Class has a final injectable(javax.inject.Inject) field.
+               */
+              public class TestClass1 {
+                // BUG: Diagnostic contains: remove
+                @Inject
+                public final int n = 0;
+              }
+            }""")
+        .doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("testdata/JavaxInjectOnFinalFieldNegativeCases.java").doTest();
+    compilationHelper
+        .addSourceLines(
+            "JavaxInjectOnFinalFieldNegativeCases.java",
+            """
+            package com.google.errorprone.bugpatterns.inject.testdata;
+
+            import javax.inject.Inject;
+
+            /**
+             * @author sgoldfeder@google.com (Steven Goldfeder)
+             */
+            public class JavaxInjectOnFinalFieldNegativeCases {
+
+              /** Class has no final fields or @Inject annotations. */
+              public class TestClass1 {}
+
+              /** Class has a final field that is not injectable. */
+              public class TestClass2 {
+                public final int n = 0;
+              }
+
+              /** Class has an injectable(javax.inject.Inject) field that is not final. */
+              public class TestClass3 {
+                @Inject public int n;
+              }
+
+              /** Class has an injectable(javax.inject.Inject), final method. */
+              public class TestClass4 {
+                @Inject
+                final void method() {}
+              }
+            }""")
+        .doTest();
   }
 }

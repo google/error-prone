@@ -33,24 +33,168 @@ public class ClassCanBeStaticTest {
   @Test
   public void negativeCase() {
     compilationHelper
-        .addSourceFile("testdata/ClassCanBeStaticNegativeCases.java")
+        .addSourceLines(
+            "ClassCanBeStaticNegativeCases.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            /**
+             * @author alexloh@google.com (Alex Loh)
+             */
+            public class ClassCanBeStaticNegativeCases {
+              int outerVar;
+
+              public int outerMethod() {
+                return 0;
+              }
+
+              public static class Inner1 { // inner class already static
+                int innerVar;
+              }
+
+              public class Inner2 { // inner class references an outer variable
+                int innerVar = outerVar;
+              }
+
+              public class Inner3 { // inner class references an outer variable in a method
+                int localMethod() {
+                  return outerVar;
+                }
+              }
+
+              public class Inner4 { // inner class references an outer method in a method
+                int localMethod() {
+                  return outerMethod();
+                }
+              }
+
+              // outer class is a nested but non-static, and thus cannot have a static class
+              class NonStaticOuter {
+                int nonStaticVar = outerVar;
+
+                class Inner5 {}
+              }
+
+              // inner class is local and thus cannot be static
+              void foo() {
+                class Inner6 {}
+              }
+
+              // inner class is anonymous and thus cannot be static
+              Object bar() {
+                return new Object() {};
+              }
+
+              // enums are already static
+              enum Inner7 {
+                RED,
+                BLUE,
+                VIOLET,
+              }
+
+              // outer class is a nested but non-static, and thus cannot have a static class
+              void baz() {
+                class NonStaticOuter2 {
+                  int nonStaticVar = outerVar;
+
+                  class Inner8 {}
+                }
+              }
+
+              // inner class references a method from inheritance
+              public interface OuterInter {
+                int outerInterMethod();
+              }
+
+              abstract static class AbstractOuter implements OuterInter {
+                class Inner8 {
+                  int localMethod() {
+                    return outerInterMethod();
+                  }
+                }
+              }
+            }""")
         .setArgs("--release", "11")
         .doTest();
   }
 
   @Test
   public void positiveCase1() {
-    compilationHelper.addSourceFile("testdata/ClassCanBeStaticPositiveCase1.java").doTest();
+    compilationHelper
+        .addSourceLines(
+            "ClassCanBeStaticPositiveCase1.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            /**
+             * @author alexloh@google.com (Alex Loh)
+             */
+            public class ClassCanBeStaticPositiveCase1 {
+
+              int outerVar;
+
+              // Non-static inner class that does not use outer scope
+              // BUG: Diagnostic contains: static class Inner1
+              class Inner1 {
+                int innerVar;
+              }
+            }""")
+        .doTest();
   }
 
   @Test
   public void positiveCase2() {
-    compilationHelper.addSourceFile("testdata/ClassCanBeStaticPositiveCase2.java").doTest();
+    compilationHelper
+        .addSourceLines(
+            "ClassCanBeStaticPositiveCase2.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            /**
+             * @author alexloh@google.com (Alex Loh)
+             */
+            public class ClassCanBeStaticPositiveCase2 {
+
+              int outerVar1;
+              int outerVar2;
+
+              // Outer variable overridden
+              // BUG: Diagnostic contains: private /* COMMENT */ static final class Inner2
+              private /* COMMENT */ final class Inner2 {
+                int outerVar1;
+                int innerVar = outerVar1;
+
+                int localMethod(int outerVar2) {
+                  return outerVar2;
+                }
+              }
+            }""")
+        .doTest();
   }
 
   @Test
   public void positiveCase3() {
-    compilationHelper.addSourceFile("testdata/ClassCanBeStaticPositiveCase3.java").doTest();
+    compilationHelper
+        .addSourceLines(
+            "ClassCanBeStaticPositiveCase3.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            /**
+             * @author alexloh@google.com (Alex Loh)
+             */
+            public class ClassCanBeStaticPositiveCase3 {
+
+              static int outerVar;
+
+              // Nested non-static inner class inside a static inner class
+              static class NonStaticOuter {
+                int nonStaticVar = outerVar;
+                // BUG: Diagnostic contains: public static class Inner3
+                public class Inner3 {}
+              }
+            }""")
+        .doTest();
   }
 
   @Test

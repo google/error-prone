@@ -36,14 +36,186 @@ public class ErroneousThreadPoolConstructorCheckerTest {
   @Test
   public void positiveCases() {
     compilationHelper
-        .addSourceFile("testdata/ErroneousThreadPoolConstructorCheckerPositiveCases.java")
+        .addSourceLines(
+            "ErroneousThreadPoolConstructorCheckerPositiveCases.java",
+            """
+package com.google.errorprone.bugpatterns.testdata;
+
+import static java.util.Comparator.comparingInt;
+import static java.util.concurrent.TimeUnit.SECONDS;
+
+import java.util.Collection;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.LinkedTransferQueue;
+import java.util.concurrent.PriorityBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+
+/**
+ * Positive test cases for {@link
+ * com.google.errorprone.bugpatterns.ErroneousThreadPoolConstructorChecker} bug pattern.
+ */
+final class ErroneousThreadPoolConstructorCheckerPositiveCases {
+
+  private static final int CORE_POOL_SIZE = 10;
+  private static final int MAXIMUM_POOL_SIZE = 20;
+  private static final long KEEP_ALIVE_TIME = 60;
+
+  private void createThreadPoolWithUnboundedLinkedBlockingQueue(Collection<Runnable> initialTasks) {
+    // BUG: Diagnostic contains: ErroneousThreadPoolConstructorChecker
+    new ThreadPoolExecutor(
+        CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE_TIME, SECONDS, new LinkedBlockingQueue<>());
+    // BUG: Diagnostic contains: ErroneousThreadPoolConstructorChecker
+    new ThreadPoolExecutor(
+        CORE_POOL_SIZE,
+        MAXIMUM_POOL_SIZE,
+        KEEP_ALIVE_TIME,
+        SECONDS,
+        new LinkedBlockingQueue<>(initialTasks));
+  }
+
+  private void createThreadPoolWithUnboundedLinkedBlockingDeque(Collection<Runnable> initialTasks) {
+    // BUG: Diagnostic contains: ErroneousThreadPoolConstructorChecker
+    new ThreadPoolExecutor(
+        CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE_TIME, SECONDS, new LinkedBlockingDeque<>());
+    // BUG: Diagnostic contains: ErroneousThreadPoolConstructorChecker
+    new ThreadPoolExecutor(
+        CORE_POOL_SIZE,
+        MAXIMUM_POOL_SIZE,
+        KEEP_ALIVE_TIME,
+        SECONDS,
+        new LinkedBlockingDeque<>(initialTasks));
+  }
+
+  private void createThreadPoolWithUnboundedLinkedTransferQueue(Collection<Runnable> initialTasks) {
+    // BUG: Diagnostic contains: ErroneousThreadPoolConstructorChecker
+    new ThreadPoolExecutor(
+        CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE_TIME, SECONDS, new LinkedTransferQueue<>());
+    // BUG: Diagnostic contains: ErroneousThreadPoolConstructorChecker
+    new ThreadPoolExecutor(
+        CORE_POOL_SIZE,
+        MAXIMUM_POOL_SIZE,
+        KEEP_ALIVE_TIME,
+        SECONDS,
+        new LinkedTransferQueue<>(initialTasks));
+  }
+
+  private void createThreadPoolWithUnboundedPriorityBlockingQueue(
+      int initialCapacity, Collection<Runnable> initialTasks) {
+    // BUG: Diagnostic contains: ErroneousThreadPoolConstructorChecker
+    new ThreadPoolExecutor(
+        CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE_TIME, SECONDS, new PriorityBlockingQueue<>());
+    // BUG: Diagnostic contains: ErroneousThreadPoolConstructorChecker
+    new ThreadPoolExecutor(
+        CORE_POOL_SIZE,
+        MAXIMUM_POOL_SIZE,
+        KEEP_ALIVE_TIME,
+        SECONDS,
+        new PriorityBlockingQueue<>(initialTasks));
+    // BUG: Diagnostic contains: ErroneousThreadPoolConstructorChecker
+    new ThreadPoolExecutor(
+        CORE_POOL_SIZE,
+        MAXIMUM_POOL_SIZE,
+        KEEP_ALIVE_TIME,
+        SECONDS,
+        new PriorityBlockingQueue<>(initialCapacity));
+    // BUG: Diagnostic contains: ErroneousThreadPoolConstructorChecker
+    new ThreadPoolExecutor(
+        CORE_POOL_SIZE,
+        MAXIMUM_POOL_SIZE,
+        KEEP_ALIVE_TIME,
+        SECONDS,
+        new PriorityBlockingQueue<>(initialCapacity, comparingInt(Object::hashCode)));
+  }
+}""")
         .doTest();
   }
 
   @Test
   public void negativeCases() {
     compilationHelper
-        .addSourceFile("testdata/ErroneousThreadPoolConstructorCheckerNegativeCases.java")
+        .addSourceLines(
+            "ErroneousThreadPoolConstructorCheckerNegativeCases.java",
+            """
+package com.google.errorprone.bugpatterns.testdata;
+
+import static java.util.concurrent.TimeUnit.SECONDS;
+
+import java.util.Collection;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+
+/**
+ * Negative test cases for {@link
+ * com.google.errorprone.bugpatterns.ErroneousThreadPoolConstructorChecker} bug pattern.
+ */
+final class ErroneousThreadPoolConstructorCheckerNegativeCases {
+
+  private static final int CORE_POOL_SIZE = 10;
+  private static final int MAXIMUM_POOL_SIZE = 20;
+  private static final long KEEP_ALIVE_TIME = 60;
+
+  private void createThreadPoolWithUnboundedQueue() {
+    new ThreadPoolExecutor(
+        MAXIMUM_POOL_SIZE,
+        MAXIMUM_POOL_SIZE,
+        KEEP_ALIVE_TIME,
+        SECONDS,
+        new LinkedBlockingQueue<>());
+  }
+
+  private void createThreadPoolWithUnboundedQueueAndEmptyPool() {
+    new ThreadPoolExecutor(0, 1, KEEP_ALIVE_TIME, SECONDS, new LinkedBlockingQueue<>());
+  }
+
+  private void createThreadPoolWithBoundedArrayBlockingQueue(
+      int initialCapacity, boolean fair, Collection<Runnable> initialTasks) {
+    new ThreadPoolExecutor(
+        CORE_POOL_SIZE,
+        MAXIMUM_POOL_SIZE,
+        KEEP_ALIVE_TIME,
+        SECONDS,
+        new ArrayBlockingQueue<>(initialCapacity));
+    new ThreadPoolExecutor(
+        CORE_POOL_SIZE,
+        MAXIMUM_POOL_SIZE,
+        KEEP_ALIVE_TIME,
+        SECONDS,
+        new ArrayBlockingQueue<>(initialCapacity, fair));
+    new ThreadPoolExecutor(
+        CORE_POOL_SIZE,
+        MAXIMUM_POOL_SIZE,
+        KEEP_ALIVE_TIME,
+        SECONDS,
+        new ArrayBlockingQueue<>(initialCapacity, fair, initialTasks));
+  }
+
+  private void createThreadPoolWithBoundedLinkedBlockingQueue(int capacity) {
+    new ThreadPoolExecutor(
+        CORE_POOL_SIZE,
+        MAXIMUM_POOL_SIZE,
+        KEEP_ALIVE_TIME,
+        SECONDS,
+        new LinkedBlockingQueue<>(capacity));
+  }
+
+  private void createThreadPoolWithBoundedLinkedBlockingDeque(int capacity) {
+    new ThreadPoolExecutor(
+        CORE_POOL_SIZE,
+        MAXIMUM_POOL_SIZE,
+        KEEP_ALIVE_TIME,
+        SECONDS,
+        new LinkedBlockingDeque<>(capacity));
+  }
+
+  private void createThreadPoolWithBoundedSynchronousQueue() {
+    new ThreadPoolExecutor(
+        CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE_TIME, SECONDS, new SynchronousQueue<>());
+  }
+}""")
         .doTest();
   }
 

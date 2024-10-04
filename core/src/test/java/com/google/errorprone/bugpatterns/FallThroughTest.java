@@ -33,12 +33,239 @@ public class FallThroughTest {
 
   @Test
   public void positive() {
-    testHelper.addSourceFile("testdata/FallThroughPositiveCases.java").doTest();
+    testHelper
+        .addSourceLines(
+            "FallThroughPositiveCases.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            public class FallThroughPositiveCases {
+
+              class NonTerminatingTryFinally {
+
+                public int foo(int i) {
+                  int z = 0;
+                  switch (i) {
+                    case 0:
+                      try {
+                        if (z > 0) {
+                          return i;
+                        } else {
+                          z++;
+                        }
+                      } finally {
+                        z++;
+                      }
+                      // BUG: Diagnostic contains:
+                    case 1:
+                      return -1;
+                    default:
+                      return 0;
+                  }
+                }
+              }
+
+              abstract class TryWithNonTerminatingCatch {
+
+                int foo(int i) {
+                  int z = 0;
+                  switch (i) {
+                    case 0:
+                      try {
+                        return bar();
+                      } catch (RuntimeException e) {
+                        log(e);
+                        throw e;
+                      } catch (Exception e) {
+                        log(e); // don't throw
+                      }
+                      // BUG: Diagnostic contains:
+                    case 1:
+                      return -1;
+                    default:
+                      return 0;
+                  }
+                }
+
+                abstract int bar() throws Exception;
+
+                void log(Throwable e) {}
+              }
+
+              public class Tweeter {
+
+                public int numTweets = 55000000;
+
+                public int everyBodyIsDoingIt(int a, int b) {
+                  switch (a) {
+                    case 1:
+                      System.out.println("1");
+                      // BUG: Diagnostic contains:
+                    case 2:
+                      System.out.println("2");
+                      // BUG: Diagnostic contains:
+                    default:
+                  }
+                  return 0;
+                }
+              }
+            }""")
+        .doTest();
   }
 
   @Test
   public void negative() {
-    testHelper.addSourceFile("testdata/FallThroughNegativeCases.java").doTest();
+    testHelper
+        .addSourceLines(
+            "FallThroughNegativeCases.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            import java.io.FileInputStream;
+            import java.io.IOException;
+
+            public class FallThroughNegativeCases {
+
+              public class AllowAnyComment {
+
+                public int numTweets = 55000000;
+
+                public int everyBodyIsDoingIt(int a, int b) {
+                  switch (a) {
+                    case 1:
+                      System.out.println("1");
+                      // fall through
+                    case 2:
+                      System.out.println("2");
+                      break;
+                    default:
+                  }
+                  return 0;
+                }
+              }
+
+              static class EmptyDefault {
+
+                static void foo(String s) {
+                  switch (s) {
+                    case "a":
+                    case "b":
+                      throw new RuntimeException();
+                    default:
+                      // do nothing
+                  }
+                }
+
+                static void bar(String s) {
+                  switch (s) {
+                    default:
+                  }
+                }
+              }
+
+              class TerminatedSynchronizedBlock {
+
+                private final Object o = new Object();
+
+                int foo(int i) {
+                  switch (i) {
+                    case 0:
+                      synchronized (o) {
+                        return i;
+                      }
+                    case 1:
+                      return -1;
+                    default:
+                      return 0;
+                  }
+                }
+              }
+
+              class TryWithNonTerminatingFinally {
+
+                int foo(int i) {
+                  int z = 0;
+                  switch (i) {
+                    case 0:
+                      try {
+                        return i;
+                      } finally {
+                        z++;
+                      }
+                    case 1:
+                      return -1;
+                    default:
+                      return 0;
+                  }
+                }
+              }
+
+              abstract class TryWithTerminatingCatchBlocks {
+
+                int foo(int i) {
+                  int z = 0;
+                  switch (i) {
+                    case 0:
+                      try {
+                        return bar();
+                      } catch (RuntimeException e) {
+                        log(e);
+                        throw e;
+                      } catch (Exception e) {
+                        log(e);
+                        throw new RuntimeException(e);
+                      }
+                    case 1:
+                      return -1;
+                    default:
+                      return 0;
+                  }
+                }
+
+                int tryWithResources(String path, int i) {
+                  switch (i) {
+                    case 0:
+                      try (FileInputStream f = new FileInputStream(path)) {
+                        return f.read();
+                      } catch (IOException e) {
+                        throw new RuntimeException(e);
+                      }
+                    case 1:
+                      try (FileInputStream f = new FileInputStream(path)) {
+                        return f.read();
+                      } catch (IOException e) {
+                        throw new RuntimeException(e);
+                      }
+                    default:
+                      throw new RuntimeException("blah");
+                  }
+                }
+
+                abstract int bar() throws Exception;
+
+                void log(Throwable e) {}
+              }
+
+              class TryWithTerminatingFinally {
+
+                int foo(int i) {
+                  int z = 0;
+                  switch (i) {
+                    case 0:
+                      try {
+                        z++;
+                      } finally {
+                        return i;
+                      }
+                    case 1:
+                      return -1;
+                    default:
+                      return 0;
+                  }
+                }
+              }
+            }""")
+        .doTest();
   }
 
   @Test

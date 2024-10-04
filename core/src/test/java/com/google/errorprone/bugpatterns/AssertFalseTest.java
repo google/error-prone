@@ -32,11 +32,45 @@ public class AssertFalseTest {
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("testdata/AssertFalseNegativeCases.java").doTest();
+    compilationHelper
+        .addSourceLines(
+            "AssertFalseNegativeCases.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            /**
+             * @author sebastian.h.monte@gmail.com (Sebastian Monte)
+             */
+            public class AssertFalseNegativeCases {
+
+              public void assertTrue() {
+                assert true;
+              }
+
+              public void assertFalseFromCondition() {
+                assert 0 == 1;
+              }
+            }""")
+        .doTest();
   }
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("testdata/AssertFalsePositiveCases.java").doTest();
+    compilationHelper
+        .addSourceLines(
+            "AssertFalsePositiveCases.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            /**
+             * @author sebastian.h.monte@gmail.com (Sebastian Monte)
+             */
+            public class AssertFalsePositiveCases {
+              public void assertFalse() {
+                // BUG: Diagnostic contains: throw new AssertionError()
+                assert false;
+              }
+            }""")
+        .doTest();
   }
 }

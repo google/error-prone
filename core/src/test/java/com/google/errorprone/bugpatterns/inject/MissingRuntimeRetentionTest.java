@@ -37,12 +37,139 @@ public class MissingRuntimeRetentionTest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("testdata/MissingRuntimeRetentionPositiveCases.java").doTest();
+    compilationHelper
+        .addSourceLines(
+            "MissingRuntimeRetentionPositiveCases.java",
+            """
+            package com.google.errorprone.bugpatterns.inject.testdata;
+
+            import static java.lang.annotation.ElementType.METHOD;
+            import static java.lang.annotation.ElementType.TYPE;
+            import static java.lang.annotation.RetentionPolicy.SOURCE;
+
+            import com.google.inject.BindingAnnotation;
+            import com.google.inject.ScopeAnnotation;
+            import java.lang.annotation.Retention;
+            import java.lang.annotation.Target;
+            import javax.inject.Qualifier;
+            import javax.inject.Scope;
+
+            /**
+             * @author sgoldfeder@google.com (Steven Goldfeder)
+             */
+            public class MissingRuntimeRetentionPositiveCases {
+              /** A scoping (@Scope) annotation with SOURCE retention */
+              @Scope
+              @Target({TYPE, METHOD})
+              // BUG: Diagnostic contains: @Retention(RUNTIME)
+              @Retention(SOURCE)
+              public @interface TestAnnotation1 {}
+
+              /** A scoping (@ScopingAnnotation) annotation with SOURCE retention. */
+              @ScopeAnnotation
+              @Target({TYPE, METHOD})
+              // BUG: Diagnostic contains: @Retention(RUNTIME)
+              @Retention(SOURCE)
+              public @interface TestAnnotation2 {}
+
+              /** A qualifier (@Qualifier) annotation with SOURCE retention. */
+              @Qualifier
+              @Target({TYPE, METHOD})
+              // BUG: Diagnostic contains: @Retention(RUNTIME)
+              @Retention(SOURCE)
+              public @interface TestAnnotation3 {}
+
+              /** A qualifier (@BindingAnnotation) annotation with SOURCE retention. */
+              @BindingAnnotation
+              @Target({TYPE, METHOD})
+              // BUG: Diagnostic contains: @Retention(RUNTIME)
+              @Retention(SOURCE)
+              public @interface TestAnnotation4 {}
+
+              /** A qualifier annotation with default retention. */
+              @BindingAnnotation
+              @Target({TYPE, METHOD})
+              // BUG: Diagnostic contains: @Retention(RUNTIME)
+              public @interface TestAnnotation5 {}
+
+              /** A dagger map key annotation with default retention. */
+              @dagger.MapKey
+              @Target({TYPE, METHOD})
+              // BUG: Diagnostic contains: @Retention(RUNTIME)
+              public @interface TestAnnotation6 {}
+
+              /** A Guice map key annotation with default retention. */
+              @com.google.inject.multibindings.MapKey
+              @Target({TYPE, METHOD})
+              // BUG: Diagnostic contains: @Retention(RUNTIME)
+              public @interface TestAnnotation7 {}
+            }""")
+        .doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("testdata/MissingRuntimeRetentionNegativeCases.java").doTest();
+    compilationHelper
+        .addSourceLines(
+            "MissingRuntimeRetentionNegativeCases.java",
+            """
+            package com.google.errorprone.bugpatterns.inject.testdata;
+
+            import static java.lang.annotation.ElementType.METHOD;
+            import static java.lang.annotation.ElementType.TYPE;
+            import static java.lang.annotation.RetentionPolicy.RUNTIME;
+            import static java.lang.annotation.RetentionPolicy.SOURCE;
+
+            import com.google.inject.BindingAnnotation;
+            import com.google.inject.ScopeAnnotation;
+            import java.lang.annotation.Retention;
+            import java.lang.annotation.Target;
+            import javax.inject.Qualifier;
+            import javax.inject.Scope;
+
+            /**
+             * @author sgoldfeder@google.com (Steven Goldfeder)
+             */
+            public class MissingRuntimeRetentionNegativeCases {
+              /** A scoping (@Scope) annotation with runtime retention */
+              @Scope
+              @Target({TYPE, METHOD})
+              @Retention(RUNTIME)
+              public @interface TestAnnotation1 {}
+
+              /** A scoping (@ScopingAnnotation) annotation with runtime retention. */
+              @ScopeAnnotation
+              @Target({TYPE, METHOD})
+              @Retention(RUNTIME)
+              public @interface TestAnnotation2 {}
+
+              /** A qualifier (@Qualifier) annotation with runtime retention. */
+              @Qualifier
+              @Target({TYPE, METHOD})
+              @Retention(RUNTIME)
+              public @interface TestAnnotation3 {}
+
+              /** A qualifier (@BindingAnnotation) annotation with runtime retention. */
+              @BindingAnnotation
+              @Target({TYPE, METHOD})
+              @Retention(RUNTIME)
+              public @interface TestAnnotation4 {}
+
+              /** A non-qualifier, non-scoping annotation without runtime retention. */
+              @Retention(SOURCE)
+              public @interface TestAnnotation5 {}
+
+              /** A dagger map key annotation. */
+              @dagger.MapKey
+              @Retention(RUNTIME)
+              public @interface TestAnnotation6 {}
+
+              /** A Guice map key annotation. */
+              @com.google.inject.multibindings.MapKey
+              @Retention(RUNTIME)
+              public @interface TestAnnotation7 {}
+            }""")
+        .doTest();
   }
 
   @Test

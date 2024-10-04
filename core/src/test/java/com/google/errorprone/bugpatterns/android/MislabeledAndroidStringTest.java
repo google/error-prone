@@ -122,7 +122,18 @@ public class MislabeledAndroidStringTest {
 
   private CompilationTestHelper createCompilationTestHelper() {
     return CompilationTestHelper.newInstance(MislabeledAndroidString.class, getClass())
-        .addSourceFile("testdata/stubs/android/R.java")
+        .addSourceLines(
+            "R.java",
+            """
+            package android;
+
+            public class R {
+              public static final class string {
+                public static final int yes = 0;
+                public static final int no = 1;
+                public static final int copy = 2;
+              }
+            }""")
         .setArgs(ImmutableList.of("-XDandroidCompatible=true"));
   }
 }

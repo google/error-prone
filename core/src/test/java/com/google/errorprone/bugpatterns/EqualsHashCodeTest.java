@@ -30,12 +30,49 @@ public class EqualsHashCodeTest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("testdata/EqualsHashCodeTestPositiveCases.java").doTest();
+    compilationHelper
+        .addSourceLines(
+            "EqualsHashCodeTestPositiveCases.java",
+            """
+public class EqualsHashCodeTestPositiveCases {
+
+  public static class EqualsOnly {
+    // BUG: Diagnostic contains: Classes that override equals should also override hashCode
+    public boolean equals(Object o) {
+      return false;
+    }
+  }
+}""")
+        .doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("testdata/EqualsHashCodeTestNegativeCases.java").doTest();
+    compilationHelper
+        .addSourceLines(
+            "EqualsHashCodeTestNegativeCases.java",
+            """
+            public class EqualsHashCodeTestNegativeCases {
+
+              public static class EqualsAndHashCode {
+                public boolean equals(Object o) {
+                  return false;
+                }
+
+                public int hashCode() {
+                  return 42;
+                }
+              }
+
+              public static class HashCodeOnly {
+                public int hashCode() {
+                  return 42;
+                }
+              }
+
+              public static class Neither {}
+            }""")
+        .doTest();
   }
 
   @Test

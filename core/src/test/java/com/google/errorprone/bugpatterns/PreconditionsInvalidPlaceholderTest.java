@@ -32,14 +32,70 @@ public class PreconditionsInvalidPlaceholderTest {
   @Test
   public void positiveCase1() {
     compilationHelper
-        .addSourceFile("testdata/PreconditionsInvalidPlaceholderPositiveCase1.java")
+        .addSourceLines(
+            "PreconditionsInvalidPlaceholderPositiveCase1.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            import static com.google.common.base.Preconditions.checkArgument;
+
+            import com.google.common.base.Preconditions;
+            import com.google.common.base.Verify;
+
+            public class PreconditionsInvalidPlaceholderPositiveCase1 {
+              int foo;
+
+              public void checkPositive(int x) {
+                // BUG: Diagnostic contains: %s > 0
+                checkArgument(x > 0, "%d > 0", x);
+              }
+
+              public void checkFoo() {
+                // BUG: Diagnostic contains: foo must be equal to 0 but was %s
+                Preconditions.checkState(foo == 0, "foo must be equal to 0 but was {0}", foo);
+              }
+
+              public void verifyFoo(int x) {
+                // BUG: Diagnostic contains:
+                Verify.verify(x > 0, "%d > 0", x);
+              }
+            }""")
         .doTest();
   }
 
   @Test
   public void negativeCase1() {
     compilationHelper
-        .addSourceFile("testdata/PreconditionsInvalidPlaceholderNegativeCase1.java")
+        .addSourceLines(
+            "PreconditionsInvalidPlaceholderNegativeCase1.java",
+            """
+package com.google.errorprone.bugpatterns.testdata;
+
+import static com.google.common.base.Preconditions.checkArgument;
+
+import com.google.common.base.Preconditions;
+
+public class PreconditionsInvalidPlaceholderNegativeCase1 {
+  Integer foo;
+
+  public void checkPositive(int x) {
+    checkArgument(x > 0, "%s > 0", x);
+  }
+
+  public void checkTooFewArgs(int x) {
+    checkArgument(x > 0, "%s %s", x);
+  }
+
+  public void checkFoo() {
+    Preconditions.checkState(foo.intValue() == 0, "foo must be equal to 0 but was %s", foo);
+  }
+
+  public static void checkNotNull(Object foo, String bar, Object baz) {}
+
+  public void checkSelf() {
+    checkNotNull(foo, "Foo", this);
+  }
+}""")
         .doTest();
   }
 }

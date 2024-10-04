@@ -30,7 +30,18 @@ public final class BinderIdentityRestoredDangerouslyTest {
 
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(BinderIdentityRestoredDangerously.class, getClass())
-          .addSourceFile("testdata/stubs/android/os/Binder.java")
+          .addSourceLines(
+              "Binder.java",
+              """
+              package android.os;
+
+              public class Binder {
+                public static final long clearCallingIdentity() {
+                  return 1;
+                }
+
+                public static final void restoreCallingIdentity(long token) {}
+              }""")
           .setArgs(ImmutableList.of("-XDandroidCompatible=true"));
 
   @Test

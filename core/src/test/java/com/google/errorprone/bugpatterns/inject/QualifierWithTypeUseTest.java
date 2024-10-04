@@ -32,11 +32,70 @@ public class QualifierWithTypeUseTest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("testdata/QualifierWithTypeUsePositiveCases.java").doTest();
+    compilationHelper
+        .addSourceLines(
+            "QualifierWithTypeUsePositiveCases.java",
+            """
+            package com.google.errorprone.bugpatterns.inject.testdata;
+
+            import com.google.inject.BindingAnnotation;
+            import java.lang.annotation.ElementType;
+            import java.lang.annotation.Target;
+            import javax.inject.Qualifier;
+
+            /** Tests for {@code QualifierWithTypeUse} */
+            public class QualifierWithTypeUsePositiveCases {
+
+              @Qualifier
+              // BUG: Diagnostic contains: @Target({CONSTRUCTOR})
+              @Target({ElementType.TYPE_USE, ElementType.CONSTRUCTOR})
+              @interface Qualifier1 {}
+
+              @Qualifier
+              // BUG: Diagnostic contains: remove
+              @Target({ElementType.TYPE_USE, ElementType.TYPE_PARAMETER})
+              @interface Qualifier2 {}
+
+              @BindingAnnotation
+              // BUG: Diagnostic contains: @Target({FIELD})
+              @Target({ElementType.FIELD, ElementType.TYPE_USE})
+              @interface BindingAnnotation1 {}
+
+              @BindingAnnotation
+              // BUG: Diagnostic contains: remove
+              @Target({ElementType.TYPE_USE, ElementType.TYPE_PARAMETER})
+              @interface BindingAnnotation2 {}
+
+              @BindingAnnotation
+              // BUG: Diagnostic contains: remove
+              @Target(ElementType.TYPE_USE)
+              @interface BindingAnnotation3 {}
+            }""")
+        .doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("testdata/QualifierWithTypeUseNegativeCases.java").doTest();
+    compilationHelper
+        .addSourceLines(
+            "QualifierWithTypeUseNegativeCases.java",
+            """
+            package com.google.errorprone.bugpatterns.inject.testdata;
+
+            import java.lang.annotation.ElementType;
+            import java.lang.annotation.Target;
+            import javax.inject.Qualifier;
+
+            /** Tests for {@code QualifierWithTypeUse} */
+            public class QualifierWithTypeUseNegativeCases {
+
+              @Qualifier
+              @Target({ElementType.CONSTRUCTOR})
+              @interface Qualifier1 {}
+
+              @Target({ElementType.TYPE_USE, ElementType.TYPE_PARAMETER})
+              @interface NotAQualifier {}
+            }""")
+        .doTest();
   }
 }

@@ -108,13 +108,78 @@ public class TreeToStringTest {
 
   @Test
   public void positiveCases() {
-    testHelper.addSourceFile("testdata/TreeToStringPositiveCases.java").doTest();
+    testHelper
+        .addSourceLines(
+            "TreeToStringPositiveCases.java",
+            """
+import com.google.errorprone.VisitorState;
+import com.google.errorprone.bugpatterns.BugChecker;
+import com.google.errorprone.matchers.Matcher;
+import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.Tree;
+
+public class TreeToStringPositiveCases {
+
+  public static class InnerClass extends BugChecker {
+    private static void foo() {
+      Tree tree = (Tree) new Object();
+      // BUG: Diagnostic contains: [TreeToString] Tree#toString shouldn't be used
+      tree.toString();
+    }
+
+    private static final Matcher<ClassTree> MATCHER1 =
+        (tree, state) -> {
+          ExpressionTree packageName = state.getPath().getCompilationUnit().getPackageName();
+          // BUG: Diagnostic contains: [TreeToString] Tree#toString shouldn't be used
+          packageName.toString();
+
+          // BUG: Diagnostic contains: [TreeToString] Tree#toString shouldn't be used
+          state.getPath().getCompilationUnit().getPackageName().toString();
+
+          return false;
+        };
+
+    private static final Matcher<ClassTree> MATCHER2 =
+        new Matcher<ClassTree>() {
+          @Override
+          public boolean matches(ClassTree classTree, VisitorState state) {
+            ExpressionTree packageName = state.getPath().getCompilationUnit().getPackageName();
+            // BUG: Diagnostic contains:
+            packageName.toString();
+            return false;
+          }
+        };
+  }
+}""")
+        .doTest();
   }
 
   @Test
   public void negativeCases() {
     testHelper
-        .addSourceFile("testdata/TreeToStringNegativeCases.java")
+        .addSourceLines(
+            "TreeToStringNegativeCases.java",
+            """
+            import com.google.errorprone.VisitorState;
+            import com.google.errorprone.bugpatterns.BugChecker;
+            import com.google.errorprone.util.ASTHelpers;
+            import com.sun.source.tree.ClassTree;
+            import com.sun.source.tree.Tree;
+
+            public class TreeToStringNegativeCases {
+
+              public static class InnerClass extends BugChecker {
+
+                private static void foo(VisitorState state) {
+                  Tree tree = (Tree) new Object();
+                  state.getSourceForNode(tree);
+                  state.getConstantExpression(tree);
+                  ((ClassTree) new Object()).getSimpleName().toString();
+                  ASTHelpers.getSymbol(tree).getSimpleName().toString();
+                }
+              }
+            }""")
         .addModules(
             "jdk.compiler/com.sun.tools.javac.code", "jdk.compiler/com.sun.tools.javac.util")
         .doTest();

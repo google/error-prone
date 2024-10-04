@@ -486,14 +486,51 @@ class Test {
   @Test
   public void stringSplitPositive() {
     CompilationTestHelper.newInstance(StringSplitter.class, getClass())
-        .addSourceFile("testdata/StringSplitterPositiveCases.java")
+        .addSourceLines(
+            "StringSplitterPositiveCases.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            /**
+             * Positive test cases for StringSplitter check.
+             *
+             * @author dturner@twosigma.com (David Turner)
+             */
+            public class StringSplitterPositiveCases {
+
+              public void StringSplitOneArg() {
+                String foo = "a:b";
+                // BUG: Diagnostic contains:
+                String[] xs = foo.split(":");
+              }
+            }""")
         .doTest();
   }
 
   @Test
   public void stringSplitNegative() {
     CompilationTestHelper.newInstance(StringSplitter.class, getClass())
-        .addSourceFile("testdata/StringSplitterNegativeCases.java")
+        .addSourceLines(
+            "StringSplitterNegativeCases.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            /**
+             * Negative test cases for StringSplitter check.
+             *
+             * @author dturner@twosigma.com (David Turner)
+             */
+            public class StringSplitterNegativeCases {
+              public void StringSplitTwoArgs() {
+                String foo = "a:b";
+                foo.split(":", 1);
+              }
+
+              public void StringSplitTwoArgsOneNegative() {
+                String foo = "a:b";
+                foo.split(":", -1);
+              }
+            }""")
         .doTest();
   }
 

@@ -80,7 +80,40 @@ public class InjectOnMemberAndConstructorPositiveCases {
   @Test
   public void negativeCase() {
     compilationHelper
-        .addSourceFile("testdata/InjectOnMemberAndConstructorNegativeCases.java")
+        .addSourceLines(
+            "InjectOnMemberAndConstructorNegativeCases.java",
+            """
+            package com.google.errorprone.bugpatterns.inject.testdata;
+
+            import javax.inject.Inject;
+
+            /**
+             * Negative test cases for {@link InjectOnMemberAndConstructor} check.
+             *
+             * @author bhagwani@google.com (Sumit Bhagwani)
+             */
+            public class InjectOnMemberAndConstructorNegativeCases {
+
+              public class InjectOnConstructorOnly {
+                private final String stringFieldWithoutInject;
+
+                @Inject
+                public InjectOnConstructorOnly(String stringFieldWithoutInject) {
+                  this.stringFieldWithoutInject = stringFieldWithoutInject;
+                }
+              }
+
+              public class InjectOnFieldOnly {
+                @Inject private String stringFieldWithInject;
+              }
+
+              public class MixedInject {
+                @Inject private String stringFieldWithInject;
+
+                @Inject
+                public MixedInject() {}
+              }
+            }""")
         .doTest();
   }
 }

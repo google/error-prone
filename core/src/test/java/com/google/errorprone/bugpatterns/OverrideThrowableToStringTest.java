@@ -33,22 +33,176 @@ public class OverrideThrowableToStringTest {
   @Test
   public void positiveCases() {
     compilationHelper
-        .addSourceFile("testdata/OverrideThrowableToStringPositiveCases.java")
+        .addSourceLines(
+            "OverrideThrowableToStringPositiveCases.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            /**
+             * @author mariasam@google.com (Maria Sam)
+             */
+            class OverrideThrowableToStringPositiveCases {
+
+              class BasicTest extends Throwable {
+
+                @Override
+                // BUG: Diagnostic contains: override
+                public String toString() {
+                  return "";
+                }
+              }
+
+              class MultipleMethods extends Throwable {
+
+                public MultipleMethods() {
+                  ;
+                }
+
+                @Override
+                // BUG: Diagnostic contains: override
+                public String toString() {
+                  return "";
+                }
+              }
+
+              class NoOverride extends Throwable {
+
+                // BUG: Diagnostic contains: override
+                public String toString() {
+                  return "";
+                }
+              }
+            }""")
         .doTest();
   }
 
   @Test
   public void negativeCases() {
     compilationHelper
-        .addSourceFile("testdata/OverrideThrowableToStringNegativeCases.java")
+        .addSourceLines(
+            "OverrideThrowableToStringNegativeCases.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            /**
+             * @author mariasam@google.com (Maria Sam)
+             */
+            public class OverrideThrowableToStringNegativeCases {
+
+              class BasicTest extends Throwable {}
+
+              class OtherToString {
+                public String toString() {
+                  return "";
+                }
+              }
+
+              class NoToString extends Throwable {
+                public void test() {
+                  System.out.println("test");
+                }
+              }
+
+              class GetMessage extends Throwable {
+                public String getMessage() {
+                  return "";
+                }
+              }
+
+              class OverridesBoth extends Throwable {
+                public String toString() {
+                  return "";
+                }
+
+                public String getMessage() {
+                  return "";
+                }
+              }
+            }""")
         .doTest();
   }
 
   @Test
   public void fixes() {
     BugCheckerRefactoringTestHelper.newInstance(OverrideThrowableToString.class, getClass())
-        .addInput("testdata/OverrideThrowableToStringPositiveCases.java")
-        .addOutput("testdata/OverrideThrowableToStringPositiveCases_expected.java")
+        .addInputLines(
+            "OverrideThrowableToStringPositiveCases.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            /**
+             * @author mariasam@google.com (Maria Sam)
+             */
+            class OverrideThrowableToStringPositiveCases {
+
+              class BasicTest extends Throwable {
+
+                @Override
+                // BUG: Diagnostic contains: override
+                public String toString() {
+                  return "";
+                }
+              }
+
+              class MultipleMethods extends Throwable {
+
+                public MultipleMethods() {
+                  ;
+                }
+
+                @Override
+                // BUG: Diagnostic contains: override
+                public String toString() {
+                  return "";
+                }
+              }
+
+              class NoOverride extends Throwable {
+
+                // BUG: Diagnostic contains: override
+                public String toString() {
+                  return "";
+                }
+              }
+            }""")
+        .addOutputLines(
+            "OverrideThrowableToStringPositiveCases_expected.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            /**
+             * @author mariasam@google.com (Maria Sam)
+             */
+            class OverrideThrowableToStringPositiveCases {
+
+              // BUG: Diagnostic contains: override
+              class BasicTest extends Throwable {
+
+                @Override
+                public String getMessage() {
+                  return "";
+                }
+              }
+
+              class MultipleMethods extends Throwable {
+
+                public MultipleMethods() {
+                  ;
+                }
+
+                @Override
+                public String getMessage() {
+                  return "";
+                }
+              }
+
+              class NoOverride extends Throwable {
+
+                public String getMessage() {
+                  return "";
+                }
+              }
+            }""")
         .doTest(TestMode.AST_MATCH);
   }
 }

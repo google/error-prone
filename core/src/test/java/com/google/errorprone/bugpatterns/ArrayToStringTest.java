@@ -34,12 +34,103 @@ public class ArrayToStringTest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("testdata/ArrayToStringPositiveCases.java").doTest();
+    compilationHelper
+        .addSourceLines(
+            "ArrayToStringPositiveCases.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            import java.util.*;
+
+            /**
+             * @author adgar@google.com (Mike Edgar)
+             */
+            public class ArrayToStringPositiveCases {
+
+              public void intArray() {
+                int[] a = {1, 2, 3};
+
+                // BUG: Diagnostic contains: Arrays.toString(a)
+                if (a.toString().isEmpty()) {
+                  System.out.println("int array string is empty!");
+                } else {
+                  System.out.println("int array string is nonempty!");
+                }
+              }
+
+              public void objectArray() {
+                Object[] a = new Object[3];
+
+                // BUG: Diagnostic contains: Arrays.toString(a)
+                if (a.toString().isEmpty()) {
+                  System.out.println("object array string is empty!");
+                } else {
+                  System.out.println("object array string is nonempty!");
+                }
+              }
+
+              public void firstMethodCall() {
+                String s = "hello";
+
+                // BUG: Diagnostic contains: Arrays.toString(s.toCharArray())
+                if (s.toCharArray().toString().isEmpty()) {
+                  System.out.println("char array string is empty!");
+                } else {
+                  System.out.println("char array string is nonempty!");
+                }
+              }
+
+              public void secondMethodCall() {
+                char[] a = new char[3];
+
+                // BUG: Diagnostic contains: Arrays.toString(a)
+                if (a.toString().isEmpty()) {
+                  System.out.println("array string is empty!");
+                } else {
+                  System.out.println("array string is nonempty!");
+                }
+              }
+
+              public void throwable() {
+                Exception e = new RuntimeException();
+                // BUG: Diagnostic contains: Throwables.getStackTraceAsString(e)
+                System.out.println(e.getStackTrace().toString());
+              }
+
+              public void arrayOfArrays() {
+                int[][] a = {};
+                // BUG: Diagnostic contains: Arrays.deepToString(a)
+                System.out.println(a);
+              }
+            }""")
+        .doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("testdata/ArrayToStringNegativeCases.java").doTest();
+    compilationHelper
+        .addSourceLines(
+            "ArrayToStringNegativeCases.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            import java.util.*;
+
+            /**
+             * @author adgar@google.com (Mike Edgar)
+             */
+            public class ArrayToStringNegativeCases {
+              public void objectEquals() {
+                Object a = new Object();
+
+                if (a.toString().isEmpty()) {
+                  System.out.println("string is empty!");
+                } else {
+                  System.out.println("string is not empty!");
+                }
+              }
+            }""")
+        .doTest();
   }
 
   @Test
@@ -195,28 +286,109 @@ public class ArrayToStringTest {
   @Test
   public void positiveCompoundAssignment() {
     compilationHelper
-        .addSourceFile("testdata/ArrayToStringCompoundAssignmentPositiveCases.java")
+        .addSourceLines(
+            "ArrayToStringCompoundAssignmentPositiveCases.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            import java.util.*;
+
+            /**
+             * @author adgar@google.com (Mike Edgar)
+             */
+            public class ArrayToStringCompoundAssignmentPositiveCases {
+
+              private static final int[] a = {1, 2, 3};
+
+              public void stringVariableAddsArrayAndAssigns() {
+                String b = "a string";
+                // BUG: Diagnostic contains: += Arrays.toString(a)
+                b += a;
+              }
+            }""")
         .doTest();
   }
 
   @Test
   public void negativeCompoundAssignment() {
     compilationHelper
-        .addSourceFile("testdata/ArrayToStringCompoundAssignmentNegativeCases.java")
+        .addSourceLines(
+            "ArrayToStringCompoundAssignmentNegativeCases.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            /**
+             * @author adgar@google.com (Mike Edgar)
+             */
+            public class ArrayToStringCompoundAssignmentNegativeCases {
+              public void concatenateCompoundAssign_object() {
+                Object a = new Object();
+                String b = " a string";
+                b += a;
+              }
+
+              public void concatenateCompoundAssign_int() {
+                int a = 5;
+                String b = " a string ";
+                b += a;
+              }
+            }""")
         .doTest();
   }
 
   @Test
   public void positiveConcat() {
     compilationHelper
-        .addSourceFile("testdata/ArrayToStringConcatenationPositiveCases.java")
+        .addSourceLines(
+            "ArrayToStringConcatenationPositiveCases.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            import java.util.*;
+
+            /**
+             * @author adgar@google.com (Mike Edgar)
+             */
+            public class ArrayToStringConcatenationPositiveCases {
+
+              private static final int[] a = {1, 2, 3};
+
+              public void stringLiteralLeftOperandIsArray() {
+                // BUG: Diagnostic contains: Arrays.toString(a) +
+                String b = a + " a string";
+              }
+
+              public void stringLiteralRightOperandIsArray() {
+                // BUG: Diagnostic contains: + Arrays.toString(a)
+                String b = "a string" + a;
+              }
+            }""")
         .doTest();
   }
 
   @Test
   public void negativeConcat() {
     compilationHelper
-        .addSourceFile("testdata/ArrayToStringConcatenationNegativeCases.java")
+        .addSourceLines(
+            "ArrayToStringConcatenationNegativeCases.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            /**
+             * @author adgar@google.com (Mike Edgar)
+             */
+            public class ArrayToStringConcatenationNegativeCases {
+              public void notArray() {
+                Object a = new Object();
+                String b = a + " a string";
+              }
+
+              public void notArray_refactored() {
+                Object a = new Object();
+                String b = " a string";
+                String c = a + b;
+              }
+            }""")
         .doTest();
   }
 

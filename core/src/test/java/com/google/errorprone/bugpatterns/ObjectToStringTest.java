@@ -40,12 +40,116 @@ public class ObjectToStringTest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("testdata/ObjectToStringPositiveCases.java").doTest();
+    compilationHelper
+        .addSourceLines(
+            "ObjectToStringPositiveCases.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            /**
+             * @author bhagwani@google.com (Sumit Bhagwani)
+             */
+            public class ObjectToStringPositiveCases {
+
+              public static final class FinalObjectClassWithoutToString {}
+
+              public static final class FinalGenericClassWithoutToString<T> {}
+
+              void directToStringCalls() {
+                FinalObjectClassWithoutToString finalObjectClassWithoutToString =
+                    new FinalObjectClassWithoutToString();
+                // BUG: Diagnostic contains: ObjectToString
+                System.out.println(finalObjectClassWithoutToString.toString());
+              }
+
+              void genericClassShowsErasure() {
+                FinalGenericClassWithoutToString<Object> finalGenericClassWithoutToString =
+                    new FinalGenericClassWithoutToString<>();
+                // BUG: Diagnostic contains: `FinalGenericClassWithoutToString@
+                System.out.println(finalGenericClassWithoutToString.toString());
+              }
+            }""")
+        .doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("testdata/ObjectToStringNegativeCases.java").doTest();
+    compilationHelper
+        .addSourceLines(
+            "ObjectToStringNegativeCases.java",
+            """
+package com.google.errorprone.bugpatterns.testdata;
+
+import org.joda.time.Duration;
+
+/**
+ * @author bhagwani@google.com (Sumit Bhagwani)
+ */
+public class ObjectToStringNegativeCases {
+
+  public static final class FinalObjectClassWithoutToString {}
+
+  public static class NonFinalObjectClassWithoutToString {}
+
+  public static final class FinalObjectClassWithToString {
+
+    @Override
+    public String toString() {
+      return "hakuna";
+    }
+  }
+
+  public static class NonFinalObjectClassWithToString {
+
+    @Override
+    public String toString() {
+      return "matata";
+    }
+  }
+
+  public void log(Object o) {
+    System.out.println(o.toString());
+  }
+
+  void directToStringCalls() {
+    NonFinalObjectClassWithoutToString nonFinalObjectClassWithoutToString =
+        new NonFinalObjectClassWithoutToString();
+    System.out.println(nonFinalObjectClassWithoutToString.toString());
+
+    FinalObjectClassWithToString finalObjectClassWithToString = new FinalObjectClassWithToString();
+    System.out.println(finalObjectClassWithToString.toString());
+
+    NonFinalObjectClassWithToString nonFinalObjectClassWithToString =
+        new NonFinalObjectClassWithToString();
+    System.out.println(nonFinalObjectClassWithToString.toString());
+  }
+
+  void callsTologMethod() {
+    FinalObjectClassWithoutToString finalObjectClassWithoutToString =
+        new FinalObjectClassWithoutToString();
+    log(finalObjectClassWithoutToString);
+
+    NonFinalObjectClassWithoutToString nonFinalObjectClassWithoutToString =
+        new NonFinalObjectClassWithoutToString();
+    log(nonFinalObjectClassWithoutToString);
+
+    FinalObjectClassWithToString finalObjectClassWithToString = new FinalObjectClassWithToString();
+    log(finalObjectClassWithToString);
+
+    NonFinalObjectClassWithToString nonFinalObjectClassWithToString =
+        new NonFinalObjectClassWithToString();
+    log(nonFinalObjectClassWithToString);
+  }
+
+  public void overridePresentInAbstractClassInHierarchy(Duration durationArg) {
+    String unusedString = Duration.standardSeconds(86400).toString();
+    System.out.println("test joda string " + Duration.standardSeconds(86400));
+
+    unusedString = durationArg.toString();
+    System.out.println("test joda string " + durationArg);
+  }
+}""")
+        .doTest();
   }
 
   /** A class that will be missing at compile-time for {@link #testIncompleteClasspath}. */

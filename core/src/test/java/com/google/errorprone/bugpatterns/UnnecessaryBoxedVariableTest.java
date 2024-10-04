@@ -37,8 +37,405 @@ public class UnnecessaryBoxedVariableTest {
   @Test
   public void cases() {
     helper
-        .addInput("testdata/UnnecessaryBoxedVariableCases.java")
-        .addOutput("testdata/UnnecessaryBoxedVariableCases_expected.java")
+        .addInputLines(
+            "UnnecessaryBoxedVariableCases.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            import static com.google.common.base.Preconditions.checkNotNull;
+
+            import java.util.List;
+            import java.util.stream.Stream;
+            import org.jspecify.annotations.Nullable;
+
+            /** @author awturner@google.com (Andy Turner) */
+            class UnnecessaryBoxedVariableCases {
+              void positive_local() {
+                Integer i = 0;
+              }
+
+              int positive_local_return() {
+                Integer i = 0;
+                return i;
+              }
+
+              Integer positive_local_addition() {
+                Integer i = 0;
+                return i + 1;
+              }
+
+              void positive_local_compoundAddition(Integer addend) {
+                Integer i = 0;
+                i += addend;
+
+                int j = 0;
+                j += i;
+              }
+
+              void positive_methodInvocation() {
+                Integer i = 0;
+                methodPrimitiveArg(i);
+              }
+
+              void negative_methodInvocation() {
+                Integer i = 0;
+                methodBoxedArg(i);
+              }
+
+              void positive_assignedValueOf() {
+                Integer i = Integer.valueOf(0);
+              }
+
+              int positive_assignedValueOf_return() {
+                Integer i = Integer.valueOf(0);
+                return i;
+              }
+
+              int positive_noInitializer() {
+                Integer i;
+                i = 0;
+                return i;
+              }
+
+              void negative_enhancedForLoopOverCollection(List<Integer> list) {
+                for (Integer i : list) {}
+              }
+
+              void negative_enhancedForLoopOverWrappedArray(Integer[] array) {
+                for (Integer i : array) {}
+              }
+
+              void positive_enhancedForLoopOverPrimitiveArray(int[] array) {
+                for (Integer i : array) {}
+              }
+
+              final void negative_invokeMethod(Integer i) throws InterruptedException {
+                i.wait(0);
+              }
+
+              final Object[] negative_objectArray(Long l) {
+                return new Object[] {"", l};
+              }
+
+              void negative_null() {
+                Integer i = null;
+              }
+
+              void negative_null_noInitializer() {
+                Integer i;
+                i = null;
+                i = 0;
+              }
+
+              void negative_null_reassignNull() {
+                Integer i = 0;
+                i = null;
+              }
+
+              void negative_enhancedForLoopOverPrimitiveArray_assignInLoop(int[] array) {
+                for (Integer i : array) {
+                  i = null;
+                }
+              }
+
+              void negative_boxedVoid() {
+                Void v;
+              }
+
+              int negative_assignmentInReturn() {
+                Integer myVariable;
+                return myVariable = methodBoxedArg(42);
+              }
+
+              int positive_assignmentInReturn() {
+                Integer myVariable;
+                return myVariable = Integer.valueOf(42);
+              }
+
+              int positive_assignmentInReturn2() {
+                Integer myVariable;
+                return myVariable = Integer.valueOf(42);
+              }
+
+              int positive_hashCode() {
+                Integer myVariable = 0;
+                return myVariable.hashCode();
+              }
+
+              short positive_castMethod() {
+                Integer myVariable = 0;
+                return myVariable.shortValue();
+              }
+
+              int positive_castMethod_sameType() {
+                Integer myVariable = 0;
+                return myVariable.intValue();
+              }
+
+              void positive_castMethod_statementExpression() {
+                Integer myVariable = 0;
+                myVariable.longValue();
+              }
+
+              void negative_methodReference() {
+                Integer myVariable = 0;
+                Stream<Integer> stream = Stream.of(1).filter(myVariable::equals);
+              }
+
+              static void positive_parameter_staticMethod(Boolean b) {
+                boolean a = b;
+              }
+
+              static void negative_parameter_staticMethod(Boolean b) {
+                System.out.println("a " + b);
+              }
+
+              static boolean positive_parameter_returnType(Boolean b) {
+                return b;
+              }
+
+              void negative_parameter_instanceMethod_nonFinal(Boolean b) {
+                boolean a = b;
+              }
+
+              final void negative_parameter_instanceMethod_final(Boolean b) {
+                boolean a = b;
+              }
+
+              static void negative_parameter_unused(Integer i) {}
+
+              static void positive_removeNullable_parameter(@Nullable Integer i) {
+                int j = i;
+              }
+
+              static void positive_removeNullable_localVariable() {
+                @Nullable Integer i = 0;
+                @org.jspecify.annotations.Nullable Integer j = 0;
+                int k = i + j;
+              }
+
+              static int positive_nullChecked_expression(Integer i) {
+                return checkNotNull(i);
+              }
+
+              static int positive_nullChecked_expression_message(Integer i) {
+                return checkNotNull(i, "Null: [%s]", i);
+              }
+
+              static int positive_nullChecked_statement(Integer i) {
+                checkNotNull(i);
+                return i;
+              }
+
+              static int positive_nullChecked_statement_message(Integer i) {
+                checkNotNull(i, "Null: [%s]", i);
+                return i;
+              }
+
+              private void methodPrimitiveArg(int i) {}
+
+              private Integer methodBoxedArg(Integer i) {
+                return i;
+              }
+            }""")
+        .addOutputLines(
+            "UnnecessaryBoxedVariableCases_expected.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            import static com.google.common.base.Preconditions.checkNotNull;
+
+            import java.util.List;
+            import java.util.stream.Stream;
+            import org.jspecify.annotations.Nullable;
+
+            /** @author awturner@google.com (Andy Turner) */
+            class UnnecessaryBoxedVariableCases {
+              void positive_local() {
+                int i = 0;
+              }
+
+              int positive_local_return() {
+                int i = 0;
+                return i;
+              }
+
+              Integer positive_local_addition() {
+                int i = 0;
+                return i + 1;
+              }
+
+              void positive_local_compoundAddition(Integer addend) {
+                int i = 0;
+                i += addend;
+
+                int j = 0;
+                j += i;
+              }
+
+              void positive_methodInvocation() {
+                int i = 0;
+                methodPrimitiveArg(i);
+              }
+
+              void negative_methodInvocation() {
+                Integer i = 0;
+                methodBoxedArg(i);
+              }
+
+              void positive_assignedValueOf() {
+                int i = Integer.valueOf(0);
+              }
+
+              int positive_assignedValueOf_return() {
+                int i = Integer.valueOf(0);
+                return i;
+              }
+
+              int positive_noInitializer() {
+                int i;
+                i = 0;
+                return i;
+              }
+
+              void negative_enhancedForLoopOverCollection(List<Integer> list) {
+                for (Integer i : list) {}
+              }
+
+              void negative_enhancedForLoopOverWrappedArray(Integer[] array) {
+                for (Integer i : array) {}
+              }
+
+              void positive_enhancedForLoopOverPrimitiveArray(int[] array) {
+                for (int i : array) {}
+              }
+
+              final void negative_invokeMethod(Integer i) throws InterruptedException {
+                i.wait(0);
+              }
+
+              final Object[] negative_objectArray(Long l) {
+                return new Object[] {"", l};
+              }
+
+              void negative_null() {
+                Integer i = null;
+              }
+
+              void negative_null_noInitializer() {
+                Integer i;
+                i = null;
+                i = 0;
+              }
+
+              void negative_null_reassignNull() {
+                Integer i = 0;
+                i = null;
+              }
+
+              void negative_enhancedForLoopOverPrimitiveArray_assignInLoop(int[] array) {
+                for (Integer i : array) {
+                  i = null;
+                }
+              }
+
+              void negative_boxedVoid() {
+                Void v;
+              }
+
+              int negative_assignmentInReturn() {
+                Integer myVariable;
+                return myVariable = methodBoxedArg(42);
+              }
+
+              int positive_assignmentInReturn() {
+                int myVariable;
+                return myVariable = Integer.valueOf(42);
+              }
+
+              int positive_assignmentInReturn2() {
+                int myVariable;
+                return myVariable = Integer.valueOf(42);
+              }
+
+              int positive_hashCode() {
+                int myVariable = 0;
+                return Integer.hashCode(myVariable);
+              }
+
+              short positive_castMethod() {
+                int myVariable = 0;
+                return (short) myVariable;
+              }
+
+              int positive_castMethod_sameType() {
+                int myVariable = 0;
+                return myVariable;
+              }
+
+              void positive_castMethod_statementExpression() {
+                int myVariable = 0;
+              }
+
+              void negative_methodReference() {
+                Integer myVariable = 0;
+                Stream<Integer> stream = Stream.of(1).filter(myVariable::equals);
+              }
+
+              static void positive_parameter_staticMethod(boolean b) {
+                boolean a = b;
+              }
+
+              static void negative_parameter_staticMethod(Boolean b) {
+                System.out.println("a " + b);
+              }
+
+              static boolean positive_parameter_returnType(boolean b) {
+                return b;
+              }
+
+              void negative_parameter_instanceMethod_nonFinal(Boolean b) {
+                boolean a = b;
+              }
+
+              final void negative_parameter_instanceMethod_final(boolean b) {
+                boolean a = b;
+              }
+
+              static void negative_parameter_unused(Integer i) {}
+
+              static void positive_removeNullable_parameter(int i) {
+                int j = i;
+              }
+
+              static void positive_removeNullable_localVariable() {
+                int i = 0;
+                int j = 0;
+                int k = i + j;
+              }
+
+              static int positive_nullChecked_expression(int i) {
+                return i;
+              }
+
+              static int positive_nullChecked_expression_message(int i) {
+                return i;
+              }
+
+              static int positive_nullChecked_statement(int i) {
+                return i;
+              }
+
+              static int positive_nullChecked_statement_message(int i) {
+                return i;
+              }
+
+              private void methodPrimitiveArg(int i) {}
+
+              private Integer methodBoxedArg(Integer i) {
+                return i;
+              }
+            }""")
         .doTest();
   }
 

@@ -32,14 +32,123 @@ public class ProvidesMethodOutsideOfModuleTest {
   @Test
   public void positiveCase() {
     compilationHelper
-        .addSourceFile("testdata/ProvidesMethodOutsideOfModulePositiveCases.java")
+        .addSourceLines(
+            "ProvidesMethodOutsideOfModulePositiveCases.java",
+            """
+            package com.google.errorprone.bugpatterns.inject.guice.testdata;
+
+            import com.google.inject.AbstractModule;
+            import com.google.inject.Provides;
+
+            /** Tests for {@code ProvidesMethodOutsideOfModule} */
+            public class ProvidesMethodOutsideOfModulePositiveCases {
+
+              /** Random class contains a provides method. */
+              public class TestClass1 {
+                // BUG: Diagnostic contains: remove
+                @Provides
+                void providesBlah() {}
+              }
+
+              /** Module contains an anonymous inner with a Provides method. */
+              public class TestModule extends AbstractModule {
+                @Override
+                protected void configure() {
+                  Object x =
+                      new Object() {
+                        // BUG: Diagnostic contains: remove
+                        @Provides
+                        void providesBlah() {}
+                      };
+                }
+              }
+
+              /** Class has inner module class */
+              public class TestClass2 {
+                class NestedModule extends AbstractModule {
+                  @Override
+                  protected void configure() {}
+
+                  @Provides
+                  int thisIsOk() {
+                    return 42;
+                  }
+                }
+
+                // BUG: Diagnostic contains: remove
+                @Provides
+                int thisIsNotOk() {
+                  return 42;
+                }
+              }
+            }""")
         .doTest();
   }
 
   @Test
   public void negativeCase() {
     compilationHelper
-        .addSourceFile("testdata/ProvidesMethodOutsideOfModuleNegativeCases.java")
+        .addSourceLines(
+            "ProvidesMethodOutsideOfModuleNegativeCases.java",
+            """
+            package com.google.errorprone.bugpatterns.inject.guice.testdata;
+
+            import com.google.gwt.inject.client.AbstractGinModule;
+            import com.google.gwt.inject.client.GinModule;
+            import com.google.gwt.inject.client.binder.GinBinder;
+            import com.google.inject.AbstractModule;
+            import com.google.inject.Binder;
+            import com.google.inject.Module;
+            import com.google.inject.Provides;
+
+            /** Tests for {@code ProvidesMethodOutsideOfModule} */
+            public class ProvidesMethodOutsideOfModuleNegativeCases {
+
+              /** Regular module */
+              class Module1 extends AbstractModule {
+                @Override
+                protected void configure() {}
+
+                @Provides
+                int providesFoo() {
+                  return 42;
+                }
+              }
+
+              /** implements the Module interface directly */
+              class Module2 implements Module {
+                @Override
+                public void configure(Binder binder) {}
+
+                @Provides
+                int providesFoo() {
+                  return 42;
+                }
+              }
+
+              /** Regular GinModule */
+              class GinModule1 extends AbstractGinModule {
+
+                @Override
+                protected void configure() {}
+
+                @Provides
+                int providesFoo() {
+                  return 42;
+                }
+              }
+
+              /** Implements the GinModule interface directly */
+              class GinModule2 implements GinModule {
+                @Override
+                public void configure(GinBinder binder) {}
+
+                @Provides
+                int providesFoo() {
+                  return 42;
+                }
+              }
+            }""")
         .doTest();
   }
 }

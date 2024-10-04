@@ -32,11 +32,104 @@ public class EmptyIfStatementTest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("testdata/EmptyIfStatementPositiveCases.java").doTest();
+    compilationHelper
+        .addSourceLines(
+            "EmptyIfStatementPositiveCases.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            /**
+             * Positive test cases for the empty if statement check.
+             *
+             * @author eaftan@google.com (Eddie Aftandilian)
+             */
+            public class EmptyIfStatementPositiveCases {
+
+              public static void positiveCase1() {
+                int i = 10;
+                // BUG: Diagnostic contains: if (i == 10) {
+                if (i == 10); {
+                  i++;
+                }
+              }
+
+              public static void positiveCase2() {
+                int i = 10;
+                // BUG: Diagnostic contains: if (i == 10)
+                if (i == 10);
+                i++;
+                System.out.println("foo");
+              }
+
+              public static void positiveCase3() {
+                int i = 10;
+                if (i == 10)
+                  // BUG: Diagnostic contains: remove this line
+                  ;
+                i++;
+                System.out.println("foo");
+              }
+
+              public static void positiveCase4() {
+                int i = 10;
+                // BUG: Diagnostic contains: remove this line
+                if (i == 10)            ;
+              }
+
+              public static void positiveCase5() {
+                int i = 10;
+                if (i == 10)
+                  // BUG: Diagnostic contains: remove this line
+                  ;
+                {
+                  System.out.println("foo");
+                }
+              }
+            }""")
+        .doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("testdata/EmptyIfStatementNegativeCases.java").doTest();
+    compilationHelper
+        .addSourceLines(
+            "EmptyIfStatementNegativeCases.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+            /**
+             * @author eaftan@google.com (Eddie Aftandilian)
+             */
+            public class EmptyIfStatementNegativeCases {
+
+              // just a normal use of if
+              public static void negativeCase1() {
+                int i = 10;
+                if (i == 10) {
+                  System.out.println("foo");
+                }
+                i++;
+              }
+
+              // empty then part but nonempty else
+              public static void negativeCase2() {
+                int i = 0;
+                if (i == 10)
+                  ;
+                else System.out.println("not 10");
+              }
+
+              // multipart if with non-empty else
+              public static void negativeCase3() {
+                int i = 0;
+                if (i == 10)
+                  ;
+                else if (i == 11)
+                  ;
+                else if (i == 12)
+                  ;
+                else System.out.println("not 10, 11, or 12");
+              }
+            }""")
+        .doTest();
   }
 }

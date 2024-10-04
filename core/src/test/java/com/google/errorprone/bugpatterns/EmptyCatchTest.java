@@ -37,12 +37,164 @@ public class EmptyCatchTest {
 
   @Test
   public void positiveCase() throws Exception {
-    compilationHelper.addSourceFile("testdata/EmptyCatchPositiveCases.java").doTest();
+    compilationHelper
+        .addSourceLines(
+            "EmptyCatchPositiveCases.java",
+            """
+            package com.google.errorprone.bugpatterns;
+
+            import static org.junit.Assert.fail;
+
+            import org.junit.Test;
+
+            /**
+             * @author yuan@ece.toronto.edu (Ding Yuan)
+             */
+            public class EmptyCatchPositiveCases {
+              public void error() throws IllegalArgumentException {
+                throw new IllegalArgumentException("Fake exception.");
+              }
+
+              public void catchIsCompleteEmpty() {
+                try {
+                  error();
+                } // BUG: Diagnostic contains:
+                catch (Throwable t) {
+
+                }
+              }
+
+              @Test
+              public void expectedException() {
+                try {
+                  System.err.println();
+                  fail();
+                  // BUG: Diagnostic contains:
+                } catch (Exception expected) {
+                }
+              }
+            }""")
+        .doTest();
   }
 
   @Test
   public void negativeCase() throws Exception {
-    compilationHelper.addSourceFile("testdata/EmptyCatchNegativeCases.java").doTest();
+    compilationHelper
+        .addSourceLines(
+            "EmptyCatchNegativeCases.java",
+            """
+            package com.google.errorprone.bugpatterns;
+
+
+            import java.io.FileNotFoundException;
+
+            /**
+             * @author yuan@ece.toronto.edu (Ding Yuan)
+             */
+            public class EmptyCatchNegativeCases {
+              public void error() throws IllegalArgumentException {
+                throw new IllegalArgumentException("Fake exception.");
+              }
+
+              public void harmlessError() throws FileNotFoundException {
+                throw new FileNotFoundException("harmless exception.");
+              }
+
+              public void close() throws IllegalArgumentException {
+                // close() is an allowed method, so any exceptions
+                // thrown by this method can be ignored!
+                throw new IllegalArgumentException("Fake exception.");
+              }
+
+              public void handledException() {
+                int a = 0;
+                try {
+                  error();
+                } catch (Exception e) {
+                  a++; // handled here
+                }
+              }
+
+              public void exceptionHandledByDataflow() {
+                int a = 0;
+                try {
+                  error();
+                  a = 10;
+                } catch (Throwable t) {
+                  /* Although the exception is ignored here, it is actually
+                   * handled by the if check below.
+                   */
+                }
+                if (a != 10) {
+                  System.out.println("Exception is handled here..");
+                  a++;
+                }
+              }
+
+              public void exceptionHandledByControlFlow() {
+                try {
+                  error();
+                  return;
+                } catch (Throwable t) {
+                  /* Although the exception is ignored here, it is actually
+                   * handled by the return statement in the try block.
+                   */
+                }
+                System.out.println("Exception is handled here..");
+              }
+
+              public void alreadyInCatch() {
+                try {
+                  error();
+                } catch (Throwable t) {
+                  try {
+                    error();
+                  } catch (Exception e) {
+                    // Although e is ignored, it is OK b/c we're already
+                    // in a nested catch block.
+                  }
+                }
+              }
+
+              public void harmlessException() {
+                try {
+                  harmlessError();
+                } catch (FileNotFoundException e) {
+                  /* FileNotFoundException is a harmless exception and
+                   * it is OK to ignore it.
+                   */
+                }
+              }
+
+              public void exemptedMethod() {
+                try {
+                  close();
+                } catch (Exception e) {
+                  // Although the exception is ignored, we can allow this b/c
+                  // it is thrown by an exempted method.
+                }
+              }
+
+              public void comment() {
+                int a = 0; // TODO
+                try {
+                  error();
+                  // TODO
+                  /* FIXME */
+                } catch (Throwable t) {
+                  // ignored
+                }
+              }
+
+              public void catchIsLoggedOnly() {
+                try {
+                  error();
+                } catch (Throwable t) {
+                  System.out.println("Caught an exception: " + t);
+                }
+              }
+            }""")
+        .doTest();
   }
 
   @Test

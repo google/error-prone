@@ -32,14 +32,68 @@ public class FuzzyEqualsShouldNotBeUsedInEqualsMethodTest {
   @Test
   public void positiveCase() {
     compilationHelper
-        .addSourceFile("testdata/FuzzyEqualsShouldNotBeUsedInEqualsMethodPositiveCases.java")
+        .addSourceLines(
+            "FuzzyEqualsShouldNotBeUsedInEqualsMethodPositiveCases.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            import com.google.common.math.DoubleMath;
+
+            /**
+             * @author sulku@google.com (Marsela Sulku)
+             */
+            public class FuzzyEqualsShouldNotBeUsedInEqualsMethodPositiveCases {
+
+              public boolean equals(Object o) {
+                // BUG: Diagnostic contains: DoubleMath.fuzzyEquals should never
+                DoubleMath.fuzzyEquals(0.2, 9.3, 2.0);
+                return true;
+              }
+
+              private class TestClass {
+
+                public boolean equals(Object other) {
+                  double x = 0, y = 0, z = 0;
+                  // BUG: Diagnostic contains: DoubleMath.fuzzyEquals should never
+                  return DoubleMath.fuzzyEquals(x, y, z);
+                }
+              }
+            }""")
         .doTest();
   }
 
   @Test
   public void negativeCase() {
     compilationHelper
-        .addSourceFile("testdata/FuzzyEqualsShouldNotBeUsedInEqualsMethodNegativeCases.java")
+        .addSourceLines(
+            "FuzzyEqualsShouldNotBeUsedInEqualsMethodNegativeCases.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            import com.google.common.math.DoubleMath;
+
+            /**
+             * @author sulku@google.com (Marsela Sulku)
+             */
+            public class FuzzyEqualsShouldNotBeUsedInEqualsMethodNegativeCases {
+              public boolean equals() {
+                return true;
+              }
+
+              private static class TestClass {
+                public void test() {
+                  boolean t = DoubleMath.fuzzyEquals(0, 2, 0.3);
+                }
+
+                public boolean equals(Object other) {
+                  return true;
+                }
+
+                public boolean equals(Object other, double a) {
+                  return DoubleMath.fuzzyEquals(0, 1, 0.2);
+                }
+              }
+            }""")
         .doTest();
   }
 }

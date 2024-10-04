@@ -30,14 +30,70 @@ public final class LockOnNonEnclosingClassLiteralTest {
   @Test
   public void lockOnNonEnclosingClassLiteralPositiveCases() {
     compilationHelper
-        .addSourceFile("testdata/LockOnNonEnclosingClassLiteralPositiveCases.java")
+        .addSourceLines(
+            "LockOnNonEnclosingClassLiteralPositiveCases.java",
+            """
+package com.google.errorprone.bugpatterns.testdata;
+
+public class LockOnNonEnclosingClassLiteralPositiveCases {
+
+  static {
+    // BUG: Diagnostic contains: Lock on the class other than the enclosing class of the code block
+    // can unintentionally prevent the locked class being used properly.
+    synchronized (String.class) {
+    }
+  }
+
+  private void methodContainsSynchronizedBlock() {
+    // BUG: Diagnostic contains: Lock on the class other than the enclosing class of the code block
+    // can unintentionally prevent the locked class being used properly.
+    synchronized (String.class) {
+    }
+  }
+
+  class SubClass {
+
+    public void methodContainsSynchronizedBlock() {
+      // BUG: Diagnostic contains: Lock on the class other than the enclosing class of the code
+      // block can unintentionally prevent the locked class being used properly.
+      synchronized (LockOnNonEnclosingClassLiteralPositiveCases.class) {
+      }
+    }
+  }
+}""")
         .doTest();
   }
 
   @Test
   public void lockOnNonEnclosingClassLiteralNegativeCases() {
     compilationHelper
-        .addSourceFile("testdata/LockOnNonEnclosingClassLiteralNegativeCases.java")
+        .addSourceLines(
+            "LockOnNonEnclosingClassLiteralNegativeCases.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            public class LockOnNonEnclosingClassLiteralNegativeCases {
+
+              static {
+                synchronized (LockOnNonEnclosingClassLiteralNegativeCases.class) {
+                }
+              }
+
+              private void methodContainsSynchronizedBlock() {
+                synchronized (LockOnNonEnclosingClassLiteralNegativeCases.class) {
+                }
+                synchronized (this) {
+                }
+              }
+
+              class SubClass {
+
+                public void methodContainsSynchronizedBlock() {
+                  synchronized (SubClass.class) {
+                  }
+                }
+              }
+            }""")
         .doTest();
   }
 }

@@ -32,11 +32,78 @@ public class CloseableProvidesTest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("testdata/CloseableProvidesPositiveCases.java").doTest();
+    compilationHelper
+        .addSourceLines(
+            "CloseableProvidesPositiveCases.java",
+            """
+            package com.google.errorprone.bugpatterns.inject.testdata;
+
+            import com.google.inject.Provides;
+            import java.io.Closeable;
+            import java.io.PrintWriter;
+            import java.nio.charset.StandardCharsets;
+            import javax.inject.Singleton;
+
+            /**
+             * @author bhagwani@google.com (Sumit Bhagwani)
+             */
+            public class CloseableProvidesPositiveCases {
+
+              static class ImplementsClosable implements Closeable {
+                public void close() {
+                  // no op
+                }
+              }
+
+              @Provides
+              // BUG: Diagnostic contains: CloseableProvides
+              ImplementsClosable providesImplementsClosable() {
+                return new ImplementsClosable();
+              }
+
+              @Provides
+              @Singleton
+              // BUG: Diagnostic contains: CloseableProvides
+              PrintWriter providesPrintWriter() throws Exception {
+                return new PrintWriter("some_file_path", StandardCharsets.UTF_8.name());
+              }
+            }""")
+        .doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("testdata/CloseableProvidesNegativeCases.java").doTest();
+    compilationHelper
+        .addSourceLines(
+            "CloseableProvidesNegativeCases.java",
+            """
+            package com.google.errorprone.bugpatterns.inject.testdata;
+
+            import com.google.inject.Provides;
+            import javax.inject.Singleton;
+
+            /**
+             * @author bhagwani@google.com (Sumit Bhagwani)
+             */
+            public class CloseableProvidesNegativeCases {
+
+              static class DoesNotImplementsClosable {
+                public void close() {
+                  // no op
+                }
+              }
+
+              @Provides
+              DoesNotImplementsClosable providesDoesNotImplementsClosable() {
+                return new DoesNotImplementsClosable();
+              }
+
+              @Provides
+              @Singleton
+              Object providesObject() {
+                return new Object();
+              }
+            }""")
+        .doTest();
   }
 }

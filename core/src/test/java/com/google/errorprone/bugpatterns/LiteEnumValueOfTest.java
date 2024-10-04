@@ -31,8 +31,32 @@ public final class LiteEnumValueOfTest {
 
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(LiteEnumValueOf.class, getClass())
-          .addSourceFile("android/testdata/stubs/android/os/Parcel.java")
-          .addSourceFile("android/testdata/stubs/android/os/Parcelable.java")
+          .addSourceLines(
+              "Parcel.java",
+              """
+              package android.os;
+
+              public interface Parcel {}""")
+          .addSourceLines(
+              "Parcelable.java",
+              """
+              package android.os;
+
+              public interface Parcelable {
+                interface Creator<T> {
+                  T createFromParcel(Parcel in);
+
+                  T[] newArray(int size);
+                }
+
+                int describeContents();
+
+                void writeToParcel(Parcel dest, int flags);
+
+                interface ClassLoaderCreator<T> extends Creator<T> {
+                  T createFromParcel(Parcel source, ClassLoader loader);
+                }
+              }""")
           .addSourceLines(
               "FakeLiteEnum.java",
               """

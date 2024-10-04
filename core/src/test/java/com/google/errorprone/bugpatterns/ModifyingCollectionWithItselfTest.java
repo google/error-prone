@@ -33,14 +33,113 @@ public class ModifyingCollectionWithItselfTest {
   @Test
   public void positiveCases1() {
     compilationHelper
-        .addSourceFile("testdata/ModifyingCollectionWithItselfPositiveCases.java")
+        .addSourceLines(
+            "ModifyingCollectionWithItselfPositiveCases.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            import java.util.ArrayList;
+            import java.util.List;
+
+            /**
+             * @author scottjohnson@google.com (Scott Johnson)
+             */
+            public class ModifyingCollectionWithItselfPositiveCases {
+
+              List<Integer> a = new ArrayList<Integer>();
+              List<Integer> c = new ArrayList<Integer>();
+
+              public void addAll(List<Integer> b) {
+                // BUG: Diagnostic contains: a.addAll(b)
+                this.a.addAll(a);
+
+                // BUG: Diagnostic contains: a.addAll(1, b)
+                a.addAll(1, a);
+              }
+
+              public void containsAll(List<Integer> b) {
+                // BUG: Diagnostic contains: this.a.containsAll(b)
+                this.a.containsAll(this.a);
+
+                // BUG: Diagnostic contains: a.containsAll(b)
+                a.containsAll(this.a);
+              }
+
+              public void retainAll(List<Integer> a) {
+                // BUG: Diagnostic contains: this.a.retainAll(a)
+                a.retainAll(a);
+              }
+
+              public void removeAll() {
+                // BUG: Diagnostic contains: a.clear()
+                this.a.removeAll(a);
+
+                // BUG: Diagnostic contains: a.clear()
+                a.removeAll(a);
+              }
+
+              static class HasOneField {
+                List<Integer> a;
+
+                void removeAll() {
+                  // BUG: Diagnostic contains: a.clear();
+                  a.removeAll(a);
+                }
+
+                void testParameterFirst(List<Integer> b) {
+                  // BUG: Diagnostic contains: this.a.removeAll(b);
+                  b.removeAll(b);
+                }
+
+                void expressionStatementChecks() {
+                  // BUG: Diagnostic contains: ModifyingCollectionWithItself
+                  boolean b = 2 == 2 && a.containsAll(a);
+
+                  // BUG: Diagnostic contains: ModifyingCollectionWithItself
+                  b = a.retainAll(a);
+
+                  // BUG: Diagnostic contains: ModifyingCollectionWithItself
+                  b = a.removeAll(a);
+                }
+              }
+            }""")
         .doTest();
   }
 
   @Test
   public void negativeCase() {
     compilationHelper
-        .addSourceFile("testdata/ModifyingCollectionWithItselfNegativeCases.java")
+        .addSourceLines(
+            "ModifyingCollectionWithItselfNegativeCases.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            import java.util.ArrayList;
+            import java.util.List;
+
+            /**
+             * @author scottjohnson@google.com (Scott Johnson)
+             */
+            public class ModifyingCollectionWithItselfNegativeCases {
+
+              List<Integer> a = new ArrayList<Integer>();
+
+              public boolean addAll(List<Integer> b) {
+                return a.addAll(b);
+              }
+
+              public boolean removeAll(List<Integer> b) {
+                return a.removeAll(b);
+              }
+
+              public boolean retainAll(List<Integer> b) {
+                return a.retainAll(b);
+              }
+
+              public boolean containsAll(List<Integer> b) {
+                return a.containsAll(b);
+              }
+            }""")
         .doTest();
   }
 }

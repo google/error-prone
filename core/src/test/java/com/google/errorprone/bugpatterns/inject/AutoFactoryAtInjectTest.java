@@ -32,11 +32,78 @@ public class AutoFactoryAtInjectTest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("testdata/AutoFactoryAtInjectPositiveCases.java").doTest();
+    compilationHelper
+        .addSourceLines(
+            "AutoFactoryAtInjectPositiveCases.java",
+            """
+            package com.google.errorprone.bugpatterns.inject.testdata;
+
+            import com.google.auto.factory.AutoFactory;
+            import javax.inject.Inject;
+
+            class AssistedInjectAndInjectOnSameConstructorPositiveCases {
+
+              @AutoFactory
+              static class HasAutoFactoryOnClass {
+                // BUG: Diagnostic contains: remove
+                @Inject
+                HasAutoFactoryOnClass() {}
+              }
+
+              @AutoFactory
+              static class UsesGuiceInject {
+                // BUG: Diagnostic contains: remove
+                @com.google.inject.Inject
+                UsesGuiceInject() {}
+              }
+
+              static class HasAutoFactoryOnConstructor {
+                // BUG: Diagnostic contains: remove
+                @Inject
+                @AutoFactory
+                HasAutoFactoryOnConstructor() {}
+              }
+            }""")
+        .doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("testdata/AutoFactoryAtInjectNegativeCases.java").doTest();
+    compilationHelper
+        .addSourceLines(
+            "AutoFactoryAtInjectNegativeCases.java",
+            """
+            package com.google.errorprone.bugpatterns.inject.testdata;
+
+            import com.google.auto.factory.AutoFactory;
+            import javax.inject.Inject;
+
+            class AutoFactoryAtInjectNegativeCases {
+
+              @AutoFactory
+              static class AtInjectOnInnerType {
+                static class InnerType {
+                  @Inject
+                  InnerType() {}
+                }
+              }
+
+              static class AutoFactoryOnInnerType {
+                @Inject
+                AutoFactoryOnInnerType() {}
+
+                @AutoFactory
+                static class InnerType {}
+              }
+
+              static class OnDifferentConstructors {
+                @Inject
+                OnDifferentConstructors(String string) {}
+
+                @AutoFactory
+                OnDifferentConstructors(Object object) {}
+              }
+            }""")
+        .doTest();
   }
 }

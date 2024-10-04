@@ -32,14 +32,165 @@ public class ChainedAssertionLosesContextTest {
   @Test
   public void positiveCase() {
     compilationHelper
-        .addSourceFile("testdata/ChainedAssertionLosesContextPositiveCases.java")
+        .addSourceLines(
+            "ChainedAssertionLosesContextPositiveCases.java",
+            """
+package com.google.errorprone.bugpatterns.testdata;
+
+import static com.google.common.truth.Truth.assertAbout;
+import static com.google.common.truth.Truth.assertWithMessage;
+import static com.google.common.truth.Truth.assert_;
+
+import com.google.common.truth.FailureMetadata;
+import com.google.common.truth.Subject;
+import com.google.common.truth.Truth;
+
+/**
+ * @author cpovirk@google.com (Chris Povirk)
+ */
+public class ChainedAssertionLosesContextPositiveCases {
+  static final class FooSubject extends Subject {
+    private final Foo actual;
+
+    static Factory<FooSubject, Foo> foos() {
+      return FooSubject::new;
+    }
+
+    static FooSubject assertThat(Foo foo) {
+      return assertAbout(foos()).that(foo);
+    }
+
+    private FooSubject(FailureMetadata metadata, Foo actual) {
+      super(metadata, actual);
+      this.actual = actual;
+    }
+
+    void hasString(String expected) {
+      // BUG: Diagnostic contains: check("string()").that(actual.string()).isEqualTo(expected)
+      Truth.assertThat(actual.string()).isEqualTo(expected);
+    }
+
+    void hasOtherFooInteger(int expected) {
+      // BUG: Diagnostic contains:
+      // check("otherFoo().integer()").that(actual.otherFoo().integer()).isEqualTo(expected)
+      Truth.assertThat(actual.otherFoo().integer()).isEqualTo(expected);
+    }
+
+    FooSubject otherFooAbout() {
+      // BUG: Diagnostic contains: check("otherFoo()").about(foos()).that(actual.otherFoo())
+      return assertAbout(foos()).that(actual.otherFoo());
+    }
+
+    FooSubject otherFooThat() {
+      // BUG: Diagnostic contains: check("otherFoo()").about(foos()).that(actual.otherFoo())
+      return assertThat(actual.otherFoo());
+    }
+
+    void withMessage(String expected) {
+      // BUG: Diagnostic contains:
+      // check("string()").withMessage("blah").that(actual.string()).isEqualTo(expected)
+      assertWithMessage("blah").that(actual.string()).isEqualTo(expected);
+    }
+
+    void withMessageWithArgs(String expected) {
+      // BUG: Diagnostic contains:
+      // check("string()").withMessage("%s", "blah").that(actual.string()).isEqualTo(expected)
+      assertWithMessage("%s", "blah").that(actual.string()).isEqualTo(expected);
+    }
+
+    void plainAssert(String expected) {
+      // BUG: Diagnostic contains:
+      // check("string()").that(actual.string()).isEqualTo(expected)
+      assert_().that(actual.string()).isEqualTo(expected);
+    }
+  }
+
+  private static final class Foo {
+    final String string;
+    final int integer;
+
+    Foo(String string, int integer) {
+      this.string = string;
+      this.integer = integer;
+    }
+
+    String string() {
+      return string;
+    }
+
+    int integer() {
+      return integer;
+    }
+
+    Foo otherFoo() {
+      return this;
+    }
+  }
+}""")
         .doTest();
   }
 
   @Test
   public void negativeCase() {
     compilationHelper
-        .addSourceFile("testdata/ChainedAssertionLosesContextNegativeCases.java")
+        .addSourceLines(
+            "ChainedAssertionLosesContextNegativeCases.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            import static com.google.common.truth.Truth.assertAbout;
+            import static com.google.common.truth.Truth.assertThat;
+
+            import com.google.common.truth.FailureMetadata;
+            import com.google.common.truth.Subject;
+
+            /**
+             * @author cpovirk@google.com (Chris Povirk)
+             */
+            public class ChainedAssertionLosesContextNegativeCases {
+              static final class FooSubject extends Subject {
+                private final Foo actual;
+
+                private FooSubject(FailureMetadata metadata, Foo actual) {
+                  super(metadata, actual);
+                  this.actual = actual;
+                }
+
+                static Factory<FooSubject, Foo> foos() {
+                  return FooSubject::new;
+                }
+
+                static FooSubject assertThat(Foo foo) {
+                  return assertAbout(foos()).that(foo);
+                }
+              }
+
+              void someTestMethod() {
+                assertThat("").isNotNull();
+              }
+
+              private static final class Foo {
+                final String string;
+                final int integer;
+
+                Foo(String string, int integer) {
+                  this.string = string;
+                  this.integer = integer;
+                }
+
+                String string() {
+                  return string;
+                }
+
+                int integer() {
+                  return integer;
+                }
+
+                Foo otherFoo() {
+                  return this;
+                }
+              }
+            }""")
         .doTest();
   }
 }

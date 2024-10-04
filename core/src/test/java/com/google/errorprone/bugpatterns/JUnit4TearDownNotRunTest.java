@@ -32,25 +32,197 @@ public class JUnit4TearDownNotRunTest {
 
   @Test
   public void positiveCases() {
-    compilationHelper.addSourceFile("testdata/JUnit4TearDownNotRunPositiveCases.java").doTest();
+    compilationHelper
+        .addSourceLines(
+            "JUnit4TearDownNotRunPositiveCases.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            import org.junit.Before;
+            import org.junit.BeforeClass;
+            import org.junit.runner.RunWith;
+            import org.junit.runners.JUnit4;
+
+            /**
+             * @author glorioso@google.com
+             */
+            @RunWith(JUnit4.class)
+            public class JUnit4TearDownNotRunPositiveCases {
+              // BUG: Diagnostic contains: @After
+              public void tearDown() {}
+            }
+
+            @RunWith(JUnit4.class)
+            class JUnit4TearDownNotRunPositiveCase2 {
+              // BUG: Diagnostic contains: @After
+              protected void tearDown() {}
+            }
+
+            @RunWith(JUnit4.class)
+            class J4BeforeToAfter {
+              // BUG: Diagnostic contains: @After
+              @Before protected void tearDown() {}
+            }
+
+            @RunWith(JUnit4.class)
+            class J4BeforeClassToAfterClass {
+              // BUG: Diagnostic contains: @AfterClass
+              @BeforeClass protected void tearDown() {}
+            }
+
+            class TearDownUnannotatedBaseClass {
+              void tearDown() {}
+            }
+
+            @RunWith(JUnit4.class)
+            class JUnit4TearDownNotRunPositiveCase3 extends TearDownUnannotatedBaseClass {
+              // BUG: Diagnostic contains: @After
+              protected void tearDown() {}
+            }
+
+            @RunWith(JUnit4.class)
+            class J4TearDownHasOverride extends TearDownUnannotatedBaseClass {
+              // BUG: Diagnostic contains: @After
+              @Override protected void tearDown() {}
+            }
+
+            @RunWith(JUnit4.class)
+            class J4TearDownHasPublicOverride extends TearDownUnannotatedBaseClass {
+              // BUG: Diagnostic contains: @After
+              @Override public void tearDown() {}
+            }""")
+        .doTest();
   }
 
   @Test
   public void positiveCase_customAnnotation() {
     compilationHelper
-        .addSourceFile("testdata/JUnit4TearDownNotRunPositiveCaseCustomAfter.java")
+        .addSourceLines(
+            "JUnit4TearDownNotRunPositiveCaseCustomAfter.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            import org.junit.runner.RunWith;
+            import org.junit.runners.JUnit4;
+
+            /** Slightly funky test case with a custom After annotation) */
+            @RunWith(JUnit4.class)
+            public class JUnit4TearDownNotRunPositiveCaseCustomAfter {
+              // This will compile-fail and suggest the import of org.junit.After
+              // BUG: Diagnostic contains: @After
+              @After
+              public void tearDown() {}
+            }
+
+            @interface After {}""")
         .doTest();
   }
 
   @Test
   public void positiveCase_customAnnotationDifferentName() {
     compilationHelper
-        .addSourceFile("testdata/JUnit4TearDownNotRunPositiveCaseCustomAfter2.java")
+        .addSourceLines(
+            "JUnit4TearDownNotRunPositiveCaseCustomAfter2.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            import org.junit.runner.RunWith;
+            import org.junit.runners.JUnit4;
+
+            /** Test case with a custom After annotation. */
+            @RunWith(JUnit4.class)
+            public class JUnit4TearDownNotRunPositiveCaseCustomAfter2 {
+              // This will compile-fail and suggest the import of org.junit.After
+              // BUG: Diagnostic contains: @After
+              @After
+              public void tidyUp() {}
+            }
+
+            @interface After {}""")
         .doTest();
   }
 
   @Test
   public void negativeCases() {
-    compilationHelper.addSourceFile("testdata/JUnit4TearDownNotRunNegativeCases.java").doTest();
+    compilationHelper
+        .addSourceLines(
+            "JUnit4TearDownNotRunNegativeCases.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            import junit.framework.TestCase;
+            import org.junit.After;
+            import org.junit.internal.runners.JUnit38ClassRunner;
+            import org.junit.runner.RunWith;
+            import org.junit.runners.JUnit4;
+
+            /** Not a JUnit 4 class (no @RunWith annotation on the class). */
+            public class JUnit4TearDownNotRunNegativeCases {
+              public void tearDown() {}
+            }
+
+            @RunWith(JUnit38ClassRunner.class)
+            class J4TearDownDifferentRunner {
+              public void tearDown() {}
+            }
+
+            @RunWith(JUnit4.class)
+            class J4TearDownHasAfter {
+              @After
+              public void tearDown() {}
+            }
+
+            @RunWith(JUnit4.class)
+            class J4TearDownExtendsTestCase extends TestCase {
+              public void tearDown() {}
+            }
+
+            @RunWith(JUnit4.class)
+            class J4TearDownPrivateTearDown {
+              private void tearDown() {}
+            }
+
+            @RunWith(JUnit4.class)
+            class J4TearDownPackageLocal {
+              void tearDown() {}
+            }
+
+            @RunWith(JUnit4.class)
+            class J4TearDownNonVoidReturnType {
+              int tearDown() {
+                return 42;
+              }
+            }
+
+            @RunWith(JUnit4.class)
+            class J4TearDownTearDownHasParameters {
+              public void tearDown(int ignored) {}
+
+              public void tearDown(boolean ignored) {}
+
+              public void tearDown(String ignored) {}
+            }
+
+            @RunWith(JUnit4.class)
+            class J4TearDownStaticTearDown {
+              public static void tearDown() {}
+            }
+
+            abstract class TearDownAnnotatedBaseClass {
+              @After
+              public void tearDown() {}
+            }
+
+            @RunWith(JUnit4.class)
+            class J4TearDownInheritsFromAnnotatedMethod extends TearDownAnnotatedBaseClass {
+              public void tearDown() {}
+            }
+
+            @RunWith(JUnit4.class)
+            class J4TearDownInheritsFromAnnotatedMethod2 extends TearDownAnnotatedBaseClass {
+              @After
+              public void tearDown() {}
+            }""")
+        .doTest();
   }
 }

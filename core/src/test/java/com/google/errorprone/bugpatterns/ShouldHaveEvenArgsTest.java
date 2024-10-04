@@ -38,19 +38,173 @@ public class ShouldHaveEvenArgsTest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("testdata/ShouldHaveEvenArgsPositiveCases.java").doTest();
+    compilationHelper
+        .addSourceLines(
+            "ShouldHaveEvenArgsPositiveCases.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            import static com.google.common.truth.Truth.assertThat;
+
+            import com.google.common.truth.Correspondence;
+            import java.util.HashMap;
+            import java.util.Map;
+
+            /**
+             * Positive test cases for {@link ShouldHaveEvenArgs} check.
+             *
+             * @author bhagwani@google.com (Sumit Bhagwani)
+             */
+            public class ShouldHaveEvenArgsPositiveCases {
+
+              private static final Map map = new HashMap<String, String>();
+
+              public void testWithOddArgs() {
+                // BUG: Diagnostic contains: even number of arguments
+                assertThat(map).containsExactly("hello", "there", "rest");
+
+                // BUG: Diagnostic contains: even number of arguments
+                assertThat(map).containsExactly("hello", "there", "hello", "there", "rest");
+
+                // BUG: Diagnostic contains: even number of arguments
+                assertThat(map).containsExactly(null, null, null, null, new Object[] {});
+              }
+
+              public void testWithArrayArgs() {
+                String key = "hello";
+                Object[] value = new Object[] {};
+                Object[][] args = new Object[][] {};
+
+                // BUG: Diagnostic contains: even number of arguments
+                assertThat(map).containsExactly(key, value, (Object) args);
+              }
+
+              public void testWithOddArgsWithCorrespondence() {
+                assertThat(map)
+                    .comparingValuesUsing(Correspondence.from((a, b) -> true, "dummy"))
+                    // BUG: Diagnostic contains: even number of arguments
+                    .containsExactly("hello", "there", "rest");
+
+                assertThat(map)
+                    .comparingValuesUsing(Correspondence.from((a, b) -> true, "dummy"))
+                    // BUG: Diagnostic contains: even number of arguments
+                    .containsExactly("hello", "there", "hello", "there", "rest");
+              }
+            }""")
+        .doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("testdata/ShouldHaveEvenArgsNegativeCases.java").doTest();
+    compilationHelper
+        .addSourceLines(
+            "ShouldHaveEvenArgsNegativeCases.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            import static com.google.common.truth.Truth.assertThat;
+
+            import java.util.HashMap;
+            import java.util.Map;
+
+            /**
+             * Negative test cases for {@link ShouldHaveEvenArgs} check.
+             *
+             * @author bhagwani@google.com (Sumit Bhagwani)
+             */
+            public class ShouldHaveEvenArgsNegativeCases {
+
+              private static final Map<String, String> map = new HashMap<String, String>();
+
+              public void testWithNoArgs() {
+                assertThat(map).containsExactly();
+              }
+
+              public void testWithMinimalArgs() {
+                assertThat(map).containsExactly("hello", "there");
+              }
+
+              public void testWithEvenArgs() {
+                assertThat(map).containsExactly("hello", "there", "hello", "there");
+              }
+
+              public void testWithVarargs(Object... args) {
+                assertThat(map).containsExactly("hello", args);
+                assertThat(map).containsExactly("hello", "world", args);
+              }
+
+              public void testWithArray() {
+                String[] arg = {"hello", "there"};
+                assertThat(map).containsExactly("yolo", arg);
+
+                String key = "hello";
+                Object[] value = new Object[] {};
+                Object[][] args = new Object[][] {};
+
+                assertThat(map).containsExactly(key, value);
+                assertThat(map).containsExactly(key, value, (Object[]) args);
+                assertThat(map).containsExactly(key, value, key, value, key, value);
+              }
+            }""")
+        .doTest();
   }
 
   @org.junit.Ignore("Public truth doesn't contain this method")
   @Test
   public void positiveCase_multimap() {
     compilationHelper
-        .addSourceFile("testdata/ShouldHaveEvenArgsMultimapPositiveCases.java")
+        .addSourceLines(
+            "ShouldHaveEvenArgsMultimapPositiveCases.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            import static com.google.common.truth.Truth.assertThat;
+
+            import com.google.common.collect.ImmutableMultimap;
+            import com.google.common.collect.Multimap;
+            import com.google.common.truth.Correspondence;
+
+            /**
+             * Positive test cases for {@link ShouldHaveEvenArgs} check.
+             *
+             * @author monnoroch@google.com (Max Strakhov)
+             */
+            public class ShouldHaveEvenArgsMultimapPositiveCases {
+
+              private static final Multimap<String, String> multimap = ImmutableMultimap.of();
+
+              public void testWithOddArgs() {
+                // BUG: Diagnostic contains: even number of arguments
+                assertThat(multimap).containsExactly("hello", "there", "rest");
+
+                // BUG: Diagnostic contains: even number of arguments
+                assertThat(multimap).containsExactly("hello", "there", "hello", "there", "rest");
+
+                // BUG: Diagnostic contains: even number of arguments
+                assertThat(multimap).containsExactly(null, null, null, null, new Object[] {});
+              }
+
+              public void testWithArrayArgs() {
+                String key = "hello";
+                Object[] value = new Object[] {};
+                Object[][] args = new Object[][] {};
+
+                // BUG: Diagnostic contains: even number of arguments
+                assertThat(multimap).containsExactly(key, value, (Object) args);
+              }
+
+              public void testWithOddArgsWithCorrespondence() {
+                assertThat(multimap)
+                    .comparingValuesUsing(Correspondence.from((a, b) -> true, "dummy"))
+                    // BUG: Diagnostic contains: even number of arguments
+                    .containsExactly("hello", "there", "rest");
+
+                assertThat(multimap)
+                    .comparingValuesUsing(Correspondence.from((a, b) -> true, "dummy"))
+                    // BUG: Diagnostic contains: even number of arguments
+                    .containsExactly("hello", "there", "hello", "there", "rest");
+              }
+            }""")
         .doTest();
   }
 
@@ -58,7 +212,51 @@ public class ShouldHaveEvenArgsTest {
   @Test
   public void negativeCase_multimap() {
     compilationHelper
-        .addSourceFile("testdata/ShouldHaveEvenArgsMultimapNegativeCases.java")
+        .addSourceLines(
+            "ShouldHaveEvenArgsMultimapNegativeCases.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            import static com.google.common.truth.Truth.assertThat;
+
+            import com.google.common.collect.ImmutableMultimap;
+            import com.google.common.collect.Multimap;
+
+            /**
+             * Negative test cases for {@link ShouldHaveEvenArgs} check.
+             *
+             * @author monnoroch@google.com (Max Strakhov)
+             */
+            public class ShouldHaveEvenArgsMultimapNegativeCases {
+
+              private static final Multimap<String, String> multimap = ImmutableMultimap.of();
+
+              public void testWithMinimalArgs() {
+                assertThat(multimap).containsExactly("hello", "there");
+              }
+
+              public void testWithEvenArgs() {
+                assertThat(multimap).containsExactly("hello", "there", "hello", "there");
+              }
+
+              public void testWithVarargs(Object... args) {
+                assertThat(multimap).containsExactly("hello", args);
+                assertThat(multimap).containsExactly("hello", "world", args);
+              }
+
+              public void testWithArray() {
+                String[] arg = {"hello", "there"};
+                assertThat(multimap).containsExactly("yolo", arg);
+
+                String key = "hello";
+                Object[] value = new Object[] {};
+                Object[][] args = new Object[][] {};
+
+                assertThat(multimap).containsExactly(key, value);
+                assertThat(multimap).containsExactly(key, value, (Object[]) args);
+                assertThat(multimap).containsExactly(key, value, key, value, key, value);
+              }
+            }""")
         .doTest();
   }
 }

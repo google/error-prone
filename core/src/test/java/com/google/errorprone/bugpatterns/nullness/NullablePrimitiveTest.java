@@ -31,12 +31,62 @@ public class NullablePrimitiveTest {
 
   @Test
   public void positiveCase() {
-    compilationHelper.addSourceFile("testdata/NullablePrimitivePositiveCases.java").doTest();
+    compilationHelper
+        .addSourceLines(
+            "NullablePrimitivePositiveCases.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            import org.jspecify.annotations.Nullable;
+
+            /**
+             * @author sebastian.h.monte@gmail.com (Sebastian Monte)
+             */
+            public class NullablePrimitivePositiveCases {
+
+              // BUG: Diagnostic contains: remove
+              @Nullable
+              int a;
+
+              public void method(
+                  // BUG: Diagnostic contains: remove
+                  @Nullable
+                  int a) {
+              }
+
+              // BUG: Diagnostic contains: remove
+              @Nullable
+              public int method() {
+                return 0;
+              }
+            }""")
+        .doTest();
   }
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("testdata/NullablePrimitiveNegativeCases.java").doTest();
+    compilationHelper
+        .addSourceLines(
+            "NullablePrimitiveNegativeCases.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            import org.jspecify.annotations.Nullable;
+
+            /**
+             * @author sebastian.h.monte@gmail.com (Sebastian Monte)
+             */
+            public class NullablePrimitiveNegativeCases {
+              @Nullable Integer a;
+
+              public void method(@Nullable Integer a) {}
+
+              @Nullable
+              public Integer method() {
+                return Integer.valueOf(0);
+              }
+            }""")
+        .doTest();
   }
 
   @Test
