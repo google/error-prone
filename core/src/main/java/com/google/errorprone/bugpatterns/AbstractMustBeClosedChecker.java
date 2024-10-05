@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.bugpatterns.CloseableDecoratorTypes.CLOSEABLE_DECORATOR_TYPES;
 import static com.google.errorprone.fixes.SuggestedFixes.prettyType;
 import static com.google.errorprone.fixes.SuggestedFixes.qualifyType;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
@@ -62,6 +63,7 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.util.Position;
@@ -299,6 +301,17 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
             }
           }
           break;
+        case NEW_CLASS:
+          NewClassTree newClassTree = (NewClassTree) path.getLeaf();
+          if (isClosingDecorator(newClassTree, prev.getLeaf(), state)) {
+            if (HAS_MUST_BE_CLOSED_ANNOTATION.matches(newClassTree, state)) {
+              // if the decorator is also annotated then it would already be enforced
+              return Optional.empty();
+            }
+            // otherwise, enforce that the decorator must be closed
+            continue OUTER;
+          }
+          break;
         case VARIABLE:
           Symbol sym = getSymbol(path.getLeaf());
           if (sym instanceof VarSymbol) {
@@ -519,5 +532,30 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
                 .build())
         .closeBraceAfter(enclosingBlock)
         .wrapped();
+  }
+
+  /**
+   * Returns true if {@code decorator} is the instantiation of an {@link AutoCloseable} decorator
+   * type that decorates the given {@code resource} and always closes the decorated {@code resource}
+   * when closed.
+   */
+  private static boolean isClosingDecorator(
+      NewClassTree decorator, Tree resource, VisitorState state) {
+    if (decorator.getArguments().isEmpty() || !decorator.getArguments().get(0).equals(resource)) {
+      // we assume the decorated resource is always the first argument to the decorator constructor
+      return false;
+    }
+    MethodSymbol constructor = getSymbol(decorator);
+    if (!constructor.getThrownTypes().isEmpty()) {
+      // resource would not be closed if the decorator constructor throws
+      return false;
+    }
+    Type resourceType = constructor.params().get(0).type;
+    Type decoratorType = constructor.owner.type;
+    return CLOSEABLE_DECORATOR_TYPES.keySet().stream()
+        .filter(key -> isSameType(resourceType, state.getTypeFromString(key), state))
+        .limit(1)
+        .flatMap(key -> CLOSEABLE_DECORATOR_TYPES.get(key).stream())
+        .anyMatch(value -> isSubtype(decoratorType, state.getTypeFromString(value), state));
   }
 }
