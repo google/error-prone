@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.truth.TruthJUnit.assume;
 import static org.junit.Assert.assertThrows;
 
 import com.google.errorprone.CompilationTestHelper;
@@ -510,6 +511,31 @@ class Test {
                 time.setYear(1);
                 time.setMonth(1);
                 time.setDate(1);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void sortedCollectionSequencedCollectionMethods() {
+    assume().that(Runtime.version().feature()).isAtLeast(21);
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.util.TreeMap;
+            import java.util.TreeSet;
+            public class Test {
+              public void foo(TreeMap<String, String> map, TreeSet<String> set) {
+                // BUG: Diagnostic contains: DoNotCall
+                map.putFirst("foo", "bar");
+                // BUG: Diagnostic contains: DoNotCall
+                map.putLast("foo", "bar");
+                // BUG: Diagnostic contains: DoNotCall
+                set.addFirst("foo");
+                // BUG: Diagnostic contains: DoNotCall
+                set.addLast("foo");
               }
             }
             """)

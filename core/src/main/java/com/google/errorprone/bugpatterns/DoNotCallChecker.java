@@ -145,6 +145,16 @@ public class DoNotCallChecker extends BugChecker
               "sqlTime.toInstant() is not supported. Did you mean to call toLocalTime() instead?")
           .put(
               instanceMethod()
+                  .onDescendantOf("java.util.SortedMap")
+                  .namedAnyOf("putFirst", "putLast"),
+              "Sorted collections do not support insertions with explicit positioning")
+          .put(
+              instanceMethod()
+                  .onDescendantOf("java.util.SortedSet")
+                  .namedAnyOf("addFirst", "addLast"),
+              "Sorted collections do not support insertions with explicit positioning")
+          .put(
+              instanceMethod()
                   .onExactClass("java.util.concurrent.ThreadLocalRandom")
                   .named("setSeed"),
               "ThreadLocalRandom does not support setting a seed.")
