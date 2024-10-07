@@ -216,4 +216,23 @@ public class MissingOverrideTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void explicitRecordAccessor_doesNotFlagConstructors() {
+    assume().that(Runtime.version().feature()).isAtLeast(16);
+
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            public record Test(int x) {
+              public Test() {
+                this(1);
+              }
+
+              public Test {}
+            }
+            """)
+        .doTest();
+  }
 }

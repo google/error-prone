@@ -67,6 +67,7 @@ public class MissingOverride extends BugChecker implements MethodTreeMatcher {
       return NO_MATCH;
     }
     if (ASTHelpers.isRecord(sym.owner)
+        && !sym.isConstructor()
         && sym.getModifiers().contains(Modifier.PUBLIC)
         && sym.getParameters().isEmpty()) {
       ImmutableSet<Name> components =
