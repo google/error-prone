@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -29,12 +28,8 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class ThreadJoinLoopTest {
 
-  private static CompilationTestHelper compilationTestHelper;
-
-  @Before
-  public void setup() {
-    compilationTestHelper = CompilationTestHelper.newInstance(ThreadJoinLoop.class, getClass());
-  }
+  private final CompilationTestHelper compilationTestHelper =
+      CompilationTestHelper.newInstance(ThreadJoinLoop.class, getClass());
 
   @Test
   public void positiveCases() {
