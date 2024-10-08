@@ -1001,6 +1001,9 @@ Math.abs does not always give a non-negative result. Please consider other metho
 __[MemoizeConstantVisitorStateLookups](bugpattern/MemoizeConstantVisitorStateLookups)__<br>
 Anytime you need to look up a constant value from VisitorState, improve performance by creating a cache for it with VisitorState.memoize
 
+__[MisformattedTestData](bugpattern/MisformattedTestData)__<br>
+This test data will be more readable if correctly formatted.
+
 __[MissingCasesInEnumSwitch](bugpattern/MissingCasesInEnumSwitch)__<br>
 Switches on enum types should either handle all values, or have a default case.
 
