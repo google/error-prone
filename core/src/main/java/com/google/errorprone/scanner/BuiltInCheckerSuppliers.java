@@ -235,6 +235,7 @@ import com.google.errorprone.bugpatterns.MathRoundIntLong;
 import com.google.errorprone.bugpatterns.MemberName;
 import com.google.errorprone.bugpatterns.MemoizeConstantVisitorStateLookups;
 import com.google.errorprone.bugpatterns.MethodCanBeStatic;
+import com.google.errorprone.bugpatterns.MisformattedTestData;
 import com.google.errorprone.bugpatterns.MissingBraces;
 import com.google.errorprone.bugpatterns.MissingCasesInEnumSwitch;
 import com.google.errorprone.bugpatterns.MissingDefault;
@@ -997,6 +998,7 @@ public class BuiltInCheckerSuppliers {
           MalformedInlineTag.class,
           MathAbsoluteNegative.class,
           MemoizeConstantVisitorStateLookups.class,
+          MisformattedTestData.class,
           MissingCasesInEnumSwitch.class,
           MissingFail.class,
           MissingImplementsComparable.class,

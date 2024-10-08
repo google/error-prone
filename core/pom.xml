@@ -69,6 +69,12 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <!-- Apache 2.0 -->
+      <groupId>com.google.googlejavaformat</groupId>
+      <artifactId>google-java-format</artifactId>
+      <version>1.19.1</version>
+    </dependency>
+    <dependency>
       <!-- MIT -->
       <groupId>org.pcollections</groupId>
       <artifactId>pcollections</artifactId>
