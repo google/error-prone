@@ -15,6 +15,7 @@
  */
 package com.google.errorprone;
 
+import com.google.errorprone.apply.CustomImportOrganizer;
 import com.google.errorprone.apply.ImportOrganizer;
 
 /** Parse import order strings. */
@@ -39,6 +40,8 @@ public final class ImportOrderParser {
       case "idea":
         return ImportOrganizer.IDEA_ORGANIZER;
       default:
+        if (importOrder.startsWith("custom:"))
+          return new CustomImportOrganizer(importOrder.substring(7));
         throw new IllegalStateException("Unknown import order: '" + importOrder + "'");
     }
   }
