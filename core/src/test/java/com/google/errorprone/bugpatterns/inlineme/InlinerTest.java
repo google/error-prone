@@ -1471,6 +1471,46 @@ public final class Caller {
         .doTest();
   }
 
+  @Test
+  public void math_b308614050() {
+    refactoringTestHelper
+        .addInputLines(
+            "Client.java",
+            """
+            package com.google.foo;
+            import com.google.errorprone.annotations.InlineMe;
+            public final class Client {
+              @InlineMe(replacement = "x * 2")
+              public static int timesTwo(int x) {
+                return x * 2;
+              }
+            }
+            """)
+        .expectUnchanged()
+        .addInputLines(
+            "Caller.java",
+            """
+            import com.google.foo.Client;
+            public final class Caller {
+              public void doTest() {
+                long four = Client.timesTwo(1 + 1);
+              }
+            }
+            """)
+        // This is a bug since it now evaluates to 3, not 4!
+        .addOutputLines(
+            "Caller.java",
+            """
+            import com.google.foo.Client;
+            public final class Caller {
+              public void doTest() {
+                long four = 1 + 1 * 2;
+              }
+            }
+            """)
+        .doTest();
+  }
+
   private BugCheckerRefactoringTestHelper bugCheckerWithPrefixFlag(String prefix) {
     return BugCheckerRefactoringTestHelper.newInstance(Inliner.class, getClass())
         .setArgs("-XepOpt:" + PREFIX_FLAG + "=" + prefix);
