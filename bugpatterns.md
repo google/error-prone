@@ -330,6 +330,9 @@ Math.round(Integer) results in truncation
 __[MislabeledAndroidString](bugpattern/MislabeledAndroidString)__<br>
 Certain resources in &#96;android.R.string&#96; have names that do not match their content
 
+__[MisleadingEscapedSpace](bugpattern/MisleadingEscapedSpace)__<br>
+Using \s anywhere except at the end of a line in a text block is potentially misleading.
+
 __[MisplacedScopeAnnotations](bugpattern/MisplacedScopeAnnotations)__<br>
 Scope annotations used as qualifier annotations don&#39;t have any effect. Move the scope annotation to the binding location or delete it.
 
