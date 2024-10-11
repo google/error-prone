@@ -75,7 +75,7 @@ public final class MisformattedTestData extends BugChecker implements MethodInvo
     } catch (FormatterException exception) {
       return NO_MATCH;
     }
-    if (formattedSource.equals(sourceValue)) {
+    if (formattedSource.trim().equals(((String) sourceValue).trim())) {
       return NO_MATCH;
     }
     // This is a bit crude: but tokenize between the comma and the 2nd argument in order to work out

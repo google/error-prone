@@ -62,6 +62,34 @@ public final class MisformattedTestDataTest {
   }
 
   @Test
+  public void onlyDiffersByFinalNewline_noFinding() {
+    assume().that(Runtime.version().feature()).isAtLeast(14);
+
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.errorprone.BugCheckerRefactoringTestHelper;
+
+            class Test {
+              void method(BugCheckerRefactoringTestHelper h) {
+                h.addInputLines(
+                    "Test.java",
+                    \"""
+                    package foo;
+
+                    class Test {
+                      void method() {
+                        int a = 1;
+                      }
+                    }\""");
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void misformatted_suggestsFix() {
     assume().that(Runtime.version().feature()).isAtLeast(14);
 
