@@ -333,36 +333,36 @@ public class DefaultCharset extends BugChecker
       Description.Builder description, VisitorState state, Tree arg, Tree toReplace) {
     for (CharsetFix charset : CharsetFix.values()) {
       if (shouldUseGuava(state)) {
-        description.addFix(guavaFileReaderFix(state, arg, toReplace, charset));
+        description.addFix(guavaFileReaderFix(arg, new FileCharsetReplacementContext(state, toReplace, charset)));
       } else {
-        description.addFix(nioFileReaderFix(state, arg, toReplace, charset));
+        description.addFix(nioFileReaderFix(arg, new FileCharsetReplacementContext(state, toReplace, charset)));
       }
     }
   }
 
   private static Fix nioFileReaderFix(
-      VisitorState state, Tree arg, Tree toReplace, CharsetFix charset) {
+          Tree arg, FileCharsetReplacementContext fileCharsetReplacementContext) {
     SuggestedFix.Builder fix = SuggestedFix.builder();
     fix.replace(
-        toReplace,
+            fileCharsetReplacementContext.getToReplace(),
         String.format(
-            "Files.newBufferedReader(%s, %s)", toPath(state, arg, fix), charset.replacement()));
+            "Files.newBufferedReader(%s, %s)", toPath(fileCharsetReplacementContext.getState(), arg, fix), fileCharsetReplacementContext.getCharset().replacement()));
     fix.addImport("java.nio.file.Files");
-    charset.addImport(fix);
-    variableTypeFix(fix, state, FileReader.class, Reader.class);
+    fileCharsetReplacementContext.getCharset().addImport(fix);
+    variableTypeFix(fix, fileCharsetReplacementContext.getState(), FileReader.class, Reader.class);
     return fix.build();
   }
 
   private static Fix guavaFileReaderFix(
-      VisitorState state, Tree fileArg, Tree toReplace, CharsetFix charset) {
+          Tree fileArg, FileCharsetReplacementContext fileCharsetReplacementContext) {
     SuggestedFix.Builder fix = SuggestedFix.builder();
     fix.replace(
-        toReplace,
+            fileCharsetReplacementContext.getToReplace(),
         String.format(
-            "Files.newReader(%s, %s)", toFile(state, fileArg, fix), charset.replacement()));
+            "Files.newReader(%s, %s)", toFile(fileCharsetReplacementContext.getState(), fileArg, fix), fileCharsetReplacementContext.getCharset().replacement()));
     fix.addImport("com.google.common.io.Files");
-    charset.addImport(fix);
-    variableTypeFix(fix, state, FileReader.class, Reader.class);
+    fileCharsetReplacementContext.getCharset().addImport(fix);
+    variableTypeFix(fix, fileCharsetReplacementContext.getState(), FileReader.class, Reader.class);
     return fix.build();
   }
 
@@ -411,35 +411,35 @@ public class DefaultCharset extends BugChecker
     boolean useGuava = shouldUseGuava(state);
     for (CharsetFix charset : CharsetFix.values()) {
       if (appendMode == null && useGuava) {
-        description.addFix(guavaFileWriterFix(state, fileArg, toReplace, charset));
+        description.addFix(guavaFileWriterFix(fileArg, new FileCharsetReplacementContext(state, toReplace, charset)));
       } else {
         description.addFix(
-            nioFileWriterFix(state, appendMode, fileArg, toReplace, charset, useGuava));
+            nioFileWriterFix(appendMode, fileArg, useGuava, new FileCharsetReplacementContext(
+                    state,
+                    toReplace,
+                    charset)));
       }
     }
     return description.build();
   }
 
   private static Fix guavaFileWriterFix(
-      VisitorState state, Tree fileArg, Tree toReplace, CharsetFix charset) {
+          Tree fileArg, FileCharsetReplacementContext fileCharsetReplacementContext) {
     SuggestedFix.Builder fix = SuggestedFix.builder();
     fix.replace(
-        toReplace,
+            fileCharsetReplacementContext.getToReplace(),
         String.format(
-            "Files.newWriter(%s, %s)", toFile(state, fileArg, fix), charset.replacement()));
+            "Files.newWriter(%s, %s)", toFile(fileCharsetReplacementContext.getState(), fileArg, fix), fileCharsetReplacementContext.getCharset().replacement()));
     fix.addImport("com.google.common.io.Files");
-    charset.addImport(fix);
-    variableTypeFix(fix, state, FileWriter.class, Writer.class);
+    fileCharsetReplacementContext.getCharset().addImport(fix);
+    variableTypeFix(fix, fileCharsetReplacementContext.getState(), FileWriter.class, Writer.class);
     return fix.build();
   }
 
   private static Fix nioFileWriterFix(
-      VisitorState state,
-      Tree appendTree,
-      Tree fileArg,
-      Tree toReplace,
-      CharsetFix charset,
-      boolean qualify) {
+          Tree appendTree,
+          Tree fileArg,
+          boolean qualify, FileCharsetReplacementContext fileCharsetReplacementContext) {
     SuggestedFix.Builder fix = SuggestedFix.builder();
     StringBuilder sb = new StringBuilder();
     if (qualify) {
@@ -449,15 +449,15 @@ public class DefaultCharset extends BugChecker
       fix.addImport("java.nio.file.Files");
     }
     sb.append(".newBufferedWriter(");
-    sb.append(toPath(state, fileArg, fix));
-    sb.append(", ").append(charset.replacement());
-    charset.addImport(fix);
+    sb.append(toPath(fileCharsetReplacementContext.getState(), fileArg, fix));
+    sb.append(", ").append(fileCharsetReplacementContext.getCharset().replacement());
+    fileCharsetReplacementContext.getCharset().addImport(fix);
     if (appendTree != null) {
-      sb.append(toAppendMode(fix, appendTree, state));
+      sb.append(toAppendMode(fix, appendTree, fileCharsetReplacementContext.getState()));
     }
     sb.append(")");
-    fix.replace(toReplace, sb.toString());
-    variableTypeFix(fix, state, FileWriter.class, Writer.class);
+    fix.replace(fileCharsetReplacementContext.getToReplace(), sb.toString());
+    variableTypeFix(fix, fileCharsetReplacementContext.getState(), FileWriter.class, Writer.class);
     return fix.build();
   }
 
