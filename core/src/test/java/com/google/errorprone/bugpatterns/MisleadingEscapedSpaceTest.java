@@ -126,4 +126,18 @@ public final class MisleadingEscapedSpaceTest {
             }""")
         .doTest();
   }
+
+  @Test
+  public void withinCommentInBrokenUpString_noFinding() {
+    assume().that(Runtime.version().feature()).isAtLeast(14);
+
+    testHelper
+        .addSourceLines(
+            "Test.class",
+            """
+            class Test {
+              private static final String FOO = "foo" + /* \\s */ " bar";
+            }""")
+        .doTest();
+  }
 }

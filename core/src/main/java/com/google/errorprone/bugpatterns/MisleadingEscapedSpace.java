@@ -19,12 +19,15 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.SourceVersion.supportsTextBlocks;
+import static java.util.stream.Collectors.joining;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.LiteralTreeMatcher;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.util.ErrorProneTokens;
 import com.sun.source.tree.LiteralTree;
+import com.sun.tools.javac.parser.Tokens.TokenKind;
 
 /** See the summary. */
 @BugPattern(
@@ -50,15 +53,26 @@ public final class MisleadingEscapedSpace extends BugChecker implements LiteralT
         return NO_MATCH;
       }
       String source = state.getSourceForNode(tree);
+      // Tokenize the source to make sure we omit comments. Desugaring of "a" + "b" into a single
+      // string literal happens really early in compilation, and we want to ensure we don't match
+      // on any "\s" in comments.
+      // This is quite ugly in that we end up with a string that looks like "foo""bar", i.e.
+      // including the quotes, but that doesn't matter for this check.
+      var tokens = ErrorProneTokens.getTokens(source, state.context);
+      var literal =
+          tokens.stream()
+              .filter(t -> t.kind().equals(TokenKind.STRINGLITERAL))
+              .map(t -> source.substring(t.pos(), t.endPos()))
+              .collect(joining());
       boolean seenEscape = false;
-      for (int i = 0; i < source.length(); ++i) {
-        switch (source.charAt(i)) {
+      for (int i = 0; i < literal.length(); ++i) {
+        switch (literal.charAt(i)) {
           case '\n':
             seenEscape = false;
             break;
           case '\\':
             i++;
-            if (source.charAt(i) == 's') {
+            if (literal.charAt(i) == 's') {
               seenEscape = true;
               break;
             }
