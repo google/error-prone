@@ -39,10 +39,12 @@ import com.google.errorprone.bugpatterns.BugChecker.ExpressionStatementTreeMatch
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.bugpatterns.NonAtomicVolatileUpdate;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.scanner.BuiltInCheckerSuppliers;
 import com.google.errorprone.scanner.ScannerSupplier;
+import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
@@ -50,6 +52,7 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.main.Main.Result;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -668,5 +671,83 @@ public class ErrorProneCompilerIntegrationTest {
     exitCode = compiler.compile(sources);
     outputStream.flush();
     assertWithMessage(outputStream.toString()).that(exitCode).isEqualTo(Result.OK);
+  }
+
+  @BugPattern(summary = "All variables should be effectively final", severity = ERROR)
+  public static class EffectivelyFinalChecker extends BugChecker implements VariableTreeMatcher {
+    @Override
+    public Description matchVariable(VariableTree tree, VisitorState state) {
+      if (ASTHelpers.isConsideredFinal(ASTHelpers.getSymbol(tree))) {
+        return NO_MATCH;
+      }
+      return describeMatch(tree);
+    }
+  }
+
+  @Test
+  public void stopPolicy_effectivelyFinal() {
+    compilerBuilder.report(
+        ScannerSupplier.fromBugCheckerClasses(EffectivelyFinalChecker.class, CPSChecker.class));
+    compiler = compilerBuilder.build();
+    // Without -XDshould-stop.ifError=FLOW, the errors reported by CPSChecker will cause javac to
+    // stop processing B after an error is reported in A. Error Prone will still analyze B without
+    // it having gone through 'flow', and the EFFECTIVELY_FINAL analysis will not have happened.
+    // see https://github.com/google/error-prone/issues/4595
+    Result exitCode =
+        compiler.compile(
+            ImmutableList.of(
+                forSourceLines(
+                    "A.java",
+                    """
+                    class A {
+                      int f(int x) {
+                        return x;
+                      }
+                    }
+                    """),
+                forSourceLines(
+                    "B.java",
+                    """
+                    class B {
+                      int f(int x) {
+                        return x;
+                      }
+                    }
+                    """)));
+
+    outputStream.flush();
+    assertWithMessage(outputStream.toString()).that(exitCode).isEqualTo(Result.ERROR);
+
+    assertThat(diagnosticHelper.getDiagnostics()).hasSize(2);
+    assertWithMessage("Error should be found. " + diagnosticHelper.describe())
+        .that(diagnosticHelper.getDiagnostics())
+        .comparingElementsUsing(DIAGNOSTIC_CONTAINING)
+        .containsExactly("[CPSChecker]", "[CPSChecker]");
+  }
+
+  @Test
+  public void stopPolicy_flow() {
+    Result exitCode =
+        compiler.compile(
+            new String[] {"-XDshould-stop.ifError=FLOW"},
+            ImmutableList.of(
+                forSourceLines(
+                    "Test.java",
+                    """
+                    package test;
+                    class Test {}
+                    """)));
+    outputStream.flush();
+    assertWithMessage(outputStream.toString()).that(exitCode).isEqualTo(Result.OK);
+  }
+
+  @Test
+  public void stopPolicy_init() {
+    InvalidCommandLineOptionException e =
+        assertThrows(
+            InvalidCommandLineOptionException.class,
+            () ->
+                compiler.compile(new String[] {"-XDshould-stop.ifError=INIT"}, ImmutableList.of()));
+    assertThat(e).hasMessageThat().contains("-XDshould-stop.ifError=INIT is not supported");
   }
 }
