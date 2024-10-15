@@ -1524,6 +1524,9 @@ Overloads will be ambiguous when passing lambda arguments.
 __[HardCodedSdCardPath](bugpattern/HardCodedSdCardPath)__<br>
 Hardcoded reference to /sdcard
 
+__[IdentifierName](bugpattern/IdentifierName)__<br>
+Methods and non-static variables should be named in lowerCamelCase
+
 __[InconsistentOverloads](bugpattern/InconsistentOverloads)__<br>
 The ordering of parameters in overloaded methods should be as consistent as possible (when viewed from left to right)
 
@@ -1538,9 +1541,6 @@ This catch block appears to be catching an explicitly declared InterruptedExcept
 
 __[Interruption](bugpattern/Interruption)__<br>
 Always pass &#39;false&#39; to &#39;Future.cancel()&#39;, unless you are propagating a cancellation-with-interrupt from another caller
-
-__[MemberName](bugpattern/MemberName)__<br>
-Methods and non-static variables should be named in lowerCamelCase
 
 __[MissingDefault](bugpattern/MissingDefault)__<br>
 The Google Java Style Guide requires that each switch statement includes a default statement group, even if it contains no code. (This requirement is lifted for any switch statement that covers all values of an enum.)

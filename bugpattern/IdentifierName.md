@@ -1,5 +1,5 @@
 ---
-title: MemberName
+title: IdentifierName
 summary: Methods and non-static variables should be named in lowerCamelCase
 layout: bugpattern
 tags: ''
@@ -11,9 +11,10 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+_Alternate names: MemberName_
 
 ## The problem
-The [Google Java Style Guide §5.2][style] provides rules for naming nembers.
+The [Google Java Style Guide §5.2][style] provides rules for naming identifiers.
 
 ## Test methods
 
@@ -51,4 +52,4 @@ appropriately) to make the flow of each test clearer.
 [parameterized]: https://junit.org/junit4/javadoc/4.12/org/junit/runners/Parameterized.html
 
 ## Suppression
-Suppress false positives by adding the suppression annotation `@SuppressWarnings("MemberName")` to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("IdentifierName")` to the enclosing element.
