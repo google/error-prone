@@ -1,4 +1,4 @@
-The [Google Java Style Guide §5.2][style] provides rules for naming nembers.
+The [Google Java Style Guide §5.2][style] provides rules for naming identifiers.
 
 ## Test methods
 

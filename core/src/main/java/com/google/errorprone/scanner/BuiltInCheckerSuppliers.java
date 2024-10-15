@@ -166,6 +166,7 @@ import com.google.errorprone.bugpatterns.GuiceNestedCombine;
 import com.google.errorprone.bugpatterns.HashtableContains;
 import com.google.errorprone.bugpatterns.HidingField;
 import com.google.errorprone.bugpatterns.ICCProfileGetInstance;
+import com.google.errorprone.bugpatterns.IdentifierName;
 import com.google.errorprone.bugpatterns.IdentityBinaryExpression;
 import com.google.errorprone.bugpatterns.IdentityHashMapBoxing;
 import com.google.errorprone.bugpatterns.IdentityHashMapUsage;
@@ -232,7 +233,6 @@ import com.google.errorprone.bugpatterns.LoopOverCharArray;
 import com.google.errorprone.bugpatterns.LossyPrimitiveCompare;
 import com.google.errorprone.bugpatterns.MathAbsoluteNegative;
 import com.google.errorprone.bugpatterns.MathRoundIntLong;
-import com.google.errorprone.bugpatterns.MemberName;
 import com.google.errorprone.bugpatterns.MemoizeConstantVisitorStateLookups;
 import com.google.errorprone.bugpatterns.MethodCanBeStatic;
 import com.google.errorprone.bugpatterns.MisformattedTestData;
@@ -1178,6 +1178,7 @@ public class BuiltInCheckerSuppliers {
           ForEachIterable.class,
           FunctionalInterfaceClash.class,
           HardCodedSdCardPath.class,
+          IdentifierName.class,
           ImmutableMemberCollection.class,
           ImmutableRefactoring.class,
           ImmutableSetForContains.class,
@@ -1193,7 +1194,6 @@ public class BuiltInCheckerSuppliers {
           Java8ApiChecker.class,
           LambdaFunctionalInterface.class,
           LongLiteralLowerCaseSuffix.class,
-          MemberName.class,
           MethodCanBeStatic.class,
           MissingBraces.class,
           MissingDefault.class,
