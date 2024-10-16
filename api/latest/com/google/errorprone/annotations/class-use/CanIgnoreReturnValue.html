@@ -195,11 +195,31 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>boolean</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">ImportStatements.</span><code><a href="../../apply/ImportStatements.html#add(java.lang.String)" class="member-name-link">add</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;importToAdd)</code></div>
+<div class="col-last even-row-color">
+<div class="block">Add an import to the list of imports.</div>
+</div>
+<div class="col-first odd-row-color"><code>boolean</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">ImportStatements.</span><code><a href="../../apply/ImportStatements.html#addAll(java.util.Collection)" class="member-name-link">addAll</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;importsToAdd)</code></div>
+<div class="col-last odd-row-color">
+<div class="block">Add all imports in a collection to this list of imports.</div>
+</div>
 <div class="col-first even-row-color"><code>&lt;K&gt;&nbsp;<a href="../../apply/ImportOrganizer.OrganizedImports.html" title="class in com.google.errorprone.apply">ImportOrganizer.OrganizedImports</a></code></div>
 <div class="col-second even-row-color"><span class="type-name-label">ImportOrganizer.OrganizedImports.</span><code><a href="../../apply/ImportOrganizer.OrganizedImports.html#addGroups(java.util.Map,java.lang.Iterable)" class="member-name-link">addGroups</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;K,<wbr>? extends <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../../apply/ImportOrganizer.Import.html" title="class in com.google.errorprone.apply">ImportOrganizer.Import</a>&gt;&gt;&nbsp;groups,
  <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;K&gt;&nbsp;keys)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Add groups of already sorted imports.</div>
+</div>
+<div class="col-first odd-row-color"><code>boolean</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">ImportStatements.</span><code><a href="../../apply/ImportStatements.html#remove(java.lang.String)" class="member-name-link">remove</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;importToRemove)</code></div>
+<div class="col-last odd-row-color">
+<div class="block">Remove an import from the list of imports.</div>
+</div>
+<div class="col-first even-row-color"><code>boolean</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">ImportStatements.</span><code><a href="../../apply/ImportStatements.html#removeAll(java.util.Collection)" class="member-name-link">removeAll</a><wbr>(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;importsToRemove)</code></div>
+<div class="col-last even-row-color">
+<div class="block">Removes all imports in a collection to this list of imports.</div>
 </div>
 </div>
 </section>
@@ -503,6 +523,14 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color"><code>@Nullable <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">Bindings.</span><code><a href="../../refaster/Bindings.html#put(com.google.errorprone.refaster.Bindings.Key,java.lang.Object)" class="member-name-link">put</a><wbr>(<a href="../../refaster/Bindings.Key.html" title="class in com.google.errorprone.refaster">Bindings.Key</a>&lt;?&gt;&nbsp;key,
  <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;value)</code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>&lt;V&gt;&nbsp;V</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">Bindings.</span><code><a href="../../refaster/Bindings.html#putBinding(com.google.errorprone.refaster.Bindings.Key,V)" class="member-name-link">putBinding</a><wbr>(<a href="../../refaster/Bindings.Key.html" title="class in com.google.errorprone.refaster">Bindings.Key</a>&lt;V&gt;&nbsp;key,
+ V&nbsp;value)</code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>&lt;V&gt;&nbsp;V</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">Unifier.</span><code><a href="../../refaster/Unifier.html#putBinding(com.google.errorprone.refaster.Bindings.Key,V)" class="member-name-link">putBinding</a><wbr>(<a href="../../refaster/Bindings.Key.html" title="class in com.google.errorprone.refaster">Bindings.Key</a>&lt;V&gt;&nbsp;key,
+ V&nbsp;value)</code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 </div>
 </section>

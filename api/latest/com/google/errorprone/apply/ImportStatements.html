@@ -215,7 +215,8 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="add(java.lang.String)">
 <h3>add</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">add</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;importToAdd)</span></div>
+<div class="member-signature"><span class="annotations"><a href="../annotations/CanIgnoreReturnValue.html" title="annotation in com.google.errorprone.annotations">@CanIgnoreReturnValue</a>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">add</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;importToAdd)</span></div>
 <div class="block">Add an import to the list of imports. If the import is already in the list, does nothing. The
  import should be of the form "import foo.bar".</div>
 <dl class="notes">
@@ -231,7 +232,8 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="addAll(java.util.Collection)">
 <h3>addAll</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">addAll</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;importsToAdd)</span></div>
+<div class="member-signature"><span class="annotations"><a href="../annotations/CanIgnoreReturnValue.html" title="annotation in com.google.errorprone.annotations">@CanIgnoreReturnValue</a>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">addAll</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;importsToAdd)</span></div>
 <div class="block">Add all imports in a collection to this list of imports. Does not add any imports that are
  already in the list.</div>
 <dl class="notes">
@@ -247,7 +249,8 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="remove(java.lang.String)">
 <h3>remove</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">remove</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;importToRemove)</span></div>
+<div class="member-signature"><span class="annotations"><a href="../annotations/CanIgnoreReturnValue.html" title="annotation in com.google.errorprone.annotations">@CanIgnoreReturnValue</a>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">remove</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;importToRemove)</span></div>
 <div class="block">Remove an import from the list of imports. If the import is not in the list, does nothing. The
  import should be of the form "import foo.bar".</div>
 <dl class="notes">
@@ -263,7 +266,8 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="removeAll(java.util.Collection)">
 <h3>removeAll</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">removeAll</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;importsToRemove)</span></div>
+<div class="member-signature"><span class="annotations"><a href="../annotations/CanIgnoreReturnValue.html" title="annotation in com.google.errorprone.annotations">@CanIgnoreReturnValue</a>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">removeAll</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;importsToRemove)</span></div>
 <div class="block">Removes all imports in a collection to this list of imports. Does not remove any imports that
  are not in the list.</div>
 <dl class="notes">
