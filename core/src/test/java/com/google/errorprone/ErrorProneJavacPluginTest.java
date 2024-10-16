@@ -304,7 +304,7 @@ public class ErrorProneJavacPluginTest {
                 ImmutableList.of(
                     "-Xplugin:ErrorProne",
                     "-XDcompilePolicy=byfile",
-                    "-XDshould-stop.ifError=LOWER"),
+                    "--should-stop=ifError=LOWER"),
                 ImmutableList.of(),
                 fileManager.getJavaFileObjects(one, two));
     assertThat(task.call()).isFalse();

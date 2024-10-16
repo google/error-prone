@@ -162,6 +162,15 @@
               <version>${autoservice.version}</version>
             </path>
           </annotationProcessorPaths>
+          <testExcludes>
+            <!-- TODO(b/172597965): maven sees a cycle here since test_helpers depends on check_api -->
+            <testExclude>**/ASTHelpersFindSuperMethodsTest.java</testExclude>
+            <testExclude>**/ASTHelpersTest.java</testExclude>
+            <testExclude>**/CommentsTest.java</testExclude>
+            <testExclude>**/FindIdentifiersTest.java</testExclude>
+            <testExclude>**/MoreAnnotationsTest.java</testExclude>
+            <testExclude>**/ReachabilityTest.java</testExclude>
+          </testExcludes>
         </configuration>
         <executions>
           <execution>
