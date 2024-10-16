@@ -45,6 +45,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSetMultimap;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.AssignmentTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -165,6 +166,7 @@ public final class TimeUnitMismatch extends BugChecker
    * Checks whether this call is a call to {@code TimeUnit.to*} and, if so, whether the units of its
    * parameter and its receiver disagree.
    */
+  @CanIgnoreReturnValue
   private boolean checkTimeUnitToUnit(
       MethodInvocationTree tree, MethodSymbol methodSymbol, VisitorState state) {
     if (tree.getMethodSelect().getKind() != MEMBER_SELECT) {
@@ -202,6 +204,7 @@ public final class TimeUnitMismatch extends BugChecker
           .put(DAYS, "toDays")
           .buildOrThrow();
 
+  @CanIgnoreReturnValue
   private boolean checkAll(
       List<VarSymbol> formals, List<? extends ExpressionTree> actuals, VisitorState state) {
     if (formals.size() != actuals.size()) {
@@ -221,6 +224,7 @@ public final class TimeUnitMismatch extends BugChecker
     return hasFinding;
   }
 
+  @CanIgnoreReturnValue
   private boolean check(String formalName, ExpressionTree actualTree, VisitorState state) {
     /*
      * Sometimes people name a Duration parameter something like "durationMs." Then we falsely

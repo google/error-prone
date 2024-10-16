@@ -163,7 +163,7 @@ public class AppliedFixTest {
 
     // If the fixes had been applied in the wrong order, this would fail.
     // But it succeeds, so they were applied in the right order.
-    AppliedFix.fromSource(" ", endPositions).apply(mockFix);
+    var unused = AppliedFix.fromSource(" ", endPositions).apply(mockFix);
   }
 
   @Test

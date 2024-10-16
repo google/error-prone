@@ -641,7 +641,7 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
   static Class<? extends Matcher<? super ExpressionTree>> getValue(Matches matches) {
     String name;
     try {
-      matches.value();
+      var unused = matches.value();
       throw new RuntimeException("unreachable");
     } catch (MirroredTypeException e) {
       DeclaredType type = (DeclaredType) e.getTypeMirror();
@@ -662,7 +662,7 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
   static Class<? extends Matcher<? super ExpressionTree>> getValue(NotMatches matches) {
     String name;
     try {
-      matches.value();
+      var unused = matches.value();
       throw new RuntimeException("unreachable");
     } catch (MirroredTypeException e) {
       DeclaredType type = (DeclaredType) e.getTypeMirror();

@@ -21,6 +21,7 @@ import static com.google.common.collect.Iterables.getLast;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static java.util.Objects.requireNonNull;
 
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.sun.source.tree.AssertTree;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.BreakTree;
@@ -99,6 +100,9 @@ public class Reachability {
       return completes;
     }
 
+    // The result can be ignored to scan for label definitions in blocks that
+    // don't otherwise affect the result of the reachability analysis.
+    @CanIgnoreReturnValue
     private boolean scan(Tree tree) {
       return tree.accept(this, null);
     }

@@ -25,6 +25,7 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.io.LineProcessor;
 import com.google.errorprone.BugPattern.SeverityLevel;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -78,6 +79,7 @@ class BugPatternFileGenerator implements LineProcessor<List<BugPatternInstance>>
     result = new ArrayList<>();
   }
 
+  @CanIgnoreReturnValue
   @Override
   public boolean processLine(String line) throws IOException {
     BugPatternInstance pattern = new Gson().fromJson(line, BugPatternInstance.class);

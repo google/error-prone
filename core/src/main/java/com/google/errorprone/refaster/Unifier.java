@@ -20,6 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.errorprone.SubContext;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.tree.JCTree;
@@ -75,6 +76,7 @@ public final class Unifier {
     return bindings.getBinding(key);
   }
 
+  @CanIgnoreReturnValue
   public <V> V putBinding(Bindings.Key<V> key, V value) {
     checkArgument(!bindings.containsKey(key), "Cannot bind %s more than once", key);
     return bindings.putBinding(key, value);

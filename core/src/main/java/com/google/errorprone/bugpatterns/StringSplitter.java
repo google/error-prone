@@ -216,14 +216,14 @@ public class StringSplitter extends BugChecker implements MethodInvocationTreeMa
       if (!isImplicitlyTyped) {
         fix.replace(varType, "List<String>").addImport("java.util.List");
       }
-      replaceWithSplitter(fix, tree, arg, state, "splitToList", needsMutableList[0]);
-    } else {
-      if (!isImplicitlyTyped) {
-        fix.replace(varType, "Iterable<String>");
-      }
-      replaceWithSplitter(fix, tree, arg, state, "split", needsMutableList[0]);
+      return Optional.of(
+          replaceWithSplitter(fix, tree, arg, state, "splitToList", needsMutableList[0]).build());
     }
-    return Optional.of(fix.build());
+    if (!isImplicitlyTyped) {
+      fix.replace(varType, "Iterable<String>");
+    }
+    return Optional.of(
+        replaceWithSplitter(fix, tree, arg, state, "split", needsMutableList[0]).build());
   }
 
   private static String getMethodAndArgument(

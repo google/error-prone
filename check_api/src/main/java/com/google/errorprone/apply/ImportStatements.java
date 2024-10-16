@@ -20,6 +20,7 @@ import com.google.common.base.CharMatcher;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
@@ -123,6 +124,7 @@ public class ImportStatements {
    * @param importToAdd a string representation of the import to add
    * @return true if the import was added
    */
+  @CanIgnoreReturnValue
   public boolean add(String importToAdd) {
     return importStrings.add(importToAdd);
   }
@@ -134,6 +136,7 @@ public class ImportStatements {
    * @param importsToAdd a collection of imports to add
    * @return true if any imports were added to the list
    */
+  @CanIgnoreReturnValue
   public boolean addAll(Collection<String> importsToAdd) {
     return importStrings.addAll(importsToAdd);
   }
@@ -145,6 +148,7 @@ public class ImportStatements {
    * @param importToRemove a string representation of the import to remove
    * @return true if the import was removed
    */
+  @CanIgnoreReturnValue
   public boolean remove(String importToRemove) {
     return importStrings.remove(importToRemove);
   }
@@ -156,6 +160,7 @@ public class ImportStatements {
    * @param importsToRemove a collection of imports to remove
    * @return true if any imports were removed from the list
    */
+  @CanIgnoreReturnValue
   public boolean removeAll(Collection<String> importsToRemove) {
     return importStrings.removeAll(importsToRemove);
   }

@@ -200,13 +200,14 @@ public abstract class Template<M extends TemplateMatch> implements Serializable 
       List<Type> actualTypes) {
     try {
       ImmutableList<UTypeVar> freeTypeVars = freeTypeVars(unifier);
-      infer(
-          warner,
-          inliner,
-          inliner.<Type>inlineList(freeTypeVars),
-          expectedTypes,
-          inliner.symtab().voidType,
-          actualTypes);
+      var unused =
+          infer(
+              warner,
+              inliner,
+              inliner.<Type>inlineList(freeTypeVars),
+              expectedTypes,
+              inliner.symtab().voidType,
+              actualTypes);
 
       for (UTypeVar var : freeTypeVars) {
         Type instantiationForVar =

@@ -579,20 +579,22 @@ public class ErrorProneCompilerIntegrationTest {
   public void compilationWithError() {
     compilerBuilder.report(ScannerSupplier.fromBugCheckerClasses(CPSChecker.class));
     compiler = compilerBuilder.build();
-    compiler.compile(
-        new String[] {
-          "-XDshouldStopPolicyIfError=LOWER",
-        },
-        Arrays.asList(
-            forSourceLines(
-                "Test.java",
-                """
-                package test;
-                public class Test {
-                  Object f() { return new NoSuch(); }
-                }
-                """)));
+    Result exitCode =
+        compiler.compile(
+            new String[] {
+              "-XDshouldStopPolicyIfError=LOWER",
+            },
+            Arrays.asList(
+                forSourceLines(
+                    "Test.java",
+                    """
+                    package test;
+                    public class Test {
+                      Object f() { return new NoSuch(); }
+                    }
+                    """)));
     outputStream.flush();
+    assertWithMessage(outputStream.toString()).that(exitCode).isEqualTo(Result.ERROR);
     String output = diagnosticHelper.getDiagnostics().toString();
     assertThat(output).contains("error: cannot find symbol");
     assertThat(output).doesNotContain("Using 'return' is considered harmful");
@@ -640,8 +642,9 @@ public class ErrorProneCompilerIntegrationTest {
 
     compilerBuilder.report(ScannerSupplier.fromBugCheckerClasses(ForbiddenString.class));
     compiler = compilerBuilder.build();
-    compiler.compile(args, sources);
+    Result exitCode = compiler.compile(args, sources);
     outputStream.flush();
+    assertWithMessage(outputStream.toString()).that(exitCode).isEqualTo(Result.ERROR);
     String output = diagnosticHelper.getDiagnostics().toString();
     assertThat(output).contains("Please don't return this const value");
   }

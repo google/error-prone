@@ -124,6 +124,7 @@ public class Bindings extends ForwardingMap<Bindings.Key<?>, Object> {
   }
 
   @SuppressWarnings("unchecked")
+  @CanIgnoreReturnValue
   public <V> V putBinding(Key<V> key, V value) {
     checkNotNull(value);
     return (V) super.put(key, value);

@@ -176,7 +176,7 @@ public class ObjectToStringNegativeCases {
   public static class CompletionChecker extends BugChecker implements ClassTreeMatcher {
     @Override
     public Description matchClass(ClassTree tree, VisitorState state) {
-      state.getSymbolFromString(One.class.getName());
+      var unused = state.getSymbolFromString(One.class.getName());
       return Description.NO_MATCH;
     }
   }

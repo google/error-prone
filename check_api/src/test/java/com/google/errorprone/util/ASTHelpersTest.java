@@ -1834,7 +1834,7 @@ class Test {
   private static <T extends Tree> void assertGetModifiersInvoked(
       Class<T> clazz, Function<T, ModifiersTree> getter) {
     T tree = mock(clazz);
-    ASTHelpers.getModifiers(tree);
+    var unused = ASTHelpers.getModifiers(tree);
 
     // This effectively means the same as {@code verify(tree).getModifiers()}.
     ModifiersTree ignored = getter.apply(verify(tree));
@@ -1871,7 +1871,7 @@ class Test {
   private static <T extends Tree> void assertGetAnnotationsInvoked(
       Class<T> clazz, Function<T, List<? extends AnnotationTree>> getter) {
     T tree = mock(clazz);
-    ASTHelpers.getAnnotations(tree);
+    var unused = ASTHelpers.getAnnotations(tree);
     // This effectively means the same as {@code verify(tree).getAnnotations()}.
     List<? extends AnnotationTree> ignored = getter.apply(verify(tree));
   }

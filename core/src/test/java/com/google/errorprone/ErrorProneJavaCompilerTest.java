@@ -97,7 +97,7 @@ public class ErrorProneJavaCompilerTest {
     JavaFileObjectDiagnosticListener listener = mock(JavaFileObjectDiagnosticListener.class);
     Locale locale = Locale.CANADA;
 
-    compiler.getStandardFileManager(listener, locale, null);
+    var unused = compiler.getStandardFileManager(listener, locale, null);
     verify(mockCompiler).getStandardFileManager(listener, locale, null);
   }
 
@@ -111,7 +111,7 @@ public class ErrorProneJavaCompilerTest {
     OutputStream err = mock(OutputStream.class);
     String[] arguments = {"-source", "8", "-target", "8"};
 
-    compiler.run(in, out, err, arguments);
+    var unused = compiler.run(in, out, err, arguments);
     verify(mockCompiler).run(in, out, err, arguments);
   }
 

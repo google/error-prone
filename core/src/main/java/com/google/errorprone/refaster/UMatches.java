@@ -40,7 +40,7 @@ abstract class UMatches extends UExpression {
       boolean positive,
       UExpression expression) {
     // Verify that we can instantiate the Matcher
-    makeMatcher(matcherClass);
+    var unused = makeMatcher(matcherClass);
 
     return new AutoValue_UMatches(positive, matcherClass, expression);
   }
