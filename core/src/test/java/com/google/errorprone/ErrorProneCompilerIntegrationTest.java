@@ -689,7 +689,7 @@ public class ErrorProneCompilerIntegrationTest {
     compilerBuilder.report(
         ScannerSupplier.fromBugCheckerClasses(EffectivelyFinalChecker.class, CPSChecker.class));
     compiler = compilerBuilder.build();
-    // Without -XDshould-stop.ifError=FLOW, the errors reported by CPSChecker will cause javac to
+    // Without --should-stop=ifError=FLOW, the errors reported by CPSChecker will cause javac to
     // stop processing B after an error is reported in A. Error Prone will still analyze B without
     // it having gone through 'flow', and the EFFECTIVELY_FINAL analysis will not have happened.
     // see https://github.com/google/error-prone/issues/4595
@@ -729,7 +729,7 @@ public class ErrorProneCompilerIntegrationTest {
   public void stopPolicy_flow() {
     Result exitCode =
         compiler.compile(
-            new String[] {"-XDshould-stop.ifError=FLOW"},
+            new String[] {"--should-stop=ifError=FLOW"},
             ImmutableList.of(
                 forSourceLines(
                     "Test.java",
@@ -743,6 +743,16 @@ public class ErrorProneCompilerIntegrationTest {
 
   @Test
   public void stopPolicy_init() {
+    InvalidCommandLineOptionException e =
+        assertThrows(
+            InvalidCommandLineOptionException.class,
+            () ->
+                compiler.compile(new String[] {"--should-stop=ifError=INIT"}, ImmutableList.of()));
+    assertThat(e).hasMessageThat().contains("--should-stop=ifError=INIT is not supported");
+  }
+
+  @Test
+  public void stopPolicy_init_xD() {
     InvalidCommandLineOptionException e =
         assertThrows(
             InvalidCommandLineOptionException.class,

@@ -196,27 +196,25 @@ public class BaseErrorProneJavaCompiler implements JavaCompiler {
     return ImmutableList.<String>builder().addAll(args).add("-XDcompilePolicy=simple").build();
   }
 
-  private static void checkShouldStopIfErrorPolicy(String value) {
+  private static void checkShouldStopIfErrorPolicy(String arg) {
+    String value = arg.substring(arg.lastIndexOf('=') + 1);
     CompileState state = CompileState.valueOf(value);
     if (CompileState.FLOW.isAfter(state)) {
       throw new InvalidCommandLineOptionException(
           String.format(
-              "-XDshould-stop.ifError=%s is not supported by Error Prone, pass"
-                  + " -XDshould-stop.ifError=FLOW instead",
-              state));
+              "%s is not supported by Error Prone, pass --should-stop=ifError=FLOW instead", arg));
     }
   }
 
   private static ImmutableList<String> setShouldStopIfErrorPolicyToFlow(
       ImmutableList<String> args) {
     for (String arg : args) {
-      if (arg.startsWith("-XDshould-stop.ifError")) {
-        String value = arg.substring(arg.indexOf('=') + 1);
-        checkShouldStopIfErrorPolicy(value);
+      if (arg.startsWith("--should-stop=ifError") || arg.startsWith("-XDshould-stop.ifError")) {
+        checkShouldStopIfErrorPolicy(arg);
         return args; // don't do anything if a valid policy is already set
       }
     }
-    return ImmutableList.<String>builder().addAll(args).add("-XDshould-stop.ifError=FLOW").build();
+    return ImmutableList.<String>builder().addAll(args).add("--should-stop=ifError=FLOW").build();
   }
 
   /** Registers our message bundle. */
