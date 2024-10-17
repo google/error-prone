@@ -1499,6 +1499,40 @@ public class ReturnMissingNullableTest {
   }
 
   @Test
+  public void negativeCases_unreachableRuntimeExit() {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            class LiteralNullReturnTest {
+              public String getMessage() {
+                Runtime.getRuntime().exit(1);
+                return null;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void negativeCases_unreachableRuntimeHalt() {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+            class LiteralNullReturnTest {
+              public String getMessage() {
+                Runtime.getRuntime().halt(1);
+                return null;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void negativeCases_unreachableAssertFail() {
     createCompilationTestHelper()
         .addSourceLines(

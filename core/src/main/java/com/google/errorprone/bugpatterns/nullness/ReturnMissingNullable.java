@@ -31,6 +31,7 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.anyMethod;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.expressionStatement;
+import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.constValue;
 import static com.google.errorprone.util.ASTHelpers.findEnclosingMethod;
@@ -107,6 +108,7 @@ public class ReturnMissingNullable extends BugChecker implements CompilationUnit
                    */
                   .onDescendantOfAny("org.junit.Assert", "junit.framework.Assert")
                   .named("fail"),
+              instanceMethod().onDescendantOf("java.lang.Runtime").namedAnyOf("exit", "halt"),
               staticMethod().onClass("java.lang.System").named("exit")));
 
   private static final Matcher<StatementTree> FAILS_IF_PASSED_FALSE =
