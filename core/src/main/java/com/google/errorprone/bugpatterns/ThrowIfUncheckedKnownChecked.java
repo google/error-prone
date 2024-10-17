@@ -34,10 +34,9 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
-import javax.lang.model.type.TypeMirror;
 import javax.lang.model.type.UnionType;
 
-/** Catches no-op calls to {@code Throwables.throwIfUnchecked}. */
+/** A BugPattern; see the summary. */
 @BugPattern(summary = "throwIfUnchecked(knownCheckedException) is a no-op.", severity = ERROR)
 public class ThrowIfUncheckedKnownChecked extends BugChecker
     implements MethodInvocationTreeMatcher {
@@ -57,12 +56,8 @@ public class ThrowIfUncheckedKnownChecked extends BugChecker
         public boolean matches(ExpressionTree tree, VisitorState state) {
           Type type = ASTHelpers.getType(tree);
           if (type.isUnion()) {
-            for (TypeMirror alternative : ((UnionType) type).getAlternatives()) {
-              if (!isKnownCheckedException(state, (Type) alternative)) {
-                return false;
-              }
-            }
-            return true;
+            return ((UnionType) type)
+                .getAlternatives().stream().allMatch(t -> isKnownCheckedException(state, (Type) t));
           } else {
             return isKnownCheckedException(state, type);
           }
@@ -72,6 +67,7 @@ public class ThrowIfUncheckedKnownChecked extends BugChecker
           Types types = state.getTypes();
           Symtab symtab = state.getSymtab();
           // Check erasure for generics.
+          // TODO(cpovirk): Is that necessary here or in ThrowIfUncheckedKnownUnchecked?
           type = types.erasure(type);
           return
           // Has to be some Exception: A variable of type Throwable might be an Error.
