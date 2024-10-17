@@ -581,9 +581,6 @@ public class ErrorProneCompilerIntegrationTest {
     compiler = compilerBuilder.build();
     Result exitCode =
         compiler.compile(
-            new String[] {
-              "-XDshouldStopPolicyIfError=LOWER",
-            },
             Arrays.asList(
                 forSourceLines(
                     "Test.java",

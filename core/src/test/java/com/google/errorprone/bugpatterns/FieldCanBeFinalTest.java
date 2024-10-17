@@ -17,7 +17,6 @@ package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.annotations.Var;
-import java.util.Arrays;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -348,8 +347,6 @@ public class FieldCanBeFinalTest {
               }
             }
             """)
-        // hackily force processing of both compilation units so we can verify both diagnostics
-        .setArgs(Arrays.asList("-XDshouldStopPolicyIfError=FLOW"))
         .doTest();
   }
 
