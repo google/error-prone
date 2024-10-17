@@ -1256,6 +1256,9 @@ Relying on the thread scheduler is discouraged.
 __[ThreeLetterTimeZoneID](bugpattern/ThreeLetterTimeZoneID)__<br>
 Three-letter time zone identifiers are deprecated, may be ambiguous, and might not do what you intend; the full IANA time zone ID should be used instead.
 
+__[ThrowIfUncheckedKnownUnchecked](bugpattern/ThrowIfUncheckedKnownUnchecked)__<br>
+&#96;throwIfUnchecked(knownUnchecked)&#96; is equivalent to &#96;throw knownUnchecked&#96;.
+
 __[TimeUnitConversionChecker](bugpattern/TimeUnitConversionChecker)__<br>
 This TimeUnit conversion looks buggy: converting from a smaller unit to a larger unit (and passing a constant), converting to/from the same TimeUnit, or converting TimeUnits where the result is statically known to be 0 or 1 are all buggy patterns.
 
