@@ -53,6 +53,7 @@ Edit your `pom.xml` file to add settings to the maven-compiler-plugin:
           <encoding>UTF-8</encoding>
           <compilerArgs>
             <arg>-XDcompilePolicy=simple</arg>
+            <arg>--should-stop=ifError=FLOW</arg>
             <arg>-Xplugin:ErrorProne</arg>
           </compilerArgs>
           <annotationProcessorPaths>
@@ -137,6 +138,7 @@ and add the following javac task to your project's `build.xml` file:
 
     <javac srcdir="src" destdir="build" fork="yes" includeantruntime="no">
       <compilerarg value="-XDcompilePolicy=simple"/>
+      <compilerarg value="--should-stop=ifError=FLOW"/>
       <compilerarg value="-processorpath"/>
       <compilerarg pathref="processorpath.ref"/>
       <compilerarg value="-Xplugin:ErrorProne -Xep:DeadException:ERROR" />
@@ -202,6 +204,7 @@ javac \
   -J--add-opens=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED \
   -J--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED \
   -XDcompilePolicy=simple \
+  --should-stop=ifError=FLOW \
   -processorpath error_prone_core-${EP_VERSION?}-with-dependencies.jar:dataflow-errorprone-${DATAFLOW_VERSION?}.jar \
   '-Xplugin:ErrorProne -XepDisableAllChecks -Xep:CollectionIncompatibleType:ERROR' \
   ShortSet.java

@@ -102,6 +102,7 @@ class Demo {
 javac \
   -J-Xbootclasspath/p:javac-9+181-r4173-1.jar \
   -XDcompilePolicy=byfile \
+  --should-stop=ifError=FLOW \
   -processorpath error_prone_core-2.3.2-with-dependencies.jar \
   "-Xplugin:ErrorProne -XepPatchChecks:refaster:${PWD}/myrule.refaster -XepPatchLocation:${PWD}" \
   Demo.java
