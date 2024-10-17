@@ -380,6 +380,7 @@ import com.google.errorprone.bugpatterns.ThreadJoinLoop;
 import com.google.errorprone.bugpatterns.ThreadLocalUsage;
 import com.google.errorprone.bugpatterns.ThreeLetterTimeZoneID;
 import com.google.errorprone.bugpatterns.ThrowIfUncheckedKnownChecked;
+import com.google.errorprone.bugpatterns.ThrowIfUncheckedKnownUnchecked;
 import com.google.errorprone.bugpatterns.ThrowNull;
 import com.google.errorprone.bugpatterns.ThrowSpecificExceptions;
 import com.google.errorprone.bugpatterns.ThrowsUncheckedException;
@@ -1086,6 +1087,7 @@ public class BuiltInCheckerSuppliers {
           ThreadLocalUsage.class,
           ThreadPriorityCheck.class,
           ThreeLetterTimeZoneID.class,
+          ThrowIfUncheckedKnownUnchecked.class,
           TimeUnitConversionChecker.class,
           ToStringReturnsNull.class,
           TraditionalSwitchExpression.class,
