@@ -30,6 +30,7 @@ import com.sun.tools.javac.code.TargetType;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.TypeAnnotationPosition;
 import com.sun.tools.javac.code.TypeTag;
+import com.sun.tools.javac.tree.JCTree;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -130,6 +131,8 @@ public final class MoreAnnotations {
       case LOCAL_VARIABLE:
         return position.type == TargetType.LOCAL_VARIABLE;
       case FIELD:
+      // treated like a field
+      case ENUM_CONSTANT:
         return position.type == TargetType.FIELD;
       case CONSTRUCTOR:
       case METHOD:
@@ -137,8 +140,16 @@ public final class MoreAnnotations {
       case PARAMETER:
         switch (position.type) {
           case METHOD_FORMAL_PARAMETER:
-            return ((MethodSymbol) sym.owner).getParameters().indexOf(sym)
-                == position.parameter_index;
+            int parameterIndex = position.parameter_index;
+            if (position.onLambda != null) {
+              com.sun.tools.javac.util.List<JCTree.JCVariableDecl> lambdaParams =
+                  position.onLambda.params;
+              return parameterIndex < lambdaParams.size()
+                  && lambdaParams.get(parameterIndex).sym.equals(sym);
+            } else {
+              return ((Symbol.MethodSymbol) sym.owner).getParameters().indexOf(sym)
+                  == parameterIndex;
+            }
           default:
             return false;
         }

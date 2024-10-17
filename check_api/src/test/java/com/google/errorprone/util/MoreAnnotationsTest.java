@@ -223,4 +223,33 @@ import java.lang.annotation.Target;
             """)
         .doTest();
   }
+
+  @Test
+  public void explicitlyAnnotatedLambdaTest() {
+    CompilationTestHelper.newInstance(GetTopLevelTypeAttributesTester.class, getClass())
+        .addSourceLines(
+            "Annos.java",
+            """
+            import static java.lang.annotation.ElementType.TYPE_USE;
+            import java.lang.annotation.Target;
+
+            @Target(TYPE_USE)
+            @interface A {}
+            """)
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.util.function.Consumer;
+
+            class Test {
+              Consumer<@A String> c;
+
+              void test() {
+                // BUG: Diagnostic contains: A
+                c = (@A String s) -> {};
+              }
+            }
+            """)
+        .doTest();
+  }
 }
