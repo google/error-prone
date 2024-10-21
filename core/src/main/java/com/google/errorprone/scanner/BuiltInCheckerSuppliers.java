@@ -586,6 +586,7 @@ import com.google.errorprone.bugpatterns.time.FromTemporalAccessor;
 import com.google.errorprone.bugpatterns.time.InstantTemporalUnit;
 import com.google.errorprone.bugpatterns.time.InvalidJavaTimeConstant;
 import com.google.errorprone.bugpatterns.time.JavaDurationGetSecondsGetNano;
+import com.google.errorprone.bugpatterns.time.JavaDurationGetSecondsToToSeconds;
 import com.google.errorprone.bugpatterns.time.JavaDurationWithNanos;
 import com.google.errorprone.bugpatterns.time.JavaDurationWithSeconds;
 import com.google.errorprone.bugpatterns.time.JavaInstantGetSecondsGetNano;
@@ -970,6 +971,7 @@ public class BuiltInCheckerSuppliers {
           JUnitAmbiguousTestClass.class,
           JUnitIncompatibleType.class,
           JavaDurationGetSecondsGetNano.class,
+          JavaDurationGetSecondsToToSeconds.class,
           JavaDurationWithNanos.class,
           JavaDurationWithSeconds.class,
           JavaInstantGetSecondsGetNano.class,
