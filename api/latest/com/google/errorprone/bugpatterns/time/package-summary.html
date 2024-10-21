@@ -140,131 +140,135 @@ loadScripts(document, 'script');</script>
 <div class="block">This checker warns about calls to <code>duration.getNano()</code> without a corresponding "nearby"
  call to <code>duration.getSeconds()</code>.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="JavaDurationWithNanos.html" title="class in com.google.errorprone.bugpatterns.time">JavaDurationWithNanos</a></div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="JavaDurationGetSecondsToToSeconds.html" title="class in com.google.errorprone.bugpatterns.time">JavaDurationGetSecondsToToSeconds</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="block">Error prone checking for <code>Duration.getSeconds()</code> without <code>Duration.getNano()</code>.</div>
+</div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="JavaDurationWithNanos.html" title="class in com.google.errorprone.bugpatterns.time">JavaDurationWithNanos</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Check for calls to <code>duration.withNanos(int)</code>.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="JavaDurationWithSeconds.html" title="class in com.google.errorprone.bugpatterns.time">JavaDurationWithSeconds</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="JavaDurationWithSeconds.html" title="class in com.google.errorprone.bugpatterns.time">JavaDurationWithSeconds</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Check for calls to <code>duration.withSeconds(long)</code>.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="JavaInstantGetSecondsGetNano.html" title="class in com.google.errorprone.bugpatterns.time">JavaInstantGetSecondsGetNano</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="JavaInstantGetSecondsGetNano.html" title="class in com.google.errorprone.bugpatterns.time">JavaInstantGetSecondsGetNano</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">This checker warns about calls to <code>instant.getNano()</code> without a corresponding "nearby" call
  to <code>instant.getEpochSecond()</code>.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="JavaLocalDateTimeGetNano.html" title="class in com.google.errorprone.bugpatterns.time">JavaLocalDateTimeGetNano</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="JavaLocalDateTimeGetNano.html" title="class in com.google.errorprone.bugpatterns.time">JavaLocalDateTimeGetNano</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">This checker warns about calls to <a href="https://docs.oracle.com/javase/8/docs/api/java/time/LocalDateTime.html#getNano--" title="class or interface in java.time" class="external-link"><code>LocalDateTime.getNano()</code></a> without a corresponding "nearby"
  call to <a href="https://docs.oracle.com/javase/8/docs/api/java/time/LocalDateTime.html#getSecond--" title="class or interface in java.time" class="external-link"><code>LocalDateTime.getSecond()</code></a>.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="JavaLocalTimeGetNano.html" title="class in com.google.errorprone.bugpatterns.time">JavaLocalTimeGetNano</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="JavaLocalTimeGetNano.html" title="class in com.google.errorprone.bugpatterns.time">JavaLocalTimeGetNano</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">This checker warns about calls to <a href="https://docs.oracle.com/javase/8/docs/api/java/time/LocalTime.html#getNano--" title="class or interface in java.time" class="external-link"><code>LocalTime.getNano()</code></a> without a corresponding "nearby" call
  to <a href="https://docs.oracle.com/javase/8/docs/api/java/time/LocalTime.html#getSecond--" title="class or interface in java.time" class="external-link"><code>LocalTime.getSecond()</code></a>.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="JavaPeriodGetDays.html" title="class in com.google.errorprone.bugpatterns.time">JavaPeriodGetDays</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="JavaPeriodGetDays.html" title="class in com.google.errorprone.bugpatterns.time">JavaPeriodGetDays</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">This checker warns about calls to <code>period.getDays()</code> without a corresponding "nearby" call
  to <code>period.getYears(), period.getMonths(), or period.getTotalMonths()</code>.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="JavaTimeDefaultTimeZone.html" title="class in com.google.errorprone.bugpatterns.time">JavaTimeDefaultTimeZone</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="JavaTimeDefaultTimeZone.html" title="class in com.google.errorprone.bugpatterns.time">JavaTimeDefaultTimeZone</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Check for calls to <code>java.time</code> APIs that silently use the default system time-zone.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="JodaConstructors.html" title="class in com.google.errorprone.bugpatterns.time">JodaConstructors</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="JodaConstructors.html" title="class in com.google.errorprone.bugpatterns.time">JodaConstructors</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Check for calls to bad JodaTime constructors.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="JodaDateTimeConstants.html" title="class in com.google.errorprone.bugpatterns.time">JodaDateTimeConstants</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="JodaDateTimeConstants.html" title="class in com.google.errorprone.bugpatterns.time">JodaDateTimeConstants</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Checks for usages of dangerous <code>DateTimeConstants</code> constants.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="JodaDurationWithMillis.html" title="class in com.google.errorprone.bugpatterns.time">JodaDurationWithMillis</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="JodaDurationWithMillis.html" title="class in com.google.errorprone.bugpatterns.time">JodaDurationWithMillis</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Check for calls to <code>duration.withMillis(long)</code>.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="JodaInstantWithMillis.html" title="class in com.google.errorprone.bugpatterns.time">JodaInstantWithMillis</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="JodaInstantWithMillis.html" title="class in com.google.errorprone.bugpatterns.time">JodaInstantWithMillis</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Check for calls to <code>instant.withMillis(long)</code>.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="JodaNewPeriod.html" title="class in com.google.errorprone.bugpatterns.time">JodaNewPeriod</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="JodaNewPeriod.html" title="class in com.google.errorprone.bugpatterns.time">JodaNewPeriod</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Match possibly incorrect use of Period to obtain a number of (e.g.) days between two dates.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="JodaPlusMinusLong.html" title="class in com.google.errorprone.bugpatterns.time">JodaPlusMinusLong</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="JodaPlusMinusLong.html" title="class in com.google.errorprone.bugpatterns.time">JodaPlusMinusLong</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Check for calls to JodaTime's <code>type.plus(long)</code> and <code>type.minus(long)</code> where <code>
  &lt;type&gt; = {Duration,Instant,DateTime,DateMidnight}</code>.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="JodaTimeConverterManager.html" title="class in com.google.errorprone.bugpatterns.time">JodaTimeConverterManager</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="JodaTimeConverterManager.html" title="class in com.google.errorprone.bugpatterns.time">JodaTimeConverterManager</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Ban usage of Joda's <code>ConverterManager</code>.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="JodaToSelf.html" title="class in com.google.errorprone.bugpatterns.time">JodaToSelf</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="JodaToSelf.html" title="class in com.google.errorprone.bugpatterns.time">JodaToSelf</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Check for calls to Joda-Time's <code>foo.toFoo()</code> and <code>new Foo(foo)</code>.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="JodaWithDurationAddedLong.html" title="class in com.google.errorprone.bugpatterns.time">JodaWithDurationAddedLong</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="JodaWithDurationAddedLong.html" title="class in com.google.errorprone.bugpatterns.time">JodaWithDurationAddedLong</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Check for calls to JodaTime's <code>type.withDurationAdded(long, int)</code> where <code>&lt;type&gt; =
  {Duration,Instant,DateTime}</code>.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="LocalDateTemporalAmount.html" title="class in com.google.errorprone.bugpatterns.time">LocalDateTemporalAmount</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="LocalDateTemporalAmount.html" title="class in com.google.errorprone.bugpatterns.time">LocalDateTemporalAmount</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Bans calls to <code>LocalDate.plus(TemporalAmount)</code> and <code>LocalDate.minus(TemporalAmount)</code>
  where the <a href="https://docs.oracle.com/javase/8/docs/api/java/time/temporal/TemporalAmount.html" title="class or interface in java.time.temporal" class="external-link"><code>TemporalAmount</code></a> is a non-zero <a href="https://docs.oracle.com/javase/8/docs/api/java/time/Duration.html" title="class or interface in java.time" class="external-link"><code>Duration</code></a>.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="NearbyCallers.html" title="class in com.google.errorprone.bugpatterns.time">NearbyCallers</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="NearbyCallers.html" title="class in com.google.errorprone.bugpatterns.time">NearbyCallers</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Utility class to find calls "nearby" other calls.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="PeriodFrom.html" title="class in com.google.errorprone.bugpatterns.time">PeriodFrom</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="PeriodFrom.html" title="class in com.google.errorprone.bugpatterns.time">PeriodFrom</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Bans calls to <code>Period.from(temporalAmount)</code> where <code>temporalAmount</code> is a <a href="https://docs.oracle.com/javase/8/docs/api/java/time/Duration.html" title="class or interface in java.time" class="external-link"><code>Duration</code></a>.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="PeriodGetTemporalUnit.html" title="class in com.google.errorprone.bugpatterns.time">PeriodGetTemporalUnit</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="PeriodGetTemporalUnit.html" title="class in com.google.errorprone.bugpatterns.time">PeriodGetTemporalUnit</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Bans calls to <code>Period.get(temporalUnit)</code> where <code>temporalUnit</code> is not <code>YEARS</code>,
  <code>MONTHS</code>, or <code>DAYS</code>.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="PeriodTimeMath.html" title="class in com.google.errorprone.bugpatterns.time">PeriodTimeMath</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="PeriodTimeMath.html" title="class in com.google.errorprone.bugpatterns.time">PeriodTimeMath</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Bans calls to <code>Period#plus/minus(TemporalAmount)</code> where the argument is a Duration.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="PreferJavaTimeOverload.html" title="class in com.google.errorprone.bugpatterns.time">PreferJavaTimeOverload</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="PreferJavaTimeOverload.html" title="class in com.google.errorprone.bugpatterns.time">PreferJavaTimeOverload</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">This check suggests the use of <code>java.time</code>-based APIs, when available.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="ProtoDurationGetSecondsGetNano.html" title="class in com.google.errorprone.bugpatterns.time">ProtoDurationGetSecondsGetNano</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="ProtoDurationGetSecondsGetNano.html" title="class in com.google.errorprone.bugpatterns.time">ProtoDurationGetSecondsGetNano</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">This checker warns about accessing the underlying nanosecond-adjustment field of a duration
  without a "nearby" access of the underlying seconds field.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="ProtoTimestampGetSecondsGetNano.html" title="class in com.google.errorprone.bugpatterns.time">ProtoTimestampGetSecondsGetNano</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="ProtoTimestampGetSecondsGetNano.html" title="class in com.google.errorprone.bugpatterns.time">ProtoTimestampGetSecondsGetNano</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">This checker warns about accessing the underlying nanosecond-adjustment field of a protobuf
  timestamp without a "nearby" access of the underlying seconds field.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="StronglyTypeTime.html" title="class in com.google.errorprone.bugpatterns.time">StronglyTypeTime</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="StronglyTypeTime.html" title="class in com.google.errorprone.bugpatterns.time">StronglyTypeTime</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Flags fields which would be better expressed as time types rather than primitive integers.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="TemporalAccessorGetChronoField.html" title="class in com.google.errorprone.bugpatterns.time">TemporalAccessorGetChronoField</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="TemporalAccessorGetChronoField.html" title="class in com.google.errorprone.bugpatterns.time">TemporalAccessorGetChronoField</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Bans calls to <code>TemporalAccessor.get(ChronoField)</code> where the implementation is guaranteed to
  throw an <code>UnsupportedTemporalTypeException</code>.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="TimeUnitConversionChecker.html" title="class in com.google.errorprone.bugpatterns.time">TimeUnitConversionChecker</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="TimeUnitConversionChecker.html" title="class in com.google.errorprone.bugpatterns.time">TimeUnitConversionChecker</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Check for problematic or suspicious TimeUnit conversion calls.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="TimeUnitMismatch.html" title="class in com.google.errorprone.bugpatterns.time">TimeUnitMismatch</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="TimeUnitMismatch.html" title="class in com.google.errorprone.bugpatterns.time">TimeUnitMismatch</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Checker that detects likely time-unit mismatches by looking at identifier names.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="ZoneIdOfZ.html" title="class in com.google.errorprone.bugpatterns.time">ZoneIdOfZ</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="ZoneIdOfZ.html" title="class in com.google.errorprone.bugpatterns.time">ZoneIdOfZ</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">This checker bans calls to <code>ZoneId.of("Z")</code> in favor of <a href="https://docs.oracle.com/javase/8/docs/api/java/time/ZoneOffset.html#UTC" title="class or interface in java.time" class="external-link"><code>ZoneOffset.UTC</code></a>.</div>
 </div>
 </div>

@@ -911,6 +911,9 @@ The types passed to this assertion are incompatible.
 __[JavaDurationGetSecondsGetNano](bugpattern/JavaDurationGetSecondsGetNano)__<br>
 duration.getNano() only accesses the underlying nanosecond adjustment from the whole second.
 
+__[JavaDurationGetSecondsToToSeconds](bugpattern/JavaDurationGetSecondsToToSeconds)__<br>
+Prefer duration.toSeconds() over duration.getSeconds()
+
 __[JavaDurationWithNanos](bugpattern/JavaDurationWithNanos)__<br>
 Use of java.time.Duration.withNanos(int) is not allowed.
 
