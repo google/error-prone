@@ -25,10 +25,12 @@ import static com.google.errorprone.names.NamingConventions.splitToLowercaseTerm
 import static com.google.errorprone.suppliers.Suppliers.DOUBLE_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.INT_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.LONG_TYPE;
+import static com.google.errorprone.util.ASTHelpers.constValue;
 import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.sun.source.tree.Tree.Kind.MEMBER_SELECT;
+import static java.util.EnumSet.allOf;
 import static java.util.concurrent.TimeUnit.DAYS;
 import static java.util.concurrent.TimeUnit.HOURS;
 import static java.util.concurrent.TimeUnit.MICROSECONDS;
@@ -37,6 +39,7 @@ import static java.util.concurrent.TimeUnit.MINUTES;
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
+import com.google.auto.value.AutoValue;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableBiMap;
 import com.google.common.collect.ImmutableList;
@@ -44,6 +47,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSetMultimap;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -57,12 +61,14 @@ import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AssignmentTree;
+import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.TypeCastTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Symbol;
@@ -73,6 +79,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import javax.inject.Inject;
 import org.jspecify.annotations.Nullable;
 
 /** Checker that detects likely time-unit mismatches by looking at identifier names. */
@@ -86,6 +93,13 @@ public final class TimeUnitMismatch extends BugChecker
         MethodInvocationTreeMatcher,
         NewClassTreeMatcher,
         VariableTreeMatcher {
+  private final boolean improvements;
+
+  @Inject
+  TimeUnitMismatch(ErrorProneFlags flags) {
+    this.improvements = flags.getBoolean("TimeUnitMismatch:improvements").orElse(true);
+  }
+
   @Override
   public Description matchAssignment(AssignmentTree tree, VisitorState state) {
     String formalName = extractArgumentName(tree.getVariable());
@@ -242,33 +256,22 @@ public final class TimeUnitMismatch extends BugChecker
      * seconds?
      */
 
-    String actualName = extractArgumentName(actualTree);
-    if (actualName == null) {
-      /*
-       * TODO(cpovirk): Look for other assignments to a variable in the method to guess its type.
-       * (Maybe even guess the type returned by a method by looking at other calls in the file?) Of
-       * course, that may be slow.
-       */
-      // TODO(cpovirk): Look for multiplication/division operations that are meant to change units.
-      // TODO(cpovirk): ...even if they include casts!
+    TimeUnit targetUnit = unitSuggestedByName(formalName);
+    TreeAndTimeUnit provided = unitSuggestedByTree(actualTree);
+    if (targetUnit == null || provided == null || targetUnit.equals(provided.outermostUnit())) {
       return false;
     }
-
-    TimeUnit formalUnit = unitSuggestedByName(formalName);
-    TimeUnit actualUnit = unitSuggestedByName(actualName);
-    if (formalUnit == null || actualUnit == null || formalUnit == actualUnit) {
-      return false;
-    }
+    TimeUnit providedUnit = provided.outermostUnit();
 
     String message =
         String.format(
             "Possible unit mismatch: expected %s but was %s. Before accepting this change, make "
                 + "sure that there is a true unit mismatch and not just an identifier whose name "
                 + "contains the wrong unit. (If there is, correct that instead!)",
-            formalUnit.toString().toLowerCase(Locale.ROOT),
-            actualUnit.toString().toLowerCase(Locale.ROOT));
-    if ((actualUnit == MICROSECONDS || actualUnit == MILLISECONDS)
-        && (formalUnit == MICROSECONDS || formalUnit == MILLISECONDS)) {
+            targetUnit.toString().toLowerCase(Locale.ROOT),
+            providedUnit.toString().toLowerCase(Locale.ROOT));
+    if ((providedUnit == MICROSECONDS || providedUnit == MILLISECONDS)
+        && (targetUnit == MICROSECONDS || targetUnit == MILLISECONDS)) {
       // TODO(cpovirk): Display this only if the code contained one of the ambiguous terms.
       message +=
           " WARNING: This checker considers \"ms\" and \"msec\" to always refer to *milli*seconds. "
@@ -277,7 +280,7 @@ public final class TimeUnitMismatch extends BugChecker
               + "before accepting this fix. If it instead means microseconds, consider renaming to "
               + "\"us\" or \"usec\" (or just \"micros\").";
       // TODO(cpovirk): More ambitiously, suggest an edit to rename the identifier to "micros," etc.
-    } else if (formalUnit == SECONDS && (actualUnit != HOURS && actualUnit != DAYS)) {
+    } else if (targetUnit == SECONDS && (providedUnit != HOURS && providedUnit != DAYS)) {
       message +=
           " WARNING: The suggested replacement truncates fractional seconds, so a value "
               + "like 999ms becomes 0.";
@@ -291,19 +294,32 @@ public final class TimeUnitMismatch extends BugChecker
      * to _multiply_ by 1000, rather than divide as we would if we were converting seconds to
      * milliseconds.
      */
-    SuggestedFix.Builder fix = SuggestedFix.builder();
-    // TODO(cpovirk): This can conflict with constants with names like "SECONDS."
-    fix.addStaticImport(TimeUnit.class.getName() + "." + actualUnit);
-    // TODO(cpovirk): This won't work for `double` and won't work if the output needs to be `int`.
-    fix.prefixWith(
-        actualTree, String.format("%s.%s(", actualUnit, TIME_UNIT_TO_UNIT_METHODS.get(formalUnit)));
-    fix.postfixWith(actualTree, ")");
+    SuggestedFix fix;
+
+    if (provided.innermostUnit().equals(targetUnit)) {
+      fix = SuggestedFix.replace(actualTree, state.getSourceForNode(provided.innermostTree()));
+    } else {
+      fix =
+          SuggestedFix.builder()
+              // TODO(cpovirk): This can conflict with constants with names like "SECONDS."
+              .addStaticImport(TimeUnit.class.getName() + "." + provided.innermostUnit())
+              // TODO(cpovirk): This won't work for `double` and won't work if the output needs to
+              // be `int`.
+              .replace(
+                  actualTree,
+                  String.format(
+                      "%s.%s(%s)",
+                      provided.innermostUnit(),
+                      TIME_UNIT_TO_UNIT_METHODS.get(targetUnit),
+                      state.getSourceForNode(provided.innermostTree())))
+              .build();
+    }
     /*
      * TODO(cpovirk): Often a better fix would be Duration.ofMillis(...).toNanos(). However, that
      * implies that the values are durations rather than instants, and it requires Java 8 (and some
      * utility methods in the case of micros). Maybe we should suggest a number of possible fixes?
      */
-    state.reportMatch(buildDescription(actualTree).setMessage(message).addFix(fix.build()).build());
+    state.reportMatch(buildDescription(actualTree).setMessage(message).addFix(fix).build());
     /*
      * TODO(cpovirk): Supply a different fix in the matchTimeUnitToUnit case (or the similar case in
      * which someone is calling, say, toMillis() but should be calling toDays(). The current fix
@@ -373,6 +389,104 @@ public final class TimeUnitMismatch extends BugChecker
           isSameType("java.lang.Integer"),
           isSameType("java.lang.Long"),
           isSameType("java.lang.Double"));
+
+  private @Nullable TreeAndTimeUnit unitSuggestedByTree(ExpressionTree tree) {
+    if (improvements && tree.getKind().equals(Kind.MULTIPLY)) {
+      var lhs = ((BinaryTree) tree).getLeftOperand();
+      var rhs = ((BinaryTree) tree).getRightOperand();
+      var lhsConversion = conversionFactor(lhs);
+      var rhsConversion = conversionFactor(rhs);
+      if (lhsConversion != null) {
+        return unitSuggestedWithConversion(lhsConversion, rhs);
+      }
+      if (rhsConversion != null) {
+        return unitSuggestedWithConversion(rhsConversion, lhs);
+      }
+    }
+    if (improvements && tree.getKind().equals(Kind.DIVIDE)) {
+      var lhs = ((BinaryTree) tree).getLeftOperand();
+      var rhs = ((BinaryTree) tree).getRightOperand();
+      var rhsConversion = conversionFactor(rhs);
+      if (rhsConversion != null) {
+        return unitSuggestedWithReciprocalConversion(rhsConversion, lhs);
+      }
+    }
+    String name = extractArgumentName(tree);
+    if (name == null) {
+      /*
+       * TODO(cpovirk): Look for other assignments to a variable in the method to guess its type.
+       * (Maybe even guess the type returned by a method by looking at other calls in the file?) Of
+       * course, that may be slow.
+       */
+      // TODO(cpovirk): ...even if they include casts!
+      return null;
+    }
+    var unit = unitSuggestedByName(name);
+    return unit == null ? null : TreeAndTimeUnit.of(tree, unit, unit);
+  }
+
+  /**
+   * The result of inspecting a tree. Given {@code getFooSeconds() * 1000}, {@link
+   * TreeAndTimeUnit#innermostTree()} refers to {@code getFooSeconds()}, {@link
+   * TreeAndTimeUnit#outermostUnit()} is MILLISECONDS, and {@link TreeAndTimeUnit#innermostUnit()}
+   * is SECONDS.
+   */
+  @AutoValue
+  abstract static class TreeAndTimeUnit {
+    public static TreeAndTimeUnit of(
+        ExpressionTree tree, TimeUnit timeUnit, TimeUnit underlyingUnit) {
+      return new AutoValue_TimeUnitMismatch_TreeAndTimeUnit(tree, timeUnit, underlyingUnit);
+    }
+
+    /** The innermost tree expressing a unit, ignoring any conversions around it. */
+    abstract ExpressionTree innermostTree();
+
+    /** The effective unit of the expression we started from. */
+    abstract TimeUnit outermostUnit();
+
+    /** The underlying unit of {@link #innermostTree()}. */
+    abstract TimeUnit innermostUnit();
+  }
+
+  private @Nullable TreeAndTimeUnit unitSuggestedWithConversion(
+      long conversionFactor, ExpressionTree tree) {
+    TreeAndTimeUnit underlying = unitSuggestedByTree(tree);
+    if (underlying == null) {
+      return null;
+    }
+    return allOf(TimeUnit.class).stream()
+        .filter(unit -> unit.convert(1, underlying.outermostUnit()) == conversionFactor)
+        .findFirst()
+        .map(u -> TreeAndTimeUnit.of(underlying.innermostTree(), u, underlying.innermostUnit()))
+        .orElse(null);
+  }
+
+  private @Nullable TreeAndTimeUnit unitSuggestedWithReciprocalConversion(
+      long conversionFactor, ExpressionTree tree) {
+    TreeAndTimeUnit underlying = unitSuggestedByTree(tree);
+    if (underlying == null) {
+      return null;
+    }
+    return allOf(TimeUnit.class).stream()
+        .filter(unit -> underlying.outermostUnit().convert(1, unit) == conversionFactor)
+        .findFirst()
+        .map(u -> TreeAndTimeUnit.of(underlying.innermostTree(), u, underlying.innermostUnit()))
+        .orElse(null);
+  }
+
+  private static @Nullable Long conversionFactor(ExpressionTree tree) {
+    var constValue = constValue(tree);
+    if (constValue instanceof Long) {
+      // Don't count 0 to be a valid conversion factor, because it _does_ show up as a conversion
+      // factor if you're doing integer division (i.e. 1 millisecond = 0 seconds, so the conversion
+      // factor naively looks like 0).
+      return (Long) constValue == 0L ? null : (Long) constValue;
+    }
+    if (constValue instanceof Integer) {
+      return (Integer) constValue == 0 ? null : ((Integer) constValue).longValue();
+    }
+    return null;
+  }
 
   @VisibleForTesting
   static @Nullable TimeUnit unitSuggestedByName(String name) {

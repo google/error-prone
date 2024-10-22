@@ -23,6 +23,7 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
+import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,6 +36,9 @@ import org.junit.runners.JUnit4;
 public class TimeUnitMismatchTest {
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(TimeUnitMismatch.class, getClass());
+
+  private final BugCheckerRefactoringTestHelper refactoringHelper =
+      BugCheckerRefactoringTestHelper.newInstance(TimeUnitMismatch.class, getClass());
 
   @Test
   public void testPositiveCase() {
@@ -215,6 +219,101 @@ public class TimeUnitMismatchTest {
                 long nanos = maybeNanos.get();
               }
             }""")
+        .doTest();
+  }
+
+  @Test
+  public void mismatchedTypeAfterManualConversion() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              // BUG: Diagnostic contains: MICROSECONDS.toMillis(getMicros())
+              long fooMillis = getMicros() * 1000;
+              // BUG: Diagnostic contains: MICROSECONDS.toMillis(getMicros())
+              long barMillis = 1000 * getMicros();
+              // BUG: Diagnostic contains:
+              long fooNanos = getMicros() / 1000;
+              // BUG: Diagnostic contains: SECONDS.toNanos(getSeconds())
+              long barNanos = getSeconds() * 1000 * 1000;
+
+              long getMicros() {
+                return 1;
+              }
+
+              long getSeconds() {
+                return 1;
+              }
+
+              void setMillis(long x) {}
+
+              void test(int timeMicros) {
+                // BUG: Diagnostic contains:
+                setMillis(timeMicros * 1000);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void noopConversion_isRemoved() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              long fooMicros = getMicros() * 1000;
+
+              long getMicros() {
+                return 1;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              long fooMicros = getMicros();
+
+              long getMicros() {
+                return 1;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void zeroMultiplier_noComplaint() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              static int MILLIS_PER_MINUTE = 42;
+              long fooMicros = 0 * MILLIS_PER_MINUTE;
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void matchedTypeAfterManualConversion() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              long fooNanos = getMicros() * 1000;
+              long fooMillis = getMicros() / 1000;
+
+              long getMicros() {
+                return 1;
+              }
+            }
+            """)
         .doTest();
   }
 
