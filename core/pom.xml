@@ -437,6 +437,7 @@
                   <include>com.google.code.findbugs:jsr305</include>
                   <include>com.google.protobuf:protobuf-java</include>
                   <include>javax.inject:javax.inject</include>
+                  <include>com.google.googlejavaformat:google-java-format</include>
                 </includes>
               </artifactSet>
             </configuration>
