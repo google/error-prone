@@ -318,6 +318,37 @@ public class TimeUnitMismatchTest {
   }
 
   @Test
+  public void binaryTree() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            abstract class Test {
+              abstract long getStartMillis();
+
+              abstract long getEndMillis();
+
+              abstract long getStartNanos();
+
+              abstract long getEndNanos();
+
+              void test() {
+                var b1 = getStartMillis() < getEndMillis();
+                var b2 = getStartNanos() + getEndNanos();
+                // BUG: Diagnostic contains: MILLISECONDS.toNanos(getStartMillis()) < getEndNanos()
+                var b3 = getStartMillis() < getEndNanos();
+                // BUG: Diagnostic contains: MILLISECONDS.toNanos(getStartMillis()) + getEndNanos()
+                var b4 = getStartMillis() + getEndNanos();
+                // BUG: Diagnostic contains: MILLISECONDS.toNanos(getStartMillis()) + getEndNanos()
+                var b5 = getStartMillis() * 1000 + getEndNanos();
+                var b6 = getStartMillis() * 1_000_000 + getEndNanos();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void testUnitSuggestedByName() {
     assertSeconds("sleepSec", "deadlineSeconds", "secondsTimeout", "msToS");
     assertUnknown(

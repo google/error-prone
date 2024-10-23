@@ -28,6 +28,7 @@ import static com.google.errorprone.suppliers.Suppliers.LONG_TYPE;
 import static com.google.errorprone.util.ASTHelpers.constValue;
 import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.sun.source.tree.Tree.Kind.MEMBER_SELECT;
 import static java.util.EnumSet.allOf;
@@ -52,6 +53,7 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.AssignmentTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
@@ -90,6 +92,7 @@ import org.jspecify.annotations.Nullable;
     severity = WARNING)
 public final class TimeUnitMismatch extends BugChecker
     implements AssignmentTreeMatcher,
+        BinaryTreeMatcher,
         MethodInvocationTreeMatcher,
         NewClassTreeMatcher,
         VariableTreeMatcher {
@@ -107,6 +110,84 @@ public final class TimeUnitMismatch extends BugChecker
       check(formalName, tree.getExpression(), state);
     }
     return ANY_MATCHES_WERE_ALREADY_REPORTED;
+  }
+
+  @Override
+  public Description matchBinary(BinaryTree tree, VisitorState state) {
+    if (!improvements
+        || !NUMERIC_TIME_TYPE.matches(tree.getLeftOperand(), state)
+        || !NUMERIC_TIME_TYPE.matches(tree.getRightOperand(), state)) {
+      return Description.NO_MATCH;
+    }
+    switch (tree.getKind()) {
+      case PLUS:
+      case MINUS:
+      case LESS_THAN:
+      case GREATER_THAN:
+      case LESS_THAN_EQUAL:
+      case GREATER_THAN_EQUAL:
+      case EQUAL_TO:
+      case NOT_EQUAL_TO:
+      case PLUS_ASSIGNMENT:
+      case MINUS_ASSIGNMENT:
+        break;
+      default:
+        return Description.NO_MATCH;
+    }
+
+    TreeAndTimeUnit lhs = unitSuggestedByTree(tree.getLeftOperand());
+    TreeAndTimeUnit rhs = unitSuggestedByTree(tree.getRightOperand());
+
+    if (lhs == null || rhs == null) {
+      return Description.NO_MATCH;
+    }
+    if (lhs.outermostUnit().equals(rhs.outermostUnit())) {
+      return Description.NO_MATCH;
+    }
+
+    StringBuilder message =
+        new StringBuilder(
+            String.format(
+                "This operation seems to mix up time units: %s and %s. The generated fix uses the"
+                    + " smaller unit to preserve precision.",
+                lhs.outermostUnit(), rhs.outermostUnit()));
+
+    if (isSameType(getType(tree), state.getSymtab().booleanType, state)) {
+      message.append(
+          " We picked the smaller unit (so larger result) to avoid truncation errors, but this may"
+              + " result in overflow.");
+    } else {
+      message.append(
+          " We picked the smaller unit to preserve truncation, but this may not be the right unit"
+              + " for the result. Please review carefully!");
+    }
+
+    // To create a fix, pick the smaller unit to retain precision. A better idea would be to look
+    // at the target of the expression and try to work out the likely target unit, but that's a lot
+    // harder.
+    if (lhs.outermostUnit().convert(1, rhs.outermostUnit()) != 0) {
+      return buildDescription(tree)
+          .setMessage(message.toString())
+          .addFix(
+              convertTree(
+                  tree.getRightOperand(),
+                  rhs.innermostTree(),
+                  lhs.outermostUnit(),
+                  rhs.innermostUnit(),
+                  state))
+          .build();
+    } else {
+      return buildDescription(tree)
+          .setMessage(message.toString())
+          .addFix(
+              convertTree(
+                  tree.getLeftOperand(),
+                  lhs.innermostTree(),
+                  rhs.outermostUnit(),
+                  lhs.innermostUnit(),
+                  state))
+          .build();
+    }
   }
 
   @Override
@@ -294,26 +375,9 @@ public final class TimeUnitMismatch extends BugChecker
      * to _multiply_ by 1000, rather than divide as we would if we were converting seconds to
      * milliseconds.
      */
-    SuggestedFix fix;
-
-    if (provided.innermostUnit().equals(targetUnit)) {
-      fix = SuggestedFix.replace(actualTree, state.getSourceForNode(provided.innermostTree()));
-    } else {
-      fix =
-          SuggestedFix.builder()
-              // TODO(cpovirk): This can conflict with constants with names like "SECONDS."
-              .addStaticImport(TimeUnit.class.getName() + "." + provided.innermostUnit())
-              // TODO(cpovirk): This won't work for `double` and won't work if the output needs to
-              // be `int`.
-              .replace(
-                  actualTree,
-                  String.format(
-                      "%s.%s(%s)",
-                      provided.innermostUnit(),
-                      TIME_UNIT_TO_UNIT_METHODS.get(targetUnit),
-                      state.getSourceForNode(provided.innermostTree())))
-              .build();
-    }
+    SuggestedFix fix =
+        convertTree(
+            actualTree, provided.innermostTree(), targetUnit, provided.innermostUnit(), state);
     /*
      * TODO(cpovirk): Often a better fix would be Duration.ofMillis(...).toNanos(). However, that
      * implies that the values are durations rather than instants, and it requires Java 8 (and some
@@ -327,6 +391,28 @@ public final class TimeUnitMismatch extends BugChecker
      * corrected call.
      */
     return true;
+  }
+
+  private static SuggestedFix convertTree(
+      ExpressionTree actualTree,
+      ExpressionTree innerTree,
+      TimeUnit to,
+      TimeUnit from,
+      VisitorState state) {
+    if (to.equals(from)) {
+      return SuggestedFix.replace(actualTree, state.getSourceForNode(innerTree));
+    }
+    return SuggestedFix.builder()
+        // TODO(cpovirk): This can conflict with constants with names like "SECONDS."
+        .addStaticImport(TimeUnit.class.getName() + "." + from)
+        // TODO(cpovirk): This won't work for `double` and won't work if the output needs to
+        // be `int`.
+        .replace(
+            actualTree,
+            String.format(
+                "%s.%s(%s)",
+                from, TIME_UNIT_TO_UNIT_METHODS.get(to), state.getSourceForNode(innerTree)))
+        .build();
   }
 
   /**
