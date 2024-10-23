@@ -140,4 +140,37 @@ public final class MisleadingEscapedSpaceTest {
             }""")
         .doTest();
   }
+
+  @Test
+  public void atEndOfString_noFinding() {
+    assume().that(Runtime.version().feature()).isAtLeast(14);
+
+    testHelper
+        .addSourceLines(
+            "Test.class",
+            """
+            class Test {
+              private static final String FOO =
+                  \"""
+              foo
+              bar\\s\""";
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void escapedSpaceAtEndOfString() {
+    assume().that(Runtime.version().feature()).isAtLeast(14);
+
+    testHelper
+        .addSourceLines(
+            "Test.class",
+            """
+            class Test {
+              // BUG: Diagnostic contains:
+              private static final String FOO = "foo\\s";
+            }""")
+        .doTest();
+  }
 }

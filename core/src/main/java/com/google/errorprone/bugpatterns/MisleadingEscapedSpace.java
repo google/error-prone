@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.SourceVersion.supportsTextBlocks;
-import static java.util.stream.Collectors.joining;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -56,32 +55,38 @@ public final class MisleadingEscapedSpace extends BugChecker implements LiteralT
       // Tokenize the source to make sure we omit comments. Desugaring of "a" + "b" into a single
       // string literal happens really early in compilation, and we want to ensure we don't match
       // on any "\s" in comments.
-      // This is quite ugly in that we end up with a string that looks like "foo""bar", i.e.
-      // including the quotes, but that doesn't matter for this check.
       var tokens = ErrorProneTokens.getTokens(source, state.context);
-      var literal =
-          tokens.stream()
-              .filter(t -> t.kind().equals(TokenKind.STRINGLITERAL))
-              .map(t -> source.substring(t.pos(), t.endPos()))
-              .collect(joining());
-      boolean seenEscape = false;
-      for (int i = 0; i < literal.length(); ++i) {
-        switch (literal.charAt(i)) {
-          case '\n':
-            seenEscape = false;
-            break;
-          case '\\':
-            i++;
-            if (literal.charAt(i) == 's') {
-              seenEscape = true;
+      for (var token : tokens) {
+        if (!token.kind().equals(TokenKind.STRINGLITERAL)) {
+          continue;
+        }
+        var sourceWithQuotes = source.substring(token.pos(), token.endPos());
+        boolean isBlockLiteral = sourceWithQuotes.startsWith("\"\"\"");
+        int quoteSize = isBlockLiteral ? 3 : 1;
+        var literal = sourceWithQuotes.substring(quoteSize, sourceWithQuotes.length() - quoteSize);
+        boolean seenEscape = false;
+        for (int i = 0; i < literal.length(); ++i) {
+          switch (literal.charAt(i)) {
+            case '\n':
+              seenEscape = false;
               break;
-            }
-          // fall through
-          default:
-            if (seenEscape) {
-              return describeMatch(tree);
-            }
-            break;
+            case '\\':
+              i++;
+              if (literal.charAt(i) == 's') {
+                seenEscape = true;
+                break;
+              }
+            // fall through
+            default:
+              if (seenEscape) {
+                return describeMatch(tree);
+              }
+              break;
+          }
+        }
+        // Catch _trailing_ \s at the end of non-block literals.
+        if (seenEscape && !isBlockLiteral) {
+          return describeMatch(tree);
         }
       }
     }
