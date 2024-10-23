@@ -64,7 +64,7 @@ public final class SetUnrecognized extends BugChecker implements MethodInvocatio
 
   private static final Matcher<ExpressionTree> IS_PROTO_SETTER =
       instanceMethod()
-          .onDescendantOfAny("com.google.protobuf.MessageLite.Builder")
+          .onDescendantOf("com.google.protobuf.MessageLite.Builder")
           .withNameMatching(Pattern.compile("(add|set).*"));
 
   private static final Supplier<Type> ENUM_LITE =
