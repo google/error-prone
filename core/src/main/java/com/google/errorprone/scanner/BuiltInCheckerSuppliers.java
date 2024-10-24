@@ -120,7 +120,6 @@ import com.google.errorprone.bugpatterns.DoNotCallSuggester;
 import com.google.errorprone.bugpatterns.DoNotClaimAnnotations;
 import com.google.errorprone.bugpatterns.DoNotMockAutoValue;
 import com.google.errorprone.bugpatterns.DoNotMockChecker;
-import com.google.errorprone.bugpatterns.DoNotUseRuleChain;
 import com.google.errorprone.bugpatterns.DoubleBraceInitialization;
 import com.google.errorprone.bugpatterns.DuplicateDateFormatField;
 import com.google.errorprone.bugpatterns.DuplicateMapKeys;
@@ -1163,7 +1162,6 @@ public class BuiltInCheckerSuppliers {
           DefaultLocale.class, // TODO: enable this by default.
           DepAnn.class,
           DifferentNameButSame.class,
-          DoNotUseRuleChain.class,
           EmptyIfStatement.class,
           EqualsBrokenForNull.class,
           EqualsMissingNullable.class,
