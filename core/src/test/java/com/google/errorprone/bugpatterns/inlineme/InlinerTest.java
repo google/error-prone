@@ -1511,6 +1511,59 @@ public final class Caller {
         .doTest();
   }
 
+  @Test
+  public void inlinerReplacesParameterValueInPackageName_b375421323() {
+    refactoringTestHelper
+        .addInputLines(
+            "Bar.java",
+            """
+            package foo;
+
+            public class Bar {
+              public static void baz(String s) {}
+            }
+            """)
+        .expectUnchanged()
+        .addInputLines(
+            "Client.java",
+            """
+            import com.google.errorprone.annotations.InlineMe;
+            import foo.Bar;
+
+            public class Client {
+              @InlineMe(replacement = "Bar.baz(foo)", imports = "foo.Bar")
+              public static void inlinedMethod(String foo) {
+                Bar.baz(foo);
+              }
+            }
+            """)
+        .expectUnchanged()
+        .addInputLines(
+            "Caller.java",
+            """
+            class Caller {
+              class Bar {}
+
+              void doTest() {
+                Client.inlinedMethod("abc");
+              }
+            }
+            """)
+        .addOutputLines(
+            "out/Caller.java",
+            """
+            class Caller {
+              class Bar {}
+
+              void doTest() {
+                "abc".Bar.baz("abc");
+              }
+            }
+            """)
+        .allowBreakingChanges()
+        .doTest();
+  }
+
   private BugCheckerRefactoringTestHelper bugCheckerWithPrefixFlag(String prefix) {
     return BugCheckerRefactoringTestHelper.newInstance(Inliner.class, getClass())
         .setArgs("-XepOpt:" + PREFIX_FLAG + "=" + prefix);
