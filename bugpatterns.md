@@ -1497,9 +1497,6 @@ Implicit use of the JVM default locale, which can result in differing behaviour 
 __[DifferentNameButSame](bugpattern/DifferentNameButSame)__<br>
 This type is referred to in different ways within this file, which may be confusing.
 
-__[DoNotUseRuleChain](bugpattern/DoNotUseRuleChain)__<br>
-Prefer using &#96;@Rule&#96; with an explicit order over declaring a &#96;RuleChain&#96;. RuleChain was the only way to declare ordered rules before JUnit 4.13. Newer versions should use the cleaner individual &#96;@Rule(order &#61; n)&#96; option. The rules with a higher value are inner.
-
 __[EqualsBrokenForNull](bugpattern/EqualsBrokenForNull)__<br>
 equals() implementation may throw NullPointerException when given null
 
