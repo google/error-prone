@@ -74,6 +74,12 @@ loadScripts(document, 'script');</script>
 <li><a href="#getDefaultInstanceForType()" tabindex="0">getDefaultInstanceForType()</a></li>
 <li><a href="#build()" tabindex="0">build()</a></li>
 <li><a href="#buildPartial()" tabindex="0">buildPartial()</a></li>
+<li><a href="#clone()" tabindex="0">clone()</a></li>
+<li><a href="#setField(com.google.protobuf.Descriptors.FieldDescriptor,java.lang.Object)" tabindex="0">setField(Descriptors.FieldDescriptor, Object)</a></li>
+<li><a href="#clearField(com.google.protobuf.Descriptors.FieldDescriptor)" tabindex="0">clearField(Descriptors.FieldDescriptor)</a></li>
+<li><a href="#clearOneof(com.google.protobuf.Descriptors.OneofDescriptor)" tabindex="0">clearOneof(Descriptors.OneofDescriptor)</a></li>
+<li><a href="#setRepeatedField(com.google.protobuf.Descriptors.FieldDescriptor,int,java.lang.Object)" tabindex="0">setRepeatedField(Descriptors.FieldDescriptor, int, Object)</a></li>
+<li><a href="#addRepeatedField(com.google.protobuf.Descriptors.FieldDescriptor,java.lang.Object)" tabindex="0">addRepeatedField(Descriptors.FieldDescriptor, Object)</a></li>
 <li><a href="#mergeFrom(com.google.protobuf.Message)" tabindex="0">mergeFrom(Message)</a></li>
 <li><a href="#mergeFrom(com.google.errorprone.bugpatterns.apidiff.ApiDiffProto.Diff)" tabindex="0">mergeFrom(ApiDiffProto.Diff)</a></li>
 <li><a href="#isInitialized()" tabindex="0">isInitialized()</a></li>
@@ -96,6 +102,8 @@ loadScripts(document, 'script');</script>
 <li><a href="#addClassDiffBuilder()" tabindex="0">addClassDiffBuilder()</a></li>
 <li><a href="#addClassDiffBuilder(int)" tabindex="0">addClassDiffBuilder(int)</a></li>
 <li><a href="#getClassDiffBuilderList()" tabindex="0">getClassDiffBuilderList()</a></li>
+<li><a href="#setUnknownFields(com.google.protobuf.UnknownFieldSet)" tabindex="0">setUnknownFields(UnknownFieldSet)</a></li>
+<li><a href="#mergeUnknownFields(com.google.protobuf.UnknownFieldSet)" tabindex="0">mergeUnknownFields(UnknownFieldSet)</a></li>
 </ol>
 </li>
 </ol>
@@ -108,7 +116,7 @@ loadScripts(document, 'script');</script>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
 <div class="inheritance">com.google.protobuf.AbstractMessageLite.Builder
 <div class="inheritance">com.google.protobuf.AbstractMessage.Builder&lt;<a href="ApiDiffProto.Diff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.Diff.Builder</a>&gt;
-<div class="inheritance">com.google.protobuf.GeneratedMessage.Builder&lt;<a href="ApiDiffProto.Diff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.Diff.Builder</a>&gt;
+<div class="inheritance">com.google.protobuf.GeneratedMessageV3.Builder&lt;<a href="ApiDiffProto.Diff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.Diff.Builder</a>&gt;
 <div class="inheritance">com.google.errorprone.bugpatterns.apidiff.ApiDiffProto.Diff.Builder</div>
 </div>
 </div>
@@ -126,7 +134,7 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public static final class </span><span class="element-name type-name-label">ApiDiffProto.Diff.Builder</span>
-<span class="extends-implements">extends com.google.protobuf.GeneratedMessage.Builder&lt;<a href="ApiDiffProto.Diff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.Diff.Builder</a>&gt;
+<span class="extends-implements">extends com.google.protobuf.GeneratedMessageV3.Builder&lt;<a href="ApiDiffProto.Diff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.Diff.Builder</a>&gt;
 implements <a href="ApiDiffProto.DiffOrBuilder.html" title="interface in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.DiffOrBuilder</a></span></div>
 <div class="block">Protobuf type <code>devtools.staticanalysis.errorprone.apidiff.Diff</code></div>
 </div>
@@ -181,20 +189,33 @@ implements <a href="ApiDiffProto.DiffOrBuilder.html" title="interface in com.goo
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block"><code>repeated .devtools.staticanalysis.errorprone.apidiff.ClassDiff class_diff = 1;</code></div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="ApiDiffProto.Diff.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.Diff</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#build()" class="member-name-link">build</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="ApiDiffProto.Diff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.Diff.Builder</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#addRepeatedField(com.google.protobuf.Descriptors.FieldDescriptor,java.lang.Object)" class="member-name-link">addRepeatedField</a><wbr>(com.google.protobuf.Descriptors.FieldDescriptor&nbsp;field,
+ <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;value)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="ApiDiffProto.Diff.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.Diff</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#buildPartial()" class="member-name-link">buildPartial</a>()</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#build()" class="member-name-link">build</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="ApiDiffProto.Diff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.Diff.Builder</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#clear()" class="member-name-link">clear</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="ApiDiffProto.Diff.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.Diff</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#buildPartial()" class="member-name-link">buildPartial</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="ApiDiffProto.Diff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.Diff.Builder</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#clearClassDiff()" class="member-name-link">clearClassDiff</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#clear()" class="member-name-link">clear</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="ApiDiffProto.Diff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.Diff.Builder</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#clearClassDiff()" class="member-name-link">clearClassDiff</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block"><code>repeated .devtools.staticanalysis.errorprone.apidiff.ClassDiff class_diff = 1;</code></div>
 </div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="ApiDiffProto.Diff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.Diff.Builder</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#clearField(com.google.protobuf.Descriptors.FieldDescriptor)" class="member-name-link">clearField</a><wbr>(com.google.protobuf.Descriptors.FieldDescriptor&nbsp;field)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="ApiDiffProto.Diff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.Diff.Builder</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#clearOneof(com.google.protobuf.Descriptors.OneofDescriptor)" class="member-name-link">clearOneof</a><wbr>(com.google.protobuf.Descriptors.OneofDescriptor&nbsp;oneof)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="ApiDiffProto.Diff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.Diff.Builder</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#clone()" class="member-name-link">clone</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="ApiDiffProto.ClassDiff.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.ClassDiff</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getClassDiff(int)" class="member-name-link">getClassDiff</a><wbr>(int&nbsp;index)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
@@ -239,7 +260,7 @@ implements <a href="ApiDiffProto.DiffOrBuilder.html" title="interface in com.goo
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.google.protobuf.Descriptors.Descriptor</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getDescriptorForType()" class="member-name-link">getDescriptorForType</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected com.google.protobuf.GeneratedMessage.FieldAccessorTable</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#internalGetFieldAccessorTable()" class="member-name-link">internalGetFieldAccessorTable</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final boolean</code></div>
@@ -255,29 +276,44 @@ implements <a href="ApiDiffProto.DiffOrBuilder.html" title="interface in com.goo
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="ApiDiffProto.Diff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.Diff.Builder</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#mergeFrom(com.google.protobuf.Message)" class="member-name-link">mergeFrom</a><wbr>(com.google.protobuf.Message&nbsp;other)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="ApiDiffProto.Diff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.Diff.Builder</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#removeClassDiff(int)" class="member-name-link">removeClassDiff</a><wbr>(int&nbsp;index)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block"><code>repeated .devtools.staticanalysis.errorprone.apidiff.ClassDiff class_diff = 1;</code></div>
-</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final <a href="ApiDiffProto.Diff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.Diff.Builder</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#mergeUnknownFields(com.google.protobuf.UnknownFieldSet)" class="member-name-link">mergeUnknownFields</a><wbr>(com.google.protobuf.UnknownFieldSet&nbsp;unknownFields)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="ApiDiffProto.Diff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.Diff.Builder</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setClassDiff(int,com.google.errorprone.bugpatterns.apidiff.ApiDiffProto.ClassDiff)" class="member-name-link">setClassDiff</a><wbr>(int&nbsp;index,
- <a href="ApiDiffProto.ClassDiff.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.ClassDiff</a>&nbsp;value)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#removeClassDiff(int)" class="member-name-link">removeClassDiff</a><wbr>(int&nbsp;index)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block"><code>repeated .devtools.staticanalysis.errorprone.apidiff.ClassDiff class_diff = 1;</code></div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="ApiDiffProto.Diff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.Diff.Builder</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setClassDiff(int,com.google.errorprone.bugpatterns.apidiff.ApiDiffProto.ClassDiff.Builder)" class="member-name-link">setClassDiff</a><wbr>(int&nbsp;index,
- <a href="ApiDiffProto.ClassDiff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.ClassDiff.Builder</a>&nbsp;builderForValue)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setClassDiff(int,com.google.errorprone.bugpatterns.apidiff.ApiDiffProto.ClassDiff)" class="member-name-link">setClassDiff</a><wbr>(int&nbsp;index,
+ <a href="ApiDiffProto.ClassDiff.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.ClassDiff</a>&nbsp;value)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block"><code>repeated .devtools.staticanalysis.errorprone.apidiff.ClassDiff class_diff = 1;</code></div>
 </div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="ApiDiffProto.Diff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.Diff.Builder</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setClassDiff(int,com.google.errorprone.bugpatterns.apidiff.ApiDiffProto.ClassDiff.Builder)" class="member-name-link">setClassDiff</a><wbr>(int&nbsp;index,
+ <a href="ApiDiffProto.ClassDiff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.ClassDiff.Builder</a>&nbsp;builderForValue)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block"><code>repeated .devtools.staticanalysis.errorprone.apidiff.ClassDiff class_diff = 1;</code></div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="ApiDiffProto.Diff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.Diff.Builder</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setField(com.google.protobuf.Descriptors.FieldDescriptor,java.lang.Object)" class="member-name-link">setField</a><wbr>(com.google.protobuf.Descriptors.FieldDescriptor&nbsp;field,
+ <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;value)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="ApiDiffProto.Diff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.Diff.Builder</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setRepeatedField(com.google.protobuf.Descriptors.FieldDescriptor,int,java.lang.Object)" class="member-name-link">setRepeatedField</a><wbr>(com.google.protobuf.Descriptors.FieldDescriptor&nbsp;field,
+ int&nbsp;index,
+ <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;value)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final <a href="ApiDiffProto.Diff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.Diff.Builder</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setUnknownFields(com.google.protobuf.UnknownFieldSet)" class="member-name-link">setUnknownFields</a><wbr>(com.google.protobuf.UnknownFieldSet&nbsp;unknownFields)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
 <div class="inherited-list">
-<h3 id="methods-inherited-from-class-com.google.protobuf.GeneratedMessage.Builder">Methods inherited from class&nbsp;com.google.protobuf.GeneratedMessage.Builder</h3>
-<code>addRepeatedField, clearField, clearOneof, clone, getAllFields, getField, getFieldBuilder, getOneofFieldDescriptor, getParentForChildren, getRepeatedField, getRepeatedFieldBuilder, getRepeatedFieldCount, getUnknownFields, getUnknownFieldSetBuilder, hasField, hasOneof, internalGetMapField, internalGetMapFieldReflection, internalGetMutableMapField, internalGetMutableMapFieldReflection, isClean, markClean, mergeUnknownFields, mergeUnknownLengthDelimitedField, mergeUnknownVarintField, newBuilderForField, onBuilt, onChanged, parseUnknownField, setField, setRepeatedField, setUnknownFields, setUnknownFieldSetBuilder, setUnknownFieldsProto3</code></div>
+<h3 id="methods-inherited-from-class-com.google.protobuf.GeneratedMessageV3.Builder">Methods inherited from class&nbsp;com.google.protobuf.GeneratedMessageV3.Builder</h3>
+<code>getAllFields, getField, getFieldBuilder, getOneofFieldDescriptor, getParentForChildren, getRepeatedField, getRepeatedFieldBuilder, getRepeatedFieldCount, getUnknownFields, getUnknownFieldSetBuilder, hasField, hasOneof, internalGetMapField, internalGetMapFieldReflection, internalGetMutableMapField, internalGetMutableMapFieldReflection, isClean, markClean, mergeUnknownLengthDelimitedField, mergeUnknownVarintField, newBuilderForField, onBuilt, onChanged, parseUnknownField, setUnknownFieldSetBuilder, setUnknownFieldsProto3</code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-com.google.protobuf.AbstractMessage.Builder">Methods inherited from class&nbsp;com.google.protobuf.AbstractMessage.Builder</h3>
 <code>findInitializationErrors, getInitializationErrorString, internalMergeFrom, mergeFrom, mergeFrom, mergeFrom, mergeFrom, mergeFrom, mergeFrom, mergeFrom, mergeFrom, mergeFrom, newUninitializedMessageException, toString</code></div>
@@ -319,10 +355,10 @@ implements <a href="ApiDiffProto.DiffOrBuilder.html" title="interface in com.goo
 <section class="detail" id="internalGetFieldAccessorTable()">
 <h3>internalGetFieldAccessorTable</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">com.google.protobuf.GeneratedMessage.FieldAccessorTable</span>&nbsp;<span class="element-name">internalGetFieldAccessorTable</span>()</div>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">com.google.protobuf.GeneratedMessageV3.FieldAccessorTable</span>&nbsp;<span class="element-name">internalGetFieldAccessorTable</span>()</div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code>internalGetFieldAccessorTable</code>&nbsp;in class&nbsp;<code>com.google.protobuf.GeneratedMessage.Builder&lt;<a href="ApiDiffProto.Diff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.Diff.Builder</a>&gt;</code></dd>
+<dd><code>internalGetFieldAccessorTable</code>&nbsp;in class&nbsp;<code>com.google.protobuf.GeneratedMessageV3.Builder&lt;<a href="ApiDiffProto.Diff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.Diff.Builder</a>&gt;</code></dd>
 </dl>
 </div>
 </section>
@@ -338,7 +374,7 @@ implements <a href="ApiDiffProto.DiffOrBuilder.html" title="interface in com.goo
 <dt>Specified by:</dt>
 <dd><code>clear</code>&nbsp;in interface&nbsp;<code>com.google.protobuf.MessageLite.Builder</code></dd>
 <dt>Overrides:</dt>
-<dd><code>clear</code>&nbsp;in class&nbsp;<code>com.google.protobuf.GeneratedMessage.Builder&lt;<a href="ApiDiffProto.Diff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.Diff.Builder</a>&gt;</code></dd>
+<dd><code>clear</code>&nbsp;in class&nbsp;<code>com.google.protobuf.GeneratedMessageV3.Builder&lt;<a href="ApiDiffProto.Diff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.Diff.Builder</a>&gt;</code></dd>
 </dl>
 </div>
 </section>
@@ -354,7 +390,7 @@ implements <a href="ApiDiffProto.DiffOrBuilder.html" title="interface in com.goo
 <dt>Specified by:</dt>
 <dd><code>getDescriptorForType</code>&nbsp;in interface&nbsp;<code>com.google.protobuf.MessageOrBuilder</code></dd>
 <dt>Overrides:</dt>
-<dd><code>getDescriptorForType</code>&nbsp;in class&nbsp;<code>com.google.protobuf.GeneratedMessage.Builder&lt;<a href="ApiDiffProto.Diff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.Diff.Builder</a>&gt;</code></dd>
+<dd><code>getDescriptorForType</code>&nbsp;in class&nbsp;<code>com.google.protobuf.GeneratedMessageV3.Builder&lt;<a href="ApiDiffProto.Diff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.Diff.Builder</a>&gt;</code></dd>
 </dl>
 </div>
 </section>
@@ -402,6 +438,96 @@ implements <a href="ApiDiffProto.DiffOrBuilder.html" title="interface in com.goo
 </section>
 </li>
 <li>
+<section class="detail" id="clone()">
+<h3>clone</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="ApiDiffProto.Diff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.Diff.Builder</a></span>&nbsp;<span class="element-name">clone</span>()</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code>clone</code>&nbsp;in interface&nbsp;<code>com.google.protobuf.Message.Builder</code></dd>
+<dt>Specified by:</dt>
+<dd><code>clone</code>&nbsp;in interface&nbsp;<code>com.google.protobuf.MessageLite.Builder</code></dd>
+<dt>Overrides:</dt>
+<dd><code>clone</code>&nbsp;in class&nbsp;<code>com.google.protobuf.GeneratedMessageV3.Builder&lt;<a href="ApiDiffProto.Diff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.Diff.Builder</a>&gt;</code></dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="setField(com.google.protobuf.Descriptors.FieldDescriptor,java.lang.Object)">
+<h3>setField</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="ApiDiffProto.Diff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.Diff.Builder</a></span>&nbsp;<span class="element-name">setField</span><wbr><span class="parameters">(com.google.protobuf.Descriptors.FieldDescriptor&nbsp;field,
+ <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;value)</span></div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code>setField</code>&nbsp;in interface&nbsp;<code>com.google.protobuf.Message.Builder</code></dd>
+<dt>Overrides:</dt>
+<dd><code>setField</code>&nbsp;in class&nbsp;<code>com.google.protobuf.GeneratedMessageV3.Builder&lt;<a href="ApiDiffProto.Diff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.Diff.Builder</a>&gt;</code></dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="clearField(com.google.protobuf.Descriptors.FieldDescriptor)">
+<h3>clearField</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="ApiDiffProto.Diff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.Diff.Builder</a></span>&nbsp;<span class="element-name">clearField</span><wbr><span class="parameters">(com.google.protobuf.Descriptors.FieldDescriptor&nbsp;field)</span></div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code>clearField</code>&nbsp;in interface&nbsp;<code>com.google.protobuf.Message.Builder</code></dd>
+<dt>Overrides:</dt>
+<dd><code>clearField</code>&nbsp;in class&nbsp;<code>com.google.protobuf.GeneratedMessageV3.Builder&lt;<a href="ApiDiffProto.Diff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.Diff.Builder</a>&gt;</code></dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="clearOneof(com.google.protobuf.Descriptors.OneofDescriptor)">
+<h3>clearOneof</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="ApiDiffProto.Diff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.Diff.Builder</a></span>&nbsp;<span class="element-name">clearOneof</span><wbr><span class="parameters">(com.google.protobuf.Descriptors.OneofDescriptor&nbsp;oneof)</span></div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code>clearOneof</code>&nbsp;in interface&nbsp;<code>com.google.protobuf.Message.Builder</code></dd>
+<dt>Overrides:</dt>
+<dd><code>clearOneof</code>&nbsp;in class&nbsp;<code>com.google.protobuf.GeneratedMessageV3.Builder&lt;<a href="ApiDiffProto.Diff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.Diff.Builder</a>&gt;</code></dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="setRepeatedField(com.google.protobuf.Descriptors.FieldDescriptor,int,java.lang.Object)">
+<h3>setRepeatedField</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="ApiDiffProto.Diff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.Diff.Builder</a></span>&nbsp;<span class="element-name">setRepeatedField</span><wbr><span class="parameters">(com.google.protobuf.Descriptors.FieldDescriptor&nbsp;field,
+ int&nbsp;index,
+ <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;value)</span></div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code>setRepeatedField</code>&nbsp;in interface&nbsp;<code>com.google.protobuf.Message.Builder</code></dd>
+<dt>Overrides:</dt>
+<dd><code>setRepeatedField</code>&nbsp;in class&nbsp;<code>com.google.protobuf.GeneratedMessageV3.Builder&lt;<a href="ApiDiffProto.Diff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.Diff.Builder</a>&gt;</code></dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="addRepeatedField(com.google.protobuf.Descriptors.FieldDescriptor,java.lang.Object)">
+<h3>addRepeatedField</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="ApiDiffProto.Diff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.Diff.Builder</a></span>&nbsp;<span class="element-name">addRepeatedField</span><wbr><span class="parameters">(com.google.protobuf.Descriptors.FieldDescriptor&nbsp;field,
+ <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;value)</span></div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code>addRepeatedField</code>&nbsp;in interface&nbsp;<code>com.google.protobuf.Message.Builder</code></dd>
+<dt>Overrides:</dt>
+<dd><code>addRepeatedField</code>&nbsp;in class&nbsp;<code>com.google.protobuf.GeneratedMessageV3.Builder&lt;<a href="ApiDiffProto.Diff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.Diff.Builder</a>&gt;</code></dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
 <section class="detail" id="mergeFrom(com.google.protobuf.Message)">
 <h3>mergeFrom</h3>
 <div class="horizontal-scroll">
@@ -432,7 +558,7 @@ implements <a href="ApiDiffProto.DiffOrBuilder.html" title="interface in com.goo
 <dt>Specified by:</dt>
 <dd><code>isInitialized</code>&nbsp;in interface&nbsp;<code>com.google.protobuf.MessageLiteOrBuilder</code></dd>
 <dt>Overrides:</dt>
-<dd><code>isInitialized</code>&nbsp;in class&nbsp;<code>com.google.protobuf.GeneratedMessage.Builder&lt;<a href="ApiDiffProto.Diff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.Diff.Builder</a>&gt;</code></dd>
+<dd><code>isInitialized</code>&nbsp;in class&nbsp;<code>com.google.protobuf.GeneratedMessageV3.Builder&lt;<a href="ApiDiffProto.Diff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.Diff.Builder</a>&gt;</code></dd>
 </dl>
 </div>
 </section>
@@ -640,6 +766,34 @@ implements <a href="ApiDiffProto.DiffOrBuilder.html" title="interface in com.goo
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="ApiDiffProto.ClassDiff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.ClassDiff.Builder</a>&gt;</span>&nbsp;<span class="element-name">getClassDiffBuilderList</span>()</div>
 <div class="block"><code>repeated .devtools.staticanalysis.errorprone.apidiff.ClassDiff class_diff = 1;</code></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="setUnknownFields(com.google.protobuf.UnknownFieldSet)">
+<h3>setUnknownFields</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type"><a href="ApiDiffProto.Diff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.Diff.Builder</a></span>&nbsp;<span class="element-name">setUnknownFields</span><wbr><span class="parameters">(com.google.protobuf.UnknownFieldSet&nbsp;unknownFields)</span></div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code>setUnknownFields</code>&nbsp;in interface&nbsp;<code>com.google.protobuf.Message.Builder</code></dd>
+<dt>Overrides:</dt>
+<dd><code>setUnknownFields</code>&nbsp;in class&nbsp;<code>com.google.protobuf.GeneratedMessageV3.Builder&lt;<a href="ApiDiffProto.Diff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.Diff.Builder</a>&gt;</code></dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="mergeUnknownFields(com.google.protobuf.UnknownFieldSet)">
+<h3>mergeUnknownFields</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type"><a href="ApiDiffProto.Diff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.Diff.Builder</a></span>&nbsp;<span class="element-name">mergeUnknownFields</span><wbr><span class="parameters">(com.google.protobuf.UnknownFieldSet&nbsp;unknownFields)</span></div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code>mergeUnknownFields</code>&nbsp;in interface&nbsp;<code>com.google.protobuf.Message.Builder</code></dd>
+<dt>Overrides:</dt>
+<dd><code>mergeUnknownFields</code>&nbsp;in class&nbsp;<code>com.google.protobuf.GeneratedMessageV3.Builder&lt;<a href="ApiDiffProto.Diff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.Diff.Builder</a>&gt;</code></dd>
+</dl>
 </div>
 </section>
 </li>
