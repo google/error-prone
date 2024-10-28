@@ -138,7 +138,11 @@ loadScripts(document, 'script');</script>
  <p>Placeholder methods are not permitted to refer to any local variables or parameters of the
  <code>@BeforeTemplate</code> that are not passed to them as arguments. Additionally, they
  <em>must</em> contain references to all arguments that <em>are</em> passed to them -- except
- those corresponding to parameters annotated with <a href="MayOptionallyUse.html" title="annotation in com.google.errorprone.refaster.annotation"><code>MayOptionallyUse</code></a>.</div>
+ those corresponding to parameters annotated with <a href="MayOptionallyUse.html" title="annotation in com.google.errorprone.refaster.annotation"><code>MayOptionallyUse</code></a>.
+
+ <p>Note that <a href="Matches.html" title="annotation in com.google.errorprone.refaster.annotation"><code>Matches</code></a> and <a href="NotMatches.html" title="annotation in com.google.errorprone.refaster.annotation"><code>NotMatches</code></a> can be applied to placeholder methods, but,
+ <strong>and this is a serious health warning</strong>, those predicates will only be matched if
+ the placeholder method is used as an <em>expression</em>, not a <em>statement</em>.</div>
 <dl class="notes">
 <dt>Author:</dt>
 <dd>lowasser@google.com (Louis Wasserman)</dd>
