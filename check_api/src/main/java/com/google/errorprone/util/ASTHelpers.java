@@ -1299,15 +1299,17 @@ public class ASTHelpers {
   }
 
   private static final ImmutableSet<TypeTag> SUBTYPE_UNDEFINED =
-      Sets.immutableEnumSet(
-          TypeTag.METHOD, TypeTag.PACKAGE, TypeTag.UNKNOWN, TypeTag.ERROR, TypeTag.FORALL);
+      Sets.immutableEnumSet(TypeTag.METHOD, TypeTag.PACKAGE, TypeTag.ERROR, TypeTag.FORALL);
 
   /** Returns true if {@code erasure(s) <: erasure(t)}. */
   public static boolean isSubtype(Type s, Type t, VisitorState state) {
     if (s == null || t == null) {
       return false;
     }
-    if (SUBTYPE_UNDEFINED.contains(s.getTag()) || SUBTYPE_UNDEFINED.contains(t.getTag())) {
+    if (SUBTYPE_UNDEFINED.contains(s.getTag())) {
+      return false;
+    }
+    if (t == state.getSymtab().unknownType) {
       return false;
     }
     Types types = state.getTypes();
