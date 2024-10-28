@@ -84,6 +84,7 @@ public class BaseErrorProneJavaCompiler implements JavaCompiler {
       JavacTask javacTask, ScannerSupplier scannerSupplier, ErrorProneOptions errorProneOptions) {
     Context context = ((BasicJavacTask) javacTask).getContext();
     checkCompilePolicy(Options.instance(context).get("compilePolicy"));
+    checkShouldStopIfErrorPolicy(Options.instance(context).get("should-stop.ifError"));
     setupMessageBundle(context);
     RefactoringCollection[] refactoringCollection = {null};
     javacTask.addTaskListener(
@@ -196,13 +197,19 @@ public class BaseErrorProneJavaCompiler implements JavaCompiler {
     return ImmutableList.<String>builder().addAll(args).add("-XDcompilePolicy=simple").build();
   }
 
-  private static void checkShouldStopIfErrorPolicy(String arg) {
-    String value = arg.substring(arg.lastIndexOf('=') + 1);
+  private static void checkShouldStopIfErrorPolicy(String value) {
+    if (value == null) {
+      throw new InvalidCommandLineOptionException(
+          "The default --should-stop=ifError policy (INIT) is not supported by Error Prone,"
+              + " pass --should-stop=ifError=FLOW instead");
+    }
     CompileState state = CompileState.valueOf(value);
     if (CompileState.FLOW.isAfter(state)) {
       throw new InvalidCommandLineOptionException(
           String.format(
-              "%s is not supported by Error Prone, pass --should-stop=ifError=FLOW instead", arg));
+              "--should-stop=ifError=%s is not supported by Error Prone, pass"
+                  + " --should-stop=ifError=FLOW instead",
+              value));
     }
   }
 
@@ -210,7 +217,8 @@ public class BaseErrorProneJavaCompiler implements JavaCompiler {
       ImmutableList<String> args) {
     for (String arg : args) {
       if (arg.startsWith("--should-stop=ifError") || arg.startsWith("-XDshould-stop.ifError")) {
-        checkShouldStopIfErrorPolicy(arg);
+        String value = arg.substring(arg.lastIndexOf('=') + 1);
+        checkShouldStopIfErrorPolicy(value);
         return args; // don't do anything if a valid policy is already set
       }
     }

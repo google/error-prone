@@ -162,7 +162,8 @@ public final class UnicodeInCodeTest {
                 null,
                 fileManager,
                 diagnosticCollector,
-                ImmutableList.of("-Xplugin:ErrorProne", "-XDcompilePolicy=simple"),
+                ImmutableList.of(
+                    "-Xplugin:ErrorProne", "-XDcompilePolicy=simple", "--should-stop=ifError=FLOW"),
                 ImmutableList.of(),
                 ImmutableList.of(
                     new SimpleJavaFileObject(

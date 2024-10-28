@@ -758,6 +758,6 @@ public class ErrorProneCompilerIntegrationTest {
             InvalidCommandLineOptionException.class,
             () ->
                 compiler.compile(new String[] {"-XDshould-stop.ifError=INIT"}, ImmutableList.of()));
-    assertThat(e).hasMessageThat().contains("-XDshould-stop.ifError=INIT is not supported");
+    assertThat(e).hasMessageThat().contains("--should-stop=ifError=INIT is not supported");
   }
 }

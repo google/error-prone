@@ -180,7 +180,8 @@ public class VisitorStateTest {
                 ImmutableList.of(
                     "-Xplugin:ErrorProne -XepDisableAllChecks"
                         + " -Xep:CheckThatTriesToMemoizeBasedOnTreePath:ERROR",
-                    "-XDcompilePolicy=byfile"),
+                    "-XDcompilePolicy=byfile",
+                    "--should-stop=ifError=FLOW"),
                 ImmutableList.of(),
                 fileManager.getJavaFileObjects(source));
     assertThat(task.call()).isFalse();
