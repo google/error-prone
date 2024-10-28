@@ -79,6 +79,10 @@ import java.lang.annotation.Target;
  * <em>must</em> contain references to all arguments that <em>are</em> passed to them -- except
  * those corresponding to parameters annotated with {@link MayOptionallyUse}.
  *
+ * <p>Note that {@link Matches} and {@link NotMatches} can be applied to placeholder methods, but,
+ * <strong>and this is a serious health warning</strong>, those predicates will only be matched if
+ * the placeholder method is used as an <em>expression</em>, not a <em>statement</em>.
+ *
  * @author lowasser@google.com (Louis Wasserman)
  */
 @Target(ElementType.METHOD)
