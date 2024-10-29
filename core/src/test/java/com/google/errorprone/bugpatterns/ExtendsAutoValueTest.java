@@ -98,8 +98,110 @@ public class ExtendsAutoValueTest {
             @AutoValue
             class AutoClass {}
 
-            // BUG: Diagnostic contains: ExtendsAutoValue
+            // BUG: Diagnostic contains: Do not extend an @AutoValue class in non-generated code.
             public class TestClass extends AutoClass {}
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void extendsAutoValue_builder_bad() {
+    helper
+        .addSourceLines(
+            "TestBuilder.java",
+            """
+import com.google.auto.value.AutoValue;
+
+@AutoValue
+class AutoClass {
+  @AutoValue.Builder
+  abstract static class Builder {
+    abstract AutoClass build();
+  }
+}
+
+// BUG: Diagnostic contains: Do not extend an @AutoValue.Builder class in non-generated code.
+public class TestBuilder extends AutoClass.Builder {
+  AutoClass build() {
+    throw new RuntimeException();
+  }
+}
+""")
+        .doTest();
+  }
+
+  @Test
+  public void implementsAutoValue_builder_bad() {
+    helper
+        .addSourceLines(
+            "TestBuilder.java",
+            """
+import com.google.auto.value.AutoValue;
+
+@AutoValue
+class AutoClass {
+  @AutoValue.Builder
+  interface Builder {
+    AutoClass build();
+  }
+}
+
+// BUG: Diagnostic contains: Do not extend an @AutoValue.Builder class in non-generated code.
+public class TestBuilder implements AutoClass.Builder {
+  public AutoClass build() {
+    throw new RuntimeException();
+  }
+}
+""")
+        .doTest();
+  }
+
+  @Test
+  public void extendsAutoBuilder_bad() {
+    helper
+        .addSourceLines(
+            "TestBuilder.java",
+            """
+            import com.google.auto.value.AutoBuilder;
+
+            class MyClass {
+              @AutoBuilder
+              abstract static class Builder {
+                abstract MyClass build();
+              }
+            }
+
+            // BUG: Diagnostic contains: Do not extend an @AutoBuilder class in non-generated code.
+            public class TestBuilder extends MyClass.Builder {
+              MyClass build() {
+                throw new RuntimeException();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void implementsAutoBuilder_bad() {
+    helper
+        .addSourceLines(
+            "TestBuilder.java",
+            """
+            import com.google.auto.value.AutoBuilder;
+
+            class MyClass {
+              @AutoBuilder
+              interface Builder {
+                MyClass build();
+              }
+            }
+
+            // BUG: Diagnostic contains: Do not extend an @AutoBuilder class in non-generated code.
+            public class TestBuilder implements MyClass.Builder {
+              public MyClass build() {
+                throw new RuntimeException();
+              }
+            }
             """)
         .doTest();
   }
@@ -117,7 +219,7 @@ public class ExtendsAutoValueTest {
               enum Kind {}
             }
 
-            // BUG: Diagnostic contains: ExtendsAutoValue
+            // BUG: Diagnostic contains: Do not extend an @AutoOneOf class in non-generated code.
             public class TestClass extends AutoClass {}
             """)
         .doTest();
@@ -132,7 +234,7 @@ public class ExtendsAutoValueTest {
             @com.google.auto.value.AutoValue
             class AutoClass {}
 
-            // BUG: Diagnostic contains: ExtendsAutoValue
+            // BUG: Diagnostic contains: Do not extend an @AutoValue class in non-generated code.
             public class TestClass extends AutoClass {}
             """)
         .doTest();
@@ -150,7 +252,7 @@ public class ExtendsAutoValueTest {
               @AutoValue
               abstract static class AutoClass {}
 
-              // BUG: Diagnostic contains: ExtendsAutoValue
+            // BUG: Diagnostic contains: Do not extend an @AutoValue class in non-generated code.
               class TestClass extends AutoClass {}
             }
             """)
@@ -170,7 +272,7 @@ public class ExtendsAutoValueTest {
               static class AutoClass {}
             }
 
-            // BUG: Diagnostic contains: ExtendsAutoValue
+            // BUG: Diagnostic contains: Do not extend an @AutoValue class in non-generated code.
             public class TestClass extends OuterClass.AutoClass {}
             """)
         .doTest();
@@ -205,7 +307,7 @@ public class ExtendsAutoValueTest {
             class AutoClass {}
 
             public class TestClass {
-              // BUG: Diagnostic contains: ExtendsAutoValue
+            // BUG: Diagnostic contains: Do not extend an @AutoValue class in non-generated code.
               public class Extends extends AutoClass {}
             }
             """)
