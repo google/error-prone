@@ -3,8 +3,6 @@ title: Command-line flags
 layout: documentation
 ---
 
-## layout: documentation
-
 ### Severity
 
 Error Prone lets the user enable and disable specific checks as well as override
