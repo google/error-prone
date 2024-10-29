@@ -1406,7 +1406,7 @@ __[EmptyIf](bugpattern/EmptyIf)__<br>
 Empty statement after if
 
 __[ExtendsAutoValue](bugpattern/ExtendsAutoValue)__<br>
-Do not extend an @AutoValue/@AutoOneOf class in non-generated code.
+Do not extend an @AutoValue-like classes in non-generated code.
 
 __[InjectMoreThanOneQualifier](bugpattern/InjectMoreThanOneQualifier)__<br>
 Using more than one qualifier annotation on the same element is not allowed.
