@@ -129,6 +129,9 @@ Identifies undesirable mocks.
 __[DoubleBraceInitialization](bugpattern/DoubleBraceInitialization)__<br>
 Prefer collection factory methods or builders to the double-brace initialization pattern.
 
+__[DuplicateBranches](bugpattern/DuplicateBranches)__<br>
+Both branches contain identical code
+
 __[DuplicateMapKeys](bugpattern/DuplicateMapKeys)__<br>
 Map#ofEntries will throw an IllegalArgumentException if there are any duplicate keys
 
