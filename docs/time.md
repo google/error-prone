@@ -11,8 +11,6 @@ Author: [Kevin Bourrillion](https://kevinb9n.github.io/)
 
 > Time is what keeps everything from happening at once. —Ray Cummings
 
-[TOC]
-
 It's hard to write much code without encountering the need for *when*.
 
 We might need to record when something happened. Or dictate when something
