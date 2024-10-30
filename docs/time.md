@@ -398,7 +398,7 @@ same arrows.](analogy.svg "An analogy")
 
 The key difference to remember between durations and periods is that durations
 are great, while periods are awful. Rephrased: durations are simple and precise;
-periods are complex and vague. Just look at how red this document gets now.
+periods are complex and vague. Just look at how many warnings are below!
 
 **Warning:** People tend to use similar words when talking about durations as
 when talking about periods. This is dangerous! The two are fundamentally
