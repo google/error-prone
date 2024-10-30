@@ -749,18 +749,20 @@ Use the `java.time` library (Java 8+) if at all possible; otherwise use
 [JodaTime](https://www.joda.org/joda-time/). Absolutely avoid the legacy classes
 `Date`, `Calendar`, and `Timestamp` at all costs.
 
-| To represent a… | Use…                                                       |
-| --------------- | ---------------------------------------------------------- |
-| instant         | [`java.time.Instant`] \(nanosecond resolution)             |
-| duration        | [`java.time.Duration`] \(nanosecond resolution)            |
-| date            | [`java.time.LocalDate`]                                    |
-| time of day     | [`java.time.LocalTime`]                                    |
-| datetime        | [`java.time.LocalDateTime`]                                |
-| day of week     | [`java.time.DayOfWeek`]                                    |
-| period          | [`java.time.Period`] has only day resolution. The classes  |
-:                 : like `Minutes` and `Months` from `org.threeten.extra`      :
-:                 : provide second resolution and are preferred when possible. :
-| time zone       | [`java.time.ZoneId`] :                                     |
+To represent a… | Use…
+--------------- | -----------------------------------------------
+instant         | [`java.time.Instant`] \(nanosecond resolution)
+duration        | [`java.time.Duration`] \(nanosecond resolution)
+date            | [`java.time.LocalDate`]
+time of day     | [`java.time.LocalTime`]
+datetime        | [`java.time.LocalDateTime`]
+day of week     | [`java.time.DayOfWeek`]
+period          | [`java.time.Period`] \(only has day resolution)
+time zone       | [`java.time.ZoneId`]
+
+NOTE: [`java.time.Period`] has only day resolution. The classes like `Minutes`
+and `Months` from `org.threeten.extra` provide second resolution and are
+preferred when possible.
 
 [`java.time.Instant`]: https://docs.oracle.com/javase/8/docs/api/java/time/Instant.html
 [`java.time.Duration`]: https://docs.oracle.com/javase/8/docs/api/java/time/Duration.html
