@@ -602,6 +602,17 @@ public class IdentifierNameTest {
   }
 
   @Test
+  public void className_badInitialism_allowed() {
+    helper
+        .setArgs("-XepOpt:IdentifierName:AllowInitialismsInTypeName=true")
+        .addSourceLines(
+            "Test.java", //
+            "class RPCServiceTester {",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void className_lowerCamelCase() {
     helper
         .addSourceLines(

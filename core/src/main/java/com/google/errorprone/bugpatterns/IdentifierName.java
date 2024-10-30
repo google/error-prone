@@ -41,6 +41,7 @@ import com.google.common.base.CaseFormat;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
@@ -60,6 +61,7 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.util.Name;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
+import javax.inject.Inject;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 
@@ -98,17 +100,25 @@ public final class IdentifierName extends BugChecker
       ", with acronyms treated as words"
           + " (https://google.github.io/styleguide/javaguide.html#s5.3-camel-case)";
 
+  private final boolean allowInitialismsInTypeName;
+
+  @Inject
+  IdentifierName(ErrorProneFlags flags) {
+    this.allowInitialismsInTypeName =
+        flags.getBoolean("IdentifierName:AllowInitialismsInTypeName").orElse(false);
+  }
+
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
     ClassSymbol symbol = getSymbol(tree);
     String name = tree.getSimpleName().toString();
-    if (name.isEmpty() || isConformantUpperCamelName(name)) {
+    if (name.isEmpty() || isConformantTypeName(name)) {
       // The name can be empty for enum member declarations, which are desugared early to class
       // declarations.
       return NO_MATCH;
     }
     String renamed = suggestedClassRename(name);
-    String suggested = fixInitialisms(renamed);
+    String suggested = allowInitialismsInTypeName ? renamed : fixInitialisms(renamed);
     boolean fixable = !suggested.equals(name) && canBeRemoved(symbol);
     String diagnostic =
         "Classes should be named in UpperCamelCase"
@@ -281,10 +291,10 @@ public final class IdentifierName extends BugChecker
         && !PROBABLE_INITIALISM.matcher(name).find();
   }
 
-  private static boolean isConformantUpperCamelName(String name) {
+  private boolean isConformantTypeName(String name) {
     return !name.contains("_")
         && isUpperCase(name.charAt(0))
-        && !PROBABLE_INITIALISM.matcher(name).find();
+        && (allowInitialismsInTypeName || !PROBABLE_INITIALISM.matcher(name).find());
   }
 
   private static boolean isStaticVariable(Symbol symbol) {
