@@ -15,6 +15,8 @@
  */
 package com.google.errorprone.bugpatterns.argumentselectiondefects;
 
+import static com.google.common.truth.TruthJUnit.assume;
+
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
@@ -38,6 +40,10 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class ArgumentSelectionDefectCheckerTest {
 
+  private final CompilationTestHelper testHelper =
+      CompilationTestHelper.newInstance(
+          ArgumentSelectionDefectWithStringEquality.class, getClass());
+
   /**
    * A {@link BugChecker} which runs the ArgumentSelectionDefectChecker checker using string
    * equality for edit distance
@@ -56,7 +62,7 @@ public class ArgumentSelectionDefectCheckerTest {
 
   @Test
   public void argumentSelectionDefectChecker_findsSwap_withSwappedMatchingPair() {
-    CompilationTestHelper.newInstance(ArgumentSelectionDefectWithStringEquality.class, getClass())
+    testHelper
         .addSourceLines(
             "Test.java",
             """
@@ -75,7 +81,7 @@ public class ArgumentSelectionDefectCheckerTest {
 
   @Test
   public void argumentSelectionDefectChecker_findsSwap_withSwappedMatchingPairWithMethod() {
-    CompilationTestHelper.newInstance(ArgumentSelectionDefectWithStringEquality.class, getClass())
+    testHelper
         .addSourceLines(
             "Test.java",
             """
@@ -96,7 +102,7 @@ public class ArgumentSelectionDefectCheckerTest {
 
   @Test
   public void argumentSelectionDefectChecker_findsSwap_withOneNullArgument() {
-    CompilationTestHelper.newInstance(ArgumentSelectionDefectWithStringEquality.class, getClass())
+    testHelper
         .addSourceLines(
             "Test.java",
             """
@@ -115,7 +121,7 @@ public class ArgumentSelectionDefectCheckerTest {
 
   @Test
   public void argumentSelectionDefectChecker_rejectsSwap_withNoAssignableAlternatives() {
-    CompilationTestHelper.newInstance(ArgumentSelectionDefectWithStringEquality.class, getClass())
+    testHelper
         .addSourceLines(
             "Test.java",
             """
@@ -132,7 +138,7 @@ public class ArgumentSelectionDefectCheckerTest {
 
   @Test
   public void argumentSelectionDefectChecker_commentsOnlyOnSwappedPair_withThreeArguments() {
-    CompilationTestHelper.newInstance(ArgumentSelectionDefectWithStringEquality.class, getClass())
+    testHelper
         .addSourceLines(
             "Test.java",
             """
@@ -360,7 +366,7 @@ public class ArgumentSelectionDefectCheckerTest {
 
   @Test
   public void description() {
-    CompilationTestHelper.newInstance(ArgumentSelectionDefectWithStringEquality.class, getClass())
+    testHelper
         .addSourceLines(
             "Test.java",
             """
@@ -374,6 +380,48 @@ abstract class Test {
     target(second, first);
   }
 }
+""")
+        .doTest();
+  }
+
+  @Test
+  public void records() {
+    assume().that(Runtime.version().feature()).isAtLeast(16);
+
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            """
+class Test {
+  Foo test(String first, String second) {
+    // BUG: Diagnostic contains: may have been swapped
+    return new Foo(second, first);
+  }
+}
+
+record Foo(String first, String second) {}
+""")
+        .doTest();
+  }
+
+  @Test
+  public void recordDeconstruction() {
+    assume().that(Runtime.version().feature()).isAtLeast(21);
+
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            """
+class Test {
+  void test(Foo foo) {
+    switch (foo) {
+      // TODO(user): We should report a finding here!
+      case Foo(String second, String first) -> {}
+    }
+  }
+}
+
+record Foo(String first, String second) {}
 """)
         .doTest();
   }
