@@ -6,6 +6,12 @@ body {
   padding-top: 50px;
   margin-bottom: 100px;
 }
+td,
+th {
+  padding: 2px;
+  padding-right: 6px;
+  border: 1px solid #333;
+}
 .page-title-bar {
   padding-top:20px;
   padding-bottom:20px;
