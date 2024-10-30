@@ -29,7 +29,7 @@ import org.jspecify.annotations.Nullable;
  *
  * @author andrewrice@google.com (Andrew Rice)
  */
-class LowInformationNameHeuristic implements Heuristic {
+final class LowInformationNameHeuristic implements Heuristic {
 
   private static final ImmutableSet<String> DEFAULT_FORMAL_PARAMETER_EXCLUSION_REGEXS =
       ImmutableSet.of(
@@ -60,11 +60,9 @@ class LowInformationNameHeuristic implements Heuristic {
    * parameter name.
    */
   protected @Nullable String findMatch(Parameter parameter) {
-    for (String regex : overloadedNamesRegexs) {
-      if (parameter.name().matches(regex)) {
-        return regex;
-      }
-    }
-    return null;
+    return overloadedNamesRegexs.stream()
+        .filter(r -> parameter.name().matches(r))
+        .findFirst()
+        .orElse(null);
   }
 }

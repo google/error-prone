@@ -24,6 +24,8 @@ import static com.google.errorprone.matchers.Matchers.hasArguments;
 import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
 import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.hasDirectAnnotationWithSimpleName;
 
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.ChildMultiMatcher.MatchType;
@@ -49,71 +51,60 @@ import java.util.regex.Pattern;
 final class Matchers {
 
   /** Matches if the tree is a constructor for an AutoValue class. */
-  static final Matcher<NewClassTree> AUTOVALUE_CONSTRUCTOR =
-      new Matcher<NewClassTree>() {
-        @Override
-        public boolean matches(NewClassTree tree, VisitorState state) {
-          MethodSymbol sym = ASTHelpers.getSymbol(tree);
+  static boolean isAutoValueConstructor(NewClassTree tree) {
+    MethodSymbol sym = getSymbol(tree);
 
-          ClassSymbol owner = (ClassSymbol) sym.owner;
-          if (owner == null) {
-            return false;
-          }
+    ClassSymbol owner = (ClassSymbol) sym.owner;
+    if (owner == null) {
+      return false;
+    }
 
-          Type superType = owner.getSuperclass();
-          if (superType == null) {
-            return false;
-          }
+    Type superType = owner.getSuperclass();
+    if (superType == null) {
+      return false;
+    }
 
-          Symbol superSymbol = superType.tsym;
-          if (superSymbol == null) {
-            return false;
-          }
+    Symbol superSymbol = superType.tsym;
+    if (superSymbol == null) {
+      return false;
+    }
 
-          if (!ASTHelpers.hasDirectAnnotationWithSimpleName(superSymbol, "AutoValue")) {
-            return false;
-          }
+    if (!hasDirectAnnotationWithSimpleName(superSymbol, "AutoValue")) {
+      return false;
+    }
 
-          return true;
-        }
-      };
+    return true;
+  }
 
-  // if any of the arguments are instances of throwable then abort - people like to use
-  // 'expected' as the name of the exception they are expecting
-  private static final Matcher<MethodInvocationTree> ARGUMENT_EXTENDS_TRHOWABLE =
+  /**
+   * If any of the arguments are instances of throwable then abort - people like to use 'expected'
+   * as the name of the exception they are expecting.
+   */
+  private static final Matcher<MethodInvocationTree> ARGUMENT_EXTENDS_THROWABLE =
       hasArguments(MatchType.AT_LEAST_ONE, isSubtypeOf(Throwable.class));
 
-  // if the method is a refaster-before template then it might be explicitly matching bad behaviour
+  /**
+   * If the method is a refaster-before template then it might be explicitly matching bad behaviour.
+   */
   private static final Matcher<MethodInvocationTree> METHOD_ANNOTATED_WITH_BEFORETEMPLATE =
       enclosingMethod(hasAnnotation("com.google.errorprone.refaster.annotation.BeforeTemplate"));
 
-  private static final Matcher<MethodInvocationTree> TWO_PARAMETER_ASSERT =
-      new Matcher<MethodInvocationTree>() {
-        @Override
-        public boolean matches(MethodInvocationTree tree, VisitorState state) {
-          List<VarSymbol> parameters = ASTHelpers.getSymbol(tree).getParameters();
-          if (parameters.size() != 2) {
-            return false;
-          }
-          return ASTHelpers.isSameType(
-              parameters.get(0).asType(), parameters.get(1).asType(), state);
-        }
-      };
+  private static boolean isTwoParameterAssert(MethodInvocationTree tree, VisitorState state) {
+    List<VarSymbol> parameters = getSymbol(tree).getParameters();
+    if (parameters.size() != 2) {
+      return false;
+    }
+    return ASTHelpers.isSameType(parameters.get(0).asType(), parameters.get(1).asType(), state);
+  }
 
-  private static final Matcher<MethodInvocationTree> THREE_PARAMETER_ASSERT =
-      new Matcher<MethodInvocationTree>() {
-        @Override
-        public boolean matches(MethodInvocationTree tree, VisitorState state) {
-          List<VarSymbol> parameters = ASTHelpers.getSymbol(tree).getParameters();
-          if (parameters.size() != 3) {
-            return false;
-          }
-          return ASTHelpers.isSameType(
-                  parameters.get(0).asType(), state.getSymtab().stringType, state)
-              && ASTHelpers.isSameType(
-                  parameters.get(1).asType(), parameters.get(2).asType(), state);
-        }
-      };
+  private static boolean isThreeParameterAssert(MethodInvocationTree tree, VisitorState state) {
+    List<VarSymbol> parameters = getSymbol(tree).getParameters();
+    if (parameters.size() != 3) {
+      return false;
+    }
+    return ASTHelpers.isSameType(parameters.get(0).asType(), state.getSymtab().stringType, state)
+        && ASTHelpers.isSameType(parameters.get(1).asType(), parameters.get(2).asType(), state);
+  }
 
   /** Matches if the tree corresponds to an assertEquals-style method */
   static final Matcher<MethodInvocationTree> ASSERT_METHOD =
@@ -128,8 +119,8 @@ final class Matchers {
                   information which would cause the tests to fail.*/
                   "ErrorProneTest")
               .withNameMatching(Pattern.compile("assert.*")),
-          anyOf(TWO_PARAMETER_ASSERT, THREE_PARAMETER_ASSERT),
-          not(ARGUMENT_EXTENDS_TRHOWABLE),
+          anyOf(Matchers::isTwoParameterAssert, Matchers::isThreeParameterAssert),
+          not(ARGUMENT_EXTENDS_THROWABLE),
           not(METHOD_ANNOTATED_WITH_BEFORETEMPLATE));
 
   private Matchers() {}

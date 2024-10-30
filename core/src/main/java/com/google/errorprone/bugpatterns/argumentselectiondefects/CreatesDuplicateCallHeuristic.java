@@ -35,7 +35,7 @@ import java.util.Objects;
  *
  * @author andrewrice@google.com (Andrew Rice)
  */
-class CreatesDuplicateCallHeuristic implements Heuristic {
+final class CreatesDuplicateCallHeuristic implements Heuristic {
 
   /**
    * Returns true if there are no other calls to this method which already have an actual parameter

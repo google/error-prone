@@ -43,7 +43,7 @@ import javax.lang.model.element.ElementKind;
  * @author andrewrice@google.com (Andrew Rice)
  */
 @BugPattern(summary = "Arguments are swapped in assertEquals-like call", severity = WARNING)
-public class AssertEqualsArgumentOrderChecker extends BugChecker
+public final class AssertEqualsArgumentOrderChecker extends BugChecker
     implements MethodInvocationTreeMatcher {
 
   private final ArgumentChangeFinder argumentchangeFinder =

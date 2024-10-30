@@ -28,7 +28,7 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
  *
  * @author andrewrice@google.com (Andrew Rice)
  */
-class PenaltyThresholdHeuristic implements Heuristic {
+final class PenaltyThresholdHeuristic implements Heuristic {
 
   private final double threshold;
 

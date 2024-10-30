@@ -30,7 +30,7 @@ import java.util.stream.Stream;
  *
  * @author andrewrice@google.com (Andrew Rice)
  */
-class Costs {
+final class Costs {
 
   /** Formal parameters for the method being called. */
   private final ImmutableList<Parameter> formals;

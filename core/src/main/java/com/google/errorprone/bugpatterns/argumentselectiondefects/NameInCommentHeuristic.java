@@ -33,7 +33,7 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
  *
  * @author andrewrice@google.com (Andrew Rice)
  */
-class NameInCommentHeuristic implements Heuristic {
+final class NameInCommentHeuristic implements Heuristic {
 
   /**
    * Return true if there are no comments on the original actual parameter of a change which match

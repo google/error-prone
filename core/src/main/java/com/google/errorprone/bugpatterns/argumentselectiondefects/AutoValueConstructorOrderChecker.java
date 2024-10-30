@@ -41,7 +41,8 @@ import java.util.function.Function;
  * @author andrewrice@google.com (Andrew Rice)
  */
 @BugPattern(summary = "Arguments to AutoValue constructor are in the wrong order", severity = ERROR)
-public class AutoValueConstructorOrderChecker extends BugChecker implements NewClassTreeMatcher {
+public final class AutoValueConstructorOrderChecker extends BugChecker
+    implements NewClassTreeMatcher {
 
   private final ArgumentChangeFinder argumentChangeFinder =
       ArgumentChangeFinder.builder()
@@ -52,7 +53,7 @@ public class AutoValueConstructorOrderChecker extends BugChecker implements NewC
 
   @Override
   public Description matchNewClass(NewClassTree tree, VisitorState state) {
-    if (!Matchers.AUTOVALUE_CONSTRUCTOR.matches(tree, state)) {
+    if (!Matchers.isAutoValueConstructor(tree)) {
       return Description.NO_MATCH;
     }
 
