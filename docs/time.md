@@ -3,7 +3,6 @@ title: How to Think About Time
 layout: documentation
 ---
 
-# How to Think About Time
 
 *for programmers, and people who like to know things*
 
