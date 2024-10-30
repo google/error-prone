@@ -186,7 +186,9 @@ table {
 }
 td,
 th {
-  padding: 0;
+  padding: 2px;
+  padding-right: 6px;
+  border: 1px solid #333;
 }
 /*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src/css/main.css */
 @media print {
