@@ -114,13 +114,20 @@ night when..." — but later for that.)
     else such as a graduate school. Or if you decide to stay and
     trust this guide anyway, please send me an email and let me know
     whose spaceships never to travel on.
-[^puff]: I would like to think that this shared experience would at last bring
-    us closer together as a global community in our final moments of life.
 
 The timeline is the basis for everything that follows in this guide, but it does
 very little on its own. It does lets us ponder a few useful concepts, like
 "now", "after", "start", and "early". And it gives tense to our languages:
 present, past, future, and somehow "pluperfect".
+
+<!--
+  n.b. GitHub pages does not render a
+  sequence of interleaved footnotes correctly; it instead drops the last footnote
+  We break them up. This one is referenced two paragraphs hence.
+-->
+
+[^puff]: I would like to think that this shared experience would at last bring
+    us closer together as a global community in our final moments of life.
 
 But how do we even *talk about* one particular instant, as something distinct
 from all the other instants? Identifying an instant turns out to be sort of
@@ -328,13 +335,20 @@ In this system:
     *   **second**: a decimal value 0–59.999… (*usually*; you can read about
         [leap seconds](#leap_seconds) if interested)
 
-We'll define a **datetime**[^datetime] to be the sextuplet of all the preceding
-values: the combination of a date with a time of day.
-
 [^year]: What we (and astronomers) call the years "0" and "-1" are called "1
     BCE" and "2 BCE" (respectively) by historians and middle school
     teachers. They're not wrong, but our way makes math easier: we can
     subtract by subtracting.
+
+<!--
+  n.b. GitHub pages does not render a
+  sequence of interleaved footnotes correctly; it instead drops the last footnote
+  We break them up.
+-->
+
+We'll define a **datetime**[^datetime] to be the sextuplet of all the preceding
+values: the combination of a date with a time of day.
+
 [^datetime]: Not an officially recognized term, but it should be. Warning: if
     you've used Joda-Time you've seen that it defines a `DateTime`
     class. That is not a datetime, but a
