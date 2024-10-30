@@ -425,7 +425,7 @@ something else. There is simply no "one best" formula to follow.
 **Warning:** This kind of math may violate expectations in many ways. For
 example, if you remember your "associative property" from your school days,
 guess what? Give it back. You can't have it. The calculation "(today + 1 month)
-+ 1 month" might not give the same value as "today + (1 month + 1 month)". And
+\+ 1 month" might not give the same value as "today + (1 month + 1 month)". And
 there are many other examples.
 
 **Warning:** Civil math can also produce technically-correct results that are
