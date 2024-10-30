@@ -694,68 +694,158 @@ with.
 
 [Abseil Common Libraries](https://abseil.io/) are strongly recommended.
 
-To represent a… | Use…
---------------- | ---------------------------------------------------------
-instant         | [`absl::Time`] \("resolution of at least one nanosecond")
-duration        | [`absl::Duration`]
-date            | [`absl::CivilDay`]
-time of day     | none
-datetime        | [`absl::CivilSecond`] \(second resolution)
-day of week     | [`absl::Weekday`]
-period          | none
-time zone       | [`absl::TimeZone`]
-
-[`absl::Time`]: https://github.com/abseil/abseil-cpp/blob/master/absl/time/time.h#L591
-[`absl::Duration`]: https://github.com/abseil/abseil-cpp/blob/master/absl/time/time.h#L157
-[`absl::CivilDay`]: https://github.com/abseil/abseil-cpp/blob/master/absl/time/civil_time.h#L328
-[`absl::CivilSecond`]: https://github.com/abseil/abseil-cpp/blob/master/absl/time/civil_time.h#L322
-[`absl::Weekday`]: https://github.com/abseil/abseil-cpp/blob/master/absl/time/civil_time.h#L369
-[`absl::TimeZone`]: https://github.com/abseil/abseil-cpp/blob/master/absl/time/time.h#L846
+<table>
+  <thead>
+    <tr>
+      <th>To&nbsp;represent&nbsp;a</th>
+      <th>Use</th>
+      <th>Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>instant</td>
+      <td><a href="https://github.com/abseil/abseil-cpp/blob/master/absl/time/time.h#L591"><code>absl::Time</code></a></td>
+      <td>resolution of at least one nanosecond</td>
+    </tr>
+    <tr>
+      <td>duration</td>
+      <td><a href="https://github.com/abseil/abseil-cpp/blob/master/absl/time/time.h#L157"><code>absl::Duration</code></a></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>date</td>
+      <td><a href="https://github.com/abseil/abseil-cpp/blob/master/absl/time/civil_time.h#L328"><code>absl::CivilDay</code></a></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>time of day</td>
+      <td>none</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>datetime</td>
+      <td><a href="https://github.com/abseil/abseil-cpp/blob/master/absl/time/civil_time.h#L322"><code>absl::CivilSecond</code></a></td>
+      <td>second resolution</td>
+    </tr>
+    <tr>
+      <td>day of week</td>
+      <td><a href="https://github.com/abseil/abseil-cpp/blob/master/absl/time/civil_time.h#L369"><code>absl::Weekday</code></a></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>period</td>
+      <td>none</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>time zone</td>
+      <td><a href="https://github.com/abseil/abseil-cpp/blob/master/absl/time/time.h#L846"><code>absl::TimeZone</code></a></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
 
 ### C# / .NET
 
 [Noda Time](https://nodatime.org/) is strongly recommended.
 
-To represent a… | Use…
---------------- | ------------------------------------------------------
-instant         | [`Instant`] \(nanosecond resolution)
-duration        | [`Duration`]
-date            | [`LocalDate`]
-time of day     | [`LocalTime`]
-datetime        | [`LocalDateTime`]
-day of week     | [`IsoDayOfWeek`]
-period          | [`Period`]
-time zone       | [`DateTimeZone`] \(can use Windows or IANA time zones)
-
-[`Instant`]: https://nodatime.org/unstable/api/NodaTime.Instant.html
-[`Duration`]: https://nodatime.org/unstable/api/NodaTime.Duration.html
-[`LocalDate`]: https://nodatime.org/unstable/api/NodaTime.LocalDate.html
-[`LocalTime`]: https://nodatime.org/unstable/api/NodaTime.LocalTime.html
-[`LocalDateTime`]: https://nodatime.org/unstable/api/NodaTime.LocalDateTime.html
-[`IsoDayOfWeek`]: https://nodatime.org/unstable/api/NodaTime.IsoDayOfWeek.html
-[`Period`]: https://nodatime.org/unstable/api/NodaTime.Period.html
-[`DateTimeZone`]: https://nodatime.org/unstable/api/NodaTime.DateTimeZone.html
+<table>
+  <thead>
+    <tr>
+      <th>To&nbsp;represent&nbsp;a</th>
+      <th>Use</th>
+      <th>Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>instant</td>
+      <td><a href="https://nodatime.org/unstable/api/NodaTime.Instant.html"><code>Instant</code></a></td>
+      <td>nanosecond resolution</td>
+    </tr>
+    <tr>
+      <td>duration</td>
+      <td><a href="https://nodatime.org/unstable/api/NodaTime.Duration.html"><code>Duration</code></a></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>date</td>
+      <td><a href="https://nodatime.org/unstable/api/NodaTime.LocalDate.html"><code>LocalDate</code></a></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>time of day</td>
+      <td><a href="https://nodatime.org/unstable/api/NodaTime.LocalTime.html"><code>LocalTime</code></a></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>datetime</td>
+      <td><a href="https://nodatime.org/unstable/api/NodaTime.LocalDateTime.html"><code>LocalDateTime</code></a></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>day of week</td>
+      <td><a href="https://nodatime.org/unstable/api/NodaTime.IsoDayOfWeek.html"><code>IsoDayOfWeek</code></a></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>period</td>
+      <td><a href="https://nodatime.org/unstable/api/NodaTime.Period.html"><code>Period</code></a></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>time zone</td>
+      <td><a href="https://nodatime.org/unstable/api/NodaTime.DateTimeZone.html"><code>DateTimeZone</code></a></td>
+      <td>can use Windows or IANA time zones</td>
+    </tr>
+  </tbody>
+</table>
 
 ### Go
 
-To represent a… | Use…
---------------- | ------------------
-instant         | [`time.Time`]
-duration        | [`time.Duration`]
-date            | [`civil.Date`]
-time of day     | [`civil.Time`]
-datetime        | [`civil.DateTime`]
-day of week     | [`time.Weekday`]
-period          | none
-time zone       | [`time.Location`]
-
-[`time.Time`]: https://pkg.go.dev/time#Time
-[`time.Duration`]: https://pkg.go.dev/time#Duration
-[`time.Weekday`]:https://pkg.go.dev/time#Weekday
-[`time.Location`]: https://pkg.go.dev/time#Location
-[`civil.Date`]: https://pkg.go.dev/cloud.google.com/go/civil#Date
-[`civil.Time`]: https://pkg.go.dev/cloud.google.com/go/civil#Time
-[`civil.DateTime`]: https://pkg.go.dev/cloud.google.com/go/civil#DateTime
+<table>
+  <thead>
+    <tr>
+      <th>To&nbsp;represent&nbsp;a</th>
+      <th>Use</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>instant</td>
+      <td><a href="https://pkg.go.dev/time#Time"><code>time.Time</code></a></td>
+    </tr>
+    <tr>
+      <td>duration</td>
+      <td><a href="https://pkg.go.dev/time#Duration"><code>time.Duration</code></a></td>
+    </tr>
+    <tr>
+      <td>date</td>
+      <td><a href="https://pkg.go.dev/cloud.google.com/go/civil#Date"><code>civil.Date</code></a></td>
+    </tr>
+    <tr>
+      <td>time of day</td>
+      <td><a href="https://pkg.go.dev/cloud.google.com/go/civil#Time"><code>civil.Time</code></a></td>
+    </tr>
+    <tr>
+      <td>datetime</td>
+      <td><a href="https://pkg.go.dev/cloud.google.com/go/civil#DateTime"><code>civil.DateTime</code></a></td>
+    </tr>
+    <tr>
+      <td>day of week</td>
+      <td><a href="https://pkg.go.dev/time#Weekday"><code>time.Weekday</code></a></td>
+    </tr>
+    <tr>
+      <td>period</td>
+      <td>none</td>
+    </tr>
+    <tr>
+      <td>time zone</td>
+      <td><a href="https://pkg.go.dev/time#Location"><code>time.Location</code></a></td>
+    </tr>
+  </tbody>
+</table>
 
 ### Java and Kotlin
 
@@ -763,89 +853,221 @@ Use the `java.time` library (Java 8+) if at all possible; otherwise use
 [JodaTime](https://www.joda.org/joda-time/). Absolutely avoid the legacy classes
 `Date`, `Calendar`, and `Timestamp` at all costs.
 
-To represent a… | Use…
---------------- | -----------------------------------------------
-instant         | [`java.time.Instant`] \(nanosecond resolution)
-duration        | [`java.time.Duration`] \(nanosecond resolution)
-date            | [`java.time.LocalDate`]
-time of day     | [`java.time.LocalTime`]
-datetime        | [`java.time.LocalDateTime`]
-day of week     | [`java.time.DayOfWeek`]
-period          | [`java.time.Period`] \(only has day resolution)
-time zone       | [`java.time.ZoneId`]
-
-NOTE: [`java.time.Period`] has only day resolution. The classes like `Minutes`
-and `Months` from `org.threeten.extra` provide second resolution and are
-preferred when possible.
-
-[`java.time.Instant`]: https://docs.oracle.com/javase/8/docs/api/java/time/Instant.html
-[`java.time.Duration`]: https://docs.oracle.com/javase/8/docs/api/java/time/Duration.html
-[`java.time.LocalDate`]: https://docs.oracle.com/javase/8/docs/api/java/time/LocalDate.html
-[`java.time.LocalTime`]: https://docs.oracle.com/javase/8/docs/api/java/time/LocalTime.html
-[`java.time.LocalDateTime`]: https://docs.oracle.com/javase/8/docs/api/java/time/LocalDateTime.html
-[`java.time.DayOfWeek`]: https://docs.oracle.com/javase/8/docs/api/java/time/DayOfWeek.html
-[`java.time.Period`]: https://docs.oracle.com/javase/8/docs/api/java/time/Period.html
-[`java.time.ZoneId`]: https://docs.oracle.com/javase/8/docs/api/java/time/ZoneId.html
+<table>
+  <thead>
+    <tr>
+      <th>To&nbsp;represent&nbsp;a</th>
+      <th>Use</th>
+      <th>Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>instant</td>
+      <td><a href="https://docs.oracle.com/javase/8/docs/api/java/time/Instant.html"><code>java.time.Instant</code></a></td>
+      <td>nanosecond resolution</td>
+    </tr>
+    <tr>
+      <td>duration</td>
+      <td><a href="https://docs.oracle.com/javase/8/docs/api/java/time/Duration.html"><code>java.time.Duration</code></a></td>
+      <td>nanosecond resolution</td>
+    </tr>
+    <tr>
+      <td>date</td>
+      <td><a href="https://docs.oracle.com/javase/8/docs/api/java/time/LocalDate.html"><code>java.time.LocalDate</code></a></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>time of day</td>
+      <td><a href="https://docs.oracle.com/javase/8/docs/api/java/time/LocalTime.html"><code>java.time.LocalTime</code></a></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>datetime</td>
+      <td><a href="https://docs.oracle.com/javase/8/docs/api/java/time/LocalDateTime.html"><code>java.time.LocalDateTime</code></a></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>day of week</td>
+      <td><a href="https://docs.oracle.com/javase/8/docs/api/java/time/DayOfWeek.html"><code>java.time.DayOfWeek</code></a></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>period</td>
+      <td><a href="https://docs.oracle.com/javase/8/docs/api/java/time/Period.html"><code>java.time.Period</code></a></td>
+      <td>only has day resolution; The classes like <code>Minutes</code> and <code>Months</code> from <code>org.threeten.extra</code> provide second resolution and are preferred when possible.</td>
+    </tr>
+    <tr>
+      <td>time zone</td>
+      <td><a href="https://docs.oracle.com/javase/8/docs/api/java/time/ZoneId.html"><code>java.time.ZoneId</code></a></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
 
 ### JavaScript and TypeScript
 
-| To represent a… | Use…                                                     |
-| --------------- | -------------------------------------------------------- |
-| instant         | [`Temporal.Instant`] or [`goog.date.UtcDateTime`]        |
-| duration        | [`Temporal.Duration`] or [`goog.date.Interval`]          |
-| date            | [`Temporal.PlainDate`] or [`goog.date.Date`]             |
-| time of day     | [`Temporal.PlainTime`]; no representation in Closure's   |
-:                 : `date` package.                                          :
-| datetime        | [`Temporal.PlainDateTime`] or [`goog.date.DateTime`]     |
-| day of week     | none \(but many `Temporal` objects have a `dayOfWeek`    |
-:                 : getter, and Closure's `Date` objects have a `getWeekday` :
-:                 : method)                                                  :
-| period          | [`Temporal.Duration`] can be added to or subtracted from |
-:                 : civil time object types (`PlainDate`, `PlainDateTime`,   :
-:                 : etc). Closure `Interval`s can similarly be added and     :
-:                 : subtracted from `DateTime` instances.                    :
-| time zone       | [`Temporal.TimeZone`]; no equivalent in Closure's `date` |
-:                 : package.                                                 :
+#### Temporal
 
-[`Temporal.Instant`]: https://tc39.es/proposal-temporal/docs/instant.html
-[`Temporal.Duration`]: https://tc39.es/proposal-temporal/docs/duration.html
-[`Temporal.PlainTime`]: https://tc39.es/proposal-temporal/docs/plaintime.html
-[`Temporal.PlainDate`]: https://tc39.es/proposal-temporal/docs/plaindate.html
-[`Temporal.PlainDateTime`]: https://tc39.es/proposal-temporal/docs/plaindatetime.html
-[`Temporal.TimeZone`]: https://tc39.es/proposal-temporal/docs/timezone.html
-[`goog.date.UtcDateTime`]: https://google.github.io/closure-library/api/goog.date.UtcDateTime.html
-[`goog.date.Interval`]: https://google.github.io/closure-library/api/goog.date.Interval.html
-[`goog.date.Date`]: https://google.github.io/closure-library/api/goog.date.Date.html
-[`goog.date.DateTime`]: https://google.github.io/closure-library/api/goog.date.DateTime.html
+<table>
+  <thead>
+    <tr>
+      <th>To&nbsp;represent&nbsp;a</th>
+      <th>Use</th>
+      <th>Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>instant</td>
+      <td><a href="https://tc39.es/proposal-temporal/docs/instant.html"><code>Temporal.Instant</code></a></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>duration</td>
+      <td><a href="https://tc39.es/proposal-temporal/docs/duration.html"><code>Temporal.Duration</code></a></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>date</td>
+      <td><a href="https://tc39.es/proposal-temporal/docs/plaindate.html"><code>Temporal.PlainDate</code></a></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>time of day</td>
+      <td><a href="https://tc39.es/proposal-temporal/docs/plaintime.html"><code>Temporal.PlainTime</code></a></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>datetime</td>
+      <td><a href="https://tc39.es/proposal-temporal/docs/plaindatetime.html"><code>Temporal.PlainDateTime</code></a></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>day of week</td>
+      <td>none</td>
+      <td>many <code>Temporal</code> objects have a <code>dayOfWeek</code> getter</td>
+    </tr>
+    <tr>
+      <td>period</td>
+      <td>none</td>
+      <td><a href="https://tc39.es/proposal-temporal/docs/duration.html"><code>Temporal.Duration</code></a> can be added to or subtracted from civil time object types (<code>PlainDate</code>, <code>PlainDateTime</code>, etc).</td>
+    </tr>
+    <tr>
+      <td>time zone</td>
+      <td><a href="https://tc39.es/proposal-temporal/docs/timezone.html"><code>Temporal.TimeZone</code></a></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
+#### Closure
+
+<table>
+  <thead>
+    <tr>
+      <th>To&nbsp;represent&nbsp;a</th>
+      <th>Use</th>
+      <th>Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>instant</td>
+      <td><a href="https://google.github.io/closure-library/api/goog.date.UtcDateTime.html"><code>goog.date.UtcDateTime</code></a></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>duration</td>
+      <td><a href="https://google.github.io/closure-library/api/goog.date.Interval.html"><code>goog.date.Interval</code></a></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>date</td>
+      <td><a href="https://google.github.io/closure-library/api/goog.date.Date.html"><code>goog.date.Date</code></a></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>time of day</td>
+      <td>none</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>datetime</td>
+      <td><a href="https://google.github.io/closure-library/api/goog.date.DateTime.html"><code>goog.date.DateTime</code></a></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>day of week</td>
+      <td>none</td>
+      <td>Closure's <code>Date</code>s have a <code>getWeekday</code> method</td>
+    </tr>
+    <tr>
+      <td>period</td>
+      <td>none</td>
+      <td>Closure's <code>Interval</code>s can be added and subtracted from <code>DateTime</code> instances.</td>
+    </tr>
+    <tr>
+      <td>time zone</td>
+      <td>none</td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
 
 ### Python
 
-| To represent a… | Use…                                                      |
-| --------------- | --------------------------------------------------------- |
-| instant         | [`datetime.datetime`] \(When using                        |
-:                 : `datetime.datetime.now(tz)`, [**always** specify the `tz` :
-:                 : parameter].)                                              :
-| duration        | [`datetime.timedelta`]                                    |
-| date            | [`datetime.date`]                                         |
-| time of day     | [`datetime.time`]                                         |
-| datetime        | [`datetime.datetime`] \(When using                        |
-:                 : `datetime.datetime.now(tz)`, [**always** specify the `tz` :
-:                 : parameter].)                                              :
-| day of week     | [`datetime.weekday`]                                      |
-| period          | [`datetime.timedelta`] \(Duration is preferred over       |
-:                 : period, though timedelta can express both. See            :
-:                 : [periods](#periods).)                                     :
-| time zone       | [`datetime.timezone`]                                     |
-
-[**always** specify the `tz` parameter]: https://dev.to/anasmk/be-careful-when-using-python-datetime-module-1dcf
-[`datetime.datetime`]: https://docs.python.org/3/library/datetime.html#datetime.datetime
-[`datetime.timedelta`]: https://docs.python.org/3/library/datetime.html#timedelta-objects
-[`datetime.date`]: https://docs.python.org/3/library/datetime.html#date-objects
-[`datetime.time`]: https://docs.python.org/3/library/datetime.html#time-objects
-[`datetime.datetime`]: https://docs.python.org/3/library/datetime.html#datetime.datetime
-[`datetime.weekday`]: https://docs.python.org/3/library/datetime.html#datetime.date.weekday
-[`datetime.timedelta`]: https://docs.python.org/3/library/datetime.html#timedelta-objects
-[`datetime.timezone`]: https://docs.python.org/3/library/datetime.html#timezone-objects
+<table>
+  <thead>
+    <tr>
+      <th>To&nbsp;represent&nbsp;a</th>
+      <th>Use</th>
+      <th>Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>instant</td>
+      <td><a href="https://docs.python.org/3/library/datetime.html#datetime.datetime"><code>datetime.datetime</code></a></td>
+      <td>When using <code>datetime.datetime.now(tz)</code>, <b>always</b> <a href="https://dev.to/anasmk/be-careful-when-using-python-datetime-module-1dcf">specify the <code>tz</code> parameter</a></td>
+    </tr>
+    <tr>
+      <td>duration</td>
+      <td><a href="https://docs.python.org/3/library/datetime.html#timedelta-objects"><code>datetime.timedelta</code></a></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>date</td>
+      <td><a href="https://docs.python.org/3/library/datetime.html#date-objects"><code>datetime.date</code></a></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>time of day</td>
+      <td><a href="https://docs.python.org/3/library/datetime.html#time-objects"><code>datetime.time</code></a></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>datetime</td>
+      <td><a href="https://docs.python.org/3/library/datetime.html#datetime.datetime"><code>datetime.datetime</code></a></td>
+      <td>When using <code>datetime.datetime.now(tz)</code>, <b>always</b> <a href="https://dev.to/anasmk/be-careful-when-using-python-datetime-module-1dcf">specify the <code>tz</code> parameter</a></td>
+    </tr>
+    <tr>
+      <td>day of week</td>
+      <td><a href="https://docs.python.org/3/library/datetime.html#datetime.date.weekday"><code>datetime.weekday</code></a></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>period</td>
+      <td><a href="https://docs.python.org/3/library/datetime.html#timedelta-objects"><code>datetime.timedelta</code></a></td>
+      <td>Duration is preferred over period, though timedelta can express both. See the section on periods above.</td>
+    </tr>
+    <tr>
+      <td>time zone</td>
+      <td><a href="https://docs.python.org/3/library/datetime.html#timezone-objects"><code>datetime.timezone</code></a></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
 
 ## Appendix: Miscellaneous Time Topics {#appendix}
 
@@ -923,12 +1145,32 @@ good sign that you've been following more bug-proof practices.
 Can anything in the topic of dates and times ever be simple? Maybe AM/PM is it.
 It's just a different way of writing the hour integer, that's all.
 
-Hour as integer | Hour in AM/PM form
---------------- | ------------------
-0               | 12 AM
-1–11            | 1–11 AM
-12              | 12 PM
-13–23           | 1–11 PM
+<table>
+  <thead>
+    <tr>
+      <th>Hour as integer</th>
+      <th>Hour in AM/PM form</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>12 AM</td>
+    </tr>
+    <tr>
+      <td>1–11</td>
+      <td>1–11 AM</td>
+    </tr>
+    <tr>
+      <td>12</td>
+      <td>12 PM</td>
+    </tr>
+    <tr>
+      <td>13–23</td>
+      <td>1–11 PM</td>
+    </tr>
+  </tbody>
+</table>
 
 Well, it was *almost* simple.
 
