@@ -40,15 +40,18 @@ import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import java.util.Objects;
 import java.util.regex.Pattern;
+import org.jspecify.annotations.Nullable;
 
 /** See the summary. */
 @BugPattern(
     summary =
-        "The non-constant portion of an equals check generally comes first. Prefer"
-            + " e.equals(CONSTANT) if e is non-null or Objects.equals(e, CONSTANT) if e may be",
+        "The non-constant portion of a comparison generally comes first. For equality, prefer"
+            + " e.equals(CONSTANT) if e is non-null or Objects.equals(e, CONSTANT) if e may be"
+            + " null. For standard operators, prefer e <OPERATION>> CONSTANT.",
     severity = WARNING)
 public final class YodaCondition extends BugChecker
     implements BinaryTreeMatcher, MethodInvocationTreeMatcher {
@@ -57,6 +60,10 @@ public final class YodaCondition extends BugChecker
     switch (tree.getKind()) {
       case EQUAL_TO:
       case NOT_EQUAL_TO:
+      case LESS_THAN:
+      case GREATER_THAN:
+      case LESS_THAN_EQUAL:
+      case GREATER_THAN_EQUAL:
         return fix(
             tree,
             tree.getLeftOperand(),
@@ -95,25 +102,99 @@ public final class YodaCondition extends BugChecker
       ExpressionTree rhs,
       boolean provideNullSafeFix,
       VisitorState state) {
-    if (yodaCondition(lhs, rhs)) {
-      var description = buildDescription(lhs);
-      if (provideNullSafeFix
-          && !getNullnessValue(rhs, state, NullnessAnalysis.instance(state.context))
-              .equals(Nullness.NONNULL)) {
-        var fix = SuggestedFix.builder().setShortDescription("null-safe fix");
-        description.addFix(
-            fix.replace(
+    if (!yodaCondition(lhs, rhs)) {
+      return NO_MATCH;
+    }
+    if (isInequality(tree) && hasAdjacentComparison(state)) {
+      return NO_MATCH;
+    }
+
+    var description = buildDescription(lhs);
+    if (provideNullSafeFix
+        && !getNullnessValue(rhs, state, NullnessAnalysis.instance(state.context))
+            .equals(Nullness.NONNULL)) {
+      var fix = SuggestedFix.builder().setShortDescription("null-safe fix");
+      description.addFix(
+          fix.replace(
+                  tree,
+                  format(
+                      "%s.equals(%s, %s)",
+                      qualifyType(state, fix, Objects.class.getName()),
+                      state.getSourceForNode(rhs),
+                      state.getSourceForNode(lhs)))
+              .build());
+    }
+    return description
+        .addFix(
+            isInequality(tree)
+                ? SuggestedFix.replace(
                     tree,
                     format(
-                        "%s.equals(%s, %s)",
-                        qualifyType(state, fix, Objects.class.getName()),
-                        state.getSourceForNode(rhs),
-                        state.getSourceForNode(lhs)))
-                .build());
-      }
-      return description.addFix(SuggestedFix.swap(lhs, rhs)).build();
+                        "%s %s %s",
+                        state.getSourceForNode(rhs), inverse(tree), state.getSourceForNode(lhs)))
+                : SuggestedFix.swap(lhs, rhs))
+        .build();
+  }
+
+  @SuppressWarnings("TreeToString") // Can't think of a better approach.
+  private static boolean hasAdjacentComparison(VisitorState state) {
+    BinaryTree tree = (BinaryTree) state.getPath().getLeaf();
+
+    ConstantKind l = seemsConstant(tree.getLeftOperand());
+    ConstantKind r = seemsConstant(tree.getRightOperand());
+    boolean putativeVariableOnRight = l.constness > r.constness;
+    if (putativeVariableOnRight) {
+      ExpressionTree right = expressionToRight(state);
+      return right != null && right.toString().equals(tree.getRightOperand().toString());
     }
-    return NO_MATCH;
+    return false;
+  }
+
+  private static @Nullable ExpressionTree expressionToRight(VisitorState state) {
+    TreePath path = state.getPath();
+    while (true) {
+      Tree tree = path.getLeaf();
+      TreePath parentPath = path.getParentPath();
+      Tree parent = parentPath.getLeaf();
+      if (!(parent instanceof BinaryTree)) {
+        break;
+      }
+      BinaryTree binaryTree = (BinaryTree) parent;
+      if (binaryTree.getLeftOperand() == tree) {
+        Tree right = binaryTree.getRightOperand();
+        return isInequality(right) ? ((BinaryTree) right).getLeftOperand() : null;
+      } else {
+        path = path.getParentPath();
+      }
+    }
+    return null;
+  }
+
+  private static boolean isInequality(Tree tree) {
+    switch (tree.getKind()) {
+      case LESS_THAN:
+      case GREATER_THAN:
+      case LESS_THAN_EQUAL:
+      case GREATER_THAN_EQUAL:
+        return true;
+      default:
+        return false;
+    }
+  }
+
+  private static String inverse(Tree tree) {
+    switch (tree.getKind()) {
+      case LESS_THAN:
+        return ">";
+      case GREATER_THAN:
+        return "<";
+      case LESS_THAN_EQUAL:
+        return ">=";
+      case GREATER_THAN_EQUAL:
+        return "<=";
+      default:
+        throw new AssertionError();
+    }
   }
 
   private static boolean yodaCondition(ExpressionTree lhs, ExpressionTree rhs) {

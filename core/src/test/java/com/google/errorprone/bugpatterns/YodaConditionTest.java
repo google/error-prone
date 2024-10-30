@@ -64,6 +64,41 @@ public final class YodaConditionTest {
   }
 
   @Test
+  public void comparison() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              boolean yoda(int a) {
+                // BUG: Diagnostic contains: a < 4
+                return 4 > a;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void comparison_noFindingWithAdjacentComparison() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              boolean test(int a) {
+                return 4 < a && a < 7 && true && false;
+              }
+
+              boolean test2(int a) {
+                return true && false && 4 < a && a < 7;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void boxedBoolean() {
     refactoring
         .addInputLines(
