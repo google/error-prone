@@ -37,7 +37,7 @@ learn.
 
 Uh oh.
 
-## What is this document?
+## What is this document? {#this_document}
 
 The Java And Kotlin Ecosystem team at Google has worked for several years to
 eliminate the sources of date/time bugs in Google's codebase. We've learned a
@@ -56,7 +56,7 @@ about dates and times, and we'll build it up again together from the ground up.
 
 Let's begin!
 
-## Instants and the timeline
+## Instants and the timeline {#timeline}
 
 *Record scratch*
 
@@ -135,7 +135,7 @@ impossible! We can't very well say "the instant 37", or "the instant Craig", or
 
 Let's move on to *durations* and come back to that.
 
-## Durations
+## Durations {#durations}
 
 A duration is the *difference* between any two instants on the timeline. A
 duration *always* has a value measured in **seconds**. At least, that is the
@@ -166,7 +166,7 @@ to choose an arbitrary value for it, in terms of one of the precise units (for
 example, for a year, it might use 525,600 minutes). These units from "day" on up
 will be far more relevant to "civil" time, which we'll get to shortly.
 
-## Negative durations?
+## Negative durations? {#negative_duration}
 
 Can a duration be negative? We would rather you had not asked.
 
@@ -197,7 +197,7 @@ puzzling bugs. I recommend avoiding negative durations as much as possible. It's
 not that there are *no* valid reasons to use one; it's just that the primary
 reason is if you don't like your teammates.
 
-## Math operations
+## Math operations {#physical_math}
 
 Instants and durations have some things in common; for example, they both have a
 strong ordering, with "less-than" meaning "before" or "shorter than",
@@ -225,7 +225,7 @@ Note in particular that you cannot add two instants.
 Well, we did say negative durations are perfectly well-defined. The fact remains
 that they're unexpected and bug-prone.)
 
-## Identifying a particular instant
+## Identifying a particular instant {#identifying_instant}
 
 The only way to refer to any particular instant involves using durations.
 
@@ -245,7 +245,7 @@ In software, in today's global world, it's very useful to have one standard
 reference instant defined for use throughout an entire codebase. We call that
 instant (strangely) the "epoch", but more on that later.
 
-## Physical time
+## Physical time {#physical_time}
 
 Now it's time to talk about *physical time*.
 
@@ -271,7 +271,7 @@ of physical time. We have the concepts "now", "before", and "after", yet
 essential terms like "tomorrow", "noon", and "Taco Tuesday" have no meaning. I
 don't want to live in a world without Taco Tuesday, so let's read on.
 
-## Civil time
+## Civil time {#civil_time}
 
 With the use of a reference instant, physical time became *possible* to talk
 about... yet it's still way too *hard* to talk about.
@@ -290,7 +290,7 @@ exhale rapidly onto flaming wax if we don't have civil time.
 
 Civil time always requires a calendar system.
 
-## Calendar systems
+## Calendar systems {#calendars}
 
 There are numerous competing schemes for how to express civil time. Each is
 called a **calendar system**. Each of them accomplishes the worthy goal of
@@ -304,7 +304,7 @@ simplifying our lives, by being itself stupendously complicated.[^complicated]
 
 Of all these, we are going to talk only about the **Gregorian calendar**.
 
-## The Gregorian calendar
+## The Gregorian calendar {#gregorian}
 
 We're focusing only on the Gregorian calendar in this guide because (a) it is
 the [official](https://en.wikipedia.org/wiki/Civil_calendar) civil calendar for
@@ -366,7 +366,7 @@ Calendar throughout all of history. This is the calendar system you want to use
 as long as you never need precise handling of dates more than a century in the
 past.
 
-## What about the time zone?
+## What about the time zone? {#time_zone_is_uncivil}
 
 (Hey, didn't we agree at the top to "forget everything we know"?)
 
@@ -381,7 +381,7 @@ zones. The language that discussion happens in is civil time.
 
 Unfortunately, we'll discuss time zones soon.
 
-## Periods
+## Periods {#periods}
 
 A period expresses the difference between two datetimes. Like a datetime,
 therefore, it's measured in separate units of years, months, days, hours,
@@ -405,7 +405,7 @@ when talking about periods. This is dangerous! The two are fundamentally
 different in subtle but important ways (as this document will continue to try to
 explain).
 
-## Civil math
+## Civil math {#civil_math}
 
 Of course, mathematical operations on civil time work in a corresponding way to
 their analogues in physical time, but with an important difference.
@@ -443,7 +443,7 @@ This is the major point of difference between physical and civil time. Physical
 time is well-defined mathematically, which makes it easy to manipulate. Civil
 time obeys no known mathematical laws.
 
-## Bad Periods
+## Bad Periods {#bad_periods}
 
 Like durations, periods *can* be negative, but please don't. It's especially
 bad, here. But also...
@@ -453,7 +453,7 @@ confusion of several periods into one. You can reasonably claim there is a
 period representing "+2 months, -9 weeks, +1 day", but what *is* that? Is it
 even positive?
 
-## Time zones
+## Time zones {#time_zones}
 
 By now we have covered a basic understanding of both
 [physical time](#physical_time) and [civil time](#civil_time), and we can see
@@ -479,7 +479,7 @@ therefore *definitely always make lots and lots of sense*.
 *either* realm, physical *or* civil; they're just how we move back and forth
 *between* those realms.
 
-## Good time zones
+## Good time zones {#good_bad_time_zones}
 
 **Not all time zones are created equal.** Plenty of the things that you think of
 as time zones are actually *really bad at* being time zones.
@@ -540,7 +540,7 @@ this document.
 Avoid these sorry excuses for "time zones" that use three uppercase letters.
 Except one...
 
-## UTC
+## UTC {#utc}
 
 UTC is a very special time zone that is useful despite *not* being in the
 above-mentioned `Asia/Kolkata` style. What is it, and why do we use it?
@@ -558,7 +558,7 @@ zone of any human being or business on the planet.[^iss] That's okay, though.
     space, who do actually use UTC as their home time zone. You matter too.
     I'm sorry. Please don't drop anything on me.
 
-## UTC for zone-independent code?
+## UTC for zone-independent code? {#zone_independent}
 
 Pop quiz: how do you write time-zone-independent code? You use the UTC time
 zone, right? This is generally on the right track, but not quite all the way
@@ -579,7 +579,7 @@ zone-neutral then the question is bogus and unanswerable--and anything
 unanswerable ought to be unaskable too. And that's what you'll get by sticking
 to types like Java's `Instant`, that are designed to model physical time only.
 
-## <a id="time_zones_change"></a>Persistence hazards
+## <a id="time_zones_change"></a>Persistence hazards {#persistence}
 
 Suppose you have a known, fixed, IANA canonical time zone, like
 `America/Chicago`. Since that provides a mapping between instants and datetimes
@@ -620,7 +620,7 @@ every user. But if you proactively think through what you want to happen in
 these scenarios (user changes time zones, time zone rules change, etc.), you'll
 be okay.
 
-## Avoid the "zoned datetime"
+## Avoid the "zoned datetime" {#zoned_datetime}
 
 Many libraries roll a datetime or instant, *plus* a time zone, into a single
 type you can pass around. In fact, Java's first two attempts at date/time
@@ -657,7 +657,7 @@ flawed**, and you should avoid it for these reasons:
 **Warning:** don't use "zoned datetime" or "zoned instant" types. I already said
 that, but now I've said it in a red box.
 
-## Now what?
+## Now what? {#now_what}
 
 With that admonition, we've concluded our basic discussion of how to think about
 time. What next?
@@ -673,7 +673,7 @@ You may also wish to consult the appendix which discusses additional topics:
 *   [The "epoch"](#the-unix-epoch)
 *   etc.
 
-## Thanks
+## Thanks {#thanks}
 
 Major help on this document was received from
 [Kurt Kluever](https://github.com/kluever),
@@ -684,7 +684,7 @@ Major help on this document was received from
 them, and you should be too; you should have seen the bad jokes I *started*
 with.
 
-## Language-Specific Date/Time APIs
+## Language-Specific Date/Time APIs {#languages}
 
 ### C++
 
@@ -1065,9 +1065,9 @@ Use the `java.time` library (Java 8+) if at all possible; otherwise use
   </tbody>
 </table>
 
-## Appendix: Miscellaneous Time Topics
+## Appendix: Miscellaneous Time Topics {#appendix}
 
-### Wall time
+### Wall time {#wall_time}
 
 Hey, what time is it?
 
@@ -1083,7 +1083,7 @@ elaborate meaning than what's illustrated here.
 
 Note that all of this takes place firmly in the realm of *physical time.*
 
-#### Timestamps
+#### Timestamps {#timestamps}
 
 As soon as a timestamp is read, it is already in the past, but it doesn't stop
 being a "timestamp". A timestamp is just an instant that was probably originally
@@ -1094,7 +1094,7 @@ Timestamps are instants and all the normal physical time math operations apply.
 But note that subtracting one timestamp *from another timestamp* can be sketchy!
 (Read on.)
 
-#### The most important thing about wall time
+#### The most important thing about wall time {#approximate}
 
 Wall time is inherently approximate. It drifts and is periodically corrected by
 a network time service.
@@ -1103,7 +1103,7 @@ Yes, this means it can even appear to run backward.
 
 Don't try to use wall time for measuring elapsed time.
 
-### Elapsed time
+### Elapsed time {#elapsed}
 
 Elapsed time is a *measured* duration -- the duration that transpired between
 two operations.
@@ -1136,7 +1136,7 @@ an implementation detail. No, it's not that anyone is ever going to suddenly
 change its value. But *if they did* and your code kept working anyway, that's a
 good sign that you've been following more bug-proof practices.
 
-### AM/PM
+### AM/PM {#am-pm}
 
 Can anything in the topic of dates and times ever be simple? Maybe AM/PM is it.
 It's just a different way of writing the hour integer, that's all.
@@ -1170,7 +1170,7 @@ It's just a different way of writing the hour integer, that's all.
 
 Well, it was *almost* simple.
 
-### Day of week
+### Day of week {#day_of_week}
 
 Maybe this one is simple though.
 
@@ -1192,7 +1192,7 @@ It's tempting to base business logic on the day of week (for example, deciding
 when the week begins, or whether it is a "business day", or to what degree it is
 "manic"), but inferences like these are extremely locale-sensitive. Be careful.
 
-### Leap seconds
+### Leap seconds {#leap_seconds}
 
 Uh oh. Leap seconds. These threaten to be a big confusing thing that makes
 everything insane and complicated. Just look at the size of the
@@ -1235,7 +1235,7 @@ The effect of all this is that when you subtract two timestamps, the duration
 you get might actually be incorrect. But this is *already* the case anyway due
 to clock drift and periodic clock corrections.
 
-### Midnight vs. start of day
+### Midnight vs. start of day {#start_of_day}
 
 "Midnight" is another word for the time-of-day "0:00:00.000". It's a dangerous
 concept because it sounds like something that every day has, but this does not
@@ -1255,7 +1255,7 @@ Every period can be used as a recurrence, but because period math is
 ill-defined, this can sometimes get you into trouble. Recurrences are defined
 slightly differently, so as to be, er, well-defined.
 
-### Communicating about dates
+### Communicating about dates {#iso}
 
 The second of July in the year 2019 should always be written in the following
 way: "2019-07-02". This is an [international standard](https://xkcd.com/1179/)
