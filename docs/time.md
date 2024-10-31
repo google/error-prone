@@ -655,7 +655,7 @@ flawed**, and you should avoid it for these reasons:
     object at a broader scope, like a user, session, client, etc.
 
 **Warning:** don't use "zoned datetime" or "zoned instant" types. I already said
-that, but now I've said it in a red box.
+that, but now I've said it in a warning!
 
 ## Now what? {#now_what}
 
