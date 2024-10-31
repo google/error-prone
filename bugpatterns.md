@@ -786,7 +786,7 @@ __[FloatingPointLiteralPrecision](bugpattern/FloatingPointLiteralPrecision)__<br
 Floating point literal loses precision
 
 __[FloggerArgumentToString](bugpattern/FloggerArgumentToString)__<br>
-Use Flogger&#39;s printf-style formatting instead of explicitly converting arguments to strings
+Use Flogger&#39;s printf-style formatting instead of explicitly converting arguments to strings. Note that Flogger does more than just call toString; for instance, it formats arrays sensibly.
 
 __[FloggerStringConcatenation](bugpattern/FloggerStringConcatenation)__<br>
 Prefer string formatting using printf placeholders (e.g. %s) instead of string concatenation
