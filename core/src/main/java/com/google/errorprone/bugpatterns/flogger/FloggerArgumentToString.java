@@ -56,7 +56,8 @@ import org.jspecify.annotations.Nullable;
 @BugPattern(
     summary =
         "Use Flogger's printf-style formatting instead of explicitly converting arguments to"
-            + " strings",
+            + " strings. Note that Flogger does more than just call toString; for instance, it"
+            + " formats arrays sensibly.",
     severity = WARNING)
 public class FloggerArgumentToString extends BugChecker implements MethodInvocationTreeMatcher {
 
