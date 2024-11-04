@@ -215,4 +215,29 @@ public class DuplicateBranchesTest {
             """)
         .doTest(TestMode.TEXT_MATCH);
   }
+
+  @Test
+  public void negativeEmpty() {
+    BugCheckerRefactoringTestHelper.newInstance(DuplicateBranches.class, getClass())
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void f(boolean a) {
+                if (a) {
+                } else {
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void f(boolean a) {
+              }
+            }
+            """)
+        .doTest();
+  }
 }
