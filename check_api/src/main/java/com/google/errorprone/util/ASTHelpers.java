@@ -535,7 +535,7 @@ public class ASTHelpers {
    */
   public static @Nullable Type getResultType(ExpressionTree expressionTree) {
     Type type = ASTHelpers.getType(expressionTree);
-    return type == null ? null : Optional.ofNullable(type.getReturnType()).orElse(type);
+    return type == null ? null : (type.getReturnType() == null ? type : type.getReturnType());
   }
 
   /**
