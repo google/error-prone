@@ -114,6 +114,19 @@ public class BanSerializableReadNegativeCases implements Serializable, Externali
     self.readObject(deserializer);
   }
 
+  // code is for Android
+  @SuppressWarnings("BanSerializableRead")
+  public static final void directCall4() throws IOException, ClassNotFoundException {
+    PipedInputStream in = new PipedInputStream();
+    PipedOutputStream out = new PipedOutputStream(in);
+
+    ObjectOutputStream serializer = new ObjectOutputStream(out);
+    ObjectInputStream deserializer = new ObjectInputStream(in);
+
+    BanSerializableReadPositiveCases self = new BanSerializableReadPositiveCases();
+    self.readObject(deserializer);
+  }
+
   // calls to readObject should themselves be excluded in a readObject method
   void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException {
     BanSerializableReadNegativeCases c = new BanSerializableReadNegativeCases();
