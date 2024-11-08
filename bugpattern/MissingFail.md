@@ -14,7 +14,7 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 _Alternate names: missing-fail_
 
 ## The problem
-When testing for exceptions in junit, it is easy to forget the call to `fail()`:
+When testing for exceptions in JUnit, it is easy to forget the call to `fail()`:
 
 ```java
 try {
@@ -32,7 +32,7 @@ import static org.junit.Assert.fail;
 
 try {
   someOperationThatShouldThrow();
-  fail()
+  fail();
 } catch (SomeException expected) {
   assertThat(expected).hasMessage("Operation failed");
 }
@@ -97,8 +97,8 @@ characteristics are present:
 
 *   A field assignment in the catch block.
 *   A call to `assertTrue/False(boolean variable or field)` in the catch block.
-*   The last statement in the `try` block is an `assert*()` (that is not a noop:
-    `assertFalse(false)`, `assertTrue(true))` or `Mockito.verify()` call.
+*   The last statement in the `try` block is an `assert*()` (that is not a
+    noop): `assertFalse(false)`, `assertTrue(true))` or `Mockito.verify()` call.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("MissingFail")` to the enclosing element.
