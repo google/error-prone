@@ -21,6 +21,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
+import static com.google.errorprone.util.ASTHelpers.isRecord;
 import static com.google.errorprone.util.ASTHelpers.methodIsPublicAndNotAnOverride;
 
 import com.google.common.collect.ImmutableSet;
@@ -84,12 +85,13 @@ public class TooManyParameters extends BugChecker implements MethodTreeMatcher {
       return NO_MATCH;
     }
 
+    String name = getSymbol(tree).isConstructor() ? "constructor" : "method";
     String message =
         String.format(
-            "Consider using a builder pattern instead of a method with %s parameters. Data shows"
-                + " that defining methods with > 5 parameters often leads to bugs. See also"
+            "Consider using a builder pattern instead of a %s with %s parameters. Data shows"
+                + " that defining %s with > 5 parameters often leads to bugs. See also"
                 + " Effective Java, Item 2.",
-            paramCount);
+            name, paramCount, name);
     return buildDescription(tree).setMessage(message).build();
   }
 
@@ -98,6 +100,9 @@ public class TooManyParameters extends BugChecker implements MethodTreeMatcher {
     if (symbol.owner instanceof ClassSymbol
         && CLASS_ANNOTATIONS_TO_IGNORE.stream()
             .anyMatch(a -> hasAnnotation(symbol.owner, a, state))) {
+      return false;
+    }
+    if (isRecord(symbol)) {
       return false;
     }
     return METHOD_ANNOTATIONS_TO_IGNORE.stream().noneMatch(a -> hasAnnotation(tree, a, state))

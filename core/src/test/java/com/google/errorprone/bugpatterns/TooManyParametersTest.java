@@ -82,6 +82,20 @@ public class TooManyParametersTest {
   }
 
   @Test
+  public void recordConstructor() {
+    compilationHelper
+        .setArgs(ImmutableList.of("-XepOpt:" + TOO_MANY_PARAMETERS_FLAG_NAME + "=3"))
+        .addSourceLines(
+            "RecordExample.java",
+            """
+            public record RecordExample(int p0, int p1, int p2, int p3, int p4, int p5) {
+              public RecordExample {}
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void constructor_withAtInject() {
     compilationHelper
         .setArgs(ImmutableList.of("-XepOpt:" + TOO_MANY_PARAMETERS_FLAG_NAME + "=3"))
@@ -114,6 +128,7 @@ public class TooManyParametersTest {
             "AutoFactory.java",
             """
             package com.google.auto.factory;
+
             public @interface AutoFactory {}
             """)
         .addSourceLines(
