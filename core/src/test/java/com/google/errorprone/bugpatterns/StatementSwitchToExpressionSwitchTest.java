@@ -2108,6 +2108,86 @@ public final class StatementSwitchToExpressionSwitchTest {
   }
 
   @Test
+  public void switchByEnum_returnSwitchCommentsBeforeFirstCase_errorAndRetained() {
+    assume().that(Runtime.version().feature()).isAtLeast(14);
+
+    // Check correct generated code
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              enum Side {
+                HEART,
+                SPADE,
+                DIAMOND,
+                CLUB
+              };
+
+              public Test(int foo) {}
+
+              public int invoke() {
+                return 123;
+              }
+
+              public int foo(Side side) {
+                switch (side) {
+                  // Abracadabra
+                  /* foo */ case HEART:
+                  // Card trick
+                  case DIAMOND:
+                    return invoke();
+                  case SPADE:
+                    throw new RuntimeException();
+                  case CLUB:
+                    throw new NullPointerException();
+                }
+                // This should never happen
+                int z = invoke();
+                z++;
+                throw new RuntimeException("Switch was not exhaustive at runtime " + z);
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              enum Side {
+                HEART,
+                SPADE,
+                DIAMOND,
+                CLUB
+              };
+
+              public Test(int foo) {}
+
+              public int invoke() {
+                return 123;
+              }
+
+              public int foo(Side side) {
+                return switch (side) {
+                  case HEART, DIAMOND ->
+                      // Abracadabra
+                      /* foo */
+                      // Card trick
+                      invoke();
+                  case SPADE -> throw new RuntimeException();
+                  case CLUB -> throw new NullPointerException();
+                };
+                // This should never happen
+
+              }
+            }
+            """)
+        .setArgs(
+            ImmutableList.of(
+                "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion"))
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+  }
+
+  @Test
   public void switchByEnum_switchInReturnSwitchWithShouldNeverHappen_error() {
     assume().that(Runtime.version().feature()).isAtLeast(14);
     // No error because the inner switch is the only fixable one

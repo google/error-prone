@@ -78,6 +78,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import javax.inject.Inject;
 import javax.lang.model.element.ElementKind;
@@ -662,7 +663,12 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
           transformReturnOrThrowBlock(caseTree, state, getStatements(caseTree));
 
       if (firstCaseInGroup) {
-        groupedCaseCommentsAccumulator = new StringBuilder();
+        groupedCaseCommentsAccumulator =
+            caseIndex == 0
+                ? new StringBuilder(
+                    extractCommentsBeforeFirstCase(switchTree, allSwitchComments).orElse(""))
+                : new StringBuilder();
+
         replacementCodeBuilder.append("\n  ");
         if (!isDefaultCase) {
           replacementCodeBuilder.append("case ");
@@ -989,6 +995,21 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
   }
 
   /**
+   * Extracts any comments appearing within the switch tree before the first case. Comments are
+   * merged into a single string separated by newlines. Precondition: the switch tree has at least
+   * one case.
+   */
+  private static Optional<String> extractCommentsBeforeFirstCase(
+      SwitchTree switchTree, ImmutableList<ErrorProneComment> allSwitchComments) {
+    // Indexing relative to the start position of the switch statement
+    int switchStart = getStartPosition(switchTree);
+    int firstCaseStartIndex = getStartPosition(switchTree.getCases().get(0)) - switchStart;
+
+    return filterAndRenderComments(
+        allSwitchComments, comment -> comment.getPos() < firstCaseStartIndex);
+  }
+
+  /**
    * Extracts any comments appearing after the specified {@code caseIndex} but before the subsequent
    * case or end of the {@code switchTree}. Comments are merged into a single string separated by
    * newlines.
@@ -1009,12 +1030,22 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
             ? state.getEndPosition(switchTree) - switchStart
             : getStartPosition(switchTree.getCases().get(caseIndex + 1)) - switchStart;
 
-    String filteredComments =
-        allSwitchComments.stream()
-            // Comments after the end of the current case and before the start of the next case
-            .filter(
-                comment ->
-                    comment.getPos() >= caseEndIndex && comment.getPos() < nextCaseStartIndex)
+    return filterAndRenderComments(
+        allSwitchComments,
+        comment -> comment.getPos() >= caseEndIndex && comment.getPos() < nextCaseStartIndex);
+  }
+
+  /**
+   * Filters comments according to the supplied predicate ({@code commentFilter}), removes
+   * fall-through and empty comments, and renders them into a single optional string. If no comments
+   * remain, returns {@code Optional.empty()}.
+   */
+  private static Optional<String> filterAndRenderComments(
+      ImmutableList<ErrorProneComment> comments, Predicate<ErrorProneComment> commentFilter) {
+
+    String rendered =
+        comments.stream()
+            .filter(commentFilter)
             .map(ErrorProneComment::getText)
             // Remove "fall thru" comments
             .map(commentText -> removeFallThruLines(commentText))
@@ -1022,7 +1053,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
             .filter(commentText -> !commentText.isEmpty())
             .collect(joining("\n"));
 
-    return filteredComments.isEmpty() ? Optional.empty() : Optional.of(filteredComments);
+    return rendered.isEmpty() ? Optional.empty() : Optional.of(rendered);
   }
 
   /**
