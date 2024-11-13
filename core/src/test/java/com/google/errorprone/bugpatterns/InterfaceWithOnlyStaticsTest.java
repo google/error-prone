@@ -206,4 +206,19 @@ public class InterfaceWithOnlyStaticsTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void negativeSealed() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            sealed interface Test {
+              record A() implements Test {}
+
+              record B() implements Test {}
+            }
+            """)
+        .doTest();
+  }
 }
