@@ -3556,4 +3556,35 @@ abstract class Test {
             """)
         .doTest();
   }
+
+  @Test
+  public void mutableRecord() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.util.List;
+            import com.google.errorprone.annotations.Immutable;
+
+            @Immutable
+            // BUG: Diagnostic contains: 'R' has field 'xs'
+            record R(List<String> xs) {}
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void immutableRecord() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.common.collect.ImmutableList;
+            import com.google.errorprone.annotations.Immutable;
+
+            @Immutable
+            record R(ImmutableList<String> xs) {}
+            """)
+        .doTest();
+  }
 }
