@@ -71,8 +71,10 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><a href="#com.google.errorprone.bugpatterns.collectionincompatibletype">com.google.errorprone.bugpatterns.collectionincompatibletype</a></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><a href="#com.google.errorprone.bugpatterns.threadsafety">com.google.errorprone.bugpatterns.threadsafety</a></div>
+<div class="col-first odd-row-color"><a href="#com.google.errorprone.bugpatterns.inlineme">com.google.errorprone.bugpatterns.inlineme</a></div>
 <div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><a href="#com.google.errorprone.bugpatterns.threadsafety">com.google.errorprone.bugpatterns.threadsafety</a></div>
+<div class="col-last even-row-color">&nbsp;</div>
 </div>
 <section class="class-uses">
 <ul class="block-list">
@@ -190,6 +192,23 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color">
 <div class="block">Highlights use of <code>Collection#contains</code> (and others) with types that do not have
  well-defined equals.</div>
+</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="com.google.errorprone.bugpatterns.inlineme">
+<h2>Uses of <a href="../BugChecker.MemberReferenceTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MemberReferenceTreeMatcher</a> in <a href="../inlineme/package-summary.html">com.google.errorprone.bugpatterns.inlineme</a></h2>
+<div class="caption"><span>Classes in <a href="../inlineme/package-summary.html">com.google.errorprone.bugpatterns.inlineme</a> that implement <a href="../BugChecker.MemberReferenceTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MemberReferenceTreeMatcher</a></span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Class</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>final class&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="../inlineme/Inliner.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.inlineme">Inliner</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">Checker that performs the inlining at call-sites (where the invoked APIs are annotated as
+ <code>@InlineMe</code>).</div>
 </div>
 </div>
 </section>
