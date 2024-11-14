@@ -39,6 +39,7 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
+import com.google.errorprone.bugpatterns.BugChecker.MemberReferenceTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -47,6 +48,7 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.MoreAnnotations;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
@@ -71,7 +73,7 @@ import javax.inject.Inject;
     severity = WARNING,
     tags = Inliner.FINDING_TAG)
 public final class Inliner extends BugChecker
-    implements MethodInvocationTreeMatcher, NewClassTreeMatcher {
+    implements MethodInvocationTreeMatcher, NewClassTreeMatcher, MemberReferenceTreeMatcher {
 
   public static final String FINDING_TAG = "JavaInlineMe";
 
@@ -139,6 +141,54 @@ public final class Inliner extends BugChecker
     }
 
     return match(tree, symbol, callingVars, receiverString, receiver, state);
+  }
+
+  private static final Pattern MEMBER_REFERENCE_PATTERN =
+      Pattern.compile(
+          "(return\\b+)?((?<qualifier>[^\b]+)\\.)?(?<identifier>\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*)\\(\\)");
+
+  @Override
+  public Description matchMemberReference(MemberReferenceTree tree, VisitorState state) {
+    MethodSymbol symbol = getSymbol(tree);
+    if (symbol.isStatic()) {
+      // TODO: b/165938605 - handle static member references
+      return Description.NO_MATCH;
+    }
+    if (!hasDirectAnnotationWithSimpleName(symbol, INLINE_ME)) {
+      return Description.NO_MATCH;
+    }
+    Optional<InlineMeData> inlineMeMaybe = InlineMeData.createFromSymbol(symbol);
+    if (inlineMeMaybe.isEmpty()) {
+      return Description.NO_MATCH;
+    }
+    InlineMeData inlineMe = inlineMeMaybe.get();
+    if (!inlineMe.imports().isEmpty() || !inlineMe.staticImports().isEmpty()) {
+      // TODO: b/165938605 - handle imports
+      return Description.NO_MATCH;
+    }
+    Api api = Api.create(symbol, state);
+    if (!matchesApiPrefixes(api)) {
+      return Description.NO_MATCH;
+    }
+    if (skipCallsitesWithComments
+        && stringContainsComments(state.getSourceForNode(tree), state.context)) {
+      return Description.NO_MATCH;
+    }
+    Matcher matcher = MEMBER_REFERENCE_PATTERN.matcher(inlineMe.replacement());
+    if (!matcher.matches()) {
+      return Description.NO_MATCH;
+    }
+    String qualifier = matcher.group("qualifier");
+    if (!qualifier.equals("this")) {
+      return Description.NO_MATCH;
+    }
+    String identifier = matcher.group("identifier");
+    SuggestedFix fix =
+        SuggestedFix.replace(
+            state.getEndPosition(tree.getQualifierExpression()),
+            state.getEndPosition(tree),
+            "::" + identifier);
+    return maybeCheckFixCompiles(tree, state, fix, api);
   }
 
   private Description match(
@@ -270,6 +320,11 @@ public final class Inliner extends BugChecker
 
     SuggestedFix fix = builder.build();
 
+    return maybeCheckFixCompiles(tree, state, fix, api);
+  }
+
+  private Description maybeCheckFixCompiles(
+      ExpressionTree tree, VisitorState state, SuggestedFix fix, Api api) {
     if (checkFixCompiles && fix.getImportsToAdd().isEmpty()) {
       // If there are no new imports being added (then there are no new dependencies). Therefore, we
       // can verify that the fix compiles (if CHECK_FIX_COMPILES is enabled).
@@ -277,7 +332,6 @@ public final class Inliner extends BugChecker
           ? describe(tree, fix, api)
           : Description.NO_MATCH;
     }
-
     return describe(tree, fix, api);
   }
 

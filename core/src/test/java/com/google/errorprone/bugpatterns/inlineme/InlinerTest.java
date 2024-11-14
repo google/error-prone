@@ -1564,6 +1564,61 @@ public final class Caller {
         .doTest();
   }
 
+  @Test
+  public void methodReference() {
+    refactoringTestHelper
+        .addInputLines(
+            "Client.java",
+            """
+            package p;
+
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class Client {
+              @Deprecated
+              @InlineMe(replacement = "this.instanceAfter()")
+              public void instanceBefore() {
+                instanceAfter();
+              }
+
+              public void instanceAfter() {}
+            }
+            """)
+        .expectUnchanged()
+        .addInputLines(
+            "Caller.java",
+            """
+            import java.util.function.Consumer;
+            import p.Client;
+
+            public final class Caller {
+              public void doTest() {
+                Client client = new Client();
+                Consumer<Client> c;
+                Runnable r;
+                r = client::instanceBefore;
+                c = Client::instanceBefore;
+              }
+            }
+            """)
+        .addOutputLines(
+            "out/Caller.java",
+            """
+            import java.util.function.Consumer;
+            import p.Client;
+            public final class Caller {
+              public void doTest() {
+                Client client = new Client();
+                Consumer<Client> c;
+                Runnable r;
+                r = client::instanceAfter;
+                c = Client::instanceAfter;
+              }
+            }
+            """)
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+  }
+
   private BugCheckerRefactoringTestHelper bugCheckerWithPrefixFlag(String prefix) {
     return BugCheckerRefactoringTestHelper.newInstance(Inliner.class, getClass())
         .setArgs("-XepOpt:" + PREFIX_FLAG + "=" + prefix);
