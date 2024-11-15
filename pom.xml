@@ -40,7 +40,7 @@
     <compile.testing.version>0.21.0</compile.testing.version>
     <caffeine.version>3.0.5</caffeine.version>
     <flogger.version>0.7.4</flogger.version>
-    <maven-javadoc-plugin.version>3.3.1</maven-javadoc-plugin.version>
+    <maven-javadoc-plugin.version>3.11.1</maven-javadoc-plugin.version>
     <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
     <nexus-staging-maven-plugin.version>1.6.13</nexus-staging-maven-plugin.version>
     <protobuf.version>3.25.5</protobuf.version>
@@ -170,7 +170,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>3.11.1</version>
+        <version>${maven-javadoc-plugin.version}</version>
         <configuration>
           <source>17</source>
           <notimestamp>true</notimestamp>
