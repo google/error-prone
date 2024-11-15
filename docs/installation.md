@@ -48,7 +48,7 @@ Edit your `pom.xml` file to add settings to the maven-compiler-plugin:
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.11.0</version>
         <configuration>
-          <source>8</source>
+          <source>17</source>
           <target>8</target>
           <encoding>UTF-8</encoding>
           <compilerArgs>
