@@ -32,6 +32,7 @@ import com.google.errorprone.bugpatterns.BugChecker.ArrayTypeTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.AssertTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.AssignmentTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.BindingPatternTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.BlockTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.BreakTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.CaseTreeMatcher;
@@ -44,6 +45,7 @@ import com.google.errorprone.bugpatterns.BugChecker.ContinueTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.DoWhileLoopTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.EmptyStatementTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.EnhancedForLoopTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.ExportsTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.ExpressionStatementTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.ForLoopTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.IdentifierTreeMatcher;
@@ -59,12 +61,18 @@ import com.google.errorprone.bugpatterns.BugChecker.MemberSelectTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.ModifiersTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.ModuleTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.NewArrayTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.OpensTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.PackageTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.ParameterizedTypeTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.ParenthesizedTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.PrimitiveTypeTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.ProvidesTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.RequiresTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.SwitchExpressionTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.SwitchTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.SynchronizedTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.ThrowTreeMatcher;
@@ -73,9 +81,11 @@ import com.google.errorprone.bugpatterns.BugChecker.TypeCastTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.TypeParameterTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.UnaryTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.UnionTypeTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.UsesTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.WhileLoopTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.WildcardTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.YieldTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Suppressible;
 import com.google.errorprone.util.ASTHelpers;
@@ -86,6 +96,7 @@ import com.sun.source.tree.ArrayTypeTree;
 import com.sun.source.tree.AssertTree;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BinaryTree;
+import com.sun.source.tree.BindingPatternTree;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.BreakTree;
 import com.sun.source.tree.CaseTree;
@@ -98,6 +109,7 @@ import com.sun.source.tree.ContinueTree;
 import com.sun.source.tree.DoWhileLoopTree;
 import com.sun.source.tree.EmptyStatementTree;
 import com.sun.source.tree.EnhancedForLoopTree;
+import com.sun.source.tree.ExportsTree;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ForLoopTree;
 import com.sun.source.tree.IdentifierTree;
@@ -113,12 +125,18 @@ import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ModifiersTree;
+import com.sun.source.tree.ModuleTree;
 import com.sun.source.tree.NewArrayTree;
 import com.sun.source.tree.NewClassTree;
+import com.sun.source.tree.OpensTree;
+import com.sun.source.tree.PackageTree;
 import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.PrimitiveTypeTree;
+import com.sun.source.tree.ProvidesTree;
+import com.sun.source.tree.RequiresTree;
 import com.sun.source.tree.ReturnTree;
+import com.sun.source.tree.SwitchExpressionTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.SynchronizedTree;
 import com.sun.source.tree.ThrowTree;
@@ -128,9 +146,11 @@ import com.sun.source.tree.TypeCastTree;
 import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.UnaryTree;
 import com.sun.source.tree.UnionTypeTree;
+import com.sun.source.tree.UsesTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.tree.WildcardTree;
+import com.sun.source.tree.YieldTree;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol.CompletionFailure;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
@@ -213,13 +233,14 @@ public class ErrorProneScanner extends Scanner {
     return customSuppressionAnnotations.get(state);
   }
 
-  private final List<AnnotationTreeMatcher> annotationMatchers = new ArrayList<>();
   private final List<AnnotatedTypeTreeMatcher> annotatedTypeMatchers = new ArrayList<>();
+  private final List<AnnotationTreeMatcher> annotationMatchers = new ArrayList<>();
   private final List<ArrayAccessTreeMatcher> arrayAccessMatchers = new ArrayList<>();
   private final List<ArrayTypeTreeMatcher> arrayTypeMatchers = new ArrayList<>();
   private final List<AssertTreeMatcher> assertMatchers = new ArrayList<>();
   private final List<AssignmentTreeMatcher> assignmentMatchers = new ArrayList<>();
   private final List<BinaryTreeMatcher> binaryMatchers = new ArrayList<>();
+  private final List<BindingPatternTreeMatcher> bindingPatternMatchers = new ArrayList<>();
   private final List<BlockTreeMatcher> blockMatchers = new ArrayList<>();
   private final List<BreakTreeMatcher> breakMatchers = new ArrayList<>();
   private final List<CaseTreeMatcher> caseMatchers = new ArrayList<>();
@@ -233,6 +254,7 @@ public class ErrorProneScanner extends Scanner {
   private final List<DoWhileLoopTreeMatcher> doWhileLoopMatchers = new ArrayList<>();
   private final List<EmptyStatementTreeMatcher> emptyStatementMatchers = new ArrayList<>();
   private final List<EnhancedForLoopTreeMatcher> enhancedForLoopMatchers = new ArrayList<>();
+  private final List<ExportsTreeMatcher> exportsMatchers = new ArrayList<>();
   private final List<ExpressionStatementTreeMatcher> expressionStatementMatchers =
       new ArrayList<>();
   private final List<ForLoopTreeMatcher> forLoopMatchers = new ArrayList<>();
@@ -249,12 +271,18 @@ public class ErrorProneScanner extends Scanner {
   private final List<MethodTreeMatcher> methodMatchers = new ArrayList<>();
   private final List<MethodInvocationTreeMatcher> methodInvocationMatchers = new ArrayList<>();
   private final List<ModifiersTreeMatcher> modifiersMatchers = new ArrayList<>();
+  private final List<ModuleTreeMatcher> moduleMatchers = new ArrayList<>();
   private final List<NewArrayTreeMatcher> newArrayMatchers = new ArrayList<>();
   private final List<NewClassTreeMatcher> newClassMatchers = new ArrayList<>();
+  private final List<OpensTreeMatcher> opensMatchers = new ArrayList<>();
+  private final List<PackageTreeMatcher> packageMatchers = new ArrayList<>();
   private final List<ParameterizedTypeTreeMatcher> parameterizedTypeMatchers = new ArrayList<>();
   private final List<ParenthesizedTreeMatcher> parenthesizedMatchers = new ArrayList<>();
   private final List<PrimitiveTypeTreeMatcher> primitiveTypeMatchers = new ArrayList<>();
+  private final List<ProvidesTreeMatcher> providesMatchers = new ArrayList<>();
+  private final List<RequiresTreeMatcher> requiresMatchers = new ArrayList<>();
   private final List<ReturnTreeMatcher> returnMatchers = new ArrayList<>();
+  private final List<SwitchExpressionTreeMatcher> switchExpressionMatchers = new ArrayList<>();
   private final List<SwitchTreeMatcher> switchMatchers = new ArrayList<>();
   private final List<SynchronizedTreeMatcher> synchronizedMatchers = new ArrayList<>();
   private final List<ThrowTreeMatcher> throwMatchers = new ArrayList<>();
@@ -263,20 +291,22 @@ public class ErrorProneScanner extends Scanner {
   private final List<TypeParameterTreeMatcher> typeParameterMatchers = new ArrayList<>();
   private final List<UnaryTreeMatcher> unaryMatchers = new ArrayList<>();
   private final List<UnionTypeTreeMatcher> unionTypeMatchers = new ArrayList<>();
+  private final List<UsesTreeMatcher> usesMatchers = new ArrayList<>();
   private final List<VariableTreeMatcher> variableMatchers = new ArrayList<>();
   private final List<WhileLoopTreeMatcher> whileLoopMatchers = new ArrayList<>();
   private final List<WildcardTreeMatcher> wildcardMatchers = new ArrayList<>();
+  private final List<YieldTreeMatcher> yieldMatchers = new ArrayList<>();
 
   private void registerNodeTypes(
       BugChecker checker,
       ImmutableSet.Builder<Class<? extends Annotation>> customSuppressionAnnotationClasses) {
     customSuppressionAnnotationClasses.addAll(checker.customSuppressionAnnotations());
 
-    if (checker instanceof AnnotationTreeMatcher) {
-      annotationMatchers.add((AnnotationTreeMatcher) checker);
-    }
     if (checker instanceof AnnotatedTypeTreeMatcher) {
       annotatedTypeMatchers.add((AnnotatedTypeTreeMatcher) checker);
+    }
+    if (checker instanceof AnnotationTreeMatcher) {
+      annotationMatchers.add((AnnotationTreeMatcher) checker);
     }
     if (checker instanceof ArrayAccessTreeMatcher) {
       arrayAccessMatchers.add((ArrayAccessTreeMatcher) checker);
@@ -292,6 +322,9 @@ public class ErrorProneScanner extends Scanner {
     }
     if (checker instanceof BinaryTreeMatcher) {
       binaryMatchers.add((BinaryTreeMatcher) checker);
+    }
+    if (checker instanceof BindingPatternTreeMatcher) {
+      bindingPatternMatchers.add((BindingPatternTreeMatcher) checker);
     }
     if (checker instanceof BlockTreeMatcher) {
       blockMatchers.add((BlockTreeMatcher) checker);
@@ -328,6 +361,9 @@ public class ErrorProneScanner extends Scanner {
     }
     if (checker instanceof EnhancedForLoopTreeMatcher) {
       enhancedForLoopMatchers.add((EnhancedForLoopTreeMatcher) checker);
+    }
+    if (checker instanceof ExportsTreeMatcher) {
+      exportsMatchers.add((ExportsTreeMatcher) checker);
     }
     if (checker instanceof ExpressionStatementTreeMatcher) {
       expressionStatementMatchers.add((ExpressionStatementTreeMatcher) checker);
@@ -374,11 +410,20 @@ public class ErrorProneScanner extends Scanner {
     if (checker instanceof ModifiersTreeMatcher) {
       modifiersMatchers.add((ModifiersTreeMatcher) checker);
     }
+    if (checker instanceof ModuleTreeMatcher) {
+      moduleMatchers.add((ModuleTreeMatcher) checker);
+    }
     if (checker instanceof NewArrayTreeMatcher) {
       newArrayMatchers.add((NewArrayTreeMatcher) checker);
     }
     if (checker instanceof NewClassTreeMatcher) {
       newClassMatchers.add((NewClassTreeMatcher) checker);
+    }
+    if (checker instanceof OpensTreeMatcher) {
+      opensMatchers.add((OpensTreeMatcher) checker);
+    }
+    if (checker instanceof PackageTreeMatcher) {
+      packageMatchers.add((PackageTreeMatcher) checker);
     }
     if (checker instanceof ParameterizedTypeTreeMatcher) {
       parameterizedTypeMatchers.add((ParameterizedTypeTreeMatcher) checker);
@@ -389,8 +434,17 @@ public class ErrorProneScanner extends Scanner {
     if (checker instanceof PrimitiveTypeTreeMatcher) {
       primitiveTypeMatchers.add((PrimitiveTypeTreeMatcher) checker);
     }
+    if (checker instanceof ProvidesTreeMatcher) {
+      providesMatchers.add((ProvidesTreeMatcher) checker);
+    }
+    if (checker instanceof RequiresTreeMatcher) {
+      requiresMatchers.add((RequiresTreeMatcher) checker);
+    }
     if (checker instanceof ReturnTreeMatcher) {
       returnMatchers.add((ReturnTreeMatcher) checker);
+    }
+    if (checker instanceof SwitchExpressionTreeMatcher) {
+      switchExpressionMatchers.add((SwitchExpressionTreeMatcher) checker);
     }
     if (checker instanceof SwitchTreeMatcher) {
       switchMatchers.add((SwitchTreeMatcher) checker);
@@ -416,6 +470,9 @@ public class ErrorProneScanner extends Scanner {
     if (checker instanceof UnionTypeTreeMatcher) {
       unionTypeMatchers.add((UnionTypeTreeMatcher) checker);
     }
+    if (checker instanceof UsesTreeMatcher) {
+      usesMatchers.add((UsesTreeMatcher) checker);
+    }
     if (checker instanceof VariableTreeMatcher) {
       variableMatchers.add((VariableTreeMatcher) checker);
     }
@@ -424,6 +481,9 @@ public class ErrorProneScanner extends Scanner {
     }
     if (checker instanceof WildcardTreeMatcher) {
       wildcardMatchers.add((WildcardTreeMatcher) checker);
+    }
+    if (checker instanceof YieldTreeMatcher) {
+      yieldMatchers.add((YieldTreeMatcher) checker);
     }
   }
 
@@ -511,6 +571,17 @@ public class ErrorProneScanner extends Scanner {
     VisitorState state =
         processMatchers(binaryMatchers, tree, BinaryTreeMatcher::matchBinary, visitorState);
     return super.visitBinary(tree, state);
+  }
+
+  @Override
+  public Void visitBindingPattern(BindingPatternTree tree, VisitorState visitorState) {
+    VisitorState state =
+        processMatchers(
+            bindingPatternMatchers,
+            tree,
+            BindingPatternTreeMatcher::matchBindingPattern,
+            visitorState);
+    return super.visitBindingPattern(tree, state);
   }
 
   @Override
@@ -618,6 +689,13 @@ public class ErrorProneScanner extends Scanner {
             EnhancedForLoopTreeMatcher::matchEnhancedForLoop,
             visitorState);
     return super.visitEnhancedForLoop(tree, state);
+  }
+
+  @Override
+  public Void visitExports(ExportsTree tree, VisitorState visitorState) {
+    VisitorState state =
+        processMatchers(exportsMatchers, tree, ExportsTreeMatcher::matchExports, visitorState);
+    return super.visitExports(tree, state);
   }
 
   // Intentionally skip visitErroneous -- we don't analyze malformed expressions.
@@ -761,6 +839,14 @@ public class ErrorProneScanner extends Scanner {
   }
 
   @Override
+  public Void visitModule(ModuleTree tree, VisitorState visitorState) {
+    VisitorState state =
+        processMatchers(moduleMatchers, tree, ModuleTreeMatcher::matchModule, visitorState);
+
+    return super.visitModule(tree, state);
+  }
+
+  @Override
   public Void visitNewArray(NewArrayTree tree, VisitorState visitorState) {
     VisitorState state =
         processMatchers(newArrayMatchers, tree, NewArrayTreeMatcher::matchNewArray, visitorState);
@@ -772,6 +858,20 @@ public class ErrorProneScanner extends Scanner {
     VisitorState state =
         processMatchers(newClassMatchers, tree, NewClassTreeMatcher::matchNewClass, visitorState);
     return super.visitNewClass(tree, state);
+  }
+
+  @Override
+  public Void visitOpens(OpensTree tree, VisitorState visitorState) {
+    VisitorState state =
+        processMatchers(opensMatchers, tree, OpensTreeMatcher::matchOpens, visitorState);
+    return super.visitOpens(tree, state);
+  }
+
+  @Override
+  public Void visitPackage(PackageTree tree, VisitorState visitorState) {
+    VisitorState state =
+        processMatchers(packageMatchers, tree, PackageTreeMatcher::matchPackage, visitorState);
+    return super.visitPackage(tree, state);
   }
 
   // Intentionally skip visitOther. It seems to be used only for let expressions, which are
@@ -811,10 +911,35 @@ public class ErrorProneScanner extends Scanner {
   }
 
   @Override
+  public Void visitProvides(ProvidesTree tree, VisitorState visitorState) {
+    VisitorState state =
+        processMatchers(providesMatchers, tree, ProvidesTreeMatcher::matchProvides, visitorState);
+    return super.visitProvides(tree, state);
+  }
+
+  @Override
+  public Void visitRequires(RequiresTree tree, VisitorState visitorState) {
+    VisitorState state =
+        processMatchers(requiresMatchers, tree, RequiresTreeMatcher::matchRequires, visitorState);
+    return super.visitRequires(tree, state);
+  }
+
+  @Override
   public Void visitReturn(ReturnTree tree, VisitorState visitorState) {
     VisitorState state =
         processMatchers(returnMatchers, tree, ReturnTreeMatcher::matchReturn, visitorState);
     return super.visitReturn(tree, state);
+  }
+
+  @Override
+  public Void visitSwitchExpression(SwitchExpressionTree tree, VisitorState visitorState) {
+    VisitorState state =
+        processMatchers(
+            switchExpressionMatchers,
+            tree,
+            SwitchExpressionTreeMatcher::matchSwitchExpression,
+            visitorState);
+    return super.visitSwitchExpression(tree, state);
   }
 
   @Override
@@ -879,6 +1004,13 @@ public class ErrorProneScanner extends Scanner {
   }
 
   @Override
+  public Void visitUses(UsesTree tree, VisitorState visitorState) {
+    VisitorState state =
+        processMatchers(usesMatchers, tree, UsesTreeMatcher::matchUses, visitorState);
+    return super.visitUses(tree, state);
+  }
+
+  @Override
   public Void visitVariable(VariableTree tree, VisitorState visitorState) {
     VisitorState state =
         processMatchers(variableMatchers, tree, VariableTreeMatcher::matchVariable, visitorState);
@@ -898,6 +1030,13 @@ public class ErrorProneScanner extends Scanner {
     VisitorState state =
         processMatchers(wildcardMatchers, tree, WildcardTreeMatcher::matchWildcard, visitorState);
     return super.visitWildcard(tree, state);
+  }
+
+  @Override
+  public Void visitYield(YieldTree tree, VisitorState visitorState) {
+    VisitorState state =
+        processMatchers(yieldMatchers, tree, YieldTreeMatcher::matchYield, visitorState);
+    return super.visitYield(tree, state);
   }
 
   /**
