@@ -4705,4 +4705,42 @@ public final class StatementSwitchToExpressionSwitchTest {
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion=true")
         .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
+
+  @Test
+  public void fallOutComment() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            public class Test {
+              String f(int x) {
+                switch (x) {
+                  case 0:
+                    return "ZERO";
+                  default: // fall out
+                }
+                return "";
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            public class Test {
+              String f(int x) {
+                switch (x) {
+                  case 0 -> {
+                    return "ZERO";
+                  }
+                  default -> {}
+                }
+                return "";
+              }
+            }
+            """)
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=true",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion=true")
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+  }
 }
