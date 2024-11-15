@@ -96,8 +96,7 @@ public class UngroupedOverloads extends BugChecker implements ClassTreeMatcher {
     LinkedHashMultimap<OverloadKey, MemberWithIndex> methods = LinkedHashMultimap.create();
     for (int i = 0; i < classTree.getMembers().size(); ++i) {
       Tree member = classTree.getMembers().get(i);
-      if (member instanceof MethodTree) {
-        MethodTree methodTree = (MethodTree) member;
+      if (member instanceof MethodTree methodTree) {
         if (!ASTHelpers.isGeneratedConstructor(methodTree)) {
           methods.put(OverloadKey.create(methodTree), MemberWithIndex.create(i, methodTree));
         }

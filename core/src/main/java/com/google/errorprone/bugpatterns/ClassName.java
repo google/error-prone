@@ -51,8 +51,7 @@ public class ClassName extends BugChecker implements CompilationUnitTreeMatcher 
     String filename = Files.getNameWithoutExtension(ASTHelpers.getFileName(tree));
     List<String> names = new ArrayList<>();
     for (Tree member : tree.getTypeDecls()) {
-      if (member instanceof ClassTree) {
-        ClassTree classMember = (ClassTree) member;
+      if (member instanceof ClassTree classMember) {
         if (isSuppressed(classMember, state)) {
           // If any top-level classes have @SuppressWarnings("ClassName"), ignore
           // this compilation unit. We can't rely on the normal suppression

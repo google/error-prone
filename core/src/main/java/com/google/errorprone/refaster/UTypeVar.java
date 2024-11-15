@@ -140,8 +140,7 @@ public class UTypeVar extends UType {
   public boolean equals(@Nullable Object obj) {
     if (this == obj) {
       return true;
-    } else if (obj instanceof UTypeVar) {
-      UTypeVar typeVar = (UTypeVar) obj;
+    } else if (obj instanceof UTypeVar typeVar) {
       return name.equals(typeVar.name)
           && lowerBound.equals(typeVar.lowerBound)
           && upperBound.equals(typeVar.upperBound);

@@ -406,8 +406,7 @@ public final class MixedMutabilityReturnType extends BugChecker
       if (!getSymbol(identifier).equals(symbol)) {
         return null;
       }
-      if (parent instanceof VariableTree) {
-        VariableTree variable = (VariableTree) parent;
+      if (parent instanceof VariableTree variable) {
         fix.replace(variable.getType(), qualifyType(state, fix, details.builderType()));
         return null;
       }

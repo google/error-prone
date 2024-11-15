@@ -156,9 +156,8 @@ public class DeeplyNested extends BugChecker implements CompilationUnitTreeMatch
       replacement.append("return builder.build();");
       fix.replace(enclosing, replacement.toString());
       return fix.build();
-    } else if (enclosing instanceof VariableTree && isStatic(getSymbol(enclosing))) {
+    } else if (enclosing instanceof VariableTree variableTree && isStatic(getSymbol(enclosing))) {
       // update `static FOO = <builder>` to declare a helper method named create<builder>
-      VariableTree variableTree = (VariableTree) enclosing;
       String factory =
           String.format(
               "create%s",

@@ -75,8 +75,7 @@ final class PlaceholderVerificationVisitor extends TreeScanner<Boolean, Unifier>
         return true;
       }
     }
-    if (node instanceof JCExpression) {
-      JCExpression expr = (JCExpression) node;
+    if (node instanceof JCExpression expr) {
       for (UFreeIdent.Key key :
           Iterables.filter(unifier.getBindings().keySet(), UFreeIdent.Key.class)) {
         JCExpression keyBinding = unifier.getBinding(key);

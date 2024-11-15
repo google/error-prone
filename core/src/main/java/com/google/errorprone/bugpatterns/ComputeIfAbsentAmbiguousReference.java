@@ -87,8 +87,7 @@ public final class ComputeIfAbsentAmbiguousReference extends BugChecker
       return NO_MATCH;
     }
     ExpressionTree onlyArgument = tree.getArguments().get(0);
-    if (onlyArgument instanceof IdentifierTree) {
-      IdentifierTree onlyArgumentIdentifier = (IdentifierTree) onlyArgument;
+    if (onlyArgument instanceof IdentifierTree onlyArgumentIdentifier) {
       Name constructorParamName = oneArgConstructors.get(0).getParameters().get(0).getSimpleName();
       if (constructorParamName.equals(onlyArgumentIdentifier.getName())) {
         return NO_MATCH;

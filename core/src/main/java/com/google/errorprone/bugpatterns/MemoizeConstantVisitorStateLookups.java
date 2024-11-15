@@ -179,8 +179,7 @@ public class MemoizeConstantVisitorStateLookups extends BugChecker
         String argumentValue = ASTHelpers.constValue(argumentExpr, String.class);
         if (argumentValue != null) {
           ExpressionTree methodSelect = tree.getMethodSelect();
-          if (methodSelect instanceof JCFieldAccess) {
-            JCFieldAccess fieldAccess = (JCFieldAccess) methodSelect;
+          if (methodSelect instanceof JCFieldAccess fieldAccess) {
             Name method = fieldAccess.name;
             result.add(new CallSite(method, argumentValue, argumentExpr, tree));
           } else {

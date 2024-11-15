@@ -45,8 +45,7 @@ public class AnnotationHasArgumentWithValue implements Matcher<AnnotationTree> {
 
     expressionTree = ASTHelpers.stripParentheses(expressionTree);
 
-    if (expressionTree instanceof NewArrayTree) {
-      NewArrayTree arrayTree = (NewArrayTree) expressionTree;
+    if (expressionTree instanceof NewArrayTree arrayTree) {
       for (ExpressionTree elementTree : arrayTree.getInitializers()) {
         if (valueMatcher.matches(elementTree, state)) {
           return true;

@@ -161,8 +161,7 @@ public final class Unifier {
     int index;
     for (index = 0; index < toUnify.size(); index++) {
       U toUnifyNext = toUnify.get(index);
-      if (allowVarargs && toUnifyNext instanceof URepeated) {
-        URepeated repeated = (URepeated) toUnifyNext;
+      if (allowVarargs && toUnifyNext instanceof URepeated repeated) {
         int startIndex = index;
         return choice
             .condition(index + 1 == toUnify.size())

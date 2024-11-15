@@ -253,8 +253,7 @@ public final class FloggerRequiredModifiers extends BugChecker
       TreePath path = state.getPath();
 
       do {
-        if (e instanceof AssignmentTree) {
-          AssignmentTree assignment = (AssignmentTree) e;
+        if (e instanceof AssignmentTree assignment) {
           if (ASTHelpers.getSymbol(assignment.getVariable()).equals(target)) {
             state.incrementCounter(this, "skip-self-assignment");
             return NO_MATCH;

@@ -296,8 +296,7 @@ public class Matchers {
       ExpressionTree arg = args.get(argNum);
 
       JCExpression methodSelect = (JCExpression) t.getMethodSelect();
-      if (methodSelect instanceof JCFieldAccess) {
-        JCFieldAccess fieldAccess = (JCFieldAccess) methodSelect;
+      if (methodSelect instanceof JCFieldAccess fieldAccess) {
         return ASTHelpers.sameVariable(fieldAccess.getExpression(), arg);
       } else if (methodSelect instanceof JCIdent) {
         // A bare method call: "equals(foo)".  Receiver is implicitly "this".

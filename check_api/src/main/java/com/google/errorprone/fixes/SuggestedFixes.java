@@ -1593,11 +1593,7 @@ public final class SuggestedFixes {
   }
 
   private static boolean isAnonymousClassTree(Tree t) {
-    if (t instanceof ClassTree) {
-      ClassTree classTree = (ClassTree) t;
-      return classTree.getSimpleName().contentEquals("");
-    }
-    return false;
+    return t instanceof ClassTree classTree && classTree.getSimpleName().contentEquals("");
   }
 
   /**

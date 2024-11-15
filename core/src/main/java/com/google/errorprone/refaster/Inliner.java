@@ -187,9 +187,8 @@ public final class Inliner {
       Iterable<? extends Inlineable<? extends R>> elements) throws CouldNotResolveImportException {
     ListBuffer<R> result = new ListBuffer<>();
     for (Inlineable<? extends R> e : elements) {
-      if (e instanceof URepeated) {
+      if (e instanceof URepeated repeated) {
         // URepeated is bound to a list of expressions.
-        URepeated repeated = (URepeated) e;
         for (JCExpression expr : getBinding(repeated.key())) {
           @SuppressWarnings("unchecked")
           // URepeated is an Inlineable<JCExpression>, so if e is also an Inlineable<? extends R>,

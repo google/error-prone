@@ -124,8 +124,7 @@ public abstract class ExpressionTemplate extends Template<ExpressionTemplateMatc
   /** Returns the matches of this template against the specified target AST. */
   @Override
   public Iterable<ExpressionTemplateMatch> match(JCTree target, Context context) {
-    if (target instanceof JCExpression) {
-      JCExpression targetExpr = (JCExpression) target;
+    if (target instanceof JCExpression targetExpr) {
       Optional<Unifier> unifier = unify(targetExpr, new Unifier(context)).first();
       if (unifier.isPresent()) {
         return ImmutableList.of(new ExpressionTemplateMatch(targetExpr, unifier.get()));
@@ -263,33 +262,25 @@ public abstract class ExpressionTemplate extends Template<ExpressionTemplateMatc
     // a different value than "0L + Integer.MIN_VALUE + Integer.MIN_VALUE" due
     // to integer promotion rules.
 
-    if (parent instanceof JCConditional) {
+    if (parent instanceof JCConditional conditional) {
       // This intentionally differs from Pretty, because Pretty appears buggy:
       // http://mail.openjdk.java.net/pipermail/compiler-dev/2013-September/007303.html
-      JCConditional conditional = (JCConditional) parent;
       return TreeInfo.condPrec + ((conditional.cond == leaf) ? 1 : 0);
-    } else if (parent instanceof JCAssign) {
-      JCAssign assign = (JCAssign) parent;
+    } else if (parent instanceof JCAssign assign) {
       return TreeInfo.assignPrec + ((assign.lhs == leaf) ? 1 : 0);
-    } else if (parent instanceof JCAssignOp) {
-      JCAssignOp assignOp = (JCAssignOp) parent;
+    } else if (parent instanceof JCAssignOp assignOp) {
       return TreeInfo.assignopPrec + ((assignOp.lhs == leaf) ? 1 : 0);
     } else if (parent instanceof JCUnary) {
       return TreeInfo.opPrec(parent.getTag());
-    } else if (parent instanceof JCBinary) {
-      JCBinary binary = (JCBinary) parent;
+    } else if (parent instanceof JCBinary binary) {
       return TreeInfo.opPrec(parent.getTag()) + ((binary.rhs == leaf) ? 1 : 0);
-    } else if (parent instanceof JCTypeCast) {
-      JCTypeCast typeCast = (JCTypeCast) parent;
+    } else if (parent instanceof JCTypeCast typeCast) {
       return (typeCast.expr == leaf) ? TreeInfo.prefixPrec : TreeInfo.noPrec;
-    } else if (parent instanceof JCInstanceOf) {
-      JCInstanceOf instanceOf = (JCInstanceOf) parent;
+    } else if (parent instanceof JCInstanceOf instanceOf) {
       return TreeInfo.ordPrec + ((instanceOf.getType() == leaf) ? 1 : 0);
-    } else if (parent instanceof JCArrayAccess) {
-      JCArrayAccess arrayAccess = (JCArrayAccess) parent;
+    } else if (parent instanceof JCArrayAccess arrayAccess) {
       return (arrayAccess.indexed == leaf) ? TreeInfo.postfixPrec : TreeInfo.noPrec;
-    } else if (parent instanceof JCFieldAccess) {
-      JCFieldAccess fieldAccess = (JCFieldAccess) parent;
+    } else if (parent instanceof JCFieldAccess fieldAccess) {
       return (fieldAccess.selected == leaf) ? TreeInfo.postfixPrec : TreeInfo.noPrec;
     } else {
       return TreeInfo.noPrec;

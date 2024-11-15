@@ -118,8 +118,7 @@ public class TreeToString extends AbstractToString {
   private static String createStringReplacement(
       VisitorState state, VarSymbol visitorStateSymbol, Tree target) {
     String visitorStateVariable = visitorStateSymbol.getSimpleName().toString();
-    if (target instanceof MethodInvocationTree) {
-      MethodInvocationTree targetMethodInvocationTree = (MethodInvocationTree) target;
+    if (target instanceof MethodInvocationTree targetMethodInvocationTree) {
       if (TREEMAKER_LITERAL_CREATOR.matches(targetMethodInvocationTree, state)) {
         return String.format(
             "%s.getConstantExpression(%s)",

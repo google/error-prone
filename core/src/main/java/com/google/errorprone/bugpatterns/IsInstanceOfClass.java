@@ -123,9 +123,8 @@ public class IsInstanceOfClass extends BugChecker implements MethodInvocationTre
 
   static Operand classify(JCTree tree, VisitorState state) {
     CharSequence source = state.getSourceForNode(tree);
-    if (tree instanceof MethodInvocationTree) {
+    if (tree instanceof MethodInvocationTree receiverInvocation) {
       // expr.getClass() -> "expr"
-      MethodInvocationTree receiverInvocation = (MethodInvocationTree) tree;
       MethodSymbol sym = ASTHelpers.getSymbol(receiverInvocation);
       if (sym.getSimpleName().contentEquals("getClass") && sym.params().isEmpty()) {
         if (receiverInvocation.getMethodSelect() instanceof IdentifierTree) {
@@ -137,9 +136,8 @@ public class IsInstanceOfClass extends BugChecker implements MethodInvocationTre
             state.getSourceForNode(ASTHelpers.getReceiver(receiverInvocation)),
             source);
       }
-    } else if (tree instanceof MemberSelectTree) {
+    } else if (tree instanceof MemberSelectTree select) {
       // Foo.class -> "Foo"
-      MemberSelectTree select = (MemberSelectTree) tree;
       if (select.getIdentifier().contentEquals("class")) {
         return Operand.create(Kind.LITERAL, state.getSourceForNode(select.getExpression()), source);
       }

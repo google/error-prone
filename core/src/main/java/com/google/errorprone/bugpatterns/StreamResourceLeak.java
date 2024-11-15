@@ -76,11 +76,10 @@ public class StreamResourceLeak extends AbstractMustBeClosedChecker implements M
     String streamType = SuggestedFixes.prettyType(state, fix, ASTHelpers.getReturnType(tree));
     if (parent instanceof MemberSelectTree) {
       StatementTree statement = state.findEnclosing(StatementTree.class);
-      if (statement instanceof VariableTree) {
+      if (statement instanceof VariableTree var) {
         // Variables need to be declared outside the try-with-resources:
         // e.g. `int count = Files.lines(p).count();`
         // -> `int count; try (Stream<String> stream = Files.lines(p)) { count = stream.count(); }`
-        VariableTree var = (VariableTree) statement;
         int pos = getStartPosition(var);
         int initPos = getStartPosition(var.getInitializer());
         int eqPos = pos + state.getSourceForNode(var).substring(0, initPos - pos).lastIndexOf('=');

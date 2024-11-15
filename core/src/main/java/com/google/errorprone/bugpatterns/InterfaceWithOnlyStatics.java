@@ -83,14 +83,12 @@ public final class InterfaceWithOnlyStatics extends BugChecker implements ClassT
     }
     SuggestedFix.Builder suggestedFix = SuggestedFix.builder();
     for (Tree member : members) {
-      if (member instanceof VariableTree) {
-        VariableTree variableTree = (VariableTree) member;
+      if (member instanceof VariableTree variableTree) {
         SuggestedFixes.addModifiers(
                 variableTree, state, Modifier.FINAL, Modifier.STATIC, Modifier.PUBLIC)
             .ifPresent(suggestedFix::merge);
       }
-      if (member instanceof MethodTree) {
-        MethodTree methodTree = (MethodTree) member;
+      if (member instanceof MethodTree methodTree) {
         SuggestedFixes.addModifiers(methodTree, state, Modifier.PUBLIC)
             .ifPresent(suggestedFix::merge);
       }

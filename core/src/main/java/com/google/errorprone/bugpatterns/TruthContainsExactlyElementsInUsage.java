@@ -77,12 +77,10 @@ public final class TruthContainsExactlyElementsInUsage extends BugChecker
   // Returns the arguments from the expression. If it is not a valid expression, returns empty.
   private static Optional<ImmutableList<ExpressionTree>> getArgumentsFromNewIterableExpression(
       ExpressionTree expression, VisitorState state) {
-    if (expression instanceof MethodInvocationTree
+    if (expression instanceof MethodInvocationTree paramMethodInvocationTree
         && NEW_ITERABLE_MATCHERS.matches(expression, state)) {
-      MethodInvocationTree paramMethodInvocationTree = (MethodInvocationTree) expression;
       return Optional.of(ImmutableList.copyOf(paramMethodInvocationTree.getArguments()));
-    } else if (expression instanceof NewArrayTree) {
-      NewArrayTree newArrayTree = (NewArrayTree) expression;
+    } else if (expression instanceof NewArrayTree newArrayTree) {
       return Optional.of(ImmutableList.copyOf(newArrayTree.getInitializers()));
     }
     return Optional.empty();

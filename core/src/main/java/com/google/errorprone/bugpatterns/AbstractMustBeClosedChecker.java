@@ -314,8 +314,7 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
           break;
         case VARIABLE:
           Symbol sym = getSymbol(path.getLeaf());
-          if (sym instanceof VarSymbol) {
-            VarSymbol var = (VarSymbol) sym;
+          if (sym instanceof VarSymbol var) {
             if (var.getKind() == ElementKind.RESOURCE_VARIABLE
                 || isClosedInFinallyClause(var, path, state)
                 || ASTHelpers.variableIsStaticFinal(var)) {

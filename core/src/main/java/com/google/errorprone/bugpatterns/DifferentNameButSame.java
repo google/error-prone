@@ -108,8 +108,7 @@ public final class DifferentNameButSame extends BugChecker implements Compilatio
       @Override
       public Void visitIdentifier(IdentifierTree identifierTree, Void unused) {
         Tree parent = getCurrentPath().getParentPath().getLeaf();
-        if (parent instanceof NewClassTree) {
-          NewClassTree newClassTree = (NewClassTree) parent;
+        if (parent instanceof NewClassTree newClassTree) {
           if (newClassTree.getIdentifier().equals(identifierTree)
               && newClassTree.getEnclosingExpression() != null) {
             // don't try to fix instantiations with explicit enclosing instances, e.g. `a.new B();`

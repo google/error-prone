@@ -125,8 +125,7 @@ public class UnnecessaryStringBuilder extends BugChecker implements NewClassTree
           path.getLeaf(), SuggestedFix.replace(path.getLeaf(), replacement(state, parts)));
     }
     Tree leaf = target.path().getLeaf();
-    if (leaf instanceof VariableTree) {
-      VariableTree variableTree = (VariableTree) leaf;
+    if (leaf instanceof VariableTree variableTree) {
       if (isRewritableVariable(variableTree, state)) {
         SuggestedFix.Builder fix = SuggestedFix.builder();
         if (state.getEndPosition(variableTree.getType()) != Position.NOPOS) {

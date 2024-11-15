@@ -420,8 +420,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     Optional<ExpressionTree> caseAssignmentTreeOptional = Optional.empty();
 
     // The assignment could be a normal assignment ("=") or a compound assignment (e.g. "+=")
-    if (expression instanceof CompoundAssignmentTree) {
-      CompoundAssignmentTree compoundAssignmentTree = (CompoundAssignmentTree) expression;
+    if (expression instanceof CompoundAssignmentTree compoundAssignmentTree) {
       caseAssignmentTargetOptional = Optional.of(compoundAssignmentTree.getVariable());
       caseAssignmentKindOptional = Optional.of(compoundAssignmentTree.getKind());
       caseAssignmentTreeOptional = Optional.of(expression);
@@ -755,8 +754,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     // NOMUTANTS--should early return above
     if (pathToEnclosing != null) {
       Tree enclosing = pathToEnclosing.getLeaf();
-      if (enclosing instanceof BlockTree) {
-        BlockTree blockTree = (BlockTree) enclosing;
+      if (enclosing instanceof BlockTree blockTree) {
         // Path from root -> switchTree
         TreePath rootToSwitchPath = TreePath.getPath(pathToEnclosing, switchTree);
 

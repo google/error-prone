@@ -124,8 +124,7 @@ public class FragmentInjection extends BugChecker implements ClassTreeMatcher {
   private static @Nullable MethodTree getMethod(
       Matcher<MethodTree> methodMatcher, ClassTree classTree, VisitorState state) {
     for (Tree member : classTree.getMembers()) {
-      if (member instanceof MethodTree) {
-        MethodTree memberTree = (MethodTree) member;
+      if (member instanceof MethodTree memberTree) {
         if (methodMatcher.matches(memberTree, state)) {
           return memberTree;
         }

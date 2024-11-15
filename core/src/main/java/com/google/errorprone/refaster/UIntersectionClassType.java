@@ -48,8 +48,7 @@ public abstract class UIntersectionClassType extends UType {
 
   @Override
   public Choice<Unifier> visitClassType(ClassType t, Unifier unifier) {
-    if (t instanceof IntersectionClassType) {
-      IntersectionClassType intersection = (IntersectionClassType) t;
+    if (t instanceof IntersectionClassType intersection) {
       return unifyList(unifier, bounds(), intersection.getComponents());
     }
     return Choice.none();

@@ -139,8 +139,7 @@ public class Finally extends BugChecker
 
     /** Match a tree in the ancestor chain given the ancestor's immediate descendant. */
     protected MatchResult matchAncestor(Tree leaf, Tree prevTree) {
-      if (leaf instanceof TryTree) {
-        TryTree tryTree = (TryTree) leaf;
+      if (leaf instanceof TryTree tryTree) {
         if (tryTree.getFinallyBlock() != null && tryTree.getFinallyBlock().equals(prevTree)) {
           return MatchResult.FOUND_ERROR;
         }
@@ -214,8 +213,7 @@ public class Finally extends BugChecker
   private static class FinallyThrowMatcher extends FinallyCompletionMatcher<ThrowTree> {
     @Override
     protected MatchResult matchAncestor(Tree tree, Tree prevTree) {
-      if (tree instanceof TryTree) {
-        TryTree tryTree = (TryTree) tree;
+      if (tree instanceof TryTree tryTree) {
         if (tryTree.getBlock().equals(prevTree) && !tryTree.getCatches().isEmpty()) {
           // The current ancestor is a try block with associated catch blocks.
           return MatchResult.NO_MATCH;

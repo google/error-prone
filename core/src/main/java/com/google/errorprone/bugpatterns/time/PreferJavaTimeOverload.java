@@ -212,12 +212,10 @@ public final class PreferJavaTimeOverload extends BugChecker
             JODA_DURATION_FACTORY_MATCHERS.entrySet()) {
           if (entry.getKey().matches(arg0, state)) {
             String value = null;
-            if (arg0 instanceof MethodInvocationTree) {
-              MethodInvocationTree jodaDurationCreation = (MethodInvocationTree) arg0;
+            if (arg0 instanceof MethodInvocationTree jodaDurationCreation) {
               value = state.getSourceForNode(jodaDurationCreation.getArguments().get(0));
             }
-            if (arg0 instanceof NewClassTree) {
-              NewClassTree jodaDurationCreation = (NewClassTree) arg0;
+            if (arg0 instanceof NewClassTree jodaDurationCreation) {
               value = state.getSourceForNode(jodaDurationCreation.getArguments().get(0));
             }
 
@@ -260,8 +258,7 @@ public final class PreferJavaTimeOverload extends BugChecker
 
         // If the Joda Instant is being constructed inline, then unwrap it.
         if (JODA_INSTANT_CONSTRUCTOR_MATCHER.matches(arg0, state)) {
-          if (arg0 instanceof NewClassTree) {
-            NewClassTree jodaInstantCreation = (NewClassTree) arg0;
+          if (arg0 instanceof NewClassTree jodaInstantCreation) {
             String value = state.getSourceForNode(jodaInstantCreation.getArguments().get(0));
             fix.replace(arg0, String.format("%s.ofEpochMilli(%s)", qualifiedInstant, value));
             return describeMatch(tree, fix.build());

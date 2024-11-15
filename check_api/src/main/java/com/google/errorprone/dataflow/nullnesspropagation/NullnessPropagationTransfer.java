@@ -476,8 +476,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
       setNonnullIfTrackable(updates, ((ArrayAccessNode) target).getArray());
     }
 
-    if (target instanceof FieldAccessNode) {
-      FieldAccessNode fieldAccess = (FieldAccessNode) target;
+    if (target instanceof FieldAccessNode fieldAccess) {
       if (!fieldAccess.isStatic()) {
         setNonnullIfTrackable(updates, fieldAccess.getReceiver());
       }
@@ -967,8 +966,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
 
     @Override
     public boolean equals(Object obj) {
-      if (obj instanceof MemberName) {
-        MemberName other = (MemberName) obj;
+      if (obj instanceof MemberName other) {
         return clazz.equals(other.clazz) && member.equals(other.member);
       }
       return false;

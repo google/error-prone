@@ -508,11 +508,9 @@ public class ASTHelpers {
    * <p>TODO(eaftan): Are there other places this could be used?
    */
   public static Type getReturnType(ExpressionTree expressionTree) {
-    if (expressionTree instanceof JCFieldAccess) {
-      JCFieldAccess methodCall = (JCFieldAccess) expressionTree;
+    if (expressionTree instanceof JCFieldAccess methodCall) {
       return methodCall.type.getReturnType();
-    } else if (expressionTree instanceof JCIdent) {
-      JCIdent methodCall = (JCIdent) expressionTree;
+    } else if (expressionTree instanceof JCIdent methodCall) {
       return methodCall.type.getReturnType();
     } else if (expressionTree instanceof JCMethodInvocation) {
       return getReturnType(((JCMethodInvocation) expressionTree).getMethodSelect());
@@ -554,11 +552,9 @@ public class ASTHelpers {
    * }</pre>
    */
   public static Type getReceiverType(ExpressionTree expressionTree) {
-    if (expressionTree instanceof JCFieldAccess) {
-      JCFieldAccess methodSelectFieldAccess = (JCFieldAccess) expressionTree;
+    if (expressionTree instanceof JCFieldAccess methodSelectFieldAccess) {
       return methodSelectFieldAccess.selected.type;
-    } else if (expressionTree instanceof JCIdent) {
-      JCIdent methodCall = (JCIdent) expressionTree;
+    } else if (expressionTree instanceof JCIdent methodCall) {
       return methodCall.sym.owner.type;
     } else if (expressionTree instanceof JCMethodInvocation) {
       return getReceiverType(((JCMethodInvocation) expressionTree).getMethodSelect());
@@ -1127,8 +1123,7 @@ public class ASTHelpers {
     Scope scope = enumType.members();
     Deque<String> values = new ArrayDeque<>();
     for (Symbol sym : scope.getSymbols()) {
-      if (sym instanceof VarSymbol) {
-        VarSymbol var = (VarSymbol) sym;
+      if (sym instanceof VarSymbol var) {
         if ((var.flags() & Flags.ENUM) != 0) {
           /*
            * Javac gives us the members backwards, apparently. It's worth making an effort to
@@ -1154,8 +1149,7 @@ public class ASTHelpers {
   public static List<MethodTree> getConstructors(ClassTree classTree) {
     List<MethodTree> constructors = new ArrayList<>();
     for (Tree member : classTree.getMembers()) {
-      if (member instanceof MethodTree) {
-        MethodTree methodTree = (MethodTree) member;
+      if (member instanceof MethodTree methodTree) {
         if (getSymbol(methodTree).isConstructor()) {
           constructors.add(methodTree);
         }
@@ -2606,8 +2600,7 @@ public class ASTHelpers {
 
       @Override
       public Void visitWildcardType(WildcardType t, Type type) {
-        if (type instanceof WildcardType) {
-          WildcardType other = (WildcardType) type;
+        if (type instanceof WildcardType other) {
           scan(t.getExtendsBound(), other.getExtendsBound());
           scan(t.getSuperBound(), other.getSuperBound());
         }

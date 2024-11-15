@@ -95,8 +95,7 @@ public abstract class BlockTemplate extends Template<BlockTemplateMatch> {
   @Override
   public Iterable<BlockTemplateMatch> match(JCTree tree, Context context) {
     // TODO(lowasser): consider nonconsecutive matches?
-    if (tree instanceof JCBlock) {
-      JCBlock block = (JCBlock) tree;
+    if (tree instanceof JCBlock block) {
       ImmutableList<JCStatement> targetStatements = ImmutableList.copyOf(block.getStatements());
       return matchesStartingAnywhere(block, 0, targetStatements, context)
           .first()

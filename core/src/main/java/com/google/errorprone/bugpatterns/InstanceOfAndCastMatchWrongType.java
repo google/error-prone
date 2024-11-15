@@ -214,8 +214,7 @@ public class InstanceOfAndCastMatchWrongType extends BugChecker implements TypeC
           && expressionsEqual(arrayAccessTree1.getIndex(), arrayAccessTree2.getIndex());
     }
 
-    if (expr1 instanceof LiteralTree) {
-      LiteralTree literalTree1 = (LiteralTree) expr1;
+    if (expr1 instanceof LiteralTree literalTree1) {
       LiteralTree literalTree2 = (LiteralTree) expr2;
       return literalTree1.getValue().equals(literalTree2.getValue());
     }

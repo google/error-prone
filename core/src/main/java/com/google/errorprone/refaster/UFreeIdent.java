@@ -70,8 +70,7 @@ public abstract class UFreeIdent extends UIdent {
 
   @Override
   protected Choice<Unifier> defaultAction(Tree target, Unifier unifier) {
-    if (target instanceof JCExpression) {
-      JCExpression expression = (JCExpression) target;
+    if (target instanceof JCExpression expression) {
 
       JCExpression currentBinding = unifier.getBinding(key());
 

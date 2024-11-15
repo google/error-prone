@@ -252,8 +252,7 @@ public class JdkObsolete extends BugChecker
       type = ASTHelpers.getType(parent);
     } else if (parent instanceof ReturnTree || parent instanceof LambdaExpressionTree) {
       type = getMethodOrLambdaReturnType(state);
-    } else if (parent instanceof MethodInvocationTree) {
-      MethodInvocationTree tree = (MethodInvocationTree) parent;
+    } else if (parent instanceof MethodInvocationTree tree) {
       int idx = tree.getArguments().indexOf(state.getPath().getLeaf());
       if (idx == -1) {
         return null;

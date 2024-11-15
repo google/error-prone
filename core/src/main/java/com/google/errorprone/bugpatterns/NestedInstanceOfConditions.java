@@ -48,8 +48,7 @@ public class NestedInstanceOfConditions extends BugChecker implements IfTreeMatc
 
     ExpressionTree expressionTree = stripParentheses(ifTree.getCondition());
 
-    if (expressionTree instanceof InstanceOfTree) {
-      InstanceOfTree instanceOfTree = (InstanceOfTree) expressionTree;
+    if (expressionTree instanceof InstanceOfTree instanceOfTree) {
 
       if (!(instanceOfTree.getExpression() instanceof IdentifierTree)) {
         return Description.NO_MATCH;
@@ -115,8 +114,7 @@ public class NestedInstanceOfConditions extends BugChecker implements IfTreeMatc
       if (tree instanceof IfTree) {
         ExpressionTree conditionTree = ASTHelpers.stripParentheses(((IfTree) tree).getCondition());
 
-        if (conditionTree instanceof InstanceOfTree) {
-          InstanceOfTree instanceOfTree = (InstanceOfTree) conditionTree;
+        if (conditionTree instanceof InstanceOfTree instanceOfTree) {
 
           Types types = state.getTypes();
 

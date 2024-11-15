@@ -153,8 +153,7 @@ public final class AnnotationPosition extends BugChecker
   private static List<ErrorProneToken> annotationTokens(
       Tree tree, VisitorState state, int annotationEnd) {
     int endPos;
-    if (tree instanceof JCMethodDecl) {
-      JCMethodDecl methodTree = (JCMethodDecl) tree;
+    if (tree instanceof JCMethodDecl methodTree) {
       if (methodTree.getReturnType() != null) {
         endPos = getStartPosition(methodTree.getReturnType());
       } else if (!methodTree.getParameters().isEmpty()) {
@@ -167,15 +166,13 @@ public final class AnnotationPosition extends BugChecker
       } else {
         endPos = state.getEndPosition(methodTree);
       }
-    } else if (tree instanceof JCVariableDecl) {
-      JCVariableDecl variableTree = (JCVariableDecl) tree;
+    } else if (tree instanceof JCVariableDecl variableTree) {
       endPos = getStartPosition(variableTree.getType());
       if (endPos == -1) {
         // handle 'var'
         endPos = state.getEndPosition(variableTree.getModifiers());
       }
-    } else if (tree instanceof JCClassDecl) {
-      JCClassDecl classTree = (JCClassDecl) tree;
+    } else if (tree instanceof JCClassDecl classTree) {
       endPos =
           classTree.getMembers().isEmpty()
               ? state.getEndPosition(classTree)

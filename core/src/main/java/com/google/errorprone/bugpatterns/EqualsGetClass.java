@@ -245,8 +245,7 @@ public final class EqualsGetClass extends BugChecker implements MethodInvocation
         enclosingPath = enclosingPath.getParentPath();
       }
       Tree enclosing = enclosingPath.getLeaf();
-      if (enclosing instanceof IfTree) {
-        IfTree ifTree = (IfTree) enclosing;
+      if (enclosing instanceof IfTree ifTree) {
         if (ifTree.getElseStatement() == null) {
           fix.replace(ifTree, "");
         } else {

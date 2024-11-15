@@ -266,8 +266,7 @@ public final class GuardedByBinder {
         public GuardedByExpression visitIdentifier(IdentifierTree node, BinderContext context) {
           Symbol symbol = context.resolver.resolveIdentifier(node);
           checkGuardedBy(symbol != null, "Could not resolve %s", node);
-          if (symbol instanceof Symbol.VarSymbol) {
-            Symbol.VarSymbol varSymbol = (Symbol.VarSymbol) symbol;
+          if (symbol instanceof Symbol.VarSymbol varSymbol) {
             switch (varSymbol.getKind()) {
               case LOCAL_VARIABLE:
               case PARAMETER:
@@ -282,8 +281,7 @@ public final class GuardedByBinder {
               default:
                 throw new IllegalGuardedBy(varSymbol.getKind().toString());
             }
-          } else if (symbol instanceof Symbol.MethodSymbol) {
-            Symbol.MethodSymbol methodSymbol = (Symbol.MethodSymbol) symbol;
+          } else if (symbol instanceof Symbol.MethodSymbol methodSymbol) {
             return F.select(computeBase(context, symbol), methodSymbol);
           } else if (symbol instanceof Symbol.ClassSymbol) {
             if (node.getName().contentEquals("this")) {

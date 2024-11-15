@@ -145,8 +145,7 @@ public class DoubleBraceInitialization extends BugChecker implements NewClassTre
         if (enclosing instanceof ParenthesizedTree) {
           continue;
         }
-        if (enclosing instanceof VariableTree) {
-          VariableTree enclosingVariable = (VariableTree) enclosing;
+        if (enclosing instanceof VariableTree enclosingVariable) {
           toReplace = enclosingVariable.getInitializer();
           typeTree = enclosingVariable.getType();
           VarSymbol symbol = ASTHelpers.getSymbol(enclosingVariable);

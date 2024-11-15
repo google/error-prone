@@ -97,8 +97,7 @@ public class StringSplitter extends BugChecker implements MethodInvocationTreeMa
                   SuggestedFix.builder(), tree, arg, state, "split", /* mutableList= */ false)
               .build());
     }
-    if (parent instanceof ArrayAccessTree) {
-      ArrayAccessTree arrayAccessTree = (ArrayAccessTree) parent;
+    if (parent instanceof ArrayAccessTree arrayAccessTree) {
       if (!arrayAccessTree.getExpression().equals(tree)) {
         return Optional.empty();
       }
@@ -168,8 +167,8 @@ public class StringSplitter extends BugChecker implements MethodInvocationTreeMa
             return false;
           }
           Tree parent = getCurrentPath().getParentPath().getLeaf();
-          if (parent instanceof AssignmentTree && ((AssignmentTree) parent).getVariable() == tree) {
-            AssignmentTree assignmentTree = (AssignmentTree) parent;
+          if (parent instanceof AssignmentTree assignmentTree
+              && ((AssignmentTree) parent).getVariable() == tree) {
             fix.replace(
                     /* startPos= */ state.getEndPosition(expression),
                     /* endPos= */ getStartPosition(index),
