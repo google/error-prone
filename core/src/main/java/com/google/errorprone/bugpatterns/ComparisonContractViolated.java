@@ -205,15 +205,11 @@ public class ComparisonContractViolated extends BugChecker implements MethodTree
             return describeMatch(tree);
           }
           switch (conditionExpr.getKind()) {
-            case LESS_THAN:
-            case LESS_THAN_EQUAL:
-              break;
-            case GREATER_THAN:
-            case GREATER_THAN_EQUAL:
-              trueFirst = !trueFirst;
-              break;
-            default:
+            case LESS_THAN, LESS_THAN_EQUAL -> {}
+            case GREATER_THAN, GREATER_THAN_EQUAL -> trueFirst = !trueFirst;
+            default -> {
               return describeMatch(tree);
+            }
           }
           BinaryTree binaryExpr = (BinaryTree) conditionExpr;
           Type ty = ASTHelpers.getType(binaryExpr.getLeftOperand());

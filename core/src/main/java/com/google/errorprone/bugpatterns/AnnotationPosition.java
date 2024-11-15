@@ -285,16 +285,11 @@ public final class AnnotationPosition extends BugChecker
     if (tree instanceof ClassTree || annotationType == null) {
       return Position.BEFORE;
     }
-    switch (annotationType) {
-      case DECLARATION:
-        return Position.BEFORE;
-      case TYPE:
-        return Position.AFTER;
-      case NONE:
-      case BOTH:
-        return Position.EITHER;
-    }
-    throw new AssertionError();
+    return switch (annotationType) {
+      case DECLARATION -> Position.BEFORE;
+      case TYPE -> Position.AFTER;
+      case NONE, BOTH -> Position.EITHER;
+    };
   }
 
   private static ImmutableList<String> annotationNames(List<AnnotationTree> annotations) {

@@ -371,14 +371,11 @@ public class DefaultCharset extends BugChecker
     Tree parent = state.getPath().getParentPath().getLeaf();
     Symbol sym;
     switch (parent.getKind()) {
-      case VARIABLE:
-        sym = ASTHelpers.getSymbol((VariableTree) parent);
-        break;
-      case ASSIGNMENT:
-        sym = ASTHelpers.getSymbol(((AssignmentTree) parent).getVariable());
-        break;
-      default:
+      case VARIABLE -> sym = ASTHelpers.getSymbol((VariableTree) parent);
+      case ASSIGNMENT -> sym = ASTHelpers.getSymbol(((AssignmentTree) parent).getVariable());
+      default -> {
         return;
+      }
     }
     if (!ASTHelpers.isSameType(
         sym.type, state.getTypeFromString(original.getCanonicalName()), state)) {

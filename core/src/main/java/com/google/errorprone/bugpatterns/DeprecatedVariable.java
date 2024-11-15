@@ -42,11 +42,10 @@ public class DeprecatedVariable extends BugChecker implements VariableTreeMatche
       return NO_MATCH;
     }
     switch (sym.getKind()) {
-      case LOCAL_VARIABLE:
-      case PARAMETER:
-        break;
-      default:
+      case LOCAL_VARIABLE, PARAMETER -> {}
+      default -> {
         return NO_MATCH;
+      }
     }
     Description.Builder description = buildDescription(tree);
     Optional.ofNullable(

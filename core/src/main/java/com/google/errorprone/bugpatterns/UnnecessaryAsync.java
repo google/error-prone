@@ -218,34 +218,26 @@ public final class UnnecessaryAsync extends BugChecker implements VariableTreeMa
 
   private static String getPrimitiveType(Type type, Types types) {
     String name = types.erasure(type).toString();
-    switch (name) {
-      case "java.util.concurrent.atomic.AtomicBoolean":
-        return "boolean";
-      case "java.util.concurrent.atomic.AtomicReference":
-        return type.allparams().isEmpty()
-            ? "Object"
-            : type.allparams().get(0).tsym.getSimpleName().toString();
-      case "java.util.concurrent.atomic.AtomicInteger":
-        return "int";
-      case "java.util.concurrent.atomic.AtomicLong":
-        return "long";
-      default:
-        throw new AssertionError(name);
-    }
+    return switch (name) {
+      case "java.util.concurrent.atomic.AtomicBoolean" -> "boolean";
+      case "java.util.concurrent.atomic.AtomicReference" ->
+          type.allparams().isEmpty()
+              ? "Object"
+              : type.allparams().get(0).tsym.getSimpleName().toString();
+      case "java.util.concurrent.atomic.AtomicInteger" -> "int";
+      case "java.util.concurrent.atomic.AtomicLong" -> "long";
+      default -> throw new AssertionError(name);
+    };
   }
 
   private static String getDefaultInitializer(VarSymbol symbol, Types types) {
     String name = types.erasure(symbol.type).toString();
-    switch (name) {
-      case "java.util.concurrent.atomic.AtomicBoolean":
-        return "false";
-      case "java.util.concurrent.atomic.AtomicReference":
-        return "null";
-      case "java.util.concurrent.atomic.AtomicInteger":
-      case "java.util.concurrent.atomic.AtomicLong":
-        return "0";
-      default:
-        throw new AssertionError(name);
-    }
+    return switch (name) {
+      case "java.util.concurrent.atomic.AtomicBoolean" -> "false";
+      case "java.util.concurrent.atomic.AtomicReference" -> "null";
+      case "java.util.concurrent.atomic.AtomicInteger", "java.util.concurrent.atomic.AtomicLong" ->
+          "0";
+      default -> throw new AssertionError(name);
+    };
   }
 }

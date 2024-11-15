@@ -121,17 +121,13 @@ public final class ImplementAssertionWithChaining extends BugChecker implements 
      * Note that all these look "backward": If the code is "if (foo == bar) { fail }," then the
      * assertion is checking that the values are *not* equal.
      */
-    switch (condition.getKind()) {
-      case LOGICAL_COMPLEMENT:
-        return findActualAndExpectedForPossibleEqualsCall(
-            stripParentheses(((UnaryTree) condition).getExpression()), state);
-
-      case NOT_EQUAL_TO:
-        return findActualAndExpectedForBinaryOp((BinaryTree) condition, state);
-
-      default:
-        return null;
-    }
+    return switch (condition.getKind()) {
+      case LOGICAL_COMPLEMENT ->
+          findActualAndExpectedForPossibleEqualsCall(
+              stripParentheses(((UnaryTree) condition).getExpression()), state);
+      case NOT_EQUAL_TO -> findActualAndExpectedForBinaryOp((BinaryTree) condition, state);
+      default -> null;
+    };
   }
 
   private static @Nullable ImmutableList<ExpressionTree> findActualAndExpectedForPossibleEqualsCall(

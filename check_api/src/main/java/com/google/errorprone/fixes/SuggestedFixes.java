@@ -152,34 +152,21 @@ public final class SuggestedFixes {
 
   /** Parse a modifier token into a {@link Modifier}. */
   private static @Nullable Modifier getTokModifierKind(ErrorProneToken tok) {
-    switch (tok.kind()) {
-      case PUBLIC:
-        return Modifier.PUBLIC;
-      case PROTECTED:
-        return Modifier.PROTECTED;
-      case PRIVATE:
-        return Modifier.PRIVATE;
-      case ABSTRACT:
-        return Modifier.ABSTRACT;
-      case STATIC:
-        return Modifier.STATIC;
-      case FINAL:
-        return Modifier.FINAL;
-      case TRANSIENT:
-        return Modifier.TRANSIENT;
-      case VOLATILE:
-        return Modifier.VOLATILE;
-      case SYNCHRONIZED:
-        return Modifier.SYNCHRONIZED;
-      case NATIVE:
-        return Modifier.NATIVE;
-      case STRICTFP:
-        return Modifier.STRICTFP;
-      case DEFAULT:
-        return Modifier.DEFAULT;
-      default:
-        return null;
-    }
+    return switch (tok.kind()) {
+      case PUBLIC -> Modifier.PUBLIC;
+      case PROTECTED -> Modifier.PROTECTED;
+      case PRIVATE -> Modifier.PRIVATE;
+      case ABSTRACT -> Modifier.ABSTRACT;
+      case STATIC -> Modifier.STATIC;
+      case FINAL -> Modifier.FINAL;
+      case TRANSIENT -> Modifier.TRANSIENT;
+      case VOLATILE -> Modifier.VOLATILE;
+      case SYNCHRONIZED -> Modifier.SYNCHRONIZED;
+      case NATIVE -> Modifier.NATIVE;
+      case STRICTFP -> Modifier.STRICTFP;
+      case DEFAULT -> Modifier.DEFAULT;
+      default -> null;
+    };
   }
 
   /** Adds modifiers to the given class, method, or field declaration. */
@@ -1329,18 +1316,19 @@ public final class SuggestedFixes {
       boolean diagnosticInSameCompilationUnit =
           diagnosticSource == null || diagnosticSource.toUri().equals(modifiedFileUri);
       switch (diagnostic.getKind()) {
-        case ERROR:
+        case ERROR -> {
           ++countErrors;
           if (!onlyInSameCompilationUnit || diagnosticInSameCompilationUnit) {
             return false;
           }
-          break;
-        case WARNING:
+        }
+        case WARNING -> {
           ++countWarnings;
           warningInSameCompilationUnit |= diagnosticInSameCompilationUnit;
-          break;
-        default:
+        }
+        default -> {
           continue;
+        }
       }
 
       if ((warningIsError && warningInSameCompilationUnit)
@@ -1625,15 +1613,11 @@ public final class SuggestedFixes {
     ImmutableSet.Builder<Tree.Kind> types = ImmutableSet.builder();
     for (ElementType t : targetAnnotation.value()) {
       switch (t) {
-        case TYPE:
-          types.add(
-              Tree.Kind.CLASS, Tree.Kind.ENUM, Tree.Kind.INTERFACE, Tree.Kind.ANNOTATION_TYPE);
-          break;
-        case METHOD:
-          types.add(Tree.Kind.METHOD);
-          break;
-        default:
-          break;
+        case TYPE ->
+            types.add(
+                Tree.Kind.CLASS, Tree.Kind.ENUM, Tree.Kind.INTERFACE, Tree.Kind.ANNOTATION_TYPE);
+        case METHOD -> types.add(Tree.Kind.METHOD);
+        default -> {}
       }
     }
     return types.build();

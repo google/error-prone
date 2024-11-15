@@ -91,17 +91,12 @@ public final class Comments {
    * <p>TODO(andrewrice) Update this method to handle block comments properly if we find the need
    */
   public static String getTextFromComment(ErrorProneComment comment) {
-    switch (comment.getStyle()) {
-      case BLOCK:
-        return comment.getText().replaceAll("^\\s*/\\*\\s*(.*?)\\s*\\*/\\s*", "$1");
-      case LINE:
-        return comment.getText().replaceAll("^\\s*//\\s*", "");
-      case JAVADOC_LINE:
-        return comment.getText().replaceAll("^\\s*///\\s*", "");
-      case JAVADOC_BLOCK:
-        return comment.getText().replaceAll("^\\s*/\\*\\*\\s*(.*?)\\s*\\*/\\s*", "$1");
-    }
-    throw new AssertionError(comment.getStyle());
+    return switch (comment.getStyle()) {
+      case BLOCK -> comment.getText().replaceAll("^\\s*/\\*\\s*(.*?)\\s*\\*/\\s*", "$1");
+      case LINE -> comment.getText().replaceAll("^\\s*//\\s*", "");
+      case JAVADOC_LINE -> comment.getText().replaceAll("^\\s*///\\s*", "");
+      case JAVADOC_BLOCK -> comment.getText().replaceAll("^\\s*/\\*\\*\\s*(.*?)\\s*\\*/\\s*", "$1");
+    };
   }
 
   private static ImmutableList<Commented<ExpressionTree>> findCommentsForArguments(

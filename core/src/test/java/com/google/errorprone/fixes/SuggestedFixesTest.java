@@ -133,14 +133,8 @@ public class SuggestedFixesTest {
               .map(v -> Verify.verifyNotNull(MODIFIERS_BY_NAME.get(v), v))
               .toArray(Modifier[]::new);
       switch (editModifiers.kind()) {
-        case ADD:
-          fix.merge(SuggestedFixes.addModifiers(tree, state, mods).orElse(null));
-          break;
-        case REMOVE:
-          fix.merge(SuggestedFixes.removeModifiers(tree, state, mods).orElse(null));
-          break;
-        default:
-          throw new AssertionError(editModifiers.kind());
+        case ADD -> fix.merge(SuggestedFixes.addModifiers(tree, state, mods).orElse(null));
+        case REMOVE -> fix.merge(SuggestedFixes.removeModifiers(tree, state, mods).orElse(null));
       }
       return describeMatch(tree, fix.build());
     }

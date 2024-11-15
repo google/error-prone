@@ -134,28 +134,25 @@ public abstract class BugChecker implements Suppressible, Serializable {
 
   private static BiPredicate<Set<? extends Name>, VisitorState> suppressionPredicate(
       Set<Class<? extends Annotation>> suppressionClasses) {
-    switch (suppressionClasses.size()) {
-      case 0:
-        return (annos, state) -> false;
-      case 1:
-        {
-          Supplier<Name> self =
-              VisitorState.memoize(
-                  state -> state.getName(Iterables.getOnlyElement(suppressionClasses).getName()));
-          return (annos, state) -> annos.contains(self.get(state));
-        }
-      default:
-        {
-          Supplier<Set<? extends Name>> self =
-              VisitorState.memoize(
-                  state ->
-                      suppressionClasses.stream()
-                          .map(Class::getName)
-                          .map(state::getName)
-                          .collect(toImmutableSet()));
-          return (annos, state) -> !Collections.disjoint(self.get(state), annos);
-        }
-    }
+    return switch (suppressionClasses.size()) {
+      case 0 -> (annos, state) -> false;
+      case 1 -> {
+        Supplier<Name> self =
+            VisitorState.memoize(
+                state -> state.getName(Iterables.getOnlyElement(suppressionClasses).getName()));
+        yield (annos, state) -> annos.contains(self.get(state));
+      }
+      default -> {
+        Supplier<Set<? extends Name>> self =
+            VisitorState.memoize(
+                state ->
+                    suppressionClasses.stream()
+                        .map(Class::getName)
+                        .map(state::getName)
+                        .collect(toImmutableSet()));
+        yield (annos, state) -> !Collections.disjoint(self.get(state), annos);
+      }
+    };
   }
 
   /** Helper to create a Description for the common case where there is a fix. */

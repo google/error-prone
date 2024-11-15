@@ -79,29 +79,26 @@ public class CanBeStaticAnalyzer extends TreeScanner {
       return;
     }
     switch (sym.getKind()) {
-      case TYPE_PARAMETER:
-      // declaring a class as non-static just to access a type parameter is silly -
-      // why not just re-declare the type parameter instead of capturing it?
-      // TODO(cushon): consider making the suggestion anyways, maybe with a fix?
-      // fall through
-      case FIELD:
+      case TYPE_PARAMETER, FIELD -> {
+        // declaring a class as non-static just to access a type parameter is silly -
+        // why not just re-declare the type parameter instead of capturing it?
+        // TODO(cushon): consider making the suggestion anyways, maybe with a fix?
         if (!isOwnedBy(sym, owner, state.getTypes())) {
           canPossiblyBeStatic = false;
         }
-        break;
-      case METHOD:
+      }
+      case METHOD -> {
         if (!isOwnedBy(sym, owner, state.getTypes())) {
           outerReferences.add((MethodSymbol) sym);
         }
-        break;
-      case CLASS:
+      }
+      case CLASS -> {
         Type enclosing = tree.type.getEnclosingType();
         if (enclosing != null) {
           enclosing.accept(new TypeVariableScanner(), null);
         }
-        break;
-      default:
-        break;
+      }
+      default -> {}
     }
   }
 

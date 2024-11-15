@@ -162,20 +162,19 @@ public class UseBinds extends BugChecker implements MethodTreeMatcher {
           checkState(getSymbol(assignment.getVariable()).getSimpleName().contentEquals("type"));
           String typeName = getSymbol(assignment.getExpression()).getSimpleName().toString();
           switch (typeName) {
-            case "SET":
+            case "SET" -> {
               modifierStringsBuilder.add("@IntoSet");
               fix.addImport(INTO_SET_CLASS_NAME);
-              break;
-            case "SET_VALUES":
+            }
+            case "SET_VALUES" -> {
               modifierStringsBuilder.add("@ElementsIntoSet");
               fix.addImport(ELEMENTS_INTO_SET_CLASS_NAME);
-              break;
-            case "MAP":
+            }
+            case "MAP" -> {
               modifierStringsBuilder.add("@IntoMap");
               fix.addImport(INTO_MAP_CLASS_NAME);
-              break;
-            default:
-              throw new AssertionError("Unknown type name: " + typeName);
+            }
+            default -> throw new AssertionError("Unknown type name: " + typeName);
           }
         }
       } else {

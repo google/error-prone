@@ -111,23 +111,16 @@ public class JavacErrorDescriptionListener implements DescriptionListener {
     JavaFileObject originalSource = log.useSource(sourceFile);
     try {
       JCDiagnostic.Factory factory = JCDiagnostic.Factory.instance(context);
-      JCDiagnostic.DiagnosticType type = JCDiagnostic.DiagnosticType.ERROR;
       DiagnosticPosition pos = description.position;
-      switch (description.severity()) {
-        case ERROR:
-          if (dontUseErrors) {
-            type = JCDiagnostic.DiagnosticType.WARNING;
-          } else {
-            type = JCDiagnostic.DiagnosticType.ERROR;
-          }
-          break;
-        case WARNING:
-          type = JCDiagnostic.DiagnosticType.WARNING;
-          break;
-        case SUGGESTION:
-          type = JCDiagnostic.DiagnosticType.NOTE;
-          break;
-      }
+      JCDiagnostic.DiagnosticType type =
+          switch (description.severity()) {
+            case ERROR ->
+                dontUseErrors
+                    ? JCDiagnostic.DiagnosticType.WARNING
+                    : JCDiagnostic.DiagnosticType.ERROR;
+            case WARNING -> JCDiagnostic.DiagnosticType.WARNING;
+            case SUGGESTION -> JCDiagnostic.DiagnosticType.NOTE;
+          };
       log.report(
           factory.create(
               type,

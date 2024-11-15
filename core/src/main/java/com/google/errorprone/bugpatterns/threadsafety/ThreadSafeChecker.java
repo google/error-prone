@@ -129,10 +129,10 @@ public class ThreadSafeChecker extends BugChecker
       return NO_MATCH;
     }
     switch (sym.owner.getKind()) {
-      case METHOD:
-      case CONSTRUCTOR:
+      case METHOD, CONSTRUCTOR -> {
         return NO_MATCH;
-      default: // fall out
+      }
+      default -> {}
     }
     ThreadSafeAnalysis analysis = new ThreadSafeAnalysis(this, state, wellKnownThreadSafety);
     if (analysis.hasThreadSafeTypeParameterAnnotation((TypeVariableSymbol) sym)) {

@@ -119,27 +119,21 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
         @Override
         public Stream<Symbol> scopeMembers(
             RuleScope scope, MethodSymbol method, VisitorState context) {
-          switch (scope) {
-            case ENCLOSING_ELEMENTS:
-              return enclosingElements(method)
-                  .filter(s -> s instanceof ClassSymbol || s instanceof PackageSymbol);
-            case GLOBAL:
-            case METHOD:
-              return Stream.of(method);
-          }
-          throw new AssertionError(scope);
+          return switch (scope) {
+            case ENCLOSING_ELEMENTS ->
+                enclosingElements(method)
+                    .filter(s -> s instanceof ClassSymbol || s instanceof PackageSymbol);
+            case GLOBAL, METHOD -> Stream.of(method);
+          };
         }
 
         @Override
         public MethodKind getMethodKind(MethodSymbol method) {
-          switch (method.getKind()) {
-            case METHOD:
-              return MethodKind.METHOD;
-            case CONSTRUCTOR:
-              return MethodKind.CONSTRUCTOR;
-            default:
-              return MethodKind.OTHER;
-          }
+          return switch (method.getKind()) {
+            case METHOD -> MethodKind.METHOD;
+            case CONSTRUCTOR -> MethodKind.CONSTRUCTOR;
+            default -> MethodKind.OTHER;
+          };
         }
       };
 
@@ -279,16 +273,17 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
     MethodSymbol method = ASTHelpers.getSymbol(tree);
     ImmutableList<String> presentAnnotations = presentCrvRelevantAnnotations(method);
     switch (presentAnnotations.size()) {
-      case 0:
+      case 0 -> {
         return Description.NO_MATCH;
-      case 1:
-        break;
-      default:
+      }
+      case 1 -> {}
+      default -> {
         // TODO(cgdecker): We can check this with evaluator.checkForConflicts now, though I want to
         //  think more about how we build and format error messages in that.
         return buildDescription(tree)
             .setMessage(conflictingAnnotations(presentAnnotations, "method"))
             .build();
+      }
     }
 
     if (method.getKind() != ElementKind.METHOD) {
@@ -393,16 +388,14 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
        */
       return "";
     }
-    switch (messageTrailerStyle) {
-      case NONE:
-        return "";
-      case API_ERASED_SIGNATURE:
-        return "\n\nFull API: "
-            + surroundingClass(symbol)
-            + "#"
-            + methodNameAndParams(symbol, state.getTypes());
-    }
-    throw new AssertionError();
+    return switch (messageTrailerStyle) {
+      case NONE -> "";
+      case API_ERASED_SIGNATURE ->
+          "\n\nFull API: "
+              + surroundingClass(symbol)
+              + "#"
+              + methodNameAndParams(symbol, state.getTypes());
+    };
   }
 
   enum MessageTrailerStyle {

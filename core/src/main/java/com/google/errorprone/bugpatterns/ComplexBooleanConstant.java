@@ -76,36 +76,32 @@ public class ComplexBooleanConstant extends BugChecker implements BinaryTreeMatc
             if (r == null) {
               return null;
             }
-            switch (node.getKind()) {
-              case LOGICAL_COMPLEMENT:
-                return !r;
-              default:
-                return null;
-            }
+            return switch (node.getKind()) {
+              case LOGICAL_COMPLEMENT -> !r;
+              default -> null;
+            };
           }
         };
     Boolean lhs = tree.getLeftOperand().accept(boolValue, null);
     Boolean rhs = tree.getRightOperand().accept(boolValue, null);
     switch (tree.getKind()) {
-      case CONDITIONAL_AND:
-      case AND:
+      case CONDITIONAL_AND, AND -> {
         if (lhs != null && rhs != null) {
           return lhs && rhs;
         }
         if (Objects.equals(lhs, Boolean.FALSE) || Objects.equals(rhs, Boolean.FALSE)) {
           return false;
         }
-        break;
-      case CONDITIONAL_OR:
-      case OR:
+      }
+      case CONDITIONAL_OR, OR -> {
         if (lhs != null && rhs != null) {
           return lhs || rhs;
         }
         if (Objects.equals(lhs, Boolean.TRUE) || Objects.equals(rhs, Boolean.TRUE)) {
           return true;
         }
-        break;
-      default: // fall out
+      }
+      default -> {}
     }
     return null;
   }

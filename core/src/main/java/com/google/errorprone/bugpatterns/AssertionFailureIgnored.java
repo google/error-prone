@@ -209,13 +209,14 @@ public class AssertionFailureIgnored extends BugChecker implements MethodInvocat
     Tree prev = null;
     for (Tree parent : state.getPath()) {
       switch (parent.getKind()) {
-        case METHOD:
-        case LAMBDA_EXPRESSION:
+        case METHOD, LAMBDA_EXPRESSION -> {
           return null;
-        case TRY:
+        }
+        case TRY -> {
           JCTry tryStatement = (JCTry) parent;
           return tryStatement.getBlock().equals(prev) ? tryStatement : null;
-        default: // fall out
+        }
+        default -> {}
       }
       prev = parent;
     }

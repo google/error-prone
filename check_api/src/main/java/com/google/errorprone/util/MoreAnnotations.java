@@ -82,14 +82,11 @@ public final class MoreAnnotations {
    * annotations won't be included when the symbol is not in the current compilation.
    */
   public static Stream<TypeCompound> getTopLevelTypeAttributes(Symbol sym) {
-    Symbol typeAnnotationOwner;
-    switch (sym.getKind()) {
-      case PARAMETER:
-        typeAnnotationOwner = sym.owner;
-        break;
-      default:
-        typeAnnotationOwner = sym;
-    }
+    Symbol typeAnnotationOwner =
+        switch (sym.getKind()) {
+          case PARAMETER -> sym.owner;
+          default -> sym;
+        };
     return typeAnnotationOwner.getRawTypeAttributes().stream()
         .filter(anno -> isAnnotationOnType(sym, anno.position));
   }
@@ -102,15 +99,11 @@ public final class MoreAnnotations {
     if (!targetTypeMatches(sym, position)) {
       return false;
     }
-    Type type;
-    switch (sym.getKind()) {
-      case METHOD:
-      case CONSTRUCTOR:
-        type = ((MethodSymbol) sym).getReturnType();
-        break;
-      default:
-        type = sym.asType();
-    }
+    Type type =
+        switch (sym.getKind()) {
+          case METHOD, CONSTRUCTOR -> ((MethodSymbol) sym).getReturnType();
+          default -> sym.asType();
+        };
     return isAnnotationOnType(type, position.location);
   }
 
@@ -128,16 +121,17 @@ public final class MoreAnnotations {
 
   private static boolean targetTypeMatches(Symbol sym, TypeAnnotationPosition position) {
     switch (sym.getKind()) {
-      case LOCAL_VARIABLE:
+      case LOCAL_VARIABLE -> {
         return position.type == TargetType.LOCAL_VARIABLE;
-      case FIELD:
-      // treated like a field
-      case ENUM_CONSTANT:
+      }
+      case FIELD, ENUM_CONSTANT -> {
+        // treated like a field
         return position.type == TargetType.FIELD;
-      case CONSTRUCTOR:
-      case METHOD:
+      }
+      case CONSTRUCTOR, METHOD -> {
         return position.type == TargetType.METHOD_RETURN;
-      case PARAMETER:
+      }
+      case PARAMETER -> {
         switch (position.type) {
           case METHOD_FORMAL_PARAMETER:
             int parameterIndex = position.parameter_index;
@@ -153,13 +147,15 @@ public final class MoreAnnotations {
           default:
             return false;
         }
-      case CLASS:
+      }
+      case CLASS -> {
         // There are no type annotations on the top-level type of the class being declared, only
         // on other types in the signature (e.g. `class Foo extends Bar<@A Baz> {}`).
         return false;
-      default:
-        throw new AssertionError(
-            "unsupported element kind in MoreAnnotation#isAnnotationOnType: " + sym.getKind());
+      }
+      default ->
+          throw new AssertionError(
+              "unsupported element kind in MoreAnnotation#isAnnotationOnType: " + sym.getKind());
     }
   }
 

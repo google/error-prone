@@ -112,29 +112,25 @@ public class ModifyCollectionInEnhancedForLoop extends BugChecker
     if (idx == -1 || idx == statements.size()) {
       return false;
     }
-    switch (getLast(statements).getKind()) {
-      case BREAK:
-      case RETURN:
-        return true;
-      default:
-        return false;
-    }
+    return switch (getLast(statements).getKind()) {
+      case BREAK, RETURN -> true;
+      default -> false;
+    };
   }
 
   /** Returns true if {@code collection} is modified by an enclosing loop. */
   private static boolean enclosingLoop(VisitorState state, ExpressionTree collection) {
     for (Tree node : state.getPath()) {
       switch (node.getKind()) {
-        case METHOD:
-        case CLASS:
-        case LAMBDA_EXPRESSION:
+        case METHOD, CLASS, LAMBDA_EXPRESSION -> {
           return false;
-        case ENHANCED_FOR_LOOP:
+        }
+        case ENHANCED_FOR_LOOP -> {
           if (sameCollection(collection, ((EnhancedForLoopTree) node).getExpression(), state)) {
             return true;
           }
-          break;
-        default: // fall out
+        }
+        default -> {}
       }
     }
     return false;

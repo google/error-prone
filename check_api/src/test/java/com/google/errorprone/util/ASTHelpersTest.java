@@ -1812,21 +1812,15 @@ class Test {
   public void typesWithModifiersTree() {
     for (Class<?> clazz : ALL_TREE_TYPES) {
       switch (clazz.getSimpleName()) {
-        case "MethodTree":
-          assertGetModifiersInvoked(MethodTree.class, MethodTree::getModifiers);
-          break;
-        case "ClassTree":
-          assertGetModifiersInvoked(ClassTree.class, ClassTree::getModifiers);
-          break;
-        case "VariableTree":
-          assertGetModifiersInvoked(VariableTree.class, VariableTree::getModifiers);
-          break;
-        case "ModifiersTree":
+        case "MethodTree" -> assertGetModifiersInvoked(MethodTree.class, MethodTree::getModifiers);
+        case "ClassTree" -> assertGetModifiersInvoked(ClassTree.class, ClassTree::getModifiers);
+        case "VariableTree" ->
+            assertGetModifiersInvoked(VariableTree.class, VariableTree::getModifiers);
+        case "ModifiersTree" -> {
           ModifiersTree modifiersTree = mock(ModifiersTree.class);
           assertThat(ASTHelpers.getModifiers(modifiersTree)).isSameInstanceAs(modifiersTree);
-          break;
-        default:
-          assertMethodNotFound(clazz, "getModifiers");
+        }
+        default -> assertMethodNotFound(clazz, "getModifiers");
       }
     }
   }
@@ -1844,26 +1838,19 @@ class Test {
   public void typesWithGetAnnotations() {
     for (Class<?> clazz : ALL_TREE_TYPES) {
       switch (clazz.getSimpleName()) {
-        case "TypeParameterTree":
-          assertGetAnnotationsInvoked(TypeParameterTree.class, TypeParameterTree::getAnnotations);
-          break;
-        case "ModuleTree":
-          assertGetAnnotationsInvoked(ModuleTree.class, ModuleTree::getAnnotations);
-          break;
-        case "PackageTree":
-          assertGetAnnotationsInvoked(PackageTree.class, PackageTree::getAnnotations);
-          break;
-        case "NewArrayTree":
-          assertGetAnnotationsInvoked(NewArrayTree.class, NewArrayTree::getAnnotations);
-          break;
-        case "ModifiersTree":
-          assertGetAnnotationsInvoked(ModifiersTree.class, ModifiersTree::getAnnotations);
-          break;
-        case "AnnotatedTypeTree":
-          assertGetAnnotationsInvoked(AnnotatedTypeTree.class, AnnotatedTypeTree::getAnnotations);
-          break;
-        default:
-          assertMethodNotFound(clazz, "getAnnotations");
+        case "TypeParameterTree" ->
+            assertGetAnnotationsInvoked(TypeParameterTree.class, TypeParameterTree::getAnnotations);
+        case "ModuleTree" ->
+            assertGetAnnotationsInvoked(ModuleTree.class, ModuleTree::getAnnotations);
+        case "PackageTree" ->
+            assertGetAnnotationsInvoked(PackageTree.class, PackageTree::getAnnotations);
+        case "NewArrayTree" ->
+            assertGetAnnotationsInvoked(NewArrayTree.class, NewArrayTree::getAnnotations);
+        case "ModifiersTree" ->
+            assertGetAnnotationsInvoked(ModifiersTree.class, ModifiersTree::getAnnotations);
+        case "AnnotatedTypeTree" ->
+            assertGetAnnotationsInvoked(AnnotatedTypeTree.class, AnnotatedTypeTree::getAnnotations);
+        default -> assertMethodNotFound(clazz, "getAnnotations");
       }
     }
   }

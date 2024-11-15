@@ -144,21 +144,22 @@ public abstract class Api {
       do {
         char next = nextLookingFor('#');
         switch (next) {
-          case '#':
+          case '#' -> {
             // We've hit the end of the leading type, break out.
             break token;
-          case '.':
+          }
+          case '.' -> {
             // OK, separator
-            break;
-          case '-':
+          }
+          case '-' -> {
             // OK, used in Kotlin JvmName to prevent Java users.
-            break;
-          default:
-            checkArgument(
-                isJavaIdentifierPart(next),
-                "Unable to parse '%s' because '%s' is not a valid identifier",
-                api,
-                next);
+          }
+          default ->
+              checkArgument(
+                  isJavaIdentifierPart(next),
+                  "Unable to parse '%s' because '%s' is not a valid identifier",
+                  api,
+                  next);
         }
         buffer.append(next);
       } while (true);
@@ -181,26 +182,27 @@ public abstract class Api {
       do {
         char next = nextLookingFor('(');
         switch (next) {
-          case '(':
+          case '(' -> {
             // We've hit the end of the method name, break out.
             break token;
-          case '<':
+          }
+          case '<' -> {
             // Starting a constructor
             check(!isConstructor, api, "Only one '<' is allowed");
             check(buffer.length() == 0, api, "'<' must come directly after '#'");
             isConstructor = true;
-            break;
-          case '>':
+          }
+          case '>' -> {
             check(isConstructor, api, "'<' must come before '>'");
             check(!finishedConstructor, api, "Only one '>' is allowed");
             finishedConstructor = true;
-            break;
-          default:
-            checkArgument(
-                isJavaIdentifierPart(next),
-                "Unable to parse '%s' because '%s' is not a valid identifier",
-                api,
-                next);
+          }
+          default ->
+              checkArgument(
+                  isJavaIdentifierPart(next),
+                  "Unable to parse '%s' because '%s' is not a valid identifier",
+                  api,
+                  next);
         }
         buffer.append(next);
       } while (true);
@@ -236,26 +238,22 @@ public abstract class Api {
       do {
         char next = nextLookingFor(')');
         switch (next) {
-          case ')':
+          case ')' -> {
             if (emptyList) {
               return ImmutableList.of();
             }
             // We've hit the end of the whole list, bail out.
             paramBuilder.add(consumeParam(buffer));
             break paramList;
-          case ',':
-            // We've hit the middle of a parameter, consume it
-            paramBuilder.add(consumeParam(buffer));
-            break;
-
-          case '[':
-          case ']':
-          case '.':
-            // . characters are separators, [ and ] are array characters, they're checked @ the end
-            buffer.append(next);
-            break;
-
-          default:
+          }
+          case ',' ->
+              // We've hit the middle of a parameter, consume it
+              paramBuilder.add(consumeParam(buffer));
+          case '[', ']', '.' ->
+              // . characters are separators, [ and ] are array characters, they're checked @ the
+              // end
+              buffer.append(next);
+          default -> {
             checkArgument(
                 isJavaIdentifierPart(next),
                 "Unable to parse '%s' because '%s' is not a valid identifier",
@@ -263,6 +261,7 @@ public abstract class Api {
                 next);
             emptyList = false;
             buffer.append(next);
+          }
         }
       } while (true);
       return paramBuilder.build();
@@ -284,20 +283,20 @@ public abstract class Api {
       for (int k = 1; k < parameter.length(); k++) {
         char c = parameter.charAt(k);
         switch (c) {
-          case '[':
+          case '[' -> {
             check(!parsingArrayStart, api, "multiple consecutive [");
             hasArraySpecifiers = true;
             parsingArrayStart = true;
-            break;
-          case ']':
+          }
+          case ']' -> {
             check(parsingArrayStart, api, "unbalanced ] in array type");
             parsingArrayStart = false;
-            break;
-          default:
-            check(
-                !hasArraySpecifiers,
-                api,
-                "types with array specifiers should end in those specifiers");
+          }
+          default ->
+              check(
+                  !hasArraySpecifiers,
+                  api,
+                  "types with array specifiers should end in those specifiers");
         }
       }
       check(!parsingArrayStart, api, "[ without closing ] at the end of a parameter type");

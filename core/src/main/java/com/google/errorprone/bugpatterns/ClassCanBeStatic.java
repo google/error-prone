@@ -58,23 +58,23 @@ public class ClassCanBeStatic extends BugChecker implements ClassTreeMatcher {
       return NO_MATCH;
     }
     switch (currentClass.owner.enclClass().getNestingKind()) {
-      case TOP_LEVEL:
-        break;
-      case MEMBER:
+      case TOP_LEVEL -> {}
+      case MEMBER -> {
         if (!SourceVersion.supportsStaticInnerClass(state.context)
             && currentClass.owner.enclClass().hasOuterInstance()) {
           // class is nested inside an inner class, so it can't be static
           return NO_MATCH;
         }
-        break;
-      case LOCAL:
+      }
+      case LOCAL -> {
         if (!SourceVersion.supportsStaticInnerClass(state.context)) {
           return NO_MATCH;
         }
-        break;
-      case ANONYMOUS:
+      }
+      case ANONYMOUS -> {
         // members of local and anonymous classes can't be static
         return NO_MATCH;
+      }
     }
     if (tree.getExtendsClause() != null
         && ASTHelpers.getType(tree.getExtendsClause()).tsym.hasOuterInstance()) {

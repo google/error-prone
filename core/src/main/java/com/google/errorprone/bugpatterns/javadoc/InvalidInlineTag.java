@@ -235,19 +235,20 @@ public final class InvalidInlineTag extends BugChecker
       for (int pos = startPos; pos < body.length(); ++pos) {
         char c = body.charAt(pos);
         switch (c) {
-          case '(':
+          case '(' -> {
             parenDepth++;
             continue;
-          case ')':
+          }
+          case ')' -> {
             if (parenDepth == 0) {
               return Optional.of(pos);
             }
             parenDepth--;
-            break;
-          case '}':
+          }
+          case '}' -> {
             return Optional.empty();
-          default:
-            // fall out
+          }
+          default -> {}
         }
       }
       return Optional.empty();

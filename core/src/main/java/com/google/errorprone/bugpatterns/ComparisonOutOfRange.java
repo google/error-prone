@@ -100,24 +100,15 @@ public class ComparisonOutOfRange extends BugChecker implements BinaryTreeMatche
             }
 
             Description matchConstantResult() {
-              switch (tree.getKind()) {
-                case EQUAL_TO:
-                  return matchOutOfBounds(/* willEvaluateTo= */ false);
-                case NOT_EQUAL_TO:
-                  return matchOutOfBounds(/* willEvaluateTo= */ true);
-
-                case LESS_THAN:
-                  return matchMinAndMaxHaveSameResult(cmp -> cmp < 0);
-                case LESS_THAN_EQUAL:
-                  return matchMinAndMaxHaveSameResult(cmp -> cmp <= 0);
-                case GREATER_THAN:
-                  return matchMinAndMaxHaveSameResult(cmp -> cmp > 0);
-                case GREATER_THAN_EQUAL:
-                  return matchMinAndMaxHaveSameResult(cmp -> cmp >= 0);
-
-                default:
-                  return NO_MATCH;
-              }
+              return switch (tree.getKind()) {
+                case EQUAL_TO -> matchOutOfBounds(/* willEvaluateTo= */ false);
+                case NOT_EQUAL_TO -> matchOutOfBounds(/* willEvaluateTo= */ true);
+                case LESS_THAN -> matchMinAndMaxHaveSameResult(cmp -> cmp < 0);
+                case LESS_THAN_EQUAL -> matchMinAndMaxHaveSameResult(cmp -> cmp <= 0);
+                case GREATER_THAN -> matchMinAndMaxHaveSameResult(cmp -> cmp > 0);
+                case GREATER_THAN_EQUAL -> matchMinAndMaxHaveSameResult(cmp -> cmp >= 0);
+                default -> NO_MATCH;
+              };
             }
 
             Description matchOutOfBounds(boolean willEvaluateTo) {

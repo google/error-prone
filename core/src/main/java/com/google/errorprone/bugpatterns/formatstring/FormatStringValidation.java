@@ -166,33 +166,19 @@ public final class FormatStringValidation {
     Type unboxedType = types.unboxedTypeOrType(types.erasure(type));
     if (unboxedType.isPrimitive()) {
       type = unboxedType;
-      switch (type.getKind()) {
-        case BOOLEAN:
-          return false;
-        case BYTE:
-          return (byte) 1;
-        case SHORT:
-          return (short) 2;
-        case INT:
-          return 3;
-        case LONG:
-          return 4L;
-        case CHAR:
-          return 'c';
-        case FLOAT:
-          return 5.0f;
-        case DOUBLE:
-          return 6.0d;
-        case VOID:
-        case NONE:
-        case NULL:
-        case ERROR:
-          return null;
-        case ARRAY:
-          return new Object[0];
-        default:
-          throw new AssertionError(type.getKind());
-      }
+      return switch (type.getKind()) {
+        case BOOLEAN -> false;
+        case BYTE -> (byte) 1;
+        case SHORT -> (short) 2;
+        case INT -> 3;
+        case LONG -> 4L;
+        case CHAR -> 'c';
+        case FLOAT -> 5.0f;
+        case DOUBLE -> 6.0d;
+        case VOID, NONE, NULL, ERROR -> null;
+        case ARRAY -> new Object[0];
+        default -> throw new AssertionError(type.getKind());
+      };
     }
     if (isSubtype(types, type, state.getSymtab().stringType)) {
       return "string";

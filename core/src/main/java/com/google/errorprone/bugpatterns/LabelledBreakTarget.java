@@ -31,13 +31,10 @@ public class LabelledBreakTarget extends BugChecker implements LabeledStatementT
   @Override
   public Description matchLabeledStatement(LabeledStatementTree tree, VisitorState state) {
     switch (tree.getStatement().getKind()) {
-      case DO_WHILE_LOOP:
-      case ENHANCED_FOR_LOOP:
-      case FOR_LOOP:
-      case WHILE_LOOP:
+      case DO_WHILE_LOOP, ENHANCED_FOR_LOOP, FOR_LOOP, WHILE_LOOP -> {
         return NO_MATCH;
-      default:
-        break;
+      }
+      default -> {}
     }
     return describeMatch(tree);
   }

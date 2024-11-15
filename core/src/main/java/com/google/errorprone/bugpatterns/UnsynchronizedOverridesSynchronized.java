@@ -104,14 +104,11 @@ public class UnsynchronizedOverridesSynchronized extends BugChecker implements M
         new TreeScanner<Boolean, Void>() {
           @Override
           public Boolean visitBlock(BlockTree tree, Void unused) {
-            switch (tree.getStatements().size()) {
-              case 0:
-                return true;
-              case 1:
-                return scan(getOnlyElement(tree.getStatements()), null);
-              default:
-                return false;
-            }
+            return switch (tree.getStatements().size()) {
+              case 0 -> true;
+              case 1 -> scan(getOnlyElement(tree.getStatements()), null);
+              default -> false;
+            };
           }
 
           @Override

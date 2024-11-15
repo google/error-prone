@@ -50,18 +50,16 @@ public class UnusedAnonymousClass extends BugChecker implements NewClassTreeMatc
     }
     for (Tree def : newClassTree.getClassBody().getMembers()) {
       switch (def.getKind()) {
-        case VARIABLE:
-          {
-            VariableTree variableTree = (VariableTree) def;
-            if (variableTree.getInitializer() != null) {
-              return Description.NO_MATCH;
-            }
-            break;
+        case VARIABLE -> {
+          VariableTree variableTree = (VariableTree) def;
+          if (variableTree.getInitializer() != null) {
+            return Description.NO_MATCH;
           }
-        case BLOCK:
+        }
+        case BLOCK -> {
           return Description.NO_MATCH;
-        default:
-          break;
+        }
+        default -> {}
       }
     }
     if (!sideEffectFreeConstructor(ASTHelpers.getType(newClassTree.getIdentifier()).tsym, state)) {

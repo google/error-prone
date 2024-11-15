@@ -167,17 +167,16 @@ abstract class InlinabilityResult {
     // The statement is either an ExpressionStatement or a ReturnStatement, given
     // InlinabilityResult.forMethod
     switch (statement.getKind()) {
-      case EXPRESSION_STATEMENT:
-        body = ((ExpressionStatementTree) statement).getExpression();
-        break;
-      case RETURN:
+      case EXPRESSION_STATEMENT -> body = ((ExpressionStatementTree) statement).getExpression();
+      case RETURN -> {
         body = ((ReturnTree) statement).getExpression();
         if (body == null) {
           return fromError(InlineValidationErrorReason.EMPTY_VOID);
         }
-        break;
-      default:
+      }
+      default -> {
         return fromError(InlineValidationErrorReason.COMPLEX_STATEMENT);
+      }
     }
 
     if (methSymbol.isVarArgs() && usesVarargsParamPoorly(body, methSymbol.params().last(), state)) {

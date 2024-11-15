@@ -302,12 +302,13 @@ public class StringSplitter extends BugChecker implements MethodInvocationTreeMa
   private static @Nullable TreePath findEnclosing(VisitorState state) {
     for (TreePath path = state.getPath(); path != null; path = path.getParentPath()) {
       switch (path.getLeaf().getKind()) {
-        case METHOD:
-        case LAMBDA_EXPRESSION:
+        case METHOD, LAMBDA_EXPRESSION -> {
           return path;
-        case CLASS:
+        }
+        case CLASS -> {
           return null;
-        default: // fall out
+        }
+        default -> {}
       }
     }
     return null;

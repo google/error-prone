@@ -50,58 +50,34 @@ public enum OperatorPrecedence {
   }
 
   public static OperatorPrecedence from(Tree.Kind kind) {
-    switch (kind) {
-      case POSTFIX_DECREMENT:
-      case POSTFIX_INCREMENT:
-        return OperatorPrecedence.POSTFIX;
-      case PREFIX_DECREMENT:
-      case PREFIX_INCREMENT:
-        return OperatorPrecedence.UNARY;
-      case MULTIPLY:
-      case DIVIDE:
-      case REMAINDER:
-        return OperatorPrecedence.MULTIPLICATIVE;
-      case PLUS:
-      case MINUS:
-        return OperatorPrecedence.ADDITIVE;
-      case RIGHT_SHIFT:
-      case UNSIGNED_RIGHT_SHIFT:
-      case LEFT_SHIFT:
-        return OperatorPrecedence.SHIFT;
-      case LESS_THAN:
-      case LESS_THAN_EQUAL:
-      case GREATER_THAN:
-      case GREATER_THAN_EQUAL:
-      case INSTANCE_OF:
-        return OperatorPrecedence.RELATIONAL;
-      case EQUAL_TO:
-      case NOT_EQUAL_TO:
-        return OperatorPrecedence.EQUALITY;
-      case AND:
-        return OperatorPrecedence.AND;
-      case XOR:
-        return OperatorPrecedence.XOR;
-      case OR:
-        return OperatorPrecedence.OR;
-      case CONDITIONAL_AND:
-        return OperatorPrecedence.CONDITIONAL_AND;
-      case CONDITIONAL_OR:
-        return OperatorPrecedence.CONDITIONAL_OR;
-      case ASSIGNMENT:
-      case MULTIPLY_ASSIGNMENT:
-      case DIVIDE_ASSIGNMENT:
-      case REMAINDER_ASSIGNMENT:
-      case PLUS_ASSIGNMENT:
-      case MINUS_ASSIGNMENT:
-      case LEFT_SHIFT_ASSIGNMENT:
-      case AND_ASSIGNMENT:
-      case XOR_ASSIGNMENT:
-      case OR_ASSIGNMENT:
-      case RIGHT_SHIFT_ASSIGNMENT:
-      case UNSIGNED_RIGHT_SHIFT_ASSIGNMENT:
-        return OperatorPrecedence.ASSIGNMENT;
-      default:
-        throw new IllegalArgumentException("Unexpected operator kind: " + kind);
-    }
+    return switch (kind) {
+      case POSTFIX_DECREMENT, POSTFIX_INCREMENT -> OperatorPrecedence.POSTFIX;
+      case PREFIX_DECREMENT, PREFIX_INCREMENT -> OperatorPrecedence.UNARY;
+      case MULTIPLY, DIVIDE, REMAINDER -> OperatorPrecedence.MULTIPLICATIVE;
+      case PLUS, MINUS -> OperatorPrecedence.ADDITIVE;
+      case RIGHT_SHIFT, UNSIGNED_RIGHT_SHIFT, LEFT_SHIFT -> OperatorPrecedence.SHIFT;
+      case LESS_THAN, LESS_THAN_EQUAL, GREATER_THAN, GREATER_THAN_EQUAL, INSTANCE_OF ->
+          OperatorPrecedence.RELATIONAL;
+      case EQUAL_TO, NOT_EQUAL_TO -> OperatorPrecedence.EQUALITY;
+      case AND -> OperatorPrecedence.AND;
+      case XOR -> OperatorPrecedence.XOR;
+      case OR -> OperatorPrecedence.OR;
+      case CONDITIONAL_AND -> OperatorPrecedence.CONDITIONAL_AND;
+      case CONDITIONAL_OR -> OperatorPrecedence.CONDITIONAL_OR;
+      case ASSIGNMENT,
+          MULTIPLY_ASSIGNMENT,
+          DIVIDE_ASSIGNMENT,
+          REMAINDER_ASSIGNMENT,
+          PLUS_ASSIGNMENT,
+          MINUS_ASSIGNMENT,
+          LEFT_SHIFT_ASSIGNMENT,
+          AND_ASSIGNMENT,
+          XOR_ASSIGNMENT,
+          OR_ASSIGNMENT,
+          RIGHT_SHIFT_ASSIGNMENT,
+          UNSIGNED_RIGHT_SHIFT_ASSIGNMENT ->
+          OperatorPrecedence.ASSIGNMENT;
+      default -> throw new IllegalArgumentException("Unexpected operator kind: " + kind);
+    };
   }
 }

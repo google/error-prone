@@ -168,19 +168,18 @@ public class SourceFile {
   void makeReplacements(Replacements changes) {
     ImmutableSet<Replacement> replacements = changes.ascending();
     switch (replacements.size()) {
-      case 0:
+      case 0 -> {
         return;
-      case 1:
-        {
-          Replacement onlyReplacement = Iterables.getOnlyElement(replacements);
-          replaceChars(
-              onlyReplacement.startPosition(),
-              onlyReplacement.endPosition(),
-              onlyReplacement.replaceWith());
-          return;
-        }
-      default:
-        break;
+      }
+      case 1 -> {
+        Replacement onlyReplacement = Iterables.getOnlyElement(replacements);
+        replaceChars(
+            onlyReplacement.startPosition(),
+            onlyReplacement.endPosition(),
+            onlyReplacement.replaceWith());
+        return;
+      }
+      default -> {}
     }
 
     // Since we have many replacements to make all at once, it's better to start off with a clean

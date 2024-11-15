@@ -164,12 +164,14 @@ abstract class Parameter {
   @VisibleForTesting
   static String getArgumentName(ExpressionTree expressionTree) {
     switch (expressionTree.getKind()) {
-      case MEMBER_SELECT:
+      case MEMBER_SELECT -> {
         return ((MemberSelectTree) expressionTree).getIdentifier().toString();
-      case NULL_LITERAL:
+      }
+      case NULL_LITERAL -> {
         // null could match anything pretty well
         return NAME_NULL;
-      case IDENTIFIER:
+      }
+      case IDENTIFIER -> {
         IdentifierTree idTree = (IdentifierTree) expressionTree;
         if (idTree.getName().contentEquals("this")) {
           // for the 'this' keyword the argument name is the name of the object's class
@@ -179,7 +181,8 @@ abstract class Parameter {
           // if we have a variable, just extract its name
           return idTree.getName().toString();
         }
-      case METHOD_INVOCATION:
+      }
+      case METHOD_INVOCATION -> {
         MethodInvocationTree methodInvocationTree = (MethodInvocationTree) expressionTree;
         MethodSymbol methodSym = ASTHelpers.getSymbol(methodInvocationTree);
         String name = methodSym.getSimpleName().toString();
@@ -199,13 +202,16 @@ abstract class Parameter {
         } else {
           return name;
         }
-      case NEW_CLASS:
+      }
+      case NEW_CLASS -> {
         MethodSymbol constructorSym = ASTHelpers.getSymbol((NewClassTree) expressionTree);
         return constructorSym.owner != null
             ? getClassName((ClassSymbol) constructorSym.owner)
             : NAME_NOT_PRESENT;
-      default:
+      }
+      default -> {
         return NAME_NOT_PRESENT;
+      }
     }
   }
 }

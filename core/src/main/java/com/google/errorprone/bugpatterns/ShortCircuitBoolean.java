@@ -49,11 +49,10 @@ public class ShortCircuitBoolean extends BugChecker implements BinaryTreeMatcher
   @Override
   public Description matchBinary(BinaryTree tree, VisitorState state) {
     switch (tree.getKind()) {
-      case AND:
-      case OR:
-        break;
-      default:
+      case AND, OR -> {}
+      default -> {
         return NO_MATCH;
+      }
     }
     if (!isSameType(getType(tree), state.getSymtab().booleanType, state)) {
       return NO_MATCH;

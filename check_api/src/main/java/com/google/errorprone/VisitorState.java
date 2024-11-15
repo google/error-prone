@@ -627,28 +627,18 @@ public class VisitorState {
    * the corresponding Type, or null otherwise.
    */
   private @Nullable Type getPrimitiveOrVoidType(String typeStr) {
-    switch (typeStr) {
-      case "byte":
-        return getSymtab().byteType;
-      case "short":
-        return getSymtab().shortType;
-      case "int":
-        return getSymtab().intType;
-      case "long":
-        return getSymtab().longType;
-      case "float":
-        return getSymtab().floatType;
-      case "double":
-        return getSymtab().doubleType;
-      case "boolean":
-        return getSymtab().booleanType;
-      case "char":
-        return getSymtab().charType;
-      case "void":
-        return getSymtab().voidType;
-      default:
-        return null;
-    }
+    return switch (typeStr) {
+      case "byte" -> getSymtab().byteType;
+      case "short" -> getSymtab().shortType;
+      case "int" -> getSymtab().intType;
+      case "long" -> getSymtab().longType;
+      case "float" -> getSymtab().floatType;
+      case "double" -> getSymtab().doubleType;
+      case "boolean" -> getSymtab().booleanType;
+      case "char" -> getSymtab().charType;
+      case "void" -> getSymtab().voidType;
+      default -> null;
+    };
   }
 
   /** Returns true if the compilation is targeting Android. */

@@ -155,24 +155,22 @@ public abstract class Choice<T> {
   }
 
   public static <T> Choice<T> from(Collection<T> choices) {
-    switch (choices.size()) {
-      case 0:
-        return none();
-      case 1:
-        return of(Iterables.getOnlyElement(choices));
-      default:
-        return new Choice<T>() {
-          @Override
-          protected Iterator<T> iterator() {
-            return choices.iterator();
-          }
+    return switch (choices.size()) {
+      case 0 -> none();
+      case 1 -> of(Iterables.getOnlyElement(choices));
+      default ->
+          new Choice<T>() {
+            @Override
+            protected Iterator<T> iterator() {
+              return choices.iterator();
+            }
 
-          @Override
-          public String toString() {
-            return String.format("Choice.from(%s)", choices);
-          }
-        };
-    }
+            @Override
+            public String toString() {
+              return String.format("Choice.from(%s)", choices);
+            }
+          };
+    };
   }
 
   /** Returns a choice between any of the options from any of the specified choices. */

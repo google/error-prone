@@ -99,15 +99,11 @@ public abstract class ChildMultiMatcher<T extends Tree, N extends Tree>
     abstract MatchResult<N> matches(List<Matchable<N>> matchables, Matcher<N> nodeMatcher);
 
     public static <N extends Tree> ListMatcher<N> create(MatchType matchType) {
-      switch (matchType) {
-        case ALL:
-          return new AllMatcher<>();
-        case AT_LEAST_ONE:
-          return new AtLeastOneMatcher<>();
-        case LAST:
-          return new LastMatcher<>();
-      }
-      throw new AssertionError("Unexpected match type: " + matchType);
+      return switch (matchType) {
+        case ALL -> new AllMatcher<>();
+        case AT_LEAST_ONE -> new AtLeastOneMatcher<>();
+        case LAST -> new LastMatcher<>();
+      };
     }
   }
 

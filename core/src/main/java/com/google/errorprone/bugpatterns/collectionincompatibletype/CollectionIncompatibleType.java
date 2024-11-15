@@ -115,27 +115,23 @@ public class CollectionIncompatibleType extends BugChecker
             .setMessage(result.message(sourceType, targetType) + compatibilityReport.extraReason());
 
     switch (fixType) {
-      case PRINT_TYPES_AS_COMMENT:
-        description.addFix(
-            SuggestedFix.prefixWith(
-                tree,
-                String.format(
-                    "/* expected: %s, actual: %s */",
-                    ASTHelpers.getUpperBound(result.targetType(), types), result.sourceType())));
-        break;
-      case CAST:
-        result.buildFix().ifPresent(description::addFix);
-        break;
-      case SUPPRESS_WARNINGS:
+      case PRINT_TYPES_AS_COMMENT ->
+          description.addFix(
+              SuggestedFix.prefixWith(
+                  tree,
+                  String.format(
+                      "/* expected: %s, actual: %s */",
+                      ASTHelpers.getUpperBound(result.targetType(), types), result.sourceType())));
+      case CAST -> result.buildFix().ifPresent(description::addFix);
+      case SUPPRESS_WARNINGS -> {
         SuggestedFix.Builder builder = SuggestedFix.builder();
         builder.prefixWith(
             result.sourceTree(),
             String.format("/* expected: %s, actual: %s */ ", targetType, sourceType));
         addSuppressWarnings(builder, state, "CollectionIncompatibleType");
         description.addFix(builder.build());
-        break;
-      case NONE:
-        break;
+      }
+      case NONE -> {}
     }
 
     return description.build();

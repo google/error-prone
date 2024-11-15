@@ -379,30 +379,31 @@ public class MethodInvocationMatcher {
             entry.getKey().comparisonKey(), traverse(mappings, mappings.get(entry.getValue())));
       }
 
-      switch (type) {
-        case RECEIVER_SUPERTYPE:
-          return (ctx, state) -> {
-            Type receiverType = (Type) TokenType.RECEIVER_SUPERTYPE.extract(ctx, state);
-            // Have to iterate here because subclassing can't be checked by lookup.
-            for (Map.Entry<Object, BiPredicate<Context, VisitorState>> child : lookup.entrySet()) {
-              if (ASTHelpers.isSubtype(
-                  receiverType, state.getTypeFromString((String) child.getKey()), state)) {
-                return child.getValue().test(ctx, state);
+      return switch (type) {
+        case RECEIVER_SUPERTYPE ->
+            (ctx, state) -> {
+              Type receiverType = (Type) TokenType.RECEIVER_SUPERTYPE.extract(ctx, state);
+              // Have to iterate here because subclassing can't be checked by lookup.
+              for (Map.Entry<Object, BiPredicate<Context, VisitorState>> child :
+                  lookup.entrySet()) {
+                if (ASTHelpers.isSubtype(
+                    receiverType, state.getTypeFromString((String) child.getKey()), state)) {
+                  return child.getValue().test(ctx, state);
+                }
               }
-            }
-            return defaultBehavior.test(ctx, state);
-          };
-        default:
-          return (ctx, state) -> {
-            // All other token types can be checked via a map lookup.
-            Object lookupKey = type.extract(ctx, state);
-            BiPredicate<Context, VisitorState> child = lookup.get(lookupKey);
-            if (child != null) {
-              return child.test(ctx, state);
-            }
-            return defaultBehavior.test(ctx, state);
-          };
-      }
+              return defaultBehavior.test(ctx, state);
+            };
+        default ->
+            (ctx, state) -> {
+              // All other token types can be checked via a map lookup.
+              Object lookupKey = type.extract(ctx, state);
+              BiPredicate<Context, VisitorState> child = lookup.get(lookupKey);
+              if (child != null) {
+                return child.test(ctx, state);
+              }
+              return defaultBehavior.test(ctx, state);
+            };
+      };
     }
   }
 

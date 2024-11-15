@@ -130,16 +130,13 @@ public class BoxedPrimitiveConstructor extends BugChecker implements NewClassTre
       String optionalCast = "";
       String optionalSuffix = "";
       switch (doubleAndFloatStatus) {
-        case PRIMITIVE_DOUBLE_INTO_FLOAT:
-          // new Float(double).compareTo($foo) => Float.compare((float) double, foo)
-          optionalCast = "(float) ";
-          break;
-        case BOXED_DOUBLE_INTO_FLOAT:
-          // new Float(Double).compareTo($foo) => Float.compare(Double.floatValue(), foo)
-          optionalSuffix = ".floatValue()";
-          break;
-        default:
-          break;
+        case PRIMITIVE_DOUBLE_INTO_FLOAT ->
+            // new Float(double).compareTo($foo) => Float.compare((float) double, foo)
+            optionalCast = "(float) ";
+        case BOXED_DOUBLE_INTO_FLOAT ->
+            // new Float(Double).compareTo($foo) => Float.compare(Double.floatValue(), foo)
+            optionalSuffix = ".floatValue()";
+        default -> {}
       }
 
       String replacement = String.format("%s.hashCode(", typeName);
@@ -158,16 +155,13 @@ public class BoxedPrimitiveConstructor extends BugChecker implements NewClassTre
       String optionalCast = "";
       String optionalSuffix = "";
       switch (doubleAndFloatStatus) {
-        case PRIMITIVE_DOUBLE_INTO_FLOAT:
-          // new Float(double).compareTo($foo) => Float.compare((float) double, foo)
-          optionalCast = "(float) ";
-          break;
-        case BOXED_DOUBLE_INTO_FLOAT:
-          // new Float(Double).compareTo($foo) => Float.compare(Double.floatValue(), foo)
-          optionalSuffix = ".floatValue()";
-          break;
-        default:
-          break;
+        case PRIMITIVE_DOUBLE_INTO_FLOAT ->
+            // new Float(double).compareTo($foo) => Float.compare((float) double, foo)
+            optionalCast = "(float) ";
+        case BOXED_DOUBLE_INTO_FLOAT ->
+            // new Float(Double).compareTo($foo) => Float.compare(Double.floatValue(), foo)
+            optionalSuffix = ".floatValue()";
+        default -> {}
       }
 
       return SuggestedFix.builder()
@@ -188,18 +182,15 @@ public class BoxedPrimitiveConstructor extends BugChecker implements NewClassTre
     String prefixToArg;
     String suffix = "";
     switch (doubleAndFloatStatus) {
-      case PRIMITIVE_DOUBLE_INTO_FLOAT:
-        // new Float(double) => Float.valueOf((float) double)
-        prefixToArg = String.format("%s.valueOf(%s", typeName, "(float) ");
-        break;
-      case BOXED_DOUBLE_INTO_FLOAT:
+      case PRIMITIVE_DOUBLE_INTO_FLOAT ->
+          // new Float(double) => Float.valueOf((float) double)
+          prefixToArg = String.format("%s.valueOf(%s", typeName, "(float) ");
+      case BOXED_DOUBLE_INTO_FLOAT -> {
         // new Float(Double) => Double.floatValue()
         prefixToArg = "";
         suffix = ".floatValue(";
-        break;
-      default:
-        prefixToArg = String.format("%s.valueOf(", typeName);
-        break;
+      }
+      default -> prefixToArg = String.format("%s.valueOf(", typeName);
     }
 
     return SuggestedFix.builder()
@@ -247,19 +238,18 @@ public class BoxedPrimitiveConstructor extends BugChecker implements NewClassTre
   }
 
   private static boolean shouldAutoboxFix(VisitorState state) {
-    switch (state.getPath().getParentPath().getLeaf().getKind()) {
-      case METHOD_INVOCATION:
-        // autoboxing a method argument affects overload resolution
-        return false;
-      case MEMBER_SELECT:
-        // can't select members on primitives (e.g. `theInteger.toString()`)
-        return false;
-      case TYPE_CAST:
-        // can't combine autoboxing and casts to reference types
-        return false;
-      default:
-        return true;
-    }
+    return switch (state.getPath().getParentPath().getLeaf().getKind()) {
+      case METHOD_INVOCATION ->
+          // autoboxing a method argument affects overload resolution
+          false;
+      case MEMBER_SELECT ->
+          // can't select members on primitives (e.g. `theInteger.toString()`)
+          false;
+      case TYPE_CAST ->
+          // can't combine autoboxing and casts to reference types
+          false;
+      default -> true;
+    };
   }
 
   private static String literalFix(boolean value, boolean autoboxFix) {

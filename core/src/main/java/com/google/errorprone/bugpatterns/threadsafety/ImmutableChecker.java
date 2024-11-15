@@ -609,12 +609,13 @@ public class ImmutableChecker extends BugChecker
     OUTER:
     for (Symbol s = sym; s.owner != null; s = s.owner) {
       switch (s.getKind()) {
-        case INSTANCE_INIT:
+        case INSTANCE_INIT -> {
           continue;
-        case PACKAGE:
+        }
+        case PACKAGE -> {
           break OUTER;
-        default:
-          break;
+        }
+        default -> {}
       }
       AnnotationInfo annotation = analysis.getImmutableAnnotation(s, state);
       if (annotation == null) {

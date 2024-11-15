@@ -548,22 +548,23 @@ public final class ThreadSafety {
     @Override
     public Violation visitType(Type type, Void s) {
       switch (type.tsym.getKind()) {
-        case ANNOTATION_TYPE:
+        case ANNOTATION_TYPE -> {
           // assume annotations are always immutable
           // TODO(b/25630189): add enforcement
           return Violation.absent();
-        case ENUM:
+        }
+        case ENUM -> {
           // assume enums are always immutable
           // TODO(b/25630186): add enforcement
           return Violation.absent();
-        case INTERFACE:
-        case CLASS:
-          break;
-        default:
+        }
+        case INTERFACE, CLASS -> {}
+        default -> {
           if (type.tsym.getKind().name().equals("RECORD")) {
             break;
           }
           throw new AssertionError(String.format("Unexpected type kind %s", type.tsym.getKind()));
+        }
       }
       if (WellKnownMutability.isAnnotation(state, type)) {
         // annotation implementations may not have ANNOTATION_TYPE kind, assume they are immutable
@@ -722,12 +723,13 @@ public final class ThreadSafety {
     OUTER:
     for (Symbol s = sym; s.owner != null; s = s.owner) {
       switch (s.getKind()) {
-        case INSTANCE_INIT:
+        case INSTANCE_INIT -> {
           continue;
-        case PACKAGE:
+        }
+        case PACKAGE -> {
           break OUTER;
-        default:
-          break;
+        }
+        default -> {}
       }
       AnnotationInfo annotation = getMarkerOrAcceptedAnnotation(s, state);
       if (annotation == null) {

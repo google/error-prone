@@ -338,16 +338,12 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
   }
 
   private static String describeVariable(VarSymbol symbol) {
-    switch (symbol.getKind()) {
-      case FIELD:
-        return "field";
-      case LOCAL_VARIABLE:
-        return "local variable";
-      case PARAMETER:
-        return "parameter";
-      default:
-        return "variable";
-    }
+    return switch (symbol.getKind()) {
+      case FIELD -> "field";
+      case LOCAL_VARIABLE -> "local variable";
+      case PARAMETER -> "parameter";
+      default -> "variable";
+    };
   }
 
   private static boolean hasNativeMethods(CompilationUnitTree tree) {
@@ -675,18 +671,18 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
         return;
       }
       switch (symbol.getKind()) {
-        case FIELD:
+        case FIELD -> {
           // We are only interested in private fields and those which are not special.
           if (isFieldEligibleForChecking(variableTree, symbol)) {
             unusedElements.put(symbol, getCurrentPath());
             usageSites.put(symbol, getCurrentPath());
           }
-          break;
-        case LOCAL_VARIABLE:
+        }
+        case LOCAL_VARIABLE -> {
           unusedElements.put(symbol, getCurrentPath());
           usageSites.put(symbol, getCurrentPath());
-          break;
-        case PARAMETER:
+        }
+        case PARAMETER -> {
           // ignore the receiver parameter
           if (variableTree.getName().contentEquals("this")) {
             return;
@@ -702,9 +698,8 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
           if (!isParameterSubjectToAnalysis(symbol)) {
             onlyCheckForReassignments.add(symbol);
           }
-          break;
-        default:
-          break;
+        }
+        default -> {}
       }
     }
 

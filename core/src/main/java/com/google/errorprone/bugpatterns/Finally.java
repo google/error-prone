@@ -120,12 +120,10 @@ public class Finally extends BugChecker
       Tree prevTree = null;
       for (Tree leaf : state.getPath()) {
         switch (leaf.getKind()) {
-          case METHOD:
-          case LAMBDA_EXPRESSION:
-          case CLASS:
+          case METHOD, LAMBDA_EXPRESSION, CLASS -> {
             return false;
-          default:
-            break;
+          }
+          default -> {}
         }
         MatchResult mr = matchAncestor(leaf, prevTree);
         if (mr != MatchResult.KEEP_LOOKING) {
@@ -183,13 +181,10 @@ public class Finally extends BugChecker
       // (1)
       if (label == null) {
         switch (leaf.getKind()) {
-          case WHILE_LOOP:
-          case DO_WHILE_LOOP:
-          case FOR_LOOP:
-          case ENHANCED_FOR_LOOP:
+          case WHILE_LOOP, DO_WHILE_LOOP, FOR_LOOP, ENHANCED_FOR_LOOP -> {
             return MatchResult.NO_MATCH;
-          default:
-            break;
+          }
+          default -> {}
         }
       }
 

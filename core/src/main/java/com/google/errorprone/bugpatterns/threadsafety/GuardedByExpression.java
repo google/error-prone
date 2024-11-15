@@ -287,22 +287,11 @@ public abstract class GuardedByExpression {
 
     private static void pprint(GuardedByExpression exp, StringBuilder sb) {
       switch (exp.kind()) {
-        case CLASS_LITERAL:
-          sb.append(String.format("%s.class", exp.sym().name));
-          break;
-        case THIS:
-          sb.append("this");
-          break;
-        case TYPE_LITERAL:
-        case LOCAL_VARIABLE:
-          sb.append(exp.sym().name);
-          break;
-        case SELECT:
-          pprintSelect((Select) exp, sb);
-          break;
-        case ERROR:
-          sb.append(((Erroneous) exp).guardString());
-          break;
+        case CLASS_LITERAL -> sb.append(String.format("%s.class", exp.sym().name));
+        case THIS -> sb.append("this");
+        case TYPE_LITERAL, LOCAL_VARIABLE -> sb.append(exp.sym().name);
+        case SELECT -> pprintSelect((Select) exp, sb);
+        case ERROR -> sb.append(((Erroneous) exp).guardString());
       }
     }
 
@@ -341,20 +330,11 @@ public abstract class GuardedByExpression {
 
     private static void pprint(GuardedByExpression exp, StringBuilder sb) {
       switch (exp.kind()) {
-        case TYPE_LITERAL:
-        case CLASS_LITERAL:
-        case LOCAL_VARIABLE:
-          sb.append(String.format("(%s %s)", exp.kind(), exp.sym()));
-          break;
-        case THIS:
-          sb.append("(THIS)");
-          break;
-        case SELECT:
-          pprintSelect((Select) exp, sb);
-          break;
-        case ERROR:
-          sb.append("(ERROR)");
-          break;
+        case TYPE_LITERAL, CLASS_LITERAL, LOCAL_VARIABLE ->
+            sb.append(String.format("(%s %s)", exp.kind(), exp.sym()));
+        case THIS -> sb.append("(THIS)");
+        case SELECT -> pprintSelect((Select) exp, sb);
+        case ERROR -> sb.append("(ERROR)");
       }
     }
 

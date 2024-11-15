@@ -64,11 +64,10 @@ public abstract class AbstractReferenceEquality extends BugChecker implements Bi
   @Override
   public final Description matchBinary(BinaryTree tree, VisitorState state) {
     switch (tree.getKind()) {
-      case EQUAL_TO:
-      case NOT_EQUAL_TO:
-        break;
-      default:
+      case EQUAL_TO, NOT_EQUAL_TO -> {}
+      default -> {
         return Description.NO_MATCH;
+      }
     }
     if (tree.getLeftOperand().getKind() == Kind.NULL_LITERAL
         || !matchArgument(tree.getLeftOperand(), state)) {

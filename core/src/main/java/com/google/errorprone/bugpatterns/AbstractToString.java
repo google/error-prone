@@ -265,14 +265,13 @@ public abstract class AbstractToString extends BugChecker
   private Optional<Fix> getFix(
       ExpressionTree tree, VisitorState state, Tree parent, ToStringKind toStringKind) {
     switch (toStringKind) {
-      case IMPLICIT:
-      case FLOGGER:
-      case FORMAT_METHOD:
+      case IMPLICIT, FLOGGER, FORMAT_METHOD -> {
         return implicitToStringFix(tree, state);
-      case EXPLICIT:
+      }
+      case EXPLICIT -> {
         return toStringFix(parent, tree, state);
-      case NONE:
-        // fall out
+      }
+      case NONE -> {}
     }
     throw new AssertionError();
   }

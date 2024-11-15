@@ -189,13 +189,11 @@ public class TypeParameterNaming extends BugChecker implements TypeParameterTree
     while (!isStatic(sym)) {
       sym = sym.owner;
       switch (sym.getKind()) {
-        case PACKAGE:
+        case PACKAGE -> {
           break outer;
-        case METHOD:
-        case CLASS:
-          typeVarScopes.addAll(0, sym.getTypeParameters());
-          break;
-        default: // fall out
+        }
+        case METHOD, CLASS -> typeVarScopes.addAll(0, sym.getTypeParameters());
+        default -> {}
       }
     }
     return typeVarScopes;

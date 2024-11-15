@@ -79,19 +79,16 @@ public abstract class ApiDiff {
         ImmutableSetMultimap.builder();
     for (ApiDiffProto.ClassDiff c : diff.getClassDiffList()) {
       switch (c.getDiffCase()) {
-        case EVERYTHING_DIFF:
-          unsupportedClasses.add(c.getEverythingDiff().getClassName());
-          break;
-        case MEMBER_DIFF:
+        case EVERYTHING_DIFF -> unsupportedClasses.add(c.getEverythingDiff().getClassName());
+        case MEMBER_DIFF -> {
           ApiDiffProto.MemberDiff memberDiff = c.getMemberDiff();
           for (ApiDiffProto.ClassMember member : memberDiff.getMemberList()) {
             unsupportedMembersByClass.put(
                 memberDiff.getClassName(),
                 ClassMemberKey.create(member.getIdentifier(), member.getMemberDescriptor()));
           }
-          break;
-        default:
-          throw new AssertionError(c.getDiffCase());
+        }
+        default -> throw new AssertionError(c.getDiffCase());
       }
     }
     return new AutoValue_ApiDiff(unsupportedClasses.build(), unsupportedMembersByClass.build());

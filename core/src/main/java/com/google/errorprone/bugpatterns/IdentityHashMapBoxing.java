@@ -70,14 +70,9 @@ public class IdentityHashMapBoxing extends BugChecker
       return Description.NO_MATCH;
     }
     Type type = state.getTypes().unboxedType(argumentTypes.get(0));
-    switch (type.getKind()) {
-      case DOUBLE:
-      case LONG:
-      case INT:
-      case FLOAT:
-        return describeMatch(tree);
-      default:
-        return Description.NO_MATCH;
-    }
+    return switch (type.getKind()) {
+      case DOUBLE, LONG, INT, FLOAT -> describeMatch(tree);
+      default -> Description.NO_MATCH;
+    };
   }
 }

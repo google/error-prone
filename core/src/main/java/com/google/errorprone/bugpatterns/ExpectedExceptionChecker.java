@@ -185,7 +185,7 @@ public class ExpectedExceptionChecker extends BugChecker implements MethodTreeMa
       Symtab symtab = state.getSymtab();
       List<? extends ExpressionTree> args = invocation.getArguments();
       switch (symbol.getSimpleName().toString()) {
-        case "expect":
+        case "expect" -> {
           Type type = ASTHelpers.getType(getOnlyElement(invocation.getArguments()));
           if (isSubtype(type, symtab.classType, state)) {
             // expect(Class<?>)
@@ -210,8 +210,8 @@ public class ExpectedExceptionChecker extends BugChecker implements MethodTreeMa
                 String.format(
                     "assertThat(thrown, %s);", state.getSourceForNode(getOnlyElement(args))));
           }
-          break;
-        case "expectCause":
+        }
+        case "expectCause" -> {
           ExpressionTree matcher = getOnlyElement(invocation.getArguments());
           if (IS_A.matches(matcher, state)) {
             fix.addStaticImport("com.google.common.truth.Truth.assertThat");
@@ -227,8 +227,8 @@ public class ExpectedExceptionChecker extends BugChecker implements MethodTreeMa
                     "assertThat(thrown.getCause(), %s);",
                     state.getSourceForNode(getOnlyElement(args))));
           }
-          break;
-        case "expectMessage":
+        }
+        case "expectMessage" -> {
           if (isSubtype(
               getOnlyElement(symbol.getParameters()).asType(), symtab.stringType, state)) {
             // expectedMessage(String)
@@ -245,9 +245,8 @@ public class ExpectedExceptionChecker extends BugChecker implements MethodTreeMa
                     "assertThat(thrown.getMessage(), %s);",
                     state.getSourceForNode(getOnlyElement(args))));
           }
-          break;
-        default:
-          throw new AssertionError("unknown expect method: " + symbol.getSimpleName());
+        }
+        default -> throw new AssertionError("unknown expect method: " + symbol.getSimpleName());
       }
     }
     // remove all interactions with the ExpectedException rule

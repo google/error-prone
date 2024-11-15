@@ -49,16 +49,15 @@ public class ReachabilityFenceUsage extends BugChecker implements MethodInvocati
     OUTER:
     for (Tree enclosing : state.getPath().getParentPath()) {
       switch (enclosing.getKind()) {
-        case TRY:
+        case TRY -> {
           if (Objects.equals(((TryTree) enclosing).getFinallyBlock(), previous)) {
             return NO_MATCH;
           }
-          break;
-        case CLASS:
-        case METHOD:
-        case LAMBDA_EXPRESSION:
+        }
+        case CLASS, METHOD, LAMBDA_EXPRESSION -> {
           break OUTER;
-        default: // fall out
+        }
+        default -> {}
       }
       previous = enclosing;
     }

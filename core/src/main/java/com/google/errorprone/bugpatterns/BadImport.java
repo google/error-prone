@@ -249,20 +249,18 @@ public class BadImport extends BugChecker implements ImportTreeMatcher {
           private void moveTypeAnnotations(IdentifierTree node) {
             Tree parent = getCurrentPath().getParentPath().getLeaf();
             switch (parent.getKind()) {
-              case METHOD:
-              case VARIABLE:
-              case ANNOTATED_TYPE:
-                moveTypeAnnotations(node, parent, state, builder);
-                break;
-              case PARAMETERIZED_TYPE:
+              case METHOD, VARIABLE, ANNOTATED_TYPE ->
+                  moveTypeAnnotations(node, parent, state, builder);
+              case PARAMETERIZED_TYPE -> {
                 Tree grandParent = getCurrentPath().getParentPath().getParentPath().getLeaf();
                 if (grandParent.getKind() == Kind.VARIABLE
                     || grandParent.getKind() == Kind.METHOD) {
                   moveTypeAnnotations(node, grandParent, state, builder);
                 }
-                break;
-              default:
+              }
+              default -> {
                 // Do nothing.
+              }
             }
           }
 

@@ -165,14 +165,11 @@ public final class ConstantPatternCompile extends BugChecker implements ClassTre
       return Optional.empty();
     }
     VarSymbol sym = getSymbol(tree);
-    switch (sym.getKind()) {
-      case RESOURCE_VARIABLE:
-        return Optional.of(SuggestedFix.emptyFix());
-      case LOCAL_VARIABLE:
-        return Optional.of(fixLocal(tree, outerMethodTree, state));
-      default:
-        return Optional.empty();
-    }
+    return switch (sym.getKind()) {
+      case RESOURCE_VARIABLE -> Optional.of(SuggestedFix.emptyFix());
+      case LOCAL_VARIABLE -> Optional.of(fixLocal(tree, outerMethodTree, state));
+      default -> Optional.empty();
+    };
   }
 
   private static SuggestedFix fixLocal(

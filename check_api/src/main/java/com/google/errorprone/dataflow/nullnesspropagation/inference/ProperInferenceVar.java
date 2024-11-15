@@ -51,16 +51,11 @@ enum ProperInferenceVar implements InferenceVariable {
   abstract Nullness nullness();
 
   static InferenceVariable create(Nullness nullness) {
-    switch (nullness) {
-      case BOTTOM:
-        return ProperInferenceVar.BOTTOM;
-      case NONNULL:
-        return ProperInferenceVar.NONNULL;
-      case NULL:
-        return ProperInferenceVar.NULL;
-      case NULLABLE:
-        return ProperInferenceVar.NULLABLE;
-    }
-    throw new RuntimeException("Unhandled nullness value: " + nullness);
+    return switch (nullness) {
+      case BOTTOM -> ProperInferenceVar.BOTTOM;
+      case NONNULL -> ProperInferenceVar.NONNULL;
+      case NULL -> ProperInferenceVar.NULL;
+      case NULLABLE -> ProperInferenceVar.NULLABLE;
+    };
   }
 }

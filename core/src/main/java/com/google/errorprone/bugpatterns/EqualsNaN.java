@@ -42,14 +42,11 @@ public class EqualsNaN extends BugChecker implements BinaryTreeMatcher {
   public Description matchBinary(BinaryTree tree, VisitorState state) {
     String prefix;
     switch (tree.getKind()) {
-      case EQUAL_TO:
-        prefix = "";
-        break;
-      case NOT_EQUAL_TO:
-        prefix = "!";
-        break;
-      default:
+      case EQUAL_TO -> prefix = "";
+      case NOT_EQUAL_TO -> prefix = "!";
+      default -> {
         return Description.NO_MATCH;
+      }
     }
     JCExpression left = (JCExpression) tree.getLeftOperand();
     JCExpression right = (JCExpression) tree.getRightOperand();

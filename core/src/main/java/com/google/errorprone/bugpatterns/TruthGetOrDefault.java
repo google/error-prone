@@ -74,41 +74,39 @@ public final class TruthGetOrDefault extends BugChecker implements MethodInvocat
     ExpressionTree defaultVal = argMethodInvocationTree.getArguments().get(1);
     ExpressionTree expectedVal = getOnlyElement(tree.getArguments());
     Match match = areValuesSame(defaultVal, expectedVal, state);
-    switch (match) {
-      case UNKNOWN:
-        return Description.NO_MATCH;
-      case DIFFERENT:
-        return describeMatch(
-            tree,
-            SuggestedFix.builder()
-                .replace(
-                    argMethodInvocationTree,
-                    state.getSourceForNode(ASTHelpers.getReceiver(argMethodInvocationTree)))
-                .replace(
-                    state.getEndPosition(rec),
-                    state.getEndPosition(tree.getMethodSelect()),
-                    ".containsEntry")
-                .replace(
-                    tree.getArguments().get(0),
-                    state.getSourceForNode(argMethodInvocationTree.getArguments().get(0))
-                        + ", "
-                        + state.getSourceForNode(tree.getArguments().get(0)))
-                .build());
-      case SAME:
-        return describeMatch(
-            tree,
-            SuggestedFix.builder()
-                .replace(arg, state.getSourceForNode(ASTHelpers.getReceiver(arg)))
-                .replace(
-                    state.getEndPosition(rec),
-                    state.getEndPosition(tree.getMethodSelect()),
-                    ".doesNotContainKey")
-                .replace(
-                    tree.getArguments().get(0),
-                    state.getSourceForNode(argMethodInvocationTree.getArguments().get(0)))
-                .build());
-    }
-    return Description.NO_MATCH;
+    return switch (match) {
+      case UNKNOWN -> Description.NO_MATCH;
+      case DIFFERENT ->
+          describeMatch(
+              tree,
+              SuggestedFix.builder()
+                  .replace(
+                      argMethodInvocationTree,
+                      state.getSourceForNode(ASTHelpers.getReceiver(argMethodInvocationTree)))
+                  .replace(
+                      state.getEndPosition(rec),
+                      state.getEndPosition(tree.getMethodSelect()),
+                      ".containsEntry")
+                  .replace(
+                      tree.getArguments().get(0),
+                      state.getSourceForNode(argMethodInvocationTree.getArguments().get(0))
+                          + ", "
+                          + state.getSourceForNode(tree.getArguments().get(0)))
+                  .build());
+      case SAME ->
+          describeMatch(
+              tree,
+              SuggestedFix.builder()
+                  .replace(arg, state.getSourceForNode(ASTHelpers.getReceiver(arg)))
+                  .replace(
+                      state.getEndPosition(rec),
+                      state.getEndPosition(tree.getMethodSelect()),
+                      ".doesNotContainKey")
+                  .replace(
+                      tree.getArguments().get(0),
+                      state.getSourceForNode(argMethodInvocationTree.getArguments().get(0)))
+                  .build());
+    };
   }
 
   private enum Match {

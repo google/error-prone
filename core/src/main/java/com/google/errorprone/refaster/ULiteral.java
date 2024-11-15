@@ -119,15 +119,13 @@ public abstract class ULiteral extends UExpression implements LiteralTree {
   public JCLiteral inline(Inliner inliner) {
     Object value = this.getValue();
     switch (getKind()) {
-      case CHAR_LITERAL:
-        // Why do they do it like this?  I wish I knew.
-        value = (int) ((Character) value).charValue();
-        break;
-      case BOOLEAN_LITERAL:
-        value = ((Boolean) value) ? 1 : 0;
-        break;
-      default:
+      case CHAR_LITERAL ->
+          // Why do they do it like this?  I wish I knew.
+          value = (int) ((Character) value).charValue();
+      case BOOLEAN_LITERAL -> value = ((Boolean) value) ? 1 : 0;
+      default -> {
         // do nothing
+      }
     }
     return inliner.maker().Literal(LIT_KIND_TAG.get(getKind()), value);
   }

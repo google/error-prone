@@ -364,20 +364,24 @@ public class ASTHelpers {
   /** Checks whether an expression requires parentheses. */
   public static boolean requiresParentheses(ExpressionTree expression, VisitorState state) {
     switch (expression.getKind()) {
-      case IDENTIFIER:
-      case MEMBER_SELECT:
-      case METHOD_INVOCATION:
-      case ARRAY_ACCESS:
-      case PARENTHESIZED:
-      case NEW_CLASS:
-      case MEMBER_REFERENCE:
+      case IDENTIFIER,
+          MEMBER_SELECT,
+          METHOD_INVOCATION,
+          ARRAY_ACCESS,
+          PARENTHESIZED,
+          NEW_CLASS,
+          MEMBER_REFERENCE -> {
         return false;
-      case LAMBDA_EXPRESSION:
+      }
+      case LAMBDA_EXPRESSION -> {
         // Parenthesizing e.g. `x -> (y -> z)` is unnecessary but helpful
         Tree parent = state.getPath().getParentPath().getLeaf();
         return parent.getKind().equals(Kind.LAMBDA_EXPRESSION)
             && stripParentheses(((LambdaExpressionTree) parent).getBody()).equals(expression);
-      default: // continue below
+      }
+      default -> {
+        // continue below
+      }
     }
     if (expression instanceof LiteralTree) {
       if (!isSameType(getType(expression), state.getSymtab().stringType, state)) {
@@ -446,12 +450,13 @@ public class ASTHelpers {
   public static @Nullable MethodTree findEnclosingMethod(VisitorState state) {
     for (Tree parent : state.getPath()) {
       switch (parent.getKind()) {
-        case METHOD:
+        case METHOD -> {
           return (MethodTree) parent;
-        case CLASS:
-        case LAMBDA_EXPRESSION:
+        }
+        case CLASS, LAMBDA_EXPRESSION -> {
           return null;
-        default: // fall out
+        }
+        default -> {}
       }
     }
     return null;
@@ -1650,14 +1655,11 @@ public class ASTHelpers {
   }
 
   public static boolean isSuper(Tree tree) {
-    switch (tree.getKind()) {
-      case IDENTIFIER:
-        return ((IdentifierTree) tree).getName().contentEquals("super");
-      case MEMBER_SELECT:
-        return ((MemberSelectTree) tree).getIdentifier().contentEquals("super");
-      default:
-        return false;
-    }
+    return switch (tree.getKind()) {
+      case IDENTIFIER -> ((IdentifierTree) tree).getName().contentEquals("super");
+      case MEMBER_SELECT -> ((MemberSelectTree) tree).getIdentifier().contentEquals("super");
+      default -> false;
+    };
   }
 
   /**
@@ -1708,19 +1710,11 @@ public class ASTHelpers {
    */
   private static @Nullable Type unaryNumericPromotion(Type type, VisitorState state) {
     Type unboxed = unboxAndEnsureNumeric(type, state);
-    switch (unboxed.getTag()) {
-      case BYTE:
-      case SHORT:
-      case CHAR:
-        return state.getSymtab().intType;
-      case INT:
-      case LONG:
-      case FLOAT:
-      case DOUBLE:
-        return unboxed;
-      default:
-        throw new AssertionError("Should not reach here: " + type);
-    }
+    return switch (unboxed.getTag()) {
+      case BYTE, SHORT, CHAR -> state.getSymtab().intType;
+      case INT, LONG, FLOAT, DOUBLE -> unboxed;
+      default -> throw new AssertionError("Should not reach here: " + type);
+    };
   }
 
   /**
@@ -1816,30 +1810,32 @@ public class ASTHelpers {
       return false;
     }
     switch (tree.getKind()) {
-      case IDENTIFIER:
-      case MEMBER_SELECT:
+      case IDENTIFIER, MEMBER_SELECT -> {
         if (!(ASTHelpers.getSymbol(tree) instanceof VarSymbol)) {
           // If we're selecting other than a member (e.g. a type or a method) then this doesn't
           // have a target type.
           return false;
         }
-        break;
-      case PRIMITIVE_TYPE:
-      case ARRAY_TYPE:
-      case PARAMETERIZED_TYPE:
-      case EXTENDS_WILDCARD:
-      case SUPER_WILDCARD:
-      case UNBOUNDED_WILDCARD:
-      case ANNOTATED_TYPE:
-      case INTERSECTION_TYPE:
-      case TYPE_ANNOTATION:
+      }
+      case PRIMITIVE_TYPE,
+          ARRAY_TYPE,
+          PARAMETERIZED_TYPE,
+          EXTENDS_WILDCARD,
+          SUPER_WILDCARD,
+          UNBOUNDED_WILDCARD,
+          ANNOTATED_TYPE,
+          INTERSECTION_TYPE,
+          TYPE_ANNOTATION -> {
         // These are all things that only appear in type uses, so they can't have a target type.
         return false;
-      case ANNOTATION:
+      }
+      case ANNOTATION -> {
         // Annotations can only appear on elements which don't have target types.
         return false;
-      default:
+      }
+      default -> {
         // Continue.
+      }
     }
     return true;
   }
@@ -1925,22 +1921,21 @@ public class ASTHelpers {
       Type expressionType = getType(tree.getExpression());
       Types types = state.getTypes();
       switch (tree.getKind()) {
-        case LEFT_SHIFT_ASSIGNMENT:
-        case RIGHT_SHIFT_ASSIGNMENT:
-        case UNSIGNED_RIGHT_SHIFT_ASSIGNMENT:
+        case LEFT_SHIFT_ASSIGNMENT, RIGHT_SHIFT_ASSIGNMENT, UNSIGNED_RIGHT_SHIFT_ASSIGNMENT -> {
           // Shift operators perform *unary* numeric promotion on the operands, separately.
           if (tree.getExpression().equals(current)) {
             return unaryNumericPromotion(expressionType, state);
           }
-          break;
-        case PLUS_ASSIGNMENT:
+        }
+        case PLUS_ASSIGNMENT -> {
           Type stringType = state.getSymtab().stringType;
           if (types.isSuperType(variableType, stringType)) {
             return stringType;
           }
-          break;
-        default:
+        }
+        default -> {
           // Fall though.
+        }
       }
       // If we've got to here, we can only have boolean or numeric operands
       // (because the only compound assignment operator for String is +=).
@@ -1993,11 +1988,13 @@ public class ASTHelpers {
       for (TreePath path = parent; path != null; path = path.getParentPath()) {
         Tree enclosing = path.getLeaf();
         switch (enclosing.getKind()) {
-          case METHOD:
+          case METHOD -> {
             return getType(((MethodTree) enclosing).getReturnType());
-          case LAMBDA_EXPRESSION:
+          }
+          case LAMBDA_EXPRESSION -> {
             return visitLambdaExpression((LambdaExpressionTree) enclosing, null);
-          default: // fall out
+          }
+          default -> {}
         }
       }
       throw new AssertionError("return not enclosed by method or lambda");
@@ -2492,12 +2489,10 @@ public class ASTHelpers {
 
   /** Returns true if the symbol is static. Returns {@code false} for module symbols. */
   public static boolean isStatic(Symbol symbol) {
-    switch (symbol.getKind()) {
-      case MODULE:
-        return false;
-      default:
-        return symbol.isStatic();
-    }
+    return switch (symbol.getKind()) {
+      case MODULE -> false;
+      default -> symbol.isStatic();
+    };
   }
 
   /**

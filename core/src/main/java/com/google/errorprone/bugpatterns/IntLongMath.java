@@ -56,13 +56,15 @@ public class IntLongMath extends BugChecker
     outer:
     for (Tree parent : state.getPath()) {
       switch (parent.getKind()) {
-        case METHOD:
+        case METHOD -> {
           type = ASTHelpers.getType(((MethodTree) parent).getReturnType());
           break outer;
-        case LAMBDA_EXPRESSION:
+        }
+        case LAMBDA_EXPRESSION -> {
           type = state.getTypes().findDescriptorType(ASTHelpers.getType(parent)).getReturnType();
           break outer;
-        default: // fall out
+        }
+        default -> {}
       }
     }
     if (type == null) {
@@ -104,17 +106,11 @@ public class IntLongMath extends BugChecker
         break;
       }
       switch (nested.getKind()) {
-        case DIVIDE:
-        case REMAINDER:
-        case AND:
-        case XOR:
-        case OR:
-        case RIGHT_SHIFT:
+        case DIVIDE, REMAINDER, AND, XOR, OR, RIGHT_SHIFT -> {
           // Skip binops that can't overflow; it doesn't matter whether they're performed on
           // longs or ints.
-          break;
-        default:
-          innerMost = (BinaryTree) nested;
+        }
+        default -> innerMost = (BinaryTree) nested;
       }
       nested = ((BinaryTree) nested).getLeftOperand();
     }

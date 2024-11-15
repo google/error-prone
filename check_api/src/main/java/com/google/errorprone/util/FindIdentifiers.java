@@ -160,31 +160,26 @@ public final class FindIdentifiers {
     Tree prev = state.getPath().getLeaf();
     for (Tree curr : state.getPath().getParentPath()) {
       switch (curr.getKind()) {
-        case BLOCK:
+        case BLOCK -> {
           for (StatementTree stmt : ((BlockTree) curr).getStatements()) {
             if (stmt.equals(prev)) {
               break;
             }
             addIfVariable(stmt, result);
           }
-          break;
-        case LAMBDA_EXPRESSION:
+        }
+        case LAMBDA_EXPRESSION -> {
           for (VariableTree param : ((LambdaExpressionTree) curr).getParameters()) {
             result.add(ASTHelpers.getSymbol(param));
           }
-          break;
-        case METHOD:
+        }
+        case METHOD -> {
           for (VariableTree param : ((MethodTree) curr).getParameters()) {
             result.add(ASTHelpers.getSymbol(param));
           }
-          break;
-        case CATCH:
-          result.add(ASTHelpers.getSymbol(((CatchTree) curr).getParameter()));
-          break;
-        case CLASS:
-        case INTERFACE:
-        case ENUM:
-        case ANNOTATION_TYPE:
+        }
+        case CATCH -> result.add(ASTHelpers.getSymbol(((CatchTree) curr).getParameter()));
+        case CLASS, INTERFACE, ENUM, ANNOTATION_TYPE -> {
           // Collect fields declared in this class.  If we are in a field initializer, only
           // include fields declared before this one. JLS 8.3.3 allows forward references if the
           // field is referred to by qualified name, but we don't support that.
@@ -210,14 +205,11 @@ public final class FindIdentifiers {
             }
             result.addAll(varsList.build().reverse());
           }
-          break;
-        case FOR_LOOP:
-          addAllIfVariable(((ForLoopTree) curr).getInitializer(), result);
-          break;
-        case ENHANCED_FOR_LOOP:
-          result.add(ASTHelpers.getSymbol(((EnhancedForLoopTree) curr).getVariable()));
-          break;
-        case TRY:
+        }
+        case FOR_LOOP -> addAllIfVariable(((ForLoopTree) curr).getInitializer(), result);
+        case ENHANCED_FOR_LOOP ->
+            result.add(ASTHelpers.getSymbol(((EnhancedForLoopTree) curr).getVariable()));
+        case TRY -> {
           TryTree tryTree = (TryTree) curr;
           boolean inResources = false;
           for (Tree resource : tryTree.getResources()) {
@@ -238,8 +230,8 @@ public final class FindIdentifiers {
             // Case 2: We're in the block (not a catch or finally)
             addAllIfVariable(tryTree.getResources(), result);
           }
-          break;
-        case COMPILATION_UNIT:
+        }
+        case COMPILATION_UNIT -> {
           for (ImportTree importTree : ((CompilationUnitTree) curr).getImports()) {
             if (importTree.isStatic()
                 && importTree.getQualifiedIdentifier().getKind() == Kind.MEMBER_SELECT) {
@@ -262,10 +254,10 @@ public final class FindIdentifiers {
               }
             }
           }
-          break;
-        default:
+        }
+        default -> {
           // other node types don't introduce variables
-          break;
+        }
       }
 
       prev = curr;
@@ -287,7 +279,7 @@ public final class FindIdentifiers {
     for (Tree curr : state.getPath().getParentPath()) {
       createFindIdentifiersScanner(usedSymbols, prev).scan(curr, null);
       switch (curr.getKind()) {
-        case BLOCK:
+        case BLOCK -> {
           // If we see a block then walk over each statement to see if it defines a variable
           for (StatementTree statement : ((BlockTree) curr).getStatements()) {
             if (statement.equals(prev)) {
@@ -297,17 +289,16 @@ public final class FindIdentifiers {
             }
             addIfVariable(statement, definedVariables);
           }
-          break;
-        case FOR_LOOP:
+        }
+        case FOR_LOOP -> {
           ForLoopTree forLoop = (ForLoopTree) curr;
           forLoop.getInitializer().stream().forEach(t -> addIfVariable(t, definedVariables));
-          break;
-        case ENHANCED_FOR_LOOP:
+        }
+        case ENHANCED_FOR_LOOP -> {
           EnhancedForLoopTree enhancedFor = (EnhancedForLoopTree) curr;
           addIfVariable(enhancedFor.getVariable(), definedVariables);
-          break;
-        default:
-          break;
+        }
+        default -> {}
       }
       prev = curr;
     }
@@ -384,8 +375,7 @@ public final class FindIdentifiers {
 
   private static boolean isVisible(VarSymbol var, TreePath path) {
     switch (var.getKind()) {
-      case ENUM_CONSTANT:
-      case FIELD:
+      case ENUM_CONSTANT, FIELD -> {
         ImmutableList<ClassSymbol> enclosingClasses =
             StreamSupport.stream(path.spliterator(), false)
                 .filter(ClassTree.class::isInstance)
@@ -431,8 +421,8 @@ public final class FindIdentifiers {
         // that the only enum constants and fields usable by simple name are either defined
         // in the enclosing class or a superclass).
         return modifiers.contains(Modifier.PUBLIC) || modifiers.contains(Modifier.PROTECTED);
-      case PARAMETER:
-      case LOCAL_VARIABLE:
+      }
+      case PARAMETER, LOCAL_VARIABLE -> {
         // If we are in an anonymous inner class, lambda, or local class, any local variable or
         // method parameter we access that is defined outside the anonymous class/lambda must be
         // final or effectively final (JLS 8.1.3).
@@ -449,11 +439,11 @@ public final class FindIdentifiers {
           }
         }
         return true;
-      case EXCEPTION_PARAMETER:
-      case RESOURCE_VARIABLE:
+      }
+      case EXCEPTION_PARAMETER, RESOURCE_VARIABLE -> {
         return true;
-      default:
-        throw new IllegalArgumentException("Unexpected variable type: " + var.getKind());
+      }
+      default -> throw new IllegalArgumentException("Unexpected variable type: " + var.getKind());
     }
   }
 
@@ -468,30 +458,33 @@ public final class FindIdentifiers {
 
     for (Tree tree : path) {
       switch (tree.getKind()) {
-        case METHOD:
+        case METHOD -> {
           return isStatic(ASTHelpers.getSymbol(tree));
-        case BLOCK: // static initializer
+        }
+        case BLOCK -> {
+          // static initializer
           if (((BlockTree) tree).isStatic()) {
             return true;
           }
-          break;
-        case VARIABLE: // variable initializer of static variable
+        }
+        case VARIABLE -> {
+          // variable initializer of static variable
           VariableTree variableTree = (VariableTree) tree;
           VarSymbol variableSym = ASTHelpers.getSymbol(variableTree);
           if (variableSym.getKind() == ElementKind.FIELD) {
             return Objects.equals(variableTree.getInitializer(), prev) && variableSym.isStatic();
           }
-          break;
-        case METHOD_INVOCATION: // JLS 8.8.7.1 explicit constructor invocation
+        }
+        case METHOD_INVOCATION -> {
+          // JLS 8.8.7.1 explicit constructor invocation
           MethodSymbol methodSym = ASTHelpers.getSymbol((MethodInvocationTree) tree);
           if (methodSym.isConstructor()
               && (Objects.equals(methodSym.owner, enclosingClass)
                   || Objects.equals(methodSym.owner, directSuperClass))) {
             return true;
           }
-          break;
-        default:
-          break;
+        }
+        default -> {}
       }
       prev = tree;
     }

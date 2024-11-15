@@ -80,21 +80,16 @@ public class FloatCast extends BugChecker implements TypeCastTreeMatcher {
       return NO_MATCH;
     }
     switch (castType.getKind()) {
-      case LONG:
-      case INT:
-      case SHORT:
-      case CHAR:
-      case BYTE:
-        break;
-      default:
+      case LONG, INT, SHORT, CHAR, BYTE -> {}
+      default -> {
         return NO_MATCH;
+      }
     }
     switch (operandType.getKind()) {
-      case FLOAT:
-      case DOUBLE:
-        break;
-      default:
+      case FLOAT, DOUBLE -> {}
+      default -> {
         return NO_MATCH;
+      }
     }
     if (IGNORED_METHODS.matches(tree.getExpression(), state)) {
       return NO_MATCH;

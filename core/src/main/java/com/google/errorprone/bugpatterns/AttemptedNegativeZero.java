@@ -50,14 +50,11 @@ public class AttemptedNegativeZero extends BugChecker implements UnaryTreeMatche
     }
     String replacement;
     switch (targetType(state).type().getTag()) {
-      case DOUBLE:
-        replacement = "-0.0";
-        break;
-      case FLOAT:
-        replacement = "-0.0f";
-        break;
-      default:
+      case DOUBLE -> replacement = "-0.0";
+      case FLOAT -> replacement = "-0.0f";
+      default -> {
         return NO_MATCH;
+      }
     }
     return describeMatch(tree, SuggestedFix.builder().replace(tree, replacement).build());
   }

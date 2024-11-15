@@ -51,10 +51,7 @@ public final class MultipleTopLevelClasses extends BugChecker
       if (member instanceof ClassTree) {
         ClassTree classMember = (ClassTree) member;
         switch (classMember.getKind()) {
-          case CLASS:
-          case INTERFACE:
-          case ANNOTATION_TYPE:
-          case ENUM:
+          case CLASS, INTERFACE, ANNOTATION_TYPE, ENUM -> {
             if (isSuppressed(classMember, state)) {
               // If any top-level classes have @SuppressWarnings("TopLevel"), ignore
               // this compilation unit. We can't rely on the normal suppression
@@ -63,9 +60,8 @@ public final class MultipleTopLevelClasses extends BugChecker
               return NO_MATCH;
             }
             names.add(classMember.getSimpleName().toString());
-            break;
-          default:
-            break;
+          }
+          default -> {}
         }
       }
     }

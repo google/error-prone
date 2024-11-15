@@ -165,15 +165,16 @@ public final class ParameterMissingNullable extends BugChecker
      * `param != null && param.somethingElse()`.
      */
     switch (path.getParentPath().getParentPath().getLeaf().getKind()) {
-      case WHILE_LOOP:
-      case DO_WHILE_LOOP:
+      case WHILE_LOOP, DO_WHILE_LOOP -> {
         return true;
-      default:
+      }
+      default -> {}
     }
     switch (path.getParentPath().getLeaf().getKind()) {
-      case FOR_LOOP:
+      case FOR_LOOP -> {
         return true;
-      default:
+      }
+      default -> {}
     }
     return false;
   }

@@ -162,15 +162,14 @@ public class NearbyCallers {
   private static ImmutableList<Tree> getNearbyTreesToScan(VisitorState state) {
     for (Tree parent : state.getPath()) {
       switch (parent.getKind()) {
-        case BLOCK:
+        case BLOCK -> {
           // if we reach a block tree, then _only_ scan that block
           return ImmutableList.of(parent);
-
-        case LAMBDA_EXPRESSION:
+        }
+        case LAMBDA_EXPRESSION -> {
           // if we reach a lambda tree, just scan the lambda body itself
           // TODO(glorioso): for simple expression lambdas, consider looking for use sites and scan
           // *those* sites, but binding the lambda variable to its use site might be rough :(
-
           // e.g.:
           //   Function<Duration, Long> NANOS = d -> d.getNano();
           //   Function<Duration, Long> SECONDS = d -> d.getSeconds();
@@ -179,8 +178,8 @@ public class NearbyCallers {
           //
           // how do we track myDuration through both layers?
           return ImmutableList.of(((LambdaExpressionTree) parent).getBody());
-
-        case CLASS:
+        }
+        case CLASS -> {
           // if we get all the way up to the class tree, then _only_ scan the other class-level
           // fields
           ImmutableList.Builder<Tree> treesToScan = ImmutableList.builder();
@@ -193,9 +192,10 @@ public class NearbyCallers {
             }
           }
           return treesToScan.build();
-
-        default:
-          // fall out, continue searching up the tree
+        }
+        default -> {
+          // continue searching up the tree
+        }
       }
     }
     return ImmutableList.of();

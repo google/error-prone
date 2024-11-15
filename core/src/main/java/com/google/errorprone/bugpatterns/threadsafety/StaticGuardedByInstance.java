@@ -105,14 +105,9 @@ public class StaticGuardedByInstance extends BugChecker implements SynchronizedT
     @Override
     public Void visitUnary(UnaryTree node, Void unused) {
       switch (node.getKind()) {
-        case PREFIX_DECREMENT:
-        case PREFIX_INCREMENT:
-        case POSTFIX_DECREMENT:
-        case POSTFIX_INCREMENT:
-          recordWrite(node.getExpression());
-          break;
-        default:
-          break;
+        case PREFIX_DECREMENT, PREFIX_INCREMENT, POSTFIX_DECREMENT, POSTFIX_INCREMENT ->
+            recordWrite(node.getExpression());
+        default -> {}
       }
       return super.visitUnary(node, null);
     }

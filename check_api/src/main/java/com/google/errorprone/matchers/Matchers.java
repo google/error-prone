@@ -584,21 +584,18 @@ public class Matchers {
   /** Matches an AST node if it is a literal other than null. */
   public static Matcher<ExpressionTree> nonNullLiteral() {
     return (tree, state) -> {
-      switch (tree.getKind()) {
-        case MEMBER_SELECT:
-          return ((MemberSelectTree) tree).getIdentifier().contentEquals("class");
-        case INT_LITERAL:
-        case LONG_LITERAL:
-        case FLOAT_LITERAL:
-        case DOUBLE_LITERAL:
-        case BOOLEAN_LITERAL:
-        case CHAR_LITERAL:
-        // fall through
-        case STRING_LITERAL:
-          return true;
-        default:
-          return false;
-      }
+      return switch (tree.getKind()) {
+        case MEMBER_SELECT -> ((MemberSelectTree) tree).getIdentifier().contentEquals("class");
+        case INT_LITERAL,
+            LONG_LITERAL,
+            FLOAT_LITERAL,
+            DOUBLE_LITERAL,
+            BOOLEAN_LITERAL,
+            CHAR_LITERAL,
+            STRING_LITERAL ->
+            true;
+        default -> false;
+      };
     };
   }
 
@@ -1191,16 +1188,15 @@ public class Matchers {
       while (path != null) {
         Tree node = path.getLeaf();
         switch (node.getKind()) {
-          case METHOD:
-          case CLASS:
+          case METHOD, CLASS -> {
             return false;
-          case WHILE_LOOP:
-          case FOR_LOOP:
-          case ENHANCED_FOR_LOOP:
-          case DO_WHILE_LOOP:
+          }
+          case WHILE_LOOP, FOR_LOOP, ENHANCED_FOR_LOOP, DO_WHILE_LOOP -> {
             return true;
-          default:
+          }
+          default -> {
             // continue below
+          }
         }
         path = path.getParentPath();
       }

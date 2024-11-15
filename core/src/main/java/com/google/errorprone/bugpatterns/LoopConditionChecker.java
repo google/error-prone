@@ -115,11 +115,11 @@ public class LoopConditionChecker extends BugChecker
       Symbol sym = ASTHelpers.getSymbol(tree);
       if (sym instanceof Symbol.VarSymbol) {
         switch (sym.getKind()) {
-          case LOCAL_VARIABLE:
-          case PARAMETER:
+          case LOCAL_VARIABLE, PARAMETER -> {
             conditionVars.add((Symbol.VarSymbol) sym);
             return true;
-          default: // fall out
+          }
+          default -> {}
         }
       }
       return false;
@@ -161,13 +161,9 @@ public class LoopConditionChecker extends BugChecker
     @Override
     public Void visitUnary(UnaryTree tree, Void unused) {
       switch (tree.getKind()) {
-        case POSTFIX_INCREMENT:
-        case PREFIX_INCREMENT:
-        case POSTFIX_DECREMENT:
-        case PREFIX_DECREMENT:
-          check(tree.getExpression());
-          break;
-        default: // fall out
+        case POSTFIX_INCREMENT, PREFIX_INCREMENT, POSTFIX_DECREMENT, PREFIX_DECREMENT ->
+            check(tree.getExpression());
+        default -> {}
       }
       return super.visitUnary(tree, null);
     }

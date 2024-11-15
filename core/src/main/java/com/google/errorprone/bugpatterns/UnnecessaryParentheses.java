@@ -43,19 +43,16 @@ public class UnnecessaryParentheses extends BugChecker implements ParenthesizedT
     ExpressionTree expression = tree.getExpression();
     Tree parent = state.getPath().getParentPath().getLeaf();
     switch (parent.getKind()) {
-      case IF:
-      case WHILE_LOOP:
-      case DO_WHILE_LOOP:
-      case FOR_LOOP:
-      case SWITCH:
-      case SYNCHRONIZED:
+      case IF, WHILE_LOOP, DO_WHILE_LOOP, FOR_LOOP, SWITCH, SYNCHRONIZED -> {
         return NO_MATCH;
-      default: // fall out
+      }
+      default -> {}
     }
     switch (parent.getKind().name()) {
-      case "SWITCH_EXPRESSION":
+      case "SWITCH_EXPRESSION" -> {
         return NO_MATCH;
-      default: // fall out
+      }
+      default -> {}
     }
     if (ASTHelpers.requiresParentheses(expression, state)) {
       return NO_MATCH;

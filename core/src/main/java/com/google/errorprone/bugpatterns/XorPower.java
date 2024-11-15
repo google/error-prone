@@ -49,11 +49,10 @@ public class XorPower extends BugChecker implements BinaryTreeMatcher {
       return NO_MATCH;
     }
     switch (lhs.intValue()) {
-      case 2:
-      case 10:
-        break;
-      default:
+      case 2, 10 -> {}
+      default -> {
         return NO_MATCH;
+      }
     }
     Number rhs = ASTHelpers.constValue(tree.getRightOperand(), Number.class);
     if (rhs == null) {
@@ -77,7 +76,7 @@ public class XorPower extends BugChecker implements BinaryTreeMatcher {
     int start = getStartPosition(lhsTree);
     int end = state.getEndPosition(tree);
     switch (lhs.intValue()) {
-      case 2:
+      case 2 -> {
         if (rhs.intValue() <= (lhs instanceof Long ? 63 : 31)) {
           String replacement = String.format("1%s << %d", suffix, rhs);
           if (start != getStartPosition(tree)) {
@@ -85,15 +84,14 @@ public class XorPower extends BugChecker implements BinaryTreeMatcher {
           }
           description.addFix(SuggestedFix.replace(start, end, replacement));
         }
-        break;
-      case 10:
+      }
+      case 10 -> {
         if (rhs.intValue() <= (lhs instanceof Long ? 18 : 9)) {
           description.addFix(
               SuggestedFix.replace(start, end, "1" + "0".repeat(rhs.intValue()) + suffix));
         }
-        break;
-      default:
-        throw new AssertionError(lhs);
+      }
+      default -> throw new AssertionError(lhs);
     }
     return description.build();
   }

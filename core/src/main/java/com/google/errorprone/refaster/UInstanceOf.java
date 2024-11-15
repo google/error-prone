@@ -49,19 +49,23 @@ abstract class UInstanceOf extends UExpression {
                 new Class<?>[] {InstanceOfTree.class},
                 (unused, method, args) -> {
                   switch (method.getName()) {
-                    case "getPattern":
+                    case "getPattern" -> {
                       // TODO(cushon): support refaster template matching on instanceof patterns
                       return null;
-                    case "getExpression":
+                    }
+                    case "getExpression" -> {
                       return getExpression();
-                    case "getType":
+                    }
+                    case "getType" -> {
                       return getType();
-                    default:
+                    }
+                    default -> {
                       try {
                         return method.invoke(UInstanceOf.this, args);
                       } catch (IllegalArgumentException e) {
                         throw new LinkageError(method.getName(), e);
                       }
+                    }
                   }
                 });
     return visitor.visitInstanceOf(proxy, data);

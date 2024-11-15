@@ -240,21 +240,21 @@ public class MethodCanBeStatic extends BugChecker implements CompilationUnitTree
       return true;
     }
     switch (sym.owner.enclClass().getNestingKind()) {
-      case TOP_LEVEL:
-        break;
-      case MEMBER:
+      case TOP_LEVEL -> {}
+      case MEMBER -> {
         if (!SourceVersion.supportsStaticInnerClass(state.context)
             && sym.owner.enclClass().hasOuterInstance()) {
           return true;
         }
-        break;
-      case LOCAL:
+      }
+      case LOCAL -> {
         if (!SourceVersion.supportsStaticInnerClass(state.context)) {
           return true;
         }
-        break;
-      case ANONYMOUS:
+      }
+      case ANONYMOUS -> {
         return true;
+      }
     }
     return SERIALIZATION_METHODS.matches(tree, state);
   }

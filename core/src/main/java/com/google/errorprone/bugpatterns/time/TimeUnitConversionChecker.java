@@ -125,44 +125,28 @@ public final class TimeUnitConversionChecker extends BugChecker
   }
 
   private static long invokeConversion(TimeUnit timeUnit, String methodName, long duration) {
-    switch (methodName) {
-      case "toDays":
-        return timeUnit.toDays(duration);
-      case "toHours":
-        return timeUnit.toHours(duration);
-      case "toMinutes":
-        return timeUnit.toMinutes(duration);
-      case "toSeconds":
-        return timeUnit.toSeconds(duration);
-      case "toMillis":
-        return timeUnit.toMillis(duration);
-      case "toMicros":
-        return timeUnit.toMicros(duration);
-      case "toNanos":
-        return timeUnit.toNanos(duration);
-      default:
-        throw new IllegalArgumentException();
-    }
+    return switch (methodName) {
+      case "toDays" -> timeUnit.toDays(duration);
+      case "toHours" -> timeUnit.toHours(duration);
+      case "toMinutes" -> timeUnit.toMinutes(duration);
+      case "toSeconds" -> timeUnit.toSeconds(duration);
+      case "toMillis" -> timeUnit.toMillis(duration);
+      case "toMicros" -> timeUnit.toMicros(duration);
+      case "toNanos" -> timeUnit.toNanos(duration);
+      default -> throw new IllegalArgumentException();
+    };
   }
 
   private static TimeUnit methodNameToTimeUnit(String methodName) {
-    switch (methodName) {
-      case "toDays":
-        return TimeUnit.DAYS;
-      case "toHours":
-        return TimeUnit.HOURS;
-      case "toMinutes":
-        return TimeUnit.MINUTES;
-      case "toSeconds":
-        return TimeUnit.SECONDS;
-      case "toMillis":
-        return TimeUnit.MILLISECONDS;
-      case "toMicros":
-        return TimeUnit.MICROSECONDS;
-      case "toNanos":
-        return TimeUnit.NANOSECONDS;
-      default:
-        throw new IllegalArgumentException();
-    }
+    return switch (methodName) {
+      case "toDays" -> TimeUnit.DAYS;
+      case "toHours" -> TimeUnit.HOURS;
+      case "toMinutes" -> TimeUnit.MINUTES;
+      case "toSeconds" -> TimeUnit.SECONDS;
+      case "toMillis" -> TimeUnit.MILLISECONDS;
+      case "toMicros" -> TimeUnit.MICROSECONDS;
+      case "toNanos" -> TimeUnit.NANOSECONDS;
+      default -> throw new IllegalArgumentException();
+    };
   }
 }

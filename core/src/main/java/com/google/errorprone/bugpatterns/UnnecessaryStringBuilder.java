@@ -75,16 +75,16 @@ public class UnnecessaryStringBuilder extends BugChecker implements NewClassTree
     }
     List<ExpressionTree> parts = new ArrayList<>();
     switch (tree.getArguments().size()) {
-      case 0:
-        break;
-      case 1:
+      case 0 -> {}
+      case 1 -> {
         ExpressionTree argument = getOnlyElement(tree.getArguments());
         if (isSubtype(getType(argument), JAVA_LANG_CHARSEQUENCE.get(state), state)) {
           parts.add(argument);
         }
-        break;
-      default:
+      }
+      default -> {
         return NO_MATCH;
+      }
     }
     TreePath path = state.getPath();
     while (true) {

@@ -178,14 +178,11 @@ abstract class UPlaceholderStatement implements UStatement {
           binding.or(
               exprBinding.transform(
                   (JCExpression expr) -> {
-                    switch (implementationFlow()) {
-                      case NEVER_EXITS:
-                        return List.of(inliner.maker().Exec(expr));
-                      case ALWAYS_RETURNS:
-                        return List.of(inliner.maker().Return(expr));
-                      default:
-                        throw new AssertionError();
-                    }
+                    return switch (implementationFlow()) {
+                      case NEVER_EXITS -> List.of(inliner.maker().Exec(expr));
+                      case ALWAYS_RETURNS -> List.of(inliner.maker().Return(expr));
+                      default -> throw new AssertionError();
+                    };
                   }));
       return UPlaceholderExpression.copier(arguments(), inliner).copy(binding.get(), inliner);
     } catch (UncheckedCouldNotResolveImportException e) {

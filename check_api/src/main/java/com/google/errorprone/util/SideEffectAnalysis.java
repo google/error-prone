@@ -83,15 +83,9 @@ public final class SideEffectAnalysis extends TreeScanner<Void, Void> {
   public Void visitUnary(UnaryTree tree, Void unused) {
     JCUnary unary = (JCUnary) tree;
     switch (unary.getKind()) {
-      case PREFIX_DECREMENT:
-      case PREFIX_INCREMENT:
-      case POSTFIX_DECREMENT:
-      case POSTFIX_INCREMENT:
-        hasSideEffect = true;
-        break;
-
-      default:
-        break;
+      case PREFIX_DECREMENT, PREFIX_INCREMENT, POSTFIX_DECREMENT, POSTFIX_INCREMENT ->
+          hasSideEffect = true;
+      default -> {}
     }
     return super.visitUnary(tree, null);
   }

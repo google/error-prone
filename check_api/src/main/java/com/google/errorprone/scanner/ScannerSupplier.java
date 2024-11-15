@@ -202,19 +202,19 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
           }
           for (BugCheckerInfo check : checksByAltName.get(checkName)) {
             switch (newSeverity) {
-              case OFF:
+              case OFF -> {
                 if (!check.disableable()) {
                   throw new InvalidCommandLineOptionException(
                       check.canonicalName() + " may not be disabled");
                 }
                 severities.remove(check.canonicalName());
                 disabled.add(check.canonicalName());
-                break;
-              case DEFAULT:
+              }
+              case DEFAULT -> {
                 severities.put(check.canonicalName(), check.defaultSeverity());
                 disabled.remove(check.canonicalName());
-                break;
-              case WARN:
+              }
+              case WARN -> {
                 // Demoting an enabled check from an error to a warning is a form of disabling
                 if (!disabled().contains(check.canonicalName())
                     && !check.disableable()
@@ -225,11 +225,11 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
                 }
                 severities.put(check.canonicalName(), SeverityLevel.WARNING);
                 disabled.remove(check.canonicalName());
-                break;
-              case ERROR:
+              }
+              case ERROR -> {
                 severities.put(check.canonicalName(), SeverityLevel.ERROR);
                 disabled.remove(check.canonicalName());
-                break;
+              }
             }
           }
         });

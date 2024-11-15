@@ -156,12 +156,8 @@ public class ForEachIterable extends BugChecker implements VariableTreeMatcher {
           p -> {
             TreePath path = p.getParentPath().getParentPath();
             switch (path.getParentPath().getLeaf().getKind()) {
-              case EXPRESSION_STATEMENT:
-                fix.delete(path.getParentPath().getLeaf());
-                break;
-              default:
-                fix.replace(path.getLeaf(), replacement);
-                break;
+              case EXPRESSION_STATEMENT -> fix.delete(path.getParentPath().getLeaf());
+              default -> fix.replace(path.getLeaf(), replacement);
             }
           });
     }

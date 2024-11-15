@@ -74,8 +74,7 @@ public class StaticQualifiedUsingExpression extends BugChecker implements Member
     ClassSymbol owner = sym.owner.enclClass();
     ExpressionTree expression = tree.getExpression();
     switch (expression.getKind()) {
-      case MEMBER_SELECT:
-      case IDENTIFIER:
+      case MEMBER_SELECT, IDENTIFIER -> {
         // References to static variables should be qualified by the type name of the owning type,
         // or a sub-type. e.g.: if CONST is declared in Foo, and SubFoo extends Foo,
         // allow `Foo.CONST` and `SubFoo.CONST` (but not, say, `new Foo().CONST`.
@@ -83,8 +82,10 @@ public class StaticQualifiedUsingExpression extends BugChecker implements Member
         if (base instanceof ClassSymbol && base.isSubClass(owner, state.getTypes())) {
           return NO_MATCH;
         }
-        break;
-      default: // continue below
+      }
+      default -> {
+        // continue below
+      }
     }
     SuggestedFix.Builder fix = SuggestedFix.builder();
     String replacement;

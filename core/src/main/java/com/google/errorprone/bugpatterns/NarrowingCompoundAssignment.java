@@ -48,61 +48,37 @@ public class NarrowingCompoundAssignment extends BugChecker
     implements CompoundAssignmentTreeMatcher {
 
   static String assignmentToString(Tree.Kind kind) {
-    switch (kind) {
-      case MULTIPLY:
-        return "*";
-      case DIVIDE:
-        return "/";
-      case REMAINDER:
-        return "%";
-      case PLUS:
-        return "+";
-      case MINUS:
-        return "-";
-      case LEFT_SHIFT:
-        return "<<";
-      case AND:
-        return "&";
-      case XOR:
-        return "^";
-      case OR:
-        return "|";
-      case RIGHT_SHIFT:
-        return ">>";
-      case UNSIGNED_RIGHT_SHIFT:
-        return ">>>";
-      default:
-        throw new IllegalArgumentException("Unexpected operator assignment kind: " + kind);
-    }
+    return switch (kind) {
+      case MULTIPLY -> "*";
+      case DIVIDE -> "/";
+      case REMAINDER -> "%";
+      case PLUS -> "+";
+      case MINUS -> "-";
+      case LEFT_SHIFT -> "<<";
+      case AND -> "&";
+      case XOR -> "^";
+      case OR -> "|";
+      case RIGHT_SHIFT -> ">>";
+      case UNSIGNED_RIGHT_SHIFT -> ">>>";
+      default -> throw new IllegalArgumentException("Unexpected operator assignment kind: " + kind);
+    };
   }
 
   static Kind regularAssignmentFromCompound(Kind kind) {
-    switch (kind) {
-      case MULTIPLY_ASSIGNMENT:
-        return Kind.MULTIPLY;
-      case DIVIDE_ASSIGNMENT:
-        return Kind.DIVIDE;
-      case REMAINDER_ASSIGNMENT:
-        return Kind.REMAINDER;
-      case PLUS_ASSIGNMENT:
-        return Kind.PLUS;
-      case MINUS_ASSIGNMENT:
-        return Kind.MINUS;
-      case LEFT_SHIFT_ASSIGNMENT:
-        return Kind.LEFT_SHIFT;
-      case AND_ASSIGNMENT:
-        return Kind.AND;
-      case XOR_ASSIGNMENT:
-        return Kind.XOR;
-      case OR_ASSIGNMENT:
-        return Kind.OR;
-      case RIGHT_SHIFT_ASSIGNMENT:
-        return Kind.RIGHT_SHIFT;
-      case UNSIGNED_RIGHT_SHIFT_ASSIGNMENT:
-        return Kind.UNSIGNED_RIGHT_SHIFT;
-      default:
-        throw new IllegalArgumentException("Unexpected compound assignment kind: " + kind);
-    }
+    return switch (kind) {
+      case MULTIPLY_ASSIGNMENT -> Kind.MULTIPLY;
+      case DIVIDE_ASSIGNMENT -> Kind.DIVIDE;
+      case REMAINDER_ASSIGNMENT -> Kind.REMAINDER;
+      case PLUS_ASSIGNMENT -> Kind.PLUS;
+      case MINUS_ASSIGNMENT -> Kind.MINUS;
+      case LEFT_SHIFT_ASSIGNMENT -> Kind.LEFT_SHIFT;
+      case AND_ASSIGNMENT -> Kind.AND;
+      case XOR_ASSIGNMENT -> Kind.XOR;
+      case OR_ASSIGNMENT -> Kind.OR;
+      case RIGHT_SHIFT_ASSIGNMENT -> Kind.RIGHT_SHIFT;
+      case UNSIGNED_RIGHT_SHIFT_ASSIGNMENT -> Kind.UNSIGNED_RIGHT_SHIFT;
+      default -> throw new IllegalArgumentException("Unexpected compound assignment kind: " + kind);
+    };
   }
 
   @Override
@@ -146,18 +122,16 @@ public class NarrowingCompoundAssignment extends BugChecker
       return Optional.absent();
     }
     switch (tree.getKind()) {
-      case RIGHT_SHIFT_ASSIGNMENT:
+      case RIGHT_SHIFT_ASSIGNMENT -> {
         // narrowing the result of a signed right shift does not lose information
         return Optional.absent();
-      case AND_ASSIGNMENT:
-      case XOR_ASSIGNMENT:
-      case OR_ASSIGNMENT:
+      }
+      case AND_ASSIGNMENT, XOR_ASSIGNMENT, OR_ASSIGNMENT -> {
         if (twiddlingConstantBitsOk(tree)) {
           return Optional.absent();
         }
-        break;
-      default:
-        break;
+      }
+      default -> {}
     }
     Kind regularAssignmentKind = regularAssignmentFromCompound(tree.getKind());
     String op = assignmentToString(regularAssignmentKind);
@@ -186,14 +160,11 @@ public class NarrowingCompoundAssignment extends BugChecker
   private static boolean twiddlingConstantBitsOk(CompoundAssignmentTree tree) {
     int shift;
     switch (ASTHelpers.getType(tree.getVariable()).getKind()) {
-      case BYTE:
-        shift = 8;
-        break;
-      case SHORT:
-        shift = 16;
-        break;
-      default:
+      case BYTE -> shift = 8;
+      case SHORT -> shift = 16;
+      default -> {
         return false;
+      }
     }
     Object constValue = ASTHelpers.constValue(tree.getExpression());
     if (!(constValue instanceof Integer || constValue instanceof Long)) {

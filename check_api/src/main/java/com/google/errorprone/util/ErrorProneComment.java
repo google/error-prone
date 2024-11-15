@@ -76,19 +76,13 @@ public final class ErrorProneComment {
     JAVADOC_BLOCK;
 
     static ErrorProneCommentStyle from(CommentStyle style) {
-      switch (style.name()) {
-        case "LINE":
-          return ErrorProneCommentStyle.LINE;
-        case "BLOCK":
-          return ErrorProneCommentStyle.BLOCK;
-        case "JAVADOC_LINE":
-          return ErrorProneCommentStyle.JAVADOC_LINE;
-        case "JAVADOC":
-        case "JAVADOC_BLOCK":
-          return ErrorProneCommentStyle.JAVADOC_BLOCK;
-        default:
-          throw new AssertionError(style);
-      }
+      return switch (style.name()) {
+        case "LINE" -> ErrorProneCommentStyle.LINE;
+        case "BLOCK" -> ErrorProneCommentStyle.BLOCK;
+        case "JAVADOC_LINE" -> ErrorProneCommentStyle.JAVADOC_LINE;
+        case "JAVADOC", "JAVADOC_BLOCK" -> ErrorProneCommentStyle.JAVADOC_BLOCK;
+        default -> throw new AssertionError(style);
+      };
     }
   }
 

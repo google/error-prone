@@ -68,14 +68,11 @@ public class DoubleCheckedLocking extends BugChecker implements IfTreeMatcher {
     if (info == null) {
       return Description.NO_MATCH;
     }
-    switch (info.sym().getKind()) {
-      case FIELD:
-        return handleField(info.outerIf(), info.sym(), state);
-      case LOCAL_VARIABLE:
-        return handleLocal(info, state);
-      default:
-        return Description.NO_MATCH;
-    }
+    return switch (info.sym().getKind()) {
+      case FIELD -> handleField(info.outerIf(), info.sym(), state);
+      case LOCAL_VARIABLE -> handleLocal(info, state);
+      default -> Description.NO_MATCH;
+    };
   }
 
   /**
@@ -117,19 +114,14 @@ public class DoubleCheckedLocking extends BugChecker implements IfTreeMatcher {
    */
   private static boolean isImmutable(Type type, VisitorState state) {
     switch (type.getKind()) {
-      case BOOLEAN:
-      case BYTE:
-      case SHORT:
-      case INT:
-      case CHAR:
-      case FLOAT:
+      case BOOLEAN, BYTE, SHORT, INT, CHAR, FLOAT -> {
         return true;
-      case LONG:
-      case DOUBLE:
+      }
+      case LONG, DOUBLE -> {
         // double-width primitives aren't written atomically
         return true;
-      default:
-        break;
+      }
+      default -> {}
     }
     return IMMUTABLE_PRIMITIVES.contains(
         state.getTypes().erasure(type).tsym.getQualifiedName().toString());

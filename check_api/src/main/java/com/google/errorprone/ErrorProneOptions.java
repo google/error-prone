@@ -411,37 +411,18 @@ public class ErrorProneOptions {
     Builder builder = new Builder();
     for (String arg : args) {
       switch (arg) {
-        case IGNORE_SUPPRESSION_ANNOTATIONS:
-          builder.setIgnoreSuppressionAnnotations(true);
-          break;
-        case IGNORE_UNKNOWN_CHECKS_FLAG:
-          builder.setIgnoreUnknownChecks(true);
-          break;
-        case DISABLE_WARNINGS_IN_GENERATED_CODE_FLAG:
-          builder.setDisableWarningsInGeneratedCode(true);
-          break;
-        case ERRORS_AS_WARNINGS_FLAG:
-          builder.setDropErrorsToWarnings(true);
-          break;
-        case SUGGESTIONS_AS_WARNINGS_FLAG:
-          builder.setSuggestionsAsWarnings(true);
-          break;
-        case ENABLE_ALL_CHECKS:
-          builder.setEnableAllChecksAsWarnings(true);
-          break;
-        case DISABLE_ALL_CHECKS:
-          builder.setDisableAllChecks(true);
-          break;
-        case COMPILING_TEST_ONLY_CODE:
-          builder.setTestOnlyTarget(true);
-          break;
-        case COMPILING_PUBLICLY_VISIBLE_CODE:
-          builder.setPubliclyVisibleTarget(true);
-          break;
-        case DISABLE_ALL_WARNINGS:
-          builder.setDisableAllWarnings(true);
-          break;
-        default:
+        case IGNORE_SUPPRESSION_ANNOTATIONS -> builder.setIgnoreSuppressionAnnotations(true);
+        case IGNORE_UNKNOWN_CHECKS_FLAG -> builder.setIgnoreUnknownChecks(true);
+        case DISABLE_WARNINGS_IN_GENERATED_CODE_FLAG ->
+            builder.setDisableWarningsInGeneratedCode(true);
+        case ERRORS_AS_WARNINGS_FLAG -> builder.setDropErrorsToWarnings(true);
+        case SUGGESTIONS_AS_WARNINGS_FLAG -> builder.setSuggestionsAsWarnings(true);
+        case ENABLE_ALL_CHECKS -> builder.setEnableAllChecksAsWarnings(true);
+        case DISABLE_ALL_CHECKS -> builder.setDisableAllChecks(true);
+        case COMPILING_TEST_ONLY_CODE -> builder.setTestOnlyTarget(true);
+        case COMPILING_PUBLICLY_VISIBLE_CODE -> builder.setPubliclyVisibleTarget(true);
+        case DISABLE_ALL_WARNINGS -> builder.setDisableAllWarnings(true);
+        default -> {
           if (arg.startsWith(SEVERITY_PREFIX)) {
             builder.parseSeverity(arg);
           } else if (arg.startsWith(ErrorProneFlags.PREFIX)) {
@@ -494,6 +475,7 @@ public class ErrorProneOptions {
             }
             remainingArgs.add(arg);
           }
+        }
       }
     }
 

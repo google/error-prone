@@ -77,15 +77,11 @@ public class VarChecker extends BugChecker implements VariableTreeMatcher {
       // TODO(cushon): consider requiring @Var if the index is modified in the body of the loop
       return Description.NO_MATCH;
     }
-    switch (sym.getKind()) {
-      case PARAMETER:
-      case LOCAL_VARIABLE:
-      case EXCEPTION_PARAMETER:
-      case RESOURCE_VARIABLE:
-        return handleLocalOrParam(tree, state, sym);
-      default:
-        return Description.NO_MATCH;
-    }
+    return switch (sym.getKind()) {
+      case PARAMETER, LOCAL_VARIABLE, EXCEPTION_PARAMETER, RESOURCE_VARIABLE ->
+          handleLocalOrParam(tree, state, sym);
+      default -> Description.NO_MATCH;
+    };
   }
 
   boolean forLoopVariable(VariableTree tree, TreePath path) {

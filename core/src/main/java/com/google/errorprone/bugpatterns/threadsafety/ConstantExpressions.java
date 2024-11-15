@@ -226,29 +226,21 @@ public final class ConstantExpressions {
 
     @Override
     public final String toString() {
-      switch (kind()) {
-        case LITERAL:
-          return literal().toString();
-        case CONSTANT_EQUALS:
-          return constantEquals().toString();
-        case PURE_METHOD:
-          return pureMethod().toString();
-      }
-      throw new AssertionError();
+      return switch (kind()) {
+        case LITERAL -> literal().toString();
+        case CONSTANT_EQUALS -> constantEquals().toString();
+        case PURE_METHOD -> pureMethod().toString();
+      };
     }
 
     public void accept(ConstantExpressionVisitor visitor) {
       switch (kind()) {
-        case LITERAL:
-          visitor.visitConstant(literal());
-          break;
-        case CONSTANT_EQUALS:
+        case LITERAL -> visitor.visitConstant(literal());
+        case CONSTANT_EQUALS -> {
           constantEquals().lhs().accept(visitor);
           constantEquals().rhs().accept(visitor);
-          break;
-        case PURE_METHOD:
-          pureMethod().accept(visitor);
-          break;
+        }
+        case PURE_METHOD -> pureMethod().accept(visitor);
       }
     }
   }

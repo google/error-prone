@@ -45,12 +45,10 @@ interface BaseMethodMatcher {
   BaseMethodMatcher CONSTRUCTOR =
       tree -> {
         switch (tree.getKind()) {
-          case NEW_CLASS:
-          case METHOD_INVOCATION:
-          case MEMBER_REFERENCE:
-            break;
-          default:
+          case NEW_CLASS, METHOD_INVOCATION, MEMBER_REFERENCE -> {}
+          default -> {
             return null;
+          }
         }
         Symbol sym = ASTHelpers.getSymbol(tree);
         if (!(sym instanceof MethodSymbol)) {

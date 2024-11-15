@@ -111,17 +111,13 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
      * @param tree must be either MethodInvocationTree or NewClassTree
      */
     String suggestName(ExpressionTree tree) {
-      String symbolName;
-      switch (tree.getKind()) {
-        case NEW_CLASS:
-          symbolName = getSymbol(((NewClassTree) tree).getIdentifier()).getSimpleName().toString();
-          break;
-        case METHOD_INVOCATION:
-          symbolName = getReturnType(tree).asElement().getSimpleName().toString();
-          break;
-        default:
-          throw new AssertionError(tree.getKind());
-      }
+      String symbolName =
+          switch (tree.getKind()) {
+            case NEW_CLASS ->
+                getSymbol(((NewClassTree) tree).getIdentifier()).getSimpleName().toString();
+            case METHOD_INVOCATION -> getReturnType(tree).asElement().getSimpleName().toString();
+            default -> throw new AssertionError(tree.getKind());
+          };
       return uniquifyName(CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, symbolName));
     }
   }
@@ -256,7 +252,7 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
       TreePath prev = path;
       path = path.getParentPath();
       switch (path.getLeaf().getKind()) {
-        case RETURN:
+        case RETURN -> {
           if (callerMethodTree != null) {
             // The invocation occurs within a return statement of a method, instead of a lambda
             // expression or anonymous class.
@@ -276,18 +272,20 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
           }
           // If enclosingMethod returned null, we must be returning from a statement lambda.
           return handleTailPositionInLambda(state);
-        case LAMBDA_EXPRESSION:
+        }
+        case LAMBDA_EXPRESSION -> {
           // The method invocation is the body of an expression lambda.
           return handleTailPositionInLambda(state);
-        case CONDITIONAL_EXPRESSION:
+        }
+        case CONDITIONAL_EXPRESSION -> {
           ConditionalExpressionTree conditionalExpressionTree =
               (ConditionalExpressionTree) path.getLeaf();
           if (conditionalExpressionTree.getTrueExpression().equals(prev.getLeaf())
               || conditionalExpressionTree.getFalseExpression().equals(prev.getLeaf())) {
             continue OUTER;
           }
-          break;
-        case MEMBER_SELECT:
+        }
+        case MEMBER_SELECT -> {
           MemberSelectTree memberSelectTree = (MemberSelectTree) path.getLeaf();
           if (memberSelectTree.getExpression().equals(prev.getLeaf())) {
             Type type = getType(memberSelectTree);
@@ -300,8 +298,8 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
               continue OUTER;
             }
           }
-          break;
-        case NEW_CLASS:
+        }
+        case NEW_CLASS -> {
           NewClassTree newClassTree = (NewClassTree) path.getLeaf();
           if (isClosingDecorator(newClassTree, prev.getLeaf(), state)) {
             if (HAS_MUST_BE_CLOSED_ANNOTATION.matches(newClassTree, state)) {
@@ -311,8 +309,8 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
             // otherwise, enforce that the decorator must be closed
             continue OUTER;
           }
-          break;
-        case VARIABLE:
+        }
+        case VARIABLE -> {
           Symbol sym = getSymbol(path.getLeaf());
           if (sym instanceof VarSymbol var) {
             if (var.getKind() == ElementKind.RESOURCE_VARIABLE
@@ -321,13 +319,13 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
               return Optional.empty();
             }
           }
-          break;
-        case ASSIGNMENT:
+        }
+        case ASSIGNMENT -> {
           // We shouldn't suggest a try/finally fix when we know the variable is going to be saved
           // for later.
           return findingWithNoFix();
-        default:
-          break;
+        }
+        default -> {}
       }
       // The constructor or method invocation does not occur within the resource variable
       // initializer of a try-with-resources statement.
@@ -367,13 +365,13 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
   private static @Nullable MethodTree enclosingMethod(VisitorState state) {
     for (Tree node : state.getPath().getParentPath()) {
       switch (node.getKind()) {
-        case LAMBDA_EXPRESSION:
-        case NEW_CLASS:
+        case LAMBDA_EXPRESSION, NEW_CLASS -> {
           return null;
-        case METHOD:
+        }
+        case METHOD -> {
           return (MethodTree) node;
-        default:
-          break;
+        }
+        default -> {}
       }
     }
     return null;

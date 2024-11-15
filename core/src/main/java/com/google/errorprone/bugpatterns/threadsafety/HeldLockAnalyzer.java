@@ -504,15 +504,14 @@ public final class HeldLockAnalyzer {
     private static GuardedByExpression helper(
         GuardedByExpression lockExpression, GuardedByExpression memberAccess) {
       switch (lockExpression.kind()) {
-        case SELECT:
-          {
-            GuardedByExpression.Select lockSelect = (GuardedByExpression.Select) lockExpression;
-            return F.select(helper(lockSelect.base(), memberAccess), lockSelect.sym());
-          }
-        case THIS:
+        case SELECT -> {
+          GuardedByExpression.Select lockSelect = (GuardedByExpression.Select) lockExpression;
+          return F.select(helper(lockSelect.base(), memberAccess), lockSelect.sym());
+        }
+        case THIS -> {
           return memberAccess;
-        default:
-          throw new IllegalGuardedBy(lockExpression.toString());
+        }
+        default -> throw new IllegalGuardedBy(lockExpression.toString());
       }
     }
 

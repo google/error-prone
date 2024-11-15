@@ -139,14 +139,11 @@ public class BaseErrorProneJavaCompiler implements JavaCompiler {
 
     String overrideLanguageLevel;
     switch (JAVA_SPECIFICATION_VERSION.value()) {
-      case "1.7":
-        overrideLanguageLevel = "7";
-        break;
-      case "1.8":
-        overrideLanguageLevel = "8";
-        break;
-      default:
+      case "1.7" -> overrideLanguageLevel = "7";
+      case "1.8" -> overrideLanguageLevel = "8";
+      default -> {
         return args;
+      }
     }
 
     return ImmutableList.<String>builder()
@@ -169,15 +166,13 @@ public class BaseErrorProneJavaCompiler implements JavaCompiler {
               + " pass -XDcompilePolicy=simple instead");
     }
     switch (compilePolicy) {
-      case "byfile":
-      case "simple":
-        break;
-      default:
-        throw new InvalidCommandLineOptionException(
-            String.format(
-                "-XDcompilePolicy=%s is not supported by Error Prone,"
-                    + " pass -XDcompilePolicy=simple instead",
-                compilePolicy));
+      case "byfile", "simple" -> {}
+      default ->
+          throw new InvalidCommandLineOptionException(
+              String.format(
+                  "-XDcompilePolicy=%s is not supported by Error Prone,"
+                      + " pass -XDcompilePolicy=simple instead",
+                  compilePolicy));
     }
   }
 

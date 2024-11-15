@@ -57,22 +57,16 @@ public final class YodaCondition extends BugChecker
     implements BinaryTreeMatcher, MethodInvocationTreeMatcher {
   @Override
   public Description matchBinary(BinaryTree tree, VisitorState state) {
-    switch (tree.getKind()) {
-      case EQUAL_TO:
-      case NOT_EQUAL_TO:
-      case LESS_THAN:
-      case GREATER_THAN:
-      case LESS_THAN_EQUAL:
-      case GREATER_THAN_EQUAL:
-        return fix(
-            tree,
-            tree.getLeftOperand(),
-            tree.getRightOperand(),
-            /* provideNullSafeFix= */ false,
-            state);
-      default:
-        return NO_MATCH;
-    }
+    return switch (tree.getKind()) {
+      case EQUAL_TO, NOT_EQUAL_TO, LESS_THAN, GREATER_THAN, LESS_THAN_EQUAL, GREATER_THAN_EQUAL ->
+          fix(
+              tree,
+              tree.getLeftOperand(),
+              tree.getRightOperand(),
+              /* provideNullSafeFix= */ false,
+              state);
+      default -> NO_MATCH;
+    };
   }
 
   @Override
@@ -171,30 +165,20 @@ public final class YodaCondition extends BugChecker
   }
 
   private static boolean isInequality(Tree tree) {
-    switch (tree.getKind()) {
-      case LESS_THAN:
-      case GREATER_THAN:
-      case LESS_THAN_EQUAL:
-      case GREATER_THAN_EQUAL:
-        return true;
-      default:
-        return false;
-    }
+    return switch (tree.getKind()) {
+      case LESS_THAN, GREATER_THAN, LESS_THAN_EQUAL, GREATER_THAN_EQUAL -> true;
+      default -> false;
+    };
   }
 
   private static String inverse(Tree tree) {
-    switch (tree.getKind()) {
-      case LESS_THAN:
-        return ">";
-      case GREATER_THAN:
-        return "<";
-      case LESS_THAN_EQUAL:
-        return ">=";
-      case GREATER_THAN_EQUAL:
-        return "<=";
-      default:
-        throw new AssertionError();
-    }
+    return switch (tree.getKind()) {
+      case LESS_THAN -> ">";
+      case GREATER_THAN -> "<";
+      case LESS_THAN_EQUAL -> ">=";
+      case GREATER_THAN_EQUAL -> "<=";
+      default -> throw new AssertionError();
+    };
   }
 
   private static boolean yodaCondition(ExpressionTree lhs, ExpressionTree rhs) {

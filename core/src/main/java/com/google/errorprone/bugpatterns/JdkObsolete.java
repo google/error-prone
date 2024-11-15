@@ -233,13 +233,16 @@ public class JdkObsolete extends BugChecker
   private static @Nullable Type getMethodOrLambdaReturnType(VisitorState state) {
     for (Tree tree : state.getPath()) {
       switch (tree.getKind()) {
-        case LAMBDA_EXPRESSION:
+        case LAMBDA_EXPRESSION -> {
           return state.getTypes().findDescriptorType(ASTHelpers.getType(tree)).getReturnType();
-        case METHOD:
+        }
+        case METHOD -> {
           return ASTHelpers.getType(tree).getReturnType();
-        case CLASS:
+        }
+        case CLASS -> {
           return null;
-        default: // fall out
+        }
+        default -> {}
       }
     }
     return null;
@@ -354,12 +357,13 @@ public class JdkObsolete extends BugChecker
     TreePath path = state.getPath();
     while (path != null) {
       switch (path.getLeaf().getKind()) {
-        case METHOD:
+        case METHOD -> {
           return path;
-        case CLASS:
-        case LAMBDA_EXPRESSION:
+        }
+        case CLASS, LAMBDA_EXPRESSION -> {
           return null;
-        default: // fall out
+        }
+        default -> {}
       }
       path = path.getParentPath();
     }

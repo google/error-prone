@@ -83,8 +83,7 @@ public final class NamedParameterComment {
 
   private static boolean isApproximateMatchingComment(ErrorProneComment comment, String formal) {
     switch (comment.getStyle()) {
-      case BLOCK:
-      case LINE:
+      case BLOCK, LINE -> {
         // sometimes people use comments around arguments for higher level structuring - such as
         // dividing two separate blocks of arguments. In these cases we want to avoid concluding
         // that it's a match. Therefore we also check to make sure that the comment is not really
@@ -95,8 +94,10 @@ public final class NamedParameterComment {
         boolean tooLong = commentText.length() > formal.length() + 5 && commentText.length() > 50;
         boolean tooMuchMarkup = CharMatcher.anyOf("-*!@<>").countIn(commentText) > 5;
         return textMatches && !tooLong && !tooMuchMarkup;
-      default:
+      }
+      default -> {
         return false;
+      }
     }
   }
 

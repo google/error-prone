@@ -82,17 +82,19 @@ public class ThreeLetterTimeZoneID extends BugChecker implements MethodInvocatio
   @VisibleForTesting
   static Replacement getReplacement(String id, boolean inJodaTimeContext, String message) {
     switch (id) {
-      case "EST":
+      case "EST" -> {
         return handleNonDaylightSavingsZone(
             inJodaTimeContext, "America/New_York", "Etc/GMT+5", message);
-      case "HST":
+      }
+      case "HST" -> {
         return handleNonDaylightSavingsZone(
             inJodaTimeContext, "Pacific/Honolulu", "Etc/GMT+10", message);
-      case "MST":
+      }
+      case "MST" -> {
         return handleNonDaylightSavingsZone(
             inJodaTimeContext, "America/Denver", "Etc/GMT+7", message);
-      default:
-        // Fall through, we will handle it below.
+      }
+      default -> {}
     }
 
     String zoneIdReplacement = ZoneId.SHORT_IDS.get(id);

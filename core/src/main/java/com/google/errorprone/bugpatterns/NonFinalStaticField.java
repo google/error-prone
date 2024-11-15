@@ -173,15 +173,10 @@ public final class NonFinalStaticField extends BugChecker implements VariableTre
           }
 
           private boolean isMutating(Kind kind) {
-            switch (kind) {
-              case POSTFIX_DECREMENT:
-              case POSTFIX_INCREMENT:
-              case PREFIX_DECREMENT:
-              case PREFIX_INCREMENT:
-                return true;
-              default:
-                return false;
-            }
+            return switch (kind) {
+              case POSTFIX_DECREMENT, POSTFIX_INCREMENT, PREFIX_DECREMENT, PREFIX_INCREMENT -> true;
+              default -> false;
+            };
           }
 
           @Override

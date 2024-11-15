@@ -204,14 +204,12 @@ public abstract class StronglyType {
   }
 
   private static String getMethodSelectOrNewClass(ExpressionTree tree, VisitorState state) {
-    switch (tree.getKind()) {
-      case METHOD_INVOCATION:
-        return state.getSourceForNode(((MethodInvocationTree) tree).getMethodSelect());
-      case NEW_CLASS:
-        return "new " + state.getSourceForNode(((NewClassTree) tree).getIdentifier());
-      default:
-        throw new AssertionError();
-    }
+    return switch (tree.getKind()) {
+      case METHOD_INVOCATION ->
+          state.getSourceForNode(((MethodInvocationTree) tree).getMethodSelect());
+      case NEW_CLASS -> "new " + state.getSourceForNode(((NewClassTree) tree).getIdentifier());
+      default -> throw new AssertionError();
+    };
   }
 
   /** Finds the path to potential fields that we might want to strongly type. */

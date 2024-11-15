@@ -622,14 +622,11 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
     if (sym == null) {
       return UTypeVarIdent.create(tree.getName());
     }
-    switch (sym.getKind()) {
-      case TYPE_PARAMETER:
-        return UTypeVarIdent.create(tree.getName());
-      case METHOD:
-        return method(sym);
-      default:
-        return ULocalVarIdent.create(tree.getName());
-    }
+    return switch (sym.getKind()) {
+      case TYPE_PARAMETER -> UTypeVarIdent.create(tree.getName());
+      case METHOD -> method(sym);
+      default -> ULocalVarIdent.create(tree.getName());
+    };
   }
 
   /**

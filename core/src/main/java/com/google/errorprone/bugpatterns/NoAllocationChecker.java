@@ -193,14 +193,14 @@ public class NoAllocationChecker extends BugChecker
             Tree node = path.getLeaf();
             state = state.withPath(path);
             switch (node.getKind()) {
-              case METHOD:
+              case METHOD -> {
                 // We've gotten to the top of the method without finding a throw.
                 return false;
-              case THROW:
-              case ANNOTATION:
+              }
+              case THROW, ANNOTATION -> {
                 return true;
-              default:
-                path = path.getParentPath();
+              }
+              default -> path = path.getParentPath();
             }
           }
           return false;

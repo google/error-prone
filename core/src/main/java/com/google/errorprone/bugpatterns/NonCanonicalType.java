@@ -122,9 +122,10 @@ public final class NonCanonicalType extends BugChecker implements MemberSelectTr
    */
   private static String getNonCanonicalName(Tree tree) {
     switch (tree.getKind()) {
-      case IDENTIFIER:
+      case IDENTIFIER -> {
         return getSymbol(tree).getQualifiedName().toString();
-      case MEMBER_SELECT:
+      }
+      case MEMBER_SELECT -> {
         MemberSelectTree memberSelectTree = (MemberSelectTree) tree;
         Symbol expressionSymbol = getSymbol(memberSelectTree.getExpression());
         if (!(expressionSymbol instanceof TypeSymbol)) {
@@ -133,12 +134,14 @@ public final class NonCanonicalType extends BugChecker implements MemberSelectTr
         return getNonCanonicalName(memberSelectTree.getExpression())
             + "."
             + memberSelectTree.getIdentifier();
-      case PARAMETERIZED_TYPE:
+      }
+      case PARAMETERIZED_TYPE -> {
         return getNonCanonicalName(((ParameterizedTypeTree) tree).getType());
-      case ANNOTATED_TYPE:
+      }
+      case ANNOTATED_TYPE -> {
         return getNonCanonicalName(((AnnotatedTypeTree) tree).getUnderlyingType());
-      default:
-        throw new AssertionError(tree.getKind());
+      }
+      default -> throw new AssertionError(tree.getKind());
     }
   }
 }

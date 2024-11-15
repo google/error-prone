@@ -51,11 +51,10 @@ public class TypeParameterUnusedInFormals extends BugChecker implements MethodTr
     // e.g. the following is OK: <T> List<T> newArrayList();
     TypeVar retType;
     switch (methodSymbol.getReturnType().getKind()) {
-      case TYPEVAR:
-        retType = (TypeVar) methodSymbol.getReturnType();
-        break;
-      default:
+      case TYPEVAR -> retType = (TypeVar) methodSymbol.getReturnType();
+      default -> {
         return Description.NO_MATCH;
+      }
     }
 
     if (!methodSymbol.equals(retType.tsym.owner)) {

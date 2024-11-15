@@ -272,10 +272,11 @@ public class ErrorProneAnalyzer implements TaskListener {
     OUTER:
     for (Tree decl : tree.getTypeDecls()) {
       switch (decl.getKind()) {
-        case EMPTY_STATEMENT:
+        case EMPTY_STATEMENT -> {
           // ignore ";" at the top level, which counts as an empty type decl
           continue OUTER;
-        case IMPORT:
+        }
+        case IMPORT -> {
           // The spec disallows mixing imports and empty top-level declarations (";"), but
           // javac has a bug that causes it to accept empty declarations interspersed with imports:
           // http://mail.openjdk.java.net/pipermail/compiler-dev/2013-August/006968.html
@@ -283,8 +284,8 @@ public class ErrorProneAnalyzer implements TaskListener {
           // Any import declarations after the first semi are incorrectly added to the list
           // of type declarations, so we have to skip over them here.
           continue OUTER;
-        default:
-          break;
+        }
+        default -> {}
       }
       if (!seen.contains(decl)) {
         return false;

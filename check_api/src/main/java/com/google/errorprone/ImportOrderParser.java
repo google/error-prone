@@ -27,20 +27,14 @@ public final class ImportOrderParser {
    * @return the {@link ImportOrganizer}
    */
   public static ImportOrganizer getImportOrganizer(String importOrder) {
-    switch (importOrder) {
-      case "static-first":
-        return ImportOrganizer.STATIC_FIRST_ORGANIZER;
-      case "static-last":
-        return ImportOrganizer.STATIC_LAST_ORGANIZER;
-      case "android-static-first":
-        return ImportOrganizer.ANDROID_STATIC_FIRST_ORGANIZER;
-      case "android-static-last":
-        return ImportOrganizer.ANDROID_STATIC_LAST_ORGANIZER;
-      case "idea":
-        return ImportOrganizer.IDEA_ORGANIZER;
-      default:
-        throw new IllegalStateException("Unknown import order: '" + importOrder + "'");
-    }
+    return switch (importOrder) {
+      case "static-first" -> ImportOrganizer.STATIC_FIRST_ORGANIZER;
+      case "static-last" -> ImportOrganizer.STATIC_LAST_ORGANIZER;
+      case "android-static-first" -> ImportOrganizer.ANDROID_STATIC_FIRST_ORGANIZER;
+      case "android-static-last" -> ImportOrganizer.ANDROID_STATIC_LAST_ORGANIZER;
+      case "idea" -> ImportOrganizer.IDEA_ORGANIZER;
+      default -> throw new IllegalStateException("Unknown import order: '" + importOrder + "'");
+    };
   }
 
   private ImportOrderParser() {}

@@ -86,12 +86,9 @@ public class ConstantField extends BugChecker implements VariableTreeMatcher {
     ClassSymbol owningClass = sym.enclClass();
 
     // Enum anonymous classes aren't considered isInner() even though they can't hold static fields
-    switch (owningClass.getNestingKind()) {
-      case LOCAL:
-      case ANONYMOUS:
-        return false;
-      default:
-        return !owningClass.isInner();
-    }
+    return switch (owningClass.getNestingKind()) {
+      case LOCAL, ANONYMOUS -> false;
+      default -> !owningClass.isInner();
+    };
   }
 }

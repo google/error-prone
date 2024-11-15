@@ -161,18 +161,17 @@ class NullnessUtils {
       VisitorState state, Tree elementTree, Tree typeTree, @Nullable String suppressionToRemove) {
     NullableAnnotationToUse nullableAnnotationToUse = pickNullableAnnotation(state);
     switch (applyOnlyIfAlreadyInScope(state)) {
-      case TRUE:
+      case TRUE -> {
         if (!nullableAnnotationToUse.isAlreadyInScope()) {
           return emptyFix();
         }
-        break;
-      case IF_NOT:
+      }
+      case IF_NOT -> {
         if (nullableAnnotationToUse.isAlreadyInScope()) {
           return emptyFix();
         }
-        break;
-      default:
-        break;
+      }
+      default -> {}
     }
 
     if (!nullableAnnotationToUse.isTypeUse()) {
@@ -209,7 +208,7 @@ class NullnessUtils {
       typeTree = ((ParameterizedTypeTree) typeTree).getType();
     }
     switch (typeTree.getKind()) {
-      case ARRAY_TYPE:
+      case ARRAY_TYPE -> {
         Tree beforeBrackets = typeTree;
         while (true) {
           Tree pastAnnotations =
@@ -225,8 +224,8 @@ class NullnessUtils {
         // For an explanation of "int @Foo [][] f," etc., see JLS 4.11.
         return nullableAnnotationToUse.fixPostfixingOnto(
             beforeBrackets, state, suppressionToRemove);
-
-      case MEMBER_SELECT:
+      }
+      case MEMBER_SELECT -> {
         int lastDot =
             reverse(state.getOffsetTokensForNode(typeTree)).stream()
                 .filter(t -> t.kind() == DOT)
@@ -234,17 +233,17 @@ class NullnessUtils {
                 .get()
                 .pos();
         return nullableAnnotationToUse.fixPostfixingOnto(lastDot, state, suppressionToRemove);
-
-      case ANNOTATED_TYPE:
+      }
+      case ANNOTATED_TYPE -> {
         return nullableAnnotationToUse.fixPrefixingOnto(
             ((AnnotatedTypeTree) typeTree).getAnnotations().get(0), state, suppressionToRemove);
-
-      case IDENTIFIER:
+      }
+      case IDENTIFIER -> {
         return nullableAnnotationToUse.fixPrefixingOnto(typeTree, state, suppressionToRemove);
-
-      default:
-        throw new AssertionError(
-            "unexpected kind for type tree: " + typeTree.getKind() + " for " + typeTree);
+      }
+      default ->
+          throw new AssertionError(
+              "unexpected kind for type tree: " + typeTree.getKind() + " for " + typeTree);
     }
     // TODO(cpovirk): Remove any @NonNull, etc. annotation that is present?
   }
@@ -376,17 +375,17 @@ class NullnessUtils {
      * TODO(b/205115472): Make this tri-state ({type-use, declaration, both}) and avoid using "both"
      * annotations in any cases in which they would be ambiguous (e.g., arrays/elements).
      */
-    switch (className) {
-      case "libcore.util.Nullable":
-      case "org.checkerframework.checker.nullness.compatqual.NullableType":
-      case "org.checkerframework.checker.nullness.qual.Nullable":
-      case "org.jspecify.annotations.NonNull":
-      case "org.jspecify.annotations.Nullable":
-        return true;
-      default:
-        // TODO(cpovirk): Detect type-use-ness from the class symbol if it's available?
-        return false;
-    }
+    return switch (className) {
+      case "libcore.util.Nullable",
+          "org.checkerframework.checker.nullness.compatqual.NullableType",
+          "org.checkerframework.checker.nullness.qual.Nullable",
+          "org.jspecify.annotations.NonNull",
+          "org.jspecify.annotations.Nullable" ->
+          true;
+      default ->
+          // TODO(cpovirk): Detect type-use-ness from the class symbol if it's available?
+          false;
+    };
   }
 
   static @Nullable NullCheck getNullCheck(ExpressionTree tree) {
@@ -394,14 +393,11 @@ class NullnessUtils {
 
     Polarity polarity;
     switch (tree.getKind()) {
-      case EQUAL_TO:
-        polarity = IS_NULL;
-        break;
-      case NOT_EQUAL_TO:
-        polarity = IS_NOT_NULL;
-        break;
-      default:
+      case EQUAL_TO -> polarity = IS_NULL;
+      case NOT_EQUAL_TO -> polarity = IS_NOT_NULL;
+      default -> {
         return null;
+      }
     }
 
     BinaryTree equalityTree = (BinaryTree) tree;

@@ -63,16 +63,15 @@ public class NonRuntimeAnnotation extends BugChecker implements MethodInvocation
     }
     RetentionPolicy retention = state.getTypes().getRetention(type.asElement());
     switch (retention) {
-      case RUNTIME:
-        break;
-      case SOURCE:
-      case CLASS:
+      case RUNTIME -> {}
+      case SOURCE, CLASS -> {
         return buildDescription(tree)
             .setMessage(
                 String.format(
                     "%s; %s has %s retention",
                     message(), type.asElement().getSimpleName(), retention))
             .build();
+      }
     }
     return NO_MATCH;
   }

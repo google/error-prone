@@ -83,18 +83,16 @@ public final class JavaTimeDefaultTimeZone extends BugChecker
     }
     MethodSymbol symbol = ASTHelpers.getSymbol(tree);
 
-    switch (symbol.getSimpleName().toString()) {
-      case "now":
-        return symbol.isStatic() && NOW_STATIC.contains(symbol.owner.getQualifiedName().toString());
-      case "dateNow":
-        return !symbol.isStatic()
-            && DATE_NOW_INSTANCE.contains(symbol.owner.getQualifiedName().toString());
-      case "systemDefaultZone":
-        return symbol.isStatic()
-            && symbol.owner.getQualifiedName().contentEquals("java.time.Clock");
-      default:
-        return false;
-    }
+    return switch (symbol.getSimpleName().toString()) {
+      case "now" ->
+          symbol.isStatic() && NOW_STATIC.contains(symbol.owner.getQualifiedName().toString());
+      case "dateNow" ->
+          !symbol.isStatic()
+              && DATE_NOW_INSTANCE.contains(symbol.owner.getQualifiedName().toString());
+      case "systemDefaultZone" ->
+          symbol.isStatic() && symbol.owner.getQualifiedName().contentEquals("java.time.Clock");
+      default -> false;
+    };
   }
 
   @Override

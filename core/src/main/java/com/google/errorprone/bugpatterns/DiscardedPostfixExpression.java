@@ -40,11 +40,10 @@ public class DiscardedPostfixExpression extends BugChecker implements UnaryTreeM
   @Override
   public Description matchUnary(UnaryTree tree, VisitorState state) {
     switch (tree.getKind()) {
-      case POSTFIX_INCREMENT:
-      case POSTFIX_DECREMENT:
-        break;
-      default:
+      case POSTFIX_INCREMENT, POSTFIX_DECREMENT -> {}
+      default -> {
         return NO_MATCH;
+      }
     }
     Tree parent = state.getPath().getParentPath().getLeaf();
     if (parent.getKind() != Kind.LAMBDA_EXPRESSION) {

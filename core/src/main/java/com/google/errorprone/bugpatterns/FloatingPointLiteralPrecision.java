@@ -54,26 +54,22 @@ public class FloatingPointLiteralPrecision extends BugChecker implements Literal
     String suffix;
     BigDecimal value;
     switch (type.getKind()) {
-      case DOUBLE:
+      case DOUBLE -> {
         value = new BigDecimal(Double.toString(constValue(tree, Double.class)));
         suffix = "";
-        break;
-      case FLOAT:
+      }
+      case FLOAT -> {
         value = new BigDecimal(Float.toString(constValue(tree, Float.class)));
         suffix = "f";
-        break;
-      default:
+      }
+      default -> {
         return NO_MATCH;
+      }
     }
     String source = state.getSourceForNode(tree);
     switch (source.charAt(source.length() - 1)) {
-      case 'f':
-      case 'F':
-      case 'd':
-      case 'D':
-        source = source.substring(0, source.length() - 1);
-        break;
-      default: // fall out
+      case 'f', 'F', 'd', 'D' -> source = source.substring(0, source.length() - 1);
+      default -> {}
     }
     source = CharMatcher.is('_').removeFrom(source);
     BigDecimal exact;

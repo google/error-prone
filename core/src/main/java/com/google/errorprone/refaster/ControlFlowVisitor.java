@@ -63,13 +63,10 @@ public class ControlFlowVisitor extends SimpleTreeVisitor<Result, BreakContext> 
     NEVER_EXITS {
       @Override
       Result or(Result other) {
-        switch (other) {
-          case MAY_BREAK_OR_RETURN:
-          case NEVER_EXITS:
-            return other;
-          default:
-            return MAY_RETURN;
-        }
+        return switch (other) {
+          case MAY_BREAK_OR_RETURN, NEVER_EXITS -> other;
+          default -> MAY_RETURN;
+        };
       }
 
       @Override
@@ -96,26 +93,20 @@ public class ControlFlowVisitor extends SimpleTreeVisitor<Result, BreakContext> 
 
       @Override
       Result then(Result other) {
-        switch (other) {
-          case MAY_BREAK_OR_RETURN:
-          case ALWAYS_RETURNS:
-            return other;
-          default:
-            return MAY_RETURN;
-        }
+        return switch (other) {
+          case MAY_BREAK_OR_RETURN, ALWAYS_RETURNS -> other;
+          default -> MAY_RETURN;
+        };
       }
     },
     ALWAYS_RETURNS {
 
       @Override
       Result or(Result other) {
-        switch (other) {
-          case MAY_BREAK_OR_RETURN:
-          case ALWAYS_RETURNS:
-            return other;
-          default:
-            return MAY_RETURN;
-        }
+        return switch (other) {
+          case MAY_BREAK_OR_RETURN, ALWAYS_RETURNS -> other;
+          default -> MAY_RETURN;
+        };
       }
 
       @Override

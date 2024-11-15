@@ -74,15 +74,11 @@ public class ToStringReturnsNull extends BugChecker implements MethodTreeMatcher
     private static class ReturnExpressionScanner extends BooleanScanner {
       @Override
       public Boolean scan(Tree tree, Void unused) {
-        switch (tree.getKind()) {
-          case NULL_LITERAL:
-            return true;
-          case PARENTHESIZED:
-          case CONDITIONAL_EXPRESSION:
-            return super.scan(tree, null);
-          default:
-            return false;
-        }
+        return switch (tree.getKind()) {
+          case NULL_LITERAL -> true;
+          case PARENTHESIZED, CONDITIONAL_EXPRESSION -> super.scan(tree, null);
+          default -> false;
+        };
       }
     }
   }

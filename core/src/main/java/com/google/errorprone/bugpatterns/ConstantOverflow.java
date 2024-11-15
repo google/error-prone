@@ -146,20 +146,19 @@ public class ConstantOverflow extends BugChecker implements BinaryTreeMatcher {
           }
           // assume that e.g. `Integer.MIN_VALUE - 1` is intentional
           switch (node.getKind()) {
-            case MINUS:
+            case MINUS -> {
               if ((lhs instanceof Long && lhs.longValue() == Long.MIN_VALUE)
                   || (lhs instanceof Integer && lhs.intValue() == Integer.MIN_VALUE)) {
                 return null;
               }
-              break;
-            case PLUS:
+            }
+            case PLUS -> {
               if ((lhs instanceof Long && lhs.longValue() == Long.MAX_VALUE)
                   || (lhs instanceof Integer && lhs.intValue() == Integer.MAX_VALUE)) {
                 return null;
               }
-              break;
-            default:
-              break;
+            }
+            default -> {}
           }
           if (lhs instanceof Long || rhs instanceof Long) {
             return binop(node.getKind(), lhs.longValue(), rhs.longValue());
@@ -198,104 +197,66 @@ public class ConstantOverflow extends BugChecker implements BinaryTreeMatcher {
       };
 
   private static @Nullable Long unop(Kind kind, long value) {
-    switch (kind) {
-      case UNARY_PLUS:
-        return +value;
-      case UNARY_MINUS:
-        return -value;
-      case BITWISE_COMPLEMENT:
-        return ~value;
-      default:
-        return null;
-    }
+    return switch (kind) {
+      case UNARY_PLUS -> +value;
+      case UNARY_MINUS -> -value;
+      case BITWISE_COMPLEMENT -> ~value;
+      default -> null;
+    };
   }
 
   private static @Nullable Integer unop(Kind kind, int value) {
-    switch (kind) {
-      case UNARY_PLUS:
-        return +value;
-      case UNARY_MINUS:
-        return -value;
-      case BITWISE_COMPLEMENT:
-        return ~value;
-      default:
-        return null;
-    }
+    return switch (kind) {
+      case UNARY_PLUS -> +value;
+      case UNARY_MINUS -> -value;
+      case BITWISE_COMPLEMENT -> ~value;
+      default -> null;
+    };
   }
 
   static @Nullable Long binop(Kind kind, long lhs, long rhs) {
-    switch (kind) {
-      case MULTIPLY:
-        return LongMath.checkedMultiply(lhs, rhs);
-      case DIVIDE:
-        return lhs / rhs;
-      case REMAINDER:
-        return lhs % rhs;
-      case PLUS:
-        return LongMath.checkedAdd(lhs, rhs);
-      case MINUS:
-        return LongMath.checkedSubtract(lhs, rhs);
-      case LEFT_SHIFT:
-        return lhs << rhs;
-      case RIGHT_SHIFT:
-        return lhs >> rhs;
-      case UNSIGNED_RIGHT_SHIFT:
-        return lhs >>> rhs;
-      case AND:
-        return lhs & rhs;
-      case XOR:
-        return lhs ^ rhs;
-      case OR:
-        return lhs | rhs;
-      default:
-        return null;
-    }
+    return switch (kind) {
+      case MULTIPLY -> LongMath.checkedMultiply(lhs, rhs);
+      case DIVIDE -> lhs / rhs;
+      case REMAINDER -> lhs % rhs;
+      case PLUS -> LongMath.checkedAdd(lhs, rhs);
+      case MINUS -> LongMath.checkedSubtract(lhs, rhs);
+      case LEFT_SHIFT -> lhs << rhs;
+      case RIGHT_SHIFT -> lhs >> rhs;
+      case UNSIGNED_RIGHT_SHIFT -> lhs >>> rhs;
+      case AND -> lhs & rhs;
+      case XOR -> lhs ^ rhs;
+      case OR -> lhs | rhs;
+      default -> null;
+    };
   }
 
   static @Nullable Integer binop(Kind kind, int lhs, int rhs) {
-    switch (kind) {
-      case MULTIPLY:
-        return IntMath.checkedMultiply(lhs, rhs);
-      case DIVIDE:
-        return lhs / rhs;
-      case REMAINDER:
-        return lhs % rhs;
-      case PLUS:
-        return IntMath.checkedAdd(lhs, rhs);
-      case MINUS:
-        return IntMath.checkedSubtract(lhs, rhs);
-      case LEFT_SHIFT:
-        return lhs << rhs;
-      case RIGHT_SHIFT:
-        return lhs >> rhs;
-      case UNSIGNED_RIGHT_SHIFT:
-        return lhs >>> rhs;
-      case AND:
-        return lhs & rhs;
-      case XOR:
-        return lhs ^ rhs;
-      case OR:
-        return lhs | rhs;
-      default:
-        return null;
-    }
+    return switch (kind) {
+      case MULTIPLY -> IntMath.checkedMultiply(lhs, rhs);
+      case DIVIDE -> lhs / rhs;
+      case REMAINDER -> lhs % rhs;
+      case PLUS -> IntMath.checkedAdd(lhs, rhs);
+      case MINUS -> IntMath.checkedSubtract(lhs, rhs);
+      case LEFT_SHIFT -> lhs << rhs;
+      case RIGHT_SHIFT -> lhs >> rhs;
+      case UNSIGNED_RIGHT_SHIFT -> lhs >>> rhs;
+      case AND -> lhs & rhs;
+      case XOR -> lhs ^ rhs;
+      case OR -> lhs | rhs;
+      default -> null;
+    };
   }
 
   private static @Nullable Number cast(TypeKind kind, Number value) {
-    switch (kind) {
-      case SHORT:
-        return value.shortValue();
-      case INT:
-        return value.intValue();
-      case LONG:
-        return value.longValue();
-      case BYTE:
-        return value.byteValue();
-      case CHAR:
-        return (int) (char) value.intValue();
-      default:
-        return null;
-    }
+    return switch (kind) {
+      case SHORT -> value.shortValue();
+      case INT -> value.intValue();
+      case LONG -> value.longValue();
+      case BYTE -> value.byteValue();
+      case CHAR -> (int) (char) value.intValue();
+      default -> null;
+    };
   }
 
   private static @Nullable Number getIntegralConstant(Tree node) {

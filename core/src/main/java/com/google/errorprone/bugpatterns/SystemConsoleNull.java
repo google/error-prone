@@ -89,11 +89,10 @@ public class SystemConsoleNull extends BugChecker
     }
     BinaryTree binaryTree = (BinaryTree) tree;
     switch (binaryTree.getKind()) {
-      case EQUAL_TO:
-      case NOT_EQUAL_TO:
-        break;
-      default:
+      case EQUAL_TO, NOT_EQUAL_TO -> {}
+      default -> {
         return false;
+      }
     }
     return binaryTree.getLeftOperand().getKind().equals(Tree.Kind.NULL_LITERAL)
         || binaryTree.getRightOperand().getKind().equals(Tree.Kind.NULL_LITERAL);

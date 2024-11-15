@@ -54,11 +54,13 @@ public class IdentityBinaryExpression extends BugChecker implements BinaryTreeMa
   public Description matchBinary(BinaryTree tree, VisitorState state) {
     if (constValue(tree.getLeftOperand()) != null) {
       switch (tree.getKind()) {
-        case LEFT_SHIFT: // bit field initialization, e.g. `1 << 1`, `1 << 2`, ...
-        case DIVIDE: // aspect ratios, e.g. `1.0f / 1.0f`, `2.0f / 3.0f`, ...
-        case MINUS: // character arithmetic, e.g. `'A' - 'A'`, `'B' - 'A'`, ...
+        case LEFT_SHIFT, DIVIDE, MINUS -> {
+          // bit field initialization, e.g. `1 << 1`, `1 << 2`, ...
+          // aspect ratios, e.g. `1.0f / 1.0f`, `2.0f / 3.0f`, ...
+          // character arithmetic, e.g. `'A' - 'A'`, `'B' - 'A'`, ...
           return NO_MATCH;
-        default: // fall out
+        }
+        default -> {}
       }
     }
     String replacement;
@@ -108,15 +110,13 @@ public class IdentityBinaryExpression extends BugChecker implements BinaryTreeMa
       return NO_MATCH;
     }
     switch (tree.getKind()) {
-      case NOT_EQUAL_TO:
-        // X != X is only true when X is NaN, so suggest isNaN(X)
-        replacement = isNanReplacement(tree, state).orElse(replacement);
-        break;
-      case EQUAL_TO:
-        // X == X is true unless X is NaN, so suggest !isNaN(X)
-        replacement = isNanReplacement(tree, state).map(r -> "!" + r).orElse(replacement);
-        break;
-      default: // fall out
+      case NOT_EQUAL_TO ->
+          // X != X is only true when X is NaN, so suggest isNaN(X)
+          replacement = isNanReplacement(tree, state).orElse(replacement);
+      case EQUAL_TO ->
+          // X == X is true unless X is NaN, so suggest !isNaN(X)
+          replacement = isNanReplacement(tree, state).map(r -> "!" + r).orElse(replacement);
+      default -> {}
     }
     Description.Builder description = buildDescription(tree);
     if (replacement != null) {

@@ -122,18 +122,12 @@ public class NullnessAnnotations {
      * (b/203207989). To reduce the chance that we hit the inner-class bug, we apply it only if the
      * first approach fails.
      */
-    TypeMirror elementType;
-    switch (sym.getKind()) {
-      case METHOD:
-        elementType = ((ExecutableElement) sym).getReturnType();
-        break;
-      case FIELD:
-      case PARAMETER:
-        elementType = sym.asType();
-        break;
-      default:
-        elementType = null;
-    }
+    TypeMirror elementType =
+        switch (sym.getKind()) {
+          case METHOD -> ((ExecutableElement) sym).getReturnType();
+          case FIELD, PARAMETER -> sym.asType();
+          default -> null;
+        };
     Optional<Nullness> fromElement = fromAnnotationsOn(elementType);
     if (fromElement.isPresent()) {
       return fromElement;

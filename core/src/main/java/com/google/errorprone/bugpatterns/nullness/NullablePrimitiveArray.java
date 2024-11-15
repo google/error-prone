@@ -144,12 +144,10 @@ public class NullablePrimitiveArray extends BugChecker
     }.visit(value.get(), null);
     for (String target : targets) {
       switch (target) {
-        case "METHOD":
-        case "FIELD":
-        case "LOCAL_VARIABLE":
-        case "PARAMETER":
+        case "METHOD", "FIELD", "LOCAL_VARIABLE", "PARAMETER" -> {
           return false;
-        default: // fall out
+        }
+        default -> {}
       }
     }
     return targets.contains("TYPE_USE");

@@ -201,14 +201,10 @@ public final class TruthAssertExpected extends BugChecker implements MethodInvoc
     if (tree == null) {
       return null;
     }
-    switch (tree.getKind()) {
-      case IDENTIFIER:
-        return (IdentifierTree) tree;
-      case MEMBER_SELECT:
-      case METHOD_INVOCATION:
-        return getRootIdentifier(ASTHelpers.getReceiver(tree));
-      default:
-        return null;
-    }
+    return switch (tree.getKind()) {
+      case IDENTIFIER -> (IdentifierTree) tree;
+      case MEMBER_SELECT, METHOD_INVOCATION -> getRootIdentifier(ASTHelpers.getReceiver(tree));
+      default -> null;
+    };
   }
 }

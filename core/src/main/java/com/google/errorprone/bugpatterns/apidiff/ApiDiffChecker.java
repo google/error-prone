@@ -129,20 +129,22 @@ public abstract class ApiDiffChecker extends BugChecker
       return sym.enclClass();
     }
     switch (tree.getKind()) {
-      case MEMBER_SELECT:
-      case METHOD_INVOCATION:
+      case MEMBER_SELECT, METHOD_INVOCATION -> {
         Type receiver = ASTHelpers.getType(ASTHelpers.getReceiver(tree));
         if (receiver == null) {
           return null;
         }
         return receiver.tsym.enclClass();
-      case IDENTIFIER:
+      }
+      case IDENTIFIER -> {
         // Simple names are implicitly qualified by an enclosing instance, so if we get here
         // we're inside the compilation unit that declares the receiver, and the diff doesn't
         // contain accurate information.
         return null;
-      default:
+      }
+      default -> {
         return null;
+      }
     }
   }
 }

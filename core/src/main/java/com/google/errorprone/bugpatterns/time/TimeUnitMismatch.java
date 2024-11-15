@@ -120,19 +120,19 @@ public final class TimeUnitMismatch extends BugChecker
       return Description.NO_MATCH;
     }
     switch (tree.getKind()) {
-      case PLUS:
-      case MINUS:
-      case LESS_THAN:
-      case GREATER_THAN:
-      case LESS_THAN_EQUAL:
-      case GREATER_THAN_EQUAL:
-      case EQUAL_TO:
-      case NOT_EQUAL_TO:
-      case PLUS_ASSIGNMENT:
-      case MINUS_ASSIGNMENT:
-        break;
-      default:
+      case PLUS,
+          MINUS,
+          LESS_THAN,
+          GREATER_THAN,
+          LESS_THAN_EQUAL,
+          GREATER_THAN_EQUAL,
+          EQUAL_TO,
+          NOT_EQUAL_TO,
+          PLUS_ASSIGNMENT,
+          MINUS_ASSIGNMENT -> {}
+      default -> {
         return Description.NO_MATCH;
+      }
     }
 
     TreeAndTimeUnit lhs = unitSuggestedByTree(tree.getLeftOperand());
@@ -425,44 +425,43 @@ public final class TimeUnitMismatch extends BugChecker
    */
   private static @Nullable String extractArgumentName(ExpressionTree expr) {
     switch (expr.getKind()) {
-      case TYPE_CAST:
+      case TYPE_CAST -> {
         return extractArgumentName(((TypeCastTree) expr).getExpression());
-      case MEMBER_SELECT:
-        {
-          // If we have a field or method access, we use the name of the field/method. (We ignore
-          // the name of the receiver object.) Exception: If the method is named "get" (Optional,
-          // Flag, etc.), we use the name of the object or class that it's called on.
-          MemberSelectTree memberSelect = (MemberSelectTree) expr;
-          String member = memberSelect.getIdentifier().toString();
-          return member.equals("get") ? extractArgumentName(memberSelect.getExpression()) : member;
+      }
+      case MEMBER_SELECT -> {
+        // If we have a field or method access, we use the name of the field/method. (We ignore
+        // the name of the receiver object.) Exception: If the method is named "get" (Optional,
+        // Flag, etc.), we use the name of the object or class that it's called on.
+        MemberSelectTree memberSelect = (MemberSelectTree) expr;
+        String member = memberSelect.getIdentifier().toString();
+        return member.equals("get") ? extractArgumentName(memberSelect.getExpression()) : member;
+      }
+      case METHOD_INVOCATION -> {
+        // If we have a 'call expression' we use the name of the method we are calling. Exception:
+        // If the method is named "get," we use the object or class instead. (See above.)
+        Symbol sym = getSymbol(expr);
+        if (sym == null) {
+          return null;
         }
-      case METHOD_INVOCATION:
-        {
-          // If we have a 'call expression' we use the name of the method we are calling. Exception:
-          // If the method is named "get," we use the object or class instead. (See above.)
-          Symbol sym = getSymbol(expr);
-          if (sym == null) {
-            return null;
-          }
-          String methodName = sym.getSimpleName().toString();
-          return methodName.equals("get")
-              ? extractArgumentName(((MethodInvocationTree) expr).getMethodSelect())
-              : methodName;
+        String methodName = sym.getSimpleName().toString();
+        return methodName.equals("get")
+            ? extractArgumentName(((MethodInvocationTree) expr).getMethodSelect())
+            : methodName;
+      }
+      case IDENTIFIER -> {
+        IdentifierTree idTree = (IdentifierTree) expr;
+        if (idTree.getName().contentEquals("this")) {
+          // for the 'this' keyword the argument name is the name of the object's class
+          Symbol sym = getSymbol(idTree);
+          return (sym == null) ? null : enclosingClass(sym).getSimpleName().toString();
+        } else {
+          // if we have a variable, just extract its name
+          return ((IdentifierTree) expr).getName().toString();
         }
-      case IDENTIFIER:
-        {
-          IdentifierTree idTree = (IdentifierTree) expr;
-          if (idTree.getName().contentEquals("this")) {
-            // for the 'this' keyword the argument name is the name of the object's class
-            Symbol sym = getSymbol(idTree);
-            return (sym == null) ? null : enclosingClass(sym).getSimpleName().toString();
-          } else {
-            // if we have a variable, just extract its name
-            return ((IdentifierTree) expr).getName().toString();
-          }
-        }
-      default:
+      }
+      default -> {
         return null;
+      }
     }
   }
 

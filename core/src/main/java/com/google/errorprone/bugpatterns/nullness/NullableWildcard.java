@@ -67,7 +67,7 @@ public class NullableWildcard extends BugChecker implements AnnotatedTypeTreeMat
     AnnotationTree existingAnnotation = getOnlyElement(existingAnnotations);
     SuggestedFix.Builder fix = SuggestedFix.builder().delete(existingAnnotation);
     switch (tree.getKind()) {
-      case EXTENDS_WILDCARD:
+      case EXTENDS_WILDCARD -> {
         Tree bound = tree.getBound();
         if (bound instanceof AnnotatedTypeTree
             && NullnessAnnotations.fromAnnotationTrees(((AnnotatedTypeTree) bound).getAnnotations())
@@ -77,15 +77,17 @@ public class NullableWildcard extends BugChecker implements AnnotatedTypeTreeMat
         return fix.prefixWith(
                 bound, String.format("%s ", state.getSourceForNode(existingAnnotation)))
             .build();
-      case SUPER_WILDCARD:
+      }
+      case SUPER_WILDCARD -> {
         return SuggestedFix.emptyFix();
-      case UNBOUNDED_WILDCARD:
+      }
+      case UNBOUNDED_WILDCARD -> {
         return fix.postfixWith(
                 tree,
                 String.format(" extends %s Object", state.getSourceForNode(existingAnnotation)))
             .build();
-      default:
-        throw new AssertionError(tree.getKind());
+      }
+      default -> throw new AssertionError(tree.getKind());
     }
   }
 }
