@@ -67,7 +67,8 @@ public class InvalidPatternSyntaxTest {
                 // BUG: Diagnostic contains:
                 "".split(INVALID, 0);
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -104,7 +105,8 @@ public class InvalidPatternSyntaxTest {
                 "".split(x);
                 "".split(x, 0);
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 }

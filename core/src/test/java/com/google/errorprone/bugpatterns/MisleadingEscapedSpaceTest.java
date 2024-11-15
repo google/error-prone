@@ -39,7 +39,8 @@ public final class MisleadingEscapedSpaceTest {
             class Test {
               // BUG: Diagnostic contains:
               private static final String FOO = " \\s ";
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -53,7 +54,8 @@ public final class MisleadingEscapedSpaceTest {
             """
             class Test {
               private static final String FOO = " \\\\s ";
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -68,7 +70,8 @@ public final class MisleadingEscapedSpaceTest {
             class Test {
               // BUG: Diagnostic contains:
               private static final char x = '\\s';
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -90,7 +93,8 @@ public final class MisleadingEscapedSpaceTest {
               foo   \\s
               bar  \\s baz
               \""";
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -107,7 +111,8 @@ public final class MisleadingEscapedSpaceTest {
               foo   \\s
               bar     \\s
               \""";
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -123,7 +128,8 @@ public final class MisleadingEscapedSpaceTest {
               private static final String FOO = \"""
               foo   \\s\\s\\s\\s
               \""";
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -137,7 +143,8 @@ public final class MisleadingEscapedSpaceTest {
             """
             class Test {
               private static final String FOO = "foo" + /* \\s */ " bar";
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -170,7 +177,8 @@ public final class MisleadingEscapedSpaceTest {
             class Test {
               // BUG: Diagnostic contains:
               private static final String FOO = "foo\\s";
-            }""")
+            }\
+            """)
         .doTest();
   }
 }

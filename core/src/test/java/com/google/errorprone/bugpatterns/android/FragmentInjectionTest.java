@@ -40,7 +40,8 @@ public final class FragmentInjectionTest {
                 protected boolean isValidFragment(String className) {
                   return true;
                 }
-              }""")
+              }\
+              """)
           .setArgs(ImmutableList.of("-XDandroidCompatible=true"));
 
   @Test

@@ -290,7 +290,8 @@ public class NullnessPropagationTransferCases1 {
     // BUG: Diagnostic contains: (Non-null)
     triggerNullnessChecker(null + (String) null);
   }
-}""")
+}\
+""")
         .doTest();
   }
 
@@ -628,7 +629,8 @@ public class NullnessPropagationTransferCases2 {
     // BUG: Diagnostic contains: (Nullable)
     triggerNullnessChecker(myOptional.orNull());
   }
-}""")
+}\
+""")
         .doTest();
   }
 
@@ -894,7 +896,8 @@ public class NullnessPropagationTransferCases3 {
       comingValue = new Object();
     }
   }
-}""")
+}\
+""")
         .doTest();
   }
 
@@ -1160,7 +1163,8 @@ public class NullnessPropagationTransferCases4 {
   }
 
   // TODO(eaftan): tests for bottom?
-}""")
+}\
+""")
         .doTest();
   }
 
@@ -1426,7 +1430,8 @@ public class NullnessPropagationTransferCases5 {
   }
 
   // TODO(eaftan): tests for bottom?
-}""")
+}\
+""")
         .doTest();
   }
 
@@ -1615,7 +1620,8 @@ public class NullnessPropagationTransferCases6 {
   static class HasStaticFields {
     static String staticStringField;
   }
-}""")
+}\
+""")
         .doTest();
   }
 
@@ -1783,7 +1789,8 @@ public class NullnessPropagationTransferCases7 {
     // BUG: Diagnostic contains: (Non-null)
     triggerNullnessCheckerOnPrimitive(mc.field = boxedIntReturningMethod());
   }
-}""")
+}\
+""")
         .doTest();
   }
 
@@ -1830,7 +1837,8 @@ public class NullnessPropagationTransferCases8 {
   <T> T something() {
     return null;
   }
-}""")
+}\
+""")
         .doTest();
   }
 

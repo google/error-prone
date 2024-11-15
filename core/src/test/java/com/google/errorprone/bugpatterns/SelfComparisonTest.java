@@ -120,7 +120,8 @@ public class SelfComparisonTest {
                   return compareTo(this);
                 }
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -167,7 +168,8 @@ public class SelfComparisonTest {
                   return testField.compareTo(obj.testField);
                 }
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 }

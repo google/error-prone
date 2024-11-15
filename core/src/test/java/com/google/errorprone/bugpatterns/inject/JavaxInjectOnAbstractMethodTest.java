@@ -99,7 +99,8 @@ public class JavaxInjectOnAbstractMethodPositiveCases {
     @javax.inject.Inject
     default void foo() {}
   }
-}""")
+}\
+""")
         .doTest();
   }
 
@@ -155,7 +156,8 @@ public class JavaxInjectOnAbstractMethodNegativeCases {
     @javax.inject.Inject
     abstract void abstractMethod();
   }
-}""")
+}\
+""")
         .doTest();
   }
 }

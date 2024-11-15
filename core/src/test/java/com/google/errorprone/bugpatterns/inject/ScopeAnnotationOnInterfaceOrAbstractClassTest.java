@@ -58,7 +58,8 @@ public class ScopeAnnotationOnInterfaceOrAbstractClassPositiveCases {
   // BUG: Diagnostic contains: remove
   @Singleton
   public interface TestClass2 {}
-}""")
+}\
+""")
         .doTest();
   }
 
@@ -109,7 +110,8 @@ public class ScopeAnnotationOnInterfaceOrAbstractClassPositiveCases {
                 @CustomScope
                 abstract class DaggerAbstractClassSubcomponent {}
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 }

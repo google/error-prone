@@ -122,7 +122,8 @@ public class ChainingConstructorIgnoresParameterPositiveCases {
   enum Location {
     TEST_TARGET
   }
-}""")
+}\
+""")
         .doTest();
   }
 
@@ -232,7 +233,8 @@ public class ChainingConstructorIgnoresParameterNegativeCases {
       this("something");
     }
   }
-}""")
+}\
+""")
         .doTest();
   }
 }

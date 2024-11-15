@@ -176,7 +176,8 @@ public class MissingFailTest {
               private static void assertDummy() {}
 
               private static void verifyDummy() {}
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -216,7 +217,8 @@ public class MissingFailTest {
               }
 
               private static void dummyMethod() {}
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -257,7 +259,8 @@ public class MissingFailTest {
               private static void dummyMethod() {}
 
               private static void assertDummy() {}
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -728,7 +731,8 @@ public class MissingFailNegativeCases extends TestCase {
       return "";
     }
   }
-}""")
+}\
+""")
         .doTest();
   }
 
@@ -761,7 +765,8 @@ public class MissingFailNegativeCases extends TestCase {
               private static void dummyMethod() {}
 
               private static void assertDummy() {}
-            }""")
+            }\
+            """)
         .doTest();
   }
 

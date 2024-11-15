@@ -69,7 +69,8 @@ public class AsyncFunctionReturnsNullTest {
                   return immediateFuture(input.toString());
                 }
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -139,7 +140,8 @@ public class AsyncFunctionReturnsNullTest {
               interface MyNonAsyncFunction<I, O> {
                 ListenableFuture<O> apply(@Nullable I input) throws Exception;
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 }

@@ -237,7 +237,8 @@ public class UnnecessaryBoxedVariableTest {
               private Integer methodBoxedArg(Integer i) {
                 return i;
               }
-            }""")
+            }\
+            """)
         .addOutputLines(
             "UnnecessaryBoxedVariableCases_expected.java",
             """
@@ -435,7 +436,8 @@ public class UnnecessaryBoxedVariableTest {
               private Integer methodBoxedArg(Integer i) {
                 return i;
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 

@@ -76,7 +76,8 @@ public class UnsafeWildcardTest {
                 // BUG: Diagnostic contains: impossible
                 new Impl<>(Stream.of(null, null)).apply("boom");
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 

@@ -85,7 +85,8 @@ public class EmptyIfStatementTest {
                   System.out.println("foo");
                 }
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -129,7 +130,8 @@ public class EmptyIfStatementTest {
                   ;
                 else System.out.println("not 10, 11, or 12");
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 }

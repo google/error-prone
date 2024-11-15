@@ -165,7 +165,8 @@ public class MoreThanOneQualifierPositiveCases {
   @BindingAnnotation
   @Retention(RUNTIME)
   public @interface Bar2 {}
-}""")
+}\
+""")
         .doTest();
   }
 
@@ -233,7 +234,8 @@ public class MoreThanOneQualifierNegativeCases {
   @BindingAnnotation
   @Retention(RUNTIME)
   public @interface Bar {}
-}""")
+}\
+""")
         .doTest();
   }
 }

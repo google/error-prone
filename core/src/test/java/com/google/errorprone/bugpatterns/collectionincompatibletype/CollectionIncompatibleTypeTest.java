@@ -292,7 +292,8 @@ public class CollectionIncompatibleTypePositiveCases {
     // BUG: Diagnostic contains:
     return collection.contains(nonFinalClass1);
   }
-}""")
+}\
+""")
         .doTest();
   }
 
@@ -567,7 +568,8 @@ public class CollectionIncompatibleTypeNegativeCases {
       Set<Class<? extends Iterable<?>>> iterables, Class<ArrayList> arrayListClass) {
     iterables.contains(arrayListClass);
   }
-}""")
+}\
+""")
         .doTest();
   }
 
@@ -587,7 +589,8 @@ public class CollectionIncompatibleTypeNegativeCases {
                 Properties properties = new Properties();
                 properties.get("");
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -606,7 +609,8 @@ public class CollectionIncompatibleTypeNegativeCases {
               public void test(K k) {
                 get(k);
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 

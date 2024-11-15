@@ -104,7 +104,8 @@ public class ByteBufferBackingArrayPositiveCases {
     // BUG: Diagnostic contains: ByteBuffer.array()
     buff.array();
   }
-}""")
+}\
+""")
         .doTest();
   }
 
@@ -248,7 +249,8 @@ public class ByteBufferBackingArrayNegativeCases {
           return null;
         };
   }
-}""")
+}\
+""")
         .doTest();
   }
 

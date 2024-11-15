@@ -143,7 +143,8 @@ public class ComparisonContractViolatedTest {
                       return o1.equals(o2) ? 0 : POSITIVE_CONSTANT;
                     }
                   };
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -179,7 +180,8 @@ public class ComparisonContractViolatedTest {
                   return (o instanceof NegativeInfinity) ? 0 : -1;
                 }
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 }

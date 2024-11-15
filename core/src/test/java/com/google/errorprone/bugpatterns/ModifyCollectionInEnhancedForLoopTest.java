@@ -127,7 +127,8 @@ public class ModifyCollectionInEnhancedForLoopTest {
                   map.remove(a.getKey());
                 }
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -233,7 +234,8 @@ public class ModifyCollectionInEnhancedForLoopNegativeCases {
       mbq.add(i);
     }
   }
-}""")
+}\
+""")
         .doTest();
   }
 

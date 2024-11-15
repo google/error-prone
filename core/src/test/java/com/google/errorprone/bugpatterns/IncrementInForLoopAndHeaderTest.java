@@ -116,7 +116,8 @@ public class IncrementInForLoopAndHeaderTest {
                 // BUG: Diagnostic contains: increment
                 for (int i = 0; i < 10; i++) i++;
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -189,7 +190,8 @@ public class IncrementInForLoopAndHeaderTest {
                   a++;
                 }
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 }

@@ -117,7 +117,8 @@ public class FragmentNotInstantiableTest {
                   return new LocalFragment();
                 }
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -202,7 +203,8 @@ public class FragmentNotInstantiableTest {
 
                 class ImplicitlyStaticAndPublicInnerFragment extends Fragment {}
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -280,7 +282,8 @@ public class FragmentNotInstantiableTest {
                   return new LocalFragment();
                 }
               }
-            }""")
+            }\
+            """)
         .addSourceLines(
             "CustomFragment.java",
             """
@@ -289,7 +292,8 @@ public class FragmentNotInstantiableTest {
             /**
              * @author jasonlong@google.com (Jason Long)
              */
-            public class CustomFragment {}""")
+            public class CustomFragment {}\
+            """)
         .addSourceLines(
             "CustomFragmentNotInstantiablePositiveCases.java",
             """
@@ -354,7 +358,8 @@ public class FragmentNotInstantiableTest {
                   return new LocalFragment();
                 }
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -439,7 +444,8 @@ public class FragmentNotInstantiableTest {
 
                 class ImplicitlyStaticAndPublicInnerFragment extends Fragment {}
               }
-            }""")
+            }\
+            """)
         .addSourceLines(
             "CustomFragment.java",
             """
@@ -448,7 +454,8 @@ public class FragmentNotInstantiableTest {
             /**
              * @author jasonlong@google.com (Jason Long)
              */
-            public class CustomFragment {}""")
+            public class CustomFragment {}\
+            """)
         .addSourceLines(
             "CustomFragmentNotInstantiableNegativeCases.java",
             """
@@ -507,7 +514,8 @@ public class FragmentNotInstantiableTest {
 
                 class ImplicitlyStaticAndPublicInnerFragment extends CustomFragment {}
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -519,13 +527,15 @@ public class FragmentNotInstantiableTest {
             """
             package android.app;
 
-            public class Fragment {}""")
+            public class Fragment {}\
+            """)
         .addSourceLines(
             "Fragment.java",
             """
             package android.support.v4.app;
 
-            public class Fragment {}""")
+            public class Fragment {}\
+            """)
         .setArgs(ImmutableList.of("-XDandroidCompatible=true"));
   }
 }

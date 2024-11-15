@@ -79,7 +79,8 @@ public class HardCodedSdCardPathTest {
 
               // BUG: Diagnostic contains: Context
               static final String PATH11 = "/data" + "/" + "user";
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -127,7 +128,8 @@ public class HardCodedSdCardPathTest {
               static final String FRAGMENT4 = "1user";
 
               static final String PATH5 = FRAGMENT3 + "/" + FRAGMENT4;
-            }""")
+            }\
+            """)
         .doTest();
   }
 }

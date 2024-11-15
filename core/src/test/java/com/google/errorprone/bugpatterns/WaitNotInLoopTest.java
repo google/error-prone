@@ -110,7 +110,8 @@ public class WaitNotInLoopPositiveCases {
     // BUG: Diagnostic contains: awaitUntil(java.util.Date) must always be called in a loop
     cond.awaitUntil(new Date());
   }
-}""")
+}\
+""")
         .doTest();
   }
 
@@ -214,7 +215,8 @@ public class WaitNotInLoopNegativeCases {
   public void testNotObjectWait() {
     wait(new Object());
   }
-}""")
+}\
+""")
         .doTest();
   }
 }

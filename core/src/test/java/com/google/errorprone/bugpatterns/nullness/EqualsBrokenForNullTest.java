@@ -216,7 +216,8 @@ public class EqualsBrokenForNullTest {
                   return that.a == a;
                 }
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -352,7 +353,8 @@ public class EqualsBrokenForNullNegativeCases {
       return that.a == a;
     }
   }
-}""")
+}\
+""")
         .doTest();
   }
 

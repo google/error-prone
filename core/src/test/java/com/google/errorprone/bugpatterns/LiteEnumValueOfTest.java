@@ -36,7 +36,8 @@ public final class LiteEnumValueOfTest {
               """
               package android.os;
 
-              public interface Parcel {}""")
+              public interface Parcel {}\
+              """)
           .addSourceLines(
               "Parcelable.java",
               """
@@ -56,7 +57,8 @@ public final class LiteEnumValueOfTest {
                 interface ClassLoaderCreator<T> extends Creator<T> {
                   T createFromParcel(Parcel source, ClassLoader loader);
                 }
-              }""")
+              }\
+              """)
           .addSourceLines(
               "FakeLiteEnum.java",
               """

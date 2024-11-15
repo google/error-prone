@@ -70,7 +70,8 @@ public class QualifierWithTypeUseTest {
               // BUG: Diagnostic contains: remove
               @Target(ElementType.TYPE_USE)
               @interface BindingAnnotation3 {}
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -95,7 +96,8 @@ public class QualifierWithTypeUseTest {
 
               @Target({ElementType.TYPE_USE, ElementType.TYPE_PARAMETER})
               @interface NotAQualifier {}
-            }""")
+            }\
+            """)
         .doTest();
   }
 }

@@ -75,7 +75,8 @@ public class ComparableAndComparatorTest {
                   return 0;
                 }
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -161,7 +162,8 @@ public class ComparableAndComparatorNegativeCases {
       return 0;
     }
   }
-}""")
+}\
+""")
         .doTest();
   }
 }

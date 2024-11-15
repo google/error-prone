@@ -59,7 +59,8 @@ public class NullablePrimitiveTest {
               public int method() {
                 return 0;
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -85,7 +86,8 @@ public class NullablePrimitiveTest {
               public Integer method() {
                 return Integer.valueOf(0);
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 

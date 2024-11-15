@@ -94,7 +94,8 @@ public class MoreThanOneInjectableConstructorPositiveCases {
     @Inject
     public TestClass4(int m, int n, boolean x) {}
   }
-}""")
+}\
+""")
         .doTest();
   }
 
@@ -172,7 +173,8 @@ public class MoreThanOneInjectableConstructorNegativeCases {
     @Inject
     public TestClass7(int n) {}
   }
-}""")
+}\
+""")
         .doTest();
   }
 }

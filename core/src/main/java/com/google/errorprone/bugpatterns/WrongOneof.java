@@ -23,6 +23,7 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.predicates.TypePredicates.isDescendantOf;
 import static com.google.errorprone.util.ASTHelpers.enumValues;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.stripParentheses;
 import static com.google.errorprone.util.Reachability.canCompleteNormally;
@@ -38,7 +39,6 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.predicates.TypePredicate;
 import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.ExpressionTree;
-import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.StatementTree;
@@ -97,8 +97,7 @@ public final class WrongOneof extends BugChecker implements SwitchTreeMatcher {
       if (caseTree.getExpression() == null) {
         break;
       }
-      allowableGetters.add(
-          getter(((IdentifierTree) caseTree.getExpression()).getName().toString()));
+      allowableGetters.add(getter(getSymbol(caseTree.getExpression()).getSimpleName().toString()));
 
       scanForInvalidGetters(getters, allowableGetters, caseTree, constantReceiver, state);
 

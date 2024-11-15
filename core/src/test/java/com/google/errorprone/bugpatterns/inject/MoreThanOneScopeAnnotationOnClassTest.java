@@ -67,7 +67,8 @@ public class MoreThanOneScopeAnnotationOnClassTest {
               @SessionScoped
               // BUG: Diagnostic contains:
               class TestClass3 {}
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -145,7 +146,8 @@ public class MoreThanOneScopeAnnotationOnClassNegativeCases {
   /** Suppression through secondary name */
   @SuppressWarnings("MoreThanOneScopeAnnotationOnClass")
   public class TestClass6 {}
-}""")
+}\
+""")
         .doTest();
   }
 }

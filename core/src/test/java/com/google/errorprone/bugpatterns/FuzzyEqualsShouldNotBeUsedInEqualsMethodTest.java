@@ -58,7 +58,8 @@ public class FuzzyEqualsShouldNotBeUsedInEqualsMethodTest {
                   return DoubleMath.fuzzyEquals(x, y, z);
                 }
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -93,7 +94,8 @@ public class FuzzyEqualsShouldNotBeUsedInEqualsMethodTest {
                   return DoubleMath.fuzzyEquals(0, 1, 0.2);
                 }
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 }

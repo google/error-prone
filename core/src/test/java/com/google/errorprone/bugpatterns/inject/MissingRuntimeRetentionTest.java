@@ -103,7 +103,8 @@ public class MissingRuntimeRetentionTest {
               @Target({TYPE, METHOD})
               // BUG: Diagnostic contains: @Retention(RUNTIME)
               public @interface TestAnnotation7 {}
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -168,7 +169,8 @@ public class MissingRuntimeRetentionTest {
               @com.google.inject.multibindings.MapKey
               @Retention(RUNTIME)
               public @interface TestAnnotation7 {}
-            }""")
+            }\
+            """)
         .doTest();
   }
 

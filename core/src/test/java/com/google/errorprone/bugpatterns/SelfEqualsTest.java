@@ -135,7 +135,8 @@ public class SelfEqualsTest {
                 // BUG: Diagnostic contains:
                 sc.equals(sc);
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -184,7 +185,8 @@ public class SelfEqualsTest {
               public void testAssertThatNeq(SelfEqualsNegativeCases obj) {
                 assertThat(obj).isNotEqualTo(obj);
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -259,7 +261,8 @@ public class SelfEqualsTest {
                 public ForTesting testing;
                 public String string;
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -296,7 +299,8 @@ public class SelfEqualsTest {
               public int hashCode() {
                 return field != null ? field.hashCode() : 0;
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 

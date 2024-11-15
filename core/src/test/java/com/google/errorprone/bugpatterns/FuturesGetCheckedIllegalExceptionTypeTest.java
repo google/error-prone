@@ -94,7 +94,8 @@ public class FuturesGetCheckedIllegalExceptionTypePositiveCases {
   }
 
   public class InnerClassWithImplicitConstructorException extends Exception {}
-}""")
+}\
+""")
         .doTest();
   }
 
@@ -147,7 +148,8 @@ public class FuturesGetCheckedIllegalExceptionTypeNegativeCases {
   public static class ProtectedConstructorException extends Exception {
     protected ProtectedConstructorException() {}
   }
-}""")
+}\
+""")
         .doTest();
   }
 }

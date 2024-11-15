@@ -85,7 +85,8 @@ public class BadComparablePositiveCases {
           return (int) (rhs.lastModified() - lhs.lastModified());
         }
       };
-}""")
+}\
+""")
         .doTest();
   }
 
@@ -231,7 +232,8 @@ public class BadComparablePositiveCases {
                       return (char) (n1 - n2);
                     }
                   };
-            }""")
+            }\
+            """)
         .doTest();
   }
 }

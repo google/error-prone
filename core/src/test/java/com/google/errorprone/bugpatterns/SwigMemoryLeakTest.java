@@ -61,7 +61,8 @@ public class SwigMemoryLeakPositiveCases {
       swigCPtr = 0;
     }
   }
-}""")
+}\
+""")
         .doTest();
   }
 
@@ -101,7 +102,8 @@ public class SwigMemoryLeakPositiveCases {
               }
 
               private static native void nativeDelete(long cptr);
-            }""")
+            }\
+            """)
         .doTest();
   }
 }

@@ -97,7 +97,8 @@ public class OverridesGuiceInjectableMethodPositiveCases {
     // BUG: Diagnostic contains: @Inject
     public void foo() {}
   }
-}""")
+}\
+""")
         .doTest();
   }
 
@@ -165,7 +166,8 @@ public class OverridesGuiceInjectableMethodNegativeCases {
 
   /** Class that extends a class with an injected method, but doesn't override it. */
   public class TestClass7 extends TestClass1 {}
-}""")
+}\
+""")
         .doTest();
   }
 }

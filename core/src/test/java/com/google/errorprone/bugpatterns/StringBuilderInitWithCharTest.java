@@ -51,7 +51,8 @@ public class StringBuilderInitWithCharTest {
                 // BUG: Diagnostic contains: new StringBuilder().append(c)
                 new StringBuilder(c);
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -72,7 +73,8 @@ public class StringBuilderInitWithCharTest {
                 new StringBuilder(5);
                 new StringBuilder();
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 }

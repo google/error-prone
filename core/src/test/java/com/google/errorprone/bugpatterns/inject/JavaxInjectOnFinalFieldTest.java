@@ -52,7 +52,8 @@ public class JavaxInjectOnFinalFieldTest {
                 @Inject
                 public final int n = 0;
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -89,7 +90,8 @@ public class JavaxInjectOnFinalFieldTest {
                 @Inject
                 final void method() {}
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 }

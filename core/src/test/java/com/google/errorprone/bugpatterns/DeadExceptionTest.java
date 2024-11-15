@@ -98,7 +98,8 @@ public class DeadExceptionTest {
                 // BUG: Diagnostic contains: throw new Exception
                 new Exception();
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -120,7 +121,8 @@ public class DeadExceptionTest {
               public Exception returnsException() {
                 return new RuntimeException("returned");
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -162,7 +164,8 @@ public class DeadExceptionTest {
                   // expected
                 }
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 }

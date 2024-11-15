@@ -87,7 +87,8 @@ public class CollectorShouldNotUseStateTest {
                     (left, right) -> left.addAll(right.build()),
                     ImmutableList.Builder::build);
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -126,7 +127,8 @@ public class CollectorShouldNotUseStateTest {
                     (left, right) -> left.addAll(right.build()),
                     ImmutableList.Builder::build);
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 }

@@ -34,7 +34,8 @@ public final class AndroidInjectionBeforeSuperTest {
 
               public class Activity {
                 public void onCreate(android.os.Bundle bundle) {}
-              }""")
+              }\
+              """)
           .addSourceLines(
               "Fragment.java",
               """
@@ -44,7 +45,8 @@ public final class AndroidInjectionBeforeSuperTest {
                 public void onAttach(android.app.Activity activity) {}
 
                 public void onAttach(android.content.Context context) {}
-              }""")
+              }\
+              """)
           .addSourceLines(
               "Service.java",
               """
@@ -56,31 +58,36 @@ public final class AndroidInjectionBeforeSuperTest {
                 public android.os.IBinder onBind(android.content.Intent intent) {
                   return null;
                 }
-              }""")
+              }\
+              """)
           .addSourceLines(
               "Context.java",
               """
               package android.content;
 
-              public class Context {}""")
+              public class Context {}\
+              """)
           .addSourceLines(
               "Intent.java",
               """
               package android.content;
 
-              public class Intent {}""")
+              public class Intent {}\
+              """)
           .addSourceLines(
               "Bundle.java",
               """
               package android.os;
 
-              public class Bundle {}""")
+              public class Bundle {}\
+              """)
           .addSourceLines(
               "IBinder.java",
               """
               package android.os;
 
-              public interface IBinder {}""");
+              public interface IBinder {}\
+              """);
 
   @Test
   public void positiveCase() {
@@ -161,7 +168,8 @@ public final class AndroidInjectionBeforeSuperTest {
                   return null;
                 }
               }
-            }""")
+            }\
+            """)
         .addSourceLines(
             "AndroidInjection.java",
             """
@@ -181,7 +189,8 @@ public final class AndroidInjection {
   public static void inject(Fragment fragment) {}
 
   public static void inject(Service service) {}
-}""")
+}\
+""")
         .doTest();
   }
 
@@ -269,7 +278,8 @@ public final class AndroidInjection {
                   return null;
                 }
               }
-            }""")
+            }\
+            """)
         .addSourceLines(
             "AndroidInjection.java",
             """
@@ -289,7 +299,8 @@ public final class AndroidInjection {
   public static void inject(Fragment fragment) {}
 
   public static void inject(Service service) {}
-}""")
+}\
+""")
         .doTest();
   }
 }

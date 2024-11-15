@@ -257,7 +257,8 @@ public class InsecureCipherModePositiveCases {
       // We don't handle any exception as this code is not meant to be executed.
     }
   }
-}""")
+}\
+""")
         .doTest();
   }
 
@@ -410,7 +411,8 @@ public class InsecureCipherModeNegativeCases {
       // We don't handle any exception as this code is not meant to be executed.
     }
   }
-}""")
+}\
+""")
         .doTest();
   }
 }

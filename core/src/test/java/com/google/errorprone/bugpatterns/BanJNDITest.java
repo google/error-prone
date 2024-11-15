@@ -169,7 +169,8 @@ class BanJNDIPositiveCases {
     // BUG: Diagnostic contains: BanJNDI
     return c.lookup("hello");
   }
-}""")
+}\
+""")
         .doTest();
   }
 
@@ -197,7 +198,8 @@ class BanJNDIPositiveCases {
   private void callsList() throws NamingException {
     FakeDirContext.list(((Name) new Object()));
   }
-}""")
+}\
+""")
         .doTest();
   }
 
@@ -225,7 +227,8 @@ class BanJNDIPositiveCases {
   private void callsList() throws NamingException {
     FakeDirContext.list(((Name) new Object()));
   }
-}""")
+}\
+""")
         .expectUnchanged()
         .setArgs("-XepCompilingTestOnlyCode")
         .doTest();

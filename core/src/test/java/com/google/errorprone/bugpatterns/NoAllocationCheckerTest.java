@@ -541,7 +541,8 @@ public class NoAllocationCheckerTest {
                 // BUG: Diagnostic contains: @NoAllocation
                 public void method() {}
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -1081,7 +1082,8 @@ public class NoAllocationCheckerNegativeCases {
     @SuppressWarnings("NoAllocation")
     public void method() {}
   }
-}""")
+}\
+""")
         .doTest();
   }
 }

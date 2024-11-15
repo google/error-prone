@@ -194,7 +194,8 @@ public class EqualsIncompatibleTypePositiveCases {
     // BUG: Diagnostic contains: T and String are incompatible
     iClazz.equals(strClazz);
   }
-}""")
+}\
+""")
         .doTest();
   }
 
@@ -392,7 +393,8 @@ public class EqualsIncompatibleTypePositiveCases {
               void checkOtherEquals(F1 f1, F2 f2) {
                 f2.equals(f1);
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -527,7 +529,8 @@ public class EqualsIncompatibleTypeRecursiveTypes {
     // Technically this could work, since there's nothing stopping A1 == A2, etc.
     boolean equals = j1.equals(j2);
   }
-}""")
+}\
+""")
         .doTest();
   }
 

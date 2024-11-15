@@ -128,7 +128,8 @@ public class MisusedWeekYearPositiveCases {
     // BUG: Diagnostic contains:
     java.time.format.DateTimeFormatter.ofPattern(WEEK_YEAR_PATTERN);
   }
-}""")
+}\
+""")
         .doTest();
   }
 
@@ -175,7 +176,8 @@ public class MisusedWeekYearPositiveCases2 {
     // BUG: Diagnostic contains:
     sdf.applyLocalizedPattern("YYYY-MM-dd");
   }
-}""")
+}\
+""")
         .doTest();
   }
 
@@ -228,7 +230,8 @@ public class MisusedWeekYearNegativeCases {
     mySdf.applyPattern("YYYY-MM-dd");
     mySdf.applyLocalizedPattern("YYYY-MM-dd");
   }
-}""")
+}\
+""")
         .doTest();
   }
 

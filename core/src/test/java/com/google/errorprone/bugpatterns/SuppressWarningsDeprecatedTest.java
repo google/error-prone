@@ -107,7 +107,8 @@ public class SuppressWarningsDeprecatedTest {
               // BUG: Diagnostic contains: @SuppressWarnings(value = "deprecation")
               @SuppressWarnings(value = "deprecated")
               public static void positiveCase9() {}
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -152,7 +153,8 @@ public class SuppressWarningsDeprecatedTest {
                 class Bar {}
                 Bar b = null;
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 }

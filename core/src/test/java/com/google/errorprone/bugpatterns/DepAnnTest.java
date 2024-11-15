@@ -76,7 +76,8 @@ public class DepAnnTest {
                */
               // BUG: Diagnostic contains: @Deprecated
               public void deprecatedMethood() {}
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -139,7 +140,8 @@ public class DepAnnTest {
               public void suppressed() {}
 
               public void newMethod() {}
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -175,7 +177,8 @@ public class DepAnnTest {
 
                 public abstract void m2();
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -226,7 +229,8 @@ public class DepAnnTest {
                */
               // BUG: Diagnostic contains: @Deprecated
               public void deprecatedMethood() {}
-            }""")
+            }\
+            """)
         .doTest();
   }
 }

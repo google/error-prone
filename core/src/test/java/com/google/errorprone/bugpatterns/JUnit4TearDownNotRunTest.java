@@ -90,7 +90,8 @@ public class JUnit4TearDownNotRunTest {
             class J4TearDownHasPublicOverride extends TearDownUnannotatedBaseClass {
               // BUG: Diagnostic contains: @After
               @Override public void tearDown() {}
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -114,7 +115,8 @@ public class JUnit4TearDownNotRunTest {
               public void tearDown() {}
             }
 
-            @interface After {}""")
+            @interface After {}\
+            """)
         .doTest();
   }
 
@@ -138,7 +140,8 @@ public class JUnit4TearDownNotRunTest {
               public void tidyUp() {}
             }
 
-            @interface After {}""")
+            @interface After {}\
+            """)
         .doTest();
   }
 
@@ -222,7 +225,8 @@ public class JUnit4TearDownNotRunTest {
             class J4TearDownInheritsFromAnnotatedMethod2 extends TearDownAnnotatedBaseClass {
               @After
               public void tearDown() {}
-            }""")
+            }\
+            """)
         .doTest();
   }
 }

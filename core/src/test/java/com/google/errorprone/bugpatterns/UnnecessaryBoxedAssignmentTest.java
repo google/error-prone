@@ -103,7 +103,8 @@ public class UnnecessaryBoxedAssignmentTest {
               void negative_methodReference() {
                 Function<String, Boolean> toBoolean = Boolean::valueOf;
               }
-            }""")
+            }\
+            """)
         .addOutputLines(
             "UnnecessaryBoxedAssignmentCases_expected.java",
             """
@@ -175,7 +176,8 @@ public class UnnecessaryBoxedAssignmentTest {
               void negative_methodReference() {
                 Function<String, Boolean> toBoolean = Boolean::valueOf;
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 }

@@ -86,7 +86,8 @@ final class TruthAssertExpectedPositiveCases {
     // assertThat(ImmutableList.of(this)).containsExactlyElementsIn(EXPECTED_LIST).inOrder();
     assertThat(EXPECTED_LIST).containsExactlyElementsIn(ImmutableList.of(this)).inOrder();
   }
-}""")
+}\
+""")
         .doTest();
   }
 
@@ -146,7 +147,8 @@ final class TruthAssertExpectedPositiveCases {
                 assertThat(expected).isEqualTo(10L);
                 assertThat(expected).isEqualTo(CONSTANT);
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 }

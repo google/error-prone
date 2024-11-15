@@ -81,7 +81,8 @@ public class ProvidesMethodOutsideOfModuleTest {
                   return 42;
                 }
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -148,7 +149,8 @@ public class ProvidesMethodOutsideOfModuleTest {
                   return 42;
                 }
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 }

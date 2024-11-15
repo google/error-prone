@@ -149,7 +149,8 @@ public class ComparableTypePositiveCases {
       return 0;
     }
   }
-}""")
+}\
+""")
         .doTest();
   }
 
@@ -255,7 +256,8 @@ public class ComparableTypeNegativeCases {
       return 0;
     }
   }
-}""")
+}\
+""")
         .doTest();
   }
 }

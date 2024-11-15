@@ -243,7 +243,8 @@ class BadImportPositiveCases {
   void classLiteral() {
     System.out.println(Builder.class);
   }
-}""")
+}\
+""")
         .doTest();
   }
 
@@ -354,7 +355,8 @@ class BadImportPositiveCases {
                   new Builder();
                 }
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -438,7 +440,8 @@ class BadImportPositiveCases {
   void classLiteral() {
     System.out.println(Builder.class);
   }
-}""")
+}\
+""")
         .addOutputLines(
             "BadImportPositiveCases_expected.java",
             """
@@ -498,7 +501,8 @@ class BadImportPositiveCases {
   void classLiteral() {
     System.out.println(ImmutableList.Builder.class);
   }
-}""")
+}\
+""")
         .doTest(TestMode.AST_MATCH);
   }
 

@@ -137,7 +137,8 @@ public class URLEqualsHashCodeTest {
                 // BUG: Diagnostic contains: java.net.URL
                 ImmutableSet<URL> urlSet2 = ImmutableSet.<URL>builder().build();
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -203,7 +204,8 @@ public class URLEqualsHashCodeTest {
               public void hashMapExtendedClass() {
                 ExtendedMap urlMap;
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 }

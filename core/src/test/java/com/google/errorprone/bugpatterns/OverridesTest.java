@@ -122,7 +122,8 @@ public class OverridesPositiveCase1 {
     // BUG: Diagnostic contains:
     public abstract void g(Object... xs);
   }
-}""")
+}\
+""")
         .doTest();
   }
 
@@ -163,7 +164,8 @@ public class OverridesPositiveCase2 {
     // BUG: Diagnostic contains:
     abstract void varargsMethod(Object[] newNames);
   }
-}""")
+}\
+""")
         .doTest();
   }
 
@@ -204,7 +206,8 @@ public class OverridesPositiveCase3 {
     // BUG: Diagnostic contains:
     abstract void arrayMethod(Object... newNames);
   }
-}""")
+}\
+""")
         .doTest();
   }
 
@@ -244,7 +247,8 @@ public class OverridesPositiveCase4 {
     // BUG: Diagnostic contains: Varargs
     abstract void varargsMethod(@Note final Map<Object, Object>  /*dsa*/ [ /* [ */ ] /* dsa */ xs);
   }
-}""")
+}\
+""")
         .doTest();
   }
 
@@ -281,7 +285,8 @@ public class OverridesPositiveCase5 {
       base.varargsMethod(null, new Object[] {}, new Object[] {}, new Object[] {}, new Object[] {});
     }
   }
-}""")
+}\
+""")
         .doTest();
   }
 
@@ -362,7 +367,8 @@ class Three extends Two {
       return this;
     }
   }
-}""")
+}\
+""")
         .doTest();
   }
 
@@ -396,7 +402,8 @@ class Three extends Two {
                 @Override
                 abstract void varargsMethod(Object... newNames);
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -430,7 +437,8 @@ class Three extends Two {
                 @Override
                 abstract void arrayMethod(Object[] xs);
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 }

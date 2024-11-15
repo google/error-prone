@@ -63,7 +63,8 @@ public class AutoFactoryAtInjectTest {
                 @AutoFactory
                 HasAutoFactoryOnConstructor() {}
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -103,7 +104,8 @@ public class AutoFactoryAtInjectTest {
                 @AutoFactory
                 OnDifferentConstructors(Object object) {}
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 }

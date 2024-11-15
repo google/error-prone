@@ -102,7 +102,8 @@ public class ArrayToStringTest {
                 // BUG: Diagnostic contains: Arrays.deepToString(a)
                 System.out.println(a);
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -129,7 +130,8 @@ public class ArrayToStringTest {
                   System.out.println("string is not empty!");
                 }
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -305,7 +307,8 @@ public class ArrayToStringTest {
                 // BUG: Diagnostic contains: += Arrays.toString(a)
                 b += a;
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -332,7 +335,8 @@ public class ArrayToStringTest {
                 String b = " a string ";
                 b += a;
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -362,7 +366,8 @@ public class ArrayToStringTest {
                 // BUG: Diagnostic contains: + Arrays.toString(a)
                 String b = "a string" + a;
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -388,7 +393,8 @@ public class ArrayToStringTest {
                 String b = " a string";
                 String c = a + b;
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 

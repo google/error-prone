@@ -66,7 +66,8 @@ public class PrimitiveArrayPassedToVarargsMethodTest {
                 // BUG: Diagnostic contains:
                 Arrays.asList(intArray);
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -96,7 +97,8 @@ public class PrimitiveArrayPassedToVarargsMethodTest {
                 intArrayVarargsMethod(intArray);
                 objectVarargsMethodWithMultipleParams(new Object());
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 }

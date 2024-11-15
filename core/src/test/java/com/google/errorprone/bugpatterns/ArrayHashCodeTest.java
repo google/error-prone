@@ -104,7 +104,8 @@ public class ArrayHashCodePositiveCases {
     // Arrays.deepHashCode(multidimensionalStringArray))
     hashCode = Objects.hashCode(obj1, obj2, multidimensionalStringArray);
   }
-}""")
+}\
+""")
         .doTest();
   }
 
@@ -147,7 +148,8 @@ public class ArrayHashCodePositiveCases {
                 hashCode = Objects.hashCode(objArray);
                 hashCode = Objects.hashCode((Object[]) stringArray);
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -193,7 +195,8 @@ public class ArrayHashCodePositiveCases {
                 hashCode = Objects.hash(objArray);
                 hashCode = Objects.hash((Object[]) stringArray);
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 }

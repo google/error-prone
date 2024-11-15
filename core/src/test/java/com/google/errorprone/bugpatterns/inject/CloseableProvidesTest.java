@@ -67,7 +67,8 @@ public class CloseableProvidesTest {
               PrintWriter providesPrintWriter() throws Exception {
                 return new PrintWriter("some_file_path", StandardCharsets.UTF_8.name());
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -103,7 +104,8 @@ public class CloseableProvidesTest {
               Object providesObject() {
                 return new Object();
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 }

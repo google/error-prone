@@ -77,7 +77,8 @@ public class TruthConstantAssertsPositiveCases {
   private TruthConstantAssertsPositiveCases memberMethod() {
     return new TruthConstantAssertsPositiveCases();
   }
-}""")
+}\
+""")
         .doTest();
   }
 
@@ -109,7 +110,8 @@ public class TruthConstantAssertsPositiveCases {
               private static TruthConstantAssertsNegativeCases getObject() {
                 return new TruthConstantAssertsNegativeCases();
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 }

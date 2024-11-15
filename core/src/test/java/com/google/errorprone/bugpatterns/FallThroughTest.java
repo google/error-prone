@@ -109,7 +109,8 @@ public class FallThroughTest {
                   return 0;
                 }
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -264,7 +265,8 @@ public class FallThroughTest {
                   }
                 }
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 

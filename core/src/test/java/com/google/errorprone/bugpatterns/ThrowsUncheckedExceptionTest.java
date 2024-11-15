@@ -69,7 +69,8 @@ public class ThrowsUncheckedExceptionPositiveCases {
   public void doBetter() throws RuntimeException, AssertionError {
     throw new RuntimeException("thrown");
   }
-}""")
+}\
+""")
         .doTest();
   }
 
@@ -95,7 +96,8 @@ public class ThrowsUncheckedExceptionPositiveCases {
               public void doMore() throws IOException {
                 throw new FileNotFoundException("thrown");
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 

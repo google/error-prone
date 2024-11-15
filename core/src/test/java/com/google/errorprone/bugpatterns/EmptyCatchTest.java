@@ -73,7 +73,8 @@ public class EmptyCatchTest {
                 } catch (Exception expected) {
                 }
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -193,7 +194,8 @@ public class EmptyCatchTest {
                   System.out.println("Caught an exception: " + t);
                 }
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 

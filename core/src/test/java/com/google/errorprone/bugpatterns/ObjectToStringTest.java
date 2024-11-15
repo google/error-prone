@@ -68,7 +68,8 @@ public class ObjectToStringTest {
                 // BUG: Diagnostic contains: `FinalGenericClassWithoutToString@
                 System.out.println(finalGenericClassWithoutToString.toString());
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -148,7 +149,8 @@ public class ObjectToStringNegativeCases {
     unusedString = durationArg.toString();
     System.out.println("test joda string " + durationArg);
   }
-}""")
+}\
+""")
         .doTest();
   }
 

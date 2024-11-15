@@ -503,7 +503,8 @@ class Test {
                 // BUG: Diagnostic contains:
                 String[] xs = foo.split(":");
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -530,7 +531,8 @@ class Test {
                 String foo = "a:b";
                 foo.split(":", -1);
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 

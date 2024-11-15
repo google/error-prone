@@ -46,7 +46,8 @@ public class RestrictedApiCheckerTest {
                 import java.lang.annotation.Target;
 
                 @Target({ElementType.METHOD, ElementType.CONSTRUCTOR})
-                public @interface Allowlist {}""")
+                public @interface Allowlist {}\
+                """)
             .addSourceLines(
                 "RestrictedApiMethods.java",
                 """
@@ -120,7 +121,8 @@ interface IFaceWithRestriction {
 }
 
 @Target({ElementType.METHOD, ElementType.CONSTRUCTOR})
-@interface AllowlistWithWarning {}""")
+@interface AllowlistWithWarning {}\
+""")
             .matchAllDiagnostics();
     refactoringTest =
         BugCheckerRefactoringTestHelper.newInstance(checker, RestrictedApiCheckerTest.class);

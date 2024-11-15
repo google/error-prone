@@ -101,7 +101,8 @@ public class AssistedInjectScopingTest {
                 @javax.inject.Inject
                 public TestClass6(String unassisted, @Assisted String assisted) {}
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -202,7 +203,8 @@ public class AssistedInjectScopingNegativeCases {
 
     public TestClass10(int i, @Assisted String assisted) {}
   }
-}""")
+}\
+""")
         .doTest();
   }
 }

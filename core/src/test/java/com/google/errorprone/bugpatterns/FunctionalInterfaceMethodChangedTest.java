@@ -126,7 +126,8 @@ public class FunctionalInterfaceMethodChangedTest {
                   return null;
                 }
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -203,7 +204,8 @@ public class FunctionalInterfaceMethodChangedTest {
                   return null;
                 }
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 }

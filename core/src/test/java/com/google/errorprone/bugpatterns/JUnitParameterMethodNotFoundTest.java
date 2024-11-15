@@ -160,7 +160,8 @@ public class JUnitParameterMethodNotFoundNegativeCase {
       return new Object[] {1};
     }
   }
-}""")
+}\
+""")
         .doTest();
   }
 
@@ -182,7 +183,8 @@ public class JUnitParameterMethodNotFoundNegativeCase {
               @Test
               @Parameters(method = "named1")
               public void paramStaticProvider() {}
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -202,7 +204,8 @@ public class JUnitParameterMethodNotFoundNegativeCase {
               public Object named1() {
                 return new Object[] {1};
               }
-            }""")
+            }\
+            """)
         .addSourceLines(
             "JUnitParameterMethodNotFoundNegativeCaseSuperClass.java",
             """
@@ -219,7 +222,8 @@ public class JUnitParameterMethodNotFoundNegativeCase {
               @Test
               @Parameters(method = "named1")
               public void testNamed(int a) {}
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -259,7 +263,8 @@ public class JUnitParameterMethodNotFoundPositiveCase {
       return new Object[] {1};
     }
   }
-}""")
+}\
+""")
         .doTest();
   }
 }

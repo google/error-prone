@@ -127,7 +127,8 @@ final class ErroneousThreadPoolConstructorCheckerPositiveCases {
         SECONDS,
         new PriorityBlockingQueue<>(initialCapacity, comparingInt(Object::hashCode)));
   }
-}""")
+}\
+""")
         .doTest();
   }
 
@@ -215,7 +216,8 @@ final class ErroneousThreadPoolConstructorCheckerNegativeCases {
     new ThreadPoolExecutor(
         CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE_TIME, SECONDS, new SynchronousQueue<>());
   }
-}""")
+}\
+""")
         .doTest();
   }
 

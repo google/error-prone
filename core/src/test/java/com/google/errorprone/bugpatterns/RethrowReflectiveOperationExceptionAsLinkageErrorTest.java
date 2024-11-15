@@ -81,7 +81,8 @@ public class RethrowReflectiveOperationExceptionAsLinkageErrorTest {
                   throw new AssertionError(e1);
                 }
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -143,7 +144,8 @@ public class RethrowReflectiveOperationExceptionAsLinkageErrorTest {
               void throwNewReflectiveOperationException() {
                 throw new AssertionError(new ReflectiveOperationException("Test"));
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 }

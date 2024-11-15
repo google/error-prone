@@ -64,7 +64,8 @@ public class InjectedConstructorAnnotationsTest {
                 // BUG: Diagnostic contains: @Inject public TestClass3
                 @TestBindingAnnotation @Inject(optional = true) public TestClass3() {}
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -110,7 +111,8 @@ public class InjectedConstructorAnnotationsTest {
                 @TestAnnotation
                 public TestClass4() {}
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 }

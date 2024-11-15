@@ -238,7 +238,8 @@ public class FutureReturnValueIgnoredPositiveCases {
             },
             runnable -> runnable.run());
   }
-}""")
+}\
+""")
         .doTest();
   }
 
@@ -540,7 +541,8 @@ public class FutureReturnValueIgnoredNegativeCases {
       }
     };
   }
-}""")
+}\
+""")
         .doTest();
   }
 

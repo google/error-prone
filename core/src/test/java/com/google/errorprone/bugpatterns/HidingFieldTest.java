@@ -95,7 +95,8 @@ public class HidingFieldPositiveCases1 {
     // BUG: Diagnostic contains: superclass: ClassF
     String varThree;
   }
-}""")
+}\
+""")
         .addSourceLines(
             "HidingFieldPositiveCases2.java",
             """
@@ -124,7 +125,8 @@ public class HidingFieldPositiveCases2 {
     // BUG: Diagnostic contains: superclass: ClassA
     public int varOne = 2;
   }
-}""")
+}\
+""")
         .doTest();
   }
 
@@ -178,7 +180,8 @@ public class HidingFieldNegativeCases {
 
     public void varTwo() {}
   }
-}""")
+}\
+""")
         .doTest();
   }
 }

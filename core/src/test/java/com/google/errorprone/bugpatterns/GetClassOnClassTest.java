@@ -59,7 +59,8 @@ public class GetClassOnClassTest {
                 // BUG: Diagnostic contains: String.class.getName()
                 System.out.println(String.class.getClass().getName());
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -91,7 +92,8 @@ public class GetClassOnClassTest {
                   return true;
                 }
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 }

@@ -61,7 +61,8 @@ public class AssistedInjectAndInjectOnSameConstructorPositiveCases {
     @AssistedInject
     public TestClass2() {}
   }
-}""")
+}\
+""")
         .doTest();
   }
 
@@ -141,7 +142,8 @@ public class AssistedInjectAndInjectOnSameConstructorNegativeCases {
     @AssistedInject
     public TestClass8() {}
   }
-}""")
+}\
+""")
         .doTest();
   }
 }

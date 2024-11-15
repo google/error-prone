@@ -62,7 +62,8 @@ public class OverlappingQualifierAndScopeAnnotationTest {
               @com.google.inject.BindingAnnotation
               // BUG: Diagnostic contains: OverlappingQualifierAndScopeAnnotation
               @interface JavaxScopeAndGuiceBindingAnnotation {}
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -111,7 +112,8 @@ public class OverlappingQualifierAndScopeAnnotationTest {
               @javax.inject.Scope
               @com.google.inject.BindingAnnotation
               @interface JavaxScopeAndGuiceBindingAnnotation {}
-            }""")
+            }\
+            """)
         .doTest();
   }
 }

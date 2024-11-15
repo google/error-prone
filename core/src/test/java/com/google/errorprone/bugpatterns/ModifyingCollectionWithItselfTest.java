@@ -102,7 +102,8 @@ public class ModifyingCollectionWithItselfTest {
                   b = a.removeAll(a);
                 }
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 
@@ -139,7 +140,8 @@ public class ModifyingCollectionWithItselfTest {
               public boolean containsAll(List<Integer> b) {
                 return a.containsAll(b);
               }
-            }""")
+            }\
+            """)
         .doTest();
   }
 }

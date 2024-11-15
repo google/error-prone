@@ -192,7 +192,8 @@ public class InstanceOfAndCastMatchWrongTypeTest {
               }
             }
 
-            class SuperClass {}""")
+            class SuperClass {}\
+            """)
         .doTest();
   }
 
@@ -470,7 +471,8 @@ public class InstanceOfAndCastMatchWrongTypeNegativeCases {
   static class SubNegativeClass extends SuperNegativeClass {}
 
   static class DisjointClass {}
-}""")
+}\
+""")
         .doTest();
   }
 

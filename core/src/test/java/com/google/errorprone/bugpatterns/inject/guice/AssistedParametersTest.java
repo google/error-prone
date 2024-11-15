@@ -93,7 +93,8 @@ public class AssistedParametersPositiveCases {
     // BUG: Diagnostic contains: int: a, b
     GenericClass(@Assisted Integer a, @Assisted int b) {}
   }
-}""")
+}\
+""")
         .doTest();
   }
 
@@ -156,7 +157,8 @@ public class AssistedParametersNegativeCases {
     public TestClass5(
         @Assisted("foo") List<String> x, @Assisted("foo") List<Integer> y, String z) {}
   }
-}""")
+}\
+""")
         .doTest();
   }
 }
