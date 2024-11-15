@@ -544,7 +544,12 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
       String transformedBlockSource = transformBlock(caseTree, state, filteredStatements);
 
       if (firstCaseInGroup) {
-        groupedCaseCommentsAccumulator = new StringBuilder();
+        groupedCaseCommentsAccumulator =
+            new StringBuilder(
+                caseIndex == 0
+                    ? extractCommentsBeforeFirstCase(switchTree, allSwitchComments).orElse("")
+                    : "");
+
         replacementCodeBuilder.append("\n  ");
         if (!isDefaultCase) {
           replacementCodeBuilder.append("case ");
@@ -663,10 +668,10 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
 
       if (firstCaseInGroup) {
         groupedCaseCommentsAccumulator =
-            caseIndex == 0
-                ? new StringBuilder(
-                    extractCommentsBeforeFirstCase(switchTree, allSwitchComments).orElse(""))
-                : new StringBuilder();
+            new StringBuilder(
+                caseIndex == 0
+                    ? extractCommentsBeforeFirstCase(switchTree, allSwitchComments).orElse("")
+                    : "");
 
         replacementCodeBuilder.append("\n  ");
         if (!isDefaultCase) {
@@ -831,7 +836,12 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
           transformAssignOrThrowBlock(caseTree, state, filteredStatements);
 
       if (firstCaseInGroup) {
-        groupedCaseCommentsAccumulator = new StringBuilder();
+        groupedCaseCommentsAccumulator =
+            new StringBuilder(
+                caseIndex == 0
+                    ? extractCommentsBeforeFirstCase(switchTree, allSwitchComments).orElse("")
+                    : "");
+
         replacementCodeBuilder.append("\n  ");
         if (!isDefaultCase) {
           replacementCodeBuilder.append("case ");

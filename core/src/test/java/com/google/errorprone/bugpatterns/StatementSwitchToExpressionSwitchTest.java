@@ -154,6 +154,7 @@ public final class StatementSwitchToExpressionSwitchTest {
               public void foo(Side side) {
                 // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]
                 switch (side) {
+                  // Comment before first case
                   case OBVERSE:
                     // Explanatory comment
                     System.out.println("this block cannot complete normally");
@@ -185,6 +186,7 @@ public final class StatementSwitchToExpressionSwitchTest {
 
               public void foo(Side side) {
                 switch (side) {
+                  // Comment before first case
                   case OBVERSE:
                     // Explanatory comment
                     System.out.println("this block cannot complete normally");
@@ -211,6 +213,7 @@ public final class StatementSwitchToExpressionSwitchTest {
               public void foo(Side side) {
                 switch (side) {
                   case OBVERSE -> {
+                    // Comment before first case
                     // Explanatory comment
                     System.out.println("this block cannot complete normally");
                     {
@@ -3304,6 +3307,7 @@ public final class StatementSwitchToExpressionSwitchTest {
               public int foo(Side side) {
                 // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]
                 switch (side) {
+                  /* Comment before first case */
                   case /* LHS comment */ HEART:
                     // Inline comment
                     x <<= 2;
@@ -3347,6 +3351,7 @@ public final class StatementSwitchToExpressionSwitchTest {
 
               public int foo(Side side) {
                 switch (side) {
+                  /* Comment before first case */
                   case /* LHS comment */ HEART:
                     // Inline comment
                     this.x <<= 2;
@@ -3384,6 +3389,7 @@ public final class StatementSwitchToExpressionSwitchTest {
                 this.x <<=
                     switch (side) {
                       case HEART ->
+                          /* Comment before first case */
                           /* LHS comment */
                           // Inline comment
                           2;
