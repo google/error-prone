@@ -18,13 +18,14 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
-import static com.google.errorprone.util.ASTHelpers.isRuleKind;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.CaseTree;
+import com.sun.source.tree.CaseTree.CaseKind;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.Tree.Kind;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(summary = "Prefer -> switches for switch expressions", severity = WARNING)
@@ -32,11 +33,11 @@ public class TraditionalSwitchExpression extends BugChecker implements BugChecke
 
   @Override
   public Description matchCase(CaseTree tree, VisitorState state) {
-    if (isRuleKind(tree)) {
+    if (tree.getCaseKind().equals(CaseKind.RULE)) {
       return NO_MATCH;
     }
     Tree parent = state.getPath().getParentPath().getLeaf();
-    if (!parent.getKind().name().equals("SWITCH_EXPRESSION")) {
+    if (!parent.getKind().equals(Kind.SWITCH_EXPRESSION)) {
       return NO_MATCH;
     }
     return describeMatch(parent);

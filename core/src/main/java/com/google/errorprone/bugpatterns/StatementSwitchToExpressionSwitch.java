@@ -22,7 +22,6 @@ import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
-import static com.google.errorprone.util.ASTHelpers.getCaseExpressions;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.sun.source.tree.Tree.Kind.BLOCK;
@@ -208,11 +207,11 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     // One-pass scan through each case in switch
     for (int caseIndex = 0; caseIndex < cases.size(); caseIndex++) {
       CaseTree caseTree = cases.get(caseIndex);
-      boolean isDefaultCase = (getCaseExpressions(caseTree).count() == 0);
+      boolean isDefaultCase = caseTree.getExpressions().isEmpty();
       hasDefaultCase |= isDefaultCase;
       // Accumulate enum values included in this case
       handledEnumValues.addAll(
-          getCaseExpressions(caseTree)
+          caseTree.getExpressions().stream()
               .filter(IdentifierTree.class::isInstance)
               .map(expressionTree -> ((IdentifierTree) expressionTree).getName().toString())
               .collect(toImmutableSet()));
@@ -1123,7 +1122,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
 
   /** Prints source for all expressions in a given {@code case}, separated by commas. */
   private static String printCaseExpressions(CaseTree caseTree, VisitorState state) {
-    return getCaseExpressions(caseTree).map(state::getSourceForNode).collect(joining(", "));
+    return caseTree.getExpressions().stream().map(state::getSourceForNode).collect(joining(", "));
   }
 
   /**

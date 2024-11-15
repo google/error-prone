@@ -2713,129 +2713,19 @@ public class ASTHelpers {
     return false;
   }
 
-  private static final Method CASE_TREE_GET_LABELS = getCaseTreeGetLabelsMethod();
-
-  private static @Nullable Method getCaseTreeGetLabelsMethod() {
-    try {
-      return CaseTree.class.getMethod("getLabels");
-    } catch (NoSuchMethodException e) {
-      return null;
-    }
-  }
-
-  @SuppressWarnings("unchecked") // reflection
-  private static List<? extends Tree> getCaseLabels(CaseTree caseTree) {
-    if (CASE_TREE_GET_LABELS == null) {
-      return ImmutableList.of();
-    }
-    try {
-      return (List<? extends Tree>) CASE_TREE_GET_LABELS.invoke(caseTree);
-    } catch (ReflectiveOperationException e) {
-      throw new LinkageError(e.getMessage(), e);
-    }
-  }
-
-  // getExpression() is being used for compatibility with earlier JDK versions
-  @SuppressWarnings("deprecation")
   public static Optional<? extends CaseTree> getSwitchDefault(SwitchTree switchTree) {
     return switchTree.getCases().stream()
         .filter(
             (CaseTree c) -> {
-              if (c.getExpression() != null) {
+              if (!c.getExpressions().isEmpty()) {
                 return false;
               }
-              List<? extends Tree> labels = getCaseLabels(c);
+              List<? extends Tree> labels = c.getLabels();
               return labels.isEmpty()
                   || (labels.size() == 1
                       && getOnlyElement(labels).getKind().name().equals("DEFAULT_CASE_LABEL"));
             })
         .findFirst();
-  }
-
-  private static final Method CASE_TREE_GET_EXPRESSIONS = getCaseTreeGetExpressionsMethod();
-
-  private static @Nullable Method getCaseTreeGetExpressionsMethod() {
-    try {
-      return CaseTree.class.getMethod("getExpressions");
-    } catch (NoSuchMethodException e) {
-      return null;
-    }
-  }
-
-  /**
-   * Returns true if the given {@link CaseTree} is in the form: {@code case <expression> ->
-   * <expression>}.
-   */
-  public static boolean isRuleKind(CaseTree caseTree) {
-    if (GET_CASE_KIND_METHOD == null) {
-      return false;
-    }
-    Enum<?> kind;
-    try {
-      kind = (Enum<?>) GET_CASE_KIND_METHOD.invoke(caseTree);
-    } catch (ReflectiveOperationException e) {
-      return false;
-    }
-    return kind.name().equals("RULE");
-  }
-
-  private static final Method GET_CASE_KIND_METHOD = getGetCaseKindMethod();
-
-  private static @Nullable Method getGetCaseKindMethod() {
-    try {
-      return CaseTree.class.getMethod("getCaseKind");
-    } catch (NoSuchMethodException e) {
-      return null;
-    }
-  }
-
-  /**
-   * Returns the statement or expression after the arrow for a {@link CaseTree} of the form: {@code
-   * case <expression> -> <body>}.
-   */
-  public static @Nullable Tree getCaseTreeBody(CaseTree caseTree) {
-    if (GET_CASE_BODY_METHOD == null) {
-      return null;
-    }
-    try {
-      return (Tree) GET_CASE_BODY_METHOD.invoke(caseTree);
-    } catch (ReflectiveOperationException e) {
-      throw new LinkageError(e.getMessage(), e);
-    }
-  }
-
-  private static final @Nullable Method GET_CASE_BODY_METHOD = getGetCaseBodyMethod();
-
-  private static @Nullable Method getGetCaseBodyMethod() {
-    try {
-      return CaseTree.class.getMethod("getBody");
-    } catch (NoSuchMethodException e) {
-      return null;
-    }
-  }
-
-  /**
-   * Retrieves a stream containing all case expressions, in order, for a given {@code CaseTree}.
-   * This method acts as a facade to the {@code CaseTree.getExpressions()} API, falling back to
-   * legacy APIs when necessary.
-   */
-  @SuppressWarnings({
-    "deprecation", // getExpression() is being used for compatibility with earlier JDK versions
-    "unchecked", // reflection
-  })
-  public static Stream<? extends ExpressionTree> getCaseExpressions(CaseTree caseTree) {
-    if (Runtime.version().feature() < 12) {
-      // "default" case gives an empty stream
-      return Stream.ofNullable(caseTree.getExpression());
-    }
-    if (CASE_TREE_GET_EXPRESSIONS == null) {
-      return Stream.empty();
-    }
-    try {
-      return ((List<? extends ExpressionTree>) CASE_TREE_GET_EXPRESSIONS.invoke(caseTree)).stream();
-    } catch (ReflectiveOperationException e) {
-      throw new LinkageError(e.getMessage(), e);
-    }
   }
 
   private static final Supplier<Name> NULL_MARKED_NAME =

@@ -19,17 +19,16 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
-import static com.google.errorprone.util.ASTHelpers.isRuleKind;
 
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.BreakTree;
 import com.sun.source.tree.CaseTree;
+import com.sun.source.tree.CaseTree.CaseKind;
 import com.sun.source.tree.IfTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.SimpleTreeVisitor;
@@ -41,10 +40,10 @@ import com.sun.source.util.SimpleTreeVisitor;
 public class UnnecessaryBreakInSwitch extends BugChecker implements BugChecker.CaseTreeMatcher {
   @Override
   public Description matchCase(CaseTree tree, VisitorState state) {
-    if (!isRuleKind(tree)) {
+    if (!tree.getCaseKind().equals(CaseKind.RULE)) {
       return NO_MATCH;
     }
-    Tree body = ASTHelpers.getCaseTreeBody(tree);
+    Tree body = tree.getBody();
     ImmutableList<BreakTree> unnecessaryBreaks = unnecessaryBreaks(body);
     if (unnecessaryBreaks.isEmpty()) {
       return NO_MATCH;
