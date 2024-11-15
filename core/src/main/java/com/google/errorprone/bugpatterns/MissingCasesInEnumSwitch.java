@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.util.ASTHelpers.isSwitchDefault;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
@@ -48,7 +49,7 @@ public class MissingCasesInEnumSwitch extends BugChecker implements SwitchTreeMa
       return Description.NO_MATCH;
     }
     // default case is present
-    if (tree.getCases().stream().anyMatch(c -> c.getExpression() == null)) {
+    if (tree.getCases().stream().anyMatch(c -> isSwitchDefault(c))) {
       return Description.NO_MATCH;
     }
     ImmutableSet<String> handled =

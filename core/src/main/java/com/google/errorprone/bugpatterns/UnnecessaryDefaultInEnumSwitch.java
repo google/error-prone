@@ -22,6 +22,7 @@ import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
+import static com.google.errorprone.util.ASTHelpers.isSwitchDefault;
 import static com.google.errorprone.util.Reachability.canCompleteNormally;
 
 import com.google.common.collect.ImmutableSet;
@@ -79,7 +80,7 @@ public class UnnecessaryDefaultInEnumSwitch extends BugChecker implements Switch
     CaseTree caseBeforeDefault = null;
     CaseTree defaultCase = null;
     for (CaseTree caseTree : switchTree.getCases()) {
-      if (caseTree.getExpression() == null) {
+      if (isSwitchDefault(caseTree)) {
         defaultCase = caseTree;
         break;
       } else {

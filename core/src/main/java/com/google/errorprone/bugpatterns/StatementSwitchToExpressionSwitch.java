@@ -24,6 +24,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.isSwitchDefault;
 import static com.sun.source.tree.Tree.Kind.BLOCK;
 import static com.sun.source.tree.Tree.Kind.BREAK;
 import static com.sun.source.tree.Tree.Kind.EXPRESSION_STATEMENT;
@@ -536,7 +537,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     boolean firstCaseInGroup = true;
     for (int caseIndex = 0; caseIndex < cases.size(); caseIndex++) {
       CaseTree caseTree = cases.get(caseIndex);
-      boolean isDefaultCase = caseTree.getExpression() == null;
+      boolean isDefaultCase = isSwitchDefault(caseTree);
 
       // For readability, filter out trailing unlabelled break statement because these become a
       // No-Op when used inside expression switches
@@ -656,7 +657,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     boolean firstCaseInGroup = true;
     for (int caseIndex = 0; caseIndex < cases.size(); caseIndex++) {
       CaseTree caseTree = cases.get(caseIndex);
-      boolean isDefaultCase = caseTree.getExpression() == null;
+      boolean isDefaultCase = isSwitchDefault(caseTree);
 
       String transformedBlockSource =
           transformReturnOrThrowBlock(caseTree, state, getStatements(caseTree));
@@ -825,7 +826,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     boolean firstCaseInGroup = true;
     for (int caseIndex = 0; caseIndex < cases.size(); caseIndex++) {
       CaseTree caseTree = cases.get(caseIndex);
-      boolean isDefaultCase = caseTree.getExpression() == null;
+      boolean isDefaultCase = isSwitchDefault(caseTree);
       ImmutableList<StatementTree> filteredStatements = filterOutRedundantBreak(caseTree);
 
       String transformedBlockSource =

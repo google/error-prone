@@ -21,6 +21,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSwitchDefault;
+import static com.google.errorprone.util.ASTHelpers.isSwitchDefault;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -55,7 +56,7 @@ public class SwitchDefault extends BugChecker implements SwitchTreeMatcher {
     while (it.hasNext()) {
       CaseTree caseTree = it.next();
       defaultStatementGroup.add(caseTree);
-      if (caseTree.getExpression() == null) {
+      if (isSwitchDefault(caseTree)) {
         while (it.hasNext() && isNullOrEmpty(caseTree.getStatements())) {
           caseTree = it.next();
           defaultStatementGroup.add(caseTree);
@@ -96,7 +97,7 @@ public class SwitchDefault extends BugChecker implements SwitchTreeMatcher {
         // If the last statement group falls out of the switch, add a `break;` before moving
         // the default to the end.
         CaseTree last = getLast(tree.getCases());
-        if (last.getExpression() == null || Reachability.canCompleteNormally(last)) {
+        if (isSwitchDefault(last) || Reachability.canCompleteNormally(last)) {
           replacement = "break;\n" + replacement;
         }
         fix.replace(start, end, "").postfixWith(getLast(tree.getCases()), replacement);

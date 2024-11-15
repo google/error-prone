@@ -19,6 +19,7 @@ package com.google.errorprone.util;
 import static com.google.common.base.MoreObjects.firstNonNull;
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.isSwitchDefault;
 import static java.util.Objects.requireNonNull;
 
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
@@ -241,7 +242,7 @@ public class Reachability {
         return true;
       }
       // (4)
-      if (tree.getCases().stream().noneMatch(c -> c.getExpression() == null)) {
+      if (tree.getCases().stream().noneMatch(c -> isSwitchDefault(c))) {
         return true;
       }
       // (5)

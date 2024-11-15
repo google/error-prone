@@ -19,6 +19,7 @@ package com.google.errorprone.refaster;
 import static com.google.errorprone.refaster.ControlFlowVisitor.Result.ALWAYS_RETURNS;
 import static com.google.errorprone.refaster.ControlFlowVisitor.Result.MAY_BREAK_OR_RETURN;
 import static com.google.errorprone.refaster.ControlFlowVisitor.Result.NEVER_EXITS;
+import static com.google.errorprone.util.ASTHelpers.isSwitchDefault;
 
 import com.google.errorprone.refaster.ControlFlowVisitor.BreakContext;
 import com.google.errorprone.refaster.ControlFlowVisitor.Result;
@@ -221,7 +222,7 @@ public class ControlFlowVisitor extends SimpleTreeVisitor<Result, BreakContext> 
     cxt.loopDepth++;
     try {
       for (CaseTree caseTree : node.getCases()) {
-        if (caseTree.getExpression() == null) {
+        if (isSwitchDefault(caseTree)) {
           seenDefault = true;
         }
 

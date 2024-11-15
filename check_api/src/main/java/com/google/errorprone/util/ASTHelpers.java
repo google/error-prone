@@ -2714,18 +2714,19 @@ public class ASTHelpers {
   }
 
   public static Optional<? extends CaseTree> getSwitchDefault(SwitchTree switchTree) {
-    return switchTree.getCases().stream()
-        .filter(
-            (CaseTree c) -> {
-              if (!c.getExpressions().isEmpty()) {
-                return false;
-              }
-              List<? extends Tree> labels = c.getLabels();
-              return labels.isEmpty()
-                  || (labels.size() == 1
-                      && getOnlyElement(labels).getKind().name().equals("DEFAULT_CASE_LABEL"));
-            })
-        .findFirst();
+    return switchTree.getCases().stream().filter(c -> isSwitchDefault(c)).findFirst();
+  }
+
+  /** Returns whether {@code caseTree} is the default case of a switch statement. */
+  public static boolean isSwitchDefault(CaseTree caseTree) {
+    if (!caseTree.getExpressions().isEmpty()) {
+      return false;
+    }
+    List<? extends Tree> labels = caseTree.getLabels();
+    return labels.isEmpty()
+        || (labels.size() == 1
+            // DEFAULT_CASE_LABEL is in Java 21, so we're stuck stringifying for now.
+            && getOnlyElement(labels).getKind().name().equals("DEFAULT_CASE_LABEL"));
   }
 
   private static final Supplier<Name> NULL_MARKED_NAME =
