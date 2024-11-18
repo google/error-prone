@@ -32,6 +32,7 @@ import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
+import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Symbol;
@@ -88,14 +89,17 @@ abstract class Parameter {
         .collect(toImmutableList());
   }
 
-  static ImmutableList<Parameter> createListFromExpressionTrees(
-      List<? extends ExpressionTree> trees) {
+  static ImmutableList<Parameter> createListFromExpressionTrees(List<? extends Tree> trees) {
     return Streams.mapWithIndex(
             trees.stream(),
             (t, i) ->
                 new AutoValue_Parameter(
                     getArgumentName(t),
-                    Optional.ofNullable(ASTHelpers.getResultType(t)).orElse(Type.noType),
+                    Optional.ofNullable(
+                            t instanceof ExpressionTree
+                                ? ASTHelpers.getResultType((ExpressionTree) t)
+                                : ASTHelpers.getType(t))
+                        .orElse(Type.noType),
                     (int) i,
                     t.toString(),
                     t.getKind(),
@@ -162,28 +166,25 @@ abstract class Parameter {
    * will return the marker for an unknown name.
    */
   @VisibleForTesting
-  static String getArgumentName(ExpressionTree expressionTree) {
-    switch (expressionTree.getKind()) {
-      case MEMBER_SELECT -> {
-        return ((MemberSelectTree) expressionTree).getIdentifier().toString();
-      }
-      case NULL_LITERAL -> {
-        // null could match anything pretty well
-        return NAME_NULL;
-      }
+  static String getArgumentName(Tree tree) {
+    return switch (tree.getKind()) {
+      case VARIABLE -> ((VariableTree) tree).getName().toString();
+      case MEMBER_SELECT -> ((MemberSelectTree) tree).getIdentifier().toString();
+      // null could match anything pretty well
+      case NULL_LITERAL -> NAME_NULL;
       case IDENTIFIER -> {
-        IdentifierTree idTree = (IdentifierTree) expressionTree;
+        IdentifierTree idTree = (IdentifierTree) tree;
         if (idTree.getName().contentEquals("this")) {
           // for the 'this' keyword the argument name is the name of the object's class
           Symbol sym = ASTHelpers.getSymbol(idTree);
-          return sym != null ? getClassName(ASTHelpers.enclosingClass(sym)) : NAME_NOT_PRESENT;
+          yield sym != null ? getClassName(ASTHelpers.enclosingClass(sym)) : NAME_NOT_PRESENT;
         } else {
           // if we have a variable, just extract its name
-          return idTree.getName().toString();
+          yield idTree.getName().toString();
         }
       }
       case METHOD_INVOCATION -> {
-        MethodInvocationTree methodInvocationTree = (MethodInvocationTree) expressionTree;
+        MethodInvocationTree methodInvocationTree = (MethodInvocationTree) tree;
         MethodSymbol methodSym = ASTHelpers.getSymbol(methodInvocationTree);
         String name = methodSym.getSimpleName().toString();
         ImmutableList<String> terms = NamingConventions.splitToLowercaseTerms(name);
@@ -192,26 +193,24 @@ abstract class Parameter {
           if (terms.size() == 1) {
             ExpressionTree receiver = ASTHelpers.getReceiver(methodInvocationTree);
             if (receiver == null) {
-              return getClassName(ASTHelpers.enclosingClass(methodSym));
+              yield getClassName(ASTHelpers.enclosingClass(methodSym));
             }
             // recursively try to get a name from the receiver
-            return getArgumentName(receiver);
+            yield getArgumentName(receiver);
           } else {
-            return name.substring(firstTerm.length());
+            yield name.substring(firstTerm.length());
           }
         } else {
-          return name;
+          yield name;
         }
       }
       case NEW_CLASS -> {
-        MethodSymbol constructorSym = ASTHelpers.getSymbol((NewClassTree) expressionTree);
-        return constructorSym.owner != null
+        MethodSymbol constructorSym = ASTHelpers.getSymbol((NewClassTree) tree);
+        yield constructorSym.owner != null
             ? getClassName((ClassSymbol) constructorSym.owner)
             : NAME_NOT_PRESENT;
       }
-      default -> {
-        return NAME_NOT_PRESENT;
-      }
-    }
+      default -> NAME_NOT_PRESENT;
+    };
   }
 }

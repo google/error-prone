@@ -21,7 +21,7 @@ import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.fixes.SuggestedFix;
-import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.Tree;
 import java.util.stream.Collectors;
 
 /**
@@ -65,7 +65,7 @@ abstract class Changes {
     SuggestedFix.Builder commentArgumentsFixBuilder = SuggestedFix.builder();
     for (ParameterPair change : changedPairs()) {
       int index = change.formal().index();
-      ExpressionTree actual = info.actualParameters().get(index);
+      Tree actual = info.actualParameters().get(index);
       int startPosition = getStartPosition(actual);
       String formal = info.formalParameters().get(index).getSimpleName().toString();
       commentArgumentsFixBuilder.replace(

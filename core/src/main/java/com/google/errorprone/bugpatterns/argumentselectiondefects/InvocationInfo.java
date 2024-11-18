@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns.argumentselectiondefects;
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.VisitorState;
-import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
@@ -39,7 +38,7 @@ abstract class InvocationInfo {
 
   abstract MethodSymbol symbol();
 
-  abstract ImmutableList<? extends ExpressionTree> actualParameters();
+  abstract ImmutableList<Tree> actualParameters();
 
   abstract ImmutableList<VarSymbol> formalParameters();
 

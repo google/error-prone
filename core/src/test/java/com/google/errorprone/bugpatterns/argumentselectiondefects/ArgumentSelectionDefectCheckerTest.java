@@ -403,26 +403,4 @@ record Foo(String first, String second) {}
 """)
         .doTest();
   }
-
-  @Test
-  public void recordDeconstruction() {
-    assume().that(Runtime.version().feature()).isAtLeast(21);
-
-    testHelper
-        .addSourceLines(
-            "Test.java",
-            """
-class Test {
-  void test(Foo foo) {
-    switch (foo) {
-      // TODO(user): We should report a finding here!
-      case Foo(String second, String first) -> {}
-    }
-  }
-}
-
-record Foo(String first, String second) {}
-""")
-        .doTest();
-  }
 }
