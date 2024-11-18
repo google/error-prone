@@ -16,8 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.truth.TruthJUnit.assume;
-
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
@@ -229,7 +227,6 @@ public class ExampleClass {
 
   @Test
   public void refactoringFormattedWithNoArguments() {
-    assume().that(Runtime.version().feature()).isAtLeast(15);
     refactoringHelper
         .addInputLines(
             "ExampleClass.java",
@@ -278,7 +275,6 @@ public class ExampleClass {
 
   @Test
   public void refactoringFormattedWithIntegerLiteral() {
-    assume().that(Runtime.version().feature()).isAtLeast(15);
     refactoringHelper
         .addInputLines(
             "ExampleClass.java",

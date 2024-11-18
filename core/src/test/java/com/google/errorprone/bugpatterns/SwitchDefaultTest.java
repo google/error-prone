@@ -258,7 +258,6 @@ public class SwitchDefaultTest {
 
   @Test
   public void newNotation_validDefault() {
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -284,7 +283,6 @@ public class SwitchDefaultTest {
 
   @Test
   public void newNotation_changeOrder() {
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     testHelper
         .addInputLines(
             "Test.java",

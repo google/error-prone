@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns.javadoc;
 
-import static com.google.common.truth.TruthJUnit.assume;
 import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
@@ -215,7 +214,6 @@ public final class InvalidParamTest {
 
   @Test
   public void negative_record() {
-    assume().that(Runtime.version().feature()).isAtLeast(16);
     helper
         .addSourceLines(
             "Test.java",
@@ -230,7 +228,6 @@ public final class InvalidParamTest {
 
   @Test
   public void badParameterName_record() {
-    assume().that(Runtime.version().feature()).isAtLeast(16);
     helper
         .addSourceLines(
             "Test.java",
@@ -246,7 +243,6 @@ public final class InvalidParamTest {
 
   @Test
   public void multipleConstructors_record() {
-    assume().that(Runtime.version().feature()).isAtLeast(16);
     helper
         .addSourceLines(
             "Test.java",
@@ -274,7 +270,6 @@ public final class InvalidParamTest {
 
   @Test
   public void typeParameter_record() {
-    assume().that(Runtime.version().feature()).isAtLeast(16);
     helper
         .addSourceLines(
             "Negative.java",
@@ -302,7 +297,6 @@ public final class InvalidParamTest {
 
   @Test
   public void compactConstructor_record() {
-    assume().that(Runtime.version().feature()).isAtLeast(16);
     helper
         .addSourceLines(
             "Test.java",
@@ -319,7 +313,6 @@ public final class InvalidParamTest {
 
   @Test
   public void normalConstructor_record() {
-    assume().that(Runtime.version().feature()).isAtLeast(16);
     helper
         .addSourceLines(
             "Test.java",

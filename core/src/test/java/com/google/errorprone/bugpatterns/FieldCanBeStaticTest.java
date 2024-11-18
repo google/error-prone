@@ -16,8 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.truth.TruthJUnit.assume;
-
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
@@ -351,7 +349,6 @@ public class FieldCanBeStaticTest {
 
   @Test
   public void inner_static() {
-    assume().that(Runtime.version().feature()).isAtLeast(16);
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -394,7 +391,6 @@ public class FieldCanBeStaticTest {
 
   @Test
   public void record() {
-    assume().that(Runtime.version().feature()).isAtLeast(16);
     compilationHelper
         .addSourceLines(
             "ExampleClass.java",

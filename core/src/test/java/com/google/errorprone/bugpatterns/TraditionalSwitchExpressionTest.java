@@ -16,8 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.truth.TruthJUnit.assume;
-
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,7 +29,6 @@ public class TraditionalSwitchExpressionTest {
 
   @Test
   public void positive() {
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     testHelper
         .addSourceLines(
             "Test.java",
@@ -69,7 +66,6 @@ public class TraditionalSwitchExpressionTest {
 
   @Test
   public void negativeArrowStatement() {
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     testHelper
         .addSourceLines(
             "Test.java",
@@ -87,7 +83,6 @@ public class TraditionalSwitchExpressionTest {
 
   @Test
   public void negativeArrow() {
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     testHelper
         .addSourceLines(
             "Test.java",

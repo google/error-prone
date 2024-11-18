@@ -1570,7 +1570,6 @@ public class Test {
 
   @Test
   public void simpleRecord() {
-    assume().that(Runtime.version().feature()).isAtLeast(16);
     helper
         .addSourceLines(
             "SimpleRecord.java", //
@@ -1581,7 +1580,6 @@ public class Test {
 
   @Test
   public void nestedRecord() {
-    assume().that(Runtime.version().feature()).isAtLeast(16);
     helper
         .addSourceLines(
             "SimpleClass.java",
@@ -1596,7 +1594,6 @@ public class Test {
 
   @Test
   public void recordWithStaticFields() {
-    assume().that(Runtime.version().feature()).isAtLeast(16);
     helper
         .addSourceLines(
             "SimpleClass.java",
@@ -1627,7 +1624,6 @@ public class Test {
   // methods differently
   @Test
   public void nestedPrivateRecord() {
-    assume().that(Runtime.version().feature()).isAtLeast(16);
     helper
         .addSourceLines(
             "SimpleClass.java",
@@ -1642,7 +1638,6 @@ public class Test {
 
   @Test
   public void nestedPrivateRecordCompactCanonicalConstructor() {
-    assume().that(Runtime.version().feature()).isAtLeast(16);
     helper
         .addSourceLines(
             "SimpleClass.java",
@@ -1660,7 +1655,6 @@ public class Test {
 
   @Test
   public void nestedPrivateRecordNormalCanonicalConstructor() {
-    assume().that(Runtime.version().feature()).isAtLeast(16);
     helper
         .addSourceLines(
             "SimpleClass.java",
@@ -1680,7 +1674,6 @@ public class Test {
 
   @Test
   public void unusedRecordConstructorParameter() {
-    assume().that(Runtime.version().feature()).isAtLeast(16);
     helper
         .addSourceLines(
             "SimpleRecord.java",
@@ -1697,7 +1690,6 @@ public class Test {
 
   @Test
   public void unusedInRecord() {
-    assume().that(Runtime.version().feature()).isAtLeast(16);
     helper
         .addSourceLines(
             "SimpleClass.java",

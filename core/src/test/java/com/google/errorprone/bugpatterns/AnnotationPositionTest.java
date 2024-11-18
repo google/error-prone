@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.truth.TruthJUnit.assume;
 import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
@@ -418,7 +417,6 @@ interface Test {
   // TODO(b/168625474): 'sealed' doesn't have a TokenKind
   @Test
   public void sealedInterface() {
-    assume().that(Runtime.version().feature()).isAtLeast(15);
     refactoringHelper
         .addInputLines(
             "Test.java",
@@ -623,7 +621,6 @@ interface Test {
 
   @Test
   public void recordAnnotation() {
-    assume().that(Runtime.version().feature()).isAtLeast(16);
     refactoringHelper
         .addInputLines(
             "Test.java",

@@ -16,8 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.truth.TruthJUnit.assume;
-
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.FixChoosers;
 import com.google.errorprone.CompilationTestHelper;
@@ -588,7 +586,6 @@ class Test {
 
   @Test
   public void withVar() {
-    assume().that(Runtime.version().feature()).isAtLeast(15);
     refactoringTest()
         .addInputLines(
             "in/Test.java",

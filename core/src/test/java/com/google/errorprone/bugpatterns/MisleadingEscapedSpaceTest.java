@@ -16,8 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.truth.TruthJUnit.assume;
-
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,8 +28,6 @@ public final class MisleadingEscapedSpaceTest {
 
   @Test
   public void misleadingEscape() {
-    assume().that(Runtime.version().feature()).isAtLeast(14);
-
     testHelper
         .addSourceLines(
             "Test.class",
@@ -46,8 +42,6 @@ public final class MisleadingEscapedSpaceTest {
 
   @Test
   public void literalBackslashS() {
-    assume().that(Runtime.version().feature()).isAtLeast(14);
-
     testHelper
         .addSourceLines(
             "Test.class",
@@ -61,8 +55,6 @@ public final class MisleadingEscapedSpaceTest {
 
   @Test
   public void asSingleCharacter_misleading() {
-    assume().that(Runtime.version().feature()).isAtLeast(14);
-
     testHelper
         .addSourceLines(
             "Test.class",
@@ -77,8 +69,6 @@ public final class MisleadingEscapedSpaceTest {
 
   @Test
   public void withinTextBlock_notAtEndOfLine_misleading() {
-    assume().that(Runtime.version().feature()).isAtLeast(14);
-
     testHelper
         .addSourceLines(
             "Test.class",
@@ -100,8 +90,6 @@ public final class MisleadingEscapedSpaceTest {
 
   @Test
   public void atEndOfLine_notMisleading() {
-    assume().that(Runtime.version().feature()).isAtLeast(14);
-
     testHelper
         .addSourceLines(
             "Test.class",
@@ -118,8 +106,6 @@ public final class MisleadingEscapedSpaceTest {
 
   @Test
   public void multipleAtEndOfLine_notMisleading() {
-    assume().that(Runtime.version().feature()).isAtLeast(14);
-
     testHelper
         .addSourceLines(
             "Test.class",
@@ -135,8 +121,6 @@ public final class MisleadingEscapedSpaceTest {
 
   @Test
   public void withinCommentInBrokenUpString_noFinding() {
-    assume().that(Runtime.version().feature()).isAtLeast(14);
-
     testHelper
         .addSourceLines(
             "Test.class",
@@ -150,8 +134,6 @@ public final class MisleadingEscapedSpaceTest {
 
   @Test
   public void atEndOfString_noFinding() {
-    assume().that(Runtime.version().feature()).isAtLeast(14);
-
     testHelper
         .addSourceLines(
             "Test.class",
@@ -168,8 +150,6 @@ public final class MisleadingEscapedSpaceTest {
 
   @Test
   public void escapedSpaceAtEndOfString() {
-    assume().that(Runtime.version().feature()).isAtLeast(14);
-
     testHelper
         .addSourceLines(
             "Test.class",

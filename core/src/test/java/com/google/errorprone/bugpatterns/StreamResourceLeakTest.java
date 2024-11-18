@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.truth.TruthJUnit.assume;
 import static java.lang.String.format;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
@@ -322,7 +321,6 @@ public class StreamResourceLeakTest {
 
   @Test
   public void record() {
-    assume().that(Runtime.version().feature()).isAtLeast(16);
     testHelper
         .addSourceLines(
             "ExampleRecord.java",

@@ -16,8 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.truth.TruthJUnit.assume;
-
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -63,8 +61,6 @@ public class CannotMockFinalClassTest {
 
   @Test
   public void positiveCase_record() {
-    assume().that(Runtime.version().feature()).isAtLeast(16);
-
     compilationHelper
         .addSourceLines(
             "Test.java",

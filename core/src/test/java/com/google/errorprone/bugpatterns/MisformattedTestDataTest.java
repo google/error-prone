@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.truth.TruthJUnit.assume;
 import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
@@ -34,8 +33,6 @@ public final class MisformattedTestDataTest {
 
   @Test
   public void alreadyFormatted_noFinding() {
-    assume().that(Runtime.version().feature()).isAtLeast(14);
-
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -63,8 +60,6 @@ public final class MisformattedTestDataTest {
 
   @Test
   public void onlyDiffersByFinalNewline_noFinding() {
-    assume().that(Runtime.version().feature()).isAtLeast(14);
-
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -91,8 +86,6 @@ public final class MisformattedTestDataTest {
 
   @Test
   public void misformatted_suggestsFix() {
-    assume().that(Runtime.version().feature()).isAtLeast(14);
-
     refactoringHelper
         .addInputLines(
             "Test.java",
@@ -141,8 +134,6 @@ public final class MisformattedTestDataTest {
 
   @Test
   public void onlyDiffersByIndentation_notReindented() {
-    assume().that(Runtime.version().feature()).isAtLeast(14);
-
     refactoringHelper
         .addInputLines(
             "Test.java",
@@ -171,8 +162,6 @@ public final class MisformattedTestDataTest {
 
   @Test
   public void escapesSpecialCharacters() {
-    assume().that(Runtime.version().feature()).isAtLeast(14);
-
     refactoringHelper
         .addInputLines(
             "Test.java",

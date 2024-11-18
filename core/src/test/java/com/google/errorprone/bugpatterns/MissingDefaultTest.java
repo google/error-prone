@@ -257,7 +257,6 @@ public class MissingDefaultTest {
 
   @Test
   public void arrowSwitch() {
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -277,7 +276,6 @@ public class MissingDefaultTest {
 
   @Test
   public void arrowSwitchNegative() {
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -297,7 +295,6 @@ public class MissingDefaultTest {
 
   @Test
   public void arrowComment() {
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     compilationHelper
         .addSourceLines(
             "Test.java",

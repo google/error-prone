@@ -16,8 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.truth.TruthJUnit.assume;
-
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.FixChoosers;
 import com.google.errorprone.CompilationTestHelper;
@@ -555,7 +553,6 @@ public final class MixedMutabilityReturnTypeTest {
 
   @Test
   public void refactoringWithVar() {
-    assume().that(Runtime.version().feature()).isAtLeast(15);
     refactoringHelper
         .addInputLines(
             "Test.java",

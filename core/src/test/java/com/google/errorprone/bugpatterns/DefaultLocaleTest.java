@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.base.Predicates.containsPattern;
-import static com.google.common.truth.TruthJUnit.assume;
 import static com.google.errorprone.bugpatterns.DefaultLocale.onlyContainsSpecifiersInAllowList;
 import static java.util.function.Predicate.not;
 import static org.junit.Assert.assertFalse;
@@ -143,7 +142,6 @@ class Test {
 
   @Test
   public void stringFormatted() {
-    assume().that(Runtime.version().feature()).isAtLeast(15);
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -233,7 +231,6 @@ class Test {
 
   @Test
   public void factoryMethodsJdk12plus() {
-    assume().that(Runtime.version().feature()).isAtLeast(12);
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -311,7 +308,6 @@ class Test {
 
   @Test
   public void resourceBundleJdk9plus() {
-    assume().that(Runtime.version().feature()).isAtLeast(9);
     compilationHelper
         .addSourceLines(
             "Test.java",

@@ -16,8 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.truth.TruthJUnit.assume;
-
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,7 +29,6 @@ public class UnnecessaryBreakInSwitchTest {
 
   @Test
   public void positive() {
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     testHelper
         .addSourceLines(
             "Test.java",
@@ -72,7 +69,6 @@ public class UnnecessaryBreakInSwitchTest {
 
   @Test
   public void negativeEmpty() {
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     testHelper
         .addSourceLines(
             "Test.java",
@@ -91,7 +87,6 @@ public class UnnecessaryBreakInSwitchTest {
 
   @Test
   public void negativeNotLast() {
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     testHelper
         .addSourceLines(
             "Test.java",
@@ -115,7 +110,6 @@ public class UnnecessaryBreakInSwitchTest {
 
   @Test
   public void negativeLabelledBreak() {
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     testHelper
         .addSourceLines(
             "Test.java",
@@ -138,7 +132,6 @@ public class UnnecessaryBreakInSwitchTest {
 
   @Test
   public void negativeLoop() {
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     testHelper
         .addSourceLines(
             "Test.java",
@@ -162,7 +155,6 @@ public class UnnecessaryBreakInSwitchTest {
 
   @Test
   public void positiveIf() {
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     testHelper
         .addSourceLines(
             "Test.java",

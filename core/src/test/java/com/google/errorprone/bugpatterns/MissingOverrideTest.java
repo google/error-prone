@@ -16,8 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.truth.TruthJUnit.assume;
-
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
@@ -195,8 +193,6 @@ public class MissingOverrideTest {
 
   @Test
   public void explicitRecordAccessor() {
-    assume().that(Runtime.version().feature()).isAtLeast(16);
-
     compilationHelper
         .addSourceLines(
             "Baz.java",
@@ -219,8 +215,6 @@ public class MissingOverrideTest {
 
   @Test
   public void explicitRecordAccessor_doesNotFlagConstructors() {
-    assume().that(Runtime.version().feature()).isAtLeast(16);
-
     compilationHelper
         .addSourceLines(
             "Test.java",

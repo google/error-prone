@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.truth.TruthJUnit.assume;
 import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
@@ -1059,7 +1058,6 @@ public class UnnecessaryDefaultInEnumSwitchTest {
 
   @Test
   public void defaultCaseKindRule() {
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -1085,7 +1083,6 @@ public class UnnecessaryDefaultInEnumSwitchTest {
 
   @Test
   public void unrecognizedCaseKindRule() {
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -1112,7 +1109,6 @@ public class UnnecessaryDefaultInEnumSwitchTest {
 
   @Test
   public void multipleLabels() {
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     compilationHelper
         .addSourceLines(
             "Test.java",

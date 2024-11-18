@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns.nullness;
 
-import static com.google.common.truth.TruthJUnit.assume;
 import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
@@ -193,7 +192,6 @@ public class FieldMissingNullableTest {
 
   @Test
   public void recordComponent() {
-    assume().that(Runtime.version().feature()).isAtLeast(16);
     createAggressiveRefactoringTestHelper()
         .addInputLines(
             "com/google/errorprone/bugpatterns/nullness/FieldMissingNullTest.java",
@@ -340,7 +338,6 @@ public class FieldMissingNullableTest {
 
   @Test
   public void negativeCases_alreadyAnnotatedRecordComponent() {
-    assume().that(Runtime.version().feature()).isAtLeast(16);
     createAggressiveCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/FieldMissingNullTest.java",

@@ -16,8 +16,6 @@
 
 package com.google.errorprone.bugpatterns.formatstring;
 
-import static com.google.common.truth.TruthJUnit.assume;
-
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -368,7 +366,6 @@ class Test {
 
   @Test
   public void invalidIndex() {
-    assume().that(Runtime.version().feature()).isAtLeast(16);
     compilationHelper
         .addSourceLines(
             "T.java",
@@ -385,7 +382,6 @@ class Test {
 
   @Test
   public void stringFormattedNegativeCase() {
-    assume().that(Runtime.version().feature()).isAtLeast(15);
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -401,7 +397,6 @@ class Test {
 
   @Test
   public void stringFormattedPositiveCase() {
-    assume().that(Runtime.version().feature()).isAtLeast(15);
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -418,7 +413,6 @@ class Test {
 
   @Test
   public void nonConstantStringFormattedNegativeCase() {
-    assume().that(Runtime.version().feature()).isAtLeast(15);
     compilationHelper
         .addSourceLines(
             "Test.java",

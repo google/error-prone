@@ -15,8 +15,6 @@
  */
 package com.google.errorprone.bugpatterns.argumentselectiondefects;
 
-import static com.google.common.truth.TruthJUnit.assume;
-
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
@@ -386,8 +384,6 @@ abstract class Test {
 
   @Test
   public void records() {
-    assume().that(Runtime.version().feature()).isAtLeast(16);
-
     testHelper
         .addSourceLines(
             "Test.java",

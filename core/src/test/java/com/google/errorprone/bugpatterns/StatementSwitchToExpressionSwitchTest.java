@@ -16,8 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.truth.TruthJUnit.assume;
-
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
@@ -36,8 +34,6 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void switchByEnum_removesRedundantBreak_error() {
-
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -137,8 +133,6 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void switchByEnumWithCompletionAnalsis_removesRedundantBreak_error() {
-
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -232,8 +226,6 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void switchByEnumCard_combinesCaseComments_error() {
-
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -340,8 +332,6 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void switchByEnumCard2_removesRedundantBreaks_error() {
-
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -445,8 +435,6 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void switchByEnumCard_onlyExpressionsAndThrowAreBraceless_error() {
-
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -551,8 +539,6 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void switchFallsThruToDefault_noError() {
-
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -590,7 +576,6 @@ public final class StatementSwitchToExpressionSwitchTest {
   public void switchFallsThruFromDefault_noError() {
 
     // Placing default in the middle of the switch is not recommended, but is valid Java
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -628,9 +613,7 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void switchWithDefaultInMiddle_error() {
-
     // Placing default in the middle of the switch is not recommended, but is valid Java
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -735,7 +718,6 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void switchWithLabelledBreak_error() {
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -841,7 +823,6 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void switchByEnum_statementSwitchWithMultipleExpressions_error() {
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -933,7 +914,6 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void switchByEnumCardWithThrow_error() {
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -971,7 +951,6 @@ public final class StatementSwitchToExpressionSwitchTest {
   @Test
   public void switchInSwitch_error() {
     // Only the outer "switch" should generate a finding
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -1015,7 +994,6 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void switchByEnumCardWithReturnNested1_error() {
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -1113,7 +1091,6 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void switchByEnumCardWithReturnNested2_error() {
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -1156,7 +1133,6 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void switchByEnumWithConditionalControl_noError() {
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -1194,7 +1170,6 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void switchByEnumWithLambda_noError() {
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -1226,7 +1201,6 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void singleCaseConvertible_error() {
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -1258,7 +1232,6 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void emptyExpressionSwitchCases_noMatch() {
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -1277,7 +1250,6 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void nonEmptyExpressionSwitchCases_noMatch() {
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -1298,7 +1270,6 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void dynamicWithThrowableDuringInitializationFromMethod_noMatch() {
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -1321,7 +1292,6 @@ public final class StatementSwitchToExpressionSwitchTest {
   @Test
   public void switchByEnum_exampleInDocumentation_error() {
     // This code appears as an example in the documentation (added surrounding class)
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -1427,7 +1397,6 @@ public final class StatementSwitchToExpressionSwitchTest {
   public void switchByEnum_caseHasOnlyComments_error() {
     // When a case is solely comments, we should still try to convert the switch using braceless
     // syntax
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -1537,7 +1506,6 @@ public final class StatementSwitchToExpressionSwitchTest {
   @Test
   public void switchByEnum_accumulatedComments_error() {
     // Comments should be aggregated across multiple cases
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -1649,7 +1617,6 @@ public final class StatementSwitchToExpressionSwitchTest {
   public void switchByEnum_surroundingBracesCannotRemove_error() {
     // Can't remove braces around OBVERSE because break statements are not a member of
     // KINDS_CONVERTIBLE_WITHOUT_BRACES
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -1741,7 +1708,6 @@ public final class StatementSwitchToExpressionSwitchTest {
   public void switchByEnum_surroundingBracesEmpty_error() {
     // Test handling of cases with surrounding braces that are empty.  The braces around OBVERSE
     // can be removed because throw is a member of KINDS_CONVERTIBLE_WITHOUT_BRACES.
-    assume().that(Runtime.version().feature()).isAtLeast(14);
 
     helper
         .addSourceLines(
@@ -1830,7 +1796,6 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void switchByEnum_afterReturnComments_error() {
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -1934,7 +1899,6 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void switchByEnum_returnSwitch_error() {
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -2038,7 +2002,6 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void switchByEnum_returnSwitchWithShouldNeverHappen_error() {
-    assume().that(Runtime.version().feature()).isAtLeast(14);
 
     // Check correct generated code
     refactoringHelper
@@ -2112,7 +2075,6 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void switchByEnum_returnSwitchCommentsBeforeFirstCase_errorAndRetained() {
-    assume().that(Runtime.version().feature()).isAtLeast(14);
 
     // Check correct generated code
     refactoringHelper
@@ -2192,7 +2154,6 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void switchByEnum_switchInReturnSwitchWithShouldNeverHappen_error() {
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     // No error because the inner switch is the only fixable one
     helper
         .addSourceLines(
@@ -2245,7 +2206,6 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void switchByEnum_exhaustiveWithDefault_error() {
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -2353,7 +2313,6 @@ public final class StatementSwitchToExpressionSwitchTest {
   @Test
   public void switchByEnum_defaultFallThru_noError() {
     // No error because default doesn't return anything within its block
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -2395,7 +2354,6 @@ public final class StatementSwitchToExpressionSwitchTest {
   @Test
   public void switchByEnum_alwaysThrows_noError() {
     // Every case throws, thus no type for return switch
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -2436,7 +2394,6 @@ public final class StatementSwitchToExpressionSwitchTest {
   @Test
   public void switchByEnum_returnSwitchWithShouldNeverHappen_errorAndRemoveShouldNeverHappen() {
     // The switch has a case for each enum and "should never happen" error handling
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -2585,7 +2542,6 @@ public final class StatementSwitchToExpressionSwitchTest {
   public void switchByEnum_returnSwitchNoFollowingStatementsInBlock_errorAndNoRemoval() {
     // The switch is exhaustive but doesn't have any statements immediately following it in the
     // lowest ancestor statement block
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -2728,7 +2684,6 @@ public final class StatementSwitchToExpressionSwitchTest {
   public void switchByEnum_groupedComments_errorAndNoRemoval() {
     // The switch is exhaustive but doesn't have any statements immediately following it in the
     // lowest ancestor statement block
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -2887,7 +2842,6 @@ public final class StatementSwitchToExpressionSwitchTest {
   public void
       switchByEnum_returnSwitchWithShouldNeverHappenInLambda_errorAndRemoveShouldNeverHappen() {
     // Conversion to return switch within a lambda
-    assume().that(Runtime.version().feature()).isAtLeast(14);
 
     refactoringHelper
         .addInputLines(
@@ -2978,7 +2932,6 @@ public final class StatementSwitchToExpressionSwitchTest {
   @Test
   public void switchByEnum_returnSwitchVoid_noError() {
     // A void cannot be converted to a return switch
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -3016,7 +2969,6 @@ public final class StatementSwitchToExpressionSwitchTest {
   @Test
   public void switchByEnum_returnLabelledContinue_noError() {
     // Control jumps outside the switch for HEART
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -3057,7 +3009,6 @@ public final class StatementSwitchToExpressionSwitchTest {
   @Test
   public void switchByEnum_returnUnlabelledContinue_noError() {
     // Control jumps outside the switch for HEART
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -3098,7 +3049,6 @@ public final class StatementSwitchToExpressionSwitchTest {
   @Test
   public void switchByEnum_returnLabelledBreak_noError() {
     // Control jumps outside the switch for HEART
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -3140,7 +3090,6 @@ public final class StatementSwitchToExpressionSwitchTest {
   @Test
   public void switchByEnum_returnYield_noError() {
     // Does not attempt to convert "yield" expressions
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -3183,7 +3132,6 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void switchByEnum_assignmentSwitchToLocalHasDefault_error() {
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -3285,7 +3233,6 @@ public final class StatementSwitchToExpressionSwitchTest {
   @Test
   public void switchByEnum_assignmentSwitchMixedReferences_error() {
     // Must deduce that "x" and "this.x" refer to same thing
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -3410,7 +3357,6 @@ public final class StatementSwitchToExpressionSwitchTest {
   @Test
   public void switchByEnum_assignmentSwitchMixedReferences_noError() {
     // Must deduce that "x" and "this.y" refer to different things
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -3456,7 +3402,6 @@ public final class StatementSwitchToExpressionSwitchTest {
   @Test
   public void switchByEnum_assignmentSwitchTwoAssignments_noError() {
     // Can't convert multiple assignments, even if redundant
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -3501,7 +3446,6 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void switchByEnum_assignmentSwitchToSingleArray_error() {
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -3618,7 +3562,6 @@ public final class StatementSwitchToExpressionSwitchTest {
     // Multiple array dereferences or other non-variable left-hand-side expressions may (in
     // principle) be convertible to assignment switches, but this feature is not supported at this
     // time
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -3664,7 +3607,6 @@ public final class StatementSwitchToExpressionSwitchTest {
   @Test
   public void switchByEnum_assignmentSwitchToMultipleDistinct_noError() {
     // x[5] and x[6] are distinct assignment targets
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -3711,7 +3653,6 @@ public final class StatementSwitchToExpressionSwitchTest {
   public void switchByEnum_assignmentSwitchMixedKinds_noError() {
     // Different assignment types ("=" versus "+=").  The check does not attempt to alter the
     // assignments to make the assignment types match (e.g. does not change to "x = x + 2")
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -3755,7 +3696,6 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void switchByEnum_assignmentLabelledContinue_noError() {
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -3805,7 +3745,6 @@ public final class StatementSwitchToExpressionSwitchTest {
   @Test
   public void switchByEnum_assignmentLabelledBreak_noError() {
     // Can't convert because of "break before"
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -3855,7 +3794,6 @@ public final class StatementSwitchToExpressionSwitchTest {
   @Test
   public void switchByEnum_assignmentLabelledBreak2_noError() {
     // Can't convert because of "break before" as the second statement in its block
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -3905,7 +3843,6 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void switchByEnum_assignmentUnlabelledContinue_noError() {
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -3955,7 +3892,6 @@ public final class StatementSwitchToExpressionSwitchTest {
   @Test
   public void switchByEnum_assignmentYield_noError() {
     // Does not attempt to convert "yield" expressions
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -3998,7 +3934,6 @@ public final class StatementSwitchToExpressionSwitchTest {
     // Transformation can change error handling.  Here, if the enum is not exhaustive at runtime
     // (say there is a new JOKER suit), then nothing would happen.  But the transformed source,
     // would throw.
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -4105,7 +4040,6 @@ public final class StatementSwitchToExpressionSwitchTest {
   @Test
   public void switchByEnum_exhaustiveCompoundAssignmentSwitch_error() {
     // Verify compound assignments (here, +=)
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -4206,7 +4140,6 @@ public final class StatementSwitchToExpressionSwitchTest {
   @Test
   public void switchByEnum_groupedComments_error() {
     // Verify compound assignments (here, *=) with grouped comments
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -4333,7 +4266,6 @@ public final class StatementSwitchToExpressionSwitchTest {
   @Test
   public void switchByEnum_compoundAssignmentExampleInDocumentation_error() {
     // This code appears as an example in the documentation (added surrounding class)
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -4435,7 +4367,6 @@ public final class StatementSwitchToExpressionSwitchTest {
   @Test
   public void switchByEnum_exhaustiveAssignmentSwitchCaseList_error() {
     // Statement switch has cases with multiple values
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -4529,7 +4460,6 @@ public final class StatementSwitchToExpressionSwitchTest {
   @Test
   public void switchByEnum_nonExhaustiveAssignmentSwitch_noError() {
     // No HEART case
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     helper
         .addSourceLines(
             "Test.java",
@@ -4567,7 +4497,6 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void i4222() {
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     refactoringHelper
         .addInputLines(
             "Test.java",
@@ -4613,7 +4542,6 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void unnecessaryBreaks() {
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     refactoringHelper
         .addInputLines(
             "Test.java",
@@ -4653,7 +4581,6 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void mixedExpressionsAndYields() {
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     refactoringHelper
         .addInputLines(
             "Test.java",

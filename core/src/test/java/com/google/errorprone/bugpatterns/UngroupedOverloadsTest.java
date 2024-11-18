@@ -16,8 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.truth.TruthJUnit.assume;
-
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
@@ -851,8 +849,6 @@ public class UngroupedOverloadsPositiveCasesCoveringOnlyOnFirst {
 
   @Test
   public void recordConstructor() {
-    assume().that(Runtime.version().feature()).isAtLeast(16);
-
     compilationHelper
         .addSourceLines(
             "Test.java",
