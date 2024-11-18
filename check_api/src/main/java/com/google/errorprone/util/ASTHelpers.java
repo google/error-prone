@@ -993,6 +993,9 @@ public class ASTHelpers {
    * annotation inheritance (see JLS 9.6.4.3).
    */
   public static boolean hasDirectAnnotationWithSimpleName(Symbol sym, String simpleName) {
+    if (sym == null) {
+      return false;
+    }
     if (sym instanceof MethodSymbol) {
       return hasDirectAnnotationWithSimpleName((MethodSymbol) sym, simpleName);
     }
