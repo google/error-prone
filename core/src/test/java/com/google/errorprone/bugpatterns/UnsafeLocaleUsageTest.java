@@ -60,7 +60,7 @@ public class UnsafeLocaleUsageTest {
               static class Inner {
                 private Locale locale;
                 Inner(String a) {
-                   locale = Locale.forLanguageTag(a.replace("_", "-"));
+                   locale = Locale.forLanguageTag(a.replace('_', '-'));
                 }
               }
 

@@ -84,10 +84,9 @@ public final class UnsafeLocaleUsage extends BugChecker
         String replacementArg =
             arg instanceof JCLiteral
                 ? String.format(
-                    "\"%s\"", ASTHelpers.constValue(arg, String.class).replace("_", "-"))
+                    "\"%s\"", ASTHelpers.constValue(arg, String.class).replace('_', '-'))
                 : String.format(
-                    "%s.replace(\"_\", \"-\")",
-                    state.getSourceForNode(constructorArguments.get(0)));
+                    "%s.replace('_', '-')", state.getSourceForNode(constructorArguments.get(0)));
 
         descriptionBuilder.addFix(
             SuggestedFix.replace(tree, String.format("Locale.forLanguageTag(%s)", replacementArg)));
