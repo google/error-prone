@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isSwitchDefault;
 
 import com.google.common.collect.ImmutableSet;
@@ -27,9 +28,11 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.SwitchTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
-import com.sun.source.tree.IdentifierTree;
+import com.sun.source.tree.CaseTree;
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.tools.javac.code.Type;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.lang.model.element.ElementKind;
@@ -44,25 +47,26 @@ public class MissingCasesInEnumSwitch extends BugChecker implements SwitchTreeMa
 
   @Override
   public Description matchSwitch(SwitchTree tree, VisitorState state) {
-    Type switchType = ASTHelpers.getType(tree.getExpression());
+    ExpressionTree expression = tree.getExpression();
+    List<? extends CaseTree> cases = tree.getCases();
+    Type switchType = ASTHelpers.getType(expression);
     if (switchType.asElement().getKind() != ElementKind.ENUM) {
       return Description.NO_MATCH;
     }
     // default case is present
-    if (tree.getCases().stream().anyMatch(c -> isSwitchDefault(c))) {
+    if (cases.stream().anyMatch(c -> isSwitchDefault(c))) {
       return Description.NO_MATCH;
     }
     ImmutableSet<String> handled =
-        tree.getCases().stream()
+        cases.stream()
             .flatMap(c -> c.getExpressions().stream())
-            .filter(IdentifierTree.class::isInstance)
-            .map(e -> ((IdentifierTree) e).getName().toString())
+            .map(e -> getSymbol(e).getSimpleName().toString())
             .collect(toImmutableSet());
     Set<String> unhandled = Sets.difference(ASTHelpers.enumValues(switchType.asElement()), handled);
     if (unhandled.isEmpty()) {
       return Description.NO_MATCH;
     }
-    return buildDescription(tree).setMessage(buildMessage(unhandled)).build();
+    return buildDescription(expression).setMessage(buildMessage(unhandled)).build();
   }
 
   /**

@@ -57,8 +57,35 @@ public class MissingCasesInEnumSwitchTest {
   }
 
   @Test
+  public void exhaustive_allowsQualifying() {
+    assume().that(Runtime.version().feature()).isAtLeast(21);
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              enum Case {
+                ONE,
+                TWO,
+                THREE
+              }
+
+              void m(Case c) {
+                switch (c) {
+                  case Case.ONE:
+                  case Case.TWO:
+                  case Case.THREE:
+                    System.err.println("found it!");
+                    break;
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void exhaustive_multipleCaseExpressions() {
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -209,7 +236,6 @@ public class MissingCasesInEnumSwitchTest {
 
   @Test
   public void nonExhaustive_arrowStatement() {
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -235,7 +261,6 @@ public class MissingCasesInEnumSwitchTest {
 
   @Test
   public void nonExhaustive_multi() {
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -261,7 +286,6 @@ public class MissingCasesInEnumSwitchTest {
 
   @Test
   public void nonExhaustive_multiArrow() {
-    assume().that(Runtime.version().feature()).isAtLeast(14);
     compilationHelper
         .addSourceLines(
             "Test.java",
