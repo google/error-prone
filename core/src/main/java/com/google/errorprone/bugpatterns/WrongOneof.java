@@ -24,13 +24,16 @@ import static com.google.errorprone.util.ASTHelpers.enumValues;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.isSwitchDefault;
 import static com.google.errorprone.util.ASTHelpers.stripParentheses;
 import static com.google.errorprone.util.Reachability.canFallThrough;
 
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.bugpatterns.BugChecker.SwitchExpressionTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.SwitchTreeMatcher;
 import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions;
 import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions.ConstantExpression;
@@ -40,9 +43,11 @@ import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.SwitchExpressionTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.source.util.TreePath;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import javax.inject.Inject;
 
@@ -50,23 +55,38 @@ import javax.inject.Inject;
 @BugPattern(
     severity = ERROR,
     summary = "This field is guaranteed not to be set given it's within a switch over a one_of.")
-public final class WrongOneof extends BugChecker implements SwitchTreeMatcher {
+public final class WrongOneof extends BugChecker
+    implements SwitchTreeMatcher, SwitchExpressionTreeMatcher {
   private static final TypePredicate ONE_OF_ENUM =
       isDescendantOf("com.google.protobuf.AbstractMessageLite.InternalOneOfEnum");
 
   private final ConstantExpressions constantExpressions;
+  private final boolean handleSwitchExpressions;
 
   @Inject
-  WrongOneof(ConstantExpressions constantExpressions) {
+  WrongOneof(ConstantExpressions constantExpressions, ErrorProneFlags flags) {
     this.constantExpressions = constantExpressions;
+    this.handleSwitchExpressions = flags.getBoolean("HandleSwitchExpressions").orElse(true);
   }
 
   @Override
   public Description matchSwitch(SwitchTree tree, VisitorState state) {
-    if (!ONE_OF_ENUM.apply(getType(tree.getExpression()), state)) {
+    return handle(tree.getExpression(), tree.getCases(), state);
+  }
+
+  @Override
+  public Description matchSwitchExpression(SwitchExpressionTree tree, VisitorState state) {
+    if (!handleSwitchExpressions) {
       return NO_MATCH;
     }
-    ExpressionTree expression = stripParentheses(tree.getExpression());
+    return handle(tree.getExpression(), tree.getCases(), state);
+  }
+
+  private Description handle(ExpressionTree e, List<? extends CaseTree> cases, VisitorState state) {
+    if (!ONE_OF_ENUM.apply(getType(e), state)) {
+      return NO_MATCH;
+    }
+    ExpressionTree expression = stripParentheses(e);
     if (!(expression instanceof MethodInvocationTree)) {
       return NO_MATCH;
     }
@@ -76,25 +96,30 @@ public final class WrongOneof extends BugChecker implements SwitchTreeMatcher {
     }
     constantExpressions
         .constantExpression(receiver, state)
-        .ifPresent(constantReceiver -> processSwitch(tree, constantReceiver, state));
+        .ifPresent(constantReceiver -> processSwitch(expression, cases, constantReceiver, state));
     return NO_MATCH;
   }
 
   private void processSwitch(
-      SwitchTree tree, ConstantExpression constantReceiver, VisitorState state) {
+      ExpressionTree expression,
+      List<? extends CaseTree> cases,
+      ConstantExpression constantReceiver,
+      VisitorState state) {
     ImmutableSet<String> getters =
-        enumValues(getType(tree.getExpression()).tsym).stream()
+        enumValues(getType(expression).tsym).stream()
             .map(WrongOneof::getter)
             .collect(toImmutableSet());
 
     // Keep track of which getters might be set.
     Set<String> allowableGetters = new HashSet<>();
-    for (CaseTree caseTree : tree.getCases()) {
+    for (CaseTree caseTree : cases) {
       // Break out once we reach a default.
-      if (caseTree.getExpression() == null) {
+      if (isSwitchDefault(caseTree)) {
         break;
       }
-      allowableGetters.add(getter(getSymbol(caseTree.getExpression()).getSimpleName().toString()));
+      for (var caseExpression : caseTree.getExpressions()) {
+        allowableGetters.add(getter(getSymbol(caseExpression).getSimpleName().toString()));
+      }
 
       scanForInvalidGetters(getters, allowableGetters, caseTree, constantReceiver, state);
 
