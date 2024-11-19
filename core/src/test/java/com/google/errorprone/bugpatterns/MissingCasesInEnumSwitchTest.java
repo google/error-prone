@@ -309,4 +309,41 @@ public class MissingCasesInEnumSwitchTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void i4684() {
+    assume().that(Runtime.version().feature()).isAtLeast(21);
+    compilationHelper
+        .addSourceLines(
+            "ErrorProneBug.java",
+            """
+            public class ErrorProneBug {
+              enum A {
+                A1,
+                A2,
+                A3
+              }
+
+              public static void main(String[] args) {
+                A a = null;
+
+                switch (a) {
+                  case null -> {
+                    System.out.println("null");
+                  }
+                  case A1 -> {
+                    System.out.println("A1");
+                  }
+                  case A2 -> {
+                    System.out.println("A2");
+                  }
+                  case A3 -> {
+                    System.out.println("A3");
+                  }
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
 }

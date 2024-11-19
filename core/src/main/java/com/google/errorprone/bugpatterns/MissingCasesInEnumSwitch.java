@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
-import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isSwitchDefault;
 
 import com.google.common.collect.ImmutableSet;
@@ -60,7 +59,9 @@ public class MissingCasesInEnumSwitch extends BugChecker implements SwitchTreeMa
     ImmutableSet<String> handled =
         cases.stream()
             .flatMap(c -> c.getExpressions().stream())
-            .map(e -> getSymbol(e).getSimpleName().toString())
+            .map(ASTHelpers::getSymbol)
+            .filter(x -> x != null)
+            .map(symbol -> symbol.getSimpleName().toString())
             .collect(toImmutableSet());
     Set<String> unhandled = Sets.difference(ASTHelpers.enumValues(switchType.asElement()), handled);
     if (unhandled.isEmpty()) {
