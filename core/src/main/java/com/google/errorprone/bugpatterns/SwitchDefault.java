@@ -74,7 +74,7 @@ public class SwitchDefault extends BugChecker implements SwitchTreeMatcher {
     if (it.hasNext()) {
       // If there are trailing cases after the default statement group, move the default to the end.
       // Only emit a fix if the default doesn't fall through.
-      if (!Reachability.canCompleteNormally(getLast(defaultStatementGroup))) {
+      if (!Reachability.canFallThrough(getLast(defaultStatementGroup))) {
         int start = getStartPosition(defaultStatementGroup.get(0));
         int end = state.getEndPosition(getLast(defaultStatementGroup));
         String replacement;
@@ -97,7 +97,7 @@ public class SwitchDefault extends BugChecker implements SwitchTreeMatcher {
         // If the last statement group falls out of the switch, add a `break;` before moving
         // the default to the end.
         CaseTree last = getLast(tree.getCases());
-        if (isSwitchDefault(last) || Reachability.canCompleteNormally(last)) {
+        if (isSwitchDefault(last) || Reachability.canFallThrough(last)) {
           replacement = "break;\n" + replacement;
         }
         fix.replace(start, end, "").postfixWith(getLast(tree.getCases()), replacement);

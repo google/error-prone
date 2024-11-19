@@ -27,6 +27,7 @@ import com.sun.source.tree.AssertTree;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.BreakTree;
 import com.sun.source.tree.CaseTree;
+import com.sun.source.tree.CaseTree.CaseKind;
 import com.sun.source.tree.CatchTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ContinueTree;
@@ -69,20 +70,26 @@ public class Reachability {
   }
 
   /**
-   * Returns true if the given case tree can complete normally, as defined by JLS 14.21.
+   * Returns true if the given case tree can fall through to the next case tree.
    *
    * <p>An exception is made for {@code System.exit}, which cannot complete normally in practice.
    */
-  public static boolean canCompleteNormally(CaseTree caseTree) {
-    List<? extends StatementTree> statements = caseTree.getStatements();
-    if (statements.isEmpty()) {
-      return true;
-    }
-    // We only care whether the last statement completes; javac would have already
-    // reported an error if that statement wasn't reachable, and the answer is
-    // independent of any preceding statements.
-    // TODO(cushon): This isn't really making an exception for System.exit in the prior statements.
-    return canCompleteNormally(getLast(statements));
+  public static boolean canFallThrough(CaseTree caseTree) {
+    return switch (caseTree.getCaseKind()) {
+      case STATEMENT -> {
+        List<? extends StatementTree> statements = caseTree.getStatements();
+        if (statements.isEmpty()) {
+          yield true;
+        }
+        // We only care whether the last statement completes; javac would have already
+        // reported an error if that statement wasn't reachable, and the answer is
+        // independent of any preceding statements.
+        // TODO(cushon): This isn't really making an exception for System.exit in the prior
+        // statements.
+        yield canCompleteNormally(getLast(statements));
+      }
+      case RULE -> false;
+    };
   }
 
   private static class CanCompleteNormallyVisitor extends SimpleTreeVisitor<Boolean, Void> {
@@ -203,14 +210,14 @@ public class Reachability {
     }
 
     /*
-     * A switch statement can complete normally iff at least one of the
+     * A non-arrow switch statement can complete normally iff at least one of the
      * following is true:
      *
-     *  1) The switch block is empty or contains only switch labels.
-     *  2) The last statement in the switch block can complete normally.
-     *  3) There is at least one switch label after the last switch block
+     *  1) The switch block does not contain a default label.
+     *  2) The switch block is empty or contains only switch labels.
+     *  3) The last statement in the switch block can complete normally.
+     *  4) There is at least one switch label after the last switch block
      *     statement group.
-     *  4) The switch block does not contain a default label.
      *  5) There is a reachable break statement that exits the switch statement.
      *
      * A switch block is reachable iff its switch statement is reachable.
@@ -226,10 +233,35 @@ public class Reachability {
     @Override
     public Boolean visitSwitch(SwitchTree tree, Void unused) {
       // (1)
+      if (tree.getCases().stream().noneMatch(c -> isSwitchDefault(c))) {
+        return true;
+      }
+      // A switch statement whose switch block consists of switch rules can complete normally iff at
+      // least one of the following is true:
+      //   (1 above) The switch statement is not enhanced (§14.11.2) and its switch block does not
+      // contain a default label.
+      //   (2) One of the switch rules introduces a switch rule expression (which is necessarily a
+      // statement expression).
+      //   (3) One of the switch rules introduces a switch rule block that can complete normally.
+      //   (4) One of the switch rules introduces a switch rule block that contains a reachable
+      // break statement which exits the switch statement.
+      if (tree.getCases().stream().anyMatch(c -> c.getCaseKind().equals(CaseKind.RULE))) {
+        // (2) and (3)
+        if (tree.getCases().stream().anyMatch(c -> scan(c.getBody()))) {
+          return true;
+        }
+        // (4)
+        if (breaks.contains(tree)) {
+          return true;
+        }
+        return false;
+      }
+      // Past this point, we know each case is a statement.
+      // (2)
       if (tree.getCases().stream().allMatch(c -> c.getStatements().isEmpty())) {
         return true;
       }
-      // (2)
+      // (3)
       boolean lastCompletes = true;
       for (CaseTree c : tree.getCases()) {
         lastCompletes = scan(c.getStatements());
@@ -237,12 +269,8 @@ public class Reachability {
       if (lastCompletes) {
         return true;
       }
-      // (3)
-      if (getLast(tree.getCases()).getStatements().isEmpty()) {
-        return true;
-      }
       // (4)
-      if (tree.getCases().stream().noneMatch(c -> isSwitchDefault(c))) {
+      if (getLast(tree.getCases()).getStatements().isEmpty()) {
         return true;
       }
       // (5)

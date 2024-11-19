@@ -320,6 +320,41 @@ public class ReachabilityTest {
         "System.err.println();",
         "// BUG: Diagnostic contains:",
       },
+      {
+        "switch (42) {", //
+        "  case 1 -> {}",
+        "}",
+        "// BUG: Diagnostic contains:",
+      },
+      {
+        "switch (42) {", //
+        "  case 1 -> throw new AssertionError();",
+        "}",
+        "// BUG: Diagnostic contains:",
+      },
+      {
+        "switch (42) {", //
+        "  case 1 -> throw new AssertionError();",
+        "  case 2 -> throw new AssertionError();",
+        "  default -> {}",
+        "}",
+        "// BUG: Diagnostic contains:",
+      },
+      {
+        "switch (42) {", //
+        "  case 1 -> throw new AssertionError();",
+        "  case 2 -> throw new AssertionError();",
+        "  default -> throw new AssertionError();",
+        "}",
+      },
+      {
+        "switch (42) {", //
+        "  case 1 -> { break; }",
+        "  case 2 -> throw new AssertionError();",
+        "  default -> throw new AssertionError();",
+        "}",
+        "// BUG: Diagnostic contains:",
+      },
     };
     return Arrays.stream(parameters).map(x -> new Object[] {x}).collect(toList());
   }

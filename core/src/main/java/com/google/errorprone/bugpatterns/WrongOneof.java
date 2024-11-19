@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
-import static com.google.common.collect.Iterables.getLast;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.predicates.TypePredicates.isDescendantOf;
@@ -26,7 +25,7 @@ import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.stripParentheses;
-import static com.google.errorprone.util.Reachability.canCompleteNormally;
+import static com.google.errorprone.util.Reachability.canFallThrough;
 
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.ImmutableSet;
@@ -41,11 +40,9 @@ import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
-import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.source.util.TreePath;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import javax.inject.Inject;
 
@@ -101,10 +98,7 @@ public final class WrongOneof extends BugChecker implements SwitchTreeMatcher {
 
       scanForInvalidGetters(getters, allowableGetters, caseTree, constantReceiver, state);
 
-      List<? extends StatementTree> statements = caseTree.getStatements();
-      if (statements != null
-          && !statements.isEmpty()
-          && !canCompleteNormally(getLast(statements))) {
+      if (!canFallThrough(caseTree)) {
         allowableGetters.clear();
       }
     }

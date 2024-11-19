@@ -24,6 +24,7 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.isSwitchDefault;
 import static com.google.errorprone.util.Reachability.canCompleteNormally;
+import static com.google.errorprone.util.Reachability.canFallThrough;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
@@ -165,8 +166,8 @@ public class UnnecessaryDefaultInEnumSwitch extends BugChecker implements Switch
     if (!SuggestedFixes.compilesWithFix(SuggestedFix.delete(defaultCase), state)) {
       return NO_MATCH; // case (3)
     }
-    if (!canCompleteNormally(caseBeforeDefault)) {
-      // case (2) -- If the case before the default can't complete normally,
+    if (!canFallThrough(caseBeforeDefault)) {
+      // case (2) -- If the case before the default can't fall through,
       // it's OK to to delete the default.
       return buildDescription(defaultCase)
           .setMessage(DESCRIPTION_REMOVED_DEFAULT)
