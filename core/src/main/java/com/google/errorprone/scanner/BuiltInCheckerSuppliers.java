@@ -360,6 +360,7 @@ import com.google.errorprone.bugpatterns.StreamToString;
 import com.google.errorprone.bugpatterns.StringBuilderInitWithChar;
 import com.google.errorprone.bugpatterns.StringCaseLocaleUsage;
 import com.google.errorprone.bugpatterns.StringCharset;
+import com.google.errorprone.bugpatterns.StringConcatToTextBlock;
 import com.google.errorprone.bugpatterns.StringFormatWithLiteral;
 import com.google.errorprone.bugpatterns.StringSplitter;
 import com.google.errorprone.bugpatterns.StronglyTypeByteString;
@@ -1082,6 +1083,7 @@ public class BuiltInCheckerSuppliers {
           StreamToIterable.class,
           StringCaseLocaleUsage.class,
           StringCharset.class,
+          StringConcatToTextBlock.class,
           StringSplitter.class,
           Suggester.class,
           SuperCallToObjectMethod.class,

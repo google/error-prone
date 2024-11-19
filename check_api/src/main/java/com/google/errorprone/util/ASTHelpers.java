@@ -1279,6 +1279,9 @@ public class ASTHelpers {
     if (type.hasTag(TypeTag.BOOLEAN) && value instanceof Integer) {
       return ((Integer) value) == 1;
     }
+    if (type.hasTag(TypeTag.CHAR) && value instanceof Integer) {
+      return (char) (int) value;
+    }
     return value;
   }
 

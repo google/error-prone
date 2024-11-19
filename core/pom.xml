@@ -72,7 +72,7 @@
       <!-- Apache 2.0 -->
       <groupId>com.google.googlejavaformat</groupId>
       <artifactId>google-java-format</artifactId>
-      <version>1.19.1</version>
+      <version>1.24.0</version>
     </dependency>
     <dependency>
       <!-- MIT -->

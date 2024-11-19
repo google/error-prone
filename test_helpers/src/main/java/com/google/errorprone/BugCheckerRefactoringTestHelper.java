@@ -49,6 +49,7 @@ import com.google.errorprone.scanner.Scanner;
 import com.google.errorprone.scanner.ScannerSupplier;
 import com.google.googlejavaformat.java.Formatter;
 import com.google.googlejavaformat.java.FormatterException;
+import com.google.googlejavaformat.java.StringWrapper;
 import com.google.testing.compile.JavaFileObjects;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.util.TreePath;
@@ -94,7 +95,8 @@ public class BugCheckerRefactoringTestHelper {
 
       private String maybeFormat(String input) {
         try {
-          return new Formatter().formatSource(input);
+          Formatter formatter = new Formatter();
+          return StringWrapper.wrap(formatter.formatSource(input), formatter);
         } catch (FormatterException e) {
           return input;
         }

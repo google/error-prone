@@ -65,6 +65,27 @@ public final class SourceCodeEscapers {
               '\\', "\\\\",
               '\'', "\\'"));
 
+  /**
+   * Returns an {@link Escaper} instance that escapes special characters in a string so it can
+   * safely be included in either a Java text block.
+   *
+   * <p>See: <a href= "https://docs.oracle.com/javase/specs/jls/se21/html/jls-3.html#jls-3.10.6"
+   * >The Java Language Specification</a> for more details.
+   */
+  public static CharEscaper getJavaTextBlockEscaper() {
+    return JAVA_TEXT_BLOCK_ESCAPER;
+  }
+
+  private static final CharEscaper JAVA_TEXT_BLOCK_ESCAPER =
+      new JavaCharEscaper(
+          ImmutableMap.of(
+              '\b', "\\b",
+              '\f', "\\f",
+              '\n', "\\n",
+              '\r', "\\r",
+              '\t', "\\t",
+              '\\', "\\\\"));
+
   // This escaper does not produce octal escape sequences. See:
   // http://java.sun.com/docs/books/jls/third_edition/html/lexical.html#101089
   //  "Octal escapes are provided for compatibility with C, but can express
@@ -88,11 +109,11 @@ public final class SourceCodeEscapers {
     r[0] = '\\';
     r[1] = 'u';
     r[5] = HEX_DIGITS[c & 0xF];
-    c >>>= 4;
+    c = (char) (c >>> 4);
     r[4] = HEX_DIGITS[c & 0xF];
-    c >>>= 4;
+    c = (char) (c >>> 4);
     r[3] = HEX_DIGITS[c & 0xF];
-    c >>>= 4;
+    c = (char) (c >>> 4);
     r[2] = HEX_DIGITS[c & 0xF];
     return r;
   }
