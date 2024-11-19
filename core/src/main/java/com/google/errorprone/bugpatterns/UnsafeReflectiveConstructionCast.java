@@ -46,8 +46,8 @@ import java.lang.reflect.Constructor;
     summary =
         "Prefer `asSubclass` instead of casting the result of `newInstance`,"
             + " to detect classes of incorrect type before invoking their constructors."
-            + "This way, if the class is of the incorrect type,"
-            + "it will throw an exception before invoking its constructor.",
+            + " This way, if the class is of the incorrect type,"
+            + " it will throw an exception before invoking its constructor.",
     severity = WARNING,
     tags = StandardTags.FRAGILE_CODE)
 public class UnsafeReflectiveConstructionCast extends BugChecker implements TypeCastTreeMatcher {
