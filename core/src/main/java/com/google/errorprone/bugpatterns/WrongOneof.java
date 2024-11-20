@@ -118,7 +118,10 @@ public final class WrongOneof extends BugChecker
         break;
       }
       for (var caseExpression : caseTree.getExpressions()) {
-        allowableGetters.add(getter(getSymbol(caseExpression).getSimpleName().toString()));
+        var symbol = getSymbol(caseExpression);
+        if (symbol != null) {
+          allowableGetters.add(getter(symbol.getSimpleName().toString()));
+        }
       }
 
       scanForInvalidGetters(getters, allowableGetters, caseTree, constantReceiver, state);
