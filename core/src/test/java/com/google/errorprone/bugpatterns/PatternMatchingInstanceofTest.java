@@ -185,4 +185,40 @@ public final class PatternMatchingInstanceofTest {
         .expectUnchanged()
         .doTest();
   }
+
+  @Test
+  public void genericWithUpperBoundedWildcard() {
+    assume().that(Runtime.version().feature()).isAtLeast(21);
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.util.List;
+
+            class Test {
+              void test(Object object) {
+                if (object instanceof List) {
+                  @SuppressWarnings("unchecked")
+                  List<? extends CharSequence> list = (List) object;
+                  System.err.println(list.get(0));
+                }
+              }
+            }
+            """)
+        // TODO: b/380054832 - this shouldn't get re-written
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.util.List;
+
+            class Test {
+              void test(Object object) {
+                if (object instanceof List list) {
+                  System.err.println(list.get(0));
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
 }
