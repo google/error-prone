@@ -69,8 +69,14 @@ public final class SourceCodeEscapers {
    * Returns an {@link Escaper} instance that escapes special characters in a string so it can
    * safely be included in either a Java text block.
    *
+   * <p>Double quotes are not escaped. If the string contents contain a run of three or more
+   * consecutive double quotes, additional action is required to make it safe to include in a text
+   * block.
+   *
    * <p>See: <a href= "https://docs.oracle.com/javase/specs/jls/se21/html/jls-3.html#jls-3.10.6"
    * >The Java Language Specification</a> for more details.
+   *
+   * <p>The Guava FR for this is: https://github.com/google/guava/issues/7421
    */
   public static CharEscaper getJavaTextBlockEscaper() {
     return JAVA_TEXT_BLOCK_ESCAPER;
