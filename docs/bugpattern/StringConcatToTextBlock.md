@@ -27,4 +27,30 @@ String message =
         + "And whether pigs have wings.'\n";
 ```
 
+## Trailing newlines
+
+If the string should not contain a trailing newline, use a `\` to escape the
+final newline in the text block. That is, these two strings are equivalent:
+
+```java
+String s = "hello\n" + "world";
+```
+
+```java
+String s =
+    """
+    hello
+    world\
+    """;
+```
+
+The suggested fixes for this check preserve the exact contents of the original
+string, so if the original string doesn't include a trailing newline the fix
+will use a `\` to escape the last newline.
+
+If the whitespace in the string isn't significant, for example because the
+string value will be parsed by a parser that doesn't care about the trailing
+newlines, consider removing the final `\` to improve the readability of the
+string.
+
 [text blocks]: https://docs.oracle.com/en/java/javase/23/text-blocks/index.html
