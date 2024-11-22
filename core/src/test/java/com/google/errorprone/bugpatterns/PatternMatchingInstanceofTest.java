@@ -30,7 +30,6 @@ public final class PatternMatchingInstanceofTest {
 
   @Test
   public void positive() {
-    assume().that(Runtime.version().feature()).isAtLeast(21);
     helper
         .addInputLines(
             "Test.java",
@@ -79,7 +78,6 @@ public final class PatternMatchingInstanceofTest {
 
   @Test
   public void moreChecksInIf_stillMatches() {
-    assume().that(Runtime.version().feature()).isAtLeast(21);
     helper
         .addInputLines(
             "Test.java",
@@ -183,6 +181,36 @@ public final class PatternMatchingInstanceofTest {
             }
             """)
         .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void notImmediatelyAssignedToVariable() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                if (o instanceof Test) {
+                  test((Test) o);
+                  test(((Test) o).hashCode());
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                if (o instanceof Test test) {
+                  test(test);
+                  test(test.hashCode());
+                }
+              }
+            }
+            """)
         .doTest();
   }
 

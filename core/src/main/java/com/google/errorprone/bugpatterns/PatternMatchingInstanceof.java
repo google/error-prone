@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.fixes.SuggestedFix.mergeFixes;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
@@ -25,96 +26,142 @@ import static com.google.errorprone.util.SourceVersion.supportsPatternMatchingIn
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.bugpatterns.BugChecker.IfTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.InstanceOfTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
-import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.BlockTree;
-import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IfTree;
 import com.sun.source.tree.InstanceOfTree;
 import com.sun.source.tree.ParenthesizedTree;
-import com.sun.source.tree.Tree.Kind;
+import com.sun.source.tree.StatementTree;
+import com.sun.source.tree.Tree;
 import com.sun.source.tree.TypeCastTree;
 import com.sun.source.tree.VariableTree;
-import com.sun.source.util.SimpleTreeVisitor;
+import com.sun.source.util.TreePath;
+import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
+import com.sun.tools.javac.code.Type;
+import org.jspecify.annotations.Nullable;
 
 /** A BugPattern; see the summary. */
 @BugPattern(
     severity = WARNING,
     summary = "This code can be simplified to use a pattern-matching instanceof.")
-public final class PatternMatchingInstanceof extends BugChecker implements IfTreeMatcher {
+public final class PatternMatchingInstanceof extends BugChecker implements InstanceOfTreeMatcher {
+
   @Override
-  public Description matchIf(IfTree tree, VisitorState state) {
+  public Description matchInstanceOf(InstanceOfTree instanceOfTree, VisitorState state) {
     if (!supportsPatternMatchingInstanceof(state.context)) {
       return NO_MATCH;
     }
-    ImmutableSet<InstanceOfTree> instanceofChecks = scanForInstanceOf(tree.getCondition());
-    if (instanceofChecks.isEmpty()) {
+    var enclosingIf = findEnclosingIf(instanceOfTree, state);
+    if (enclosingIf != null) {
+      var replaceExistingVariable = checkForImmediateVariable(instanceOfTree, state, enclosingIf);
+      if (replaceExistingVariable != NO_MATCH) {
+        return replaceExistingVariable;
+      }
+      if (getSymbol(instanceOfTree.getExpression()) instanceof VarSymbol varSymbol) {
+        Type targetType = getType(instanceOfTree.getType());
+        var allCasts = findAllCasts(varSymbol, enclosingIf.getThenStatement(), targetType, state);
+        if (!allCasts.isEmpty()) {
+          // This is a gamble as to an appropriate name. We could make sure it doesn't clash with
+          // anything in scope, but that's effort.
+          var name = lowerFirstLetter(targetType.tsym.getSimpleName().toString());
+          return describeMatch(
+              instanceOfTree,
+              SuggestedFix.builder()
+                  .postfixWith(instanceOfTree, " " + name)
+                  .merge(
+                      allCasts.stream()
+                          .map(c -> SuggestedFix.replace(c, name))
+                          .collect(mergeFixes()))
+                  .build());
+        }
+      }
+    }
+    // TODO(ghm): Handle things other than just ifs. It'd be great to refactor `foo instanceof Bar
+    // && ((Bar) foo).baz()`.
+    return NO_MATCH;
+  }
+
+  private Description checkForImmediateVariable(
+      InstanceOfTree instanceOfTree, VisitorState state, IfTree enclosingIf) {
+    var body = enclosingIf.getThenStatement();
+    if (!(body instanceof BlockTree block)) {
       return NO_MATCH;
     }
-    var body = tree.getThenStatement();
-    if (!(body instanceof BlockTree)) {
-      return NO_MATCH;
-    }
-    var block = (BlockTree) body;
     if (block.getStatements().isEmpty()) {
       return NO_MATCH;
     }
     var firstStatement = block.getStatements().get(0);
-    if (!(firstStatement instanceof VariableTree)) {
+    if (!(firstStatement instanceof VariableTree variableTree)) {
       return NO_MATCH;
     }
-    var variableTree = (VariableTree) firstStatement;
-    if (!(variableTree.getInitializer() instanceof TypeCastTree)) {
+    if (!(variableTree.getInitializer() instanceof TypeCastTree typeCast)) {
       return NO_MATCH;
     }
-    var typeCast = (TypeCastTree) variableTree.getInitializer();
-    var matchingInstanceof =
-        instanceofChecks.stream()
-            .filter(
-                i ->
-                    state.getTypes().isSameType(getType(i.getType()), getType(typeCast.getType()))
-                        && getSymbol(i.getExpression()) instanceof VarSymbol
-                        && getSymbol(i.getExpression()).equals(getSymbol(typeCast.getExpression())))
-            .findFirst()
-            .orElse(null);
-    if (matchingInstanceof == null) {
+    // TODO(ghm): Relax the requirement of this being an exact same symbol. Handle expressions?
+    if (!(state.getTypes().isSubtype(getType(instanceOfTree.getType()), getType(typeCast.getType()))
+        && getSymbol(instanceOfTree.getExpression()) instanceof VarSymbol varSymbol
+        && varSymbol.equals(getSymbol(typeCast.getExpression())))) {
       return NO_MATCH;
     }
     return describeMatch(
         firstStatement,
         SuggestedFix.builder()
             .delete(variableTree)
-            .postfixWith(matchingInstanceof, " " + variableTree.getName().toString())
+            .postfixWith(instanceOfTree, " " + variableTree.getName().toString())
             .build());
   }
 
-  private ImmutableSet<InstanceOfTree> scanForInstanceOf(ExpressionTree condition) {
-    ImmutableSet.Builder<InstanceOfTree> instanceOfs = ImmutableSet.builder();
-    new SimpleTreeVisitor<Void, Void>() {
-      @Override
-      public Void visitParenthesized(ParenthesizedTree tree, Void unused) {
-        return visit(tree.getExpression(), null);
-      }
-
-      @Override
-      public Void visitBinary(BinaryTree tree, Void unused) {
-        if (tree.getKind() != Kind.CONDITIONAL_AND) {
+  /**
+   * Finds the enclosing IfTree if the provided {@code instanceof} is guaranteed to imply the then
+   * branch.
+   */
+  // TODO(ghm): handle _inverted_ ifs.
+  private static @Nullable IfTree findEnclosingIf(InstanceOfTree tree, VisitorState state) {
+    Tree last = tree;
+    for (Tree parent : state.getPath().getParentPath()) {
+      switch (parent.getKind()) {
+        case CONDITIONAL_AND, PARENTHESIZED -> {}
+        case IF -> {
+          if (((IfTree) parent).getCondition() == last) {
+            return (IfTree) parent;
+          } else {
+            return null;
+          }
+        }
+        default -> {
           return null;
         }
-        visit(tree.getLeftOperand(), null);
-        visit(tree.getRightOperand(), null);
-        return null;
       }
+      last = parent;
+    }
+    return null;
+  }
 
+  /** Finds all casts of {@code symbol} which are cast to {@code targetType} within {@code tree}. */
+  private static ImmutableSet<Tree> findAllCasts(
+      VarSymbol symbol, StatementTree tree, Type targetType, VisitorState state) {
+    ImmutableSet.Builder<Tree> usages = ImmutableSet.builder();
+    new TreePathScanner<Void, Void>() {
       @Override
-      public Void visitInstanceOf(InstanceOfTree tree, Void unused) {
-        instanceOfs.add(tree);
-        return null;
+      public Void visitTypeCast(TypeCastTree node, Void unused) {
+        if (getSymbol(node.getExpression()) instanceof VarSymbol v) {
+          if (v.equals(symbol) && state.getTypes().isSubtype(targetType, getType(node.getType()))) {
+            usages.add(
+                getCurrentPath().getParentPath().getLeaf() instanceof ParenthesizedTree p
+                    ? p
+                    : node);
+          }
+        }
+        return super.visitTypeCast(node, null);
       }
-    }.visit(condition, null);
-    return instanceOfs.build();
+    }.scan(new TreePath(new TreePath(state.getPath().getCompilationUnit()), tree), null);
+    return usages.build();
+  }
+
+  private static String lowerFirstLetter(String description) {
+    return Character.toLowerCase(description.charAt(0)) + description.substring(1);
   }
 }

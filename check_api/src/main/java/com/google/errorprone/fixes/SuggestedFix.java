@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collector;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -166,6 +167,11 @@ public abstract class SuggestedFix implements Fix {
       builder.merge(fix);
     }
     return builder.build();
+  }
+
+  public static Collector<SuggestedFix, ?, SuggestedFix> mergeFixes() {
+    return Collector.of(
+        SuggestedFix::builder, Builder::merge, Builder::merge, SuggestedFix.Builder::build);
   }
 
   public static Builder builder() {
