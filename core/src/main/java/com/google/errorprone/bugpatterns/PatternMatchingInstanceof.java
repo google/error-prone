@@ -101,7 +101,9 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
       return NO_MATCH;
     }
     // TODO(ghm): Relax the requirement of this being an exact same symbol. Handle expressions?
-    if (!(state.getTypes().isSubtype(getType(instanceOfTree.getType()), getType(typeCast.getType()))
+    if (!(state
+            .getTypes()
+            .isSubtype(getType(instanceOfTree.getType()), getType(variableTree.getType()))
         && getSymbol(instanceOfTree.getExpression()) instanceof VarSymbol varSymbol
         && varSymbol.equals(getSymbol(typeCast.getExpression())))) {
       return NO_MATCH;
