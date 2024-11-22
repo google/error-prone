@@ -44,7 +44,7 @@ public final class UndefinedEqualsTest {
 
             class Test {
               void f(Queue a, Queue b) {
-                // BUG: Diagnostic contains: Subtypes of Queue are not guaranteed
+                // BUG: Diagnostic contains: Queue does not have well-defined equality semantics
                 a.equals(b);
               }
             }
@@ -509,6 +509,42 @@ public final class UndefinedEqualsTest {
               void f(CharSequence a, String b) {
                 assertThat(a.toString()).isEqualTo(b);
                 assertThat(b).isEqualTo(a.toString());
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void futures() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.common.util.concurrent.ListenableFuture;
+            import com.google.common.util.concurrent.SettableFuture;
+            import java.util.concurrent.CompletableFuture;
+            import java.util.concurrent.Future;
+
+            class Test {
+              void listenableFuture(ListenableFuture a, ListenableFuture b) {
+                // BUG: Diagnostic contains: Future does not have well-defined equality semantics
+                a.equals(b);
+              }
+
+              void settableFuture(SettableFuture a, SettableFuture b) {
+                // BUG: Diagnostic contains: Future does not have well-defined equality semantics
+                a.equals(b);
+              }
+
+              void completableFuture(CompletableFuture a, CompletableFuture b) {
+                // BUG: Diagnostic contains: Future does not have well-defined equality semantics
+                a.equals(b);
+              }
+
+              void future(Future a, Future b) {
+                // BUG: Diagnostic contains: Future does not have well-defined equality semantics
+                a.equals(b);
               }
             }
             """)

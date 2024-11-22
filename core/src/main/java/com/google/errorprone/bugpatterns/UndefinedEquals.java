@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.fixes.SuggestedFix.emptyFix;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.assertEqualsInvocation;
@@ -55,7 +56,7 @@ import java.util.function.BiFunction;
  * @author eleanorh@google.com (Eleanor Harris)
  */
 @BugPattern(
-    summary = "This type is not guaranteed to implement a useful #equals method.",
+    summary = "This type is not guaranteed to implement a useful equals() method.",
     severity = WARNING)
 public final class UndefinedEquals extends BugChecker implements MethodInvocationTreeMatcher {
 
@@ -102,13 +103,8 @@ public final class UndefinedEquals extends BugChecker implements MethodInvocatio
         .map(
             b ->
                 buildDescription(tree)
-                    .setMessage(
-                        "Subtypes of "
-                            + b.shortName()
-                            + " are not guaranteed to implement a useful #equals method.")
-                    .addFix(
-                        generateFix(tree, state, receiver, argument)
-                            .orElse(SuggestedFix.emptyFix()))
+                    .setMessage(b.shortName() + " does not have well-defined equality semantics")
+                    .addFix(generateFix(tree, state, receiver, argument).orElse(emptyFix()))
                     .build())
         .orElse(Description.NO_MATCH);
   }
@@ -140,18 +136,18 @@ public final class UndefinedEquals extends BugChecker implements MethodInvocatio
 
       // If both are subtypes of Iterable, rewrite
       Type iterableType = state.getSymtab().iterableType;
-      Type multimapType = COM_GOOGLE_COMMON_COLLECT_MULTIMAP.get(state);
+      Type multimapType = MULTIMAP.get(state);
       Optional<SuggestedFix> fix =
-          firstPresent(
-              generateTruthFix.apply(iterableType, "containsExactlyElementsIn"),
-              generateTruthFix.apply(multimapType, "containsExactlyEntriesIn"));
+          generateTruthFix
+              .apply(iterableType, "containsExactlyElementsIn")
+              .or(() -> generateTruthFix.apply(multimapType, "containsExactlyEntriesIn"));
       if (fix.isPresent()) {
         return fix;
       }
     }
 
     // Generate fix for CharSequence
-    Type charSequenceType = JAVA_LANG_CHARSEQUENCE.get(state);
+    Type charSequenceType = CHAR_SEQUENCE.get(state);
     BiFunction<Tree, Tree, Optional<SuggestedFix>> generateCharSequenceFix =
         (maybeCharSequence, maybeString) -> {
           if (charSequenceType != null
@@ -161,23 +157,14 @@ public final class UndefinedEquals extends BugChecker implements MethodInvocatio
           }
           return Optional.empty();
         };
-    return firstPresent(
-        generateCharSequenceFix.apply(receiver, argument),
-        generateCharSequenceFix.apply(argument, receiver));
+    return generateCharSequenceFix
+        .apply(receiver, argument)
+        .or(() -> generateCharSequenceFix.apply(argument, receiver));
   }
 
-  private static <T> Optional<T> firstPresent(Optional<T>... optionals) {
-    for (Optional<T> optional : optionals) {
-      if (optional.isPresent()) {
-        return optional;
-      }
-    }
-    return Optional.empty();
-  }
-
-  private static final Supplier<Type> COM_GOOGLE_COMMON_COLLECT_MULTIMAP =
+  private static final Supplier<Type> MULTIMAP =
       VisitorState.memoize(state -> state.getTypeFromString("com.google.common.collect.Multimap"));
 
-  private static final Supplier<Type> JAVA_LANG_CHARSEQUENCE =
+  private static final Supplier<Type> CHAR_SEQUENCE =
       VisitorState.memoize(state -> state.getTypeFromString("java.lang.CharSequence"));
 }

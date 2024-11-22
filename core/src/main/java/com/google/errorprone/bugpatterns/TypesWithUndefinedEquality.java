@@ -28,6 +28,12 @@ public enum TypesWithUndefinedEquality {
   CHAR_SEQUENCE("CharSequence", "java.lang.CharSequence"),
   COLLECTION("Collection", "java.util.Collection"),
   DATE("Date", "java.util.Date"),
+  FUTURE(
+      "Future",
+      "java.util.concurrent.Future",
+      "java.util.concurrent.CompletableFuture",
+      "com.google.common.util.concurrent.ListenableFuture",
+      "com.google.common.util.concurrent.SettableFuture"),
   IMMUTABLE_COLLECTION("ImmutableCollection", "com.google.common.collect.ImmutableCollection"),
   IMMUTABLE_MULTIMAP("ImmutableMultimap", "com.google.common.collect.ImmutableMultimap"),
   ITERABLE("Iterable", "com.google.common.collect.FluentIterable", "java.lang.Iterable"),
@@ -45,6 +51,7 @@ public enum TypesWithUndefinedEquality {
   private final String shortName;
   private final ImmutableSet<String> typeNames;
 
+  // TODO: kak - should we add a bit which determines if we should check isSameType or isSubtype?
   TypesWithUndefinedEquality(String shortName, String... typeNames) {
     this.shortName = shortName;
     this.typeNames = ImmutableSet.copyOf(typeNames);
