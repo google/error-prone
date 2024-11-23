@@ -85,6 +85,10 @@ public class InfiniteRecursion extends BugChecker implements MethodTreeMatcher {
        * Since we're scanning such code only for `return` statements, there's no need to scan any
        * code that contains only expressions (e.g., for a ternary, getTrueExpression()
        * and getFalseExpression()).
+       *
+       * TODO(cpovirk): Enhance the check to look at conditionally executed code (including
+       * expression-only code) to identify conditionals for which *every* branch makes a recursive
+       * call.
        */
 
       @Override
@@ -99,18 +103,6 @@ public class InfiniteRecursion extends BugChecker implements MethodTreeMatcher {
       @Override
       public Void visitCase(CaseTree tree, Boolean underConditional) {
         return super.visitCase(tree, /*underConditional*/ true);
-      }
-
-      @Override
-      public Void visitCatch(CatchTree tree, Boolean underConditional) {
-        /*
-         * We mostly ignore exceptions. Notably, if a loop would be infinite *except* that it throws
-         * an exception, we still report it as an infinite loop. But we do want to consider `catch`
-         * blocks to be conditionally executed, since it would be reasonable for a method to
-         * delegate to itself (on another object or with a different argument) in case of an
-         * exception. For example, `toString(COMPLEX)` might fall back to `toString(SIMPLE)`.
-         */
-        return super.visitCatch(tree, /*underConditional*/ true);
       }
 
       @Override
@@ -149,6 +141,40 @@ public class InfiniteRecursion extends BugChecker implements MethodTreeMatcher {
       public Void visitWhileLoop(WhileLoopTree tree, Boolean underConditional) {
         scan(tree.getCondition(), underConditional);
         scan(tree.getStatement(), /*underConditional*/ true);
+        return null;
+      }
+
+      /*
+       * We ignore the possibility of exceptions. After all, if we were to say "The recursion in
+       * this method might not be infinite because the method might throw an exception," then we'd
+       * report infinite recursion almost nowhere, given that almost any code can throw an exception
+       * (especially a RuntimeException or Error). So:
+       *
+       * For a `try` block: We treat the whole thing as executed unconditionally. Yes, some of its
+       * code could throw an exception, but that's equally true for code outside a `try` block, as
+       * discussed above.
+       *
+       * For a `catch` block:
+       *
+       * - Clearly it's not executed _unconditionally_, so we don't want to perform our normal
+       *   scanning, which would report errors for any recursive calls. (For example, maybe a
+       *   `toString(Style)` method has a `catch` block that calls `toString(Style.SIMPLE)`, but it
+       *   can't create infinite recursion because the `catch` block can entered only for
+       *   `Style.DETAILED`. Such code would be more than a little scary (given that some very
+       *   _similar_ code _could_ produce infinite recursion!), but it would be wrong to flag it as
+       *   infinite recursion.)
+       *
+       * - While it would make conceptual sense to say that it's executed _conditionally_, that
+       *   doesn't fit with the policy above: Recall that the whole reason that we scan
+       *   conditionally executed code is to see if it might `return`, since a conditional `return`
+       *   can preventing subsequent code from making recursive calls. But also recall that we are
+       *   ignoring the possibility of exceptions. Thus, we don't want to say "The recursion in this
+       *   method might not be infinite because the method might throw an exception _and then catch
+       *   it and return_."
+       */
+
+      @Override
+      public Void visitCatch(CatchTree tree, Boolean underConditional) {
         return null;
       }
 

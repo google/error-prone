@@ -260,7 +260,7 @@ public class InfiniteRecursionTest {
   }
 
   @Test
-  public void negativeConditional() {
+  public void negativeIfConditional() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -270,6 +270,52 @@ public class InfiniteRecursionTest {
                 if (callAgain) {
                   f(false);
                 }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void negativeSwitchStatementConditional() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            final class Test {
+              void f(CallAgain callAgain) {
+                switch (callAgain) {
+                  case TRUE:
+                    f(CallAgain.FALSE);
+                }
+              }
+
+              enum CallAgain {
+                TRUE,
+                FALSE,
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void negativeSwitchExpressionConditional() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            final class Test {
+              int f(CallAgain callAgain) {
+                return switch (callAgain) {
+                  case TRUE -> f(CallAgain.FALSE) + 1;
+                  case FALSE -> 0;
+                };
+              }
+
+              enum CallAgain {
+                TRUE,
+                FALSE,
               }
             }
             """)
@@ -465,6 +511,27 @@ public class InfiniteRecursionTest {
               String asString() {
                 // BUG: Diagnostic contains:
                 return '{' + asString() + '}';
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void positiveCatchAndReturnDoesNotMakeItSafe() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            final class Test {
+              void f() {
+                try {
+                  System.out.println("hi");
+                } catch (Exception e) {
+                  return;
+                }
+                // BUG: Diagnostic contains:
+                f();
               }
             }
             """)
