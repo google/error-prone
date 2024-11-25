@@ -17,7 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Iterables.getLast;
-import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static java.util.stream.Collectors.joining;
@@ -36,7 +36,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
-@BugPattern(summary = "Both branches contain identical code", severity = ERROR)
+@BugPattern(summary = "Both branches contain identical code", severity = WARNING)
 public class DuplicateBranches extends BugChecker
     implements IfTreeMatcher, ConditionalExpressionTreeMatcher {
   @Override
