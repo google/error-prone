@@ -98,8 +98,8 @@ public class TestExceptionChecker extends BugChecker implements MethodTreeMatche
     prefix.append(
         String.format("assertThrows(%s, () -> ", state.getSourceForNode(expectedException)));
     StatementTree last = getLast(statements);
-    if (last instanceof ExpressionStatementTree) {
-      ExpressionTree expression = ((ExpressionStatementTree) last).getExpression();
+    if (last instanceof ExpressionStatementTree expressionStatementTree) {
+      ExpressionTree expression = expressionStatementTree.getExpression();
       fix.prefixWith(expression, prefix.toString());
       fix.postfixWith(expression, ")");
     } else {

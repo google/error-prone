@@ -152,8 +152,8 @@ public final class InvalidParam extends BugChecker implements ClassTreeMatcher, 
       ImmutableSet<String> paramNames = paramTree.isTypeParameter() ? typeParameters : parameters;
       if (!paramTree.getDescription().isEmpty()) {
         var firstDescription = paramTree.getDescription().get(0);
-        if (firstDescription instanceof DCText) {
-          if (((DCText) firstDescription).getBody().startsWith(":")) {
+        if (firstDescription instanceof DCText dcText) {
+          if (dcText.getBody().startsWith(":")) {
             int colonLocation = Utils.getEndPosition(paramTree.getName(), state);
             if (state.getSourceCode().charAt(colonLocation) == ':') {
               state.reportMatch(

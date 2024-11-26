@@ -66,10 +66,10 @@ public class BadShiftAmount extends BugChecker implements BinaryTreeMatcher {
           }
 
           ExpressionTree rightOperand = tree.getRightOperand();
-          if (rightOperand instanceof LiteralTree) {
-            Object rightValue = ((LiteralTree) rightOperand).getValue();
-            if (rightValue instanceof Number) {
-              int intValue = ((Number) rightValue).intValue();
+          if (rightOperand instanceof LiteralTree literalTree) {
+            Object rightValue = literalTree.getValue();
+            if (rightValue instanceof Number number) {
+              int intValue = number.intValue();
               return intValue < 0 || intValue > 31;
             }
           }

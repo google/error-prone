@@ -75,17 +75,16 @@ public final class DirectInvocationOnMock extends BugChecker implements Compilat
           var receiver = getReceiver(tree);
           if (receiver != null && WHEN.matches(receiver, state)) {
             ExpressionTree firstArgument = ((MethodInvocationTree) receiver).getArguments().get(0);
-            var firstArgumentSymbol = getSymbol(firstArgument);
-            if (firstArgumentSymbol instanceof MethodSymbol) {
-              methodsCallingRealImplementations.add((MethodSymbol) firstArgumentSymbol);
+            if (getSymbol(firstArgument) instanceof MethodSymbol methodSymbol) {
+              methodsCallingRealImplementations.add(methodSymbol);
             }
           }
           return super.visitMethodInvocation(tree, null);
         }
         if (DO_CALL_REAL_METHOD.matches(tree, state)) {
-          var methodSymbol = getSymbol(getCurrentPath().getParentPath().getParentPath().getLeaf());
-          if (methodSymbol instanceof MethodSymbol) {
-            methodsCallingRealImplementations.add((MethodSymbol) methodSymbol);
+          if (getSymbol(getCurrentPath().getParentPath().getParentPath().getLeaf())
+              instanceof MethodSymbol methodSymbol) {
+            methodsCallingRealImplementations.add(methodSymbol);
           }
           return super.visitMethodInvocation(tree, null);
         }
@@ -160,8 +159,8 @@ public final class DirectInvocationOnMock extends BugChecker implements Compilat
       public Void visitAssignment(AssignmentTree tree, Void unused) {
         if (MOCK.matches(tree.getExpression(), state)) {
           var symbol = getSymbol(tree.getVariable());
-          if (symbol instanceof VarSymbol) {
-            mocks.add((VarSymbol) symbol);
+          if (symbol instanceof VarSymbol varSymbol) {
+            mocks.add(varSymbol);
           }
         }
         return super.visitAssignment(tree, null);

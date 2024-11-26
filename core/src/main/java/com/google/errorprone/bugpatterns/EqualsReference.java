@@ -76,8 +76,8 @@ public class EqualsReference extends BugChecker implements MethodTreeMatcher {
           methodInvocationTree.getArguments().size() == 1
               && Objects.equals(
                   ASTHelpers.getSymbol(methodInvocationTree.getArguments().get(0)), varSymbol);
-      if (methodSelectTree instanceof MemberSelectTree) {
-        memberSelectTree = (MemberSelectTree) methodSelectTree;
+      if (methodSelectTree instanceof MemberSelectTree m) {
+        memberSelectTree = m;
         ExpressionTree e = memberSelectTree.getExpression();
         // this.equals(o)
         // not using o.equals(this) because all instances of this were false positives

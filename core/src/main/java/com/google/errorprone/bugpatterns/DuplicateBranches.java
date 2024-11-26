@@ -73,9 +73,9 @@ public class DuplicateBranches extends BugChecker
     int start = getStartPosition(elseTree);
     int end = state.getEndPosition(elseTree);
     boolean needsBraces = false;
-    if (elseTree instanceof BlockTree) {
+    if (elseTree instanceof BlockTree blockTree) {
       needsBraces = !state.getPath().getParentPath().getLeaf().getKind().equals(Kind.BLOCK);
-      var statements = ((BlockTree) elseTree).getStatements();
+      var statements = blockTree.getStatements();
       if (statements.isEmpty()) {
         start = end;
       } else {

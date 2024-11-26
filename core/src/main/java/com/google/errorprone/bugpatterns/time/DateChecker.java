@@ -157,8 +157,8 @@ public final class DateChecker extends BugChecker
   private static void checkMonth(ExpressionTree tree, List<String> errors) {
     checkBounds(tree, "0-based month", MONTH_RANGE, errors);
 
-    if (tree instanceof LiteralTree) {
-      int monthValue = (int) ((LiteralTree) tree).getValue();
+    if (tree instanceof LiteralTree literalTree) {
+      int monthValue = (int) literalTree.getValue();
       try {
         errors.add(
             String.format(

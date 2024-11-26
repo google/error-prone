@@ -155,11 +155,12 @@ public final class TemporalAccessorGetChronoField extends BugChecker
   }
 
   private static Optional<String> getEnumName(ExpressionTree chronoField) {
-    if (chronoField instanceof IdentifierTree) { // e.g., SECOND_OF_DAY
-      return Optional.of(((IdentifierTree) chronoField).getName().toString());
+    if (chronoField instanceof IdentifierTree identifierTree) { // e.g., SECOND_OF_DAY
+      return Optional.of(identifierTree.getName().toString());
     }
-    if (chronoField instanceof MemberSelectTree) { // e.g., ChronoField.SECOND_OF_DAY
-      return Optional.of(((MemberSelectTree) chronoField).getIdentifier().toString());
+    if (chronoField
+        instanceof MemberSelectTree memberSelectTree) { // e.g., ChronoField.SECOND_OF_DAY
+      return Optional.of(memberSelectTree.getIdentifier().toString());
     }
     return Optional.empty();
   }

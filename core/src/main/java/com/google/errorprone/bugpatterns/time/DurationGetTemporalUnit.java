@@ -107,11 +107,11 @@ public final class DurationGetTemporalUnit extends BugChecker
   }
 
   private static Optional<String> getEnumName(ExpressionTree temporalUnit) {
-    if (temporalUnit instanceof IdentifierTree) { // e.g., SECONDS
-      return Optional.of(((IdentifierTree) temporalUnit).getName().toString());
+    if (temporalUnit instanceof IdentifierTree identifierTree) { // e.g., SECONDS
+      return Optional.of(identifierTree.getName().toString());
     }
-    if (temporalUnit instanceof MemberSelectTree) { // e.g., ChronoUnit.SECONDS
-      return Optional.of(((MemberSelectTree) temporalUnit).getIdentifier().toString());
+    if (temporalUnit instanceof MemberSelectTree memberSelectTree) { // e.g., ChronoUnit.SECONDS
+      return Optional.of(memberSelectTree.getIdentifier().toString());
     }
     return Optional.empty();
   }

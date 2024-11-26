@@ -99,7 +99,7 @@ public class StreamResourceLeak extends AbstractMustBeClosedChecker implements M
       fix.replace(tree, "stream");
       fix.postfixWith(statement, "}");
       return fix.build();
-    } else if (parent instanceof VariableTree) {
+    } else if (parent instanceof VariableTree variableTree) {
       // If the stream is assigned to a variable, wrap the variable in a try-with-resources
       // that includes all statements in the same block that reference the variable.
       Tree grandParent = parentPath.getParentPath().getLeaf();
@@ -130,9 +130,7 @@ public class StreamResourceLeak extends AbstractMustBeClosedChecker implements M
       }
       fix.prefixWith(parent, "try (");
       fix.replace(
-          state.getEndPosition(((VariableTree) parent).getInitializer()),
-          state.getEndPosition(parent),
-          ") {");
+          state.getEndPosition(variableTree.getInitializer()), state.getEndPosition(parent), ") {");
       fix.postfixWith(statements.get(lastUse), "}");
       return fix.build();
     } else if (parent instanceof EnhancedForLoopTree) {

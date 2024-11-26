@@ -123,10 +123,10 @@ public final class EqualsGetClass extends BugChecker implements MethodInvocation
         return true;
       }
       while (!(receiver instanceof IdentifierTree)) {
-        if (receiver instanceof ParenthesizedTree) {
-          receiver = ((ParenthesizedTree) receiver).getExpression();
-        } else if (receiver instanceof TypeCastTree) {
-          receiver = ((TypeCastTree) receiver).getExpression();
+        if (receiver instanceof ParenthesizedTree parenthesizedTree) {
+          receiver = parenthesizedTree.getExpression();
+        } else if (receiver instanceof TypeCastTree typeCastTree) {
+          receiver = typeCastTree.getExpression();
         } else {
           return false;
         }

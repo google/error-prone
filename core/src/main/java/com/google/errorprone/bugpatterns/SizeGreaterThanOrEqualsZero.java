@@ -158,8 +158,8 @@ public class SizeGreaterThanOrEqualsZero extends BugChecker implements BinaryTre
       } else if (PROTO_REPEATED_FIELD_COUNT_METHOD.matches(callToSize, state)) {
         return provideReplacementForProtoMethodInvocation(tree, callToSize, state);
       }
-    } else if (operand instanceof MemberSelectTree) {
-      if (arrayLengthMatcher((MemberSelectTree) operand, state)) {
+    } else if (operand instanceof MemberSelectTree memberSelectTree) {
+      if (arrayLengthMatcher(memberSelectTree, state)) {
         return removeEqualsFromComparison(tree, state, expressionType);
       }
     }

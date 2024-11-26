@@ -87,12 +87,12 @@ final class EnclosedByReverseHeuristic implements Heuristic {
   }
 
   private static Optional<String> getName(Tree tree) {
-    if (tree instanceof MethodTree) {
-      return Optional.of(((MethodTree) tree).getName().toString());
+    if (tree instanceof MethodTree methodTree) {
+      return Optional.of(methodTree.getName().toString());
     }
 
-    if (tree instanceof ClassTree) {
-      return Optional.of(((ClassTree) tree).getSimpleName().toString());
+    if (tree instanceof ClassTree classTree) {
+      return Optional.of(classTree.getSimpleName().toString());
     }
 
     return Optional.empty();

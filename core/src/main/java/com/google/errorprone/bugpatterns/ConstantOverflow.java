@@ -95,8 +95,9 @@ public class ConstantOverflow extends BugChecker implements BinaryTreeMatcher {
     }
     SuggestedFix.Builder fix = SuggestedFix.builder().postfixWith(expr, "L");
     Tree parent = state.getPath().getParentPath().getLeaf();
-    if (parent instanceof VariableTree && isSameType(getType(parent), intType, state)) {
-      Tree type = ((VariableTree) parent).getType();
+    if (parent instanceof VariableTree variableTree
+        && isSameType(getType(parent), intType, state)) {
+      Tree type = variableTree.getType();
       if (hasExplicitSource(type, state)) {
         fix.replace(type, "long");
       }

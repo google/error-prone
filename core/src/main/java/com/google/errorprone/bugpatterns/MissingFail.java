@@ -480,10 +480,10 @@ public class MissingFail extends BugChecker implements TryTreeMatcher {
     private static boolean matches(List<? extends ExpressionTree> expressionTrees) {
       Set<Integer> foundValues = new HashSet<>();
       for (Tree tree : expressionTrees) {
-        if (tree instanceof LiteralTree) {
-          Object value = ((LiteralTree) tree).getValue();
-          if (value instanceof Integer) {
-            boolean duplicate = !foundValues.add((Integer) value);
+        if (tree instanceof LiteralTree literalTree) {
+          Object value = literalTree.getValue();
+          if (value instanceof Integer integer) {
+            boolean duplicate = !foundValues.add(integer);
             if (!duplicate && foundValues.size() > 1) {
               return true;
             }

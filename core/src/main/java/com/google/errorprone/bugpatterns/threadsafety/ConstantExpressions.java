@@ -359,9 +359,10 @@ public final class ConstantExpressions {
     if (isPureIdentifier(tree)) {
       return Optional.of(
           PureMethodInvocation.of(getSymbol(tree), ImmutableList.of(), receiverConstant));
-    } else if (tree instanceof MethodInvocationTree && pureMethods.matches(tree, state)) {
+    } else if (tree instanceof MethodInvocationTree methodInvocationTree
+        && pureMethods.matches(tree, state)) {
       ImmutableList.Builder<ConstantExpression> arguments = ImmutableList.builder();
-      for (ExpressionTree argument : ((MethodInvocationTree) tree).getArguments()) {
+      for (ExpressionTree argument : methodInvocationTree.getArguments()) {
         Optional<ConstantExpression> argumentConstant = constantExpression(argument, state);
         if (argumentConstant.isEmpty()) {
           return Optional.empty();

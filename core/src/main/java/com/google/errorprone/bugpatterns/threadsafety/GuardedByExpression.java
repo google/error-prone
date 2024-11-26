@@ -227,11 +227,11 @@ public abstract class GuardedByExpression {
     }
 
     Select select(GuardedByExpression base, Symbol member) {
-      if (member instanceof VarSymbol) {
-        return select(base, (VarSymbol) member);
+      if (member instanceof VarSymbol varSymbol) {
+        return select(base, varSymbol);
       }
-      if (member instanceof MethodSymbol) {
-        return select(base, (MethodSymbol) member);
+      if (member instanceof MethodSymbol methodSymbol) {
+        return select(base, methodSymbol);
       }
       throw new IllegalStateException("Bad select expression: expected symbol " + member.getKind());
     }

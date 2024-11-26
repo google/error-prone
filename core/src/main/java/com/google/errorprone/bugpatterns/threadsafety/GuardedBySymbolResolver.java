@@ -224,8 +224,8 @@ public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
       ExpressionTree arg = method.argument(idx);
       if (arg != null) {
         Symbol sym = ASTHelpers.getSymbol(arg);
-        if (sym instanceof VarSymbol) {
-          return (VarSymbol) sym;
+        if (sym instanceof VarSymbol varSymbol) {
+          return varSymbol;
         }
       }
       return param;

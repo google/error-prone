@@ -412,8 +412,8 @@ public final class MixedMutabilityReturnType extends BugChecker
       }
       if (parent instanceof MemberSelectTree) {
         Tree grandParent = getCurrentPath().getParentPath().getParentPath().getLeaf();
-        if (grandParent instanceof MethodInvocationTree) {
-          if (!details.appendMethods().matches((MethodInvocationTree) grandParent, state)) {
+        if (grandParent instanceof MethodInvocationTree methodInvocationTree) {
+          if (!details.appendMethods().matches(methodInvocationTree, state)) {
             failed = true;
             return null;
           }

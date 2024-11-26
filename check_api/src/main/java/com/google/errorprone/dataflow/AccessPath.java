@@ -160,14 +160,14 @@ public abstract class AccessPath {
    * path and null otherwise
    */
   public static @Nullable AccessPath fromNodeIfTrackable(Node node) {
-    if (node instanceof LocalVariableNode) {
-      return fromLocalVariable((LocalVariableNode) node);
-    } else if (node instanceof VariableDeclarationNode) {
-      return fromVariableDecl((VariableDeclarationNode) node);
-    } else if (node instanceof FieldAccessNode) {
-      return fromFieldAccess((FieldAccessNode) node);
-    } else if (node instanceof AssignmentNode) {
-      return fromNodeIfTrackable(((AssignmentNode) node).getTarget());
+    if (node instanceof LocalVariableNode localVariableNode) {
+      return fromLocalVariable(localVariableNode);
+    } else if (node instanceof VariableDeclarationNode variableDeclarationNode) {
+      return fromVariableDecl(variableDeclarationNode);
+    } else if (node instanceof FieldAccessNode fieldAccessNode) {
+      return fromFieldAccess(fieldAccessNode);
+    } else if (node instanceof AssignmentNode assignmentNode) {
+      return fromNodeIfTrackable(assignmentNode.getTarget());
     }
     return null;
   }

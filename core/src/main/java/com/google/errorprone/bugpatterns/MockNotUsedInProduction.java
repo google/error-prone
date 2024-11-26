@@ -107,8 +107,8 @@ public final class MockNotUsedInProduction extends BugChecker
 
       private void handle(Tree tree) {
         var symbol = getSymbol(tree);
-        if (symbol instanceof VarSymbol) {
-          usedMocks.add((VarSymbol) symbol);
+        if (symbol instanceof VarSymbol varSymbol) {
+          usedMocks.add(varSymbol);
         }
       }
     }.scan(state.getPath(), null);

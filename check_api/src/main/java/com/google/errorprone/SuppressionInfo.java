@@ -158,8 +158,8 @@ public class SuppressionInfo {
         for (Pair<MethodSymbol, Attribute> value : attr.values) {
           if (value.fst.name.equals(valueName)) {
             if (value.snd
-                instanceof Attribute.Array) { // SuppressWarnings/SuppressLint take an array
-              for (Attribute suppress : ((Attribute.Array) value.snd).values) {
+                instanceof Attribute.Array array) { // SuppressWarnings/SuppressLint take an array
+              for (Attribute suppress : array.values) {
                 String suppressedWarning = (String) suppress.getValue();
                 if (!suppressWarningsStrings.contains(suppressedWarning)) {
                   anyModification = true;

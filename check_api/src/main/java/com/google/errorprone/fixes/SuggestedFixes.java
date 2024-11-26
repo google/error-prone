@@ -795,11 +795,11 @@ public final class SuggestedFixes {
     Tree methodSelect = tree.getMethodSelect();
     Name identifier;
     int startPos;
-    if (methodSelect instanceof MemberSelectTree) {
-      identifier = ((MemberSelectTree) methodSelect).getIdentifier();
-      startPos = state.getEndPosition(((MemberSelectTree) methodSelect).getExpression());
-    } else if (methodSelect instanceof IdentifierTree) {
-      identifier = ((IdentifierTree) methodSelect).getName();
+    if (methodSelect instanceof MemberSelectTree memberSelectTree) {
+      identifier = memberSelectTree.getIdentifier();
+      startPos = state.getEndPosition(memberSelectTree.getExpression());
+    } else if (methodSelect instanceof IdentifierTree identifierTree) {
+      identifier = identifierTree.getName();
       startPos = getStartPosition(tree);
     } else {
       throw malformedMethodInvocationTree(tree);

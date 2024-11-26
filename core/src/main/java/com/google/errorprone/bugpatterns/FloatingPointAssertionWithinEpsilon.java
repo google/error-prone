@@ -249,8 +249,8 @@ public final class FloatingPointAssertionWithinEpsilon extends BugChecker
       if (state.getTypes().unboxedTypeOrType(type).getTag() == typeTag) {
         return source;
       }
-      if (tree instanceof LiteralTree) {
-        Optional<String> suffixed = suffixLiteralIfPossible((LiteralTree) tree, state);
+      if (tree instanceof LiteralTree literalTree) {
+        Optional<String> suffixed = suffixLiteralIfPossible(literalTree, state);
         if (suffixed.isPresent()) {
           return suffixed.get();
         }

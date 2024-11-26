@@ -69,8 +69,8 @@ abstract class RefasterScanner<M extends TemplateMatch, T extends Template<M>>
     if (sym == null || !sym.getQualifiedName().contentEquals(rule().qualifiedTemplateClass())) {
       ListBuffer<JCStatement> statements = new ListBuffer<>();
       for (Tree tree : node.getMembers()) {
-        if (tree instanceof JCStatement) {
-          statements.append((JCStatement) tree);
+        if (tree instanceof JCStatement jCStatement) {
+          statements.append(jCStatement);
         } else {
           tree.accept(this, context);
         }

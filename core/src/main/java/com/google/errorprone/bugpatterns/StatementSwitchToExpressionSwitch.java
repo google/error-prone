@@ -424,8 +424,8 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
       caseAssignmentTargetOptional = Optional.of(compoundAssignmentTree.getVariable());
       caseAssignmentKindOptional = Optional.of(compoundAssignmentTree.getKind());
       caseAssignmentTreeOptional = Optional.of(expression);
-    } else if (expression instanceof AssignmentTree) {
-      caseAssignmentTargetOptional = Optional.of(((AssignmentTree) expression).getVariable());
+    } else if (expression instanceof AssignmentTree assignmentTree) {
+      caseAssignmentTargetOptional = Optional.of(assignmentTree.getVariable());
       caseAssignmentKindOptional = Optional.of(Tree.Kind.ASSIGNMENT);
       caseAssignmentTreeOptional = Optional.of(expression);
     }
@@ -1212,10 +1212,10 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
       int unused = extractLhsComments(caseTree, state, transformedBlockBuilder);
       ExpressionTree expression = ((ExpressionStatementTree) statements.get(0)).getExpression();
       Optional<ExpressionTree> rhs = Optional.empty();
-      if (expression instanceof CompoundAssignmentTree) {
-        rhs = Optional.of(((CompoundAssignmentTree) expression).getExpression());
-      } else if (expression instanceof AssignmentTree) {
-        rhs = Optional.of(((AssignmentTree) expression).getExpression());
+      if (expression instanceof CompoundAssignmentTree compoundAssignmentTree) {
+        rhs = Optional.of(compoundAssignmentTree.getExpression());
+      } else if (expression instanceof AssignmentTree assignmentTree) {
+        rhs = Optional.of(assignmentTree.getExpression());
       }
       codeBlockStart = getStartPosition(rhs.get());
     } else {

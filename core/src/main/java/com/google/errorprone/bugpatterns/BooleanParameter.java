@@ -145,8 +145,8 @@ public class BooleanParameter extends BugChecker
   private static boolean areSingleArgumentsSelfDocumenting(Tree tree) {
     // Consider single-argument booleans for classes whose names contain "Boolean" to be self-
     // documenting. This is aimed at classes like AtomicBoolean which simply wrap a value.
-    if (tree instanceof NewClassTree) {
-      Symbol symbol = ASTHelpers.getSymbol(((NewClassTree) tree).getIdentifier());
+    if (tree instanceof NewClassTree newClassTree) {
+      Symbol symbol = ASTHelpers.getSymbol(newClassTree.getIdentifier());
       return symbol != null && Ascii.toLowerCase(symbol.getSimpleName()).contains("boolean");
     }
     return true;

@@ -171,13 +171,11 @@ public final class DurationToLongTimeUnit extends BugChecker
    * TimeUnit it likely represents.
    */
   static Optional<TimeUnit> getTimeUnit(ExpressionTree timeUnit) {
-    if (timeUnit instanceof IdentifierTree) { // e.g., SECONDS
-      return Enums.getIfPresent(TimeUnit.class, ((IdentifierTree) timeUnit).getName().toString())
-          .toJavaUtil();
+    if (timeUnit instanceof IdentifierTree identifierTree) { // e.g., SECONDS
+      return Enums.getIfPresent(TimeUnit.class, identifierTree.getName().toString()).toJavaUtil();
     }
-    if (timeUnit instanceof MemberSelectTree) { // e.g., TimeUnit.SECONDS
-      return Enums.getIfPresent(
-              TimeUnit.class, ((MemberSelectTree) timeUnit).getIdentifier().toString())
+    if (timeUnit instanceof MemberSelectTree memberSelectTree) { // e.g., TimeUnit.SECONDS
+      return Enums.getIfPresent(TimeUnit.class, memberSelectTree.getIdentifier().toString())
           .toJavaUtil();
     }
     return Optional.empty();

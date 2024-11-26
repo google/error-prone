@@ -36,8 +36,8 @@ interface BaseMethodMatcher {
           // Don't match constructors as they are neither static nor instance methods.
           return null;
         }
-        if (tree instanceof MethodInvocationTree) {
-          tree = ((MethodInvocationTree) tree).getMethodSelect();
+        if (tree instanceof MethodInvocationTree methodInvocationTree) {
+          tree = methodInvocationTree.getMethodSelect();
         }
         return MethodMatchState.create(tree, (MethodSymbol) sym);
       };

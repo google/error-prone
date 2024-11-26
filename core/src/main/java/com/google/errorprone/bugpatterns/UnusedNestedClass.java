@@ -125,8 +125,8 @@ public final class UnusedNestedClass extends BugChecker implements CompilationUn
 
     private void handle(Tree node) {
       for (Symbol symbol = getSymbol(node); symbol != null; symbol = enclosingClass(symbol)) {
-        if (symbol instanceof ClassSymbol && !withinClasses.contains(symbol)) {
-          usedClasses.add((ClassSymbol) symbol);
+        if (symbol instanceof ClassSymbol classSymbol && !withinClasses.contains(symbol)) {
+          usedClasses.add(classSymbol);
         }
       }
     }

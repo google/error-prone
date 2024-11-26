@@ -69,8 +69,8 @@ public class AssertThrowsMultipleStatements extends BugChecker
     int endPosition = state.getEndPosition(statements.get(statements.size() - 2));
     SuggestedFix.Builder fix = SuggestedFix.builder();
     // if the last statement is an expression, convert from a block to expression lambda
-    if (last instanceof ExpressionStatementTree) {
-      fix.replace(body, state.getSourceForNode(((ExpressionStatementTree) last).getExpression()));
+    if (last instanceof ExpressionStatementTree expressionStatementTree) {
+      fix.replace(body, state.getSourceForNode(expressionStatementTree.getExpression()));
     } else {
       fix.replace(startPosition, endPosition, "");
     }

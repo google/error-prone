@@ -214,9 +214,9 @@ public class DefaultCharset extends BugChecker
     }
     if (STRING_GET_BYTES.matches(tree, state)) {
       Tree parent = state.getPath().getParentPath().getLeaf();
-      if (parent instanceof ExpressionTree
+      if (parent instanceof ExpressionTree expressionTree
           && BYTESTRING_COPY_FROM.matches((ExpressionTree) parent, state)) {
-        return byteStringFixes(tree, (ExpressionTree) parent, state);
+        return byteStringFixes(tree, expressionTree, state);
       } else {
         return appendCharsets(tree, tree.getMethodSelect(), tree.getArguments(), state);
       }

@@ -101,8 +101,8 @@ public class VoidMissingNullable extends BugChecker
     }
 
     for (Tree tree : parameterizedTypeTree.getTypeArguments()) {
-      if (tree instanceof WildcardTree) {
-        tree = ((WildcardTree) tree).getBound();
+      if (tree instanceof WildcardTree wildcardTree) {
+        tree = wildcardTree.getBound();
       }
       checkTree(tree, state);
     }
@@ -210,8 +210,8 @@ public class VoidMissingNullable extends BugChecker
   }
 
   private static List<? extends AnnotationTree> annotationsIfAnnotatedTypeTree(Tree tree) {
-    if (tree instanceof AnnotatedTypeTree) {
-      return ((AnnotatedTypeTree) tree).getAnnotations();
+    if (tree instanceof AnnotatedTypeTree annotatedTypeTree) {
+      return annotatedTypeTree.getAnnotations();
     }
     return ImmutableList.of();
   }

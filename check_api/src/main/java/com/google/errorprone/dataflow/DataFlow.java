@@ -98,11 +98,11 @@ public final class DataFlow {
                   ClassTree classTree = null;
                   MethodTree methodTree = null;
                   for (Tree parent : methodPath) {
-                    if (parent instanceof MethodTree) {
-                      methodTree = (MethodTree) parent;
+                    if (parent instanceof MethodTree m) {
+                      methodTree = m;
                     }
-                    if (parent instanceof ClassTree) {
-                      classTree = (ClassTree) parent;
+                    if (parent instanceof ClassTree c) {
+                      classTree = c;
                       break;
                     }
                   }

@@ -91,8 +91,8 @@ public final class UnusedTypeParameter extends BugChecker implements Compilation
       @Override
       public Void scan(Tree tree, Void unused) {
         var symbol = getSymbol(tree);
-        if (symbol instanceof TypeVariableSymbol) {
-          identifiers.add((TypeVariableSymbol) symbol);
+        if (symbol instanceof TypeVariableSymbol typeVariableSymbol) {
+          identifiers.add(typeVariableSymbol);
         }
         return super.scan(tree, null);
       }

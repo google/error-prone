@@ -92,10 +92,10 @@ public class NullnessAnnotations {
 
   private static String simpleName(AnnotationTree annotation) {
     Tree annotationType = annotation.getAnnotationType();
-    if (annotationType instanceof IdentifierTree) {
-      return ((IdentifierTree) annotationType).getName().toString();
-    } else if (annotationType instanceof MemberSelectTree) {
-      return ((MemberSelectTree) annotationType).getIdentifier().toString();
+    if (annotationType instanceof IdentifierTree identifierTree) {
+      return identifierTree.getName().toString();
+    } else if (annotationType instanceof MemberSelectTree memberSelectTree) {
+      return memberSelectTree.getIdentifier().toString();
     } else {
       throw new AssertionError(annotationType.getKind());
     }

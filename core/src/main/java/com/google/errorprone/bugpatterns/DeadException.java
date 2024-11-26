@@ -103,10 +103,10 @@ public class DeadException extends BugChecker implements NewClassTreeMatcher {
       if (enclosing == null) {
         return ImmutableList.of();
       }
-      if (enclosing instanceof BlockTree) {
-        return ((BlockTree) enclosing).getStatements();
-      } else if (enclosing instanceof CaseTree) {
-        return ((CaseTree) enclosing).getStatements();
+      if (enclosing instanceof BlockTree blockTree) {
+        return blockTree.getStatements();
+      } else if (enclosing instanceof CaseTree caseTree) {
+        return caseTree.getStatements();
       } else {
         // findEnclosing given two types must return something of one of those types
         throw new IllegalStateException("enclosing tree not a BlockTree or CaseTree");

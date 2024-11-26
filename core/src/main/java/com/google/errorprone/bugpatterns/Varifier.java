@@ -95,12 +95,12 @@ public final class Varifier extends BugChecker implements VariableTreeMatcher {
       return fix(tree);
     }
     // Foo foo = new Foo(...);
-    if (initializer instanceof NewClassTree
+    if (initializer instanceof NewClassTree newClassTree
         && isSameType(
             getType(((NewClassTree) initializer).getIdentifier()),
             getType(tree.getType()),
             state)) {
-      var identifier = ((NewClassTree) initializer).getIdentifier();
+      var identifier = newClassTree.getIdentifier();
       if (identifier instanceof ParameterizedTypeTree
           && ((ParameterizedTypeTree) identifier).getTypeArguments().isEmpty()) {
         return NO_MATCH;

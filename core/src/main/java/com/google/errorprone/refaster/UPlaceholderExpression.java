@@ -97,9 +97,9 @@ public abstract class UPlaceholderExpression extends UExpression {
 
       @Override
       public JCTree visitIdentifier(IdentifierTree node, Inliner inliner) {
-        if (node instanceof PlaceholderParamIdent) {
+        if (node instanceof PlaceholderParamIdent placeholderParamIdent) {
           try {
-            return arguments.get(((PlaceholderParamIdent) node).param).inline(inliner);
+            return arguments.get(placeholderParamIdent.param).inline(inliner);
           } catch (CouldNotResolveImportException e) {
             throw new UncheckedCouldNotResolveImportException(e);
           }

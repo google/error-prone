@@ -162,10 +162,10 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
       fromAnnotations = NullnessAnnotations.fromAnnotationsOn(inferredType);
     }
     if (!fromAnnotations.isPresent()) {
-      if (declaredType instanceof TypeVariable) {
+      if (declaredType instanceof TypeVariable typeVariable) {
         // Check bounds second so explicit annotations take precedence. Even for bounds we still use
         // equality constraint below since we have to assume the bound as the "worst" case.
-        fromAnnotations = NullnessAnnotations.getUpperBound((TypeVariable) declaredType);
+        fromAnnotations = NullnessAnnotations.getUpperBound(typeVariable);
       } else {
         // Look for a default annotation in scope of either the symbol we're looking at or, if this
         // is a type variable, the type variable declaration's scope, which is effectively the type
@@ -485,8 +485,8 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
     Optional<Nullness> fromAnnotations =
         extractExplicitNullness(lType, argSelector.isEmpty() ? decl : null);
     if (!fromAnnotations.isPresent()) {
-      if (lType instanceof TypeVariable) {
-        fromAnnotations = NullnessAnnotations.getUpperBound((TypeVariable) lType);
+      if (lType instanceof TypeVariable typeVariable) {
+        fromAnnotations = NullnessAnnotations.getUpperBound(typeVariable);
         isBound = true;
       } else {
         fromAnnotations = NullnessAnnotations.fromDefaultAnnotations(decl);

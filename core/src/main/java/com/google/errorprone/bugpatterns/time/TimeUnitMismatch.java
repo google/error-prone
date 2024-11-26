@@ -561,14 +561,14 @@ public final class TimeUnitMismatch extends BugChecker
 
   private static @Nullable Long conversionFactor(ExpressionTree tree) {
     var constValue = constValue(tree);
-    if (constValue instanceof Long) {
+    if (constValue instanceof Long l) {
       // Don't count 0 to be a valid conversion factor, because it _does_ show up as a conversion
       // factor if you're doing integer division (i.e. 1 millisecond = 0 seconds, so the conversion
       // factor naively looks like 0).
-      return (Long) constValue == 0L ? null : (Long) constValue;
+      return l == 0L ? null : l;
     }
-    if (constValue instanceof Integer) {
-      return (Integer) constValue == 0 ? null : ((Integer) constValue).longValue();
+    if (constValue instanceof Integer integer) {
+      return integer == 0 ? null : integer.longValue();
     }
     return null;
   }

@@ -72,9 +72,9 @@ public final class CheckNotNullMultipleTimes extends BugChecker implements Metho
             && getCurrentPath().getParentPath().getLeaf() instanceof StatementTree
             && CHECK_NOT_NULL.matches(tree, state)) {
           Symbol symbol = getSymbol(arguments.get(0));
-          if (symbol instanceof VarSymbol && isConsideredFinal(symbol)) {
-            variables.add((VarSymbol) symbol);
-            lastCheck.put((VarSymbol) symbol, tree);
+          if (symbol instanceof VarSymbol varSymbol && isConsideredFinal(symbol)) {
+            variables.add(varSymbol);
+            lastCheck.put(varSymbol, tree);
           }
         }
         return super.visitMethodInvocation(tree, null);

@@ -202,8 +202,8 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
     // corresponding constructor of the supertype (e.g.: if I extend a class with a @CIRV
     // constructor that I delegate to, then my anonymous class's constructor should *also* be
     // considered @CIRV).
-    if (tree instanceof NewClassTree) {
-      ClassTree anonymousClazz = ((NewClassTree) tree).getClassBody();
+    if (tree instanceof NewClassTree newClassTree) {
+      ClassTree anonymousClazz = newClassTree.getClassBody();
       if (anonymousClazz != null) {
         // There should be a single defined constructor in the anonymous class body
         var constructor =

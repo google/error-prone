@@ -152,8 +152,8 @@ public class ForOverrideChecker extends BugChecker
       path = path.getParentPath();
       if (path != null) {
         Tree leaf = path.getLeaf();
-        if (leaf instanceof MethodTree) {
-          return (MethodTree) leaf;
+        if (leaf instanceof MethodTree methodTree) {
+          return methodTree;
         }
         // if we find a ClassTree before a MethodTree, we must be an initializer
         if (leaf instanceof ClassTree) {

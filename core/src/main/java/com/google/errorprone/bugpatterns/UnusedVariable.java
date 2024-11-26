@@ -482,8 +482,8 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
       } else if (statement.getKind() == Kind.EXPRESSION_STATEMENT) {
         JCTree tree = (JCTree) ((ExpressionStatementTree) statement).getExpression();
 
-        if (tree instanceof CompoundAssignmentTree) {
-          if (hasSideEffect(((CompoundAssignmentTree) tree).getExpression())) {
+        if (tree instanceof CompoundAssignmentTree compoundAssignmentTree) {
+          if (hasSideEffect(compoundAssignmentTree.getExpression())) {
             // If it's a compound assignment, there's no reason we'd want to remove the expression,
             // so don't set `encounteredSideEffects` based on this usage.
             SuggestedFix replacement =
@@ -495,8 +495,8 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
             removeSideEffectsFix.merge(replacement);
             continue;
           }
-        } else if (tree instanceof AssignmentTree) {
-          if (hasSideEffect(((AssignmentTree) tree).getExpression())) {
+        } else if (tree instanceof AssignmentTree assignmentTree) {
+          if (hasSideEffect(assignmentTree.getExpression())) {
             encounteredSideEffects = true;
             keepSideEffectsFix.replace(
                 tree.getStartPosition(), ((JCAssign) tree).getExpression().getStartPosition(), "");

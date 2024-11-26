@@ -284,8 +284,9 @@ public class UnsafeWildcard extends BugChecker
     int i = 0;
     for (Type arg : targetType.getTypeArguments()) {
       // Check components of generic types (getTypeArguments() is empty for other kinds of types)
-      if (arg instanceof WildcardType && ((WildcardType) arg).getSuperBound() != null) {
-        Type lowerBound = ((WildcardType) arg).getSuperBound();
+      if (arg instanceof WildcardType wildcardType
+          && ((WildcardType) arg).getSuperBound() != null) {
+        Type lowerBound = wildcardType.getSuperBound();
         // We only check lower bounds that are themselves type variables with trivial upper bounds.
         // Javac already checks other lower bounds, namely lower bounds that are concrete types or
         // type variables with non-trivial upper bounds, to be in bounds of the corresponding type
@@ -336,14 +337,12 @@ public class UnsafeWildcard extends BugChecker
         if (contained != Description.NO_MATCH) {
           return contained;
         }
-      } else if (arg instanceof WildcardType && ((WildcardType) arg).getExtendsBound() != null) {
+      } else if (arg instanceof WildcardType wildcardType
+          && wildcardType.getExtendsBound() != null) {
         // Check the wildcard's bound
         Description contained =
             checkForUnsafeWildcards(
-                tree,
-                messageHeader + i + " nested: ",
-                ((WildcardType) arg).getExtendsBound(),
-                state);
+                tree, messageHeader + i + " nested: ", wildcardType.getExtendsBound(), state);
         if (contained != Description.NO_MATCH) {
           return contained;
         }
@@ -358,8 +357,8 @@ public class UnsafeWildcard extends BugChecker
       ++i;
     }
     // For union and intersection types, check their components.
-    if (targetType instanceof IntersectionClassType) {
-      for (Type bound : ((IntersectionClassType) targetType).getExplicitComponents()) {
+    if (targetType instanceof IntersectionClassType intersectionClassType) {
+      for (Type bound : intersectionClassType.getExplicitComponents()) {
         Description contained =
             checkForUnsafeWildcards(tree, messageHeader + "bound ", bound, state);
         if (contained != Description.NO_MATCH) {
@@ -367,8 +366,8 @@ public class UnsafeWildcard extends BugChecker
         }
       }
     }
-    if (targetType instanceof UnionClassType) {
-      for (Type alternative : ((UnionClassType) targetType).getAlternativeTypes()) {
+    if (targetType instanceof UnionClassType unionClassType) {
+      for (Type alternative : unionClassType.getAlternativeTypes()) {
         Description contained =
             checkForUnsafeWildcards(tree, messageHeader + "alternative ", alternative, state);
         if (contained != Description.NO_MATCH) {

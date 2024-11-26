@@ -96,8 +96,8 @@ public class AvoidObjectArrays extends BugChecker implements MethodTreeMatcher {
 
     String message = String.format("Avoid %s a %s", verb, prettyType(type, state));
 
-    if (type instanceof ArrayType) {
-      type = ((ArrayType) type).getComponentType();
+    if (type instanceof ArrayType arrayType) {
+      type = arrayType.getComponentType();
       boolean isMultiDimensional = (type instanceof ArrayType);
       if (!isMultiDimensional) {
         message += String.format("; consider an %s<%s> instead", newType, prettyType(type, state));

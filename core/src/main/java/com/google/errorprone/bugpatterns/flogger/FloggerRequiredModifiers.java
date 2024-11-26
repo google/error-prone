@@ -146,9 +146,9 @@ public final class FloggerRequiredModifiers extends BugChecker
 
   private static boolean isConstantLogger(
       ExpressionTree initializer, ClassSymbol owner, VisitorState state) {
-    if (initializer instanceof MethodInvocationTree) {
+    if (initializer instanceof MethodInvocationTree methodInvocationTree) {
       Type loggerType = LOGGER_TYPE.get(state);
-      MethodInvocationTree method = (MethodInvocationTree) initializer;
+      MethodInvocationTree method = methodInvocationTree;
       MethodSymbol methodSym = ASTHelpers.getSymbol(method);
       if (methodSym.isStatic()
           && methodSym.owner.equals(owner)
@@ -396,8 +396,8 @@ public final class FloggerRequiredModifiers extends BugChecker
     ClassTree result = null;
     while (path != null) {
       Tree leaf = path.getLeaf();
-      if (leaf instanceof ClassTree) {
-        result = (ClassTree) leaf;
+      if (leaf instanceof ClassTree classTree) {
+        result = classTree;
       }
       path = path.getParentPath();
     }
@@ -460,8 +460,8 @@ public final class FloggerRequiredModifiers extends BugChecker
           return NO_MATCH;
         }
       }
-      if (parent instanceof ClassTree) {
-        outermostClassOfFile = (ClassTree) parent;
+      if (parent instanceof ClassTree classTree) {
+        outermostClassOfFile = classTree;
       }
     }
 

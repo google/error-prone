@@ -95,9 +95,9 @@ public class TypeParameterUnusedInFormals extends BugChecker implements MethodTr
 
     @Override
     public Void visitClassType(Type.ClassType type, Void unused) {
-      if (type instanceof Type.IntersectionClassType) {
+      if (type instanceof Type.IntersectionClassType intersectionClassType) {
         // TypeVisitor doesn't support intersection types natively
-        visitIntersectionClassType((Type.IntersectionClassType) type);
+        visitIntersectionClassType(intersectionClassType);
       } else {
         for (Type t : type.getTypeArguments()) {
           t.accept(this, null);

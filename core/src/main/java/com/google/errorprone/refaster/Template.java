@@ -323,10 +323,10 @@ public abstract class Template<M extends TemplateMatch> implements Serializable 
 
         @Override
         public void printStat(JCTree tree) throws IOException {
-          if (tree instanceof JCExpressionStatement
+          if (tree instanceof JCExpressionStatement jCExpressionStatement
               && ((JCExpressionStatement) tree).getExpression() instanceof JCMethodInvocation) {
             JCMethodInvocation invocation =
-                (JCMethodInvocation) ((JCExpressionStatement) tree).getExpression();
+                (JCMethodInvocation) jCExpressionStatement.getExpression();
             JCExpression select = invocation.getMethodSelect();
             if (select != null && select.toString().equals("Refaster.emitComment")) {
               String commentLiteral =

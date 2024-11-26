@@ -191,10 +191,9 @@ public final class IdentifierName extends BugChecker
   public Description matchVariable(VariableTree tree, VisitorState state) {
     VarSymbol symbol = getSymbol(tree);
     String name = tree.getName().toString();
-    if (symbol.owner instanceof MethodSymbol
+    if (symbol.owner instanceof MethodSymbol methodSymbol
         && symbol.getKind() == ElementKind.PARAMETER
         && state.getPath().getParentPath().getLeaf().getKind() != Kind.LAMBDA_EXPRESSION) {
-      var methodSymbol = (MethodSymbol) symbol.owner;
       int index = methodSymbol.getParameters().indexOf(symbol);
       var maybeSuper = ASTHelpers.streamSuperMethods(methodSymbol, state.getTypes()).findFirst();
       if (maybeSuper.isPresent()) {

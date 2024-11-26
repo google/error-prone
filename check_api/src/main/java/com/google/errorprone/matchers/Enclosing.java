@@ -90,10 +90,10 @@ public class Enclosing {
       }
       Tree enclosing = pathToEnclosing.getLeaf();
       state = state.withPath(pathToEnclosing);
-      if (enclosing instanceof BlockTree) {
-        return blockTreeMatcher.matches((BlockTree) enclosing, state);
-      } else if (enclosing instanceof CaseTree) {
-        return caseTreeMatcher.matches((CaseTree) enclosing, state);
+      if (enclosing instanceof BlockTree blockTree) {
+        return blockTreeMatcher.matches(blockTree, state);
+      } else if (enclosing instanceof CaseTree caseTree) {
+        return caseTreeMatcher.matches(caseTree, state);
       } else {
         // findEnclosing given two types must return something of one of those types
         throw new IllegalStateException("enclosing tree not a BlockTree or CaseTree");

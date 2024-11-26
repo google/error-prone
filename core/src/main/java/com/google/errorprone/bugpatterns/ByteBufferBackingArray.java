@@ -86,8 +86,8 @@ public class ByteBufferBackingArray extends BugChecker implements MethodInvocati
     }
 
     // Checks for validating use on method scope.
-    if (bufferSymbol.owner instanceof MethodSymbol) {
-      MethodTree enclosingMethod = ASTHelpers.findMethod((MethodSymbol) bufferSymbol.owner, state);
+    if (bufferSymbol.owner instanceof MethodSymbol methodSymbol) {
+      MethodTree enclosingMethod = ASTHelpers.findMethod(methodSymbol, state);
       if (enclosingMethod == null
           || ValidByteBufferArrayScanner.scan(enclosingMethod, state, bufferSymbol)) {
         return Description.NO_MATCH;
@@ -95,8 +95,8 @@ public class ByteBufferBackingArray extends BugChecker implements MethodInvocati
     }
 
     // Checks for validating use on fields.
-    if (bufferSymbol.owner instanceof ClassSymbol) {
-      ClassTree enclosingClass = ASTHelpers.findClass((ClassSymbol) bufferSymbol.owner, state);
+    if (bufferSymbol.owner instanceof ClassSymbol classSymbol) {
+      ClassTree enclosingClass = ASTHelpers.findClass(classSymbol, state);
       if (enclosingClass == null) {
         return Description.NO_MATCH;
       }

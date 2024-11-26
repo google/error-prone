@@ -225,21 +225,21 @@ public class ASTHelpers {
    * is null.
    */
   public static @Nullable Symbol getDeclaredSymbol(Tree tree) {
-    if (tree instanceof PackageTree) {
-      return getSymbol((PackageTree) tree);
+    if (tree instanceof PackageTree packageTree) {
+      return getSymbol(packageTree);
     }
     if (tree instanceof TypeParameterTree) {
       Type type = ((JCTypeParameter) tree).type;
       return type == null ? null : type.tsym;
     }
-    if (tree instanceof ClassTree) {
-      return getSymbol((ClassTree) tree);
+    if (tree instanceof ClassTree classTree) {
+      return getSymbol(classTree);
     }
-    if (tree instanceof MethodTree) {
-      return getSymbol((MethodTree) tree);
+    if (tree instanceof MethodTree methodTree) {
+      return getSymbol(methodTree);
     }
-    if (tree instanceof VariableTree) {
-      return getSymbol((VariableTree) tree);
+    if (tree instanceof VariableTree variableTree) {
+      return getSymbol(variableTree);
     }
     return null;
   }
@@ -250,32 +250,32 @@ public class ASTHelpers {
    * error.
    */
   public static @Nullable Symbol getSymbol(Tree tree) {
-    if (tree instanceof AnnotationTree) {
-      return getSymbol(((AnnotationTree) tree).getAnnotationType());
+    if (tree instanceof AnnotationTree annotationTree) {
+      return getSymbol(annotationTree.getAnnotationType());
     }
-    if (tree instanceof JCFieldAccess) {
-      return ((JCFieldAccess) tree).sym;
+    if (tree instanceof JCFieldAccess jcFieldAccess) {
+      return jcFieldAccess.sym;
     }
-    if (tree instanceof JCIdent) {
-      return ((JCIdent) tree).sym;
+    if (tree instanceof JCIdent jcIdent) {
+      return jcIdent.sym;
     }
-    if (tree instanceof JCMethodInvocation) {
-      return getSymbol((MethodInvocationTree) tree);
+    if (tree instanceof JCMethodInvocation jcMethodInvocation) {
+      return getSymbol(jcMethodInvocation);
     }
-    if (tree instanceof JCNewClass) {
-      return getSymbol((NewClassTree) tree);
+    if (tree instanceof JCNewClass jcNewClass) {
+      return getSymbol(jcNewClass);
     }
-    if (tree instanceof MemberReferenceTree) {
-      return getSymbol((MemberReferenceTree) tree);
+    if (tree instanceof MemberReferenceTree memberReferenceTree) {
+      return getSymbol(memberReferenceTree);
     }
-    if (tree instanceof JCAnnotatedType) {
-      return getSymbol(((JCAnnotatedType) tree).underlyingType);
+    if (tree instanceof JCAnnotatedType jcAnnotatedType) {
+      return getSymbol(jcAnnotatedType.underlyingType);
     }
-    if (tree instanceof ParameterizedTypeTree) {
-      return getSymbol(((ParameterizedTypeTree) tree).getType());
+    if (tree instanceof ParameterizedTypeTree parameterizedTypeTree) {
+      return getSymbol(parameterizedTypeTree.getType());
     }
-    if (tree instanceof ClassTree) {
-      return getSymbol((ClassTree) tree);
+    if (tree instanceof ClassTree classTree) {
+      return getSymbol(classTree);
     }
 
     return getDeclaredSymbol(tree);
@@ -494,8 +494,8 @@ public class ASTHelpers {
     ExpressionTree expr = methodInvocationTree;
     while (expr instanceof JCMethodInvocation) {
       expr = ((JCMethodInvocation) expr).getMethodSelect();
-      if (expr instanceof JCFieldAccess) {
-        expr = ((JCFieldAccess) expr).getExpression();
+      if (expr instanceof JCFieldAccess jCFieldAccess) {
+        expr = jCFieldAccess.getExpression();
       }
     }
 
@@ -517,10 +517,10 @@ public class ASTHelpers {
       return methodCall.type.getReturnType();
     } else if (expressionTree instanceof JCIdent methodCall) {
       return methodCall.type.getReturnType();
-    } else if (expressionTree instanceof JCMethodInvocation) {
-      return getReturnType(((JCMethodInvocation) expressionTree).getMethodSelect());
-    } else if (expressionTree instanceof JCMemberReference) {
-      return ((JCMemberReference) expressionTree).sym.type.getReturnType();
+    } else if (expressionTree instanceof JCMethodInvocation jCMethodInvocation) {
+      return getReturnType(jCMethodInvocation.getMethodSelect());
+    } else if (expressionTree instanceof JCMemberReference jCMemberReference) {
+      return jCMemberReference.sym.type.getReturnType();
     }
     throw new IllegalArgumentException("Expected a JCFieldAccess or JCIdent");
   }
@@ -561,10 +561,10 @@ public class ASTHelpers {
       return methodSelectFieldAccess.selected.type;
     } else if (expressionTree instanceof JCIdent methodCall) {
       return methodCall.sym.owner.type;
-    } else if (expressionTree instanceof JCMethodInvocation) {
-      return getReceiverType(((JCMethodInvocation) expressionTree).getMethodSelect());
-    } else if (expressionTree instanceof JCMemberReference) {
-      return ((JCMemberReference) expressionTree).getQualifierExpression().type;
+    } else if (expressionTree instanceof JCMethodInvocation jCMethodInvocation) {
+      return getReceiverType(jCMethodInvocation.getMethodSelect());
+    } else if (expressionTree instanceof JCMemberReference jCMemberReference) {
+      return jCMemberReference.getQualifierExpression().type;
     }
     throw new IllegalArgumentException(
         "Expected a JCFieldAccess or JCIdent from expression " + expressionTree);
@@ -589,16 +589,16 @@ public class ASTHelpers {
    * }</pre>
    */
   public static @Nullable ExpressionTree getReceiver(ExpressionTree expressionTree) {
-    if (expressionTree instanceof MethodInvocationTree) {
-      ExpressionTree methodSelect = ((MethodInvocationTree) expressionTree).getMethodSelect();
+    if (expressionTree instanceof MethodInvocationTree methodInvocationTree) {
+      ExpressionTree methodSelect = methodInvocationTree.getMethodSelect();
       if (methodSelect instanceof IdentifierTree) {
         return null;
       }
       return getReceiver(methodSelect);
-    } else if (expressionTree instanceof MemberSelectTree) {
-      return ((MemberSelectTree) expressionTree).getExpression();
-    } else if (expressionTree instanceof MemberReferenceTree) {
-      return ((MemberReferenceTree) expressionTree).getQualifierExpression();
+    } else if (expressionTree instanceof MemberSelectTree memberSelectTree) {
+      return memberSelectTree.getExpression();
+    } else if (expressionTree instanceof MemberReferenceTree memberReferenceTree) {
+      return memberReferenceTree.getQualifierExpression();
     } else {
       throw new IllegalStateException(
           String.format(
@@ -993,11 +993,11 @@ public class ASTHelpers {
    * annotation inheritance (see JLS 9.6.4.3).
    */
   public static boolean hasDirectAnnotationWithSimpleName(Symbol sym, String simpleName) {
-    if (sym instanceof MethodSymbol) {
-      return hasDirectAnnotationWithSimpleName((MethodSymbol) sym, simpleName);
+    if (sym instanceof MethodSymbol methodSymbol) {
+      return hasDirectAnnotationWithSimpleName(methodSymbol, simpleName);
     }
-    if (sym instanceof VarSymbol) {
-      return hasDirectAnnotationWithSimpleName((VarSymbol) sym, simpleName);
+    if (sym instanceof VarSymbol varSymbol) {
+      return hasDirectAnnotationWithSimpleName(varSymbol, simpleName);
     }
     return hasDirectAnnotationWithSimpleName(sym.getAnnotationMirrors().stream(), simpleName);
   }
@@ -1269,15 +1269,15 @@ public class ASTHelpers {
     tree = stripParentheses(tree);
     Type type = ASTHelpers.getType(tree);
     Object value;
-    if (tree instanceof JCLiteral) {
-      value = ((JCLiteral) tree).value;
+    if (tree instanceof JCLiteral jCLiteral) {
+      value = jCLiteral.value;
     } else if (type != null) {
       value = type.constValue();
     } else {
       return null;
     }
-    if (type.hasTag(TypeTag.BOOLEAN) && value instanceof Integer) {
-      return ((Integer) value) == 1;
+    if (type.hasTag(TypeTag.BOOLEAN) && value instanceof Integer integer) {
+      return integer == 1;
     }
     if (type.hasTag(TypeTag.CHAR) && value instanceof Integer) {
       return (char) (int) value;
@@ -1349,40 +1349,40 @@ public class ASTHelpers {
 
   /** Returns the modifiers tree of the given class, method, or variable declaration. */
   public static @Nullable ModifiersTree getModifiers(Tree tree) {
-    if (tree instanceof ClassTree) {
-      return ((ClassTree) tree).getModifiers();
+    if (tree instanceof ClassTree classTree) {
+      return classTree.getModifiers();
     }
-    if (tree instanceof MethodTree) {
-      return ((MethodTree) tree).getModifiers();
+    if (tree instanceof MethodTree methodTree) {
+      return methodTree.getModifiers();
     }
-    if (tree instanceof VariableTree) {
-      return ((VariableTree) tree).getModifiers();
+    if (tree instanceof VariableTree variableTree) {
+      return variableTree.getModifiers();
     }
-    if (tree instanceof ModifiersTree) {
-      return (ModifiersTree) tree;
+    if (tree instanceof ModifiersTree modifiersTree) {
+      return modifiersTree;
     }
     return null;
   }
 
   /** Returns the annotations of the given tree, or an empty list. */
   public static List<? extends AnnotationTree> getAnnotations(Tree tree) {
-    if (tree instanceof TypeParameterTree) {
-      return ((TypeParameterTree) tree).getAnnotations();
+    if (tree instanceof TypeParameterTree typeParameterTree) {
+      return typeParameterTree.getAnnotations();
     }
-    if (tree instanceof ModuleTree) {
-      return ((ModuleTree) tree).getAnnotations();
+    if (tree instanceof ModuleTree moduleTree) {
+      return moduleTree.getAnnotations();
     }
-    if (tree instanceof PackageTree) {
-      return ((PackageTree) tree).getAnnotations();
+    if (tree instanceof PackageTree packageTree) {
+      return packageTree.getAnnotations();
     }
-    if (tree instanceof NewArrayTree) {
-      return ((NewArrayTree) tree).getAnnotations();
+    if (tree instanceof NewArrayTree newArrayTree) {
+      return newArrayTree.getAnnotations();
     }
-    if (tree instanceof AnnotatedTypeTree) {
-      return ((AnnotatedTypeTree) tree).getAnnotations();
+    if (tree instanceof AnnotatedTypeTree annotatedTypeTree) {
+      return annotatedTypeTree.getAnnotations();
     }
-    if (tree instanceof ModifiersTree) {
-      return ((ModifiersTree) tree).getAnnotations();
+    if (tree instanceof ModifiersTree modifiersTree) {
+      return modifiersTree.getAnnotations();
     }
     ModifiersTree modifiersTree = getModifiers(tree);
     return modifiersTree == null ? ImmutableList.of() : modifiersTree.getAnnotations();
@@ -1475,10 +1475,10 @@ public class ASTHelpers {
   private static boolean hasSimpleName(AnnotationTree annotation, String name) {
     Tree annotationType = annotation.getAnnotationType();
     javax.lang.model.element.Name simpleName;
-    if (annotationType instanceof IdentifierTree) {
-      simpleName = ((IdentifierTree) annotationType).getName();
-    } else if (annotationType instanceof MemberSelectTree) {
-      simpleName = ((MemberSelectTree) annotationType).getIdentifier();
+    if (annotationType instanceof IdentifierTree identifierTree) {
+      simpleName = identifierTree.getName();
+    } else if (annotationType instanceof MemberSelectTree memberSelectTree) {
+      simpleName = memberSelectTree.getIdentifier();
     } else {
       return false;
     }
@@ -1892,8 +1892,8 @@ public class ASTHelpers {
         return null;
       }
 
-      if (tree instanceof SwitchTree) {
-        return ((SwitchTree) tree).getExpression();
+      if (tree instanceof SwitchTree switchTree) {
+        return switchTree.getExpression();
       }
       // Reflection is required for JDK < 12
       try {
@@ -2351,8 +2351,8 @@ public class ASTHelpers {
       for (Tree resource : tree.getResources()) {
         Symbol symbol = getType(resource).tsym;
 
-        if (symbol instanceof ClassSymbol) {
-          getCloseMethod((ClassSymbol) symbol, state)
+        if (symbol instanceof ClassSymbol classSymbol) {
+          getCloseMethod(classSymbol, state)
               .ifPresent(methodSymbol -> getThrownTypes().addAll(methodSymbol.getThrownTypes()));
         }
       }

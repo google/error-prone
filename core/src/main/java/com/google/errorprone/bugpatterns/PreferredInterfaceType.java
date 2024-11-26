@@ -280,8 +280,8 @@ public final class PreferredInterfaceType extends BugChecker implements Compilat
         !isImmutable(targetType(symbol)) && isImmutable(newType)
             ? IMMUTABLE_MESSAGE
             : NON_IMMUTABLE_MESSAGE;
-    if (symbol instanceof MethodSymbol) {
-      if (!findSuperMethods((MethodSymbol) symbol, state.getTypes()).isEmpty()) {
+    if (symbol instanceof MethodSymbol methodSymbol) {
+      if (!findSuperMethods(methodSymbol, state.getTypes()).isEmpty()) {
         return "Method return" + messageBase + OVERRIDE_NOTE;
       } else {
         return "Method return" + messageBase;

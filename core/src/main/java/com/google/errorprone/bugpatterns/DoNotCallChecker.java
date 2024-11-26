@@ -404,10 +404,10 @@ public class DoNotCallChecker extends BugChecker
       @Override
       public Void visitAssignment(AssignmentTree node, Void unused) {
         Symbol assignee = getSymbol(node.getVariable());
-        if (assignee instanceof VarSymbol && isConsideredFinal(assignee)) {
+        if (assignee instanceof VarSymbol varSymbol && isConsideredFinal(assignee)) {
           Type type = getType(node.getExpression());
           if (type != null) {
-            assignedTypes.put((VarSymbol) assignee, type);
+            assignedTypes.put(varSymbol, type);
           }
         }
         return super.visitAssignment(node, null);

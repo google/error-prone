@@ -155,44 +155,34 @@ public final class UnnecessaryAsync extends BugChecker implements VariableTreeMa
         if (isVariableDeclarationItself(parentTree)) {
           return super.visitIdentifier(tree, null);
         }
-        if (parentTree instanceof MemberSelectTree) {
+        if (parentTree instanceof MemberSelectTree memberSelectTree) {
           var grandparent =
               (MethodInvocationTree) getCurrentPath().getParentPath().getParentPath().getLeaf();
-          if (((MemberSelectTree) parentTree).getIdentifier().contentEquals("set")) {
+          if (memberSelectTree.getIdentifier().contentEquals("set")) {
             fix.replace(
                 grandparent,
                 format(
                     "%s = %s",
                     state.getSourceForNode(tree),
                     state.getSourceForNode(grandparent.getArguments().get(0))));
-          } else if (((MemberSelectTree) parentTree).getIdentifier().contentEquals("get")) {
+          } else if (memberSelectTree.getIdentifier().contentEquals("get")) {
             fix.replace(grandparent, state.getSourceForNode(tree));
-          } else if (((MemberSelectTree) parentTree)
-              .getIdentifier()
-              .contentEquals("getAndIncrement")) {
+          } else if (memberSelectTree.getIdentifier().contentEquals("getAndIncrement")) {
             fix.replace(grandparent, format("%s++", state.getSourceForNode(tree)));
-          } else if (((MemberSelectTree) parentTree)
-              .getIdentifier()
-              .contentEquals("getAndDecrement")) {
+          } else if (memberSelectTree.getIdentifier().contentEquals("getAndDecrement")) {
             fix.replace(grandparent, format("%s--", state.getSourceForNode(tree)));
-          } else if (((MemberSelectTree) parentTree)
-              .getIdentifier()
-              .contentEquals("incrementAndGet")) {
+          } else if (memberSelectTree.getIdentifier().contentEquals("incrementAndGet")) {
             fix.replace(grandparent, format("++%s", state.getSourceForNode(tree)));
-          } else if (((MemberSelectTree) parentTree)
-              .getIdentifier()
-              .contentEquals("decrementAndGet")) {
+          } else if (memberSelectTree.getIdentifier().contentEquals("decrementAndGet")) {
             fix.replace(grandparent, format("--%s", state.getSourceForNode(tree)));
-          } else if (((MemberSelectTree) parentTree)
-              .getIdentifier()
-              .contentEquals("compareAndSet")) {
+          } else if (memberSelectTree.getIdentifier().contentEquals("compareAndSet")) {
             fix.replace(
                 grandparent,
                 format(
                     "%s = %s",
                     state.getSourceForNode(tree),
                     state.getSourceForNode(grandparent.getArguments().get(1))));
-          } else if (((MemberSelectTree) parentTree).getIdentifier().contentEquals("addAndGet")) {
+          } else if (memberSelectTree.getIdentifier().contentEquals("addAndGet")) {
             fix.replace(
                 grandparent,
                 format(

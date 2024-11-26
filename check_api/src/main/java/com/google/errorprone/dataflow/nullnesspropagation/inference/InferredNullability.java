@@ -73,8 +73,8 @@ public class InferredNullability {
     Optional<Nullness> result;
     // short-circuit and return if...
     // ...this inference variable is a `proper` bound, i.e. a concrete nullness lattice element
-    if (iv instanceof ProperInferenceVar) {
-      return Optional.of(((ProperInferenceVar) iv).nullness());
+    if (iv instanceof ProperInferenceVar properInferenceVar) {
+      return Optional.of(properInferenceVar.nullness());
       // ...we've already computed and memoized a nullness value for it.
     } else if ((result = inferredMemoTable.get(iv)) != null) {
       return result;

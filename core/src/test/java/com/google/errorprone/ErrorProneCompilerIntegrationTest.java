@@ -260,10 +260,10 @@ public class ErrorProneCompilerIntegrationTest {
     public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
       Tree select = tree.getMethodSelect();
       Name name;
-      if (select instanceof MemberSelectTree) {
-        name = ((MemberSelectTree) select).getIdentifier();
-      } else if (select instanceof IdentifierTree) {
-        name = ((IdentifierTree) select).getName();
+      if (select instanceof MemberSelectTree memberSelectTree) {
+        name = memberSelectTree.getIdentifier();
+      } else if (select instanceof IdentifierTree identifierTree) {
+        name = identifierTree.getName();
       } else {
         return NO_MATCH;
       }

@@ -84,9 +84,8 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
    */
   private SuppressionInfo updateSuppressions(Tree tree, VisitorState state) {
     SuppressionInfo prevSuppressionInfo = currentSuppressions;
-    if (tree instanceof CompilationUnitTree) {
-      currentSuppressions =
-          currentSuppressions.forCompilationUnit((CompilationUnitTree) tree, state);
+    if (tree instanceof CompilationUnitTree compilationUnitTree) {
+      currentSuppressions = currentSuppressions.forCompilationUnit(compilationUnitTree, state);
     } else {
       Symbol sym = ASTHelpers.getDeclaredSymbol(tree);
       if (sym != null) {

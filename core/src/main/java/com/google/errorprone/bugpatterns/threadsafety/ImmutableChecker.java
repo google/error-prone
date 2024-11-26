@@ -456,10 +456,10 @@ public class ImmutableChecker extends BugChecker
       }
 
       private void handleIdentifier(Symbol symbol) {
-        if (symbol instanceof VarSymbol
+        if (symbol instanceof VarSymbol varSymbol
             && !variablesOwnedByLambda.contains(symbol)
             && !isStatic(symbol)) {
-          variablesClosed.add((VarSymbol) symbol);
+          variablesClosed.add(varSymbol);
         }
       }
     }.scan(state.getPath(), null);

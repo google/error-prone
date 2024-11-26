@@ -106,8 +106,8 @@ public class CanBeStaticAnalyzer extends TreeScanner {
     if (sym.owner == owner) {
       return true;
     }
-    if (owner instanceof TypeSymbol) {
-      return sym.isMemberOf((TypeSymbol) owner, types);
+    if (owner instanceof TypeSymbol typeSymbol) {
+      return sym.isMemberOf(typeSymbol, types);
     }
     return false;
   }

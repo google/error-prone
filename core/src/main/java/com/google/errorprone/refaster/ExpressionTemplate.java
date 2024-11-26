@@ -151,10 +151,10 @@ public abstract class ExpressionTemplate extends Template<ExpressionTemplateMatc
 
         @Override
         public Boolean visitOther(Tree t, Unifier u) {
-          if (t instanceof UPlaceholderExpression) {
-            return ((UPlaceholderExpression) t).reverify(u);
-          } else if (t instanceof UPlaceholderStatement) {
-            return ((UPlaceholderStatement) t).reverify(u);
+          if (t instanceof UPlaceholderExpression uPlaceholderExpression) {
+            return uPlaceholderExpression.reverify(u);
+          } else if (t instanceof UPlaceholderStatement uPlaceholderStatement) {
+            return uPlaceholderStatement.reverify(u);
           } else {
             return super.visitOther(t, u);
           }

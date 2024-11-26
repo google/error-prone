@@ -40,8 +40,8 @@ public class ConstructorOfClass extends ChildMultiMatcher<ClassTree, MethodTree>
     // Iterate over members of class (methods and fields).
     for (Tree member : classTree.getMembers()) {
       // If this member is a constructor...
-      if (member instanceof MethodTree && ASTHelpers.getSymbol(member).isConstructor()) {
-        result.add((MethodTree) member);
+      if (member instanceof MethodTree methodTree && ASTHelpers.getSymbol(member).isConstructor()) {
+        result.add(methodTree);
       }
     }
     return result.build();

@@ -100,10 +100,10 @@ public class ComparisonContractViolated extends BugChecker implements MethodTree
         @Override
         public ComparisonResult visitMemberSelect(MemberSelectTree node, VisitorState state) {
           Symbol sym = ASTHelpers.getSymbol(node);
-          if (sym instanceof VarSymbol) {
-            Object value = ((VarSymbol) sym).getConstantValue();
-            if (value instanceof Integer) {
-              return forInt((Integer) value);
+          if (sym instanceof VarSymbol varSymbol) {
+            Object value = varSymbol.getConstantValue();
+            if (value instanceof Integer integer) {
+              return forInt(integer);
             }
           }
           return super.visitMemberSelect(node, state);
@@ -112,10 +112,10 @@ public class ComparisonContractViolated extends BugChecker implements MethodTree
         @Override
         public ComparisonResult visitIdentifier(IdentifierTree node, VisitorState state) {
           Symbol sym = ASTHelpers.getSymbol(node);
-          if (sym instanceof VarSymbol) {
-            Object value = ((VarSymbol) sym).getConstantValue();
-            if (value instanceof Integer) {
-              return forInt((Integer) value);
+          if (sym instanceof VarSymbol varSymbol) {
+            Object value = varSymbol.getConstantValue();
+            if (value instanceof Integer integer) {
+              return forInt(integer);
             }
           }
           return super.visitIdentifier(node, state);

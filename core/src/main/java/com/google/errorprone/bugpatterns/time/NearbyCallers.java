@@ -151,8 +151,8 @@ public class NearbyCallers {
       if (!IS_IMMUTABLE_PROTO_GETTER.matches(expr, state)) {
         return Optional.empty();
       }
-      if (expr instanceof JCFieldAccess) {
-        expr = ((JCFieldAccess) expr).getExpression();
+      if (expr instanceof JCFieldAccess fieldAccess) {
+        expr = fieldAccess.getExpression();
       }
       symbolChain.add(ASTHelpers.getSymbol(expr));
     }
@@ -184,8 +184,8 @@ public class NearbyCallers {
           // fields
           ImmutableList.Builder<Tree> treesToScan = ImmutableList.builder();
           for (Tree member : ((ClassTree) parent).getMembers()) {
-            if (member instanceof VariableTree) {
-              ExpressionTree expressionTree = ((VariableTree) member).getInitializer();
+            if (member instanceof VariableTree variableTree) {
+              ExpressionTree expressionTree = variableTree.getInitializer();
               if (expressionTree != null) {
                 treesToScan.add(expressionTree);
               }

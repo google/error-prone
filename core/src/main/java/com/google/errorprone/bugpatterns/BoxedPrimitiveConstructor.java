@@ -96,9 +96,8 @@ public class BoxedPrimitiveConstructor extends BugChecker implements NewClassTre
       Object value = literalValue(tree.getArguments().iterator().next());
       if (value instanceof Boolean) {
         return SuggestedFix.replace(tree, literalFix((boolean) value, autoboxFix));
-      } else if (value instanceof String) {
-        return SuggestedFix.replace(
-            tree, literalFix(Boolean.parseBoolean((String) value), autoboxFix));
+      } else if (value instanceof String string) {
+        return SuggestedFix.replace(tree, literalFix(Boolean.parseBoolean(string), autoboxFix));
       }
     }
 

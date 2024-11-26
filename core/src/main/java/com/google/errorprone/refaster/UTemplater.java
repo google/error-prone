@@ -156,9 +156,9 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
     if (genericType instanceof UForAll forAllType) {
       typeParameters = forAllType.getTypeVars();
       methodType = (UMethodType) forAllType.getQuantifiedType();
-    } else if (genericType instanceof UMethodType) {
+    } else if (genericType instanceof UMethodType uMethodType) {
       typeParameters = ImmutableList.of();
-      methodType = (UMethodType) genericType;
+      methodType = uMethodType;
     } else {
       throw new IllegalArgumentException(
           "Expected genericType to be either a ForAll or a UMethodType, but was " + genericType);
@@ -330,8 +330,8 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
   @Override
   public UExpression visitMemberSelect(MemberSelectTree tree, Void v) {
     Symbol sym = ASTHelpers.getSymbol(tree);
-    if (sym instanceof ClassSymbol) {
-      return UClassIdent.create((ClassSymbol) sym);
+    if (sym instanceof ClassSymbol classSymbol) {
+      return UClassIdent.create(classSymbol);
     } else if (isStatic(sym)) {
       ExpressionTree selected = tree.getExpression();
       checkState(
@@ -591,8 +591,8 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
   @Override
   public UExpression visitIdentifier(IdentifierTree tree, Void v) {
     Symbol sym = ASTHelpers.getSymbol(tree);
-    if (sym instanceof ClassSymbol) {
-      return UClassIdent.create((ClassSymbol) sym);
+    if (sym instanceof ClassSymbol classSymbol) {
+      return UClassIdent.create(classSymbol);
     } else if (sym != null && isStatic(sym)) {
       return staticMember(sym);
     } else if (freeVariables.containsKey(tree.getName().toString())) {
@@ -884,9 +884,9 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
 
         @Override
         public UType visitClassType(ClassType type, Void v) {
-          if (type instanceof IntersectionClassType) {
+          if (type instanceof IntersectionClassType intersectionClassType) {
             return UIntersectionClassType.create(
-                templateTypes(((IntersectionClassType) type).getComponents()));
+                templateTypes(intersectionClassType.getComponents()));
           }
           return UClassType.create(
               type.tsym.getQualifiedName().toString(), templateTypes(type.getTypeArguments()));

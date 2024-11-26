@@ -96,10 +96,10 @@ public abstract class ULiteral extends UExpression implements LiteralTree {
   }
 
   private static boolean match(@Nullable Object a, @Nullable Object b) {
-    if (a instanceof Number && b instanceof Number) {
-      return (integral(a) && integral(b))
-          ? ((Number) a).longValue() == ((Number) b).longValue()
-          : Double.compare(((Number) a).doubleValue(), ((Number) b).doubleValue()) == 0;
+    if (a instanceof Number aNum && b instanceof Number bNum) {
+      return (integral(aNum) && integral(bNum))
+          ? aNum.longValue() == bNum.longValue()
+          : Double.compare(aNum.doubleValue(), bNum.doubleValue()) == 0;
     } else {
       return Objects.equals(a, b);
     }

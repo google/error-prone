@@ -468,12 +468,12 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     Nullness value = inputs.valueOfSubNode(node.getExpression());
 
     Node target = node.getTarget();
-    if (target instanceof LocalVariableNode) {
-      updates.set((LocalVariableNode) target, value);
+    if (target instanceof LocalVariableNode localVariableNode) {
+      updates.set(localVariableNode, value);
     }
 
-    if (target instanceof ArrayAccessNode) {
-      setNonnullIfTrackable(updates, ((ArrayAccessNode) target).getArray());
+    if (target instanceof ArrayAccessNode arrayAccessNode) {
+      setNonnullIfTrackable(updates, arrayAccessNode.getArray());
     }
 
     if (target instanceof FieldAccessNode fieldAccess) {
@@ -681,16 +681,16 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
 
   private static @Nullable ClassAndField tryGetFieldSymbol(Tree tree) {
     Symbol symbol = tryGetSymbol(tree);
-    if (symbol instanceof VarSymbol) {
-      return ClassAndField.make((VarSymbol) symbol);
+    if (symbol instanceof VarSymbol varSymbol) {
+      return ClassAndField.make(varSymbol);
     }
     return null;
   }
 
   static @Nullable ClassAndMethod tryGetMethodSymbol(MethodInvocationTree tree, Types types) {
     Symbol symbol = tryGetSymbol(tree.getMethodSelect());
-    if (symbol instanceof MethodSymbol) {
-      return ClassAndMethod.make((MethodSymbol) symbol, types);
+    if (symbol instanceof MethodSymbol methodSymbol) {
+      return ClassAndMethod.make(methodSymbol, types);
     }
     return null;
   }
@@ -700,14 +700,14 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
    * back on core.
    */
   private static @Nullable Symbol tryGetSymbol(Tree tree) {
-    if (tree instanceof JCIdent) {
-      return ((JCIdent) tree).sym;
+    if (tree instanceof JCIdent jCIdent) {
+      return jCIdent.sym;
     }
-    if (tree instanceof JCFieldAccess) {
-      return ((JCFieldAccess) tree).sym;
+    if (tree instanceof JCFieldAccess jCFieldAccess) {
+      return jCFieldAccess.sym;
     }
-    if (tree instanceof JCVariableDecl) {
-      return ((JCVariableDecl) tree).sym;
+    if (tree instanceof JCVariableDecl jCVariableDecl) {
+      return jCVariableDecl.sym;
     }
     return null;
   }
@@ -763,8 +763,8 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     Optional<Nullness> declaredNullness = NullnessAnnotations.fromAnnotationsOn(accessed.symbol);
     if (declaredNullness.isEmpty()) {
       Type ftype = accessed.symbol.type;
-      if (ftype instanceof TypeVariable) {
-        declaredNullness = NullnessAnnotations.getUpperBound((TypeVariable) ftype);
+      if (ftype instanceof TypeVariable typeVariable) {
+        declaredNullness = NullnessAnnotations.getUpperBound(typeVariable);
       } else {
         declaredNullness = NullnessAnnotations.fromDefaultAnnotations(accessed.symbol);
       }
@@ -843,12 +843,12 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
   }
 
   private static void setNonnullIfTrackable(Updates updates, Node node) {
-    if (node instanceof LocalVariableNode) {
-      updates.set((LocalVariableNode) node, NONNULL);
-    } else if (node instanceof FieldAccessNode) {
-      updates.set((FieldAccessNode) node, NONNULL);
-    } else if (node instanceof VariableDeclarationNode) {
-      updates.set((VariableDeclarationNode) node, NONNULL);
+    if (node instanceof LocalVariableNode localVariableNode) {
+      updates.set(localVariableNode, NONNULL);
+    } else if (node instanceof FieldAccessNode fieldAccessNode) {
+      updates.set(fieldAccessNode, NONNULL);
+    } else if (node instanceof VariableDeclarationNode variableDeclarationNode) {
+      updates.set(variableDeclarationNode, NONNULL);
     }
   }
 
@@ -928,8 +928,8 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
       // TODO(cpovirk): better handling of varargs
       if (i >= 0 && i < arguments.size()) {
         Node argument = arguments.get(i);
-        if (argument instanceof LocalVariableNode) {
-          result.add((LocalVariableNode) argument);
+        if (argument instanceof LocalVariableNode localVariableNode) {
+          result.add(localVariableNode);
         }
       }
     }

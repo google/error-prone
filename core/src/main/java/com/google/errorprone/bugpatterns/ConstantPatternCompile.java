@@ -125,8 +125,8 @@ public final class ConstantPatternCompile extends BugChecker implements ClassTre
             return Optional.empty();
           }
           Tree parent = state.getPath().getParentPath().getLeaf();
-          if (parent instanceof VariableTree) {
-            return handleVariable((VariableTree) parent, state);
+          if (parent instanceof VariableTree variableTree) {
+            return handleVariable(variableTree, state);
           }
 
           return Optional.of(handleInlineExpression(tree, state, nameUniquifier));
@@ -361,12 +361,11 @@ public final class ConstantPatternCompile extends BugChecker implements ClassTre
       return null;
     }
     ExpressionTree matchTree = ((MethodInvocationTree) grandParent).getArguments().get(0);
-    if (matchTree instanceof IdentifierTree) {
-      return convertToConstantName(((IdentifierTree) matchTree).getName().toString());
+    if (matchTree instanceof IdentifierTree identifierTree) {
+      return convertToConstantName(identifierTree.getName().toString());
     }
-    if (matchTree instanceof MethodInvocationTree) {
-      return convertToConstantName(
-          getSymbol((MethodInvocationTree) matchTree).getSimpleName().toString());
+    if (matchTree instanceof MethodInvocationTree methodInvocationTree) {
+      return convertToConstantName(getSymbol(methodInvocationTree).getSimpleName().toString());
     }
     return null;
   }

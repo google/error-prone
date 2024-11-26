@@ -109,8 +109,9 @@ public class UnnecessaryLongToIntConversion extends BugChecker
       }
 
       // Match if the arg is a type cast from a long to an int.
-      if (arg instanceof TypeCastTree && LONG_TO_INT_CAST.matches((TypeCastTree) arg, state)) {
-        ExpressionTree castedExpression = ((TypeCastTree) arg).getExpression();
+      if (arg instanceof TypeCastTree typeCastTree
+          && LONG_TO_INT_CAST.matches(typeCastTree, state)) {
+        ExpressionTree castedExpression = typeCastTree.getExpression();
         return buildDescription(tree)
             // Remove the type cast.
             .addFix(SuggestedFix.replace(arg, state.getSourceForNode(castedExpression)))

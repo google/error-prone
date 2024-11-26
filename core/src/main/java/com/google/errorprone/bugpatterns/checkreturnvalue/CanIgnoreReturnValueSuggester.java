@@ -242,8 +242,8 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
   private static boolean isSimpleReturnThisMethod(MethodTree methodTree) {
     if (methodTree.getBody() != null && methodTree.getBody().getStatements().size() == 1) {
       StatementTree onlyStatement = methodTree.getBody().getStatements().get(0);
-      if (onlyStatement instanceof ReturnTree) {
-        return returnsThisOrSelf((ReturnTree) onlyStatement);
+      if (onlyStatement instanceof ReturnTree returnTree) {
+        return returnsThisOrSelf(returnTree);
       }
     }
     return false;
@@ -251,8 +251,8 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
 
   private static boolean isIdentifier(ExpressionTree expr, String identifierName) {
     expr = stripParentheses(expr);
-    if (expr instanceof IdentifierTree) {
-      return ((IdentifierTree) expr).getName().contentEquals(identifierName);
+    if (expr instanceof IdentifierTree identifierTree) {
+      return identifierTree.getName().contentEquals(identifierName);
     }
     return false;
   }

@@ -71,11 +71,11 @@ public class ForEachIterable extends BugChecker implements VariableTreeMatcher {
       return NO_MATCH;
     }
     Tree parent = state.getPath().getParentPath().getLeaf();
-    if (parent instanceof BlockTree) {
-      return matchWhile(tree, (BlockTree) parent, state);
+    if (parent instanceof BlockTree blockTree) {
+      return matchWhile(tree, blockTree, state);
     }
-    if (parent instanceof ForLoopTree) {
-      return matchFor(tree, (ForLoopTree) parent, state);
+    if (parent instanceof ForLoopTree forLoopTree) {
+      return matchFor(tree, forLoopTree, state);
     }
     return NO_MATCH;
   }

@@ -85,8 +85,8 @@ public class StaticGuardedByInstance extends BugChecker implements SynchronizedT
 
     private void recordWrite(ExpressionTree variable) {
       Symbol sym = ASTHelpers.getSymbol(variable);
-      if (sym instanceof VarSymbol) {
-        writes.put((VarSymbol) sym, variable);
+      if (sym instanceof VarSymbol varSymbol) {
+        writes.put(varSymbol, variable);
       }
     }
 

@@ -495,8 +495,8 @@ public final class HeldLockAnalyzer {
 
     /** Gets the base expression of a (possibly nested) member select expression. */
     private static GuardedByExpression getSelectInstance(GuardedByExpression guard) {
-      if (guard instanceof Select) {
-        return getSelectInstance(((Select) guard).base());
+      if (guard instanceof Select select) {
+        return getSelectInstance(select.base());
       }
       return guard;
     }

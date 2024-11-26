@@ -462,8 +462,8 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
             }
           }
           for (Type toAdd : currentTypeParam.getBounds()) {
-            if (toAdd.tsym instanceof TypeVariableSymbol) {
-              queue.add((TypeVariableSymbol) toAdd.tsym);
+            if (toAdd.tsym instanceof TypeVariableSymbol typeVariableSymbol) {
+              queue.add(typeVariableSymbol);
             }
           }
         }
@@ -593,8 +593,7 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
     if (isSubtype(resultType, lostType, state)) {
       // Traverse enclosing nodes of this return tree until either a lambda or a Method is reached.
       for (Tree enclosing : state.getPath()) {
-        if (enclosing instanceof MethodTree) {
-          MethodTree methodTree = (MethodTree) enclosing;
+        if (enclosing instanceof MethodTree methodTree) {
           MethodSymbol symbol = getSymbol(methodTree);
           if (isSubtype(objectType, symbol.getReturnType(), state)
               && !isExemptedInterfaceMethod(symbol, state)) {
@@ -606,8 +605,7 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
             break;
           }
         }
-        if (enclosing instanceof LambdaExpressionTree) {
-          LambdaExpressionTree lambdaTree = (LambdaExpressionTree) enclosing;
+        if (enclosing instanceof LambdaExpressionTree lambdaTree) {
           if (isObjectReturningLambdaExpression(lambdaTree, state)) {
             return buildDescription(tree)
                 .setMessage(lostTypeMessage(resultType.toString(), "Object"))

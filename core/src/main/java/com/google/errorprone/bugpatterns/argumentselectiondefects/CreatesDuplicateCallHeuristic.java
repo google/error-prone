@@ -121,15 +121,14 @@ final class CreatesDuplicateCallHeuristic implements Heuristic {
       }
 
       private ImmutableList<Parameter> createParameterList(Tree tree) {
-        if (tree instanceof MethodInvocationTree) {
-          return Parameter.createListFromExpressionTrees(
-              ((MethodInvocationTree) tree).getArguments());
+        if (tree instanceof MethodInvocationTree methodInvocationTree) {
+          return Parameter.createListFromExpressionTrees(methodInvocationTree.getArguments());
         }
-        if (tree instanceof NewClassTree) {
-          return Parameter.createListFromExpressionTrees(((NewClassTree) tree).getArguments());
+        if (tree instanceof NewClassTree newClassTree) {
+          return Parameter.createListFromExpressionTrees(newClassTree.getArguments());
         }
-        if (tree instanceof MethodTree) {
-          return Parameter.createListFromVariableTrees(((MethodTree) tree).getParameters());
+        if (tree instanceof MethodTree methodTree) {
+          return Parameter.createListFromVariableTrees(methodTree.getParameters());
         }
         return ImmutableList.of();
       }

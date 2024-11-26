@@ -138,11 +138,11 @@ public final class MockitoDoSetup extends BugChecker implements CompilationUnitT
       public Void visitMethodInvocation(MethodInvocationTree tree, Void unused) {
         if (DO_THROW.matches(tree, state)) {
           var whenCall = getCurrentPath().getParentPath().getParentPath().getLeaf();
-          if ((whenCall instanceof MethodInvocationTree)
-              && INSTANCE_WHEN.matches((MethodInvocationTree) whenCall, state)) {
-            var whenTarget = getSymbol(((MethodInvocationTree) whenCall).getArguments().get(0));
-            if (whenTarget instanceof VarSymbol) {
-              spiesOrThrows.add((VarSymbol) whenTarget);
+          if (whenCall instanceof MethodInvocationTree methodInvocationTree
+              && INSTANCE_WHEN.matches(methodInvocationTree, state)) {
+            var whenTarget = getSymbol(methodInvocationTree.getArguments().get(0));
+            if (whenTarget instanceof VarSymbol varSymbol) {
+              spiesOrThrows.add(varSymbol);
             }
           }
         }
@@ -151,8 +151,8 @@ public final class MockitoDoSetup extends BugChecker implements CompilationUnitT
           if (STATIC_WHEN.matches(receiver, state)) {
             var mock = getReceiver(((MethodInvocationTree) receiver).getArguments().get(0));
             var mockSymbol = getSymbol(mock);
-            if (mockSymbol instanceof VarSymbol) {
-              spiesOrThrows.add((VarSymbol) mockSymbol);
+            if (mockSymbol instanceof VarSymbol varSymbol) {
+              spiesOrThrows.add(varSymbol);
             }
           }
         }
@@ -163,8 +163,8 @@ public final class MockitoDoSetup extends BugChecker implements CompilationUnitT
       public Void visitAssignment(AssignmentTree tree, Void unused) {
         if (SPY.matches(tree.getExpression(), state)) {
           var symbol = getSymbol(tree.getVariable());
-          if (symbol instanceof VarSymbol) {
-            spiesOrThrows.add((VarSymbol) symbol);
+          if (symbol instanceof VarSymbol varSymbol) {
+            spiesOrThrows.add(varSymbol);
           }
         }
         return super.visitAssignment(tree, null);

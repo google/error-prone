@@ -302,10 +302,10 @@ public final class Comments {
 
     Tree parent = enclosingPath.getLeaf();
 
-    if (parent instanceof BlockTree) {
-      return after(predecessorNode, ((BlockTree) parent).getStatements(), parent);
-    } else if (parent instanceof ClassTree) {
-      return after(predecessorNode, ((ClassTree) parent).getMembers(), parent);
+    if (parent instanceof BlockTree blockTree) {
+      return after(predecessorNode, blockTree.getStatements(), parent);
+    } else if (parent instanceof ClassTree classTree) {
+      return after(predecessorNode, classTree.getMembers(), parent);
     }
     return parent;
   }

@@ -154,8 +154,8 @@ public class DoubleBraceInitialization extends BugChecker implements NewClassTre
                   && symbol.getModifiers().contains(Modifier.FINAL)
                   && symbol.getKind() == ElementKind.FIELD;
         }
-        if (enclosing instanceof ReturnTree) {
-          toReplace = ((ReturnTree) enclosing).getExpression();
+        if (enclosing instanceof ReturnTree returnTree) {
+          toReplace = returnTree.getExpression();
           MethodTree enclosingMethod = ASTHelpers.findEnclosingNode(path, MethodTree.class);
           typeTree = enclosingMethod == null ? null : enclosingMethod.getReturnType();
         }
@@ -187,8 +187,8 @@ public class DoubleBraceInitialization extends BugChecker implements NewClassTre
       if (unmodifiable != null || constant) {
         // there's an enclosing unmodifiable* call, or we're in the initializer of a constant,
         // so rewrite the variable's type to be immutable and drop the unmodifiable* method
-        if (typeTree instanceof ParameterizedTypeTree) {
-          typeTree = ((ParameterizedTypeTree) typeTree).getType();
+        if (typeTree instanceof ParameterizedTypeTree parameterizedTypeTree) {
+          typeTree = parameterizedTypeTree.getType();
         }
         if (typeTree != null) {
           fix.replace(typeTree, immutableType);

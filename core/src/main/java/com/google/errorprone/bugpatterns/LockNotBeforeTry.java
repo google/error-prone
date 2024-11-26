@@ -117,9 +117,9 @@ public final class LockNotBeforeTry extends BugChecker implements MethodInvocati
     // Scan through the enclosing statements
     for (StatementTree statement : Iterables.skip(block.getStatements(), index + 1)) {
       // ... for a try/finally which releases this lock.
-      if (statement instanceof TryTree && releases((TryTree) statement, lockee, state)) {
+      if (statement instanceof TryTree tryTree && releases((TryTree) statement, lockee, state)) {
         int start = getStartPosition(statement);
-        int end = getStartPosition(((TryTree) statement).getBlock().getStatements().get(0));
+        int end = getStartPosition(tryTree.getBlock().getStatements().get(0));
         SuggestedFix fix =
             SuggestedFix.builder()
                 .replace(start, end, "")
@@ -134,8 +134,8 @@ public final class LockNotBeforeTry extends BugChecker implements MethodInvocati
             .build();
       }
       // ... or an unlock at the same level.
-      if (statement instanceof ExpressionStatementTree) {
-        ExpressionTree expression = ((ExpressionStatementTree) statement).getExpression();
+      if (statement instanceof ExpressionStatementTree expressionStatementTree) {
+        ExpressionTree expression = expressionStatementTree.getExpression();
         if (acquires(expression, lockee, state)) {
           return buildDescription(lockInvocation)
               .setMessage(

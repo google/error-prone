@@ -113,10 +113,10 @@ public class LoopConditionChecker extends BugChecker
     @Override
     public Boolean visitIdentifier(IdentifierTree tree, Void unused) {
       Symbol sym = ASTHelpers.getSymbol(tree);
-      if (sym instanceof Symbol.VarSymbol) {
+      if (sym instanceof Symbol.VarSymbol varSymbol) {
         switch (sym.getKind()) {
           case LOCAL_VARIABLE, PARAMETER -> {
-            conditionVars.add((Symbol.VarSymbol) sym);
+            conditionVars.add(varSymbol);
             return true;
           }
           default -> {}

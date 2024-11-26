@@ -48,8 +48,7 @@ public final class MultipleTopLevelClasses extends BugChecker
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
     List<String> names = new ArrayList<>();
     for (Tree member : tree.getTypeDecls()) {
-      if (member instanceof ClassTree) {
-        ClassTree classMember = (ClassTree) member;
+      if (member instanceof ClassTree classMember) {
         switch (classMember.getKind()) {
           case CLASS, INTERFACE, ANNOTATION_TYPE, ENUM -> {
             if (isSuppressed(classMember, state)) {
