@@ -213,6 +213,36 @@ public final class PatternMatchingInstanceofTest {
   }
 
   @Test
+  public void primitiveType_shortNameChosen() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                if (o instanceof Long) {
+                  test((Long) o);
+                  test(((Long) o).hashCode());
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                if (o instanceof Long l) {
+                  test(l);
+                  test(l.hashCode());
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void genericWithUpperBoundedWildcard() {
     helper
         .addInputLines(

@@ -23,6 +23,7 @@ import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.SourceVersion.supportsPatternMatchingInstanceof;
 
+import com.google.common.base.Ascii;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -41,6 +42,7 @@ import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.code.TypeTag;
 import org.jspecify.annotations.Nullable;
 
 /** A BugPattern; see the summary. */
@@ -66,7 +68,16 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
         if (!allCasts.isEmpty()) {
           // This is a gamble as to an appropriate name. We could make sure it doesn't clash with
           // anything in scope, but that's effort.
-          var name = lowerFirstLetter(targetType.tsym.getSimpleName().toString());
+          String name;
+          var unboxed = state.getTypes().unboxedType(targetType);
+          if (targetType.isPrimitive() || (unboxed != null && unboxed.getTag() != TypeTag.NONE)) {
+            name =
+                String.valueOf(
+                    Ascii.toLowerCase(targetType.tsym.getSimpleName().toString().charAt(0)));
+          } else {
+            name = lowerFirstLetter(targetType.tsym.getSimpleName().toString());
+          }
+
           return describeMatch(
               instanceOfTree,
               SuggestedFix.builder()
