@@ -29,6 +29,7 @@ import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
+import static com.google.errorprone.util.ASTHelpers.stripParentheses;
 import static java.lang.String.format;
 import static java.util.Arrays.stream;
 
@@ -47,12 +48,15 @@ import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.BinaryTree;
+import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ParenthesizedTree;
+import com.sun.source.tree.SwitchExpressionTree;
+import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.TypeCastTree;
@@ -64,6 +68,7 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -146,6 +151,7 @@ public final class ImpossibleNullComparison extends BugChecker
   private final boolean matchTestAssertions;
   private final boolean checkPrimitives;
   private final boolean checkValueOf;
+  private final boolean checkSwitches;
 
   @Inject
   ImpossibleNullComparison(ErrorProneFlags flags) {
@@ -153,6 +159,7 @@ public final class ImpossibleNullComparison extends BugChecker
         flags.getBoolean("ProtoFieldNullComparison:MatchTestAssertions").orElse(true);
     this.checkPrimitives = flags.getBoolean("ImmutableNullComparison:CheckPrimitives").orElse(true);
     this.checkValueOf = flags.getBoolean("ImpossibleNullComparison:CheckValueOf").orElse(true);
+    this.checkSwitches = flags.getBoolean("ImpossibleNullComparison:CheckSwitches").orElse(true);
   }
 
   @Override
@@ -209,6 +216,38 @@ public final class ImpossibleNullComparison extends BugChecker
               return visit(node.getExpression(), null);
             }
           }.visit(tree, null));
+    }
+
+    @Override
+    public Void visitSwitch(SwitchTree tree, Void unused) {
+      if (checkSwitches) {
+        handleSwitch(tree.getExpression(), tree.getCases());
+      }
+      return super.visitSwitch(tree, null);
+    }
+
+    @Override
+    public Void visitSwitchExpression(SwitchExpressionTree tree, Void unused) {
+      if (checkSwitches) {
+        handleSwitch(tree.getExpression(), tree.getCases());
+      }
+      return super.visitSwitchExpression(tree, null);
+    }
+
+    private void handleSwitch(ExpressionTree expression, List<? extends CaseTree> cases) {
+      var withoutParens = stripParentheses(expression);
+      VisitorState subState = state.withPath(getCurrentPath());
+      for (var caseTree : cases) {
+        caseTree.getExpressions().stream()
+            .filter(e -> isNull(e))
+            .findFirst()
+            // We're not using the fixer, just using it to see if there's a problem.
+            .filter(unused -> getFixer(withoutParens, subState).isPresent())
+            .ifPresent(
+                e ->
+                    // NOTE: This fix is possibly too big: you can write `case null, default ->`.
+                    state.reportMatch(describeMatch(caseTree, SuggestedFix.delete(caseTree))));
+      }
     }
 
     @Override

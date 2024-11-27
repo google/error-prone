@@ -15,6 +15,7 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.common.collect.ImmutableList;
+import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -30,6 +31,9 @@ public final class ImpossibleNullComparisonTest {
 
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(ImpossibleNullComparison.class, getClass());
+
+  private final BugCheckerRefactoringTestHelper refactoringHelper =
+      BugCheckerRefactoringTestHelper.newInstance(ImpossibleNullComparison.class, getClass());
 
   @Test
   public void scalarCases() {
@@ -472,6 +476,62 @@ public class Test {
               }
             }
             """)
+        .doTest();
+  }
+
+  @Test
+  public void optionalGetSwitched() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.util.Optional;
+
+            public class Test {
+              public boolean o(Optional<String> o) {
+                return switch (o.get()) {
+                  case null -> true;
+                  case "" -> false;
+                  default -> false;
+                };
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.util.Optional;
+
+            public class Test {
+              public boolean o(Optional<String> o) {
+                return switch (o.get()) {
+                  case "" -> false;
+                  default -> false;
+                };
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void optionalGetSwitched_noNullCheck() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.util.Optional;
+
+            public class Test {
+              public boolean o(Optional<String> o) {
+                return switch (o.get()) {
+                  case "" -> false;
+                  default -> false;
+                };
+              }
+            }
+            """)
+        .expectUnchanged()
         .doTest();
   }
 
