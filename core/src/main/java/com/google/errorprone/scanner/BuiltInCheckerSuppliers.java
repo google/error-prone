@@ -205,6 +205,7 @@ import com.google.errorprone.bugpatterns.JUnit3FloatingPointComparisonWithoutDel
 import com.google.errorprone.bugpatterns.JUnit3TestNotRun;
 import com.google.errorprone.bugpatterns.JUnit4ClassAnnotationNonStatic;
 import com.google.errorprone.bugpatterns.JUnit4ClassUsedInJUnit3;
+import com.google.errorprone.bugpatterns.JUnit4EmptyMethods;
 import com.google.errorprone.bugpatterns.JUnit4SetUpNotRun;
 import com.google.errorprone.bugpatterns.JUnit4TearDownNotRun;
 import com.google.errorprone.bugpatterns.JUnit4TestNotRun;
@@ -971,6 +972,7 @@ public class BuiltInCheckerSuppliers {
           IterableAndIterator.class,
           JUnit3FloatingPointComparisonWithoutDelta.class,
           JUnit4ClassUsedInJUnit3.class,
+          JUnit4EmptyMethods.class,
           JUnitAmbiguousTestClass.class,
           JUnitIncompatibleType.class,
           JavaDurationGetSecondsGetNano.class,
