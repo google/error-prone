@@ -2624,14 +2624,6 @@ public class ASTHelpers {
     return result.build();
   }
 
-  /**
-   * @deprecated use {@link #hasImplicitType(VariableTree, VisitorState)} instead
-   */
-  @Deprecated
-  public static boolean hasNoExplicitType(VariableTree tree, VisitorState state) {
-    return hasImplicitType(tree, state);
-  }
-
   /** Returns whether this is a {@code var} or a lambda parameter that has no explicit type. */
   public static boolean hasImplicitType(VariableTree tree, VisitorState state) {
     /*
