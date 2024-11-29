@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.base.Ascii.toLowerCase;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.fixes.SuggestedFix.mergeFixes;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
@@ -23,7 +24,6 @@ import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.SourceVersion.supportsPatternMatchingInstanceof;
 
-import com.google.common.base.Ascii;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -43,6 +43,7 @@ import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.TypeTag;
+import javax.lang.model.SourceVersion;
 import org.jspecify.annotations.Nullable;
 
 /** A BugPattern; see the summary. */
@@ -68,15 +69,7 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
         if (!allCasts.isEmpty()) {
           // This is a gamble as to an appropriate name. We could make sure it doesn't clash with
           // anything in scope, but that's effort.
-          String name;
-          var unboxed = state.getTypes().unboxedType(targetType);
-          if (targetType.isPrimitive() || (unboxed != null && unboxed.getTag() != TypeTag.NONE)) {
-            name =
-                String.valueOf(
-                    Ascii.toLowerCase(targetType.tsym.getSimpleName().toString().charAt(0)));
-          } else {
-            name = lowerFirstLetter(targetType.tsym.getSimpleName().toString());
-          }
+          String name = generateVariableName(targetType, state);
 
           return describeMatch(
               instanceOfTree,
@@ -93,6 +86,18 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
     // TODO(ghm): Handle things other than just ifs. It'd be great to refactor `foo instanceof Bar
     // && ((Bar) foo).baz()`.
     return NO_MATCH;
+  }
+
+  private static String generateVariableName(Type targetType, VisitorState state) {
+    Type unboxed = state.getTypes().unboxedType(targetType);
+    String simpleName = targetType.tsym.getSimpleName().toString();
+    String lowerFirstLetter = toLowerCase(String.valueOf(simpleName.charAt(0)));
+    String camelCased = lowerFirstLetter + simpleName.substring(1);
+    if (SourceVersion.isKeyword(camelCased)
+        || (unboxed != null && unboxed.getTag() != TypeTag.NONE)) {
+      return lowerFirstLetter;
+    }
+    return camelCased;
   }
 
   private Description checkForImmediateVariable(
@@ -172,9 +177,5 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
       }
     }.scan(new TreePath(new TreePath(state.getPath().getCompilationUnit()), tree), null);
     return usages.build();
-  }
-
-  private static String lowerFirstLetter(String description) {
-    return Character.toLowerCase(description.charAt(0)) + description.substring(1);
   }
 }

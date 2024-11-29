@@ -275,4 +275,60 @@ public final class PatternMatchingInstanceofTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void javaKeyword_break() {
+    helper
+        .addInputLines(
+            "Break.java",
+            """
+            class Break {
+              void test(Object o) {
+                if (o instanceof Break) {
+                  test((Break) o);
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Break.java",
+            """
+            class Break {
+              void test(Object o) {
+                if (o instanceof Break b) {
+                  test(b);
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void javaKeyword_class() {
+    helper
+        .addInputLines(
+            "Class.java",
+            """
+            class Class {
+              void test(Object o) {
+                if (o instanceof Class) {
+                  test((Class) o);
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Class.java",
+            """
+            class Class {
+              void test(Object o) {
+                if (o instanceof Class c) {
+                  test(c);
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
 }
