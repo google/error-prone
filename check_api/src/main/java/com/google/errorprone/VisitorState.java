@@ -51,6 +51,7 @@ import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.Context;
+import com.sun.tools.javac.util.Convert;
 import com.sun.tools.javac.util.Name;
 import com.sun.tools.javac.util.Names;
 import com.sun.tools.javac.util.Options;
@@ -760,24 +761,20 @@ public class VisitorState {
    * Like {@link Elements#getConstantExpression}, but doesn't over-escape single quotes in strings.
    */
   public String getConstantExpression(Object value) {
-    String escaped = getElements().getConstantExpression(value);
-    if (value instanceof String) {
-      // Don't escape single-quotes in string literals
-      StringBuilder sb = new StringBuilder();
-      for (int i = 0; i < escaped.length(); i++) {
-        char c = escaped.charAt(i);
-        if (c == '\\' && i + 1 < escaped.length()) {
-          char next = escaped.charAt(++i);
-          if (next != '\'') {
-            sb.append(c);
-          }
-          sb.append(next);
-        } else {
-          sb.append(c);
-        }
-      }
-      return sb.toString();
+    if (!(value instanceof CharSequence str)) {
+      return getElements().getConstantExpression(value);
     }
-    return escaped;
+
+    // Don't escape single-quotes in string literals.
+    StringBuilder sb = new StringBuilder("\"");
+    for (int i = 0; i < str.length(); i++) {
+      char c = str.charAt(i);
+      if (c == '\'') {
+        sb.append('\'');
+      } else {
+        sb.append(Convert.quote(c));
+      }
+    }
+    return sb.append('"').toString();
   }
 }
