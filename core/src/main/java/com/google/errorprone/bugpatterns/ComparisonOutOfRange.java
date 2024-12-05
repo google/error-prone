@@ -103,10 +103,10 @@ public class ComparisonOutOfRange extends BugChecker implements BinaryTreeMatche
               return switch (tree.getKind()) {
                 case EQUAL_TO -> matchOutOfBounds(/* willEvaluateTo= */ false);
                 case NOT_EQUAL_TO -> matchOutOfBounds(/* willEvaluateTo= */ true);
-                case LESS_THAN -> matchMinAndMaxHaveSameResult(cmp -> cmp < 0);
-                case LESS_THAN_EQUAL -> matchMinAndMaxHaveSameResult(cmp -> cmp <= 0);
-                case GREATER_THAN -> matchMinAndMaxHaveSameResult(cmp -> cmp > 0);
-                case GREATER_THAN_EQUAL -> matchMinAndMaxHaveSameResult(cmp -> cmp >= 0);
+                case LESS_THAN -> matchDoesNotSplitNumberLine(cmp -> cmp < 0);
+                case LESS_THAN_EQUAL -> matchDoesNotSplitNumberLine(cmp -> cmp <= 0);
+                case GREATER_THAN -> matchDoesNotSplitNumberLine(cmp -> cmp > 0);
+                case GREATER_THAN_EQUAL -> matchDoesNotSplitNumberLine(cmp -> cmp >= 0);
                 default -> NO_MATCH;
               };
             }
@@ -118,13 +118,14 @@ public class ComparisonOutOfRange extends BugChecker implements BinaryTreeMatche
             }
 
             /*
-             * If `minValue < constant` and `maxValue < constant` are both true, then `anything <
-             * constant` is true.
+             * A proper "<" comparison to `constant` splits the number line into two pieces: On one
+             * side, the comparison is true; on the other, false. (Ditto for "<=," ">," and ">=.")
              *
-             * The same holds if we replace "<" with another inequality operator, if we replace
-             * "true" with "false," or if we move "constant" to the left operand.
+             * So, if the comparison returns the *same* value for the far left side of the number
+             * line as it does for the far right side, then the comparison is out of range (e.g.,
+             * "someInt < Long.MAX_VALUE").
              */
-            Description matchMinAndMaxHaveSameResult(IntPredicate op) {
+            Description matchDoesNotSplitNumberLine(IntPredicate op) {
               boolean minResult;
               boolean maxResult;
               if (constant == tree.getRightOperand()) {
