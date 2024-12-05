@@ -24,6 +24,8 @@ import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.symbolHasAnnotation;
 import static com.google.errorprone.matchers.Matchers.toType;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
+import static com.google.errorprone.util.ASTHelpers.enclosingClass;
+import static com.google.errorprone.util.ASTHelpers.findEnclosingNode;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getReturnType;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
@@ -32,8 +34,10 @@ import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.hasExplicitSource;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
+import static com.google.errorprone.util.ASTHelpers.isInStaticInitializer;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
+import static com.google.errorprone.util.ASTHelpers.variableIsStaticFinal;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.base.CaseFormat;
@@ -46,7 +50,6 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.UnusedReturnValueMatcher;
-import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.ExpressionStatementTree;
@@ -62,7 +65,6 @@ import com.sun.source.tree.TryTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreeScanner;
-import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
@@ -224,9 +226,9 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
    * Check that the expression {@code tree} occurs within the resource variable initializer of a
    * try-with-resources statement.
    */
-  private final Optional<Change> matchNewClassOrMethodInvocation(
+  private Optional<Change> matchNewClassOrMethodInvocation(
       ExpressionTree tree, VisitorState state, NameSuggester suggester) {
-    if (ASTHelpers.isInStaticInitializer(state)) {
+    if (isInStaticInitializer(state)) {
       return Optional.empty();
     }
     return checkClosed(tree, state, suggester)
@@ -253,46 +255,45 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
       path = path.getParentPath();
       switch (path.getLeaf().getKind()) {
         case RETURN -> {
-          if (callerMethodTree != null) {
-            // The invocation occurs within a return statement of a method, instead of a lambda
-            // expression or anonymous class.
-            if (HAS_MUST_BE_CLOSED_ANNOTATION.matches(callerMethodTree, state)) {
-              // Ignore invocations of annotated methods and constructors that occur in the return
-              // statement of an annotated caller method, since invocations of the caller are
-              // enforced.
-              return Optional.empty();
-            }
-            // The caller method is not annotated, so the closing of the returned resource is not
-            // enforced. Suggest fixing this by annotating the caller method.
-            return Change.of(
-                SuggestedFix.builder()
-                    .prefixWith(callerMethodTree, "@MustBeClosed\n")
-                    .addImport(MustBeClosed.class.getCanonicalName())
-                    .build());
+          if (callerMethodTree == null) {
+            // If enclosingMethod returned null, we must be returning from a statement lambda.
+            return handleTailPositionInLambda(state);
           }
-          // If enclosingMethod returned null, we must be returning from a statement lambda.
-          return handleTailPositionInLambda(state);
+          // The invocation occurs within a return statement of a method, instead of a lambda
+          // expression or anonymous class.
+          if (HAS_MUST_BE_CLOSED_ANNOTATION.matches(callerMethodTree, state)) {
+            // Ignore invocations of annotated methods and constructors that occur in the return
+            // statement of an annotated caller method, since invocations of the caller are
+            // enforced.
+            return Optional.empty();
+          }
+          // The caller method is not annotated, so the closing of the returned resource is not
+          // enforced. Suggest fixing this by annotating the caller method.
+          return Change.of(
+              SuggestedFix.builder()
+                  .prefixWith(callerMethodTree, "@MustBeClosed\n")
+                  .addImport(MustBeClosed.class.getCanonicalName())
+                  .build());
         }
         case LAMBDA_EXPRESSION -> {
           // The method invocation is the body of an expression lambda.
           return handleTailPositionInLambda(state);
         }
         case CONDITIONAL_EXPRESSION -> {
-          ConditionalExpressionTree conditionalExpressionTree =
-              (ConditionalExpressionTree) path.getLeaf();
+          var conditionalExpressionTree = (ConditionalExpressionTree) path.getLeaf();
           if (conditionalExpressionTree.getTrueExpression().equals(prev.getLeaf())
               || conditionalExpressionTree.getFalseExpression().equals(prev.getLeaf())) {
             continue OUTER;
           }
         }
         case MEMBER_SELECT -> {
-          MemberSelectTree memberSelectTree = (MemberSelectTree) path.getLeaf();
+          var memberSelectTree = (MemberSelectTree) path.getLeaf();
           if (memberSelectTree.getExpression().equals(prev.getLeaf())) {
-            Type type = getType(memberSelectTree);
-            Symbol sym = getSymbol(memberSelectTree);
             Type streamType = state.getTypeFromString(Stream.class.getName());
-            if (isSubtype(sym.enclClass().asType(), streamType, state)
-                && isSameType(type.getReturnType(), streamType, state)) {
+            Type classType = enclosingClass(getSymbol(memberSelectTree)).asType();
+            Type returnType = getReturnType(memberSelectTree);
+            if (isSubtype(classType, streamType, state)
+                && isSameType(returnType, streamType, state)) {
               // skip enclosing method invocation
               path = path.getParentPath();
               continue OUTER;
@@ -300,7 +301,7 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
           }
         }
         case NEW_CLASS -> {
-          NewClassTree newClassTree = (NewClassTree) path.getLeaf();
+          var newClassTree = (NewClassTree) path.getLeaf();
           if (isClosingDecorator(newClassTree, prev.getLeaf(), state)) {
             if (HAS_MUST_BE_CLOSED_ANNOTATION.matches(newClassTree, state)) {
               // if the decorator is also annotated then it would already be enforced
@@ -311,13 +312,11 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
           }
         }
         case VARIABLE -> {
-          Symbol sym = getSymbol(path.getLeaf());
-          if (sym instanceof VarSymbol var) {
-            if (var.getKind() == ElementKind.RESOURCE_VARIABLE
-                || isClosedInFinallyClause(var, path, state)
-                || ASTHelpers.variableIsStaticFinal(var)) {
-              return Optional.empty();
-            }
+          VarSymbol var = getSymbol((VariableTree) path.getLeaf());
+          if (var.getKind() == ElementKind.RESOURCE_VARIABLE
+              || isClosedInFinallyClause(var, path, state)
+              || variableIsStaticFinal(var)) {
+            return Optional.empty();
           }
         }
         case ASSIGNMENT -> {
@@ -338,8 +337,7 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
   }
 
   private static Optional<Change> handleTailPositionInLambda(VisitorState state) {
-    LambdaExpressionTree lambda =
-        ASTHelpers.findEnclosingNode(state.getPath(), LambdaExpressionTree.class);
+    LambdaExpressionTree lambda = findEnclosingNode(state.getPath(), LambdaExpressionTree.class);
     if (lambda == null) {
       // Apparently we're not inside a lambda?!
       return findingWithNoFix();
@@ -381,21 +379,15 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
     if (!isConsideredFinal(var)) {
       return false;
     }
-    Tree parent = path.getParentPath().getLeaf();
-    if (parent.getKind() != Tree.Kind.BLOCK) {
+    if (!(path.getParentPath().getLeaf() instanceof BlockTree block)) {
       return false;
     }
-    BlockTree block = (BlockTree) parent;
     int idx = block.getStatements().indexOf(path.getLeaf());
     if (idx == -1 || idx == block.getStatements().size() - 1) {
       return false;
     }
     StatementTree next = block.getStatements().get(idx + 1);
-    if (!(next instanceof TryTree)) {
-      return false;
-    }
-    TryTree tryTree = (TryTree) next;
-    if (tryTree.getFinallyBlock() == null) {
+    if (!(next instanceof TryTree tryTree) || tryTree.getFinallyBlock() == null) {
       return false;
     }
     boolean[] closed = {false};
@@ -418,23 +410,20 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
 
   private static Optional<Change> chooseFixType(
       ExpressionTree tree, VisitorState state, NameSuggester suggester) {
-    TreePath path = state.getPath();
-    Tree parent = path.getParentPath().getLeaf();
-    if (parent instanceof VariableTree) {
-      return wrapTryFinallyAroundVariableScope((VariableTree) parent, state);
+    if (state.getPath().getParentPath().getLeaf() instanceof VariableTree parent) {
+      return wrapTryFinallyAroundVariableScope(parent, state);
     }
     StatementTree stmt = state.findEnclosing(StatementTree.class);
     if (stmt == null) {
       return Optional.empty();
     }
-    if (!(stmt instanceof VariableTree)) {
+    if (!(stmt instanceof VariableTree var)) {
       return introduceSingleStatementTry(tree, stmt, state, suggester);
     }
-    VarSymbol varSym = getSymbol((VariableTree) stmt);
-    if (varSym.getKind() == ElementKind.RESOURCE_VARIABLE) {
-      return extractToResourceInCurrentTry(tree, stmt, state, suggester);
+    if (getSymbol(var).getKind() == ElementKind.RESOURCE_VARIABLE) {
+      return extractToResourceInCurrentTry(tree, var, state, suggester);
     }
-    return splitVariableDeclarationAroundTry(tree, (VariableTree) stmt, state, suggester);
+    return splitVariableDeclarationAroundTry(tree, var, state, suggester);
   }
 
   private static Optional<Change> introduceSingleStatementTry(
