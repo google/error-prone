@@ -19,9 +19,8 @@ package com.google.errorprone;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 
-import com.google.common.base.Supplier;
-import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.fixes.AppliedFix;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.matchers.Description;
@@ -33,7 +32,6 @@ import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import com.sun.tools.javac.util.Log;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,17 +58,12 @@ public class JavacErrorDescriptionListener implements DescriptionListener {
   // The suffix for properties in src/main/resources/com/google/errorprone/errors.properties
   private static final String MESSAGE_BUNDLE_KEY = "error.prone";
 
-  // DiagnosticFlag.MULTIPLE went away in JDK13, so we want to load it if it's available.
-  private static final Supplier<EnumSet<JCDiagnostic.DiagnosticFlag>> diagnosticFlags =
-      Suppliers.memoize(
-          () -> {
-            try {
-              return EnumSet.of(JCDiagnostic.DiagnosticFlag.valueOf("MULTIPLE"));
-            } catch (IllegalArgumentException iae) {
-              // JDK 13 and above
-              return EnumSet.noneOf(JCDiagnostic.DiagnosticFlag.class);
-            }
-          });
+  // DiagnosticFlag.API ensures that errors are always reported, bypassing 'shouldReport' logic
+  // that filters out duplicate diagnostics at the same position, and ensures that
+  // ErrorProneAnalyzer can compare the counts of errors reported by Error Prone with the total
+  // number of errors reported.
+  private static final ImmutableSet<JCDiagnostic.DiagnosticFlag> DIAGNOSTIC_FLAGS =
+      ImmutableSet.of(JCDiagnostic.DiagnosticFlag.API);
 
   private JavacErrorDescriptionListener(
       Log log,
@@ -125,7 +118,7 @@ public class JavacErrorDescriptionListener implements DescriptionListener {
           factory.create(
               type,
               /* lintCategory */ null,
-              diagnosticFlags.get(),
+              DIAGNOSTIC_FLAGS,
               log.currentSource(),
               pos,
               MESSAGE_BUNDLE_KEY,

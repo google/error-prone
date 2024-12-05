@@ -16,6 +16,7 @@
 
 package com.google.errorprone;
 
+import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assertWithMessage;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
@@ -25,6 +26,7 @@ import static com.google.errorprone.FileObjects.forSourceLines;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.constValue;
 import static java.util.Locale.ENGLISH;
+import static java.util.Objects.requireNonNull;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assume.assumeTrue;
 
@@ -759,5 +761,66 @@ public class ErrorProneCompilerIntegrationTest {
             () ->
                 compiler.compile(new String[] {"-XDshould-stop.ifError=INIT"}, ImmutableList.of()));
     assertThat(e).hasMessageThat().contains("--should-stop=ifError=INIT is not supported");
+  }
+
+  @BugPattern(summary = "Checks that symbols are non-null", severity = ERROR)
+  public static class GetSymbolChecker extends BugChecker implements MethodInvocationTreeMatcher {
+    @Override
+    public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+      requireNonNull(ASTHelpers.getSymbol(tree));
+      return NO_MATCH;
+    }
+  }
+
+  @BugPattern(summary = "Duplicates CPSChecker", severity = ERROR)
+  public static class CPSChecker2 extends CPSChecker {}
+
+  // This is a regression test for a crash if two Error Prone diagnostics are reported at the same
+  // position. javac has logic to filter duplicate diagnostics, which can result in counts of
+  // Error Prone and other diagnostics getting out of sync with the counters kept in
+  // ErrorProneAnalyzer, which are used to skip Error Prone checks on compilation units with
+  // underlying errors. If the checks run on compilations with underlying errors they may see
+  // null symbols.
+  @Test
+  public void processingError() {
+    compilerBuilder.report(
+        ScannerSupplier.fromBugCheckerClasses(
+            CPSChecker.class, CPSChecker2.class, GetSymbolChecker.class));
+    compiler = compilerBuilder.build();
+    Result exitCode =
+        compiler.compile(
+            new String[] {"--should-stop=ifError=FLOW", "-XDcompilePolicy=byfile"},
+            ImmutableList.of(
+                forSourceLines(
+                    "A.java",
+                    """
+                    class A {
+                      int f(int x) {
+                        return x;
+                      }
+                    }
+                    """),
+                forSourceLines(
+                    "B.java",
+                    """
+                    package test;
+                    import java.util.HashSet;
+                    import java.util.Set;
+                    class B {
+                      enum E { ONE }
+                      E f(int s) {
+                        return E.valueOf(s);
+                      }
+                    }
+                    """)),
+            ImmutableList.of());
+    assertWithMessage(outputStream.toString()).that(exitCode).isEqualTo(Result.ERROR);
+    ImmutableList<String> diagnostics =
+        diagnosticHelper.getDiagnostics().stream()
+            .filter(d -> d.getKind().equals(Diagnostic.Kind.ERROR))
+            .map(d -> d.getCode())
+            .collect(toImmutableList());
+    assertThat(diagnostics).doesNotContain("compiler.err.error.prone.crash");
+    assertThat(diagnostics).hasSize(3);
   }
 }
