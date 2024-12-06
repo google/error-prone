@@ -20,7 +20,6 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.fixes.SuggestedFix.emptyFix;
 import static com.google.errorprone.fixes.SuggestedFix.merge;
 import static com.google.errorprone.fixes.SuggestedFixes.addModifiers;
-import static com.google.errorprone.fixes.SuggestedFixes.removeModifiers;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.canBeRemoved;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -68,6 +67,9 @@ public final class NonFinalStaticField extends BugChecker implements VariableTre
     if (!isStatic(symbol)) {
       return NO_MATCH;
     }
+    if (symbol.getModifiers().contains(Modifier.VOLATILE)) {
+      return NO_MATCH;
+    }
     if (isConsideredFinal(symbol)) {
       return NO_MATCH;
     }
@@ -86,8 +88,6 @@ public final class NonFinalStaticField extends BugChecker implements VariableTre
         tree,
         merge(
             addModifiers(tree, tree.getModifiers(), state, ImmutableSet.of(FINAL))
-                .orElse(emptyFix()),
-            removeModifiers(tree.getModifiers(), state, ImmutableSet.of(Modifier.VOLATILE))
                 .orElse(emptyFix()),
             addDefaultInitializerIfNecessary(tree, state)));
   }

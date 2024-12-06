@@ -233,20 +233,13 @@ public final class NonFinalStaticFieldTest {
   }
 
   @Test
-  public void volatileRemoved() {
-    refactoringTestHelper
-        .addInputLines(
+  public void volatile_noFinding() {
+    compilationTestHelper
+        .addSourceLines(
             "Test.java",
             """
             public class Test {
               private static volatile String FOO = "";
-            }
-            """)
-        .addOutputLines(
-            "Test.java",
-            """
-            public class Test {
-              private static final String FOO = "";
             }
             """)
         .doTest();
