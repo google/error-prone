@@ -63,7 +63,7 @@ public final class ErrorProneFlags implements Serializable {
   }
 
   public ImmutableMap<String, String> getFlagsMap() {
-    return ImmutableMap.copyOf(flagsMap);
+    return flagsMap;
   }
 
   /**
