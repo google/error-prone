@@ -545,6 +545,7 @@ import com.google.errorprone.bugpatterns.javadoc.InvalidBlockTag;
 import com.google.errorprone.bugpatterns.javadoc.InvalidInlineTag;
 import com.google.errorprone.bugpatterns.javadoc.InvalidLink;
 import com.google.errorprone.bugpatterns.javadoc.InvalidParam;
+import com.google.errorprone.bugpatterns.javadoc.InvalidSnippet;
 import com.google.errorprone.bugpatterns.javadoc.InvalidThrows;
 import com.google.errorprone.bugpatterns.javadoc.InvalidThrowsLink;
 import com.google.errorprone.bugpatterns.javadoc.MalformedInlineTag;
@@ -966,6 +967,7 @@ public class BuiltInCheckerSuppliers {
           InvalidInlineTag.class,
           InvalidLink.class,
           InvalidParam.class,
+          InvalidSnippet.class,
           InvalidTargetingOnScopingAnnotation.class,
           InvalidThrows.class,
           InvalidThrowsLink.class,
