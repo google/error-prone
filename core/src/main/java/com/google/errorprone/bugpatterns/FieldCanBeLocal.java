@@ -76,7 +76,7 @@ public final class FieldCanBeLocal extends BugChecker implements CompilationUnit
     Map<VarSymbol, TreePath> potentialFields = new LinkedHashMap<>();
     SetMultimap<VarSymbol, TreePath> unconditionalAssignments =
         MultimapBuilder.linkedHashKeys().linkedHashSetValues().build();
-    SetMultimap<VarSymbol, Tree> uses =
+    SetMultimap<VarSymbol, TreePath> uses =
         MultimapBuilder.linkedHashKeys().linkedHashSetValues().build();
 
     new SuppressibleTreePathScanner<Void, Void>(state) {
@@ -194,7 +194,7 @@ public final class FieldCanBeLocal extends BugChecker implements CompilationUnit
               return;
             }
             VarSymbol varSymbol = (VarSymbol) symbol;
-            uses.put(varSymbol, tree);
+            uses.put(varSymbol, getCurrentPath());
             if (!unconditionallyAssigned.contains(varSymbol)) {
               potentialFields.remove(varSymbol);
             }
@@ -250,6 +250,15 @@ public final class FieldCanBeLocal extends BugChecker implements CompilationUnit
       if (assignmentLocations.isEmpty()) {
         continue;
       }
+      // Don't emit findings if the _only_ uses of the field are assignments: we'll be overlapping
+      // with UnusedVariable.
+      if (uses.get(varSymbol).stream()
+          .allMatch(
+              tp ->
+                  tp.getParentPath().getLeaf() instanceof AssignmentTree parent
+                      && parent.getVariable() == tp.getLeaf())) {
+        continue;
+      }
       SuggestedFix.Builder fix = SuggestedFix.builder();
       VariableTree variableTree = (VariableTree) declarationSite.getLeaf();
       String type = state.getSourceForNode(variableTree.getType());
@@ -277,7 +286,8 @@ public final class FieldCanBeLocal extends BugChecker implements CompilationUnit
         }
       }
       // Strip "this." off any uses of the field.
-      for (Tree usage : uses.get(varSymbol)) {
+      for (TreePath usagePath : uses.get(varSymbol)) {
+        var usage = usagePath.getLeaf();
         if (deletedTrees.contains(usage)
             || usage.getKind() == Kind.IDENTIFIER
             || usage.getKind() != Kind.MEMBER_SELECT) {

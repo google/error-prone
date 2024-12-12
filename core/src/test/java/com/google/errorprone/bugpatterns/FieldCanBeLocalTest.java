@@ -52,6 +52,23 @@ public final class FieldCanBeLocalTest {
   }
 
   @Test
+  public void fullyUnused_noFinding() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              private int a;
+
+              void foo() {
+                a = 1;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void suppressedByUnusedPrefix() {
     helper
         .addSourceLines(
