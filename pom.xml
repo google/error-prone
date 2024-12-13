@@ -303,7 +303,7 @@
           <toolchains>
             <jdk>
               <version>17</version>
-              <version>24</version>
+              <version>25</version>
             </jdk>
           </toolchains>
         </configuration>
