@@ -3131,42 +3131,10 @@ public final class StatementSwitchToExpressionSwitchTest {
    **********************************/
 
   @Test
-  public void switchByEnum_assignmentSwitchToLocalHasDefault_error() {
-    helper
-        .addSourceLines(
-            "Test.java",
-            """
-            class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
-              public Test(int foo) {}
-
-              public int foo(Side side) {
-                int x = 0;
-                // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]
-                switch (side) {
-                  case HEART:
-                  case DIAMOND:
-                    x = (((x + 1) * (x * x)) << 1);
-                    break;
-                  case SPADE:
-                    throw new RuntimeException();
-                  default:
-                    throw new NullPointerException();
-                }
-                return x;
-              }
-            }
-            """)
-        .setArgs(
-            ImmutableList.of(
-                "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion"))
-        .doTest();
+  public void switchByEnum_assignmentSwitchToVarInVariableDeclaratorList_error() {
+    // The variable declaration for x is in the same VariableDeclaratorList as for y, therefore we
+    // do not combine the variable declaration for x with the switch block.  (There is a separate
+    // Error Prone check that suggests a fix for this.)
 
     // Check correct generated code
     refactoringHelper
@@ -3184,11 +3152,13 @@ public final class StatementSwitchToExpressionSwitchTest {
               public Test(int foo) {}
 
               public int foo(Side side) {
-                int x = 0;
+                var a = 0;
+                String b = "b";
+                int y = 0, x;
                 switch (side) {
                   case HEART:
                   case DIAMOND:
-                    x = ((x + 1) * (x * x)) << 1;
+                    x = ((y + 1) * (y * y)) << 1;
                     break;
                   case SPADE:
                     throw new RuntimeException();
@@ -3213,10 +3183,12 @@ public final class StatementSwitchToExpressionSwitchTest {
               public Test(int foo) {}
 
               public int foo(Side side) {
-                int x = 0;
+                var a = 0;
+                String b = "b";
+                int y = 0, x;
                 x =
                     switch (side) {
-                      case HEART, DIAMOND -> ((x + 1) * (x * x)) << 1;
+                      case HEART, DIAMOND -> ((y + 1) * (y * y)) << 1;
                       case SPADE -> throw new RuntimeException();
                       default -> throw new NullPointerException();
                     };
@@ -3227,7 +3199,432 @@ public final class StatementSwitchToExpressionSwitchTest {
         .setArgs(
             ImmutableList.of(
                 "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion"))
-        .doTest();
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+  }
+
+  @Test
+  public void switchByEnum_assignmentSwitchCombinedWithPrecedingVariableDeclaration_error() {
+    // Test case where the switch block can be combined with the preceding variable declaration. The
+    // variable declaration contains an unusual variation of comments, annotations, etc., which
+    // should all be preserved, though possibly reordered.  Also has test of wildcards.
+
+    // Check correct generated code
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.lang.annotation.Repeatable;
+            import java.util.HashMap;
+            import java.util.Map;
+            import java.util.Set;
+
+            class Test {
+              enum Side {
+                HEART,
+                SPADE,
+                DIAMOND,
+                CLUB
+              };
+
+              @interface MyAnnos {
+                Test.MyAnno[] value();
+              }
+
+              @Repeatable(Test.MyAnnos.class)
+              @interface MyAnno {
+                String v() default "";
+              }
+
+              @interface MyOtherAnno {}
+
+              public Test(int foo) {}
+
+              public int y = 0;
+
+              public int foo(Side side) {
+                @MyAnno(v = "foo")
+                // alpha
+                /* beta */ @MyOtherAnno
+                @MyAnno
+                final /* chi */ int /* gamma */ x /* delta */; // epsilon
+                // zeta
+                switch (side) {
+                  case HEART:
+                  case DIAMOND:
+                    x = ((y + 1) * (y * y)) << 1;
+                    break;
+                  case SPADE:
+                    throw new RuntimeException();
+                  default:
+                    throw new NullPointerException();
+                }
+                Map<? extends String, ? super Test> map = null;
+                switch (side) {
+                  case HEART:
+                  case DIAMOND:
+                    map = new HashMap<>();
+                    break;
+                  case SPADE:
+                    throw new RuntimeException();
+                  default:
+                    throw new NullPointerException();
+                }
+                return x;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.lang.annotation.Repeatable;
+            import java.util.HashMap;
+            import java.util.Map;
+            import java.util.Set;
+            class Test {
+              enum Side {
+                HEART,
+                SPADE,
+                DIAMOND,
+                CLUB
+              };
+
+              @interface MyAnnos {Test.MyAnno[] value();}
+              @Repeatable(Test.MyAnnos.class)
+              @interface MyAnno {String v() default "";}
+              @interface MyOtherAnno {}
+
+              public Test(int foo) {}
+
+              public int y = 0;
+
+              public int foo(Side side) {
+                // epsilon
+                // zeta
+                // alpha
+                /* beta */
+                /* chi */
+                /* gamma */
+                /* delta */
+                @MyAnno(v = "foo")
+                @MyOtherAnno
+                @MyAnno
+                final int x =
+                    switch (side) {
+                      case HEART, DIAMOND -> ((y + 1) * (y * y)) << 1;
+                      case SPADE -> throw new RuntimeException();
+                      default -> throw new NullPointerException();
+                    };
+
+                 Map<? extends String, ? super Test> map =
+                     switch (side) {
+                      case HEART, DIAMOND -> new HashMap<>();
+                      case SPADE -> throw new RuntimeException();
+                      default -> throw new NullPointerException();
+                    };
+                return x;
+              }
+            }
+            """)
+        .setArgs(
+            ImmutableList.of(
+                "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion"))
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+  }
+
+  @Test
+  public void switchByEnum_assignmentSwitchToInitializedtAsConstant_error() {
+    // Dead store of a compile-time constant to local variable {@code x} can be elided.  Also tests
+    // that the type of a "var" declaration is handled correctly.
+
+    // Check correct generated code
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              enum Side {
+                HEART,
+                SPADE,
+                DIAMOND,
+                CLUB
+              };
+
+              public Test(int foo) {}
+
+              public int foo(Side side) {
+                int y = 0;
+                var x = 999;
+                switch (side) {
+                  case HEART:
+                  case DIAMOND:
+                    x = ((y + 1) * (y * y)) << 1;
+                    break;
+                  case SPADE:
+                    throw new RuntimeException();
+                  default:
+                    throw new NullPointerException();
+                }
+                return x;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              enum Side {
+                HEART,
+                SPADE,
+                DIAMOND,
+                CLUB
+              };
+
+              public Test(int foo) {}
+
+              public int foo(Side side) {
+                int y = 0;
+
+                var x =
+                    switch (side) {
+                      case HEART, DIAMOND -> ((y + 1) * (y * y)) << 1;
+                      case SPADE -> throw new RuntimeException();
+                      default -> throw new NullPointerException();
+                    };
+                return x;
+              }
+            }
+            """)
+        .setArgs(
+            ImmutableList.of(
+                "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion"))
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+  }
+
+  @Test
+  public void switchByEnum_assignmentSwitchToNearbyDefined_error() {
+    // The switch block cannot be combined with the variable declaration for {@code x} because the
+    // variable declaration is nearby, but not immediately preceding the switch block.
+
+    // Check correct generated code
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              enum Side {
+                HEART,
+                SPADE,
+                DIAMOND,
+                CLUB
+              };
+
+              public Test(int foo) {}
+
+              public int foo(Side side) {
+                int z = 3;
+                int x;
+                int y;
+                switch (side) {
+                  case HEART:
+                  case DIAMOND:
+                    x = ((z + 1) * (z * z)) << 1;
+                    break;
+                  case SPADE:
+                    throw new RuntimeException();
+                  default:
+                    throw new NullPointerException();
+                }
+                return x;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              enum Side {
+                HEART,
+                SPADE,
+                DIAMOND,
+                CLUB
+              };
+
+              public Test(int foo) {}
+
+              public int foo(Side side) {
+                int z = 3;
+                int x;
+                int y;
+                x =
+                    switch (side) {
+                      case HEART, DIAMOND -> ((z + 1) * (z * z)) << 1;
+                      case SPADE -> throw new RuntimeException();
+                      default -> throw new NullPointerException();
+                    };
+                return x;
+              }
+            }
+            """)
+        .setArgs(
+            ImmutableList.of(
+                "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion"))
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+  }
+
+  @Test
+  public void switchByEnum_assignmentSwitchDifferentBlockScope_error() {
+    // Local variable {@code x} is defined before the switch block, but at a different (parent)
+    // block scope than the switch block.  Therefore, it should not be combined with the switch
+    // assignment.
+
+    // Check correct generated code
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              enum Side {
+                HEART,
+                SPADE,
+                DIAMOND,
+                CLUB
+              };
+
+              public Test(int foo) {}
+
+              public int foo(Side side) {
+                int z = 3;
+                int x;
+                {
+                  {
+                    switch (side) {
+                      case HEART:
+                      case DIAMOND:
+                        x = ((z + 1) * (z * z)) << 1;
+                        break;
+                      case SPADE:
+                        throw new RuntimeException();
+                      default:
+                        throw new NullPointerException();
+                    }
+                  }
+                }
+                return x;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              enum Side {
+                HEART,
+                SPADE,
+                DIAMOND,
+                CLUB
+              };
+
+              public Test(int foo) {}
+
+              public int foo(Side side) {
+                int z = 3;
+                int x;
+                {
+                  {
+                    x =
+                      switch (side) {
+                        case HEART, DIAMOND -> ((z + 1) * (z * z)) << 1;
+                        case SPADE -> throw new RuntimeException();
+                        default -> throw new NullPointerException();
+                      };
+                  }
+                }
+                return x;
+              }
+            }
+            """)
+        .setArgs(
+            ImmutableList.of(
+                "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion"))
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+  }
+
+  @Test
+  public void switchByEnum_assignmentSwitchToLocalHasDefaultVolatile_error() {
+    // Local variable {@code x} is initialized by reading a {@code volatile} field, which includes
+    // inter-thread action effects (refer to e.g. JLS 21 § 17.4.2); therefore, should not be
+    // combined with the switch assignment because those effects could be different from the
+    // original source code.  See also e.g. Shuyang Liu, John Bender, and Jens Palsberg. Compiling
+    // Volatile Correctly in Java. In 36th European Conference on Object-Oriented Programming (ECOOP
+    // 2022). Leibniz International Proceedings in Informatics (LIPIcs), Volume 222, pp. 6:1-6:26,
+    // Schloss Dagstuhl – Leibniz-Zentrum für Informatik (2022)
+
+    // Check correct generated code
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              enum Side {
+                HEART,
+                SPADE,
+                DIAMOND,
+                CLUB
+              };
+
+              public Test(int foo) {}
+
+              volatile int v = 0;
+
+              public int foo(Side side) {
+                int z = 3;
+                int x = v;
+                switch (side) {
+                  case HEART:
+                  case DIAMOND:
+                    x = ((z + 1) * (z * z)) << 1;
+                    break;
+                  case SPADE:
+                    throw new RuntimeException();
+                  default:
+                    throw new NullPointerException();
+                }
+                return x;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              enum Side {
+                HEART,
+                SPADE,
+                DIAMOND,
+                CLUB
+              };
+
+              public Test(int foo) {}
+
+              volatile int v = 0;
+
+              public int foo(Side side) {
+                int z = 3;
+                int x = v;
+                x =
+                  switch (side) {
+                    case HEART, DIAMOND -> ((z + 1) * (z * z)) << 1;
+                    case SPADE -> throw new RuntimeException();
+                    default -> throw new NullPointerException();
+                  };
+                return x;
+              }
+            }
+            """)
+        .setArgs(
+            ImmutableList.of(
+                "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion"))
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 
   @Test
@@ -3934,6 +4331,10 @@ public final class StatementSwitchToExpressionSwitchTest {
     // Transformation can change error handling.  Here, if the enum is not exhaustive at runtime
     // (say there is a new JOKER suit), then nothing would happen.  But the transformed source,
     // would throw.
+
+    // Note also that the initial value of {@code x} is used in the computation inside the switch,
+    // thus its definition is not eligible to be combined with the switch (e.g. {@code int x =
+    // switch (...)}).
     helper
         .addSourceLines(
             "Test.java",
