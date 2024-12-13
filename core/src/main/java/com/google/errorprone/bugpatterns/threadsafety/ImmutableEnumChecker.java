@@ -20,12 +20,13 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
+import static com.google.errorprone.util.AnnotationNames.IMMUTABLE_ANNOTATION;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.annotations.Immutable;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.bugpatterns.threadsafety.ThreadSafety.Violation;
@@ -67,7 +68,7 @@ public class ImmutableEnumChecker extends BugChecker implements ClassTreeMatcher
       return NO_MATCH;
     }
 
-    if (ASTHelpers.hasAnnotation(symbol, Immutable.class, state)
+    if (hasAnnotation(symbol, IMMUTABLE_ANNOTATION, state)
         && !implementsExemptInterface(symbol, state)) {
       AnnotationTree annotation =
           ASTHelpers.getAnnotationWithSimpleName(tree.getModifiers().getAnnotations(), "Immutable");
@@ -87,7 +88,7 @@ public class ImmutableEnumChecker extends BugChecker implements ClassTreeMatcher
                 this::isSuppressed,
                 state,
                 wellKnownMutability,
-                ImmutableSet.of(Immutable.class.getName()))
+                ImmutableSet.of(IMMUTABLE_ANNOTATION))
             .checkForImmutability(
                 Optional.of(tree), ImmutableSet.of(), getType(tree), this::describe);
 
@@ -109,10 +110,10 @@ public class ImmutableEnumChecker extends BugChecker implements ClassTreeMatcher
   }
 
   private static final ImmutableSet<String> EXEMPT_ANNOTATIONS =
-      ImmutableSet.of("com.google.errorprone.annotations.Immutable");
+      ImmutableSet.of(IMMUTABLE_ANNOTATION);
 
   private static boolean hasExemptAnnotation(Symbol symbol, VisitorState state) {
     return EXEMPT_ANNOTATIONS.stream()
-        .anyMatch(annotation -> ASTHelpers.hasAnnotation(symbol, annotation, state));
+        .anyMatch(annotation -> hasAnnotation(symbol, annotation, state));
   }
 }

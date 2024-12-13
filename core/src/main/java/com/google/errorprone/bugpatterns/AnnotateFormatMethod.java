@@ -23,10 +23,11 @@ import static com.google.errorprone.BugPattern.StandardTags.FRAGILE_CODE;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
+import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
+import static com.google.errorprone.util.AnnotationNames.FORMAT_METHOD_ANNOTATION;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.annotations.FormatMethod;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
@@ -43,7 +44,7 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * Detects occurrences of pairs of parameters being passed straight through to {@link String#format}
- * from a method not annotated with {@link FormatMethod}.
+ * from a method not annotated with {@link com.google.errorprone.annotations.FormatMethod}.
  *
  * @author ghm@google.com (Graeme Morgan)
  */
@@ -90,7 +91,7 @@ public final class AnnotateFormatMethod extends BugChecker implements MethodInvo
     MethodTree enclosingMethod = ASTHelpers.findEnclosingNode(state.getPath(), MethodTree.class);
     if (enclosingMethod == null
         || !ASTHelpers.getSymbol(enclosingMethod).isVarArgs()
-        || ASTHelpers.hasAnnotation(enclosingMethod, FormatMethod.class, state)) {
+        || hasAnnotation(enclosingMethod, FORMAT_METHOD_ANNOTATION, state)) {
       return Description.NO_MATCH;
     }
     List<? extends VariableTree> enclosingParameters = enclosingMethod.getParameters();

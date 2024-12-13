@@ -17,16 +17,20 @@
 package com.google.errorprone.bugpatterns.formatstring;
 
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
+import static com.google.errorprone.util.ASTHelpers.constValue;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
+import static com.google.errorprone.util.ASTHelpers.isSameType;
+import static com.google.errorprone.util.AnnotationNames.FORMAT_METHOD_ANNOTATION;
+import static com.google.errorprone.util.AnnotationNames.FORMAT_STRING_ANNOTATION;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.annotations.FormatMethod;
-import com.google.errorprone.annotations.FormatString;
 import com.google.errorprone.bugpatterns.formatstring.FormatStringValidation.ValidationResult;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
@@ -72,7 +76,7 @@ public class StrictFormatStringValidation {
 
     // The format string is not a compile time constant. Check if it is an @FormatString method
     // parameter or is in an @FormatMethod method.
-    Symbol formatStringSymbol = ASTHelpers.getSymbol(formatStringTree);
+    Symbol formatStringSymbol = getSymbol(formatStringTree);
     if (!(formatStringSymbol instanceof VarSymbol)) {
       return ValidationResult.create(
           String.format(
@@ -124,7 +128,7 @@ public class StrictFormatStringValidation {
     Types types = state.getTypes();
     ImmutableList.Builder<Type> calleeFormatArgTypesBuilder = ImmutableList.builder();
     for (ExpressionTree formatArgExpression : args) {
-      calleeFormatArgTypesBuilder.add(types.erasure(ASTHelpers.getType(formatArgExpression)));
+      calleeFormatArgTypesBuilder.add(types.erasure(getType(formatArgExpression)));
     }
     ImmutableList<Type> calleeFormatArgTypes = calleeFormatArgTypesBuilder.build();
 
@@ -138,8 +142,7 @@ public class StrictFormatStringValidation {
               calleeFormatArgTypes.size(), ownerFormatArgTypes.size()));
     } else {
       for (int i = 0; i < calleeFormatArgTypes.size(); i++) {
-        if (!ASTHelpers.isSameType(
-            ownerFormatArgTypes.get(i), calleeFormatArgTypes.get(i), state)) {
+        if (!isSameType(ownerFormatArgTypes.get(i), calleeFormatArgTypes.get(i), state)) {
           return ValidationResult.create(
               String.format(
                   "The format argument types passed "
@@ -178,7 +181,7 @@ public class StrictFormatStringValidation {
     // that case.
     Symbol owner = formatStringSymbol.owner;
     TreePath path = TreePath.getPath(state.getPath(), formatStringTree);
-    while (path != null && ASTHelpers.getSymbol(path.getLeaf()) != owner) {
+    while (path != null && getSymbol(path.getLeaf()) != owner) {
       path = path.getParentPath();
     }
 
@@ -199,7 +202,7 @@ public class StrictFormatStringValidation {
                 new TreeScanner<ValidationResult, Void>() {
                   @Override
                   public ValidationResult visitVariable(VariableTree node, Void unused) {
-                    if (ASTHelpers.getSymbol(node) == formatStringSymbol) {
+                    if (getSymbol(node) == formatStringSymbol) {
                       if (node.getInitializer() == null) {
                         return ValidationResult.create(
                             String.format(
@@ -231,7 +234,7 @@ public class StrictFormatStringValidation {
       ExpressionTree formatStringRhs,
       List<? extends ExpressionTree> args,
       VisitorState state) {
-    String value = ASTHelpers.constValue(formatStringRhs, String.class);
+    String value = constValue(formatStringRhs, String.class);
     if (value == null) {
       return ValidationResult.create(
           String.format(
@@ -261,14 +264,14 @@ public class StrictFormatStringValidation {
     Type stringType = state.getSymtab().stringType;
 
     // The input symbol must be a String and a parameter of a @FormatMethod to be a @FormatString.
-    if (!ASTHelpers.isSameType(formatString.type, stringType, state)
+    if (!isSameType(formatString.type, stringType, state)
         || !(formatString.owner instanceof MethodSymbol)
-        || !ASTHelpers.hasAnnotation(formatString.owner, FormatMethod.class, state)) {
+        || !hasAnnotation(formatString.owner, FORMAT_METHOD_ANNOTATION, state)) {
       return false;
     }
 
     // If the format string is annotated @FormatString in a @FormatMethod, it is a format string.
-    if (ASTHelpers.hasAnnotation(formatString, FormatString.class, state)) {
+    if (hasAnnotation(formatString, FORMAT_STRING_ANNOTATION, state)) {
       return true;
     }
 
@@ -280,12 +283,12 @@ public class StrictFormatStringValidation {
         formatStringFound = true;
       }
 
-      if (ASTHelpers.isSameType(param.type, stringType, state)) {
+      if (isSameType(param.type, stringType, state)) {
         // If this is a String parameter before the input Symbol, then the input symbol can't be the
         // format string since it wasn't annotated @FormatString.
         if (!formatStringFound) {
           return false;
-        } else if (ASTHelpers.hasAnnotation(param, FormatString.class, state)) {
+        } else if (hasAnnotation(param, FORMAT_STRING_ANNOTATION, state)) {
           return false;
         }
       }

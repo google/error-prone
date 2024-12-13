@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns.apidiff;
 
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -117,7 +118,7 @@ public abstract class ApiDiffChecker extends BugChecker
 
   private boolean hasAnnotationForbiddingUse(Symbol sym, VisitorState state) {
     return alsoForbidApisAnnotated.isPresent()
-        && ASTHelpers.hasAnnotation(sym, alsoForbidApisAnnotated.get(), state);
+        && hasAnnotation(sym, alsoForbidApisAnnotated.get().getName(), state);
   }
 
   /**

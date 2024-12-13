@@ -22,15 +22,16 @@ import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
+import static com.google.errorprone.util.AnnotationNames.FORMAT_METHOD_ANNOTATION;
+import static com.google.errorprone.util.AnnotationNames.FORMAT_STRING_ANNOTATION;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.MultimapBuilder;
 import com.google.common.collect.SetMultimap;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.annotations.FormatMethod;
-import com.google.errorprone.annotations.FormatString;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -96,7 +97,7 @@ public class InlineFormatString extends BugChecker implements CompilationUnitTre
   private static @Nullable ExpressionTree formatMethodAnnotationArguments(
       MethodInvocationTree tree, VisitorState state) {
     MethodSymbol sym = getSymbol(tree);
-    if (!ASTHelpers.hasAnnotation(sym, FormatMethod.class, state)) {
+    if (!hasAnnotation(sym, FORMAT_METHOD_ANNOTATION, state)) {
       return null;
     }
     return tree.getArguments().get(formatStringIndex(state, sym));
@@ -106,7 +107,7 @@ public class InlineFormatString extends BugChecker implements CompilationUnitTre
     int idx = 0;
     List<VarSymbol> parameters = sym.getParameters();
     for (VarSymbol p : parameters) {
-      if (ASTHelpers.hasAnnotation(p, FormatString.class, state)) {
+      if (hasAnnotation(p, FORMAT_STRING_ANNOTATION, state)) {
         return idx;
       }
       idx++;

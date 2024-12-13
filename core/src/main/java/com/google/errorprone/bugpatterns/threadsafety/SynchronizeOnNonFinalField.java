@@ -18,12 +18,13 @@ package com.google.errorprone.bugpatterns.threadsafety;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.stripParentheses;
+import static com.google.errorprone.util.AnnotationNames.LAZY_INIT_ANNOTATION;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.annotations.concurrent.LazyInit;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
@@ -60,7 +61,7 @@ public class SynchronizeOnNonFinalField extends BugChecker
         || (varSymbol.flags() & Flags.FINAL) != 0) {
       return NO_MATCH;
     }
-    if (ASTHelpers.hasAnnotation(varSymbol, LazyInit.class, state)) {
+    if (hasAnnotation(varSymbol, LAZY_INIT_ANNOTATION, state)) {
       return NO_MATCH;
     }
 

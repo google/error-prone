@@ -16,7 +16,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
-import static com.google.common.collect.Streams.stream;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
@@ -128,7 +127,7 @@ public final class ImmutableMemberCollection extends BugChecker implements Class
             .filter(member -> !EXCLUSIONS.matches(member, state))
             .filter(member -> !isSuppressed(member, state))
             .map(VariableTree.class::cast)
-            .flatMap(varTree -> stream(isReplaceable(varTree, state)))
+            .flatMap(varTree -> isReplaceable(varTree, state).stream())
             .collect(toImmutableMap(ReplaceableVar::symbol, var -> var));
     if (replaceableVars.isEmpty()) {
       return Description.NO_MATCH;

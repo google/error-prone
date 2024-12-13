@@ -18,17 +18,19 @@ package com.google.errorprone.bugpatterns.formatstring;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
+import static com.google.errorprone.util.ASTHelpers.isSameType;
+import static com.google.errorprone.util.AnnotationNames.FORMAT_METHOD_ANNOTATION;
+import static com.google.errorprone.util.AnnotationNames.FORMAT_STRING_ANNOTATION;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.annotations.FormatMethod;
-import com.google.errorprone.annotations.FormatString;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
@@ -56,7 +58,7 @@ public final class FormatStringAnnotationChecker extends BugChecker
       MethodSymbol symbol,
       List<? extends ExpressionTree> args,
       VisitorState state) {
-    if (!ASTHelpers.hasAnnotation(symbol, FormatMethod.class, state)) {
+    if (!hasAnnotation(symbol, FORMAT_METHOD_ANNOTATION, state)) {
       return Description.NO_MATCH;
     }
 
@@ -83,10 +85,10 @@ public final class FormatStringAnnotationChecker extends BugChecker
     int firstStringIndex = -1;
     for (int i = 0; i < params.size(); i++) {
       VarSymbol param = params.get(i);
-      if (ASTHelpers.hasAnnotation(param, FormatString.class, state)) {
+      if (hasAnnotation(param, FORMAT_STRING_ANNOTATION, state)) {
         return i;
       }
-      if (firstStringIndex < 0 && ASTHelpers.isSameType(param.type, stringType, state)) {
+      if (firstStringIndex < 0 && isSameType(param.type, stringType, state)) {
         firstStringIndex = i;
       }
     }
@@ -95,31 +97,30 @@ public final class FormatStringAnnotationChecker extends BugChecker
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    return matchInvocation(tree, ASTHelpers.getSymbol(tree), tree.getArguments(), state);
+    return matchInvocation(tree, getSymbol(tree), tree.getArguments(), state);
   }
 
   @Override
   public Description matchNewClass(NewClassTree tree, VisitorState state) {
-    return matchInvocation(tree, ASTHelpers.getSymbol(tree), tree.getArguments(), state);
+    return matchInvocation(tree, getSymbol(tree), tree.getArguments(), state);
   }
 
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
     Type stringType = state.getSymtab().stringType;
 
-    boolean isFormatMethod =
-        ASTHelpers.hasAnnotation(ASTHelpers.getSymbol(tree), FormatMethod.class, state);
+    boolean isFormatMethod = hasAnnotation(getSymbol(tree), FORMAT_METHOD_ANNOTATION, state);
     boolean foundFormatString = false;
     boolean foundString = false;
     for (VariableTree param : tree.getParameters()) {
-      VarSymbol paramSymbol = ASTHelpers.getSymbol(param);
-      boolean isStringParam = ASTHelpers.isSameType(paramSymbol.type, stringType, state);
+      VarSymbol paramSymbol = getSymbol(param);
+      boolean isStringParam = isSameType(paramSymbol.type, stringType, state);
 
       if (isStringParam) {
         foundString = true;
       }
 
-      if (ASTHelpers.hasAnnotation(paramSymbol, FormatString.class, state)) {
+      if (hasAnnotation(paramSymbol, FORMAT_STRING_ANNOTATION, state)) {
         if (!isFormatMethod) {
           return buildDescription(tree)
               .setMessage(

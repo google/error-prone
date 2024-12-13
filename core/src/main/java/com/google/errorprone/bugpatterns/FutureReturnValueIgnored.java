@@ -20,11 +20,11 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
+import static com.google.errorprone.util.AnnotationNames.CAN_IGNORE_RETURN_VALUE_ANNOTATION;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
 import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions;
 import com.google.errorprone.matchers.Matcher;
@@ -104,14 +104,14 @@ public final class FutureReturnValueIgnored extends AbstractReturnValueIgnored
                     ASTHelpers.getUpperBound(resultType, state.getTypes()), futureType, state);
           }
           MethodSymbol sym = (MethodSymbol) untypedSymbol;
-          if (hasAnnotation(sym, CanIgnoreReturnValue.class, state)) {
+          if (hasAnnotation(sym, CAN_IGNORE_RETURN_VALUE_ANNOTATION, state)) {
             return false;
           }
           for (MethodSymbol superSym : ASTHelpers.findSuperMethods(sym, state.getTypes())) {
             // There are interfaces annotated with @CanIgnoreReturnValue (like Guava's Function)
             // whose return value really shouldn't be ignored - as a heuristic, check if the super's
             // method is returning a future subtype.
-            if (hasAnnotation(superSym, CanIgnoreReturnValue.class, state)
+            if (hasAnnotation(superSym, CAN_IGNORE_RETURN_VALUE_ANNOTATION, state)
                 && ASTHelpers.isSubtype(
                     ASTHelpers.getUpperBound(superSym.getReturnType(), state.getTypes()),
                     futureType,

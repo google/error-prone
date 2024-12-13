@@ -23,10 +23,10 @@ import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.streamSuperMethods;
+import static com.google.errorprone.util.AnnotationNames.CAN_IGNORE_RETURN_VALUE_ANNOTATION;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
@@ -53,6 +53,7 @@ import javax.inject.Inject;
             + "observables may never execute. It also means the error case is not being handled",
     severity = WARNING)
 public final class RxReturnValueIgnored extends AbstractReturnValueIgnored {
+
   private static boolean hasCirvAnnotation(ExpressionTree tree, VisitorState state) {
     Symbol untypedSymbol = getSymbol(tree);
     if (!(untypedSymbol instanceof MethodSymbol)) {
@@ -61,7 +62,7 @@ public final class RxReturnValueIgnored extends AbstractReturnValueIgnored {
 
     MethodSymbol sym = (MethodSymbol) untypedSymbol;
     // Directly has @CanIgnoreReturnValue
-    if (ASTHelpers.hasAnnotation(sym, CanIgnoreReturnValue.class, state)) {
+    if (hasAnnotation(sym, CAN_IGNORE_RETURN_VALUE_ANNOTATION, state)) {
       return true;
     }
 
@@ -72,7 +73,7 @@ public final class RxReturnValueIgnored extends AbstractReturnValueIgnored {
     return streamSuperMethods(sym, state.getTypes())
         .anyMatch(
             superSym ->
-                hasAnnotation(superSym, CanIgnoreReturnValue.class, state)
+                hasAnnotation(superSym, CAN_IGNORE_RETURN_VALUE_ANNOTATION, state)
                     && superSym.getReturnType().tsym.equals(sym.getReturnType().tsym));
   }
 

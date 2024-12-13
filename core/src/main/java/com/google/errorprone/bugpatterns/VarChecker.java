@@ -18,11 +18,12 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.util.ASTHelpers.getAnnotationWithSimpleName;
+import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
+import static com.google.errorprone.util.AnnotationNames.VAR_ANNOTATION;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.annotations.Var;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -55,7 +56,7 @@ public class VarChecker extends BugChecker implements VariableTreeMatcher {
   @Override
   public Description matchVariable(VariableTree tree, VisitorState state) {
     Symbol sym = ASTHelpers.getSymbol(tree);
-    if (ASTHelpers.hasAnnotation(sym, Var.class, state)) {
+    if (hasAnnotation(sym, VAR_ANNOTATION, state)) {
       if ((sym.flags() & Flags.EFFECTIVELY_FINAL) != 0) {
         return buildDescription(tree)
             .setMessage("@Var variable is never modified")
@@ -118,6 +119,6 @@ public class VarChecker extends BugChecker implements VariableTreeMatcher {
   }
 
   private static Fix addVarAnnotation(VariableTree tree) {
-    return SuggestedFix.builder().prefixWith(tree, "@Var ").addImport(Var.class.getName()).build();
+    return SuggestedFix.builder().prefixWith(tree, "@Var ").addImport(VAR_ANNOTATION).build();
   }
 }

@@ -21,10 +21,10 @@ import static com.google.errorprone.matchers.InjectMatchers.hasProvidesAnnotatio
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.hasDirectAnnotationWithSimpleName;
 import static com.google.errorprone.util.ASTHelpers.shouldKeep;
+import static com.google.errorprone.util.AnnotationNames.DO_NOT_CALL_ANNOTATION;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.annotations.DoNotCall;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.inlineme.InlinabilityResult.InlineValidationErrorReason;
@@ -52,7 +52,7 @@ public final class Suggester extends BugChecker implements MethodTreeMatcher {
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
     // only suggest @InlineMe on @Deprecated APIs
-    if (!hasAnnotation(tree, Deprecated.class, state)) {
+    if (!hasAnnotation(tree, Deprecated.class.getName(), state)) {
       return Description.NO_MATCH;
     }
 
@@ -62,7 +62,7 @@ public final class Suggester extends BugChecker implements MethodTreeMatcher {
     }
 
     // if the API is already annotated with @DoNotCall, then return no match
-    if (hasAnnotation(tree, DoNotCall.class, state)) {
+    if (hasAnnotation(tree, DO_NOT_CALL_ANNOTATION, state)) {
       return Description.NO_MATCH;
     }
 
@@ -71,7 +71,7 @@ public final class Suggester extends BugChecker implements MethodTreeMatcher {
       return Description.NO_MATCH;
     }
 
-    // if the body is not inlineable, then return no match
+    // if the body is not inlinable, then return no match
     InlinabilityResult inlinabilityResult = InlinabilityResult.forMethod(tree, state);
     if (!inlinabilityResult.isValidForSuggester()) {
       return Description.NO_MATCH;

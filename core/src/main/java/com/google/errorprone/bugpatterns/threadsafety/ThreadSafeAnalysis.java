@@ -16,10 +16,12 @@
 
 package com.google.errorprone.bugpatterns.threadsafety;
 
+import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
+import static com.google.errorprone.util.AnnotationNames.LAZY_INIT_ANNOTATION;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.annotations.concurrent.LazyInit;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.threadsafety.ThreadSafety.Violation;
 import com.google.errorprone.fixes.SuggestedFixes;
@@ -213,7 +215,7 @@ public class ThreadSafeAnalysis {
       VarSymbol var) {
     if (bugChecker.isSuppressed(var)
         || bugChecker.customSuppressionAnnotations().stream()
-            .map(a -> ASTHelpers.hasAnnotation(var, a, state))
+            .map(a -> hasAnnotation(var, a.getName(), state))
             .anyMatch(v -> v)) {
       return Violation.absent();
     }
@@ -225,7 +227,7 @@ public class ThreadSafeAnalysis {
     }
 
     if (!var.getModifiers().contains(Modifier.FINAL)
-        && !ASTHelpers.hasAnnotation(var, LazyInit.class, state)) {
+        && !hasAnnotation(var, LAZY_INIT_ANNOTATION, state)) {
       return processModifier(tree, classSym, var, Modifier.FINAL, "'%s' has non-final field '%s'");
     }
     Type varType = state.getTypes().memberType(classType, var);

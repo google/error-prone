@@ -19,6 +19,10 @@ package com.google.errorprone.bugpatterns.threadsafety;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
+import static com.google.errorprone.util.AnnotationNames.THREAD_SAFE_ANNOTATION;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableSet;
@@ -26,8 +30,6 @@ import com.google.common.collect.Sets;
 import com.google.common.collect.Sets.SetView;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.annotations.Immutable;
-import com.google.errorprone.annotations.ThreadSafe;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MemberReferenceTreeMatcher;
@@ -38,7 +40,6 @@ import com.google.errorprone.bugpatterns.threadsafety.ThreadSafety.Violation;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -84,16 +85,14 @@ public class ThreadSafeChecker extends BugChecker
   // check instantiations of `@ThreadSafe`s in method references
   @Override
   public Description matchMemberReference(MemberReferenceTree tree, VisitorState state) {
-    checkInvocation(
-        tree, ((JCMemberReference) tree).referentType, state, ASTHelpers.getSymbol(tree));
+    checkInvocation(tree, ((JCMemberReference) tree).referentType, state, getSymbol(tree));
     return NO_MATCH;
   }
 
   // check instantiations of `@ThreadSafe`s in method invocations
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    checkInvocation(
-        tree, ASTHelpers.getType(tree.getMethodSelect()), state, ASTHelpers.getSymbol(tree));
+    checkInvocation(tree, getType(tree.getMethodSelect()), state, getSymbol(tree));
     return NO_MATCH;
   }
 
@@ -106,8 +105,7 @@ public class ThreadSafeChecker extends BugChecker
     ThreadSafeAnalysis analysis = new ThreadSafeAnalysis(this, state, wellKnownThreadSafety);
     Violation info =
         analysis.checkInstantiation(
-            ASTHelpers.getSymbol(tree.getIdentifier()).getTypeParameters(),
-            ASTHelpers.getType(tree).getTypeArguments());
+            getSymbol(tree.getIdentifier()).getTypeParameters(), getType(tree).getTypeArguments());
     if (info.isPresent()) {
       state.reportMatch(buildDescription(tree).setMessage(info.message()).build());
     }
@@ -124,7 +122,7 @@ public class ThreadSafeChecker extends BugChecker
 
   @Override
   public Description matchTypeParameter(TypeParameterTree tree, VisitorState state) {
-    Symbol sym = ASTHelpers.getSymbol(tree);
+    Symbol sym = getSymbol(tree);
     if (sym == null) {
       return NO_MATCH;
     }
@@ -177,8 +175,7 @@ public class ThreadSafeChecker extends BugChecker
     // Check that the types in containerOf actually exist
     Map<String, TypeVariableSymbol> typarams = new HashMap<>();
     for (TypeParameterTree typaram : tree.getTypeParameters()) {
-      typarams.put(
-          typaram.getName().toString(), (TypeVariableSymbol) ASTHelpers.getSymbol(typaram));
+      typarams.put(typaram.getName().toString(), (TypeVariableSymbol) getSymbol(typaram));
     }
     SetView<String> difference = Sets.difference(annotation.containerOf(), typarams.keySet());
     if (!difference.isEmpty()) {
@@ -214,8 +211,8 @@ public class ThreadSafeChecker extends BugChecker
     Violation info =
         analysis.checkForThreadSafety(
             Optional.of(tree),
-            analysis.threadSafeTypeParametersInScope(ASTHelpers.getSymbol(tree)),
-            ASTHelpers.getType(tree));
+            analysis.threadSafeTypeParametersInScope(getSymbol(tree)),
+            getType(tree));
 
     if (!info.isPresent()) {
       return NO_MATCH;
@@ -231,7 +228,7 @@ public class ThreadSafeChecker extends BugChecker
   /** Check anonymous implementations of {@code @ThreadSafe} types. */
   private Description handleAnonymousClass(
       ClassTree tree, VisitorState state, ThreadSafeAnalysis analysis) {
-    ClassSymbol sym = ASTHelpers.getSymbol(tree);
+    ClassSymbol sym = getSymbol(tree);
     if (sym == null) {
       return NO_MATCH;
     }
@@ -244,8 +241,7 @@ public class ThreadSafeChecker extends BugChecker
     // the type arguments will be validated at any type use site where we care about
     // the instance's threadsafety.
     ImmutableSet<String> typarams = analysis.threadSafeTypeParametersInScope(sym);
-    Violation info =
-        analysis.areFieldsThreadSafe(Optional.of(tree), typarams, ASTHelpers.getType(tree));
+    Violation info = analysis.areFieldsThreadSafe(Optional.of(tree), typarams, getType(tree));
     if (!info.isPresent()) {
       return NO_MATCH;
     }
@@ -260,7 +256,7 @@ public class ThreadSafeChecker extends BugChecker
 
   /** Check for classes without {@code @ThreadSafe} that have threadsafe supertypes. */
   private Description checkSubtype(ClassTree tree, VisitorState state) {
-    ClassSymbol sym = ASTHelpers.getSymbol(tree);
+    ClassSymbol sym = getSymbol(tree);
     if (sym == null) {
       return NO_MATCH;
     }
@@ -268,7 +264,7 @@ public class ThreadSafeChecker extends BugChecker
     if (superType == null) {
       return NO_MATCH;
     }
-    if (ASTHelpers.hasAnnotation(sym, Immutable.class, state)) {
+    if (hasAnnotation(sym, "com.google.errorprone.annotations.Immutable", state)) {
       // If the superclass is @ThreadSafe and the subclass is @Immutable, then the subclass is
       // effectively also @ThreadSafe, and we defer to the @Immutable plugin.
       return NO_MATCH;
@@ -277,7 +273,7 @@ public class ThreadSafeChecker extends BugChecker
         String.format(
             "Class extends @ThreadSafe type %s, but is not annotated as threadsafe", superType);
     SuggestedFix.Builder fix = SuggestedFix.builder();
-    String typeName = SuggestedFixes.qualifyType(state, fix, ThreadSafe.class.getName());
+    String typeName = SuggestedFixes.qualifyType(state, fix, THREAD_SAFE_ANNOTATION);
     fix.prefixWith(tree, "@" + typeName + " ");
     return buildDescription(tree).setMessage(message).addFix(fix.build()).build();
   }
@@ -293,7 +289,7 @@ public class ThreadSafeChecker extends BugChecker
       }
       // Don't use getThreadSafeAnnotation here: subtypes of trusted types are
       // also trusted, only check for explicitly annotated supertypes.
-      if (ASTHelpers.hasAnnotation(superType.tsym, ThreadSafe.class, state)) {
+      if (hasAnnotation(superType.tsym, THREAD_SAFE_ANNOTATION, state)) {
         return superType;
       }
       // We currently trust that @interface annotations are threadsafe, but don't enforce that

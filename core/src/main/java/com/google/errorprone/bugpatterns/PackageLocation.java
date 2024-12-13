@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
+import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static java.lang.Math.max;
 
 import com.google.common.base.Joiner;
@@ -54,7 +55,8 @@ public class PackageLocation extends BugChecker implements CompilationUnitTreeMa
 
     // package-info annotations are special
     // TODO(cushon): fix the core suppression logic to handle this
-    if (ASTHelpers.hasAnnotation(tree.getPackage(), SuppressPackageLocation.class, state)) {
+    if (hasAnnotation(
+        tree.getPackage(), "com.google.errorprone.annotations.SuppressPackageLocation", state)) {
       return Description.NO_MATCH;
     }
 

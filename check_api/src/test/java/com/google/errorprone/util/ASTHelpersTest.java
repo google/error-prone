@@ -22,6 +22,7 @@ import static com.google.common.truth.Truth.assertWithMessage;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
+import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.LOCAL_VARIABLE;
 import static java.lang.annotation.ElementType.METHOD;
@@ -312,7 +313,8 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
                   new Matcher<ClassTree>() {
                     @Override
                     public boolean matches(ClassTree t, VisitorState state) {
-                      return ASTHelpers.hasAnnotation(t, InheritedAnnotation.class, state);
+                      return hasAnnotation(
+                          t, "com.google.errorprone.util.InheritedAnnotation", state);
                     }
                   });
               setAssertionsComplete();
@@ -333,9 +335,7 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
           @Override
           public Void visitClass(ClassTree tree, VisitorState state) {
             if (tree.getSimpleName().contentEquals("D")) {
-              assertThat(
-                      ASTHelpers.hasAnnotation(
-                          tree, "TestAnnotation", state.withPath(getCurrentPath())))
+              assertThat(hasAnnotation(tree, "TestAnnotation", state.withPath(getCurrentPath())))
                   .isFalse();
               setAssertionsComplete();
             }
@@ -371,7 +371,7 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
                   new Matcher<ClassTree>() {
                     @Override
                     public boolean matches(ClassTree t, VisitorState state) {
-                      return ASTHelpers.hasAnnotation(t, "TestAnnotation", state);
+                      return hasAnnotation(t, "TestAnnotation", state);
                     }
                   });
               setAssertionsComplete();
@@ -413,7 +413,7 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
                   tree,
                   state,
                   (MethodTree t, VisitorState s) ->
-                      ASTHelpers.hasAnnotation(t, InheritedAnnotation.class, s));
+                      hasAnnotation(t, "com.google.errorprone.util.InheritedAnnotation", s));
               setAssertionsComplete();
             }
             return super.visitMethod(tree, state);
@@ -454,8 +454,7 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
                   new Matcher<ClassTree>() {
                     @Override
                     public boolean matches(ClassTree t, VisitorState state) {
-                      return ASTHelpers.hasAnnotation(
-                          ASTHelpers.getSymbol(t), "test.Lib$MyAnnotation", state);
+                      return hasAnnotation(ASTHelpers.getSymbol(t), "test.Lib$MyAnnotation", state);
                     }
                   });
               setAssertionsComplete();
@@ -911,7 +910,7 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
           public Void visitMethodInvocation(MethodInvocationTree tree, VisitorState state) {
             if (ASTHelpers.getSymbol(tree).toString().equals("doIt()")) {
               setAssertionsComplete();
-              assertThat(ASTHelpers.hasAnnotation(tree, Deprecated.class, state)).isFalse();
+              assertThat(hasAnnotation(tree, Deprecated.class.getName(), state)).isFalse();
             }
             return super.visitMethodInvocation(tree, state);
           }

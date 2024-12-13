@@ -18,6 +18,9 @@ package com.google.errorprone.refaster;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
+import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
+import static com.google.errorprone.util.AnnotationNames.AFTER_TEMPLATE_ANNOTATION;
+import static com.google.errorprone.util.AnnotationNames.BEFORE_TEMPLATE_ANNOTATION;
 import static java.util.logging.Level.FINE;
 
 import com.google.common.collect.ImmutableClassToInstanceMap;
@@ -28,11 +31,8 @@ import com.google.common.collect.Ordering;
 import com.google.errorprone.CodeTransformer;
 import com.google.errorprone.SubContext;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.refaster.annotation.AfterTemplate;
 import com.google.errorprone.refaster.annotation.AllowCodeBetweenLines;
 import com.google.errorprone.refaster.annotation.AlsoNegation;
-import com.google.errorprone.refaster.annotation.BeforeTemplate;
-import com.google.errorprone.refaster.annotation.Placeholder;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
@@ -110,7 +110,7 @@ public final class RefasterRuleBuilderScanner extends SimpleTreeVisitor<Void, Vo
     try {
       VisitorState state = new VisitorState(context);
       logger.log(FINE, "Discovered method with name {0}", tree.getName());
-      if (ASTHelpers.hasAnnotation(tree, Placeholder.class, state)) {
+      if (hasAnnotation(tree, "com.google.errorprone.refaster.annotation.Placeholder", state)) {
         checkArgument(
             tree.getModifiers().getFlags().contains(Modifier.ABSTRACT),
             "@Placeholder methods are expected to be abstract");
@@ -130,14 +130,14 @@ public final class RefasterRuleBuilderScanner extends SimpleTreeVisitor<Void, Vo
                 templater.template(sym.getReturnType()),
                 params.buildOrThrow(),
                 UTemplater.annotationMap(sym)));
-      } else if (ASTHelpers.hasAnnotation(tree, BeforeTemplate.class, state)) {
+      } else if (hasAnnotation(tree, BEFORE_TEMPLATE_ANNOTATION, state)) {
         checkState(afterTemplates.isEmpty(), "BeforeTemplate must come before AfterTemplate");
         Template<?> template = UTemplater.createTemplate(context, tree);
         beforeTemplates.add(template);
         if (template instanceof BlockTemplate) {
           context.put(UTemplater.REQUIRE_BLOCK_KEY, /* data= */ true);
         }
-      } else if (ASTHelpers.hasAnnotation(tree, AfterTemplate.class, state)) {
+      } else if (hasAnnotation(tree, AFTER_TEMPLATE_ANNOTATION, state)) {
         afterTemplates.add(UTemplater.createTemplate(context, tree));
       } else if (tree.getModifiers().getFlags().contains(Modifier.ABSTRACT)) {
         throw new IllegalArgumentException(

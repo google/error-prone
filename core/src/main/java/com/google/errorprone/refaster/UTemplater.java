@@ -18,7 +18,9 @@ package com.google.errorprone.refaster;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
+import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isStatic;
+import static com.google.errorprone.util.AnnotationNames.REPEATED_ANNOTATION;
 
 import com.google.common.collect.ImmutableClassToInstanceMap;
 import com.google.common.collect.ImmutableList;
@@ -115,7 +117,6 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
@@ -457,8 +458,7 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
     } else if (anyMatch(AS_VARARGS, tree.getMethodSelect(), new Unifier(context))) {
       ExpressionTree arg = Iterables.getOnlyElement(tree.getArguments());
       checkArgument(
-          ASTHelpers.hasAnnotation(
-              ASTHelpers.getSymbol(arg), Repeated.class, new VisitorState(context)));
+          hasAnnotation(ASTHelpers.getSymbol(arg), REPEATED_ANNOTATION, new VisitorState(context)));
       return template(arg);
     }
     Map<MethodSymbol, PlaceholderMethod> placeholderMethods =

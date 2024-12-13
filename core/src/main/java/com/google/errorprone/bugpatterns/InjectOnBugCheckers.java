@@ -25,6 +25,7 @@ import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.hasDirectAnnotationWithSimpleName;
 import static com.google.errorprone.util.ASTHelpers.isGeneratedConstructor;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
+import static com.google.errorprone.util.AnnotationNames.BUG_PATTERN_ANNOTATION;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.ErrorProneFlags;
@@ -51,7 +52,7 @@ public final class InjectOnBugCheckers extends BugChecker implements MethodTreeM
     }
     if (!isSubtype(
             symbol.owner.type, state.getTypeFromString(BugChecker.class.getCanonicalName()), state)
-        || !hasAnnotation(symbol.owner, BugPattern.class, state)) {
+        || !hasAnnotation(symbol.owner, BUG_PATTERN_ANNOTATION, state)) {
       return NO_MATCH;
     }
     if (tree.getParameters().isEmpty()
