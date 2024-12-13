@@ -47,4 +47,63 @@ public final class EnumOrdinalTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void positive_enumValues_externalCall() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            enum TestEnum {
+              FOO,
+              BAR,
+            }
+
+            class Caller {
+              public TestEnum callValues() {
+                // BUG: Diagnostic contains: ordinal
+                return TestEnum.values()[0];
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void negative_enumValues_internalCall() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            enum TestEnum {
+              FOO,
+              BAR;
+
+              private static TestEnum fromValues() {
+                return values()[0];
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void negative_enumValues_noIndex() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            enum TestEnum {
+              FOO,
+              BAR,
+            }
+
+            class Caller {
+              public TestEnum[] callValues() {
+                return TestEnum.values();
+              }
+            }
+            """)
+        .doTest();
+  }
 }
