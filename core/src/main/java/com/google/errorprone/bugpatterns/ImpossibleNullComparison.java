@@ -151,7 +151,6 @@ public final class ImpossibleNullComparison extends BugChecker
   private final boolean matchTestAssertions;
   private final boolean checkPrimitives;
   private final boolean checkValueOf;
-  private final boolean checkSwitches;
 
   @Inject
   ImpossibleNullComparison(ErrorProneFlags flags) {
@@ -159,7 +158,6 @@ public final class ImpossibleNullComparison extends BugChecker
         flags.getBoolean("ProtoFieldNullComparison:MatchTestAssertions").orElse(true);
     this.checkPrimitives = flags.getBoolean("ImmutableNullComparison:CheckPrimitives").orElse(true);
     this.checkValueOf = flags.getBoolean("ImpossibleNullComparison:CheckValueOf").orElse(true);
-    this.checkSwitches = flags.getBoolean("ImpossibleNullComparison:CheckSwitches").orElse(true);
   }
 
   @Override
@@ -220,17 +218,13 @@ public final class ImpossibleNullComparison extends BugChecker
 
     @Override
     public Void visitSwitch(SwitchTree tree, Void unused) {
-      if (checkSwitches) {
-        handleSwitch(tree.getExpression(), tree.getCases());
-      }
+      handleSwitch(tree.getExpression(), tree.getCases());
       return super.visitSwitch(tree, null);
     }
 
     @Override
     public Void visitSwitchExpression(SwitchExpressionTree tree, Void unused) {
-      if (checkSwitches) {
-        handleSwitch(tree.getExpression(), tree.getCases());
-      }
+      handleSwitch(tree.getExpression(), tree.getCases());
       return super.visitSwitchExpression(tree, null);
     }
 
