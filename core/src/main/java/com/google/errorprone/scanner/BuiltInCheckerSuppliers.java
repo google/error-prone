@@ -271,6 +271,7 @@ import com.google.errorprone.bugpatterns.NCopiesOfChar;
 import com.google.errorprone.bugpatterns.NamedLikeContextualKeyword;
 import com.google.errorprone.bugpatterns.NarrowCalculation;
 import com.google.errorprone.bugpatterns.NarrowingCompoundAssignment;
+import com.google.errorprone.bugpatterns.NegativeBoolean;
 import com.google.errorprone.bugpatterns.NegativeCharLiteral;
 import com.google.errorprone.bugpatterns.NestedInstanceOfConditions;
 import com.google.errorprone.bugpatterns.NewFileSystem;
@@ -1216,6 +1217,7 @@ public class BuiltInCheckerSuppliers {
           MultiVariableDeclaration.class,
           MultipleTopLevelClasses.class,
           MutableGuiceModule.class,
+          NegativeBoolean.class,
           NoAllocationChecker.class,
           NonCanonicalStaticMemberImport.class,
           NonFinalStaticField.class, // Intentionally disabled in OSS.
