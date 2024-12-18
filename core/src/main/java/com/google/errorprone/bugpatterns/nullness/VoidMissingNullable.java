@@ -92,10 +92,6 @@ public class VoidMissingNullable extends BugChecker
       return NO_MATCH;
     }
 
-    if (beingConservative && state.errorProneOptions().isTestOnlyTarget()) {
-      return NO_MATCH;
-    }
-
     if (beingConservative && !isInNullMarkedScope(state)) {
       return NO_MATCH;
     }
@@ -127,10 +123,6 @@ public class VoidMissingNullable extends BugChecker
 
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
-    if (beingConservative && state.errorProneOptions().isTestOnlyTarget()) {
-      return NO_MATCH;
-    }
-
     MethodSymbol sym = getSymbol(tree);
     if (!typeMatches(sym.getReturnType(), sym, state)) {
       return NO_MATCH;
@@ -143,10 +135,6 @@ public class VoidMissingNullable extends BugChecker
 
   @Override
   public Description matchVariable(VariableTree tree, VisitorState state) {
-    if (beingConservative && state.errorProneOptions().isTestOnlyTarget()) {
-      return NO_MATCH;
-    }
-
     if (hasImplicitType(tree, state)) {
       /*
        * In the case of `var`, a declaration-annotation @Nullable would be valid. But a type-use
