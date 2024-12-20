@@ -664,7 +664,6 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
           && exemptedFieldBySuperType(getType(variableTree), state)) {
         return;
       }
-      super.visitVariable(variableTree, null);
       // Return if the element is exempted by an annotation.
       if (exemptedByAnnotation(variableTree.getModifiers().getAnnotations())
           || shouldKeep(variableTree)) {
