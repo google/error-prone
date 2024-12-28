@@ -18,6 +18,7 @@ package com.google.errorprone;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.errorprone.ConstantStringExpressions.toConstantStringExpression;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -51,7 +52,6 @@ import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.Context;
-import com.sun.tools.javac.util.Convert;
 import com.sun.tools.javac.util.Name;
 import com.sun.tools.javac.util.Names;
 import com.sun.tools.javac.util.Options;
@@ -758,23 +758,10 @@ public class VisitorState {
 
   /**
    * Returns the Java source code for a constant expression representing the given constant value.
-   * Like {@link Elements#getConstantExpression}, but doesn't over-escape single quotes in strings.
+   * Like {@link Elements#getConstantExpression}, but (a) before JDK 23, doesn't over-escape single
+   * quotes in strings and (b) treats any {@link CharSequence} as a {@link String}.
    */
   public String getConstantExpression(Object value) {
-    if (!(value instanceof CharSequence str)) {
-      return getElements().getConstantExpression(value);
-    }
-
-    // Don't escape single-quotes in string literals.
-    StringBuilder sb = new StringBuilder("\"");
-    for (int i = 0; i < str.length(); i++) {
-      char c = str.charAt(i);
-      if (c == '\'') {
-        sb.append('\'');
-      } else {
-        sb.append(Convert.quote(c));
-      }
-    }
-    return sb.append('"').toString();
+    return toConstantStringExpression(value, this);
   }
 }
