@@ -182,6 +182,22 @@
             </configuration>
           </execution>
           <execution>
+            <id>java23</id>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+            <configuration>
+              <jdkToolchain>
+                <version>23</version>
+              </jdkToolchain>
+              <compileSourceRoots>
+                <compileSourceRoot>${basedir}/src/main/java23</compileSourceRoot>
+              </compileSourceRoots>
+              <!-- multiReleaseOutput requires setting release -->
+              <outputDirectory>${project.build.outputDirectory}/META-INF/versions/23</outputDirectory>
+            </configuration>
+          </execution>
+          <execution>
             <id>java24</id>
             <configuration>
               <jdkToolchain>
@@ -196,6 +212,17 @@
           </execution>
         </executions>
 
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <archive>
+            <manifestEntries>
+              <Multi-Release>true</Multi-Release>
+            </manifestEntries>
+          </archive>
+        </configuration>
       </plugin>
     </plugins>
   </build>
