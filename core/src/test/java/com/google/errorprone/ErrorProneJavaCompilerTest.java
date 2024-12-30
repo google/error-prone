@@ -434,40 +434,131 @@ public class ErrorProneJavaCompilerTest {
   }
 
   @Test
-  public void patchWithBugPatternCustomization() throws IOException {
-    // Patching modifies files on disk, so we must create an actual file that matches the
-    // `SimpleJavaFileObject` defined below.
-    Path location = tempDir.getRoot().toPath().resolve("StringConstantWrapper.java");
-    String source =
-        """
-        class StringConstantWrapper {
-          String s = "old-value";
-        }
-        """;
-    Files.writeString(location, source);
+  public void patchAll() throws IOException {
+    JavaFileObject fileObject =
+        createOnDiskFileObject(
+            "StringConstantWrapper.java",
+            """
+            class StringConstantWrapper {
+              String s = "old-value";
+            }
+            """);
 
     CompilationResult result =
         doCompile(
-            Collections.singleton(
-                new SimpleJavaFileObject(location.toUri(), SimpleJavaFileObject.Kind.SOURCE) {
-                  @Override
-                  public CharSequence getCharContent(boolean ignoreEncodingErrors) {
-                    return source;
-                  }
-                }),
+            Collections.singleton(fileObject),
+            Arrays.asList("-XepPatchChecks:", "-XepPatchLocation:IN_PLACE"),
+            Collections.singletonList(AssignmentUpdater.class));
+    assertThat(result.succeeded).isTrue();
+    assertThat(Files.readString(Path.of(fileObject.toUri())))
+        .isEqualTo(
+            """
+            class StringConstantWrapper {
+              String s = "flag-not-set";
+            }
+            """);
+  }
+
+  @Test
+  public void patchAllWithCheckDisabled() throws IOException {
+    JavaFileObject fileObject =
+        createOnDiskFileObject(
+            "StringConstantWrapper.java",
+            """
+            class StringConstantWrapper {
+              String s = "old-value";
+            }
+            """);
+
+    CompilationResult result =
+        doCompile(
+            Collections.singleton(fileObject),
+            Arrays.asList(
+                "-XepPatchChecks:", "-XepPatchLocation:IN_PLACE", "-Xep:AssignmentUpdater:OFF"),
+            Collections.singletonList(AssignmentUpdater.class));
+    assertThat(result.succeeded).isTrue();
+    assertThat(Files.readString(Path.of(fileObject.toUri())))
+        .isEqualTo(
+            """
+            class StringConstantWrapper {
+              String s = "old-value";
+            }
+            """);
+  }
+
+  @Test
+  public void patchSingleWithCheckDisabled() throws IOException {
+    JavaFileObject fileObject =
+        createOnDiskFileObject(
+            "StringConstantWrapper.java",
+            """
+            class StringConstantWrapper {
+              String s = "old-value";
+            }
+            """);
+
+    CompilationResult result =
+        doCompile(
+            Collections.singleton(fileObject),
+            Arrays.asList(
+                "-XepPatchChecks:AssignmentUpdater",
+                "-XepPatchLocation:IN_PLACE",
+                "-Xep:AssignmentUpdater:OFF"),
+            Collections.singletonList(AssignmentUpdater.class));
+    assertThat(result.succeeded).isTrue();
+    assertThat(Files.readString(Path.of(fileObject.toUri())))
+        .isEqualTo(
+            """
+            class StringConstantWrapper {
+              String s = "old-value";
+            }
+            """);
+  }
+
+  @Test
+  public void patchSingleWithBugPatternCustomization() throws IOException {
+    JavaFileObject fileObject =
+        createOnDiskFileObject(
+            "StringConstantWrapper.java",
+            """
+            class StringConstantWrapper {
+              String s = "old-value";
+            }
+            """);
+
+    CompilationResult result =
+        doCompile(
+            Collections.singleton(fileObject),
             Arrays.asList(
                 "-XepPatchChecks:AssignmentUpdater",
                 "-XepPatchLocation:IN_PLACE",
                 "-XepOpt:AssignmentUpdater:NewValue=new-value"),
             Collections.singletonList(AssignmentUpdater.class));
     assertThat(result.succeeded).isTrue();
-    assertThat(Files.readString(location))
+    assertThat(Files.readString(Path.of(fileObject.toUri())))
         .isEqualTo(
             """
             class StringConstantWrapper {
               String s = "new-value";
             }
             """);
+  }
+
+  /**
+   * Creates a {@link JavaFileObject} with matching on-disk contents.
+   *
+   * <p>This method aids in testing patching functionality, as {@code IN_PLACE} patching requires
+   * that compiled code actually exists on disk.
+   */
+  private JavaFileObject createOnDiskFileObject(String fileName, String source) throws IOException {
+    Path location = tempDir.getRoot().toPath().resolve(fileName);
+    Files.writeString(location, source);
+    return new SimpleJavaFileObject(location.toUri(), SimpleJavaFileObject.Kind.SOURCE) {
+      @Override
+      public CharSequence getCharContent(boolean ignoreEncodingErrors) {
+        return source;
+      }
+    };
   }
 
   private static class CompilationResult {
