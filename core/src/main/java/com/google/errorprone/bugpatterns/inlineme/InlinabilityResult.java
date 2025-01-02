@@ -20,6 +20,9 @@ import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
+import static com.google.errorprone.util.ASTHelpers.isLocal;
+import static com.google.errorprone.util.ASTHelpers.isSuper;
+import static com.google.errorprone.util.ASTHelpers.methodCanBeOverridden;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableSet;
@@ -125,7 +128,8 @@ abstract class InlinabilityResult {
             + " call to another varargs method"),
     EMPTY_VOID("InlineMe cannot yet be applied to no-op void methods"),
     REUSE_OF_ARGUMENTS("Implementations cannot use an argument more than once:"),
-    PARAM_NAMES_ARE_NAMED_ARGN("Method parameter names cannot match `arg[0-9]+`.");
+    PARAM_NAMES_ARE_NAMED_ARGN("Method parameter names cannot match `arg[0-9]+`."),
+    NO_SUPER_CALLS("super(...) calls cannot be inlined.");
 
     private final @Nullable String errorMessage;
 
@@ -142,21 +146,21 @@ abstract class InlinabilityResult {
     return paramName.matches("arg[0-9]+");
   }
 
-  static InlinabilityResult forMethod(MethodTree tree, VisitorState state) {
-    if (tree.getBody() == null) {
+  static InlinabilityResult forMethod(MethodTree methodTree, VisitorState state) {
+    if (methodTree.getBody() == null) {
       return fromError(InlineValidationErrorReason.NO_BODY);
     }
 
-    if (tree.getBody().getStatements().size() != 1) {
+    if (methodTree.getBody().getStatements().size() != 1) {
       return fromError(InlineValidationErrorReason.NOT_EXACTLY_ONE_STATEMENT);
     }
 
-    MethodSymbol methSymbol = getSymbol(tree);
-    if (methSymbol.getModifiers().contains(Modifier.PRIVATE)) {
+    MethodSymbol methodSym = getSymbol(methodTree);
+    if (methodSym.getModifiers().contains(Modifier.PRIVATE)) {
       return fromError(InlineValidationErrorReason.API_IS_PRIVATE);
     }
 
-    StatementTree statement = tree.getBody().getStatements().get(0);
+    StatementTree statement = methodTree.getBody().getStatements().get(0);
 
     if (state.getSourceForNode(statement) == null) {
       return fromError(InlineValidationErrorReason.NO_BODY);
@@ -179,11 +183,16 @@ abstract class InlinabilityResult {
       }
     }
 
-    if (methSymbol.isVarArgs() && usesVarargsParamPoorly(body, methSymbol.params().last(), state)) {
+    if (body instanceof MethodInvocationTree methodInvocation
+        && isSuper(methodInvocation.getMethodSelect())) {
+      return fromError(InlineValidationErrorReason.NO_SUPER_CALLS);
+    }
+
+    if (methodSym.isVarArgs() && usesVarargsParamPoorly(body, methodSym.params().last(), state)) {
       return fromError(InlineValidationErrorReason.VARARGS_USED_UNSAFELY, body);
     }
 
-    for (VarSymbol param : methSymbol.params()) {
+    for (VarSymbol param : methodSym.params()) {
       if (matchesArgN(param.name.toString())) {
         return fromError(InlineValidationErrorReason.PARAM_NAMES_ARE_NAMED_ARGN);
       }
@@ -195,14 +204,14 @@ abstract class InlinabilityResult {
       return fromError(InlineValidationErrorReason.COMPLEX_STATEMENT, body);
     }
 
-    Symbol usedMultipleTimes = usesVariablesMultipleTimes(body, methSymbol.params(), state);
+    Symbol usedMultipleTimes = usesVariablesMultipleTimes(body, methodSym.params(), state);
     if (usedMultipleTimes != null) {
       return fromError(
           InlineValidationErrorReason.REUSE_OF_ARGUMENTS, body, usedMultipleTimes.toString());
     }
 
     Tree privateOrDeprecatedApi =
-        usesPrivateOrDeprecatedApis(body, state, getVisibility(methSymbol));
+        usesPrivateOrDeprecatedApis(body, state, getVisibility(methodSym));
     if (privateOrDeprecatedApi != null) {
       return fromError(
           InlineValidationErrorReason.CALLS_DEPRECATED_OR_PRIVATE_APIS,
@@ -210,15 +219,15 @@ abstract class InlinabilityResult {
           state.getSourceForNode(privateOrDeprecatedApi));
     }
 
-    if (hasArgumentInPossiblyNonExecutedPosition(tree, body)) {
+    if (hasArgumentInPossiblyNonExecutedPosition(methodTree, body)) {
       return fromError(InlineValidationErrorReason.BODY_WOULD_EVALUATE_DIFFERENTLY, body);
     }
 
-    if (ASTHelpers.methodCanBeOverridden(methSymbol)) {
+    if (methodCanBeOverridden(methodSym)) {
       // TODO(glorioso): One additional edge case we can check is if the owning class can't be
       // overridden due to having no publicly-accessible constructors.
       return fromError(
-          methSymbol.isDefault()
+          methodSym.isDefault()
               ? InlineValidationErrorReason.METHOD_CAN_BE_OVERRIDDEN_AND_CANT_BE_FIXED
               : InlineValidationErrorReason.METHOD_CAN_BE_OVERRIDDEN_BUT_CAN_BE_FIXED,
           body);
@@ -234,7 +243,7 @@ abstract class InlinabilityResult {
       final Set<Symbol> usedVariables = new HashSet<>();
 
       @Override
-      public Void visitIdentifier(IdentifierTree identifierTree, Void aVoid) {
+      public Void visitIdentifier(IdentifierTree identifierTree, Void unused) {
         Symbol usedSymbol = getSymbol(identifierTree);
         if (parameterVariables.contains(usedSymbol) && !usedVariables.add(usedSymbol)) {
           usesVarsTwice.set(usedSymbol);
@@ -252,7 +261,7 @@ abstract class InlinabilityResult {
     AtomicBoolean usesVarargsPoorly = new AtomicBoolean(false);
     new TreePathScanner<Void, Void>() {
       @Override
-      public Void visitIdentifier(IdentifierTree identifierTree, Void aVoid) {
+      public Void visitIdentifier(IdentifierTree identifierTree, Void unused) {
         if (!getSymbol(identifierTree).equals(varargsParam)) {
           return super.visitIdentifier(identifierTree, null);
         }
@@ -293,48 +302,47 @@ abstract class InlinabilityResult {
     AtomicReference<Tree> usesDeprecatedOrLessVisibleApis = new AtomicReference<>();
     new TreeScanner<Void, Void>() {
       @Override
-      public Void visitLambdaExpression(LambdaExpressionTree node, Void unused) {
-        // we override so we can ignore the node.getParameters()
-        return super.scan(node.getBody(), null);
+      public Void visitLambdaExpression(LambdaExpressionTree lambda, Void unused) {
+        // we override so we can ignore the lambda.getParameters()
+        return super.scan(lambda.getBody(), null);
       }
 
       @Override
-      public Void visitMemberSelect(MemberSelectTree memberSelectTree, Void aVoid) {
+      public Void visitMemberSelect(MemberSelectTree memberSelect, Void unused) {
         // This check is necessary as the TreeScanner doesn't visit the "name" part of the
         // left-hand of an assignment.
-        if (isDeprecatedOrLessVisible(memberSelectTree, minVisibility)) {
-          // short circuit
-          return null;
+        if (isDeprecatedOrLessVisible(memberSelect, minVisibility)) {
+          return null; // short-circuit
         }
-        return super.visitMemberSelect(memberSelectTree, null);
+        return super.visitMemberSelect(memberSelect, null);
       }
 
       @Override
-      public Void visitIdentifier(IdentifierTree node, Void unused) {
-        if (!ASTHelpers.isLocal(getSymbol(node))) {
-          if (!node.getName().contentEquals("this")) {
-            if (isDeprecatedOrLessVisible(node, minVisibility)) {
+      public Void visitIdentifier(IdentifierTree identifierTree, Void unused) {
+        if (!isLocal(getSymbol(identifierTree))) {
+          if (!identifierTree.getName().contentEquals("this")) {
+            if (isDeprecatedOrLessVisible(identifierTree, minVisibility)) {
               return null; // short-circuit
             }
           }
         }
-        return super.visitIdentifier(node, null);
+        return super.visitIdentifier(identifierTree, null);
       }
 
       @Override
-      public Void visitNewClass(NewClassTree newClassTree, Void aVoid) {
+      public Void visitNewClass(NewClassTree newClassTree, Void unused) {
         if (isDeprecatedOrLessVisible(newClassTree, minVisibility)) {
-          return null;
+          return null; // short-circuit
         }
         return super.visitNewClass(newClassTree, null);
       }
 
       @Override
-      public Void visitMethodInvocation(MethodInvocationTree node, Void unused) {
-        if (isDeprecatedOrLessVisible(node, minVisibility)) {
+      public Void visitMethodInvocation(MethodInvocationTree methodInvocation, Void unused) {
+        if (isDeprecatedOrLessVisible(methodInvocation, minVisibility)) {
           return null; // short-circuit
         }
-        return super.visitMethodInvocation(node, null);
+        return super.visitMethodInvocation(methodInvocation, null);
       }
 
       private boolean isDeprecatedOrLessVisible(Tree tree, Visibility minVisibility) {
@@ -376,43 +384,43 @@ abstract class InlinabilityResult {
   }
 
   private static boolean hasArgumentInPossiblyNonExecutedPosition(
-      MethodTree meth, ExpressionTree statement) {
+      MethodTree methodTree, ExpressionTree statement) {
     AtomicBoolean paramReferred = new AtomicBoolean(false);
     ImmutableSet<VarSymbol> params =
-        meth.getParameters().stream().map(ASTHelpers::getSymbol).collect(toImmutableSet());
+        methodTree.getParameters().stream().map(ASTHelpers::getSymbol).collect(toImmutableSet());
     new TreeScanner<Void, Void>() {
       Tree currentContextTree = null;
 
       @Override
-      public Void visitLambdaExpression(LambdaExpressionTree lambdaExpressionTree, Void o) {
+      public Void visitLambdaExpression(LambdaExpressionTree lambda, Void unused) {
         Tree lastContext = currentContextTree;
-        currentContextTree = lambdaExpressionTree;
-        scan(lambdaExpressionTree.getBody(), null);
+        currentContextTree = lambda;
+        scan(lambda.getBody(), null);
         currentContextTree = lastContext;
         return null;
       }
 
       @Override
-      public Void visitConditionalExpression(ConditionalExpressionTree ceTree, Void o) {
-        scan(ceTree.getCondition(), null);
+      public Void visitConditionalExpression(ConditionalExpressionTree conditional, Void unused) {
+        scan(conditional.getCondition(), null);
         // If the variables show up in the left or right side, they may conditionally not be
         // executed.
         Tree lastContext = currentContextTree;
-        currentContextTree = ceTree;
-        scan(ceTree.getTrueExpression(), null);
-        scan(ceTree.getFalseExpression(), null);
+        currentContextTree = conditional;
+        scan(conditional.getTrueExpression(), null);
+        scan(conditional.getFalseExpression(), null);
         currentContextTree = lastContext;
         return null;
       }
 
       @Override
-      public Void visitIdentifier(IdentifierTree identifierTree, Void aVoid) {
+      public Void visitIdentifier(IdentifierTree identifier, Void unused) {
         // If the lambda captures method parameters, inlining the method body can change the
         // timing of the evaluation of the arguments.
-        if (currentContextTree != null && params.contains(getSymbol(identifierTree))) {
+        if (currentContextTree != null && params.contains(getSymbol(identifier))) {
           paramReferred.set(true);
         }
-        return super.visitIdentifier(identifierTree, null);
+        return super.visitIdentifier(identifier, null);
       }
     }.scan(statement, null);
     return paramReferred.get();
