@@ -106,6 +106,8 @@ public class VisitorStateTest {
     assertThat(visitorState.getConstantExpression("hello \n world"))
         .isEqualTo("\"hello \\n world\"");
     assertThat(visitorState.getConstantExpression('\'')).isEqualTo("'\\''");
+    assertThat(visitorState.getConstantExpression(new StringBuilder("hello ' world")))
+        .isEqualTo("\"hello ' world\"");
   }
 
   // The following is taken from ErrorProneJavacPluginTest. There may be an easier way.
