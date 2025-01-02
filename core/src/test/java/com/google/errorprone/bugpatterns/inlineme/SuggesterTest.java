@@ -1389,4 +1389,33 @@ public class Client {
             """)
         .doTest();
   }
+
+  @Test
+  public void deprecatedConstructorSuperCall() {
+    refactoringTestHelper
+        .addInputLines(
+            "ExecutionError.java",
+            """
+            public final class ExecutionError extends Error {
+              @Deprecated
+              public ExecutionError(String message) {
+                super(message);
+              }
+            }
+            """)
+        // TODO(b/387265535): we shouldn't suggest @InlineMe when there's a super() call...
+        .addOutputLines(
+            "ExecutionError.java",
+            """
+            import com.google.errorprone.annotations.InlineMe;
+            public final class ExecutionError extends Error {
+              @InlineMe(replacement = "this.super(message)")
+              @Deprecated
+              public ExecutionError(String message) {
+                super(message);
+              }
+            }
+            """)
+        .doTest();
+  }
 }
