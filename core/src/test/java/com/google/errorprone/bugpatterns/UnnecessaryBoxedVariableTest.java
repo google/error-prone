@@ -527,4 +527,21 @@ public class UnnecessaryBoxedVariableTest {
         .setArgs(ImmutableList.of("-processor", AutoValueProcessor.class.getName()))
         .doTest();
   }
+
+  @Test
+  public void recordsIgnored() {
+    compilationTestHelper
+        .addSourceLines(
+            "Foo.java",
+            """
+            import static com.google.common.base.Preconditions.checkNotNull;
+
+            record Foo(Integer foo, boolean bar) {
+              Foo {
+                checkNotNull(foo);
+              }
+            }
+            """)
+        .doTest();
+  }
 }

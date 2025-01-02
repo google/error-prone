@@ -287,7 +287,8 @@ public class UnnecessaryBoxedVariable extends BugChecker implements CompilationU
 
   private static boolean canChangeMethodSignature(VisitorState state, MethodSymbol methodSymbol) {
     return !ASTHelpers.methodCanBeOverridden(methodSymbol)
-        && ASTHelpers.findSuperMethods(methodSymbol, state.getTypes()).isEmpty();
+        && ASTHelpers.findSuperMethods(methodSymbol, state.getTypes()).isEmpty()
+        && !ASTHelpers.isRecord(methodSymbol);
   }
 
   private static class FindBoxedUsagesScanner extends TreePathScanner<Void, Void> {
