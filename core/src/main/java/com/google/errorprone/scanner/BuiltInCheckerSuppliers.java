@@ -190,6 +190,7 @@ import com.google.errorprone.bugpatterns.InlineTrivialConstant;
 import com.google.errorprone.bugpatterns.InputStreamSlowMultibyteRead;
 import com.google.errorprone.bugpatterns.InsecureCipherMode;
 import com.google.errorprone.bugpatterns.InstanceOfAndCastMatchWrongType;
+import com.google.errorprone.bugpatterns.IntFloatConversion;
 import com.google.errorprone.bugpatterns.IntLongMath;
 import com.google.errorprone.bugpatterns.InterfaceWithOnlyStatics;
 import com.google.errorprone.bugpatterns.InterruptedExceptionSwallowed;
@@ -963,6 +964,7 @@ public class BuiltInCheckerSuppliers {
           Inliner.class,
           InputStreamSlowMultibyteRead.class,
           InstanceOfAndCastMatchWrongType.class,
+          IntFloatConversion.class,
           IntLongMath.class,
           InvalidBlockTag.class,
           InvalidInlineTag.class,
