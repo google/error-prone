@@ -126,4 +126,25 @@ public class ComputeIfAbsentAmbiguousReferenceTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void negativeCase_nonOverride() {
+    compilationHelper
+        .addSourceLines(
+            "in/Test.java",
+            """
+            import java.util.Map;
+
+            class Test {
+              interface SubMap extends Map<Object, Object> {
+                Object computeIfAbsent(Object key);
+              }
+
+              private void test(SubMap map) {
+                map.computeIfAbsent(4L);
+              }
+            }
+            """)
+        .doTest();
+  }
 }

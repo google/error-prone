@@ -50,7 +50,10 @@ import java.util.stream.Collectors;
 public final class ComputeIfAbsentAmbiguousReference extends BugChecker
     implements MethodInvocationTreeMatcher {
   private static final Matcher<ExpressionTree> COMPUTE_IF_ABSENT =
-      instanceMethod().onDescendantOf("java.util.Map").named("computeIfAbsent");
+      instanceMethod()
+          .onDescendantOf("java.util.Map")
+          .named("computeIfAbsent")
+          .withParameters("java.lang.Object", "java.util.function.Function");
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
