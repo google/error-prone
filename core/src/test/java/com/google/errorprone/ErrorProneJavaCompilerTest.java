@@ -34,6 +34,7 @@ import com.google.errorprone.bugpatterns.ArrayEquals;
 import com.google.errorprone.bugpatterns.BadShiftAmount;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.bugpatterns.ChainingConstructorIgnoresParameter;
 import com.google.errorprone.bugpatterns.Finally;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -42,21 +43,27 @@ import com.google.errorprone.scanner.ScannerSupplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.file.JavacFileManager;
+import com.sun.tools.javac.util.Constants;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import javax.inject.Inject;
 import javax.lang.model.SourceVersion;
 import javax.tools.DiagnosticListener;
 import javax.tools.JavaCompiler;
 import javax.tools.JavaFileObject;
+import javax.tools.SimpleJavaFileObject;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -410,6 +417,150 @@ public class ErrorProneJavaCompilerTest {
     assertThat(result.succeeded).isFalse();
   }
 
+  @BugPattern(summary = "Test bug pattern to test custom patch functionality", severity = ERROR)
+  public static final class AssignmentUpdater extends BugChecker implements VariableTreeMatcher {
+    private final String newValue;
+
+    @Inject
+    AssignmentUpdater(ErrorProneFlags flags) {
+      newValue = flags.get("AssignmentUpdater:NewValue").orElse("flag-not-set");
+    }
+
+    @Override
+    public Description matchVariable(VariableTree tree, VisitorState state) {
+      return describeMatch(
+          tree, SuggestedFix.replace(tree.getInitializer(), Constants.format(newValue)));
+    }
+  }
+
+  @Test
+  public void patchAll() throws IOException {
+    JavaFileObject fileObject =
+        createOnDiskFileObject(
+            "StringConstantWrapper.java",
+            """
+            class StringConstantWrapper {
+              String s = "old-value";
+            }
+            """);
+
+    CompilationResult result =
+        doCompile(
+            Collections.singleton(fileObject),
+            Arrays.asList("-XepPatchChecks:", "-XepPatchLocation:IN_PLACE"),
+            ImmutableList.of(AssignmentUpdater.class));
+    assertThat(result.succeeded).isTrue();
+    assertThat(Files.readString(Path.of(fileObject.toUri())))
+        .isEqualTo(
+            """
+            class StringConstantWrapper {
+              String s = "flag-not-set";
+            }
+            """);
+  }
+
+  @Test
+  public void patchAllWithCheckDisabled() throws IOException {
+    JavaFileObject fileObject =
+        createOnDiskFileObject(
+            "StringConstantWrapper.java",
+            """
+            class StringConstantWrapper {
+              String s = "old-value";
+            }
+            """);
+
+    CompilationResult result =
+        doCompile(
+            Collections.singleton(fileObject),
+            Arrays.asList(
+                "-XepPatchChecks:", "-XepPatchLocation:IN_PLACE", "-Xep:AssignmentUpdater:OFF"),
+            ImmutableList.of(AssignmentUpdater.class));
+    assertThat(result.succeeded).isTrue();
+    assertThat(Files.readString(Path.of(fileObject.toUri())))
+        .isEqualTo(
+            """
+            class StringConstantWrapper {
+              String s = "old-value";
+            }
+            """);
+  }
+
+  @Test
+  public void patchSingleWithCheckDisabled() throws IOException {
+    JavaFileObject fileObject =
+        createOnDiskFileObject(
+            "StringConstantWrapper.java",
+            """
+            class StringConstantWrapper {
+              String s = "old-value";
+            }
+            """);
+
+    CompilationResult result =
+        doCompile(
+            Collections.singleton(fileObject),
+            Arrays.asList(
+                "-XepPatchChecks:AssignmentUpdater",
+                "-XepPatchLocation:IN_PLACE",
+                "-Xep:AssignmentUpdater:OFF"),
+            ImmutableList.of(AssignmentUpdater.class));
+    assertThat(result.succeeded).isTrue();
+    assertThat(Files.readString(Path.of(fileObject.toUri())))
+        .isEqualTo(
+            """
+            class StringConstantWrapper {
+              String s = "old-value";
+            }
+            """);
+  }
+
+  @Test
+  public void patchSingleWithBugPatternCustomization() throws IOException {
+    JavaFileObject fileObject =
+        createOnDiskFileObject(
+            "StringConstantWrapper.java",
+            """
+            class StringConstantWrapper {
+              String s = "old-value";
+            }
+            """);
+
+    CompilationResult result =
+        doCompile(
+            Collections.singleton(fileObject),
+            Arrays.asList(
+                "-XepPatchChecks:AssignmentUpdater",
+                "-XepPatchLocation:IN_PLACE",
+                "-XepOpt:AssignmentUpdater:NewValue=new-value"),
+            ImmutableList.of(AssignmentUpdater.class));
+    assertThat(result.succeeded).isTrue();
+    assertThat(Files.readString(Path.of(fileObject.toUri())))
+        .isEqualTo(
+            """
+            class StringConstantWrapper {
+              String s = "new-value";
+            }
+            """);
+  }
+
+  /**
+   * Creates a {@link JavaFileObject} with matching on-disk contents.
+   *
+   * <p>This method aids in testing patching functionality, as {@code IN_PLACE} patching requires
+   * that compiled code actually exists on disk.
+   */
+  private JavaFileObject createOnDiskFileObject(String fileName, String source) throws IOException {
+    Path location = tempDir.getRoot().toPath().resolve(fileName);
+    Files.writeString(location, source);
+    return new SimpleJavaFileObject(location.toUri(), SimpleJavaFileObject.Kind.SOURCE) {
+      @Override
+      public String getCharContent(boolean ignoreEncodingErrors) {
+        return source;
+      }
+    };
+  }
+
   private static class CompilationResult {
     public final boolean succeeded;
     public final String output;
@@ -427,6 +578,14 @@ public class ErrorProneJavaCompilerTest {
       List<String> fileNames,
       List<String> extraArgs,
       List<Class<? extends BugChecker>> customCheckers) {
+    return doCompile(
+        forResources(getClass(), fileNames.toArray(new String[0])), extraArgs, customCheckers);
+  }
+
+  private CompilationResult doCompile(
+      Iterable<? extends JavaFileObject> files,
+      List<String> extraArgs,
+      List<Class<? extends BugChecker>> customCheckers) {
     DiagnosticTestHelper diagnosticHelper = new DiagnosticTestHelper();
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(outputStream, UTF_8), true);
@@ -441,12 +600,7 @@ public class ErrorProneJavaCompilerTest {
             : new ErrorProneJavaCompiler(ScannerSupplier.fromBugCheckerClasses(customCheckers));
     JavaCompiler.CompilationTask task =
         errorProneJavaCompiler.getTask(
-            printWriter,
-            fileManager,
-            diagnosticHelper.collector,
-            args,
-            null,
-            forResources(getClass(), fileNames.toArray(new String[0])));
+            printWriter, fileManager, diagnosticHelper.collector, args, null, files);
 
     return new CompilationResult(
         task.call(), new String(outputStream.toByteArray(), UTF_8), diagnosticHelper);

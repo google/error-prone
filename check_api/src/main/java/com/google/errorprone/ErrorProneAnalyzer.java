@@ -24,6 +24,7 @@ import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern.SeverityLevel;
+import com.google.errorprone.ErrorProneOptions.Severity;
 import com.google.errorprone.RefactoringCollection.RefactoringResult;
 import com.google.errorprone.scanner.ErrorProneScannerTransformer;
 import com.google.errorprone.scanner.ScannerSupplier;
@@ -79,15 +80,18 @@ public class ErrorProneAnalyzer implements TaskListener {
             .or(
                 Suppliers.memoize(
                     () -> {
-                      ScannerSupplier toUse =
-                          ErrorPronePlugins.loadPlugins(scannerSupplier, context);
                       ImmutableSet<String> namedCheckers =
                           epOptions.patchingOptions().namedCheckers();
-                      if (!namedCheckers.isEmpty()) {
-                        toUse = toUse.filter(bci -> namedCheckers.contains(bci.canonicalName()));
-                      } else {
-                        toUse = toUse.applyOverrides(epOptions);
-                      }
+                      ScannerSupplier toUse =
+                          ErrorPronePlugins.loadPlugins(scannerSupplier, context)
+                              .applyOverrides(epOptions)
+                              .filter(
+                                  bci -> {
+                                    String name = bci.canonicalName();
+                                    return epOptions.getSeverityMap().get(name) != Severity.OFF
+                                        && (namedCheckers.isEmpty()
+                                            || namedCheckers.contains(name));
+                                  });
                       return ErrorProneScannerTransformer.create(toUse.get());
                     }));
 
