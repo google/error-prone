@@ -17,6 +17,7 @@
 package com.google.errorprone;
 
 import com.sun.tools.javac.util.Convert;
+import javax.lang.model.util.Elements;
 
 /**
  * @see VisitorState#getConstantExpression(Object)
@@ -24,9 +25,9 @@ import com.sun.tools.javac.util.Convert;
 final class ConstantStringExpressions {
   private ConstantStringExpressions() {}
 
-  static String toConstantStringExpression(Object value, VisitorState state) {
+  static String toConstantStringExpression(Object value, Elements elements) {
     if (!(value instanceof CharSequence)) {
-      return state.getElements().getConstantExpression(value);
+      return elements.getConstantExpression(value);
     }
 
     // Don't escape single-quotes in string literals.

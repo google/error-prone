@@ -762,6 +762,6 @@ public class VisitorState {
    * quotes in strings and (b) treats any {@link CharSequence} as a {@link String}.
    */
   public String getConstantExpression(Object value) {
-    return toConstantStringExpression(value, this);
+    return toConstantStringExpression(value, getElements());
   }
 }
