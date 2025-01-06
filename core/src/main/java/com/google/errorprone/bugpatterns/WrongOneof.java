@@ -31,7 +31,6 @@ import static com.google.errorprone.util.Reachability.canFallThrough;
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.SwitchExpressionTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.SwitchTreeMatcher;
@@ -61,12 +60,10 @@ public final class WrongOneof extends BugChecker
       isDescendantOf("com.google.protobuf.AbstractMessageLite.InternalOneOfEnum");
 
   private final ConstantExpressions constantExpressions;
-  private final boolean handleSwitchExpressions;
 
   @Inject
-  WrongOneof(ConstantExpressions constantExpressions, ErrorProneFlags flags) {
+  WrongOneof(ConstantExpressions constantExpressions) {
     this.constantExpressions = constantExpressions;
-    this.handleSwitchExpressions = flags.getBoolean("HandleSwitchExpressions").orElse(true);
   }
 
   @Override
@@ -76,9 +73,6 @@ public final class WrongOneof extends BugChecker
 
   @Override
   public Description matchSwitchExpression(SwitchExpressionTree tree, VisitorState state) {
-    if (!handleSwitchExpressions) {
-      return NO_MATCH;
-    }
     return handle(tree.getExpression(), tree.getCases(), state);
   }
 
