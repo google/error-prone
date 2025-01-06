@@ -51,12 +51,17 @@ public class ThreadSafeAnalysis {
   private final VisitorState state;
   private final WellKnownThreadSafety wellKnownThreadSafety;
   private final ThreadSafety threadSafety;
+  private final GuardedByFlags flags;
 
   public ThreadSafeAnalysis(
-      BugChecker bugChecker, VisitorState state, WellKnownThreadSafety wellKnownThreadSafety) {
+      BugChecker bugChecker,
+      VisitorState state,
+      WellKnownThreadSafety wellKnownThreadSafety,
+      GuardedByFlags flags) {
     this.bugChecker = bugChecker;
     this.state = state;
     this.wellKnownThreadSafety = wellKnownThreadSafety;
+    this.flags = flags;
 
     this.threadSafety = ThreadSafety.threadSafeBuilder(wellKnownThreadSafety).build(state);
   }
@@ -222,7 +227,7 @@ public class ThreadSafeAnalysis {
     if (var.getModifiers().contains(Modifier.STATIC)) {
       return Violation.absent();
     }
-    if (!GuardedByUtils.getGuardValues(var).isEmpty()) {
+    if (!GuardedByUtils.getGuardValues(var, flags).isEmpty()) {
       return Violation.absent();
     }
 

@@ -385,25 +385,6 @@ public class ThreadSafeCheckerTest {
   }
 
   @Test
-  public void mutableFieldGuardedByJsr305Annotation() {
-    compilationHelper
-        .addSourceLines(
-            "Test.java",
-            """
-            import com.google.errorprone.annotations.ThreadSafe;
-            import java.util.List;
-            import java.util.Map;
-            import javax.annotation.concurrent.GuardedBy;
-            @ThreadSafe class Test {
-              @GuardedBy("this") int a = 42;
-              @GuardedBy("this") final Map<Long, List<Long>> b = null;
-              @GuardedBy("this") volatile int c = 42;
-            }
-            """)
-        .doTest();
-  }
-
-  @Test
   public void mutableFieldGuardedByErrorProneAnnotation() {
     compilationHelper
         .addSourceLines(

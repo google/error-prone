@@ -34,7 +34,7 @@ public class GuardedByValidatorTest {
             "threadsafety/Test.java",
             """
             package threadsafety.Test;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             class Test {
               // BUG: Diagnostic contains:
               // Invalid @GuardedBy expression: could not resolve guard
@@ -54,7 +54,7 @@ public class GuardedByValidatorTest {
             "threadsafety/Test.java",
             """
             package threadsafety.Test;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             class Test {
               final Object mu = new Object();
               class Inner {
@@ -80,7 +80,7 @@ public class GuardedByValidatorTest {
             "threadsafety/Test.java",
             """
             package threadsafety.Test;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             class Test {
               @GuardedBy("itself") Object s_;
             }
@@ -95,7 +95,7 @@ public class GuardedByValidatorTest {
             "threadsafety/Test.java",
             """
             package threadsafety.Test;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             class Test {
               final Object instanceField = new Object();
               // BUG: Diagnostic contains:
@@ -113,7 +113,7 @@ public class GuardedByValidatorTest {
             "threadsafety/Test.java",
             """
             package threadsafety.Test;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             class Test {
               // BUG: Diagnostic contains:
               // Invalid @GuardedBy expression: could not resolve guard
@@ -130,7 +130,7 @@ public class GuardedByValidatorTest {
             "threadsafety/Test.java",
             """
             package threadsafety;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             class Test {
               static class Endpoint {
                 Object getLock() { return null; }
@@ -162,7 +162,7 @@ public class GuardedByValidatorTest {
             "threadsafety/Test.java",
             """
             package threadsafety;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             class Test {
               static class Endpoint {
                 Object getLock() { return null; }
@@ -194,7 +194,7 @@ public class GuardedByValidatorTest {
             "threadsafety/Test.java",
             """
             package threadsafety.Test;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             class Test {
               // BUG: Diagnostic contains:
               // Invalid @GuardedBy expression: static member guarded by instance
@@ -211,7 +211,7 @@ public class GuardedByValidatorTest {
             "threadsafety/Test.java",
             """
             package threadsafety.Test;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             class Test {
               final Object mu_ = new Object();
               Object lock() { return mu_; }
@@ -230,7 +230,7 @@ public class GuardedByValidatorTest {
             "threadsafety/Test.java",
             """
             package threadsafety.Test;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             class Test {
               @GuardedBy("Test.class") static int x;
             }
@@ -245,7 +245,7 @@ public class GuardedByValidatorTest {
             "threadsafety/Test.java",
             """
             package threadsafety.Test;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             class Test {
               // BUG: Diagnostic contains:
               // Invalid @GuardedBy expression: could not resolve guard

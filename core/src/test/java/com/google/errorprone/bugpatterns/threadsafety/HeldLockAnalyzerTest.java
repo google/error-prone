@@ -20,12 +20,14 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.CompilationTestHelper;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.Tree;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import javax.inject.Inject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -44,7 +46,7 @@ public class HeldLockAnalyzerTest {
             """
             package threadsafety;
 
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             import java.util.concurrent.locks.Lock;
 
             class Test {
@@ -76,7 +78,7 @@ public class HeldLockAnalyzerTest {
             """
             package threadsafety;
 
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             import java.util.concurrent.locks.Lock;
 
             class Test {
@@ -110,7 +112,7 @@ public class HeldLockAnalyzerTest {
             """
             package threadsafety;
 
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             import java.util.concurrent.locks.Lock;
 
             class Test {
@@ -134,7 +136,7 @@ public class HeldLockAnalyzerTest {
             """
             package threadsafety;
 
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             import java.util.concurrent.locks.Lock;
 
             class Test {
@@ -160,7 +162,7 @@ public class HeldLockAnalyzerTest {
             """
             package threadsafety;
 
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
 
             class Lock {
               final Object lock = null;
@@ -192,7 +194,7 @@ public class HeldLockAnalyzerTest {
             """
             package threadsafety;
 
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
 
             class Lock {}
 
@@ -221,7 +223,7 @@ public class HeldLockAnalyzerTest {
             """
             package threadsafety;
 
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             import java.util.concurrent.locks.Lock;
 
             class Test {
@@ -253,6 +255,11 @@ public class HeldLockAnalyzerTest {
   /** A customized {@link GuardedByChecker} that prints more test-friendly diagnostics. */
   @BugPattern(name = "GuardedByLockSet", summary = "", explanation = "", severity = ERROR)
   public static class GuardedByLockSetAnalyzer extends GuardedByChecker {
+    @Inject
+    GuardedByLockSetAnalyzer(ErrorProneFlags flags) {
+      super(flags);
+    }
+
     @Override
     protected Description checkGuardedAccess(
         Tree tree, GuardedByExpression guard, HeldLockSet live, VisitorState state) {

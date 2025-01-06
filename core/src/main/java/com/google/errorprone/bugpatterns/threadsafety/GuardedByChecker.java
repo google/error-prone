@@ -22,6 +22,7 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 
 import com.google.common.base.Joiner;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.LambdaExpressionTreeMatcher;
@@ -44,6 +45,7 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
+import javax.inject.Inject;
 import org.jspecify.annotations.Nullable;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
@@ -60,7 +62,12 @@ public class GuardedByChecker extends BugChecker
 
   private static final String JUC_READ_WRITE_LOCK = "java.util.concurrent.locks.ReadWriteLock";
 
-  private final GuardedByFlags flags = GuardedByFlags.allOn();
+  private final GuardedByFlags flags;
+
+  @Inject
+  GuardedByChecker(ErrorProneFlags flags) {
+    this.flags = GuardedByFlags.fromFlags(flags);
+  }
 
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {

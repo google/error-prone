@@ -35,7 +35,7 @@ public class GuardedByCheckerTest {
             "threadsafety/Test.java",
             """
             package threadsafety;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             import java.util.concurrent.locks.Lock;
             class Test {
               final Lock lock = null;
@@ -70,7 +70,7 @@ public class GuardedByCheckerTest {
             "threadsafety/Test.java",
             """
             package threadsafety;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             import java.util.concurrent.locks.Lock;
             class Test {
               @GuardedBy("Test.class")
@@ -90,7 +90,7 @@ public class GuardedByCheckerTest {
             "threadsafety/Test.java",
             """
             package threadsafety;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             import com.google.common.util.concurrent.Monitor;
             class Test {
               final Monitor monitor = null;
@@ -122,7 +122,7 @@ public class GuardedByCheckerTest {
             "threadsafety/Test.java",
             """
             package threadsafety;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             import java.util.concurrent.locks.Lock;
             class Test {
               final Lock lock1 = null;
@@ -151,7 +151,7 @@ public class GuardedByCheckerTest {
             "threadsafety/Test.java",
             """
             package threadsafety;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             class Test {
               public static final Object lock = new Object();
               @GuardedBy("lock")
@@ -173,7 +173,7 @@ public class GuardedByCheckerTest {
             "threadsafety/Test.java",
             """
             package threadsafety;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             class Test {
               public static final Object lock = new Object();
               @GuardedBy("lock")
@@ -195,7 +195,7 @@ public class GuardedByCheckerTest {
             "threadsafety/Test.java",
             """
             package threadsafety;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             class Test {
               public static final Object lock = new Object();
               @GuardedBy("lock")
@@ -217,7 +217,7 @@ public class GuardedByCheckerTest {
             "threadsafety/Test.java",
             """
             package threadsafety;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             class Test {
               @GuardedBy("Test.class")
               public static int x;
@@ -236,7 +236,7 @@ public class GuardedByCheckerTest {
             "threadsafety/Test.java",
             """
             package threadsafety;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             class Test {
               public static final Object lock = new Object();
               @GuardedBy("lock")
@@ -258,7 +258,7 @@ public class GuardedByCheckerTest {
             "threadsafety/Test.java",
             """
             package threadsafety;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             class Test {
               // BUG: Diagnostic contains: Invalid @GuardedBy expression
               @GuardedBy("foo") int y;
@@ -290,7 +290,7 @@ public class GuardedByCheckerTest {
             "threadsafety/Test.java",
             """
             package threadsafety;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             class Test {
               final Object mu = new Object();
               @GuardedBy("mu") int y;
@@ -313,7 +313,7 @@ public class GuardedByCheckerTest {
             "threadsafety/Test.java",
             """
             package threadsafety;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             class Itself {
               @GuardedBy("itself")
               int x;
@@ -335,7 +335,7 @@ public class GuardedByCheckerTest {
             """
             package threadsafety;
             import java.util.List;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             class Itself {
               @GuardedBy("itself")
               List<String> xs;
@@ -361,7 +361,7 @@ public class GuardedByCheckerTest {
             """
             package threadsafety;
             import java.util.List;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             class Itself {
               @GuardedBy("this")
               void f() {};
@@ -384,7 +384,7 @@ public class GuardedByCheckerTest {
             "threadsafety/Test.java",
             """
             package threadsafety;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             class Test {
               @GuardedBy("this") int x;
               public Test() {
@@ -402,7 +402,7 @@ public class GuardedByCheckerTest {
             "threadsafety/Test.java",
             """
             package threadsafety;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             class Test {
               @GuardedBy("this") void x() {}
               void m() {
@@ -421,7 +421,7 @@ public class GuardedByCheckerTest {
             "threadsafety/Test.java",
             """
             package threadsafety;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             class Test {
               @GuardedBy("this") void x() {}
               @GuardedBy("this") void m() {
@@ -439,7 +439,7 @@ public class GuardedByCheckerTest {
         .addSourceLines(
             "threadsafety.Test",
             "package threadsafety.Test;",
-            "import javax.annotation.concurrent.GuardedBy;",
+            "import com.google.errorprone.annotations.concurrent.GuardedBy;",
             "import java.util.concurrent.locks.ReentrantReadWriteLock;",
             "import java.util.concurrent.locks.Lock;",
             "class Test {",
@@ -474,7 +474,7 @@ public class GuardedByCheckerTest {
             "threadsafety/Test.java",
             """
             package threadsafety;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             import java.util.concurrent.locks.ReentrantReadWriteLock;
             class Test {
               final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
@@ -508,7 +508,7 @@ public class GuardedByCheckerTest {
             "threadsafety/Test.java",
             """
             package threadsafety.Test;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             import java.util.concurrent.locks.ReentrantReadWriteLock;
             class Test {
               final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
@@ -531,7 +531,7 @@ public class GuardedByCheckerTest {
             "threadsafety/Test.java",
             """
             package threadsafety;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             public class Test {
               final Object mu = new Object();
               @GuardedBy("mu") boolean b = false;
@@ -559,7 +559,7 @@ public class GuardedByCheckerTest {
             "threadsafety/Test.java",
             """
             package threadsafety;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             public class Test {
               @GuardedBy("this") boolean b = false;
               private final class Baz {
@@ -581,7 +581,7 @@ public class GuardedByCheckerTest {
             "threadsafety/Test.java",
             """
             package threadsafety;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             public class Test {
               @GuardedBy("this") boolean b = false;
               private synchronized void n() {
@@ -606,7 +606,7 @@ public class GuardedByCheckerTest {
             "threadsafety/Test.java",
             """
             package threadsafety;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             class A {
               final Object lock = new Object();
             }
@@ -629,7 +629,7 @@ public class GuardedByCheckerTest {
             "threadsafety/Test.java",
             """
             package threadsafety;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             class A {
               final Object lock = new Object();
               @GuardedBy("lock") boolean flag = false;
@@ -655,7 +655,7 @@ public class GuardedByCheckerTest {
             "threadsafety/Test.java",
             """
             package threadsafety;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             class A {
               final Object lock = new Object();
               @GuardedBy("this") boolean flag = false;
@@ -676,7 +676,7 @@ public class GuardedByCheckerTest {
             "threadsafety/Test.java",
             """
             package threadsafety;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             class A {
               final Object lock = new Object();
               @GuardedBy("lock") boolean flag = false;
@@ -702,7 +702,7 @@ public class GuardedByCheckerTest {
             "threadsafety/Test.java",
             """
             package threadsafety;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             class A {
               static final Object lock = new Object();
               @GuardedBy("lock") static boolean flag = false;
@@ -728,7 +728,7 @@ public class GuardedByCheckerTest {
             "threadsafety/Test.java",
             """
             package threadsafety;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             class A {
               static final Object lock = new Object();
               @GuardedBy("lock") static boolean flag = false;
@@ -760,7 +760,7 @@ public class GuardedByCheckerTest {
             "threadsafety/Test.java",
             """
             package threadsafety;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             class A {
               static final Object lock = new Object();
               @GuardedBy("lock") static boolean flag = false;
@@ -792,7 +792,7 @@ public class GuardedByCheckerTest {
             "threadsafety/Test.java",
             """
             package threadsafety;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             class A {
               static final Object lock = new Object();
               @GuardedBy("lock") static boolean flag = false;
@@ -815,7 +815,7 @@ public class GuardedByCheckerTest {
             "threadsafety/Test.java",
             """
             package threadsafety;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             class InstanceAccess_InstanceGuard {
               class A {
                 final Object lock = new Object();
@@ -845,7 +845,7 @@ public class GuardedByCheckerTest {
             "threadsafety/Test.java",
             """
             package threadsafety;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             class InstanceAccess_LexicalGuard {
               class Outer {
                 final Object lock = new Object();
@@ -874,7 +874,7 @@ public class GuardedByCheckerTest {
             "threadsafety/Test.java",
             """
             package threadsafety;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             class LexicalAccess_InstanceGuard {
               class Outer {
                 final Object lock = new Object();
@@ -903,7 +903,7 @@ public class GuardedByCheckerTest {
             "threadsafety/Test.java",
             """
             package threadsafety;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             class LexicalAccess_LexicalGuard {
               class Outer {
                 final Object lock = new Object();
@@ -934,7 +934,7 @@ public class GuardedByCheckerTest {
             "threadsafety/Test.java",
             """
             package threadsafety;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             class InstanceAccess_ThisGuard {
               class A {
                 @GuardedBy("this")
@@ -962,7 +962,7 @@ public class GuardedByCheckerTest {
             "threadsafety/Test.java",
             """
             package threadsafety;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             class InstanceAccess_NamedThisGuard {
               class Outer {
                 class Inner {
@@ -990,7 +990,7 @@ public class GuardedByCheckerTest {
             "threadsafety/Test.java",
             """
             package threadsafety;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             class LexicalAccess_ThisGuard {
               class Outer {
                 @GuardedBy("this")
@@ -1018,7 +1018,7 @@ public class GuardedByCheckerTest {
             "threadsafety/Test.java",
             """
             package threadsafety;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             class LexicalAccess_NamedThisGuard {
               class Outer {
                 class Inner {
@@ -1071,7 +1071,7 @@ public class GuardedByCheckerTest {
             "threadsafety/Test.java",
             """
 package threadsafety;
-import javax.annotation.concurrent.GuardedBy;
+import com.google.errorprone.annotations.concurrent.GuardedBy;
 class WrongInnerClassInstance {
   final Object lock = new Object();
   class Inner {
@@ -1099,7 +1099,7 @@ class WrongInnerClassInstance {
             "threadsafety/Test.java",
             """
             package threadsafety;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             import java.util.concurrent.locks.Lock;
             class Test {
               Lock lock;
@@ -1133,7 +1133,7 @@ class WrongInnerClassInstance {
             "threadsafety/Test.java",
             """
             package threadsafety;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             import java.util.concurrent.locks.Lock;
             class Test {
               Lock lock;
@@ -1176,7 +1176,7 @@ class WrongInnerClassInstance {
             "threadsafety/Test.java",
             """
             package threadsafety;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             class Transaction {
               @GuardedBy("this")
               int x;
@@ -1208,7 +1208,7 @@ class WrongInnerClassInstance {
             "threadsafety/Test.java",
             """
             package threadsafety;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             class Transaction {
               @GuardedBy("this")
               int x;
@@ -1239,7 +1239,7 @@ class WrongInnerClassInstance {
             "threadsafety/Test.java",
             """
             package threadsafety;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             import java.util.List;
             import java.util.ArrayList;
             class Names {
@@ -1264,7 +1264,7 @@ class WrongInnerClassInstance {
             "threadsafety/Test.java",
             """
             package threadsafety;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             import com.google.common.util.concurrent.Monitor;
             import java.util.List;
             import java.util.ArrayList;
@@ -1289,7 +1289,7 @@ class WrongInnerClassInstance {
             "threadsafety/Test.java",
             """
             package threadsafety;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             import java.util.concurrent.Semaphore;
             class Test {
               final Semaphore semaphore = null;
@@ -1320,7 +1320,7 @@ class WrongInnerClassInstance {
         .addSourceLines(
             "threadsafety/Test.java",
             "package threadsafety;",
-            "import javax.annotation.concurrent.GuardedBy;",
+            "import com.google.errorprone.annotations.concurrent.GuardedBy;",
             // do not remove, regression test for a bug when RWL is on the classpath
             "import java.util.concurrent.locks.ReadWriteLock;",
             "class Test {",
@@ -1343,7 +1343,7 @@ class WrongInnerClassInstance {
             "threadsafety/Test.java",
             """
             package threadsafety;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             import java.util.concurrent.locks.Lock;
             class Test {
               final Lock lock = null;
@@ -1366,7 +1366,7 @@ class WrongInnerClassInstance {
             "threadsafety/Test.java",
             """
             package threadsafety;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             public class Test {
               public final Object mu = new Object();
               @GuardedBy("mu") int x = 1;
@@ -1402,7 +1402,7 @@ class WrongInnerClassInstance {
             "threadsafety/Test.java",
             """
             package threadsafety;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             public class Test {
               public final Object mu = new Object();
               @GuardedBy("lib.Lib.Inner.mu") int x = 1;
@@ -1434,7 +1434,7 @@ class WrongInnerClassInstance {
             "threadsafety/Test.java",
             """
             package threadsafety;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             import lib.Lib;
             public class Test {
               public final Object mu = new Object();
@@ -1456,7 +1456,7 @@ class WrongInnerClassInstance {
             "threadsafety/Test.java",
             """
             package threadsafety;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             public class Test {
               public final Object mu1 = new Object();
               public final Object mu2 = new Object();
@@ -1481,7 +1481,7 @@ class WrongInnerClassInstance {
             "threadsafety/Test.java",
             """
             package threadsafety;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             public class Test {
               public static final Object mu1 = new Object();
               public static final Object mu2 = new Object();
@@ -1506,7 +1506,7 @@ class WrongInnerClassInstance {
             "threadsafety/Test.java",
             """
             package threadsafety;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             public class Test {
               public static final Object mu = new Object();
               @GuardedBy("mu") static int x0 = 1;
@@ -1523,7 +1523,7 @@ class WrongInnerClassInstance {
             "threadsafety/Test.java",
             """
             package threadsafety;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             public class Test {
               public final Object mu = new Object();
               @GuardedBy("mu") int x0 = 1;
@@ -1540,7 +1540,7 @@ class WrongInnerClassInstance {
             "threadsafety/Test.java",
             """
             package threadsafety;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             public class Test {
               public final Object mu = new Object();
               class Inner {
@@ -1572,7 +1572,7 @@ class WrongInnerClassInstance {
             "threadsafety/Test.java",
             """
             package threadsafety;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             public class Test {
               public final Object mu = new Object();
               @GuardedBy("mu") int i = 0;
@@ -1597,7 +1597,7 @@ class WrongInnerClassInstance {
             "threadsafety/Outer.java",
             """
             package threadsafety;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             public class Outer {
               public final Object mu = new Object();
               class Inner {
@@ -1610,7 +1610,7 @@ class WrongInnerClassInstance {
             "threadsafety/Test.java",
             """
 package threadsafety;
-import javax.annotation.concurrent.GuardedBy;
+import com.google.errorprone.annotations.concurrent.GuardedBy;
 public class Test {
   void f() {
     Outer a = new Outer();
@@ -1645,7 +1645,7 @@ public class Test {
         .addSourceLines(
             "B.java",
             """
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             class One {
               @GuardedBy("One.class") static int x = 1;
               static void f() { synchronized (One.class) { x++; } }
@@ -1672,7 +1672,7 @@ public class Test {
             "threadsafety/Test.java",
             """
             package threadsafety;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             public class Test {
               @GuardedBy("this") void f() {}
               void main() {
@@ -1693,7 +1693,7 @@ public class Test {
         .addSourceLines(
             "MemoryAllocatedInfoJava.java",
             """
-import javax.annotation.concurrent.GuardedBy;
+import com.google.errorprone.annotations.concurrent.GuardedBy;
 public class MemoryAllocatedInfoJava {
   private static final class AllocationStats {
     @GuardedBy("MemoryAllocatedInfoJava.this")
@@ -1721,7 +1721,7 @@ public class MemoryAllocatedInfoJava {
         .addSourceLines(
             "Test.java",
             """
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             public class Test {
               Foo foo;
               // BUG: Diagnostic contains: could not resolve guard
@@ -1738,7 +1738,7 @@ public class MemoryAllocatedInfoJava {
         .addSourceLines(
             "Test.java",
             """
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             public class Test {
               @GuardedBy("this") int x;
               synchronized void f() {
@@ -1746,42 +1746,6 @@ public class MemoryAllocatedInfoJava {
                   // BUG: Diagnostic contains: should be guarded by 'this',
                   x++;
                 };
-              }
-            }
-            """)
-        .doTest();
-  }
-
-  @Test
-  public void multipleLocks() {
-    compilationHelper
-        .addSourceLines(
-            "GuardedBy.java",
-            """
-            @interface GuardedBy {
-              String[] value() default {};
-            }
-            """)
-        .addSourceLines(
-            "Test.java",
-            """
-            public class Test {
-              private final Object mu = new Object();
-              @GuardedBy({"this", "mu"}) int x;
-              void f() {
-                synchronized (this) {
-                  synchronized (mu) {
-                    x++;
-                  }
-                }
-                synchronized (this) {
-                  // BUG: Diagnostic contains: should be guarded by 'this.mu'
-                  x++;
-                }
-                synchronized (mu) {
-                  // BUG: Diagnostic contains: should be guarded by 'this'
-                  x++;
-                }
               }
             }
             """)
@@ -1797,7 +1761,7 @@ public class MemoryAllocatedInfoJava {
             "threadsafety/Test.java",
             """
             package threadsafety;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             public class Test {
               final Object mu = new Object();
               private static final class Baz {
@@ -1824,7 +1788,7 @@ public class MemoryAllocatedInfoJava {
             "threadsafety/Test.java",
             """
             package threadsafety;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             public class Test {
               static final Object mu = new Object();
               private static final class Baz {
@@ -1846,7 +1810,7 @@ public class MemoryAllocatedInfoJava {
         .addSourceLines(
             "Foo.java",
             """
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             public class Foo {
               private final Object mu = new Object();
               @GuardedBy("mu") int x;
@@ -1876,7 +1840,7 @@ public class MemoryAllocatedInfoJava {
             "Test.java",
             """
             package threadsafety;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             class Test {
               final Object lock = null;
               void foo() {
@@ -1902,7 +1866,7 @@ public class MemoryAllocatedInfoJava {
             "threadsafety/Lib.java",
             """
             package threadsafety;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             @SuppressWarnings("GuardedBy")
             class Lib {
               @GuardedBy("lock")
@@ -1929,7 +1893,7 @@ public class MemoryAllocatedInfoJava {
         .addSourceLines(
             "threadsafety/Test.java",
             """
-import javax.annotation.concurrent.GuardedBy;
+import com.google.errorprone.annotations.concurrent.GuardedBy;
 class Work {
   final Object lock = new Object();
   Object getLock() {
@@ -1977,7 +1941,7 @@ abstract class Test {
         .addSourceLines(
             "threadsafety/Test.java",
             """
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             class Work {
               final Object lock = new Object();
               Object getLock() {
@@ -2006,7 +1970,7 @@ abstract class Test {
         .addSourceLines(
             "threadsafety/Test.java",
             """
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             class Work {
               final Object lock = new Object();
               Object getLock() {
@@ -2034,7 +1998,7 @@ abstract class Test {
         .addSourceLines(
             "threadsafety/Test.java",
             """
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             class Test {
               @GuardedBy("xs.toString()")
               void f(int x, Object... xs) {
@@ -2061,7 +2025,7 @@ abstract class Test {
             import java.util.ArrayList;
             import java.util.List;
             import java.util.Optional;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             class Test {
               @GuardedBy("this") private final List<String> xs = new ArrayList<>();
               @GuardedBy("ys") private final List<String> ys = new ArrayList<>();
@@ -2088,7 +2052,7 @@ abstract class Test {
             import java.util.List;
             import java.util.Optional;
             import java.util.function.Predicate;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             class Test {
               @GuardedBy("this") private final List<String> xs = new ArrayList<>();
               private final List<Predicate<String>> preds = new ArrayList<>();
@@ -2111,7 +2075,7 @@ abstract class Test {
             import java.util.List;
             import java.util.Optional;
             import java.util.function.Predicate;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             class Test {
               private final List<Predicate<String>> preds = new ArrayList<>();
               public synchronized void test() {
@@ -2135,7 +2099,7 @@ abstract class Test {
             "Test.java",
             """
             import java.util.List;
-            import javax.annotation.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             class Test {
               @GuardedBy("this") private final Object o = new Object();
               public synchronized void test(List<?> xs) {

@@ -179,7 +179,7 @@ public final class HeldLockAnalyzer {
 
       // @GuardedBy annotations on methods are trusted for declarations, and checked
       // for invocations.
-      for (String guard : GuardedByUtils.getGuardValues(tree, visitorState)) {
+      for (String guard : GuardedByUtils.getGuardValues(tree, flags)) {
         Optional<GuardedByExpression> bound =
             GuardedByBinder.bindString(
                 guard, GuardedBySymbolResolver.from(tree, visitorState), flags);
@@ -271,7 +271,7 @@ public final class HeldLockAnalyzer {
     }
 
     private void checkMatch(ExpressionTree tree, HeldLockSet locks) {
-      for (String guardString : GuardedByUtils.getGuardValues(tree, visitorState)) {
+      for (String guardString : GuardedByUtils.getGuardValues(tree, flags)) {
         Optional<GuardedByExpression> guard =
             GuardedByBinder.bindString(
                 guardString,
