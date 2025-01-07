@@ -16,6 +16,8 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.truth.TruthJUnit.assume;
+
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -318,6 +320,26 @@ public final class NonApiTypeTest {
               // BUG: Diagnostic contains: NonApiType
               public Iterator<String> returnType() {
                 return null;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void recordConstructorParameters_notFlagged() {
+    assume().that(Runtime.version().feature()).isAtLeast(16);
+
+    helper
+        .addSourceLines(
+            "Record.java",
+            """
+            import java.util.ArrayList;
+            import java.util.List;
+
+            public record Record(String a) {
+              public Record(ArrayList<String> a) {
+                this(a.get(0));
               }
             }
             """)

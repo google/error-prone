@@ -25,6 +25,7 @@ import static com.google.errorprone.predicates.TypePredicates.isExactType;
 import static com.google.errorprone.predicates.TypePredicates.not;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.isRecord;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.google.errorprone.util.ASTHelpers.methodIsPublicAndNotAnOverride;
 
@@ -204,10 +205,17 @@ public final class NonApiType extends BugChecker implements MethodTreeMatcher {
 
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
-    Type enclosingType = getSymbol(tree).owner.type;
+    var symbol = getSymbol(tree);
+    // NOTE: maybe it would make sense to judiciously start warning on some types for records: maybe
+    // a record really shouldn't have ArrayList members. However, we'd want to be consistent and
+    // flag canonical constructors as well (even when implicit).
+    if (isRecord(symbol.owner)) {
+      return NO_MATCH;
+    }
+    Type enclosingType = symbol.owner.type;
 
     boolean isPublicApi =
-        methodIsPublicAndNotAnOverride(getSymbol(tree), state)
+        methodIsPublicAndNotAnOverride(symbol, state)
             && state.errorProneOptions().isPubliclyVisibleTarget();
 
     for (Tree parameter : tree.getParameters()) {
