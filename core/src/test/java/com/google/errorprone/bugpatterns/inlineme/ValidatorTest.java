@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns.inlineme;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
+import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
 import java.util.regex.Pattern;
 import org.junit.Test;
@@ -983,6 +984,42 @@ public class ValidatorTest {
             }
             """)
         .doTest();
+  }
+
+  @Test
+  public void cleanupInlineMes_records() {
+    getHelperInCleanupMode()
+        .allowBreakingChanges()
+        .addInputLines(
+            "Client.java",
+            """
+            package com.google.frobber;
+
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class Client {
+              public record SomeRecord(long id) {
+                @InlineMe(replacement = "this.id()")
+                public long getId() {
+                  return id();
+                }
+              }
+            }
+            """)
+        // TODO(kak): we shouldn't delete the closing parenthesis and open curly bracket!
+        .addOutputLines(
+            "Client.java",
+            """
+            package com.google.frobber;
+
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class Client {
+              public record SomeRecord(long id
+              }
+            }
+            """)
+        .doTest(TestMode.TEXT_MATCH);
   }
 
   private BugCheckerRefactoringTestHelper getHelperInCleanupMode() {
