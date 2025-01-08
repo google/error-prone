@@ -17,7 +17,9 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
+import com.google.errorprone.BugCheckerRefactoringTestHelper.FixChoosers;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,6 +31,9 @@ public final class StatementSwitchToExpressionSwitchTest {
   private final CompilationTestHelper helper =
       CompilationTestHelper.newInstance(StatementSwitchToExpressionSwitch.class, getClass());
   private final BugCheckerRefactoringTestHelper refactoringHelper =
+      BugCheckerRefactoringTestHelper.newInstance(
+          StatementSwitchToExpressionSwitch.class, getClass());
+  private final BugCheckerRefactoringTestHelper refactoringHelper2 =
       BugCheckerRefactoringTestHelper.newInstance(
           StatementSwitchToExpressionSwitch.class, getClass());
 
@@ -3199,6 +3204,7 @@ public final class StatementSwitchToExpressionSwitchTest {
         .setArgs(
             ImmutableList.of(
                 "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion"))
+        .setFixChooser(Iterables::getOnlyElement)
         .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 
@@ -3328,6 +3334,7 @@ public final class StatementSwitchToExpressionSwitchTest {
         .setArgs(
             ImmutableList.of(
                 "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion"))
+        .setFixChooser(Iterables::getOnlyElement)
         .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 
@@ -3397,6 +3404,7 @@ public final class StatementSwitchToExpressionSwitchTest {
         .setArgs(
             ImmutableList.of(
                 "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion"))
+        .setFixChooser(Iterables::getOnlyElement)
         .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 
@@ -3468,6 +3476,7 @@ public final class StatementSwitchToExpressionSwitchTest {
         .setArgs(
             ImmutableList.of(
                 "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion"))
+        .setFixChooser(Iterables::getOnlyElement)
         .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 
@@ -3546,6 +3555,7 @@ public final class StatementSwitchToExpressionSwitchTest {
         .setArgs(
             ImmutableList.of(
                 "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion"))
+        .setFixChooser(Iterables::getOnlyElement)
         .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 
@@ -3624,6 +3634,7 @@ public final class StatementSwitchToExpressionSwitchTest {
         .setArgs(
             ImmutableList.of(
                 "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion"))
+        .setFixChooser(Iterables::getOnlyElement)
         .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 
@@ -3748,6 +3759,7 @@ public final class StatementSwitchToExpressionSwitchTest {
         .setArgs(
             ImmutableList.of(
                 "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion"))
+        .setFixChooser(Iterables::getOnlyElement)
         .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 
@@ -3951,6 +3963,7 @@ public final class StatementSwitchToExpressionSwitchTest {
         .setArgs(
             ImmutableList.of(
                 "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion"))
+        .setFixChooser(Iterables::getOnlyElement)
         .doTest();
   }
 
@@ -4435,6 +4448,155 @@ public final class StatementSwitchToExpressionSwitchTest {
         .setArgs(
             ImmutableList.of(
                 "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion"))
+        // There should be no second fix that attempts to remove the default case because there is
+        // no default case.
+        .setFixChooser(Iterables::getOnlyElement)
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+  }
+
+  @Test
+  public void switchByEnum_canRemoveDefault_error() {
+    // Switch contain all enum values, so `default:` can likely be removed, unless the author
+    // explicitly desires the behavior it would provide (for example, in contemplation that the
+    // classpath may be configured differently at runtime).  This asserts that the removal is
+    // offered as a secondary fix.
+
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              enum Side {
+                HEART,
+                SPADE,
+                DIAMOND,
+                CLUB
+              };
+
+              public Test(int foo) {}
+
+              public int foo(Side side) {
+                int x = 0;
+                switch (side) {
+                  case HEART:
+                  // Heart comment
+                  // Fall through
+                  case DIAMOND:
+                    x = (((x + 1) * (x * x)) << 2);
+                    break;
+                  case SPADE:
+                    throw new RuntimeException();
+                  default:
+                    // This is unlikely to be reached
+                    throw new RuntimeException();
+                  case CLUB:
+                    throw new NullPointerException();
+                }
+                return x;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              enum Side {
+                HEART,
+                SPADE,
+                DIAMOND,
+                CLUB
+              };
+
+              public Test(int foo) {}
+
+              public int foo(Side side) {
+                int x = 0;
+                x =
+                    switch (side) {
+                      case HEART, DIAMOND ->
+                          // Heart comment
+                          (((x + 1) * (x * x)) << 2);
+                      case SPADE -> throw new RuntimeException();
+                      default ->
+                          // This is unlikely to be reached
+                          throw new RuntimeException();
+                      case CLUB -> throw new NullPointerException();
+                    };
+                return x;
+              }
+            }
+            """)
+        .setArgs(
+            ImmutableList.of(
+                "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion"))
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+
+    refactoringHelper2
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              enum Side {
+                HEART,
+                SPADE,
+                DIAMOND,
+                CLUB
+              };
+
+              public Test(int foo) {}
+
+              public int foo(Side side) {
+                int x = 0;
+                switch (side) {
+                  case HEART:
+                  // Heart comment
+                  // Fall through
+                  case DIAMOND:
+                    x = (((x + 1) * (x * x)) << 2);
+                    break;
+                  case SPADE:
+                    throw new RuntimeException();
+                  default:
+                    // This is unlikely to be reached
+                    throw new RuntimeException();
+                  case CLUB:
+                    throw new NullPointerException();
+                }
+                return x;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              enum Side {
+                HEART,
+                SPADE,
+                DIAMOND,
+                CLUB
+              };
+
+              public Test(int foo) {}
+
+              public int foo(Side side) {
+                int x = 0;
+                x =
+                    switch (side) {
+                      case HEART, DIAMOND ->
+                          // Heart comment
+                          (((x + 1) * (x * x)) << 2);
+                      case SPADE -> throw new RuntimeException();
+                      case CLUB -> throw new NullPointerException();
+                    };
+                return x;
+              }
+            }
+            """)
+        .setArgs(
+            ImmutableList.of(
+                "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion"))
+        .setFixChooser(FixChoosers.SECOND)
         .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 
@@ -4535,6 +4697,7 @@ public final class StatementSwitchToExpressionSwitchTest {
         .setArgs(
             ImmutableList.of(
                 "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion"))
+        .setFixChooser(Iterables::getOnlyElement)
         .doTest();
   }
 
@@ -4661,6 +4824,7 @@ public final class StatementSwitchToExpressionSwitchTest {
         .setArgs(
             ImmutableList.of(
                 "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion"))
+        .setFixChooser(Iterables::getOnlyElement)
         .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 
@@ -4762,6 +4926,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             }
             """)
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion")
+        .setFixChooser(Iterables::getOnlyElement)
         .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 
@@ -4855,6 +5020,7 @@ public final class StatementSwitchToExpressionSwitchTest {
         .setArgs(
             ImmutableList.of(
                 "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion"))
+        .setFixChooser(Iterables::getOnlyElement)
         .doTest();
   }
 
