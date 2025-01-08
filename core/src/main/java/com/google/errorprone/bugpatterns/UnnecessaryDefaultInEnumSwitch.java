@@ -22,6 +22,7 @@ import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
+import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSwitchDefault;
 import static com.google.errorprone.util.Reachability.canCompleteNormally;
 import static com.google.errorprone.util.Reachability.canFallThrough;
@@ -31,6 +32,7 @@ import com.google.common.collect.Sets;
 import com.google.common.collect.Sets.SetView;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.bugpatterns.BugChecker.SwitchExpressionTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.SwitchTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
@@ -39,10 +41,10 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.StatementTree;
+import com.sun.source.tree.SwitchExpressionTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
-import com.sun.tools.javac.tree.JCTree.JCSwitch;
 import java.util.List;
 import javax.lang.model.element.ElementKind;
 
@@ -52,7 +54,8 @@ import javax.lang.model.element.ElementKind;
         "Switch handles all enum values: an explicit default case is unnecessary and defeats error"
             + " checking for non-exhaustive switches.",
     severity = WARNING)
-public class UnnecessaryDefaultInEnumSwitch extends BugChecker implements SwitchTreeMatcher {
+public class UnnecessaryDefaultInEnumSwitch extends BugChecker
+    implements SwitchTreeMatcher, SwitchExpressionTreeMatcher {
 
   private static final String DESCRIPTION_MOVED_DEFAULT =
       "Switch handles all enum values: move code from the default case to execute after the "
@@ -70,9 +73,43 @@ public class UnnecessaryDefaultInEnumSwitch extends BugChecker implements Switch
           + "exhaustive";
 
   @Override
+  public Description matchSwitchExpression(SwitchExpressionTree tree, VisitorState state) {
+    TypeSymbol switchType = getType(tree.getExpression()).asElement();
+    if (switchType.getKind() != ElementKind.ENUM) {
+      return NO_MATCH;
+    }
+    CaseTree defaultCase =
+        tree.getCases().stream().filter(c -> isSwitchDefault(c)).findFirst().orElse(null);
+    if (defaultCase == null) {
+      return NO_MATCH;
+    }
+    SetView<String> unhandledCases = unhandledCases(tree.getCases(), switchType);
+    if (unhandledCases.equals(ImmutableSet.of("UNRECOGNIZED"))) {
+      // switch handles all values of a proto-generated enum except for 'UNRECOGNIZED'.
+      return buildDescription(defaultCase)
+          .setMessage(DESCRIPTION_UNRECOGNIZED)
+          .addFix(
+              SuggestedFix.replace(
+                  getStartPosition(defaultCase),
+                  getStartPosition(defaultCase.getBody()),
+                  "case UNRECOGNIZED -> "))
+          .build();
+    }
+    if (unhandledCases.isEmpty()) {
+      // switch is exhaustive, remove the default if we can.
+      return buildDescription(defaultCase)
+          .setMessage(DESCRIPTION_REMOVED_DEFAULT)
+          .addFix(SuggestedFix.delete(defaultCase))
+          .build();
+    }
+    // switch is non-exhaustive, default can stay.
+    return NO_MATCH;
+  }
+
+  @Override
   public Description matchSwitch(SwitchTree switchTree, VisitorState state) {
     // Only look at enum switches.
-    TypeSymbol switchType = ((JCSwitch) switchTree).getExpression().type.tsym;
+    TypeSymbol switchType = getType(switchTree.getExpression()).asElement();
     if (switchType.getKind() != ElementKind.ENUM) {
       return NO_MATCH;
     }
@@ -94,7 +131,7 @@ public class UnnecessaryDefaultInEnumSwitch extends BugChecker implements Switch
 
     SetView<String> unhandledCases = unhandledCases(switchTree, switchType);
     if (unhandledCases.equals(ImmutableSet.of("UNRECOGNIZED"))) {
-      // switch handles all values of an proto-generated enum except for 'UNRECOGNIZED'.
+      // switch handles all values of a proto-generated enum except for 'UNRECOGNIZED'.
       return fixUnrecognized(switchTree, defaultCase, state);
     }
     if (unhandledCases.isEmpty()) {
@@ -231,8 +268,13 @@ public class UnnecessaryDefaultInEnumSwitch extends BugChecker implements Switch
   }
 
   private static SetView<String> unhandledCases(SwitchTree tree, TypeSymbol switchType) {
+    return unhandledCases(tree.getCases(), switchType);
+  }
+
+  private static SetView<String> unhandledCases(
+      List<? extends CaseTree> cases, TypeSymbol switchType) {
     ImmutableSet<String> handledCases =
-        tree.getCases().stream()
+        cases.stream()
             .flatMap(e -> e.getExpressions().stream())
             .filter(IdentifierTree.class::isInstance)
             .map(p -> ((IdentifierTree) p).getName().toString())

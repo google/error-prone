@@ -1135,4 +1135,89 @@ public class UnnecessaryDefaultInEnumSwitchTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void expressionSwitch() {
+    BugCheckerRefactoringTestHelper.newInstance(UnnecessaryDefaultInEnumSwitch.class, getClass())
+        .addInputLines(
+            "in/Test.java",
+            """
+            class Test {
+              enum Case {
+                ONE,
+                TWO,
+              }
+
+              boolean m(Case c) {
+                return switch (c) {
+                  case ONE -> true;
+                  case TWO -> false;
+                  default -> throw new AssertionError();
+                };
+              }
+            }
+            """)
+        .addOutputLines(
+            "out/Test.java",
+            """
+            class Test {
+              enum Case {
+                ONE,
+                TWO,
+              }
+
+              boolean m(Case c) {
+                return switch (c) {
+                  case ONE -> true;
+                  case TWO -> false;
+                };
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void expressionSwitchUnrecognized() {
+    BugCheckerRefactoringTestHelper.newInstance(UnnecessaryDefaultInEnumSwitch.class, getClass())
+        .addInputLines(
+            "in/Test.java",
+            """
+            class Test {
+              enum Case {
+                ONE,
+                TWO,
+                UNRECOGNIZED
+              }
+
+              boolean m(Case c) {
+                return switch (c) {
+                  case ONE -> true;
+                  case TWO -> false;
+                  default -> throw new AssertionError();
+                };
+              }
+            }
+            """)
+        .addOutputLines(
+            "out/Test.java",
+            """
+            class Test {
+              enum Case {
+                ONE,
+                TWO,
+                UNRECOGNIZED
+              }
+
+              boolean m(Case c) {
+                return switch (c) {
+                  case ONE -> true;
+                  case TWO -> false;
+                  case UNRECOGNIZED -> throw new AssertionError();
+                };
+              }
+            }
+            """)
+        .doTest();
+  }
 }
