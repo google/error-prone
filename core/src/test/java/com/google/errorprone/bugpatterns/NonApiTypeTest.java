@@ -345,4 +345,24 @@ public final class NonApiTypeTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void recordCompactConstructor_notFlagged() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            import static com.google.common.base.Preconditions.checkArgument;
+            import com.google.common.collect.ImmutableSet;
+
+            public class Test {
+              public record RecordWithImmutableSet(ImmutableSet<String> ids) {
+                public RecordWithImmutableSet {
+                  ids.forEach(id -> checkArgument(!id.isBlank()));
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
 }
