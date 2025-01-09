@@ -261,6 +261,43 @@ public class UnnecessaryLambdaTest {
   }
 
   @Test
+  public void variable_static_butNotUpperCased() {
+    testHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.util.function.Function;
+
+            class Test {
+              private static final Function<String, String> notUpperCased = x -> "hello " + x;
+
+              void g() {
+                Function<String, String> l = Test.notUpperCased;
+                System.err.println(notUpperCased.apply("world"));
+              }
+            }
+            """)
+        // TODO: b/388821905 - we should retain the camelCasing of the variable name
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.util.function.Function;
+
+            class Test {
+              private static String notuppercased(String x) {
+                return "hello " + x;
+              }
+
+              void g() {
+                Function<String, String> l = Test::notuppercased;
+                System.err.println(notuppercased("world"));
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void method_shapes() {
     testHelper
         .addInputLines(
