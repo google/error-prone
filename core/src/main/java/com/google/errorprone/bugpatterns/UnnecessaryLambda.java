@@ -18,6 +18,8 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.base.CaseFormat.LOWER_CAMEL;
 import static com.google.common.base.CaseFormat.UPPER_UNDERSCORE;
+import static com.google.common.base.CharMatcher.inRange;
+import static com.google.common.base.CharMatcher.is;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.fixes.SuggestedFixes.prettyType;
@@ -32,6 +34,7 @@ import static com.google.errorprone.util.ASTHelpers.isStatic;
 import static com.sun.tools.javac.util.Position.NOPOS;
 import static java.util.stream.Collectors.joining;
 
+import com.google.common.base.CharMatcher;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
@@ -126,6 +129,8 @@ public class UnnecessaryLambda extends BugChecker
     return describeMatch(tree, fix.build());
   }
 
+  private static final CharMatcher UPPER_CASE = inRange('A', 'Z').or(is('_')).or(inRange('0', '9'));
+
   @Override
   public Description matchVariable(VariableTree tree, VisitorState state) {
     if (tree.getInitializer() == null) {
@@ -152,15 +157,18 @@ public class UnnecessaryLambda extends BugChecker
       return NO_MATCH;
     }
     SuggestedFix.Builder fix = SuggestedFix.builder();
-    String name =
-        isStatic(sym)
-            ? UPPER_UNDERSCORE.converterTo(LOWER_CAMEL).convert(tree.getName().toString())
-            : tree.getName().toString();
+    String varName = tree.getName().toString();
+    // NOTE: if https://github.com/google/guava/issues/2212 gets resolved, we could use it here.
+    String methodName =
+        (isStatic(sym) && UPPER_CASE.matchesAllOf(varName))
+            ? UPPER_UNDERSCORE.converterTo(LOWER_CAMEL).convert(varName)
+            : varName;
+
     new TreePathScanner<Void, Void>() {
       @Override
       public Void visitMemberSelect(MemberSelectTree node, Void unused) {
         if (Objects.equals(getSymbol(node), sym)) {
-          replaceUseWithMethodReference(fix, node, name, state.withPath(getCurrentPath()));
+          replaceUseWithMethodReference(fix, node, methodName, state.withPath(getCurrentPath()));
         }
         return super.visitMemberSelect(node, null);
       }
@@ -168,13 +176,13 @@ public class UnnecessaryLambda extends BugChecker
       @Override
       public Void visitIdentifier(IdentifierTree node, Void unused) {
         if (Objects.equals(getSymbol(node), sym)) {
-          replaceUseWithMethodReference(fix, node, name, state.withPath(getCurrentPath()));
+          replaceUseWithMethodReference(fix, node, methodName, state.withPath(getCurrentPath()));
         }
         return super.visitIdentifier(node, null);
       }
     }.scan(state.getPath().getCompilationUnit(), null);
     SuggestedFixes.removeModifiers(tree, state, Modifier.FINAL).ifPresent(fix::merge);
-    lambdaToMethod(state, lambda, fix, name, type);
+    lambdaToMethod(state, lambda, fix, methodName, type);
     return describeMatch(tree, fix.build());
   }
 

@@ -277,20 +277,19 @@ public class UnnecessaryLambdaTest {
               }
             }
             """)
-        // TODO: b/388821905 - we should retain the camelCasing of the variable name
         .addOutputLines(
             "Test.java",
             """
             import java.util.function.Function;
 
             class Test {
-              private static String notuppercased(String x) {
+              private static String notUpperCased(String x) {
                 return "hello " + x;
               }
 
               void g() {
-                Function<String, String> l = Test::notuppercased;
-                System.err.println(notuppercased("world"));
+                Function<String, String> l = Test::notUpperCased;
+                System.err.println(notUpperCased("world"));
               }
             }
             """)
