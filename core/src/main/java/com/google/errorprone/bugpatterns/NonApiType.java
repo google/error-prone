@@ -153,6 +153,12 @@ public final class NonApiType extends BugChecker implements MethodTreeMatcher {
               "Prefer accepting an Iterable or Collection instead. " + STREAM_LINK,
               ApiElementType.PARAMETER),
 
+          // Guice
+          withAnyVisibility(
+              isExactType("com.google.inject.AbstractModule"),
+              "Prefer using Module instead.",
+              ApiElementType.ANY),
+
           // ProtoTime
           withPublicVisibility(
               isExactType("com.google.protobuf.Duration"),

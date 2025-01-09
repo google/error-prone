@@ -365,4 +365,28 @@ public final class NonApiTypeTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void guiceModules() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.inject.AbstractModule;
+            import com.google.inject.Module;
+
+            public class Test extends AbstractModule {
+              // BUG: Diagnostic contains: NonApiType
+              public AbstractModule test() {
+                return new AbstractModule() {};
+              }
+
+              // Exact type, no finding.
+              public Test test2() {
+                return new Test();
+              }
+            }
+            """)
+        .doTest();
+  }
 }
