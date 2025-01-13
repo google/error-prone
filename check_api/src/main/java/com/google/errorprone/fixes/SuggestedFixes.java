@@ -28,6 +28,7 @@ import static com.google.errorprone.util.ASTHelpers.getModifiers;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasImplicitType;
+import static com.google.errorprone.util.ASTHelpers.isRecord;
 import static com.sun.source.tree.Tree.Kind.ASSIGNMENT;
 import static com.sun.source.tree.Tree.Kind.CONDITIONAL_EXPRESSION;
 import static com.sun.source.tree.Tree.Kind.NEW_ARRAY;
@@ -1641,7 +1642,11 @@ public final class SuggestedFixes {
     ClassTree classTree = (ClassTree) parent;
     int startTokenization;
     for (Tree member : classTree.getMembers()) {
-      if (member instanceof MethodTree && ASTHelpers.isGeneratedConstructor((MethodTree) member)) {
+      if (member instanceof MethodTree methodTree
+          && ASTHelpers.isGeneratedConstructor(methodTree)) {
+        continue;
+      }
+      if (member instanceof VariableTree && isRecord(getSymbol(member))) {
         continue;
       }
       if (member.equals(tree)) {

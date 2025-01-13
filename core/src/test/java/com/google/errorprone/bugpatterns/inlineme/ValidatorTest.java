@@ -1006,7 +1006,6 @@ public class ValidatorTest {
               }
             }
             """)
-        // TODO(kak): we shouldn't delete the closing parenthesis and open curly bracket!
         .addOutputLines(
             "Client.java",
             """
@@ -1015,8 +1014,7 @@ public class ValidatorTest {
             import com.google.errorprone.annotations.InlineMe;
 
             public final class Client {
-              public record SomeRecord(long id
-              }
+              public record SomeRecord(long id) {}
             }
             """)
         .doTest(TestMode.TEXT_MATCH);
