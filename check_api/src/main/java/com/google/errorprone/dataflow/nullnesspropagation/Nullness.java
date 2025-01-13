@@ -108,7 +108,6 @@ public enum Nullness implements AbstractValue<Nullness> {
       case NULLABLE, NONNULL -> NULLABLE;
       case NULL -> NONNULL;
       case BOTTOM -> BOTTOM;
-      default -> throw new AssertionError("Inverse of " + this + " not defined");
     };
   }
 
