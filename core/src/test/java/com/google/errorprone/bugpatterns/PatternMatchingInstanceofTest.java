@@ -16,6 +16,8 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.truth.TruthJUnit.assume;
+
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -329,6 +331,31 @@ public final class PatternMatchingInstanceofTest {
               }
             }
             """)
+        .doTest();
+  }
+
+  @Test
+  public void recordPatternMatching() {
+    assume().that(Runtime.version().feature()).isAtLeast(21);
+
+    helper
+        .addInputLines(
+            "Foo.java",
+            """
+            record Foo(int x, int y) {}
+            """)
+        .expectUnchanged()
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                // No finding here, but also no crash.
+                if (o instanceof Foo(int x, int y)) {}
+              }
+            }
+            """)
+        .expectUnchanged()
         .doTest();
   }
 }
