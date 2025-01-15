@@ -159,6 +159,24 @@ public class EqualsMissingNullableTest {
   }
 
   @Test
+  public void negativeConservativeNullMarkedCountermanded() {
+    conservativeHelper
+        .addSourceLines(
+            "Foo.java",
+            """
+            import org.jspecify.annotations.NullMarked;
+            import org.jspecify.annotations.NullUnmarked;
+
+            @NullMarked
+            abstract class Foo {
+              @NullUnmarked
+              public abstract boolean equals(Object o);
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void negativeConservativeNotNullMarked() {
     conservativeHelper
         .addSourceLines(

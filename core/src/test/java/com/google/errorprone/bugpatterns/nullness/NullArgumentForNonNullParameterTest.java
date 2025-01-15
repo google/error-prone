@@ -217,6 +217,60 @@ public class NullArgumentForNonNullParameterTest {
   }
 
   @Test
+  public void positiveNullMarkedPackageInfo() {
+    aggressiveHelper
+        .addSourceLines(
+            "p/package-info.java",
+            """
+            @org.jspecify.annotations.NullMarked
+            package p;
+            """)
+        .addSourceLines(
+            "p/Foo.java",
+            """
+            package p;
+
+            class Foo {
+              void consume(String s) {}
+
+              void foo() {
+                // BUG: Diagnostic contains:
+                consume(null);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void negativeNullMarkedPackageInfoCountermanded() {
+    aggressiveHelper
+        .addSourceLines(
+            "p/package-info.java",
+            """
+            @org.jspecify.annotations.NullMarked
+            package p;
+            """)
+        .addSourceLines(
+            "p/Foo.java",
+            """
+            package p;
+
+            import org.jspecify.annotations.NullUnmarked;
+
+            @NullUnmarked
+            class Foo {
+              void consume(String s) {}
+
+              void foo() {
+                consume(null);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void negativeNullMarkedNonComGoogleCommonPackageConservative() {
     conservativeHelper
         .addSourceLines(

@@ -73,6 +73,8 @@ public final class NullArgumentForNonNullParameter extends BugChecker
       memoize(state -> state.getName("com.google.protobuf.Internal$ProtoNonnullApi"));
   private static final Supplier<Name> NULL_MARKED_NAME =
       memoize(state -> state.getName("org.jspecify.annotations.NullMarked"));
+  private static final Supplier<Name> NULL_UNMARKED_NAME =
+      memoize(state -> state.getName("org.jspecify.annotations.NullUnmarked"));
   private static final Supplier<ImmutableSet<Name>> NULL_MARKED_PACKAGES_WE_TRUST =
       memoize(
           state ->
@@ -245,15 +247,26 @@ public final class NullArgumentForNonNullParameter extends BugChecker
     return enclosingClass(sym).fullname.startsWith(nameSupplier.get(state));
   }
 
+  /*
+   * TODO(cpovirk): Unify this with NullnessUtils.isInNullMarkedScope, noting that this method also
+   * recognizes @ProtoNonnullApi (though perhaps we will successfully migrate protobuf to
+   * @NullMarked first) and also that this method trusts @NullMarked only on certain packages.
+   */
   private boolean enclosingAnnotationDefaultsNonTypeVariablesToNonNull(
       Symbol sym, VisitorState state) {
     for (; sym != null; sym = sym.getEnclosingElement()) {
       if (hasDirectAnnotation(sym, PROTO_NONNULL_API_NAME.get(state))) {
         return true;
       }
-      if (hasDirectAnnotation(sym, NULL_MARKED_NAME.get(state))
-          && weTrustNullMarkedOn(sym, state)) {
+      // https://jspecify.dev/docs/spec/#null-marked-scope
+      // TODO(cpovirk): Including handling of @kotlin.Metadata.
+      boolean marked = hasDirectAnnotation(sym, NULL_MARKED_NAME.get(state));
+      boolean unmarked = hasDirectAnnotation(sym, NULL_UNMARKED_NAME.get(state));
+      if (marked && !unmarked && weTrustNullMarkedOn(sym, state)) {
         return true;
+      }
+      if (unmarked && !marked) {
+        return false;
       }
     }
     return false;

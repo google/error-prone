@@ -128,10 +128,22 @@ class NullnessUtils {
    * such a Symbol.
    */
 
+  /*
+   * TODO(cpovirk): Unify this with
+   * NullArgumentForNonnullParameter.enclosingAnnotationDefaultsNonTypeVariablesToNonNull, but note
+   * the differences documented on that method.
+   */
   static boolean isInNullMarkedScope(Symbol sym, VisitorState state) {
     for (; sym != null; sym = sym.getEnclosingElement()) {
-      if (hasAnnotation(sym, "org.jspecify.annotations.NullMarked", state)) {
+      // https://jspecify.dev/docs/spec/#null-marked-scope
+      // TODO(cpovirk): Including handling of @kotlin.Metadata.
+      boolean marked = hasAnnotation(sym, "org.jspecify.annotations.NullMarked", state);
+      boolean unmarked = hasAnnotation(sym, "org.jspecify.annotations.NullUnmarked", state);
+      if (marked && !unmarked) {
         return true;
+      }
+      if (unmarked && !marked) {
+        return false;
       }
     }
     return false;
