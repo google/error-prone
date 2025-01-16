@@ -15,25 +15,17 @@
 package com.google.errorprone.bugpatterns.threadsafety;
 
 import com.google.auto.value.AutoValue;
-import com.google.errorprone.ErrorProneFlags;
 
 /**
  * Flags that control the behavior of threadsafety utils to facilitate rolling out new
  * functionality.
  *
- * <p>This has no flags for now, but is still plumbed through to make it easier to flag guard
- * changes to {@link GuardedByChecker} in the future. Otherwise, it's rather difficult.
+ * <p>This may have no flags, but is still plumbed through to make it easier to flag guard changes
+ * to {@link GuardedByChecker} in the future. Otherwise, it's rather difficult.
  */
 @AutoValue
 public abstract class GuardedByFlags {
-  public abstract boolean restrictToErrorProneGuardedBy();
-
   public static GuardedByFlags allOn() {
-    return new AutoValue_GuardedByFlags(true);
-  }
-
-  public static GuardedByFlags fromFlags(ErrorProneFlags flags) {
-    return new AutoValue_GuardedByFlags(
-        flags.getBoolean("GuardedBy:RestrictToErrorProneGuardedBy").orElse(true));
+    return new AutoValue_GuardedByFlags();
   }
 }

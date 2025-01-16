@@ -43,17 +43,13 @@ import org.jspecify.annotations.Nullable;
  * @author cushon@google.com (Liam Miller-Cushon)
  */
 public final class GuardedByUtils {
-  public static ImmutableSet<String> getGuardValues(Symbol sym, GuardedByFlags flags) {
+  public static ImmutableSet<String> getGuardValues(Symbol sym) {
     List<Attribute.Compound> rawAttributes = sym.getRawAttributes();
     if (rawAttributes.isEmpty()) {
       return ImmutableSet.of();
     }
     return rawAttributes.stream()
-        .filter(
-            a ->
-                flags.restrictToErrorProneGuardedBy()
-                    ? a.type.tsym.flatName().contentEquals(GUARDED_BY)
-                    : a.getAnnotationType().asElement().getSimpleName().contentEquals("GuardedBy"))
+        .filter(a -> a.type.tsym.flatName().contentEquals(GUARDED_BY))
         .flatMap(
             a ->
                 MoreAnnotations.getValue(a, "value")
@@ -62,9 +58,9 @@ public final class GuardedByUtils {
         .collect(toImmutableSet());
   }
 
-  static ImmutableSet<String> getGuardValues(Tree tree, GuardedByFlags flags) {
+  static ImmutableSet<String> getGuardValues(Tree tree) {
     Symbol sym = getSymbol(tree);
-    return sym == null ? ImmutableSet.of() : getGuardValues(sym, flags);
+    return sym == null ? ImmutableSet.of() : getGuardValues(sym);
   }
 
   private static final String GUARDED_BY = "com.google.errorprone.annotations.concurrent.GuardedBy";
@@ -107,7 +103,7 @@ public final class GuardedByUtils {
 
   public static GuardedByValidationResult isGuardedByValid(
       Tree tree, VisitorState state, GuardedByFlags flags) {
-    ImmutableSet<String> guards = GuardedByUtils.getGuardValues(tree, flags);
+    ImmutableSet<String> guards = GuardedByUtils.getGuardValues(tree);
     if (guards.isEmpty()) {
       return GuardedByValidationResult.ok();
     }
