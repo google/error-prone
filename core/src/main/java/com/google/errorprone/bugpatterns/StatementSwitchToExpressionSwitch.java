@@ -112,7 +112,6 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
       AssignmentSwitchAnalysisResult.of(
           /* canConvertToAssignmentSwitch= */ false,
           /* canCombineWithPrecedingVariableDeclaration= */ false,
-          /* canRemoveDefault= */ false,
           /* assignmentTargetOptional= */ Optional.empty(),
           /* assignmentKindOptional= */ Optional.empty(),
           /* assignmentSourceCodeOptional= */ Optional.empty());
@@ -121,11 +120,14 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
       AnalysisResult.of(
           /* canConvertDirectlyToExpressionSwitch= */ false,
           /* canConvertToReturnSwitch= */ false,
+          /* canRemoveDefault= */ false,
           DEFAULT_ASSIGNMENT_SWITCH_ANALYSIS_RESULT,
           /* groupedWithNextCase= */ ImmutableList.of());
   private static final String EQUALS_STRING = "=";
   private static final Matcher<ExpressionTree> COMPILE_TIME_CONSTANT_MATCHER =
       CompileTimeConstantExpressionMatcher.instance();
+  private static final String REMOVE_DEFAULT_CASE_SHORT_DESCRIPTION =
+      "Remove default case because all enum values handled";
 
   // Tri-state to represent the fall-thru control flow of a particular case of a particular
   // statement switch
@@ -171,14 +173,20 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
 
     List<SuggestedFix> suggestedFixes = new ArrayList<>();
     if (enableReturnSwitchConversion && analysisResult.canConvertToReturnSwitch()) {
-      suggestedFixes.add(convertToReturnSwitch(switchTree, state, analysisResult));
+      suggestedFixes.add(
+          convertToReturnSwitch(switchTree, state, analysisResult, /* removeDefault= */ false));
+
+      if (analysisResult.canRemoveDefault()) {
+        suggestedFixes.add(
+            convertToReturnSwitch(switchTree, state, analysisResult, /* removeDefault= */ true));
+      }
     }
     if (enableAssignmentSwitchConversion
         && analysisResult.assignmentSwitchAnalysisResult().canConvertToAssignmentSwitch()) {
       suggestedFixes.add(
           convertToAssignmentSwitch(switchTree, state, analysisResult, /* removeDefault= */ false));
 
-      if (analysisResult.assignmentSwitchAnalysisResult().canRemoveDefault()) {
+      if (analysisResult.canRemoveDefault()) {
         suggestedFixes.add(
             convertToAssignmentSwitch(
                 switchTree, state, analysisResult, /* removeDefault= */ true));
@@ -344,10 +352,10 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     return AnalysisResult.of(
         /* canConvertDirectlyToExpressionSwitch= */ allCasesHaveDefiniteControlFlow,
         canConvertToReturnSwitch,
+        canRemoveDefault,
         AssignmentSwitchAnalysisResult.of(
             canConvertToAssignmentSwitch,
             canCombineWithPrecedingVariableDeclaration,
-            canRemoveDefault,
             assignmentSwitchAnalysisState.assignmentTargetOptional(),
             assignmentSwitchAnalysisState.assignmentExpressionKindOptional(),
             assignmentSwitchAnalysisState
@@ -759,7 +767,10 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
    * conversion is possible.
    */
   private static SuggestedFix convertToReturnSwitch(
-      SwitchTree switchTree, VisitorState state, AnalysisResult analysisResult) {
+      SwitchTree switchTree,
+      VisitorState state,
+      AnalysisResult analysisResult,
+      boolean removeDefault) {
 
     List<StatementTree> statementsToDelete = new ArrayList<>();
     List<? extends CaseTree> cases = switchTree.getCases();
@@ -778,6 +789,10 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     for (int caseIndex = 0; caseIndex < cases.size(); caseIndex++) {
       CaseTree caseTree = cases.get(caseIndex);
       boolean isDefaultCase = isSwitchDefault(caseTree);
+      if (removeDefault && isDefaultCase) {
+        // Skip default case
+        continue;
+      }
 
       String transformedBlockSource =
           transformReturnOrThrowBlock(caseTree, state, getStatements(caseTree));
@@ -849,8 +864,11 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     // removed.
     statementsToDelete.addAll(followingStatementsInBlock(switchTree, state));
 
-    SuggestedFix.Builder suggestedFixBuilder =
-        SuggestedFix.builder().replace(switchTree, replacementCodeBuilder.toString());
+    SuggestedFix.Builder suggestedFixBuilder = SuggestedFix.builder();
+    if (removeDefault) {
+      suggestedFixBuilder.setShortDescription(REMOVE_DEFAULT_CASE_SHORT_DESCRIPTION);
+    }
+    suggestedFixBuilder.replace(switchTree, replacementCodeBuilder.toString());
     // Delete trailing statements, leaving comments where feasible
     statementsToDelete.forEach(deleteMe -> suggestedFixBuilder.replace(deleteMe, ""));
     return suggestedFixBuilder.build();
@@ -1125,8 +1143,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
 
     SuggestedFix.Builder suggestedFixBuilder = SuggestedFix.builder();
     if (removeDefault) {
-      suggestedFixBuilder.setShortDescription(
-          "Remove default case because all enum values handled");
+      suggestedFixBuilder.setShortDescription(REMOVE_DEFAULT_CASE_SHORT_DESCRIPTION);
     }
     suggestedFixBuilder.replace(switchTree, replacementCodeBuilder.toString());
     statementsToDelete.forEach(deleteMe -> suggestedFixBuilder.replace(deleteMe, ""));
@@ -1470,6 +1487,12 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     // Whether the statement switch can be converted to a return switch
     abstract boolean canConvertToReturnSwitch();
 
+    /**
+     * Whether the assignment switch is exhaustive even in the absence of the default case that
+     * exists in the original switch statement
+     */
+    abstract boolean canRemoveDefault();
+
     // Results of the analysis for conversion to an assignment switch
     abstract AssignmentSwitchAnalysisResult assignmentSwitchAnalysisResult();
 
@@ -1479,11 +1502,13 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     static AnalysisResult of(
         boolean canConvertDirectlyToExpressionSwitch,
         boolean canConvertToReturnSwitch,
+        boolean canRemoveDefault,
         AssignmentSwitchAnalysisResult assignmentSwitchAnalysisResult,
         ImmutableList<Boolean> groupedWithNextCase) {
       return new AutoValue_StatementSwitchToExpressionSwitch_AnalysisResult(
           canConvertDirectlyToExpressionSwitch,
           canConvertToReturnSwitch,
+          canRemoveDefault,
           assignmentSwitchAnalysisResult,
           groupedWithNextCase);
     }
@@ -1498,10 +1523,6 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     // declaration
     abstract boolean canCombineWithPrecedingVariableDeclaration();
 
-    // Whether the assignment switch is exhaustive even in the absence of the default case that
-    // exists in the original switch statement
-    abstract boolean canRemoveDefault();
-
     // Target of the assignment switch, if any
     abstract Optional<ExpressionTree> assignmentTargetOptional();
 
@@ -1514,14 +1535,12 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     static AssignmentSwitchAnalysisResult of(
         boolean canConvertToAssignmentSwitch,
         boolean canCombineWithPrecedingVariableDeclaration,
-        boolean canRemoveDefault,
         Optional<ExpressionTree> assignmentTargetOptional,
         Optional<Tree.Kind> assignmentKindOptional,
         Optional<String> assignmentSourceCodeOptional) {
       return new AutoValue_StatementSwitchToExpressionSwitch_AssignmentSwitchAnalysisResult(
           canConvertToAssignmentSwitch,
           canCombineWithPrecedingVariableDeclaration,
-          canRemoveDefault,
           assignmentTargetOptional,
           assignmentKindOptional,
           assignmentSourceCodeOptional);
