@@ -58,6 +58,119 @@ public final class PatternMatchingInstanceofTest {
   }
 
   @Test
+  public void negatedIf() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                if (!(o instanceof Test)) {
+                } else {
+                  Test test = (Test) o;
+                  test(test);
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                if (!(o instanceof Test test)) {
+                } else {
+                  test(test);
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void negatedIf_withOrs() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                if (!(o instanceof Test) || o.hashCode() == 0) {
+                  return;
+                }
+                Test test = (Test) o;
+                test(test);
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                if (!(o instanceof Test test) || o.hashCode() == 0) {
+                  return;
+                }
+                test(test);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void negatedIfWithReturn() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                if (!(o instanceof Test)) {
+                  return;
+                }
+                Test test = (Test) o;
+                test(test);
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                if (!(o instanceof Test test)) {
+                  return;
+                }
+                test(test);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void negatedIf_butNoDefiniteReturn_noFinding() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                if (!(o instanceof Test)) {
+                  test(o);
+                }
+                Test test = (Test) o;
+                test(test);
+              }
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
   public void notDefinitelyChecked_noFinding() {
     helper
         .addInputLines(
