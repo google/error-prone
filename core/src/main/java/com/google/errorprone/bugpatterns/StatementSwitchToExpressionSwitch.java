@@ -193,7 +193,15 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
       }
     }
     if (enableDirectConversion && analysisResult.canConvertDirectlyToExpressionSwitch()) {
-      suggestedFixes.add(convertDirectlyToExpressionSwitch(switchTree, state, analysisResult));
+      suggestedFixes.add(
+          convertDirectlyToExpressionSwitch(
+              switchTree, state, analysisResult, /* removeDefault= */ false));
+
+      if (analysisResult.canRemoveDefault()) {
+        suggestedFixes.add(
+            convertDirectlyToExpressionSwitch(
+                switchTree, state, analysisResult, /* removeDefault= */ true));
+      }
     }
 
     return suggestedFixes.isEmpty()
@@ -639,10 +647,14 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
   /**
    * Transforms the supplied statement switch into an expression switch directly. In this
    * conversion, each nontrivial statement block is mapped one-to-one to a new {@code Expression} or
-   * {@code StatementBlock} on the right-hand side. Comments are preserved where possible.
+   * {@code StatementBlock} on the right-hand side (the `default:` case is removed if {@code
+   * removeDefault} is true). Comments are preserved where possible.
    */
   private static SuggestedFix convertDirectlyToExpressionSwitch(
-      SwitchTree switchTree, VisitorState state, AnalysisResult analysisResult) {
+      SwitchTree switchTree,
+      VisitorState state,
+      AnalysisResult analysisResult,
+      boolean removeDefault) {
 
     List<? extends CaseTree> cases = switchTree.getCases();
     ImmutableList<ErrorProneComment> allSwitchComments =
@@ -661,6 +673,11 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     for (int caseIndex = 0; caseIndex < cases.size(); caseIndex++) {
       CaseTree caseTree = cases.get(caseIndex);
       boolean isDefaultCase = isSwitchDefault(caseTree);
+
+      if (removeDefault && isDefaultCase) {
+        // Skip default case
+        continue;
+      }
 
       // For readability, filter out trailing unlabelled break statement because these become a
       // No-Op when used inside expression switches
@@ -756,7 +773,12 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     // Close the switch statement
     replacementCodeBuilder.append("\n}");
 
-    return SuggestedFix.builder().replace(switchTree, replacementCodeBuilder.toString()).build();
+    SuggestedFix.Builder suggestedFixBuilder = SuggestedFix.builder();
+    if (removeDefault) {
+      suggestedFixBuilder.setShortDescription(REMOVE_DEFAULT_CASE_SHORT_DESCRIPTION);
+    }
+    suggestedFixBuilder.replace(switchTree, replacementCodeBuilder.toString());
+    return suggestedFixBuilder.build();
   }
 
   /**

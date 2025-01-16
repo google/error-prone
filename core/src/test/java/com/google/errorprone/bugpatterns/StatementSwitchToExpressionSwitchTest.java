@@ -133,6 +133,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             }
             """)
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
+        .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
         .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 
@@ -224,6 +225,168 @@ public final class StatementSwitchToExpressionSwitchTest {
             }
             """)
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
+        .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+  }
+
+  @Test
+  public void switchByEnumExhaustiveWithoutDefault_removesDefault_error() {
+    // The switch covers all enum values and also includes a default clause, so assert that a
+    // secondary fix is generated to remove the default clause.
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              enum Side {
+                OBVERSE,
+                REVERSE
+              };
+
+              public Test(int foo) {}
+
+              public void foo(Side side) {
+                // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]
+                switch (side) {
+                  // Comment before first case
+                  case OBVERSE:
+                    // Explanatory comment
+                    System.out.println("this block cannot complete normally");
+                    {
+                      throw new NullPointerException();
+                    }
+                  case REVERSE:
+                    System.out.println("reverse");
+                    break;
+                  default:
+                    System.out.println("default");
+                }
+              }
+            }
+            """)
+        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
+        .doTest();
+
+    // Check correct generated code
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              enum Side {
+                OBVERSE,
+                REVERSE
+              };
+
+              public Test(int foo) {}
+
+              public void foo(Side side) {
+                switch (side) {
+                  // Comment before first case
+                  case OBVERSE:
+                    // Explanatory comment
+                    System.out.println("this block cannot complete normally");
+                    {
+                      throw new NullPointerException();
+                    }
+                  case REVERSE:
+                    System.out.println("reverse");
+                    break;
+                  default:
+                    System.out.println("default");
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              enum Side {
+                OBVERSE,
+                REVERSE
+              };
+
+              public Test(int foo) {}
+
+              public void foo(Side side) {
+                switch (side) {
+                  case OBVERSE -> {
+                    // Comment before first case
+                    // Explanatory comment
+                    System.out.println("this block cannot complete normally");
+                    {
+                      throw new NullPointerException();
+                    }
+                  }
+                  case REVERSE -> System.out.println("reverse");
+                  default -> System.out.println("default");
+                }
+              }
+            }
+            """)
+        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
+        .setFixChooser(FixChoosers.FIRST)
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+
+    refactoringHelper2
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              enum Side {
+                OBVERSE,
+                REVERSE
+              };
+
+              public Test(int foo) {}
+
+              public void foo(Side side) {
+                switch (side) {
+                  // Comment before first case
+                  case OBVERSE:
+                    // Explanatory comment
+                    System.out.println("this block cannot complete normally");
+                    {
+                      throw new NullPointerException();
+                    }
+                  case REVERSE:
+                    System.out.println("reverse");
+                    break;
+                  default:
+                    System.out.println("default");
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              enum Side {
+                OBVERSE,
+                REVERSE
+              };
+
+              public Test(int foo) {}
+
+              public void foo(Side side) {
+                switch (side) {
+                  case OBVERSE -> {
+                    // Comment before first case
+                    // Explanatory comment
+                    System.out.println("this block cannot complete normally");
+                    {
+                      throw new NullPointerException();
+                    }
+                  }
+                  case REVERSE -> System.out.println("reverse");
+                }
+              }
+            }
+            """)
+        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
+        .setFixChooser(FixChoosers.SECOND)
         .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 
@@ -328,6 +491,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             }
             """)
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
+        .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
         .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 
@@ -429,6 +593,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             }
             """)
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
+        .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
         .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 
@@ -531,6 +696,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             }
             """)
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
+        .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
 
@@ -706,6 +872,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             }
             """)
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
+        .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
         .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 
@@ -809,6 +976,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             }
             """)
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
+        .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
 
@@ -898,6 +1066,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             }
             """)
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
+        .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
 
@@ -1071,6 +1240,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             }
             """)
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
+        .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
 
@@ -1370,6 +1540,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             }
             """)
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
+        .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
         .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 
@@ -1480,6 +1651,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             }
             """)
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
+        .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
         .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 
@@ -1590,6 +1762,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             }
             """)
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
+        .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
         .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 
@@ -1680,6 +1853,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             }
             """)
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
+        .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
         .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 
@@ -1769,6 +1943,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             }
             """)
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
+        .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
         .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 
@@ -1865,6 +2040,91 @@ public final class StatementSwitchToExpressionSwitchTest {
             }
             """)
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
+        .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+  }
+
+  @Test
+  public void i4222() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            public class Test {
+              public static void main(String[] args) {
+                switch (args.length) {
+                  case 0:
+                    {
+                      System.out.println(0);
+                      break;
+                    }
+                  case 1:
+                    System.out.println(1);
+                    break;
+                  case 2:
+                    System.out.println(2);
+                    System.out.println(2);
+                    break;
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            public class Test {
+              public static void main(String[] args) {
+                switch (args.length) {
+                  case 0 -> System.out.println(0);
+                  case 1 -> System.out.println(1);
+                  case 2 -> {
+                    System.out.println(2);
+                    System.out.println(2);
+                  }
+                }
+              }
+            }
+            """)
+        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=true")
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+  }
+
+  @Test
+  public void unnecessaryBreaks() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            public class Test {
+              public static void main(String[] args) {
+                switch (args.length) {
+                  case 0:
+                    System.out.println(0);
+                    break;
+                  default:
+                    // hello
+                    // world
+                    break;
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            public class Test {
+              public static void main(String[] args) {
+                switch (args.length) {
+                  case 0 -> System.out.println(0);
+                  default -> {
+                    // hello
+                    // world
+                  }
+                }
+              }
+            }
+            """)
+        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=true")
         .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 
@@ -5111,90 +5371,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             """)
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion")
         .doTest();
-  }
-
-  @Test
-  public void i4222() {
-    refactoringHelper
-        .addInputLines(
-            "Test.java",
-            """
-            public class Test {
-              public static void main(String[] args) {
-                switch (args.length) {
-                  case 0:
-                    {
-                      System.out.println(0);
-                      break;
-                    }
-                  case 1:
-                    System.out.println(1);
-                    break;
-                  case 2:
-                    System.out.println(2);
-                    System.out.println(2);
-                    break;
-                }
-              }
-            }
-            """)
-        .addOutputLines(
-            "Test.java",
-            """
-            public class Test {
-              public static void main(String[] args) {
-                switch (args.length) {
-                  case 0 -> System.out.println(0);
-                  case 1 -> System.out.println(1);
-                  case 2 -> {
-                    System.out.println(2);
-                    System.out.println(2);
-                  }
-                }
-              }
-            }
-            """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=true")
-        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
-  }
-
-  @Test
-  public void unnecessaryBreaks() {
-    refactoringHelper
-        .addInputLines(
-            "Test.java",
-            """
-            public class Test {
-              public static void main(String[] args) {
-                switch (args.length) {
-                  case 0:
-                    System.out.println(0);
-                    break;
-                  default:
-                    // hello
-                    // world
-                    break;
-                }
-              }
-            }
-            """)
-        .addOutputLines(
-            "Test.java",
-            """
-            public class Test {
-              public static void main(String[] args) {
-                switch (args.length) {
-                  case 0 -> System.out.println(0);
-                  default -> {
-                    // hello
-                    // world
-                  }
-                }
-              }
-            }
-            """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=true")
-        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 
   @Test
