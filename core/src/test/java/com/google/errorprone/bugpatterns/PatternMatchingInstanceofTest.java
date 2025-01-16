@@ -389,4 +389,24 @@ public final class PatternMatchingInstanceofTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void reassignedWithinScope_noFinding() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Object o) {
+                if (o instanceof String) {
+                  while (((String) o).hashCode() != 0) {
+                    o = o.toString();
+                  }
+                }
+              }
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
 }

@@ -30,6 +30,7 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.InstanceOfTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
+import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.IfTree;
 import com.sun.source.tree.InstanceOfTree;
 import com.sun.source.tree.ParenthesizedTree;
@@ -39,10 +40,12 @@ import com.sun.source.tree.TypeCastTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
+import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.TypeTag;
 import java.util.HashSet;
+import java.util.concurrent.atomic.AtomicBoolean;
 import javax.lang.model.SourceVersion;
 import org.jspecify.annotations.Nullable;
 
@@ -62,6 +65,9 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
       // TODO(ghm): Relax the requirement of this being an identical VarSymbol: it would be nice to
       // support expressions, though we'd then need to worry about their purity.
       if (getSymbol(instanceOfTree.getExpression()) instanceof VarSymbol varSymbol) {
+        if (isReassigned(varSymbol, enclosingIf.getThenStatement())) {
+          return NO_MATCH;
+        }
         Type targetType = getType(instanceOfTree.getType());
         var allCasts =
             new HashSet<>(
@@ -179,5 +185,20 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
       }
     }.scan(new TreePath(new TreePath(state.getPath().getCompilationUnit()), tree), null);
     return usages.build();
+  }
+
+  private static boolean isReassigned(VarSymbol symbol, Tree tree) {
+    AtomicBoolean isReassigned = new AtomicBoolean(false);
+    new TreeScanner<Void, Void>() {
+      @Override
+      public Void visitAssignment(AssignmentTree assignmentTree, Void unused) {
+        var lhsSymbol = getSymbol(assignmentTree.getVariable());
+        if (lhsSymbol != null && lhsSymbol.equals(symbol)) {
+          isReassigned.set(true);
+        }
+        return super.visitAssignment(assignmentTree, null);
+      }
+    }.scan(tree, null);
+    return isReassigned.get();
   }
 }
