@@ -30,7 +30,6 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.InstanceOfTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
-import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.IfTree;
 import com.sun.source.tree.InstanceOfTree;
 import com.sun.source.tree.ParenthesizedTree;
@@ -43,6 +42,7 @@ import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.TypeTag;
+import java.util.HashSet;
 import javax.lang.model.SourceVersion;
 import org.jspecify.annotations.Nullable;
 
@@ -59,25 +59,42 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
     }
     var enclosingIf = findEnclosingIf(instanceOfTree, state);
     if (enclosingIf != null) {
-      var replaceExistingVariable = checkForImmediateVariable(instanceOfTree, state, enclosingIf);
-      if (replaceExistingVariable != NO_MATCH) {
-        return replaceExistingVariable;
-      }
+      // TODO(ghm): Relax the requirement of this being an identical VarSymbol: it would be nice to
+      // support expressions, though we'd then need to worry about their purity.
       if (getSymbol(instanceOfTree.getExpression()) instanceof VarSymbol varSymbol) {
         Type targetType = getType(instanceOfTree.getType());
-        var allCasts = findAllCasts(varSymbol, enclosingIf.getThenStatement(), targetType, state);
-        if (!allCasts.isEmpty()) {
-          // This is a gamble as to an appropriate name. We could make sure it doesn't clash with
-          // anything in scope, but that's effort.
-          String name = generateVariableName(targetType, state);
+        var allCasts =
+            new HashSet<>(
+                findAllCasts(varSymbol, enclosingIf.getThenStatement(), targetType, state));
+        String name = null;
+        SuggestedFix.Builder fix = SuggestedFix.builder();
 
+        // If we find a variable tree which exists only to be assigned the cast result, use that as
+        // the name and delete it.
+        // NOTE: an even nicer approach would be to delete all such VariableTrees, and rename all
+        // the names to one. That would require another scan, though.
+        for (TreePath cast : allCasts) {
+          VariableTree variableTree = isVariableAssignedFromCast(cast, instanceOfTree, state);
+          if (variableTree != null) {
+            allCasts.remove(cast);
+            fix.delete(variableTree);
+            name = variableTree.getName().toString();
+            break;
+          }
+        }
+        if (!allCasts.isEmpty() || !fix.isEmpty()) {
+          if (name == null) {
+            // This is a gamble as to an appropriate name. We could make sure it doesn't clash with
+            // anything in scope, but that's effort.
+            name = generateVariableName(targetType, state);
+          }
+          String fn = name;
           return describeMatch(
               instanceOfTree,
-              SuggestedFix.builder()
-                  .postfixWith(instanceOfTree, " " + name)
+              fix.postfixWith(instanceOfTree, " " + name)
                   .merge(
                       allCasts.stream()
-                          .map(c -> SuggestedFix.replace(c, name))
+                          .map(c -> SuggestedFix.replace(c.getLeaf(), fn))
                           .collect(mergeFixes()))
                   .build());
         }
@@ -86,6 +103,23 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
     // TODO(ghm): Handle things other than just ifs. It'd be great to refactor `foo instanceof Bar
     // && ((Bar) foo).baz()`.
     return NO_MATCH;
+  }
+
+  private static @Nullable VariableTree isVariableAssignedFromCast(
+      TreePath treePath, InstanceOfTree instanceOfTree, VisitorState state) {
+    var parent = treePath.getParentPath().getLeaf();
+    if (!(parent instanceof VariableTree variableTree)) {
+      return null;
+    }
+    if (!variableTree.getInitializer().equals(treePath.getLeaf())) {
+      return null;
+    }
+    if (!state
+        .getTypes()
+        .isSubtype(getType(instanceOfTree.getType()), getType(variableTree.getType()))) {
+      return null;
+    }
+    return variableTree;
   }
 
   private static String generateVariableName(Type targetType, VisitorState state) {
@@ -98,38 +132,6 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
       return lowerFirstLetter;
     }
     return camelCased;
-  }
-
-  private Description checkForImmediateVariable(
-      InstanceOfTree instanceOfTree, VisitorState state, IfTree enclosingIf) {
-    var body = enclosingIf.getThenStatement();
-    if (!(body instanceof BlockTree block)) {
-      return NO_MATCH;
-    }
-    if (block.getStatements().isEmpty()) {
-      return NO_MATCH;
-    }
-    var firstStatement = block.getStatements().get(0);
-    if (!(firstStatement instanceof VariableTree variableTree)) {
-      return NO_MATCH;
-    }
-    if (!(variableTree.getInitializer() instanceof TypeCastTree typeCast)) {
-      return NO_MATCH;
-    }
-    // TODO(ghm): Relax the requirement of this being an exact same symbol. Handle expressions?
-    if (!(state
-            .getTypes()
-            .isSubtype(getType(instanceOfTree.getType()), getType(variableTree.getType()))
-        && getSymbol(instanceOfTree.getExpression()) instanceof VarSymbol varSymbol
-        && varSymbol.equals(getSymbol(typeCast.getExpression())))) {
-      return NO_MATCH;
-    }
-    return describeMatch(
-        firstStatement,
-        SuggestedFix.builder()
-            .delete(variableTree)
-            .postfixWith(instanceOfTree, " " + variableTree.getName().toString())
-            .build());
   }
 
   /**
@@ -159,9 +161,9 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
   }
 
   /** Finds all casts of {@code symbol} which are cast to {@code targetType} within {@code tree}. */
-  private static ImmutableSet<Tree> findAllCasts(
+  private static ImmutableSet<TreePath> findAllCasts(
       VarSymbol symbol, StatementTree tree, Type targetType, VisitorState state) {
-    ImmutableSet.Builder<Tree> usages = ImmutableSet.builder();
+    var usages = ImmutableSet.<TreePath>builder();
     new TreePathScanner<Void, Void>() {
       @Override
       public Void visitTypeCast(TypeCastTree node, Void unused) {
@@ -169,8 +171,8 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
           if (v.equals(symbol) && state.getTypes().isSubtype(targetType, getType(node.getType()))) {
             usages.add(
                 getCurrentPath().getParentPath().getLeaf() instanceof ParenthesizedTree p
-                    ? p
-                    : node);
+                    ? getCurrentPath().getParentPath()
+                    : getCurrentPath());
           }
         }
         return super.visitTypeCast(node, null);

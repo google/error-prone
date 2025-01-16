@@ -358,4 +358,35 @@ public final class PatternMatchingInstanceofTest {
         .expectUnchanged()
         .doTest();
   }
+
+  @Test
+  public void newVariableNotInstantlyAssigned_pleasantFix() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                if (o instanceof Test) {
+                  test((Test) o);
+                  Test test = (Test) o;
+                  test(test);
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                if (o instanceof Test test) {
+                  test(test);
+                  test(test);
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
 }
