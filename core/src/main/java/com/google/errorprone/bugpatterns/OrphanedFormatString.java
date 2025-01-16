@@ -67,7 +67,7 @@ public class OrphanedFormatString extends BugChecker implements LiteralTreeMatch
                       .forClass(TypePredicates.isDescendantOf(s -> s.getSymtab().throwableType)),
                   (tree, state) -> {
                     Symbol sym = getSymbol(tree);
-                    return sym instanceof MethodSymbol && !((MethodSymbol) sym).isVarArgs();
+                    return sym instanceof MethodSymbol methodSymbol && !methodSymbol.isVarArgs();
                   }),
               instanceMethod()
                   .onDescendantOfAny("java.io.PrintStream", "java.io.PrintWriter")
@@ -100,10 +100,10 @@ public class OrphanedFormatString extends BugChecker implements LiteralTreeMatch
   @Override
   public Description matchLiteral(LiteralTree tree, VisitorState state) {
     Object value = tree.getValue();
-    if (!(value instanceof String)) {
+    if (!(value instanceof String string)) {
       return NO_MATCH;
     }
-    if (!missingFormatArgs((String) value)) {
+    if (!missingFormatArgs(string)) {
       return NO_MATCH;
     }
     Tree methodInvocation = state.getPath().getParentPath().getLeaf();

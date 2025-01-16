@@ -44,18 +44,17 @@ public class TryWithResourcesVariable extends BugChecker implements TryTreeMatch
   @Override
   public Description matchTry(TryTree tree, VisitorState state) {
     for (Tree resource : tree.getResources()) {
-      if (!(resource instanceof VariableTree)) {
+      if (!(resource instanceof VariableTree variableTree)) {
         continue;
       }
-      VariableTree variableTree = (VariableTree) resource;
       ExpressionTree initializer = variableTree.getInitializer();
-      if (!(initializer instanceof IdentifierTree)) {
+      if (!(initializer instanceof IdentifierTree identifierTree)) {
         continue;
       }
       if (!isConsideredFinal(getSymbol(initializer))) {
         continue;
       }
-      String name = ((IdentifierTree) initializer).getName().toString();
+      String name = identifierTree.getName().toString();
       state.reportMatch(
           describeMatch(
               resource,

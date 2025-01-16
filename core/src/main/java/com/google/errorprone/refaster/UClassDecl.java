@@ -113,8 +113,8 @@ abstract class UClassDecl extends USimpleStatement implements ClassTree {
     Choice<UnifierWithRemainingMembers> path =
         Choice.of(UnifierWithRemainingMembers.create(unifier, getMembers()));
     for (Tree targetMember : node.getMembers()) {
-      if (targetMember instanceof MethodTree
-          && ASTHelpers.isGeneratedConstructor((MethodTree) targetMember)) {
+      if (targetMember instanceof MethodTree methodTree
+          && ASTHelpers.isGeneratedConstructor(methodTree)) {
         // skip synthetic constructors
         continue;
       }

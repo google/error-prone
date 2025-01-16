@@ -134,8 +134,8 @@ public class UnsynchronizedOverridesSynchronized extends BugChecker implements M
           @Override
           public Boolean visitMethodInvocation(MethodInvocationTree node, Void unused) {
             ExpressionTree receiver = ASTHelpers.getReceiver(node);
-            return receiver instanceof IdentifierTree
-                && ((IdentifierTree) receiver).getName().contentEquals("super")
+            return receiver instanceof IdentifierTree identifierTree
+                && identifierTree.getName().contentEquals("super")
                 && overrides(ASTHelpers.getSymbol(method), ASTHelpers.getSymbol(node));
           }
 

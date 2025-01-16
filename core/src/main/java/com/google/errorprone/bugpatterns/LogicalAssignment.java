@@ -75,10 +75,9 @@ public class LogicalAssignment extends BugChecker
   }
 
   private Description checkCondition(ExpressionTree condition, VisitorState state) {
-    if (!(condition instanceof AssignmentTree)) {
+    if (!(condition instanceof AssignmentTree assign)) {
       return NO_MATCH;
     }
-    AssignmentTree assign = (AssignmentTree) condition;
     return buildDescription(condition)
         .addFix(
             SuggestedFix.builder().prefixWith(condition, "(").postfixWith(condition, ")").build())

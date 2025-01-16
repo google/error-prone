@@ -128,12 +128,12 @@ public abstract class StronglyType {
           return;
         }
         Tree parent = getCurrentPath().getParentPath().getLeaf();
-        if (!(parent instanceof ExpressionTree)
-            || !factoryMatcher().matches((ExpressionTree) parent, state)) {
+        if (!(parent instanceof ExpressionTree expressionTree)
+            || !factoryMatcher().matches(expressionTree, state)) {
           fields.remove(symbol);
           return;
         }
-        usages.put((VarSymbol) symbol, (ExpressionTree) parent);
+        usages.put((VarSymbol) symbol, expressionTree);
       }
     }.scan(tree, null);
 

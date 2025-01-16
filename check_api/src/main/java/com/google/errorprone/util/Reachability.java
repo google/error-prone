@@ -175,10 +175,10 @@ public class Reachability {
     }
 
     private static boolean isSystemExit(ExpressionTree expression) {
-      if (!(expression instanceof MethodInvocationTree)) {
+      if (!(expression instanceof MethodInvocationTree methodInvocationTree)) {
         return false;
       }
-      MethodSymbol sym = getSymbol((MethodInvocationTree) expression);
+      MethodSymbol sym = getSymbol(methodInvocationTree);
       return sym.owner.getQualifiedName().contentEquals("java.lang.System")
           && sym.getSimpleName().contentEquals("exit");
     }

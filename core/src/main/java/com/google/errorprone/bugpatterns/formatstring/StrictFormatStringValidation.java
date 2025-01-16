@@ -265,7 +265,7 @@ public class StrictFormatStringValidation {
 
     // The input symbol must be a String and a parameter of a @FormatMethod to be a @FormatString.
     if (!isSameType(formatString.type, stringType, state)
-        || !(formatString.owner instanceof MethodSymbol)
+        || !(formatString.owner instanceof MethodSymbol owner)
         || !hasAnnotation(formatString.owner, FORMAT_METHOD_ANNOTATION, state)) {
       return false;
     }
@@ -276,7 +276,6 @@ public class StrictFormatStringValidation {
     }
 
     // Check if format string is the first string with no @FormatString params in the @FormatMethod.
-    MethodSymbol owner = (MethodSymbol) formatString.owner;
     boolean formatStringFound = false;
     for (Symbol param : owner.getParameters()) {
       if (param == formatString) {

@@ -299,11 +299,11 @@ public class ASTHelpers {
   /** Gets the method symbol for a new class. */
   public static MethodSymbol getSymbol(NewClassTree tree) {
     Symbol sym = ((JCNewClass) tree).constructor;
-    if (!(sym instanceof MethodSymbol)) {
+    if (!(sym instanceof MethodSymbol methodSymbol)) {
       // Defensive. Would only occur if there are errors in the AST.
       throw new IllegalArgumentException(tree.toString());
     }
-    return (MethodSymbol) sym;
+    return methodSymbol;
   }
 
   /** Gets the symbol for a variable. */
@@ -339,8 +339,8 @@ public class ASTHelpers {
    * also means that this symbol is not an override.
    */
   public static boolean canBeRemoved(Symbol symbol, VisitorState state) {
-    if (symbol instanceof MethodSymbol
-        && !findSuperMethods((MethodSymbol) symbol, state.getTypes()).isEmpty()) {
+    if (symbol instanceof MethodSymbol methodSymbol
+        && !findSuperMethods(methodSymbol, state.getTypes()).isEmpty()) {
       return false;
     }
     return isEffectivelyPrivate(symbol);
@@ -393,11 +393,11 @@ public class ASTHelpers {
     }
     if (expression instanceof UnaryTree) {
       Tree parent = state.getPath().getParentPath().getLeaf();
-      if (!(parent instanceof MemberSelectTree)) {
+      if (!(parent instanceof MemberSelectTree memberSelectTree)) {
         return false;
       }
       // eg. (i++).toString();
-      return stripParentheses(((MemberSelectTree) parent).getExpression()).equals(expression);
+      return stripParentheses(memberSelectTree.getExpression()).equals(expression);
     }
     return true;
   }
@@ -480,13 +480,13 @@ public class ASTHelpers {
    */
   public static @Nullable ExpressionTree getRootAssignable(
       MethodInvocationTree methodInvocationTree) {
-    if (!(methodInvocationTree instanceof JCMethodInvocation)) {
+    if (!(methodInvocationTree instanceof JCMethodInvocation jCMethodInvocation)) {
       throw new IllegalArgumentException(
           "Expected type to be JCMethodInvocation, but was " + methodInvocationTree.getClass());
     }
 
     // Check for bare method call, e.g. intern().
-    if (((JCMethodInvocation) methodInvocationTree).getMethodSelect() instanceof JCIdent) {
+    if (jCMethodInvocation.getMethodSelect() instanceof JCIdent) {
       return null;
     }
 
@@ -743,7 +743,7 @@ public class ASTHelpers {
   public static Stream<MethodSymbol> matchingMethods(
       Name name, Predicate<MethodSymbol> predicate, Type startClass, Types types) {
     Predicate<Symbol> matchesMethodPredicate =
-        sym -> sym instanceof MethodSymbol && predicate.test((MethodSymbol) sym);
+        sym -> sym instanceof MethodSymbol methodSymbol && predicate.test(methodSymbol);
 
     // Iterate over all classes and interfaces that startClass inherits from.
     return types.closure(startClass).stream()
@@ -1145,10 +1145,10 @@ public class ASTHelpers {
 
   /** Returns true if the given tree is a generated constructor. */
   public static boolean isGeneratedConstructor(MethodTree tree) {
-    if (!(tree instanceof JCMethodDecl)) {
+    if (!(tree instanceof JCMethodDecl jCMethodDecl)) {
       return false;
     }
-    return (((JCMethodDecl) tree).mods.flags & Flags.GENERATEDCONSTR) == Flags.GENERATEDCONSTR;
+    return (jCMethodDecl.mods.flags & Flags.GENERATEDCONSTR) == Flags.GENERATEDCONSTR;
   }
 
   /** Returns the list of all constructors defined in the class (including generated ones). */
@@ -1416,12 +1416,12 @@ public class ASTHelpers {
    */
   public static boolean isJUnitTestCode(VisitorState state) {
     for (Tree ancestor : state.getPath()) {
-      if (ancestor instanceof MethodTree
-          && JUnitMatchers.hasJUnitAnnotation((MethodTree) ancestor, state)) {
+      if (ancestor instanceof MethodTree methodTree
+          && JUnitMatchers.hasJUnitAnnotation(methodTree, state)) {
         return true;
       }
-      if (ancestor instanceof ClassTree
-          && (JUnitMatchers.isTestCaseDescendant.matches((ClassTree) ancestor, state)
+      if (ancestor instanceof ClassTree classTree
+          && (JUnitMatchers.isTestCaseDescendant.matches(classTree, state)
               || hasAnnotation(getSymbol(ancestor), JUNIT4_RUN_WITH_ANNOTATION, state))) {
         return true;
       }
@@ -1435,12 +1435,12 @@ public class ASTHelpers {
    */
   public static boolean isTestNgTestCode(VisitorState state) {
     for (Tree ancestor : state.getPath()) {
-      if (ancestor instanceof MethodTree
-          && TestNgMatchers.hasTestNgAnnotation((MethodTree) ancestor, state)) {
+      if (ancestor instanceof MethodTree methodTree
+          && TestNgMatchers.hasTestNgAnnotation(methodTree, state)) {
         return true;
       }
-      if (ancestor instanceof ClassTree
-          && TestNgMatchers.hasTestNgAnnotation((ClassTree) ancestor)) {
+      if (ancestor instanceof ClassTree classTree
+          && TestNgMatchers.hasTestNgAnnotation(classTree)) {
         return true;
       }
     }
@@ -1678,10 +1678,10 @@ public class ASTHelpers {
         .anyMatch(
             tree ->
                 (tree instanceof VariableTree && variableIsStaticFinal((VarSymbol) getSymbol(tree)))
-                    || (tree instanceof AssignmentTree
-                        && getSymbol(((AssignmentTree) tree).getVariable()) instanceof VarSymbol
+                    || (tree instanceof AssignmentTree assignmentTree
+                        && getSymbol(assignmentTree.getVariable()) instanceof VarSymbol
                         && variableIsStaticFinal(
-                            (VarSymbol) getSymbol(((AssignmentTree) tree).getVariable()))));
+                            (VarSymbol) getSymbol(assignmentTree.getVariable()))));
   }
 
   /**
@@ -2679,7 +2679,7 @@ public class ASTHelpers {
   private static boolean hasMatchingMethods(
       Name name, Predicate<MethodSymbol> predicate, Type startClass, Types types) {
     Predicate<Symbol> matchesMethodPredicate =
-        sym -> sym instanceof MethodSymbol && predicate.test((MethodSymbol) sym);
+        sym -> sym instanceof MethodSymbol methodSymbol && predicate.test(methodSymbol);
 
     // Iterate over all classes and interfaces that startClass inherits from.
     for (Type superClass : types.closure(startClass)) {

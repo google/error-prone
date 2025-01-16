@@ -98,10 +98,9 @@ public class DangerousLiteralNullChecker extends BugChecker implements LiteralTr
       return NO_MATCH;
     }
     Tree parent = state.getPath().getParentPath().getLeaf();
-    if (!(parent instanceof MethodInvocationTree)) {
+    if (!(parent instanceof MethodInvocationTree invocation)) {
       return NO_MATCH;
     }
-    MethodInvocationTree invocation = (MethodInvocationTree) parent;
     if (invocation.getArguments().size() != 1) {
       return NO_MATCH;
     }

@@ -69,7 +69,9 @@ public class ProtectedMembersInFinalClass extends BugChecker implements ClassTre
             .filter(m -> (m instanceof MethodTree || m instanceof VariableTree))
             .filter(m -> HAS_PROTECTED.matches(m, state))
             .filter(
-                m -> !(m instanceof MethodTree) || methodHasNoParentMethod((MethodTree) m, state))
+                m ->
+                    !(m instanceof MethodTree methodTree)
+                        || methodHasNoParentMethod(methodTree, state))
             .filter(m -> !isSuppressed(m, state))
             .collect(toImmutableList());
     if (relevantMembers.isEmpty()) {

@@ -60,22 +60,22 @@ public final class MisformattedTestData extends BugChecker implements MethodInvo
       return NO_MATCH;
     }
     var sourceTree = tree.getArguments().get(1);
-    if (!(sourceTree instanceof LiteralTree)) {
+    if (!(sourceTree instanceof LiteralTree literalTree)) {
       return NO_MATCH;
     }
-    var sourceValue = ((LiteralTree) sourceTree).getValue();
-    if (!(sourceValue instanceof String)) {
+    var sourceValue = literalTree.getValue();
+    if (!(sourceValue instanceof String string)) {
       return NO_MATCH;
     }
 
     Formatter formatter = new Formatter();
     String formattedSource;
     try {
-      formattedSource = formatter.formatSource((String) sourceValue);
+      formattedSource = formatter.formatSource(string);
     } catch (FormatterException exception) {
       return NO_MATCH;
     }
-    if (formattedSource.trim().equals(((String) sourceValue).trim())) {
+    if (formattedSource.trim().equals(string.trim())) {
       return NO_MATCH;
     }
     // This is a bit crude: but tokenize between the comma and the 2nd argument in order to work out

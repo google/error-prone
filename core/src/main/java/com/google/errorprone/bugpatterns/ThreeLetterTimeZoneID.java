@@ -165,8 +165,8 @@ public class ThreeLetterTimeZoneID extends BugChecker implements MethodInvocatio
   private static boolean isInJodaTimeContext(VisitorState state) {
     if (state.getPath().getParentPath() != null) {
       Tree parentLeaf = state.getPath().getParentPath().getLeaf();
-      if (parentLeaf instanceof ExpressionTree
-          && JODATIME_METHOD_MATCHER.matches((ExpressionTree) parentLeaf, state)) {
+      if (parentLeaf instanceof ExpressionTree expressionTree
+          && JODATIME_METHOD_MATCHER.matches(expressionTree, state)) {
         return true;
       }
     }

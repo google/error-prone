@@ -68,29 +68,26 @@ public final class MockitoDoSetup extends BugChecker implements CompilationUnitT
         }
         TreePath whenPath = getCurrentPath().getParentPath().getParentPath();
         Tree whenCall = whenPath.getLeaf();
-        if (!(whenCall instanceof MethodInvocationTree)
-            || !INSTANCE_WHEN.matches((MethodInvocationTree) whenCall, state)) {
+        if (!(whenCall instanceof MethodInvocationTree whenMethod)
+            || !INSTANCE_WHEN.matches(whenMethod, state)) {
           return;
         }
-        if (isSpy(((MethodInvocationTree) whenCall).getArguments().get(0))) {
+        if (isSpy(whenMethod.getArguments().get(0))) {
           return;
         }
-        Tree mockedMethod = whenPath.getParentPath().getParentPath().getLeaf();
-
-        if (!(mockedMethod instanceof MethodInvocationTree)) {
+        if (!(whenPath.getParentPath().getParentPath().getLeaf()
+            instanceof MethodInvocationTree mockedMethod)) {
           return;
         }
         if (isSameType(
-            getSymbol((MethodInvocationTree) mockedMethod).getReturnType(),
-            state.getSymtab().voidType,
-            state)) {
+            getSymbol(mockedMethod).getReturnType(), state.getSymtab().voidType, state)) {
           return;
         }
 
         SuggestedFix.Builder fix = SuggestedFix.builder();
         var when = SuggestedFixes.qualifyStaticImport("org.mockito.Mockito.when", fix, state);
-        fix.replace(((MethodInvocationTree) whenCall).getMethodSelect(), when)
-            .replace(state.getEndPosition(whenCall) - 1, state.getEndPosition(whenCall), "")
+        fix.replace(whenMethod.getMethodSelect(), when)
+            .replace(state.getEndPosition(whenMethod) - 1, state.getEndPosition(whenMethod), "")
             .postfixWith(
                 mockedMethod,
                 format(

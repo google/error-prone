@@ -138,7 +138,7 @@ public final class FindIdentifiers {
       }
       Tree leaf = parent.getLeaf();
       if (leaf instanceof ClassTree classTree
-          && ((ClassTree) leaf).getMembers().contains(treePath.getLeaf())) {
+          && classTree.getMembers().contains(treePath.getLeaf())) {
         return classTree;
       }
       treePath = parent;

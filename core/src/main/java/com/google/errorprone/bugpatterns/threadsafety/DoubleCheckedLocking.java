@@ -161,11 +161,9 @@ public class DoubleCheckedLocking extends BugChecker implements IfTreeMatcher {
     if (!Objects.equals(ASTHelpers.getSymbol(assign.getVariable()), info.sym())) {
       return Description.NO_MATCH;
     }
-    Symbol sym = ASTHelpers.getSymbol(assign.getExpression());
-    if (!(sym instanceof VarSymbol)) {
+    if (!(ASTHelpers.getSymbol(assign.getExpression()) instanceof VarSymbol fvar)) {
       return Description.NO_MATCH;
     }
-    VarSymbol fvar = (VarSymbol) sym;
     if (fvar.getKind() != ElementKind.FIELD) {
       return Description.NO_MATCH;
     }
@@ -232,10 +230,9 @@ public class DoubleCheckedLocking extends BugChecker implements IfTreeMatcher {
     if (!Objects.equals(outerSym, ASTHelpers.getSymbol(innerIfTest))) {
       return null;
     }
-    if (!(outerSym instanceof VarSymbol)) {
+    if (!(outerSym instanceof VarSymbol var)) {
       return null;
     }
-    VarSymbol var = (VarSymbol) outerSym;
     return DCLInfo.create(outerIf, synchTree, innerIf, var);
   }
 
@@ -244,10 +241,9 @@ public class DoubleCheckedLocking extends BugChecker implements IfTreeMatcher {
    */
   private static @Nullable ExpressionTree getNullCheckedExpression(ExpressionTree condition) {
     condition = stripParentheses(condition);
-    if (!(condition instanceof BinaryTree)) {
+    if (!(condition instanceof BinaryTree bin)) {
       return null;
     }
-    BinaryTree bin = (BinaryTree) condition;
     ExpressionTree other;
     if (bin.getLeftOperand().getKind() == Kind.NULL_LITERAL) {
       other = bin.getRightOperand();
@@ -302,10 +298,10 @@ public class DoubleCheckedLocking extends BugChecker implements IfTreeMatcher {
   private static @Nullable JCTree findFieldDeclaration(TreePath path, VarSymbol var) {
     for (TreePath curr = path; curr != null; curr = curr.getParentPath()) {
       Tree leaf = curr.getLeaf();
-      if (!(leaf instanceof JCClassDecl)) {
+      if (!(leaf instanceof JCClassDecl classTree)) {
         continue;
       }
-      for (JCTree tree : ((JCClassDecl) leaf).getMembers()) {
+      for (JCTree tree : classTree.getMembers()) {
         if (Objects.equals(var, ASTHelpers.getSymbol(tree))) {
           return tree;
         }

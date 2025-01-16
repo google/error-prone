@@ -116,9 +116,8 @@ public final class FormatStringValidation {
     // Bail out, since we don't know what the actual argument types are.
     if (args.size() == 1 && (formatMethodSymbol == null || formatMethodSymbol.isVarArgs())) {
       Type type = ASTHelpers.getType(Iterables.getOnlyElement(args));
-      if (type instanceof Type.ArrayType
-          && ASTHelpers.isSameType(
-              ((Type.ArrayType) type).elemtype, state.getSymtab().objectType, state)) {
+      if (type instanceof Type.ArrayType arrayType
+          && ASTHelpers.isSameType(arrayType.elemtype, state.getSymtab().objectType, state)) {
         return null;
       }
     }

@@ -160,10 +160,9 @@ public final class FieldCanBeLocal extends BugChecker implements CompilationUnit
           public Void visitAssignment(AssignmentTree assignmentTree, Void unused) {
             scan(assignmentTree.getExpression(), null);
             Symbol symbol = getSymbol(assignmentTree.getVariable());
-            if (!(symbol instanceof VarSymbol)) {
+            if (!(symbol instanceof VarSymbol varSymbol)) {
               return scan(assignmentTree.getVariable(), null);
             }
-            VarSymbol varSymbol = (VarSymbol) symbol;
             if (!potentialFields.containsKey(varSymbol)) {
               return scan(assignmentTree.getVariable(), null);
             }
@@ -190,10 +189,9 @@ public final class FieldCanBeLocal extends BugChecker implements CompilationUnit
 
           private void handleIdentifier(Tree tree) {
             Symbol symbol = getSymbol(tree);
-            if (!(symbol instanceof VarSymbol)) {
+            if (!(symbol instanceof VarSymbol varSymbol)) {
               return;
             }
-            VarSymbol varSymbol = (VarSymbol) symbol;
             uses.put(varSymbol, getCurrentPath());
             if (!unconditionallyAssigned.contains(varSymbol)) {
               potentialFields.remove(varSymbol);
@@ -294,10 +292,9 @@ public final class FieldCanBeLocal extends BugChecker implements CompilationUnit
           continue;
         }
         ExpressionTree selected = ((MemberSelectTree) usage).getExpression();
-        if (!(selected instanceof IdentifierTree)) {
+        if (!(selected instanceof IdentifierTree ident)) {
           continue;
         }
-        IdentifierTree ident = (IdentifierTree) selected;
         if (ident.getName().contentEquals("this")) {
           fix.replace(getStartPosition(ident), state.getEndPosition(ident) + 1, "");
         }

@@ -190,8 +190,8 @@ public class Finally extends BugChecker
 
       // (2)
       if (label != null
-          && leaf instanceof LabeledStatementTree
-          && label.equals(((LabeledStatementTree) leaf).getLabel())) {
+          && leaf instanceof LabeledStatementTree labeledStatementTree
+          && label.equals(labeledStatementTree.getLabel())) {
         return MatchResult.NO_MATCH;
       }
 

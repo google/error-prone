@@ -83,7 +83,7 @@ public class TreeToString extends AbstractToString {
 
   private boolean enclosingBugChecker(VisitorState state) {
     return stream(state.getPath())
-        .anyMatch(t -> t instanceof ClassTree && IS_BUGCHECKER.matches((ClassTree) t, state));
+        .anyMatch(t -> t instanceof ClassTree classTree && IS_BUGCHECKER.matches(classTree, state));
   }
 
   @Override
@@ -98,10 +98,10 @@ public class TreeToString extends AbstractToString {
 
   @Override
   protected Optional<Fix> toStringFix(Tree parent, ExpressionTree tree, VisitorState state) {
-    if (!(parent instanceof MethodInvocationTree)) {
+    if (!(parent instanceof MethodInvocationTree methodInvocationTree)) {
       return Optional.empty();
     }
-    ExpressionTree receiver = getReceiver((ExpressionTree) parent);
+    ExpressionTree receiver = getReceiver(methodInvocationTree);
     if (receiver == null) {
       return Optional.empty();
     }

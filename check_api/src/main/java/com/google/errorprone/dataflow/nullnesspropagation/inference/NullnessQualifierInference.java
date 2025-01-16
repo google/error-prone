@@ -454,8 +454,8 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
     } else if ((rVal instanceof LiteralTree)
         || (rVal instanceof NewClassTree)
         || (rVal instanceof NewArrayTree)
-        || ((rVal instanceof IdentifierTree)
-            && ((IdentifierTree) rVal).getName().contentEquals("this"))) {
+        || ((rVal instanceof IdentifierTree identifierTree)
+            && identifierTree.getName().contentEquals("this"))) {
       qualifierConstraints.putEdge(
           ProperInferenceVar.NONNULL, TypeArgInferenceVar.create(ImmutableList.of(), rVal));
       qualifierConstraints.putEdge(

@@ -230,10 +230,10 @@ public class TryFailThrowable extends BugChecker implements TryTreeMatcher {
     // method that can throw an AssertionFailedError)
     StatementTree failStatement = null;
     for (StatementTree statement : statements) {
-      if (!(statement instanceof ExpressionStatementTree)) {
+      if (!(statement instanceof ExpressionStatementTree expressionStatementTree)) {
         continue;
       }
-      if (failOrAssert.matches(((ExpressionStatementTree) statement).getExpression(), state)) {
+      if (failOrAssert.matches(expressionStatementTree.getExpression(), state)) {
         failStatement = statement;
         break;
       }

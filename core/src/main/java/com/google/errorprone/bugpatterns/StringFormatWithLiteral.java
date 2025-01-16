@@ -83,11 +83,11 @@ public final class StringFormatWithLiteral extends BugChecker
    */
   private static boolean shouldRefactorStringFormat(
       ExpressionTree formatString, List<? extends ExpressionTree> arguments) {
-    if (!(formatString instanceof LiteralTree)
+    if (!(formatString instanceof LiteralTree literalTree)
         || !arguments.stream().allMatch(argumentTree -> argumentTree instanceof LiteralTree)) {
       return false;
     }
-    return onlyContainsSpecifiersInAllowList((String) ((LiteralTree) formatString).getValue());
+    return onlyContainsSpecifiersInAllowList((String) literalTree.getValue());
   }
 
   private static boolean onlyContainsSpecifiersInAllowList(String formatString) {

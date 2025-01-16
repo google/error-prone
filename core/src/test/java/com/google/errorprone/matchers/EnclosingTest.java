@@ -53,7 +53,8 @@ public class EnclosingTest extends CompilerBasedAbstractTest {
         return false;
       }
       Tree parent = state.getPath().getParentPath().getLeaf();
-      return (parent instanceof ForLoopTree && (interestingPartOfLoop((ForLoopTree) parent) == t));
+      return (parent instanceof ForLoopTree forLoopTree
+          && (interestingPartOfLoop(forLoopTree) == t));
     }
 
     abstract Object interestingPartOfLoop(ForLoopTree loop);

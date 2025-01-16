@@ -206,7 +206,7 @@ public final class AlreadyChecked extends BugChecker implements CompilationUnitT
           || getCurrentPath().getLeaf() instanceof NewClassTree) {
         return super.scan(tree, null);
       }
-      if (!(tree instanceof ExpressionTree)
+      if (!(tree instanceof ExpressionTree expressionTree)
           || !isSameType(getType(tree), state.getSymtab().booleanType, state)) {
         return super.scan(tree, null);
       }
@@ -218,7 +218,7 @@ public final class AlreadyChecked extends BugChecker implements CompilationUnitT
       }
 
       constantExpressions
-          .constantExpression((ExpressionTree) tree, state)
+          .constantExpression(expressionTree, state)
           .ifPresent(
               e -> {
                 if (truths.contains(e)) {

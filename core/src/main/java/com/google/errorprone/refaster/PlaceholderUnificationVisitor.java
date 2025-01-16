@@ -226,10 +226,9 @@ abstract class PlaceholderUnificationVisitor
       new SimpleTreeVisitor<Boolean, Unifier>() {
         @Override
         protected Boolean defaultAction(Tree node, Unifier unifier) {
-          if (!(node instanceof JCExpression)) {
+          if (!(node instanceof JCExpression expr)) {
             return false;
           }
-          JCExpression expr = (JCExpression) node;
           for (UFreeIdent.Key key :
               Iterables.filter(unifier.getBindings().keySet(), UFreeIdent.Key.class)) {
             JCExpression keyBinding = unifier.getBinding(key);

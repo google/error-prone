@@ -61,10 +61,10 @@ public class MethodInvocationMatcher {
 
     public static Optional<Context> create(ExpressionTree tree) {
       Symbol sym = ASTHelpers.getSymbol(tree);
-      if (!(sym instanceof MethodSymbol)) {
+      if (!(sym instanceof MethodSymbol methodSymbol)) {
         return Optional.empty();
       }
-      return Optional.of(new Context((MethodSymbol) sym, tree));
+      return Optional.of(new Context(methodSymbol, tree));
     }
   }
 

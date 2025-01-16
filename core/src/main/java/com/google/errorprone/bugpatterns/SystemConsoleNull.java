@@ -53,8 +53,8 @@ public class SystemConsoleNull extends BugChecker
     if (isNullCheck(enclosing)) {
       return describeMatch(enclosing, buildFix(enclosing));
     }
-    if (enclosing instanceof VariableTree
-        && Objects.equals(((VariableTree) enclosing).getInitializer(), tree)) {
+    if (enclosing instanceof VariableTree variableTree
+        && Objects.equals(variableTree.getInitializer(), tree)) {
       Symbol sym = ASTHelpers.getSymbol(enclosing);
       if (ASTHelpers.isConsideredFinal(sym)) {
         new SuppressibleTreePathScanner<Void, Void>(state) {
@@ -84,10 +84,9 @@ public class SystemConsoleNull extends BugChecker
   }
 
   private static boolean isNullCheck(Tree tree) {
-    if (!(tree instanceof BinaryTree)) {
+    if (!(tree instanceof BinaryTree binaryTree)) {
       return false;
     }
-    BinaryTree binaryTree = (BinaryTree) tree;
     switch (binaryTree.getKind()) {
       case EQUAL_TO, NOT_EQUAL_TO -> {}
       default -> {

@@ -103,10 +103,9 @@ public class InjectOnMemberAndConstructor extends BugChecker implements ClassTre
     SuggestedFix.Builder fix = SuggestedFix.builder();
     VariableTree variableTreeFirstMatch = null;
     for (Tree member : classTree.getMembers()) {
-      if (!(member instanceof VariableTree)) {
+      if (!(member instanceof VariableTree variableTree)) {
         continue;
       }
-      VariableTree variableTree = (VariableTree) member;
       if (!INSTANCE_FIELD_WITH_INJECT.matches(variableTree, state)) {
         continue;
       }

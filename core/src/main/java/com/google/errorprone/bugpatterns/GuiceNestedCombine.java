@@ -59,10 +59,10 @@ public final class GuiceNestedCombine extends BugChecker implements MethodInvoca
     }
 
     var parent = state.getPath().getParentPath().getLeaf();
-    if (!(parent instanceof MethodInvocationTree)) {
+    if (!(parent instanceof MethodInvocationTree methodInvocationTree)) {
       return NO_MATCH;
     }
-    if (!isInVarargsPosition(tree, (MethodInvocationTree) parent, state)) {
+    if (!isInVarargsPosition(tree, methodInvocationTree, state)) {
       return NO_MATCH;
     }
 

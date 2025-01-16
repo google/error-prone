@@ -80,10 +80,9 @@ public final class TruthAssertExpected extends BugChecker implements MethodInvoc
    * often named {@code expectedException} or similar).
    */
   private static boolean expectedValue(ExpressionTree tree, VisitorState state) {
-    if (!(tree instanceof MethodInvocationTree)) {
+    if (!(tree instanceof MethodInvocationTree methodTree)) {
       return false;
     }
-    MethodInvocationTree methodTree = (MethodInvocationTree) tree;
     IdentifierTree identifier = getRootIdentifier(getOnlyElement(methodTree.getArguments()));
     if (identifier == null) {
       return false;
@@ -160,11 +159,10 @@ public final class TruthAssertExpected extends BugChecker implements MethodInvoc
       return Description.NO_MATCH;
     }
     ExpressionTree assertion = findReceiverMatching(tree, state, ASSERT_ON_EXPECTED);
-    if (!(assertion instanceof MethodInvocationTree)) {
+    if (!(assertion instanceof MethodInvocationTree methodInvocationTree)) {
       return Description.NO_MATCH;
     }
-    ExpressionTree assertedArgument =
-        getOnlyElement(((MethodInvocationTree) assertion).getArguments());
+    ExpressionTree assertedArgument = getOnlyElement(methodInvocationTree.getArguments());
     ExpressionTree terminatingArgument = getOnlyElement(tree.getArguments());
     // To avoid some false positives, skip anything where the terminating value is already a
     // compile-time constant.

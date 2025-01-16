@@ -63,8 +63,8 @@ public final class Varifier extends BugChecker implements VariableTreeMatcher {
           staticMethod().anyClass().withNameMatching(Pattern.compile("(new|create|of).*")),
           (t, s) -> {
             var symbol = getSymbol(t);
-            return symbol instanceof MethodSymbol
-                && isSameType(((MethodSymbol) symbol).getReturnType(), symbol.owner.type, s);
+            return symbol instanceof MethodSymbol methodSymbol
+                && isSameType(methodSymbol.getReturnType(), symbol.owner.type, s);
           });
 
   private static final Matcher<ExpressionTree> ASSERT_THROWS =
@@ -89,20 +89,16 @@ public final class Varifier extends BugChecker implements VariableTreeMatcher {
       return fix(tree);
     }
     // Foo foo = (Foo) bar;
-    if (initializer instanceof TypeCastTree
-        && isSameType(
-            getType(((TypeCastTree) initializer).getType()), getType(tree.getType()), state)) {
+    if (initializer instanceof TypeCastTree typeCastTree
+        && isSameType(getType(typeCastTree.getType()), getType(tree.getType()), state)) {
       return fix(tree);
     }
     // Foo foo = new Foo(...);
     if (initializer instanceof NewClassTree newClassTree
-        && isSameType(
-            getType(((NewClassTree) initializer).getIdentifier()),
-            getType(tree.getType()),
-            state)) {
+        && isSameType(getType(newClassTree.getIdentifier()), getType(tree.getType()), state)) {
       var identifier = newClassTree.getIdentifier();
-      if (identifier instanceof ParameterizedTypeTree
-          && ((ParameterizedTypeTree) identifier).getTypeArguments().isEmpty()) {
+      if (identifier instanceof ParameterizedTypeTree parameterizedTypeTree
+          && parameterizedTypeTree.getTypeArguments().isEmpty()) {
         return NO_MATCH;
       }
       return fix(tree);

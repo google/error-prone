@@ -53,14 +53,14 @@ public class AssertThrowsMultipleStatements extends BugChecker
       return NO_MATCH;
     }
     ExpressionTree arg = getLast(tree.getArguments());
-    if (!(arg instanceof LambdaExpressionTree)) {
+    if (!(arg instanceof LambdaExpressionTree lambdaExpressionTree)) {
       return NO_MATCH;
     }
-    Tree body = ((LambdaExpressionTree) arg).getBody();
-    if (!(body instanceof BlockTree)) {
+    Tree body = lambdaExpressionTree.getBody();
+    if (!(body instanceof BlockTree blockTree)) {
       return NO_MATCH;
     }
-    List<? extends StatementTree> statements = ((BlockTree) body).getStatements();
+    List<? extends StatementTree> statements = blockTree.getStatements();
     if (statements.size() <= 1) {
       return NO_MATCH;
     }

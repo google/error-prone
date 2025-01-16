@@ -176,10 +176,10 @@ public class DeeplyNested extends BugChecker implements CompilationUnitTreeMatch
   }
 
   private static boolean builderResult(Tree leaf) {
-    if (!(leaf instanceof ExpressionTree)) {
+    if (!(leaf instanceof ExpressionTree expressionTree)) {
       return false;
     }
-    Type resultType = getResultType((ExpressionTree) leaf);
+    Type resultType = getResultType(expressionTree);
     if (resultType == null) {
       return false;
     }
@@ -187,11 +187,11 @@ public class DeeplyNested extends BugChecker implements CompilationUnitTreeMatch
   }
 
   private static boolean terminalBuilder(Tree leaf) {
-    if (!(leaf instanceof MethodInvocationTree)) {
+    if (!(leaf instanceof MethodInvocationTree methodInvocationTree)) {
       return false;
     }
-    ExpressionTree select = ((MethodInvocationTree) leaf).getMethodSelect();
-    return select instanceof MemberSelectTree
-        && ((MemberSelectTree) select).getIdentifier().toString().startsWith("build");
+    ExpressionTree select = methodInvocationTree.getMethodSelect();
+    return select instanceof MemberSelectTree memberSelectTree
+        && memberSelectTree.getIdentifier().toString().startsWith("build");
   }
 }

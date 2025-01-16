@@ -64,10 +64,9 @@ public class FunctionalInterfaceClash extends BugChecker implements ClassTreeMat
     SetMultimap<String, MethodSymbol> methodsByName = HashMultimap.create();
     for (Symbol sym :
         types.membersClosure(getType(tree), /* skipInterface= */ false).getSymbols()) {
-      if (!(sym instanceof MethodSymbol)) {
+      if (!(sym instanceof MethodSymbol msym)) {
         continue;
       }
-      MethodSymbol msym = (MethodSymbol) sym;
       if (msym.getParameters().stream()
           .noneMatch(p -> maybeFunctionalInterface(p.type, types, state))) {
         continue;
@@ -100,10 +99,10 @@ public class FunctionalInterfaceClash extends BugChecker implements ClassTreeMat
     // check if any declared members clash with another declared or inherited member
     // (don't report clashes between inherited members)
     for (Tree member : tree.getMembers()) {
-      if (!(member instanceof MethodTree)) {
+      if (!(member instanceof MethodTree methodTree)) {
         continue;
       }
-      MethodSymbol msym = getSymbol((MethodTree) member);
+      MethodSymbol msym = getSymbol(methodTree);
       if (msym.getParameters().stream()
           .noneMatch(p -> maybeFunctionalInterface(p.type, types, state))) {
         continue;

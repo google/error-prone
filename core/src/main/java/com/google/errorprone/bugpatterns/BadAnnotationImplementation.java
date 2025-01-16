@@ -121,10 +121,9 @@ public class BadAnnotationImplementation extends BugChecker implements ClassTree
       Type type, Name name, Predicate<MethodSymbol> predicate) {
     Scope scope = type.tsym.members();
     for (Symbol sym : scope.getSymbolsByName(name)) {
-      if (!(sym instanceof MethodSymbol)) {
+      if (!(sym instanceof MethodSymbol methodSymbol)) {
         continue;
       }
-      MethodSymbol methodSymbol = (MethodSymbol) sym;
       if (predicate.test(methodSymbol)) {
         return methodSymbol;
       }

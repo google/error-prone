@@ -103,10 +103,9 @@ public class JUnit4TestNotRun extends BugChecker implements ClassTreeMatcher {
     }
     Map<MethodSymbol, MethodTree> suspiciousMethods = new HashMap<>();
     for (Tree member : tree.getMembers()) {
-      if (!(member instanceof MethodTree) || isSuppressed(member, state)) {
+      if (!(member instanceof MethodTree methodTree) || isSuppressed(member, state)) {
         continue;
       }
-      MethodTree methodTree = (MethodTree) member;
       if (POSSIBLE_TEST_METHOD.matches(methodTree, state) && !isSuppressed(tree, state)) {
         suspiciousMethods.put(getSymbol(methodTree), methodTree);
       }

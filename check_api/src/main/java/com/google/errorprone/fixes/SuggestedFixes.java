@@ -626,7 +626,8 @@ public final class SuggestedFixes {
       if (sym == null) {
         return false;
       }
-      if (member instanceof MethodTree && ASTHelpers.isGeneratedConstructor((MethodTree) member)) {
+      if (member instanceof MethodTree methodTree
+          && ASTHelpers.isGeneratedConstructor(methodTree)) {
         return false;
       }
 
@@ -1100,11 +1101,11 @@ public final class SuggestedFixes {
             tree ->
                 tree instanceof MethodTree
                     // Anonymous classes can't be suppressed
-                    || (tree instanceof ClassTree
-                        && ((ClassTree) tree).getSimpleName().length() != 0)
+                    || (tree instanceof ClassTree classTree
+                        && classTree.getSimpleName().length() != 0)
                     // Lambda parameters can't be suppressed unless they have Type decls
-                    || (tree instanceof VariableTree
-                        && !hasImplicitType((VariableTree) tree, state)))
+                    || (tree instanceof VariableTree variableTree
+                        && !hasImplicitType(variableTree, state)))
         .findFirst()
         .orElse(null);
   }
@@ -1635,11 +1636,10 @@ public final class SuggestedFixes {
       TreePath path, String replacement, VisitorState state) {
     Tree tree = path.getLeaf();
     Tree parent = path.getParentPath().getLeaf();
-    if (!(parent instanceof ClassTree)) {
+    if (!(parent instanceof ClassTree classTree)) {
       return SuggestedFix.replace(tree, replacement);
     }
     Tree previousMember = null;
-    ClassTree classTree = (ClassTree) parent;
     int startTokenization;
     for (Tree member : classTree.getMembers()) {
       if (member instanceof MethodTree methodTree

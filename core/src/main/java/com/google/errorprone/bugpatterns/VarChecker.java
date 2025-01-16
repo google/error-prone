@@ -87,10 +87,9 @@ public class VarChecker extends BugChecker implements VariableTreeMatcher {
 
   boolean forLoopVariable(VariableTree tree, TreePath path) {
     Tree parent = path.getParentPath().getLeaf();
-    if (!(parent instanceof ForLoopTree)) {
+    if (!(parent instanceof ForLoopTree forLoop)) {
       return false;
     }
-    ForLoopTree forLoop = (ForLoopTree) parent;
     return forLoop.getInitializer().contains(tree);
   }
 

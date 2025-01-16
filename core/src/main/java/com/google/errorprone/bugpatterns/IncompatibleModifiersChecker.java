@@ -80,13 +80,12 @@ public class IncompatibleModifiersChecker extends BugChecker implements Annotati
     }
 
     Tree parent = state.getPath().getParentPath().getLeaf();
-    if (!(parent instanceof ModifiersTree)) {
+    if (!(parent instanceof ModifiersTree modifiersTree)) {
       // e.g. An annotated package name
       return NO_MATCH;
     }
 
-    Set<Modifier> incompatible =
-        Sets.intersection(incompatibleModifiers, ((ModifiersTree) parent).getFlags());
+    Set<Modifier> incompatible = Sets.intersection(incompatibleModifiers, modifiersTree.getFlags());
 
     if (incompatible.isEmpty()) {
       return NO_MATCH;
@@ -103,7 +102,7 @@ public class IncompatibleModifiersChecker extends BugChecker implements Annotati
             nameString, incompatible);
     return buildDescription(tree)
         .addFix(
-            SuggestedFixes.removeModifiers((ModifiersTree) parent, state, incompatible)
+            SuggestedFixes.removeModifiers(modifiersTree, state, incompatible)
                 .orElse(SuggestedFix.emptyFix()))
         .setMessage(message)
         .build();

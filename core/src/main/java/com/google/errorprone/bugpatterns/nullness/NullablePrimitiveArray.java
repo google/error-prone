@@ -108,9 +108,9 @@ public class NullablePrimitiveArray extends BugChecker
     typeNullnessAnnos.forEach(fix::delete);
     boolean hasDeclarationNullnessAnno = typeNullnessAnnos.size() < treeNullnessAnnos.size();
     boolean hasTypeNullnessAnnoOnArray =
-        dims instanceof AnnotatedTypeTree
+        dims instanceof AnnotatedTypeTree annotatedTypeTree
             && !NullnessAnnotations.annotationsRelevantToNullness(
-                    ((AnnotatedTypeTree) dims).getAnnotations())
+                    annotatedTypeTree.getAnnotations())
                 .isEmpty();
     if (!hasDeclarationNullnessAnno && !hasTypeNullnessAnnoOnArray) {
       fix.postfixWith(

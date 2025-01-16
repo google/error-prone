@@ -40,10 +40,7 @@ public class Throws implements Matcher<StatementTree> {
 
   @Override
   public boolean matches(StatementTree expressionTree, VisitorState state) {
-    if (!(expressionTree instanceof ThrowTree)) {
-      return false;
-    }
-
-    return thrownMatcher.matches(((ThrowTree) expressionTree).getExpression(), state);
+    return expressionTree instanceof ThrowTree throwTree
+        && thrownMatcher.matches(throwTree.getExpression(), state);
   }
 }

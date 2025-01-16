@@ -74,10 +74,9 @@ public class InlineFormatString extends BugChecker implements CompilationUnitTre
 
   private static boolean secondParameterIsString(ExpressionTree tree, VisitorState state) {
     Symbol symbol = getSymbol(tree);
-    if (!(symbol instanceof MethodSymbol)) {
+    if (!(symbol instanceof MethodSymbol methodSymbol)) {
       return false;
     }
-    MethodSymbol methodSymbol = (MethodSymbol) symbol;
     return methodSymbol.getParameters().size() >= 2
         && isSubtype(methodSymbol.getParameters().get(1).type, state.getSymtab().stringType, state);
   }

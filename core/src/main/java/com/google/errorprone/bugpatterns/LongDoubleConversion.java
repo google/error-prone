@@ -55,7 +55,7 @@ public final class LongDoubleConversion extends BugChecker implements MethodInvo
       return;
     }
     Object constant = constValue(argument);
-    if (constant instanceof Long && constant.equals((long) ((Long) constant).doubleValue())) {
+    if (constant instanceof Long l && constant.equals((long) l.doubleValue())) {
       return;
     }
     ASTHelpers.TargetType targetType =

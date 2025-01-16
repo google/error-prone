@@ -123,10 +123,9 @@ public final class StaticImports {
     }
 
     Symbol sym = getSymbol(access.getExpression());
-    if (!(sym instanceof Symbol.TypeSymbol)) {
+    if (!(sym instanceof Symbol.TypeSymbol baseType)) {
       return null;
     }
-    Symbol.TypeSymbol baseType = (Symbol.TypeSymbol) sym;
     Symbol.PackageSymbol pkgSym =
         ((JCTree.JCCompilationUnit) state.getPath().getCompilationUnit()).packge;
     ImmutableSet<Symbol> members = lookup(baseType, baseType, identifier, types, pkgSym);

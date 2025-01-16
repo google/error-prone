@@ -266,11 +266,10 @@ abstract class InlinabilityResult {
           return super.visitIdentifier(identifierTree, null);
         }
         Tree parentNode = getCurrentPath().getParentPath().getLeaf();
-        if (!(parentNode instanceof MethodInvocationTree)) {
+        if (!(parentNode instanceof MethodInvocationTree mit)) {
           usesVarargsPoorly.set(true);
           return null;
         }
-        MethodInvocationTree mit = (MethodInvocationTree) parentNode;
 
         if (!getSymbol(mit).isVarArgs()) {
           // Passing varargs to another method that maybe takes an explicit array?

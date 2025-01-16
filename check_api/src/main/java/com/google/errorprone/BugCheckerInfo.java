@@ -246,10 +246,7 @@ public class BugCheckerInfo implements Serializable {
 
   @Override
   public boolean equals(Object o) {
-    if (!(o instanceof BugCheckerInfo)) {
-      return false;
-    }
-    return checker.equals(((BugCheckerInfo) o).checker);
+    return o instanceof BugCheckerInfo bugCheckerInfo && checker.equals(bugCheckerInfo.checker);
   }
 
   @Override

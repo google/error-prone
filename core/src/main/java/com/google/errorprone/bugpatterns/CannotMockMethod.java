@@ -48,10 +48,10 @@ public final class CannotMockMethod extends BugChecker implements MethodInvocati
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     if (WHEN.matches(tree, state)) {
       ExpressionTree firstArgument = tree.getArguments().get(0);
-      if (!(firstArgument instanceof MethodInvocationTree)) {
+      if (!(firstArgument instanceof MethodInvocationTree methodInvocationTree)) {
         return NO_MATCH;
       }
-      return describe(tree, getSymbol((MethodInvocationTree) firstArgument));
+      return describe(tree, getSymbol(methodInvocationTree));
     }
     var receiver = getReceiver(tree);
     if (receiver != null && VERIFY.matches(receiver, state)) {

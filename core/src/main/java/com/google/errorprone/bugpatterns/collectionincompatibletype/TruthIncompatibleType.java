@@ -446,8 +446,8 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
       MethodSymbol methodSymbol, long index, Type argumentType) {
     return methodSymbol.getParameters().size() - 1 == index
         && methodSymbol.isVarArgs()
-        && argumentType instanceof ArrayType
-        && !((ArrayType) argumentType).elemtype.isPrimitive();
+        && argumentType instanceof ArrayType arrayType
+        && !arrayType.elemtype.isPrimitive();
   }
 
   private Stream<Description> checkCompatibility(

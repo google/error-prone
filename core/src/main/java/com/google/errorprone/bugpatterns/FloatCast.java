@@ -57,10 +57,9 @@ public class FloatCast extends BugChecker implements TypeCastTreeMatcher {
   @Override
   public Description matchTypeCast(TypeCastTree tree, VisitorState state) {
     Tree parent = state.getPath().getParentPath().getLeaf();
-    if (!(parent instanceof BinaryTree)) {
+    if (!(parent instanceof BinaryTree binop)) {
       return NO_MATCH;
     }
-    BinaryTree binop = (BinaryTree) parent;
     if (!binop.getLeftOperand().equals(tree)) {
       // the precedence is unambiguous for e.g. `i + (int) f`
       return NO_MATCH;

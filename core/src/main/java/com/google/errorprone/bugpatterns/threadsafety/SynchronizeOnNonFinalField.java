@@ -49,13 +49,12 @@ public class SynchronizeOnNonFinalField extends BugChecker
   @Override
   public Description matchSynchronized(SynchronizedTree tree, VisitorState state) {
     Symbol symbol = ASTHelpers.getSymbol(stripParentheses(tree.getExpression()));
-    if (!(symbol instanceof VarSymbol)) {
+    if (!(symbol instanceof VarSymbol varSymbol)) {
       return NO_MATCH;
     }
 
     // TODO(cushon): check that the receiver doesn't contain mutable state.
     // Currently 'this.locks[i].mu' is accepted if 'mu' is final but 'locks' is non-final.
-    VarSymbol varSymbol = (VarSymbol) symbol;
     if (ASTHelpers.isLocal(varSymbol)
         || varSymbol.isStatic()
         || (varSymbol.flags() & Flags.FINAL) != 0) {

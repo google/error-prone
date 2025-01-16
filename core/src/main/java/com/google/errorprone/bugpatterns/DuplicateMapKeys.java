@@ -54,13 +54,12 @@ public class DuplicateMapKeys extends BugChecker implements MethodInvocationTree
     }
     Set<Object> keySet = new HashSet<>();
     for (ExpressionTree expr : tree.getArguments()) {
-      if (!(expr instanceof MethodInvocationTree)) {
+      if (!(expr instanceof MethodInvocationTree entryInvocation)) {
         continue;
       }
       if (!ENTRY_MATCHER.matches(expr, state)) {
         continue;
       }
-      MethodInvocationTree entryInvocation = (MethodInvocationTree) expr;
       Object key = ASTHelpers.constValue(entryInvocation.getArguments().get(0));
       if (key == null) {
         continue;

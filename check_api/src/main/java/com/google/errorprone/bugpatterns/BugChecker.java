@@ -600,11 +600,8 @@ public abstract class BugChecker implements Suppressible, Serializable {
 
   @Override
   public boolean equals(Object obj) {
-    if (!(obj instanceof BugChecker)) {
-      return false;
-    }
-    BugChecker that = (BugChecker) obj;
-    return this.canonicalName().equals(that.canonicalName())
+    return obj instanceof BugChecker that
+        && this.canonicalName().equals(that.canonicalName())
         && this.defaultSeverity().equals(that.defaultSeverity())
         && this.supportsSuppressWarnings() == that.supportsSuppressWarnings()
         && this.customSuppressionAnnotations().equals(that.customSuppressionAnnotations());

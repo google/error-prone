@@ -117,7 +117,7 @@ public final class UnusedReturnValueMatcher implements Matcher<ExpressionTree> {
    */
   public static boolean isReturnValueUnused(ExpressionTree tree, VisitorState state) {
     Symbol sym = getSymbol(tree);
-    if (!(sym instanceof MethodSymbol) || isVoidMethod((MethodSymbol) sym)) {
+    if (!(sym instanceof MethodSymbol methodSymbol) || isVoidMethod(methodSymbol)) {
       return false;
     }
     if (tree instanceof MemberReferenceTree) {
@@ -255,10 +255,9 @@ public final class UnusedReturnValueMatcher implements Matcher<ExpressionTree> {
    * doReturn(val).when(t)}.
    */
   public static boolean mockitoInvocation(Tree tree, VisitorState state) {
-    if (!(tree instanceof JCMethodInvocation)) {
+    if (!(tree instanceof JCMethodInvocation invocation)) {
       return false;
     }
-    JCMethodInvocation invocation = (JCMethodInvocation) tree;
     if (!(invocation.getMethodSelect() instanceof JCFieldAccess)) {
       return false;
     }

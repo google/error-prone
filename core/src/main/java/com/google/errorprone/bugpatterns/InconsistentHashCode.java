@@ -87,10 +87,9 @@ public final class InconsistentHashCode extends BugChecker implements ClassTreeM
     MethodTree equalsDeclaration = null;
     MethodTree hashCodeDeclaration = null;
     for (Tree member : tree.getMembers()) {
-      if (!(member instanceof MethodTree)) {
+      if (!(member instanceof MethodTree methodTree)) {
         continue;
       }
-      MethodTree methodTree = (MethodTree) member;
       if (hashCodeMethodDeclaration().matches(methodTree, state)) {
         hashCodeDeclaration = methodTree;
       } else if (equalsMethodDeclaration().matches(methodTree, state)) {
@@ -105,10 +104,9 @@ public final class InconsistentHashCode extends BugChecker implements ClassTreeM
     // "method accessed no fields".
     Map<MethodSymbol, ImmutableSet<Symbol>> fieldsByMethod = new HashMap<>();
     for (Tree member : tree.getMembers()) {
-      if (!(member instanceof MethodTree)) {
+      if (!(member instanceof MethodTree methodTree)) {
         continue;
       }
-      MethodTree methodTree = (MethodTree) member;
       if (!methodTree.equals(equalsDeclaration) && !methodTree.equals(hashCodeDeclaration)) {
         FieldAccessFinder finder = FieldAccessFinder.scanMethod(state, classSymbol, methodTree);
         if (!finder.failed()) {
@@ -196,8 +194,8 @@ public final class InconsistentHashCode extends BugChecker implements ClassTreeM
       ExpressionTree receiver = getReceiver(tree);
       ExpressionTree e = tree.getExpression();
       if (receiver == null
-          || (e instanceof IdentifierTree
-              && ((IdentifierTree) e).getName().contentEquals("this"))) {
+          || (e instanceof IdentifierTree identifierTree
+              && identifierTree.getName().contentEquals("this"))) {
         Symbol symbol = ((JCFieldAccess) tree).sym;
         handleSymbol(symbol);
       }

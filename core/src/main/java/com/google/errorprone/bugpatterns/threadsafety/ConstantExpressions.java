@@ -272,10 +272,9 @@ public final class ConstantExpressions {
 
     @Override
     public final boolean equals(@Nullable Object other) {
-      if (!(other instanceof ConstantEquals)) {
+      if (!(other instanceof ConstantEquals that)) {
         return false;
       }
-      ConstantEquals that = (ConstantEquals) other;
       return (lhs().equals(that.lhs()) && rhs().equals(that.rhs()))
           || (lhs().equals(that.rhs()) && rhs().equals(that.lhs()));
     }
@@ -495,7 +494,7 @@ public final class ConstantExpressions {
           allOf(
               instanceEqualsInvocation(),
               (t, s) -> {
-                if (!(t instanceof MethodInvocationTree)) {
+                if (!(t instanceof MethodInvocationTree methodInvocationTree)) {
                   return false;
                 }
                 ExpressionTree receiver = getReceiver(t);
@@ -503,16 +502,15 @@ public final class ConstantExpressions {
                   return false;
                 }
                 return typeIsImmutable(getType(receiver), s)
-                    && typeIsImmutable(
-                        getType(((MethodInvocationTree) t).getArguments().get(0)), s);
+                    && typeIsImmutable(getType(methodInvocationTree.getArguments().get(0)), s);
               }),
           allOf(
               staticEqualsInvocation(),
               (t, s) -> {
-                if (!(t instanceof MethodInvocationTree)) {
+                if (!(t instanceof MethodInvocationTree methodInvocationTree)) {
                   return false;
                 }
-                List<? extends ExpressionTree> args = ((MethodInvocationTree) t).getArguments();
+                List<? extends ExpressionTree> args = methodInvocationTree.getArguments();
                 return typeIsImmutable(getType(args.get(0)), s)
                     && typeIsImmutable(getType(args.get(1)), s);
               }));

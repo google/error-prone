@@ -114,16 +114,16 @@ public final class SameNameButDifferent extends BugChecker implements Compilatio
           parts.addFirst(select.getIdentifier());
           tree = select.getExpression();
         }
-        if (!(tree instanceof IdentifierTree)) {
+        if (!(tree instanceof IdentifierTree identifierTree)) {
           return null;
         }
-        parts.addFirst(((IdentifierTree) tree).getName());
+        parts.addFirst(identifierTree.getName());
         return Joiner.on('.').join(parts);
       }
 
       private void handle(Tree tree) {
-        if (tree instanceof IdentifierTree
-            && ((IdentifierTree) tree).getName().contentEquals("Builder")) {
+        if (tree instanceof IdentifierTree identifierTree
+            && identifierTree.getName().contentEquals("Builder")) {
           return;
         }
         String qualifiedName = qualifiedName(tree);

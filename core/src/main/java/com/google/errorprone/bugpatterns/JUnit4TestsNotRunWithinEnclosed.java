@@ -80,7 +80,7 @@ public final class JUnit4TestsNotRunWithinEnclosed extends BugChecker
           return super.visitClass(classTree, null);
         }
         for (Tree member : classTree.getMembers()) {
-          if (member instanceof MethodTree && TEST_CASE.matches((MethodTree) member, state)) {
+          if (member instanceof MethodTree methodTree && TEST_CASE.matches(methodTree, state)) {
             SuggestedFix.Builder fix = SuggestedFix.builder();
             String junit4 = SuggestedFixes.qualifyType(state, fix, "org.junit.runners.JUnit4");
             state.reportMatch(

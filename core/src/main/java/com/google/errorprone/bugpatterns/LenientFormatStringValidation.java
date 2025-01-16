@@ -59,10 +59,10 @@ public final class LenientFormatStringValidation extends BugChecker
       }
       ExpressionTree formatStringArgument = args.get(method.formatStringPosition());
       Object formatString = ASTHelpers.constValue(formatStringArgument);
-      if (!(formatString instanceof String)) {
+      if (!(formatString instanceof String string)) {
         continue;
       }
-      int expected = occurrences((String) formatString, "%s");
+      int expected = occurrences(string, "%s");
       int actual = args.size() - method.formatStringPosition() - 1;
       if (expected == actual) {
         continue;

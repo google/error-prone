@@ -62,10 +62,9 @@ public class RobolectricShadowDirectlyOn extends BugChecker implements MethodInv
     }
     path = path.getParentPath();
     Tree parentTree = path.getLeaf();
-    if (!(parentTree instanceof MethodInvocationTree)) {
+    if (!(parentTree instanceof MethodInvocationTree parent)) {
       return NO_MATCH;
     }
-    MethodInvocationTree parent = (MethodInvocationTree) parentTree;
     if (!tree.equals(getReceiver(parent))) {
       return NO_MATCH;
     }

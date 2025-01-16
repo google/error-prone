@@ -207,10 +207,9 @@ public abstract class GuardedByExpression {
 
       @Override
       public boolean equals(Object other) {
-        if (!(other instanceof VarSymbol)) {
+        if (!(other instanceof VarSymbol that)) {
           return false;
         }
-        VarSymbol that = (VarSymbol) other;
         if (!that.getSimpleName().contentEquals(ENCLOSING_INSTANCE_NAME)) {
           return false;
         }

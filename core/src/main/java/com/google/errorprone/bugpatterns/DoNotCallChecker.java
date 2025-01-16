@@ -351,12 +351,10 @@ public class DoNotCallChecker extends BugChecker
         if (hasAnnotation(sym, DO_NOT_CALL, state)) {
           return Optional.of(sym);
         }
-        ExpressionTree receiver = getReceiver(tree);
-        Symbol receiverSymbol = getSymbol(receiver);
-        if (!(receiverSymbol instanceof VarSymbol)) {
+        if (!(getSymbol(getReceiver(tree)) instanceof VarSymbol receiverSymbol)) {
           return Optional.empty();
         }
-        ImmutableList<Type> assigned = assignedTypes.get((VarSymbol) receiverSymbol);
+        ImmutableList<Type> assigned = assignedTypes.get(receiverSymbol);
         if (!assigned.stream().allMatch(t -> isSameType(t, assigned.get(0), state))) {
           return Optional.empty();
         }

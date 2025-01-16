@@ -78,8 +78,8 @@ public final class BugPatternNaming extends BugChecker implements ClassTreeMatch
                 anno.getArguments().stream()
                     .filter(
                         t ->
-                            t instanceof AssignmentTree
-                                && ((IdentifierTree) ((AssignmentTree) t).getVariable())
+                            t instanceof AssignmentTree assignmentTree
+                                && ((IdentifierTree) assignmentTree.getVariable())
                                     .getName()
                                     .contentEquals("name"))
                     .findFirst()

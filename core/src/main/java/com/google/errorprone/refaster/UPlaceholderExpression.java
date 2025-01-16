@@ -147,10 +147,9 @@ public abstract class UPlaceholderExpression extends UExpression {
   @Override
   protected Choice<Unifier> defaultAction(Tree node, Unifier unifier) {
     // for now we only match JCExpressions
-    if (!(node instanceof JCExpression)) {
+    if (!(node instanceof JCExpression expr)) {
       return Choice.none();
     }
-    JCExpression expr = (JCExpression) node;
 
     PlaceholderVerificationVisitor verification =
         new PlaceholderVerificationVisitor(

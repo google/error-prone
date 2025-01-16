@@ -180,8 +180,8 @@ public final class MockNotUsedInProduction extends BugChecker
       }
 
       private boolean isEligible(Symbol symbol) {
-        return symbol instanceof VarSymbol
-            && (!symbol.getKind().equals(FIELD) || canBeRemoved((VarSymbol) symbol))
+        return symbol instanceof VarSymbol varSymbol
+            && (!symbol.getKind().equals(FIELD) || canBeRemoved(varSymbol))
             && annotatedAtMostMock(symbol);
       }
 

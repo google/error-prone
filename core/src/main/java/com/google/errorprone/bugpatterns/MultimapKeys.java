@@ -51,8 +51,8 @@ public final class MultimapKeys extends BugChecker implements MethodInvocationTr
     }
     if (parent instanceof MemberSelectTree) {
       var grandparent = state.getPath().getParentPath().getParentPath().getLeaf();
-      return grandparent instanceof MethodInvocationTree
-          && FOR_EACH.matches((ExpressionTree) grandparent, state);
+      return grandparent instanceof MethodInvocationTree methodInvocationTree
+          && FOR_EACH.matches(methodInvocationTree, state);
     }
     return false;
   }

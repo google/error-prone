@@ -36,7 +36,6 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.MethodTree;
-import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.ThrowTree;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
@@ -110,8 +109,7 @@ public class DoNotCallSuggester extends BugChecker implements MethodTreeMatcher 
     }
 
     // if the single statement is not a ThrowTree, exit
-    StatementTree statement = getOnlyElement(tree.getBody().getStatements());
-    if (!(statement instanceof ThrowTree)) {
+    if (!(getOnlyElement(tree.getBody().getStatements()) instanceof ThrowTree throwTree)) {
       return NO_MATCH;
     }
 
@@ -167,7 +165,7 @@ public class DoNotCallSuggester extends BugChecker implements MethodTreeMatcher 
     }
 
     // otherwise, suggest annotating the method with @DoNotCall
-    Type thrownType = getType(((ThrowTree) statement).getExpression());
+    Type thrownType = getType(throwTree.getExpression());
     // TODO(kak): Consider possibly stripping "java.lang" (users should be familiar with those!)
     SuggestedFix fix =
         SuggestedFix.builder()

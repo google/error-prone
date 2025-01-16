@@ -217,7 +217,7 @@ public final class DataFlow {
     }
 
     Tree method = enclosingMethodPath.getLeaf();
-    if (method instanceof MethodTree && ((MethodTree) method).getBody() == null) {
+    if (method instanceof MethodTree methodTree && methodTree.getBody() == null) {
       // expressions can occur in abstract methods, for example {@code Map.Entry} in:
       //
       //   abstract Set<Map.Entry<K, V>> entries();

@@ -51,14 +51,13 @@ public class InexactVarargsConditional extends BugChecker implements MethodInvoc
       return NO_MATCH;
     }
     Tree arg = getLast(tree.getArguments());
-    if (!(arg instanceof ConditionalExpressionTree)) {
+    if (!(arg instanceof ConditionalExpressionTree cond)) {
       return NO_MATCH;
     }
     Types types = state.getTypes();
     if (types.isArray(getType(arg))) {
       return NO_MATCH;
     }
-    ConditionalExpressionTree cond = (ConditionalExpressionTree) arg;
     boolean trueIsArray = types.isArray(getType(cond.getTrueExpression()));
     if (!(trueIsArray ^ types.isArray(getType(cond.getFalseExpression())))) {
       return NO_MATCH;

@@ -257,10 +257,9 @@ public class UnnecessaryBoxedVariable extends BugChecker implements CompilationU
     ExpressionTree expression = tree.getInitializer();
     if (expression == null) {
       Tree leaf = state.getPath().getParentPath().getLeaf();
-      if (!(leaf instanceof EnhancedForLoopTree)) {
+      if (!(leaf instanceof EnhancedForLoopTree node)) {
         return true;
       }
-      EnhancedForLoopTree node = (EnhancedForLoopTree) leaf;
       Type expressionType = ASTHelpers.getType(node.getExpression());
       if (expressionType == null) {
         return false;

@@ -147,8 +147,8 @@ public class AlwaysThrows extends BugChecker implements MethodInvocationTreeMatc
       if (state.getPath().getParentPath() != null
           && state.getPath().getParentPath().getParentPath() != null) {
         Tree grandParent = state.getPath().getParentPath().getParentPath().getLeaf();
-        if (grandParent instanceof ExpressionTree
-            && IMMUTABLE_MAP_PUT.matches((ExpressionTree) grandParent, state)) {
+        if (grandParent instanceof ExpressionTree expressionTree
+            && IMMUTABLE_MAP_PUT.matches(expressionTree, state)) {
           return NO_MATCH;
         }
       }

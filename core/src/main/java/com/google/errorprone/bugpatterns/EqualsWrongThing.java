@@ -102,8 +102,8 @@ public final class EqualsWrongThing extends BugChecker implements MethodTreeMatc
           ExpressionTree receiver = getReceiver(node);
           if (receiver != null) {
             // Special-case super, for odd cases like `super.equals(this)`.
-            if (!(receiver instanceof IdentifierTree
-                && ((IdentifierTree) receiver).getName().contentEquals("super"))) {
+            if (!(receiver instanceof IdentifierTree identifierTree
+                && identifierTree.getName().contentEquals("super"))) {
               getDubiousComparison(classSymbol, node, receiver, args.get(0))
                   .ifPresent(suspiciousComparisons::add);
             }

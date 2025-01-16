@@ -955,13 +955,10 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
 
     StatementTree secondToLastStatement = precedingStatements.get(precedingStatements.size() - 2);
     StatementTree lastStatement = Iterables.getLast(precedingStatements);
-    if (!(secondToLastStatement instanceof VariableTree)
-        || !(lastStatement instanceof VariableTree)) {
+    if (!(secondToLastStatement instanceof VariableTree variableTree1)
+        || !(lastStatement instanceof VariableTree variableTree2)) {
       return true;
     }
-
-    VariableTree variableTree1 = (VariableTree) secondToLastStatement;
-    VariableTree variableTree2 = (VariableTree) lastStatement;
 
     // Start positions will vary if the variable declarations are in the same
     // VariableDeclaratorList.

@@ -103,11 +103,9 @@ public final class IgnoredPureGetter extends AbstractReturnValueIgnored {
   }
 
   private static Optional<PureGetterKind> pureGetterKind(ExpressionTree tree, VisitorState state) {
-    Symbol rawSymbol = getSymbol(tree);
-    if (!(rawSymbol instanceof MethodSymbol)) {
+    if (!(getSymbol(tree) instanceof MethodSymbol symbol)) {
       return Optional.empty();
     }
-    MethodSymbol symbol = (MethodSymbol) rawSymbol;
     Symbol owner = symbol.owner;
 
     if (symbol.getModifiers().contains(ABSTRACT) && symbol.getParameters().isEmpty()) {

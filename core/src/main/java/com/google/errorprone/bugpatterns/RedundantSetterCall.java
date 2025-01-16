@@ -80,10 +80,10 @@ public final class RedundantSetterCall extends BugChecker implements MethodInvoc
                   "com.google.protobuf.GeneratedMessageLite.Builder")
               .withNameMatching(Pattern.compile("^(set|add|clear|put).+")),
           (tree, state) -> {
-            if (!(tree instanceof MethodInvocationTree)) {
+            if (!(tree instanceof MethodInvocationTree methodInvocationTree)) {
               return false;
             }
-            var symbol = getSymbol((MethodInvocationTree) tree);
+            var symbol = getSymbol(methodInvocationTree);
             return isAbstract(symbol)
                 && isWithinAutoValueBuilder(symbol, state)
                 && isSameType(symbol.owner.type, symbol.getReturnType(), state);

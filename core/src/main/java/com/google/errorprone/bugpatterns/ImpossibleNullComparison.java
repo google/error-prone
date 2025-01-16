@@ -608,10 +608,9 @@ public final class ImpossibleNullComparison extends BugChecker
     }
 
     private static boolean isGetter(ExpressionTree expressionTree) {
-      if (!(expressionTree instanceof JCFieldAccess)) {
+      if (!(expressionTree instanceof JCFieldAccess access)) {
         return false;
       }
-      JCFieldAccess access = (JCFieldAccess) expressionTree;
       String methodName = access.sym.getQualifiedName().toString();
       return methodName.startsWith("get");
     }

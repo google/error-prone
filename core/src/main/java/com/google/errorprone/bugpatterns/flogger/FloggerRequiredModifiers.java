@@ -129,15 +129,14 @@ public final class FloggerRequiredModifiers extends BugChecker
       return NO_MATCH;
     }
     VarSymbol sym = ASTHelpers.getSymbol(tree);
-    if (!(sym.owner instanceof ClassSymbol)) {
+    if (!(sym.owner instanceof ClassSymbol classSymbol)) {
       return NO_MATCH;
     }
     ExpressionTree initializer = tree.getInitializer();
     // Static fields with no initializer, or fields initialized to a constant FluentLogger
     if (initializer == null
         ? sym.isStatic()
-        : isConstantLogger(initializer, (ClassSymbol) sym.owner, state)
-            && !sym.owner.isInterface()) {
+        : isConstantLogger(initializer, classSymbol, state) && !sym.owner.isInterface()) {
       return fixModifier(tree, (ClassTree) state.getPath().getParentPath().getLeaf(), state);
     }
 
@@ -265,8 +264,8 @@ public final class FloggerRequiredModifiers extends BugChecker
     }
     String loggerName = logger.name;
     Tree parent = state.getPath().getParentPath().getLeaf();
-    if (parent instanceof VariableTree
-        && ((VariableTree) parent).getName().contentEquals(loggerName)) {
+    if (parent instanceof VariableTree variableTree
+        && variableTree.getName().contentEquals(loggerName)) {
       // Instead of making a local shadow of a class member, just use the class member.
       return describeMatch(expr, fix.delete(parent).build());
     }

@@ -109,6 +109,6 @@ public class OutlineNone extends BugChecker
     if (value instanceof String && NONE_STRINGS.contains(value)) {
       return true;
     }
-    return value instanceof Number && ((Number) value).doubleValue() == 0.0;
+    return value instanceof Number number && number.doubleValue() == 0.0;
   }
 }

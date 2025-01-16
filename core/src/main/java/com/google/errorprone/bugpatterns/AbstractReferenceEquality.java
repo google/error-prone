@@ -196,10 +196,9 @@ public abstract class AbstractReferenceEquality extends BugChecker implements Bi
     // If the other half of this or statement is foo.equals(bar) or Objects.equals(foo, bar)
     // replace the or statement with the other half as already written.
     ExpressionTree otherExpression = ASTHelpers.stripParentheses(p.getRightOperand());
-    if (!(otherExpression instanceof MethodInvocationTree)) {
+    if (!(otherExpression instanceof MethodInvocationTree other)) {
       return Optional.empty();
     }
-    MethodInvocationTree other = (MethodInvocationTree) otherExpression;
 
     // a == b || Objects.equals(a, b) => Objects.equals(a, b)
     if (EQUALS_STATIC_METHODS.matches(other, state)) {

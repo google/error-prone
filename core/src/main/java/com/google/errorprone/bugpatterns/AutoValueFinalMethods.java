@@ -72,8 +72,8 @@ public class AutoValueFinalMethods extends BugChecker implements ClassTreeMatche
         tree.getMembers().stream()
             .filter(
                 t ->
-                    t instanceof MethodTree
-                        && METHOD_MATCHER.matches((MethodTree) t, state)
+                    t instanceof MethodTree methodTree
+                        && METHOD_MATCHER.matches(methodTree, state)
                         && !isSuppressed(t, state))
             .map(t -> (MethodTree) t)
             .collect(toImmutableList());

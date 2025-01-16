@@ -215,13 +215,12 @@ public final class InvalidBlockTag extends BugChecker
         return false;
       }
       DocTree parentDoc = getCurrentPath().getParentPath().getLeaf();
-      if (!(parentDoc instanceof DCDocComment)) {
+      if (!(parentDoc instanceof DCDocComment dcDocComment)) {
         return false;
       }
-      DCDocComment dcDocComment = (DCDocComment) parentDoc;
       return dcDocComment.getFullBody().stream()
           .anyMatch(
-              dc -> dc instanceof DCErroneous && ((DCErroneous) dc).body.startsWith("{@code"));
+              dc -> dc instanceof DCErroneous dCErroneous && dCErroneous.body.startsWith("{@code"));
     }
 
     private void reportUnknownTag(DocTree docTree, JavadocTag tag) {
@@ -260,10 +259,10 @@ public final class InvalidBlockTag extends BugChecker
       if (fixedTags.contains(docTree)) {
         return null;
       }
-      if (!(docTree instanceof DCBlockTag)) {
+      if (!(docTree instanceof DCBlockTag dCBlockTag)) {
         return null;
       }
-      JavadocTag tag = blockTag(((DCBlockTag) docTree).getTagName());
+      JavadocTag tag = blockTag(dCBlockTag.getTagName());
       if (validTags.contains(tag) || JavadocTag.KNOWN_OTHER_TAGS.contains(tag)) {
         return null;
       }

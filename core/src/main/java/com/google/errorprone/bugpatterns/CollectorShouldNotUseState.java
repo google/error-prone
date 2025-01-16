@@ -63,11 +63,9 @@ public class CollectorShouldNotUseState extends BugChecker implements MethodInvo
 
     @Override
     public boolean matches(Tree tree, VisitorState visitorState) {
-      if (!(tree instanceof NewClassTree)) {
+      if (!(tree instanceof NewClassTree newClassTree)) {
         return false;
       }
-
-      NewClassTree newClassTree = (NewClassTree) tree;
 
       if (newClassTree.getClassBody() == null) {
         return false;

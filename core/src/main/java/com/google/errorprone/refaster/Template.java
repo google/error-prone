@@ -324,7 +324,7 @@ public abstract class Template<M extends TemplateMatch> implements Serializable 
         @Override
         public void printStat(JCTree tree) throws IOException {
           if (tree instanceof JCExpressionStatement jCExpressionStatement
-              && ((JCExpressionStatement) tree).getExpression() instanceof JCMethodInvocation) {
+              && jCExpressionStatement.getExpression() instanceof JCMethodInvocation) {
             JCMethodInvocation invocation =
                 (JCMethodInvocation) jCExpressionStatement.getExpression();
             JCExpression select = invocation.getMethodSelect();

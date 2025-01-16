@@ -102,8 +102,8 @@ public final class DirectInvocationOnMock extends BugChecker implements Compilat
                 .get();
         var receiver = getReceiver(tree);
         if (isMock(receiver)
-            && !(parent instanceof ExpressionTree
-                && WHEN.matches((ExpressionTree) parent, state))) {
+            && !(parent instanceof ExpressionTree expressionTree
+                && WHEN.matches(expressionTree, state))) {
           var description =
               buildDescription(tree)
                   .setMessage(

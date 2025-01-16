@@ -59,7 +59,8 @@ public final class VoidUsed extends BugChecker
 
   private Description handle(Tree tree, VisitorState state) {
     var parent = state.getPath().getParentPath().getLeaf();
-    if (parent instanceof AssignmentTree && ((AssignmentTree) parent).getVariable().equals(tree)) {
+    if (parent instanceof AssignmentTree assignmentTree
+        && assignmentTree.getVariable().equals(tree)) {
       return NO_MATCH;
     }
     var symbol = getSymbol(tree);

@@ -202,11 +202,10 @@ public class BadImport extends BugChecker implements ImportTreeMatcher {
       return state;
     }
     Tree tree = compilationUnit.getTypeDecls().get(0);
-    if (!(tree instanceof ClassTree) || ((ClassTree) tree).getMembers().isEmpty()) {
+    if (!(tree instanceof ClassTree classTree) || classTree.getMembers().isEmpty()) {
       return state;
     }
-    return state.withPath(
-        TreePath.getPath(compilationUnit, ((ClassTree) tree).getMembers().get(0)));
+    return state.withPath(TreePath.getPath(compilationUnit, classTree.getMembers().get(0)));
   }
 
   private boolean isAcceptableImport(Symbol symbol, Set<String> badNames) {

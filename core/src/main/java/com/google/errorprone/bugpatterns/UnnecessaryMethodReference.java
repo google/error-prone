@@ -66,8 +66,8 @@ public final class UnnecessaryMethodReference extends BugChecker
     if (receiver == null) {
       return NO_MATCH;
     }
-    if (receiver instanceof IdentifierTree
-        && ((IdentifierTree) receiver).getName().contentEquals("super")) {
+    if (receiver instanceof IdentifierTree identifierTree
+        && identifierTree.getName().contentEquals("super")) {
       return NO_MATCH;
     }
     if (!state.getTypes().isSubtype(getType(receiver), targetType.type())) {

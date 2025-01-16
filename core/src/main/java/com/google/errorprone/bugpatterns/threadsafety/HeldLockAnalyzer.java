@@ -126,11 +126,10 @@ public final class HeldLockAnalyzer {
     if (newClassTree == null) {
       return locks;
     }
-    Symbol clazzSym = ASTHelpers.getSymbol(newClassTree.clazz);
-    if (!(clazzSym instanceof ClassSymbol)) {
+    if (!(ASTHelpers.getSymbol(newClassTree.clazz) instanceof ClassSymbol classSymbol)) {
       return locks;
     }
-    if (!((ClassSymbol) clazzSym).fullname.contentEquals(MONITOR_GUARD_CLASS)) {
+    if (!classSymbol.fullname.contentEquals(MONITOR_GUARD_CLASS)) {
       return locks;
     }
     Optional<GuardedByExpression> lockExpression =
@@ -245,8 +244,8 @@ public final class HeldLockAnalyzer {
     @Override
     public Void visitLambdaExpression(LambdaExpressionTree node, HeldLockSet heldLockSet) {
       var parent = getCurrentPath().getParentPath().getLeaf();
-      if (parent instanceof MethodInvocationTree
-          && INVOKES_LAMBDAS_IMMEDIATELY.matches((ExpressionTree) parent, visitorState)) {
+      if (parent instanceof MethodInvocationTree methodInvocationTree
+          && INVOKES_LAMBDAS_IMMEDIATELY.matches(methodInvocationTree, visitorState)) {
         return super.visitLambdaExpression(node, heldLockSet);
       }
       // Don't descend into lambdas; they will be analyzed separately.

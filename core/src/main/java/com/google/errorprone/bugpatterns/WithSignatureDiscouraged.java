@@ -76,14 +76,14 @@ public class WithSignatureDiscouraged extends BugChecker implements MethodInvoca
     // .withSignature("valueOf(java.lang.String,int)")
     //      =>
     // .named("valueOf").withParameters("java.lang.String", "int")
-    if (!(tree instanceof JCTree)) {
+    if (!(tree instanceof JCTree jCTree)) {
       // We can't easily compute offsets to replace a whole method chain based on just the public
       // Tree API.
       return NO_MATCH;
     }
     String methodName = sig.substring(0, firstParenIndex);
     String paramList = sig.substring(firstParenIndex + 1, sig.length() - 1);
-    return fixWithParameters((JCTree) tree, state, methodName, paramList);
+    return fixWithParameters(jCTree, state, methodName, paramList);
   }
 
   private Description fixWithParameters(

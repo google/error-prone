@@ -229,10 +229,9 @@ public final class InvalidParam extends BugChecker implements ClassTreeMatcher, 
       DCDocComment docCommentTree, boolean isTypeParameter) {
     ImmutableSet.Builder<String> parameters = ImmutableSet.builder();
     for (DocTree docTree : docCommentTree.getBlockTags()) {
-      if (!(docTree instanceof ParamTree)) {
+      if (!(docTree instanceof ParamTree paramTree)) {
         continue;
       }
-      ParamTree paramTree = (ParamTree) docTree;
       if (paramTree.isTypeParameter() == isTypeParameter) {
         parameters.add(paramTree.getName().getName().toString());
       }

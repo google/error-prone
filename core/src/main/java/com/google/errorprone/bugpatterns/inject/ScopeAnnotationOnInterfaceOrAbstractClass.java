@@ -68,9 +68,9 @@ public class ScopeAnnotationOnInterfaceOrAbstractClass extends BugChecker
   public final Description matchAnnotation(AnnotationTree annotationTree, VisitorState state) {
     Tree modified = getCurrentlyAnnotatedNode(state);
     if (SCOPE_ANNOTATION_MATCHER.matches(annotationTree, state)
-        && modified instanceof ClassTree
-        && !IS_DAGGER_COMPONENT.matches((ClassTree) modified, state)
-        && INTERFACE_AND_ABSTRACT_TYPE_MATCHER.matches((ClassTree) modified, state)) {
+        && modified instanceof ClassTree classTree
+        && !IS_DAGGER_COMPONENT.matches(classTree, state)
+        && INTERFACE_AND_ABSTRACT_TYPE_MATCHER.matches(classTree, state)) {
       return describeMatch(annotationTree, SuggestedFix.delete(annotationTree));
     }
     return Description.NO_MATCH;

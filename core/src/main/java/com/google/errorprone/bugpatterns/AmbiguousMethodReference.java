@@ -63,10 +63,10 @@ public class AmbiguousMethodReference extends BugChecker implements ClassTreeMat
 
     // look for groups of ambiguous method references
     for (Tree member : tree.getMembers()) {
-      if (!(member instanceof MethodTree)) {
+      if (!(member instanceof MethodTree methodTree)) {
         continue;
       }
-      MethodSymbol msym = getSymbol((MethodTree) member);
+      MethodSymbol msym = getSymbol(methodTree);
       if (isSuppressed(msym, state)) {
         continue;
       }

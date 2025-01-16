@@ -192,8 +192,8 @@ public final class MissingSummary extends BugChecker
       return false;
     }
     Symbol symbol = getSymbol(tree);
-    if (symbol instanceof MethodSymbol
-        && !findSuperMethods((MethodSymbol) symbol, state.getTypes()).isEmpty()) {
+    if (symbol instanceof MethodSymbol methodSymbol
+        && !findSuperMethods(methodSymbol, state.getTypes()).isEmpty()) {
       return false;
     }
     return symbol != null && !isEffectivelyPrivate(symbol);

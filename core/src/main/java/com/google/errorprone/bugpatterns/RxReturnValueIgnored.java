@@ -56,11 +56,10 @@ public final class RxReturnValueIgnored extends AbstractReturnValueIgnored {
 
   private static boolean hasCirvAnnotation(ExpressionTree tree, VisitorState state) {
     Symbol untypedSymbol = getSymbol(tree);
-    if (!(untypedSymbol instanceof MethodSymbol)) {
+    if (!(untypedSymbol instanceof MethodSymbol sym)) {
       return false;
     }
 
-    MethodSymbol sym = (MethodSymbol) untypedSymbol;
     // Directly has @CanIgnoreReturnValue
     if (hasAnnotation(sym, CAN_IGNORE_RETURN_VALUE_ANNOTATION, state)) {
       return true;

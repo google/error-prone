@@ -109,8 +109,8 @@ public class AvoidObjectArrays extends BugChecker implements MethodTreeMatcher {
 
   /** Returns whether the tree represents an object array or not. */
   private static boolean isObjectArray(Tree tree) {
-    Type type = getType(tree);
-    return (type instanceof ArrayType) && !((ArrayType) type).getComponentType().isPrimitive();
+    return getType(tree) instanceof ArrayType arrayType
+        && !arrayType.getComponentType().isPrimitive();
   }
 
   private static boolean shouldApplyApiChecks(MethodTree methodTree, VisitorState state) {

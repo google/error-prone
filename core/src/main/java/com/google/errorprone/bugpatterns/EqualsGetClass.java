@@ -136,12 +136,8 @@ public final class EqualsGetClass extends BugChecker implements MethodInvocation
     }
 
     private static boolean matchesClass(ExpressionTree tree) {
-      Symbol symbol = getSymbol(tree);
-      if (!(symbol instanceof VarSymbol)) {
-        return false;
-      }
-      VarSymbol varSymbol = (VarSymbol) symbol;
-      return varSymbol.getSimpleName().contentEquals("class");
+      return getSymbol(tree) instanceof VarSymbol varSymbol
+          && varSymbol.getSimpleName().contentEquals("class");
     }
 
     private final Symbol parameter;

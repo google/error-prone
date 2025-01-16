@@ -304,11 +304,7 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
         return false;
       }
       ExpressionTree selected = ((MemberSelectTree) tree).getExpression();
-      if (!(selected instanceof IdentifierTree)) {
-        return false;
-      }
-      IdentifierTree ident = (IdentifierTree) selected;
-      return ident.getName().contentEquals("this");
+      return selected instanceof IdentifierTree ident && ident.getName().contentEquals("this");
     }
 
     @Override

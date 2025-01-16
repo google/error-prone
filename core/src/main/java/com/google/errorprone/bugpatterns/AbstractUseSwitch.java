@@ -124,10 +124,9 @@ public abstract class AbstractUseSwitch extends BugChecker implements IfTreeMatc
       } else {
         return NO_MATCH;
       }
-      if (!(lhs instanceof IdentifierTree)) {
+      if (!(lhs instanceof IdentifierTree identifierTree)) {
         return NO_MATCH;
       }
-      IdentifierTree identifierTree = (IdentifierTree) lhs;
       if (var == null) {
         var = identifierTree;
         // This is the first if block, and identifierTree is the string variable

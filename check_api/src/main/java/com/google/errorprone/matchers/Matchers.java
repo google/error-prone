@@ -366,11 +366,8 @@ public class Matchers {
   public static Matcher<ExpressionTree> methodInvocation(
       Matcher<ExpressionTree> methodSelectMatcher) {
     return (expressionTree, state) -> {
-      if (!(expressionTree instanceof MethodInvocationTree)) {
-        return false;
-      }
-      MethodInvocationTree tree = (MethodInvocationTree) expressionTree;
-      return methodSelectMatcher.matches(tree.getMethodSelect(), state);
+      return expressionTree instanceof MethodInvocationTree tree
+          && methodSelectMatcher.matches(tree.getMethodSelect(), state);
     };
   }
 
@@ -954,7 +951,7 @@ public class Matchers {
   public static Matcher<ClassTree> hasMethod(Matcher<MethodTree> methodMatcher) {
     return (t, state) -> {
       for (Tree member : t.getMembers()) {
-        if (member instanceof MethodTree && methodMatcher.matches((MethodTree) member, state)) {
+        if (member instanceof MethodTree methodTree && methodMatcher.matches(methodTree, state)) {
           return true;
         }
       }
@@ -1087,8 +1084,8 @@ public class Matchers {
   /** Matches an {@link ExpressionStatementTree} based on its {@link ExpressionTree}. */
   public static Matcher<StatementTree> expressionStatement(Matcher<ExpressionTree> matcher) {
     return (statementTree, state) ->
-        statementTree instanceof ExpressionStatementTree
-            && matcher.matches(((ExpressionStatementTree) statementTree).getExpression(), state);
+        statementTree instanceof ExpressionStatementTree expressionStatementTree
+            && matcher.matches(expressionStatementTree.getExpression(), state);
   }
 
   static Matcher<Tree> isSymbol(java.lang.Class<? extends Symbol> symbolClass) {
@@ -1581,10 +1578,10 @@ public class Matchers {
   public static Matcher<StatementTree> matchExpressionReturn(
       Matcher<ExpressionTree> expressionTreeMatcher) {
     return (statement, state) -> {
-      if (!(statement instanceof ReturnTree)) {
+      if (!(statement instanceof ReturnTree returnTree)) {
         return false;
       }
-      ExpressionTree expression = ((ReturnTree) statement).getExpression();
+      ExpressionTree expression = returnTree.getExpression();
       if (expression == null) {
         return false;
       }

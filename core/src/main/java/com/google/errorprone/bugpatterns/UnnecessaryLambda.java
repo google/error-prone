@@ -112,8 +112,8 @@ public class UnnecessaryLambda extends BugChecker
 
         if (Objects.equals(getSymbol(node), sym)) {
           Tree parent = getCurrentPath().getParentPath().getLeaf();
-          if (parent instanceof EnhancedForLoopTree
-              && ((EnhancedForLoopTree) parent).getExpression().equals(node)) {
+          if (parent instanceof EnhancedForLoopTree enhancedForLoopTree
+              && enhancedForLoopTree.getExpression().equals(node)) {
             usedInEnhancedForLoop[0] = true;
           } else {
             replaceUseWithMethodReference(fix, node, name, state.withPath(getCurrentPath()));
@@ -243,10 +243,10 @@ public class UnnecessaryLambda extends BugChecker
 
       private void check(MethodInvocationTree node) {
         ExpressionTree lhs = node.getMethodSelect();
-        if (!(lhs instanceof MemberSelectTree)) {
+        if (!(lhs instanceof MemberSelectTree memberSelectTree)) {
           return;
         }
-        ExpressionTree receiver = ((MemberSelectTree) lhs).getExpression();
+        ExpressionTree receiver = memberSelectTree.getExpression();
         if (!Objects.equals(sym, getSymbol(receiver))) {
           return;
         }
@@ -302,8 +302,8 @@ public class UnnecessaryLambda extends BugChecker
   private static void replaceUseWithMethodReference(
       SuggestedFix.Builder fix, ExpressionTree node, String newName, VisitorState state) {
     Tree parent = state.getPath().getParentPath().getLeaf();
-    if (parent instanceof MemberSelectTree
-        && ((MemberSelectTree) parent).getExpression().equals(node)) {
+    if (parent instanceof MemberSelectTree memberSelectTree
+        && memberSelectTree.getExpression().equals(node)) {
       Tree receiver = node.getKind() == Tree.Kind.IDENTIFIER ? null : getReceiver(node);
       fix.replace(
           receiver != null ? state.getEndPosition(receiver) : getStartPosition(node),

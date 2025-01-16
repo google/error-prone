@@ -119,16 +119,16 @@ public enum Visibility implements Comparable<Visibility> {
       if (tree instanceof NewClassTree) {
         return false;
       }
-      if (!(tree instanceof ExpressionTree)) {
+      if (!(tree instanceof ExpressionTree expressionTree)) {
         return hasEnclosingClassExtending(enclosingClass(symbol).type, state, classTree);
       }
-      if (tree instanceof MemberSelectTree
-          && ((MemberSelectTree) tree).getIdentifier().contentEquals("super")) {
+      if (tree instanceof MemberSelectTree memberSelectTree
+          && memberSelectTree.getIdentifier().contentEquals("super")) {
         // Allow qualified super calls.
         return true;
       }
       if (tree instanceof MemberSelectTree || tree instanceof MemberReferenceTree) {
-        ExpressionTree receiver = ASTHelpers.getReceiver((ExpressionTree) tree);
+        ExpressionTree receiver = ASTHelpers.getReceiver(expressionTree);
         return receiver.toString().equals("super")
             || hasEnclosingClassOfSuperType(getType(receiver), state, classTree);
       }

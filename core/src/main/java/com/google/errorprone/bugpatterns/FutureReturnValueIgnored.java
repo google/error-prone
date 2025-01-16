@@ -32,7 +32,6 @@ import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.suppliers.Suppliers;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
-import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import java.util.Optional;
@@ -96,14 +95,12 @@ public final class FutureReturnValueIgnored extends AbstractReturnValueIgnored
           if (futureType == null) {
             return false;
           }
-          Symbol untypedSymbol = ASTHelpers.getSymbol(tree);
-          if (!(untypedSymbol instanceof MethodSymbol)) {
+          if (!(ASTHelpers.getSymbol(tree) instanceof MethodSymbol sym)) {
             Type resultType = ASTHelpers.getResultType(tree);
             return resultType != null
                 && ASTHelpers.isSubtype(
                     ASTHelpers.getUpperBound(resultType, state.getTypes()), futureType, state);
           }
-          MethodSymbol sym = (MethodSymbol) untypedSymbol;
           if (hasAnnotation(sym, CAN_IGNORE_RETURN_VALUE_ANNOTATION, state)) {
             return false;
           }

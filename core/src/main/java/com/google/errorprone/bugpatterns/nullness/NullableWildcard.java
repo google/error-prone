@@ -32,7 +32,6 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.AnnotatedTypeTree;
 import com.sun.source.tree.AnnotationTree;
-import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.WildcardTree;
 import java.util.List;
@@ -51,11 +50,10 @@ public class NullableWildcard extends BugChecker implements AnnotatedTypeTreeMat
     if (nullness.isEmpty()) {
       return NO_MATCH;
     }
-    ExpressionTree typeTree = tree.getUnderlyingType();
-    if (!(typeTree instanceof WildcardTree)) {
+    if (!(tree.getUnderlyingType() instanceof WildcardTree wildcardTree)) {
       return NO_MATCH;
     }
-    return describeMatch(tree, fix(tree.getAnnotations(), (WildcardTree) typeTree, state));
+    return describeMatch(tree, fix(tree.getAnnotations(), wildcardTree, state));
   }
 
   Fix fix(List<? extends AnnotationTree> annotations, WildcardTree tree, VisitorState state) {
@@ -69,8 +67,8 @@ public class NullableWildcard extends BugChecker implements AnnotatedTypeTreeMat
     switch (tree.getKind()) {
       case EXTENDS_WILDCARD -> {
         Tree bound = tree.getBound();
-        if (bound instanceof AnnotatedTypeTree
-            && NullnessAnnotations.fromAnnotationTrees(((AnnotatedTypeTree) bound).getAnnotations())
+        if (bound instanceof AnnotatedTypeTree annotatedTypeTree
+            && NullnessAnnotations.fromAnnotationTrees(annotatedTypeTree.getAnnotations())
                 .isPresent()) {
           return SuggestedFix.emptyFix();
         }

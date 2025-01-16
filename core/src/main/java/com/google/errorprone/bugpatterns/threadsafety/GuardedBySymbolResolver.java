@@ -357,21 +357,17 @@ public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
     }
 
     static @Nullable MethodInfo create(Tree tree, VisitorState visitorState) {
-      Symbol sym = ASTHelpers.getSymbol(tree);
-      if (!(sym instanceof MethodSymbol)) {
+      if (!(ASTHelpers.getSymbol(tree) instanceof MethodSymbol methodSym)) {
         return null;
       }
-      MethodSymbol methodSym = (MethodSymbol) sym;
       Tree parent = visitorState.getPath().getParentPath().getLeaf();
-      if (!(parent instanceof MethodInvocationTree)) {
+      if (!(parent instanceof MethodInvocationTree invocation)) {
         return create(methodSym);
       }
-      MethodInvocationTree invocation = (MethodInvocationTree) parent;
       if (!invocation.getMethodSelect().equals(tree)) {
         return create(methodSym);
       }
-      return create(
-          methodSym, ImmutableList.copyOf(((MethodInvocationTree) parent).getArguments()));
+      return create(methodSym, ImmutableList.copyOf(invocation.getArguments()));
     }
   }
 }

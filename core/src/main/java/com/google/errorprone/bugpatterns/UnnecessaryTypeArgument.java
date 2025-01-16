@@ -55,10 +55,9 @@ public class UnnecessaryTypeArgument extends BugChecker
 
   private Description check(Tree tree, List<? extends Tree> arguments, VisitorState state) {
     Symbol sym = ASTHelpers.getSymbol(tree);
-    if (!(sym instanceof MethodSymbol)) {
+    if (!(sym instanceof MethodSymbol methodSymbol)) {
       return Description.NO_MATCH;
     }
-    MethodSymbol methodSymbol = (MethodSymbol) sym;
 
     int expected = methodSymbol.getTypeParameters().size();
     int actual = arguments.size();

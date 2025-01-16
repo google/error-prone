@@ -150,10 +150,9 @@ public final class YodaCondition extends BugChecker
       Tree tree = path.getLeaf();
       TreePath parentPath = path.getParentPath();
       Tree parent = parentPath.getLeaf();
-      if (!(parent instanceof BinaryTree)) {
+      if (!(parent instanceof BinaryTree binaryTree)) {
         break;
       }
-      BinaryTree binaryTree = (BinaryTree) parent;
       if (binaryTree.getLeftOperand() == tree) {
         Tree right = binaryTree.getRightOperand();
         return isInequality(right) ? ((BinaryTree) right).getLeftOperand() : null;

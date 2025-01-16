@@ -105,11 +105,11 @@ public class ModifySourceCollectionInStream extends BugChecker
 
     // Starting from the immediate enclosing method invocation of the lambda expression.
     Tree parentNode = pathToLambdaExpression.getParentPath().getLeaf();
-    if (!(parentNode instanceof ExpressionTree)) {
+    if (!(parentNode instanceof ExpressionTree expressionTree)) {
       return Description.NO_MATCH;
     }
 
-    return isStreamApiInvocationOnStreamSource((ExpressionTree) parentNode, mutatedReceiver, state)
+    return isStreamApiInvocationOnStreamSource(expressionTree, mutatedReceiver, state)
         ? describeMatch(tree)
         : Description.NO_MATCH;
   }

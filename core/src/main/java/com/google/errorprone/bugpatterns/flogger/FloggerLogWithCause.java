@@ -72,10 +72,10 @@ public final class FloggerLogWithCause extends BugChecker implements CatchTreeMa
       return NO_MATCH;
     }
     StatementTree statementTree = statements.get(0);
-    if (!(statementTree instanceof ExpressionStatementTree)) {
+    if (!(statementTree instanceof ExpressionStatementTree expressionStatementTree)) {
       return NO_MATCH;
     }
-    ExpressionTree expressionTree = ((ExpressionStatementTree) statementTree).getExpression();
+    ExpressionTree expressionTree = expressionStatementTree.getExpression();
     if (!LOG_MATCHER.matches(expressionTree, state)) {
       return NO_MATCH;
     }

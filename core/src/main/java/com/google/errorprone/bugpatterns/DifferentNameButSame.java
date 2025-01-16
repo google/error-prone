@@ -192,11 +192,9 @@ public final class DifferentNameButSame extends BugChecker implements Compilatio
   private boolean isDefinedInThisFile(Symbol symbol, CompilationUnitTree tree) {
     return tree.getTypeDecls().stream()
         .anyMatch(
-            t -> {
-              Symbol topLevelClass = getSymbol(t);
-              return topLevelClass instanceof ClassSymbol
-                  && symbol.isEnclosedBy((ClassSymbol) topLevelClass);
-            });
+            t ->
+                getSymbol(t) instanceof ClassSymbol classSymbol
+                    && symbol.isEnclosedBy(classSymbol));
   }
 
   private static boolean isGeneric(Symbol symbol) {

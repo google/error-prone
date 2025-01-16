@@ -259,9 +259,9 @@ public class BoxedPrimitiveConstructor extends BugChecker implements NewClassTre
   }
 
   private static @Nullable Object literalValue(Tree arg) {
-    if (!(arg instanceof LiteralTree)) {
+    if (!(arg instanceof LiteralTree literalTree)) {
       return null;
     }
-    return ((LiteralTree) arg).getValue();
+    return literalTree.getValue();
   }
 }

@@ -80,12 +80,12 @@ public class RequiredModifiersChecker extends BugChecker implements AnnotationTr
     }
 
     Tree parent = state.getPath().getParentPath().getLeaf();
-    if (!(parent instanceof ModifiersTree)) {
+    if (!(parent instanceof ModifiersTree modifiersTree)) {
       // e.g. An annotated package name
       return NO_MATCH;
     }
 
-    Set<Modifier> missing = Sets.difference(requiredModifiers, ((ModifiersTree) parent).getFlags());
+    Set<Modifier> missing = Sets.difference(requiredModifiers, modifiersTree.getFlags());
 
     if (missing.isEmpty()) {
       return NO_MATCH;
@@ -104,7 +104,7 @@ public class RequiredModifiersChecker extends BugChecker implements AnnotationTr
         .addFix(
             SuggestedFixes.addModifiers(
                     state.getPath().getParentPath().getParentPath().getLeaf(),
-                    (ModifiersTree) parent,
+                    modifiersTree,
                     state,
                     missing)
                 .orElse(SuggestedFix.emptyFix()))

@@ -55,10 +55,10 @@ public class LoopOverCharArray extends BugChecker implements BugChecker.Enhanced
       return NO_MATCH;
     }
     StatementTree body = tree.getStatement();
-    if (!(body instanceof BlockTree)) {
+    if (!(body instanceof BlockTree blockTree)) {
       return NO_MATCH;
     }
-    List<? extends StatementTree> statements = ((BlockTree) body).getStatements();
+    List<? extends StatementTree> statements = blockTree.getStatements();
     if (statements.isEmpty()) {
       return NO_MATCH;
     }

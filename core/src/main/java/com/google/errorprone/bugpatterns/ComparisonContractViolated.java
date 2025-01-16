@@ -188,7 +188,7 @@ public class ComparisonContractViolated extends BugChecker implements MethodTree
               (ConditionalExpressionTree) returnTree.getExpression();
           ExpressionTree conditionExpr = condTree.getCondition();
           conditionExpr = ASTHelpers.stripParentheses(conditionExpr);
-          if (!(conditionExpr instanceof BinaryTree)) {
+          if (!(conditionExpr instanceof BinaryTree binaryExpr)) {
             return describeMatch(tree);
           }
           ComparisonResult trueConst = condTree.getTrueExpression().accept(CONSTANT_VISITOR, state);
@@ -211,7 +211,6 @@ public class ComparisonContractViolated extends BugChecker implements MethodTree
               return describeMatch(tree);
             }
           }
-          BinaryTree binaryExpr = (BinaryTree) conditionExpr;
           Type ty = ASTHelpers.getType(binaryExpr.getLeftOperand());
           Types types = state.getTypes();
           Symtab symtab = state.getSymtab();

@@ -84,10 +84,10 @@ public final class Inliner {
     try {
       Symbol symbol =
           JavaCompiler.instance(context).resolveBinaryNameOrIdent(qualifiedClass.toString());
-      if (symbol.equals(symtab().errSymbol) || !(symbol instanceof ClassSymbol)) {
+      if (symbol.equals(symtab().errSymbol) || !(symbol instanceof ClassSymbol classSymbol)) {
         throw new CouldNotResolveImportException(qualifiedClass);
       } else {
-        return (ClassSymbol) symbol;
+        return classSymbol;
       }
     } catch (NullPointerException e) {
       throw new CouldNotResolveImportException(qualifiedClass);

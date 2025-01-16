@@ -216,16 +216,16 @@ public class DoubleBraceInitialization extends BugChecker implements NewClassTre
         body.getMembers().stream()
             .filter(
                 m ->
-                    !(m instanceof MethodTree && ASTHelpers.isGeneratedConstructor((MethodTree) m)))
+                    !(m instanceof MethodTree methodTree
+                        && ASTHelpers.isGeneratedConstructor(methodTree)))
             .collect(toImmutableList());
     if (members.size() != 1) {
       return NO_MATCH;
     }
     Tree member = Iterables.getOnlyElement(members);
-    if (!(member instanceof BlockTree)) {
+    if (!(member instanceof BlockTree block)) {
       return NO_MATCH;
     }
-    BlockTree block = (BlockTree) member;
     Optional<CollectionTypes> collectionType =
         Arrays.stream(CollectionTypes.values())
             .filter(type -> type.constructorMatcher.matches(tree, state))

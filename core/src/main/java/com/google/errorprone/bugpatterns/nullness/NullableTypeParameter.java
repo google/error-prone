@@ -66,9 +66,8 @@ public class NullableTypeParameter extends BugChecker implements TypeParameterTr
     if (bounds.stream()
         .anyMatch(
             b ->
-                b instanceof AnnotatedTypeTree
-                    && NullnessAnnotations.fromAnnotationTrees(
-                            ((AnnotatedTypeTree) b).getAnnotations())
+                b instanceof AnnotatedTypeTree annotatedTypeTree
+                    && NullnessAnnotations.fromAnnotationTrees(annotatedTypeTree.getAnnotations())
                         .isPresent())) {
       return SuggestedFix.emptyFix();
     }

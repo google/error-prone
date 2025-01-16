@@ -308,10 +308,10 @@ public final class ConstantPatternCompile extends BugChecker implements ClassTre
    */
   private static @Nullable String fromInitializer(VariableTree tree) {
     ExpressionTree regex = ((MethodInvocationTree) tree.getInitializer()).getArguments().get(0);
-    if (!(regex instanceof IdentifierTree)) {
+    if (!(regex instanceof IdentifierTree identifierTree)) {
       return null;
     }
-    String name = ((IdentifierTree) regex).getName().toString();
+    String name = identifierTree.getName().toString();
     if (name.endsWith("_REGEX")) {
       name = name.substring(0, name.length() - "_REGEX".length());
     }
@@ -354,10 +354,10 @@ public final class ConstantPatternCompile extends BugChecker implements ClassTre
    */
   private static @Nullable String findNameFromMatcherArgument(VisitorState state, TreePath use) {
     Tree grandParent = use.getParentPath().getParentPath().getLeaf();
-    if (!(grandParent instanceof ExpressionTree)) {
+    if (!(grandParent instanceof ExpressionTree expressionTree)) {
       return null;
     }
-    if (!MATCHER_MATCHER.matches((ExpressionTree) grandParent, state)) {
+    if (!MATCHER_MATCHER.matches(expressionTree, state)) {
       return null;
     }
     ExpressionTree matchTree = ((MethodInvocationTree) grandParent).getArguments().get(0);

@@ -88,7 +88,7 @@ public class ThreadJoinLoop extends BugChecker implements MethodInvocationTreeMa
     boolean hasWhileLoopOneStatement = false;
     if (pathToLoop != null) {
       Tree statements = pathToLoop.getStatement();
-      if (statements instanceof BlockTree && ((BlockTree) statements).getStatements().size() == 1) {
+      if (statements instanceof BlockTree blockTree && blockTree.getStatements().size() == 1) {
         hasWhileLoopOneStatement = true;
       }
     }

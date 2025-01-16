@@ -197,7 +197,7 @@ public final class ParameterMissingNullable extends BugChecker
          * For more discussion, see the TODO at the top of matchBinary.
          */
         return true;
-      } else if (tree instanceof IfTree && childInPath.equals(((IfTree) tree).getCondition())) {
+      } else if (tree instanceof IfTree ifTree && childInPath.equals(ifTree.getCondition())) {
         /*
          * We have something like `if (foo == null)`, etc., so we scan the then+else for code that
          * throws exceptions.

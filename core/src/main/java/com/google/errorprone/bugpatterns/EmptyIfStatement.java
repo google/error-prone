@@ -54,10 +54,9 @@ public class EmptyIfStatement extends BugChecker implements EmptyStatementTreeMa
   public Description matchEmptyStatement(EmptyStatementTree tree, VisitorState state) {
     TreePath parentPath = state.getPath().getParentPath();
     Tree parent = parentPath.getLeaf();
-    if (!(parent instanceof IfTree)) {
+    if (!(parent instanceof IfTree ifTree)) {
       return NO_MATCH;
     }
-    IfTree ifTree = (IfTree) parent;
     if (!(ifTree.getThenStatement() instanceof EmptyStatementTree)
         || ifTree.getElseStatement() != null) {
       return NO_MATCH;

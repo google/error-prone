@@ -134,10 +134,10 @@ public final class UnusedException extends BugChecker implements CatchTreeMatche
   private static Optional<SuggestedFix> fixConstructor(
       NewClassTree constructor, VarSymbol exception, VisitorState state) {
     Symbol symbol = ASTHelpers.getSymbol(((JCNewClass) constructor).clazz);
-    if (!(symbol instanceof ClassSymbol)) {
+    if (!(symbol instanceof ClassSymbol classSymbol)) {
       return Optional.empty();
     }
-    ImmutableList<MethodSymbol> constructors = ASTHelpers.getConstructors((ClassSymbol) symbol);
+    ImmutableList<MethodSymbol> constructors = ASTHelpers.getConstructors(classSymbol);
     MethodSymbol constructorSymbol = ASTHelpers.getSymbol(constructor);
     List<Type> types = getParameterTypes(constructorSymbol);
     for (MethodSymbol proposedConstructor : constructors) {

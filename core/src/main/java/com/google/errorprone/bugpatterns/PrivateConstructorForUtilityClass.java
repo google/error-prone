@@ -100,8 +100,8 @@ public final class PrivateConstructorForUtilityClass extends BugChecker
         .anyMatch(
             currentLeaf ->
                 // Checking instanceof rather than Kind given (e.g.) enums are ClassTrees.
-                currentLeaf instanceof ClassTree
-                    && ((ClassTree) currentLeaf).getModifiers().getFlags().contains(PRIVATE));
+                currentLeaf instanceof ClassTree classTree
+                    && classTree.getModifiers().getFlags().contains(PRIVATE));
   }
 
   private static boolean isInstance(Tree tree) {

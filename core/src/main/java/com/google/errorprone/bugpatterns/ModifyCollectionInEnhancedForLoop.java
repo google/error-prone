@@ -103,11 +103,11 @@ public class ModifyCollectionInEnhancedForLoop extends BugChecker
       return false;
     }
     Tree parent = statementPath.getParentPath().getLeaf();
-    if (!(parent instanceof BlockTree)) {
+    if (!(parent instanceof BlockTree blockTree)) {
       return false;
     }
     StatementTree statement = (StatementTree) statementPath.getLeaf();
-    List<? extends StatementTree> statements = ((BlockTree) parent).getStatements();
+    List<? extends StatementTree> statements = blockTree.getStatements();
     int idx = statements.indexOf(statement);
     if (idx == -1 || idx == statements.size()) {
       return false;

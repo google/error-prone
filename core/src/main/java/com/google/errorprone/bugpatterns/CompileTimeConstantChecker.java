@@ -137,11 +137,9 @@ public class CompileTimeConstantChecker extends BugChecker
    * non-final. Suggest making it final in the error message.
    */
   private Description handleMatch(ExpressionTree actualParam, VisitorState state) {
-    Symbol sym = ASTHelpers.getSymbol(actualParam);
-    if (!(sym instanceof VarSymbol)) {
+    if (!(ASTHelpers.getSymbol(actualParam) instanceof VarSymbol var)) {
       return describeMatch(actualParam);
     }
-    VarSymbol var = (VarSymbol) sym;
     if (!hasCompileTimeConstantAnnotation(state, var)) {
       return describeMatch(actualParam);
     }

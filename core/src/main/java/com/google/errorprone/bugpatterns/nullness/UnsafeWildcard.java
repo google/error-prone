@@ -284,8 +284,7 @@ public class UnsafeWildcard extends BugChecker
     int i = 0;
     for (Type arg : targetType.getTypeArguments()) {
       // Check components of generic types (getTypeArguments() is empty for other kinds of types)
-      if (arg instanceof WildcardType wildcardType
-          && ((WildcardType) arg).getSuperBound() != null) {
+      if (arg instanceof WildcardType wildcardType && wildcardType.getSuperBound() != null) {
         Type lowerBound = wildcardType.getSuperBound();
         // We only check lower bounds that are themselves type variables with trivial upper bounds.
         // Javac already checks other lower bounds, namely lower bounds that are concrete types or

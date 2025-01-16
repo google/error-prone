@@ -61,19 +61,17 @@ public final class ComputeIfAbsentAmbiguousReference extends BugChecker
       return NO_MATCH;
     }
     ExpressionTree mappingFunctionArg = tree.getArguments().get(1);
-    if (!(mappingFunctionArg instanceof MemberReferenceTree)) {
+    if (!(mappingFunctionArg instanceof MemberReferenceTree memberReferenceTree)) {
       return NO_MATCH;
     }
-    MemberReferenceTree memberReferenceTree = (MemberReferenceTree) mappingFunctionArg;
     if (memberReferenceTree.getMode() != ReferenceMode.NEW) {
       return NO_MATCH;
     }
     ExpressionTree expressionTree = memberReferenceTree.getQualifierExpression();
     Symbol symbol = ASTHelpers.getSymbol(expressionTree);
-    if (!(symbol instanceof ClassSymbol)) {
+    if (!(symbol instanceof ClassSymbol classSymbol)) {
       return NO_MATCH;
     }
-    ClassSymbol classSymbol = (ClassSymbol) symbol;
     ImmutableList<MethodSymbol> constructors = ASTHelpers.getConstructors(classSymbol);
     List<MethodSymbol> zeroArgConstructors =
         constructors.stream()

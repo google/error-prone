@@ -120,10 +120,9 @@ public class WildcardImport extends BugChecker implements CompilationUnitTreeMat
     for (ImportTree tree : imports) {
       // javac represents on-demand imports as a member select where the selected name is '*'.
       Tree ident = tree.getQualifiedIdentifier();
-      if (!(ident instanceof MemberSelectTree)) {
+      if (!(ident instanceof MemberSelectTree select)) {
         continue;
       }
-      MemberSelectTree select = (MemberSelectTree) ident;
       if (select.getIdentifier().contentEquals("*")) {
         result.add(tree);
       }

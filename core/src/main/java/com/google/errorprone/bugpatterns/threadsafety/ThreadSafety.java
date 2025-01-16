@@ -775,10 +775,10 @@ public final class ThreadSafety {
       return AnnotationInfo.create(sym.getQualifiedName().toString(), containerElements);
     }
     // @ThreadSafe is inherited from supertypes
-    if (!(sym instanceof ClassSymbol)) {
+    if (!(sym instanceof ClassSymbol classSymbol)) {
       return null;
     }
-    Type superClass = ((ClassSymbol) sym).getSuperclass();
+    Type superClass = classSymbol.getSuperclass();
     AnnotationInfo superAnnotation = getInheritedAnnotation(superClass.asElement(), state);
     if (superAnnotation == null) {
       return null;

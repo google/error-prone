@@ -103,10 +103,10 @@ public class StreamResourceLeak extends AbstractMustBeClosedChecker implements M
       // If the stream is assigned to a variable, wrap the variable in a try-with-resources
       // that includes all statements in the same block that reference the variable.
       Tree grandParent = parentPath.getParentPath().getLeaf();
-      if (!(grandParent instanceof BlockTree)) {
+      if (!(grandParent instanceof BlockTree blockTree)) {
         return SuggestedFix.emptyFix();
       }
-      List<? extends StatementTree> statements = ((BlockTree) grandParent).getStatements();
+      List<? extends StatementTree> statements = blockTree.getStatements();
       int idx = statements.indexOf(parent);
       int lastUse = idx;
       for (int i = idx + 1; i < statements.size(); i++) {

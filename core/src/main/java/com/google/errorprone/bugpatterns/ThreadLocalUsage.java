@@ -59,12 +59,12 @@ public class ThreadLocalUsage extends BugChecker implements NewClassTreeMatcher 
       return NO_MATCH;
     }
     Tree parent = state.getPath().getParentPath().getLeaf();
-    if (!(parent instanceof VariableTree)) {
+    if (!(parent instanceof VariableTree variableTree)) {
       // If the ThreadLocal is created outside of a field we can't easily make assumptions about its
       // scope.
       return NO_MATCH;
     }
-    VarSymbol sym = getSymbol((VariableTree) parent);
+    VarSymbol sym = getSymbol(variableTree);
     if (sym.isStatic()) {
       return NO_MATCH;
     }

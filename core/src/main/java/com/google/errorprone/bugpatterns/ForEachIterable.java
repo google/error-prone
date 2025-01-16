@@ -108,7 +108,7 @@ public class ForEachIterable extends BugChecker implements VariableTreeMatcher {
       return NO_MATCH;
     }
     StatementTree next = statements.get(nextIdx);
-    if (!(next instanceof WhileLoopTree)) {
+    if (!(next instanceof WhileLoopTree whileLoop)) {
       return NO_MATCH;
     }
     VarSymbol iterator = getSymbol(tree);
@@ -117,7 +117,6 @@ public class ForEachIterable extends BugChecker implements VariableTreeMatcher {
         return NO_MATCH;
       }
     }
-    WhileLoopTree whileLoop = (WhileLoopTree) next;
     return match(
         tree, state, getStartPosition(tree), whileLoop.getCondition(), whileLoop.getStatement());
   }
@@ -194,18 +193,17 @@ public class ForEachIterable extends BugChecker implements VariableTreeMatcher {
 
   private static @Nullable VariableTree existingVariable(
       VarSymbol varSymbol, StatementTree body, VisitorState state) {
-    if (!(body instanceof BlockTree)) {
+    if (!(body instanceof BlockTree blockTree)) {
       return null;
     }
-    List<? extends StatementTree> statements = ((BlockTree) body).getStatements();
+    List<? extends StatementTree> statements = blockTree.getStatements();
     if (statements.isEmpty()) {
       return null;
     }
     StatementTree first = statements.iterator().next();
-    if (!(first instanceof VariableTree)) {
+    if (!(first instanceof VariableTree variableTree)) {
       return null;
     }
-    VariableTree variableTree = (VariableTree) first;
     if (variableTree.getInitializer() == null) {
       return null;
     }
@@ -220,10 +218,9 @@ public class ForEachIterable extends BugChecker implements VariableTreeMatcher {
 
   private static boolean isNext(VariableTree tree, VisitorState state, TreePath p) {
     Tree parentTree = p.getParentPath().getLeaf();
-    if (!(parentTree instanceof ExpressionTree)) {
+    if (!(parentTree instanceof ExpressionTree parent)) {
       return false;
     }
-    ExpressionTree parent = (ExpressionTree) parentTree;
     return NEXT.matches(parent, state) && getSymbol(tree).equals(getSymbol(getReceiver(parent)));
   }
 

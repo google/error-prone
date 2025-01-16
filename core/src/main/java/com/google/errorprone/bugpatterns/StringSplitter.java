@@ -89,8 +89,8 @@ public class StringSplitter extends BugChecker implements MethodInvocationTreeMa
   public Optional<Fix> buildFix(MethodInvocationTree tree, VisitorState state) {
     ExpressionTree arg = getOnlyElement(tree.getArguments());
     Tree parent = state.getPath().getParentPath().getLeaf();
-    if (parent instanceof EnhancedForLoopTree
-        && ((EnhancedForLoopTree) parent).getExpression().equals(tree)) {
+    if (parent instanceof EnhancedForLoopTree enhancedForLoopTree
+        && enhancedForLoopTree.getExpression().equals(tree)) {
       // fix for `for (... : s.split(...)) {}` -> `for (... : Splitter.on(...).split(s)) {}`
       return Optional.of(
           replaceWithSplitter(
@@ -121,10 +121,9 @@ public class StringSplitter extends BugChecker implements MethodInvocationTreeMa
     }
     // If the result of split is assigned to a variable, try to fix all uses of the variable in the
     // enclosing method. If we don't know how to fix any of them, bail out.
-    if (!(parent instanceof VariableTree)) {
+    if (!(parent instanceof VariableTree varTree)) {
       return Optional.empty();
     }
-    VariableTree varTree = (VariableTree) parent;
     if (!varTree.getInitializer().equals(tree)) {
       return Optional.empty();
     }
@@ -168,7 +167,7 @@ public class StringSplitter extends BugChecker implements MethodInvocationTreeMa
           }
           Tree parent = getCurrentPath().getParentPath().getLeaf();
           if (parent instanceof AssignmentTree assignmentTree
-              && ((AssignmentTree) parent).getVariable() == tree) {
+              && assignmentTree.getVariable() == tree) {
             fix.replace(
                     /* startPos= */ state.getEndPosition(expression),
                     /* endPos= */ getStartPosition(index),

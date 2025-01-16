@@ -121,11 +121,10 @@ public class MustBeClosedChecker extends AbstractMustBeClosedChecker
     // Find all of the constructors in the class without the {@code @MustBeClosed} annotation, which
     // invoke a constructor with {@code MustBeClosed}.
     for (Tree member : tree.getMembers()) {
-      if (!(member instanceof MethodTree)) {
+      if (!(member instanceof MethodTree methodTree)) {
         continue;
       }
 
-      MethodTree methodTree = (MethodTree) member;
       if (!ASTHelpers.getSymbol(methodTree).isConstructor()
           || hasAnnotation(methodTree, MUST_BE_CLOSED_ANNOTATION, state)
           || !invokedConstructorMustBeClosed(state, methodTree)) {

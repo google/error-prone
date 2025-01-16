@@ -193,7 +193,7 @@ public class JdkObsolete extends BugChecker
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
     Tree parent = state.getPath().getParentPath().getLeaf();
-    if (parent instanceof NewClassTree && tree.equals(((NewClassTree) parent).getClassBody())) {
+    if (parent instanceof NewClassTree newClassTree && tree.equals(newClassTree.getClassBody())) {
       // don't double-report anonymous implementations of obsolete interfaces
       return NO_MATCH;
     }
@@ -304,16 +304,14 @@ public class JdkObsolete extends BugChecker
   private static Optional<Fix> stringBufferFix(VisitorState state) {
     Tree tree = state.getPath().getLeaf();
     // expect `new StringBuffer()`
-    if (!(tree instanceof NewClassTree)) {
+    if (!(tree instanceof NewClassTree newClassTree)) {
       return Optional.empty();
     }
     // expect e.g. `StringBuffer sb = new StringBuffer();`
-    NewClassTree newClassTree = (NewClassTree) tree;
     Tree parent = state.getPath().getParentPath().getLeaf();
-    if (!(parent instanceof VariableTree)) {
+    if (!(parent instanceof VariableTree varTree)) {
       return Optional.empty();
     }
-    VariableTree varTree = (VariableTree) parent;
     VarSymbol varSym = ASTHelpers.getSymbol(varTree);
     TreePath methodPath = findEnclosingMethod(state);
     if (methodPath == null) {
@@ -333,8 +331,8 @@ public class JdkObsolete extends BugChecker
             return null;
           }
           // the LHS of a select (e.g. in `sb.append(...)`) does not escape
-          if (!(parent instanceof MemberSelectTree)
-              || ((MemberSelectTree) parent).getExpression() != tree) {
+          if (!(parent instanceof MemberSelectTree memberSelectTree)
+              || memberSelectTree.getExpression() != tree) {
             escape[0] = true;
           }
         }

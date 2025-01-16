@@ -115,10 +115,10 @@ public final class NamedLikeContextualKeyword extends BugChecker
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     ExpressionTree select = tree.getMethodSelect();
-    if (!(select instanceof IdentifierTree)) {
+    if (!(select instanceof IdentifierTree identifierTree)) {
       return NO_MATCH;
     }
-    if (!((IdentifierTree) select).getName().contentEquals("yield")) {
+    if (!identifierTree.getName().contentEquals("yield")) {
       return NO_MATCH;
     }
     SuggestedFix.Builder fix = SuggestedFix.builder();

@@ -138,8 +138,7 @@ public class ClassInitializationDeadlock extends BugChecker implements BugChecke
       }
 
       private void handle(ExpressionTree tree) {
-        Symbol use = getSymbol(tree);
-        if (!(use instanceof ClassSymbol)) {
+        if (!(getSymbol(tree) instanceof ClassSymbol use)) {
           return;
         }
         if (use.equals(classSymbol)) {
@@ -154,7 +153,7 @@ public class ClassInitializationDeadlock extends BugChecker implements BugChecke
           return;
         }
         ImmutableSet<ClassSymbol> nonPrivateInstantiators =
-            nonPrivateInstantiators((ClassSymbol) use, classSymbol, state.getTypes());
+            nonPrivateInstantiators(use, classSymbol, state.getTypes());
         if (nonPrivateInstantiators.isEmpty()) {
           return;
         }

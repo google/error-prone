@@ -84,11 +84,11 @@ public final class JUnitIncompatibleType extends BugChecker implements MethodInv
       int skip = argumentsToSkip(tree, state);
       var expected = getUpperBound(ignoringCasts(arguments.get(skip), state), state.getTypes());
       var actual = getUpperBound(ignoringCasts(arguments.get(skip + 1), state), state.getTypes());
-      if (!(expected instanceof ArrayType) || !(actual instanceof ArrayType)) {
+      if (!(expected instanceof ArrayType expectedArray)
+          || !(actual instanceof ArrayType actualArray)) {
         return NO_MATCH;
       }
-      return checkCompatibility(
-          tree, ((ArrayType) expected).elemtype, ((ArrayType) actual).elemtype, state);
+      return checkCompatibility(tree, expectedArray.elemtype, actualArray.elemtype, state);
     }
     return NO_MATCH;
   }

@@ -106,10 +106,6 @@ final class UBreak extends USimpleStatement implements BreakTree {
 
   @Override
   public boolean equals(Object obj) {
-    if (!(obj instanceof UBreak)) {
-      return false;
-    }
-    UBreak other = (UBreak) obj;
-    return Objects.equals(label, other.label);
+    return obj instanceof UBreak other && Objects.equals(label, other.label);
   }
 }

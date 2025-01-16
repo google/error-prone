@@ -109,8 +109,8 @@ public class RestrictedApiChecker extends BugChecker
 
   private static boolean isVariableTreeWithName(AssignmentTree tree, String name) {
     ExpressionTree variable = tree.getVariable();
-    return variable instanceof IdentifierTree
-        && ((IdentifierTree) variable).getName().contentEquals(name);
+    return variable instanceof IdentifierTree identifierTree
+        && identifierTree.getName().contentEquals(name);
   }
 
   @Override

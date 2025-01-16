@@ -53,7 +53,7 @@ public final class PrimitiveAtomicReference extends BugChecker
       return NO_MATCH;
     }
     ExpressionTree firstArgument = tree.getArguments().get(0);
-    if (firstArgument instanceof LiteralTree && ((LiteralTree) firstArgument).getValue() == null) {
+    if (firstArgument instanceof LiteralTree literalTree && literalTree.getValue() == null) {
       return NO_MATCH;
     }
     Type receiverType = getType(getReceiver(tree));

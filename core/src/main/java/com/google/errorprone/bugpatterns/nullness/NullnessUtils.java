@@ -623,17 +623,16 @@ class NullnessUtils {
   /** Returns x if the path's leaf is the only statement inside {@code if (x == null) { ... }}. */
   static ImmutableSet<Name> varsProvenNullByParentIf(TreePath path) {
     Tree parent = path.getParentPath().getLeaf();
-    if (!(parent instanceof BlockTree)) {
+    if (!(parent instanceof BlockTree blockTree)) {
       return ImmutableSet.of();
     }
-    if (((BlockTree) parent).getStatements().size() > 1) {
+    if (blockTree.getStatements().size() > 1) {
       return ImmutableSet.of();
     }
     Tree grandparent = path.getParentPath().getParentPath().getLeaf();
-    if (!(grandparent instanceof IfTree)) {
+    if (!(grandparent instanceof IfTree ifTree)) {
       return ImmutableSet.of();
     }
-    IfTree ifTree = (IfTree) grandparent;
     NullCheck nullCheck = getNullCheck(ifTree.getCondition());
     if (nullCheck == null) {
       return ImmutableSet.of();

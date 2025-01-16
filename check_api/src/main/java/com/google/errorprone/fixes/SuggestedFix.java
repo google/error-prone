@@ -377,7 +377,7 @@ public abstract class SuggestedFix implements Fix {
      * synthetic constructs added to the AST early enough to be visible from Error Prone.
      */
     private static void checkNotSyntheticConstructor(Tree tree) {
-      if (tree instanceof MethodTree && ASTHelpers.isGeneratedConstructor((MethodTree) tree)) {
+      if (tree instanceof MethodTree methodTree && ASTHelpers.isGeneratedConstructor(methodTree)) {
         throw new IllegalArgumentException("Cannot edit synthetic AST nodes");
       }
     }

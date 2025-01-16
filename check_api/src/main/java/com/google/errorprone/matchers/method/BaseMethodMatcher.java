@@ -29,7 +29,7 @@ interface BaseMethodMatcher {
   BaseMethodMatcher METHOD =
       tree -> {
         Symbol sym = ASTHelpers.getSymbol(tree);
-        if (!(sym instanceof MethodSymbol)) {
+        if (!(sym instanceof MethodSymbol methodSymbol)) {
           return null;
         }
         if (tree instanceof NewClassTree) {
@@ -39,7 +39,7 @@ interface BaseMethodMatcher {
         if (tree instanceof MethodInvocationTree methodInvocationTree) {
           tree = methodInvocationTree.getMethodSelect();
         }
-        return MethodMatchState.create(tree, (MethodSymbol) sym);
+        return MethodMatchState.create(tree, methodSymbol);
       };
 
   BaseMethodMatcher CONSTRUCTOR =
@@ -51,10 +51,9 @@ interface BaseMethodMatcher {
           }
         }
         Symbol sym = ASTHelpers.getSymbol(tree);
-        if (!(sym instanceof MethodSymbol)) {
+        if (!(sym instanceof MethodSymbol method)) {
           return null;
         }
-        MethodSymbol method = (MethodSymbol) sym;
         if (!method.isConstructor()) {
           return null;
         }

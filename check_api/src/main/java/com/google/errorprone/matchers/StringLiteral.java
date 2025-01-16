@@ -40,11 +40,8 @@ public class StringLiteral implements Matcher<ExpressionTree> {
 
   @Override
   public boolean matches(ExpressionTree expressionTree, VisitorState state) {
-    if (expressionTree instanceof LiteralTree literalTree) {
-      Object actualValue = literalTree.getValue();
-      return actualValue instanceof String && matcher.test((String) actualValue);
-    } else {
-      return false;
-    }
+    return expressionTree instanceof LiteralTree literalTree
+        && literalTree.getValue() instanceof String string
+        && matcher.test(string);
   }
 }

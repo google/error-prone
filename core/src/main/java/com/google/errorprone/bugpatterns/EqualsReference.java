@@ -82,8 +82,8 @@ public class EqualsReference extends BugChecker implements MethodTreeMatcher {
         // this.equals(o)
         // not using o.equals(this) because all instances of this were false positives
         // (people checked to see if o was an instance of this class)
-        if (e instanceof IdentifierTree
-            && ((IdentifierTree) e).getName().contentEquals("this")
+        if (e instanceof IdentifierTree identifierTree
+            && identifierTree.getName().contentEquals("this")
             && Objects.equals(
                 ASTHelpers.getSymbol(methodTree), ASTHelpers.getSymbol(memberSelectTree))
             && hasParameterAndSameSymbol) {

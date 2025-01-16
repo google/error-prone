@@ -81,13 +81,14 @@ public class UnnecessaryAnonymousClass extends BugChecker implements VariableTre
     }
     ImmutableList<? extends Tree> members =
         classTree.getClassBody().getMembers().stream()
-            .filter(x -> !(x instanceof MethodTree && isGeneratedConstructor((MethodTree) x)))
+            .filter(
+                x -> !(x instanceof MethodTree methodTree && isGeneratedConstructor(methodTree)))
             .collect(toImmutableList());
     if (members.size() != 1) {
       return NO_MATCH;
     }
     Tree member = getOnlyElement(members);
-    if (!(member instanceof MethodTree)) {
+    if (!(member instanceof MethodTree implementation)) {
       return NO_MATCH;
     }
     VarSymbol varSym = getSymbol(tree);
@@ -96,7 +97,6 @@ public class UnnecessaryAnonymousClass extends BugChecker implements VariableTre
         || !varSym.getModifiers().contains(Modifier.FINAL)) {
       return NO_MATCH;
     }
-    MethodTree implementation = (MethodTree) member;
     Type type = getType(tree.getType());
     if (type == null || !state.getTypes().isFunctionalInterface(type)) {
       return NO_MATCH;
@@ -236,8 +236,8 @@ public class UnnecessaryAnonymousClass extends BugChecker implements VariableTre
     private @Nullable SuggestedFix replaceUseWithMethodReference(
         ExpressionTree node, VisitorState state) {
       Tree parent = state.getPath().getParentPath().getLeaf();
-      if (parent instanceof MemberSelectTree
-          && ((MemberSelectTree) parent).getExpression().equals(node)) {
+      if (parent instanceof MemberSelectTree memberSelectTree
+          && memberSelectTree.getExpression().equals(node)) {
         Symbol symbol = getSymbol(parent);
         // If anything other than the abstract method is used on this anonymous class, we can't hope
         // to generate a fix.

@@ -70,10 +70,10 @@ public final class NullableOnContainingClass extends BugChecker
 
   private Description handle(
       List<? extends AnnotationTree> annotations, Tree type, VisitorState state) {
-    if (!(type instanceof MemberSelectTree)) {
+    if (!(type instanceof MemberSelectTree memberSelectTree)) {
       return NO_MATCH;
     }
-    int endOfOuterType = state.getEndPosition(((MemberSelectTree) type).getExpression());
+    int endOfOuterType = state.getEndPosition(memberSelectTree.getExpression());
 
     for (AnnotationTree annotation : annotations) {
       if (!isOnlyTypeAnnotation(getSymbol(annotation))) {

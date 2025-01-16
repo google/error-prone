@@ -516,13 +516,12 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
 
   private static ImmutableList<SuggestedFix> buildUnusedParameterFixes(
       Symbol varSymbol, List<TreePath> usagePaths, VisitorState state) {
-    if (!(varSymbol.owner instanceof MethodSymbol)
-        || !((MethodSymbol) varSymbol.owner).params().contains(varSymbol)
+    if (!(varSymbol.owner instanceof MethodSymbol methodSymbol)
+        || !methodSymbol.params().contains(varSymbol)
         || !canBeRemoved(varSymbol.owner, state)) {
       // We're presumably in a lambda. Don't try to generate a fix.
       return ImmutableList.of();
     }
-    MethodSymbol methodSymbol = (MethodSymbol) varSymbol.owner;
     int index = methodSymbol.params.indexOf(varSymbol);
     RangeSet<Integer> deletions = TreeRangeSet.create();
     for (TreePath path : usagePaths) {
@@ -587,8 +586,8 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
   private static boolean isEnhancedForLoopVar(TreePath variablePath) {
     Tree tree = variablePath.getLeaf();
     Tree parent = variablePath.getParentPath().getLeaf();
-    return parent instanceof EnhancedForLoopTree
-        && ((EnhancedForLoopTree) parent).getVariable() == tree;
+    return parent instanceof EnhancedForLoopTree enhancedForLoopTree
+        && enhancedForLoopTree.getVariable() == tree;
   }
 
   /**
@@ -730,8 +729,8 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
       checkArgument(sym.getKind() == ElementKind.PARAMETER);
       Symbol enclosingMethod = sym.owner;
 
-      if (!(enclosingMethod instanceof MethodSymbol)
-          || isAbstract((MethodSymbol) enclosingMethod)
+      if (!(enclosingMethod instanceof MethodSymbol methodSymbol)
+          || isAbstract(methodSymbol)
           || superMethodsToOverrides.containsKey(enclosingMethod)) {
         return false;
       }
@@ -747,7 +746,7 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
       }
 
       if (enclosingMethod.owner instanceof ClassSymbol
-          && !isAbstract((MethodSymbol) enclosingMethod)
+          && !isAbstract(methodSymbol)
           && FUNCTIONAL_INTERFACE_TYPES_TO_CHECK.stream()
               .map(state::getTypeFromString)
               .anyMatch(

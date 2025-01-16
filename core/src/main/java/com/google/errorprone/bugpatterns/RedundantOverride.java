@@ -76,10 +76,10 @@ public final class RedundantOverride extends BugChecker implements MethodTreeMat
       return NO_MATCH;
     }
     ExpressionTree receiver = getReceiver(methodInvocationTree);
-    if (!(receiver instanceof IdentifierTree)) {
+    if (!(receiver instanceof IdentifierTree identifierTree)) {
       return NO_MATCH;
     }
-    if (!((IdentifierTree) receiver).getName().contentEquals("super")) {
+    if (!identifierTree.getName().contentEquals("super")) {
       return NO_MATCH;
     }
     // Exempt Javadocs; the override might be here to add documentation.

@@ -81,7 +81,7 @@ public class OperatorPrecedence extends BugChecker
   public Description matchConditionalExpression(
       ConditionalExpressionTree tree, VisitorState state) {
     ExpressionTree condition = tree.getCondition();
-    if (!(condition instanceof BinaryTree)) {
+    if (!(condition instanceof BinaryTree binaryTree)) {
       return NO_MATCH;
     }
     if (!CONDITIONAL.contains(condition.getKind())) {
@@ -90,7 +90,7 @@ public class OperatorPrecedence extends BugChecker
     if (!state.getTypes().unboxedTypeOrType(getType(tree)).hasTag(TypeTag.BOOLEAN)) {
       return NO_MATCH;
     }
-    return basicFix((BinaryTree) condition);
+    return basicFix(binaryTree);
   }
 
   private static boolean isConfusing(Kind thisKind, Kind parentKind) {

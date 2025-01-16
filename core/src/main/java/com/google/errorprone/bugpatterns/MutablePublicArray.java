@@ -67,10 +67,9 @@ public class MutablePublicArray extends BugChecker implements VariableTreeMatche
       return false;
     }
     ExpressionTree initializer = arrayExpression.getInitializer();
-    if (!(initializer instanceof JCNewArray)) {
+    if (!(initializer instanceof JCNewArray newArray)) {
       return false;
     }
-    JCNewArray newArray = (JCNewArray) initializer;
     if (!newArray.getDimensions().isEmpty()) {
       return !newArray.getDimensions().stream()
           .allMatch(e -> Objects.equals(ASTHelpers.constValue(e, Integer.class), 0));
