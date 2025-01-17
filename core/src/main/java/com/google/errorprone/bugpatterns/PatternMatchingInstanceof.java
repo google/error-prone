@@ -35,6 +35,7 @@ import com.google.errorprone.util.Reachability;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.BlockTree;
+import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.IfTree;
 import com.sun.source.tree.InstanceOfTree;
 import com.sun.source.tree.ParenthesizedTree;
@@ -192,6 +193,14 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
           } else {
             impliedStatements.add(ifTree.getThenStatement());
           }
+          return impliedStatements.build();
+        }
+        case CONDITIONAL_EXPRESSION -> {
+          var conditionalExpression = (ConditionalExpressionTree) parent;
+          impliedStatements.add(
+              negated
+                  ? conditionalExpression.getFalseExpression()
+                  : conditionalExpression.getTrueExpression());
           return impliedStatements.build();
         }
         default -> {

@@ -591,4 +591,60 @@ public final class PatternMatchingInstanceofTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void conditionalExpression() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              private String val;
+
+              public String stringify(Object o) {
+                return o instanceof Test ? ((Test) o).val : "not a test";
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              private String val;
+
+              public String stringify(Object o) {
+                return o instanceof Test test ? test.val : "not a test";
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void conditionalExpression_negated() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              private String val;
+
+              public String stringify(Object o) {
+                return !(o instanceof Test) ? "not a test" : ((Test) o).val;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              private String val;
+
+              public String stringify(Object o) {
+                return !(o instanceof Test test) ? "not a test" : test.val;
+              }
+            }
+            """)
+        .doTest();
+  }
 }
