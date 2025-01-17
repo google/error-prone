@@ -137,7 +137,7 @@ public class EqualsBrokenForNull extends BugChecker implements MethodTreeMatcher
             case PARENTHESIZED -> tree = ((ParenthesizedTree) tree).getExpression();
             case IDENTIFIER -> {
               Symbol symbol = getSymbol(tree);
-              return symbol instanceof VarSymbol ? (VarSymbol) symbol : null;
+              return symbol instanceof VarSymbol varSymbol ? varSymbol : null;
             }
             default -> {
               return null;

@@ -292,7 +292,7 @@ public final class PreferredInterfaceType extends BugChecker implements Compilat
   }
 
   private static Type targetType(Symbol symbol) {
-    return symbol instanceof MethodSymbol ? ((MethodSymbol) symbol).getReturnType() : symbol.type;
+    return symbol instanceof MethodSymbol methodSymbol ? methodSymbol.getReturnType() : symbol.type;
   }
 
   private static boolean isImmutable(Type type) {

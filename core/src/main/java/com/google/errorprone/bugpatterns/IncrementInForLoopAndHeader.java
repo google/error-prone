@@ -67,7 +67,7 @@ public class IncrementInForLoopAndHeader extends BugChecker implements ForLoopTr
     // track if they are updated in the body without a conditional surrounding them
     StatementTree body = forLoopTree.getStatement();
     List<? extends StatementTree> statementTrees =
-        body instanceof BlockTree ? ((BlockTree) body).getStatements() : ImmutableList.of(body);
+        body instanceof BlockTree blockTree ? blockTree.getStatements() : ImmutableList.of(body);
     for (StatementTree s : statementTrees) {
       if (!CONDITIONALS.contains(s.getKind())) {
         Optional<Symbol> opSymbol = returnUnarySym(s);

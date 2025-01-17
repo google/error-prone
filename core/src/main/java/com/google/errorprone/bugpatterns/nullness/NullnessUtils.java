@@ -422,11 +422,9 @@ class NullnessUtils {
       return null;
     }
 
-    Name name =
-        nullChecked.getKind() == IDENTIFIER ? ((IdentifierTree) nullChecked).getName() : null;
+    Name name = nullChecked instanceof IdentifierTree id ? id.getName() : null;
 
-    Symbol symbol = getSymbol(nullChecked);
-    VarSymbol varSymbol = symbol instanceof VarSymbol ? (VarSymbol) symbol : null;
+    VarSymbol varSymbol = getSymbol(nullChecked) instanceof VarSymbol vs ? vs : null;
 
     return new AutoValue_NullnessUtils_NullCheck(name, varSymbol, polarity);
   }

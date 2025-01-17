@@ -228,7 +228,7 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
 
   private static Optional<MethodSymbol> methodSymbol(ExpressionTree tree) {
     Symbol sym = ASTHelpers.getSymbol(tree);
-    return sym instanceof MethodSymbol ? Optional.of((MethodSymbol) sym) : Optional.empty();
+    return sym instanceof MethodSymbol methodSymbol ? Optional.of(methodSymbol) : Optional.empty();
   }
 
   @Override

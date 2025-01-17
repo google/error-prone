@@ -138,7 +138,7 @@ public class FloggerRedundantIsEnabled extends BugChecker implements IfTreeMatch
 
           @Override
           protected @Nullable ExpressionTree defaultAction(Tree tree, Void unused) {
-            return tree instanceof ExpressionTree ? (ExpressionTree) tree : null;
+            return tree instanceof ExpressionTree expressionTree ? expressionTree : null;
           }
 
           @Override

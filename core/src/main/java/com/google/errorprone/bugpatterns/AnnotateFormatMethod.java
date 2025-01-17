@@ -122,6 +122,6 @@ public final class AnnotateFormatMethod extends BugChecker implements MethodInvo
 
   private static @Nullable VarSymbol asSymbol(ExpressionTree tree) {
     Symbol symbol = ASTHelpers.getSymbol(tree);
-    return symbol instanceof VarSymbol ? (VarSymbol) symbol : null;
+    return symbol instanceof VarSymbol varSymbol ? varSymbol : null;
   }
 }

@@ -90,8 +90,8 @@ public abstract class AccessPath {
     // methodSelect is always either a field access (e.g. `obj.foo()`) or identifier (e.g. `foo()`)
     JCExpression methodSelect = invocationTree.getMethodSelect();
     Type rcvrType =
-        (methodSelect instanceof JCFieldAccess)
-            ? ((JCFieldAccess) methodSelect).selected.type
+        methodSelect instanceof JCFieldAccess jCFieldAccess
+            ? jCFieldAccess.selected.type
             : ((JCIdent) methodSelect).sym.owner.type;
 
     return invocationTree.getArguments().isEmpty() // 0 arguments

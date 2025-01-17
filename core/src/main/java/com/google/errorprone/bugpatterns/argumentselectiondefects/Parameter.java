@@ -96,8 +96,8 @@ abstract class Parameter {
                 new AutoValue_Parameter(
                     getArgumentName(t),
                     Optional.ofNullable(
-                            t instanceof ExpressionTree
-                                ? ASTHelpers.getResultType((ExpressionTree) t)
+                            t instanceof ExpressionTree expressionTree
+                                ? ASTHelpers.getResultType(expressionTree)
                                 : ASTHelpers.getType(t))
                         .orElse(Type.noType),
                     (int) i,

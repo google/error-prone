@@ -124,7 +124,7 @@ public class SelfAssignment extends BugChecker
 
       @Override
       protected @Nullable ExpressionTree defaultAction(Tree node, Void unused) {
-        return node instanceof ExpressionTree ? (ExpressionTree) node : null;
+        return node instanceof ExpressionTree expressionTree ? expressionTree : null;
       }
     }.visit(expression, null);
   }

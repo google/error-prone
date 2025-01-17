@@ -125,9 +125,9 @@ public final class UnusedReturnValueMatcher implements Matcher<ExpressionTree> {
       return implementsVoidMethod(tree, state);
     }
     Tree parent = state.getPath().getParentPath().getLeaf();
-    return parent instanceof LambdaExpressionTree
+    return parent instanceof LambdaExpressionTree lambdaExpressionTree
         // Runnable r = () -> foo.getBar();
-        ? implementsVoidMethod((LambdaExpressionTree) parent, state)
+        ? implementsVoidMethod(lambdaExpressionTree, state)
         // foo.getBar();
         : parent.getKind() == Kind.EXPRESSION_STATEMENT;
   }
@@ -150,8 +150,8 @@ public final class UnusedReturnValueMatcher implements Matcher<ExpressionTree> {
   }
 
   private static boolean returnsJavaLangVoid(ExpressionTree tree, VisitorState state) {
-    return tree instanceof MemberReferenceTree
-        ? returnsJavaLangVoid((MemberReferenceTree) tree, state)
+    return tree instanceof MemberReferenceTree memberReferenceTree
+        ? returnsJavaLangVoid(memberReferenceTree, state)
         : isVoidType(getResultType(tree), state);
   }
 

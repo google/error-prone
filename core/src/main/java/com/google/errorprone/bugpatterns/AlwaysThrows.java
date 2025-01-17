@@ -238,7 +238,9 @@ public class AlwaysThrows extends BugChecker implements MethodInvocationTreeMatc
                 + repeatedKeys.stream()
                     .map(
                         k ->
-                            k instanceof VarSymbol ? ((VarSymbol) k).getSimpleName() : k.toString())
+                            k instanceof VarSymbol varSymbol
+                                ? varSymbol.getSimpleName()
+                                : k.toString())
                     .collect(toImmutableSet()))
         .build();
   }

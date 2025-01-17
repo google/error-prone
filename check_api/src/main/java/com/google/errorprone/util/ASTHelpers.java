@@ -404,7 +404,7 @@ public class ASTHelpers {
 
   /** Removes any enclosing parentheses from the tree. */
   public static Tree stripParentheses(Tree tree) {
-    return tree instanceof ExpressionTree ? stripParentheses((ExpressionTree) tree) : tree;
+    return tree instanceof ExpressionTree expressionTree ? stripParentheses(expressionTree) : tree;
   }
 
   /** Given an ExpressionTree, removes any enclosing parentheses. */
@@ -1185,7 +1185,7 @@ public class ASTHelpers {
    * determined.
    */
   public static @Nullable Type getType(@Nullable Tree tree) {
-    return tree instanceof JCTree ? ((JCTree) tree).type : null;
+    return tree instanceof JCTree jCTree ? jCTree.type : null;
   }
 
   /**
@@ -1194,7 +1194,7 @@ public class ASTHelpers {
    */
   public static @Nullable ClassType getType(@Nullable ClassTree tree) {
     Type type = getType((Tree) tree);
-    return type instanceof ClassType ? (ClassType) type : null;
+    return type instanceof ClassType classType ? classType : null;
   }
 
   public static @Nullable String getAnnotationName(AnnotationTree tree) {

@@ -153,9 +153,7 @@ public abstract class AbstractUseSwitch extends BugChecker implements IfTreeMatc
       statementTree = ifTree.getElseStatement();
     } while (statementTree instanceof IfTree);
     Optional<JCBlock> defaultBranch =
-        (statementTree instanceof JCBlock)
-            ? Optional.of((JCBlock) statementTree)
-            : Optional.absent();
+        statementTree instanceof JCBlock jCBlock ? Optional.of(jCBlock) : Optional.absent();
     if (stringConstants.size() + defaultBranch.asSet().size() < MIN_BRANCHES) {
       return NO_MATCH;
     }
