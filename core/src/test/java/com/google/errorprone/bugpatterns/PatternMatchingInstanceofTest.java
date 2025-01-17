@@ -522,4 +522,73 @@ public final class PatternMatchingInstanceofTest {
         .expectUnchanged()
         .doTest();
   }
+
+  @Test
+  public void withinStatement() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              private final int x = 0;
+              private final int y = 1;
+
+              @Override
+              public boolean equals(Object o) {
+                return o instanceof Test && ((Test) o).x == this.x && ((Test) o).y == this.y;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              private final int x = 0;
+              private final int y = 1;
+              @Override
+              public boolean equals(Object o) {
+                return o instanceof Test test && test.x == this.x && test.y == this.y;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void withinIfCondition_andUsedAfter() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              private final int x = 0;
+              private final int y = 1;
+
+              @Override
+              public boolean equals(Object o) {
+                if (!(o instanceof Test) || ((Test) o).x != this.x) {
+                  return false;
+                }
+                Test other = (Test) o;
+                return other.y == this.y;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              private final int x = 0;
+              private final int y = 1;
+              @Override
+              public boolean equals(Object o) {
+                if (!(o instanceof Test other) || other.x != this.x) {
+                  return false;
+                }
+                return other.y == this.y;
+              }
+            }
+            """)
+        .doTest();
+  }
 }
