@@ -475,4 +475,55 @@ public class RemoveUnusedImportsTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void b390690031() {
+    testHelper
+        .addInputLines(
+            "a/One.java",
+            """
+            package a;
+
+            import java.lang.annotation.ElementType;
+            import java.lang.annotation.Target;
+
+            @Target({ElementType.CONSTRUCTOR, ElementType.METHOD})
+            public @interface One {}
+            """)
+        .expectUnchanged()
+        .addInputLines(
+            "a/Two.java",
+            """
+            package a;
+
+            import java.lang.annotation.ElementType;
+            import java.lang.annotation.Target;
+
+            @Target({ElementType.CONSTRUCTOR, ElementType.METHOD})
+            public @interface Two {}
+            """)
+        .expectUnchanged()
+        .addInputLines(
+            "p/Test.java",
+            """
+            package p;
+
+            import a.One;
+            import a.Two;
+
+            public record Test(int z, @One int x, int y) {}
+            """)
+        .addOutputLines(
+            "out/p/Test.java",
+            """
+            package p;
+
+            // TODO: b/390690031 - this should be preserved
+            // import a.One;
+
+            public record Test(int z, @One int x, int y) {}
+            """)
+        .allowBreakingChanges() // TODO: b/390690031 - this not be breaking
+        .doTest();
+  }
 }
