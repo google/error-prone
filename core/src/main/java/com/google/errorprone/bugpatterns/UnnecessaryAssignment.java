@@ -79,6 +79,7 @@ public final class UnnecessaryAssignment extends BugChecker
       ImmutableSet.of(
           "com.google.testing.junit.testparameterinjector.TestParameter",
           "com.google.inject.Inject",
+          "jakarta.inject.Inject",
           "javax.inject.Inject");
 
   private static final Matcher<Tree> HAS_MOCK_ANNOTATION = hasAnnotation("org.mockito.Mock");
