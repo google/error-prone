@@ -144,6 +144,11 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
    */
   private static final ImmutableSet<String> EXEMPTING_VARIABLE_ANNOTATIONS =
       ImmutableSet.of(
+          "jakarta.persistence.Basic",
+          "jakarta.persistence.Column",
+          "jakarta.persistence.Id",
+          "jakarta.persistence.Version",
+          "jakarta.xml.bind.annotation.XmlElement",
           "javax.persistence.Basic",
           "javax.persistence.Column",
           "javax.persistence.Id",
@@ -168,6 +173,7 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
           "com.google.inject.multibindings.ProvidesIntoMap",
           "com.google.inject.multibindings.ProvidesIntoSet",
           "dagger.Provides",
+          "jakarta.inject.Inject",
           "javax.inject.Inject",
           // Parameters on test methods imply the test is parameterised, and those parameters should
           // be used or removed.
