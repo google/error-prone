@@ -518,12 +518,10 @@ public class RemoveUnusedImportsTest {
             """
             package p;
 
-            // TODO: b/390690031 - this should be preserved
-            // import a.One;
+            import a.One;
 
             public record Test(int z, @One int x, int y) {}
             """)
-        .allowBreakingChanges() // TODO: b/390690031 - this not be breaking
         .doTest();
   }
 }

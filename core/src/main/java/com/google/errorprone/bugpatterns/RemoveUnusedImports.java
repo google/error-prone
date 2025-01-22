@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.getEnclosedElements;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
 import com.google.common.base.Joiner;
@@ -34,6 +35,7 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.doctree.DocCommentTree;
 import com.sun.source.doctree.ReferenceTree;
+import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.ImportTree;
@@ -140,6 +142,17 @@ public final class RemoveUnusedImports extends BugChecker implements Compilation
       }
       sink.accept(symbol.baseSymbol());
       return null;
+    }
+
+    @Override
+    public Void visitClass(ClassTree node, SymbolSink symbolSink) {
+      if (node.getKind().equals(Tree.Kind.RECORD)) {
+        getEnclosedElements(getSymbol(node)).stream()
+            .flatMap(e -> e.getAnnotationMirrors().stream())
+            .map(a -> (Symbol) a.getAnnotationType().asElement())
+            .forEach(symbolSink::accept);
+      }
+      return super.visitClass(node, symbolSink);
     }
 
     @Override
