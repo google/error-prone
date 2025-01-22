@@ -16,7 +16,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -27,12 +26,8 @@ import org.junit.runners.JUnit4;
  */
 @RunWith(JUnit4.class)
 public class HidingFieldTest {
-  CompilationTestHelper compilationHelper;
-
-  @Before
-  public void setUp() {
-    compilationHelper = CompilationTestHelper.newInstance(HidingField.class, getClass());
-  }
+  private final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(HidingField.class, getClass());
 
   @Test
   public void hidingFieldPositiveCases() {
@@ -57,13 +52,13 @@ public class HidingFieldPositiveCases1 {
 
   /** ClassB has a field with the same name as one in its parent. */
   public static class ClassB extends ClassA {
-    // BUG: Diagnostic contains: superclass: ClassA
+    // BUG: Diagnostic contains: ClassA
     private String varOne = "Test";
   }
 
   /** ClassC has a field with the same name as one in its grandparent. */
   public static class ClassC extends ClassB {
-    // BUG: Diagnostic contains: superclass: ClassA
+    // BUG: Diagnostic contains: ClassA
     public int varTwo;
   }
 
@@ -72,9 +67,9 @@ public class HidingFieldPositiveCases1 {
    * unrelated members.
    */
   public static class ClassD extends ClassB {
-    // BUG: Diagnostic contains: superclass: ClassA
+    // BUG: Diagnostic contains: ClassA
     protected int varThree;
-    // BUG: Diagnostic contains: superclass: ClassA
+    // BUG: Diagnostic contains: ClassA
     int varTwo;
     String randOne;
     String randTwo;
@@ -82,7 +77,7 @@ public class HidingFieldPositiveCases1 {
 
   /** ClassE has same variable name as grandparent */
   public static class ClassE extends ClassC {
-    // BUG: Diagnostic contains: superclass: ClassC
+    // BUG: Diagnostic contains: ClassC
     public String varTwo;
   }
 
@@ -92,7 +87,7 @@ public class HidingFieldPositiveCases1 {
   }
 
   public static class ClassG extends ClassF {
-    // BUG: Diagnostic contains: superclass: ClassF
+    // BUG: Diagnostic contains: ClassF
     String varThree;
   }
 }\
@@ -113,7 +108,7 @@ public class HidingFieldPositiveCases2 {
    * parent
    */
   public class ClassA extends HidingFieldPositiveCases1.ClassB {
-    // BUG: Diagnostic contains: superclass: ClassA
+    // BUG: Diagnostic contains: hiding ClassA.varTwo
     private int varTwo;
   }
 
@@ -122,7 +117,7 @@ public class HidingFieldPositiveCases2 {
    * grandparent
    */
   public class ClassB extends HidingFieldPositiveCases1.ClassB {
-    // BUG: Diagnostic contains: superclass: ClassA
+    // BUG: Diagnostic contains: hiding ClassA.varOne
     public int varOne = 2;
   }
 }\

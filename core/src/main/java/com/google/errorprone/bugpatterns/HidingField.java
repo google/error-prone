@@ -19,6 +19,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.util.ASTHelpers.enclosingPackage;
 import static com.google.errorprone.util.ASTHelpers.getEnclosedElements;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static java.lang.String.format;
 import static java.util.stream.Collectors.toCollection;
 
 import com.google.common.collect.ImmutableSet;
@@ -114,9 +115,10 @@ public class HidingField extends BugChecker implements ClassTreeMatcher {
         Description.Builder matchDesc = buildDescription(origVariable);
 
         matchDesc.setMessage(
-            "Hiding fields of superclasses may cause confusion and errors. "
-                + "This field is hiding a field of the same name in superclass: "
-                + parentClassName);
+            format(
+                "Hiding fields of superclasses may cause confusion and errors. "
+                    + "This field is hiding %s.%s.",
+                parentClassName, origVariable.getName()));
 
         visitorState.reportMatch(matchDesc.build());
         origVariableIterator.remove();
