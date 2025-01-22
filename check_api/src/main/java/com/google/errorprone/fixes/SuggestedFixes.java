@@ -707,29 +707,7 @@ public final class SuggestedFixes {
    */
   public static SuggestedFix renameVariableUsages(
       VariableTree tree, String replacement, VisitorState state) {
-    SuggestedFix.Builder fix = SuggestedFix.builder();
-    Symbol.VarSymbol sym = getSymbol(tree);
-    new TreeScanner<Void, Void>() {
-      @Override
-      public Void visitIdentifier(IdentifierTree tree, Void unused) {
-        if (sym.equals(getSymbol(tree))) {
-          fix.replace(tree, replacement);
-        }
-        return super.visitIdentifier(tree, null);
-      }
-
-      @Override
-      public Void visitMemberSelect(MemberSelectTree tree, Void unused) {
-        if (sym.equals(getSymbol(tree))) {
-          fix.replace(
-              state.getEndPosition(tree.getExpression()),
-              state.getEndPosition(tree),
-              "." + replacement);
-        }
-        return super.visitMemberSelect(tree, null);
-      }
-    }.scan(state.getPath().getCompilationUnit(), null);
-    return fix.build();
+    return renameSymbolOccurrences(getSymbol(tree), replacement, state);
   }
 
   /** Be warned, only changes method name at the declaration. */
@@ -755,8 +733,71 @@ public final class SuggestedFixes {
    */
   public static SuggestedFix renameMethodWithInvocations(
       MethodTree tree, String replacement, VisitorState state) {
-    SuggestedFix.Builder fix = renameMethod(tree, replacement, state).toBuilder();
     MethodSymbol sym = getSymbol(tree);
+    return SuggestedFix.merge(
+        renameMethod(tree, replacement, state), renameSymbolOccurrences(sym, replacement, state));
+  }
+
+  /** Replaces the name of the method being invoked in {@code tree} with {@code replacement}. */
+  public static SuggestedFix renameMethodInvocation(
+      MethodInvocationTree tree, String replacement, VisitorState state) {
+    Tree methodSelect = tree.getMethodSelect();
+    Name identifier;
+    int startPos;
+    if (methodSelect instanceof MemberSelectTree memberSelectTree) {
+      identifier = memberSelectTree.getIdentifier();
+      startPos = state.getEndPosition(memberSelectTree.getExpression());
+    } else if (methodSelect instanceof IdentifierTree identifierTree) {
+      identifier = identifierTree.getName();
+      startPos = getStartPosition(tree);
+    } else {
+      throw malformedMethodInvocationTree(tree);
+    }
+    int endPos =
+        tree.getArguments().isEmpty()
+            ? state.getEndPosition(tree)
+            : getStartPosition(tree.getArguments().get(0));
+    List<ErrorProneToken> tokens = state.getOffsetTokens(startPos, endPos);
+    for (ErrorProneToken token : Lists.reverse(tokens)) {
+      if (token.kind() == TokenKind.IDENTIFIER && token.name().equals(identifier)) {
+        return SuggestedFix.replace(token.pos(), token.endPos(), replacement);
+      }
+    }
+    throw malformedMethodInvocationTree(tree);
+  }
+
+  /** Rename a class and all uses of it in the current file. */
+  public static SuggestedFix renameClassWithUses(
+      ClassTree tree, String replacement, VisitorState state) {
+    return SuggestedFix.merge(
+        renameClass(tree, replacement, state),
+        renameSymbolOccurrences(getSymbol(tree), replacement, state));
+  }
+
+  /** Be warned, this only renames the class declaration. */
+  private static SuggestedFix renameClass(ClassTree tree, String replacement, VisitorState state) {
+    // Search tokens from start of class to first member (if present).
+    int basePos = getStartPosition(tree);
+    int endPos =
+        tree.getMembers().stream()
+            .map(state::getEndPosition)
+            .filter(p -> p != NOPOS)
+            .findFirst()
+            .orElse(state.getEndPosition(tree));
+    List<ErrorProneToken> tokens = state.getOffsetTokens(basePos, endPos);
+
+    for (ErrorProneToken token : tokens) {
+      if (token.kind() == TokenKind.IDENTIFIER && token.name().equals(tree.getSimpleName())) {
+        return SuggestedFix.replace(token.pos(), token.endPos(), replacement);
+      }
+    }
+    // Class name not found.
+    throw new AssertionError();
+  }
+
+  private static SuggestedFix renameSymbolOccurrences(
+      Symbol sym, String replacement, VisitorState state) {
+    SuggestedFix.Builder fix = SuggestedFix.builder();
     new TreeScanner<Void, Void>() {
       @Override
       public Void visitIdentifier(IdentifierTree tree, Void unused) {
@@ -789,34 +830,6 @@ public final class SuggestedFixes {
       }
     }.scan(state.getPath().getCompilationUnit(), null);
     return fix.build();
-  }
-
-  /** Replaces the name of the method being invoked in {@code tree} with {@code replacement}. */
-  public static SuggestedFix renameMethodInvocation(
-      MethodInvocationTree tree, String replacement, VisitorState state) {
-    Tree methodSelect = tree.getMethodSelect();
-    Name identifier;
-    int startPos;
-    if (methodSelect instanceof MemberSelectTree memberSelectTree) {
-      identifier = memberSelectTree.getIdentifier();
-      startPos = state.getEndPosition(memberSelectTree.getExpression());
-    } else if (methodSelect instanceof IdentifierTree identifierTree) {
-      identifier = identifierTree.getName();
-      startPos = getStartPosition(tree);
-    } else {
-      throw malformedMethodInvocationTree(tree);
-    }
-    int endPos =
-        tree.getArguments().isEmpty()
-            ? state.getEndPosition(tree)
-            : getStartPosition(tree.getArguments().get(0));
-    List<ErrorProneToken> tokens = state.getOffsetTokens(startPos, endPos);
-    for (ErrorProneToken token : Lists.reverse(tokens)) {
-      if (token.kind() == TokenKind.IDENTIFIER && token.name().equals(identifier)) {
-        return SuggestedFix.replace(token.pos(), token.endPos(), replacement);
-      }
-    }
-    throw malformedMethodInvocationTree(tree);
   }
 
   private static IllegalStateException malformedMethodInvocationTree(MethodInvocationTree tree) {

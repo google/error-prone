@@ -2098,6 +2098,55 @@ public class Test {
         .doTest(TEXT_MATCH);
   }
 
+  /** A {@link BugChecker} for testing. */
+  @BugPattern(summary = "RenameClassChecker", severity = ERROR)
+  public static class RenameClassChecker extends BugChecker implements ClassTreeMatcher {
+    @Override
+    public Description matchClass(ClassTree tree, VisitorState state) {
+      return describeMatch(tree, SuggestedFixes.renameClassWithUses(tree, "Foo", state));
+    }
+  }
+
+  @Test
+  public void renameClass() {
+    BugCheckerRefactoringTestHelper.newInstance(RenameClassChecker.class, getClass())
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              Test get() {
+                return null;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Foo {
+              Foo get() {
+                return null;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void renameClass_selfReferential() {
+    BugCheckerRefactoringTestHelper.newInstance(RenameClassChecker.class, getClass())
+        .addInputLines(
+            "Test.java",
+            """
+            class Test<T extends Test<T>> {}
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Foo<T extends Foo<T>> {}
+            """)
+        .doTest();
+  }
+
   /**
    * Test checker that raises a diagnostic with the result of {@link SuggestedFixes#qualifyType} on
    * new instances.
