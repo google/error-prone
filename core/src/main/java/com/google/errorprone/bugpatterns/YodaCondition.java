@@ -51,7 +51,7 @@ import org.jspecify.annotations.Nullable;
     summary =
         "The non-constant portion of a comparison generally comes first. For equality, prefer"
             + " e.equals(CONSTANT) if e is non-null or Objects.equals(e, CONSTANT) if e may be"
-            + " null. For standard operators, prefer e <OPERATION>> CONSTANT.",
+            + " null. For standard operators, prefer e <OPERATION> CONSTANT.",
     severity = WARNING)
 public final class YodaCondition extends BugChecker
     implements BinaryTreeMatcher, MethodInvocationTreeMatcher {
