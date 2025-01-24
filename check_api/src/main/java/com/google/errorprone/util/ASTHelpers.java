@@ -115,6 +115,7 @@ import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.code.Type.ArrayType;
 import com.sun.tools.javac.code.Type.ClassType;
 import com.sun.tools.javac.code.Type.TypeVar;
 import com.sun.tools.javac.code.Type.UnionClassType;
@@ -2602,6 +2603,14 @@ public class ASTHelpers {
         if (type instanceof WildcardType other) {
           scan(t.getExtendsBound(), other.getExtendsBound());
           scan(t.getSuperBound(), other.getSuperBound());
+        }
+        return null;
+      }
+
+      @Override
+      public Void visitArrayType(ArrayType t, Type type) {
+        if (type instanceof ArrayType other) {
+          scan(t.getComponentType(), other.getComponentType());
         }
         return null;
       }

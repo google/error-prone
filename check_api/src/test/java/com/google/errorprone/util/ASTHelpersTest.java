@@ -2019,7 +2019,7 @@ class Test {
               <T> void g(List<T> t) {}
 
               void test(Integer[] i, List<String> s) {
-                // BUG: Diagnostic contains: {}
+                // BUG: Diagnostic contains: {T=[java.lang.Integer]}
                 f(i);
                 // BUG: Diagnostic contains: {T=[java.lang.String]}
                 g(s);
