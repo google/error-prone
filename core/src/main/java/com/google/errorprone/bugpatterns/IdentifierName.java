@@ -21,6 +21,7 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.BugPattern.LinkType.CUSTOM;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.fixes.SuggestedFix.emptyFix;
+import static com.google.errorprone.fixes.SuggestedFixes.renameClassWithUses;
 import static com.google.errorprone.fixes.SuggestedFixes.renameMethodWithInvocations;
 import static com.google.errorprone.fixes.SuggestedFixes.renameVariable;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
@@ -128,7 +129,7 @@ public final class IdentifierName extends BugChecker
             fixable
                 ? diagnostic
                 : diagnostic + String.format("; did you" + " mean '%s'?", suggested))
-        .addFix(emptyFix())
+        .addFix(fixable ? renameClassWithUses(tree, suggested, state) : emptyFix())
         .build();
   }
 

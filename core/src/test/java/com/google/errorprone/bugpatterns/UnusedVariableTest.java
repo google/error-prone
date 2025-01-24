@@ -1805,12 +1805,13 @@ public class Test {
               public void test(List<Integer> xs) {
                 // BUG: Diagnostic contains: 'b' is never read
                 Collections.sort(xs, (a, b) -> a > a ? 1 : 0);
-                Collections.sort(xs, new Comparator<Integer>() {
-                    // BUG: Diagnostic contains: 'b' is never read
-                    @Override public int compare(Integer a, Integer b) { return a; }
-                    public void foo(int a, int b) {}
-                });
                 Collections.sort(xs, (a, unused) -> a > a ? 1 : 0);
+              }
+
+              public class TestComparator implements Comparator<Integer> {
+                // BUG: Diagnostic contains: 'b' is never read
+                @Override public int compare(Integer a, Integer b) { return a; }
+                public void foo(int a, int b) {}
               }
             }
             """)

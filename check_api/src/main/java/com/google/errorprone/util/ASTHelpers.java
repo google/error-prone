@@ -359,7 +359,9 @@ public class ASTHelpers {
 
   /** Returns whether this symbol or any of its owners are private. */
   public static boolean isEffectivelyPrivate(Symbol symbol) {
-    return enclosingElements(symbol).anyMatch(Symbol::isPrivate);
+    return enclosingElements(symbol)
+        .anyMatch(
+            s -> s.isPrivate() || (s instanceof ClassSymbol && s.owner instanceof MethodSymbol));
   }
 
   /** Checks whether an expression requires parentheses. */

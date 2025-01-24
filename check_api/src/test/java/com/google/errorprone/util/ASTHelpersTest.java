@@ -43,6 +43,7 @@ import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
+import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.IdentifierTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MemberReferenceTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -1762,7 +1763,14 @@ class Test {
   /** Helper for testing {@link ASTHelpers#canBeRemoved}. */
   @BugPattern(summary = "", severity = WARNING)
   public static final class VisibleMembers extends BugChecker
-      implements MethodTreeMatcher, VariableTreeMatcher {
+      implements ClassTreeMatcher, MethodTreeMatcher, VariableTreeMatcher {
+
+    @Override
+    public Description matchClass(ClassTree tree, VisitorState state) {
+      return ASTHelpers.canBeRemoved(ASTHelpers.getSymbol(tree), state)
+          ? describeMatch(tree)
+          : Description.NO_MATCH;
+    }
 
     @Override
     public Description matchMethod(MethodTree tree, VisitorState state) {
@@ -1788,6 +1796,16 @@ class Test {
             class Test {
               // BUG: Diagnostic contains:
               private Test t;
+              public void foo() {
+                // BUG: Diagnostic contains:
+                class Foo {
+                  // BUG: Diagnostic contains:
+                  class Bar {}
+                  // BUG: Diagnostic contains:
+                  public void bar() {}
+                }
+              }
+              // BUG: Diagnostic contains:
               private class Inner {
                 // BUG: Diagnostic contains:
                 public Test t;

@@ -155,6 +155,30 @@ public class IdentifierNameTest {
   }
 
   @Test
+  public void localClass_renamed() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              public void get() {
+                class MisnamedURLVisitor {}
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              public void get() {
+                class MisnamedUrlVisitor {}
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void resourceVariable_renamed() {
     refactoringHelper
         .addInputLines(
