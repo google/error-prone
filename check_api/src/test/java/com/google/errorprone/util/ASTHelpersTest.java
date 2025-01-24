@@ -1985,4 +1985,47 @@ class Test {
             """)
         .doTest();
   }
+
+  /** Helper for testing {@link ASTHelpers#getTypeSubstitution}. */
+  @BugPattern(summary = "", severity = WARNING)
+  public static final class GetTypeSubstitution extends BugChecker
+      implements MethodInvocationTreeMatcher {
+
+    @Override
+    public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+      return buildDescription(tree)
+          .setMessage(
+              ASTHelpers.getTypeSubstitution(
+                      ASTHelpers.getType(tree.getMethodSelect()).asMethodType(),
+                      ASTHelpers.getSymbol(tree))
+                  .toString())
+          .build();
+    }
+  }
+
+  @Test
+  public void getTypeSubstitution() {
+    CompilationTestHelper.newInstance(GetTypeSubstitution.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            """
+            package p;
+
+            import java.util.List;
+
+            class Test {
+              <T> void f(T[] t) {}
+
+              <T> void g(List<T> t) {}
+
+              void test(Integer[] i, List<String> s) {
+                // BUG: Diagnostic contains: {}
+                f(i);
+                // BUG: Diagnostic contains: {T=[java.lang.String]}
+                g(s);
+              }
+            }
+            """)
+        .doTest();
+  }
 }
