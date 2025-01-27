@@ -205,6 +205,8 @@ public class CompileTimeConstantExpressionMatcherTest {
                 boolean bool2 = flag ? g() : false;
                 // BUG: Diagnostic contains: true
                 boolean bool3 = flag ? true : false;
+                // BUG: Diagnostic contains: true
+                String str = "a" + (flag ? "b" : "c") + "d";
               }
             }
             """)
