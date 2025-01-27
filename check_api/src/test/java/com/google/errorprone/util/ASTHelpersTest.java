@@ -1818,6 +1818,24 @@ class Test {
         .doTest();
   }
 
+  @Test
+  public void visibleMembers_anonymous() {
+    CompilationTestHelper.newInstance(VisibleMembers.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              Test t =
+                  // BUG: Diagnostic contains:
+                  new Test() {
+                    // BUG: Diagnostic contains:
+                    public int foo = 42;
+                  };
+            }
+            """)
+        .doTest();
+  }
+
   private static final ImmutableSet<Class<?>> ALL_TREE_TYPES =
       Arrays.stream(TreePathScanner.class.getMethods())
           .filter(m -> m.getName().startsWith("visit"))

@@ -361,7 +361,22 @@ public class ASTHelpers {
   public static boolean isEffectivelyPrivate(Symbol symbol) {
     return enclosingElements(symbol)
         .anyMatch(
-            s -> s.isPrivate() || (s instanceof ClassSymbol && s.owner instanceof MethodSymbol));
+            s -> {
+              if (s.isPrivate()) {
+                return true;
+              }
+              if (s instanceof ClassSymbol) {
+                // Anonymous classes. (Note: packages can be anonymous too.)
+                if (s.isAnonymous()) {
+                  return true;
+                }
+                // Local classes have a method as an owner.
+                if (s.owner instanceof MethodSymbol) {
+                  return true;
+                }
+              }
+              return false;
+            });
   }
 
   /** Checks whether an expression requires parentheses. */
