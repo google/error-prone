@@ -16,11 +16,12 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.collect.ImmutableMap.toImmutableMap;
+import static com.google.common.collect.ImmutableListMultimap.toImmutableListMultimap;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.util.ASTHelpers.isStatic;
 
 import com.google.common.base.Ascii;
+import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
@@ -39,6 +40,8 @@ import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
+
+import java.util.List;
 import java.util.Map;
 import javax.lang.model.element.ElementKind;
 
@@ -58,11 +61,11 @@ public class InconsistentCapitalization extends BugChecker implements ClassTreeM
       return Description.NO_MATCH;
     }
 
-    ImmutableMap<String, Symbol> fieldNamesMap =
+    ImmutableListMultimap<String, Symbol> fieldNamesMap =
         fields.stream()
             .collect(
-                toImmutableMap(
-                    symbol -> Ascii.toLowerCase(symbol.toString()), x -> x, (x, y) -> x));
+                toImmutableListMultimap(
+                    symbol -> Ascii.toLowerCase(symbol.toString()), x -> x));
     ImmutableMap<TreePath, Symbol> matchedParameters =
         MatchingParametersScanner.findMatchingParameters(fieldNamesMap, state.getPath());
 
@@ -180,17 +183,17 @@ public class InconsistentCapitalization extends BugChecker implements ClassTreeM
   private static class MatchingParametersScanner extends TreePathScanner<Void, Void> {
 
     static ImmutableMap<TreePath, Symbol> findMatchingParameters(
-        ImmutableMap<String, Symbol> fieldNamesMap, TreePath path) {
+        ImmutableListMultimap<String, Symbol> fieldNamesMap, TreePath path) {
       ImmutableMap.Builder<TreePath, Symbol> matchedParametersBuilder = ImmutableMap.builder();
       new MatchingParametersScanner(fieldNamesMap, matchedParametersBuilder).scan(path, null);
       return matchedParametersBuilder.buildOrThrow();
     }
 
-    private final ImmutableMap<String, Symbol> fields;
+    private final ImmutableListMultimap<String, Symbol> fields;
     private final ImmutableMap.Builder<TreePath, Symbol> matchedParameters;
 
     private MatchingParametersScanner(
-        ImmutableMap<String, Symbol> fields,
+        ImmutableListMultimap<String, Symbol> fields,
         ImmutableMap.Builder<TreePath, Symbol> matchedParameters) {
       this.fields = fields;
       this.matchedParameters = matchedParameters;
@@ -212,12 +215,10 @@ public class InconsistentCapitalization extends BugChecker implements ClassTreeM
         return super.visitVariable(tree, null);
       }
       String variableName = symbol.toString();
-      Symbol matchedField = fields.get(Ascii.toLowerCase(variableName));
-      if (matchedField != null) {
-        String fieldName = matchedField.toString();
-        if (!variableName.equals(fieldName)) {
-          matchedParameters.put(getCurrentPath(), matchedField);
-        }
+      List<Symbol> matchedFields = fields.get(Ascii.toLowerCase(variableName));
+      if (!matchedFields.isEmpty()
+          && matchedFields.stream().map(Symbol::toString).noneMatch(variableName::equals)) {
+        matchedParameters.put(getCurrentPath(), matchedFields.getFirst());
       }
       return super.visitVariable(tree, null);
     }
