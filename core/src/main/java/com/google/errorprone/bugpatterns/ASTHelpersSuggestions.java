@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.matchers.FieldMatchers.instanceField;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.util.ASTHelpers.findEnclosingNode;
@@ -60,6 +61,12 @@ public class ASTHelpersSuggestions extends BugChecker implements MethodInvocatio
               .onClass((t, s) -> isSubtype(MODULE_SYMBOL.get(s), t, s))
               .namedAnyOf("isStatic"));
 
+  private static final Matcher<ExpressionTree> SYMBOL_ENCLCLASS =
+      instanceMethod().onDescendantOf("com.sun.tools.javac.code.Symbol").namedAnyOf("enclClass");
+
+  private static final Matcher<ExpressionTree> SYMBOL_OWNER =
+      instanceField("com.sun.tools.javac.code.Symbol", "owner");
+
   private static final Matcher<ExpressionTree> SCOPE =
       instanceMethod().onDescendantOf("com.sun.tools.javac.code.Scope");
 
@@ -90,6 +97,22 @@ public class ASTHelpersSuggestions extends BugChecker implements MethodInvocatio
               .prefixWith(tree, name + "(")
               .replace(state.getEndPosition(receiver), state.getEndPosition(tree), ")")
               .build());
+    }
+    if (SYMBOL_ENCLCLASS.matches(tree, state)) {
+      // Check whether the receiver matches the instance field Symbol.owner.
+      if (SYMBOL_OWNER.matches(receiver, state)) {
+        // Get the receiver of the Symbol.owner expression.
+        ExpressionTree receiver2 = getReceiver(receiver);
+        if (receiver2 != null) {
+          return describeMatch(
+              tree,
+              SuggestedFix.builder()
+                  .addStaticImport("com.google.errorprone.util.ASTHelpers.enclosingClass")
+                  .prefixWith(tree, "enclosingClass(")
+                  .replace(state.getEndPosition(receiver2), state.getEndPosition(tree), ")")
+                  .build());
+        }
+      }
     }
     if (SCOPE.matches(tree, state)) {
       MethodSymbol sym = getSymbol(tree);

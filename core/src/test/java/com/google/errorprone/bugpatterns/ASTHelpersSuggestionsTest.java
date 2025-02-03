@@ -152,4 +152,35 @@ public class ASTHelpersSuggestionsTest {
             "jdk.compiler/com.sun.tools.javac.code", "jdk.compiler/com.sun.tools.javac.util")
         .doTest();
   }
+
+  @Test
+  public void symbolOwnerEnclClass() {
+    testHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import com.sun.tools.javac.code.Symbol.ClassSymbol;
+
+            class Test {
+              void f(ClassSymbol symbol) {
+                ClassSymbol enclosing = symbol.owner.enclClass();
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import static com.google.errorprone.util.ASTHelpers.enclosingClass;
+            import com.sun.tools.javac.code.Symbol.ClassSymbol;
+
+            class Test {
+              void f(ClassSymbol symbol) {
+                ClassSymbol enclosing = enclosingClass(symbol);
+              }
+            }
+            """)
+        .addModules(
+            "jdk.compiler/com.sun.tools.javac.code", "jdk.compiler/com.sun.tools.javac.util")
+        .doTest();
+  }
 }
