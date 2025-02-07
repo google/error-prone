@@ -87,6 +87,7 @@ public final class WellKnownThreadSafety implements ThreadSafetyKnownTypes {
         .add(java.util.concurrent.ConcurrentLinkedDeque.class, "E")
         .add(java.util.concurrent.ConcurrentLinkedQueue.class, "E")
         .add(java.util.concurrent.ConcurrentHashMap.class, "K", "V")
+        .add(java.util.concurrent.ConcurrentHashMap.KeySetView.class, "K", "V")
         .add(java.util.concurrent.ConcurrentMap.class, "K", "V")
         .add(java.util.concurrent.ConcurrentNavigableMap.class, "K", "V")
         .add(java.util.concurrent.ConcurrentSkipListMap.class, "K", "V")
