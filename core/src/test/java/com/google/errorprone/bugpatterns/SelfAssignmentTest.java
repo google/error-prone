@@ -311,4 +311,24 @@ public class SelfAssignmentTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void initializerBlock() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              int foo;
+
+              Test(int foo) {}
+
+              {
+                // BUG: Diagnostic contains:
+                this.foo = foo;
+              }
+            }\
+            """)
+        .doTest();
+  }
 }

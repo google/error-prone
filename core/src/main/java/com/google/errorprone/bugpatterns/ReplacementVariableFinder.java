@@ -82,10 +82,15 @@ public final class ReplacementVariableFinder {
       ExpressionTree input, Predicate<JCVariableDecl> validParameterPredicate, VisitorState state) {
     Preconditions.checkState(input.getKind() == IDENTIFIER || input.getKind() == MEMBER_SELECT);
 
+    JCMethodDecl methodTree = ASTHelpers.findEnclosingNode(state.getPath(), JCMethodDecl.class);
+    if (methodTree == null) {
+      return ImmutableList.of();
+    }
+
     // find a method parameter matching the input predicate and similar name and suggest it
     // as the new argument
     ImmutableMultimap<Integer, JCVariableDecl> potentialReplacements =
-        ASTHelpers.findEnclosingNode(state.getPath(), JCMethodDecl.class).getParameters().stream()
+        methodTree.getParameters().stream()
             .filter(validParameterPredicate)
             .collect(collectByEditDistanceTo(simpleNameOfIdentifierOrMemberAccess(input)));
 
