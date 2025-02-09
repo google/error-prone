@@ -51,7 +51,6 @@ import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.ErrorProneComment;
 import com.google.errorprone.util.Reachability;
-import com.google.errorprone.util.SourceVersion;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.BreakTree;
@@ -152,7 +151,10 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
   @Inject
   StatementSwitchToExpressionSwitch(ErrorProneFlags flags) {
     this.enableDirectConversion =
-        flags.getBoolean("StatementSwitchToExpressionSwitch:EnableDirectConversion").orElse(false);
+        true
+            || flags
+                .getBoolean("StatementSwitchToExpressionSwitch:EnableDirectConversion")
+                .orElse(false);
     this.enableReturnSwitchConversion =
         flags
             .getBoolean("StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion")
@@ -165,9 +167,9 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
 
   @Override
   public Description matchSwitch(SwitchTree switchTree, VisitorState state) {
-    if (!SourceVersion.supportsSwitchExpressions(state.context)) {
-      return NO_MATCH;
-    }
+    // if (!SourceVersion.supportsSwitchExpressions(state.context)) {
+    //  return NO_MATCH;
+    // }
 
     AnalysisResult analysisResult = analyzeSwitchTree(switchTree, state);
 
