@@ -63,6 +63,7 @@ public final class UnnecessarilyVisible extends BugChecker implements MethodTree
                       "com.google.inject.multibindings.ProvidesIntoMap",
                       "com.google.inject.multibindings.ProvidesIntoSet",
                       "dagger.Provides",
+                      "jakarta.inject.Inject",
                       "javax.inject.Inject")
                   .map(s::getName)
                   .collect(toImmutableSet()));
@@ -70,7 +71,7 @@ public final class UnnecessarilyVisible extends BugChecker implements MethodTree
   private static final Supplier<ImmutableSet<Name>> INJECT_ANNOTATIONS =
       VisitorState.memoize(
           s ->
-              Stream.of("com.google.inject.Inject", "javax.inject.Inject")
+              Stream.of("com.google.inject.Inject", "javax.inject.Inject", "jakarta.inject.Inject")
                   .map(s::getName)
                   .collect(toImmutableSet()));
 
