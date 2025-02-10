@@ -192,8 +192,7 @@ public class ThreadSafeAnalysis {
     // javac gives us members in reverse declaration order
     // handling them in declaration order leads to marginally better diagnostics
     List<Symbol> members =
-        ImmutableList.copyOf(ASTHelpers.scope(classSym.members()).getSymbols(instanceFieldFilter))
-            .reverse();
+        ImmutableList.copyOf(classSym.members().getSymbols(instanceFieldFilter)).reverse();
     for (Symbol member : members) {
       Optional<Tree> memberTree = Optional.ofNullable(declarations.get(member));
       Violation info =

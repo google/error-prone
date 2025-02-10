@@ -35,7 +35,6 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.suppliers.Suppliers;
-import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.ASTHelpers.TargetType;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
@@ -75,8 +74,8 @@ public final class UnnecessaryMethodReference extends BugChecker
     }
     MethodSymbol symbol = getSymbol(tree);
     Scope members = targetType.type().tsym.members();
-    if (!ASTHelpers.scope(members)
-            .anyMatch(sym -> isFunctionalInterfaceInvocation(symbol, targetType.type(), sym, state))
+    if (!members.anyMatch(
+            sym -> isFunctionalInterfaceInvocation(symbol, targetType.type(), sym, state))
         && !isKnownAlias(tree, targetType.type(), state)) {
       return NO_MATCH;
     }

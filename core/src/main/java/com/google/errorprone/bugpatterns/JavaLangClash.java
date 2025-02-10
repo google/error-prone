@@ -72,8 +72,7 @@ public class JavaLangClash extends BugChecker
     PackageSymbol javaLang = symtab.enterPackage(symtab.java_base, state.getNames().java_lang);
     Symbol other =
         getFirst(
-            ASTHelpers.scope(javaLang.members())
-                .getSymbolsByName(simpleName, s -> s.getModifiers().contains(PUBLIC)),
+            javaLang.members().getSymbolsByName(simpleName, s -> s.getModifiers().contains(PUBLIC)),
             null);
     Symbol symbol = ASTHelpers.getSymbol(tree);
     if (other == null || other.equals(symbol)) {

@@ -34,7 +34,6 @@ import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isGeneratedConstructor;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
-import static com.google.errorprone.util.ASTHelpers.scope;
 import static com.google.errorprone.util.ASTHelpers.shouldKeep;
 import static com.google.errorprone.util.MoreAnnotations.asStrings;
 import static com.google.errorprone.util.MoreAnnotations.getAnnotationValue;
@@ -467,10 +466,11 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
 
       SuggestedFix.Builder fix = SuggestedFix.builder();
 
-      int constructorCount = size(scope(symbol.members()).getSymbols(Symbol::isConstructor));
+      int constructorCount = size(symbol.members().getSymbols(Symbol::isConstructor));
       int finalFields =
           size(
-              scope(symbol.members())
+              symbol
+                  .members()
                   .getSymbols(s -> s.getKind().equals(FIELD) && s.getModifiers().contains(FINAL)));
       boolean fixable;
       if (constructorCount == trees.size()) {

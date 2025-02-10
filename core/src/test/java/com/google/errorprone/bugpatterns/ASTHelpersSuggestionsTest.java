@@ -38,7 +38,6 @@ public class ASTHelpersSuggestionsTest {
               void f(Symbol s) {
                 s.isStatic();
                 s.packge();
-                s.members().anyMatch(x -> x.isStatic());
               }
             }
             """)
@@ -47,14 +46,12 @@ public class ASTHelpersSuggestionsTest {
             """
             import static com.google.errorprone.util.ASTHelpers.enclosingPackage;
             import static com.google.errorprone.util.ASTHelpers.isStatic;
-            import static com.google.errorprone.util.ASTHelpers.scope;
             import com.sun.tools.javac.code.Symbol;
 
             class Test {
               void f(Symbol s) {
                 isStatic(s);
                 enclosingPackage(s);
-                scope(s.members()).anyMatch(x -> isStatic(x));
               }
             }
             """)
@@ -75,7 +72,6 @@ public class ASTHelpersSuggestionsTest {
               void f(VarSymbol s) {
                 s.isStatic();
                 s.packge();
-                s.members().anyMatch(x -> x.isStatic());
               }
             }
             """)
@@ -83,15 +79,12 @@ public class ASTHelpersSuggestionsTest {
             "Test.java",
             """
             import static com.google.errorprone.util.ASTHelpers.enclosingPackage;
-            import static com.google.errorprone.util.ASTHelpers.isStatic;
-            import static com.google.errorprone.util.ASTHelpers.scope;
             import com.sun.tools.javac.code.Symbol.VarSymbol;
 
             class Test {
               void f(VarSymbol s) {
                 s.isStatic();
                 enclosingPackage(s);
-                scope(s.members()).anyMatch(x -> isStatic(x));
               }
             }
             """)

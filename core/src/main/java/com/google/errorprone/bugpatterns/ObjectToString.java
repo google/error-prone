@@ -25,7 +25,6 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.predicates.TypePredicate;
-import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
@@ -66,7 +65,8 @@ public class ObjectToString extends AbstractToString {
     // implements and we collect all overrides of java.lang.Object.toString(). If one of those
     // overrides is present, then we don't flag it.
     return Iterables.isEmpty(
-        ASTHelpers.scope(types.membersClosure(type, /* skipInterface= */ false))
+        types
+            .membersClosure(type, /* skipInterface= */ false)
             .getSymbolsByName(
                 names.toString,
                 m ->

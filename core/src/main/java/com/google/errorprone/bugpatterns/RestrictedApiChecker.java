@@ -160,7 +160,8 @@ public class RestrictedApiChecker extends BugChecker
 
     return (MethodSymbol)
         getOnlyElement(
-            ASTHelpers.scope(superclass.members())
+            superclass
+                .members()
                 .getSymbols(
                     member ->
                         member.isConstructor()

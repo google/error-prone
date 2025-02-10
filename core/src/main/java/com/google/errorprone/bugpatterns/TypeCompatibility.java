@@ -23,7 +23,6 @@ import static com.google.errorprone.util.ASTHelpers.getUpperBound;
 import static com.google.errorprone.util.ASTHelpers.isCastable;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
-import static com.google.errorprone.util.ASTHelpers.scope;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.Streams;
@@ -101,7 +100,8 @@ public final class TypeCompatibility {
             (MethodSymbol)
                 state.getSymtab().objectType.tsym.members().findFirst(state.getNames().equals);
         return isEmpty(
-                scope(types.membersClosure(leftUpperBound, /* skipInterface= */ false))
+                types
+                    .membersClosure(leftUpperBound, /* skipInterface= */ false)
                     .getSymbolsByName(
                         names.toString,
                         m ->

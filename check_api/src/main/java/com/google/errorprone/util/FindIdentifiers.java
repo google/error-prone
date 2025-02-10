@@ -200,7 +200,7 @@ public final class FindIdentifiers {
           for (Type type : superTypes) {
             Scope scope = type.tsym.members();
             ImmutableList.Builder<VarSymbol> varsList = ImmutableList.builder();
-            for (Symbol var : ASTHelpers.scope(scope).getSymbols(VarSymbol.class::isInstance)) {
+            for (Symbol var : scope.getSymbols(VarSymbol.class::isInstance)) {
               varsList.add((VarSymbol) var);
             }
             result.addAll(varsList.build().reverse());
@@ -244,12 +244,10 @@ public final class FindIdentifiers {
                           ASTHelpers.getType(memberSelectTree.getExpression()),
                           /* skipInterface= */ false);
               for (Symbol var :
-                  ASTHelpers.scope(scope)
-                      .getSymbols(
-                          sym ->
-                              sym instanceof VarSymbol
-                                  && sym.getSimpleName()
-                                      .equals(memberSelectTree.getIdentifier()))) {
+                  scope.getSymbols(
+                      sym ->
+                          sym instanceof VarSymbol
+                              && sym.getSimpleName().equals(memberSelectTree.getIdentifier()))) {
                 result.add((VarSymbol) var);
               }
             }
@@ -325,8 +323,7 @@ public final class FindIdentifiers {
               if (scope == null) {
                 return ImmutableList.<VarSymbol>of().stream();
               }
-              return ImmutableList.copyOf(
-                      ASTHelpers.scope(scope).getSymbols(VarSymbol.class::isInstance))
+              return ImmutableList.copyOf(scope.getSymbols(VarSymbol.class::isInstance))
                   .reverse()
                   .stream()
                   .map(v -> (VarSymbol) v)

@@ -61,8 +61,7 @@ public class ClassInitializationDeadlock extends BugChecker implements BugChecke
   public Description matchClass(ClassTree tree, VisitorState state) {
     ClassSymbol classSymbol = getSymbol(tree);
     if (classSymbol.isInterface()
-        && !ASTHelpers.scope(classSymbol.members())
-            .anyMatch(ClassInitializationDeadlock::defaultMethod)) {
+        && !classSymbol.members().anyMatch(ClassInitializationDeadlock::defaultMethod)) {
       // Interfaces are only recursively initialized by their subtypes if they declare any
       // non-abstract, non-static (i.e. default) methods, see JVMS 5.5.
       // This heuristic ignores interfaces that declare default methods directly, to be fully
@@ -208,8 +207,7 @@ public class ClassInitializationDeadlock extends BugChecker implements BugChecke
       // current unit.
       return false;
     }
-    if (!ASTHelpers.scope(use.members())
-        .anyMatch(ClassInitializationDeadlock::nonPrivateConstructorOrFactory)) {
+    if (!use.members().anyMatch(ClassInitializationDeadlock::nonPrivateConstructorOrFactory)) {
       // If the class has no non-private constructors or static methods (which could be factory
       // methods), it can't be directly instantiated outside the current file.
       return false;

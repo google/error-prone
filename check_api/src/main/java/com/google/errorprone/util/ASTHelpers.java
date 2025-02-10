@@ -774,8 +774,8 @@ public class ASTHelpers {
                 return Stream.empty();
               }
               return stream(
-                      scope(superClassSymbols)
-                          .getSymbolsByName(name, matchesMethodPredicate, NON_RECURSIVE))
+                      superClassSymbols.getSymbolsByName(
+                          name, matchesMethodPredicate, NON_RECURSIVE))
                   // By definition of the filter, we know that the symbol is a MethodSymbol.
                   .map(symbol -> (MethodSymbol) symbol);
             });
@@ -2714,8 +2714,7 @@ public class ASTHelpers {
       Scope superClassSymbols = superClassSymbol.members();
       if (superClassSymbols != null) { // Can be null if superClass is a type variable
         if (!Iterables.isEmpty(
-            scope(superClassSymbols)
-                .getSymbolsByName(name, matchesMethodPredicate, NON_RECURSIVE))) {
+            superClassSymbols.getSymbolsByName(name, matchesMethodPredicate, NON_RECURSIVE))) {
           return true;
         }
       }
