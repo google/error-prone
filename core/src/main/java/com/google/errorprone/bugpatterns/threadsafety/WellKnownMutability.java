@@ -113,6 +113,7 @@ public final class WellKnownMutability implements ThreadSafetyKnownTypes {
         // checking whether classes are immutable. Within error prone, protos are verified
         // using isProto2MessageClass from this class.
         .add("com.google.protobuf.GeneratedMessage")
+        .add("com.google.protobuf.Parser")
         .add("com.google.re2j.Pattern")
         .add("com.google.inject.TypeLiteral")
         .add("com.google.inject.Key")
