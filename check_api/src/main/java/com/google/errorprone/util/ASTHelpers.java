@@ -86,6 +86,7 @@ import com.sun.source.tree.PackageTree;
 import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.ReturnTree;
+import com.sun.source.tree.SwitchExpressionTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.SynchronizedTree;
 import com.sun.source.tree.ThrowTree;
@@ -97,6 +98,7 @@ import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.UnaryTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
+import com.sun.source.tree.YieldTree;
 import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreeScanner;
@@ -153,7 +155,6 @@ import com.sun.tools.javac.util.Name;
 import com.sun.tools.javac.util.Position;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
 import java.net.JarURLConnection;
 import java.net.URI;
 import java.nio.CharBuffer;
@@ -1792,7 +1793,7 @@ public class ASTHelpers {
     Type type = new TargetTypeVisitor(current, state, parent).visit(parent.getLeaf(), null);
     if (type == null) {
       Tree actualTree = null;
-      if (YIELD_TREE != null && YIELD_TREE.isAssignableFrom(parent.getLeaf().getClass())) {
+      if (parent.getLeaf() instanceof YieldTree) {
         actualTree = parent.getParentPath().getParentPath().getParentPath().getLeaf();
       } else if (CONSTANT_CASE_LABEL_TREE != null
           && CONSTANT_CASE_LABEL_TREE.isAssignableFrom(parent.getLeaf().getClass())) {
@@ -1808,19 +1809,10 @@ public class ASTHelpers {
   }
 
   private static final @Nullable Class<?> CONSTANT_CASE_LABEL_TREE = constantCaseLabelTree();
-  private static final @Nullable Class<?> YIELD_TREE = yieldTree();
 
   private static @Nullable Class<?> constantCaseLabelTree() {
     try {
       return Class.forName("com.sun.source.tree.ConstantCaseLabelTree");
-    } catch (ClassNotFoundException e) {
-      return null;
-    }
-  }
-
-  private static @Nullable Class<?> yieldTree() {
-    try {
-      return Class.forName("com.sun.source.tree.YieldTree");
     } catch (ClassNotFoundException e) {
       return null;
     }
@@ -1907,27 +1899,11 @@ public class ASTHelpers {
     }
 
     private static @Nullable ExpressionTree getSwitchExpression(@Nullable Tree tree) {
-      if (tree == null) {
-        return null;
-      }
-
       if (tree instanceof SwitchTree switchTree) {
         return switchTree.getExpression();
       }
-      // Reflection is required for JDK < 12
-      try {
-        Class<?> switchExpression = Class.forName("com.sun.source.tree.SwitchExpressionTree");
-        Class<?> clazz = tree.getClass();
-        if (switchExpression.isAssignableFrom(clazz)) {
-          try {
-            Method method = clazz.getMethod("getExpression");
-            return (ExpressionTree) method.invoke(tree);
-          } catch (ReflectiveOperationException e) {
-            throw new LinkageError(e.getMessage(), e);
-          }
-        }
-      } catch (ClassNotFoundException e) {
-        // continue below
+      if (tree instanceof SwitchExpressionTree switchExpressionTree) {
+        return switchExpressionTree.getExpression();
       }
       return null;
     }
@@ -2482,31 +2458,15 @@ public class ASTHelpers {
     return false;
   }
 
-  private static final Method IS_LOCAL = getIsLocal();
-
-  private static Method getIsLocal() {
-    try {
-      return Symbol.class.getMethod("isLocal");
-    } catch (NoSuchMethodException e) {
-      // continue below
-    }
-    try {
-      return Symbol.class.getMethod("isDirectlyOrIndirectlyLocal");
-    } catch (NoSuchMethodException e) {
-      throw new LinkageError(e.getMessage(), e);
-    }
-  }
-
   /**
    * Returns true if the symbol is directly or indirectly local to a method or variable initializer;
-   * see {@code Symbol#isLocal} or {@code Symbol#isDirectlyOrIndirectlyLocal}.
+   *
+   * @deprecated used {@code Symbol#isDirectlyOrIndirectlyLocal} instead
    */
+  @Deprecated
+  @InlineMe(replacement = "symbol.isDirectlyOrIndirectlyLocal()")
   public static boolean isLocal(Symbol symbol) {
-    try {
-      return (boolean) IS_LOCAL.invoke(symbol);
-    } catch (ReflectiveOperationException e) {
-      throw new LinkageError(e.getMessage(), e);
-    }
+    return symbol.isDirectlyOrIndirectlyLocal();
   }
 
   /** Returns true if the symbol is static. Returns {@code false} for module symbols. */
@@ -2549,9 +2509,13 @@ public class ASTHelpers {
     return method.getModifiers().contains(Modifier.ABSTRACT);
   }
 
-  /** Returns a compatibility adapter around {@link Scope}. */
-  public static ErrorProneScope scope(Scope scope) {
-    return new ErrorProneScope(scope);
+  /**
+   * @deprecated use Scope directly instead.
+   */
+  @Deprecated
+  @InlineMe(replacement = "scope")
+  public static Scope scope(Scope scope) {
+    return scope;
   }
 
   public static EnumSet<Flags.Flag> asFlagSet(long flags) {

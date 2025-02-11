@@ -56,7 +56,6 @@ import com.sun.source.tree.ArrayTypeTree;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.BlockTree;
-import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
@@ -66,6 +65,7 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.StatementTree;
+import com.sun.source.tree.SwitchExpressionTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TypeCastTree;
 import com.sun.source.tree.VariableTree;
@@ -79,8 +79,6 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.processing.JavacProcessingEnvironment;
-import java.lang.reflect.Method;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import javax.lang.model.element.Name;
@@ -570,39 +568,13 @@ class NullnessUtils {
       }
 
       boolean isSwitchExpressionWithDefinitelyNullBranch(Tree tree) {
-        return tree.getKind().name().equals("SWITCH_EXPRESSION")
-            && getCases(tree).stream()
-                .map(NullnessUtils::getBody)
+        return tree instanceof SwitchExpressionTree switchExpressionTree
+            && switchExpressionTree.getCases().stream()
+                .map(c -> c.getBody())
                 .anyMatch(t -> Objects.equals(visit(t, null), TRUE));
       }
     }.visit(tree, null);
   }
-
-  private static List<?> getCases(Tree switchExpressionTree) {
-    try {
-      if (getCasesMethod == null) {
-        getCasesMethod =
-            Class.forName("com.sun.source.tree.SwitchExpressionTree").getMethod("getCases");
-      }
-      return (List<?>) getCasesMethod.invoke(switchExpressionTree);
-    } catch (ReflectiveOperationException e) {
-      throw new LinkageError(e.getMessage(), e);
-    }
-  }
-
-  private static Tree getBody(Object caseTree) {
-    try {
-      if (getBodyMethod == null) {
-        getBodyMethod = CaseTree.class.getMethod("getBody");
-      }
-      return (Tree) getBodyMethod.invoke(caseTree);
-    } catch (ReflectiveOperationException e) {
-      throw new LinkageError(e.getMessage(), e);
-    }
-  }
-
-  private static Method getCasesMethod;
-  private static Method getBodyMethod;
 
   /** Returns true if this is {@code x == null ? x : ...} or similar. */
   private static boolean isTernaryXIfXIsNull(ConditionalExpressionTree tree) {

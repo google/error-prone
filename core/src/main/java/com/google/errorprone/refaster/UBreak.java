@@ -20,9 +20,6 @@ import com.sun.source.tree.BreakTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.TreeVisitor;
 import com.sun.tools.javac.tree.JCTree.JCBreak;
-import com.sun.tools.javac.tree.JCTree.JCExpression;
-import com.sun.tools.javac.tree.TreeMaker;
-import com.sun.tools.javac.util.Name;
 import java.util.Objects;
 import org.jspecify.annotations.Nullable;
 
@@ -69,23 +66,7 @@ final class UBreak extends USimpleStatement implements BreakTree {
 
   @Override
   public JCBreak inline(Inliner inliner) {
-    return makeBreak(ULabeledStatement.inlineLabel(getLabel(), inliner), inliner);
-  }
-
-  private static JCBreak makeBreak(Name label, Inliner inliner) {
-    try {
-      if (Runtime.version().feature() >= 12) {
-        return (JCBreak)
-            TreeMaker.class
-                .getMethod("Break", JCExpression.class)
-                .invoke(inliner.maker(), inliner.maker().Ident(label));
-      } else {
-        return (JCBreak)
-            TreeMaker.class.getMethod("Break", Name.class).invoke(inliner.maker(), label);
-      }
-    } catch (ReflectiveOperationException e) {
-      throw new LinkageError(e.getMessage(), e);
-    }
+    return inliner.maker().Break(ULabeledStatement.inlineLabel(getLabel(), inliner));
   }
 
   @Override

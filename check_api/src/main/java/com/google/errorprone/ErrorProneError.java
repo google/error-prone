@@ -24,7 +24,6 @@ import com.sun.tools.javac.util.JCDiagnostic;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticType;
 import com.sun.tools.javac.util.Log;
-import java.lang.reflect.Method;
 import javax.tools.JavaFileObject;
 
 /**
@@ -49,32 +48,6 @@ public class ErrorProneError extends Error {
     this.cause = cause;
     this.pos = pos;
     this.source = source;
-  }
-
-  /**
-   * @deprecated prefer {@link #logFatalError(Log, Context)}
-   */
-  @Deprecated
-  public void logFatalError(Log log) {
-    String version = ErrorProneVersion.loadVersionFromPom().or("unknown version");
-    JavaFileObject prev = log.currentSourceFile();
-    try {
-      log.useSource(source);
-      // use reflection since this overload of error doesn't exist in JDK >= 11
-      Method m =
-          Log.class.getMethod("error", DiagnosticPosition.class, String.class, Object[].class);
-      m.invoke(
-          log,
-          pos,
-          "error.prone.crash",
-          Throwables.getStackTraceAsString(cause),
-          version,
-          checkName);
-    } catch (ReflectiveOperationException e) {
-      throw new LinkageError(e.getMessage(), e);
-    } finally {
-      log.useSource(prev);
-    }
   }
 
   public void logFatalError(Log log, Context context) {
