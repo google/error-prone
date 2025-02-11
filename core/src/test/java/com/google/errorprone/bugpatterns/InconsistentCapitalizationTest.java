@@ -194,6 +194,16 @@ public class InconsistentCapitalizationNegativeCases {
       }
     }
   }
+  
+  static class HandlesFieldsWithInconsistentCapitalization {
+    
+    private int abc;
+    private int ABC;
+    
+    void foo(int ABC) {
+    
+    }
+  }
 }\
 """)
         .doTest();
