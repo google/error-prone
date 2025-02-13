@@ -62,6 +62,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.ModifiersTree;
+import com.sun.source.tree.PatternCaseLabelTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.SwitchTree;
@@ -245,6 +246,12 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     // One-pass scan through each case in switch
     for (int caseIndex = 0; caseIndex < cases.size(); caseIndex++) {
       CaseTree caseTree = cases.get(caseIndex);
+      boolean hasCasePattern =
+          caseTree.getLabels().stream().anyMatch(PatternCaseLabelTree.class::isInstance);
+      if (hasCasePattern) {
+        // Case patterns are not currently supported by the checker.
+        return DEFAULT_ANALYSIS_RESULT;
+      }
       boolean isDefaultCase = caseTree.getExpressions().isEmpty();
       hasDefaultCase |= isDefaultCase;
       // Accumulate enum values included in this case
