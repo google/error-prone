@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns.testdata;
 
 import com.google.errorprone.bugpatterns.BanSerializableReadTest;
+import java.io.DataInput;
 import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
@@ -132,6 +133,15 @@ public class BanSerializableReadNegativeCases implements Serializable, Externali
     BanSerializableReadNegativeCases c = new BanSerializableReadNegativeCases();
     c.readObject(ois);
     ois.defaultReadObject();
+  }
+
+  private static class SomeSerializable implements Serializable {
+    // A readObject method that doesn't actually satisfy Serializable interface.
+    public void readObject(DataInput ois) throws IOException, ClassNotFoundException {}
+  }
+
+  public static final void callOverloadedReadObject() throws IOException, ClassNotFoundException {
+    new SomeSerializable().readObject(null);
   }
 
   private static class ObjectInputStreamIsExempt extends ObjectInputStream {

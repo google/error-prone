@@ -94,4 +94,14 @@ class BanSerializableReadPositiveCases implements Serializable {
   public void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException {
     ois.defaultReadObject();
   }
+
+  private static class SomeSerializable<T extends ObjectInputStream> implements Serializable {
+    private void readObject(T ois) throws IOException, ClassNotFoundException {}
+  }
+
+  @SuppressWarnings("BanSerializableRead")
+  public static final void callGenericReadObject() throws IOException, ClassNotFoundException {
+    // BUG: Diagnostic contains: BanSerializableRead
+    new SomeSerializable().readObject(null);
+  }
 }

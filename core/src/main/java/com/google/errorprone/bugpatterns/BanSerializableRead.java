@@ -66,7 +66,10 @@ public final class BanSerializableRead extends AbstractBanUnsafeAPIChecker
 
               // because in the next part we exempt readObject functions, here we
               // check for calls to those functions
-              instanceMethod().onDescendantOf("java.io.Serializable").named("readObject"),
+              instanceMethod()
+                  .onDescendantOf("java.io.Serializable")
+                  .named("readObject")
+                  .withParameters("java.io.ObjectInputStream"),
 
               // we need to ban java.io.ObjectInput.readObject too, but most of the time it's called
               // inside java.io.Externalizable.readExternal. Also ban direct calls of readExternal,
