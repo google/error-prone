@@ -171,7 +171,7 @@ public final class TruthAssertExpected extends BugChecker implements MethodInvoc
         || isConstantCreator(terminatingArgument)) {
       return Description.NO_MATCH;
     }
-    SuggestedFix fix = SuggestedFix.swap(assertedArgument, terminatingArgument);
+    SuggestedFix fix = SuggestedFix.swap(assertedArgument, terminatingArgument, state);
     if (SuggestedFixes.compilesWithFix(fix, state)) {
       return describeMatch(tree, fix);
     }

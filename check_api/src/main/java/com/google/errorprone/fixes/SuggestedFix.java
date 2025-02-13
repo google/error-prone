@@ -22,6 +22,7 @@ import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.fixes.Replacements.CoalescePolicy;
 import com.google.errorprone.util.ASTHelpers;
@@ -149,9 +150,9 @@ public abstract class SuggestedFix implements Fix {
     return builder().delete(node).build();
   }
 
-  /** {@link Builder#swap(Tree, Tree)} */
-  public static SuggestedFix swap(Tree node1, Tree node2) {
-    return builder().swap(node1, node2).build();
+  /** {@link Builder#swap(Tree, Tree, VisitorState)} */
+  public static SuggestedFix swap(Tree node1, Tree node2, VisitorState state) {
+    return builder().swap(node1, node2, state).build();
   }
 
   private static final SuggestedFix EMPTY = builder().build();
@@ -288,13 +289,11 @@ public abstract class SuggestedFix implements Fix {
     }
 
     @CanIgnoreReturnValue
-    public Builder swap(Tree node1, Tree node2) {
+    public Builder swap(Tree node1, Tree node2, VisitorState state) {
       checkNotSyntheticConstructor(node1);
       checkNotSyntheticConstructor(node2);
-      // calling Tree.toString() is kind of cheesy, but we don't currently have a better option
-      // TODO(cushon): consider an approach that doesn't rewrite the original tokens
-      fixes.add(ReplacementFix.create((DiagnosticPosition) node1, node2.toString()));
-      fixes.add(ReplacementFix.create((DiagnosticPosition) node2, node1.toString()));
+      fixes.add(ReplacementFix.create((DiagnosticPosition) node1, state.getSourceForNode(node2)));
+      fixes.add(ReplacementFix.create((DiagnosticPosition) node2, state.getSourceForNode(node1)));
       return this;
     }
 

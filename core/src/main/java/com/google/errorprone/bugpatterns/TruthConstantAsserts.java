@@ -84,7 +84,7 @@ public class TruthConstantAsserts extends BugChecker implements MethodInvocation
     if (ASTHelpers.constValue(expectation) != null) {
       return Description.NO_MATCH;
     }
-    SuggestedFix fix = SuggestedFix.swap(expr, expectation);
+    SuggestedFix fix = SuggestedFix.swap(expr, expectation, state);
     return describeMatch(methodInvocationTree, fix);
   }
 }

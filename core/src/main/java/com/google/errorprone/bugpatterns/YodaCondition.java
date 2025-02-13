@@ -126,7 +126,7 @@ public final class YodaCondition extends BugChecker
                     format(
                         "%s %s %s",
                         state.getSourceForNode(rhs), inverse(tree), state.getSourceForNode(lhs)))
-                : SuggestedFix.swap(lhs, rhs))
+                : SuggestedFix.swap(lhs, rhs, state))
         .build();
   }
 
