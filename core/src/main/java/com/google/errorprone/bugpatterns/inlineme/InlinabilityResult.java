@@ -20,7 +20,6 @@ import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
-import static com.google.errorprone.util.ASTHelpers.isLocal;
 import static com.google.errorprone.util.ASTHelpers.isSuper;
 import static com.google.errorprone.util.ASTHelpers.methodCanBeOverridden;
 
@@ -318,7 +317,7 @@ abstract class InlinabilityResult {
 
       @Override
       public Void visitIdentifier(IdentifierTree identifierTree, Void unused) {
-        if (!isLocal(getSymbol(identifierTree))) {
+        if (!getSymbol(identifierTree).isDirectlyOrIndirectlyLocal()) {
           if (!identifierTree.getName().contentEquals("this")) {
             if (isDeprecatedOrLessVisible(identifierTree, minVisibility)) {
               return null; // short-circuit

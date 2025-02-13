@@ -29,7 +29,6 @@ import com.google.common.base.CharMatcher;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.MoreAnnotations;
 import com.google.errorprone.util.SourceCodeEscapers;
 import com.sun.source.tree.ClassTree;
@@ -293,7 +292,7 @@ abstract class InlineMeData {
         return super.visitIdentifier(identifierTree, null);
       }
       Symbol symbol = getSymbol(identifierTree);
-      if (symbol == null || ASTHelpers.isLocal(symbol)) {
+      if (symbol == null || symbol.isDirectlyOrIndirectlyLocal()) {
         return super.visitIdentifier(identifierTree, null);
       }
 

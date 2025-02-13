@@ -55,7 +55,7 @@ public class SynchronizeOnNonFinalField extends BugChecker
 
     // TODO(cushon): check that the receiver doesn't contain mutable state.
     // Currently 'this.locks[i].mu' is accepted if 'mu' is final but 'locks' is non-final.
-    if (ASTHelpers.isLocal(varSymbol)
+    if (varSymbol.isDirectlyOrIndirectlyLocal()
         || varSymbol.isStatic()
         || (varSymbol.flags() & Flags.FINAL) != 0) {
       return NO_MATCH;

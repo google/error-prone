@@ -49,7 +49,6 @@ import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasDirectAnnotationWithSimpleName;
 import static com.google.errorprone.util.ASTHelpers.isGeneratedConstructor;
-import static com.google.errorprone.util.ASTHelpers.isLocal;
 import static com.sun.source.tree.Tree.Kind.METHOD;
 
 import com.google.common.collect.ImmutableList;
@@ -381,7 +380,7 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
 
   private String apiTrailer(MethodSymbol symbol, VisitorState state) {
     // (isLocal returns true for both local classes and anonymous classes. That's good for us.)
-    if (isLocal(enclosingClass(symbol))) {
+    if (enclosingClass(symbol).isDirectlyOrIndirectlyLocal()) {
       /*
        * We don't have a defined format for members of local and anonymous classes. After all, their
        * generated class names can change easily as other such classes are introduced.

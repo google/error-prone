@@ -198,7 +198,7 @@ public class UnnecessaryCheckNotNull extends BugChecker implements MethodInvocat
     Set<Symbol> symbols = new HashSet<>();
     for (IdentifierTree ident : getVariableUses(tree)) {
       Symbol sym = ASTHelpers.getSymbol(ident);
-      if (ASTHelpers.isLocal(sym)) {
+      if (sym.isDirectlyOrIndirectlyLocal()) {
         symbols.add(sym);
       }
     }

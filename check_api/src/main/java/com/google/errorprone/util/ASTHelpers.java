@@ -2458,17 +2458,6 @@ public class ASTHelpers {
     return false;
   }
 
-  /**
-   * Returns true if the symbol is directly or indirectly local to a method or variable initializer;
-   *
-   * @deprecated used {@code Symbol#isDirectlyOrIndirectlyLocal} instead
-   */
-  @Deprecated
-  @InlineMe(replacement = "symbol.isDirectlyOrIndirectlyLocal()")
-  public static boolean isLocal(Symbol symbol) {
-    return symbol.isDirectlyOrIndirectlyLocal();
-  }
-
   /** Returns true if the symbol is static. Returns {@code false} for module symbols. */
   public static boolean isStatic(Symbol symbol) {
     return switch (symbol.getKind()) {
@@ -2507,15 +2496,6 @@ public class ASTHelpers {
    */
   public static boolean isAbstract(MethodSymbol method) {
     return method.getModifiers().contains(Modifier.ABSTRACT);
-  }
-
-  /**
-   * @deprecated use Scope directly instead.
-   */
-  @Deprecated
-  @InlineMe(replacement = "scope")
-  public static Scope scope(Scope scope) {
-    return scope;
   }
 
   public static EnumSet<Flags.Flag> asFlagSet(long flags) {
