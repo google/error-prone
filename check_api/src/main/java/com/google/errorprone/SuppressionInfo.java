@@ -16,25 +16,33 @@
 
 package com.google.errorprone;
 
+import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.annotations.CheckReturnValue;
 import com.google.errorprone.annotations.Immutable;
+import com.google.errorprone.bugpatterns.BugChecker;
+import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Suppressible;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
+import com.sun.source.tree.Tree;
 import com.sun.source.util.SimpleTreeVisitor;
+import com.sun.source.util.Trees;
 import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.processing.JavacProcessingEnvironment;
 import com.sun.tools.javac.util.Name;
 import com.sun.tools.javac.util.Pair;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Immutable container of "suppression signals" - annotations or other information gathered from
@@ -61,11 +69,85 @@ public class SuppressionInfo {
 
   private final boolean inGeneratedCode;
 
+  @BugPattern(summary = "Warns when a @SuppressWarnings is not needed", severity = WARNING)
+  private static final class UnusedSuppressionChecker extends BugChecker {}
+
+  private static final UnusedSuppressionChecker UNUSED_SUPPRESSION_CHECKER =
+      new UnusedSuppressionChecker();
+
+  // for tracking unneeded suppressions
+  static class SuppressionInfoForSymbol {
+    private final @Nullable Symbol symbol;
+    private final ImmutableSet<String> suppressWarningStringsForSymbol;
+    private final Set<String> usedSuppressWarningStrings = new HashSet<>();
+    private final ImmutableSet<Name> customSuppressionsForSymbol;
+    private final @Nullable SuppressionInfoForSymbol parent;
+
+    public SuppressionInfoForSymbol(
+        @Nullable Symbol symbol,
+        ImmutableSet<String> suppressWarningStringsForSymbol,
+        ImmutableSet<Name> customSuppressionsForSymbol,
+        @Nullable SuppressionInfoForSymbol parent) {
+      this.symbol = symbol;
+      this.suppressWarningStringsForSymbol = suppressWarningStringsForSymbol;
+      this.customSuppressionsForSymbol = customSuppressionsForSymbol;
+      this.parent = parent;
+    }
+
+    public void markSuppressionStringAsUsed(String suppressionName) {
+      if (suppressWarningStringsForSymbol.contains(suppressionName)) {
+        usedSuppressWarningStrings.add(suppressionName);
+      } else if (parent != null) {
+        parent.markSuppressionStringAsUsed(suppressionName);
+      } else {
+        throw new IllegalArgumentException("Suppression string not found: " + suppressionName);
+      }
+    }
+  }
+
+  private final @Nullable SuppressionInfoForSymbol infoForClosestSymbol;
+
+  public void updatedUsedSuppressions(Suppressed suppressed) {
+    String suppressionName = suppressed.getSuppressionName();
+    if (suppressionName != null && suppressed.isUsed()) {
+      infoForClosestSymbol.markSuppressionStringAsUsed(suppressionName);
+    }
+  }
+
+  public void warnOnUnusedSuppressions(VisitorState state) {
+    if (infoForClosestSymbol == null) {
+      return;
+    }
+    for (String warn : infoForClosestSymbol.suppressWarningStringsForSymbol) {
+      if (!infoForClosestSymbol.usedSuppressWarningStrings.contains(warn)) {
+        Tree tree =
+            Trees.instance(JavacProcessingEnvironment.instance(state.context))
+                .getTree(infoForClosestSymbol.symbol);
+        Description description =
+            UNUSED_SUPPRESSION_CHECKER
+                .buildDescription(tree)
+                .setMessage("Unnecessary @SuppressWarnings(\"" + warn + "\")")
+                .overrideSeverity(WARNING)
+                .build();
+        state.reportMatch(description);
+      }
+    }
+  }
+
   private SuppressionInfo(
       Set<String> suppressWarningsStrings, Set<Name> customSuppressions, boolean inGeneratedCode) {
+    this(suppressWarningsStrings, customSuppressions, inGeneratedCode, null);
+  }
+
+  private SuppressionInfo(
+      Set<String> suppressWarningsStrings,
+      Set<Name> customSuppressions,
+      boolean inGeneratedCode,
+      @Nullable SuppressionInfoForSymbol infoForClosestSymbol) {
     this.suppressWarningsStrings = ImmutableSet.copyOf(suppressWarningsStrings);
     this.customSuppressions = ImmutableSet.copyOf(customSuppressions);
     this.inGeneratedCode = inGeneratedCode;
+    this.infoForClosestSymbol = infoForClosestSymbol;
   }
 
   private static boolean isGenerated(Symbol sym) {
@@ -82,18 +164,29 @@ public class SuppressionInfo {
   public SuppressedState suppressedState(
       Suppressible suppressible, boolean suppressedInGeneratedCode, VisitorState state) {
     if (inGeneratedCode && suppressedInGeneratedCode) {
-      return SuppressedState.SUPPRESSED;
+      return new Suppressed(null);
     }
     if (suppressible.supportsSuppressWarnings()
         && (suppressWarningsStrings.contains("all")
             || !Collections.disjoint(suppressible.allNames(), suppressWarningsStrings))) {
-      return SuppressedState.SUPPRESSED;
+      String name;
+      if (suppressWarningsStrings.contains("all")) {
+        name = "all";
+      } else {
+        // find the first name that suppresses this check
+        name =
+            suppressible.allNames().stream()
+                .filter(suppressWarningsStrings::contains)
+                .findAny()
+                .get();
+      }
+      return new Suppressed(name);
     }
     if (suppressible.suppressedByAnyOf(customSuppressions, state)) {
-      return SuppressedState.SUPPRESSED;
+      return new Suppressed(null);
     }
 
-    return SuppressedState.UNSUPPRESSED;
+    return Unsuppressed.UNSUPPRESSED;
   }
 
   /**
@@ -128,14 +221,20 @@ public class SuppressionInfo {
    * @param sym The {@code Symbol} for the AST node currently being scanned
    * @param state VisitorState for checking the current tree, as well as for getting the {@code
    *     SuppressWarnings symbol type}.
+   * @param warnOnUnneededSuppressWarningsStrings
    */
   public SuppressionInfo withExtendedSuppressions(
-      Symbol sym, VisitorState state, Set<? extends Name> customSuppressionAnnosToLookFor) {
+          Symbol sym,
+          VisitorState state,
+          Set<? extends Name> customSuppressionAnnosToLookFor,
+          Set<String> warnOnUnneededSuppressWarningsStrings) {
     boolean newInGeneratedCode = inGeneratedCode || isGenerated(sym);
     boolean anyModification = newInGeneratedCode != inGeneratedCode;
 
     /* Handle custom suppression annotations. */
     Set<Name> lookingFor = new HashSet<>(customSuppressionAnnosToLookFor);
+    // TODO what if we have nested suppressions with the same customSuppression annotation?
+    //  Is the inner one unused?  Let's just say no for now.  We'll report on the outermost one.
     lookingFor.removeAll(customSuppressions);
     Set<Name> newlyPresent = ASTHelpers.annotationsAmong(sym, lookingFor, state);
     Set<Name> newCustomSuppressions;
@@ -151,6 +250,7 @@ public class SuppressionInfo {
     Name suppressLint = ANDROID_SUPPRESS_LINT.get(state);
     Name valueName = VALUE.get(state);
     Set<String> newSuppressions = null;
+    Set<String> newWarnOnUnneededSuppressions = new HashSet<>();
     // Iterate over annotations on this symbol, looking for SuppressWarnings
     for (Attribute.Compound attr : sym.getAnnotationMirrors()) {
       if ((attr.type.tsym == state.getSymtab().suppressWarningsType.tsym)
@@ -167,6 +267,9 @@ public class SuppressionInfo {
                     newSuppressions = new HashSet<>(suppressWarningsStrings);
                   }
                   newSuppressions.add(suppressedWarning);
+                  if (warnOnUnneededSuppressWarningsStrings.contains(suppressedWarning)) {
+                    newWarnOnUnneededSuppressions.add(suppressedWarning);
+                  }
                 }
               }
             } else {
@@ -187,11 +290,56 @@ public class SuppressionInfo {
     if (newSuppressions == null) {
       newSuppressions = suppressWarningsStrings;
     }
-    return new SuppressionInfo(newSuppressions, newCustomSuppressions, newInGeneratedCode);
+
+    SuppressionInfoForSymbol newInfoForClosestSymbol =
+        new SuppressionInfoForSymbol(
+            sym,
+            ImmutableSet.copyOf(newWarnOnUnneededSuppressions),
+            ImmutableSet.copyOf(newlyPresent),
+            infoForClosestSymbol);
+    return new SuppressionInfo(
+        newSuppressions, newCustomSuppressions, newInGeneratedCode, newInfoForClosestSymbol);
   }
 
-  public enum SuppressedState {
-    UNSUPPRESSED,
-    SUPPRESSED
+  public sealed interface SuppressedState permits Suppressed, Unsuppressed {
+    boolean isSuppressed();
+  }
+
+  public static final class Unsuppressed implements SuppressedState {
+    public static final Unsuppressed UNSUPPRESSED = new Unsuppressed();
+
+    private Unsuppressed() {}
+
+    @Override
+    public boolean isSuppressed() {
+      return false;
+    }
+  }
+
+  public static final class Suppressed implements SuppressedState {
+    private final @Nullable String suppressionName;
+
+    private boolean used = false;
+
+    public Suppressed(@Nullable String suppressionName) {
+      this.suppressionName = suppressionName;
+    }
+
+    public @Nullable String getSuppressionName() {
+      return suppressionName;
+    }
+
+    public boolean isUsed() {
+      return used;
+    }
+
+    public void setAsUsed() {
+      this.used = true;
+    }
+
+    @Override
+    public boolean isSuppressed() {
+      return true;
+    }
   }
 }
