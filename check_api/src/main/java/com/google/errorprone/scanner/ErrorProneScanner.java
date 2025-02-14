@@ -22,6 +22,7 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.ErrorProneError;
 import com.google.errorprone.ErrorProneOptions;
+import com.google.errorprone.SuppressionInfo;
 import com.google.errorprone.SuppressionInfo.SuppressedState;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -174,6 +175,7 @@ public class ErrorProneScanner extends Scanner {
 
   private final Map<String, SeverityLevel> severities;
   private final ImmutableSet<BugChecker> bugCheckers;
+  private final ImmutableSet<String> allSuppressWarningsStrings;
 
   /**
    * Create an error-prone scanner for the given checkers.
@@ -204,9 +206,11 @@ public class ErrorProneScanner extends Scanner {
     this.severities = severities;
     ImmutableSet.Builder<Class<? extends Annotation>> annotationClassesBuilder =
         ImmutableSet.builder();
+    ImmutableSet.Builder<String> allSuppressWarningsStringsBuilder = ImmutableSet.builder();
     for (BugChecker checker : this.bugCheckers) {
-      registerNodeTypes(checker, annotationClassesBuilder);
+      registerNodeTypes(checker, annotationClassesBuilder, allSuppressWarningsStringsBuilder);
     }
+    this.allSuppressWarningsStrings = allSuppressWarningsStringsBuilder.build();
     ImmutableSet<Class<? extends Annotation>> annotationClasses = annotationClassesBuilder.build();
     this.customSuppressionAnnotations =
         VisitorState.memoize(
@@ -299,9 +303,12 @@ public class ErrorProneScanner extends Scanner {
 
   private void registerNodeTypes(
       BugChecker checker,
-      ImmutableSet.Builder<Class<? extends Annotation>> customSuppressionAnnotationClasses) {
+      ImmutableSet.Builder<Class<? extends Annotation>> customSuppressionAnnotationClasses,
+      ImmutableSet.Builder<String> allSuppressWarningsStringsBuilder) {
     customSuppressionAnnotationClasses.addAll(checker.customSuppressionAnnotations());
-
+    if (checker.supportsUnneededSuppressionWarnings()) {
+      allSuppressWarningsStringsBuilder.addAll(checker.allNames());
+    }
     if (checker instanceof AnnotatedTypeTreeMatcher annotatedTypeTreeMatcher) {
       annotatedTypeMatchers.add(annotatedTypeTreeMatcher);
     }
@@ -500,14 +507,18 @@ public class ErrorProneScanner extends Scanner {
     for (M matcher : matchers) {
       SuppressedState suppressed = isSuppressed(matcher, errorProneOptions, newState);
       // If the ErrorProneOptions say to visit suppressed code, we still visit it
-      if (suppressed == SuppressedState.UNSUPPRESSED
-          || errorProneOptions.isIgnoreSuppressionAnnotations()) {
+      if (!suppressed.isSuppressed()
+          || errorProneOptions.isIgnoreSuppressionAnnotations()
+          || errorProneOptions.isWarnOnUnneededSuppressions()) {
         try (AutoCloseable unused = oldState.timingSpan(matcher)) {
           // We create a new VisitorState with the suppression info specific to this matcher.
           VisitorState stateWithSuppressionInformation = newState.withSuppression(suppressed);
           reportMatch(
               processingFunction.process(matcher, tree, stateWithSuppressionInformation),
               stateWithSuppressionInformation);
+          if (suppressed.isSuppressed()) {
+            currentSuppressions.updatedUsedSuppressions((SuppressionInfo.Suppressed) suppressed);
+          }
         } catch (Exception | AssertionError t) {
           handleError(matcher, t);
         }
@@ -1067,5 +1078,10 @@ public class ErrorProneScanner extends Scanner {
 
   public ImmutableSet<BugChecker> getBugCheckers() {
     return this.bugCheckers;
+  }
+
+  @Override
+  protected Set<String> getAllSuppressWarningsStrings() {
+    return allSuppressWarningsStrings;
   }
 }
