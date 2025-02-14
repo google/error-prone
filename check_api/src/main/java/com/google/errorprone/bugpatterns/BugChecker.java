@@ -320,9 +320,10 @@ public abstract class BugChecker implements Suppressible, Serializable {
             && state.severityMap().get(canonicalName()) != SeverityLevel.ERROR;
     SuppressionInfo.SuppressedState suppressedState =
         SuppressionInfo.EMPTY
-            .withExtendedSuppressions(sym, state, customSuppressionAnnotationNames.get(state))
+            .withExtendedSuppressions(
+                sym, state, customSuppressionAnnotationNames.get(state), allNames())
             .suppressedState(BugChecker.this, suppressedInGeneratedCode, state);
-    return suppressedState == SuppressionInfo.SuppressedState.SUPPRESSED;
+    return suppressedState.isSuppressed();
   }
 
   private final Supplier<? extends Set<? extends Name>> customSuppressionAnnotationNames =
@@ -347,6 +348,14 @@ public abstract class BugChecker implements Suppressible, Serializable {
       }
     }.scan(state.getPath().getCompilationUnit(), null);
     return ImmutableRangeSet.copyOf(suppressedRegions);
+  }
+
+  /**
+   * Returns true if this checker supports unneeded suppression warnings. False by default;
+   * supporting checkers should override.
+   */
+  public boolean supportsUnneededSuppressionWarnings() {
+    return false;
   }
 
   public interface AnnotatedTypeTreeMatcher extends Suppressible {

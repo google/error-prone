@@ -18,6 +18,7 @@ package com.google.errorprone;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.errorprone.SuppressionInfo.Unsuppressed.UNSUPPRESSED;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -92,7 +93,7 @@ public class VisitorState {
         // Can't use this VisitorState to report results, so no-op collector.
         StatisticsCollector.createNoOpCollector(),
         null,
-        SuppressedState.UNSUPPRESSED);
+        UNSUPPRESSED);
   }
 
   /**
@@ -108,7 +109,7 @@ public class VisitorState {
         ErrorProneOptions.empty(),
         StatisticsCollector.createCollector(),
         null,
-        SuppressedState.UNSUPPRESSED);
+        UNSUPPRESSED);
   }
 
   /**
@@ -126,7 +127,7 @@ public class VisitorState {
         errorProneOptions,
         StatisticsCollector.createCollector(),
         null,
-        SuppressedState.UNSUPPRESSED);
+        UNSUPPRESSED);
   }
 
   /**
@@ -145,7 +146,7 @@ public class VisitorState {
         // Can't use this VisitorState to report results, so no-op collector.
         StatisticsCollector.createNoOpCollector(),
         null,
-        SuppressedState.UNSUPPRESSED);
+        UNSUPPRESSED);
   }
 
   /**
@@ -163,7 +164,7 @@ public class VisitorState {
         ErrorProneOptions.empty(),
         StatisticsCollector.createCollector(),
         null,
-        SuppressedState.UNSUPPRESSED);
+        UNSUPPRESSED);
   }
 
   /**
@@ -184,7 +185,7 @@ public class VisitorState {
         errorProneOptions,
         StatisticsCollector.createCollector(),
         null,
-        SuppressedState.UNSUPPRESSED);
+        UNSUPPRESSED);
   }
 
   /**
@@ -293,6 +294,14 @@ public class VisitorState {
     if (override != null) {
       description = description.applySeverityOverride(override);
     }
+    if (suppressedState.isSuppressed()) {
+      // we used it
+      ((SuppressionInfo.Suppressed) suppressedState).setAsUsed();
+      if (errorProneOptions().isWarnOnUnneededSuppressions()) {
+        // For now, don't report suppressed findings if we're going to warn on unused suppressions.
+        return;
+      }
+    }
     sharedState.statisticsCollector.incrementCounter(statsKey(description.checkName + "-findings"));
 
     // TODO(glorioso): I believe it is correct to still emit regular findings since the
@@ -303,7 +312,11 @@ public class VisitorState {
   }
 
   private String statsKey(String key) {
-    return suppressedState == SuppressedState.SUPPRESSED ? key + "-suppressed" : key;
+    return suppressedState.isSuppressed() ? key + "-suppressed" : key;
+  }
+
+  public SuppressedState getSuppressedState() {
+    return suppressedState;
   }
 
   /**

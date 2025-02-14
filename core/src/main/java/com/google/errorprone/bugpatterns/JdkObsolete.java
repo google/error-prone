@@ -423,4 +423,9 @@ public class JdkObsolete extends BugChecker
     }
     return true;
   }
+
+  @Override
+  public boolean supportsUnneededSuppressionWarnings() {
+    return true;
+  }
 }
