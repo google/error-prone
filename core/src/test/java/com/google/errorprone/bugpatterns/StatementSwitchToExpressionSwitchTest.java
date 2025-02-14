@@ -5465,6 +5465,69 @@ public final class StatementSwitchToExpressionSwitchTest {
         .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 
+  @Test
+  public void directConversion_casePatternWithGuard_noError() {
+    // Case patterns are not currently supported by the checker.
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+
+              int[] x;
+
+              public Test(int foo) {
+                x = null;
+              }
+
+              public int[] foo(String s) {
+                switch (s) {
+                  case String str
+                  when str.equals("good"):
+                    break;
+                  case String str
+                  when str.equals("bad"):
+                    break;
+                  default:
+                    throw new RuntimeException();
+                }
+                return x;
+              }
+            }
+            """)
+        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
+        .doTest();
+  }
+
+  @Test
+  public void directConversion_casePatternWithoutGuard_noError() {
+    // Case patterns are not currently supported by the checker.
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+
+              int[] x;
+
+              public Test(int foo) {
+                x = null;
+              }
+
+              public int[] foo(String s) {
+                switch (s) {
+                  case String str:
+                    String[] foo = {"hello", "world"};
+                    break;
+                }
+                return x;
+              }
+            }
+            """)
+        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
+        .doTest();
+  }
+
   /**
    * Asserts that there is exactly one suggested fix and returns it.
    *
