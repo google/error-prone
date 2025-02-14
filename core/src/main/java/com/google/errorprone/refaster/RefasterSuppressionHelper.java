@@ -44,12 +44,15 @@ final class RefasterSuppressionHelper {
     if (sym == null) {
       return false;
     }
+    RefasterSuppressible suppressible = new RefasterSuppressible(rule);
     return SuppressionInfo.EMPTY
         .withExtendedSuppressions(
-            sym, state, /* customSuppressionAnnosToLookFor= */ ImmutableSet.of())
-        .suppressedState(
-            new RefasterSuppressible(rule), /* suppressedInGeneratedCode= */ false, state)
-        .equals(SuppressionInfo.SuppressedState.SUPPRESSED);
+            sym,
+            state,
+            /* customSuppressionAnnosToLookFor= */ ImmutableSet.of(),
+            suppressible.allNames())
+        .suppressedState(suppressible, /* suppressedInGeneratedCode= */ false, state)
+        .isSuppressed();
   }
 
   /** Adapts a {@link RefasterRule<?, ?>} into a {@link Suppressible}. */
