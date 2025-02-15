@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.truth.Truth.assertThat;
+import static com.google.common.truth.TruthJUnit.assume;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.FixChoosers;
@@ -5463,6 +5464,73 @@ public final class StatementSwitchToExpressionSwitchTest {
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=true",
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion=true")
         .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+  }
+
+  @Test
+  public void directConversion_casePatternWithGuard_noError() {
+    // Case patterns are not currently supported by the checker.
+    assume().that(Runtime.version().feature()).isAtLeast(21);
+
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+
+              int[] x;
+
+              public Test(int foo) {
+                x = null;
+              }
+
+              public int[] foo(String s) {
+                switch (s) {
+                  case String str
+                  when str.equals("good"):
+                    break;
+                  case String str
+                  when str.equals("bad"):
+                    break;
+                  default:
+                    throw new RuntimeException();
+                }
+                return x;
+              }
+            }
+            """)
+        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
+        .doTest();
+  }
+
+  @Test
+  public void directConversion_casePatternWithoutGuard_noError() {
+    // Case patterns are not currently supported by the checker.
+    assume().that(Runtime.version().feature()).isAtLeast(21);
+
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+
+              int[] x;
+
+              public Test(int foo) {
+                x = null;
+              }
+
+              public int[] foo(String s) {
+                switch (s) {
+                  case String str:
+                    String[] foo = {"hello", "world"};
+                    break;
+                }
+                return x;
+              }
+            }
+            """)
+        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
+        .doTest();
   }
 
   /**

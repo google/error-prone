@@ -245,6 +245,14 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     // One-pass scan through each case in switch
     for (int caseIndex = 0; caseIndex < cases.size(); caseIndex++) {
       CaseTree caseTree = cases.get(caseIndex);
+      boolean hasCasePattern =
+          caseTree.getLabels().stream()
+              .anyMatch(
+                  caseLabelTree -> caseLabelTree.getKind().name().equals("PATTERN_CASE_LABEL"));
+      if (hasCasePattern) {
+        // Case patterns are not currently supported by the checker.
+        return DEFAULT_ANALYSIS_RESULT;
+      }
       boolean isDefaultCase = caseTree.getExpressions().isEmpty();
       hasDefaultCase |= isDefaultCase;
       // Accumulate enum values included in this case
