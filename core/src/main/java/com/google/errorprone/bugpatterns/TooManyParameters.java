@@ -53,6 +53,7 @@ public class TooManyParameters extends BugChecker implements MethodTreeMatcher {
           "java.lang.Deprecated",
           "java.lang.Override",
           // dependency injection annotations
+          "jakarta.inject.Inject",
           "javax.inject.Inject",
           "com.google.inject.Inject",
           "com.google.inject.Provides",
