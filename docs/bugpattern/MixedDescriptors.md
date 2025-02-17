@@ -1,14 +1,14 @@
-A proto's `Descriptor` was created by mixing the `Descriptors` class from one
-proto with the field number from another. E.g.:
+A field `Descriptor` was created by mixing the message `Descriptor` from one
+proto message with the field number from another. For example:
 
 ```java
-Foo.getDescriptors().findFieldByNumber(Bar.ID_FIELD_NUMBER)
+Foo.getDescriptor().findFieldByNumber(Bar.ID_FIELD_NUMBER)
 ```
 
 This accesses the `Descriptor` of a field in `Foo` with a field number from
 `Bar`. One of these was probably intended:
 
 ```java
-Foo.getDescriptors().findFieldByNumber(Foo.ID_FIELD_NUMBER)
-Bar.getDescriptors().findFieldByNumber(Bar.ID_FIELD_NUMBER)
+Foo.getDescriptor().findFieldByNumber(Foo.ID_FIELD_NUMBER)
+Bar.getDescriptor().findFieldByNumber(Bar.ID_FIELD_NUMBER)
 ```
