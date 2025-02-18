@@ -133,6 +133,8 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
           "jakarta.persistence.PrePersist",
           "jakarta.persistence.PreRemove",
           "jakarta.persistence.PreUpdate",
+          "jakarta.validation.constraints.AssertFalse",
+          "jakarta.validation.constraints.AssertTrue",
           "javax.annotation.PreDestroy",
           "javax.annotation.PostConstruct",
           "javax.inject.Inject",
