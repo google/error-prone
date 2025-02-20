@@ -168,7 +168,10 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
           "com.google.inject.multibindings.ProvidesIntoMap",
           "com.google.inject.multibindings.ProvidesIntoSet",
           "dagger.Provides",
-          "javax.inject.Inject");
+          "javax.inject.Inject",
+          // Parameters on test methods imply the test is parameterised, and those parameters should
+          // be used or removed.
+          "org.junit.Test");
 
   private final ImmutableSet<String> methodAnnotationsExemptingParameters;
 

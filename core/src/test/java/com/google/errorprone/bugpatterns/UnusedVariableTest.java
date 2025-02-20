@@ -1904,4 +1904,22 @@ public class Test {
         .expectUnchanged()
         .doTest();
   }
+
+  @Test
+  public void testParameters() {
+    refactoringHelper
+        .addInputLines(
+            "FooTest.java",
+            """
+            import org.junit.Test;
+
+            class FooTest {
+              @Test
+              // BUG: Diagnostic contains:
+              public void foo(int xs) {}
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
 }
