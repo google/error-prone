@@ -5533,6 +5533,295 @@ public final class StatementSwitchToExpressionSwitchTest {
         .doTest();
   }
 
+  @Test
+  public void directConversion_lexicalScopeOverlap_error() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+
+              int[] x;
+
+              public Test(int foo) {
+                x = null;
+              }
+
+              public int[] foo() {
+                int z = 0;
+                switch (z) {
+                  case 1:
+                    String foo = "hello";
+                    break;
+                  case 2:
+                    // Here, foo is defined but maybe uninitialized
+                    foo = "there";
+                    // Here, foo is defined and initialized
+                }
+                return x;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+
+              int[] x;
+
+              public Test(int foo) {
+              x = null;
+              }
+
+              public int[] foo() {
+                int z = 0;
+                String foo;
+                switch(z) {
+                  case 1 -> {
+                    foo = "hello";
+                  }
+                  case 2 ->
+                    // Here, foo is defined but maybe uninitialized
+                    foo = "there";
+                    // Here, foo is defined and initialized
+                }
+                return x;
+              }
+            }
+            """)
+        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
+        .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+  }
+
+  @Test
+  public void directConversion_lexicalScopeOverlap2_error() {
+    // The checker must be able to deduce the actual types of "var"s to enable hoisting.  Also,
+    // checks comment handling.
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.lang.annotation.Repeatable;
+            import java.util.ArrayList;
+            import java.util.Map;
+
+            class Test {
+              @interface MyAnnos {
+                Test.MyAnno[] value();
+              }
+
+              @Repeatable(Test.MyAnnos.class)
+              @interface MyAnno {
+                String v() default "";
+              }
+
+              @interface MyOtherAnno {}
+
+              int[] x;
+
+              public Test(int foo) {
+                x = null;
+              }
+
+              public int[] foo() {
+                int z = 0;
+                switch (z) {
+                  case 0:
+                  case 1:
+                    @MyAnno(v = "foo")
+                    // alpha
+                    /* beta */ @MyOtherAnno
+                    @MyAnno
+                    /* aa */ String /* bb */ foo /* cc */ = /* dd */ "hello" /* ee */; // ff
+                    var anotherString = "salut";
+                    var listInt = new ArrayList<Integer>();
+                    double dontHoistMe = 2.0d;
+                    dontHoistMe += 1.0d;
+                    int alsoDontHoistMe = 1;
+                    System.out.println(alsoDontHoistMe);
+                    Map<? extends String, ? super Test> map = null;
+                    break;
+                  case 2:
+                    map = null;
+                    foo = "there";
+                    anotherString = "bonjour";
+                    listInt = null;
+                    break;
+                  case 3:
+                    anotherString = "just this var";
+                    int staysHere;
+                }
+                return x;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.lang.annotation.Repeatable;
+            import java.util.ArrayList;
+            import java.util.Map;
+
+            class Test {
+              @interface MyAnnos {
+                Test.MyAnno[] value();
+              }
+
+              @Repeatable(Test.MyAnnos.class)
+              @interface MyAnno {
+                String v() default "";
+              }
+
+              @interface MyOtherAnno {}
+              int[] x;
+
+              public Test(int foo) {
+                x = null;
+              }
+
+              public int[] foo() {
+                int z = 0;
+                // alpha
+                /* beta */
+                /* aa */
+                /* bb */
+                /* cc */
+                /* dd */
+                /* ee */
+                @MyAnno(v = "foo")
+                @MyOtherAnno
+                @MyAnno
+                String foo;
+                String anotherString;
+                ArrayList<Integer> listInt;
+                Map<? extends String, ? super Test> map;
+                switch (z) {
+                  case 0, 1 -> {
+                    foo = "hello";
+                    anotherString = "salut";
+                    listInt = new ArrayList<Integer>();
+                    double dontHoistMe = 2.0d;
+                    dontHoistMe += 1.0d;
+                    int alsoDontHoistMe = 1;
+                    System.out.println(alsoDontHoistMe);
+                    map = null;
+                  }
+                  case 2 -> {
+                    map = null;
+                    foo = "there";
+                    anotherString = "bonjour";
+                    listInt = null;
+                  }
+                  case 3 -> {
+                    anotherString = "just this var";
+                    int staysHere;
+                  }
+                }
+                return x;
+              }
+            }
+            """)
+        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
+        .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+  }
+
+  @Test
+  public void directConversion_hoistArray_noError() {
+    // Cannot hoist array types because certain types of initializers don't work with assignment
+    // expressions.
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+
+              int[] x;
+
+              public Test(int foo) {
+                x = null;
+              }
+
+              public int[] foo() {
+                int z = 0;
+                switch (z) {
+                  case 1:
+                    String[] foo = {"hello", "world"};
+                    break;
+                  case 2:
+                    foo = null;
+                }
+                return x;
+              }
+            }
+            """)
+        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
+        .doTest();
+  }
+
+  @Test
+  public void directConversion_lexicalScopeOverlap3_error() {
+    // Switch statement is in a labeled statement.  The checker must surround the switch statement
+    // with braces
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+
+              int[] x;
+
+              public Test(int foo) {
+                x = null;
+              }
+
+              public int[] foo() {
+                int z = 0;
+                myLabel:
+                switch (z) {
+                  case 1:
+                    String foo = "hello";
+                    break;
+                  case 2:
+                    foo = "there";
+                }
+                return x;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+
+              int[] x;
+
+              public Test(int foo) {
+              x = null;
+              }
+
+              public int[] foo() {
+                int z = 0;
+                myLabel: {
+                  String foo;
+                  switch(z) {
+                    case 1 -> {
+                      foo = "hello";
+                    }
+                    case 2 ->
+                      foo = "there";
+                  }
+                }
+                return x;
+              }
+            }
+            """)
+        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
+        .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+  }
+
   /**
    * Asserts that there is exactly one suggested fix and returns it.
    *
