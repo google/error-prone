@@ -16,8 +16,6 @@
 
 package com.google.errorprone.refaster;
 
-import static com.google.common.base.Preconditions.checkState;
-
 import com.google.auto.value.AutoValue;
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableMap;
@@ -71,6 +69,7 @@ import com.sun.tools.javac.tree.JCTree.JCAssignOp;
 import com.sun.tools.javac.tree.JCTree.JCBinary;
 import com.sun.tools.javac.tree.JCTree.JCBlock;
 import com.sun.tools.javac.tree.JCTree.JCCase;
+import com.sun.tools.javac.tree.JCTree.JCCaseLabel;
 import com.sun.tools.javac.tree.JCTree.JCCatch;
 import com.sun.tools.javac.tree.JCTree.JCConditional;
 import com.sun.tools.javac.tree.JCTree.JCDoWhileLoop;
@@ -661,59 +660,19 @@ abstract class PlaceholderUnificationVisitor
   @Override
   public Choice<State<JCCase>> visitCase(CaseTree node, State<?> state) {
     return chooseSubtrees(
-        state, s -> unifyStatements(node.getStatements(), s), stmts -> makeCase(node, stmts));
-  }
-
-  private JCCase makeCase(CaseTree node, List<JCStatement> stmts) {
-    try {
-      if (Runtime.version().feature() >= 12) {
-        Enum<?> caseKind = (Enum) CaseTree.class.getMethod("getCaseKind").invoke(node);
-        checkState(
-            caseKind.name().contentEquals("STATEMENT"),
-            "expression switches are not supported yet");
-        if (Runtime.version().feature() >= 21) {
-          return (JCCase)
-              TreeMaker.class
-                  .getMethod(
-                      "Case",
-                      Class.forName("com.sun.source.tree.CaseTree$CaseKind"),
-                      List.class,
-                      JCExpression.class,
-                      List.class,
-                      JCTree.class)
-                  .invoke(
-                      maker(),
-                      caseKind,
-                      CaseTree.class.getMethod("getLabels").invoke(node),
-                      CaseTree.class.getMethod("getGuard").invoke(node),
-                      stmts,
-                      /* body */ null);
-        }
-        return (JCCase)
-            TreeMaker.class
-                .getMethod(
-                    "Case",
-                    Class.forName("com.sun.source.tree.CaseTree$CaseKind"),
-                    List.class,
-                    List.class,
-                    JCTree.class)
-                .invoke(
-                    maker(),
-                    caseKind,
-                    Runtime.version().feature() >= 17
-                        ? CaseTree.class.getMethod("getLabels").invoke(node)
-                        : List.of((JCExpression) node.getExpression()),
+        state,
+        s -> unify(node.getLabels(), s),
+        s -> unifyExpression(node.getGuard(), s),
+        s -> unifyStatements(node.getStatements(), s),
+        s -> unify(node.getBody(), s),
+        (labels, guard, stmts, body) ->
+            maker()
+                .Case(
+                    node.getCaseKind(),
+                    List.convert(JCCaseLabel.class, labels),
+                    guard,
                     stmts,
-                    /* body */ null);
-      } else {
-        return (JCCase)
-            TreeMaker.class
-                .getMethod("Case", JCExpression.class, List.class)
-                .invoke(maker(), node.getExpression(), stmts);
-      }
-    } catch (ReflectiveOperationException e) {
-      throw new LinkageError(e.getMessage(), e);
-    }
+                    body));
   }
 
   @Override

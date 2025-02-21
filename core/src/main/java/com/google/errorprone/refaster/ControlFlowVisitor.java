@@ -234,7 +234,10 @@ public class ControlFlowVisitor extends SimpleTreeVisitor<Result, BreakContext> 
 
   @Override
   public Result visitCase(CaseTree node, BreakContext cxt) {
-    return visitStatements(node.getStatements(), cxt);
+    return switch (node.getCaseKind()) {
+      case STATEMENT -> visitStatements(node.getStatements(), cxt);
+      case RULE -> node.getBody().accept(this, cxt);
+    };
   }
 
   @Override
