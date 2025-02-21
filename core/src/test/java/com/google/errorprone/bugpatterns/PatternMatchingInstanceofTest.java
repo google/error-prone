@@ -358,7 +358,7 @@ public final class PatternMatchingInstanceofTest {
   }
 
   @Test
-  public void genericWithUpperBoundedWildcard() {
+  public void rawType_findingAvoided() {
     helper
         .addInputLines(
             "Test.java",
@@ -374,20 +374,7 @@ public final class PatternMatchingInstanceofTest {
               }
             }
             """)
-        .addOutputLines(
-            "Test.java",
-            """
-            import java.util.List;
-
-            class Test {
-              void test(Object object) {
-                if (object instanceof List list) {
-                  @SuppressWarnings("unchecked")
-                  List<? extends CharSequence> xs = list;
-                }
-              }
-            }
-            """)
+        .expectUnchanged()
         .doTest();
   }
 
@@ -642,6 +629,34 @@ public final class PatternMatchingInstanceofTest {
 
               public String stringify(Object o) {
                 return !(o instanceof Test test) ? "not a test" : test.val;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void generics_includeWildcards() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test<T> {
+              private String val;
+
+              public String stringify(Object o) {
+                return !(o instanceof Test) ? "not a test" : ((Test) o).val;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test<T> {
+              private String val;
+
+              public String stringify(Object o) {
+                return !(o instanceof Test<?> test) ? "not a test" : test.val;
               }
             }
             """)

@@ -22,7 +22,10 @@ import static com.google.errorprone.fixes.SuggestedFix.mergeFixes;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.targetType;
 import static com.google.errorprone.util.SourceVersion.supportsPatternMatchingInstanceof;
+import static java.util.Collections.nCopies;
+import static java.util.stream.Collectors.joining;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -50,6 +53,7 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.TypeTag;
 import java.util.HashSet;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Stream;
 import javax.lang.model.SourceVersion;
 import org.jspecify.annotations.Nullable;
 
@@ -80,6 +84,14 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
       String name = null;
       SuggestedFix.Builder fix = SuggestedFix.builder();
 
+      int typeArgCount = getType(instanceOfTree.getType()).tsym.getTypeParameters().size();
+      if (typeArgCount != 0
+          && allCasts.stream()
+              .flatMap(c -> Stream.ofNullable(targetType(state.withPath(c))))
+              .anyMatch(t -> !t.type().isRaw())) {
+        return NO_MATCH;
+      }
+
       // If we find a variable tree which exists only to be assigned the cast result, use that as
       // the name and delete it.
       // NOTE: an even nicer approach would be to delete all such VariableTrees, and rename all
@@ -93,11 +105,17 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
           break;
         }
       }
+
       if (!allCasts.isEmpty() || !fix.isEmpty()) {
         if (name == null) {
           // This is a gamble as to an appropriate name. We could make sure it doesn't clash with
           // anything in scope, but that's effort.
           name = generateVariableName(targetType, state);
+        }
+        if (typeArgCount != 0) {
+          fix.postfixWith(
+              instanceOfTree.getType(),
+              nCopies(typeArgCount, "?").stream().collect(joining(",", "<", ">")));
         }
         String fn = name;
         return describeMatch(
