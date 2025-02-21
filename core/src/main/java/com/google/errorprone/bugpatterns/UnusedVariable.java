@@ -20,6 +20,7 @@ import static com.google.common.base.MoreObjects.firstNonNull;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Strings.nullToEmpty;
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
@@ -35,6 +36,8 @@ import static com.google.errorprone.util.ASTHelpers.isAbstract;
 import static com.google.errorprone.util.ASTHelpers.isStatic;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.google.errorprone.util.ASTHelpers.shouldKeep;
+import static com.google.errorprone.util.MoreAnnotations.asStrings;
+import static com.google.errorprone.util.MoreAnnotations.getAnnotationValue;
 import static com.google.errorprone.util.SideEffectAnalysis.hasSideEffect;
 import static com.sun.source.tree.Tree.Kind.POSTFIX_DECREMENT;
 import static com.sun.source.tree.Tree.Kind.POSTFIX_INCREMENT;
@@ -245,7 +248,8 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
     // appropriate fixes for them.
     ListMultimap<Symbol, TreePath> usageSites = variableFinder.usageSites;
 
-    FilterUsedVariables filterUsedVariables = new FilterUsedVariables(unusedElements, usageSites);
+    FilterUsedVariables filterUsedVariables =
+        new FilterUsedVariables(state, unusedElements, usageSites);
     filterUsedVariables.scan(state.getPath(), null);
 
     // Keeps track of whether a symbol was _ever_ used (between reassignments).
@@ -816,6 +820,8 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
 
     private TreePath currentExpressionStatement = null;
 
+    private final VisitorState state;
+
     private final Map<Symbol, TreePath> unusedElements;
 
     private final ListMultimap<Symbol, TreePath> usageSites;
@@ -828,7 +834,10 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
     private final ImmutableMap<Symbol, TreePath> declarationSites;
 
     private FilterUsedVariables(
-        Map<Symbol, TreePath> unusedElements, ListMultimap<Symbol, TreePath> usageSites) {
+        VisitorState state,
+        Map<Symbol, TreePath> unusedElements,
+        ListMultimap<Symbol, TreePath> usageSites) {
+      this.state = state;
       this.unusedElements = unusedElements;
       this.usageSites = usageSites;
       this.declarationSites = ImmutableMap.copyOf(unusedElements);
@@ -1066,6 +1075,40 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
       inMethodCall--;
       return null;
     }
+
+    @Override
+    public Void visitMethod(final MethodTree node, final Void unused) {
+      handleFieldSource(node);
+      return super.visitMethod(node, unused);
+    }
+
+    /**
+     * If a method is annotated with @FieldSource, the annotation value refers to a field that is
+     * used reflectively to supply test parameters, so that field should not be considered unused.
+     */
+    private void handleFieldSource(MethodTree tree) {
+      MethodSymbol sym = getSymbol(tree);
+      Name name = ORG_JUNIT_JUPITER_PARAMS_PROVIDER_FIELDSOURCE.get(state);
+      sym.getRawAttributes().stream()
+          .filter(a -> a.type.tsym.getQualifiedName().equals(name))
+          .findAny()
+          // get the annotation value array as a set of Names
+          .flatMap(a -> getAnnotationValue(a, "value"))
+          .map(y -> asStrings(y).map(state::getName).map(Name::toString).collect(toImmutableSet()))
+          // remove all potentially unused methods referenced by the @FieldSource
+          .ifPresent(
+              referencedNames ->
+                  unusedElements
+                      .entrySet()
+                      .removeIf(
+                          e -> {
+                            Symbol unusedSym = e.getKey();
+                            String simpleName = unusedSym.getSimpleName().toString();
+                            return referencedNames.contains(simpleName)
+                                || referencedNames.contains(
+                                    unusedSym.owner.getQualifiedName() + "#" + simpleName);
+                          }));
+    }
   }
 
   @AutoValue
@@ -1103,4 +1146,9 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
 
   private static final Supplier<Type> PARCELABLE_CREATOR =
       VisitorState.memoize(state -> state.getTypeFromString("android.os.Parcelable.Creator"));
+
+  private static final Supplier<com.sun.tools.javac.util.Name>
+          ORG_JUNIT_JUPITER_PARAMS_PROVIDER_FIELDSOURCE =
+          VisitorState.memoize(
+              state -> state.getName("org.junit.jupiter.params.provider.FieldSource"));
 }
