@@ -3,7 +3,7 @@ title: DuplicateBranches
 summary: Both branches contain identical code
 layout: bugpattern
 tags: ''
-severity: ERROR
+severity: WARNING
 ---
 
 <!--

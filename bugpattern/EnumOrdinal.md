@@ -1,6 +1,7 @@
 ---
 title: EnumOrdinal
-summary: You should almost never invoke the Enum.ordinal() method.
+summary: You should almost never invoke the Enum.ordinal() method or depend on the
+  enum values by index.
 layout: bugpattern
 tags: ''
 severity: WARNING
@@ -13,10 +14,11 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 
 
 ## The problem
-You should almost never invoke the `Enum.ordinal()` method. The ordinal exists
-only to support low-level utilities like `EnumSet`. The ordinal of a given enum
-value is not guaranteed to be stable across builds because of the potential for
-enum values to be added, removed, or reordered.
+You should almost never invoke the `Enum.ordinal()` method, nor depend on some
+enum constant being at a particular index of the `values()` array. The ordinal
+of a given enum value is not guaranteed to be stable across builds because of
+the potential for enum values to be added, removed, or reordered. The ordinal
+exists only to support low-level utilities like `EnumSet`.
 
 Prefer using enum value directly:
 
@@ -28,7 +30,7 @@ ImmutableMap<MyEnum, String> MAPPING =
         .buildOrThrow();
 ```
 
-to this:
+instead of relying on the ordinal:
 
 ```java
 ImmutableMap<Integer, String> MAPPING =
@@ -38,8 +40,8 @@ ImmutableMap<Integer, String> MAPPING =
         .buildOrThrow();
 ```
 
-Or if you need a stable number for serialisation, consider defining an explicit
-field on the enum instead:
+If you need a stable number for serialisation, consider defining an explicit
+field on the enum:
 
 ```java
 enum MyStableEnum {
@@ -47,10 +49,22 @@ enum MyStableEnum {
   BAR(2),
   ;
 
-  private final int index;
-  MyStableEnum(int index) {
-    this.index = index;
+  private final int wireCode;
+  MyStableEnum(int wireCode) {
+    this.wireCode = wireCode;
   }
+}
+```
+
+rather than relying on the ordinal values:
+
+```java
+enum MyUnstableEnum {
+  FOO,
+  BAR,
+}
+MyUnstableEnum fromWire(int wireCode) {
+  return MyUnstableEnum.values()[wireCode];
 }
 ```
 

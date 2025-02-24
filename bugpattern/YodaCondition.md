@@ -2,7 +2,7 @@
 title: YodaCondition
 summary: The non-constant portion of a comparison generally comes first. For equality,
   prefer e.equals(CONSTANT) if e is non-null or Objects.equals(e, CONSTANT) if e may
-  be null. For standard operators, prefer e <OPERATION>> CONSTANT.
+  be null. For standard operators, prefer e <OPERATION> CONSTANT.
 layout: bugpattern
 tags: ''
 severity: WARNING

@@ -129,9 +129,6 @@ Identifies undesirable mocks.
 __[DoubleBraceInitialization](bugpattern/DoubleBraceInitialization)__<br>
 Prefer collection factory methods or builders to the double-brace initialization pattern.
 
-__[DuplicateBranches](bugpattern/DuplicateBranches)__<br>
-Both branches contain identical code
-
 __[DuplicateMapKeys](bugpattern/DuplicateMapKeys)__<br>
 Map#ofEntries will throw an IllegalArgumentException if there are any duplicate keys
 
@@ -722,6 +719,9 @@ AutoValue classes represent pure data classes, so mocking them should not be nec
 __[DoubleCheckedLocking](bugpattern/DoubleCheckedLocking)__<br>
 Double-checked locking on non-volatile fields is unsafe
 
+__[DuplicateBranches](bugpattern/DuplicateBranches)__<br>
+Both branches contain identical code
+
 __[DuplicateDateFormatField](bugpattern/DuplicateDateFormatField)__<br>
 Reuse of DateFormat fields is most likely unintentional
 
@@ -738,7 +738,7 @@ __[EmptyTopLevelDeclaration](bugpattern/EmptyTopLevelDeclaration)__<br>
 Empty top-level type declarations should be omitted
 
 __[EnumOrdinal](bugpattern/EnumOrdinal)__<br>
-You should almost never invoke the Enum.ordinal() method.
+You should almost never invoke the Enum.ordinal() method or depend on the enum values by index.
 
 __[EqualsGetClass](bugpattern/EqualsGetClass)__<br>
 Prefer instanceof to getClass when implementing Object#equals.
@@ -875,6 +875,9 @@ Please also override int read(byte[], int, int), otherwise multi-byte reads from
 __[InstanceOfAndCastMatchWrongType](bugpattern/InstanceOfAndCastMatchWrongType)__<br>
 Casting inside an if block should be plausibly consistent with the instanceof type
 
+__[IntFloatConversion](bugpattern/IntFloatConversion)__<br>
+Conversion from int to float may lose precision; use an explicit cast to float if this was intentional
+
 __[IntLongMath](bugpattern/IntLongMath)__<br>
 Expression of type int may overflow before being assigned to a long
 
@@ -890,6 +893,9 @@ This @link tag looks wrong.
 __[InvalidParam](bugpattern/InvalidParam)__<br>
 This @param tag doesn&#39;t refer to a parameter of the method.
 
+__[InvalidSnippet](bugpattern/InvalidSnippet)__<br>
+This tag is invalid.
+
 __[InvalidThrows](bugpattern/InvalidThrows)__<br>
 The documented method doesn&#39;t actually throw this checked exception.
 
@@ -904,6 +910,9 @@ Floating-point comparison without error tolerance
 
 __[JUnit4ClassUsedInJUnit3](bugpattern/JUnit4ClassUsedInJUnit3)__<br>
 Some JUnit4 construct cannot be used in a JUnit3 context. Convert your class to JUnit4 style to use them.
+
+__[JUnit4EmptyMethods](bugpattern/JUnit4EmptyMethods)__<br>
+Empty JUnit4 @Before, @After, @BeforeClass, and @AfterClass methods are unnecessary and should be deleted.
 
 __[JUnitAmbiguousTestClass](bugpattern/JUnitAmbiguousTestClass)__<br>
 Test class inherits from JUnit 3&#39;s TestCase but has JUnit 4 @Test or @RunWith annotations.
@@ -1033,6 +1042,9 @@ A summary line is required on public/protected Javadocs.
 
 __[MixedMutabilityReturnType](bugpattern/MixedMutabilityReturnType)__<br>
 This method returns both mutable and immutable collections or maps from different paths. This may be confusing for users of the method.
+
+__[MockIllegalThrows](bugpattern/MockIllegalThrows)__<br>
+This exception can&#39;t be thrown by the mocked method.
 
 __[MockNotUsedInProduction](bugpattern/MockNotUsedInProduction)__<br>
 This mock is instantiated and configured, but is never passed to production code. It should be either removed or used.
@@ -1181,6 +1193,9 @@ Qualifiers/Scope annotations on @Inject methods don&#39;t have any effect. Move 
 __[ReachabilityFenceUsage](bugpattern/ReachabilityFenceUsage)__<br>
 reachabilityFence should always be called inside a finally block
 
+__[RedundantControlFlow](bugpattern/RedundantControlFlow)__<br>
+This continue statement is redundant and can be removed. It may be misleading.
+
 __[ReferenceEquality](bugpattern/ReferenceEquality)__<br>
 Comparison using reference equality instead of value equality
 
@@ -1195,6 +1210,9 @@ Void methods should not have a @return tag.
 
 __[RobolectricShadowDirectlyOn](bugpattern/RobolectricShadowDirectlyOn)__<br>
 Migrate off a deprecated overload of org.robolectric.shadow.api.Shadow#directlyOn
+
+__[RuleNotRun](bugpattern/RuleNotRun)__<br>
+This TestRule isn&#39;t annotated with @Rule, so won&#39;t be run.
 
 __[RxReturnValueIgnored](bugpattern/RxReturnValueIgnored)__<br>
 Returned Rx objects must be checked. Ignoring a returned Rx value means it is never scheduled for execution
@@ -1234,6 +1252,9 @@ Specify a &#96;Locale&#96; when calling &#96;String#to{Lower,Upper}Case&#96;. (N
 
 __[StringCharset](bugpattern/StringCharset)__<br>
 StringCharset
+
+__[StringConcatToTextBlock](bugpattern/StringConcatToTextBlock)__<br>
+This string literal can be written more clearly as a text block
 
 __[StringSplitter](bugpattern/StringSplitter)__<br>
 String.split(String) has surprising behavior
@@ -1302,7 +1323,7 @@ __[URLEqualsHashCode](bugpattern/URLEqualsHashCode)__<br>
 Avoid hash-based containers of java.net.URL--the containers rely on equals() and hashCode(), which cause java.net.URL to make blocking internet connections.
 
 __[UndefinedEquals](bugpattern/UndefinedEquals)__<br>
-This type is not guaranteed to implement a useful #equals method.
+This type is not guaranteed to implement a useful equals() method.
 
 __[UnicodeEscape](bugpattern/UnicodeEscape)__<br>
 Using unicode escape sequences for printable ASCII characters is obfuscated, and potentially dangerous.
@@ -1341,7 +1362,7 @@ __[UnsafeFinalization](bugpattern/UnsafeFinalization)__<br>
 Finalizer may run before native code finishes execution
 
 __[UnsafeReflectiveConstructionCast](bugpattern/UnsafeReflectiveConstructionCast)__<br>
-Prefer &#96;asSubclass&#96; instead of casting the result of &#96;newInstance&#96;, to detect classes of incorrect type before invoking their constructors.This way, if the class is of the incorrect type,it will throw an exception before invoking its constructor.
+Prefer &#96;asSubclass&#96; instead of casting the result of &#96;newInstance&#96;, to detect classes of incorrect type before invoking their constructors. This way, if the class is of the incorrect type, it will throw an exception before invoking its constructor.
 
 __[UnsynchronizedOverridesSynchronized](bugpattern/UnsynchronizedOverridesSynchronized)__<br>
 Unsynchronized method overrides a synchronized method.
@@ -1557,6 +1578,9 @@ Prefer using when/thenReturn over doReturn/when for additional type safety.
 __[MutableGuiceModule](bugpattern/MutableGuiceModule)__<br>
 Fields in Guice modules should be final
 
+__[NegativeBoolean](bugpattern/NegativeBoolean)__<br>
+Prefer positive boolean names
+
 __[NonCanonicalStaticMemberImport](bugpattern/NonCanonicalStaticMemberImport)__<br>
 Static import of member uses non-canonical name
 
@@ -1666,7 +1690,7 @@ __[Varifier](bugpattern/Varifier)__<br>
 Consider using &#96;var&#96; here to avoid boilerplate.
 
 __[YodaCondition](bugpattern/YodaCondition)__<br>
-The non-constant portion of a comparison generally comes first. For equality, prefer e.equals(CONSTANT) if e is non-null or Objects.equals(e, CONSTANT) if e may be null. For standard operators, prefer e &lt;OPERATION&gt;&gt; CONSTANT.
+The non-constant portion of a comparison generally comes first. For equality, prefer e.equals(CONSTANT) if e is non-null or Objects.equals(e, CONSTANT) if e may be null. For standard operators, prefer e &lt;OPERATION&gt; CONSTANT.
 
 ## Experimental : SUGGESTION
 

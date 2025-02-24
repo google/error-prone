@@ -17,7 +17,7 @@ const messages = {
 const categories = {
     modules: "Modules",
     packages: "Packages",
-    types: "Types",
+    types: "Classes and Interfaces",
     members: "Members",
     searchTags: "Search Tags"
 };

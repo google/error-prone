@@ -1,6 +1,6 @@
 ---
 title: UndefinedEquals
-summary: 'This type is not guaranteed to implement a useful #equals method.'
+summary: This type is not guaranteed to implement a useful equals() method.
 layout: bugpattern
 tags: ''
 severity: WARNING
