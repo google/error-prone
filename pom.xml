@@ -40,7 +40,7 @@
     <compile.testing.version>0.21.0</compile.testing.version>
     <caffeine.version>3.0.5</caffeine.version>
     <flogger.version>0.7.4</flogger.version>
-    <maven-javadoc-plugin.version>3.11.1</maven-javadoc-plugin.version>
+    <maven-javadoc-plugin.version>3.11.2</maven-javadoc-plugin.version>
     <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
     <nexus-staging-maven-plugin.version>1.6.13</nexus-staging-maven-plugin.version>
     <protobuf.version>3.25.5</protobuf.version>
@@ -175,7 +175,8 @@
           <source>17</source>
           <notimestamp>true</notimestamp>
           <doctitle>Error Prone ${project.version} API</doctitle>
-          <sourcepath>src/main/java:${project.build.directory}/generated-sources/protobuf/java</sourcepath>
+          <disableSourcepathUsage>true</disableSourcepathUsage>
+          <legacyMode>true</legacyMode>
           <additionalOptions>
             <additionalOption>--add-exports=java.base/jdk.internal.javac=ALL-UNNAMED</additionalOption>
             <additionalOption>--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED</additionalOption>
