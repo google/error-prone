@@ -620,6 +620,7 @@ import com.google.errorprone.bugpatterns.time.ProtoDurationGetSecondsGetNano;
 import com.google.errorprone.bugpatterns.time.ProtoTimestampGetSecondsGetNano;
 import com.google.errorprone.bugpatterns.time.StronglyTypeTime;
 import com.google.errorprone.bugpatterns.time.TemporalAccessorGetChronoField;
+import com.google.errorprone.bugpatterns.time.TimeInStaticInitializer;
 import com.google.errorprone.bugpatterns.time.TimeUnitConversionChecker;
 import com.google.errorprone.bugpatterns.time.TimeUnitMismatch;
 import com.google.errorprone.bugpatterns.time.ZoneIdOfZ;
@@ -1106,6 +1107,7 @@ public class BuiltInCheckerSuppliers {
           ThreadPriorityCheck.class,
           ThreeLetterTimeZoneID.class,
           ThrowIfUncheckedKnownUnchecked.class,
+          TimeInStaticInitializer.class,
           TimeUnitConversionChecker.class,
           ToStringReturnsNull.class,
           TraditionalSwitchExpression.class,
