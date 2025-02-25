@@ -198,7 +198,10 @@ public class CompilationTestHelper {
    * {@link #addSourceLines} which test a single behaviour in isolation.
    *
    * @param path the path to the source file
+   * @deprecated prefer {@link #addSourceLines}. Declaring tests in the same file using text blocks
+   *     is more readable, as it encourages writing small, focussed tests.
    */
+  @Deprecated
   @CanIgnoreReturnValue
   public CompilationTestHelper addSourceFile(String path) {
     this.sources.add(forResource(clazz, path));

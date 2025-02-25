@@ -192,6 +192,13 @@ public class BugCheckerRefactoringTestHelper {
         clazz, ScannerSupplier.fromBugCheckerClasses(checkerClass));
   }
 
+  /**
+   * Adds an input file.
+   *
+   * @deprecated prefer {@link #addInputLines}. Declaring tests in the same file using text blocks
+   *     is more readable, as it encourages writing small, focussed tests.
+   */
+  @Deprecated
   public BugCheckerRefactoringTestHelper.ExpectOutput addInput(String inputFilename) {
     return new ExpectOutput(forResource(clazz, inputFilename));
   }
@@ -374,6 +381,13 @@ public class BugCheckerRefactoringTestHelper {
       return addInputAndOutput(input, forSourceLines(path, output));
     }
 
+    /**
+     * Adds an output file.
+     *
+     * @deprecated prefer {@link #addOutputLines}. Declaring tests in the same file using text
+     *     blocks is more readable, as it encourages writing small, focussed tests.
+     */
+    @Deprecated
     public BugCheckerRefactoringTestHelper addOutput(String outputFilename) {
       return addInputAndOutput(input, forResource(clazz, outputFilename));
     }
