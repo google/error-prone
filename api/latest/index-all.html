@@ -300,7 +300,12 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/google/errorprone/refaster/Template.html#addImports(com.google.errorprone.refaster.Inliner,com.google.errorprone.fixes.SuggestedFix.Builder)" class="member-name-link">addImports(Inliner, SuggestedFix.Builder)</a> - Static method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Template.html" title="class in com.google.errorprone.refaster">Template</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/BugCheckerRefactoringTestHelper.html#addInput(java.lang.String)" class="member-name-link">addInput(String)</a> - Method in class com.google.errorprone.<a href="com/google/errorprone/BugCheckerRefactoringTestHelper.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">prefer <a href="com/google/errorprone/BugCheckerRefactoringTestHelper.html#addInputLines(java.lang.String,java.lang.String...)"><code>BugCheckerRefactoringTestHelper.addInputLines(String, String...)</code></a>. Declaring tests in the same file using text blocks
+     is more readable, as it encourages writing small, focussed tests.</div>
+</div>
+</dd>
 <dt><a href="com/google/errorprone/BugCheckerRefactoringTestHelper.html#addInputLines(java.lang.String,java.lang.String...)" class="member-name-link">addInputLines(String, String...)</a> - Method in class com.google.errorprone.<a href="com/google/errorprone/BugCheckerRefactoringTestHelper.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/util/OperatorPrecedence.html#ADDITIVE" class="member-name-link">ADDITIVE</a> - Enum constant in enum class com.google.errorprone.util.<a href="com/google/errorprone/util/OperatorPrecedence.html" title="enum class in com.google.errorprone.util">OperatorPrecedence</a></dt>
@@ -359,7 +364,12 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/google/errorprone/fixes/BranchedSuggestedFixes.Builder.html#addOption(com.google.errorprone.fixes.SuggestedFix)" class="member-name-link">addOption(SuggestedFix)</a> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/BranchedSuggestedFixes.Builder.html" title="class in com.google.errorprone.fixes">BranchedSuggestedFixes.Builder</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/BugCheckerRefactoringTestHelper.ExpectOutput.html#addOutput(java.lang.String)" class="member-name-link">addOutput(String)</a> - Method in class com.google.errorprone.<a href="com/google/errorprone/BugCheckerRefactoringTestHelper.ExpectOutput.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper.ExpectOutput</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">prefer <a href="com/google/errorprone/BugCheckerRefactoringTestHelper.ExpectOutput.html#addOutputLines(java.lang.String,java.lang.String...)"><code>BugCheckerRefactoringTestHelper.ExpectOutput.addOutputLines(String, String...)</code></a>. Declaring tests in the same file using text
+     blocks is more readable, as it encourages writing small, focussed tests.</div>
+</div>
+</dd>
 <dt><a href="com/google/errorprone/BugCheckerRefactoringTestHelper.ExpectOutput.html#addOutputLines(java.lang.String,java.lang.String...)" class="member-name-link">addOutputLines(String, String...)</a> - Method in class com.google.errorprone.<a href="com/google/errorprone/BugCheckerRefactoringTestHelper.ExpectOutput.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper.ExpectOutput</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/apidiff/ApiDiffProto.ClassDiff.Builder.html#addRepeatedField(com.google.protobuf.Descriptors.FieldDescriptor,java.lang.Object)" class="member-name-link">addRepeatedField(Descriptors.FieldDescriptor, Object)</a> - Method in class com.google.errorprone.bugpatterns.apidiff.<a href="com/google/errorprone/bugpatterns/apidiff/ApiDiffProto.ClassDiff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.ClassDiff.Builder</a></dt>
@@ -392,7 +402,10 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/google/errorprone/CompilationTestHelper.html#addSourceFile(java.lang.String)" class="member-name-link">addSourceFile(String)</a> - Method in class com.google.errorprone.<a href="com/google/errorprone/CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a></dt>
 <dd>
-<div class="block">Adds a source file to the test compilation, from an existing resource file.</div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">prefer <a href="com/google/errorprone/CompilationTestHelper.html#addSourceLines(java.lang.String,java.lang.String...)"><code>CompilationTestHelper.addSourceLines(String, String...)</code></a>. Declaring tests in the same file using text blocks
+     is more readable, as it encourages writing small, focussed tests.</div>
+</div>
 </dd>
 <dt><a href="com/google/errorprone/CompilationTestHelper.html#addSourceLines(java.lang.String,java.lang.String...)" class="member-name-link">addSourceLines(String, String...)</a> - Method in class com.google.errorprone.<a href="com/google/errorprone/CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a></dt>
 <dd>
@@ -7926,6 +7939,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/MultiVariableDeclaration.html#matchBlock(com.sun.source.tree.BlockTree,com.google.errorprone.VisitorState)" class="member-name-link">matchBlock(BlockTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/MultiVariableDeclaration.html" title="class in com.google.errorprone.bugpatterns">MultiVariableDeclaration</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/time/TimeInStaticInitializer.html#matchBlock(com.sun.source.tree.BlockTree,com.google.errorprone.VisitorState)" class="member-name-link">matchBlock(BlockTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.time.<a href="com/google/errorprone/bugpatterns/time/TimeInStaticInitializer.html" title="class in com.google.errorprone.bugpatterns.time">TimeInStaticInitializer</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/BugChecker.BreakTreeMatcher.html#matchBreak(com.sun.source.tree.BreakTree,com.google.errorprone.VisitorState)" class="member-name-link">matchBreak(BreakTree, VisitorState)</a> - Method in interface com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BugChecker.BreakTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.BreakTreeMatcher</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/Finally.html#matchBreak(com.sun.source.tree.BreakTree,com.google.errorprone.VisitorState)" class="member-name-link">matchBreak(BreakTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/Finally.html" title="class in com.google.errorprone.bugpatterns">Finally</a></dt>
@@ -9610,6 +9625,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/google/errorprone/bugpatterns/StaticMockMember.html#matchVariable(com.sun.source.tree.VariableTree,com.google.errorprone.VisitorState)" class="member-name-link">matchVariable(VariableTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/StaticMockMember.html" title="class in com.google.errorprone.bugpatterns">StaticMockMember</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByChecker.html#matchVariable(com.sun.source.tree.VariableTree,com.google.errorprone.VisitorState)" class="member-name-link">matchVariable(VariableTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByChecker.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByChecker</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/time/TimeInStaticInitializer.html#matchVariable(com.sun.source.tree.VariableTree,com.google.errorprone.VisitorState)" class="member-name-link">matchVariable(VariableTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.time.<a href="com/google/errorprone/bugpatterns/time/TimeInStaticInitializer.html" title="class in com.google.errorprone.bugpatterns.time">TimeInStaticInitializer</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/time/TimeUnitMismatch.html#matchVariable(com.sun.source.tree.VariableTree,com.google.errorprone.VisitorState)" class="member-name-link">matchVariable(VariableTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.time.<a href="com/google/errorprone/bugpatterns/time/TimeUnitMismatch.html" title="class in com.google.errorprone.bugpatterns.time">TimeUnitMismatch</a></dt>
 <dd>&nbsp;</dd>
@@ -13351,6 +13368,12 @@ loadScripts(document, 'script');</script>
 <div class="block">Suggests to remove the unchecked throws clause.</div>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/ThrowsUncheckedException.html#%3Cinit%3E()" class="member-name-link">ThrowsUncheckedException()</a> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ThrowsUncheckedException.html" title="class in com.google.errorprone.bugpatterns">ThrowsUncheckedException</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/time/TimeInStaticInitializer.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.time">TimeInStaticInitializer</a> - Class in <a href="com/google/errorprone/bugpatterns/time/package-summary.html">com.google.errorprone.bugpatterns.time</a></dt>
+<dd>
+<div class="block">A BugPattern; see the summary.</div>
+</dd>
+<dt><a href="com/google/errorprone/bugpatterns/time/TimeInStaticInitializer.html#%3Cinit%3E()" class="member-name-link">TimeInStaticInitializer()</a> - Constructor for class com.google.errorprone.bugpatterns.time.<a href="com/google/errorprone/bugpatterns/time/TimeInStaticInitializer.html" title="class in com.google.errorprone.bugpatterns.time">TimeInStaticInitializer</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/time/TimeUnitConversionChecker.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.time">TimeUnitConversionChecker</a> - Class in <a href="com/google/errorprone/bugpatterns/time/package-summary.html">com.google.errorprone.bugpatterns.time</a></dt>
 <dd>
