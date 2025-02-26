@@ -273,14 +273,14 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="dataflow/nullnesspropagation/NullnessAnalysis.html" title="class in com.google.errorprone.dataflow.nullnesspropagation">NullnessAnalysis</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getNullnessAnalysis()" class="member-name-link">getNullnessAnalysis</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="util/ErrorProneToken.html" title="class in com.google.errorprone.util">ErrorProneToken</a>&gt;</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.google.common.collect.ImmutableList<wbr>&lt;<a href="util/ErrorProneToken.html" title="class in com.google.errorprone.util">ErrorProneToken</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getOffsetTokens(int,int)" class="member-name-link">getOffsetTokens</a><wbr>(int&nbsp;start,
  int&nbsp;end)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the list of <code>Tokens.Token</code>s for source code between the given positions, offset by the
  start position.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="util/ErrorProneToken.html" title="class in com.google.errorprone.util">ErrorProneToken</a>&gt;</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.google.common.collect.ImmutableList<wbr>&lt;<a href="util/ErrorProneToken.html" title="class in com.google.errorprone.util">ErrorProneToken</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getOffsetTokensForNode(com.sun.source.tree.Tree)" class="member-name-link">getOffsetTokensForNode</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the list of <code>Tokens.Token</code>s for the given <code>JCTree</code>, offset by the start position
@@ -314,7 +314,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.sun.tools.javac.code.Symtab</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSymtab()" class="member-name-link">getSymtab</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="util/ErrorProneToken.html" title="class in com.google.errorprone.util">ErrorProneToken</a>&gt;</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.google.common.collect.ImmutableList<wbr>&lt;<a href="util/ErrorProneToken.html" title="class in com.google.errorprone.util">ErrorProneToken</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTokensForNode(com.sun.source.tree.Tree)" class="member-name-link">getTokensForNode</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the list of <code>Tokens.Token</code>s for the given <code>JCTree</code>.</div>
@@ -796,7 +796,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getTokensForNode(com.sun.source.tree.Tree)">
 <h3>getTokensForNode</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="util/ErrorProneToken.html" title="class in com.google.errorprone.util">ErrorProneToken</a>&gt;</span>&nbsp;<span class="element-name">getTokensForNode</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableList&lt;<a href="util/ErrorProneToken.html" title="class in com.google.errorprone.util">ErrorProneToken</a>&gt;</span>&nbsp;<span class="element-name">getTokensForNode</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree)</span></div>
 <div class="block">Returns the list of <code>Tokens.Token</code>s for the given <code>JCTree</code>.
 
  <p>This is moderately expensive (the source of the node has to be re-lexed), so it should only
@@ -808,7 +808,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getOffsetTokensForNode(com.sun.source.tree.Tree)">
 <h3>getOffsetTokensForNode</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="util/ErrorProneToken.html" title="class in com.google.errorprone.util">ErrorProneToken</a>&gt;</span>&nbsp;<span class="element-name">getOffsetTokensForNode</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableList&lt;<a href="util/ErrorProneToken.html" title="class in com.google.errorprone.util">ErrorProneToken</a>&gt;</span>&nbsp;<span class="element-name">getOffsetTokensForNode</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree)</span></div>
 <div class="block">Returns the list of <code>Tokens.Token</code>s for the given <code>JCTree</code>, offset by the start position
  of the tree within the overall source.
 
@@ -821,7 +821,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getOffsetTokens(int,int)">
 <h3>getOffsetTokens</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="util/ErrorProneToken.html" title="class in com.google.errorprone.util">ErrorProneToken</a>&gt;</span>&nbsp;<span class="element-name">getOffsetTokens</span><wbr><span class="parameters">(int&nbsp;start,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableList&lt;<a href="util/ErrorProneToken.html" title="class in com.google.errorprone.util">ErrorProneToken</a>&gt;</span>&nbsp;<span class="element-name">getOffsetTokens</span><wbr><span class="parameters">(int&nbsp;start,
  int&nbsp;end)</span></div>
 <div class="block">Returns the list of <code>Tokens.Token</code>s for source code between the given positions, offset by the
  start position.
