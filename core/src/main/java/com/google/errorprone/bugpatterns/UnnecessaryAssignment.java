@@ -59,7 +59,6 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.parser.Tokens.TokenKind;
-import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.lang.model.element.Modifier;
@@ -190,7 +189,7 @@ public final class UnnecessaryAssignment extends BugChecker
       return SuggestedFix.delete(anno);
     }
     int startPos = getStartPosition(tree);
-    List<ErrorProneToken> tokens =
+    ImmutableList<ErrorProneToken> tokens =
         state.getOffsetTokens(startPos, getStartPosition(tree.getInitializer()));
     for (ErrorProneToken token : Lists.reverse(tokens)) {
       if (token.kind() == TokenKind.EQ) {

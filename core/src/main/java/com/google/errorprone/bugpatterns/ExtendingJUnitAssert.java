@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
@@ -35,7 +36,6 @@ import com.sun.source.tree.Tree;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.parser.Tokens.TokenKind;
-import java.util.List;
 
 /**
  * @author kayco@google.com (Kayla Walker)
@@ -78,7 +78,7 @@ public class ExtendingJUnitAssert extends BugChecker implements ClassTreeMatcher
     Tree extendsClause = tree.getExtendsClause();
     int endOfExtendsClause = state.getEndPosition(extendsClause);
 
-    List<ErrorProneToken> tokens = state.getOffsetTokensForNode(tree);
+    ImmutableList<ErrorProneToken> tokens = state.getOffsetTokensForNode(tree);
 
     int startPos = 0;
     for (ErrorProneToken token : tokens) {

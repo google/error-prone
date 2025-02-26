@@ -82,7 +82,7 @@ public class StringConcatToTextBlock extends BugChecker
         return NO_MATCH;
       }
     }
-    List<ErrorProneToken> tokens = state.getTokensForNode(tree);
+    ImmutableList<ErrorProneToken> tokens = state.getTokensForNode(tree);
     ImmutableList<String> strings =
         tokens.stream()
             .filter(t -> t.kind().equals(Tokens.TokenKind.STRINGLITERAL))

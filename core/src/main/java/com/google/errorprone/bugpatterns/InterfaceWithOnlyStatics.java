@@ -23,6 +23,7 @@ import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isStatic;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.VisitorState;
@@ -102,7 +103,7 @@ public final class InterfaceWithOnlyStatics extends BugChecker implements ClassT
   private static SuggestedFix fixClass(ClassTree classTree, VisitorState state) {
     int startPos = getStartPosition(classTree);
     int endPos = getStartPosition(classTree.getMembers().get(0));
-    List<ErrorProneToken> tokens = state.getOffsetTokens(startPos, endPos);
+    ImmutableList<ErrorProneToken> tokens = state.getOffsetTokens(startPos, endPos);
     String modifiers =
         getSymbol(classTree).owner.enclClass() == null ? "final class" : "static final class";
     SuggestedFix.Builder fix = SuggestedFix.builder();

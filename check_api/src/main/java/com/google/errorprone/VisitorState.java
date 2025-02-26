@@ -21,6 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMultiset;
 import com.google.errorprone.BugPattern.SeverityLevel;
@@ -571,7 +572,7 @@ public class VisitorState {
    * <p>This is moderately expensive (the source of the node has to be re-lexed), so it should only
    * be used if a fix is already going to be emitted.
    */
-  public List<ErrorProneToken> getTokensForNode(Tree tree) {
+  public ImmutableList<ErrorProneToken> getTokensForNode(Tree tree) {
     return ErrorProneTokens.getTokens(getSourceForNode(tree), context);
   }
 
@@ -582,7 +583,7 @@ public class VisitorState {
    * <p>This is moderately expensive (the source of the node has to be re-lexed), so it should only
    * be used if a fix is already going to be emitted.
    */
-  public List<ErrorProneToken> getOffsetTokensForNode(Tree tree) {
+  public ImmutableList<ErrorProneToken> getOffsetTokensForNode(Tree tree) {
     int start = getStartPosition(tree);
     return ErrorProneTokens.getTokens(getSourceForNode(tree), start, context);
   }
@@ -594,7 +595,7 @@ public class VisitorState {
    * <p>This is moderately expensive (the source of the node has to be re-lexed), so it should only
    * be used if a fix is already going to be emitted.
    */
-  public List<ErrorProneToken> getOffsetTokens(int start, int end) {
+  public ImmutableList<ErrorProneToken> getOffsetTokens(int start, int end) {
     return ErrorProneTokens.getTokens(
         getSourceCode().subSequence(start, end).toString(), start, context);
   }

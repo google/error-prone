@@ -193,7 +193,7 @@ public final class SuggestedFixes {
       for (Modifier mod : toAdd) {
         modifierPositions.put(mod, -1);
       }
-      List<ErrorProneToken> tokens = state.getOffsetTokensForNode(originalModifiers);
+      ImmutableList<ErrorProneToken> tokens = state.getOffsetTokensForNode(originalModifiers);
       for (ErrorProneToken tok : tokens) {
         Modifier mod = getTokModifierKind(tok);
         if (mod != null) {
