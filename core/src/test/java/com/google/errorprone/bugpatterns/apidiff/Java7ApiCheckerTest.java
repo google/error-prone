@@ -25,15 +25,8 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class Java7ApiCheckerTest {
 
-  protected final CompilationTestHelper compilationHelper;
-
-  public Java7ApiCheckerTest() {
-    this(Java7ApiChecker.class);
-  }
-
-  protected Java7ApiCheckerTest(Class<? extends ApiDiffChecker> checker) {
-    compilationHelper = CompilationTestHelper.newInstance(checker, getClass());
-  }
+  private final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(Java7ApiChecker.class, getClass());
 
   @Test
   public void positiveClass() {

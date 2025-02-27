@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -26,12 +25,8 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class ClassNewInstanceTest {
 
-  private BugCheckerRefactoringTestHelper testHelper;
-
-  @Before
-  public void setUp() {
-    testHelper = BugCheckerRefactoringTestHelper.newInstance(ClassNewInstance.class, getClass());
-  }
+  private final BugCheckerRefactoringTestHelper testHelper =
+      BugCheckerRefactoringTestHelper.newInstance(ClassNewInstance.class, getClass());
 
   @Test
   public void differentHandles() {

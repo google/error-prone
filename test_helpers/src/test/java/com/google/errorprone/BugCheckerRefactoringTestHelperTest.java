@@ -32,7 +32,6 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ReturnTree;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -41,12 +40,8 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class BugCheckerRefactoringTestHelperTest {
 
-  private BugCheckerRefactoringTestHelper helper;
-
-  @Before
-  public void setUp() {
-    helper = BugCheckerRefactoringTestHelper.newInstance(ReturnNullRefactoring.class, getClass());
-  }
+  private final BugCheckerRefactoringTestHelper helper =
+      BugCheckerRefactoringTestHelper.newInstance(ReturnNullRefactoring.class, getClass());
 
   @Test
   public void noMatch() {

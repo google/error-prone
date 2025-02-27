@@ -19,7 +19,6 @@ import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEX
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -29,13 +28,8 @@ import org.junit.runners.JUnit4;
  */
 @RunWith(JUnit4.class)
 public class RemoveUnusedImportsTest {
-  private BugCheckerRefactoringTestHelper testHelper;
-
-  @Before
-  public void setUp() {
-    this.testHelper =
-        BugCheckerRefactoringTestHelper.newInstance(RemoveUnusedImports.class, getClass());
-  }
+  private final BugCheckerRefactoringTestHelper testHelper =
+      BugCheckerRefactoringTestHelper.newInstance(RemoveUnusedImports.class, getClass());
 
   @Test
   public void basicUsageTest() {

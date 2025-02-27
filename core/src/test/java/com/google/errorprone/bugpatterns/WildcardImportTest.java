@@ -27,7 +27,6 @@ import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -35,12 +34,8 @@ import org.junit.runners.JUnit4;
 /** {@link WildcardImport}Test */
 @RunWith(JUnit4.class)
 public class WildcardImportTest {
-  private BugCheckerRefactoringTestHelper testHelper;
-
-  @Before
-  public void setUp() {
-    testHelper = BugCheckerRefactoringTestHelper.newInstance(WildcardImport.class, getClass());
-  }
+  private final BugCheckerRefactoringTestHelper testHelper =
+      BugCheckerRefactoringTestHelper.newInstance(WildcardImport.class, getClass());
 
   @Test
   public void chainOffStatic() {
@@ -711,17 +706,14 @@ public class WildcardImportTest {
 
   @Test
   public void manyTypesFix() {
-
     ImmutableList<Character> alphabet =
         Stream.iterate('A', x -> (char) (x + 1)).limit(26).collect(toImmutableList());
 
     for (Character ch : alphabet) {
-      testHelper =
-          testHelper
-              .addInputLines(
-                  String.format("e/%s.java", ch),
-                  String.format("package e; public class %s {}", ch))
-              .expectUnchanged();
+      testHelper
+          .addInputLines(
+              String.format("e/%s.java", ch), String.format("package e; public class %s {}", ch))
+          .expectUnchanged();
     }
 
     testHelper

@@ -26,7 +26,6 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.TreeSet;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -53,17 +52,12 @@ public final class EmptySetMultibindingContributionsTest {
   }
 
   private final String emptySetSnippet;
-  private BugCheckerRefactoringTestHelper testHelper;
+  private final BugCheckerRefactoringTestHelper testHelper =
+      BugCheckerRefactoringTestHelper.newInstance(
+          EmptySetMultibindingContributions.class, getClass());
 
   public EmptySetMultibindingContributionsTest(String emptySetSnippet) {
     this.emptySetSnippet = emptySetSnippet;
-  }
-
-  @Before
-  public void setUp() {
-    testHelper =
-        BugCheckerRefactoringTestHelper.newInstance(
-            EmptySetMultibindingContributions.class, getClass());
   }
 
   @Test

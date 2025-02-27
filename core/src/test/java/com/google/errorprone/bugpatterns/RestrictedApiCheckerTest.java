@@ -27,30 +27,22 @@ import org.junit.runners.JUnit4;
 /** Unit test for {@link RestrictedApiChecker} */
 @RunWith(JUnit4.class)
 public class RestrictedApiCheckerTest {
-  private final CompilationTestHelper helper;
-  private final BugCheckerRefactoringTestHelper refactoringTest;
+  private final CompilationTestHelper helper =
+      CompilationTestHelper.newInstance(RestrictedApiChecker.class, RestrictedApiCheckerTest.class)
+          .addSourceLines(
+              "Allowlist.java",
+              """
+              package com.google.errorprone.bugpatterns.testdata;
 
-  public RestrictedApiCheckerTest() {
-    this(RestrictedApiChecker.class);
-  }
+              import java.lang.annotation.ElementType;
+              import java.lang.annotation.Target;
 
-  protected RestrictedApiCheckerTest(Class<? extends BugChecker> checker) {
-    helper =
-        CompilationTestHelper.newInstance(checker, RestrictedApiCheckerTest.class)
-            .addSourceLines(
-                "Allowlist.java",
-                """
-                package com.google.errorprone.bugpatterns.testdata;
-
-                import java.lang.annotation.ElementType;
-                import java.lang.annotation.Target;
-
-                @Target({ElementType.METHOD, ElementType.CONSTRUCTOR})
-                public @interface Allowlist {}\
-                """)
-            .addSourceLines(
-                "RestrictedApiMethods.java",
-                """
+              @Target({ElementType.METHOD, ElementType.CONSTRUCTOR})
+              public @interface Allowlist {}\
+              """)
+          .addSourceLines(
+              "RestrictedApiMethods.java",
+              """
 package com.google.errorprone.bugpatterns.testdata;
 
 import com.google.errorprone.annotations.RestrictedApi;
@@ -123,10 +115,10 @@ interface IFaceWithRestriction {
 @Target({ElementType.METHOD, ElementType.CONSTRUCTOR})
 @interface AllowlistWithWarning {}\
 """)
-            .matchAllDiagnostics();
-    refactoringTest =
-        BugCheckerRefactoringTestHelper.newInstance(checker, RestrictedApiCheckerTest.class);
-  }
+          .matchAllDiagnostics();
+  private final BugCheckerRefactoringTestHelper refactoringTest =
+      BugCheckerRefactoringTestHelper.newInstance(
+          RestrictedApiChecker.class, RestrictedApiCheckerTest.class);
 
   @Test
   public void normalCallAllowed() {

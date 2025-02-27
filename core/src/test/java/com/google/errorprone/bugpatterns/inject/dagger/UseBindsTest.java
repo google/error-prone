@@ -23,7 +23,6 @@ import dagger.producers.ProducerModule;
 import dagger.producers.Produces;
 import java.util.Arrays;
 import java.util.List;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -44,16 +43,12 @@ public class UseBindsTest {
   private final String bindingMethodAnnotation;
   private final String moduleAnnotation;
 
-  private BugCheckerRefactoringTestHelper testHelper;
+  private final BugCheckerRefactoringTestHelper testHelper =
+      BugCheckerRefactoringTestHelper.newInstance(UseBinds.class, getClass());
 
   public UseBindsTest(String bindingMethodAnnotation, String moduleAnnotation) {
     this.bindingMethodAnnotation = bindingMethodAnnotation;
     this.moduleAnnotation = moduleAnnotation;
-  }
-
-  @Before
-  public void setUp() {
-    testHelper = BugCheckerRefactoringTestHelper.newInstance(UseBinds.class, getClass());
   }
 
   @Test

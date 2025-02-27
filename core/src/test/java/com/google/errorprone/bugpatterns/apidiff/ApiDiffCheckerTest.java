@@ -66,7 +66,8 @@ public class ApiDiffCheckerTest {
   @Target({ANNOTATION_TYPE, CONSTRUCTOR, FIELD, METHOD, TYPE})
   public @interface RequiresNewApiVersion {}
 
-  private final CompilationTestHelper compilationHelper;
+  private final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(AnnotationOnlyApiDiffChecker.class, getClass());
 
   /** An {@link ApiDiffChecker} for testing. */
   @BugPattern(name = "SampleChecker", severity = SeverityLevel.ERROR, summary = "")
@@ -86,11 +87,6 @@ public class ApiDiffCheckerTest {
     public AnnotationOnlyApiDiffChecker() {
       super(ApiDiff.fromProto(Diff.getDefaultInstance()), RequiresNewApiVersion.class);
     }
-  }
-
-  public ApiDiffCheckerTest() {
-    compilationHelper =
-        CompilationTestHelper.newInstance(AnnotationOnlyApiDiffChecker.class, getClass());
   }
 
   @Test

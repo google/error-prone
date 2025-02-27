@@ -16,7 +16,6 @@
 package com.google.errorprone.bugpatterns.inject.dagger;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -26,14 +25,9 @@ import org.junit.runners.JUnit4;
  */
 @RunWith(JUnit4.class)
 public final class PrivateConstructorForNoninstantiableModuleTest {
-  private BugCheckerRefactoringTestHelper testHelper;
-
-  @Before
-  public void setUp() {
-    testHelper =
-        BugCheckerRefactoringTestHelper.newInstance(
-            PrivateConstructorForNoninstantiableModule.class, getClass());
-  }
+  private final BugCheckerRefactoringTestHelper testHelper =
+      BugCheckerRefactoringTestHelper.newInstance(
+          PrivateConstructorForNoninstantiableModule.class, getClass());
 
   @Test
   public void emptyModuleGetsLeftAlone() {
