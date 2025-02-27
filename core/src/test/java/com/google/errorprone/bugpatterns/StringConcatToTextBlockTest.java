@@ -209,4 +209,36 @@ public class StringConcatToTextBlockTest {
             """)
         .doTest(TEXT_MATCH);
   }
+
+  // b/396965922
+  @Test
+  public void trailingSpacesInMultilineString() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              private static final String FOO =
+                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit: \\n"
+                      + "- Lorem ipsum dolor sit amet, consectetur adipiscing elit?\\n"
+                      + "- Lorem ipsum dolor sit amet, consectetur adipiscing elit?\\n"
+                      + "- Lorem ipsum dolor sit amet, consectetur adipiscing elit?\\n";
+            }
+            """)
+        // NOTE: we're missing a space after the first line.
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              private static final String FOO =
+                  \"""
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit:
+                  - Lorem ipsum dolor sit amet, consectetur adipiscing elit?
+                  - Lorem ipsum dolor sit amet, consectetur adipiscing elit?
+                  - Lorem ipsum dolor sit amet, consectetur adipiscing elit?
+                  \""";
+            }
+            """)
+        .doTest(TEXT_MATCH);
+  }
 }
