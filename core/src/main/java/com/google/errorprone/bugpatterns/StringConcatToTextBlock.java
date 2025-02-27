@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Iterables.getOnlyElement;
+import static com.google.common.collect.Streams.zip;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.method.MethodMatchers.constructor;
@@ -30,6 +31,7 @@ import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static java.util.stream.Collectors.joining;
 
+import com.google.common.base.CharMatcher;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
@@ -159,19 +161,21 @@ public class StringConcatToTextBlock extends BugChecker
       return NO_MATCH;
     }
     boolean trailingNewline = getLast(strings).endsWith("\n");
-    strings =
-        String.join("\n", strings)
-            .stripIndent()
-            .lines()
-            .map(s -> s.stripTrailing())
+    String joined = String.join("\n", strings);
+    ImmutableList<String> outdentedStrings =
+        zip(
+                joined.stripIndent().lines(),
+                joined.lines(),
+                (s, orig) -> s + " ".repeat(orig.length() - SPACE.trimTrailingFrom(orig).length()))
             .collect(toImmutableList());
     LineMap lineMap = state.getPath().getCompilationUnit().getLineMap();
     String indent = " ".repeat((int) lineMap.getColumnNumber(replaceFrom) - 1);
     String suffix = trailingNewline ? "" : "\\";
     String replacement =
-        strings.stream()
+        outdentedStrings.stream()
             .map(line -> line.isEmpty() ? line : (indent + line))
             .map(SourceCodeEscapers.getJavaTextBlockEscaper()::escape)
+            .map(s -> s.endsWith(" ") ? (s.substring(0, s.length() - 1) + "\\s") : s)
             .collect(joining("\n", DELIMITER + "\n", suffix + "\n" + indent + DELIMITER));
     SuggestedFix fix = SuggestedFix.replace(replaceFrom, replaceTo, replacement);
     return describeMatch(tree, fix);
@@ -194,6 +198,8 @@ public class StringConcatToTextBlock extends BugChecker
 
   private static final Matcher<ExpressionTree> FOR_SOURCE_LINES =
       staticMethod().onClass("com.google.testing.compile.JavaFileObjects").named("forSourceLines");
+
+  private static final CharMatcher SPACE = CharMatcher.is(' ');
 
   private Description joiner(MethodInvocationTree tree, VisitorState state) {
     ImmutableList<String> strings = stringLiteralArguments(tree.getArguments());

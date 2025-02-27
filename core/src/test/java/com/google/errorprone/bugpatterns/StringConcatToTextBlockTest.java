@@ -220,20 +220,19 @@ public class StringConcatToTextBlockTest {
             class Test {
               private static final String FOO =
                   "Lorem ipsum dolor sit amet, consectetur adipiscing elit: \\n"
-                      + "- Lorem ipsum dolor sit amet, consectetur adipiscing elit?\\n"
+                      + "- Lorem ipsum dolor sit amet, consectetur adipiscing elit?   \\n"
                       + "- Lorem ipsum dolor sit amet, consectetur adipiscing elit?\\n"
                       + "- Lorem ipsum dolor sit amet, consectetur adipiscing elit?\\n";
             }
             """)
-        // NOTE: we're missing a space after the first line.
         .addOutputLines(
             "Test.java",
             """
             class Test {
               private static final String FOO =
                   \"""
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit:
-                  - Lorem ipsum dolor sit amet, consectetur adipiscing elit?
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit:\\s
+                  - Lorem ipsum dolor sit amet, consectetur adipiscing elit?  \\s
                   - Lorem ipsum dolor sit amet, consectetur adipiscing elit?
                   - Lorem ipsum dolor sit amet, consectetur adipiscing elit?
                   \""";
