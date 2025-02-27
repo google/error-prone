@@ -377,6 +377,7 @@ public class BugCheckerRefactoringTestHelper {
       this.input = input;
     }
 
+    @CanIgnoreReturnValue
     public BugCheckerRefactoringTestHelper addOutputLines(String path, String... output) {
       return addInputAndOutput(input, forSourceLines(path, output));
     }
@@ -388,10 +389,12 @@ public class BugCheckerRefactoringTestHelper {
      *     blocks is more readable, as it encourages writing small, focussed tests.
      */
     @Deprecated
+    @CanIgnoreReturnValue
     public BugCheckerRefactoringTestHelper addOutput(String outputFilename) {
       return addInputAndOutput(input, forResource(clazz, outputFilename));
     }
 
+    @CanIgnoreReturnValue
     public BugCheckerRefactoringTestHelper expectUnchanged() {
       return addInputAndOutput(input, input);
     }
