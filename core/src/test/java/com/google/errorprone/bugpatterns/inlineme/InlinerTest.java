@@ -1628,4 +1628,42 @@ public final class Caller {
     return BugCheckerRefactoringTestHelper.newInstance(Inliner.class, getClass())
         .setArgs("-XepOpt:InlineMe:CheckFixCompiles=true");
   }
+
+  // b/308614050
+  @Test
+  public void binaryTree_immediatelyInvoked_requiresParens() {
+    refactoringTestHelper
+        .addInputLines(
+            "Strings.java",
+            """
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class Strings {
+              @InlineMe(replacement = "string.repeat(count)")
+              public static String repeat(String string, int count) {
+                return string.repeat(count);
+              }
+            }
+            """)
+        .expectUnchanged()
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void test() {
+                String s = Strings.repeat("a" + "b", 10);
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void test() {
+                String s = "a" + "b".repeat(10);
+              }
+            }
+            """)
+        .doTest();
+  }
 }
