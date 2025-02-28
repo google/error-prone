@@ -97,6 +97,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import javax.inject.Inject;
 import javax.lang.model.element.ElementKind;
+import javax.lang.model.type.IntersectionType;
 
 /** Checks for statement switches that can be expressed as an equivalent expression switch. */
 @BugPattern(
@@ -375,8 +376,14 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
             && exhaustive;
     boolean canConvertDirectlyToExpressionSwitch =
         allCasesHaveDefiniteControlFlow
+            // Hoisting currently not supported for arrays due to restrictions on using assignment
+            // expressions to initialize them
             && symbolsToHoist.keySet().stream()
-                .noneMatch(symbol -> state.getTypes().isArray(symbol.type));
+                .noneMatch(symbol -> state.getTypes().isArray(symbol.type))
+            // Hoisting currently not supported for intersection types because the type is not
+            // denotable as an explicit type (see JLS 21 § 14.4.1.)
+            && symbolsToHoist.keySet().stream()
+                .noneMatch(symbol -> symbol.type instanceof IntersectionType);
 
     List<StatementTree> precedingStatements = getPrecedingStatementsInBlock(switchTree, state);
     Optional<ExpressionTree> assignmentTarget =

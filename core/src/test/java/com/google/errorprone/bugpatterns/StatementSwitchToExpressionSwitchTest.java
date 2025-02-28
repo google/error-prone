@@ -5761,6 +5761,99 @@ public final class StatementSwitchToExpressionSwitchTest {
   }
 
   @Test
+  public void directConversion_hoistIntersectionType_noError() {
+    // The type of foo is an intersection type, which is not supported for hoisting.
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+
+              int[] x;
+
+              public Test(int foo) {
+                x = null;
+              }
+
+              public int[] foo() {
+                int z = 1;
+                switch (z) {
+                  case 1:
+                    var foo = (CharSequence & Comparable<String>) "hello";
+                    break;
+                  case 2:
+                    foo = "there";
+                }
+                return x;
+              }
+            }
+            """)
+        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
+        .doTest();
+  }
+
+  @Test
+  public void directConversion_typeParameterWithIntersection_error() {
+    // Type parameters containing type intersections are supported for hoisting.
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+
+              int[] x;
+
+              public Test(int foo) {
+                x = null;
+              }
+
+              public static <T extends CharSequence & Comparable<String>> int[] foo() {
+                int z = 1;
+                switch (z) {
+                  case 1:
+                    T foo = null;
+                    break;
+                  case 2:
+                    System.out.println("Somehow, z was 2.");
+                    foo = null;
+                }
+                return new int[0];
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+
+              int[] x;
+
+              public Test(int foo) {
+              x = null;
+              }
+
+              public static <T extends CharSequence & Comparable<String>> int[] foo() {
+                int z = 1;
+                T foo;
+                switch(z) {
+                  case 1 -> {
+                    foo = null;
+                  }
+                  case 2 -> {
+                    System.out.println("Somehow, z was 2.");
+                    foo = null;
+                  }
+                }
+                return new int[0];
+              }
+            }
+            """)
+        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
+        .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+  }
+
+  @Test
   public void directConversion_lexicalScopeOverlap3_error() {
     // Switch statement is in a labeled statement.  The checker must surround the switch statement
     // with braces
