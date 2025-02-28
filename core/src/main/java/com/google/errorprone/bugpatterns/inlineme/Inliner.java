@@ -24,12 +24,13 @@ import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.hasDirectAnnotationWithSimpleName;
+import static com.google.errorprone.util.ASTHelpers.requiresParentheses;
 import static com.google.errorprone.util.ASTHelpers.stringContainsComments;
 import static com.google.errorprone.util.MoreAnnotations.getValue;
 import static com.google.errorprone.util.SideEffectAnalysis.hasSideEffect;
+import static java.util.stream.Collectors.joining;
 
 import com.google.auto.value.AutoValue;
-import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
@@ -56,6 +57,7 @@ import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -104,12 +106,10 @@ public final class Inliner extends BugChecker
     if (!hasDirectAnnotationWithSimpleName(symbol, INLINE_ME)) {
       return Description.NO_MATCH;
     }
-    ImmutableList<String> callingVars =
-        tree.getArguments().stream().map(state::getSourceForNode).collect(toImmutableList());
 
     String receiverString = "new " + state.getSourceForNode(tree.getIdentifier());
 
-    return match(tree, symbol, callingVars, receiverString, null, state);
+    return match(tree, symbol, tree.getArguments(), receiverString, null, state);
   }
 
   @Override
@@ -118,8 +118,6 @@ public final class Inliner extends BugChecker
     if (!hasDirectAnnotationWithSimpleName(symbol, INLINE_ME)) {
       return Description.NO_MATCH;
     }
-    ImmutableList<String> callingVars =
-        tree.getArguments().stream().map(state::getSourceForNode).collect(toImmutableList());
 
     String receiverString = "";
 
@@ -140,7 +138,7 @@ public final class Inliner extends BugChecker
       }
     }
 
-    return match(tree, symbol, callingVars, receiverString, receiver, state);
+    return match(tree, symbol, tree.getArguments(), receiverString, receiver, state);
   }
 
   private static final Pattern MEMBER_REFERENCE_PATTERN =
@@ -194,7 +192,7 @@ public final class Inliner extends BugChecker
   private Description match(
       ExpressionTree tree,
       MethodSymbol symbol,
-      ImmutableList<String> callingVars,
+      List<? extends ExpressionTree> callingVars,
       String receiverString,
       ExpressionTree receiver,
       VisitorState state) {
@@ -230,22 +228,31 @@ public final class Inliner extends BugChecker
             .map(varSymbol -> varSymbol.getSimpleName().toString())
             .collect(toImmutableList());
 
+    ImmutableList<String> callingVarStrings;
+
     boolean varargsWithEmptyArguments = false;
     if (symbol.isVarArgs()) {
       // If we're calling a varargs method, its inlining *should* have the varargs parameter in a
       // reasonable position. If there are 0 arguments, we'll need to do more surgery
       if (callingVars.size() == varNames.size() - 1) {
         varargsWithEmptyArguments = true;
+        callingVarStrings =
+            callingVars.stream().map(state::getSourceForNode).collect(toImmutableList());
       } else {
-        ImmutableList<String> nonvarargs = callingVars.subList(0, varNames.size() - 1);
+        List<? extends ExpressionTree> nonvarargs = callingVars.subList(0, varNames.size() - 1);
         String varargsJoined =
-            Joiner.on(", ").join(callingVars.subList(varNames.size() - 1, callingVars.size()));
-        callingVars =
+            callingVars.subList(varNames.size() - 1, callingVars.size()).stream()
+                .map(state::getSourceForNode)
+                .collect(joining(", "));
+        callingVarStrings =
             ImmutableList.<String>builderWithExpectedSize(varNames.size())
-                .addAll(nonvarargs)
+                .addAll(nonvarargs.stream().map(state::getSourceForNode).collect(toImmutableList()))
                 .add(varargsJoined)
                 .build();
       }
+    } else {
+      callingVarStrings =
+          callingVars.stream().map(state::getSourceForNode).collect(toImmutableList());
     }
 
     String replacement = inlineMe.get().replacement();
@@ -298,7 +305,7 @@ public final class Inliner extends BugChecker
       // where the replacement is _just_ one parameter, there isn't a trailing token. We just make
       // the direct replacement here.
       if (replacement.equals(varName)) {
-        replacement = callingVars.get(i);
+        replacement = callingVarStrings.get(i);
         break;
       }
 
@@ -309,11 +316,19 @@ public final class Inliner extends BugChecker
       String capturePrefixForVarargs = terminalVarargsReplacement ? "(?:,\\s*)?" : "\\b";
       // We want to avoid replacing a method invocation with the same name as the method.
       var extractArgAndNextToken =
-          Pattern.compile(capturePrefixForVarargs + Pattern.quote(varName) + "\\b([^(])");
+          Pattern.compile(capturePrefixForVarargs + "(" + Pattern.quote(varName) + ")\\b([^(])");
       String replacementResult =
-          Matcher.quoteReplacement(terminalVarargsReplacement ? "" : callingVars.get(i)) + "$1";
+          Matcher.quoteReplacement(terminalVarargsReplacement ? "" : callingVarStrings.get(i));
       Matcher matcher = extractArgAndNextToken.matcher(replacement);
-      replacement = matcher.replaceAll(replacementResult);
+      String finalReplacement = replacement;
+      boolean mayRequireParens =
+          i < callingVars.size() && requiresParentheses(callingVars.get(i), state);
+      replacement =
+          matcher.replaceAll(
+              mr ->
+                  mightRequireParens(mr.start(1), mr.end(1), finalReplacement) && mayRequireParens
+                      ? "(" + replacementResult + ")$2"
+                      : (replacementResult + "$2"));
     }
 
     builder.replace(replacementStart, replacementEnd, replacement);
@@ -322,6 +337,22 @@ public final class Inliner extends BugChecker
 
     return maybeCheckFixCompiles(tree, state, fix, api);
   }
+
+  /**
+   * Tries to establish whether substituting an expression into {@code replacement} between {@code
+   * start} and {@code end} might require parenthesising.
+   *
+   * <p>The current heuristic is that the only things that are guaranteed not to are arguments to
+   * methods, which we infer with string munging.
+   */
+  private static boolean mightRequireParens(int start, int end, String replacement) {
+    return !LOOKS_LIKE_METHOD_CALL_BEFORE.matcher(replacement.substring(0, start)).matches()
+        || !LOOKS_LIKE_METHOD_CALL_AFTER.matcher(replacement.substring(end)).matches();
+  }
+
+  private static final Pattern LOOKS_LIKE_METHOD_CALL_BEFORE = Pattern.compile(".*(\\(|,)\\s*$");
+
+  private static final Pattern LOOKS_LIKE_METHOD_CALL_AFTER = Pattern.compile("^\\s*(\\)|,).*");
 
   private Description maybeCheckFixCompiles(
       ExpressionTree tree, VisitorState state, SuggestedFix fix, Api api) {

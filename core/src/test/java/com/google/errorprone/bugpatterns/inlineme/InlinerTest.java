@@ -1466,8 +1466,7 @@ public final class Caller {
             "public final class Caller {",
             "  public void doTest() {",
             "    Object value = 42L;",
-            // TODO(b/308614050): this is a bug! you can't call doubleValue() on an Object!
-            "    Client.after((Long) value.doubleValue());",
+            "    Client.after(((Long) value).doubleValue());",
             "  }",
             "}")
         .allowBreakingChanges()
@@ -1476,7 +1475,7 @@ public final class Caller {
 
   // b/308614050
   @Test
-  public void math() {
+  public void replacementWhichRequiresParens() {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
@@ -1501,14 +1500,13 @@ public final class Caller {
               }
             }
             """)
-        // This is a bug since it now evaluates to 3, not 4!
         .addOutputLines(
             "Caller.java",
             """
             import com.google.foo.Client;
             public final class Caller {
               public void doTest() {
-                long four = 1 + 1 * 2;
+                long four = (1 + 1) * 2;
               }
             }
             """)
@@ -1620,6 +1618,7 @@ public final class Caller {
                 Runnable r;
                 r = client::instanceAfter;
                 c = Client::instanceAfter;
+
               }
             }
             """)
@@ -1679,7 +1678,7 @@ public final class Caller {
                 ImmutableList<String> b = ImmutableList.of("foo", "bar");
                 Client client =
                     new Client(
-                        b.size() == 1 ? ImmutableList.of() : b.get(0),
+                        (b.size() == 1 ? ImmutableList.of() : b).get(0),
                         b.size() == 1 ? ImmutableList.of() : b);
               }
             }
@@ -1728,7 +1727,44 @@ public final class Caller {
             """
             class Test {
               void test() {
-                String s = "a" + "b".repeat(10);
+                String s = ("a" + "b").repeat(10);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void variousInlinings_doesNotAddParensWithinMethodCall() {
+    refactoringTestHelper
+        .addInputLines(
+            "Strings.java",
+            """
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class Strings {
+              @InlineMe(replacement = "String.format(\\"%s%s%s\\", x, y, z)")
+              public static String f(String x, String y, String z) {
+                return String.format("%s%s%s", x, y, z);
+              }
+            }
+            """)
+        .expectUnchanged()
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void test() {
+                String s = Strings.f("a" + "b", "c" + "d", "e" + "f");
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void test() {
+                String s = String.format("%s%s%s", "a" + "b", "c" + "d", "e" + "f");
               }
             }
             """)
