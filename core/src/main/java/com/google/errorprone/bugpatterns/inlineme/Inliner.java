@@ -36,6 +36,9 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Range;
+import com.google.common.collect.RangeMap;
+import com.google.common.collect.TreeRangeMap;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
@@ -292,6 +295,8 @@ public final class Inliner extends BugChecker
               Matcher.quoteReplacement(typeName.getValue()));
     }
 
+    RangeMap<Integer, String> replacementsToApply = TreeRangeMap.create();
+
     for (int i = 0; i < varNames.size(); i++) {
       String varName = varNames.get(i);
 
@@ -306,6 +311,7 @@ public final class Inliner extends BugChecker
       // the direct replacement here.
       if (replacement.equals(varName)) {
         replacement = callingVarStrings.get(i);
+        replacementsToApply.clear();
         break;
       }
 
@@ -317,19 +323,24 @@ public final class Inliner extends BugChecker
       // We want to avoid replacing a method invocation with the same name as the method.
       var extractArgAndNextToken =
           Pattern.compile(capturePrefixForVarargs + "(" + Pattern.quote(varName) + ")\\b([^(])");
-      String replacementResult =
-          Matcher.quoteReplacement(terminalVarargsReplacement ? "" : callingVarStrings.get(i));
-      Matcher matcher = extractArgAndNextToken.matcher(replacement);
-      String finalReplacement = replacement;
+      String replacementResult = terminalVarargsReplacement ? "" : callingVarStrings.get(i);
       boolean mayRequireParens =
           i < callingVars.size() && requiresParentheses(callingVars.get(i), state);
-      replacement =
-          matcher.replaceAll(
+      String finalReplacement = replacement;
+      extractArgAndNextToken
+          .matcher(replacement)
+          .results()
+          .forEach(
               mr ->
-                  mightRequireParens(mr.start(1), mr.end(1), finalReplacement) && mayRequireParens
-                      ? "(" + replacementResult + ")$2"
-                      : (replacementResult + "$2"));
+                  replacementsToApply.put(
+                      Range.closedOpen(mr.start(0), mr.end(1)),
+                      mightRequireParens(mr.start(1), mr.end(1), finalReplacement)
+                              && mayRequireParens
+                          ? "(" + replacementResult + ")"
+                          : replacementResult));
     }
+
+    replacement = applyReplacements(replacement, replacementsToApply);
 
     builder.replace(replacementStart, replacementEnd, replacement);
 
@@ -353,6 +364,21 @@ public final class Inliner extends BugChecker
   private static final Pattern LOOKS_LIKE_METHOD_CALL_BEFORE = Pattern.compile(".*(\\(|,)\\s*$");
 
   private static final Pattern LOOKS_LIKE_METHOD_CALL_AFTER = Pattern.compile("^\\s*(\\)|,).*");
+
+  private static String applyReplacements(
+      String input, RangeMap<Integer, String> replacementsToApply) {
+    // Replace in ascending order to avoid quadratic behaviour.
+    int idx = 0;
+    StringBuilder sb = new StringBuilder();
+    for (Map.Entry<Range<Integer>, String> entry : replacementsToApply.asMapOfRanges().entrySet()) {
+      Range<Integer> range = entry.getKey();
+      String newText = entry.getValue();
+      sb.append(input, idx, range.lowerEndpoint()).append(newText);
+      idx = range.upperEndpoint();
+    }
+    sb.append(input, idx, input.length());
+    return sb.toString();
+  }
 
   private Description maybeCheckFixCompiles(
       ExpressionTree tree, VisitorState state, SuggestedFix fix, Api api) {
