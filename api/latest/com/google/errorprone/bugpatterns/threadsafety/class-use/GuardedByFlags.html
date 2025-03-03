@@ -78,6 +78,9 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color"><code>static <a href="../GuardedByFlags.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByFlags</a></code></div>
 <div class="col-second even-row-color"><span class="type-name-label">GuardedByFlags.</span><code><a href="../GuardedByFlags.html#allOn()" class="member-name-link">allOn</a>()</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>static <a href="../GuardedByFlags.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByFlags</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">GuardedByFlags.</span><code><a href="../GuardedByFlags.html#fromFlags(com.google.errorprone.ErrorProneFlags)" class="member-name-link">fromFlags</a><wbr>(<a href="../../../ErrorProneFlags.html" title="class in com.google.errorprone">ErrorProneFlags</a>&nbsp;flags)</code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
 </div>
 <div class="caption"><span>Methods in <a href="../package-summary.html">com.google.errorprone.bugpatterns.threadsafety</a> with parameters of type <a href="../GuardedByFlags.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByFlags</a></span></div>
 <div class="summary-table three-column-summary">
@@ -122,11 +125,27 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color">
 <div class="block">Determine the lock expression that needs to be held when accessing a specific guarded member.</div>
 </div>
-<div class="col-first odd-row-color"><code>static com.google.errorprone.bugpatterns.threadsafety.GuardedByUtils.GuardedByValidationResult</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">GuardedByUtils.</span><code><a href="../GuardedByUtils.html#isGuardedByValid(com.sun.source.tree.Tree,com.google.errorprone.VisitorState,com.google.errorprone.bugpatterns.threadsafety.GuardedByFlags)" class="member-name-link">isGuardedByValid</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,
- <a href="../../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
+<div class="col-first odd-row-color"><code>static com.google.common.collect.ImmutableSet<wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">GuardedByUtils.</span><code><a href="../GuardedByUtils.html#getGuardValues(com.sun.tools.javac.code.Symbol,com.google.errorprone.bugpatterns.threadsafety.GuardedByFlags)" class="member-name-link">getGuardValues</a><wbr>(com.sun.tools.javac.code.Symbol&nbsp;sym,
  <a href="../GuardedByFlags.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByFlags</a>&nbsp;flags)</code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>static com.google.errorprone.bugpatterns.threadsafety.GuardedByUtils.GuardedByValidationResult</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">GuardedByUtils.</span><code><a href="../GuardedByUtils.html#isGuardedByValid(com.sun.source.tree.Tree,com.google.errorprone.VisitorState,com.google.errorprone.bugpatterns.threadsafety.GuardedByFlags)" class="member-name-link">isGuardedByValid</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,
+ <a href="../../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
+ <a href="../GuardedByFlags.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByFlags</a>&nbsp;flags)</code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+</div>
+<div class="caption"><span>Constructors in <a href="../package-summary.html">com.google.errorprone.bugpatterns.threadsafety</a> with parameters of type <a href="../GuardedByFlags.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByFlags</a></span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier</div>
+<div class="table-header col-second">Constructor</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="../ThreadSafeAnalysis.html#%3Cinit%3E(com.google.errorprone.bugpatterns.BugChecker,com.google.errorprone.VisitorState,com.google.errorprone.bugpatterns.threadsafety.WellKnownThreadSafety,com.google.errorprone.bugpatterns.threadsafety.GuardedByFlags)" class="member-name-link">ThreadSafeAnalysis</a><wbr>(<a href="../../BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>&nbsp;bugChecker,
+ <a href="../../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
+ <a href="../WellKnownThreadSafety.html" title="class in com.google.errorprone.bugpatterns.threadsafety">WellKnownThreadSafety</a>&nbsp;wellKnownThreadSafety,
+ <a href="../GuardedByFlags.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByFlags</a>&nbsp;flags)</code></div>
+<div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
 </li>

@@ -66,7 +66,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
 <li><a href="#constructor-detail" tabindex="0">Constructor Details</a>
 <ol class="toc-list">
-<li><a href="#%3Cinit%3E(com.google.errorprone.bugpatterns.BugChecker,com.google.errorprone.VisitorState,com.google.errorprone.bugpatterns.threadsafety.WellKnownThreadSafety)" tabindex="0">ThreadSafeAnalysis(BugChecker, VisitorState, WellKnownThreadSafety)</a></li>
+<li><a href="#%3Cinit%3E(com.google.errorprone.bugpatterns.BugChecker,com.google.errorprone.VisitorState,com.google.errorprone.bugpatterns.threadsafety.WellKnownThreadSafety,com.google.errorprone.bugpatterns.threadsafety.GuardedByFlags)" tabindex="0">ThreadSafeAnalysis(BugChecker, VisitorState, WellKnownThreadSafety, GuardedByFlags)</a></li>
 </ol>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
@@ -104,9 +104,10 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.google.errorprone.bugpatterns.BugChecker,com.google.errorprone.VisitorState,com.google.errorprone.bugpatterns.threadsafety.WellKnownThreadSafety)" class="member-name-link">ThreadSafeAnalysis</a><wbr>(<a href="../BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>&nbsp;bugChecker,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.google.errorprone.bugpatterns.BugChecker,com.google.errorprone.VisitorState,com.google.errorprone.bugpatterns.threadsafety.WellKnownThreadSafety,com.google.errorprone.bugpatterns.threadsafety.GuardedByFlags)" class="member-name-link">ThreadSafeAnalysis</a><wbr>(<a href="../BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>&nbsp;bugChecker,
  <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
- <a href="WellKnownThreadSafety.html" title="class in com.google.errorprone.bugpatterns.threadsafety">WellKnownThreadSafety</a>&nbsp;wellKnownThreadSafety)</code></div>
+ <a href="WellKnownThreadSafety.html" title="class in com.google.errorprone.bugpatterns.threadsafety">WellKnownThreadSafety</a>&nbsp;wellKnownThreadSafety,
+ <a href="GuardedByFlags.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByFlags</a>&nbsp;flags)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -160,12 +161,13 @@ loadScripts(document, 'script');</script>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(com.google.errorprone.bugpatterns.BugChecker,com.google.errorprone.VisitorState,com.google.errorprone.bugpatterns.threadsafety.WellKnownThreadSafety)">
+<section class="detail" id="&lt;init&gt;(com.google.errorprone.bugpatterns.BugChecker,com.google.errorprone.VisitorState,com.google.errorprone.bugpatterns.threadsafety.WellKnownThreadSafety,com.google.errorprone.bugpatterns.threadsafety.GuardedByFlags)">
 <h3>ThreadSafeAnalysis</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">ThreadSafeAnalysis</span><wbr><span class="parameters">(<a href="../BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>&nbsp;bugChecker,
  <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
- <a href="WellKnownThreadSafety.html" title="class in com.google.errorprone.bugpatterns.threadsafety">WellKnownThreadSafety</a>&nbsp;wellKnownThreadSafety)</span></div>
+ <a href="WellKnownThreadSafety.html" title="class in com.google.errorprone.bugpatterns.threadsafety">WellKnownThreadSafety</a>&nbsp;wellKnownThreadSafety,
+ <a href="GuardedByFlags.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByFlags</a>&nbsp;flags)</span></div>
 </div>
 </section>
 </li>

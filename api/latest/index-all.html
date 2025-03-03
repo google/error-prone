@@ -4348,6 +4348,8 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/threadsafety/ConstantExpressions.html#fromFlags(com.google.errorprone.ErrorProneFlags)" class="member-name-link">fromFlags(ErrorProneFlags)</a> - Static method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ConstantExpressions.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByFlags.html#fromFlags(com.google.errorprone.ErrorProneFlags)" class="member-name-link">fromFlags(ErrorProneFlags)</a> - Static method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByFlags.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByFlags</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/threadsafety/WellKnownMutability.html#fromFlags(com.google.errorprone.ErrorProneFlags)" class="member-name-link">fromFlags(ErrorProneFlags)</a> - Static method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/WellKnownMutability.html" title="class in com.google.errorprone.bugpatterns.threadsafety">WellKnownMutability</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/threadsafety/WellKnownThreadSafety.html#fromFlags(com.google.errorprone.ErrorProneFlags)" class="member-name-link">fromFlags(ErrorProneFlags)</a> - Static method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/WellKnownThreadSafety.html" title="class in com.google.errorprone.bugpatterns.threadsafety">WellKnownThreadSafety</a></dt>
@@ -4973,7 +4975,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns the values of the given symbol's <code>Generated</code> annotations, if present.</div>
 </dd>
-<dt><a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByUtils.html#getGuardValues(com.sun.tools.javac.code.Symbol)" class="member-name-link">getGuardValues(Symbol)</a> - Static method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByUtils.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByUtils</a></dt>
+<dt><a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByUtils.html#getGuardValues(com.sun.tools.javac.code.Symbol,com.google.errorprone.bugpatterns.threadsafety.GuardedByFlags)" class="member-name-link">getGuardValues(Symbol, GuardedByFlags)</a> - Static method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByUtils.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByUtils</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/apidiff/ApiDiffProto.ClassMember.Builder.html#getIdentifier()" class="member-name-link">getIdentifier()</a> - Method in class com.google.errorprone.bugpatterns.apidiff.<a href="com/google/errorprone/bugpatterns/apidiff/ApiDiffProto.ClassMember.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.ClassMember.Builder</a></dt>
 <dd>
@@ -6238,6 +6240,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Matches comparison of proto fields to <code>null</code>.</div>
 </dd>
+<dt><a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByFlags.html#includeSelectedGuardedBy()" class="member-name-link">includeSelectedGuardedBy()</a> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByFlags.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByFlags</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/Incomparable.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">Incomparable</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
 <div class="block">A <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="com/google/errorprone/BugPattern.html" title="annotation interface in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
@@ -13267,7 +13271,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Analyzes types for deep thread safety.</div>
 </dd>
-<dt><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafeAnalysis.html#%3Cinit%3E(com.google.errorprone.bugpatterns.BugChecker,com.google.errorprone.VisitorState,com.google.errorprone.bugpatterns.threadsafety.WellKnownThreadSafety)" class="member-name-link">ThreadSafeAnalysis(BugChecker, VisitorState, WellKnownThreadSafety)</a> - Constructor for class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafeAnalysis.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafeAnalysis</a></dt>
+<dt><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafeAnalysis.html#%3Cinit%3E(com.google.errorprone.bugpatterns.BugChecker,com.google.errorprone.VisitorState,com.google.errorprone.bugpatterns.threadsafety.WellKnownThreadSafety,com.google.errorprone.bugpatterns.threadsafety.GuardedByFlags)" class="member-name-link">ThreadSafeAnalysis(BugChecker, VisitorState, WellKnownThreadSafety, GuardedByFlags)</a> - Constructor for class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafeAnalysis.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafeAnalysis</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#threadSafeBuilder(com.google.errorprone.bugpatterns.threadsafety.WellKnownThreadSafety)" class="member-name-link">threadSafeBuilder(WellKnownThreadSafety)</a> - Static method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety</a></dt>
 <dd>&nbsp;</dd>
