@@ -43,13 +43,18 @@ import org.jspecify.annotations.Nullable;
  * @author cushon@google.com (Liam Miller-Cushon)
  */
 public final class GuardedByUtils {
-  public static ImmutableSet<String> getGuardValues(Symbol sym) {
+  public static ImmutableSet<String> getGuardValues(Symbol sym, GuardedByFlags flags) {
     List<Attribute.Compound> rawAttributes = sym.getRawAttributes();
     if (rawAttributes.isEmpty()) {
       return ImmutableSet.of();
     }
     return rawAttributes.stream()
-        .filter(a -> a.type.tsym.flatName().contentEquals(GUARDED_BY))
+        .filter(
+            a ->
+                flags.includeSelectedGuardedBy()
+                    ? ACCEPTED_GUARDED_BY_ANNOTATIONS.contains(
+                        a.getAnnotationType().asElement().toString())
+                    : a.type.tsym.flatName().contentEquals(GUARDED_BY))
         .flatMap(
             a ->
                 MoreAnnotations.getValue(a, "value")
@@ -58,12 +63,19 @@ public final class GuardedByUtils {
         .collect(toImmutableSet());
   }
 
-  static ImmutableSet<String> getGuardValues(Tree tree) {
+  static ImmutableSet<String> getGuardValues(Tree tree, GuardedByFlags flags) {
     Symbol sym = getSymbol(tree);
-    return sym == null ? ImmutableSet.of() : getGuardValues(sym);
+    return sym == null ? ImmutableSet.of() : getGuardValues(sym, flags);
   }
 
   private static final String GUARDED_BY = "com.google.errorprone.annotations.concurrent.GuardedBy";
+
+  private static final ImmutableSet<String> ACCEPTED_GUARDED_BY_ANNOTATIONS =
+      ImmutableSet.of(
+          "android.support.annotation.GuardedBy",
+          "androidx.annotation.GuardedBy",
+          "com.google.errorprone.annotations.concurrent.GuardedBy",
+          "javax.annotation.concurrent.GuardedBy");
 
   static JCTree.JCExpression parseString(String guardedByString, Context context) {
     JavacParser parser =
@@ -103,7 +115,7 @@ public final class GuardedByUtils {
 
   public static GuardedByValidationResult isGuardedByValid(
       Tree tree, VisitorState state, GuardedByFlags flags) {
-    ImmutableSet<String> guards = GuardedByUtils.getGuardValues(tree);
+    ImmutableSet<String> guards = GuardedByUtils.getGuardValues(tree, flags);
     if (guards.isEmpty()) {
       return GuardedByValidationResult.ok();
     }

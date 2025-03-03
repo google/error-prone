@@ -17,13 +17,14 @@
 package com.google.errorprone.bugpatterns.threadsafety;
 
 import com.google.errorprone.CompilationTestHelper;
+import com.google.testing.junit.testparameterinjector.TestParameter;
+import com.google.testing.junit.testparameterinjector.TestParameterInjector;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 
 /** {@link GuardedByChecker}Test */
-@RunWith(JUnit4.class)
+@RunWith(TestParameterInjector.class)
 public class GuardedByCheckerTest {
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(GuardedByChecker.class, getClass());
@@ -268,18 +269,25 @@ public class GuardedByCheckerTest {
   }
 
   @Test
-  public void errorProneAnnotation() {
+  public void multipleAnnotationsObeyed(
+      @TestParameter({
+            "com.google.errorprone.annotations.concurrent.GuardedBy",
+            "javax.annotation.concurrent.GuardedBy"
+          })
+          String anno) {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
-            """
-            package threadsafety;
-            import com.google.errorprone.annotations.concurrent.GuardedBy;
-            class Test {
-              // BUG: Diagnostic contains: Invalid @GuardedBy expression
-              @GuardedBy("foo") int y;
-            }
-            """)
+            String.format(
+                """
+                package threadsafety;
+                import %s;
+                class Test {
+                  // BUG: Diagnostic contains: Invalid @GuardedBy expression
+                  @GuardedBy("foo") int y;
+                }
+                """,
+                anno))
         .doTest();
   }
 

@@ -22,6 +22,7 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 
 import com.google.common.base.Joiner;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.LambdaExpressionTreeMatcher;
@@ -63,8 +64,8 @@ public class GuardedByChecker extends BugChecker
   private final GuardedByFlags flags;
 
   @Inject
-  GuardedByChecker() {
-    this.flags = GuardedByFlags.allOn();
+  GuardedByChecker(ErrorProneFlags flags) {
+    this.flags = GuardedByFlags.fromFlags(flags);
   }
 
   @Override
