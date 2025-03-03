@@ -34,12 +34,13 @@ public final class InvalidBlockTagTest {
 
   @Test
   public void typo() {
+    // common_typos_disable
     refactoring
         .addInputLines(
             "Test.java",
             """
             interface Test {
-              /** @return anything */
+              /** @returns anything */
               void foo();
             }
             """)
@@ -52,6 +53,7 @@ public final class InvalidBlockTagTest {
             }
             """)
         .doTest(TestMode.TEXT_MATCH);
+    // common_typos_enable
   }
 
   @Test
