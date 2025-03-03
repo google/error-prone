@@ -206,4 +206,20 @@ public final class InvalidBlockTagTest {
             """)
         .doTest();
   }
+
+  @Test
+  @SuppressWarnings("MisformattedTestData") // asserting the line the bug is on becomes inconvenient
+  public void returnOnClass() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            // BUG: Diagnostic contains:
+            /** @return anything */
+            interface Test {
+              void foo();
+            }
+            """)
+        .doTest();
+  }
 }
