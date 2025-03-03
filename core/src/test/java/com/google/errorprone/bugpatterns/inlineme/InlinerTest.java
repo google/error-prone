@@ -1768,4 +1768,43 @@ public final class Caller {
             """)
         .doTest();
   }
+
+  // b/400398218
+  @Test
+  public void inlinedCodeRequiresParens() {
+    refactoringTestHelper
+        .addInputLines(
+            "I.java",
+            """
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class I {
+              @InlineMe(replacement = "foo + \\"b\\"")
+              public static String ab(String foo) {
+                return foo + "b";
+              }
+            }
+            """)
+        .expectUnchanged()
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(String x) {
+                String abn = I.ab(x).repeat(10);
+              }
+            }
+            """)
+        // Broken! The inlined code requires parens.
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(String x) {
+                String abn = x + "b".repeat(10);
+              }
+            }
+            """)
+        .doTest();
+  }
 }
