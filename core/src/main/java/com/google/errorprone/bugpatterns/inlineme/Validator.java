@@ -24,7 +24,6 @@ import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.hasDirectAnnotationWithSimpleName;
 import static com.google.errorprone.util.ASTHelpers.shouldKeep;
 
-import com.google.common.base.CharMatcher;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.ErrorProneFlags;
@@ -180,15 +179,11 @@ public final class Validator extends BugChecker implements MethodTreeMatcher {
     return mismatches;
   }
 
-  private static final CharMatcher SEMICOLON = CharMatcher.is(';');
-
   /** Determines if the first and second token strings are equivalent. */
   private static boolean parseAndCheckForTokenEquivalence(
       String first, String second, Context context) {
-    ImmutableList<ErrorProneToken> tokens1 =
-        ErrorProneTokens.getTokens(SEMICOLON.trimTrailingFrom(first), context);
-    ImmutableList<ErrorProneToken> tokens2 =
-        ErrorProneTokens.getTokens(SEMICOLON.trimTrailingFrom(second), context);
+    ImmutableList<ErrorProneToken> tokens1 = ErrorProneTokens.getTokens(first, context);
+    ImmutableList<ErrorProneToken> tokens2 = ErrorProneTokens.getTokens(second, context);
 
     if (tokens1.size() != tokens2.size()) {
       return false;

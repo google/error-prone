@@ -1282,7 +1282,7 @@ public final class Caller {
             import com.google.errorprone.annotations.InlineMe;
 
             public final class Client {
-              @InlineMe(replacement = "this.after(/* foo= */ isAdmin);;;;")
+              @InlineMe(replacement = "this.after(/* foo= */ isAdmin)")
               @Deprecated
               public boolean before(boolean isAdmin) {
                 return after(/* foo= */ isAdmin);

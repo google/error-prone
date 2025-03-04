@@ -42,7 +42,7 @@ public class ValidatorTest {
 
             public final class Client {
               @InlineMe(
-                  replacement = "new Client();",
+                  replacement = "new Client()",
                   imports = {"com.google.foo.Client"})
               @Deprecated
               public static Client create() {
@@ -67,7 +67,7 @@ public class ValidatorTest {
             import com.google.errorprone.annotations.InlineMe;
 
             public final class Client {
-              @InlineMe(replacement = "new Client();", imports = "com.google.foo.Client")
+              @InlineMe(replacement = "new Client()", imports = "com.google.foo.Client")
               @Deprecated
               public static Client create() {
                 return new Client();
@@ -136,7 +136,7 @@ public class ValidatorTest {
             import java.util.function.Supplier;
 
             public final class Client {
-              @InlineMe(replacement = "this.after(string);")
+              @InlineMe(replacement = "this.after(string)")
               @Deprecated
               public void before(String string) {
                 after(/* string= */ string);
@@ -159,7 +159,7 @@ public class ValidatorTest {
             import java.util.function.Supplier;
 
             public final class Client {
-              @InlineMe(replacement = "this.after(/* name= */ name);")
+              @InlineMe(replacement = "this.after(/* name= */ name)")
               @Deprecated
               public void before(String name) {
                 after(/* name= */ name);
@@ -182,7 +182,7 @@ public class ValidatorTest {
             import java.util.function.Supplier;
 
             public final class Client {
-              @InlineMe(replacement = "this.after(/* name1= */ name1, /* name2= */ name2);")
+              @InlineMe(replacement = "this.after(/* name1= */ name1, /* name2= */ name2)")
               @Deprecated
               public void before(String name1, String name2) {
                 after(/* name1= */ name1, /* name2= */ name2);
@@ -205,7 +205,7 @@ public class ValidatorTest {
             import java.util.function.Supplier;
 
             public final class Client {
-              @InlineMe(replacement = "this.after(string);")
+              @InlineMe(replacement = "this.after(string)")
               @Deprecated
               public void before(String string) {
                 after( // string
@@ -326,7 +326,7 @@ public class ValidatorTest {
             import java.util.function.Function;
 
             public final class Client {
-              @InlineMe(replacement = "this.after(str -> Integer.parseInt(str));")
+              @InlineMe(replacement = "this.after(str -> Integer.parseInt(str))")
               @Deprecated
               public void before() {
                 after(str -> Integer.parseInt(str));
@@ -373,7 +373,7 @@ public class ValidatorTest {
             public final class Client {
               public final String str = null;
 
-              @InlineMe(replacement = "this.str;")
+              @InlineMe(replacement = "this.str")
               @Deprecated
               public String before() {
                 return str;
@@ -612,7 +612,7 @@ public class ValidatorTest {
 
             public final class Client {
               @InlineMe(
-                  replacement = "this.after(Duration.ZERO);",
+                  replacement = "this.after(Duration.ZERO)",
                   imports = {"java.time.Duration"})
               @Deprecated
               public void before() {
@@ -638,7 +638,7 @@ public class ValidatorTest {
 
             public final class Client {
               @InlineMe(
-                  replacement = "this.after(ZERO);",
+                  replacement = "this.after(ZERO)",
                   staticImports = {"java.time.Duration.ZERO"})
               @Deprecated
               public void before() {
@@ -727,7 +727,7 @@ public class ValidatorTest {
             public final class Client {
               public static final class Builder {
                 @InlineMe(
-                    replacement = "this.setDeadline(Client.Builder.parseDuration(deadline));",
+                    replacement = "this.setDeadline(Client.Builder.parseDuration(deadline))",
                     imports = {"com.google.frobber.Client"})
                 @Deprecated
                 public void setDeadline(String deadline) {
@@ -780,7 +780,7 @@ public class ValidatorTest {
             public final class RpcClient {
               public String name;
 
-              @InlineMe(replacement = "this.name = name;")
+              @InlineMe(replacement = "this.name = name")
               @Deprecated
               public void setName(String name) {
                 this.name = name;

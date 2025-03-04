@@ -25,7 +25,6 @@ import static com.google.errorprone.util.ASTHelpers.isStatic;
 import static com.google.errorprone.util.MoreAnnotations.getValue;
 
 import com.google.auto.value.AutoValue;
-import com.google.common.base.CharMatcher;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.VisitorState;
@@ -126,7 +125,6 @@ abstract class InlineMeData {
 
     return getValue(inlineMe, "replacement")
         .flatMap(MoreAnnotations::asStringValue)
-        .map(InlineMeData::trimTrailingSemicolons)
         .map(replacement -> create(replacement, imports, staticImports));
   }
 
@@ -358,11 +356,5 @@ abstract class InlineMeData {
         .map(MoreAnnotations::asStrings)
         .orElse(Stream.empty())
         .collect(toImmutableSet());
-  }
-
-  private static final CharMatcher SEMICOLON = CharMatcher.is(';');
-
-  private static String trimTrailingSemicolons(String s) {
-    return SEMICOLON.trimTrailingFrom(s);
   }
 }
