@@ -1922,4 +1922,32 @@ public class Test {
         .expectUnchanged()
         .doTest();
   }
+
+  @Test
+  public void fieldSource() {
+    helper
+        .addSourceLines(
+            "FieldSource.java",
+            """
+            package org.junit.jupiter.params.provider;
+
+            public @interface FieldSource {
+              String[] value();
+            }
+            """)
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.util.List;
+            import org.junit.jupiter.params.provider.FieldSource;
+
+            class Test {
+              @FieldSource("parameters")
+              void test() {}
+
+              private static final List<String> parameters = List.of("apple", "banana");
+            }
+            """)
+        .doTest();
+  }
 }
