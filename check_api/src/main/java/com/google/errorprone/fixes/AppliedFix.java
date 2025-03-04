@@ -70,9 +70,20 @@ public class AppliedFix {
         return null;
       }
 
+      String replaced = applyReplacements(suggestedFix);
+
+      // Find the changed line containing the first edit
+      String snippet = firstEditedLine(replaced, Iterables.get(replacements, 0));
+      if (snippet.isEmpty()) {
+        return new AppliedFix("to remove this line", /* isRemoveLine= */ true);
+      }
+      return new AppliedFix(snippet, /* isRemoveLine= */ false);
+    }
+
+    public String applyReplacements(Fix fix) {
       StringBuilder replaced = new StringBuilder();
       int positionInOriginal = 0;
-      for (Replacement repl : replacements) {
+      for (Replacement repl : fix.getReplacements(endPositions)) {
         checkArgument(
             repl.endPosition() <= source.length(),
             "End [%s] should not exceed source length [%s]",
@@ -88,13 +99,7 @@ public class AppliedFix {
       }
       // Flush out any remaining content after the final change
       replaced.append(source, positionInOriginal, source.length());
-
-      // Find the changed line containing the first edit
-      String snippet = firstEditedLine(replaced, Iterables.get(replacements, 0));
-      if (snippet.isEmpty()) {
-        return new AppliedFix("to remove this line", /* isRemoveLine= */ true);
-      }
-      return new AppliedFix(snippet, /* isRemoveLine= */ false);
+      return replaced.toString();
     }
 
     /** Get the replacements in an appropriate order to apply correctly. */
@@ -110,7 +115,7 @@ public class AppliedFix {
      * Error Prone have already been transformed from platform line endings to newlines (and even if
      * it didn't, the dangling \r characters would be handled by a trim() call).
      */
-    private static String firstEditedLine(StringBuilder content, Replacement firstEdit) {
+    private static String firstEditedLine(String content, Replacement firstEdit) {
       // We subtract 1 here because we want to find the first newline *before* the edit, not one
       // at its beginning.
       int startOfFirstEditedLine = content.lastIndexOf("\n", firstEdit.startPosition() - 1);

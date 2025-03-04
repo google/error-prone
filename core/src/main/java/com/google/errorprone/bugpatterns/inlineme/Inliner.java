@@ -21,6 +21,7 @@ import static com.google.common.collect.MoreCollectors.onlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.util.ASTHelpers.enclosingPackage;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
+import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.hasDirectAnnotationWithSimpleName;
@@ -36,9 +37,6 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Range;
-import com.google.common.collect.RangeMap;
-import com.google.common.collect.TreeRangeMap;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
@@ -46,23 +44,29 @@ import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MemberReferenceTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
+import com.google.errorprone.fixes.AppliedFix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.MoreAnnotations;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
-import java.util.HashMap;
+import com.sun.tools.javac.parser.JavacParser;
+import com.sun.tools.javac.parser.ParserFactory;
+import com.sun.tools.javac.tree.EndPosTable;
+import com.sun.tools.javac.tree.JCTree;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
+import java.util.function.BiConsumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -213,19 +217,6 @@ public final class Inliner extends BugChecker
         && stringContainsComments(state.getSourceForNode(tree), state.context)) {
       return Description.NO_MATCH;
     }
-
-    SuggestedFix.Builder builder = SuggestedFix.builder();
-
-    Map<String, String> typeNames = new HashMap<>();
-    for (String newImport : inlineMe.get().imports()) {
-      String typeName = Iterables.getLast(PACKAGE_SPLITTER.split(newImport));
-      String qualifiedTypeName = SuggestedFixes.qualifyType(state, builder, newImport);
-      typeNames.put(typeName, qualifiedTypeName);
-    }
-    for (String newStaticImport : inlineMe.get().staticImports()) {
-      builder.addStaticImport(newStaticImport);
-    }
-
     ImmutableList<String> varNames =
         symbol.getParameters().stream()
             .map(varSymbol -> varSymbol.getSimpleName().toString())
@@ -259,18 +250,55 @@ public final class Inliner extends BugChecker
     }
 
     String replacement = inlineMe.get().replacement();
-    int replacementStart = ((DiagnosticPosition) tree).getStartPosition();
+
+    JavacParser parser =
+        ParserFactory.instance(state.context)
+            .newParser(
+                replacement,
+                /* keepDocComments= */ true,
+                /* keepEndPos= */ true,
+                /* keepLineMap= */ true);
+    var replacementExpression = parser.parseExpression();
+    SuggestedFix.Builder replacementFixes = SuggestedFix.builder();
+
+    SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
+
+    for (String newImport : inlineMe.get().imports()) {
+      String typeName = Iterables.getLast(PACKAGE_SPLITTER.split(newImport));
+      String qualifiedTypeName = SuggestedFixes.qualifyType(state, fixBuilder, newImport);
+
+      visitIdentifiers(
+          replacementExpression,
+          (node, unused) -> {
+            if (node.getName().contentEquals(typeName)) {
+              replacementFixes.replace(node, qualifiedTypeName);
+            }
+          });
+    }
+    for (String newStaticImport : inlineMe.get().staticImports()) {
+      fixBuilder.addStaticImport(newStaticImport);
+    }
+
+    int replacementStart = getStartPosition(tree);
     int replacementEnd = state.getEndPosition(tree);
 
     // Special case replacements starting with "this." so the receiver portion is not included in
     // the replacement. This avoids overlapping replacement regions for fluent chains.
-    if (replacement.startsWith("this.") && receiver != null) {
+    boolean removedThisPrefix = replacement.startsWith("this.") && receiver != null;
+    if (removedThisPrefix) {
+      replacementFixes.replace(0, "this".length(), "");
       replacementStart = state.getEndPosition(receiver);
-      replacement = replacement.substring("this".length());
     }
 
     if (Strings.isNullOrEmpty(receiverString)) {
-      replacement = replacement.replaceAll("\\bthis\\.\\b", "");
+      visitIdentifiers(
+          replacementExpression,
+          (node, unused) -> {
+            if (node.getName().contentEquals("this")) {
+              replacementFixes.replace(
+                  getStartPosition(node), parser.getEndPos((JCTree) node) + 1, "");
+            }
+          });
     } else {
       if (replacement.equals("this")) { // e.g.: foo.b() -> foo
         Tree parent = state.getPath().getParentPath().getLeaf();
@@ -281,21 +309,16 @@ public final class Inliner extends BugChecker
           return describe(parent, SuggestedFix.delete(parent), api);
         }
       }
-      replacement = replacement.replaceAll("\\bthis\\b", receiverString);
+      visitIdentifiers(
+          replacementExpression,
+          (node, unused) -> {
+            if ((!removedThisPrefix || getStartPosition(node) != 0)
+                && node.getName().contentEquals("this")) {
+              replacementFixes.replace(
+                  getStartPosition(node), parser.getEndPos((JCTree) node), receiverString);
+            }
+          });
     }
-
-    // Qualify imports first, then replace parameter values to avoid clobbering source from the
-    // inlined method.
-    for (Map.Entry<String, String> typeName : typeNames.entrySet()) {
-      // TODO(b/189535612): we'll need to be smarter about our replacements (to avoid clobbering
-      // inline parameter comments like /* paramName= */
-      replacement =
-          replacement.replaceAll(
-              "\\b" + Pattern.quote(typeName.getKey()) + "\\b",
-              Matcher.quoteReplacement(typeName.getValue()));
-    }
-
-    RangeMap<Integer, String> replacementsToApply = TreeRangeMap.create();
 
     for (int i = 0; i < varNames.size(); i++) {
       String varName = varNames.get(i);
@@ -305,79 +328,73 @@ public final class Inliner extends BugChecker
         return Description.NO_MATCH;
       }
 
-      // The replacement logic below assumes the existence of another token after the parameter
-      // in the replacement string (ex: a trailing parens, comma, dot, etc.). However, in the case
-      // where the replacement is _just_ one parameter, there isn't a trailing token. We just make
-      // the direct replacement here.
-      if (replacement.equals(varName)) {
-        replacement = callingVarStrings.get(i);
-        replacementsToApply.clear();
-        break;
-      }
-
       // Ex: foo(int a, int... others) -> this.bar(a, others)
       // If caller passes 0 args in the varargs position, we want to remove the preceding comma to
       // make this.bar(a) (as opposed to "this.bar(a, )"
       boolean terminalVarargsReplacement = varargsWithEmptyArguments && i == varNames.size() - 1;
-      String capturePrefixForVarargs = terminalVarargsReplacement ? "(?:,\\s*)?" : "\\b";
-      // We want to avoid replacing a method invocation with the same name as the method.
-      var extractArgAndNextToken =
-          Pattern.compile(capturePrefixForVarargs + "(" + Pattern.quote(varName) + ")\\b([^(])");
       String replacementResult = terminalVarargsReplacement ? "" : callingVarStrings.get(i);
       boolean mayRequireParens =
           i < callingVars.size() && requiresParentheses(callingVars.get(i), state);
-      String finalReplacement = replacement;
-      extractArgAndNextToken
-          .matcher(replacement)
-          .results()
-          .forEach(
-              mr ->
-                  replacementsToApply.put(
-                      Range.closedOpen(mr.start(0), mr.end(1)),
-                      mightRequireParens(mr.start(1), mr.end(1), finalReplacement)
-                              && mayRequireParens
-                          ? "(" + replacementResult + ")"
-                          : replacementResult));
+
+      visitIdentifiers(
+          replacementExpression,
+          (node, path) -> {
+            if (!node.getName().contentEquals(varName)) {
+              return;
+            }
+            // Substituting into a method invocation never requires parens.
+            boolean outerNeverRequiresParens =
+                path.size() < 2 || getArguments(path.get(path.size() - 2)).contains(node);
+            if (terminalVarargsReplacement) {
+              var calledMethodArguments = getArguments(path.get(path.size() - 2));
+              replacementFixes.replace(
+                  calledMethodArguments.indexOf(node) == 0
+                      ? getStartPosition(node)
+                      : parser.getEndPos(
+                          (JCTree)
+                              calledMethodArguments.get(calledMethodArguments.indexOf(node) - 1)),
+                  parser.getEndPos((JCTree) node),
+                  replacementResult);
+            } else {
+              replacementFixes.replace(
+                  node,
+                  !outerNeverRequiresParens && mayRequireParens
+                      ? "(" + replacementResult + ")"
+                      : replacementResult);
+            }
+          });
     }
 
-    replacement = applyReplacements(replacement, replacementsToApply);
+    String fixedReplacement =
+        AppliedFix.fromSource(
+                replacement,
+                new EndPosTable() {
+                  @Override
+                  public int getEndPos(JCTree tree) {
+                    return parser.getEndPos(tree);
+                  }
 
-    builder.replace(replacementStart, replacementEnd, replacement);
+                  @Override
+                  public void storeEnd(JCTree tree, int endpos) {}
 
-    SuggestedFix fix = builder.build();
+                  @Override
+                  public int replaceTree(JCTree oldtree, JCTree newtree) {
+                    return 0;
+                  }
+                })
+            .applyReplacements(replacementFixes.build());
 
-    return maybeCheckFixCompiles(tree, state, fix, api);
+    fixBuilder.replace(replacementStart, replacementEnd, fixedReplacement);
+
+    return maybeCheckFixCompiles(tree, state, fixBuilder.build(), api);
   }
 
-  /**
-   * Tries to establish whether substituting an expression into {@code replacement} between {@code
-   * start} and {@code end} might require parenthesising.
-   *
-   * <p>The current heuristic is that the only things that are guaranteed not to are arguments to
-   * methods, which we infer with string munging.
-   */
-  private static boolean mightRequireParens(int start, int end, String replacement) {
-    return !LOOKS_LIKE_METHOD_CALL_BEFORE.matcher(replacement.substring(0, start)).matches()
-        || !LOOKS_LIKE_METHOD_CALL_AFTER.matcher(replacement.substring(end)).matches();
-  }
-
-  private static final Pattern LOOKS_LIKE_METHOD_CALL_BEFORE = Pattern.compile(".*(\\(|,)\\s*$");
-
-  private static final Pattern LOOKS_LIKE_METHOD_CALL_AFTER = Pattern.compile("^\\s*(\\)|,).*");
-
-  private static String applyReplacements(
-      String input, RangeMap<Integer, String> replacementsToApply) {
-    // Replace in ascending order to avoid quadratic behaviour.
-    int idx = 0;
-    StringBuilder sb = new StringBuilder();
-    for (Map.Entry<Range<Integer>, String> entry : replacementsToApply.asMapOfRanges().entrySet()) {
-      Range<Integer> range = entry.getKey();
-      String newText = entry.getValue();
-      sb.append(input, idx, range.lowerEndpoint()).append(newText);
-      idx = range.upperEndpoint();
-    }
-    sb.append(input, idx, input.length());
-    return sb.toString();
+  private static List<? extends ExpressionTree> getArguments(Tree tree) {
+    return switch (tree.getKind()) {
+      case METHOD_INVOCATION -> ((MethodInvocationTree) tree).getArguments();
+      case NEW_CLASS -> ((NewClassTree) tree).getArguments();
+      default -> ImmutableList.of();
+    };
   }
 
   private Description maybeCheckFixCompiles(
@@ -390,6 +407,30 @@ public final class Inliner extends BugChecker
           : Description.NO_MATCH;
     }
     return describe(tree, fix, api);
+  }
+
+  private static void visitIdentifiers(
+      Tree tree, BiConsumer<IdentifierTree, List<Tree>> identifierConsumer) {
+    new TreeScanner<Void, Void>() {
+      // It'd be nice to use a TreePathScanner, but we don't have CompilationUnit-rooted AST.
+      private final List<Tree> path = new ArrayList<>();
+
+      @Override
+      public Void scan(Tree tree, Void unused) {
+        if (tree != null) {
+          path.add(tree);
+          super.scan(tree, null);
+          path.remove(path.size() - 1);
+        }
+        return null;
+      }
+
+      @Override
+      public Void visitIdentifier(IdentifierTree node, Void unused) {
+        identifierConsumer.accept(node, path);
+        return super.visitIdentifier(node, null);
+      }
+    }.scan(tree, null);
   }
 
   private static ImmutableList<String> getStrings(Attribute.Compound attribute, String name) {

@@ -1114,8 +1114,7 @@ public final class Caller {
 
   @Test
   public void orderOfOperations() {
-    bugCheckerWithCheckFixCompiles()
-        .allowBreakingChanges()
+    refactoringTestHelper
         .addInputLines(
             "Client.java",
             """
@@ -1142,20 +1141,20 @@ public final class Caller {
             """)
         .addOutputLines(
             "out/Caller.java",
-            "public final class Caller {",
-            "  public void doTest() {",
-            "    Client client = new Client();",
-            // TODO(kak): hmm, why don't we inline this?
-            "    int x = client.multiply(5, 10);",
-            "  }",
-            "}")
+            """
+            public final class Caller {
+              public void doTest() {
+                Client client = new Client();
+                int x = 5 * 10;
+              }
+            }
+            """)
         .doTest();
   }
 
   @Test
   public void orderOfOperationsWithParamAddition() {
-    bugCheckerWithCheckFixCompiles()
-        .allowBreakingChanges()
+    refactoringTestHelper
         .addInputLines(
             "Client.java",
             """
@@ -1182,20 +1181,20 @@ public final class Caller {
             """)
         .addOutputLines(
             "out/Caller.java",
-            "public final class Caller {",
-            "  public void doTest() {",
-            "    Client client = new Client();",
-            // TODO(kak): hmm, why don't we inline this?
-            "    int x = client.multiply(5 + 3, 10);",
-            "  }",
-            "}")
+            """
+            public final class Caller {
+              public void doTest() {
+                Client client = new Client();
+                int x = (5 + 3) * 10;
+              }
+            }
+            """)
         .doTest();
   }
 
   @Test
   public void orderOfOperationsWithTrailingOperand() {
-    bugCheckerWithCheckFixCompiles()
-        .allowBreakingChanges()
+    refactoringTestHelper
         .addInputLines(
             "Client.java",
             """
@@ -1222,13 +1221,14 @@ public final class Caller {
             """)
         .addOutputLines(
             "out/Caller.java",
-            "public final class Caller {",
-            "  public void doTest() {",
-            "    Client client = new Client();",
-            // TODO(kak): hmm, why don't we inline this?
-            "    int x = client.multiply(5 + 3, 10) * 5;",
-            "  }",
-            "}")
+            """
+            public final class Caller {
+              public void doTest() {
+                Client client = new Client();
+                int x = (5 + 3) * 10 * 5;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1263,13 +1263,14 @@ public final class Caller {
             """)
         .addOutputLines(
             "out/Caller.java",
-            "public final class Caller {",
-            "  public void doTest() {",
-            "    Client client = new Client();",
-            // TODO(b/189535612): this is a bug!
-            "    client.after(/* false = */ false);",
-            "  }",
-            "}")
+            """
+            public final class Caller {
+              public void doTest() {
+                Client client = new Client();
+                client.after(/* isAdmin = */ false);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1563,11 +1564,10 @@ public final class Caller {
               class Bar {}
 
               void doTest() {
-                "abc".Bar.baz("abc");
+                foo.Bar.baz("abc");
               }
             }
             """)
-        .allowBreakingChanges()
         .doTest();
   }
 
