@@ -3229,16 +3229,11 @@ public final class StatementSwitchToExpressionSwitchTest {
   }
 
   @Test
-  public void
-      switchByEnum_returnSwitchWithShouldNeverHappenInLambda_errorAndRemoveShouldNeverHappen() {
-    // Conversion to return switch within a lambda
-
+  public void switchByEnum_removesBracesFromSingleStatement_error() {
     refactoringHelper
         .addInputLines(
             "Test.java",
             """
-            import java.util.function.Supplier;
-
             class Test {
               enum Side {
                 HEART,
@@ -3247,69 +3242,59 @@ public final class StatementSwitchToExpressionSwitchTest {
                 CLUB
               };
 
-              public Test(int foo) {}
-
-              public int invoke() {
-                return 123;
-              }
-
               public int foo(Side side) {
-                Supplier<Integer> lambda =
-                    () -> {
-                      // Preceding comment
-                      switch (side) {
-                        case HEART:
-                        // Fall through
-                        case DIAMOND:
-                          return invoke();
-                        case SPADE:
-                          throw new RuntimeException();
-                        case CLUB:
-                          throw new NullPointerException();
-                      }
-                      // Custom comment - should never happen
-                      int z = invoke(/* block comment 0 */ );
-                      z++;
-                      throw new RuntimeException("Switch was not exhaustive at runtime " + z);
-                    };
-                System.out.println("don't delete 2");
-                return lambda.get();
+
+                switch (side) {
+                  case HEART:
+                    {
+                      return 0;
+                    }
+                  case SPADE:
+                    {
+                      return 1;
+                    }
+                  case DIAMOND:
+                    {
+                      return 2;
+                    }
+                  default:
+                    {
+                      throw new IllegalArgumentException(
+                          "Error error error error error error error error"
+                              + "Error error error error error error error error"
+                              + " type");
+                    }
+                }
               }
             }
             """)
         .addOutputLines(
             "Test.java",
             """
-            import java.util.function.Supplier;
-
             class Test {
-              enum Side {
+             enum Side {
                 HEART,
                 SPADE,
                 DIAMOND,
                 CLUB
               };
 
-              public Test(int foo) {}
-
-              public int invoke() {
-                return 123;
-              }
-
               public int foo(Side side) {
-                Supplier<Integer> lambda =
-                    () -> {
-                      // Preceding comment
-                      return switch (side) {
-                        case HEART, DIAMOND -> invoke();
-                        case SPADE -> throw new RuntimeException();
-                        case CLUB -> throw new NullPointerException();
-                      };
-                      // Custom comment - should never happen
 
-                    };
-                System.out.println("don't delete 2");
-                return lambda.get();
+                return switch (side) {
+                  case HEART ->
+                      0;
+                  case SPADE ->
+                      1;
+                  case DIAMOND ->
+                      2;
+                  default ->
+                    throw new IllegalArgumentException(
+                        "Error error error error error error error error"
+                            + "Error error error error error error error error"
+                            + " type");
+
+                };
               }
             }
             """)

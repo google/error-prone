@@ -1668,7 +1668,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
       CaseTree caseTree, VisitorState state, List<? extends StatementTree> statements) {
 
     StringBuilder transformedBlockBuilder = new StringBuilder();
-    int codeBlockEnd = state.getEndPosition(caseTree);
+    int codeBlockEnd = getBlockEnd(state, caseTree);
     if (statements.size() > 1) {
       transformedBlockBuilder.append("{\n");
       int codeBlockStart = extractLhsComments(caseTree, state, transformedBlockBuilder);
@@ -1686,7 +1686,6 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
       int unused = extractLhsComments(caseTree, state, transformedBlockBuilder);
       ReturnTree returnTree = (ReturnTree) statements.get(0);
       int codeBlockStart = getStartPosition(returnTree.getExpression());
-      codeBlockEnd = state.getEndPosition(Streams.findLast(statements.stream()).get());
       transformedBlockBuilder.append(state.getSourceCode(), codeBlockStart, codeBlockEnd);
     } else {
       int codeBlockStart = extractLhsComments(caseTree, state, transformedBlockBuilder);
