@@ -60,8 +60,10 @@ public class FutureTransformAsyncTest {
             import com.google.common.util.concurrent.Futures;
             import com.google.common.util.concurrent.ListenableFuture;
             import java.util.concurrent.Executor;
+
             class Test {
               private Executor executor;
+
               ListenableFuture<String> test() {
                 ListenableFuture<String> future =
                     Futures.transform(
@@ -111,8 +113,10 @@ public class FutureTransformAsyncTest {
             import com.google.common.util.concurrent.Futures;
             import com.google.common.util.concurrent.ListenableFuture;
             import java.util.concurrent.Executor;
+
             class Test {
               private Executor executor;
+
               ListenableFuture<String> test() {
                 ListenableFuture<String> future =
                     Futures.transform(
@@ -297,8 +301,10 @@ public class FutureTransformAsyncTest {
             import com.google.common.util.concurrent.Futures;
             import com.google.common.util.concurrent.ListenableFuture;
             import java.util.concurrent.Executor;
+
             class Test {
               private Executor executor;
+
               ListenableFuture<String> test() {
                 ListenableFuture<String> future =
                     Futures.transform(
@@ -342,8 +348,10 @@ class Test {
             import com.google.common.util.concurrent.Futures;
             import com.google.common.util.concurrent.ListenableFuture;
             import java.util.concurrent.Executor;
+
             class Test {
               private Executor executor;
+
               ListenableFuture<String> test() {
                 return Futures.transform(
                     Futures.immediateFuture(5),
@@ -390,11 +398,14 @@ class Test {
             import com.google.common.util.concurrent.Futures;
             import com.google.common.util.concurrent.ListenableFuture;
             import java.util.concurrent.Executor;
+
             class Test {
               private Executor executor;
+
               ListenableFuture<String> foo(String s) {
                 return immediateFuture(s);
               }
+
               ListenableFuture<String> test() {
                 ListenableFuture<String> future =
                     transform(
@@ -438,11 +449,14 @@ class Test {
             import com.google.common.util.concurrent.Futures;
             import com.google.common.util.concurrent.ListenableFuture;
             import java.util.concurrent.Executor;
+
             class Test {
               private Executor executor;
+
               ListenableFuture<String> foo(String s) {
                 return Futures.immediateFuture(s);
               }
+
               ListenableFuture<Void> test() {
                 ListenableFuture<Void> future =
                     Futures.transform(
@@ -483,8 +497,10 @@ class Test {
             import com.google.common.util.concurrent.Futures;
             import com.google.common.util.concurrent.ListenableFuture;
             import java.util.concurrent.Executor;
+
             class Test {
               private Executor executor;
+
               ListenableFuture<Void> test() {
                 ListenableFuture<Void> future =
                     Futures.transform(
@@ -541,22 +557,27 @@ class Test {
             import com.google.common.util.concurrent.Futures;
             import com.google.common.util.concurrent.ListenableFuture;
             import java.util.concurrent.Executor;
+
             class Test {
               private Executor executor;
+
               interface TestInterface {
                 ListenableFuture<Void> apply(String value);
               }
+
               void foo(TestInterface unused) {
                 return;
               }
+
               ListenableFuture<Void> test() {
                 ListenableFuture<Void> future =
                     Futures.transform(
                         Futures.immediateFuture("x"),
                         unused -> {
-                          foo(x -> {
-                            return Futures.immediateVoidFuture();
-                          });
+                          foo(
+                              x -> {
+                                return Futures.immediateVoidFuture();
+                              });
                           return (Void) null;
                         },
                         executor);
@@ -596,14 +617,118 @@ class Test {
             import com.google.common.util.concurrent.Futures;
             import com.google.common.util.concurrent.ListenableFuture;
             import java.util.concurrent.Executor;
+
             class Test {
               private Executor executor;
+
               ListenableFuture<String> test() {
                 ListenableFuture<String> future =
                     FluentFuture.from(Futures.immediateFuture(5))
                         .transform(
                             value -> "value: " + value,
                             executor);
+                return future;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void futureCombiner_callAsync() {
+    refactoringHelper
+        .addInputLines(
+            "in/Test.java",
+            """
+            import com.google.common.util.concurrent.Futures;
+            import com.google.common.util.concurrent.ListenableFuture;
+            import java.util.concurrent.Executor;
+
+            class Test {
+              private Executor executor;
+
+              ListenableFuture<String> test() {
+                ListenableFuture<Integer> future1 = Futures.immediateFuture(5);
+                ListenableFuture<Integer> future2 = Futures.immediateFuture(10);
+                ListenableFuture<String> future =
+                    Futures.whenAllSucceed(future1, future2)
+                        .callAsync(() -> Futures.immediateFuture("All values succeeded"), executor);
+                return future;
+              }
+            }
+            """)
+        .addOutputLines(
+            "out/Test.java",
+            """
+            import com.google.common.util.concurrent.Futures;
+            import com.google.common.util.concurrent.ListenableFuture;
+            import java.util.concurrent.Executor;
+
+            class Test {
+              private Executor executor;
+
+              ListenableFuture<String> test() {
+                ListenableFuture<Integer> future1 = Futures.immediateFuture(5);
+                ListenableFuture<Integer> future2 = Futures.immediateFuture(10);
+                ListenableFuture<String> future =
+                    Futures.whenAllSucceed(future1, future2)
+                        .call(() -> "All values succeeded", executor);
+                return future;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void futureCombiner_callAsyncWithCheckedException() {
+    refactoringHelper
+        .addInputLines(
+            "in/Test.java",
+            """
+            import com.google.common.util.concurrent.Futures;
+            import com.google.common.util.concurrent.ListenableFuture;
+            import java.util.concurrent.Executor;
+
+            class Test {
+              private Executor executor;
+
+              ListenableFuture<String> test() {
+                ListenableFuture<Integer> future1 = Futures.immediateFuture(5);
+                ListenableFuture<Integer> future2 = Futures.immediateFuture(10);
+                ListenableFuture<String> future =
+                    Futures.whenAllSucceed(future1, future2)
+                        .callAsync(
+                            () -> {
+                              int total = Futures.getDone(future1) + Futures.getDone(future2);
+                              return Futures.immediateFuture("Sum = " + total);
+                            },
+                            executor);
+                return future;
+              }
+            }
+            """)
+        .addOutputLines(
+            "out/Test.java",
+            """
+            import com.google.common.util.concurrent.Futures;
+            import com.google.common.util.concurrent.ListenableFuture;
+            import java.util.concurrent.Executor;
+
+            class Test {
+              private Executor executor;
+
+              ListenableFuture<String> test() {
+                ListenableFuture<Integer> future1 = Futures.immediateFuture(5);
+                ListenableFuture<Integer> future2 = Futures.immediateFuture(10);
+                ListenableFuture<String> future =
+                    Futures.whenAllSucceed(future1, future2)
+                        .call(
+                        () -> {
+                          int total = Futures.getDone(future1) + Futures.getDone(future2);
+                          return "Sum = " + total;
+                        },
+                        executor);
                 return future;
               }
             }
