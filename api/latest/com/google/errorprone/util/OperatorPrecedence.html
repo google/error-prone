@@ -69,6 +69,7 @@ loadScripts(document, 'script');</script>
 <ol class="toc-list">
 <li><a href="#POSTFIX" tabindex="0">POSTFIX</a></li>
 <li><a href="#UNARY" tabindex="0">UNARY</a></li>
+<li><a href="#CAST" tabindex="0">CAST</a></li>
 <li><a href="#MULTIPLICATIVE" tabindex="0">MULTIPLICATIVE</a></li>
 <li><a href="#ADDITIVE" tabindex="0">ADDITIVE</a></li>
 <li><a href="#SHIFT" tabindex="0">SHIFT</a></li>
@@ -89,6 +90,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#valueOf(java.lang.String)" tabindex="0">valueOf(String)</a></li>
 <li><a href="#isHigher(com.google.errorprone.util.OperatorPrecedence)" tabindex="0">isHigher(OperatorPrecedence)</a></li>
 <li><a href="#from(com.sun.source.tree.Tree.Kind)" tabindex="0">from(Tree.Kind)</a></li>
+<li><a href="#optionallyFrom(com.sun.source.tree.Tree.Kind)" tabindex="0">optionallyFrom(Tree.Kind)</a></li>
 </ol>
 </li>
 </ol>
@@ -142,28 +144,30 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code><a href="#ASSIGNMENT" class="member-name-link">ASSIGNMENT</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#CONDITIONAL_AND" class="member-name-link">CONDITIONAL_AND</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#CAST" class="member-name-link">CAST</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#CONDITIONAL_OR" class="member-name-link">CONDITIONAL_OR</a></code></div>
+<div class="col-first even-row-color"><code><a href="#CONDITIONAL_AND" class="member-name-link">CONDITIONAL_AND</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#EQUALITY" class="member-name-link">EQUALITY</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#CONDITIONAL_OR" class="member-name-link">CONDITIONAL_OR</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#MULTIPLICATIVE" class="member-name-link">MULTIPLICATIVE</a></code></div>
+<div class="col-first even-row-color"><code><a href="#EQUALITY" class="member-name-link">EQUALITY</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#OR" class="member-name-link">OR</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#MULTIPLICATIVE" class="member-name-link">MULTIPLICATIVE</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#POSTFIX" class="member-name-link">POSTFIX</a></code></div>
+<div class="col-first even-row-color"><code><a href="#OR" class="member-name-link">OR</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#RELATIONAL" class="member-name-link">RELATIONAL</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#POSTFIX" class="member-name-link">POSTFIX</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#SHIFT" class="member-name-link">SHIFT</a></code></div>
+<div class="col-first even-row-color"><code><a href="#RELATIONAL" class="member-name-link">RELATIONAL</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#TERNARY" class="member-name-link">TERNARY</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#SHIFT" class="member-name-link">SHIFT</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#UNARY" class="member-name-link">UNARY</a></code></div>
+<div class="col-first even-row-color"><code><a href="#TERNARY" class="member-name-link">TERNARY</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#XOR" class="member-name-link">XOR</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#UNARY" class="member-name-link">UNARY</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code><a href="#XOR" class="member-name-link">XOR</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
@@ -184,14 +188,17 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isHigher(com.google.errorprone.util.OperatorPrecedence)" class="member-name-link">isHigher</a><wbr>(<a href="OperatorPrecedence.html" title="enum class in com.google.errorprone.util">OperatorPrecedence</a>&nbsp;other)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="OperatorPrecedence.html" title="enum class in com.google.errorprone.util">OperatorPrecedence</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#valueOf(java.lang.String)" class="member-name-link">valueOf</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="OperatorPrecedence.html" title="enum class in com.google.errorprone.util">OperatorPrecedence</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#optionallyFrom(com.sun.source.tree.Tree.Kind)" class="member-name-link">optionallyFrom</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/Tree.Kind.html" title="class or interface in com.sun.source.tree" class="external-link">Tree.Kind</a>&nbsp;kind)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="OperatorPrecedence.html" title="enum class in com.google.errorprone.util">OperatorPrecedence</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#valueOf(java.lang.String)" class="member-name-link">valueOf</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns the enum constant of this class with the specified name.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="OperatorPrecedence.html" title="enum class in com.google.errorprone.util">OperatorPrecedence</a>[]</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#values()" class="member-name-link">values</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="OperatorPrecedence.html" title="enum class in com.google.errorprone.util">OperatorPrecedence</a>[]</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#values()" class="member-name-link">values</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns an array containing the constants of this enum class, in
 the order they are declared.</div>
 </div>
@@ -228,6 +235,14 @@ the order they are declared.</div>
 <h3>UNARY</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="OperatorPrecedence.html" title="enum class in com.google.errorprone.util">OperatorPrecedence</a></span>&nbsp;<span class="element-name">UNARY</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="CAST">
+<h3>CAST</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="OperatorPrecedence.html" title="enum class in com.google.errorprone.util">OperatorPrecedence</a></span>&nbsp;<span class="element-name">CAST</span></div>
 </div>
 </section>
 </li>
@@ -383,6 +398,14 @@ not permitted.)</div>
 <h3>from</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="OperatorPrecedence.html" title="enum class in com.google.errorprone.util">OperatorPrecedence</a></span>&nbsp;<span class="element-name">from</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/Tree.Kind.html" title="class or interface in com.sun.source.tree" class="external-link">Tree.Kind</a>&nbsp;kind)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="optionallyFrom(com.sun.source.tree.Tree.Kind)">
+<h3>optionallyFrom</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="OperatorPrecedence.html" title="enum class in com.google.errorprone.util">OperatorPrecedence</a>&gt;</span>&nbsp;<span class="element-name">optionallyFrom</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/Tree.Kind.html" title="class or interface in com.sun.source.tree" class="external-link">Tree.Kind</a>&nbsp;kind)</span></div>
 </div>
 </section>
 </li>
