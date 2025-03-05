@@ -1226,7 +1226,7 @@ public final class Caller {
             public final class Caller {
               public void doTest() {
                 Client client = new Client();
-                int x = 1 + 2 * 3;
+                int x = (1 + 2) * 3;
                 int y = 1 + 2 + 3;
               }
             }
@@ -1877,13 +1877,12 @@ public final class Caller {
               }
             }
             """)
-        // Broken! The inlined code requires parens.
         .addOutputLines(
             "Test.java",
             """
             class Test {
               void test(String x) {
-                String abn = x + "b".repeat(10);
+                String abn = (x + "b").repeat(10);
               }
             }
             """)

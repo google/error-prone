@@ -17,6 +17,7 @@
 package com.google.errorprone.util;
 
 import com.sun.source.tree.Tree;
+import java.util.Optional;
 
 /**
  * The precedence for an operator kind in the {@link com.sun.source.tree} API.
@@ -24,8 +25,9 @@ import com.sun.source.tree.Tree;
  * <p>As documented at: http://docs.oracle.com/javase/tutorial/java/nutsandbolts/operators.html
  */
 public enum OperatorPrecedence {
-  POSTFIX(13),
-  UNARY(12),
+  POSTFIX(14),
+  UNARY(13),
+  CAST(12),
   MULTIPLICATIVE(11),
   ADDITIVE(10),
   SHIFT(9),
@@ -50,20 +52,26 @@ public enum OperatorPrecedence {
   }
 
   public static OperatorPrecedence from(Tree.Kind kind) {
+    return optionallyFrom(kind)
+        .orElseThrow(() -> new IllegalArgumentException("Unexpected operator kind: " + kind));
+  }
+
+  public static Optional<OperatorPrecedence> optionallyFrom(Tree.Kind kind) {
     return switch (kind) {
-      case POSTFIX_DECREMENT, POSTFIX_INCREMENT -> OperatorPrecedence.POSTFIX;
-      case PREFIX_DECREMENT, PREFIX_INCREMENT -> OperatorPrecedence.UNARY;
-      case MULTIPLY, DIVIDE, REMAINDER -> OperatorPrecedence.MULTIPLICATIVE;
-      case PLUS, MINUS -> OperatorPrecedence.ADDITIVE;
-      case RIGHT_SHIFT, UNSIGNED_RIGHT_SHIFT, LEFT_SHIFT -> OperatorPrecedence.SHIFT;
+      case POSTFIX_DECREMENT, POSTFIX_INCREMENT -> Optional.of(OperatorPrecedence.POSTFIX);
+      case PREFIX_DECREMENT, PREFIX_INCREMENT -> Optional.of(OperatorPrecedence.UNARY);
+      case TYPE_CAST -> Optional.of(OperatorPrecedence.CAST);
+      case MULTIPLY, DIVIDE, REMAINDER -> Optional.of(OperatorPrecedence.MULTIPLICATIVE);
+      case PLUS, MINUS -> Optional.of(OperatorPrecedence.ADDITIVE);
+      case RIGHT_SHIFT, UNSIGNED_RIGHT_SHIFT, LEFT_SHIFT -> Optional.of(OperatorPrecedence.SHIFT);
       case LESS_THAN, LESS_THAN_EQUAL, GREATER_THAN, GREATER_THAN_EQUAL, INSTANCE_OF ->
-          OperatorPrecedence.RELATIONAL;
-      case EQUAL_TO, NOT_EQUAL_TO -> OperatorPrecedence.EQUALITY;
-      case AND -> OperatorPrecedence.AND;
-      case XOR -> OperatorPrecedence.XOR;
-      case OR -> OperatorPrecedence.OR;
-      case CONDITIONAL_AND -> OperatorPrecedence.CONDITIONAL_AND;
-      case CONDITIONAL_OR -> OperatorPrecedence.CONDITIONAL_OR;
+          Optional.of(OperatorPrecedence.RELATIONAL);
+      case EQUAL_TO, NOT_EQUAL_TO -> Optional.of(OperatorPrecedence.EQUALITY);
+      case AND -> Optional.of(OperatorPrecedence.AND);
+      case XOR -> Optional.of(OperatorPrecedence.XOR);
+      case OR -> Optional.of(OperatorPrecedence.OR);
+      case CONDITIONAL_AND -> Optional.of(OperatorPrecedence.CONDITIONAL_AND);
+      case CONDITIONAL_OR -> Optional.of(OperatorPrecedence.CONDITIONAL_OR);
       case ASSIGNMENT,
           MULTIPLY_ASSIGNMENT,
           DIVIDE_ASSIGNMENT,
@@ -76,8 +84,8 @@ public enum OperatorPrecedence {
           OR_ASSIGNMENT,
           RIGHT_SHIFT_ASSIGNMENT,
           UNSIGNED_RIGHT_SHIFT_ASSIGNMENT ->
-          OperatorPrecedence.ASSIGNMENT;
-      default -> throw new IllegalArgumentException("Unexpected operator kind: " + kind);
+          Optional.of(OperatorPrecedence.ASSIGNMENT);
+      default -> Optional.empty();
     };
   }
 }

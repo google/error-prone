@@ -29,6 +29,7 @@ import static com.google.errorprone.util.ASTHelpers.requiresParentheses;
 import static com.google.errorprone.util.ASTHelpers.stringContainsComments;
 import static com.google.errorprone.util.MoreAnnotations.getValue;
 import static com.google.errorprone.util.SideEffectAnalysis.hasSideEffect;
+import static java.lang.String.format;
 import static java.util.stream.Collectors.joining;
 
 import com.google.auto.value.AutoValue;
@@ -49,13 +50,19 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.MoreAnnotations;
+import com.google.errorprone.util.OperatorPrecedence;
+import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberReferenceTree;
+import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.UnaryTree;
+import com.sun.source.tree.VariableTree;
+import com.sun.source.util.TreePath;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
@@ -65,6 +72,7 @@ import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.regex.Matcher;
@@ -384,7 +392,12 @@ public final class Inliner extends BugChecker
                 })
             .applyReplacements(replacementFixes.build());
 
-    fixBuilder.replace(replacementStart, replacementEnd, fixedReplacement);
+    fixBuilder.replace(
+        replacementStart,
+        replacementEnd,
+        inliningRequiresParentheses(state.getPath(), replacementExpression)
+            ? format("(%s)", fixedReplacement)
+            : fixedReplacement);
 
     return maybeCheckFixCompiles(tree, state, fixBuilder.build(), api);
   }
@@ -395,6 +408,73 @@ public final class Inliner extends BugChecker
       case NEW_CLASS -> ((NewClassTree) tree).getArguments();
       default -> ImmutableList.of();
     };
+  }
+
+  /**
+   * Checks whether an expression requires parentheses when substituting in.
+   *
+   * <p>{@code treePath} is the original path including the old tree at the tip; {@code replacement}
+   * is the proposed replacement tree.
+   *
+   * <p>This was originally from {@link com.google.errorprone.util.ASTHelpers#requiresParentheses}
+   * but is heavily specialised for this use case.
+   */
+  private static boolean inliningRequiresParentheses(
+      TreePath treePath, ExpressionTree replacement) {
+    var originalExpression = treePath.getLeaf();
+    var parent = treePath.getParentPath().getLeaf();
+
+    Optional<OperatorPrecedence> replacementPrecedence =
+        OperatorPrecedence.optionallyFrom(replacement.getKind());
+    Optional<OperatorPrecedence> parentPrecedence =
+        OperatorPrecedence.optionallyFrom(parent.getKind());
+    if (replacementPrecedence.isPresent() && parentPrecedence.isPresent()) {
+      return parentPrecedence.get().isHigher(replacementPrecedence.get());
+    }
+
+    // There are some locations, based on the parent path, where we never want to parenthesise.
+    // This list is likely not exhaustive.
+    switch (parent.getKind()) {
+      case RETURN, EXPRESSION_STATEMENT -> {
+        return false;
+      }
+      case VARIABLE -> {
+        if (Objects.equals(((VariableTree) parent).getInitializer(), originalExpression)) {
+          return false;
+        }
+      }
+      case ASSIGNMENT -> {
+        if (((AssignmentTree) parent).getExpression().equals(originalExpression)) {
+          return false;
+        }
+      }
+      case METHOD_INVOCATION, NEW_CLASS -> {
+        if (getArguments(parent).contains(originalExpression)) {
+          return false;
+        }
+      }
+      default -> {
+        // continue below
+      }
+    }
+    switch (replacement.getKind()) {
+      case IDENTIFIER,
+          MEMBER_SELECT,
+          METHOD_INVOCATION,
+          ARRAY_ACCESS,
+          PARENTHESIZED,
+          NEW_CLASS,
+          MEMBER_REFERENCE -> {
+        return false;
+      }
+      default -> {
+        // continue below
+      }
+    }
+    if (replacement instanceof UnaryTree) {
+      return parent instanceof MemberSelectTree;
+    }
+    return true;
   }
 
   private Description maybeCheckFixCompiles(
@@ -489,7 +569,7 @@ public final class Inliner extends BugChecker
 
     /** Returns {@code FullyQualifiedClassName#methodName}. */
     final String methodId() {
-      return String.format("%s#%s", className(), methodName());
+      return format("%s#%s", className(), methodName());
     }
 
     /**
@@ -498,7 +578,7 @@ public final class Inliner extends BugChecker
      */
     final String shortName() {
       String humanReadableClassName = className().replaceFirst(packageName() + ".", "");
-      return String.format("`%s.%s()`", humanReadableClassName, methodName());
+      return format("`%s.%s()`", humanReadableClassName, methodName());
     }
 
     /** Returns the simple class name (e.g., {@code ClassName}). */
