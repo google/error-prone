@@ -16,6 +16,8 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.truth.TruthJUnit.assume;
+
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
@@ -668,6 +670,29 @@ public class IdentifierNameTest {
             "    void f() {}",
             "  }",
             "}")
+        .doTest();
+  }
+
+  @Test
+  public void unnamedVariables() {
+    assume().that(Runtime.version().feature()).isAtLeast(22);
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.util.Scanner;
+            import java.util.function.Function;
+
+            class Test {
+              void unnamed() {
+                try (var _ = new Scanner("discarded")) {
+                  Function<String, String> f = _ -> "bar";
+                  String _ = f.apply("foo");
+                }
+                catch (Exception _) {}
+              }
+            }
+            """)
         .doTest();
   }
 }

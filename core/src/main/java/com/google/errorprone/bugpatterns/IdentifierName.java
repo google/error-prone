@@ -278,6 +278,9 @@ public final class IdentifierName extends BugChecker
     if (isStaticVariable(symbol) && isConformantStaticVariableName(name)) {
       return true;
     }
+    if (name.isEmpty()) {
+      return true;
+    }
     return isConformantLowerCamelName(name);
   }
 
