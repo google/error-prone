@@ -17,8 +17,6 @@
 package com.google.errorprone.fixes;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -104,9 +102,8 @@ public class AppliedFixTest {
   public void shouldApplySingleFixOnALine() {
     JCTree node = node(11, 14);
 
-    AppliedFix fix =
-        AppliedFix.fromSource("import org.me.B;", endPositions).apply(SuggestedFix.delete(node));
-    assertThat(fix.getNewCodeSnippet().toString(), equalTo("import org.B;"));
+    AppliedFix fix = AppliedFix.apply("import org.me.B;", endPositions, SuggestedFix.delete(node));
+    assertThat(fix.snippet()).isEqualTo("import org.B;");
   }
 
   @Test
@@ -114,24 +111,30 @@ public class AppliedFixTest {
     JCTree node = node(25, 26);
 
     AppliedFix fix =
-        AppliedFix.fromSource("public class Foo {\n" + "  int 3;\n" + "}", endPositions)
-            .apply(
-                SuggestedFix.builder().prefixWith(node, "three").postfixWith(node, "tres").build());
-    assertThat(fix.getNewCodeSnippet().toString()).isEqualTo("int three3tres;");
+        AppliedFix.apply(
+            """
+            public class Foo {
+              int 3;
+            }\
+            """,
+            endPositions,
+            SuggestedFix.builder().prefixWith(node, "three").postfixWith(node, "tres").build());
+    assertThat(fix.snippet()).isEqualTo("int three3tres;");
   }
 
   @Test
   public void shouldReturnNullOnEmptyFix() {
-    AppliedFix fix =
-        AppliedFix.fromSource("public class Foo {}", endPositions).apply(SuggestedFix.emptyFix());
+    AppliedFix fix = AppliedFix.apply("public class Foo {}", endPositions, SuggestedFix.emptyFix());
     assertThat(fix).isNull();
   }
 
   @Test
   public void shouldReturnNullOnImportOnlyFix() {
     AppliedFix fix =
-        AppliedFix.fromSource("public class Foo {}", endPositions)
-            .apply(SuggestedFix.builder().addImport("foo.bar.Baz").build());
+        AppliedFix.apply(
+            "public class Foo {}",
+            endPositions,
+            SuggestedFix.builder().addImport("foo.bar.Baz").build());
     assertThat(fix).isNull();
   }
 
@@ -147,9 +150,14 @@ public class AppliedFixTest {
     JCTree node = node(21, 42);
 
     AppliedFix fix =
-        AppliedFix.fromSource("package com.example;\n" + "import java.util.Map;\n", endPositions)
-            .apply(SuggestedFix.delete(node));
-    assertThat(fix.getNewCodeSnippet().toString(), equalTo("to remove this line"));
+        AppliedFix.apply(
+            """
+            package com.example;
+            import java.util.Map;
+            """,
+            endPositions,
+            SuggestedFix.delete(node));
+    assertThat(fix.snippet()).isEqualTo("to remove this line");
   }
 
   @Test
@@ -163,13 +171,13 @@ public class AppliedFixTest {
 
     // If the fixes had been applied in the wrong order, this would fail.
     // But it succeeds, so they were applied in the right order.
-    var unused = AppliedFix.fromSource(" ", endPositions).apply(mockFix);
+    var unused = AppliedFix.apply(" ", endPositions, mockFix);
   }
 
   @Test
   public void shouldThrowIfReplacementOutsideSource() {
-    AppliedFix.Applier applier = AppliedFix.fromSource("Hello", endPositions);
     SuggestedFix fix = SuggestedFix.replace(0, 6, "World!");
-    assertThrows(IllegalArgumentException.class, () -> applier.apply(fix));
+    assertThrows(
+        IllegalArgumentException.class, () -> AppliedFix.apply("Hello", endPositions, fix));
   }
 }
