@@ -206,6 +206,32 @@ public enum ImportPolicy {
       }
       return inliner.maker().Ident(inliner.asName(member));
     }
+  },
+
+  /**
+   * When inlining static methods, always static import the method if it is called {@code
+   * assertThat}. Non-static references to classes are imported from the top level as in {@code
+   * IMPORT_TOP_LEVEL}.
+   */
+  STATIC_IMPORT_ASSERT_THAT {
+    @Override
+    public JCExpression classReference(
+        Inliner inliner, CharSequence topLevelClazz, CharSequence fullyQualifiedClazz) {
+      return IMPORT_TOP_LEVEL.classReference(inliner, topLevelClazz, fullyQualifiedClazz);
+    }
+
+    @Override
+    public JCExpression staticReference(
+        Inliner inliner,
+        CharSequence topLevelClazz,
+        CharSequence fullyQualifiedClazz,
+        CharSequence member) {
+      if (member.toString().equals("assertThat")) {
+        return STATIC_IMPORT_ALWAYS.staticReference(
+            inliner, topLevelClazz, fullyQualifiedClazz, member);
+      }
+      return IMPORT_TOP_LEVEL.staticReference(inliner, topLevelClazz, fullyQualifiedClazz, member);
+    }
   };
 
   public static void bind(Context context, ImportPolicy policy) {
