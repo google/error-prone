@@ -75,8 +75,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiConsumer;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import javax.inject.Inject;
 
@@ -156,10 +154,6 @@ public final class Inliner extends BugChecker
     return match(tree, symbol, tree.getArguments(), receiverString, receiver, state);
   }
 
-  private static final Pattern MEMBER_REFERENCE_PATTERN =
-      Pattern.compile(
-          "(return\\b+)?((?<qualifier>[^\b]+)\\.)?(?<identifier>\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*)\\(\\)");
-
   @Override
   public Description matchMemberReference(MemberReferenceTree tree, VisitorState state) {
     MethodSymbol symbol = getSymbol(tree);
@@ -187,15 +181,14 @@ public final class Inliner extends BugChecker
         && stringContainsComments(state.getSourceForNode(tree), state.context)) {
       return Description.NO_MATCH;
     }
-    Matcher matcher = MEMBER_REFERENCE_PATTERN.matcher(inlineMe.replacement());
-    if (!matcher.matches()) {
+    JavacParser parser = newParser(inlineMe.replacement(), state);
+    if (!(parser.parseExpression() instanceof MethodInvocationTree mit
+        && mit.getArguments().isEmpty()
+        && getReceiver(mit) instanceof IdentifierTree it
+        && it.getName().contentEquals("this"))) {
       return Description.NO_MATCH;
     }
-    String qualifier = matcher.group("qualifier");
-    if (!qualifier.equals("this")) {
-      return Description.NO_MATCH;
-    }
-    String identifier = matcher.group("identifier");
+    String identifier = ((MemberSelectTree) mit.getMethodSelect()).getIdentifier().toString();
     SuggestedFix fix =
         SuggestedFix.replace(
             state.getEndPosition(tree.getQualifierExpression()),
@@ -259,14 +252,8 @@ public final class Inliner extends BugChecker
 
     String replacement = inlineMe.get().replacement();
 
-    JavacParser parser =
-        ParserFactory.instance(state.context)
-            .newParser(
-                replacement,
-                /* keepDocComments= */ true,
-                /* keepEndPos= */ true,
-                /* keepLineMap= */ true);
-    var replacementExpression = parser.parseExpression();
+    JavacParser parser = newParser(replacement, state);
+    ExpressionTree replacementExpression = parser.parseExpression();
     SuggestedFix.Builder replacementFixes = SuggestedFix.builder();
 
     SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
@@ -400,6 +387,15 @@ public final class Inliner extends BugChecker
             : fixedReplacement);
 
     return maybeCheckFixCompiles(tree, state, fixBuilder.build(), api);
+  }
+
+  private static JavacParser newParser(String replacement, VisitorState state) {
+    return ParserFactory.instance(state.context)
+        .newParser(
+            replacement,
+            /* keepDocComments= */ true,
+            /* keepEndPos= */ true,
+            /* keepLineMap= */ true);
   }
 
   private static List<? extends ExpressionTree> getArguments(Tree tree) {
