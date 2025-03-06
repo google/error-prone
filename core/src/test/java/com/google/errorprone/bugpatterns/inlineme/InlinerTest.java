@@ -270,6 +270,57 @@ public class InlinerTest {
   }
 
   @Test
+  public void staticMethod_explicitTypeParam_specifiedInReplacement() {
+    refactoringTestHelper
+        .allowBreakingChanges()
+        .addInputLines(
+            "Client.java",
+            """
+            package com.google.foo;
+
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class Client {
+              @Deprecated
+              @InlineMe(
+                  replacement = "Client.<T>after()",
+                  imports = {"com.google.foo.Client"})
+              public static <T> T before() {
+                return Client.<T>after();
+              }
+
+              public static <T> T after() {
+                return (T) null;
+              }
+            }
+            """)
+        .expectUnchanged()
+        .addInputLines(
+            "Caller.java",
+            """
+            package com.google.foo;
+
+            public final class Caller {
+              public void doTest() {
+                String str = Client.<String>before();
+              }
+            }
+            """)
+        .addOutputLines(
+            "out/Caller.java",
+            """
+            package com.google.foo;
+
+            public final class Caller {
+              public void doTest() {
+                String str = Client.<T>after();
+              }
+            }
+            """)
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
   public void instanceMethod_withConflictingImport() {
     refactoringTestHelper
         .addInputLines(
