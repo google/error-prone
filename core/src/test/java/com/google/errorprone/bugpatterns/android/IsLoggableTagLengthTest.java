@@ -52,8 +52,11 @@ public final class IsLoggableTagLengthTest {
             "Test.java",
             """
             import android.util.Log;
+
             class Test {
-              public void log() { Log.isLoggable("SHORT_ENOUGH", Log.INFO); }
+              public void log() {
+                Log.isLoggable("SHORT_ENOUGH", Log.INFO);
+              }
             }
             """)
         .doTest();
@@ -66,9 +69,12 @@ public final class IsLoggableTagLengthTest {
             "Test.java",
             """
             import android.util.Log;
+
             class Test {
-              // BUG: Diagnostic contains: IsLoggableTagLength
-              public void log() { Log.isLoggable("THIS_TAG_NAME_IS_WAY_TOO_LONG", Log.INFO); }
+              public void log() {
+                // BUG: Diagnostic contains: IsLoggableTagLength
+                Log.isLoggable("THIS_TAG_NAME_IS_WAY_TOO_LONG", Log.INFO);
+              }
             }
             """)
         .doTest();
@@ -80,11 +86,14 @@ public final class IsLoggableTagLengthTest {
         .addSourceLines(
             "Test.java",
             """
-import android.util.Log;
-class Test {
-  public void log() { Log.isLoggable("\ud83d\ude80\ud83d\ude80\ud83d\ude80\ud83d\ude80", Log.INFO); }
-}
-""")
+            import android.util.Log;
+
+            class Test {
+              public void log() {
+                Log.isLoggable("🚀🚀🚀🚀", Log.INFO);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -94,12 +103,15 @@ class Test {
         .addSourceLines(
             "Test.java",
             """
-import android.util.Log;
-class Test {
-  // BUG: Diagnostic contains: IsLoggableTagLength
-  public void log() { Log.isLoggable("\u2614\u2614\u2614\u2614\u2614\u2614\u2614\u2614\u2614\u2614\u2614\u2614", Log.INFO); }
-}
-""")
+            import android.util.Log;
+
+            class Test {
+              public void log() {
+                // BUG: Diagnostic contains: IsLoggableTagLength
+                Log.isLoggable("☔☔☔☔☔☔☔☔☔☔☔☔", Log.INFO);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -110,9 +122,13 @@ class Test {
             "Test.java",
             """
             import android.util.Log;
+
             class Test {
               static final String TAG = "SHORT_ENOUGH";
-              public void log() { Log.isLoggable(TAG, Log.INFO); }
+
+              public void log() {
+                Log.isLoggable(TAG, Log.INFO);
+              }
             }
             """)
         .doTest();
@@ -125,10 +141,14 @@ class Test {
             "Test.java",
             """
             import android.util.Log;
+
             class Test {
               static final String TAG = "THIS_TAG_NAME_IS_WAY_TOO_LONG";
-              // BUG: Diagnostic contains: IsLoggableTagLength
-              public void log() { Log.isLoggable(TAG, Log.INFO); }
+
+              public void log() {
+                // BUG: Diagnostic contains: IsLoggableTagLength
+                Log.isLoggable(TAG, Log.INFO);
+              }
             }
             """)
         .doTest();
@@ -141,8 +161,11 @@ class Test {
             "Test.java",
             """
             import android.util.Log;
+
             class Test {
-              public void log() { Log.isLoggable(Test.class.getSimpleName(), Log.INFO); }
+              public void log() {
+                Log.isLoggable(Test.class.getSimpleName(), Log.INFO);
+              }
             }
             """)
         .doTest();
@@ -155,6 +178,7 @@ class Test {
             "ThisClassNameIsWayTooLong.java",
             """
             import android.util.Log;
+
             class ThisClassNameIsWayTooLong {
               public void log() {
                 // BUG: Diagnostic contains: IsLoggableTagLength
@@ -172,8 +196,10 @@ class Test {
             "Test.java",
             """
             import android.util.Log;
+
             class Test {
               static final String TAG = Test.class.getSimpleName();
+
               public void log() {
                 Log.isLoggable(TAG, Log.INFO);
               }
@@ -189,8 +215,10 @@ class Test {
             "ThisClassNameIsWayTooLong.java",
             """
             import android.util.Log;
+
             class ThisClassNameIsWayTooLong {
               static final String TAG = ThisClassNameIsWayTooLong.class.getSimpleName();
+
               public void log() {
                 // BUG: Diagnostic contains: IsLoggableTagLength
                 Log.isLoggable(TAG, Log.INFO);
@@ -207,9 +235,13 @@ class Test {
             "Test.java",
             """
             import android.util.Log;
+
             class Test {
               String unknownValue;
-              public void log() { Log.isLoggable(unknownValue, Log.INFO); }
+
+              public void log() {
+                Log.isLoggable(unknownValue, Log.INFO);
+              }
             }
             """)
         .doTest();
@@ -222,8 +254,10 @@ class Test {
             "ThisClassNameIsWayTooLong.java",
             """
             import android.util.Log;
+
             class ThisClassNameIsWayTooLong {
               String TAG = ThisClassNameIsWayTooLong.class.getSimpleName();
+
               public void log() {
                 Log.isLoggable(TAG, Log.INFO);
               }

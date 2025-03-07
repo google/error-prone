@@ -31,12 +31,19 @@ public class ForOverrideCheckerTest {
               "test/ExtendMe.java",
               """
               package test;
+
               import com.google.errorprone.annotations.ForOverride;
+
               public class ExtendMe {
                 @ForOverride
-                protected int overrideMe() { return 1; }
+                protected int overrideMe() {
+                  return 1;
+                }
+
                 @ForOverride
-                protected int overrideMe(int a) { return 1; }
+                protected int overrideMe(int a) {
+                  return 1;
+                }
 
                 public final void callMe() {
                   overrideMe();
@@ -51,9 +58,12 @@ public class ForOverrideCheckerTest {
             "test/Test.java",
             """
             package test;
+
             import com.google.errorprone.annotations.ForOverride;
+
             public class Test {
-              @ForOverride protected void myMethod() {}
+              @ForOverride
+              protected void myMethod() {}
             }
             """)
         .doTest();
@@ -66,9 +76,12 @@ public class ForOverrideCheckerTest {
             "test/Test.java",
             """
             package test;
+
             import com.google.errorprone.annotations.ForOverride;
+
             public class Test {
-              @ForOverride void myMethod() {}
+              @ForOverride
+              void myMethod() {}
             }
             """)
         .doTest();
@@ -81,10 +94,13 @@ public class ForOverrideCheckerTest {
             "test/Test.java",
             """
 package test;
+
 import com.google.errorprone.annotations.ForOverride;
+
 public class Test {
+  @ForOverride
   // BUG: Diagnostic contains: @ForOverride must have protected or package-private visibility
-  @ForOverride public void myMethod() {}
+  public void myMethod() {}
 }
 """)
         .doTest();
@@ -97,10 +113,13 @@ public class Test {
             "test/Test.java",
             """
 package test;
+
 import com.google.errorprone.annotations.ForOverride;
+
 public class Test {
+  @ForOverride
   // BUG: Diagnostic contains: @ForOverride must have protected or package-private visibility
-  @ForOverride private void myMethod() {}
+  private void myMethod() {}
 }
 """)
         .doTest();
@@ -113,10 +132,13 @@ public class Test {
             "test/Test.java",
             """
 package test;
+
 import com.google.errorprone.annotations.ForOverride;
+
 public interface Test {
+  @ForOverride
   // BUG: Diagnostic contains: @ForOverride must have protected or package-private visibility
-  @ForOverride void myMethod();
+  void myMethod();
 }
 """)
         .doTest();
@@ -129,6 +151,7 @@ public interface Test {
             "test/Test.java",
             """
             package test;
+
             public class Test extends test.ExtendMe {
               public void googleyMethod() {
                 callMe();
@@ -145,6 +168,7 @@ public interface Test {
             "test/Test.java",
             """
             package test;
+
             public class Test {
               public void tryCall() {
                 ExtendMe extendMe = new ExtendMe();
@@ -163,6 +187,7 @@ public interface Test {
             "test/Test.java",
             """
             package test;
+
             public class Test extends test.ExtendMe {
               public void circumventer() {
                 // BUG: Diagnostic contains: must not be invoked
@@ -180,12 +205,14 @@ public interface Test {
             "test/Test.java",
             """
             package test2;
+
             public class Test extends test.ExtendMe {
               @Override
               protected int overrideMe() {
                 System.err.println("Capybaras are semi-aquatic.");
                 return 1;
               }
+
               public void circumventer() {
                 // BUG: Diagnostic contains: must not be invoked
                 overrideMe();
@@ -202,6 +229,7 @@ public interface Test {
             "test/Test.java",
             """
             package test2;
+
             public class Test extends test.ExtendMe {
               @Override
               protected int overrideMe() {
@@ -235,6 +263,7 @@ public interface Test {
             "test/Test.java",
             """
             package test2;
+
             public class Test extends test.ExtendMe {
               protected void circumventer() {
                 // BUG: Diagnostic contains: must not be invoked
@@ -252,6 +281,7 @@ public interface Test {
             "test/Test.java",
             """
             package test2;
+
             public class Test extends test.ExtendMe {
               // BUG: Diagnostic contains: must not be invoked
               private final int k = super.overrideMe();
@@ -267,6 +297,7 @@ public interface Test {
             "test/Test.java",
             """
             package test2;
+
             public class Test extends test.ExtendMe {
               @Override
               protected int overrideMe() {
@@ -292,11 +323,13 @@ public interface Test {
             "test/Test.java",
             """
             package test2;
+
             public class Test extends test.ExtendMe {
               // BUG: Diagnostic contains: overrides @ForOverride method test.ExtendMe.overrideMe
               public int overrideMe() {
                 return 1;
               }
+
               // BUG: Diagnostic contains: overrides @ForOverride method test.ExtendMe.overrideMe
               public int overrideMe(int a) {
                 return 1;
@@ -313,10 +346,13 @@ public interface Test {
             "test/OuterClass.java",
             """
             package test;
+
             import com.google.errorprone.annotations.ForOverride;
+
             public class OuterClass {
               @ForOverride
-              protected void forOverride() { }
+              protected void forOverride() {}
+
               private class InnerClass {
                 void invoke() {
                   forOverride();
@@ -334,10 +370,13 @@ public interface Test {
             "test/OuterClass.java",
             """
             package test;
+
             import com.google.errorprone.annotations.ForOverride;
+
             public class OuterClass {
               @ForOverride
-              protected void forOverride() { }
+              protected void forOverride() {}
+
               public Runnable getRunner() {
                 return new Runnable() {
                   public void run() {

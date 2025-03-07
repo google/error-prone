@@ -202,9 +202,11 @@ public class MissingOverrideTest {
               public int x() {
                 return x;
               }
+
               public int x(int y) {
                 return y;
               }
+
               public int y() {
                 return x;
               }

@@ -35,8 +35,10 @@ public class UnnecessaryTypeArgumentTest {
             "Test.java",
             """
             package foo.bar;
+
             class Test {
               void f() {}
+
               void m() {
                 // BUG: Diagnostic contains: this.f()
                 this.<String>f();
@@ -53,14 +55,15 @@ public class UnnecessaryTypeArgumentTest {
             "Test.java",
             """
             package foo.bar;
+
             class Test {
               static class C {
                 public <T> C() {
-                  // BUG: Diagnostic contains: /*START*/this(42)
-                  /*START*/<String>this(42);
+                  // BUG: Diagnostic contains: /*START*/ this(42)
+                  /*START*/ <String>this(42);
                 }
-                public C(int i) {
-                }
+
+                public C(int i) {}
               }
             }
             """)
@@ -74,15 +77,16 @@ public class UnnecessaryTypeArgumentTest {
             "Test.java",
             """
             package foo.bar;
+
             class Test {
               static class B {
-                public B() {
-                }
+                public B() {}
               }
+
               static class C extends B {
                 public <T> C() {
-                  // BUG: Diagnostic contains: /*START*/super()
-                  /*START*/<String>super();
+                  // BUG: Diagnostic contains: /*START*/ super()
+                  /*START*/ <String>super();
                 }
               }
             }
@@ -97,10 +101,12 @@ public class UnnecessaryTypeArgumentTest {
             "Test.java",
             """
             package foo.bar;
+
             class Test {
               static class C {
                 public C() {}
               }
+
               void m() {
                 // BUG: Diagnostic contains: new C()
                 new <String, Integer>C();
@@ -117,8 +123,10 @@ public class UnnecessaryTypeArgumentTest {
             "Test.java",
             """
             package foo.bar;
+
             class Test {
               <T> void f() {}
+
               void m() {
                 this.<String>f();
               }
@@ -134,7 +142,9 @@ public class UnnecessaryTypeArgumentTest {
             "Super.java",
             """
             public class Super {
-              public <T> T f(T x) { return x; }
+              public <T> T f(T x) {
+                return x;
+              }
             }
             """)
         .addSourceLines(
@@ -142,7 +152,9 @@ public class UnnecessaryTypeArgumentTest {
             """
             @SuppressWarnings("unchecked")
             public class Sub extends Super {
-              public Object f(Object x) { return x; }
+              public Object f(Object x) {
+                return x;
+              }
             }
             """)
         .addSourceLines(
@@ -164,11 +176,13 @@ public class UnnecessaryTypeArgumentTest {
             "Test.java",
             """
             package foo.bar;
+
             class Test {
               void f() {}
+
               void m() {
                 // BUG: Diagnostic contains: this.f()
-                this.<  /*  */ String  /*  */ >f();
+                this.</*  */ String /*  */>f();
               }
             }
             """)

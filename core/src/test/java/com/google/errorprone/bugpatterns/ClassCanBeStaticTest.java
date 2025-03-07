@@ -191,10 +191,11 @@ public class ClassCanBeStaticTest {
               // Nested non-static inner class inside a static inner class
               static class NonStaticOuter {
                 int nonStaticVar = outerVar;
+
                 // BUG: Diagnostic contains: public static class Inner3
                 public class Inner3 {}
               }
-            }\
+            }
             """)
         .doTest();
   }

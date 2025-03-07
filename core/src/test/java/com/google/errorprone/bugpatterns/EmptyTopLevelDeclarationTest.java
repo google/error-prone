@@ -35,6 +35,7 @@ public class EmptyTopLevelDeclarationTest {
             "a/A.java",
             """
             package a;
+
             class One {}
             """)
         .doTest();
@@ -47,8 +48,10 @@ public class EmptyTopLevelDeclarationTest {
             "a/A.java",
             """
             package a;
-            // BUG: Diagnostic contains: Did you mean 'class One {}'?
-            class One {};
+
+            class One {}
+            // BUG: Diagnostic contains: remove
+            ;
             """)
         .doTest();
   }
@@ -63,6 +66,7 @@ public class EmptyTopLevelDeclarationTest {
             package errorpronecrash;
             // BUG: Diagnostic contains: Did you mean to remove this line?
             ;
+
             public class ReproFile {}
             """)
         .doTest();

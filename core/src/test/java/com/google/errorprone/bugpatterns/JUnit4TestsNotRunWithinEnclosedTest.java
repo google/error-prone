@@ -41,9 +41,11 @@ public final class JUnit4TestsNotRunWithinEnclosedTest {
             import org.junit.Test;
             import org.junit.runner.RunWith;
             import org.junit.runners.JUnit4;
+
             @RunWith(JUnit4.class)
             public final class FooTest {
-              @Test public void test() {}
+              @Test
+              public void test() {}
             }
             """)
         .doTest();
@@ -58,10 +60,12 @@ public final class JUnit4TestsNotRunWithinEnclosedTest {
             import org.junit.Test;
             import org.junit.experimental.runners.Enclosed;
             import org.junit.runner.RunWith;
+
             @RunWith(Enclosed.class)
             public final class FooTest {
+              @Test
               // BUG: Diagnostic contains:
-              @Test public void test() {}
+              public void test() {}
             }
             """)
         .doTest();
@@ -76,9 +80,11 @@ public final class JUnit4TestsNotRunWithinEnclosedTest {
             import org.junit.Test;
             import org.junit.experimental.runners.Enclosed;
             import org.junit.runner.RunWith;
+
             @RunWith(Enclosed.class)
             public final class FooTest {
-              @Test public void test() {}
+              @Test
+              public void test() {}
             }
             """)
         .addOutputLines(
@@ -105,9 +111,12 @@ public final class JUnit4TestsNotRunWithinEnclosedTest {
             import org.junit.experimental.runners.Enclosed;
             import org.junit.Test;
             import org.junit.runner.RunWith;
+
             @RunWith(Enclosed.class)
             public class FooTest {
-              @Test public void test() {}
+              @Test
+              public void test() {}
+
               public class FooInnerTest extends FooTest {}
             }
             """)
@@ -123,10 +132,12 @@ public final class JUnit4TestsNotRunWithinEnclosedTest {
             import org.junit.experimental.runners.Enclosed;
             import org.junit.Test;
             import org.junit.runner.RunWith;
+
             @RunWith(Enclosed.class)
             public class FooTest {
               public static class BarTest {
-                @Test public void test() {}
+                @Test
+                public void test() {}
               }
             }
             """)

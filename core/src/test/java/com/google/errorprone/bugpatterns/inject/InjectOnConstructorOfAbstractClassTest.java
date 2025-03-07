@@ -37,9 +37,11 @@ public class InjectOnConstructorOfAbstractClassTest {
             "Foo.java",
             """
             import javax.inject.Inject;
+
             abstract class Foo {
-              // BUG: Diagnostic contains: Foo() {}
-              @Inject Foo() {}
+              // BUG: Diagnostic contains:
+              @Inject
+              Foo() {}
             }
             """)
         .doTest();
@@ -52,9 +54,11 @@ public class InjectOnConstructorOfAbstractClassTest {
             "Foo.java",
             """
             import com.google.inject.Inject;
+
             abstract class Foo {
-              // BUG: Diagnostic contains: Foo() {}
-              @Inject Foo() {}
+              // BUG: Diagnostic contains:
+              @Inject
+              Foo() {}
             }
             """)
         .doTest();
@@ -67,10 +71,12 @@ public class InjectOnConstructorOfAbstractClassTest {
             "Foo.java",
             """
             import javax.inject.Inject;
+
             class Bar {
               abstract static class Foo {
-                 // BUG: Diagnostic contains: Foo() {}
-                 @Inject Foo() {}
+                // BUG: Diagnostic contains:
+                @Inject
+                Foo() {}
               }
             }
             """)
@@ -84,8 +90,10 @@ public class InjectOnConstructorOfAbstractClassTest {
             "Foo.java",
             """
             import javax.inject.Inject;
+
             class Foo {
-              @Inject Foo() {}
+              @Inject
+              Foo() {}
             }
             """)
         .doTest();
@@ -98,9 +106,11 @@ public class InjectOnConstructorOfAbstractClassTest {
             "Foo.java",
             """
             import javax.inject.Inject;
+
             abstract class Bar {
               static class Foo {
-                @Inject Foo() {}
+                @Inject
+                Foo() {}
               }
             }
             """)

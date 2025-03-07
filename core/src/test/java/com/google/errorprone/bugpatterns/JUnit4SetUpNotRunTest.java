@@ -62,9 +62,7 @@ class J4PositiveCase2 {
   protected void setUp() {}
 }
 
-/**
- * Replace @After with @Before
- */
+/** Replace @After with @Before */
 @RunWith(JUnit4.class)
 class J4AfterToBefore {
   // BUG: Diagnostic contains: @Before
@@ -72,9 +70,7 @@ class J4AfterToBefore {
   protected void setUp() {}
 }
 
-/**
- * Replace @AfterClass with @BeforeClass
- */
+/** Replace @AfterClass with @BeforeClass */
 @RunWith(JUnit4.class)
 class J4AfterClassToBeforeClass {
   // BUG: Diagnostic contains: @BeforeClass
@@ -87,8 +83,8 @@ class BaseTestClass {
 }
 
 /**
- * This is the ambiguous case that we want the developer to make the determination as to
- * whether to rename setUp()
+ * This is the ambiguous case that we want the developer to make the determination as to whether to
+ * rename setUp()
  */
 @RunWith(JUnit4.class)
 class J4Inherit extends BaseTestClass {
@@ -102,15 +98,17 @@ class J4Inherit extends BaseTestClass {
  */
 @RunWith(JUnit4.class)
 class J4OverriddenSetUp extends BaseTestClass {
+  @Override
   // BUG: Diagnostic contains: @Before
-  @Override protected void setUp() {}
+  protected void setUp() {}
 }
 
 @RunWith(JUnit4.class)
 class J4OverriddenSetUpPublic extends BaseTestClass {
+  @Override
   // BUG: Diagnostic contains: @Before
-  @Override public void setUp() {}
-}\
+  public void setUp() {}
+}
 """)
         .doTest();
   }

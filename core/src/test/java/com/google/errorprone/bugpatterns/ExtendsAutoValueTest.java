@@ -252,7 +252,7 @@ public class TestBuilder implements AutoClass.Builder {
               @AutoValue
               abstract static class AutoClass {}
 
-            // BUG: Diagnostic contains: Do not extend an @AutoValue class in non-generated code.
+              // BUG: Diagnostic contains: Do not extend an @AutoValue class in non-generated code.
               class TestClass extends AutoClass {}
             }
             """)
@@ -307,7 +307,7 @@ public class TestBuilder implements AutoClass.Builder {
             class AutoClass {}
 
             public class TestClass {
-            // BUG: Diagnostic contains: Do not extend an @AutoValue class in non-generated code.
+              // BUG: Diagnostic contains: Do not extend an @AutoValue class in non-generated code.
               public class Extends extends AutoClass {}
             }
             """)

@@ -40,7 +40,9 @@ public final class InvalidBlockTagTest {
             "Test.java",
             """
             interface Test {
-              /** @returns anything */
+              /**
+               * @returns anything
+               */
               void foo();
             }
             """)
@@ -63,7 +65,9 @@ public final class InvalidBlockTagTest {
             "Test.java",
             """
             interface Test {
-              /** @returnFnargleBlargle anything */
+              /**
+               * @returnFnargleBlargle anything
+               */
               void foo();
             }
             """)
@@ -86,6 +90,7 @@ public final class InvalidBlockTagTest {
   }
 
   @Test
+  @SuppressWarnings("MisformattedTestData")
   public void inHtml() {
     refactoring
         .addInputLines(
@@ -154,6 +159,7 @@ public final class InvalidBlockTagTest {
   }
 
   @Test
+  @SuppressWarnings("MisformattedTestData")
   public void parameterBlockTag_finding() {
     helper
         .addSourceLines(
@@ -161,7 +167,7 @@ public final class InvalidBlockTagTest {
             """
             interface Test {
               /**
-               // BUG: Diagnostic contains: {@code a}
+               * // BUG: Diagnostic contains: {@code a}
                * @a blah
                */
               void foo(int a);
@@ -177,7 +183,9 @@ public final class InvalidBlockTagTest {
             "Test.java",
             """
             interface Test {
-              /** @inheritDoc */
+              /**
+               * @inheritDoc
+               */
               void frobnicate(String foo);
             }
             """)
@@ -199,9 +207,9 @@ public final class InvalidBlockTagTest {
             "Test.java",
             """
             /**
-              * @apiNote does nothing
-              * @implNote not implemented
-              */
+             * @apiNote does nothing
+             * @implNote not implemented
+             */
             class Test {}
             """)
         .doTest();

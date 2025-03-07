@@ -42,13 +42,13 @@ public class UnsafeLocaleUsageTest {
             class Test {
               static class Inner {
                 private Locale locale;
+
                 Inner(String a) {
-                   locale = new Locale(a);
+                  locale = new Locale(a);
                 }
               }
 
               private static final Test.Inner INNER_OBJ = new Inner("zh_hant_tw");
-
             }
             """)
         .addOutputLines(
@@ -106,13 +106,13 @@ public class UnsafeLocaleUsageTest {
             class Test {
               static class Inner {
                 private Locale locale;
+
                 Inner(String a, String b) {
-                   locale = new Locale(a, b);
+                  locale = new Locale(a, b);
                 }
               }
 
               private static final Test.Inner INNER_OBJ = new Inner("zh", "tw");
-
             }
             """)
         .addOutputLines(
@@ -146,14 +146,14 @@ public class UnsafeLocaleUsageTest {
             class Test {
               static class Inner {
                 private Locale locale;
+
                 Inner(String a, String b, String c) {
-                   // BUG: Diagnostic contains: forLanguageTag(String)
-                   locale = new Locale(a, b, c);
+                  // BUG: Diagnostic contains: forLanguageTag(String)
+                  locale = new Locale(a, b, c);
                 }
               }
 
               private static final Test.Inner INNER_OBJ = new Inner("zh", "tw", "hant");
-
             }
             """)
         .doTest();
@@ -170,12 +170,13 @@ public class UnsafeLocaleUsageTest {
             class Test {
               static class Inner {
                 private Locale locale;
+
                 Inner(String a) {
-                   locale = Locale.forLanguageTag(a);
+                  locale = Locale.forLanguageTag(a);
                 }
 
                 String getLocaleDisplayString() {
-                   return locale.toString();
+                  return locale.toString();
                 }
               }
 
@@ -212,11 +213,13 @@ public class UnsafeLocaleUsageTest {
             "Test.java",
             """
             import java.util.Locale;
+
             class Test {
-                // BUG: Diagnostic contains: forLanguageTag(String)
-                private static final Locale LOCALE = new Locale(
-                    // BUG: Diagnostic contains: toLanguageTag()
-                    Locale.TAIWAN.toString());
+              private static final Locale LOCALE =
+                  // BUG: Diagnostic contains: forLanguageTag(String)
+                  new Locale(
+                      // BUG: Diagnostic contains: toLanguageTag()
+                      Locale.TAIWAN.toString());
             }
             """)
         .doTest();
@@ -230,9 +233,10 @@ public class UnsafeLocaleUsageTest {
             """
             import java.util.Locale;
             import com.google.common.collect.ImmutableMap;
+
             class Test {
               private static final ImmutableMap<String, Locale> INTERNAL_COUNTRY_CODE_TO_LOCALE =
-                ImmutableMap.of("abc", Locale.KOREAN);
+                  ImmutableMap.of("abc", Locale.KOREAN);
               private static final String DISPLAY_NAME = getLocaleDisplayNameFromCode("abc");
 
               public static final String getLocaleDisplayNameFromCode(String code) {

@@ -66,13 +66,29 @@ public final class StaticOrDefaultInterfaceMethodTest {
 
   @Test
   public void negativeCaseNoBody() {
-    compilationHelper.addSourceLines("Test.java", "interface Test { void test(); }").doTest();
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            interface Test {
+              void test();
+            }
+            """)
+        .doTest();
   }
 
   @Test
   public void negativeCaseClass() {
     compilationHelper
-        .addSourceLines("Test.java", "class Test {  static void test() { System.out.println(); } }")
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              static void test() {
+                System.out.println();
+              }
+            }
+            """)
         .doTest();
   }
 }

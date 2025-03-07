@@ -1116,7 +1116,9 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
             """
             abstract class Test {
               abstract <T> T get(T obj);
+
               abstract void target(Object param);
+
               private void test() {
                 // BUG: Diagnostic contains: java.lang.Integer
                 target(get(1));
@@ -1134,6 +1136,7 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
             """
             abstract class Test {
               abstract void target(int i);
+
               private void test(int j) {
                 // BUG: Diagnostic contains: int
                 target(j);
@@ -1151,6 +1154,7 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
             """
             abstract class Test {
               abstract void target(String s);
+
               private void test() {
                 // BUG: Diagnostic contains: java.lang.String
                 target(new String());
@@ -1168,6 +1172,7 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
             """
             abstract class Test {
               abstract void target(String s);
+
               private void test() {
                 // BUG: Diagnostic contains: <nulltype>
                 target(null);
@@ -1184,8 +1189,10 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
             "Test.java",
             """
             class GenericTest<T> {}
+
             abstract class Test {
               abstract void target(Object param);
+
               private void test() {
                 // BUG: Diagnostic contains: GenericTest<java.lang.String>
                 target(new GenericTest<String>());
@@ -1277,11 +1284,15 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
             "Test.java",
             """
             import java.util.ArrayList;
+
             class Foo {
-              // BUG: Diagnostic contains: Target type of ArrayList<Integer> is null
-              Object obj = new ArrayList<Integer>() {
-                int foo() { return 0; }
-              };
+              Object obj =
+                  // BUG: Diagnostic contains: Target type of ArrayList<Integer> is null
+                  new ArrayList<Integer>() {
+                    int foo() {
+                      return 0;
+                    }
+                  };
             }
             """)
         .expectResult(Result.ERROR)
@@ -1425,8 +1436,9 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
             """
             enum Test {
               VALUE {
+                @Override
                 // BUG: Diagnostic contains: Cannot be overridden
-                @Override void abstractCanBeOverridden() {}
+                void abstractCanBeOverridden() {}
 
                 // BUG: Diagnostic contains: Cannot be overridden
                 void declaredOnlyInValue() {}
@@ -1449,10 +1461,11 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
             "Test.java",
             """
             class Test {
-              Object obj = new Object() {
-                // BUG: Diagnostic contains: Cannot be overridden
-                void inAnonymousClass() {}
-              };
+              Object obj =
+                  new Object() {
+                    // BUG: Diagnostic contains: Cannot be overridden
+                    void inAnonymousClass() {}
+                  };
             }
             """)
         .doTest();
@@ -1557,7 +1570,8 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
               void test() throws Exception {
                 try {
                   throw new IllegalStateException();
-                } catch (Exception e) {}
+                } catch (Exception e) {
+                }
               }
             }
             """)
@@ -1613,7 +1627,8 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
                   test();
                 } catch (InterruptedException e) {
                   throw e;
-                } catch (Exception e) {}
+                } catch (Exception e) {
+                }
               }
             }
             """)
@@ -1629,6 +1644,7 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
 import java.util.concurrent.Callable;
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
+
 class Test {
   // BUG: Diagnostic contains: [FileNotFoundException UnsupportedEncodingException]
   void test(Callable<Void> c) throws FileNotFoundException, UnsupportedEncodingException {
@@ -1659,11 +1675,14 @@ class Test {
               void test() throws Exception {
                 try (var x = c()) {}
               }
+
               // BUG: Diagnostic contains:
               abstract C c();
+
               abstract class C implements AutoCloseable {
+                @Override
                 // BUG: Diagnostic contains:
-                @Override public abstract void close() throws InterruptedException;
+                public abstract void close() throws InterruptedException;
               }
             }
             """)
@@ -1682,11 +1701,14 @@ class Test {
                 var x = c();
                 try (x) {}
               }
+
               // BUG: Diagnostic contains:
               abstract C c();
+
               abstract class C implements AutoCloseable {
+                @Override
                 // BUG: Diagnostic contains:
-                @Override public abstract void close() throws InterruptedException;
+                public abstract void close() throws InterruptedException;
               }
             }
             """)
@@ -1749,6 +1771,7 @@ class Test {
             """
             class Test {
               private Test t;
+
               private void t() {
                 // BUG: Diagnostic contains: []
                 t();
@@ -1796,22 +1819,30 @@ class Test {
             class Test {
               // BUG: Diagnostic contains:
               private Test t;
+
               public void foo() {
                 // BUG: Diagnostic contains:
                 class Foo {
                   // BUG: Diagnostic contains:
                   class Bar {}
+
                   // BUG: Diagnostic contains:
                   public void bar() {}
                 }
               }
+
               // BUG: Diagnostic contains:
               private class Inner {
                 // BUG: Diagnostic contains:
                 public Test t;
+
                 // BUG: Diagnostic contains:
                 public void test() {}
-                @Override public String toString() { return null; }
+
+                @Override
+                public String toString() {
+                  return null;
+                }
               }
             }
             """)
@@ -1933,16 +1964,19 @@ class Test {
             "Test.java",
             """
             package p;
+
             import java.util.function.Function;
             import java.util.function.IntFunction;
             import java.util.stream.Stream;
+
             class Test {
               // BUG: Diagnostic contains: [java.util.function]
               Function<?, ?> f;
               // BUG: Diagnostic contains: [p]
               Test t;
+
               {
-              // BUG: Diagnostic contains: []
+                // BUG: Diagnostic contains: []
                 Stream.of().toArray(IntFunction[]::new);
               }
             }
@@ -1988,6 +2022,7 @@ class Test {
             import static java.lang.annotation.ElementType.METHOD;
             import static java.lang.annotation.ElementType.FIELD;
             import java.lang.annotation.Target;
+
             class Declaration {
               @Target({METHOD, FIELD})
               @interface Nullable {}
@@ -1998,6 +2033,7 @@ class Test {
             """
             import static java.lang.annotation.ElementType.TYPE_USE;
             import java.lang.annotation.Target;
+
             class TypeUse {
               @Target(TYPE_USE)
               @interface Nullable {}
@@ -2007,11 +2043,15 @@ class Test {
             "Test.java",
             """
             abstract class Test {
+              @Declaration.Nullable
               // BUG: Diagnostic contains:
-              @Declaration.Nullable public abstract Integer f();
+              public abstract Integer f();
+
               // BUG: Diagnostic contains:
               public abstract @TypeUse.Nullable Integer g();
+
               public abstract Integer i();
+
               // BUG: Diagnostic contains:
               @Declaration.Nullable public Integer x;
               // BUG: Diagnostic contains:

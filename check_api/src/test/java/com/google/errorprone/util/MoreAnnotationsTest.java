@@ -108,12 +108,16 @@ public final class MoreAnnotationsTest {
             """
 import static java.lang.annotation.ElementType.*;
 import java.lang.annotation.Target;
+
 @Target(TYPE_USE)
 @interface Other {}
+
 @Target(TYPE_USE)
 @interface TA {}
+
 @Target({TYPE, CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PARAMETER, TYPE_PARAMETER})
 @interface DA {}
+
 @Target({TYPE, TYPE_USE, CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PARAMETER, TYPE_PARAMETER})
 @interface A {}
 """)
@@ -121,18 +125,33 @@ import java.lang.annotation.Target;
             "Test.java",
             """
             import java.util.List;
+
+            @DA
+            @A
             // BUG: Diagnostic contains: DA, A
-            @DA @A class Test<T extends @Other String> {
+            class Test<T extends @Other String> {
+              @TA
+              @DA
+              @A
               // BUG: Diagnostic contains: DA, A, TA
-              @TA @DA @A Test() {}
+              Test() {}
+
               // BUG: Diagnostic contains: DA, A, TA
               @TA @DA @A List<@Other String> field;
+
               {
+                @TA
+                @DA
+                @A
                 // BUG: Diagnostic contains: DA, A, TA
-                @TA @DA @A List<@Other String> local;
+                List<@Other String> local;
               }
+
+              @TA
+              @DA
+              @A
               // BUG: Diagnostic contains: DA, A, TA
-              @TA @DA @A List<@Other String> f(
+              List<@Other String> f(
                   // BUG: Diagnostic contains: DA, A, TA
                   @TA @DA @A List<@Other String> param) {
                 return null;
@@ -150,12 +169,16 @@ import java.lang.annotation.Target;
             """
 import static java.lang.annotation.ElementType.*;
 import java.lang.annotation.Target;
+
 @Target(TYPE_USE)
 @interface Other {}
+
 @Target(TYPE_USE)
 @interface TA {}
+
 @Target({TYPE, CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PARAMETER, TYPE_PARAMETER})
 @interface DA {}
+
 @Target({TYPE, TYPE_USE, CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PARAMETER, TYPE_PARAMETER})
 @interface A {}
 """)
@@ -163,17 +186,32 @@ import java.lang.annotation.Target;
             "Test.java",
             """
             import java.util.List;
-            @DA @A class Test<T extends @Other String> {
+
+            @DA
+            @A
+            class Test<T extends @Other String> {
+              @TA
+              @DA
+              @A
               // BUG: Diagnostic contains: TA, A
-              @TA @DA @A Test() {}
+              Test() {}
+
               // BUG: Diagnostic contains: TA, A
               @TA @DA @A List<@Other String> field;
+
               {
+                @TA
+                @DA
+                @A
                 // BUG: Diagnostic contains: TA, A
-                @TA @DA @A List<@Other String> local;
+                List<@Other String> local;
               }
+
+              @TA
+              @DA
+              @A
               // BUG: Diagnostic contains: TA, A
-              @TA @DA @A List<@Other String> f(
+              List<@Other String> f(
                   // BUG: Diagnostic contains: TA, A
                   @TA @DA @A List<@Other String> param) {
                 return null;
@@ -191,34 +229,47 @@ import java.lang.annotation.Target;
             """
             import static java.lang.annotation.ElementType.TYPE_USE;
             import java.lang.annotation.Target;
-            @Target(TYPE_USE) @interface A {}
-            @Target(TYPE_USE) @interface B {}
-            @Target(TYPE_USE) @interface C {}
+
+            @Target(TYPE_USE)
+            @interface A {}
+
+            @Target(TYPE_USE)
+            @interface B {}
+
+            @Target(TYPE_USE)
+            @interface C {}
             """)
         .addSourceLines(
             "Test.java",
             """
             import java.util.List;
+
             abstract class Outer {
               class Middle {
                 class Inner {}
               }
+
               class MiddleStatic {
                 class Inner {}
+
                 class InnerStatic {}
               }
+
               // BUG: Diagnostic contains: C
-              @A Outer . @B Middle . @C Inner x;
+              @A Outer.@B Middle.@C Inner x;
               // BUG: Diagnostic contains: B
-              Outer . @A MiddleStatic . @B Inner y;
+              Outer.@A MiddleStatic.@B Inner y;
               // BUG: Diagnostic contains: A
-              Outer . MiddleStatic . @A InnerStatic z;
+              Outer.MiddleStatic.@A InnerStatic z;
+
               // BUG: Diagnostic contains: C
-              abstract @A Outer . @B Middle . @C Inner f();
+              abstract @A Outer.@B Middle.@C Inner f();
+
               // BUG: Diagnostic contains: B
-              abstract Outer . @A MiddleStatic . @B Inner g();
+              abstract Outer.@A MiddleStatic.@B Inner g();
+
               // BUG: Diagnostic contains: A
-              abstract Outer . MiddleStatic . @A InnerStatic h();
+              abstract Outer.MiddleStatic.@A InnerStatic h();
             }
             """)
         .doTest();

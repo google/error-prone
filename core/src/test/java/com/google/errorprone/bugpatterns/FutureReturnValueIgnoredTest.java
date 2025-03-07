@@ -541,7 +541,7 @@ public class FutureReturnValueIgnoredNegativeCases {
       }
     };
   }
-}\
+}
 """)
         .doTest();
   }

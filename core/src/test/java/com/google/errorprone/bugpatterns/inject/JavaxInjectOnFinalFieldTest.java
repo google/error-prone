@@ -44,15 +44,12 @@ public class JavaxInjectOnFinalFieldTest {
              */
             public class JavaxInjectOnFinalFieldPositiveCases {
 
-              /**
-               * Class has a final injectable(javax.inject.Inject) field.
-               */
+              /** Class has a final injectable(javax.inject.Inject) field. */
               public class TestClass1 {
-                // BUG: Diagnostic contains: remove
-                @Inject
-                public final int n = 0;
+                // BUG: Diagnostic contains:
+                @Inject public final int n = 0;
               }
-            }\
+            }
             """)
         .doTest();
   }

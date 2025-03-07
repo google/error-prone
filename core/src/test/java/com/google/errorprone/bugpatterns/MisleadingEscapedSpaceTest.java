@@ -74,16 +74,18 @@ public final class MisleadingEscapedSpaceTest {
             "Test.class",
             """
             class Test {
-              // BUG: Diagnostic contains:
-              private static final String FOO = \"""
+              private static final String FOO =
+                  // BUG: Diagnostic contains:
+                  \"""
               foo   \\s  bar
               \""";
-              // BUG: Diagnostic contains:
-              private static final String BAZ = \"""
+              private static final String BAZ =
+                  // BUG: Diagnostic contains:
+                  \"""
               foo   \\s
               bar  \\s baz
               \""";
-            }\
+            }
             """)
         .doTest();
   }
@@ -95,11 +97,12 @@ public final class MisleadingEscapedSpaceTest {
             "Test.class",
             """
             class Test {
-              private static final String FOO = \"""
+              private static final String FOO =
+                  \"""
               foo   \\s
               bar     \\s
               \""";
-            }\
+            }
             """)
         .doTest();
   }
@@ -111,10 +114,11 @@ public final class MisleadingEscapedSpaceTest {
             "Test.class",
             """
             class Test {
-              private static final String FOO = \"""
+              private static final String FOO =
+                  \"""
               foo   \\s\\s\\s\\s
               \""";
-            }\
+            }
             """)
         .doTest();
   }

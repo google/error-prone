@@ -39,9 +39,11 @@ public class FunctionalInterfaceClashTest {
             """
             import java.util.function.Function;
             import java.util.function.Consumer;
+
             public class Test {
               // BUG: Diagnostic contains: foo(Function<String, String>)
               void foo(Consumer<String> x) {}
+
               void foo(Function<String, String> c) {}
             }
             """)
@@ -55,12 +57,15 @@ public class FunctionalInterfaceClashTest {
             "Test.java",
             """
             import java.util.concurrent.Callable;
+
             public class Test {
               interface MyCallable {
                 String call();
               }
+
               // BUG: Diagnostic contains: foo(MyCallable)
               void foo(Callable<String> x) {}
+
               void foo(MyCallable c) {}
             }
             """)
@@ -74,6 +79,7 @@ public class FunctionalInterfaceClashTest {
             "Super.java",
             """
             import java.util.function.Function;
+
             class Super {
               void foo(Function<String, String> x) {}
             }
@@ -82,6 +88,7 @@ public class FunctionalInterfaceClashTest {
             "Test.java",
             """
             import java.util.function.Consumer;
+
             public class Test extends Super {
               // BUG: Diagnostic contains: Super.foo(Function<String, String>)
               void foo(Consumer<String> c) {}
@@ -98,9 +105,11 @@ public class FunctionalInterfaceClashTest {
             """
             import java.util.function.Function;
             import java.util.function.Consumer;
+
             public class Test {
               // BUG: Diagnostic contains: foo(Function<String, Integer>)
               void foo(Consumer<String> c) {}
+
               void foo(Function<String, Integer> f) {}
             }
             """)
@@ -114,6 +123,7 @@ public class FunctionalInterfaceClashTest {
             "Super.java",
             """
             import java.util.function.Consumer;
+
             class Super {
               void foo(Consumer<String> x) {}
             }
@@ -122,6 +132,7 @@ public class FunctionalInterfaceClashTest {
             "Test.java",
             """
             import java.util.function.Consumer;
+
             public class Test extends Super {
               void foo(Consumer<String> x) {}
             }
@@ -136,6 +147,7 @@ public class FunctionalInterfaceClashTest {
             "Super.java",
             """
             import java.util.function.Function;
+
             class Super {
               Super(Function<String, String> r) {}
             }
@@ -144,8 +156,11 @@ public class FunctionalInterfaceClashTest {
             "Test.java",
             """
             import java.util.function.Consumer;
+
             public class Test extends Super {
-              Test(Consumer<String> r) { super(null); }
+              Test(Consumer<String> r) {
+                super(null);
+              }
             }
             """)
         .doTest();
@@ -159,9 +174,11 @@ public class FunctionalInterfaceClashTest {
             """
             import java.util.function.Function;
             import java.util.function.Consumer;
+
             public class Test {
               // BUG: Diagnostic contains: Test(Function<String, String>)
               Test(Consumer<String> r) {}
+
               Test(Function<String, String> c) {}
             }
             """)
@@ -176,9 +193,11 @@ public class FunctionalInterfaceClashTest {
             """
             import java.util.function.Function;
             import java.util.function.Consumer;
+
             public class Test {
               // BUG: Diagnostic contains: foo(Function<String, String>)
               static void foo(Consumer<String> x) {}
+
               void foo(Function<String, String> c) {}
             }
             """)
@@ -194,9 +213,11 @@ public class FunctionalInterfaceClashTest {
             import java.lang.SuppressWarnings;
             import java.util.function.Function;
             import java.util.function.Consumer;
+
             public class Test {
               @SuppressWarnings("FunctionalInterfaceClash")
               void foo(Consumer<String> x) {}
+
               void foo(Function<String, String> c) {}
             }
             """)
@@ -210,6 +231,7 @@ public class FunctionalInterfaceClashTest {
             "pkg1/FunctionalInterface.java",
             """
             package pkg1;
+
             public interface FunctionalInterface {
               String apply(String s);
             }
@@ -218,7 +240,9 @@ public class FunctionalInterfaceClashTest {
             "pkg2/BaseClass.java",
             """
             package pkg2;
+
             import pkg1.FunctionalInterface;
+
             public abstract class BaseClass {
               abstract String doIt(FunctionalInterface fi);
             }
@@ -227,9 +251,12 @@ public class FunctionalInterfaceClashTest {
             "pkg2/DerivedClass.java",
             """
             package pkg2;
+
             import pkg1.FunctionalInterface;
+
             public class DerivedClass extends BaseClass {
-              @Override public String doIt(FunctionalInterface fi) {
+              @Override
+              public String doIt(FunctionalInterface fi) {
                 return null;
               }
             }
@@ -238,12 +265,15 @@ public class FunctionalInterfaceClashTest {
             "pkg3/Test.java",
             """
             package pkg3;
+
             import pkg1.FunctionalInterface;
             import pkg2.DerivedClass;
+
             public class Test {
               DerivedClass getDerivedClass() {
                 return new DerivedClass() {
-                  @Override public String doIt(FunctionalInterface fi) {
+                  @Override
+                  public String doIt(FunctionalInterface fi) {
                     return null;
                   }
                 };
@@ -260,11 +290,14 @@ public class FunctionalInterfaceClashTest {
             "pkg2/BaseClass.java",
             """
             package pkg2;
+
             import java.util.function.Function;
             import java.util.function.Consumer;
+
             public abstract class BaseClass {
               // BUG: Diagnostic contains: When passing lambda arguments to this function
               abstract void baz(Consumer<String> c);
+
               abstract void baz(Function<String, Integer> f);
             }
             """)
@@ -272,11 +305,16 @@ public class FunctionalInterfaceClashTest {
             "pkg2/DerivedClass.java",
             """
             package pkg2;
+
             import java.util.function.Function;
             import java.util.function.Consumer;
+
             public class DerivedClass extends BaseClass {
-              @Override void baz(Consumer<String> c) {}
-              @Override void baz(Function<String, Integer> f) {}
+              @Override
+              void baz(Consumer<String> c) {}
+
+              @Override
+              void baz(Function<String, Integer> f) {}
             }
             """)
         .doTest();
@@ -289,8 +327,10 @@ public class FunctionalInterfaceClashTest {
             "pkg2/BaseClass.java",
             """
             package pkg2;
+
             import java.util.function.Function;
             import java.util.function.Consumer;
+
             public abstract class BaseClass {
               abstract void bar(Consumer<String> c);
             }
@@ -299,10 +339,13 @@ public class FunctionalInterfaceClashTest {
             "pkg2/DerivedClass.java",
             """
             package pkg2;
+
             import java.util.function.Function;
             import java.util.function.Consumer;
+
             public class DerivedClass extends BaseClass {
-              @Override void bar(Consumer<String> c) {}
+              @Override
+              void bar(Consumer<String> c) {}
             }
             """)
         .doTest();
@@ -315,8 +358,10 @@ public class FunctionalInterfaceClashTest {
             "pkg2/BaseClass.java",
             """
             package pkg2;
+
             import java.util.function.Function;
             import java.util.function.Consumer;
+
             public class BaseClass {
               void conduct(Consumer<String> c) {}
             }
@@ -325,11 +370,15 @@ public class FunctionalInterfaceClashTest {
             "pkg2/ConductClass.java",
             """
             package pkg2;
+
             import java.util.function.Function;
             import java.util.function.Consumer;
+
             public class ConductClass extends BaseClass {
+              @Override
               // BUG: Diagnostic contains: disambiguate with:
-              @Override void conduct(Consumer<String> c) {}
+              void conduct(Consumer<String> c) {}
+
               void conduct(Function<String, Integer> f) {}
             }
             """)
@@ -343,8 +392,10 @@ public class FunctionalInterfaceClashTest {
             "pkg2/BaseClass.java",
             """
             package pkg2;
+
             import java.util.function.Function;
             import java.util.function.Consumer;
+
             public class BaseClass {
               void conduct(Consumer<String> c) {}
             }
@@ -353,10 +404,13 @@ public class FunctionalInterfaceClashTest {
             "pkg2/ConductClass.java",
             """
             package pkg2;
+
             import java.util.function.Function;
             import java.util.function.Consumer;
+
             public class ConductClass extends BaseClass {
-              @Override void conduct(Consumer<String> c) {}
+              @Override
+              void conduct(Consumer<String> c) {}
             }
             """)
         .doTest();
@@ -369,7 +423,9 @@ public class FunctionalInterfaceClashTest {
             "pkg2/Super.java",
             """
             package pkg2;
+
             import java.util.function.Consumer;
+
             public abstract class Super {
               void barr(Consumer<String> c) {}
             }
@@ -378,7 +434,9 @@ public class FunctionalInterfaceClashTest {
             "pkg2/BaseClass.java",
             """
             package pkg2;
+
             import java.util.function.Consumer;
+
             public abstract class BaseClass extends Super {
               void barr(Consumer<String> c) {}
             }
@@ -387,7 +445,9 @@ public class FunctionalInterfaceClashTest {
             "pkg2/MyDerivedClass.java",
             """
             package pkg2;
+
             import java.util.function.Function;
+
             public class MyDerivedClass extends BaseClass {
               // BUG: Diagnostic contains: disambiguate with:
               void barr(Function<String, Integer> f) {}
@@ -403,11 +463,14 @@ public class FunctionalInterfaceClashTest {
             "pkg2/Super.java",
             """
             package pkg2;
+
             import java.util.function.Consumer;
             import java.util.function.Function;
+
             public abstract class Super {
               // BUG: Diagnostic contains: When passing lambda arguments to this function
               void barr(Function<String, Integer> f) {}
+
               void barr(Consumer<String> c) {}
             }
             """)
@@ -415,13 +478,18 @@ public class FunctionalInterfaceClashTest {
             "pkg2/BaseClass.java",
             """
             package pkg2;
+
             import java.util.function.Consumer;
             import java.util.function.Function;
+
             public abstract class BaseClass extends Super {
               void barr(Function<String, Integer> f) {}
+
               void barr(Consumer<String> c) {}
+
               // BUG: Diagnostic contains: When passing lambda arguments to this function
               void foo(Function<Integer, Integer> f) {}
+
               void foo(Consumer<Integer> c) {}
             }
             """)
@@ -435,9 +503,12 @@ public class FunctionalInterfaceClashTest {
             "Test.java",
             """
             import java.util.function.Consumer;
+
             public class Test {
               void foo(Consumer<String> c) {}
+
               void foo(SubConsumer<String> c) {}
+
               interface SubConsumer<T> extends Consumer<T> {}
             }
             """)

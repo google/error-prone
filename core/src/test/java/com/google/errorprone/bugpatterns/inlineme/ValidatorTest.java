@@ -972,6 +972,7 @@ public class ValidatorTest {
             "Client.java",
             """
             import com.google.errorprone.annotations.InlineMe;
+
             public final class Client {
               @Deprecated
               @InlineMe(replacement = "this.after(arg0, arg1)")
@@ -979,8 +980,8 @@ public class ValidatorTest {
               public void before(int arg0, int arg1) {
                 after(arg0, arg1);
               }
-              public void after(int arg0, int arg1) {
-              }
+
+              public void after(int arg0, int arg1) {}
             }
             """)
         .doTest();

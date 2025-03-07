@@ -197,7 +197,14 @@ public final class YodaConditionTest {
   @Test
   public void nullIntolerantFix() {
     refactoring
-        .addInputLines("E.java", "enum E {A, B}")
+        .addInputLines(
+            "E.java",
+            """
+            enum E {
+              A,
+              B
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
             "Test.java",
@@ -224,7 +231,14 @@ public final class YodaConditionTest {
   @Test
   public void nullTolerantFix() {
     refactoring
-        .addInputLines("E.java", "enum E {A, B}")
+        .addInputLines(
+            "E.java",
+            """
+            enum E {
+              A,
+              B
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
             "Test.java",
@@ -252,7 +266,14 @@ public final class YodaConditionTest {
   @Test
   public void provablyNonNull_nullIntolerantFix() {
     refactoring
-        .addInputLines("E.java", "enum E {A, B}")
+        .addInputLines(
+            "E.java",
+            """
+            enum E {
+              A,
+              B
+            }
+            """)
         .expectUnchanged()
         .addInputLines(
             "Test.java",

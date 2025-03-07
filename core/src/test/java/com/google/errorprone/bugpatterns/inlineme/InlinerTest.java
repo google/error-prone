@@ -1617,7 +1617,9 @@ public final class Caller {
             "Client.java",
             """
             package com.google.foo;
+
             import com.google.errorprone.annotations.InlineMe;
+
             public final class Client {
               @InlineMe(replacement = "x * 2")
               public static int timesTwo(int x) {
@@ -1630,6 +1632,7 @@ public final class Caller {
             "Caller.java",
             """
             import com.google.foo.Client;
+
             public final class Caller {
               public void doTest() {
                 long four = Client.timesTwo(1 + 1);

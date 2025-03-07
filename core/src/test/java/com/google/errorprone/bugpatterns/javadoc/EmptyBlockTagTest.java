@@ -121,13 +121,14 @@ public final class EmptyBlockTagTest {
   }
 
   @Test
+  @SuppressWarnings("MisformattedTestData")
   public void removes_emptyDeprecatedOnClass() {
     compilationTestHelper
         .addSourceLines(
             "Test.java",
             """
             /**
-              // BUG: Diagnostic contains:
+             * // BUG: Diagnostic contains:
              * @deprecated
              */
             @Deprecated

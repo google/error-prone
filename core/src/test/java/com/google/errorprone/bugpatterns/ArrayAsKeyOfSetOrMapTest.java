@@ -56,7 +56,8 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.LinkedListMultimap;
 import java.util.HashMap;
 import java.util.HashSet;
-class Test{
+
+class Test {
   public static void main(String[] args) {
     // BUG: Diagnostic contains: ArrayAsKeyOfSetOrMap
     Map<String[], Integer> testNewMap = Maps.newHashMap();
@@ -79,19 +80,20 @@ class Test{
     // BUG: Diagnostic contains: ArrayAsKeyOfSetOrMap
     ArrayListMultimap<String[], Integer> testArrayListMultimap = ArrayListMultimap.create();
     // BUG: Diagnostic contains: ArrayAsKeyOfSetOrMap
-    LinkedHashMultimap<String[], Integer> testLinkedHashMultimap= LinkedHashMultimap.create();
+    LinkedHashMultimap<String[], Integer> testLinkedHashMultimap = LinkedHashMultimap.create();
     // BUG: Diagnostic contains: ArrayAsKeyOfSetOrMap
-    LinkedListMultimap<String[], Integer> testLinkedListMultimap= LinkedListMultimap.create();
+    LinkedListMultimap<String[], Integer> testLinkedListMultimap = LinkedListMultimap.create();
     // BUG: Diagnostic contains: ArrayAsKeyOfSetOrMap
     HashBiMap<String[], Integer> testHashBiMap = HashBiMap.create();
     // BUG: Diagnostic contains: ArrayAsKeyOfSetOrMap
-    LinkedHashMap<String[], Integer> testLinkedHashMap= new LinkedHashMap<String[], Integer>();
+    LinkedHashMap<String[], Integer> testLinkedHashMap = new LinkedHashMap<String[], Integer>();
+    ConcurrentHashMap<String[], Integer> testConcurrentHashMap =
     // BUG: Diagnostic contains: ArrayAsKeyOfSetOrMap
-    ConcurrentHashMap<String[], Integer> testConcurrentHashMap= new ConcurrentHashMap<String[], Integer>();
+        new ConcurrentHashMap<String[], Integer>();
     // BUG: Diagnostic contains: ArrayAsKeyOfSetOrMap
     HashMultiset<String[]> testHashMultiSet = HashMultiset.create();
     // BUG: Diagnostic contains: ArrayAsKeyOfSetOrMap
-    LinkedHashMultiset<String[]> testLinkedHashMultiSet= LinkedHashMultiset.create();
+    LinkedHashMultiset<String[]> testLinkedHashMultiSet = LinkedHashMultiset.create();
   }
 }
 """)
@@ -122,6 +124,7 @@ import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Ordering;
+
 class Test {
   public static void main(String[] args) {
     Map<Integer, Integer> testMap = new HashMap<Integer, Integer>();
@@ -132,16 +135,18 @@ class Test {
     Map testMap2 = new HashMap();
     Map<Integer, Integer> mapFromMethod = Maps.newHashMap();
     Set<String> setFromMethod = Sets.newHashSet();
-    Set<String[]> thisShouldWork = new TreeSet<String[]>(Ordering.natural().lexicographical().onResultOf(Arrays::asList));
+    Set<String[]> thisShouldWork =
+        new TreeSet<String[]>(Ordering.natural().lexicographical().onResultOf(Arrays::asList));
     HashMultimap<String, Integer> testHashMultimap = HashMultimap.create();
     ArrayListMultimap<String, Integer> testArrayListMultimap = ArrayListMultimap.create();
-    LinkedHashMultimap<String, Integer> testLinkedHashMultimap= LinkedHashMultimap.create();
-    LinkedListMultimap<String, Integer> testLinkedListMultimap= LinkedListMultimap.create();
+    LinkedHashMultimap<String, Integer> testLinkedHashMultimap = LinkedHashMultimap.create();
+    LinkedListMultimap<String, Integer> testLinkedListMultimap = LinkedListMultimap.create();
     HashBiMap<String, Integer> testHashBiMap = HashBiMap.create();
-    LinkedHashMap<String, Integer> testLinkedHashMap= new LinkedHashMap<String, Integer>();
-    ConcurrentHashMap<String, Integer> testConcurrentHashMap= new ConcurrentHashMap<String, Integer>();
+    LinkedHashMap<String, Integer> testLinkedHashMap = new LinkedHashMap<String, Integer>();
+    ConcurrentHashMap<String, Integer> testConcurrentHashMap =
+        new ConcurrentHashMap<String, Integer>();
     HashMultiset<String> testHashMultiSet = HashMultiset.create();
-    LinkedHashMultiset<String> testLinkedHashMultiSet= LinkedHashMultiset.create();
+    LinkedHashMultiset<String> testLinkedHashMultiSet = LinkedHashMultiset.create();
   }
 }
 """)

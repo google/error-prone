@@ -36,7 +36,9 @@ public final class ImmutableRefactoringTest {
             "Test.java",
             """
             import javax.annotation.concurrent.Immutable;
-            @Immutable class Test {
+
+            @Immutable
+            class Test {
               final int a = 42;
               final String b = null;
             }
@@ -60,9 +62,13 @@ public final class ImmutableRefactoringTest {
             "Test.java",
             """
             import javax.annotation.concurrent.Immutable;
-            @Immutable class Test {
+
+            @Immutable
+            class Test {
               int a = 42;
-              @Immutable static class Inner {
+
+              @Immutable
+              static class Inner {
                 final int a = 43;
               }
             }
@@ -72,6 +78,7 @@ public final class ImmutableRefactoringTest {
             "import com.google.errorprone.annotations.Immutable;",
             "// This class was annotated with javax.annotation.concurrent.Immutable, but didn't"
                 + " seem to be provably immutable.",
+            "",
             "class Test {",
             "  int a = 42;",
             "  @Immutable ",
@@ -89,7 +96,9 @@ public final class ImmutableRefactoringTest {
             "Test.java",
             """
             import javax.annotation.concurrent.Immutable;
-            @Immutable class Test {
+
+            @Immutable
+            class Test {
               int a = 42;
             }
             """)
@@ -98,6 +107,7 @@ public final class ImmutableRefactoringTest {
             "import com.google.errorprone.annotations.Immutable;",
             "// This class was annotated with javax.annotation.concurrent.Immutable, but didn't"
                 + " seem to be provably immutable.",
+            "",
             "class Test {",
             "  int a = 42;",
             "}")
@@ -111,9 +121,13 @@ public final class ImmutableRefactoringTest {
             "Test.java",
             """
             import javax.annotation.concurrent.Immutable;
-            @Immutable class Test {
+
+            @Immutable
+            class Test {
               int a = 42;
-              @Immutable static class Inner {
+
+              @Immutable
+              static class Inner {
                 int a = 43;
               }
             }
@@ -123,10 +137,12 @@ public final class ImmutableRefactoringTest {
             "import com.google.errorprone.annotations.Immutable;",
             "// This class was annotated with javax.annotation.concurrent.Immutable, but didn't"
                 + " seem to be provably immutable.",
+            "",
             "class Test {",
             "  int a = 42;",
             "  // This class was annotated with javax.annotation.concurrent.Immutable, but didn't"
                 + " seem to be provably immutable.",
+            "",
             "  static class Inner {",
             "    int a = 43;",
             "  }",

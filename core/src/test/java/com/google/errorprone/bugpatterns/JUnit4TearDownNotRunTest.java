@@ -61,13 +61,15 @@ public class JUnit4TearDownNotRunTest {
             @RunWith(JUnit4.class)
             class J4BeforeToAfter {
               // BUG: Diagnostic contains: @After
-              @Before protected void tearDown() {}
+              @Before
+              protected void tearDown() {}
             }
 
             @RunWith(JUnit4.class)
             class J4BeforeClassToAfterClass {
               // BUG: Diagnostic contains: @AfterClass
-              @BeforeClass protected void tearDown() {}
+              @BeforeClass
+              protected void tearDown() {}
             }
 
             class TearDownUnannotatedBaseClass {
@@ -82,15 +84,17 @@ public class JUnit4TearDownNotRunTest {
 
             @RunWith(JUnit4.class)
             class J4TearDownHasOverride extends TearDownUnannotatedBaseClass {
+              @Override
               // BUG: Diagnostic contains: @After
-              @Override protected void tearDown() {}
+              protected void tearDown() {}
             }
 
             @RunWith(JUnit4.class)
             class J4TearDownHasPublicOverride extends TearDownUnannotatedBaseClass {
+              @Override
               // BUG: Diagnostic contains: @After
-              @Override public void tearDown() {}
-            }\
+              public void tearDown() {}
+            }
             """)
         .doTest();
   }

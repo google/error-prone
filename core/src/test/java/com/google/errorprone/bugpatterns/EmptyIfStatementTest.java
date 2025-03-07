@@ -31,6 +31,7 @@ public class EmptyIfStatementTest {
       CompilationTestHelper.newInstance(EmptyIfStatement.class, getClass());
 
   @Test
+  @SuppressWarnings("MisformattedTestData") // intentional
   public void positiveCase() {
     compilationHelper
         .addSourceLines(

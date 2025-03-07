@@ -42,13 +42,16 @@ public class UnusedVariableTest {
             "ExemptedByReceiverParameter.java",
             """
             package unusedvars;
+
             public class ExemptedByReceiverParameter {
               public void test() {
                 used();
               }
+
               private void used(ExemptedByReceiverParameter this) {
                 // the receiver parameter should not be marked as unused
               }
+
               class Inner {
                 private Inner(ExemptedByReceiverParameter ExemptedByReceiverParameter.this) {
                   // the receiver parameter should not be marked as unused
@@ -65,19 +68,18 @@ public class UnusedVariableTest {
         .addSourceLines(
             "UnicodeBytes.java",
             """
-package unusedvars;
-/**
- * This file contains Unicode characters: \u2741\u2741\u2741\u2741\u2741\u2741\u2741\u2741\u2741
- */
-public class UnicodeBytes {
-  public void test() {
-    // BUG: Diagnostic contains: is never read
-    int notUsedLocal;
-    String usedLocal = "";
-    System.out.println(usedLocal);
-  }
-}
-""")
+            package unusedvars;
+
+            /** This file contains Unicode characters: ❁❁❁❁❁❁❁❁❁ */
+            public class UnicodeBytes {
+              public void test() {
+                // BUG: Diagnostic contains: is never read
+                int notUsedLocal;
+                String usedLocal = "";
+                System.out.println(usedLocal);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -88,8 +90,10 @@ public class UnicodeBytes {
             "UnusedArray.java",
             """
             package unusedvars;
+
             public class UnusedArray {
               private int[] ints;
+
               public void test() {
                 ints[0] = 0;
                 ints[0]++;
@@ -108,8 +112,10 @@ public class UnicodeBytes {
             "UnusedEnhancedForLoop.java",
             """
             package unusedvars;
+
             import java.util.ArrayList;
             import java.util.List;
+
             class UnusedEnhancedForLoop {
               public List<String> makeList(List<String> input) {
                 List<String> output = new ArrayList<>();
@@ -118,6 +124,7 @@ public class UnicodeBytes {
                 }
                 return output;
               }
+
               public List<String> listData(List<List<String>> input) {
                 List<String> output = new ArrayList<>();
                 for (List<String> secondVar : input) {
@@ -160,13 +167,16 @@ public class UnicodeBytes {
             "UnusedField.java",
             """
             package unusedvars;
+
             import java.util.ArrayList;
             import java.util.List;
+
             public class UnusedField {
               // BUG: Diagnostic contains: is never read
               private int notUsedInt;
               // BUG: Diagnostic contains: is never read
               private List<String> list = new ArrayList<>();
+
               public void test() {
                 notUsedInt = 0;
                 if (hashCode() > 0) {
@@ -175,15 +185,19 @@ public class UnicodeBytes {
                   list = makeList();
                 }
               }
+
               private List<String> makeList() {
                 return null;
               }
+
               public UnusedField(List<String> list) {
                 this.list = list;
               }
+
               // These fields are special, and should not be flagged as unused.
               private static final long serialVersionUID = 0;
               private static final String TAG = "UnusedFieldTestThingy";
+
               @SuppressWarnings("unchecked")
               // BUG: Diagnostic contains: is never read
               private long fieldWithAnn;
@@ -221,6 +235,7 @@ public class UnicodeBytes {
             "UnusedLocalVarInitialized.java",
             """
             package unusedvars;
+
             public class UnusedLocalVarInitialized {
               public void test() {
                 String s = "";
@@ -229,6 +244,7 @@ public class UnicodeBytes {
                 int notUsed = UnusedLocalVarInitialized.setData();
                 notUsed = this.hashCode();
               }
+
               public static int setData() {
                 return 0;
               }
@@ -244,6 +260,7 @@ public class UnicodeBytes {
             "UnusedLocalVar.java",
             """
             package unusedvars;
+
             public class UnusedLocalVar {
               public void test() {
                 // BUG: Diagnostic contains: is never read
@@ -253,14 +270,14 @@ public class UnicodeBytes {
                 if (usedLocal.length() == 0) {
                   notUsedLocal = 10 + usedLocal.length();
                 } else {
-                  notUsedLocal = this.calculate()
-                      + 1  ;
+                  notUsedLocal = this.calculate() + 1;
                   notUsedLocal--;
                   notUsedLocal += Integer.valueOf(1);
                   System.out.println(usedLocal);
                 }
                 System.out.println(usedLocal);
               }
+
               int calculate() {
                 return 0;
               }
@@ -276,9 +293,11 @@ public class UnicodeBytes {
             "UnusedNative.java",
             """
             package unusedvars;
+
             public class UnusedNative {
               private int usedInNative1 = 0;
               private String usedInNative2 = "";
+
               private native void aNativeMethod();
             }
             """)
@@ -292,20 +311,24 @@ public class UnicodeBytes {
             "UnusedParamInPrivateMethod.java",
             """
             package unusedvars;
+
             public class UnusedParamInPrivateMethod {
               // BUG: Diagnostic contains: 'j' is never read
               private void test(int i, int j) {
                 System.out.println(i);
               }
+
               private class Inner {
                 // BUG: Diagnostic contains: 'j' is never read
                 public void test(int i, int j) {
                   System.out.println(i);
                 }
               }
+
               private interface Foo {
                 void foo(int a);
               }
+
               public void main() {
                 test(1, 2);
               }
@@ -321,10 +344,12 @@ public class UnicodeBytes {
             "Unuseds.java",
             """
             package unusedvars;
+
             import java.io.IOException;
             import java.io.ObjectStreamException;
             import java.util.List;
             import javax.inject.Inject;
+
             public class Unuseds {
               // BUG: Diagnostic contains:
               private static final String NOT_USED_CONST_STR = "unused_test";
@@ -334,10 +359,11 @@ public class UnicodeBytes {
               private List<String> used;
               public int publicOne;
               private int[] ints;
-              @Inject
-              private int unusedExemptedByAnnotation;
+              @Inject private int unusedExemptedByAnnotation;
+
               @Inject
               private void unusedMethodExemptedByAnnotation() {}
+
               void test() {
                 this.notUsed = 0;
                 this.notUsed++;
@@ -355,9 +381,9 @@ public class UnicodeBytes {
                 ints[j--]++;
                 ints[1] = 0;
                 // Negative case (:( data flow analysis...).
-                byte[] notUsedLocalArray = new byte[]{};
+                byte[] notUsedLocalArray = new byte[] {};
                 notUsedLocalArray[0] += this.used.size();
-                char[] out = new char[]{};
+                char[] out = new char[] {};
                 for (int m = 0, n = 0; m < 1; m++) {
                   out[n++] = out[m];
                 }
@@ -370,13 +396,16 @@ public class UnicodeBytes {
                 values[0][valuesIndex1][valuesIndex2] = 10;
                 System.out.println(values);
               }
+
               public void set(double d) {}
+
               public void usedInMethodCall(double d) {
                 List<Unuseds> notUseds = null;
                 int indexInMethodCall = 0;
                 // Must not be reported as unused
                 notUseds.get(indexInMethodCall).publicOne = 0;
               }
+
               void memberSelectUpdate1() {
                 List<Unuseds> l = null;
                 // `u` should not be reported as unused.
@@ -385,23 +414,29 @@ public class UnicodeBytes {
                 System.out.println(l);
                 getFirst(l).notUsed = 100;
               }
+
               void memberSelectUpdate2() {
                 List<Unuseds> l = null;
                 // `l` should not be reported as unused.
                 l.get(0).notUsed = 10;
               }
+
               Unuseds getFirst(List<Unuseds> l) {
                 return l.get(0);
               }
+
               // Negative case. Must not report.
               private int usedCount = 0;
+
               int incCounter() {
                 return usedCount += 2;
               }
+
               // For testing the lack of NPE on return statement.
               public void returnNothing() {
                 return;
               }
+
               // Negative case. Must not report.
               public void testUsedArray() {
                 ints[0] = 0;
@@ -409,9 +444,11 @@ public class UnicodeBytes {
                 ints[0]--;
                 ints[0] -= 0;
               }
+
               @SuppressWarnings({"deprecation", "unused"})
               class UsesSuppressWarning {
                 private int f1;
+
                 private void test1() {
                   int local;
                 }
@@ -428,11 +465,13 @@ public class UnicodeBytes {
             "Unuseds.java",
             """
             package unusedvars;
+
             public class Unuseds {
               private static final String NOT_USED_CONST_STR = "unused_test";
               private static final String CONST_STR = "test";
               private int notUsed;
               public int publicOne;
+
               void test() {
                 this.notUsed = 0;
                 this.notUsed++;
@@ -465,16 +504,21 @@ public class UnicodeBytes {
             "Unuseds.java",
             """
             package unusedvars;
+
             public class Unuseds {
               // BUG: Diagnostic contains: The parameter 'j' is never read
               private int usedPrivateMethodWithUnusedParam(int i, int j) {
                 return i * 2;
               }
+
               int a = usedPrivateMethodWithUnusedParam(1, 2);
+
               // In the following three cases, parameters should not be reported as unused,
               // because methods are non-private.
               public void publicMethodWithUnusedParam(int i, int j) {}
+
               public void protectedMethodWithUnusedParam(int i, int j) {}
+
               public void packageMethodWithUnusedParam(int i, int j) {}
             }
             """)
@@ -488,6 +532,7 @@ public class UnicodeBytes {
             "Unuseds.java",
             """
             package unusedvars;
+
             class ExemptedByName {
               private int unused;
               private int unusedInt;
@@ -512,13 +557,16 @@ public class UnicodeBytes {
             "Unuseds.java",
             """
             package unusedvars;
+
             class Suppressed {
               @SuppressWarnings({"deprecation", "unused"})
               class UsesSuppressWarning {
                 private int f1;
+
                 private void test1() {
                   int local;
                 }
+
                 @SuppressWarnings(value = "unused")
                 private void test2() {
                   int local;
@@ -536,8 +584,10 @@ public class UnicodeBytes {
             "UnusedStaticField.java",
             """
             package unusedvars;
+
             import java.util.ArrayList;
             import java.util.List;
+
             public class UnusedStaticField {
               // BUG: Diagnostic contains: is never read
               private static final List<String> DATA = new ArrayList<>();
@@ -553,6 +603,7 @@ public class UnicodeBytes {
             "UnusedStaticPrivate.java",
             """
             package unusedvars;
+
             public class UnusedStaticPrivate {
               // BUG: Diagnostic contains: is never read
               private static final String NOT_USED_CONST_STR = "unused_test";
@@ -569,12 +620,13 @@ public class UnicodeBytes {
             "UnusedTryResource.java",
             """
             package unusedvars;
+
             public class UnusedTryResource {
               public static void main(String[] args) {
-                try (A a = new A()) {
-                }
+                try (A a = new A()) {}
               }
             }
+
             class A implements AutoCloseable {
               public void close() {}
             }
@@ -589,9 +641,9 @@ public class UnicodeBytes {
             "UnusedWithComment.java",
             """
             package unusedvars;
+
             public class UnusedWithComment {
-              /**
-               * Comment for a field */
+              /** Comment for a field */
               @SuppressWarnings("test")
               private Object field;
             }
@@ -681,11 +733,15 @@ public class UnicodeBytes {
             "UnusedWithComment.java",
             """
             package unusedvars;
+
             public class UnusedWithComment {
               private static final String foo = null, // foo
-              // BUG: Diagnostic contains:
+                  // BUG: Diagnostic contains:
                   bar = null;
-              public static String foo() { return foo; }
+
+              public static String foo() {
+                return foo;
+              }
             }
             """)
         .doTest();
@@ -698,16 +754,19 @@ public class UnicodeBytes {
             "Utf8Handling.java",
             """
             package unusedvars;
+
             public class Utf8Handling {
               private int foo = 1;
+
               public void test() {
-                System.out.println("\u5e83");
+                System.out.println("広");
                 for (int i = 0; i < 10; ++i) {
-                // BUG: Diagnostic contains: is never read
+                  // BUG: Diagnostic contains: is never read
                   int notUsedLocal = calculate();
                 }
                 System.out.println(foo);
               }
+
               int calculate() {
                 return ++foo;
               }
@@ -723,11 +782,16 @@ public class UnicodeBytes {
             "A.java",
             """
             package unusedvars;
+
             class A {
-              { foo(1); }
+              {
+                foo(1);
+              }
+
               @B
               private static void foo(int a) {}
             }
+
             @interface B {}
             """)
         .setArgs(
@@ -742,11 +806,14 @@ public class UnicodeBytes {
             "Test.java",
             """
             package unusedvars;
+
             import java.util.Map;
             import java.util.HashMap;
+
             public class Test {
               private int next = 1;
               private Map<String, Integer> xs = new HashMap<>();
+
               public int frobnicate(String s) {
                 Integer x = xs.get(s);
                 if (x == null) {
@@ -785,11 +852,14 @@ public class UnicodeBytes {
             "Test.java",
             """
             package unusedvars;
+
             import javax.inject.Inject;
+
             public class Test {
-              @Inject Test(
-                // BUG: Diagnostic contains:
-                String foo) {}
+              @Inject
+              Test(
+                  // BUG: Diagnostic contains:
+                  String foo) {}
             }
             """)
         .doTest();
@@ -802,12 +872,14 @@ public class UnicodeBytes {
             "Test.java",
             """
             package unusedvars;
+
             import com.google.inject.Provides;
+
             class Test {
               @Provides
               public String test(
-                // BUG: Diagnostic contains:
-                String foo) {
+                  // BUG: Diagnostic contains:
+                  String foo) {
                 return "test";
               }
             }
@@ -822,7 +894,9 @@ public class UnicodeBytes {
             "Test.java",
             """
             package unusedvars;
+
             import javax.inject.Inject;
+
             public class Test {
               @Inject Object foo;
               @Inject public Object bar;
@@ -838,10 +912,12 @@ public class UnicodeBytes {
             "Test.java",
             """
             import com.google.common.collect.ImmutableList;
+
             class Test {
               private final ImmutableList<Integer> foo = ImmutableList.of();
+
               void test() {
-                 ImmutableList<Integer> foo = ImmutableList.of();
+                ImmutableList<Integer> foo = ImmutableList.of();
               }
             }
             """)
@@ -867,10 +943,12 @@ public class UnicodeBytes {
             "Test.java",
             """
             import com.google.common.collect.ImmutableList;
+
             class Test {
               private final ImmutableList<Integer> foo = ImmutableList.of();
+
               void test() {
-                 ImmutableList<Integer> foo = ImmutableList.of();
+                ImmutableList<Integer> foo = ImmutableList.of();
               }
             }
             """)
@@ -893,6 +971,7 @@ public class UnicodeBytes {
             "Test.java",
             """
             import org.junit.rules.TestRule;
+
             class Test {
               private TestRule rule;
             }
@@ -908,6 +987,7 @@ public class UnicodeBytes {
             """
             class Test {
               int a;
+
               void test() {
                 Test o = new Test();
                 ((Test) o).a = 1;
@@ -915,7 +995,10 @@ public class UnicodeBytes {
                 Test p = new Test();
                 id(p).a = 1;
               }
-              Test id(Test t) { return t; }
+
+              Test id(Test t) {
+                return t;
+              }
             }
             """)
         .doTest();
@@ -929,6 +1012,7 @@ public class UnicodeBytes {
             """
             class Test {
               int a = foo(1);
+
               private int foo(int b) {
                 b = 1;
                 return 1;
@@ -956,9 +1040,18 @@ public class UnicodeBytes {
             """
             class Test {
               int a = foo(1, 2, 3) + bar(1, 2, 3) + baz(1, 2, 3);
-              private int foo(int a, int b, int c) { return a * b; }
-              private int bar(int a, int b, int c) { return b * c; }
-              private int baz(int a, int b, int c) { return a * c; }
+
+              private int foo(int a, int b, int c) {
+                return a * b;
+              }
+
+              private int bar(int a, int b, int c) {
+                return b * c;
+              }
+
+              private int baz(int a, int b, int c) {
+                return a * c;
+              }
             }
             """)
         .addOutputLines(
@@ -982,7 +1075,10 @@ public class UnicodeBytes {
             """
             class Test {
               int a = foo(1, 2, 3, 4);
-              private int foo(int a, int... b) { return a; }
+
+              private int foo(int a, int... b) {
+                return a;
+              }
             }
             """)
         .addOutputLines(
@@ -1004,7 +1100,10 @@ public class UnicodeBytes {
             """
             class Test {
               int a = foo(1);
-              private int foo(int a, int... b) { return a; }
+
+              private int foo(int a, int... b) {
+                return a;
+              }
             }
             """)
         .addOutputLines(
@@ -1028,9 +1127,11 @@ public class UnicodeBytes {
             enum Test {
               ONE("1", 1) {};
               private String a;
+
               private Test(String a, int x) {
                 this.a = a;
               }
+
               String a() {
                 return a;
               }
@@ -1062,8 +1163,8 @@ public class UnicodeBytes {
             """
             enum Test {
               ONE(1) {};
-              private Test(int x) {
-              }
+
+              private Test(int x) {}
             }
             """)
         .addOutputLines(
@@ -1105,6 +1206,7 @@ public class UnicodeBytes {
             """
             class Test {
               private int x = 1;
+
               public int a() {
                 x = a();
                 return 1;
@@ -1134,8 +1236,7 @@ public class UnicodeBytes {
             class Test {
               void foo() {
                 int a = 1;
-                if (hashCode() > 0)
-                  a = 2;
+                if (hashCode() > 0) a = 2;
               }
             }
             """)
@@ -1158,6 +1259,7 @@ public class UnicodeBytes {
             "Test.java",
             """
             package unusedvars;
+
             public class Test {
               public void test() {
                 Integer a = 1;
@@ -1177,6 +1279,7 @@ public class UnicodeBytes {
             "Test.java",
             """
             package unusedvars;
+
             public class Test {
               public int test() {
                 // BUG: Diagnostic contains: This assignment to the local variable
@@ -1201,6 +1304,7 @@ public class UnicodeBytes {
             "Test.java",
             """
             package unusedvars;
+
             public class Test {
               public void test() {
                 Integer a = 1;
@@ -1219,6 +1323,7 @@ public class UnicodeBytes {
             "Test.java",
             """
             package unusedvars;
+
             public class Test {
               public void test() {
                 Integer a = 1;
@@ -1250,6 +1355,7 @@ public class UnicodeBytes {
             "Test.java",
             """
             package unusedvars;
+
             public class Test {
               public String test() {
                 String a = null;
@@ -1281,6 +1387,7 @@ public class UnicodeBytes {
             "Test.java",
             """
             package unusedvars;
+
             public class Test {
               public void test() {
                 int a = 1;
@@ -1310,6 +1417,7 @@ public class UnicodeBytes {
             "Test.java",
             """
             package unusedvars;
+
             public class Test {
               public void test() {
                 int a = 1;
@@ -1340,6 +1448,7 @@ public class UnicodeBytes {
             "Test.java",
             """
             package unusedvars;
+
             public class Test {
               public int test() {
                 int a = 1;
@@ -1358,6 +1467,7 @@ public class UnicodeBytes {
             "Test.java",
             """
             package unusedvars;
+
             public class Test {
               public void test(int a) {
                 a = 2;
@@ -1383,6 +1493,7 @@ public class UnicodeBytes {
             "Test.java",
             """
             package unusedvars;
+
             public class Test {
               public int test(int a) {
                 a = 2;
@@ -1400,6 +1511,7 @@ public class UnicodeBytes {
             "Test.java",
             """
             package unusedvars;
+
             public class Test {
               public void test(Iterable<Integer> as) {
                 for (int a : as) {
@@ -1446,6 +1558,7 @@ public class UnicodeBytes {
             "Test.java",
             """
             package unusedvars;
+
             public class Test {
               public void test() {
                 int a;
@@ -1464,6 +1577,7 @@ public class UnicodeBytes {
             "Test.java",
             """
             package unusedvars;
+
             public class Test {
               public int frobnicate() {
                 int a = 1;
@@ -1484,14 +1598,19 @@ public class UnicodeBytes {
             "Unuseds.java",
             """
             package unusedvars;
+
             import java.io.IOException;
             import java.io.ObjectStreamException;
+
             public class Unuseds implements java.io.Serializable {
               private void readObject(java.io.ObjectInputStream in) throws IOException {}
+
               private void writeObject(java.io.ObjectOutputStream out) throws IOException {}
+
               private Object readResolve() {
                 return null;
               }
+
               private void readObjectNoData() throws ObjectStreamException {}
             }
             """)
@@ -1508,6 +1627,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import static java.util.stream.Collectors.toList;
+
 public class Test {
   public void f(List<List<String>> lists) {
     List<String> result =
@@ -1542,6 +1662,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import static java.util.stream.Collectors.toList;
+
 public class Test {
   public void f(List<List<String>> lists) {
     List<String> result =
@@ -1573,7 +1694,10 @@ public class Test {
     helper
         .addSourceLines(
             "SimpleRecord.java", //
-            "public record SimpleRecord (Integer foo, Long bar) {}")
+            """
+            //            public record SimpleRecord(Integer foo, Long bar) {}
+            //\
+            """)
         .expectNoDiagnostics()
         .doTest();
   }
@@ -1585,7 +1709,7 @@ public class Test {
             "SimpleClass.java",
             """
             public class SimpleClass {
-              public record SimpleRecord (Integer foo, Long bar) {}
+              public record SimpleRecord(Integer foo, Long bar) {}
             }
             """)
         .expectNoDiagnostics()
@@ -1599,7 +1723,7 @@ public class Test {
             "SimpleClass.java",
             """
             public class SimpleClass {
-              public record MyRecord (int foo) {
+              public record MyRecord(int foo) {
                 private static int a = 1;
                 private static int b = 1;
                 // BUG: Diagnostic contains: is never read
@@ -1629,7 +1753,7 @@ public class Test {
             "SimpleClass.java",
             """
             public class SimpleClass {
-              private record SimpleRecord (Integer foo, Long bar) {}
+              private record SimpleRecord(Integer foo, Long bar) {}
             }
             """)
         .expectNoDiagnostics()
@@ -1660,7 +1784,7 @@ public class Test {
             "SimpleClass.java",
             """
             public class SimpleClass {
-              private record SimpleRecord (Integer foo, Long bar) {
+              private record SimpleRecord(Integer foo, Long bar) {
                 private SimpleRecord(Integer foo, Long bar) {
                   this.foo = foo;
                   this.bar = bar;
@@ -1678,7 +1802,7 @@ public class Test {
         .addSourceLines(
             "SimpleRecord.java",
             """
-            public record SimpleRecord (int x) {
+            public record SimpleRecord(int x) {
               // BUG: Diagnostic contains: The parameter 'b' is never read
               private SimpleRecord(int a, int b) {
                 this(a);
@@ -1695,7 +1819,7 @@ public class Test {
             "SimpleClass.java",
             """
             public class SimpleClass {
-              public record SimpleRecord (Integer foo, Long bar) {
+              public record SimpleRecord(Integer foo, Long bar) {
                 void f() {
                   // BUG: Diagnostic contains: is never read
                   int x = foo;
@@ -1713,7 +1837,7 @@ public class Test {
             "Test.java",
             """
             public class Test {
-              public void test () {
+              public void test() {
                 Integer a = 1;
                 a = 2;
                 a = 3;
@@ -1759,6 +1883,7 @@ public class Test {
             "Test.java",
             """
             import android.os.Parcelable;
+
             class Test {
               private static final Parcelable.Creator<Test> CREATOR = null;
             }
@@ -1773,7 +1898,10 @@ public class Test {
             "Test.java",
             """
             class Test {
-              private int foo(int a, int b) { return b; }
+              private int foo(int a, int b) {
+                return b;
+              }
+
               void test() {
                 foo(foo(1, 2), 2);
               }
@@ -1801,6 +1929,7 @@ public class Test {
             import java.util.Collections;
             import java.util.Comparator;
             import java.util.List;
+
             class Test {
               public void test(List<Integer> xs) {
                 // BUG: Diagnostic contains: 'b' is never read
@@ -1809,8 +1938,12 @@ public class Test {
               }
 
               public class TestComparator implements Comparator<Integer> {
+                @Override
                 // BUG: Diagnostic contains: 'b' is never read
-                @Override public int compare(Integer a, Integer b) { return a; }
+                public int compare(Integer a, Integer b) {
+                  return a;
+                }
+
                 public void foo(int a, int b) {}
               }
             }
@@ -1827,12 +1960,14 @@ public class Test {
             import java.util.Collections;
             import java.util.Comparator;
             import java.util.List;
+
             class Test {
               public void test(List<Integer> xs) {
                 var unusedLocal =
-                    xs.stream().sorted(
-                // BUG: Diagnostic contains: 'b' is never read
-                        (a, b) -> a > a ? 1 : 0);
+                    xs.stream()
+                        .sorted(
+                            // BUG: Diagnostic contains: 'b' is never read
+                            (a, b) -> a > a ? 1 : 0);
               }
             }
             """)
@@ -1848,13 +1983,19 @@ public class Test {
             import java.util.Collections;
             import java.util.Comparator;
             import java.util.List;
+
             class Test {
               public void test(List<Integer> xs) {
                 Collections.sort(xs, (a, b) -> a > a ? 1 : 0);
                 Collections.sort(xs, (a, unused) -> a > a ? 1 : 0);
-                Collections.sort(xs, new Comparator<Integer>() {
-                    @Override public int compare(Integer a, Integer b) { return a; }
-                });
+                Collections.sort(
+                    xs,
+                    new Comparator<Integer>() {
+                      @Override
+                      public int compare(Integer a, Integer b) {
+                        return a;
+                      }
+                    });
               }
             }
             """)
@@ -1872,12 +2013,14 @@ public class Test {
               private static class Base {
                 protected void doStuff(String usedInDescendants) {}
               }
+
               private static class Descendant extends Base {
                 @Override
                 protected void doStuff(String actuallyUsed) {
                   System.out.println(actuallyUsed);
                 }
               }
+
               public static void main(String[] args) {
                 Base b = new Descendant();
                 b.doStuff("some string");

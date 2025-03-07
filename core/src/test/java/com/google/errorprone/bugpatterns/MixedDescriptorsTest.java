@@ -40,10 +40,11 @@ public final class MixedDescriptorsTest {
             import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
             import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
             import com.google.protobuf.Descriptors.Descriptor;
+
             final class Test {
               void test(Descriptor d) {
-                TestFieldProtoMessage.getDescriptor().findFieldByNumber(
-                    TestFieldProtoMessage.FIELD_FIELD_NUMBER);
+                TestFieldProtoMessage.getDescriptor()
+                    .findFieldByNumber(TestFieldProtoMessage.FIELD_FIELD_NUMBER);
                 TestFieldProtoMessage.getDescriptor().findFieldByNumber(1);
                 d.findFieldByNumber(TestFieldProtoMessage.FIELD_FIELD_NUMBER);
               }
@@ -60,11 +61,12 @@ public final class MixedDescriptorsTest {
             """
             import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
             import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
+
             final class Test {
               void test() {
-                // BUG: Diagnostic contains:
-                TestFieldProtoMessage.getDescriptor().findFieldByNumber(
-                    TestProtoMessage.MULTI_FIELD_FIELD_NUMBER);
+                TestFieldProtoMessage.getDescriptor()
+                    // BUG: Diagnostic contains:
+                    .findFieldByNumber(TestProtoMessage.MULTI_FIELD_FIELD_NUMBER);
               }
             }
             """)

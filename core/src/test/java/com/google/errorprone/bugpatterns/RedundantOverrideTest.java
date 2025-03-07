@@ -34,8 +34,9 @@ public final class RedundantOverrideTest {
             "Test.java",
             """
             class Test extends foo.Bar {
+              @Override
               // BUG: Diagnostic contains:
-              @Override public boolean frob(Object o) {
+              public boolean frob(Object o) {
                 return super.frob(o);
               }
             }
@@ -44,6 +45,7 @@ public final class RedundantOverrideTest {
             "foo/Bar.java",
             """
             package foo;
+
             public class Bar {
               public boolean frob(Object o) {
                 return false;
@@ -61,7 +63,8 @@ public final class RedundantOverrideTest {
             """
             class Test extends foo.Bar {
               /** Adding javadoc. */
-              @Override public boolean frob(Object o) {
+              @Override
+              public boolean frob(Object o) {
                 return super.frob(o);
               }
             }
@@ -70,6 +73,7 @@ public final class RedundantOverrideTest {
             "foo/Bar.java",
             """
             package foo;
+
             public class Bar {
               public boolean frob(Object o) {
                 return false;
@@ -86,7 +90,8 @@ public final class RedundantOverrideTest {
             "Test.java",
             """
             class Test extends foo.Bar {
-              @Override public boolean frob(Object o) {
+              @Override
+              public boolean frob(Object o) {
                 // TODO..
                 return super.frob(o);
               }
@@ -96,6 +101,7 @@ public final class RedundantOverrideTest {
             "foo/Bar.java",
             """
             package foo;
+
             public class Bar {
               public boolean frob(Object o) {
                 return false;
@@ -119,7 +125,8 @@ public final class RedundantOverrideTest {
             "B.java",
             """
             class B extends A {
-              @Override public void swap(int a, int b) {
+              @Override
+              public void swap(int a, int b) {
                 super.swap(b, a);
               }
             }
@@ -141,7 +148,8 @@ public final class RedundantOverrideTest {
             "B.java",
             """
             class B extends A {
-              @Override public void swap(int a, int b) {
+              @Override
+              public void swap(int a, int b) {
                 super.swap(a, b);
               }
             }
@@ -165,9 +173,11 @@ public final class RedundantOverrideTest {
             "B.java",
             """
             import javax.annotation.Nullable;
+
             class B extends A {
               @Nullable
-              @Override public Object swap(int a, int b) {
+              @Override
+              public Object swap(int a, int b) {
                 return super.swap(a, b);
               }
             }
@@ -182,8 +192,10 @@ public final class RedundantOverrideTest {
             "A.java",
             """
             import javax.annotation.Nullable;
+
             class A {
-              @Nullable Object swap(int a, int b) {
+              @Nullable
+              Object swap(int a, int b) {
                 return null;
               }
             }
@@ -192,10 +204,12 @@ public final class RedundantOverrideTest {
             "B.java",
             """
             import javax.annotation.Nullable;
+
             class B extends A {
               @Nullable
+              @Override
               // BUG: Diagnostic contains:
-              @Override Object swap(int a, int b) {
+              Object swap(int a, int b) {
                 return super.swap(a, b);
               }
             }
@@ -210,8 +224,10 @@ public final class RedundantOverrideTest {
             "A.java",
             """
             import javax.annotation.Nullable;
+
             class A {
-              @Nullable Object swap(int a, int b) {
+              @Nullable
+              Object swap(int a, int b) {
                 return null;
               }
             }
@@ -220,8 +236,10 @@ public final class RedundantOverrideTest {
             "B.java",
             """
             import javax.annotation.Nullable;
+
             class B extends A {
-              @Override Object swap(int a, int b) {
+              @Override
+              Object swap(int a, int b) {
                 return super.swap(a, b);
               }
             }
@@ -245,9 +263,11 @@ public final class RedundantOverrideTest {
             "B.java",
             """
             import javax.annotation.Nullable;
+
             class B extends A {
               @Nullable
-              @Override Object swap(int a, int b) {
+              @Override
+              Object swap(int a, int b) {
                 return super.swap(a, b);
               }
             }
@@ -262,6 +282,7 @@ public final class RedundantOverrideTest {
             "A.java",
             """
             package foo;
+
             public class A {
               protected void swap() {}
             }
@@ -270,8 +291,10 @@ public final class RedundantOverrideTest {
             "B.java",
             """
             package bar;
+
             public class B extends foo.A {
-              @Override protected void swap() {
+              @Override
+              protected void swap() {
                 super.swap();
               }
             }
@@ -286,6 +309,7 @@ public final class RedundantOverrideTest {
             "A.java",
             """
             package foo;
+
             class A {
               protected void swap() {}
             }
@@ -294,9 +318,11 @@ public final class RedundantOverrideTest {
             "B.java",
             """
             package foo;
+
             class B extends A {
+              @Override
               // BUG: Diagnostic contains:
-              @Override protected void swap() {
+              protected void swap() {
                 super.swap();
               }
             }
@@ -311,12 +337,14 @@ public final class RedundantOverrideTest {
             "DemoAnnotation.java",
             """
             package foo;
+
             @interface DemoAnnotation {}
             """)
         .addSourceLines(
             "A.java",
             """
             package foo;
+
             class A {
               protected void swap(int a) {}
             }
@@ -325,6 +353,7 @@ public final class RedundantOverrideTest {
             "B.java",
             """
             package foo;
+
             class B extends A {
               @Override
               protected void swap(@DemoAnnotation int a) {
@@ -342,12 +371,14 @@ public final class RedundantOverrideTest {
             "DemoAnnotation.java",
             """
             package foo;
+
             @interface DemoAnnotation {}
             """)
         .addSourceLines(
             "A.java",
             """
             package foo;
+
             class A {
               protected void swap(@DemoAnnotation int a) {}
             }
@@ -356,6 +387,7 @@ public final class RedundantOverrideTest {
             "B.java",
             """
             package foo;
+
             class B extends A {
               @Override
               protected void swap(int a) {

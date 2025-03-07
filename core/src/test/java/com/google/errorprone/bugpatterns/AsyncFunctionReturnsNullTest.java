@@ -69,7 +69,7 @@ public class AsyncFunctionReturnsNullTest {
                   return immediateFuture(input.toString());
                 }
               }
-            }\
+            }
             """)
         .doTest();
   }

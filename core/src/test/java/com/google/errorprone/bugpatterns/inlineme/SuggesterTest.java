@@ -1350,8 +1350,8 @@ public class Client {
               public void before(int arg0, int arg1) {
                 after(arg0, arg1);
               }
-              public void after(int arg0, int arg1) {
-              }
+
+              public void after(int arg0, int arg1) {}
             }
             """)
         .expectUnchanged()
@@ -1369,8 +1369,8 @@ public class Client {
               public void before(int int0, int int1) {
                 after(int0, int1);
               }
-              public void after(int int0, int int1) {
-              }
+
+              public void after(int int0, int int1) {}
             }
             """)
         .addOutputLines(

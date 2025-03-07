@@ -81,7 +81,6 @@ public class EmptyCatchTest {
             """
             package com.google.errorprone.bugpatterns;
 
-
             import java.io.FileNotFoundException;
 
             /**
@@ -189,7 +188,7 @@ public class EmptyCatchTest {
                   System.out.println("Caught an exception: " + t);
                 }
               }
-            }\
+            }
             """)
         .doTest();
   }
@@ -214,7 +213,7 @@ public class EmptyCatchTest {
               public void testNG() {
                 try {
                   System.err.println();
-                // BUG: Diagnostic contains:
+                  // BUG: Diagnostic contains:
                 } catch (Exception doNotCare) {
                 }
               }

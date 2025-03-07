@@ -95,6 +95,7 @@ public class MoreThanOneScopeAnnotationOnClassNegativeCases {
 
   /** Class has no annotation. */
   public class TestClass1 {}
+
   /** Class has a single non scoping annotation. */
   @SuppressWarnings("foo")
   public class TestClass2 {}
@@ -146,7 +147,7 @@ public class MoreThanOneScopeAnnotationOnClassNegativeCases {
   /** Suppression through secondary name */
   @SuppressWarnings("MoreThanOneScopeAnnotationOnClass")
   public class TestClass6 {}
-}\
+}
 """)
         .doTest();
   }

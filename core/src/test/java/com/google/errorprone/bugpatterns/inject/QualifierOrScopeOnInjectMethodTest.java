@@ -41,9 +41,12 @@ public class QualifierOrScopeOnInjectMethodTest {
             """
             import javax.inject.Inject;
             import javax.inject.Named;
+
             class Foo {
-              // BUG: Diagnostic contains: @Inject  void someMethod() {}
-              @Inject @Named("bar") void someMethod() {}
+              @Inject
+              // BUG: Diagnostic contains: remove
+              @Named("bar")
+              void someMethod() {}
             }
             """)
         .doTest();
@@ -58,8 +61,12 @@ public class QualifierOrScopeOnInjectMethodTest {
             import javax.inject.Inject;
             import javax.inject.Named;
             import javax.inject.Singleton;
+
             class Foo {
-              @Inject @Singleton @Named("bar") Foo() {}
+              @Inject
+              @Singleton
+              @Named("bar")
+              Foo() {}
             }
             """)
         .addOutputLines(
@@ -84,9 +91,14 @@ public class QualifierOrScopeOnInjectMethodTest {
             import dagger.Provides;
             import dagger.Module;
             import javax.inject.Named;
+
             @Module
             class Foo {
-              @Provides @Named("bar") int something() { return 42; }
+              @Provides
+              @Named("bar")
+              int something() {
+                return 42;
+              }
             }
             """)
         .doTest();

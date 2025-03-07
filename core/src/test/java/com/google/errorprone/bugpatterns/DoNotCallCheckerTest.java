@@ -44,9 +44,14 @@ public class DoNotCallCheckerTest {
             "Test.java",
             """
             import com.google.errorprone.annotations.DoNotCall;
+
             class Test {
-              @DoNotCall("satisfying explanation") final void f() {}
-              @DoNotCall final void g() {}
+              @DoNotCall("satisfying explanation")
+              final void f() {}
+
+              @DoNotCall
+              final void g() {}
+
               void m() {
                 // BUG: Diagnostic contains:
                 // Test.f() should not be called: satisfying explanation
@@ -70,6 +75,7 @@ public class DoNotCallCheckerTest {
             "Test.java",
             """
             import java.util.List;
+
             class Test {
               void foo() {
                 List<Integer> xs = ImmutableList.of();
@@ -89,6 +95,7 @@ public class DoNotCallCheckerTest {
             "Test.java",
             """
             import java.util.List;
+
             class Test {
               void foo() {
                 List<Integer> xs;
@@ -112,17 +119,23 @@ public class DoNotCallCheckerTest {
         .addSourceLines(
             "ImmutableCollection.java",
             """
-import com.google.errorprone.annotations.DoNotCall;
-import java.util.List;
-abstract class ImmutableCollection<T> implements java.util.Collection<T> {
-  @DoNotCall @Override public final boolean add(T t) { throw new UnsupportedOperationException(); }
-}
-""")
+            import com.google.errorprone.annotations.DoNotCall;
+            import java.util.List;
+
+            abstract class ImmutableCollection<T> implements java.util.Collection<T> {
+              @DoNotCall
+              @Override
+              public final boolean add(T t) {
+                throw new UnsupportedOperationException();
+              }
+            }
+            """)
         .addSourceLines(
             "ImmutableList.java",
             """
             import com.google.errorprone.annotations.DoNotCall;
             import java.util.List;
+
             abstract class ImmutableList<T> extends ImmutableCollection<T> implements List<T> {
               public static <T> ImmutableList<T> of() {
                 return null;
@@ -140,6 +153,7 @@ abstract class ImmutableCollection<T> implements java.util.Collection<T> {
             import com.google.common.collect.ImmutableList;
             import java.util.ArrayList;
             import java.util.List;
+
             class Test {
               void foo() {
                 List<Integer> xs;
@@ -162,10 +176,14 @@ abstract class ImmutableCollection<T> implements java.util.Collection<T> {
             "Test.java",
             """
             import com.google.errorprone.annotations.DoNotCall;
+
             public class Test {
+              @DoNotCall
               // BUG: Diagnostic contains: should be final
-              @DoNotCall public void f() {}
-              @DoNotCall public final void g() {}
+              public void f() {}
+
+              @DoNotCall
+              public final void g() {}
             }
             """)
         .doTest();
@@ -178,16 +196,19 @@ abstract class ImmutableCollection<T> implements java.util.Collection<T> {
             "A.java",
             """
             import com.google.errorprone.annotations.DoNotCall;
+
             public interface A {
-              @DoNotCall public void f();
+              @DoNotCall
+              public void f();
             }
             """)
         .addSourceLines(
             "B.java",
             """
             public class B implements A {
+              @Override
               // BUG: Diagnostic contains: overrides f in A which is annotated
-              @Override public void f() {}
+              public void f() {}
             }
             """)
         .doTest();
@@ -200,16 +221,21 @@ abstract class ImmutableCollection<T> implements java.util.Collection<T> {
             "A.java",
             """
             import com.google.errorprone.annotations.DoNotCall;
+
             public interface A {
-              @DoNotCall public void f();
+              @DoNotCall
+              public void f();
             }
             """)
         .addSourceLines(
             "B.java",
             """
             import com.google.errorprone.annotations.DoNotCall;
+
             public class B implements A {
-              @DoNotCall @Override public final void f() {}
+              @DoNotCall
+              @Override
+              public final void f() {}
             }
             """)
         .doTest();
@@ -228,15 +254,16 @@ abstract class ImmutableCollection<T> implements java.util.Collection<T> {
             "I.java",
             """
             import com.google.errorprone.annotations.DoNotCall;
+
             public interface I {
-              @DoNotCall public String toString();
+              @DoNotCall
+              public String toString();
             }
             """)
         .addSourceLines(
             "B.java",
             """
-            public class B implements I {
-            }
+            public class B implements I {}
             """)
         .addSourceLines(
             "Test.java",
@@ -260,8 +287,10 @@ abstract class ImmutableCollection<T> implements java.util.Collection<T> {
             "Test.java",
             """
             import com.google.errorprone.annotations.DoNotCall;
+
             public final class Test {
-              @DoNotCall public void f() {}
+              @DoNotCall
+              public void f() {}
             }
             """)
         .doTest();
@@ -274,9 +303,11 @@ abstract class ImmutableCollection<T> implements java.util.Collection<T> {
             "Test.java",
             """
             import com.google.errorprone.annotations.DoNotCall;
+
             public final class Test {
+              @DoNotCall
               // BUG: Diagnostic contains: private method
-              @DoNotCall private void f() {}
+              private void f() {}
             }
             """)
         .doTest();
@@ -298,7 +329,8 @@ abstract class ImmutableCollection<T> implements java.util.Collection<T> {
             """
 class Test {
   void m() {
-    // BUG: Diagnostic contains: com.google.errorprone.bugpatterns.DoNotCallCheckerTest.DNCTest.f() should not be called, see its documentation for details.
+    // BUG: Diagnostic contains: com.google.errorprone.bugpatterns.DoNotCallCheckerTest.DNCTest.f()
+    // should not be called, see its documentation for details.
     com.google.errorprone.bugpatterns.DoNotCallCheckerTest.DNCTest.f();
   }
 }
@@ -336,6 +368,7 @@ class Test {
             """
             import java.sql.Date;
             import java.time.Instant;
+
             public class TestClass {
               public void badApis(Date date) {
                 // BUG: Diagnostic contains: toLocalDate()
@@ -357,6 +390,7 @@ class Test {
             "TestClass.java",
             """
             import java.sql.Date;
+
             public class TestClass {
               public void badApis(Date date) {
                 // BUG: Diagnostic contains: DoNotCall
@@ -382,6 +416,7 @@ class Test {
             "TestClass.java",
             """
             import java.sql.Date;
+
             public class TestClass {
               public void badApis(Date date) {
                 // BUG: Diagnostic contains: DoNotCall
@@ -404,6 +439,7 @@ class Test {
             """
             import java.time.Instant;
             import java.util.Date;
+
             public class TestClass {
               public void badApis() {
                 Date date = new java.sql.Date(1234567890L);
@@ -429,6 +465,7 @@ class Test {
             """
             import java.sql.Time;
             import java.time.Instant;
+
             public class TestClass {
               public void badApis(Time time) {
                 // BUG: Diagnostic contains: toLocalTime()
@@ -451,6 +488,7 @@ class Test {
             "TestClass.java",
             """
             import java.sql.Time;
+
             public class TestClass {
               public void badApis(Time time) {
                 // BUG: Diagnostic contains: DoNotCall
@@ -478,6 +516,7 @@ class Test {
             "TestClass.java",
             """
             import java.sql.Time;
+
             public class TestClass {
               public void badApis(Time time) {
                 // BUG: Diagnostic contains: DoNotCall
@@ -500,6 +539,7 @@ class Test {
             """
             import java.time.Instant;
             import java.util.Date;
+
             public class TestClass {
               public void badApis() {
                 Date time = new java.sql.Time(1234567890L);
@@ -526,6 +566,7 @@ class Test {
             """
             import java.util.TreeMap;
             import java.util.TreeSet;
+
             public class Test {
               public void foo(TreeMap<String, String> map, TreeSet<String> set) {
                 // BUG: Diagnostic contains: DoNotCall
@@ -552,6 +593,7 @@ class Test {
             "Test.java",
             """
             import java.util.concurrent.locks.ReentrantReadWriteLock;
+
             public class Test {
               public void foo() {
                 ReentrantReadWriteLock.ReadLock lock = new ReentrantReadWriteLock().readLock();
@@ -572,6 +614,7 @@ class Test {
             "Test.java",
             """
             import java.util.concurrent.ThreadLocalRandom;
+
             public class Test {
               public void foo() {
                 ThreadLocalRandom random = ThreadLocalRandom.current();
@@ -591,6 +634,7 @@ class Test {
             """
             import java.util.concurrent.ThreadLocalRandom;
             import java.util.Optional;
+
             public class Test {
               public void foo(Optional<Long> x) {
                 ThreadLocalRandom random = ThreadLocalRandom.current();
@@ -609,8 +653,10 @@ class Test {
             "Test.java",
             """
             import java.util.List;
+
             class Test<T extends java.util.Collection<Object>> {
-              @Override public boolean equals(Object o) {
+              @Override
+              public boolean equals(Object o) {
                 T foo = (T) o;
                 return foo.equals(1);
               }
@@ -625,15 +671,15 @@ class Test {
         .addSourceLines(
             "Test.java",
             """
-            class Test{
-             void f() {
-               try {
-                 throw new Exception();
-               } catch (Exception ex) {
-                 // BUG: Diagnostic contains: getClassName
-                 ex.getStackTrace()[0].getClass().getSimpleName();
-               }
-             }
+            class Test {
+              void f() {
+                try {
+                  throw new Exception();
+                } catch (Exception ex) {
+                  // BUG: Diagnostic contains: getClassName
+                  ex.getStackTrace()[0].getClass().getSimpleName();
+                }
+              }
             }
             """)
         .doTest();
@@ -645,11 +691,11 @@ class Test {
         .addSourceLines(
             "Test.java",
             """
-            class Test{
-             void f(StackWalker w) {
-               // BUG: Diagnostic contains: getCallerClass
-               w.getClass();
-             }
+            class Test {
+              void f(StackWalker w) {
+                // BUG: Diagnostic contains: getCallerClass
+                w.getClass();
+              }
             }
             """)
         .doTest();
@@ -662,11 +708,12 @@ class Test {
             "Test.java",
             """
             import java.lang.StackWalker.StackFrame;
-            class Test{
-             void f(StackFrame f) {
-               // BUG: Diagnostic contains: getClassName
-               f.getClass();
-             }
+
+            class Test {
+              void f(StackFrame f) {
+                // BUG: Diagnostic contains: getClassName
+                f.getClass();
+              }
             }
             """)
         .doTest();
@@ -679,11 +726,12 @@ class Test {
             "Test.java",
             """
             import java.lang.reflect.Constructor;
-            class Test{
-             void f(Constructor<?> c) {
-               // BUG: Diagnostic contains: getDeclaringClass
-               c.getClass();
-             }
+
+            class Test {
+              void f(Constructor<?> c) {
+                // BUG: Diagnostic contains: getDeclaringClass
+                c.getClass();
+              }
             }
             """)
         .doTest();
@@ -696,11 +744,12 @@ class Test {
             "Test.java",
             """
             import java.lang.reflect.Field;
-            class Test{
-             void f(Field f) {
-               // BUG: Diagnostic contains: getDeclaringClass
-               f.getClass();
-             }
+
+            class Test {
+              void f(Field f) {
+                // BUG: Diagnostic contains: getDeclaringClass
+                f.getClass();
+              }
             }
             """)
         .doTest();
@@ -713,11 +762,12 @@ class Test {
             "Test.java",
             """
             import java.lang.reflect.Method;
-            class Test{
-             void f(Method m) {
-               // BUG: Diagnostic contains: getDeclaringClass
-               m.getClass();
-             }
+
+            class Test {
+              void f(Method m) {
+                // BUG: Diagnostic contains: getDeclaringClass
+                m.getClass();
+              }
             }
             """)
         .doTest();
@@ -730,11 +780,12 @@ class Test {
             "Test.java",
             """
             import java.beans.BeanDescriptor;
-            class Test{
-             void f(BeanDescriptor b) {
-               // BUG: Diagnostic contains: getBeanClass
-               b.getClass();
-             }
+
+            class Test {
+              void f(BeanDescriptor b) {
+                // BUG: Diagnostic contains: getBeanClass
+                b.getClass();
+              }
             }
             """)
         .doTest();
@@ -748,13 +799,14 @@ class Test {
             """
             import java.lang.management.LockInfo;
             import java.lang.management.MonitorInfo;
-            class Test{
-             void f(LockInfo l, MonitorInfo m) {
-               // BUG: Diagnostic contains: getClassName
-               l.getClass();
-               // BUG: Diagnostic contains: getClassName
-               m.getClass();
-             }
+
+            class Test {
+              void f(LockInfo l, MonitorInfo m) {
+                // BUG: Diagnostic contains: getClassName
+                l.getClass();
+                // BUG: Diagnostic contains: getClassName
+                m.getClass();
+              }
             }
             """)
         .doTest();
@@ -767,11 +819,12 @@ class Test {
             "Test.java",
             """
             import java.lang.reflect.ParameterizedType;
-            class Test{
-             void f(ParameterizedType t) {
-               // BUG: Diagnostic contains: getRawType
-               t.getClass();
-             }
+
+            class Test {
+              void f(ParameterizedType t) {
+                // BUG: Diagnostic contains: getRawType
+                t.getClass();
+              }
             }
             """)
         .doTest();
@@ -784,11 +837,12 @@ class Test {
             "Test.java",
             """
             import com.google.common.reflect.ClassPath.ClassInfo;
-            class Test{
-             void f(ClassInfo i) {
-               // BUG: Diagnostic contains: getName
-               i.getClass();
-             }
+
+            class Test {
+              void f(ClassInfo i) {
+                // BUG: Diagnostic contains: getName
+                i.getClass();
+              }
             }
             """)
         .doTest();
@@ -801,11 +855,12 @@ class Test {
             "Test.java",
             """
             import com.google.common.reflect.TypeToken;
-            class Test{
-             void f(TypeToken<?> t) {
-               // BUG: Diagnostic contains: getRawType
-               t.getClass();
-             }
+
+            class Test {
+              void f(TypeToken<?> t) {
+                // BUG: Diagnostic contains: getRawType
+                t.getClass();
+              }
             }
             """)
         .doTest();
@@ -818,10 +873,10 @@ class Test {
             "Test.java",
             """
             class Test {
-             void f(Thread t) {
-               // BUG: Diagnostic contains: start
-               t.run();
-             }
+              void f(Thread t) {
+                // BUG: Diagnostic contains: start
+                t.run();
+              }
             }
             """)
         .doTest();
@@ -834,9 +889,10 @@ class Test {
             "Test.java",
             """
             class Test extends Thread {
-             @Override public void run() {
-               super.run();
-             }
+              @Override
+              public void run() {
+                super.run();
+              }
             }
             """)
         .doTest();

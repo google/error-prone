@@ -54,7 +54,7 @@ public class FallThroughTest {
                       } finally {
                         z++;
                       }
-                      // BUG: Diagnostic contains:
+                    // BUG: Diagnostic contains:
                     case 1:
                       return -1;
                     default:
@@ -77,7 +77,7 @@ public class FallThroughTest {
                       } catch (Exception e) {
                         log(e); // don't throw
                       }
-                      // BUG: Diagnostic contains:
+                    // BUG: Diagnostic contains:
                     case 1:
                       return -1;
                     default:
@@ -98,16 +98,16 @@ public class FallThroughTest {
                   switch (a) {
                     case 1:
                       System.out.println("1");
-                      // BUG: Diagnostic contains:
+                    // BUG: Diagnostic contains:
                     case 2:
                       System.out.println("2");
-                      // BUG: Diagnostic contains:
+                    // BUG: Diagnostic contains:
                     default:
                   }
                   return 0;
                 }
               }
-            }\
+            }
             """)
         .doTest();
   }
@@ -133,7 +133,7 @@ public class FallThroughTest {
                   switch (a) {
                     case 1:
                       System.out.println("1");
-                      // fall through
+                    // fall through
                     case 2:
                       System.out.println("2");
                       break;
@@ -263,7 +263,7 @@ public class FallThroughTest {
                   }
                 }
               }
-            }\
+            }
             """)
         .doTest();
   }

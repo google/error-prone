@@ -88,44 +88,55 @@ public class UnsafeWildcardTest {
             "Test.java",
             """
             import java.util.List;
+
             class Test<T> {
               static class WithBound<U extends Number> {}
+
               public WithBound<? super T> basic() {
                 // BUG: Diagnostic contains: Cast to wildcard type unsafe
                 return null;
               }
+
               public WithBound<? super T> inParens() {
                 // BUG: Diagnostic contains: Cast to wildcard type unsafe
                 return (null);
               }
+
               public WithBound<? super T> cast() {
                 // BUG: Diagnostic contains: Cast to wildcard type unsafe
                 return (WithBound<? super T>) null;
               }
+
               public WithBound<? super T> inTernary(boolean x, WithBound<? super T> dflt) {
                 // BUG: Diagnostic contains: Cast to wildcard type unsafe
                 return x ? null : dflt;
               }
+
               public WithBound<? super T> allNullTernary(boolean x) {
                 // BUG: Diagnostic contains: Cast to wildcard type unsafe
                 return x ? null : null;
               }
+
               public WithBound<? super T> parensInTernary(boolean x) {
                 // BUG: Diagnostic contains: Cast to wildcard type unsafe
                 return x ? (null) : null;
               }
+
               public WithBound<? super T> parensAroundTernary(boolean x) {
                 // BUG: Diagnostic contains: Cast to wildcard type unsafe
                 return (x ? null : null);
               }
+
               public List<WithBound<? super T>> nestedWildcard() {
                 // BUG: Diagnostic contains: Cast to wildcard type unsafe
                 return null;
               }
+
               public List<? extends WithBound<? super T>> extendsWildcard() {
                 // BUG: Diagnostic contains: Cast to wildcard type unsafe
                 return null;
               }
+
               public List<? super WithBound<? super T>> superWildcard() {
                 // BUG: Diagnostic contains: Cast to wildcard type unsafe
                 return null;
@@ -142,31 +153,40 @@ public class UnsafeWildcardTest {
             "Test.java",
             """
             import java.util.List;
+
             class Test {
               public String basic() {
                 return null;
               }
+
               public String inParens() {
                 return (null);
               }
+
               public String inTernary(boolean x) {
                 return x ? null : "foo";
               }
+
               public String allNullTernary(boolean x) {
                 return x ? null : null;
               }
+
               public String parensInTernary(boolean x) {
                 return x ? (null) : "foo";
               }
+
               public String parensAroundTernary(boolean x) {
                 return (x ? null : "foo");
               }
+
               public List<String> typearg() {
                 return null;
               }
+
               public List<? extends String> extendsWildcard() {
                 return null;
               }
+
               public List<? super String> superWildcardNoImplicitBound() {
                 return null;
               }
@@ -183,18 +203,24 @@ public class UnsafeWildcardTest {
             """
             import java.util.List;
             import java.util.function.Function;
+
             class Test {
               public Function<String, String> basic() {
                 return x -> null;
               }
+
               public Function<String, String> inParens() {
                 return x -> (null);
               }
+
               public Function<Boolean, String> inTernary() {
                 return x -> x ? null : "foo";
               }
+
               public Function<String, String> returnInLambda() {
-                return x -> { return null; };
+                return x -> {
+                  return null;
+                };
               }
             }
             """)
@@ -209,22 +235,30 @@ public class UnsafeWildcardTest {
             """
             import java.util.List;
             import java.util.function.Function;
+
             class Test {
               class WithBound<T extends Number> {}
+
               public Function<String, List<? super String>> contra() {
                 return s -> null;
               }
+
               public Function<Integer, WithBound<? super Integer>> implicitOk() {
                 return i -> null;
               }
+
               public <U> Function<U, WithBound<? super U>> implicitPositive() {
                 // BUG: Diagnostic contains: Cast to wildcard type unsafe
                 return u -> null;
               }
+
               public <U> Function<U, WithBound<? super U>> returnInLambda() {
-                // BUG: Diagnostic contains: Cast to wildcard type unsafe
-                return u -> { return null; };
+                return u -> {
+                  // BUG: Diagnostic contains: Cast to wildcard type unsafe
+                  return null;
+                };
               }
+
               public <U> Function<U, WithBound<? super U>> nestedWildcard() {
                 // BUG: Diagnostic contains: Cast to wildcard type unsafe
                 return null;
@@ -241,22 +275,27 @@ public class UnsafeWildcardTest {
             "Test.java",
             """
             import java.util.List;
+
             class Test<S> {
               static class WithBound<U extends Number> {}
+
               class WildcardBound<T extends WithBound<? super S>> {
                 T bad() {
                   // We allow this and instead check instantiations below
                   return null;
                 }
               }
+
               WildcardBound<WithBound<? super S>> diamond() {
                 // BUG: Diagnostic contains: Unsafe wildcard type argument
                 return new WildcardBound<>();
               }
+
               WildcardBound<WithBound<? super S>> create() {
                 // BUG: Diagnostic contains: Unsafe wildcard type argument
                 return new WildcardBound<WithBound<? super S>>();
               }
+
               WildcardBound<WithBound<? super S>> none() {
                 // BUG: Diagnostic contains: Cast to wildcard type unsafe
                 return null;
@@ -273,8 +312,10 @@ public class UnsafeWildcardTest {
             "Test.java",
             """
             import java.util.List;
+
             class Test<T> {
               class WithBound<T extends Number> {}
+
               private String s;
               private List<String> xs = null;
               private List<? super String> ys;
@@ -286,6 +327,7 @@ public class UnsafeWildcardTest {
               // BUG: Diagnostic contains: Uninitialized field with unsafe wildcard
               private WithBound<? super T> uninitialized;
               private final WithBound<? super T> uninitializedFinal;
+
               Test() {
                 // BUG: Diagnostic contains: Cast to wildcard type unsafe
                 uninitializedFinal = null;
@@ -294,6 +336,7 @@ public class UnsafeWildcardTest {
                 // BUG: Diagnostic contains: Cast to wildcard type unsafe
                 initialized = null;
               }
+
               public void foo() {
                 List<? extends String> covariant = null;
                 List<? super String> contravariant = null;
@@ -371,18 +414,25 @@ public class UnsafeWildcardTest {
             """
             class Test<U> {
               class WithBound<T extends Number> {}
-              public Test() { this(null, null); }
+
+              public Test() {
+                this(null, null);
+              }
+
               public Test(WithBound<? super U> implicit) {}
+
               public Test(WithBound<Integer> xs, WithBound<? super Integer> contra) {
                 // BUG: Diagnostic contains: Cast to wildcard type unsafe
                 this(null);
               }
+
               class Sub<S> extends Test<S> {
                 Sub(WithBound<? super U> implicit) {
                   // BUG: Diagnostic contains: Cast to wildcard type unsafe
                   super(null);
                 }
               }
+
               static <U> Test<U> newClass() {
                 new Test<U>(null, null);
                 // BUG: Diagnostic contains: Cast to wildcard type unsafe
@@ -390,11 +440,13 @@ public class UnsafeWildcardTest {
                 // BUG: Diagnostic contains: Cast to wildcard type unsafe
                 return new Test<>(null);
               }
+
               static <U> Test<U> anonymous() {
                 // BUG: Diagnostic contains: Cast to wildcard type unsafe
                 new Test<U>(null) {};
                 return null;
               }
+
               void inner() {
                 // BUG: Diagnostic contains: Cast to wildcard type unsafe
                 new Sub<U>(null);
@@ -417,16 +469,22 @@ public class UnsafeWildcardTest {
             import java.io.Serializable;
             import java.util.AbstractList;
             import java.util.List;
+
             class Test {
               class WithBound<T extends Number> {}
+
               // BUG: Diagnostic contains: Unsafe wildcard type
               abstract class BadList<U> extends AbstractList<WithBound<? super U>> {}
-              abstract class BadListImpl<U> implements Serializable,
-                  // BUG: Diagnostic contains: Unsafe wildcard type
-                  List<WithBound<? super U>> {}
-              interface BadListItf<U> extends Serializable,
-                  // BUG: Diagnostic contains: Unsafe wildcard type
-                  List<WithBound<? super U>> {}
+
+              abstract class BadListImpl<U>
+                  implements Serializable,
+                      // BUG: Diagnostic contains: Unsafe wildcard type
+                      List<WithBound<? super U>> {}
+
+              interface BadListItf<U>
+                  extends Serializable,
+                      // BUG: Diagnostic contains: Unsafe wildcard type
+                      List<WithBound<? super U>> {}
             }
             """)
         .doTest();
@@ -495,12 +553,14 @@ public class UnsafeWildcardTest {
             """
             class Test {
               class WithBound<T extends Number> {}
+
               // BUG: Diagnostic matches: X
-              WithBound<? super Integer>[] simpleInitializer = { null };
+              WithBound<? super Integer>[] simpleInitializer = {null};
               // BUG: Diagnostic matches: X
-              WithBound<? super Integer>[][] nestedInitializer = { { null }, { null } };
+              WithBound<? super Integer>[][] nestedInitializer = {{null}, {null}};
               // BUG: Diagnostic matches: X
               WithBound<? super Integer>[][] emptyInitializer = {};
+
               void newArrays() {
                 // BUG: Diagnostic matches: X
                 Object[] a1 = new WithBound<? super Integer>[] {};
@@ -552,9 +612,11 @@ public class UnsafeWildcardTest {
             "MyIterable.java",
             """
             import java.util.List;
+
             interface MyIterable<E, T extends Iterable<E>> {
               static class Test<F, S extends List<F>> implements MyIterable<F, S> {
                 MyIterable<F, ? super S> parent;
+
                 public Test() {
                   this.parent = null;
                 }
@@ -571,10 +633,12 @@ public class UnsafeWildcardTest {
             "MyIterable.java",
             """
             import java.util.List;
+
             interface MyIterable<E, T extends List<E>> {
               // BUG: Diagnostic matches: X
               static class Test<F, S extends Iterable<F>> implements MyIterable<F, S> {
                 MyIterable<F, ? super S> parent;
+
                 public Test() {
                   this.parent = null;
                 }
@@ -602,7 +666,9 @@ public class UnsafeWildcardTest {
             """
             abstract class FBounded<T extends FBounded<T>> {
               public static final class Coll<E> extends FBounded<Coll<E>> {}
+
               public interface Listener<U extends FBounded<U>> {}
+
               public static <K> void shouldWork() {
                 Listener<? super Coll<K>> validListener = null;
                 // BUG: Diagnostic contains: Cast to wildcard type unsafe
@@ -623,7 +689,9 @@ public class UnsafeWildcardTest {
             """
             abstract class FBounded<T extends FBounded<T>> {
               public static final class Coll<E> extends FBounded<Coll<E>> {}
+
               public interface Listener<U extends FBounded<U>> {}
+
               public static <K> void shouldWork() {
                 // BUG: Diagnostic matches: X
                 Listener<? super String> listener = null;

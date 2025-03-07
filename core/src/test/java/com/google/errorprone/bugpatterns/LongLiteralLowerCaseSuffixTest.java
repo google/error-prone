@@ -34,6 +34,7 @@ public class LongLiteralLowerCaseSuffixTest {
       CompilationTestHelper.newInstance(LongLiteralLowerCaseSuffix.class, getClass());
 
   @Test
+  @SuppressWarnings("MisformattedTestData")
   public void positiveCase() {
     compilationHelper
         .addSourceLines(
@@ -41,9 +42,7 @@ public class LongLiteralLowerCaseSuffixTest {
             """
 package com.google.errorprone.bugpatterns.testdata;
 
-/**
- * Positive cases for {@link LongLiteralLowerCaseSuffix}.
- */
+/** Positive cases for {@link LongLiteralLowerCaseSuffix}. */
 public class LongLiteralLowerCaseSuffixPositiveCase1 {
 
   // This constant string includes non-ASCII characters to make sure that we're not confusing
@@ -116,8 +115,7 @@ public class LongLiteralLowerCaseSuffixPositiveCase1 {
     // BUG: Diagnostic contains: value = -  06543L
     long value = -  06543l;
   }
-
-}\
+}
 """)
         .doTest();
   }
@@ -217,9 +215,7 @@ public class LongLiteralLowerCaseSuffixPositiveCase2 {
             """
 package com.google.errorprone.bugpatterns.testdata;
 
-/**
- * Positive cases for {@link LongLiteralLowerCaseSuffix}.
- */
+/** Positive cases for {@link LongLiteralLowerCaseSuffix}. */
 public class LongLiteralLowerCaseSuffixPositiveCase1 {
 
   // This constant string includes non-ASCII characters to make sure that we're not confusing
@@ -244,7 +240,7 @@ public class LongLiteralLowerCaseSuffixPositiveCase1 {
 
   public void negativeExtraSpacesLowerCase() {
     // BUG: Diagnostic contains: value = -  123432L
-    long value = -  123432l;
+    long value = -123432l;
   }
 
   public void positiveHexLowerCase() {
@@ -270,7 +266,7 @@ public class LongLiteralLowerCaseSuffixPositiveCase1 {
 
   public void negativeHexExtraSpacesLowerCase() {
     // BUG: Diagnostic contains: value = -  0x8abcDEF0L
-    long value = -  0x8abcDEF0l;
+    long value = -0x8abcDEF0l;
   }
 
   public void positiveOctalLowerCase() {
@@ -290,10 +286,9 @@ public class LongLiteralLowerCaseSuffixPositiveCase1 {
 
   public void negativeOctalExtraSpacesLowerCase() {
     // BUG: Diagnostic contains: value = -  06543L
-    long value = -  06543l;
+    long value = -06543l;
   }
-
-}\
+}
 """)
         .doTest();
   }

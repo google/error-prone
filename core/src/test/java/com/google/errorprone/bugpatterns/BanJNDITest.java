@@ -198,7 +198,7 @@ class BanJNDIPositiveCases {
   private void callsList() throws NamingException {
     FakeDirContext.list(((Name) new Object()));
   }
-}\
+}
 """)
         .doTest();
   }
@@ -227,7 +227,7 @@ class BanJNDIPositiveCases {
   private void callsList() throws NamingException {
     FakeDirContext.list(((Name) new Object()));
   }
-}\
+}
 """)
         .expectUnchanged()
         .setArgs("-XepCompilingTestOnlyCode")

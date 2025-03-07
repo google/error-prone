@@ -167,10 +167,12 @@ public class FindIdentifiersTest {
             class Test {
               private static String s1;
               private String s2;
+
               private void doIt() {
                 // BUG: Diagnostic contains: [s1, s2]
                 String.format(s1 + s2);
               }
+
               private static void staticDoIt() {
                 // BUG: Diagnostic contains: [s1]
                 String.format(s1);
@@ -187,6 +189,7 @@ public class FindIdentifiersTest {
             "pkg/Super.java",
             """
             package pkg;
+
             public class Super {
               public String s1;
               protected String s2;
@@ -202,11 +205,13 @@ public class FindIdentifiersTest {
             "pkg/Sub.java",
             """
             package pkg;
+
             public class Sub extends Super {
               private void doIt() {
                 // BUG: Diagnostic contains: [s1, s2, s3, s5, s6, s7]
                 String.format(s1 + s2 + s3 + s5 + s6 + s7);
               }
+
               private static void doItStatically() {
                 // BUG: Diagnostic contains: [s5, s6, s7]
                 String.format(s5 + s6 + s7);
@@ -223,6 +228,7 @@ public class FindIdentifiersTest {
             "pkg1/Super.java",
             """
             package pkg1;
+
             public class Super {
               public String s1;
               protected String s2;
@@ -238,12 +244,15 @@ public class FindIdentifiersTest {
             "pkg2/Sub.java",
             """
             package pkg2;
+
             import pkg1.Super;
+
             public class Sub extends Super {
               private void doIt() {
                 // BUG: Diagnostic contains: [s1, s2, s5, s6]
                 String.format(s1 + s2 + s5 + s6);
               }
+
               private static void doItStatically() {
                 // BUG: Diagnostic contains: [s5, s6]
                 String.format(s5 + s6);
@@ -263,8 +272,10 @@ public class FindIdentifiersTest {
               class Super {
                 private String s1;
               }
+
               class Sub extends Super {
                 private String s2;
+
                 private void doIt() {
                   // BUG: Diagnostic contains: [s2]
                   String.format(s2);
@@ -284,13 +295,16 @@ public class FindIdentifiersTest {
             class Outer {
               private String s1;
               private static String s2;
+
               static class Inner {
                 private String s3;
                 private static final String s4 = "s4";
+
                 private void doIt() {
                   // BUG: Diagnostic contains: [s3, s4, s2]
                   String.format(s3 + s4 + s2);
                 }
+
                 private static void doItStatically() {
                   // BUG: Diagnostic contains: [s4, s2]
                   String.format(s4 + s2);
@@ -310,12 +324,15 @@ public class FindIdentifiersTest {
             class Outer {
               private String s1;
               private static String s2;
+
               class Inner {
                 private String s3;
                 private static final String s4 = "s4";
+
                 class EvenMoreInner {
                   private String s5;
                   private static final String s6 = "s6";
+
                   private void doIt() {
                     // BUG: Diagnostic contains: [s5, s6, s3, s4, s1, s2]
                     String.format(s5 + s6 + s3 + s4 + s1 + s2);
@@ -336,10 +353,12 @@ public class FindIdentifiersTest {
             class Test {
               private String s1;
               private static String s2;
+
               private static void doIt() {
                 class Helper {
                   private String s3;
                   private static final String s4 = "s6";
+
                   void reallyDoIt() {
                     // BUG: Diagnostic contains: [s3, s4, s2]
                     String.format(s4 + s3 + s2);
@@ -376,15 +395,17 @@ public class FindIdentifiersTest {
             class Test {
               private String s1;
               private static String s2;
-              private static Runnable doIt = () -> {
-                class Helper {
-                  private String s3;
-                  void reallyDoIt() {
-                    // BUG: Diagnostic contains: [s3, s2]
-                    String.format(s3 + s2);
-                  }
-                }
-              };
+              private static Runnable doIt =
+                  () -> {
+                    class Helper {
+                      private String s3;
+
+                      void reallyDoIt() {
+                        // BUG: Diagnostic contains: [s3, s2]
+                        String.format(s3 + s2);
+                      }
+                    }
+                  };
             }
             """)
         .doTest();
@@ -405,6 +426,7 @@ public class FindIdentifiersTest {
             """
             class Outer extends ToExtend {
               private String s2;
+
               class Inner {
                 void doIt() {
                   // BUG: Diagnostic contains: [s2, s1]
@@ -424,10 +446,13 @@ public class FindIdentifiersTest {
             """
             class Outer {
               String s1;
+
               static class Inner {
                 String s2;
+
                 class EvenMoreInner {
                   String s3;
+
                   void doIt() {
                     // BUG: Diagnostic contains: [s3, s2]
                     String.format(s3 + s2);
@@ -447,19 +472,21 @@ public class FindIdentifiersTest {
             """
             class Test {
               public String s1;
+
               private void doIt(final String s2) {
                 String s3 = "";
                 String s4 = "";
                 new Thread(
-                  new Runnable() {
-                    @Override public void run() {
-                      String s5 = "";
-                      s5 = "foo";
-                      // BUG: Diagnostic contains: [s5, s3, s2, s1]
-                      String.format(s5 + s3 + s2 + s1);
-                    }
-                  }
-                ).start();
+                        new Runnable() {
+                          @Override
+                          public void run() {
+                            String s5 = "";
+                            s5 = "foo";
+                            // BUG: Diagnostic contains: [s5, s3, s2, s1]
+                            String.format(s5 + s3 + s2 + s1);
+                          }
+                        })
+                    .start();
                 s4 = "foo";
               }
             }
@@ -475,6 +502,7 @@ public class FindIdentifiersTest {
             """
             class Test {
               public String s1;
+
               private void doIt(final String s2) {
                 String s3 = "";
                 String s4 = "";
@@ -494,8 +522,10 @@ public class FindIdentifiersTest {
             "Test.java",
             """
             import java.util.function.Function;
+
             class Test {
               public String s1;
+
               private void doIt(final String s2) {
                 String s3 = "";
                 String s4 = "";
@@ -516,6 +546,7 @@ public class FindIdentifiersTest {
             """
             class Test {
               public String s1;
+
               private void doIt(final String s2) {
                 String s3 = "";
                 try {
@@ -563,6 +594,7 @@ public class FindIdentifiersTest {
             class Test {
               public static String s1;
               public String s2;
+
               static {
                 // BUG: Diagnostic contains: [s1]
                 String.format(s1);
@@ -597,9 +629,11 @@ public class FindIdentifiersTest {
             class Test {
               private String s1;
               private static String s2;
+
               public Test(String s1) {
                 this.s1 = s1;
               }
+
               public Test() {
                 // BUG: Diagnostic contains: [s2]
                 this(String.format(s2));
@@ -618,6 +652,7 @@ public class FindIdentifiersTest {
             class Super {
               protected String s1;
               protected static String s2;
+
               public Super(String s1) {
                 this.s1 = s1;
               }
@@ -669,6 +704,7 @@ public class FindIdentifiersTest {
               FOO,
               BAR,
               BAZ;
+
               static class Nested {
                 void doIt() {
                   // BUG: Diagnostic contains: [FOO, BAR, BAZ]
@@ -692,7 +728,7 @@ public class FindIdentifiersTest {
                   // BUG: Diagnostic contains: [i]
                   String.format(Integer.toString(i));
                 }
-                for (int j : new int[]{0, 1, 2}) {
+                for (int j : new int[] {0, 1, 2}) {
                   // BUG: Diagnostic contains: [j]
                   String.format(Integer.toString(j));
                 }
@@ -708,25 +744,26 @@ public class FindIdentifiersTest {
         .addSourceLines(
             "Test.java",
             """
-import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.*;
-class Test {
-  void doIt() {
-    try (
-      BufferedReader reader = Files.newBufferedReader(Paths.get("foo"));
-      // BUG: Diagnostic contains: [reader]
-      InputStream is = new ByteArrayInputStream(String.format(reader.readLine()).getBytes(StandardCharsets.UTF_8))
-    ) {
-      // BUG: Diagnostic contains: [reader, is]
-      String.format(reader.readLine() + is.toString());
-    } catch (IOException e) {
-      // BUG: Diagnostic contains: [e]
-      String.format(e.toString());
-    }
-  }
-}
-""")
+            import java.io.*;
+            import java.nio.charset.StandardCharsets;
+            import java.nio.file.*;
+
+            class Test {
+              void doIt() {
+                try (BufferedReader reader = Files.newBufferedReader(Paths.get("foo"));
+                    InputStream is =
+                        new ByteArrayInputStream(
+                        // BUG: Diagnostic contains: [reader]
+                            String.format(reader.readLine()).getBytes(StandardCharsets.UTF_8))) {
+                  // BUG: Diagnostic contains: [reader, is]
+                  String.format(reader.readLine() + is.toString());
+                } catch (IOException e) {
+                  // BUG: Diagnostic contains: [e]
+                  String.format(e.toString());
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -737,6 +774,7 @@ class Test {
             "Test.java",
             """
             import static java.nio.charset.StandardCharsets.UTF_8;
+
             class Test {
               void doIt() {
                 // BUG: Diagnostic contains: [UTF_8]
@@ -754,6 +792,7 @@ class Test {
             "pkg/MyInterface.java",
             """
             package pkg;
+
             public interface MyInterface {
               String EMPTY = "";
             }
@@ -762,6 +801,7 @@ class Test {
             "pkg/Super.java",
             """
             package pkg;
+
             public class Super {
               public static final String FOO = "foo";
             }
@@ -770,6 +810,7 @@ class Test {
             "pkg/Impl.java",
             """
             package pkg;
+
             public class Impl extends Super implements MyInterface {}
             """)
         .addSourceLines(
@@ -777,6 +818,7 @@ class Test {
             """
             import static pkg.Impl.EMPTY;
             import static pkg.Impl.FOO;
+
             public class Test {
               void doIt() {
                 // BUG: Diagnostic contains: [EMPTY, FOO]
@@ -810,6 +852,7 @@ class Test {
             class Test {
               private String s1;
               private String s2;
+
               // BUG: Diagnostic contains: [s1, s2]
               private void doIt() {}
             }
@@ -864,6 +907,7 @@ class Test {
             """
             class Test {
               void test(String arg) {}
+
               private void doIt() {
                 String a = null;
                 test(a);
@@ -883,6 +927,7 @@ class Test {
             """
             class Test {
               void test(String arg) {}
+
               private void doIt() {
                 String a = null;
                 if (a == null) {}
@@ -902,6 +947,7 @@ class Test {
             """
             class Test {
               void test(String arg) {}
+
               private void doIt() {
                 String a = null;
                 // BUG: Diagnostic contains: [a]
@@ -921,7 +967,9 @@ class Test {
             """
             class Test {
               String a = null;
+
               void test(String arg) {}
+
               private void doIt() {
                 test(a);
                 String a = null;
@@ -941,7 +989,7 @@ class Test {
             """
             class Test {
               private void doIt() {
-                for(String a : new String[] {}) {
+                for (String a : new String[] {}) {
                   // BUG: Diagnostic contains: [a]
                   String.format(a);
                 }
@@ -989,9 +1037,10 @@ class Test {
             "Reference.java",
             """
             class Reference {
-             static String staticField;
-             String instanceField;
-             static void test() {}
+              static String staticField;
+              String instanceField;
+
+              static void test() {}
             }
             """)
         .addSourceLines(
@@ -1060,6 +1109,7 @@ class Test {
               Test.A foo() {
                 return null;
               }
+
               class A {}
             }
             """)
@@ -1073,12 +1123,14 @@ class Test {
             "A.java",
             """
             package pkg;
+
             class A {}
             """)
         .addSourceLines(
             "Test.java",
             """
             package pkg;
+
             // BUG: Diagnostic contains:
             class Test extends java.lang.Object {
               // BUG: Diagnostic contains:

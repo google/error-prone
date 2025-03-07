@@ -44,22 +44,18 @@ public class NullablePrimitiveTest {
              */
             public class NullablePrimitivePositiveCases {
 
-              // BUG: Diagnostic contains: remove
-              @Nullable
-              int a;
+              // BUG: Diagnostic contains: private  int a
+              private @Nullable int a;
 
-              public void method(
-                  // BUG: Diagnostic contains: remove
-                  @Nullable
-                  int a) {
-              }
+              // BUG: Diagnostic contains: ( int a)
+              public void method(@Nullable int a) {}
 
               // BUG: Diagnostic contains: remove
               @Nullable
               public int method() {
                 return 0;
               }
-            }\
+            }
             """)
         .doTest();
   }

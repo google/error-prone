@@ -40,11 +40,15 @@ public final class InconsistentHashCodeTest {
             class Test {
               private int a;
               private int b;
-              @Override public boolean equals(Object o) {
+
+              @Override
+              public boolean equals(Object o) {
                 Test that = (Test) o;
                 return a == that.a && b == that.b;
               }
-              @Override public int hashCode() {
+
+              @Override
+              public int hashCode() {
                 return a + 31 * b;
               }
             }
@@ -61,12 +65,16 @@ public final class InconsistentHashCodeTest {
             class Test {
               private int foo;
               private int bar;
-              @Override public boolean equals(Object o) {
+
+              @Override
+              public boolean equals(Object o) {
                 Test that = (Test) o;
                 return foo == that.foo;
               }
+
+              @Override
               // BUG: Diagnostic contains: bar
-              @Override public int hashCode() {
+              public int hashCode() {
                 return foo + 31 * bar;
               }
             }
@@ -83,15 +91,22 @@ public final class InconsistentHashCodeTest {
             class Test {
               private int foo;
               private int bar;
-              @Override public boolean equals(Object o) {
+
+              @Override
+              public boolean equals(Object o) {
                 Test that = (Test) o;
                 return foo == that.foo;
               }
+
+              @Override
               // BUG: Diagnostic contains: bar
-              @Override public int hashCode() {
+              public int hashCode() {
                 return foo + 31 * getBar();
               }
-              private int getBar() { return bar; }
+
+              private int getBar() {
+                return bar;
+              }
             }
             """)
         .doTest();
@@ -106,10 +121,14 @@ public final class InconsistentHashCodeTest {
             class Test {
               private int a;
               private int b;
-              @Override public boolean equals(Object o) {
+
+              @Override
+              public boolean equals(Object o) {
                 return this == o;
               }
-              @Override public int hashCode() {
+
+              @Override
+              public int hashCode() {
                 return a + 31 * b;
               }
             }
@@ -127,11 +146,15 @@ public final class InconsistentHashCodeTest {
               private int a;
               private int b;
               private int hashCode;
-              @Override public boolean equals(Object o) {
+
+              @Override
+              public boolean equals(Object o) {
                 Test that = (Test) o;
                 return this.a == that.a && this.b == that.b;
               }
-              @Override public int hashCode() {
+
+              @Override
+              public int hashCode() {
                 return hashCode;
               }
             }
@@ -149,18 +172,25 @@ public final class InconsistentHashCodeTest {
               private int a;
               private int b;
               private int hashCode;
+
               public void accessesLocalWithLabeledBreak() {
-                label: {
+                label:
+                {
                   switch (a) {
-                    case 0: break label;
+                    case 0:
+                      break label;
                   }
                 }
               }
-              @Override public boolean equals(Object o) {
+
+              @Override
+              public boolean equals(Object o) {
                 Test that = (Test) o;
                 return this.a == that.a && this.b == that.b;
               }
-              @Override public int hashCode() {
+
+              @Override
+              public int hashCode() {
                 return hashCode;
               }
             }

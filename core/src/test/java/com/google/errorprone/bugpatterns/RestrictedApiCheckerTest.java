@@ -43,78 +43,78 @@ public class RestrictedApiCheckerTest {
           .addSourceLines(
               "RestrictedApiMethods.java",
               """
-package com.google.errorprone.bugpatterns.testdata;
+              package com.google.errorprone.bugpatterns.testdata;
 
-import com.google.errorprone.annotations.RestrictedApi;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Target;
+              import com.google.errorprone.annotations.RestrictedApi;
+              import java.lang.annotation.ElementType;
+              import java.lang.annotation.Target;
 
-/** Example for {@link com.google.errorprone.bugpatterns.RestrictedApiCheckerTest}. */
-public class RestrictedApiMethods implements IFaceWithRestriction {
+              /** Example for {@link com.google.errorprone.bugpatterns.RestrictedApiCheckerTest}. */
+              public class RestrictedApiMethods implements IFaceWithRestriction {
 
-  public int normalMethod() {
-    return 0;
-  }
+                public int normalMethod() {
+                  return 0;
+                }
 
-  @RestrictedApi(
-      explanation = "lorem",
-      allowlistAnnotations = {Allowlist.class},
-      allowlistWithWarningAnnotations = {AllowlistWithWarning.class},
-      link = "")
-  public RestrictedApiMethods() {}
+                @RestrictedApi(
+                    explanation = "lorem",
+                    allowlistAnnotations = {Allowlist.class},
+                    allowlistWithWarningAnnotations = {AllowlistWithWarning.class},
+                    link = "")
+                public RestrictedApiMethods() {}
 
-  @RestrictedApi(
-      explanation = "lorem",
-      allowlistAnnotations = {Allowlist.class},
-      allowlistWithWarningAnnotations = {AllowlistWithWarning.class},
-      link = "")
-  public RestrictedApiMethods(int restricted) {}
+                @RestrictedApi(
+                    explanation = "lorem",
+                    allowlistAnnotations = {Allowlist.class},
+                    allowlistWithWarningAnnotations = {AllowlistWithWarning.class},
+                    link = "")
+                public RestrictedApiMethods(int restricted) {}
 
-  @RestrictedApi(
-      explanation = "lorem",
-      allowlistAnnotations = {Allowlist.class},
-      allowlistWithWarningAnnotations = {AllowlistWithWarning.class},
-      link = "",
-      allowedOnPath = ".*testsuite/.*")
-  public int restrictedMethod() {
-    return 1;
-  }
+                @RestrictedApi(
+                    explanation = "lorem",
+                    allowlistAnnotations = {Allowlist.class},
+                    allowlistWithWarningAnnotations = {AllowlistWithWarning.class},
+                    link = "",
+                    allowedOnPath = ".*testsuite/.*")
+                public int restrictedMethod() {
+                  return 1;
+                }
 
-  @RestrictedApi(
-      explanation = "lorem",
-      allowlistAnnotations = {Allowlist.class},
-      allowlistWithWarningAnnotations = {AllowlistWithWarning.class},
-      link = "")
-  public static int restrictedStaticMethod() {
-    return 2;
-  }
+                @RestrictedApi(
+                    explanation = "lorem",
+                    allowlistAnnotations = {Allowlist.class},
+                    allowlistWithWarningAnnotations = {AllowlistWithWarning.class},
+                    link = "")
+                public static int restrictedStaticMethod() {
+                  return 2;
+                }
 
-  @Override
-  public void dontCallMe() {}
+                @Override
+                public void dontCallMe() {}
 
-  public static class Subclass extends RestrictedApiMethods {
-    @Allowlist
-    public Subclass(int restricted) {
-      super(restricted);
-    }
+                public static class Subclass extends RestrictedApiMethods {
+                  @Allowlist
+                  public Subclass(int restricted) {
+                    super(restricted);
+                  }
 
-    @Override
-    public int restrictedMethod() {
-      return 42;
-    }
-  }
+                  @Override
+                  public int restrictedMethod() {
+                    return 42;
+                  }
+                }
 
-  public static void accept(Runnable r) {}
-}
+                public static void accept(Runnable r) {}
+              }
 
-interface IFaceWithRestriction {
-  @RestrictedApi(explanation = "ipsum", link = "nothing")
-  void dontCallMe();
-}
+              interface IFaceWithRestriction {
+                @RestrictedApi(explanation = "ipsum", link = "nothing")
+                void dontCallMe();
+              }
 
-@Target({ElementType.METHOD, ElementType.CONSTRUCTOR})
-@interface AllowlistWithWarning {}\
-""")
+              @Target({ElementType.METHOD, ElementType.CONSTRUCTOR})
+              @interface AllowlistWithWarning {}
+              """)
           .matchAllDiagnostics();
   private final BugCheckerRefactoringTestHelper refactoringTest =
       BugCheckerRefactoringTestHelper.newInstance(

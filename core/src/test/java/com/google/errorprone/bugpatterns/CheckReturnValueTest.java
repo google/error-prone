@@ -241,18 +241,22 @@ public class CheckReturnValuePositiveCases {
             "foo/bar/CheckReturnValue.java",
             """
             package foo.bar;
+
             public @interface CheckReturnValue {}
             """)
         .addSourceLines(
             "test/TestCustomCheckReturnValueAnnotation.java",
             """
             package test;
+
             import foo.bar.CheckReturnValue;
+
             public class TestCustomCheckReturnValueAnnotation {
               @CheckReturnValue
               public String getString() {
                 return "string";
               }
+
               public void doIt() {
                 // BUG: Diagnostic contains: CheckReturnValue
                 getString();
@@ -269,19 +273,23 @@ public class CheckReturnValuePositiveCases {
             "foo/bar/CanIgnoreReturnValue.java",
             """
             package foo.bar;
+
             public @interface CanIgnoreReturnValue {}
             """)
         .addSourceLines(
             "test/TestCustomCanIgnoreReturnValueAnnotation.java",
             """
             package test;
+
             import foo.bar.CanIgnoreReturnValue;
+
             @com.google.errorprone.annotations.CheckReturnValue
             public class TestCustomCanIgnoreReturnValueAnnotation {
               @CanIgnoreReturnValue
               public String ignored() {
                 return null;
               }
+
               public void doIt() {
                 ignored();
               }
@@ -366,8 +374,11 @@ public class CheckReturnValuePositiveCases {
             "lib/Lib.java",
             """
             package lib;
+
             public class Lib {
-              public static int f() { return 42; }
+              public static int f() {
+                return 42;
+              }
             }
             """)
         .addSourceLines(
@@ -390,9 +401,12 @@ public class CheckReturnValuePositiveCases {
             "lib/Lib.java",
             """
             package lib;
+
             @com.google.errorprone.annotations.CheckReturnValue
             public class Lib {
-              public static int f() { return 42; }
+              public static int f() {
+                return 42;
+              }
             }
             """)
         .addSourceLines(
@@ -422,6 +436,7 @@ public class CheckReturnValuePositiveCases {
             "lib/Lib.java",
             """
             package lib;
+
             public class Lib {
               public static void f() {}
             }
@@ -445,11 +460,12 @@ public class CheckReturnValuePositiveCases {
             "Test.java",
             """
             package lib;
+
             @com.google.errorprone.annotations.CheckReturnValue
             public class Test {
-              // BUG: Diagnostic contains: CheckReturnValue
-              // @CheckReturnValue may not be applied to void-returning methods
-              @com.google.errorprone.annotations.CheckReturnValue public static void f() {}
+              @com.google.errorprone.annotations.CheckReturnValue
+              // BUG: Diagnostic contains: may not be applied to void-returning methods
+              public static void f() {}
             }
             """)
         .doTest();
@@ -462,11 +478,12 @@ public class CheckReturnValuePositiveCases {
             "Test.java",
             """
             package lib;
+
             @com.google.errorprone.annotations.CheckReturnValue
             public class Test {
-              // BUG: Diagnostic contains: CheckReturnValue
-              // @CheckReturnValue may not be applied to void-returning methods
-              @com.google.errorprone.annotations.CheckReturnValue public static Void f() {
+              @com.google.errorprone.annotations.CheckReturnValue
+              // BUG: Diagnostic contains: may not be applied to void-returning methods
+              public static Void f() {
                 return null;
               }
             }
@@ -487,9 +504,12 @@ public class CheckReturnValuePositiveCases {
             "lib/Lib.java",
             """
             package lib;
+
             public class Lib {
               @com.google.errorprone.annotations.CanIgnoreReturnValue
-              public static int f() { return 42; }
+              public static int f() {
+                return 42;
+              }
             }
             """)
         .addSourceLines(
@@ -511,10 +531,13 @@ public class CheckReturnValuePositiveCases {
             "lib/Lib.java",
             """
             package lib;
+
             @com.google.errorprone.annotations.CheckReturnValue
             public class Lib {
               @com.google.errorprone.annotations.CanIgnoreReturnValue
-              public static int f() { return 42; }
+              public static int f() {
+                return 42;
+              }
             }
             """)
         .addSourceLines(
@@ -536,11 +559,12 @@ public class CheckReturnValuePositiveCases {
             "Test.java",
             """
             package lib;
+
             @com.google.errorprone.annotations.CheckReturnValue
             public class Test {
-              // BUG: Diagnostic contains: CheckReturnValue
-              // @CanIgnoreReturnValue may not be applied to void-returning methods
-              @com.google.errorprone.annotations.CanIgnoreReturnValue public static void f() {}
+              @com.google.errorprone.annotations.CanIgnoreReturnValue
+              // BUG: Diagnostic contains: may not be applied to void-returning methods
+              public static void f() {}
             }
             """)
         .doTest();
@@ -553,11 +577,14 @@ public class CheckReturnValuePositiveCases {
             "lib/Lib.java",
             """
             package lib;
+
             @com.google.errorprone.annotations.CheckReturnValue
             public class Lib {
               public static class Inner {
                 public static class InnerMost {
-                  public static int f() { return 42; }
+                  public static int f() {
+                    return 42;
+                  }
                 }
               }
             }
@@ -582,12 +609,15 @@ public class CheckReturnValuePositiveCases {
             "lib/Lib.java",
             """
             package lib;
+
             @com.google.errorprone.annotations.CheckReturnValue
             public class Lib {
               @com.google.errorprone.annotations.CanIgnoreReturnValue
               public static class Inner {
                 public static class InnerMost {
-                  public static int f() { return 42; }
+                  public static int f() {
+                    return 42;
+                  }
                 }
               }
             }
@@ -617,9 +647,12 @@ public class CheckReturnValuePositiveCases {
             "lib/Lib.java",
             """
             package lib;
+
             @com.google.errorprone.annotations.CanIgnoreReturnValue
             public class Lib {
-              public static int f() { return 42; }
+              public static int f() {
+                return 42;
+              }
             }
             """)
         .addSourceLines(
@@ -642,7 +675,8 @@ public class CheckReturnValuePositiveCases {
             """
 @com.google.errorprone.annotations.CanIgnoreReturnValue
 @com.google.errorprone.annotations.CheckReturnValue
-// BUG: Diagnostic contains: @CheckReturnValue and @CanIgnoreReturnValue cannot be applied to the same class
+// BUG: Diagnostic contains: @CheckReturnValue and @CanIgnoreReturnValue cannot be applied to the
+// same class
 class Test {}
 """)
         .doTest();
@@ -657,7 +691,8 @@ class Test {}
 class Test {
   @com.google.errorprone.annotations.CanIgnoreReturnValue
   @com.google.errorprone.annotations.CheckReturnValue
-  // BUG: Diagnostic contains: @CheckReturnValue and @CanIgnoreReturnValue cannot be applied to the same method
+  // BUG: Diagnostic contains: @CheckReturnValue and @CanIgnoreReturnValue cannot be applied to the
+  // same method
   void m() {}
 }
 """)
@@ -678,6 +713,7 @@ class Test {
             "lib/Lib.java",
             """
             package lib;
+
             public class Lib {
               public static Void f() {
                 return null;
@@ -755,6 +791,7 @@ class Test {
             class Test {
               @com.google.errorprone.annotations.CheckReturnValue
               public Test() {}
+
               public static void foo() {
                 // BUG: Diagnostic contains: CheckReturnValue
                 new Test();
@@ -773,7 +810,11 @@ class Test {
             class Test {
               @com.google.errorprone.annotations.CheckReturnValue
               public Test() {}
-              public Test(int foo) { this(); }
+
+              public Test(int foo) {
+                this();
+              }
+
               public static void foo() {
                 Test foo = new Test(42);
               }
@@ -791,7 +832,13 @@ class Test {
             class Test {
               @com.google.errorprone.annotations.CheckReturnValue
               public Test() {}
-              static class SubTest extends Test { SubTest() { super(); } }
+
+              static class SubTest extends Test {
+                SubTest() {
+                  super();
+                }
+              }
+
               public static void foo() {
                 Test derived = new SubTest();
               }
@@ -809,9 +856,14 @@ class Test {
             class Test {
               @com.google.errorprone.annotations.CanIgnoreReturnValue
               public Test() {}
+
               public static void foo() {
                 new Test() {};
-                new Test() {{ System.out.println("Lookie, instance initializer"); }};
+                new Test() {
+                  {
+                    System.out.println("Lookie, instance initializer");
+                  }
+                };
               }
             }
             """)
@@ -827,6 +879,7 @@ class Test {
             class Test {
               @com.google.errorprone.annotations.CheckReturnValue
               public Test() {}
+
               public static void foo() {
                 // BUG: Diagnostic contains: CheckReturnValue
                 new Test() {};
@@ -847,6 +900,7 @@ class Test {
                 @com.google.errorprone.annotations.CheckReturnValue
                 public Inner() {}
               }
+
               public static void foo() {
                 // BUG: Diagnostic contains: CheckReturnValue
                 new Test().new Inner() {};
@@ -906,7 +960,8 @@ class Test {
                 try {
                   new Foo();
                   org.junit.Assert.fail();
-                } catch (Exception expected) {}
+                } catch (Exception expected) {
+                }
                 org.junit.Assert.assertThrows(IllegalArgumentException.class, () -> new Foo());
               }
             }
@@ -944,6 +999,7 @@ class Test {
             """
             class Test {
               public Test() {}
+
               public static void foo() {
                 // BUG: Diagnostic contains: CheckReturnValue
                 new Test();
@@ -960,7 +1016,10 @@ class Test {
             "Test.java",
             """
             class Test {
-              public int bar() { return 42; }
+              public int bar() {
+                return 42;
+              }
+
               public static void foo() {
                 // BUG: Diagnostic contains: CheckReturnValue
                 new Test().bar();
@@ -980,6 +1039,7 @@ class Test {
             "Test.java",
             """
             import my.java.util.List;
+
             class Test {
               public static void foo(List<Integer> x) {
                 x.add(42);
@@ -992,8 +1052,10 @@ class Test {
             "my/java/util/List.java",
             """
             package my.java.util;
+
             public interface List<E> {
               boolean add(E e);
+
               E get(int index);
             }
             """)
@@ -1008,6 +1070,7 @@ class Test {
             """
             import my.java.util.List;
             import my.java.util.regex.Pattern;
+
             class Test {
               public static void foo(List<Integer> list, Pattern pattern) {
                 // BUG: Diagnostic contains: CheckReturnValue
@@ -1021,6 +1084,7 @@ class Test {
             "my/java/util/List.java",
             """
             package my.java.util;
+
             public interface List<E> {
               E get(int index);
             }
@@ -1029,6 +1093,7 @@ class Test {
             "my/java/util/regex/Pattern.java",
             """
             package my.java.util.regex;
+
             public interface Pattern {
               String matcher(CharSequence input);
             }
@@ -1044,6 +1109,7 @@ class Test {
             """
             import my.java.util.List;
             import my.java.util.regex.Pattern;
+
             class Test {
               public static void foo(List<Integer> list, Pattern pattern) {
                 // BUG: Diagnostic contains: CheckReturnValue
@@ -1056,6 +1122,7 @@ class Test {
             "my/java/util/List.java",
             """
             package my.java.util;
+
             public interface List<E> {
               E get(int index);
             }
@@ -1064,6 +1131,7 @@ class Test {
             "my/java/util/regex/Pattern.java",
             """
             package my.java.util.regex;
+
             public interface Pattern {
               String matcher(CharSequence input);
             }
@@ -1083,6 +1151,7 @@ class Test {
             import my.java.util.List;
             import my.java.util.regex.Pattern;
             import my.java.util.regex.PatternSyntaxException;
+
             class Test {
               public static void foo(List<Integer> list, Pattern pattern) {
                 // BUG: Diagnostic contains: CheckReturnValue
@@ -1097,6 +1166,7 @@ class Test {
             "my/java/util/List.java",
             """
             package my.java.util;
+
             public interface List<E> {
               E get(int index);
             }
@@ -1105,6 +1175,7 @@ class Test {
             "my/java/util/regex/Pattern.java",
             """
             package my.java.util.regex;
+
             public interface Pattern {
               String matcher(CharSequence input);
             }
@@ -1113,6 +1184,7 @@ class Test {
             "my/java/util/regex/PatternSyntaxException.java",
             """
             package my.java.util.regex;
+
             public class PatternSyntaxException extends IllegalArgumentException {
               public PatternSyntaxException(String desc, String regex, int index) {}
             }
@@ -1164,11 +1236,13 @@ class Test {
             "Test.java",
             """
             import com.google.errorprone.annotations.CheckReturnValue;
+
             @CheckReturnValue
             class Test {
               void foo() {
                 makeBarOrThrow();
               }
+
               String makeBarOrThrow() {
                 throw new UnsupportedOperationException();
               }
@@ -1200,9 +1274,11 @@ class Test {
             "Test.java",
             """
             import com.google.errorprone.annotations.CheckReturnValue;
+
             @CheckReturnValue
             class Test {
               Runnable r = this::makeBarOrThrow;
+
               String makeBarOrThrow() {
                 throw new UnsupportedOperationException();
               }
@@ -1232,9 +1308,11 @@ class Test {
             "Test.java",
             """
             import com.google.errorprone.annotations.CheckReturnValue;
+
             @CheckReturnValue
             class Test {
               Test() {}
+
               void run() {
                 new Test();
               }
@@ -1264,10 +1342,12 @@ class Test {
             "Test.java",
             """
             import com.google.errorprone.annotations.CheckReturnValue;
+
             class Test {
               void foo() {
                 makeBarOrThrow();
               }
+
               @CheckReturnValue
               String makeBarOrThrow() {
                 throw new UnsupportedOperationException();
@@ -1299,6 +1379,7 @@ class Test {
             "Lib.java",
             """
             import com.google.errorprone.annotations.CheckReturnValue;
+
             @CheckReturnValue
             class Lib {
               String makeBarOrThrow() {
@@ -1311,6 +1392,7 @@ class Test {
             "Test.java",
             """
             import com.google.errorprone.annotations.CheckReturnValue;
+
             @CheckReturnValue
             class Test {
               void foo(Lib l) {
@@ -1366,9 +1448,11 @@ class Test {
             "Lib.java",
             """
             import com.google.errorprone.annotations.CheckReturnValue;
+
             @CheckReturnValue
             interface Lib {
               int a();
+
               int b();
             }
             """)

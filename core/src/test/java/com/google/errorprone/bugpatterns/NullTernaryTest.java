@@ -51,7 +51,9 @@ public class NullTernaryTest {
                 // BUG: Diagnostic contains:
                 z = (b ? null : 1) + 0;
               }
+
               void g(String s, int y) {}
+
               void h(String s, int... y) {}
             }
             """)
@@ -74,7 +76,9 @@ public class NullTernaryTest {
                 int z = 0 + (b ? 0 : 1);
                 boolean t = (b ? 0 : null) == Integer.valueOf(0);
               }
+
               void g(String s, int y) {}
+
               void h(String s, int... y) {}
             }
             """)
@@ -91,17 +95,29 @@ public class NullTernaryTest {
               interface I {
                 int f();
               }
+
               interface J {
                 Integer f();
               }
+
               interface K<X> {
                 X f();
               }
+
               void f(boolean b) {
+                I i =
+                    () -> {
                 // BUG: Diagnostic contains:
-                I i = () -> { return b ? null : 1; };
-                J j = () -> { return b ? null : 1; };
-                K<Integer> k = () -> { return b ? null : 1; };
+                      return b ? null : 1;
+                    };
+                J j =
+                    () -> {
+                      return b ? null : 1;
+                    };
+                K<Integer> k =
+                    () -> {
+                      return b ? null : 1;
+                    };
                 // BUG: Diagnostic contains:
                 i = () -> b ? null : 1;
                 j = () -> b ? null : 1;
@@ -118,15 +134,13 @@ public class NullTernaryTest {
         .addSourceLines(
             "Test.java",
             """
-            class Test {
-              void conditionalInCondition(Object array, String input) {
-                int arrayDimensions =
-                    ((array!=null?input:null) == null)
-                        ? 0
-                        : (array!=null?input:null).length();
-              }
-            }
-            """)
+class Test {
+  void conditionalInCondition(Object array, String input) {
+    int arrayDimensions =
+        ((array != null ? input : null) == null) ? 0 : (array != null ? input : null).length();
+  }
+}
+""")
         .doTest();
   }
 
@@ -137,16 +151,17 @@ public class NullTernaryTest {
             "Test.java",
             """
             class Test {
-             static String doStuff(SomeEnum enumVar) {
-               return switch (enumVar) {
-                 case A -> enumVar.name() != null ? "AAA" : null;
-                 default -> null;
-               };
-             }
+              static String doStuff(SomeEnum enumVar) {
+                return switch (enumVar) {
+                  case A -> enumVar.name() != null ? "AAA" : null;
+                  default -> null;
+                };
+              }
 
-             static enum SomeEnum {
-               A, B
-             }
+              static enum SomeEnum {
+                A,
+                B
+              }
             }
             """)
         .doTest();

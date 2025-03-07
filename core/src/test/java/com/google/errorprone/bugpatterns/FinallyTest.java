@@ -97,11 +97,9 @@ public class FinallyPositiveCase1 {
     }
   }
 
-  /**
-   * break statement jumps to outer labeled while, not inner one.
-   */
+  /** break statement jumps to outer labeled while, not inner one. */
   public void test5() {
-  label:
+    label:
     while (true) {
       try {
       } finally {
@@ -113,15 +111,13 @@ public class FinallyPositiveCase1 {
     }
   }
 
-  /**
-   * continue statement jumps to outer labeled for, not inner one.
-   */
+  /** continue statement jumps to outer labeled for, not inner one. */
   public void test6() {
-  label:
-    for (;;) {
+    label:
+    for (; ; ) {
       try {
       } finally {
-        for (;;) {
+        for (; ; ) {
           // BUG: Diagnostic contains:
           continue label;
         }
@@ -129,9 +125,7 @@ public class FinallyPositiveCase1 {
     }
   }
 
-  /**
-   * continue statement jumps to while, not switch.
-   */
+  /** continue statement jumps to while, not switch. */
   public void test7() {
     int i = 10;
     while (true) {
@@ -149,13 +143,34 @@ public class FinallyPositiveCase1 {
   public void test8() {
     try {
     } finally {
-    // BUG: Diagnostic contains:
-      { { { { { { { { { { return; } } } } } } } } } }
+      {
+        {
+          {
+            {
+              {
+                {
+                  {
+                    {
+                      {
+                        {
+                          // BUG: Diagnostic contains:
+                          return;
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 
   // Don't assume that completion statements occur inside methods:
   static boolean flag = false;
+
   static {
     while (flag) {
       try {
@@ -165,7 +180,7 @@ public class FinallyPositiveCase1 {
       }
     }
   }
-}\
+}
 """)
         .doTest();
   }

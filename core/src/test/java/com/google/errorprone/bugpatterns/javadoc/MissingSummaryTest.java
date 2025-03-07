@@ -74,6 +74,7 @@ public final class MissingSummaryTest {
                * @see List other impl
                */
               void test(int n);
+
               /**
                * @param n foo
                * @see List
@@ -103,6 +104,7 @@ public final class MissingSummaryTest {
   }
 
   @Test
+  @SuppressWarnings("MisformattedTestData")
   public void publicCase() {
     helper
         .addSourceLines(
@@ -126,7 +128,9 @@ public final class MissingSummaryTest {
             "Test.java",
             """
             class Test {
-              /** @throws IllegalStateException */
+              /**
+               * @throws IllegalStateException
+               */
               private void test() {}
             }
             """)
@@ -141,7 +145,9 @@ public final class MissingSummaryTest {
             """
             class Test {
               private class Inner {
-                /** @throws IllegalStateException */
+                /**
+                 * @throws IllegalStateException
+                 */
                 public void test() {}
               }
             }
@@ -174,10 +180,19 @@ public final class MissingSummaryTest {
             "Test.java",
             """
             class Test {
-              /** @param o thing to compare */
-              @Override public boolean equals(Object o) { return true; }
-              /** @deprecated use something else */
-              @Deprecated public void frobnicate() {}
+              /**
+               * @param o thing to compare
+               */
+              @Override
+              public boolean equals(Object o) {
+                return true;
+              }
+
+              /**
+               * @deprecated use something else
+               */
+              @Deprecated
+              public void frobnicate() {}
             }
             """)
         .doTest();
@@ -190,7 +205,9 @@ public final class MissingSummaryTest {
             "Test.java",
             """
             class Test {
-              /** @param o thing to compare */
+              /**
+               * @param o thing to compare
+               */
               public Test(Object o) {}
             }
             """)
@@ -204,7 +221,9 @@ public final class MissingSummaryTest {
             "Test.java",
             """
             class Test {
-              /** @param o thing to compare */
+              /**
+               * @param o thing to compare
+               */
               private Test(Object o) {}
             }
             """)
@@ -218,14 +237,19 @@ public final class MissingSummaryTest {
             "Test.java",
             """
             class Test implements java.util.function.Predicate<Object> {
-              /** @param o thing to compare */
-              public boolean test(Object o) { return false; }
+              /**
+               * @param o thing to compare
+               */
+              public boolean test(Object o) {
+                return false;
+              }
             }
             """)
         .doTest();
   }
 
   @Test
+  @SuppressWarnings("MisformattedTestData")
   public void seeWithHtmlLink() {
     helper
         .addSourceLines(
@@ -239,6 +263,7 @@ public final class MissingSummaryTest {
   }
 
   @Test
+  @SuppressWarnings("MisformattedTestData")
   public void emptyReturn() {
     helper
         .addSourceLines(
@@ -260,10 +285,10 @@ public final class MissingSummaryTest {
             "Test.java",
             """
             package test;
+
             /** */
             // BUG: Diagnostic contains: summary line is required
-            public class Test {
-            }
+            public class Test {}
             """)
         .doTest();
   }

@@ -52,7 +52,7 @@ public final class MisformattedTestDataTest {
                       }
                     }
                     \""");
-               }
+              }
             }
             """)
         .doTest();
@@ -105,7 +105,7 @@ public final class MisformattedTestDataTest {
                       }
                     }
                     \""");
-               }
+              }
             }
             """)
         .addOutputLines(
@@ -152,8 +152,8 @@ public final class MisformattedTestDataTest {
                                                 int a = 1;
                                               }
                                             }
-                                            ""\");
-               }
+                                            \""");
+              }
             }
             """)
         .expectUnchanged()
@@ -182,7 +182,7 @@ public final class MisformattedTestDataTest {
                       }
                     }
                     \""");
-               }
+              }
             }
             """)
         .addOutputLines(

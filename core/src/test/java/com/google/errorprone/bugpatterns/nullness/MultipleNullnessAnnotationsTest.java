@@ -37,6 +37,7 @@ public class MultipleNullnessAnnotationsTest {
             import org.checkerframework.checker.nullness.qual.NonNull;
             import org.checkerframework.checker.nullness.qual.Nullable;
             import java.util.List;
+
             abstract class Test {
               // BUG: Diagnostic contains:
               @Nullable @NonNull Object x;
@@ -44,10 +45,13 @@ public class MultipleNullnessAnnotationsTest {
               @NullableDecl static @NonNull Object y;
               // BUG: Diagnostic contains:
               List<@Nullable @NonNull String> z;
+
+              @NullableDecl
               // BUG: Diagnostic contains:
-              @NullableDecl abstract @NonNull Object f();
+              abstract @NonNull Object f();
+
               // BUG: Diagnostic contains:
-              abstract void f(@NullableDecl Object @NonNull[] x);
+              abstract void f(@NullableDecl Object @NonNull [] x);
             }
             """)
         .doTest();
@@ -64,6 +68,7 @@ public class MultipleNullnessAnnotationsTest {
             import org.checkerframework.checker.nullness.qual.NonNull;
             import org.checkerframework.checker.nullness.qual.Nullable;
             import java.util.List;
+
             abstract class Test {
               @NonNullDecl @NonNull Object x;
               @NullableDecl static @Nullable Object y;
@@ -80,8 +85,10 @@ public class MultipleNullnessAnnotationsTest {
             """
             import org.checkerframework.checker.nullness.qual.Nullable;
             import java.util.List;
+
             abstract class Test {
               @Nullable Object @Nullable [] x;
+
               abstract void f(@Nullable Object @Nullable ... x);
             }
             """)
@@ -96,6 +103,7 @@ public class MultipleNullnessAnnotationsTest {
             """
             import java.lang.annotation.Target;
             import java.lang.annotation.ElementType;
+
             @Target({
               ElementType.METHOD,
               ElementType.FIELD,
@@ -110,7 +118,9 @@ public class MultipleNullnessAnnotationsTest {
             """
             abstract class Test {
               abstract void f(@Nullable Object x);
+
               abstract @Nullable Object g();
+
               @Nullable Object f;
             }
             """)
@@ -125,11 +135,14 @@ public class MultipleNullnessAnnotationsTest {
             """
             import org.checkerframework.checker.nullness.compatqual.NullableDecl;
             import org.checkerframework.checker.nullness.qual.NonNull;
+
             class T<X> {
               // BUG: Diagnostic contains:
               @NullableDecl @NonNull X f;
+
+              @NullableDecl
               // BUG: Diagnostic contains:
-              @NullableDecl @NonNull X g() {
+              @NonNull X g() {
                 return null;
               }
             }
@@ -145,6 +158,7 @@ public class MultipleNullnessAnnotationsTest {
             """
             import javax.annotation.CheckForNull;
             import org.checkerframework.checker.nullness.qual.NonNull;
+
             class T {
               // BUG: Diagnostic contains:
               @CheckForNull Object @NonNull [] f;

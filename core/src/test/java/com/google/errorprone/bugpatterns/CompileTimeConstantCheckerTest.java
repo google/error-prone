@@ -35,11 +35,16 @@ public class CompileTimeConstantCheckerTest {
             "test/CompileTimeConstantTestCase.java",
             """
             package test;
+
             import com.google.errorprone.annotations.CompileTimeConstant;
+
             public class CompileTimeConstantTestCase {
-              public void m(String p, @CompileTimeConstant String q) { }
-              // BUG: Diagnostic contains: Non-compile-time constant expression passed
-              public void r(String s) { this.m("boo", s); }
+              public void m(String p, @CompileTimeConstant String q) {}
+
+              public void r(String s) {
+                // BUG: Diagnostic contains: Non-compile-time constant expression passed
+                this.m("boo", s);
+              }
             }
             """)
         .doTest();
@@ -52,11 +57,16 @@ public class CompileTimeConstantCheckerTest {
             "test/CompileTimeConstantTestCase.java",
             """
             package test;
+
             import com.google.errorprone.annotations.CompileTimeConstant;
+
             public class CompileTimeConstantTestCase {
-              public void m(String p, @CompileTimeConstant String q) { }
-              // BUG: Diagnostic contains: Non-compile-time constant expression passed
-              public void r(String s) { this.m("boo", s +"boo"); }
+              public void m(String p, @CompileTimeConstant String q) {}
+
+              public void r(String s) {
+                // BUG: Diagnostic contains: Non-compile-time constant expression passed
+                this.m("boo", s + "boo");
+              }
             }
             """)
         .doTest();
@@ -69,10 +79,15 @@ public class CompileTimeConstantCheckerTest {
             "test/CompileTimeConstantTestCase.java",
             """
             package test;
+
             import com.google.errorprone.annotations.CompileTimeConstant;
+
             public class CompileTimeConstantTestCase {
-              public void m(String s, @CompileTimeConstant String p) { }
-              public void r(String x) { this.m(x, "boo"); }
+              public void m(String s, @CompileTimeConstant String p) {}
+
+              public void r(String x) {
+                this.m(x, "boo");
+              }
             }
             """)
         .doTest();
@@ -85,11 +100,17 @@ public class CompileTimeConstantCheckerTest {
             "test/CompileTimeConstantTestCase.java",
             """
             package test;
+
             import com.google.errorprone.annotations.CompileTimeConstant;
+
             public class CompileTimeConstantTestCase {
               public static final String S = "Hello";
-              public void m(String s, @CompileTimeConstant String p) { }
-              public void r(String x) { this.m(x, S); }
+
+              public void m(String s, @CompileTimeConstant String p) {}
+
+              public void r(String x) {
+                this.m(x, S);
+              }
             }
             """)
         .doTest();
@@ -102,11 +123,17 @@ public class CompileTimeConstantCheckerTest {
             "test/CompileTimeConstantTestCase.java",
             """
             package test;
+
             import com.google.errorprone.annotations.CompileTimeConstant;
+
             public class CompileTimeConstantTestCase {
               public static final String S = "Hello";
-              public void m(String s, @CompileTimeConstant String p) { }
-              public void r(String x) { this.m(x, S + " World!"); }
+
+              public void m(String s, @CompileTimeConstant String p) {}
+
+              public void r(String x) {
+                this.m(x, S + " World!");
+              }
             }
             """)
         .doTest();
@@ -119,11 +146,16 @@ public class CompileTimeConstantCheckerTest {
             "test/CompileTimeConstantTestCase.java",
             """
             package test;
+
             import com.google.errorprone.annotations.CompileTimeConstant;
+
             public class CompileTimeConstantTestCase {
-              public void m(@CompileTimeConstant String p, int i) { }
-              // BUG: Diagnostic contains: Non-compile-time constant expression passed
-              public void r(String s) { m(s, 19); }
+              public void m(@CompileTimeConstant String p, int i) {}
+
+              public void r(String s) {
+                // BUG: Diagnostic contains: Non-compile-time constant expression passed
+                m(s, 19);
+              }
             }
             """)
         .doTest();
@@ -136,11 +168,19 @@ public class CompileTimeConstantCheckerTest {
             "test/CompileTimeConstantTestCase.java",
             """
             package test;
+
             import com.google.errorprone.annotations.CompileTimeConstant;
+
             public class CompileTimeConstantTestCase {
-              public void m(String s, @CompileTimeConstant String p) { }
-              public void r(@CompileTimeConstant final String x) { m(x, x); }
-              public void s() { r("boo"); }
+              public void m(String s, @CompileTimeConstant String p) {}
+
+              public void r(@CompileTimeConstant final String x) {
+                m(x, x);
+              }
+
+              public void s() {
+                r("boo");
+              }
             }
             """)
         .doTest();
@@ -153,11 +193,16 @@ public class CompileTimeConstantCheckerTest {
             "test/CompileTimeConstantTestCase.java",
             """
             package test;
+
             import com.google.errorprone.annotations.CompileTimeConstant;
+
             public class CompileTimeConstantTestCase {
-              public static void m(@CompileTimeConstant String p, int i) { }
-              // BUG: Diagnostic contains: Non-compile-time constant expression passed
-              public static void r(String s) { m(s, 19); }
+              public static void m(@CompileTimeConstant String p, int i) {}
+
+              public static void r(String s) {
+                // BUG: Diagnostic contains: Non-compile-time constant expression passed
+                m(s, 19);
+              }
             }
             """)
         .doTest();
@@ -170,10 +215,15 @@ public class CompileTimeConstantCheckerTest {
             "test/CompileTimeConstantTestCase.java",
             """
             package test;
+
             import com.google.errorprone.annotations.CompileTimeConstant;
+
             public class CompileTimeConstantTestCase {
-              public static void m(String s, @CompileTimeConstant String p) { }
-              public static void r(String x) { m(x, "boo"); }
+              public static void m(String s, @CompileTimeConstant String p) {}
+
+              public static void r(String x) {
+                m(x, "boo");
+              }
             }
             """)
         .doTest();
@@ -186,13 +236,18 @@ public class CompileTimeConstantCheckerTest {
             "test/CompileTimeConstantTestCase.java",
             """
             package test;
+
             import com.google.errorprone.annotations.CompileTimeConstant;
+
             public class CompileTimeConstantTestCase {
               public static class Inner {
-                public static void m(@CompileTimeConstant String p, int i) { }
+                public static void m(@CompileTimeConstant String p, int i) {}
               }
-              // BUG: Diagnostic contains: Non-compile-time constant expression passed
-              public static void r(String s) { Inner.m(s, 19); }
+
+              public static void r(String s) {
+                // BUG: Diagnostic contains: Non-compile-time constant expression passed
+                Inner.m(s, 19);
+              }
             }
             """)
         .doTest();
@@ -205,12 +260,17 @@ public class CompileTimeConstantCheckerTest {
             "test/CompileTimeConstantTestCase.java",
             """
             package test;
+
             import com.google.errorprone.annotations.CompileTimeConstant;
+
             public class CompileTimeConstantTestCase {
               public static class Inner {
-                public static void m(String s, @CompileTimeConstant String p) { }
+                public static void m(String s, @CompileTimeConstant String p) {}
               }
-              public static void r(String x) { Inner.m(x, "boo"); }
+
+              public static void r(String x) {
+                Inner.m(x, "boo");
+              }
             }
             """)
         .doTest();
@@ -223,10 +283,12 @@ public class CompileTimeConstantCheckerTest {
             "test/CompileTimeConstantTestCase.java",
             """
             package test;
+
             import com.google.errorprone.annotations.CompileTimeConstant;
+
             public class CompileTimeConstantTestCase {
-              public CompileTimeConstantTestCase(
-                  String s, @CompileTimeConstant String p) { }
+              public CompileTimeConstantTestCase(String s, @CompileTimeConstant String p) {}
+
               public static CompileTimeConstantTestCase makeNew(String x) {
                 return new CompileTimeConstantTestCase(x, "boo");
               }
@@ -242,10 +304,12 @@ public class CompileTimeConstantCheckerTest {
             "test/CompileTimeConstantTestCase.java",
             """
             package test;
+
             import com.google.errorprone.annotations.CompileTimeConstant;
+
             public class CompileTimeConstantTestCase {
-              public CompileTimeConstantTestCase(
-                  String s, @CompileTimeConstant String p) { }
+              public CompileTimeConstantTestCase(String s, @CompileTimeConstant String p) {}
+
               public static CompileTimeConstantTestCase makeNew(String x) {
                 // BUG: Diagnostic contains: Non-compile-time constant expression passed
                 return new CompileTimeConstantTestCase("boo", x);
@@ -262,11 +326,16 @@ public class CompileTimeConstantCheckerTest {
             "test/CompileTimeConstantTestCase.java",
             """
             package test;
+
             import com.google.errorprone.annotations.CompileTimeConstant;
+
             public class CompileTimeConstantTestCase {
-              public CompileTimeConstantTestCase(
-                  String s, @CompileTimeConstant final String p) { m(p); }
+              public CompileTimeConstantTestCase(String s, @CompileTimeConstant final String p) {
+                m(p);
+              }
+
               public void m(@CompileTimeConstant String r) {}
+
               public static CompileTimeConstantTestCase makeNew(String x) {
                 return new CompileTimeConstantTestCase(x, "boo");
               }
@@ -306,9 +375,12 @@ public class CompileTimeConstantCheckerTest {
             "test/CompileTimeConstantTestCase.java",
             """
             package test;
+
             import com.google.errorprone.annotations.CompileTimeConstant;
+
             public class CompileTimeConstantTestCase {
-              public static void m(String s, @CompileTimeConstant String... p) { }
+              public static void m(String s, @CompileTimeConstant String... p) {}
+
               public static void r(String s) {
                 m(s);
                 m(s, "foo");
@@ -327,9 +399,12 @@ public class CompileTimeConstantCheckerTest {
             "test/CompileTimeConstantTestCase.java",
             """
             package test;
+
             import com.google.errorprone.annotations.CompileTimeConstant;
+
             public class CompileTimeConstantTestCase {
-              public static void m(@CompileTimeConstant String y) { }
+              public static void m(@CompileTimeConstant String y) {}
+
               public static void r(@CompileTimeConstant String x) {
                 m(x);
               }
@@ -345,9 +420,12 @@ public class CompileTimeConstantCheckerTest {
             "test/CompileTimeConstantTestCase.java",
             """
             package test;
+
             import com.google.errorprone.annotations.CompileTimeConstant;
+
             public class CompileTimeConstantTestCase {
-              public static void m(@CompileTimeConstant String y) { }
+              public static void m(@CompileTimeConstant String y) {}
+
               public static void r(@CompileTimeConstant String x) {
                 x = x + "!";
                 // BUG: Diagnostic contains: . Did you mean to make 'x' final?
@@ -365,12 +443,16 @@ public class CompileTimeConstantCheckerTest {
             "test/CompileTimeConstantTestCase.java",
             """
             package test;
+
             import com.google.errorprone.annotations.CompileTimeConstant;
+
             abstract class CompileTimeConstantTestCase {
               abstract void m(String y);
+
               static class C extends CompileTimeConstantTestCase {
+                @Override
                 // BUG: Diagnostic contains: Method with @CompileTimeConstant parameter
-                @Override void m(@CompileTimeConstant String s) {}
+                void m(@CompileTimeConstant String s) {}
               }
             }
             """)
@@ -384,10 +466,13 @@ public class CompileTimeConstantCheckerTest {
             "test/CompileTimeConstantTestCase.java",
             """
             package test;
+
             import com.google.errorprone.annotations.CompileTimeConstant;
             import java.util.function.Consumer;
+
             public class CompileTimeConstantTestCase {
-              public static void m(@CompileTimeConstant String s) { }
+              public static void m(@CompileTimeConstant String s) {}
+
               public static Consumer<String> r(String x) {
                 // BUG: Diagnostic contains: Method with @CompileTimeConstant parameter
                 return CompileTimeConstantTestCase::m;
@@ -404,10 +489,13 @@ public class CompileTimeConstantCheckerTest {
             "test/CompileTimeConstantTestCase.java",
             """
             package test;
+
             import com.google.errorprone.annotations.CompileTimeConstant;
             import java.util.function.Function;
+
             public class CompileTimeConstantTestCase {
-              CompileTimeConstantTestCase(@CompileTimeConstant String s) { }
+              CompileTimeConstantTestCase(@CompileTimeConstant String s) {}
+
               public static Function<String, CompileTimeConstantTestCase> r(String x) {
                 // BUG: Diagnostic contains: Method with @CompileTimeConstant parameter
                 return CompileTimeConstantTestCase::new;
@@ -424,13 +512,17 @@ public class CompileTimeConstantCheckerTest {
             "test/CompileTimeConstantTestCase.java",
             """
             package test;
+
             import com.google.errorprone.annotations.CompileTimeConstant;
             import java.util.function.Consumer;
+
             public class CompileTimeConstantTestCase {
               interface ConstantFn {
                 void apply(@CompileTimeConstant String s);
               }
-              public static void m(@CompileTimeConstant String s) { }
+
+              public static void m(@CompileTimeConstant String s) {}
+
               public static ConstantFn r(String x) {
                 return CompileTimeConstantTestCase::m;
               }
@@ -446,13 +538,17 @@ public class CompileTimeConstantCheckerTest {
             "test/CompileTimeConstantTestCase.java",
             """
             package test;
+
             import com.google.errorprone.annotations.CompileTimeConstant;
             import java.util.function.Consumer;
+
             public class CompileTimeConstantTestCase {
               interface ConstantFn {
                 CompileTimeConstantTestCase apply(@CompileTimeConstant String s);
               }
+
               CompileTimeConstantTestCase(@CompileTimeConstant String s) {}
+
               public static ConstantFn r(String x) {
                 return CompileTimeConstantTestCase::new;
               }
@@ -468,8 +564,10 @@ public class CompileTimeConstantCheckerTest {
             "test/CompileTimeConstantTestCase.java",
             """
             package test;
+
             import com.google.errorprone.annotations.CompileTimeConstant;
             import java.util.function.Consumer;
+
             public class CompileTimeConstantTestCase {
               // BUG: Diagnostic contains: Method with @CompileTimeConstant parameter
               Consumer<String> c = (@CompileTimeConstant String s) -> {};
@@ -485,13 +583,20 @@ public class CompileTimeConstantCheckerTest {
             "test/CompileTimeConstantTestCase.java",
             """
             package test;
+
             import com.google.errorprone.annotations.CompileTimeConstant;
             import java.util.function.Consumer;
+
             public class CompileTimeConstantTestCase {
               interface ConstantFn {
                 void apply(@CompileTimeConstant String s);
               }
-              ConstantFn c = (@CompileTimeConstant String s) -> {doFoo(s);};
+
+              ConstantFn c =
+                  (@CompileTimeConstant String s) -> {
+                    doFoo(s);
+                  };
+
               void doFoo(final @CompileTimeConstant String foo) {}
             }
             """)
@@ -505,14 +610,21 @@ public class CompileTimeConstantCheckerTest {
             "test/CompileTimeConstantTestCase.java",
             """
             package test;
+
             import com.google.errorprone.annotations.CompileTimeConstant;
             import java.util.function.Consumer;
+
             public class CompileTimeConstantTestCase {
               interface ConstantFn {
                 void apply(@CompileTimeConstant String s);
               }
-              // BUG: Diagnostic contains: Non-compile-time constant expression
-              ConstantFn c = s -> {doFoo(s);};
+
+              ConstantFn c =
+                  s -> {
+                    // BUG: Diagnostic contains: Non-compile-time constant expression
+                    doFoo(s);
+                  };
+
               void doFoo(final @CompileTimeConstant String foo) {}
             }
             """)
@@ -526,12 +638,15 @@ public class CompileTimeConstantCheckerTest {
             "test/CompileTimeConstantTestCase.java",
             """
             package test;
+
             import com.google.errorprone.annotations.CompileTimeConstant;
+
             public class CompileTimeConstantTestCase {
               @FunctionalInterface
               interface I {
                 void f(@CompileTimeConstant String x);
               }
+
               void f(String s) {
                 I i = x -> {};
                 // BUG: Diagnostic contains: Non-compile-time constant expression passed
@@ -549,7 +664,9 @@ public class CompileTimeConstantCheckerTest {
             "test/CompileTimeConstantTestCase.java",
             """
             package test;
+
             import com.google.errorprone.annotations.CompileTimeConstant;
+
             public class CompileTimeConstantTestCase {
               // BUG: Diagnostic contains: . Did you mean to make 's' final?
               @CompileTimeConstant String s = "s";
@@ -565,7 +682,9 @@ public class CompileTimeConstantCheckerTest {
             "test/CompileTimeConstantTestCase.java",
             """
             package test;
+
             import com.google.errorprone.annotations.CompileTimeConstant;
+
             public class CompileTimeConstantTestCase {
               @CompileTimeConstant final String s = "s";
             }
@@ -580,9 +699,12 @@ public class CompileTimeConstantCheckerTest {
             "test/CompileTimeConstantTestCase.java",
             """
             package test;
+
             import com.google.errorprone.annotations.CompileTimeConstant;
+
             public class CompileTimeConstantTestCase {
               @CompileTimeConstant final String s;
+
               CompileTimeConstantTestCase(String s) {
                 // BUG: Diagnostic contains: Non-compile-time constant expression
                 this.s = s;
@@ -599,9 +721,12 @@ public class CompileTimeConstantCheckerTest {
             "test/CompileTimeConstantTestCase.java",
             """
             package test;
+
             import com.google.errorprone.annotations.CompileTimeConstant;
+
             public class CompileTimeConstantTestCase {
               @CompileTimeConstant final String s;
+
               CompileTimeConstantTestCase(@CompileTimeConstant String s) {
                 this.s = s;
               }
@@ -617,15 +742,20 @@ public class CompileTimeConstantCheckerTest {
             "test/CompileTimeConstantTestCase.java",
             """
             package test;
+
             import com.google.errorprone.annotations.CompileTimeConstant;
+
             public class CompileTimeConstantTestCase {
               @CompileTimeConstant final String s;
+
               CompileTimeConstantTestCase(@CompileTimeConstant String s) {
                 this.s = s;
               }
+
               void invokeCTCMethod() {
                 ctcMethod(s);
               }
+
               void ctcMethod(@CompileTimeConstant String s) {}
             }
             """)
@@ -639,10 +769,12 @@ public class CompileTimeConstantCheckerTest {
             "Test.java",
             """
             import com.google.errorprone.annotations.CompileTimeConstant;
+
             public enum Test {
               A("A");
               // BUG: Diagnostic contains: . Did you mean to make 's' final?
               @CompileTimeConstant String s;
+
               Test(@CompileTimeConstant String s) {
                 this.s = s;
               }
@@ -658,9 +790,11 @@ public class CompileTimeConstantCheckerTest {
             "Test.java",
             """
             import com.google.errorprone.annotations.CompileTimeConstant;
+
             public enum Test {
               A("A");
               @CompileTimeConstant final String s;
+
               Test(@CompileTimeConstant String s) {
                 this.s = s;
               }
@@ -676,9 +810,11 @@ public class CompileTimeConstantCheckerTest {
             "Test.java",
             """
             import com.google.errorprone.annotations.CompileTimeConstant;
+
             public enum Test {
               A("A");
               @CompileTimeConstant final String s;
+
               Test(String s) {
                 // BUG: Diagnostic contains: Non-compile-time constant expression
                 this.s = s;
@@ -695,15 +831,19 @@ public class CompileTimeConstantCheckerTest {
             "Test.java",
             """
             import com.google.errorprone.annotations.CompileTimeConstant;
+
             public enum Test {
               A("A");
               @CompileTimeConstant final String s;
+
               Test(@CompileTimeConstant String s) {
                 this.s = s;
               }
+
               void invokeCTCMethod() {
                 ctcMethod(s);
               }
+
               void ctcMethod(@CompileTimeConstant String s) {}
             }
             """)
@@ -717,9 +857,12 @@ public class CompileTimeConstantCheckerTest {
             "test/CompileTimeConstantTestCase.java",
             """
             package test;
+
             import com.google.errorprone.annotations.CompileTimeConstant;
+
             public abstract class CompileTimeConstantTestCase {
               abstract String something();
+
               // BUG: Diagnostic contains: Non-compile-time constant expression
               @CompileTimeConstant final String x = something();
             }
@@ -734,8 +877,10 @@ public class CompileTimeConstantCheckerTest {
             "test/CompileTimeConstantTestCase.java",
             """
             package test;
+
             import com.google.common.collect.ImmutableList;
             import com.google.errorprone.annotations.CompileTimeConstant;
+
             public abstract class CompileTimeConstantTestCase {
               @CompileTimeConstant final ImmutableList<String> x = ImmutableList.of("a");
             }

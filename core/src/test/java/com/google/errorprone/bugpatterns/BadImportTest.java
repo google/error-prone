@@ -211,8 +211,8 @@ class BadImportPositiveCases {
     ImmutableList.Builder<Builder> builder2Raw;
   }
 
-  @Nullable
-      Builder<@Nullable Builder<@Nullable String>> parameterizedWithTypeUseAnnotationMethod() {
+  @Nullable Builder<@Nullable Builder<@Nullable String>>
+      parameterizedWithTypeUseAnnotationMethod() {
     return null;
   }
 
@@ -243,7 +243,7 @@ class BadImportPositiveCases {
   void classLiteral() {
     System.out.println(Builder.class);
   }
-}\
+}
 """)
         .doTest();
   }
@@ -408,8 +408,8 @@ class BadImportPositiveCases {
     ImmutableList.Builder<Builder> builder2Raw;
   }
 
-  @Nullable
-      Builder<@Nullable Builder<@Nullable String>> parameterizedWithTypeUseAnnotationMethod() {
+  @Nullable Builder<@Nullable Builder<@Nullable String>>
+      parameterizedWithTypeUseAnnotationMethod() {
     return null;
   }
 
@@ -440,7 +440,7 @@ class BadImportPositiveCases {
   void classLiteral() {
     System.out.println(Builder.class);
   }
-}\
+}
 """)
         .addOutputLines(
             "BadImportPositiveCases_expected.java",

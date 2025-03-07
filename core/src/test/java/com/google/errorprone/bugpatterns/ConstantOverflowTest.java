@@ -37,10 +37,13 @@ public class ConstantOverflowTest {
             """
             class Test {
               static final int C = 1;
+
               void g(int x) {}
+
               void f() {
-                // BUG: Diagnostic contains: if (1000L * 1000 * 1000 * 10 * 1L == 0);
-                if (1000 * 1000 * 1000 * 10 * 1L == 0);
+                // BUG: Diagnostic contains: if (1000L * 1000 * 1000 * 10 * 1L == 0)
+                if (1000 * 1000 * 1000 * 10 * 1L == 0)
+                  ;
                 // BUG: Diagnostic contains: int x = (int) (1000L * 1000 * 1000 * 10 * 1L);
                 int x = (int) (1000 * 1000 * 1000 * 10 * 1L);
                 // BUG: Diagnostic contains: long y = 1000L * 1000 * 1000 * 10;
@@ -138,6 +141,7 @@ public class ConstantOverflowTest {
             """
             class Test {
               private static final int MASK = (1 << 31);
+
               void f(int[] xs) {
                 for (final int x : xs) {
                   final int y = (x & (MASK - 1));
@@ -156,6 +160,7 @@ public class ConstantOverflowTest {
             """
             class Test {
               private static final long GOLDEN_GAMMA = 0x9e3779b97f4a7c15L;
+
               void f() {
                 System.err.println(2 * GOLDEN_GAMMA);
               }

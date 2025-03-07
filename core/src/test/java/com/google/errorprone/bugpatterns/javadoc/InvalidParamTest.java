@@ -41,8 +41,7 @@ public final class InvalidParamTest {
             """
             interface Test {
               /**
-               * @param <T> baz
-               // BUG: Diagnostic contains: Parameter name `c` is unknown
+               * @param <T> baz // BUG: Diagnostic contains: Parameter name `c` is unknown
                * @param c foo
                * @param b bar
                */
@@ -143,9 +142,7 @@ public final class InvalidParamTest {
             "Test.java",
             """
             interface Test {
-              /**
-               * {@code foabar}, {@code barfoo}
-               */
+              /** {@code foabar}, {@code barfoo} */
               void foo(int foobar);
             }
             """)
@@ -163,19 +160,21 @@ public final class InvalidParamTest {
   }
 
   @Test
+  @SuppressWarnings("MisformattedTestData")
   public void verySimilarCodeParam_diagnosticMessage() {
     helper
         .addSourceLines(
             "Test.java",
             """
-            interface Test {
-              /**
-               // BUG: Diagnostic contains: `foabar` is very close to the parameter `foobar`
-               * {@code foabar}, {@code barfoo}
-               */
-              void foo(int foobar);
-            }
-            """)
+interface Test {
+  /**
+   * // BUG: Diagnostic contains: `foabar` is very close to the parameter `foobar`
+   * {@code foabar},
+   * {@code barfoo}
+   */
+  void foo(int foobar);
+}
+""")
         .doTest();
   }
 
@@ -188,6 +187,7 @@ public final class InvalidParamTest {
             interface Test {
               /**
                * Frobnicates a {@code foobarbaz}.
+               *
                * @param <T> baz
                * @param a bar
                * @param b quux
@@ -227,13 +227,14 @@ public final class InvalidParamTest {
   }
 
   @Test
+  @SuppressWarnings("MisformattedTestData")
   public void badParameterName_record() {
     helper
         .addSourceLines(
             "Test.java",
             """
             /**
-             // BUG: Diagnostic contains: Parameter name `bar` is unknown
+             * // BUG: Diagnostic contains: Parameter name `bar` is unknown
              * @param bar Foo.
              */
             public record Test(String foo) {}
@@ -242,6 +243,7 @@ public final class InvalidParamTest {
   }
 
   @Test
+  @SuppressWarnings("MisformattedTestData")
   public void multipleConstructors_record() {
     helper
         .addSourceLines(
@@ -257,7 +259,7 @@ public final class InvalidParamTest {
               }
 
               /**
-               // BUG: Diagnostic contains: Parameter name `bar` is unknown
+               * // BUG: Diagnostic contains: Parameter name `bar` is unknown
                * @param bar Foo.
                */
               public Test(String foo) {
@@ -269,6 +271,7 @@ public final class InvalidParamTest {
   }
 
   @Test
+  @SuppressWarnings("MisformattedTestData")
   public void typeParameter_record() {
     helper
         .addSourceLines(
@@ -285,7 +288,7 @@ public final class InvalidParamTest {
             "Positive.java",
             """
             /**
-             // BUG: Diagnostic contains: Parameter name `E` is unknown
+             * // BUG: Diagnostic contains: Parameter name `E` is unknown
              * @param <E> The type parameter.
              * @param contents Contents.
              * @param bar Bar.
@@ -312,6 +315,7 @@ public final class InvalidParamTest {
   }
 
   @Test
+  @SuppressWarnings("MisformattedTestData")
   public void normalConstructor_record() {
     helper
         .addSourceLines(
@@ -322,13 +326,13 @@ public final class InvalidParamTest {
              */
             public record Test(String name) {
               /**
-               // BUG: Diagnostic contains: Parameter name `foo` is unknown
+               * // BUG: Diagnostic contains: Parameter name `foo` is unknown
                * @param foo Name.
                */
               public Test(String name) {
                 this.name = name;
               }
-             }
+            }
             """)
         .doTest();
   }

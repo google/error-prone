@@ -38,11 +38,11 @@ public class TransientMisuseTest {
               // BUG: Diagnostic contains: static String foo1
               static transient String foo1;
               // BUG: Diagnostic contains: static String foo2
-              transient static String foo2;
-              // BUG: Diagnostic contains: static final public String foo3
-              static final public transient String foo3 = "";
-              // BUG: Diagnostic contains: protected final static String foo4
-              protected final static transient String foo4 = "";
+              static transient String foo2;
+              // BUG: Diagnostic contains: public static final String foo3
+              public static final transient String foo3 = "";
+              // BUG: Diagnostic contains: protected static final String foo4
+              protected static final transient String foo4 = "";
             }
             """)
         .doTest();

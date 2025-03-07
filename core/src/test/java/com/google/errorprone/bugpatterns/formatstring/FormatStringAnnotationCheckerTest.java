@@ -35,12 +35,16 @@ public class FormatStringAnnotationCheckerTest {
             "test/FormatStringTestCase.java",
             """
             package test;
+
             import com.google.errorprone.annotations.FormatMethod;
             import com.google.errorprone.annotations.FormatString;
+
             public class FormatStringTestCase {
-              @FormatMethod public static void log(@FormatString String s, Object... args) {}
-              @FormatMethod public static void callLog(@FormatString String s, Object arg,
-                  Object arg2) {
+              @FormatMethod
+              public static void log(@FormatString String s, Object... args) {}
+
+              @FormatMethod
+              public static void callLog(@FormatString String s, Object arg, Object arg2) {
                 // BUG: Diagnostic contains: The number of format arguments passed with an
                 log(s, "test");
                 // BUG: Diagnostic contains: The format argument types passed with an
@@ -58,11 +62,16 @@ public class FormatStringAnnotationCheckerTest {
             "test/FormatStringTestCase.java",
             """
             package test;
+
             import com.google.errorprone.annotations.FormatMethod;
             import com.google.errorprone.annotations.FormatString;
+
             public class FormatStringTestCase {
-              @FormatMethod public static void log(@FormatString String s, Object... args) {}
-              @FormatMethod public static void callLog(@FormatString String s, Object arg) {
+              @FormatMethod
+              public static void log(@FormatString String s, Object... args) {}
+
+              @FormatMethod
+              public static void callLog(@FormatString String s, Object arg) {
                 log(s, arg);
               }
             }
@@ -77,11 +86,16 @@ public class FormatStringAnnotationCheckerTest {
             "test/FormatStringTestCase.java",
             """
             package test;
+
             import com.google.errorprone.annotations.FormatMethod;
             import com.google.errorprone.annotations.FormatString;
+
             public class FormatStringTestCase {
-              @FormatMethod public static void log(@FormatString String s, Object... args) {}
-              @FormatMethod public static void callLog(String s, Object arg) {
+              @FormatMethod
+              public static void log(@FormatString String s, Object... args) {}
+
+              @FormatMethod
+              public static void callLog(String s, Object arg) {
                 log(s, arg);
               }
             }
@@ -96,10 +110,14 @@ public class FormatStringAnnotationCheckerTest {
             "test/FormatStringTestCase.java",
             """
             package test;
+
             import com.google.errorprone.annotations.FormatMethod;
             import com.google.errorprone.annotations.FormatString;
+
             public class FormatStringTestCase {
-              @FormatMethod public static void log(@FormatString String s, Object... args) {}
+              @FormatMethod
+              public static void log(@FormatString String s, Object... args) {}
+
               public static void callLog() {
                 // BUG: Diagnostic contains: extra format arguments: used 1, provided 2
                 log("%s", new Object(), new Object());
@@ -116,10 +134,14 @@ public class FormatStringAnnotationCheckerTest {
             "test/FormatStringTestCase.java",
             """
             package test;
+
             import com.google.errorprone.annotations.FormatMethod;
             import com.google.errorprone.annotations.FormatString;
+
             public class FormatStringTestCase {
-              @FormatMethod public static void log(@FormatString String s, Object... args) {}
+              @FormatMethod
+              public static void log(@FormatString String s, Object... args) {}
+
               public static void callLog() {
                 final String formatString = "%d";
                 log(formatString, Integer.valueOf(0));
@@ -136,10 +158,17 @@ public class FormatStringAnnotationCheckerTest {
             "test/FormatStringTestCase.java",
             """
             package test;
+
             import com.google.errorprone.annotations.FormatMethod;
+
             public class FormatStringTestCase {
-              @FormatMethod static void log(String s, Object... args) {}
-              public static String formatString() { return "";}
+              @FormatMethod
+              static void log(String s, Object... args) {}
+
+              public static String formatString() {
+                return "";
+              }
+
               public static void callLog() {
                 String format = "log: ";
                 // BUG: Diagnostic contains: Format strings must be either literals or
@@ -159,15 +188,23 @@ public class FormatStringAnnotationCheckerTest {
             "test/FormatStringTestCase.java",
             """
             package test;
+
             import com.google.errorprone.annotations.FormatMethod;
             import com.google.errorprone.annotations.FormatString;
+
             public class FormatStringTestCase {
+              @FormatMethod
               // BUG: Diagnostic contains: A method cannot have more than one @FormatString
-              @FormatMethod void log1(@FormatString String s1, @FormatString String s2) {}
+              void log1(@FormatString String s1, @FormatString String s2) {}
+
+              @FormatMethod
               // BUG: Diagnostic contains: An @FormatMethod must contain at least one String
-              @FormatMethod void log2(Object o) {}
+              void log2(Object o) {}
+
+              @FormatMethod
               // BUG: Diagnostic contains: Only strings can be annotated @FormatString.
-              @FormatMethod void log3(@FormatString Object o) {}
+              void log3(@FormatString Object o) {}
+
               // BUG: Diagnostic contains: A parameter can only be annotated @FormatString in a
               void log4(@FormatString Object o) {}
             }
@@ -182,16 +219,22 @@ public class FormatStringAnnotationCheckerTest {
             "test/FormatStringTestCase.java",
             """
             package test;
+
             import com.google.errorprone.annotations.FormatMethod;
             import com.google.errorprone.annotations.FormatString;
+
             public class FormatStringTestCase {
-              @FormatMethod public static void log(@FormatString String s, Object... args) {}
-              @FormatMethod public static void callLog1(String format, String s, Object arg) {
+              @FormatMethod
+              public static void log(@FormatString String s, Object... args) {}
+
+              @FormatMethod
+              public static void callLog1(String format, String s, Object arg) {
                 // BUG: Diagnostic contains: Format strings must be compile time constants or
                 log(s, arg);
               }
-              @FormatMethod public static void callLog2(String s, @FormatString String format,
-                  Object arg) {
+
+              @FormatMethod
+              public static void callLog2(String s, @FormatString String format, Object arg) {
                 // BUG: Diagnostic contains: Format strings must be compile time constants or
                 log(s, arg);
               }
@@ -279,10 +322,14 @@ public class FormatStringAnnotationCheckerTest {
             "test/FormatStringTestCase.java",
             """
             package test;
+
             import com.google.errorprone.annotations.FormatMethod;
             import com.google.errorprone.annotations.FormatString;
+
             public class FormatStringTestCase {
-              @FormatMethod public FormatStringTestCase(String s, Object... args) {}
+              @FormatMethod
+              public FormatStringTestCase(String s, Object... args) {}
+
               public static void createTestCase(String s, Object arg) {
                 // BUG: Diagnostic contains: Format strings must be compile time constants or
                 new FormatStringTestCase(s, arg);
@@ -299,13 +346,17 @@ public class FormatStringAnnotationCheckerTest {
             "test/FormatStringTestCase.java",
             """
             package test;
+
             import static org.mockito.ArgumentMatchers.any;
             import static org.mockito.ArgumentMatchers.eq;
             import static org.mockito.Mockito.verify;
             import com.google.errorprone.annotations.FormatMethod;
             import com.google.errorprone.annotations.FormatString;
+
             public class FormatStringTestCase {
-              @FormatMethod public void log(@FormatString String s, Object... args) {}
+              @FormatMethod
+              public void log(@FormatString String s, Object... args) {}
+
               public void callLog(String s, Object... args) {
                 verify(this).log(any(String.class), eq(args));
               }
@@ -321,13 +372,17 @@ public class FormatStringAnnotationCheckerTest {
             "test/FormatStringTestCase.java",
             """
             package test;
+
             import static org.mockito.ArgumentMatchers.any;
             import static org.mockito.ArgumentMatchers.eq;
             import static org.mockito.Mockito.verify;
             import com.google.errorprone.annotations.FormatMethod;
             import com.google.errorprone.annotations.FormatString;
+
             public class FormatStringTestCase {
-              @FormatMethod public void log(@FormatString String s, Object... args) {}
+              @FormatMethod
+              public void log(@FormatString String s, Object... args) {}
+
               public void callLog(String s, Object... args) {
                 verify(this).log(any(String.class), eq(args));
               }
@@ -343,10 +398,14 @@ public class FormatStringAnnotationCheckerTest {
             "test/FormatStringTestCase.java",
             """
             package test;
+
             import com.google.errorprone.annotations.FormatMethod;
+
             public class FormatStringTestCase {
+              @FormatMethod
               // BUG: Diagnostic contains: must contain at least one String parameter
-              @FormatMethod public static void log(int x, int y) {}
+              public static void log(int x, int y) {}
+
               void test() {
                 log(1, 2);
               }

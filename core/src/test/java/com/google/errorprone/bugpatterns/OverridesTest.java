@@ -112,6 +112,7 @@ public class OverridesPositiveCase1 {
   abstract class ImplementsAndExtends extends MyBase implements MyInterface {
     // BUG: Diagnostic contains:
     public abstract void f(Object... xs);
+
     // BUG: Diagnostic contains:
     public abstract void g(Object[] xs);
   }
@@ -119,10 +120,11 @@ public class OverridesPositiveCase1 {
   abstract class ImplementsAndExtends2 extends MyBase implements MyInterface {
     // BUG: Diagnostic contains:
     public abstract void f(Object[] xs);
+
     // BUG: Diagnostic contains:
     public abstract void g(Object... xs);
   }
-}\
+}
 """)
         .doTest();
   }
@@ -228,26 +230,27 @@ import java.util.Map;
  */
 public class OverridesPositiveCase4 {
 
-  @interface Note { }
+  @interface Note {}
 
   abstract class Base {
     abstract void varargsMethod(@Note final Map<Object, Object>... xs);
+
     abstract void arrayMethod(@Note final Map<Object, Object>[] xs);
   }
 
   abstract class Child1 extends Base {
     @Override
-    // BUG: Diagnostic contains: (@Note final Map<Object, Object> /* asd */ [] /* dsa */ xs);
-    abstract void arrayMethod(@Note final Map<Object, Object> /* asd */ ... /* dsa */ xs);
+    // BUG: Diagnostic contains: (@Note final Map<Object, Object> /* asd */[] /* dsa */ xs);
+    abstract void arrayMethod(@Note final Map<Object, Object> /* asd */... /* dsa */ xs);
   }
 
   abstract class Child2 extends Base {
     @Override
-    //TODO(cushon): improve testing infrastructure so we can enforce that no fix is suggested.
+    // TODO(cushon): improve testing infrastructure so we can enforce that no fix is suggested.
     // BUG: Diagnostic contains: Varargs
-    abstract void varargsMethod(@Note final Map<Object, Object>  /*dsa*/ [ /* [ */ ] /* dsa */ xs);
+    abstract void varargsMethod(@Note final Map<Object, Object> /*dsa*/[ /* [ */] /* dsa */ xs);
   }
-}\
+}
 """)
         .doTest();
   }
