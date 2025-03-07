@@ -83,8 +83,9 @@ public class JavacErrorDescriptionListener implements DescriptionListener {
     Map<Fix, AppliedFix> cache = new HashMap<>();
     try {
       CharSequence sourceFileContent = sourceFile.getCharContent(true);
-      AppliedFix.Applier applier = AppliedFix.fromSource(sourceFileContent, endPositions);
-      fixToAppliedFix = fix -> cache.computeIfAbsent(fix, applier::apply);
+      fixToAppliedFix =
+          fix ->
+              cache.computeIfAbsent(fix, f -> AppliedFix.apply(sourceFileContent, endPositions, f));
     } catch (IOException e) {
       throw new UncheckedIOException(e);
     }
@@ -153,7 +154,7 @@ public class JavacErrorDescriptionListener implements DescriptionListener {
       if (appliedFix.isRemoveLine()) {
         messageBuilder.append("to remove this line");
       } else {
-        messageBuilder.append("'").append(appliedFix.getNewCodeSnippet()).append("'");
+        messageBuilder.append("'").append((CharSequence) appliedFix.snippet()).append("'");
       }
       first = false;
     }
