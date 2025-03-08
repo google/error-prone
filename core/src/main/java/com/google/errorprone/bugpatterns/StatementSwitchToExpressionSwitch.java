@@ -159,7 +159,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
   @Inject
   StatementSwitchToExpressionSwitch(ErrorProneFlags flags) {
     this.enableDirectConversion =
-        flags.getBoolean("StatementSwitchToExpressionSwitch:EnableDirectConversion").orElse(false);
+        flags.getBoolean("StatementSwitchToExpressionSwitch:EnableDirectConversion").orElse(true);
     this.enableReturnSwitchConversion =
         flags
             .getBoolean("StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion")
@@ -167,7 +167,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     this.enableAssignmentSwitchConversion =
         flags
             .getBoolean("StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion")
-            .orElse(false);
+            .orElse(true);
   }
 
   @Override
