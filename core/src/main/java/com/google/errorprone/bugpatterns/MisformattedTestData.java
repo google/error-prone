@@ -94,8 +94,11 @@ public final class MisformattedTestData extends BugChecker implements MethodInvo
             .findFirst()
             .orElseThrow()
             .endPos();
+    var betweenArguments = state.getSourceCode().subSequence(afterCommaPos, endPos).toString();
     var spaces =
-        state.getSourceCode().subSequence(afterCommaPos, endPos).toString().replace("\n", "");
+        betweenArguments.contains("\n")
+            ? betweenArguments.substring(betweenArguments.indexOf('\n') + 1)
+            : "";
     return describeMatch(
         sourceTree,
         SuggestedFix.replace(

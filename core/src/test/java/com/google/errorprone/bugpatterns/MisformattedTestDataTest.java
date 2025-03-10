@@ -155,6 +155,42 @@ public final class MisformattedTestDataTest {
   }
 
   @Test
+  public void trailingComments_notIncludedInPrefix() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import com.google.errorprone.BugCheckerRefactoringTestHelper;
+
+            class Test {
+              void method(BugCheckerRefactoringTestHelper h) {
+                h.addInputLines(
+                    "Test.java", //
+                    "package foo; class Test {}");
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import com.google.errorprone.BugCheckerRefactoringTestHelper;
+
+            class Test {
+              void method(BugCheckerRefactoringTestHelper h) {
+                h.addInputLines(
+                    "Test.java", //
+                    \"""
+                    package foo;
+
+                    class Test {}
+                    \""");
+               }
+            }
+            """)
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
   public void onlyDiffersByIndentation_notReindented() {
     refactoringHelper
         .addInputLines(
