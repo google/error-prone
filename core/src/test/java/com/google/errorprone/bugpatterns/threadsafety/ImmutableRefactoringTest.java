@@ -47,7 +47,9 @@ public final class ImmutableRefactoringTest {
             "Test.java",
             """
             import com.google.errorprone.annotations.Immutable;
-            @Immutable class Test {
+
+            @Immutable
+            class Test {
               final int a = 42;
               final String b = null;
             }

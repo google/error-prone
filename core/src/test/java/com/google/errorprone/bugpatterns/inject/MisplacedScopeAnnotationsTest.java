@@ -72,8 +72,10 @@ public class MisplacedScopeAnnotationsTest {
             import com.google.inject.Provides;
             import javax.inject.Named;
             import javax.inject.Singleton;
+
             class Foo {
-              @Provides String provideString( @Named("foo") String foo) {
+              @Provides
+              String provideString(@Named("foo") String foo) {
                 return foo;
               }
             }
@@ -102,8 +104,10 @@ public class MisplacedScopeAnnotationsTest {
             import javax.inject.Inject;
             import javax.inject.Named;
             import javax.inject.Singleton;
+
             class Foo {
-              @Inject Foo( @Named("bar") String bar) {}
+              @Inject
+              Foo(@Named("bar") String bar) {}
             }
             """)
         .doTest();
@@ -130,8 +134,10 @@ public class MisplacedScopeAnnotationsTest {
             import javax.inject.Inject;
             import javax.inject.Named;
             import javax.inject.Singleton;
+
             class Foo {
-              @Inject Foo( String bar, Integer i,  Long c) {}
+              @Inject
+              Foo(String bar, Integer i, Long c) {}
             }
             """)
         .doTest();
@@ -157,8 +163,9 @@ public class MisplacedScopeAnnotationsTest {
             import javax.inject.Inject;
             import javax.inject.Named;
             import javax.inject.Singleton;
+
             class Foo {
-              @Inject  String foo;
+              @Inject String foo;
             }
             """)
         .doTest();

@@ -38,20 +38,20 @@ public class DuplicateMapKeysTest {
         .addSourceLines(
             "a/A.java",
             """
-            package a;
-            import static java.util.Map.entry;
-            import java.util.Map;
-            class A {
-              public static void test() {
-                // BUG: Diagnostic contains: Foo
-                Map<String, String> map = Map.ofEntries(
-                entry("Foo", "Bar"),
-                entry("Ping", "Pong"),
-                entry("Kit", "Kat"),
-                entry("Foo", "Bar"));
-              }
-            }
-            """)
+package a;
+
+import static java.util.Map.entry;
+import java.util.Map;
+
+class A {
+  public static void test() {
+    Map<String, String> map =
+        // BUG: Diagnostic contains: Foo
+        Map.ofEntries(
+            entry("Foo", "Bar"), entry("Ping", "Pong"), entry("Kit", "Kat"), entry("Foo", "Bar"));
+  }
+}
+""")
         .doTest();
   }
 
@@ -61,19 +61,19 @@ public class DuplicateMapKeysTest {
         .addSourceLines(
             "a/A.java",
             """
-            package a;
-            import static java.util.Map.entry;
-            import java.util.Map;
-            class A {
-              public static void test() {
-                Map<String, String> map = Map.ofEntries(
-                entry("Foo", "Bar"),
-                entry("Ping", "Pong"),
-                entry("Kit", "Kat"),
-                entry("Food", "Bar"));
-              }
-            }
-            """)
+package a;
+
+import static java.util.Map.entry;
+import java.util.Map;
+
+class A {
+  public static void test() {
+    Map<String, String> map =
+        Map.ofEntries(
+            entry("Foo", "Bar"), entry("Ping", "Pong"), entry("Kit", "Kat"), entry("Food", "Bar"));
+  }
+}
+""")
         .doTest();
   }
 }

@@ -532,6 +532,7 @@ public final class PatternMatchingInstanceofTest {
             class Test {
               private final int x = 0;
               private final int y = 1;
+
               @Override
               public boolean equals(Object o) {
                 return o instanceof Test test && test.x == this.x && test.y == this.y;
@@ -567,6 +568,7 @@ public final class PatternMatchingInstanceofTest {
             class Test {
               private final int x = 0;
               private final int y = 1;
+
               @Override
               public boolean equals(Object o) {
                 if (!(o instanceof Test other) || other.x != this.x) {

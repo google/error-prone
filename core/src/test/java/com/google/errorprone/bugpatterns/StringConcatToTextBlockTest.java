@@ -145,6 +145,7 @@ public class StringConcatToTextBlockTest {
             "Test.java",
             """
             import com.google.common.base.Joiner;
+
             class Test {
               String s =
                   \"""
@@ -172,6 +173,7 @@ public class StringConcatToTextBlockTest {
             "Test.java",
             """
             import java.util.StringJoiner;
+
             class Test {
               String s =
                   \"""
@@ -199,6 +201,7 @@ public class StringConcatToTextBlockTest {
             "Test.java",
             """
             import java.util.StringJoiner;
+
             class Test {
               String s =
                   \"""

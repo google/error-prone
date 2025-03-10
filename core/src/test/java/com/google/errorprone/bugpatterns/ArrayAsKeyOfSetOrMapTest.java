@@ -88,7 +88,7 @@ class Test {
     // BUG: Diagnostic contains: ArrayAsKeyOfSetOrMap
     LinkedHashMap<String[], Integer> testLinkedHashMap = new LinkedHashMap<String[], Integer>();
     ConcurrentHashMap<String[], Integer> testConcurrentHashMap =
-    // BUG: Diagnostic contains: ArrayAsKeyOfSetOrMap
+        // BUG: Diagnostic contains: ArrayAsKeyOfSetOrMap
         new ConcurrentHashMap<String[], Integer>();
     // BUG: Diagnostic contains: ArrayAsKeyOfSetOrMap
     HashMultiset<String[]> testHashMultiSet = HashMultiset.create();

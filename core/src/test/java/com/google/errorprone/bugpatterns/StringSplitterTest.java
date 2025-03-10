@@ -116,10 +116,8 @@ class Test {
   void f() {
     for (String s : Splitter.on(Pattern.compile(NON_REGEX_PATTERN_STRING)).split("")) {}
     for (String s : Splitter.on(Pattern.compile(REGEX_PATTERN_STRING)).split("")) {}
-    for (String s :
-             Splitter.on(Pattern.compile(CONVERTIBLE_PATTERN_STRING)).split("")) {}
-    for (String s :
-             Splitter.on(Pattern.compile((CONVERTIBLE_PATTERN_STRING))).split("")) {}
+    for (String s : Splitter.on(Pattern.compile(CONVERTIBLE_PATTERN_STRING)).split("")) {}
+    for (String s : Splitter.on(Pattern.compile((CONVERTIBLE_PATTERN_STRING))).split("")) {}
   }
 }
 """)

@@ -107,7 +107,7 @@ public class NullTernaryTest {
               void f(boolean b) {
                 I i =
                     () -> {
-                // BUG: Diagnostic contains:
+                      // BUG: Diagnostic contains:
                       return b ? null : 1;
                     };
                 J j =

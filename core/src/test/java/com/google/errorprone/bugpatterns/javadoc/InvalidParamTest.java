@@ -150,9 +150,7 @@ public final class InvalidParamTest {
             "Test.java",
             """
             interface Test {
-              /**
-               * {@code foobar}, {@code barfoo}
-               */
+              /** {@code foobar}, {@code barfoo} */
               void foo(int foobar);
             }
             """)

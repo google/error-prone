@@ -3272,7 +3272,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-             enum Side {
+              enum Side {
                 HEART,
                 SPADE,
                 DIAMOND,
@@ -3282,18 +3282,14 @@ public final class StatementSwitchToExpressionSwitchTest {
               public int foo(Side side) {
 
                 return switch (side) {
-                  case HEART ->
-                      0;
-                  case SPADE ->
-                      1;
-                  case DIAMOND ->
-                      2;
+                  case HEART -> 0;
+                  case SPADE -> 1;
+                  case DIAMOND -> 2;
                   default ->
-                    throw new IllegalArgumentException(
-                        "Error error error error error error error error"
-                            + "Error error error error error error error error"
-                            + " type");
-
+                      throw new IllegalArgumentException(
+                          "Error error error error error error error error"
+                              + "Error error error error error error error error"
+                              + " type");
                 };
               }
             }
@@ -3643,6 +3639,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             import java.util.HashMap;
             import java.util.Map;
             import java.util.Set;
+
             class Test {
               enum Side {
                 HEART,
@@ -3651,9 +3648,15 @@ public final class StatementSwitchToExpressionSwitchTest {
                 CLUB
               };
 
-              @interface MyAnnos {Test.MyAnno[] value();}
+              @interface MyAnnos {
+                Test.MyAnno[] value();
+              }
+
               @Repeatable(Test.MyAnnos.class)
-              @interface MyAnno {String v() default "";}
+              @interface MyAnno {
+                String v() default "";
+              }
+
               @interface MyOtherAnno {}
 
               public Test(int foo) {}
@@ -3678,8 +3681,8 @@ public final class StatementSwitchToExpressionSwitchTest {
                       default -> throw new NullPointerException();
                     };
 
-                 Map<? extends String, ? super Test> map =
-                     switch (side) {
+                Map<? extends String, ? super Test> map =
+                    switch (side) {
                       case HEART, DIAMOND -> new HashMap<>();
                       case SPADE -> throw new RuntimeException();
                       default -> throw new NullPointerException();
@@ -3892,11 +3895,11 @@ public final class StatementSwitchToExpressionSwitchTest {
                 {
                   {
                     x =
-                      switch (side) {
-                        case HEART, DIAMOND -> ((z + 1) * (z * z)) << 1;
-                        case SPADE -> throw new RuntimeException();
-                        default -> throw new NullPointerException();
-                      };
+                        switch (side) {
+                          case HEART, DIAMOND -> ((z + 1) * (z * z)) << 1;
+                          case SPADE -> throw new RuntimeException();
+                          default -> throw new NullPointerException();
+                        };
                   }
                 }
                 return x;
@@ -3971,11 +3974,11 @@ public final class StatementSwitchToExpressionSwitchTest {
                 int z = 3;
                 int x = v;
                 x =
-                  switch (side) {
-                    case HEART, DIAMOND -> ((z + 1) * (z * z)) << 1;
-                    case SPADE -> throw new RuntimeException();
-                    default -> throw new NullPointerException();
-                  };
+                    switch (side) {
+                      case HEART, DIAMOND -> ((z + 1) * (z * z)) << 1;
+                      case SPADE -> throw new RuntimeException();
+                      default -> throw new NullPointerException();
+                    };
                 return x;
               }
             }
@@ -5555,19 +5558,19 @@ public final class StatementSwitchToExpressionSwitchTest {
               int[] x;
 
               public Test(int foo) {
-              x = null;
+                x = null;
               }
 
               public int[] foo() {
                 int z = 0;
                 String foo;
-                switch(z) {
+                switch (z) {
                   case 1 -> {
                     foo = "hello";
                   }
                   case 2 ->
-                    // Here, foo is defined but maybe uninitialized
-                    foo = "there";
+                      // Here, foo is defined but maybe uninitialized
+                      foo = "there";
                     // Here, foo is defined and initialized
                 }
                 return x;
@@ -5659,6 +5662,7 @@ public final class StatementSwitchToExpressionSwitchTest {
               }
 
               @interface MyOtherAnno {}
+
               int[] x;
 
               public Test(int foo) {
@@ -5814,13 +5818,13 @@ public final class StatementSwitchToExpressionSwitchTest {
               int[] x;
 
               public Test(int foo) {
-              x = null;
+                x = null;
               }
 
               public static <T extends CharSequence & Comparable<String>> int[] foo() {
                 int z = 1;
                 T foo;
-                switch(z) {
+                switch (z) {
                   case 1 -> {
                     foo = null;
                   }
@@ -5876,19 +5880,19 @@ public final class StatementSwitchToExpressionSwitchTest {
               int[] x;
 
               public Test(int foo) {
-              x = null;
+                x = null;
               }
 
               public int[] foo() {
                 int z = 0;
-                myLabel: {
+                myLabel:
+                {
                   String foo;
-                  switch(z) {
+                  switch (z) {
                     case 1 -> {
                       foo = "hello";
                     }
-                    case 2 ->
-                      foo = "there";
+                    case 2 -> foo = "there";
                   }
                 }
                 return x;

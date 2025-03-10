@@ -59,13 +59,13 @@ public class UnsafeLocaleUsageTest {
             class Test {
               static class Inner {
                 private Locale locale;
+
                 Inner(String a) {
-                   locale = Locale.forLanguageTag(a.replace('_', '-'));
+                  locale = Locale.forLanguageTag(a.replace('_', '-'));
                 }
               }
 
               private static final Test.Inner INNER_OBJ = new Inner("zh_hant_tw");
-
             }
             """)
         .doTest();
@@ -123,13 +123,13 @@ public class UnsafeLocaleUsageTest {
             class Test {
               static class Inner {
                 private Locale locale;
+
                 Inner(String a, String b) {
-                   locale = new Locale.Builder().setLanguage(a).setRegion(b).build();
+                  locale = new Locale.Builder().setLanguage(a).setRegion(b).build();
                 }
               }
 
               private static final Test.Inner INNER_OBJ = new Inner("zh", "tw");
-
             }
             """)
         .doTest();
@@ -191,12 +191,13 @@ public class UnsafeLocaleUsageTest {
             class Test {
               static class Inner {
                 private Locale locale;
+
                 Inner(String a) {
-                   locale = Locale.forLanguageTag(a);
+                  locale = Locale.forLanguageTag(a);
                 }
 
                 String getLocaleDisplayString() {
-                   return locale.toLanguageTag();
+                  return locale.toLanguageTag();
                 }
               }
 

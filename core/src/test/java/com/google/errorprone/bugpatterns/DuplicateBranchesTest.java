@@ -234,8 +234,7 @@ public class DuplicateBranchesTest {
             "Test.java",
             """
             class Test {
-              void f(boolean a) {
-              }
+              void f(boolean a) {}
             }
             """)
         .doTest();

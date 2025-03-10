@@ -649,8 +649,11 @@ public class UngroupedOverloadsPositiveCasesCoveringOnlyOnFirst {
             """
             class BelowLimit {
               BelowLimit() {}
+
               void foo() {}
+
               void foo(int x) {}
+
               void bar() {}
             }
             """)
@@ -680,9 +683,13 @@ public class UngroupedOverloadsPositiveCasesCoveringOnlyOnFirst {
             """
             class AboveLimit {
               AboveLimit() {}
+
               void foo() {}
+
               void foo(int x) {}
+
               void bar() {}
+
               void baz() {}
             }
             """)
@@ -764,6 +771,7 @@ public class UngroupedOverloadsPositiveCasesCoveringOnlyOnFirst {
             class Test {
 
               void foo() {}
+
               /** doc */
               void foo(int x) {}
 

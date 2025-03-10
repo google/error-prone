@@ -92,6 +92,7 @@ public final class MissingSummaryTest {
                * @param n foo
                */
               void test(int n);
+
               /**
                * See {@link List}.
                *

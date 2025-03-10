@@ -171,6 +171,7 @@ public class ConstantOverflowTest {
             """
             class Test {
               private static final long GOLDEN_GAMMA = 0x9e3779b97f4a7c15L;
+
               void f() {
                 System.err.println(2 * GOLDEN_GAMMA);
               }

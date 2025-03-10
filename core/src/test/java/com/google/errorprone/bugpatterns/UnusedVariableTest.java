@@ -138,8 +138,10 @@ public class UnusedVariableTest {
             "UnusedEnhancedForLoop.java",
             """
             package unusedvars;
+
             import java.util.ArrayList;
             import java.util.List;
+
             class UnusedEnhancedForLoop {
               public List<String> makeList(List<String> input) {
                 List<String> output = new ArrayList<>();
@@ -148,6 +150,7 @@ public class UnusedVariableTest {
                 }
                 return output;
               }
+
               public List<String> listData(List<List<String>> input) {
                 List<String> output = new ArrayList<>();
                 for (List<String> unused : input) {
@@ -486,9 +489,11 @@ public class UnusedVariableTest {
             "Unuseds.java",
             """
             package unusedvars;
+
             public class Unuseds {
               private static final String CONST_STR = "test";
               public int publicOne;
+
               void test() {
                 System.out.println(CONST_STR);
               }
@@ -652,8 +657,8 @@ public class UnusedVariableTest {
             "UnusedWithComment.java",
             """
             package unusedvars;
-            public class UnusedWithComment {
-            }
+
+            public class UnusedWithComment {}
             """)
         .doTest(TestMode.TEXT_MATCH);
   }
@@ -720,8 +725,7 @@ public class UnusedVariableTest {
             "Test.java",
             """
             @SuppressWarnings("foo" /* { */)
-            public class Test {
-            }
+            public class Test {}
             """)
         .doTest(TestMode.TEXT_MATCH);
   }
@@ -925,10 +929,14 @@ public class UnusedVariableTest {
             "Test.java",
             """
             import com.google.common.collect.ImmutableList;
+
             class Test {
-              { ImmutableList.of(); }
+              {
+                ImmutableList.of();
+              }
+
               void test() {
-                 ImmutableList.of();
+                ImmutableList.of();
               }
             }
             """)
@@ -956,9 +964,9 @@ public class UnusedVariableTest {
             "Test.java",
             """
             import com.google.common.collect.ImmutableList;
+
             class Test {
-              void test() {
-              }
+              void test() {}
             }
             """)
         .doTest();
@@ -1024,6 +1032,7 @@ public class UnusedVariableTest {
             """
             class Test {
               int a = foo();
+
               private int foo() {
                 return 1;
               }
@@ -1059,9 +1068,18 @@ public class UnusedVariableTest {
             """
             class Test {
               int a = foo(1, 2) + bar(2, 3) + baz(1, 3);
-              private int foo(int a, int b) { return a * b; }
-              private int bar(int b, int c) { return b * c; }
-              private int baz(int a, int c) { return a * c; }
+
+              private int foo(int a, int b) {
+                return a * b;
+              }
+
+              private int bar(int b, int c) {
+                return b * c;
+              }
+
+              private int baz(int a, int c) {
+                return a * c;
+              }
             }
             """)
         .doTest();
@@ -1086,7 +1104,10 @@ public class UnusedVariableTest {
             """
             class Test {
               int a = foo(1);
-              private int foo(int a) { return a; }
+
+              private int foo(int a) {
+                return a;
+              }
             }
             """)
         .doTest();
@@ -1111,7 +1132,10 @@ public class UnusedVariableTest {
             """
             class Test {
               int a = foo(1);
-              private int foo(int a) { return a; }
+
+              private int foo(int a) {
+                return a;
+              }
             }
             """)
         .doTest();
@@ -1143,9 +1167,11 @@ public class UnusedVariableTest {
             enum Test {
               ONE("1") {};
               private String a;
+
               private Test(String a) {
                 this.a = a;
               }
+
               String a() {
                 return a;
               }
@@ -1172,8 +1198,8 @@ public class UnusedVariableTest {
             """
             enum Test {
               ONE() {};
-              private Test() {
-              }
+
+              private Test() {}
             }
             """)
         .doTest();
@@ -1192,8 +1218,7 @@ public class UnusedVariableTest {
         .addOutputLines(
             "Test.java",
             """
-            class Test {
-            }
+            class Test {}
             """)
         .doTest();
   }
@@ -1337,6 +1362,7 @@ public class UnusedVariableTest {
             "Test.java",
             """
             package unusedvars;
+
             public class Test {
               public void test() {
                 Integer a = 1;
@@ -1369,6 +1395,7 @@ public class UnusedVariableTest {
             "Test.java",
             """
             package unusedvars;
+
             public class Test {
               public String test() {
                 hashCode();
@@ -1400,6 +1427,7 @@ public class UnusedVariableTest {
             "Test.java",
             """
             package unusedvars;
+
             public class Test {
               public void test() {
                 int a = 1;
@@ -1431,6 +1459,7 @@ public class UnusedVariableTest {
             "Test.java",
             """
             package unusedvars;
+
             public class Test {
               public void test() {
                 int a = 3;
@@ -1478,9 +1507,9 @@ public class UnusedVariableTest {
             "Test.java",
             """
             package unusedvars;
+
             public class Test {
-              public void test(int a) {
-              }
+              public void test(int a) {}
             }
             """)
         .doTest();
@@ -1525,6 +1554,7 @@ public class UnusedVariableTest {
             "Test.java",
             """
             package unusedvars;
+
             public class Test {
               public void test(Iterable<Integer> as) {
                 for (int a : as) {
@@ -1643,9 +1673,9 @@ public class Test {
             import java.util.Collection;
             import java.util.List;
             import static java.util.stream.Collectors.toList;
+
             public class Test {
-              public void f(List<List<String>> lists) {
-              }
+              public void f(List<List<String>> lists) {}
             }
             """)
         .setFixChooser(FixChoosers.FIRST)
@@ -1678,6 +1708,7 @@ public class Test {
             import java.util.Collection;
             import java.util.List;
             import static java.util.stream.Collectors.toList;
+
             public class Test {
               public void f(List<List<String>> lists) {
                 lists.stream().collect(ArrayList::new, Collection::addAll, Collection::addAll);
@@ -1849,7 +1880,7 @@ public class Test {
             "Test.java",
             """
             public class Test {
-              public void test () {
+              public void test() {
                 Integer a = 3;
                 a.hashCode();
               }
@@ -1911,7 +1942,10 @@ public class Test {
             "Test.java",
             """
             class Test {
-              private int foo(int b) { return b; }
+              private int foo(int b) {
+                return b;
+              }
+
               void test() {
                 foo(2);
               }

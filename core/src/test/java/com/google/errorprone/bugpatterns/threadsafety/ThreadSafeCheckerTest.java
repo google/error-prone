@@ -105,8 +105,8 @@ public class ThreadSafeCheckerTest {
         .addOutputLines(
             "ThreadSafe.java",
             """
-            @com.google.errorprone.annotations.ThreadSafe class ThreadSafe implements I {
-            }
+            @com.google.errorprone.annotations.ThreadSafe
+            class ThreadSafe implements I {}
             """)
         .doTest();
   }

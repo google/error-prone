@@ -1400,7 +1400,7 @@ public final class Caller {
             public final class Caller {
               public void doTest() {
                 Client client = new Client();
-                client.after(/* isAdmin = */ false);
+                client.after(/* isAdmin= */ false);
               }
             }
             """)
@@ -1643,6 +1643,7 @@ public final class Caller {
             "Caller.java",
             """
             import com.google.foo.Client;
+
             public final class Caller {
               public void doTest() {
                 long four = (1 + 1) * 2;
@@ -1749,6 +1750,7 @@ public final class Caller {
             """
             import java.util.function.Consumer;
             import p.Client;
+
             public final class Caller {
               public void doTest() {
                 Client client = new Client();
@@ -1756,7 +1758,6 @@ public final class Caller {
                 Runnable r;
                 r = client::instanceAfter;
                 c = Client::instanceAfter;
-
               }
             }
             """)
@@ -1812,8 +1813,7 @@ public final class Caller {
             public final class Caller {
               public void doTest() {
                 ImmutableList<String> b = ImmutableList.of("foo", "bar");
-                Client client =
-                    new Client(b.get(0), b.size() == 1 ? ImmutableList.of() : b);
+                Client client = new Client(b.get(0), b.size() == 1 ? ImmutableList.of() : b);
               }
             }
             """)

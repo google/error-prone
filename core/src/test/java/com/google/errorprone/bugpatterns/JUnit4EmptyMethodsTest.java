@@ -65,6 +65,7 @@ public class JUnit4EmptyMethodsTest {
             import org.junit.Before;
             import org.junit.BeforeClass;
             import org.junit.Test;
+
             class FooTest {
               @Test
               public void emptyTest() {}

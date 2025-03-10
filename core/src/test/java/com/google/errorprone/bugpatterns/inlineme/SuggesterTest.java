@@ -1377,14 +1377,15 @@ public class Client {
             "Client.java",
             """
             import com.google.errorprone.annotations.InlineMe;
+
             public final class Client {
               @InlineMe(replacement = "this.after(int0, int1)")
               @Deprecated
               public void before(int int0, int int1) {
                 after(int0, int1);
               }
-              public void after(int int0, int int1) {
-              }
+
+              public void after(int int0, int int1) {}
             }
             """)
         .doTest();

@@ -50,7 +50,9 @@ public final class InvalidBlockTagTest {
             "Test.java",
             """
             interface Test {
-              /** @return anything */
+              /**
+               * @return anything
+               */
               void foo();
             }
             """)

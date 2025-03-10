@@ -57,6 +57,7 @@ public class ParameterNameTest {
             """
             class Test {
               void f(int foo, int bar) {}
+
               {
                 f(/* foo= */ 1, /* bar= */ 2);
                 f(/* foo= */ 3, /* bar= */ 4);

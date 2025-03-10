@@ -59,13 +59,20 @@ public class NullablePrimitiveArrayTest {
             """
             import org.checkerframework.checker.nullness.qual.Nullable;
             import org.checkerframework.checker.nullness.qual.NonNull;
+
             abstract class Test {
               abstract byte @Nullable [] f();
+
               abstract byte @Nullable [] g();
+
               abstract void h(byte @Nullable [] x);
+
               abstract void i(byte @Nullable [] x);
-              abstract void j(byte @Nullable... x);
+
+              abstract void j(byte @Nullable ... x);
+
               abstract void k(byte @Nullable [][][] x);
+
               abstract void l(byte @NonNull [] x);
             }
             """)
@@ -90,6 +97,7 @@ public class NullablePrimitiveArrayTest {
             "Test.java",
             """
             import org.checkerframework.checker.nullness.qual.Nullable;
+
             abstract class Test {
               @SuppressWarnings("SomeOtherChecker") // unrelated annotation
               abstract byte @Nullable [] f();
@@ -118,8 +126,10 @@ public class NullablePrimitiveArrayTest {
             """
             import javax.annotation.CheckForNull;
             import org.checkerframework.checker.nullness.qual.Nullable;
+
             abstract class Test {
-              @CheckForNull abstract byte[] f();
+              @CheckForNull
+              abstract byte[] f();
             }
             """)
         .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
@@ -164,6 +174,7 @@ public class NullablePrimitiveArrayTest {
             """
             import org.checkerframework.checker.nullness.qual.Nullable;
             import org.checkerframework.checker.nullness.qual.NonNull;
+
             abstract class Test {
               abstract void f(int @NonNull [] x);
             }

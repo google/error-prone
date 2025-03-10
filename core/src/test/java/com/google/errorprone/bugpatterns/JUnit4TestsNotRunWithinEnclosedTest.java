@@ -94,9 +94,11 @@ public final class JUnit4TestsNotRunWithinEnclosedTest {
             import org.junit.experimental.runners.Enclosed;
             import org.junit.runner.RunWith;
             import org.junit.runners.JUnit4;
+
             @RunWith(JUnit4.class)
             public final class FooTest {
-              @Test public void test() {}
+              @Test
+              public void test() {}
             }
             """)
         .doTest();

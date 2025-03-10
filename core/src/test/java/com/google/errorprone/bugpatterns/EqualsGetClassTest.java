@@ -55,7 +55,9 @@ public final class EqualsGetClassTest {
             """
             class Test {
               private int a;
-              @Override public boolean equals(Object o) {
+
+              @Override
+              public boolean equals(Object o) {
                 return o instanceof Test && a == ((Test) o).a;
               }
             }
@@ -83,7 +85,9 @@ public final class EqualsGetClassTest {
             """
             class Test {
               private int a;
-              @Override public boolean equals(Object o) {
+
+              @Override
+              public boolean equals(Object o) {
                 return (o instanceof Test) && a == ((Test) o).a;
               }
             }
@@ -117,8 +121,12 @@ public final class EqualsGetClassTest {
             """
             class Test {
               private int a;
-              @Override public boolean equals(Object o) {
-                if (!(o instanceof Test)) { return false; }
+
+              @Override
+              public boolean equals(Object o) {
+                if (!(o instanceof Test)) {
+                  return false;
+                }
                 return ((Test) o).a == a;
               }
             }
@@ -153,8 +161,12 @@ public final class EqualsGetClassTest {
             """
             class Test {
               private int a;
-              @Override public boolean equals(Object o) {
-                if (!(o instanceof Test)) { return false; }
+
+              @Override
+              public boolean equals(Object o) {
+                if (!(o instanceof Test)) {
+                  return false;
+                }
                 return ((Test) o).a == a;
               }
             }
@@ -183,7 +195,9 @@ public final class EqualsGetClassTest {
             """
             class Test {
               private int a;
-              @Override public boolean equals(Object o) {
+
+              @Override
+              public boolean equals(Object o) {
                 return o instanceof Test && ((Test) o).a == a;
               }
             }
@@ -214,8 +228,12 @@ public final class EqualsGetClassTest {
             """
             class Test {
               private int a;
-              @Override public boolean equals(Object o) {
-                if (!(o instanceof Test)) { return false; }
+
+              @Override
+              public boolean equals(Object o) {
+                if (!(o instanceof Test)) {
+                  return false;
+                }
                 return ((Test) o).a == a;
               }
             }

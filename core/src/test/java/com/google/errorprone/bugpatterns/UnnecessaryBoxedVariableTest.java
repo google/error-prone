@@ -252,7 +252,9 @@ public class UnnecessaryBoxedVariableTest {
             import java.util.stream.Stream;
             import org.jspecify.annotations.Nullable;
 
-            /** @author awturner@google.com (Andy Turner) */
+            /**
+             * @author awturner@google.com (Andy Turner)
+             */
             class UnnecessaryBoxedVariableCases {
               void positive_local() {
                 int i = 0;
@@ -438,7 +440,7 @@ public class UnnecessaryBoxedVariableTest {
               private Integer methodBoxedArg(Integer i) {
                 return i;
               }
-            }\
+            }
             """)
         .doTest();
   }

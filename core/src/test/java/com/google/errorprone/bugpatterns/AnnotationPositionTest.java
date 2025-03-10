@@ -105,7 +105,8 @@ public final class AnnotationPositionTest {
             "Test.java",
             """
             interface Test {
-              @Override public boolean equals(Object o);
+              @Override
+              public boolean equals(Object o);
             }
             """)
         .doTest(TEXT_MATCH);
@@ -251,12 +252,21 @@ public final class AnnotationPositionTest {
             """
             interface Test {
               /** Javadoc */
-              @NonTypeUse public @EitherUse String foo();
+              @NonTypeUse
+              public @EitherUse String foo();
+
               /** Javadoc */
-              @NonTypeUse public @EitherUse String bar();
+              @NonTypeUse
+              public @EitherUse String bar();
+
               /** Javadoc */
-              @NonTypeUse public @EitherUse String baz();
-              @NonTypeUse public static @EitherUse int quux() { return 1; }
+              @NonTypeUse
+              public @EitherUse String baz();
+
+              @NonTypeUse
+              public static @EitherUse int quux() {
+                return 1;
+              }
             }
             """)
         .doTest(TEXT_MATCH);
@@ -322,12 +332,18 @@ public final class AnnotationPositionTest {
     refactoringHelper
         .addInputLines(
             "Test.java", //
-            "@NonTypeUse public /** Javadoc */ final class Test {}")
+            """
+            @NonTypeUse
+            public
+            /** Javadoc */
+            final class Test {}
+            """)
         .addOutputLines(
             "Test.java",
             """
             /** Javadoc */
-            @NonTypeUse public final class Test {}
+            @NonTypeUse
+            public final class Test {}
             """)
         .doTest(TEXT_MATCH);
   }
@@ -352,8 +368,15 @@ public final class AnnotationPositionTest {
             "Test.java",
             """
             interface Test {
-              @NonTypeUse public static @EitherUse int foo() { return 1; }
-              @NonTypeUse public static @EitherUse int bar() { return 1; }
+              @NonTypeUse
+              public static @EitherUse int foo() {
+                return 1;
+              }
+
+              @NonTypeUse
+              public static @EitherUse int bar() {
+                return 1;
+              }
             }
             """)
         .doTest(TEXT_MATCH);
@@ -375,7 +398,9 @@ public final class AnnotationPositionTest {
             "Test.java",
             """
             class Test {
-              public final @EitherUse("foo") int foo(final int a) { return 1; }
+              public final @EitherUse("foo") int foo(final int a) {
+                return 1;
+              }
             }
             """)
         .doTest(TEXT_MATCH);
@@ -400,12 +425,17 @@ interface Test {
         .addOutputLines(
             "Test.java",
             """
-interface Test {
-  /** Javadoc */
-  @NonTypeUse public @EitherUse String baz();
-  /* a */ @NonTypeUse public /* b */ /* c */ static @EitherUse /* d */ /* e */ int quux() { return 1; }
-}
-""")
+            interface Test {
+              /** Javadoc */
+              @NonTypeUse
+              public @EitherUse String baz();
+
+              /* a */ @NonTypeUse
+              public /* b */ /* c */ static @EitherUse /* d */ /* e */ int quux() {
+                return 1;
+              }
+            }
+            """)
         .doTest(TEXT_MATCH);
   }
 
@@ -484,7 +514,8 @@ interface Test {
             "Test.java",
             """
             interface T {
-              @EitherUse <T> T f();
+              @EitherUse
+              <T> T f();
             }
             """)
         .doTest(TEXT_MATCH);
@@ -528,6 +559,7 @@ interface Test {
             "Test.java",
             """
             import java.util.List;
+
             interface T {
               <T extends List<T>> @TypeUse T f();
             }
@@ -551,7 +583,9 @@ interface Test {
             "Test.java",
             """
             interface T {
-              @NonTypeUse @TypeUse T f();
+              @NonTypeUse
+              @TypeUse
+              T f();
             }
             """)
         .doTest(TEXT_MATCH);
@@ -721,8 +755,7 @@ interface Test {
             """
             class Test {
               /** Javadoc! */
-              @NonTypeUse
-              int x;
+              @NonTypeUse int x;
             }
             """)
         .doTest(TEXT_MATCH);
@@ -746,6 +779,7 @@ interface Test {
             "Test.java",
             """
             import java.util.List;
+
             class Test {
               private @TypeUse List<?> x;
               private @EitherUse List<?> y;

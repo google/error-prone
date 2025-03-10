@@ -3306,8 +3306,8 @@ import com.google.errorprone.annotations.ImmutableTypeParameter;
 
 class Clazz {
   private static final GenericWithImmutableParam<MutableClass> value =
-  // BUG: Diagnostic contains: instantiation of 'T' is mutable, the declaration of type
-  // 'Clazz.MutableClass' is not annotated with @com.google.errorprone.annotations.Immutable
+      // BUG: Diagnostic contains: instantiation of 'T' is mutable, the declaration of type
+      // 'Clazz.MutableClass' is not annotated with @com.google.errorprone.annotations.Immutable
       new GenericWithImmutableParam<MutableClass>() {};
 
   private static class MutableClass {}

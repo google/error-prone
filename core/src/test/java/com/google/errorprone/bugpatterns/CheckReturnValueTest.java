@@ -1253,11 +1253,13 @@ class Test {
             """
             import com.google.errorprone.annotations.CanIgnoreReturnValue;
             import com.google.errorprone.annotations.CheckReturnValue;
+
             @CheckReturnValue
             class Test {
               void foo() {
                 makeBarOrThrow();
               }
+
               @CanIgnoreReturnValue
               String makeBarOrThrow() {
                 throw new UnsupportedOperationException();
@@ -1289,9 +1291,11 @@ class Test {
             """
             import com.google.errorprone.annotations.CanIgnoreReturnValue;
             import com.google.errorprone.annotations.CheckReturnValue;
+
             @CheckReturnValue
             class Test {
               Runnable r = this::makeBarOrThrow;
+
               @CanIgnoreReturnValue
               String makeBarOrThrow() {
                 throw new UnsupportedOperationException();
@@ -1323,10 +1327,12 @@ class Test {
             """
             import com.google.errorprone.annotations.CanIgnoreReturnValue;
             import com.google.errorprone.annotations.CheckReturnValue;
+
             @CheckReturnValue
             class Test {
               @CanIgnoreReturnValue
               Test() {}
+
               void run() {
                 new Test();
               }
@@ -1359,10 +1365,12 @@ class Test {
             """
             import com.google.errorprone.annotations.CanIgnoreReturnValue;
             import com.google.errorprone.annotations.CheckReturnValue;
+
             class Test {
               void foo() {
                 makeBarOrThrow();
               }
+
               @CanIgnoreReturnValue
               String makeBarOrThrow() {
                 throw new UnsupportedOperationException();
@@ -1405,6 +1413,7 @@ class Test {
             "Test.java",
             """
             import com.google.errorprone.annotations.CheckReturnValue;
+
             @CheckReturnValue
             class Test {
               void foo(Lib l) {
