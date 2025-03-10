@@ -95,16 +95,27 @@ public final class MisformattedTestDataTest {
             class Test {
               void method(BugCheckerRefactoringTestHelper h) {
                 h.addInputLines(
-                    "Test.java",
-                    \"""
-                    package foo;
-                    class Test {
-                      void method() {
-                        int a =
-                        1;
-                      }
-                    }
-                    \""");
+                        "Test.java",
+                        \"""
+                        package foo;
+                        class Test {
+                          void method() {
+                            int a =
+                            1;
+                          }
+                        }
+                        \""")
+                    .addOutputLines(
+                        "Test.java",
+                        \"""
+                        package foo;
+                        class Test {
+                          void method() {
+                            int a =
+                            1;
+                          }
+                        }
+                        \""");
               }
             }
             """)
@@ -116,16 +127,27 @@ public final class MisformattedTestDataTest {
             class Test {
               void method(BugCheckerRefactoringTestHelper h) {
                 h.addInputLines(
-                    "Test.java",
-                    \"""
-                    package foo;
+                        "Test.java",
+                        \"""
+                        package foo;
 
-                    class Test {
-                      void method() {
-                        int a = 1;
-                      }
-                    }
-                    \""");
+                        class Test {
+                          void method() {
+                            int a = 1;
+                          }
+                        }
+                        \""")
+                  .addOutputLines(
+                        "Test.java",
+                        \"""
+                        package foo;
+
+                        class Test {
+                          void method() {
+                            int a = 1;
+                          }
+                        }
+                        \""");
                }
             }
             """)

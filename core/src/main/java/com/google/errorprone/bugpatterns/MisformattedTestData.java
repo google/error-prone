@@ -119,7 +119,7 @@ public final class MisformattedTestData extends BugChecker implements MethodInvo
               .onExactClass("com.google.errorprone.BugCheckerRefactoringTestHelper")
               .named("addInputLines"),
           instanceMethod()
-              .onExactClass("com.google.errorprone.BugCheckerRefactoringTestHelper")
+              .onExactClass("com.google.errorprone.BugCheckerRefactoringTestHelper.ExpectOutput")
               .named("addOutputLines"));
 
   private static final Splitter LINE_SPLITTER = Splitter.on('\n');
