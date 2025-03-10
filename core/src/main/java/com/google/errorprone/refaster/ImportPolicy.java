@@ -51,8 +51,15 @@ public enum ImportPolicy {
    * Import the outermost class and explicitly qualify references below that. For example, to
    * reference {@code com.google.Foo.Bar}, we import {@code com.google.Foo} and explicitly qualify
    * {@code Foo.Bar}.
+   *
+   * <p><b>Note:</b> static methods named {@code assertThat}, {@code assertWithMessage} and {@code
+   * assertAbout} are always statically imported.
    */
   IMPORT_TOP_LEVEL {
+
+    private static final ImmutableSet<String> METHOD_NAMES_TO_STATICALLY_IMPORT =
+        ImmutableSet.of("assertThat", "assertAbout", "assertWithMessage");
+
     @Override
     public JCExpression classReference(
         Inliner inliner, CharSequence topLevelClazz, CharSequence fullyQualifiedClazz) {
@@ -111,6 +118,11 @@ public enum ImportPolicy {
         CharSequence topLevelClazz,
         CharSequence fullyQualifiedClazz,
         CharSequence member) {
+      // NOTE(b/17121704): we always statically import certain method names
+      if (METHOD_NAMES_TO_STATICALLY_IMPORT.contains(member.toString())) {
+        return STATIC_IMPORT_ALWAYS.staticReference(
+            inliner, topLevelClazz, fullyQualifiedClazz, member);
+      }
       return inliner
           .maker()
           .Select(
@@ -205,32 +217,6 @@ public enum ImportPolicy {
         inliner.addStaticImport(importableName);
       }
       return inliner.maker().Ident(inliner.asName(member));
-    }
-  },
-
-  /**
-   * When inlining static methods, always static import the method if it is called {@code
-   * assertThat}. Non-static references to classes are imported from the top level as in {@code
-   * IMPORT_TOP_LEVEL}.
-   */
-  STATIC_IMPORT_ASSERT_THAT {
-    @Override
-    public JCExpression classReference(
-        Inliner inliner, CharSequence topLevelClazz, CharSequence fullyQualifiedClazz) {
-      return IMPORT_TOP_LEVEL.classReference(inliner, topLevelClazz, fullyQualifiedClazz);
-    }
-
-    @Override
-    public JCExpression staticReference(
-        Inliner inliner,
-        CharSequence topLevelClazz,
-        CharSequence fullyQualifiedClazz,
-        CharSequence member) {
-      if (member.toString().equals("assertThat")) {
-        return STATIC_IMPORT_ALWAYS.staticReference(
-            inliner, topLevelClazz, fullyQualifiedClazz, member);
-      }
-      return IMPORT_TOP_LEVEL.staticReference(inliner, topLevelClazz, fullyQualifiedClazz, member);
     }
   };
 
