@@ -69,6 +69,7 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ArrayAccessTree;
 import com.sun.source.tree.AssignmentTree;
+import com.sun.source.tree.BindingPatternTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.CompoundAssignmentTree;
@@ -80,6 +81,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.ForLoopTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.IfTree;
+import com.sun.source.tree.InstanceOfTree;
 import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberSelectTree;
@@ -452,18 +454,21 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
         ExpressionTree initializer = variableTree.getInitializer();
         if (hasSideEffect(initializer) && TOP_LEVEL_EXPRESSIONS.contains(initializer.getKind())) {
           encounteredSideEffects = true;
-          if (varKind == ElementKind.FIELD) {
-            String newContent =
-                String.format(
-                    "%s{ %s; }",
-                    isStatic(varSymbol) ? "static " : "", state.getSourceForNode(initializer));
-            keepSideEffectsFix.merge(
-                SuggestedFixes.replaceIncludingComments(usagePath, newContent, state));
-            removeSideEffectsFix.replace(statement, "");
-          } else {
-            keepSideEffectsFix.replace(
-                statement, String.format("%s;", state.getSourceForNode(initializer)));
-            removeSideEffectsFix.replace(statement, "");
+          switch (varKind) {
+            case FIELD -> {
+              String newContent =
+                  String.format(
+                      "%s{ %s; }",
+                      isStatic(varSymbol) ? "static " : "", state.getSourceForNode(initializer));
+              keepSideEffectsFix.merge(
+                  SuggestedFixes.replaceIncludingComments(usagePath, newContent, state));
+              removeSideEffectsFix.replace(statement, "");
+            }
+            default -> {
+              keepSideEffectsFix.replace(
+                  statement, String.format("%s;", state.getSourceForNode(initializer)));
+              removeSideEffectsFix.replace(statement, "");
+            }
           }
         } else if (isEnhancedForLoopVar(usagePath)) {
           String modifiers =
@@ -480,6 +485,10 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
           // fix in this case because we can't just remove the enhanced for loop variable.
           keepSideEffectsFix.replace(variableTree, newContent);
           removeSideEffectsFix.replace(variableTree, newContent);
+        } else if (varKind == ElementKind.BINDING_VARIABLE) {
+          removeSideEffectsFix.replace(
+              variableTree, state.getSourceForNode(variableTree.getType()));
+          keepSideEffectsFix.replace(variableTree, state.getSourceForNode(variableTree.getType()));
         } else {
           String replacement = needsBlock(usagePath) ? "{}" : "";
           keepSideEffectsFix.merge(
@@ -688,6 +697,14 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
         case LOCAL_VARIABLE -> {
           unusedElements.put(symbol, getCurrentPath());
           usageSites.put(symbol, getCurrentPath());
+        }
+        case BINDING_VARIABLE -> {
+          if (parent instanceof BindingPatternTree
+              && getCurrentPath().getParentPath().getParentPath().getLeaf()
+                  instanceof InstanceOfTree) {
+            unusedElements.put(symbol, getCurrentPath());
+            usageSites.put(symbol, getCurrentPath());
+          }
         }
         case PARAMETER -> {
           // ignore the receiver parameter

@@ -2099,4 +2099,46 @@ public class Test {
         .expectUnchanged()
         .doTest();
   }
+
+  @Test
+  public void patternMatchingInstanceof_variableUnused() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              private boolean eq(Object o) {
+                return o instanceof Test t;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              private boolean eq(Object o) {
+                return o instanceof Test;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void patternMatchingInstanceofs_variableUsed() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              private int a;
+
+              private boolean eq(Object o) {
+                return o instanceof Test t && a == t.a;
+              }
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
 }
