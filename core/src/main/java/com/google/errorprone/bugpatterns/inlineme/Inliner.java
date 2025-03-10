@@ -360,24 +360,23 @@ public final class Inliner extends BugChecker
           });
     }
 
+    EndPosTable endPosTable =
+        new EndPosTable() {
+          @Override
+          public int getEndPos(JCTree tree) {
+            return parser.getEndPos(tree);
+          }
+
+          @Override
+          public void storeEnd(JCTree tree, int endpos) {}
+
+          @Override
+          public int replaceTree(JCTree oldtree, JCTree newtree) {
+            return 0;
+          }
+        };
     String fixedReplacement =
-        AppliedFix.fromSource(
-                replacement,
-                new EndPosTable() {
-                  @Override
-                  public int getEndPos(JCTree tree) {
-                    return parser.getEndPos(tree);
-                  }
-
-                  @Override
-                  public void storeEnd(JCTree tree, int endpos) {}
-
-                  @Override
-                  public int replaceTree(JCTree oldtree, JCTree newtree) {
-                    return 0;
-                  }
-                })
-            .applyReplacements(replacementFixes.build());
+        AppliedFix.applyReplacements(replacement, endPosTable, replacementFixes.build());
 
     fixBuilder.replace(
         replacementStart,

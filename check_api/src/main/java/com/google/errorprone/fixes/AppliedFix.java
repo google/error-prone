@@ -30,113 +30,83 @@ import org.jspecify.annotations.Nullable;
  *
  * @author alexeagle@google.com (Alex Eagle)
  */
-public class AppliedFix {
-  private final String snippet;
-  private final boolean isRemoveLine;
+public record AppliedFix(String snippet, boolean isRemoveLine) {
+  /**
+   * Applies the suggestedFix to the source. Returns null if applying the fix results in no change
+   * to the source, or a change only to imports.
+   */
+  public static @Nullable AppliedFix apply(
+      CharSequence source, EndPosTable endPositions, Fix suggestedFix) {
+    // We apply the replacements in ascending order here. Descending is simpler, since applying a
+    // replacement can't change the index for future replacements, but it leads to quadratic
+    // copying behavior as we constantly shift the tail of the file around in our StringBuilder.
+    ImmutableSet<Replacement> replacements = ascending(suggestedFix.getReplacements(endPositions));
+    if (replacements.isEmpty()) {
+      return null;
+    }
 
-  private AppliedFix(String snippet, boolean isRemoveLine) {
-    this.snippet = snippet;
-    this.isRemoveLine = isRemoveLine;
+    String replaced = applyReplacements(source, endPositions, suggestedFix);
+
+    // Find the changed line containing the first edit
+    String snippet = firstEditedLine(replaced, Iterables.get(replacements, 0));
+    if (snippet.isEmpty()) {
+      return new AppliedFix("to remove this line", /* isRemoveLine= */ true);
+    }
+    return new AppliedFix(snippet, /* isRemoveLine= */ false);
   }
 
-  public CharSequence getNewCodeSnippet() {
+  public static String applyReplacements(CharSequence source, EndPosTable endPositions, Fix fix) {
+    StringBuilder replaced = new StringBuilder();
+    int positionInOriginal = 0;
+    for (Replacement repl : fix.getReplacements(endPositions)) {
+      checkArgument(
+          repl.endPosition() <= source.length(),
+          "End [%s] should not exceed source length [%s]",
+          repl.endPosition(),
+          source.length());
+
+      // Write the unmodified content leading up to this change
+      replaced.append(source, positionInOriginal, repl.startPosition());
+      // And the modified content for this change
+      replaced.append(repl.replaceWith());
+      // Then skip everything from source between start and end
+      positionInOriginal = repl.endPosition();
+    }
+    // Flush out any remaining content after the final change
+    replaced.append(source, positionInOriginal, source.length());
+    return replaced.toString();
+  }
+
+  /** Get the replacements in an appropriate order to apply correctly. */
+  private static ImmutableSet<Replacement> ascending(Set<Replacement> set) {
+    Replacements replacements = new Replacements();
+    set.forEach(replacements::add);
+    return replacements.ascending();
+  }
+
+  /**
+   * Finds the full text of the first line that's changed. In this case "line" means "bracketed by
+   * \n characters". We don't handle \r\n specially, because the strings that javac provides to
+   * Error Prone have already been transformed from platform line endings to newlines (and even if
+   * it didn't, the dangling \r characters would be handled by a trim() call).
+   */
+  private static String firstEditedLine(String content, Replacement firstEdit) {
+    // We subtract 1 here because we want to find the first newline *before* the edit, not one
+    // at its beginning.
+    int startOfFirstEditedLine = content.lastIndexOf("\n", firstEdit.startPosition() - 1);
+    int endOfFirstEditedLine = content.indexOf("\n", firstEdit.startPosition());
+    if (startOfFirstEditedLine == -1) {
+      startOfFirstEditedLine = 0; // Change to start of file with no preceding newline
+    }
+    if (endOfFirstEditedLine == -1) {
+      // Change to last line of file
+      endOfFirstEditedLine = content.length();
+    }
+    String snippet = content.substring(startOfFirstEditedLine, endOfFirstEditedLine);
+    snippet = snippet.trim();
+    if (snippet.contains("//")) {
+      snippet = snippet.substring(0, snippet.indexOf("//")).trim();
+    }
     return snippet;
-  }
-
-  public boolean isRemoveLine() {
-    return isRemoveLine;
-  }
-
-  public static class Applier {
-    private final CharSequence source;
-    private final EndPosTable endPositions;
-
-    public Applier(CharSequence source, EndPosTable endPositions) {
-      this.source = source;
-      this.endPositions = endPositions;
-    }
-
-    /**
-     * Applies the suggestedFix to the source. Returns null if applying the fix results in no change
-     * to the source, or a change only to imports.
-     */
-    public @Nullable AppliedFix apply(Fix suggestedFix) {
-      // We apply the replacements in ascending order here. Descending is simpler, since applying a
-      // replacement can't change the index for future replacements, but it leads to quadratic
-      // copying behavior as we constantly shift the tail of the file around in our StringBuilder.
-      ImmutableSet<Replacement> replacements =
-          ascending(suggestedFix.getReplacements(endPositions));
-      if (replacements.isEmpty()) {
-        return null;
-      }
-
-      String replaced = applyReplacements(suggestedFix);
-
-      // Find the changed line containing the first edit
-      String snippet = firstEditedLine(replaced, Iterables.get(replacements, 0));
-      if (snippet.isEmpty()) {
-        return new AppliedFix("to remove this line", /* isRemoveLine= */ true);
-      }
-      return new AppliedFix(snippet, /* isRemoveLine= */ false);
-    }
-
-    public String applyReplacements(Fix fix) {
-      StringBuilder replaced = new StringBuilder();
-      int positionInOriginal = 0;
-      for (Replacement repl : fix.getReplacements(endPositions)) {
-        checkArgument(
-            repl.endPosition() <= source.length(),
-            "End [%s] should not exceed source length [%s]",
-            repl.endPosition(),
-            source.length());
-
-        // Write the unmodified content leading up to this change
-        replaced.append(source, positionInOriginal, repl.startPosition());
-        // And the modified content for this change
-        replaced.append(repl.replaceWith());
-        // Then skip everything from source between start and end
-        positionInOriginal = repl.endPosition();
-      }
-      // Flush out any remaining content after the final change
-      replaced.append(source, positionInOriginal, source.length());
-      return replaced.toString();
-    }
-
-    /** Get the replacements in an appropriate order to apply correctly. */
-    private static ImmutableSet<Replacement> ascending(Set<Replacement> set) {
-      Replacements replacements = new Replacements();
-      set.forEach(replacements::add);
-      return replacements.ascending();
-    }
-
-    /**
-     * Finds the full text of the first line that's changed. In this case "line" means "bracketed by
-     * \n characters". We don't handle \r\n specially, because the strings that javac provides to
-     * Error Prone have already been transformed from platform line endings to newlines (and even if
-     * it didn't, the dangling \r characters would be handled by a trim() call).
-     */
-    private static String firstEditedLine(String content, Replacement firstEdit) {
-      // We subtract 1 here because we want to find the first newline *before* the edit, not one
-      // at its beginning.
-      int startOfFirstEditedLine = content.lastIndexOf("\n", firstEdit.startPosition() - 1);
-      int endOfFirstEditedLine = content.indexOf("\n", firstEdit.startPosition());
-      if (startOfFirstEditedLine == -1) {
-        startOfFirstEditedLine = 0; // Change to start of file with no preceding newline
-      }
-      if (endOfFirstEditedLine == -1) {
-        // Change to last line of file
-        endOfFirstEditedLine = content.length();
-      }
-      String snippet = content.substring(startOfFirstEditedLine, endOfFirstEditedLine);
-      snippet = snippet.trim();
-      if (snippet.contains("//")) {
-        snippet = snippet.substring(0, snippet.indexOf("//")).trim();
-      }
-      return snippet;
-    }
-  }
-
-  public static Applier fromSource(CharSequence source, EndPosTable endPositions) {
-    return new Applier(source, endPositions);
   }
 }
