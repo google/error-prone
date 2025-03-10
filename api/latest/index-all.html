@@ -846,17 +846,13 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Utility method to produce <a href="com/google/errorprone/bugpatterns/checkreturnvalue/Api.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><code>Api</code></a> objects from javac <code>Symbol.MethodSymbol</code>.</div>
 </dd>
-<dt><a href="com/google/errorprone/fixes/AppliedFix.html" class="type-name-link" title="class in com.google.errorprone.fixes">AppliedFix</a> - Class in <a href="com/google/errorprone/fixes/package-summary.html">com.google.errorprone.fixes</a></dt>
+<dt><a href="com/google/errorprone/fixes/AppliedFix.html" class="type-name-link" title="class in com.google.errorprone.fixes">AppliedFix</a> - Record Class in <a href="com/google/errorprone/fixes/package-summary.html">com.google.errorprone.fixes</a></dt>
 <dd>
 <div class="block">Represents the corrected source which we think was intended, by applying a Fix.</div>
 </dd>
-<dt><a href="com/google/errorprone/fixes/AppliedFix.Applier.html" class="type-name-link" title="class in com.google.errorprone.fixes">AppliedFix.Applier</a> - Class in <a href="com/google/errorprone/fixes/package-summary.html">com.google.errorprone.fixes</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/google/errorprone/fixes/AppliedFix.Applier.html#%3Cinit%3E(java.lang.CharSequence,com.sun.tools.javac.tree.EndPosTable)" class="member-name-link">Applier(CharSequence, EndPosTable)</a> - Constructor for class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/AppliedFix.Applier.html" title="class in com.google.errorprone.fixes">AppliedFix.Applier</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/google/errorprone/fixes/AppliedFix.Applier.html#apply(com.google.errorprone.fixes.Fix)" class="member-name-link">apply(Fix)</a> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/AppliedFix.Applier.html" title="class in com.google.errorprone.fixes">AppliedFix.Applier</a></dt>
+<dt><a href="com/google/errorprone/fixes/AppliedFix.html#%3Cinit%3E(java.lang.String,boolean)" class="member-name-link">AppliedFix(String, boolean)</a> - Constructor for record class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/AppliedFix.html" title="class in com.google.errorprone.fixes">AppliedFix</a></dt>
 <dd>
-<div class="block">Applies the suggestedFix to the source.</div>
+<div class="block">Creates an instance of a <code>AppliedFix</code> record class.</div>
 </dd>
 <dt><a href="com/google/errorprone/refaster/UReturn.html#apply(com.google.errorprone.refaster.UStatement.UnifierWithUnconsumedStatements)" class="member-name-link">apply(UStatement.UnifierWithUnconsumedStatements)</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UReturn.html" title="class in com.google.errorprone.refaster">UReturn</a></dt>
 <dd>&nbsp;</dd>
@@ -882,6 +878,10 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/predicates/TypePredicate.html#apply(com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)" class="member-name-link">apply(Type, VisitorState)</a> - Method in interface com.google.errorprone.predicates.<a href="com/google/errorprone/predicates/TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/fixes/AppliedFix.html#apply(java.lang.CharSequence,com.sun.tools.javac.tree.EndPosTable,com.google.errorprone.fixes.Fix)" class="member-name-link">apply(CharSequence, EndPosTable, Fix)</a> - Static method in record class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/AppliedFix.html" title="class in com.google.errorprone.fixes">AppliedFix</a></dt>
+<dd>
+<div class="block">Applies the suggestedFix to the source.</div>
+</dd>
 <dt><a href="com/google/errorprone/apply/DescriptionBasedDiff.html#applyDifferences(com.google.errorprone.apply.SourceFile)" class="member-name-link">applyDifferences(SourceFile)</a> - Method in class com.google.errorprone.apply.<a href="com/google/errorprone/apply/DescriptionBasedDiff.html" title="class in com.google.errorprone.apply">DescriptionBasedDiff</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/apply/Diff.html#applyDifferences(com.google.errorprone.apply.SourceFile)" class="member-name-link">applyDifferences(SourceFile)</a> - Method in interface com.google.errorprone.apply.<a href="com/google/errorprone/apply/Diff.html" title="interface in com.google.errorprone.apply">Diff</a></dt>
@@ -892,7 +892,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Applies options to this <a href="com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a>.</div>
 </dd>
-<dt><a href="com/google/errorprone/fixes/AppliedFix.Applier.html#applyReplacements(com.google.errorprone.fixes.Fix)" class="member-name-link">applyReplacements(Fix)</a> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/AppliedFix.Applier.html" title="class in com.google.errorprone.fixes">AppliedFix.Applier</a></dt>
+<dt><a href="com/google/errorprone/fixes/AppliedFix.html#applyReplacements(java.lang.CharSequence,com.sun.tools.javac.tree.EndPosTable,com.google.errorprone.fixes.Fix)" class="member-name-link">applyReplacements(CharSequence, EndPosTable, Fix)</a> - Static method in record class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/AppliedFix.html" title="class in com.google.errorprone.fixes">AppliedFix</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/matchers/Description.html#applySeverityOverride(com.google.errorprone.BugPattern.SeverityLevel)" class="member-name-link">applySeverityOverride(BugPattern.SeverityLevel)</a> - Method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></dt>
 <dd>
@@ -3488,6 +3488,10 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/BugChecker.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/fixes/AppliedFix.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in record class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/AppliedFix.html" title="class in com.google.errorprone.fixes">AppliedFix</a></dt>
+<dd>
+<div class="block">Indicates whether some other object is "equal to" this one.</div>
+</dd>
 <dt><a href="com/google/errorprone/bugpatterns/nullness/EqualsBrokenForNull.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.nullness">EqualsBrokenForNull</a> - Class in <a href="com/google/errorprone/bugpatterns/nullness/package-summary.html">com.google.errorprone.bugpatterns.nullness</a></dt>
 <dd>
 <div class="block"><a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a> adds a null check to <code>equals()</code> method implementations which don't
@@ -4387,8 +4391,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns a <a href="com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> that just returns the <a href="com/google/errorprone/scanner/Scanner.html" title="class in com.google.errorprone.scanner"><code>Scanner</code></a> that was passed in.</div>
 </dd>
-<dt><a href="com/google/errorprone/fixes/AppliedFix.html#fromSource(java.lang.CharSequence,com.sun.tools.javac.tree.EndPosTable)" class="member-name-link">fromSource(CharSequence, EndPosTable)</a> - Static method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/AppliedFix.html" title="class in com.google.errorprone.fixes">AppliedFix</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/suppliers/Suppliers.html#fromStrings(java.lang.Iterable)" class="member-name-link">fromStrings(Iterable&lt;String&gt;)</a> - Static method in class com.google.errorprone.suppliers.<a href="com/google/errorprone/suppliers/Suppliers.html" title="class in com.google.errorprone.suppliers">Suppliers</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ApiFactory.html#fromSymbol(com.sun.tools.javac.code.Symbol.MethodSymbol,com.sun.tools.javac.code.Types)" class="member-name-link">fromSymbol(Symbol.MethodSymbol, Types)</a> - Static method in class com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ApiFactory.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ApiFactory</a></dt>
@@ -5320,8 +5322,6 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/VisitorState.html#getNames()" class="member-name-link">getNames()</a> - Method in class com.google.errorprone.<a href="com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/google/errorprone/fixes/AppliedFix.html#getNewCodeSnippet()" class="member-name-link">getNewCodeSnippet()</a> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/AppliedFix.html" title="class in com.google.errorprone.fixes">AppliedFix</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/names/TermEditDistance.html#getNormalizedEditDistance(java.lang.String,java.lang.String)" class="member-name-link">getNormalizedEditDistance(String, String)</a> - Method in class com.google.errorprone.names.<a href="com/google/errorprone/names/TermEditDistance.html" title="class in com.google.errorprone.names">TermEditDistance</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/names/NeedlemanWunschEditDistance.html#getNormalizedEditDistance(java.lang.String,java.lang.String,boolean,int,int,int)" class="member-name-link">getNormalizedEditDistance(String, String, boolean, int, int, int)</a> - Static method in class com.google.errorprone.names.<a href="com/google/errorprone/names/NeedlemanWunschEditDistance.html" title="class in com.google.errorprone.names">NeedlemanWunschEditDistance</a></dt>
@@ -5896,6 +5896,10 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/threadsafety/ConstantExpressions.ConstantEquals.html#hashCode()" class="member-name-link">hashCode()</a> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ConstantExpressions.ConstantEquals.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.ConstantEquals</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/fixes/AppliedFix.html#hashCode()" class="member-name-link">hashCode()</a> - Method in record class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/AppliedFix.html" title="class in com.google.errorprone.fixes">AppliedFix</a></dt>
+<dd>
+<div class="block">Returns a hash code value for this object.</div>
+</dd>
 <dt><a href="com/google/errorprone/fixes/SuggestedFix.html#hashCode()" class="member-name-link">hashCode()</a> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/refaster/Bindings.Key.html#hashCode()" class="member-name-link">hashCode()</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Bindings.Key.html" title="class in com.google.errorprone.refaster">Bindings.Key</a></dt>
@@ -7034,8 +7038,10 @@ loadScripts(document, 'script');</script>
 <div class="block">Returns whether the given <code>Symbol</code> is a record, a record's canonical constructor or a
  member that is part of a record's state vector.</div>
 </dd>
-<dt><a href="com/google/errorprone/fixes/AppliedFix.html#isRemoveLine()" class="member-name-link">isRemoveLine()</a> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/AppliedFix.html" title="class in com.google.errorprone.fixes">AppliedFix</a></dt>
-<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/fixes/AppliedFix.html#isRemoveLine()" class="member-name-link">isRemoveLine()</a> - Method in record class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/AppliedFix.html" title="class in com.google.errorprone.fixes">AppliedFix</a></dt>
+<dd>
+<div class="block">Returns the value of the <code>isRemoveLine</code> record component.</div>
+</dd>
 <dt><a href="com/google/errorprone/matchers/UnusedReturnValueMatcher.html#isReturnValueUnused(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)" class="member-name-link">isReturnValueUnused(ExpressionTree, VisitorState)</a> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/UnusedReturnValueMatcher.html" title="class in com.google.errorprone.matchers">UnusedReturnValueMatcher</a></dt>
 <dd>
 <div class="block">Returns <code>true</code> if and only if the given <code>tree</code> is an invocation of or reference to
@@ -12589,6 +12595,10 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/SizeGreaterThanOrEqualsZero.html#%3Cinit%3E()" class="member-name-link">SizeGreaterThanOrEqualsZero()</a> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/SizeGreaterThanOrEqualsZero.html" title="class in com.google.errorprone.bugpatterns">SizeGreaterThanOrEqualsZero</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/fixes/AppliedFix.html#snippet()" class="member-name-link">snippet()</a> - Method in record class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/AppliedFix.html" title="class in com.google.errorprone.fixes">AppliedFix</a></dt>
+<dd>
+<div class="block">Returns the value of the <code>snippet</code> record component.</div>
+</dd>
 <dt><a href="com/google/errorprone/util/SourceCodeEscapers.html" class="type-name-link" title="class in com.google.errorprone.util">SourceCodeEscapers</a> - Class in <a href="com/google/errorprone/util/package-summary.html">com.google.errorprone.util</a></dt>
 <dd>
 <div class="block">A factory for Escaper instances used to escape strings for safe use in Java.</div>
@@ -13460,6 +13470,10 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/dataflow/nullnesspropagation/Nullness.html#toString()" class="member-name-link">toString()</a> - Method in enum class com.google.errorprone.dataflow.nullnesspropagation.<a href="com/google/errorprone/dataflow/nullnesspropagation/Nullness.html" title="enum class in com.google.errorprone.dataflow.nullnesspropagation">Nullness</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/fixes/AppliedFix.html#toString()" class="member-name-link">toString()</a> - Method in record class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/AppliedFix.html" title="class in com.google.errorprone.fixes">AppliedFix</a></dt>
+<dd>
+<div class="block">Returns a string representation of this record class.</div>
+</dd>
 <dt><a href="com/google/errorprone/refaster/Bindings.Key.html#toString()" class="member-name-link">toString()</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Bindings.Key.html" title="class in com.google.errorprone.refaster">Bindings.Key</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/refaster/Choice.html#toString()" class="member-name-link">toString()</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Choice.html" title="class in com.google.errorprone.refaster">Choice</a></dt>

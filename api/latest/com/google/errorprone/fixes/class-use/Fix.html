@@ -341,13 +341,17 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>@Nullable <a href="../AppliedFix.html" title="class in com.google.errorprone.fixes">AppliedFix</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">AppliedFix.Applier.</span><code><a href="../AppliedFix.Applier.html#apply(com.google.errorprone.fixes.Fix)" class="member-name-link">apply</a><wbr>(<a href="../Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&nbsp;suggestedFix)</code></div>
+<div class="col-first even-row-color"><code>static @Nullable <a href="../AppliedFix.html" title="class in com.google.errorprone.fixes">AppliedFix</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">AppliedFix.</span><code><a href="../AppliedFix.html#apply(java.lang.CharSequence,com.sun.tools.javac.tree.EndPosTable,com.google.errorprone.fixes.Fix)" class="member-name-link">apply</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;source,
+ com.sun.tools.javac.tree.EndPosTable&nbsp;endPositions,
+ <a href="../Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&nbsp;suggestedFix)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Applies the suggestedFix to the source.</div>
 </div>
-<div class="col-first odd-row-color"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">AppliedFix.Applier.</span><code><a href="../AppliedFix.Applier.html#applyReplacements(com.google.errorprone.fixes.Fix)" class="member-name-link">applyReplacements</a><wbr>(<a href="../Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&nbsp;fix)</code></div>
+<div class="col-first odd-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">AppliedFix.</span><code><a href="../AppliedFix.html#applyReplacements(java.lang.CharSequence,com.sun.tools.javac.tree.EndPosTable,com.google.errorprone.fixes.Fix)" class="member-name-link">applyReplacements</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;source,
+ com.sun.tools.javac.tree.EndPosTable&nbsp;endPositions,
+ <a href="../Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&nbsp;fix)</code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static boolean</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../SuggestedFixes.html#compilesWithFix(com.google.errorprone.fixes.Fix,com.google.errorprone.VisitorState)" class="member-name-link">compilesWithFix</a><wbr>(<a href="../Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&nbsp;fix,
