@@ -259,6 +259,8 @@ public class ASTHelpers {
       return jcFieldAccess.sym;
     }
     if (tree instanceof JCIdent jcIdent) {
+      // You might reasonably expect that IdentifierTrees always have a non-null symbol, but a few
+      // cases don't, including module names and identifiers resolved from Javadoc (sometimes).
       return jcIdent.sym;
     }
     if (tree instanceof JCMethodInvocation jcMethodInvocation) {
