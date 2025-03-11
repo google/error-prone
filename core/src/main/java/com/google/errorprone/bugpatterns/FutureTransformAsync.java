@@ -47,6 +47,7 @@ import com.sun.source.tree.ReturnTree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Symbol;
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Optional;
 
@@ -56,48 +57,95 @@ import java.util.Optional;
     severity = WARNING)
 public final class FutureTransformAsync extends BugChecker implements MethodInvocationTreeMatcher {
 
-  private static final ImmutableSet<String> CLASSES_WITH_STATIC_METHOD =
+  private enum Method {
+    TRANSFORM_ASYNC(TRANSFORM_ASYNC_MATCHER, "transform", false),
+    CALL_ASYNC(CALL_ASYNC_MATCHER, "call", true);
+
+    @SuppressWarnings("ImmutableEnumChecker")
+    private final Matcher<ExpressionTree> matcher;
+
+    private final String fixedName;
+    private final boolean canThrowCheckedException;
+
+    private Method(
+        Matcher<ExpressionTree> matcher, String fixedName, boolean canThrowCheckedException) {
+      this.matcher = matcher;
+      this.fixedName = fixedName;
+      this.canThrowCheckedException = canThrowCheckedException;
+    }
+  }
+
+  private static final ImmutableSet<String> CLASSES_WITH_TRANSFORM_ASYNC_STATIC_METHOD =
       ImmutableSet.of(Futures.class.getName());
 
-  private static final ImmutableSet<String> CLASSES_WITH_INSTANCE_METHOD =
+  private static final ImmutableSet<String> CLASSES_WITH_TRANSFORM_ASYNC_INSTANCE_METHOD =
       ImmutableSet.of(ClosingFuture.class.getName(), FluentFuture.class.getName());
+
+  private static final ImmutableSet<String> CLASSES_WITH_CALL_ASYNC_INSTANCE_METHOD =
+      ImmutableSet.of(Futures.FutureCombiner.class.getName());
 
   private static final Matcher<ExpressionTree> TRANSFORM_ASYNC_MATCHER =
       anyOf(
-          staticMethod().onClassAny(CLASSES_WITH_STATIC_METHOD).named("transformAsync"),
-          instanceMethod().onExactClassAny(CLASSES_WITH_INSTANCE_METHOD).named("transformAsync"));
+          staticMethod()
+              .onClassAny(CLASSES_WITH_TRANSFORM_ASYNC_STATIC_METHOD)
+              .named("transformAsync"),
+          instanceMethod()
+              .onExactClassAny(CLASSES_WITH_TRANSFORM_ASYNC_INSTANCE_METHOD)
+              .named("transformAsync"));
+
+  private static final Matcher<ExpressionTree> CALL_ASYNC_MATCHER =
+      instanceMethod().onExactClassAny(CLASSES_WITH_CALL_ASYNC_INSTANCE_METHOD).named("callAsync");
 
   private static final Matcher<ExpressionTree> IMMEDIATE_FUTURE =
       staticMethod()
-          .onClassAny(union(CLASSES_WITH_STATIC_METHOD, CLASSES_WITH_INSTANCE_METHOD))
+          .onClassAny(
+              union(
+                  CLASSES_WITH_TRANSFORM_ASYNC_STATIC_METHOD,
+                  CLASSES_WITH_TRANSFORM_ASYNC_INSTANCE_METHOD))
           .named("immediateFuture");
 
   private static final Matcher<ExpressionTree> IMMEDIATE_VOID_FUTURE =
       staticMethod()
-          .onClassAny(union(CLASSES_WITH_STATIC_METHOD, CLASSES_WITH_INSTANCE_METHOD))
+          .onClassAny(
+              union(
+                  CLASSES_WITH_TRANSFORM_ASYNC_STATIC_METHOD,
+                  CLASSES_WITH_TRANSFORM_ASYNC_INSTANCE_METHOD))
           .named("immediateVoidFuture");
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    if (!TRANSFORM_ASYNC_MATCHER.matches(tree, state)) {
-      return NO_MATCH;
-    }
+    return getMethod(tree, state)
+        .map(method -> matchMethodInvocation(method, tree, state))
+        .orElse(NO_MATCH);
+  }
 
-    // Find the lambda expression. The transformAsync() methods might have different number of
-    // arguments, but they all have a single lambda. Also discard the lambdas that throw checked
-    // exceptions, since they cannot be supported by transform().
+  private Description matchMethodInvocation(
+      Method method, MethodInvocationTree tree, VisitorState state) {
+    // Find the lambda expression. The transformAsync() / callAsync() methods might have different
+    // number of arguments, but they all have a single lambda. In case of transformAsync(), discard
+    // the lambdas that throw checked exceptions, since they cannot be supported by transform().
     Optional<LambdaExpressionTree> lambda =
         tree.getArguments().stream()
             .filter(LambdaExpressionTree.class::isInstance)
             .map(arg -> (LambdaExpressionTree) arg)
-            .filter(lambdaTree -> !throwsCheckedException(lambdaTree, state))
+            .filter(
+                lambdaTree ->
+                    method.canThrowCheckedException || !throwsCheckedException(lambdaTree, state))
             .findFirst();
 
-    return lambda.map(lambdaTree -> handleTransformAsync(tree, lambdaTree, state)).orElse(NO_MATCH);
+    return lambda
+        .map(lambdaTree -> handleTransformAsync(method, tree, lambdaTree, state))
+        .orElse(NO_MATCH);
+  }
+
+  private static Optional<Method> getMethod(MethodInvocationTree tree, VisitorState state) {
+    return EnumSet.allOf(Method.class).stream()
+        .filter(method -> method.matcher.matches(tree, state))
+        .findFirst();
   }
 
   private Description handleTransformAsync(
-      MethodInvocationTree tree, LambdaExpressionTree lambda, VisitorState state) {
+      Method method, MethodInvocationTree tree, LambdaExpressionTree lambda, VisitorState state) {
     HashSet<ExpressionTree> returnExpressions = new HashSet<>();
     if (lambda.getBody() instanceof ExpressionTree) {
       returnExpressions.add((ExpressionTree) lambda.getBody());
@@ -136,7 +184,7 @@ public final class FutureTransformAsync extends BugChecker implements MethodInvo
 
     if (areAllImmediateFutures) {
       SuggestedFix.Builder fix = SuggestedFix.builder();
-      suggestFixTransformAsyncToTransform(tree, state, fix);
+      suggestFixTransformAsyncToTransform(method, tree, state, fix);
       for (ExpressionTree expression : returnExpressions) {
         suggestFixRemoveImmediateFuture((MethodInvocationTree) expression, state, fix);
       }
@@ -153,20 +201,20 @@ public final class FutureTransformAsync extends BugChecker implements MethodInvo
   }
 
   /**
-   * Suggests fix to replace transformAsync with transform.
+   * Suggests fix to replace transformAsync/callAsync with transform/call.
    *
    * <p>If the transformAsync is imported as a static method, it takes care of adding the equivalent
    * import static for transform.
    */
   private static void suggestFixTransformAsyncToTransform(
-      MethodInvocationTree tree, VisitorState state, SuggestedFix.Builder fix) {
+      Method method, MethodInvocationTree tree, VisitorState state, SuggestedFix.Builder fix) {
     ExpressionTree methodSelect = tree.getMethodSelect();
     if (state.getSourceForNode(methodSelect).equals("transformAsync")) {
       Symbol symbol = getSymbol(methodSelect);
       String className = enclosingClass(symbol).getQualifiedName().toString();
       fix.addStaticImport(className + "." + "transform");
     }
-    fix.merge(SuggestedFixes.renameMethodInvocation(tree, "transform", state));
+    fix.merge(SuggestedFixes.renameMethodInvocation(tree, method.fixedName, state));
   }
 
   /** Suggests fix to remove the immediateFuture or immediateVoidFuture call. */
