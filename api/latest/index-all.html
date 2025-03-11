@@ -711,10 +711,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">A <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="com/google/errorprone/BugPattern.html" title="annotation interface in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </dd>
-<dt><a href="com/google/errorprone/refaster/Choice.html#any(java.util.Collection)" class="member-name-link">any(Collection&lt;Choice&lt;T&gt;&gt;)</a> - Static method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Choice.html" title="class in com.google.errorprone.refaster">Choice</a></dt>
-<dd>
-<div class="block">Returns a choice between any of the options from any of the specified choices.</div>
-</dd>
 <dt><a href="com/google/errorprone/util/Commented.Position.html#ANY" class="member-name-link">ANY</a> - Enum constant in enum class com.google.errorprone.util.<a href="com/google/errorprone/util/Commented.Position.html" title="enum class in com.google.errorprone.util">Commented.Position</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/matchers/method/MethodMatchers.AnyMethodMatcher.html#anyClass()" class="member-name-link">anyClass()</a> - Method in interface com.google.errorprone.matchers.method.<a href="com/google/errorprone/matchers/method/MethodMatchers.AnyMethodMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.AnyMethodMatcher</a></dt>
@@ -2391,22 +2387,18 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/ComputeIfAbsentAmbiguousReference.html#%3Cinit%3E()" class="member-name-link">ComputeIfAbsentAmbiguousReference()</a> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ComputeIfAbsentAmbiguousReference.html" title="class in com.google.errorprone.bugpatterns">ComputeIfAbsentAmbiguousReference</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/refaster/Choice.html#concat(com.google.errorprone.refaster.Choice)" class="member-name-link">concat(Choice&lt;T&gt;)</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Choice.html" title="class in com.google.errorprone.refaster">Choice</a></dt>
+<dd>
+<div class="block">Returns a choice of the options from this <code>Choice</code> or from <code>other</code>.</div>
+</dd>
 <dt><a href="com/google/errorprone/BugPattern.StandardTags.html#CONCURRENCY" class="member-name-link">CONCURRENCY</a> - Static variable in class com.google.errorprone.<a href="com/google/errorprone/BugPattern.StandardTags.html" title="class in com.google.errorprone">BugPattern.StandardTags</a></dt>
 <dd>
 <div class="block">This check points out potential issues when operating in a concurrent context</div>
-</dd>
-<dt><a href="com/google/errorprone/refaster/Choice.html#condition(boolean)" class="member-name-link">condition(boolean)</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Choice.html" title="class in com.google.errorprone.refaster">Choice</a></dt>
-<dd>
-<div class="block">Returns this choice if <code>condition</code>, otherwise the empty choice.</div>
 </dd>
 <dt><a href="com/google/errorprone/refaster/Choice.html#condition(boolean,T)" class="member-name-link">condition(boolean, T)</a> - Static method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Choice.html" title="class in com.google.errorprone.refaster">Choice</a></dt>
 <dd>
 <div class="block">Returns a <code>Choice</code> with <code>t</code> as an option if <code>condition</code>, and no options
  otherwise.</div>
-</dd>
-<dt><a href="com/google/errorprone/refaster/Choice.html#condition(com.google.common.base.Predicate)" class="member-name-link">condition(Predicate&lt;? super T&gt;)</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Choice.html" title="class in com.google.errorprone.refaster">Choice</a></dt>
-<dd>
-<div class="block">Filters the choices to those that satisfy the provided <code>Predicate</code>.</div>
 </dd>
 <dt><a href="com/google/errorprone/util/OperatorPrecedence.html#CONDITIONAL_AND" class="member-name-link">CONDITIONAL_AND</a> - Enum constant in enum class com.google.errorprone.util.<a href="com/google/errorprone/util/OperatorPrecedence.html" title="enum class in com.google.errorprone.util">OperatorPrecedence</a></dt>
 <dd>&nbsp;</dd>
@@ -3931,6 +3923,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Filters this <a href="com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> based on the provided predicate.</div>
 </dd>
+<dt><a href="com/google/errorprone/refaster/Choice.html#filter(com.google.common.base.Predicate)" class="member-name-link">filter(Predicate&lt;? super T&gt;)</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Choice.html" title="class in com.google.errorprone.refaster">Choice</a></dt>
+<dd>
+<div class="block">Filters the choices to those that satisfy the provided <code>Predicate</code>.</div>
+</dd>
 <dt><a href="com/google/errorprone/annotations/Modifier.html#FINAL" class="member-name-link">FINAL</a> - Enum constant in enum class com.google.errorprone.annotations.<a href="com/google/errorprone/annotations/Modifier.html" title="enum class in com.google.errorprone.annotations">Modifier</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/Finalize.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">Finalize</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
@@ -3981,6 +3977,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/google/errorprone/util/ASTHelpers.html#findEnclosingNode(com.sun.source.util.TreePath,java.lang.Class)" class="member-name-link">findEnclosingNode(TreePath, Class&lt;T&gt;)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
 <dd>
 <div class="block">Given a TreePath, walks up the tree until it finds a node of the given type.</div>
+</dd>
+<dt><a href="com/google/errorprone/refaster/Choice.html#findFirst()" class="member-name-link">findFirst()</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Choice.html" title="class in com.google.errorprone.refaster">Choice</a></dt>
+<dd>
+<div class="block">Returns the first valid option from this <code>Choice</code>.</div>
 </dd>
 <dt><a href="com/google/errorprone/util/FindIdentifiers.html#findIdent(java.lang.String,com.google.errorprone.VisitorState)" class="member-name-link">findIdent(String, VisitorState)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/FindIdentifiers.html" title="class in com.google.errorprone.util">FindIdentifiers</a></dt>
 <dd>
@@ -4042,10 +4042,6 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/refaster/RefasterRuleCompilerAnalyzer.html#finished(com.sun.source.util.TaskEvent)" class="member-name-link">finished(TaskEvent)</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/RefasterRuleCompilerAnalyzer.html" title="class in com.google.errorprone.refaster">RefasterRuleCompilerAnalyzer</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/google/errorprone/refaster/Choice.html#first()" class="member-name-link">first()</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Choice.html" title="class in com.google.errorprone.refaster">Choice</a></dt>
-<dd>
-<div class="block">Returns the first valid option from this <code>Choice</code>.</div>
-</dd>
 <dt><a href="com/google/errorprone/BugCheckerRefactoringTestHelper.FixChoosers.html#FIRST" class="member-name-link">FIRST</a> - Enum constant in enum class com.google.errorprone.<a href="com/google/errorprone/BugCheckerRefactoringTestHelper.FixChoosers.html" title="enum class in com.google.errorprone">BugCheckerRefactoringTestHelper.FixChoosers</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/fixes/SuggestedFixes.AdditionPosition.html#FIRST" class="member-name-link">FIRST</a> - Enum constant in enum class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFixes.AdditionPosition.html" title="enum class in com.google.errorprone.fixes">SuggestedFixes.AdditionPosition</a></dt>
@@ -4079,6 +4075,11 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Suggest replacing <code>input</code> with a reference to a method parameter in the nearest enclosing
  method declaration with a similar or the same name as the <code>input</code> expression.</div>
+</dd>
+<dt><a href="com/google/errorprone/refaster/Choice.html#flatMap(com.google.common.base.Function)" class="member-name-link">flatMap(Function&lt;? super T, Choice&lt;R&gt;&gt;)</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Choice.html" title="class in com.google.errorprone.refaster">Choice</a></dt>
+<dd>
+<div class="block">Returns all the choices obtained by choosing from this <code>Choice</code> and then choosing from
+ the <code>Choice</code> yielded by this function on the result.</div>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/FloatCast.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">FloatCast</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
@@ -7765,6 +7766,10 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/javadoc/MalformedInlineTag.html#%3Cinit%3E()" class="member-name-link">MalformedInlineTag()</a> - Constructor for class com.google.errorprone.bugpatterns.javadoc.<a href="com/google/errorprone/bugpatterns/javadoc/MalformedInlineTag.html" title="class in com.google.errorprone.bugpatterns.javadoc">MalformedInlineTag</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/refaster/Choice.html#map(com.google.common.base.Function)" class="member-name-link">map(Function&lt;? super T, R&gt;)</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Choice.html" title="class in com.google.errorprone.refaster">Choice</a></dt>
+<dd>
+<div class="block">Maps the choices with the specified function.</div>
+</dd>
 <dt><a href="com/google/errorprone/bugpatterns/checkreturnvalue/Rules.html#mapAnnotationSimpleName(java.lang.String,com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicy)" class="member-name-link">mapAnnotationSimpleName(String, ResultUsePolicy)</a> - Static method in class com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/Rules.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">Rules</a></dt>
 <dd>
 <div class="block">Returns a <a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUseRule</code></a> that maps annotations with the given <code>simpleName</code> to the
@@ -7772,6 +7777,11 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafetyKnownTypes.MapBuilder.html#%3Cinit%3E()" class="member-name-link">MapBuilder()</a> - Constructor for class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafetyKnownTypes.MapBuilder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafetyKnownTypes.MapBuilder</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/refaster/Choice.html#mapIfPresent(com.google.common.base.Function)" class="member-name-link">mapIfPresent(Function&lt;? super T, Optional&lt;R&gt;&gt;)</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Choice.html" title="class in com.google.errorprone.refaster">Choice</a></dt>
+<dd>
+<div class="block">Returns all the choices obtained by choosing from this <code>Choice</code> and yielding a present
+ <code>Optional</code>.</div>
+</dd>
 <dt><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html#markerAnnotations(java.lang.Iterable)" class="member-name-link">markerAnnotations(Iterable&lt;String&gt;)</a> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a></dt>
 <dd>
 <div class="block">Annotations that will cause a class to be tested with this <a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><code>ThreadSafety</code></a> instance; for
@@ -11007,10 +11017,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Enrich this TypeExtractor with fallback behavior.</div>
 </dd>
-<dt><a href="com/google/errorprone/refaster/Choice.html#or(com.google.errorprone.refaster.Choice)" class="member-name-link">or(Choice&lt;T&gt;)</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Choice.html" title="class in com.google.errorprone.refaster">Choice</a></dt>
-<dd>
-<div class="block">Returns a choice of the options from this <code>Choice</code> or from <code>other</code>.</div>
-</dd>
 <dt><a href="com/google/errorprone/util/OperatorPrecedence.html#OR" class="member-name-link">OR</a> - Enum constant in enum class com.google.errorprone.util.<a href="com/google/errorprone/util/OperatorPrecedence.html" title="enum class in com.google.errorprone.util">OperatorPrecedence</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/apply/ImportOrganizer.OrganizedImports.html#%3Cinit%3E()" class="member-name-link">OrganizedImports()</a> - Constructor for class com.google.errorprone.apply.<a href="com/google/errorprone/apply/ImportOrganizer.OrganizedImports.html" title="class in com.google.errorprone.apply">ImportOrganizer.OrganizedImports</a></dt>
@@ -13238,16 +13244,6 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/fixes/BranchedSuggestedFixes.Builder.html#then()" class="member-name-link">then()</a> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/BranchedSuggestedFixes.Builder.html" title="class in com.google.errorprone.fixes">BranchedSuggestedFixes.Builder</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/google/errorprone/refaster/Choice.html#thenChoose(com.google.common.base.Function)" class="member-name-link">thenChoose(Function&lt;? super T, Choice&lt;R&gt;&gt;)</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Choice.html" title="class in com.google.errorprone.refaster">Choice</a></dt>
-<dd>
-<div class="block">Returns all the choices obtained by choosing from this <code>Choice</code> and then choosing from
- the <code>Choice</code> yielded by this function on the result.</div>
-</dd>
-<dt><a href="com/google/errorprone/refaster/Choice.html#thenOption(com.google.common.base.Function)" class="member-name-link">thenOption(Function&lt;? super T, Optional&lt;R&gt;&gt;)</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Choice.html" title="class in com.google.errorprone.refaster">Choice</a></dt>
-<dd>
-<div class="block">Returns all the choices obtained by choosing from this <code>Choice</code> and yielding a present
- <code>Optional</code>.</div>
-</dd>
 <dt><a href="com/google/errorprone/bugpatterns/TheoryButNoTheories.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">TheoryButNoTheories</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
 <div class="block">Flags uses of <code>@Theory</code> (and others) in non-<code>Theories</code>-run tests.</div>
@@ -13537,10 +13533,6 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/TraditionalSwitchExpression.html#%3Cinit%3E()" class="member-name-link">TraditionalSwitchExpression()</a> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/TraditionalSwitchExpression.html" title="class in com.google.errorprone.bugpatterns">TraditionalSwitchExpression</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/google/errorprone/refaster/Choice.html#transform(com.google.common.base.Function)" class="member-name-link">transform(Function&lt;? super T, R&gt;)</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Choice.html" title="class in com.google.errorprone.refaster">Choice</a></dt>
-<dd>
-<div class="block">Maps the choices with the specified function.</div>
-</dd>
 <dt><a href="com/google/errorprone/CompositeCodeTransformer.html#transformers()" class="member-name-link">transformers()</a> - Method in class com.google.errorprone.<a href="com/google/errorprone/CompositeCodeTransformer.html" title="class in com.google.errorprone">CompositeCodeTransformer</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/annotations/Modifier.html#TRANSIENT" class="member-name-link">TRANSIENT</a> - Enum constant in enum class com.google.errorprone.annotations.<a href="com/google/errorprone/annotations/Modifier.html" title="enum class in com.google.errorprone.annotations">Modifier</a></dt>

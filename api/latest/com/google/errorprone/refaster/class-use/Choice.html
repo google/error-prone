@@ -104,27 +104,17 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>static &lt;T&gt;&nbsp;<a href="../Choice.html" title="class in com.google.errorprone.refaster">Choice</a><wbr>&lt;T&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">Choice.</span><code><a href="../Choice.html#any(java.util.Collection)" class="member-name-link">any</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;T&gt;&gt;&nbsp;choices)</code></div>
+<div class="col-first even-row-color"><code><a href="../Choice.html" title="class in com.google.errorprone.refaster">Choice</a><wbr>&lt;<a href="../Choice.html#type-param-T" title="type parameter in Choice">T</a>&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">Choice.</span><code><a href="../Choice.html#concat(com.google.errorprone.refaster.Choice)" class="member-name-link">concat</a><wbr>(<a href="../Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;<a href="../Choice.html#type-param-T" title="type parameter in Choice">T</a>&gt;&nbsp;other)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Returns a choice between any of the options from any of the specified choices.</div>
+<div class="block">Returns a choice of the options from this <code>Choice</code> or from <code>other</code>.</div>
 </div>
-<div class="col-first odd-row-color"><code><a href="../Choice.html" title="class in com.google.errorprone.refaster">Choice</a><wbr>&lt;<a href="../Choice.html#type-param-T" title="type parameter in Choice">T</a>&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">Choice.</span><code><a href="../Choice.html#condition(boolean)" class="member-name-link">condition</a><wbr>(boolean&nbsp;condition)</code></div>
-<div class="col-last odd-row-color">
-<div class="block">Returns this choice if <code>condition</code>, otherwise the empty choice.</div>
-</div>
-<div class="col-first even-row-color"><code>static &lt;T&gt;&nbsp;<a href="../Choice.html" title="class in com.google.errorprone.refaster">Choice</a><wbr>&lt;T&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">Choice.</span><code><a href="../Choice.html#condition(boolean,T)" class="member-name-link">condition</a><wbr>(boolean&nbsp;condition,
+<div class="col-first odd-row-color"><code>static &lt;T&gt;&nbsp;<a href="../Choice.html" title="class in com.google.errorprone.refaster">Choice</a><wbr>&lt;T&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">Choice.</span><code><a href="../Choice.html#condition(boolean,T)" class="member-name-link">condition</a><wbr>(boolean&nbsp;condition,
  T&nbsp;t)</code></div>
-<div class="col-last even-row-color">
+<div class="col-last odd-row-color">
 <div class="block">Returns a <code>Choice</code> with <code>t</code> as an option if <code>condition</code>, and no options
  otherwise.</div>
-</div>
-<div class="col-first odd-row-color"><code><a href="../Choice.html" title="class in com.google.errorprone.refaster">Choice</a><wbr>&lt;<a href="../Choice.html#type-param-T" title="type parameter in Choice">T</a>&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">Choice.</span><code><a href="../Choice.html#condition(com.google.common.base.Predicate)" class="member-name-link">condition</a><wbr>(com.google.common.base.Predicate&lt;? super <a href="../Choice.html#type-param-T" title="type parameter in Choice">T</a>&gt;&nbsp;predicate)</code></div>
-<div class="col-last odd-row-color">
-<div class="block">Filters the choices to those that satisfy the provided <code>Predicate</code>.</div>
 </div>
 <div class="col-first even-row-color"><code>protected <a href="../Choice.html" title="class in com.google.errorprone.refaster">Choice</a><wbr>&lt;<a href="../Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">UAnyOf.</span><code><a href="../UAnyOf.html#defaultAction(com.sun.source.tree.Tree,com.google.errorprone.refaster.Unifier)" class="member-name-link">defaultAction</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,
@@ -150,6 +140,17 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color"><span class="type-name-label">UTree.</span><code><a href="../UTree.html#defaultAction(com.sun.source.tree.Tree,com.google.errorprone.refaster.Unifier)" class="member-name-link">defaultAction</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;node,
  <a href="../Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;unifier)</code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code><a href="../Choice.html" title="class in com.google.errorprone.refaster">Choice</a><wbr>&lt;<a href="../Choice.html#type-param-T" title="type parameter in Choice">T</a>&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">Choice.</span><code><a href="../Choice.html#filter(com.google.common.base.Predicate)" class="member-name-link">filter</a><wbr>(com.google.common.base.Predicate&lt;? super <a href="../Choice.html#type-param-T" title="type parameter in Choice">T</a>&gt;&nbsp;predicate)</code></div>
+<div class="col-last even-row-color">
+<div class="block">Filters the choices to those that satisfy the provided <code>Predicate</code>.</div>
+</div>
+<div class="col-first odd-row-color"><code>&lt;R&gt;&nbsp;<a href="../Choice.html" title="class in com.google.errorprone.refaster">Choice</a><wbr>&lt;R&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">Choice.</span><code><a href="../Choice.html#flatMap(com.google.common.base.Function)" class="member-name-link">flatMap</a><wbr>(com.google.common.base.Function&lt;? super <a href="../Choice.html#type-param-T" title="type parameter in Choice">T</a>, <a href="../Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;R&gt;&gt;&nbsp;function)</code></div>
+<div class="col-last odd-row-color">
+<div class="block">Returns all the choices obtained by choosing from this <code>Choice</code> and then choosing from
+ the <code>Choice</code> yielded by this function on the result.</div>
+</div>
 <div class="col-first even-row-color"><code>static &lt;T&gt;&nbsp;<a href="../Choice.html" title="class in com.google.errorprone.refaster">Choice</a><wbr>&lt;T&gt;</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">Choice.</span><code><a href="../Choice.html#from(java.util.Collection)" class="member-name-link">from</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;T&gt;&nbsp;choices)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
@@ -157,6 +158,17 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color"><span class="type-name-label">Choice.</span><code><a href="../Choice.html#fromOptional(com.google.common.base.Optional)" class="member-name-link">fromOptional</a><wbr>(com.google.common.base.Optional&lt;T&gt;&nbsp;optional)</code></div>
 <div class="col-last odd-row-color">
 <div class="block">Returns a choice of the optional value, if it is present, or the empty choice if it is absent.</div>
+</div>
+<div class="col-first even-row-color"><code>&lt;R&gt;&nbsp;<a href="../Choice.html" title="class in com.google.errorprone.refaster">Choice</a><wbr>&lt;R&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">Choice.</span><code><a href="../Choice.html#map(com.google.common.base.Function)" class="member-name-link">map</a><wbr>(com.google.common.base.Function&lt;? super <a href="../Choice.html#type-param-T" title="type parameter in Choice">T</a>, R&gt;&nbsp;function)</code></div>
+<div class="col-last even-row-color">
+<div class="block">Maps the choices with the specified function.</div>
+</div>
+<div class="col-first odd-row-color"><code>&lt;R&gt;&nbsp;<a href="../Choice.html" title="class in com.google.errorprone.refaster">Choice</a><wbr>&lt;R&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">Choice.</span><code><a href="../Choice.html#mapIfPresent(com.google.common.base.Function)" class="member-name-link">mapIfPresent</a><wbr>(com.google.common.base.Function&lt;? super <a href="../Choice.html#type-param-T" title="type parameter in Choice">T</a>, com.google.common.base.Optional&lt;R&gt;&gt;&nbsp;function)</code></div>
+<div class="col-last odd-row-color">
+<div class="block">Returns all the choices obtained by choosing from this <code>Choice</code> and yielding a present
+ <code>Optional</code>.</div>
 </div>
 <div class="col-first even-row-color"><code>static &lt;T&gt;&nbsp;<a href="../Choice.html" title="class in com.google.errorprone.refaster">Choice</a><wbr>&lt;T&gt;</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">Choice.</span><code><a href="../Choice.html#none()" class="member-name-link">none</a>()</code></div>
@@ -167,28 +179,6 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color"><span class="type-name-label">Choice.</span><code><a href="../Choice.html#of(T)" class="member-name-link">of</a><wbr>(T&nbsp;t)</code></div>
 <div class="col-last odd-row-color">
 <div class="block">Returns a <code>Choice</code> with only one option, <code>t</code>.</div>
-</div>
-<div class="col-first even-row-color"><code><a href="../Choice.html" title="class in com.google.errorprone.refaster">Choice</a><wbr>&lt;<a href="../Choice.html#type-param-T" title="type parameter in Choice">T</a>&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">Choice.</span><code><a href="../Choice.html#or(com.google.errorprone.refaster.Choice)" class="member-name-link">or</a><wbr>(<a href="../Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;<a href="../Choice.html#type-param-T" title="type parameter in Choice">T</a>&gt;&nbsp;other)</code></div>
-<div class="col-last even-row-color">
-<div class="block">Returns a choice of the options from this <code>Choice</code> or from <code>other</code>.</div>
-</div>
-<div class="col-first odd-row-color"><code>&lt;R&gt;&nbsp;<a href="../Choice.html" title="class in com.google.errorprone.refaster">Choice</a><wbr>&lt;R&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">Choice.</span><code><a href="../Choice.html#thenChoose(com.google.common.base.Function)" class="member-name-link">thenChoose</a><wbr>(com.google.common.base.Function&lt;? super <a href="../Choice.html#type-param-T" title="type parameter in Choice">T</a>, <a href="../Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;R&gt;&gt;&nbsp;function)</code></div>
-<div class="col-last odd-row-color">
-<div class="block">Returns all the choices obtained by choosing from this <code>Choice</code> and then choosing from
- the <code>Choice</code> yielded by this function on the result.</div>
-</div>
-<div class="col-first even-row-color"><code>&lt;R&gt;&nbsp;<a href="../Choice.html" title="class in com.google.errorprone.refaster">Choice</a><wbr>&lt;R&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">Choice.</span><code><a href="../Choice.html#thenOption(com.google.common.base.Function)" class="member-name-link">thenOption</a><wbr>(com.google.common.base.Function&lt;? super <a href="../Choice.html#type-param-T" title="type parameter in Choice">T</a>, com.google.common.base.Optional&lt;R&gt;&gt;&nbsp;function)</code></div>
-<div class="col-last even-row-color">
-<div class="block">Returns all the choices obtained by choosing from this <code>Choice</code> and yielding a present
- <code>Optional</code>.</div>
-</div>
-<div class="col-first odd-row-color"><code>&lt;R&gt;&nbsp;<a href="../Choice.html" title="class in com.google.errorprone.refaster">Choice</a><wbr>&lt;R&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">Choice.</span><code><a href="../Choice.html#transform(com.google.common.base.Function)" class="member-name-link">transform</a><wbr>(com.google.common.base.Function&lt;? super <a href="../Choice.html#type-param-T" title="type parameter in Choice">T</a>, R&gt;&nbsp;function)</code></div>
-<div class="col-last odd-row-color">
-<div class="block">Maps the choices with the specified function.</div>
 </div>
 <div class="col-first even-row-color"><code><a href="../Choice.html" title="class in com.google.errorprone.refaster">Choice</a><wbr>&lt;<a href="../Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">ExpressionTemplate.</span><code><a href="../ExpressionTemplate.html#unify(com.sun.tools.javac.tree.JCTree.JCExpression,com.google.errorprone.refaster.Unifier)" class="member-name-link">unify</a><wbr>(com.sun.tools.javac.tree.JCTree.JCExpression&nbsp;target,
@@ -313,7 +303,7 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code><a href="../Choice.html" title="class in com.google.errorprone.refaster">Choice</a><wbr>&lt;<a href="../Choice.html#type-param-T" title="type parameter in Choice">T</a>&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">Choice.</span><code><a href="../Choice.html#or(com.google.errorprone.refaster.Choice)" class="member-name-link">or</a><wbr>(<a href="../Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;<a href="../Choice.html#type-param-T" title="type parameter in Choice">T</a>&gt;&nbsp;other)</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">Choice.</span><code><a href="../Choice.html#concat(com.google.errorprone.refaster.Choice)" class="member-name-link">concat</a><wbr>(<a href="../Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;<a href="../Choice.html#type-param-T" title="type parameter in Choice">T</a>&gt;&nbsp;other)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Returns a choice of the options from this <code>Choice</code> or from <code>other</code>.</div>
 </div>
@@ -323,14 +313,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>static &lt;T&gt;&nbsp;<a href="../Choice.html" title="class in com.google.errorprone.refaster">Choice</a><wbr>&lt;T&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">Choice.</span><code><a href="../Choice.html#any(java.util.Collection)" class="member-name-link">any</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;T&gt;&gt;&nbsp;choices)</code></div>
+<div class="col-first even-row-color"><code>&lt;R&gt;&nbsp;<a href="../Choice.html" title="class in com.google.errorprone.refaster">Choice</a><wbr>&lt;R&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">Choice.</span><code><a href="../Choice.html#flatMap(com.google.common.base.Function)" class="member-name-link">flatMap</a><wbr>(com.google.common.base.Function&lt;? super <a href="../Choice.html#type-param-T" title="type parameter in Choice">T</a>, <a href="../Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;R&gt;&gt;&nbsp;function)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Returns a choice between any of the options from any of the specified choices.</div>
-</div>
-<div class="col-first odd-row-color"><code>&lt;R&gt;&nbsp;<a href="../Choice.html" title="class in com.google.errorprone.refaster">Choice</a><wbr>&lt;R&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">Choice.</span><code><a href="../Choice.html#thenChoose(com.google.common.base.Function)" class="member-name-link">thenChoose</a><wbr>(com.google.common.base.Function&lt;? super <a href="../Choice.html#type-param-T" title="type parameter in Choice">T</a>, <a href="../Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;R&gt;&gt;&nbsp;function)</code></div>
-<div class="col-last odd-row-color">
 <div class="block">Returns all the choices obtained by choosing from this <code>Choice</code> and then choosing from
  the <code>Choice</code> yielded by this function on the result.</div>
 </div>
