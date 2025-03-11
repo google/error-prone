@@ -43,6 +43,12 @@ public class NonCanonicalStaticMemberImport extends BugChecker implements Import
     if (importInfo == null || importInfo.isCanonical() || importInfo.members().isEmpty()) {
       return Description.NO_MATCH;
     }
-    return describeMatch(tree, SuggestedFix.replace(tree, importInfo.importStatement()));
+    return buildDescription(tree)
+        .addFix(SuggestedFix.replace(tree, importInfo.importStatement()))
+        .setMessage(
+            String.format(
+                "Static import of '%s' uses non-canonical name; prefer '%s'",
+                importInfo.simpleName(), importInfo.canonicalName()))
+        .build();
   }
 }
