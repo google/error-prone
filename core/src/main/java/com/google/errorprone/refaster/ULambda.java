@@ -59,7 +59,7 @@ abstract class ULambda extends UExpression implements LambdaExpressionTree {
   @Override
   public Choice<Unifier> visitLambdaExpression(LambdaExpressionTree node, Unifier unifier) {
     return unifyList(unifier, getParameters(), node.getParameters())
-        .thenChoose(unifications(getBody(), node.getBody()));
+        .flatMap(unifications(getBody(), node.getBody()));
   }
 
   @Override

@@ -44,7 +44,7 @@ abstract class UTypeCast extends UExpression implements TypeCastTree {
   public Choice<Unifier> visitTypeCast(TypeCastTree cast, Unifier unifier) {
     return getType()
         .unify(cast.getType(), unifier)
-        .thenChoose(unifications(getExpression(), cast.getExpression()));
+        .flatMap(unifications(getExpression(), cast.getExpression()));
   }
 
   @Override

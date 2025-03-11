@@ -59,9 +59,9 @@ abstract class UTypeApply extends UExpression implements ParameterizedTypeTree {
     Choice<Unifier> choice = getType().unify(typeApply.getType(), unifier);
     if (getTypeArguments().isEmpty()) {
       // the template uses diamond syntax; accept anything except raw
-      return choice.condition(typeApply.getTypeArguments() != null);
+      return typeApply.getTypeArguments() == null ? Choice.none() : choice;
     } else {
-      return choice.thenChoose(unifications(getTypeArguments(), typeApply.getTypeArguments()));
+      return choice.flatMap(unifications(getTypeArguments(), typeApply.getTypeArguments()));
     }
   }
 

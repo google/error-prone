@@ -68,8 +68,7 @@ abstract class UUnary extends UExpression implements UnaryTree {
   @Override
   public @Nullable Choice<Unifier> visitUnary(UnaryTree unary, @Nullable Unifier unifier) {
     return Choice.condition(getKind().equals(unary.getKind()), unifier)
-        .thenChoose(
-            unifications(getExpression(), ASTHelpers.stripParentheses(unary.getExpression())));
+        .flatMap(unifications(getExpression(), ASTHelpers.stripParentheses(unary.getExpression())));
   }
 
   @Override

@@ -125,7 +125,7 @@ public abstract class ExpressionTemplate extends Template<ExpressionTemplateMatc
   @Override
   public Iterable<ExpressionTemplateMatch> match(JCTree target, Context context) {
     if (target instanceof JCExpression targetExpr) {
-      Optional<Unifier> unifier = unify(targetExpr, new Unifier(context)).first();
+      Optional<Unifier> unifier = unify(targetExpr, new Unifier(context)).findFirst();
       if (unifier.isPresent()) {
         return ImmutableList.of(new ExpressionTemplateMatch(targetExpr, unifier.get()));
       }
@@ -165,8 +165,8 @@ public abstract class ExpressionTemplate extends Template<ExpressionTemplateMatc
   public Choice<Unifier> unify(JCExpression target, Unifier unifier) {
     return expression()
         .unify(target, unifier)
-        .condition(u -> trueOrNull(PLACEHOLDER_VERIFIER.scan(expression(), u)))
-        .thenOption(
+        .filter(u -> trueOrNull(PLACEHOLDER_VERIFIER.scan(expression(), u)))
+        .mapIfPresent(
             new Function<Unifier, Optional<Unifier>>() {
 
               @Override

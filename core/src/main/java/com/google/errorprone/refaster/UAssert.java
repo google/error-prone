@@ -56,7 +56,7 @@ abstract class UAssert extends USimpleStatement implements AssertTree {
   public Choice<Unifier> visitAssert(AssertTree node, Unifier unifier) {
     return getCondition()
         .unify(node.getCondition(), unifier)
-        .thenChoose(unifications(getDetail(), node.getDetail()));
+        .flatMap(unifications(getDetail(), node.getDetail()));
   }
 
   @Override

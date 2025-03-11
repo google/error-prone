@@ -83,7 +83,7 @@ abstract class UAssignOp extends UExpression implements CompoundAssignmentTree {
   @Override
   public Choice<Unifier> visitCompoundAssignment(CompoundAssignmentTree assignOp, Unifier unifier) {
     return Choice.condition(getKind() == assignOp.getKind(), unifier)
-        .thenChoose(unifications(getVariable(), assignOp.getVariable()))
-        .thenChoose(unifications(getExpression(), assignOp.getExpression()));
+        .flatMap(unifications(getVariable(), assignOp.getVariable()))
+        .flatMap(unifications(getExpression(), assignOp.getExpression()));
   }
 }

@@ -65,8 +65,8 @@ public abstract class UStaticIdent extends UIdent {
     if (symbol != null) {
       return classIdent()
           .unify(symbol.getEnclosingElement(), unifier)
-          .thenChoose(unifications(getName(), symbol.getSimpleName()))
-          .thenChoose(unifications(memberType(), symbol.asType()));
+          .flatMap(unifications(getName(), symbol.getSimpleName()))
+          .flatMap(unifications(memberType(), symbol.asType()));
     }
     return Choice.none();
   }

@@ -92,8 +92,8 @@ abstract class UBinary extends UExpression implements BinaryTree {
   @Override
   public Choice<Unifier> visitBinary(BinaryTree binary, Unifier unifier) {
     return Choice.condition(getKind().equals(binary.getKind()), unifier)
-        .thenChoose(unifications(getLeftOperand(), binary.getLeftOperand()))
-        .thenChoose(unifications(getRightOperand(), binary.getRightOperand()));
+        .flatMap(unifications(getLeftOperand(), binary.getLeftOperand()))
+        .flatMap(unifications(getRightOperand(), binary.getRightOperand()));
   }
 
   @Override

@@ -86,6 +86,6 @@ abstract class UInstanceOf extends UExpression {
       InstanceOfTree instanceOf, @Nullable Unifier unifier) {
     return getExpression()
         .unify(instanceOf.getExpression(), unifier)
-        .thenChoose(unifications(getType(), instanceOf.getType()));
+        .flatMap(unifications(getType(), instanceOf.getType()));
   }
 }

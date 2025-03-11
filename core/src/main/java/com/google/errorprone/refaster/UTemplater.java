@@ -424,7 +424,7 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
 
   static <T, U extends Unifiable<? super T>> boolean anyMatch(
       U toUnify, T target, Unifier unifier) {
-    return toUnify.unify(target, unifier).first().isPresent();
+    return toUnify.unify(target, unifier).findFirst().isPresent();
   }
 
   @Override

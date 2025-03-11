@@ -50,14 +50,14 @@ abstract class UConditional extends UExpression implements ConditionalExpression
       ConditionalExpressionTree conditional, Unifier unifier) {
     return getCondition()
         .unify(conditional.getCondition(), unifier.fork())
-        .thenChoose(unifications(getTrueExpression(), conditional.getTrueExpression()))
-        .thenChoose(unifications(getFalseExpression(), conditional.getFalseExpression()))
-        .or(
+        .flatMap(unifications(getTrueExpression(), conditional.getTrueExpression()))
+        .flatMap(unifications(getFalseExpression(), conditional.getFalseExpression()))
+        .concat(
             getCondition()
                 .negate()
                 .unify(conditional.getCondition(), unifier.fork())
-                .thenChoose(unifications(getFalseExpression(), conditional.getTrueExpression()))
-                .thenChoose(unifications(getTrueExpression(), conditional.getFalseExpression())));
+                .flatMap(unifications(getFalseExpression(), conditional.getTrueExpression()))
+                .flatMap(unifications(getTrueExpression(), conditional.getFalseExpression())));
   }
 
   @Override

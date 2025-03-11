@@ -60,7 +60,7 @@ public abstract class AbstractUTreeTest {
   public void assertUnifies(String expression, UTree<?> template) {
     assertWithMessage(
             String.format("Expected template %s to unify with expression %s", template, expression))
-        .that(template.unify(parseExpression(expression), unifier).first())
+        .that(template.unify(parseExpression(expression), unifier).findFirst())
         .isPresent();
   }
 

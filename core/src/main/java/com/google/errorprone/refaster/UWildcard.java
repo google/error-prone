@@ -76,6 +76,6 @@ abstract class UWildcard extends UExpression implements WildcardTree {
   @Override
   public Choice<Unifier> visitWildcard(WildcardTree node, Unifier unifier) {
     return Choice.condition(getKind() == node.getKind(), unifier)
-        .thenChoose(unifications(getBound(), node.getBound()));
+        .flatMap(unifications(getBound(), node.getBound()));
   }
 }

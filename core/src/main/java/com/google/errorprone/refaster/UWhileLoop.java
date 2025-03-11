@@ -51,7 +51,7 @@ abstract class UWhileLoop extends USimpleStatement implements WhileLoopTree {
   public Choice<Unifier> visitWhileLoop(WhileLoopTree loop, Unifier unifier) {
     return getCondition()
         .unify(loop.getCondition(), unifier)
-        .thenChoose(unifications(getStatement(), loop.getStatement()));
+        .flatMap(unifications(getStatement(), loop.getStatement()));
   }
 
   @Override

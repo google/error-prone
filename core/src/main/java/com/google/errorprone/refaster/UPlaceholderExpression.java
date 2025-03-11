@@ -171,7 +171,7 @@ public abstract class UPlaceholderExpression extends UExpression {
                 expr,
                 PlaceholderUnificationVisitor.State.create(
                     List.<UVariableDecl>nil(), unifier, null));
-    return states.thenOption(
+    return states.mapIfPresent(
         (PlaceholderUnificationVisitor.State<? extends JCExpression> state) -> {
           if (ImmutableSet.copyOf(state.seenParameters())
               .containsAll(placeholder().requiredParameters())) {

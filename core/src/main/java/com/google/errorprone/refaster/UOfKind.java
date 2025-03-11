@@ -59,6 +59,6 @@ abstract class UOfKind extends UExpression {
   @Override
   protected @Nullable Choice<Unifier> defaultAction(Tree tree, @Nullable Unifier unifier) {
     return Choice.condition(allowed().contains(tree.getKind()), unifier)
-        .thenChoose(unifications(expression(), tree));
+        .flatMap(unifications(expression(), tree));
   }
 }

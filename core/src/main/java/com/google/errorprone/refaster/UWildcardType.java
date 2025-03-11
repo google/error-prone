@@ -46,7 +46,7 @@ abstract class UWildcardType extends UType {
   @Override
   public Choice<Unifier> visitWildcardType(WildcardType wildcard, Unifier unifier) {
     return Choice.condition(boundKind().equals(wildcard.kind), unifier)
-        .thenChoose(unifications(bound(), wildcard.type));
+        .flatMap(unifications(bound(), wildcard.type));
   }
 
   @Override

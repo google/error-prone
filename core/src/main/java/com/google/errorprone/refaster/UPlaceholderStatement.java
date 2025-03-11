@@ -117,7 +117,7 @@ abstract class UPlaceholderStatement implements UStatement {
             State.create(List.<UVariableDecl>nil(), initState.unifier(), ConsumptionState.empty()));
 
     if (verification.allRequiredMatched()) {
-      realOptions = choiceToHere.or(realOptions);
+      realOptions = choiceToHere.concat(realOptions);
     }
     for (StatementTree targetStatement : initState.unconsumedStatements()) {
       if (!verification.scan(targetStatement, initState.unifier())) {
@@ -125,19 +125,19 @@ abstract class UPlaceholderStatement implements UStatement {
       }
       // Consume another statement, or if that fails, fall back to the previous choices...
       choiceToHere =
-          choiceToHere.thenChoose(
+          choiceToHere.flatMap(
               (State<ConsumptionState> consumptionState) ->
                   visitor
                       .unifyStatement(targetStatement, consumptionState)
-                      .transform(
+                      .map(
                           (State<? extends JCStatement> stmtState) ->
                               stmtState.withResult(
                                   consumptionState.result().consume(stmtState.result()))));
       if (verification.allRequiredMatched()) {
-        realOptions = choiceToHere.or(realOptions);
+        realOptions = choiceToHere.concat(realOptions);
       }
     }
-    return realOptions.thenOption(
+    return realOptions.mapIfPresent(
         (State<ConsumptionState> consumptionState) -> {
           if (ImmutableSet.copyOf(consumptionState.seenParameters())
               .containsAll(placeholder().requiredParameters())) {

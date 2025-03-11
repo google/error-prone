@@ -82,11 +82,10 @@ abstract class UNewClass extends UExpression implements NewClassTree {
   @Override
   public @Nullable Choice<Unifier> visitNewClass(NewClassTree newClass, @Nullable Unifier unifier) {
     return unifyNullable(unifier, getEnclosingExpression(), newClass.getEnclosingExpression())
-        .thenChoose(unifications(getTypeArguments(), newClass.getTypeArguments()))
-        .thenChoose(unifications(getIdentifier(), newClass.getIdentifier()))
-        .thenChoose(unifications(getClassBody(), newClass.getClassBody()))
-        .thenChoose(
-            unifications(getArguments(), newClass.getArguments(), /* allowVarargs= */ true));
+        .flatMap(unifications(getTypeArguments(), newClass.getTypeArguments()))
+        .flatMap(unifications(getIdentifier(), newClass.getIdentifier()))
+        .flatMap(unifications(getClassBody(), newClass.getClassBody()))
+        .flatMap(unifications(getArguments(), newClass.getArguments(), /* allowVarargs= */ true));
   }
 
   @Override

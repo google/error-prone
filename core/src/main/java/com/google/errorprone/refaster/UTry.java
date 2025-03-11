@@ -90,8 +90,8 @@ abstract class UTry extends USimpleStatement implements TryTree {
   @Override
   public @Nullable Choice<Unifier> visitTry(TryTree node, @Nullable Unifier unifier) {
     return unifyList(unifier, getResources(), node.getResources())
-        .thenChoose(unifications(getBlock(), node.getBlock()))
-        .thenChoose(unifications(getCatches(), node.getCatches()))
-        .thenChoose(unifications(getFinallyBlock(), node.getFinallyBlock()));
+        .flatMap(unifications(getBlock(), node.getBlock()))
+        .flatMap(unifications(getCatches(), node.getCatches()))
+        .flatMap(unifications(getFinallyBlock(), node.getFinallyBlock()));
   }
 }

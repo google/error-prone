@@ -60,6 +60,6 @@ abstract class UCatch extends UTree<JCCatch> implements CatchTree {
   public @Nullable Choice<Unifier> visitCatch(CatchTree node, @Nullable Unifier unifier) {
     return getParameter()
         .unify(node.getParameter(), unifier)
-        .thenChoose(unifications(getBlock(), node.getBlock()));
+        .flatMap(unifications(getBlock(), node.getBlock()));
   }
 }

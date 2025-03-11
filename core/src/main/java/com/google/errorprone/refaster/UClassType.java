@@ -50,7 +50,7 @@ public abstract class UClassType extends UType {
   public Choice<Unifier> visitClassType(ClassType classType, Unifier unifier) {
     return fullyQualifiedClass()
         .unify(classType.tsym.getQualifiedName(), unifier)
-        .thenChoose(unifications(typeArguments(), classType.getTypeArguments()));
+        .flatMap(unifications(typeArguments(), classType.getTypeArguments()));
   }
 
   @Override

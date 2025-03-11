@@ -68,10 +68,10 @@ abstract class UMethodDecl extends UTree<JCMethodDecl> implements MethodTree {
   public @Nullable Choice<Unifier> visitMethod(MethodTree decl, @Nullable Unifier unifier) {
     return getName()
         .unify(decl.getName(), unifier)
-        .thenChoose(unifications(getReturnType(), decl.getReturnType()))
-        .thenChoose(unifications(getParameters(), decl.getParameters()))
-        .thenChoose(unifications(getThrows(), decl.getThrows()))
-        .thenChoose(unifications(getBody(), decl.getBody()));
+        .flatMap(unifications(getReturnType(), decl.getReturnType()))
+        .flatMap(unifications(getParameters(), decl.getParameters()))
+        .flatMap(unifications(getThrows(), decl.getThrows()))
+        .flatMap(unifications(getBody(), decl.getBody()));
   }
 
   @Override

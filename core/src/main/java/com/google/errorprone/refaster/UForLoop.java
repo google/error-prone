@@ -62,9 +62,9 @@ abstract class UForLoop extends USimpleStatement implements ForLoopTree {
   @Override
   public @Nullable Choice<Unifier> visitForLoop(ForLoopTree loop, @Nullable Unifier unifier) {
     return UBlock.unifyStatementList(getInitializer(), loop.getInitializer(), unifier)
-        .thenChoose(unifications(getCondition(), loop.getCondition()))
-        .thenChoose(unifications(getUpdate(), loop.getUpdate()))
-        .thenChoose(unifications(getStatement(), loop.getStatement()));
+        .flatMap(unifications(getCondition(), loop.getCondition()))
+        .flatMap(unifications(getUpdate(), loop.getUpdate()))
+        .flatMap(unifications(getStatement(), loop.getStatement()));
   }
 
   @Override

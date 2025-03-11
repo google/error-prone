@@ -75,7 +75,7 @@ abstract class UClassDecl extends USimpleStatement implements ClassTree {
           Choice.from(
               ContiguousSet.create(
                   Range.closedOpen(0, currentMembers.size()), DiscreteDomain.integers()));
-      return methodChoice.thenChoose(
+      return methodChoice.flatMap(
           (Integer i) -> {
             ImmutableList<UMethodDecl> remainingMembers =
                 ImmutableList.<UMethodDecl>builder()
@@ -103,7 +103,7 @@ abstract class UClassDecl extends USimpleStatement implements ClassTree {
             }
             return chosenMethod
                 .unify(tree, unifier)
-                .transform(UnifierWithRemainingMembers.withRemaining(remainingMembers));
+                .map(UnifierWithRemainingMembers.withRemaining(remainingMembers));
           });
     };
   }
@@ -118,10 +118,10 @@ abstract class UClassDecl extends USimpleStatement implements ClassTree {
         // skip synthetic constructors
         continue;
       }
-      path = path.thenChoose(match(targetMember));
+      path = path.flatMap(match(targetMember));
     }
-    return path.condition(s -> s.remainingMembers().isEmpty())
-        .transform(UnifierWithRemainingMembers::unifier);
+    return path.filter(s -> s.remainingMembers().isEmpty())
+        .map(UnifierWithRemainingMembers::unifier);
   }
 
   @Override

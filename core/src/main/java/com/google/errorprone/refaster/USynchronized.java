@@ -61,6 +61,6 @@ abstract class USynchronized extends USimpleStatement implements SynchronizedTre
   public Choice<Unifier> visitSynchronized(SynchronizedTree synced, Unifier unifier) {
     return getExpression()
         .unify(synced.getExpression(), unifier)
-        .thenChoose(unifications(getBlock(), synced.getBlock()));
+        .flatMap(unifications(getBlock(), synced.getBlock()));
   }
 }

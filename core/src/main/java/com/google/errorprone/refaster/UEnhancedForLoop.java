@@ -167,7 +167,7 @@ abstract class UEnhancedForLoop extends USimpleStatement implements EnhancedForL
   public Choice<Unifier> visitEnhancedForLoop(EnhancedForLoopTree loop, Unifier unifier) {
     return getVariable()
         .unify(loop.getVariable(), unifier)
-        .thenChoose(unifications(getExpression(), loop.getExpression()))
-        .thenChoose(unifications(getStatement(), loop.getStatement()));
+        .flatMap(unifications(getExpression(), loop.getExpression()))
+        .flatMap(unifications(getStatement(), loop.getStatement()));
   }
 }

@@ -67,7 +67,7 @@ public abstract class UMethodInvocation extends UExpression implements MethodInv
       MethodInvocationTree methodInvocation, @Nullable Unifier unifier) {
     return getMethodSelect()
         .unify(methodInvocation.getMethodSelect(), unifier)
-        .thenChoose(
+        .flatMap(
             unifications(
                 getArguments(), methodInvocation.getArguments(), /* allowVarargs= */ true));
   }

@@ -51,7 +51,7 @@ abstract class UAnnotatedType extends UExpression implements AnnotatedTypeTree {
   @Override
   public Choice<Unifier> visitAnnotatedType(AnnotatedTypeTree node, Unifier unifier) {
     return unifyList(unifier, getAnnotations(), node.getAnnotations())
-        .thenChoose(unifications(getUnderlyingType(), node.getUnderlyingType()));
+        .flatMap(unifications(getUnderlyingType(), node.getUnderlyingType()));
   }
 
   @Override

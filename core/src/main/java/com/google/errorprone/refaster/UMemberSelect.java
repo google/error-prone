@@ -56,8 +56,8 @@ public abstract class UMemberSelect extends UExpression implements MemberSelectT
     if (ASTHelpers.getSymbol(fieldAccess) != null) {
       return getIdentifier()
           .unify(fieldAccess.getIdentifier(), unifier)
-          .thenChoose(unifications(getExpression(), fieldAccess.getExpression()))
-          .thenChoose(unifications(type(), ASTHelpers.getSymbol(fieldAccess).asType()));
+          .flatMap(unifications(getExpression(), fieldAccess.getExpression()))
+          .flatMap(unifications(type(), ASTHelpers.getSymbol(fieldAccess).asType()));
     }
     return Choice.none();
   }
@@ -69,8 +69,8 @@ public abstract class UMemberSelect extends UExpression implements MemberSelectT
       JCExpression thisIdent = unifier.thisExpression(sym.owner.type);
       return getIdentifier()
           .unify(ident.getName(), unifier)
-          .thenChoose(unifications(getExpression(), thisIdent))
-          .thenChoose(unifications(type(), sym.asType()));
+          .flatMap(unifications(getExpression(), thisIdent))
+          .flatMap(unifications(type(), sym.asType()));
     }
     return Choice.none();
   }

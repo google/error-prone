@@ -77,7 +77,7 @@ abstract class UTypeParameter extends UTree<JCTypeParameter> implements TypePara
       TypeParameterTree node, @Nullable Unifier unifier) {
     return getName()
         .unify(node.getName(), unifier)
-        .thenChoose(unifications(getBounds(), node.getBounds()))
-        .thenChoose(unifications(getAnnotations(), node.getAnnotations()));
+        .flatMap(unifications(getBounds(), node.getBounds()))
+        .flatMap(unifications(getAnnotations(), node.getAnnotations()));
   }
 }

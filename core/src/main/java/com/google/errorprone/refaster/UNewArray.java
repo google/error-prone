@@ -60,8 +60,8 @@ abstract class UNewArray extends UExpression implements NewArrayTree {
         getInitializers() != null
             && Iterables.any(getInitializers(), Predicates.instanceOf(URepeated.class));
     return unifyNullable(unifier, getType(), newArray.getType())
-        .thenChoose(unifications(getDimensions(), newArray.getDimensions()))
-        .thenChoose(unifications(getInitializers(), newArray.getInitializers(), hasRepeated));
+        .flatMap(unifications(getDimensions(), newArray.getDimensions()))
+        .flatMap(unifications(getInitializers(), newArray.getInitializers(), hasRepeated));
   }
 
   @Override

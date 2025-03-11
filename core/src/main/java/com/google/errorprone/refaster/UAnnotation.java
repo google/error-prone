@@ -52,7 +52,7 @@ abstract class UAnnotation extends UExpression implements AnnotationTree {
   public @Nullable Choice<Unifier> visitAnnotation(AnnotationTree annotation, Unifier unifier) {
     return getAnnotationType()
         .unify(annotation.getAnnotationType(), unifier)
-        .thenChoose(unifications(getArguments(), annotation.getArguments()));
+        .flatMap(unifications(getArguments(), annotation.getArguments()));
   }
 
   @Override

@@ -52,7 +52,7 @@ public abstract class UAnyOf extends UExpression {
   @Override
   protected Choice<Unifier> defaultAction(Tree tree, Unifier unifier) {
     return Choice.from(expressions())
-        .thenChoose(
+        .flatMap(
             (UExpression expression) ->
                 expression.unify(ASTHelpers.stripParentheses(tree), unifier.fork()));
   }

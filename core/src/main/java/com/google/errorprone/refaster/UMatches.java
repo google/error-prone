@@ -56,7 +56,7 @@ abstract class UMatches extends UExpression {
     Tree exprTarget = ASTHelpers.stripParentheses(target);
     return expression()
         .unify(exprTarget, unifier)
-        .condition((Unifier success) -> matches(exprTarget, success) == positive());
+        .filter((Unifier success) -> matches(exprTarget, success) == positive());
   }
 
   @Override

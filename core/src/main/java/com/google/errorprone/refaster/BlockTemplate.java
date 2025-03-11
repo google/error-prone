@@ -98,7 +98,7 @@ public abstract class BlockTemplate extends Template<BlockTemplateMatch> {
     if (tree instanceof JCBlock block) {
       ImmutableList<JCStatement> targetStatements = ImmutableList.copyOf(block.getStatements());
       return matchesStartingAnywhere(block, 0, targetStatements, context)
-          .first()
+          .findFirst()
           .or(List.<BlockTemplateMatch>nil());
     }
     return ImmutableList.of();
@@ -116,9 +116,9 @@ public abstract class BlockTemplate extends Template<BlockTemplateMatch> {
     Choice<UnifierWithUnconsumedStatements> choice =
         Choice.of(UnifierWithUnconsumedStatements.create(new Unifier(context), statements));
     for (UStatement templateStatement : templateStatements()) {
-      choice = choice.thenChoose(templateStatement);
+      choice = choice.flatMap(templateStatement);
     }
-    return choice.thenChoose(
+    return choice.flatMap(
         (UnifierWithUnconsumedStatements state) -> {
           Unifier unifier = state.unifier();
           Inliner inliner = unifier.createInliner();
@@ -147,7 +147,7 @@ public abstract class BlockTemplate extends Template<BlockTemplateMatch> {
                       offset + consumedStatements,
                       statements.subList(consumedStatements, statements.size()),
                       context)
-                  .transform(list -> list.prepend(match));
+                  .map(list -> list.prepend(match));
             }
           } catch (CouldNotResolveImportException e) {
             // fall through
@@ -164,11 +164,11 @@ public abstract class BlockTemplate extends Template<BlockTemplateMatch> {
     Choice<List<BlockTemplateMatch>> choice = Choice.none();
     for (int i = 0; i < statements.size(); i++) {
       choice =
-          choice.or(
+          choice.concat(
               matchesStartingAtBeginning(
                   block, offset + i, statements.subList(i, statements.size()), context));
     }
-    return choice.or(Choice.of(List.<BlockTemplateMatch>nil()));
+    return choice.concat(Choice.of(List.<BlockTemplateMatch>nil()));
   }
 
   /** Returns a {@code String} representation of a statement, including semicolon. */

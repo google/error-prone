@@ -52,9 +52,9 @@ abstract class UBlock extends USimpleStatement implements BlockTree {
     Choice<UnifierWithUnconsumedStatements> choice =
         Choice.of(UnifierWithUnconsumedStatements.create(unifier, ImmutableList.copyOf(targets)));
     for (UStatement statement : statements) {
-      choice = choice.thenChoose(statement);
+      choice = choice.flatMap(statement);
     }
-    return choice.thenOption(
+    return choice.mapIfPresent(
         (UnifierWithUnconsumedStatements state) ->
             state.unconsumedStatements().isEmpty()
                 ? Optional.of(state.unifier())

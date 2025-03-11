@@ -163,34 +163,32 @@ public final class Unifier {
       U toUnifyNext = toUnify.get(index);
       if (allowVarargs && toUnifyNext instanceof URepeated repeated) {
         int startIndex = index;
-        return choice
-            .condition(index + 1 == toUnify.size())
-            .thenOption(
-                new Function<Unifier, Optional<Unifier>>() {
-                  @Override
-                  public Optional<Unifier> apply(Unifier unifier) {
-                    List<JCExpression> expressions = new ArrayList<>();
-                    for (int j = startIndex; j < targets.size(); j++) {
-                      Optional<Unifier> forked =
-                          repeated.unify((JCTree) targets.get(j), unifier.fork()).first();
-                      if (!forked.isPresent()) {
-                        return Optional.absent();
-                      }
-                      JCExpression boundExpr = repeated.getUnderlyingBinding(forked.get());
-                      if (boundExpr == null) {
-                        return Optional.absent();
-                      }
-                      expressions.add(boundExpr);
-                    }
-                    unifier.putBinding(repeated.key(), expressions);
-                    return Optional.of(unifier);
-                  }
-                });
+        if (index + 1 != toUnify.size()) {
+          return Choice.none();
+        }
+        return choice.mapIfPresent(
+            u -> {
+              List<JCExpression> expressions = new ArrayList<>();
+              for (int j = startIndex; j < targets.size(); j++) {
+                Optional<Unifier> forked =
+                    repeated.unify((JCTree) targets.get(j), u.fork()).findFirst();
+                if (!forked.isPresent()) {
+                  return Optional.absent();
+                }
+                JCExpression boundExpr = repeated.getUnderlyingBinding(forked.get());
+                if (boundExpr == null) {
+                  return Optional.absent();
+                }
+                expressions.add(boundExpr);
+              }
+              u.putBinding(repeated.key(), expressions);
+              return Optional.of(u);
+            });
       }
       if (index >= targets.size()) {
         return Choice.none();
       }
-      choice = choice.thenChoose(unifications(toUnifyNext, targets.get(index)));
+      choice = choice.flatMap(unifications(toUnifyNext, targets.get(index)));
     }
     if (index < targets.size()) {
       return Choice.none();
