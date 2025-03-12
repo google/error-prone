@@ -65,16 +65,24 @@ In the above example, `@AlsoNegation` is used to signal that the rule can also m
 
 ## Running the Refaster refactoring
 
-TIP: These instructions are valid as of Error Prone 2.3.1, and are subject to change.
+TIP: These instructions are valid as of Error Prone 2.36.0, and are subject to change.
 
 Use the Error Prone javac JAR and the Error Prone Refaster JAR to compile the
-Refaster template, using JDK 9 or newer:
+Refaster template, using JDK 17 or newer:
 
 ```shell
-wget http://repo1.maven.org/maven2/com/google/errorprone/error_prone_refaster/2.3.1/error_prone_refaster-2.3.1.jar
+wget https://repo1.maven.org/maven2/com/google/errorprone/error_prone_refaster/2.36.0/error_prone_refaster-2.36.0.jar
 
 javac \
-  -cp error_prone_refaster-2.3.1.jar \
+  -J--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED \
+  -J--add-exports=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED \
+  -J--add-exports=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED \
+  -J--add-exports=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED \
+  -J--add-exports=jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED \
+  -J--add-exports=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED \
+  -J--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED \
+  -J--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED \
+  -cp error_prone_refaster-2.36.0.jar \
   "-Xplugin:RefasterRuleCompiler --out ${PWD}/myrule.refaster" \
   StringIsEmpty.java
 ```
@@ -99,11 +107,20 @@ class Demo {
 ```
 
 ```
+wget https://repo1.maven.org/maven2/com/google/errorprone/error_prone_core/2.36.0/error_prone_core-2.36.0-with-dependencies.jar
+
 javac \
-  -J-Xbootclasspath/p:javac-9+181-r4173-1.jar \
+  -J--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED \
+  -J--add-exports=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED \
+  -J--add-exports=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED \
+  -J--add-exports=jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED \
+  -J--add-exports=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED \
+  -J--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED \
+  -J--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED \
+  -J--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED \
   -XDcompilePolicy=byfile \
   --should-stop=ifError=FLOW \
-  -processorpath error_prone_core-2.3.2-with-dependencies.jar \
+  -processorpath error_prone_core-2.36.0-with-dependencies.jar \
   "-Xplugin:ErrorProne -XepPatchChecks:refaster:${PWD}/myrule.refaster -XepPatchLocation:${PWD}" \
   Demo.java
 ```
