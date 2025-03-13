@@ -63,7 +63,9 @@ public class TooManyParameters extends BugChecker implements MethodTreeMatcher {
           "org.junit.Test",
           // dagger provider / producers
           "dagger.Provides",
-          "dagger.producers.Produces");
+          "dagger.producers.Produces",
+          // AutoFactory can be put on a constructor.
+          "com.google.auto.factory.AutoFactory");
 
   private static final ImmutableSet<String> CLASS_ANNOTATIONS_TO_IGNORE =
       ImmutableSet.of("com.google.auto.factory.AutoFactory");

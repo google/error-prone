@@ -124,7 +124,7 @@ public class TooManyParametersTest {
   }
 
   @Test
-  public void ignoresAutoFactory() {
+  public void ignoresAutoFactoryOnClass() {
     compilationHelper
         .setArgs(ImmutableList.of("-XepOpt:" + TOO_MANY_PARAMETERS_FLAG_NAME + "=3"))
         .addSourceLines(
@@ -139,6 +139,36 @@ public class TooManyParametersTest {
             """
             @com.google.auto.factory.AutoFactory
             public class Test {
+              public Test(int a, int b, int c, int d) {}
+            }
+            """)
+        .addSourceLines(
+            "TestWithoutAutoFactory.java",
+            """
+            public class TestWithoutAutoFactory {
+              // BUG: Diagnostic contains: 4 parameters
+              public TestWithoutAutoFactory(int a, int b, int c, int d) {}
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void ignoresAutoFactoryOnConstructor() {
+    compilationHelper
+        .setArgs(ImmutableList.of("-XepOpt:" + TOO_MANY_PARAMETERS_FLAG_NAME + "=3"))
+        .addSourceLines(
+            "AutoFactory.java",
+            """
+            package com.google.auto.factory;
+
+            public @interface AutoFactory {}
+            """)
+        .addSourceLines(
+            "Test.java",
+            """
+            public class Test {
+              @com.google.auto.factory.AutoFactory
               public Test(int a, int b, int c, int d) {}
             }
             """)
