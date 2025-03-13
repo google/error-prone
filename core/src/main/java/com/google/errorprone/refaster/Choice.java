@@ -19,9 +19,6 @@ package com.google.errorprone.refaster;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Function;
-import com.google.common.base.Optional;
-import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
@@ -29,6 +26,9 @@ import com.google.errorprone.annotations.ForOverride;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * A representation of a choice with zero or more options, which may be evaluated lazily or
@@ -113,7 +113,7 @@ public abstract class Choice<T> {
 
       @Override
       public Choice<T> filter(Predicate<? super T> predicate) {
-        return predicate.apply(t) ? this : Choice.<T>none();
+        return predicate.test(t) ? this : Choice.<T>none();
       }
 
       @Override
@@ -190,7 +190,7 @@ public abstract class Choice<T> {
   /** Returns the first valid option from this {@code Choice}. */
   public Optional<T> findFirst() {
     Iterator<T> itr = iterator();
-    return itr.hasNext() ? Optional.of(itr.next()) : Optional.<T>absent();
+    return itr.hasNext() ? Optional.of(itr.next()) : Optional.<T>empty();
   }
 
   /**
@@ -229,7 +229,11 @@ public abstract class Choice<T> {
     return new Choice<R>() {
       @Override
       protected Iterator<R> iterator() {
-        return Optional.presentInstances(Iterables.transform(thisChoice.asIterable(), function))
+        return Iterables.transform(
+                Iterables.filter(
+                    Iterables.transform(thisChoice.asIterable(), function::apply),
+                    Optional::isPresent),
+                Optional::get)
             .iterator();
       }
     };
@@ -242,7 +246,7 @@ public abstract class Choice<T> {
     return new Choice<R>() {
       @Override
       protected Iterator<R> iterator() {
-        return Iterators.transform(thisChoice.iterator(), function);
+        return Iterators.transform(thisChoice.iterator(), function::apply);
       }
     };
   }
@@ -275,7 +279,7 @@ public abstract class Choice<T> {
     return new Choice<T>() {
       @Override
       protected Iterator<T> iterator() {
-        return Iterators.filter(thisChoice.iterator(), predicate);
+        return Iterators.filter(thisChoice.iterator(), predicate::test);
       }
 
       @Override

@@ -20,7 +20,6 @@ import static com.google.errorprone.refaster.Unifier.unifications;
 import static com.google.errorprone.refaster.Unifier.unifyList;
 
 import com.google.auto.value.AutoValue;
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.TreeVisitor;
@@ -33,6 +32,7 @@ import com.sun.tools.javac.tree.JCTree.JCStatement;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import com.sun.tools.javac.util.List;
 import com.sun.tools.javac.util.ListBuffer;
+import java.util.Optional;
 
 /**
  * {@code UTree} representation of a {@code LambdaExpressionTree}.

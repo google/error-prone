@@ -18,7 +18,6 @@ package com.google.errorprone.refaster;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.base.Function;
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.refaster.ControlFlowVisitor.Result;
@@ -27,6 +26,7 @@ import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.TreeVisitor;
 import com.sun.tools.javac.tree.JCTree.JCStatement;
 import com.sun.tools.javac.util.List;
+import java.util.Optional;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -143,7 +143,7 @@ abstract class UIf implements UStatement, IfTree {
                           (UnifierWithUnconsumedStatements stateAfterThen) ->
                               stateAfterThen.unconsumedStatements().isEmpty()
                                   ? Optional.of(stateAfterThen.unifier())
-                                  : Optional.<Unifier>absent());
+                                  : Optional.<Unifier>empty());
                 })
             .flatMap(
                 unifierAfterThen -> {

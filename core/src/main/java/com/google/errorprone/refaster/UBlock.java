@@ -17,7 +17,6 @@
 package com.google.errorprone.refaster;
 
 import com.google.auto.value.AutoValue;
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.StatementTree;
@@ -26,6 +25,7 @@ import com.sun.tools.javac.tree.JCTree.JCBlock;
 import com.sun.tools.javac.tree.JCTree.JCStatement;
 import com.sun.tools.javac.util.ListBuffer;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * {@link UTree} representation of a {@link BlockTree}.
@@ -58,7 +58,7 @@ abstract class UBlock extends USimpleStatement implements BlockTree {
         (UnifierWithUnconsumedStatements state) ->
             state.unconsumedStatements().isEmpty()
                 ? Optional.of(state.unifier())
-                : Optional.<Unifier>absent());
+                : Optional.<Unifier>empty());
   }
 
   static com.sun.tools.javac.util.List<JCStatement> inlineStatementList(

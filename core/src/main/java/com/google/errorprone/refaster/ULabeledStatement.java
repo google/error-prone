@@ -47,7 +47,7 @@ abstract class ULabeledStatement extends USimpleStatement implements LabeledStat
   static @Nullable Name inlineLabel(@Nullable CharSequence label, Inliner inliner) {
     return (label == null)
         ? null
-        : inliner.asName(inliner.getOptionalBinding(new Key(label)).or(label));
+        : inliner.asName(inliner.getOptionalBinding(new Key(label)).orElse(label));
   }
 
   @Override

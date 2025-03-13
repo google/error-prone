@@ -15,7 +15,6 @@
 package com.google.errorprone.refaster;
 
 import com.google.auto.value.AutoValue;
-import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.ClassToInstanceMap;
 import com.google.common.collect.ImmutableClassToInstanceMap;
@@ -32,6 +31,7 @@ import com.google.errorprone.refaster.annotation.OfKind;
 import com.google.errorprone.refaster.annotation.Placeholder;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCStatement;
 import com.sun.tools.javac.util.List;
@@ -39,6 +39,7 @@ import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.Set;
+import java.util.function.Predicate;
 
 /**
  * Representation of a {@code Refaster} placeholder method, which can represent an arbitrary
@@ -62,7 +63,7 @@ abstract class PlaceholderMethod implements Serializable {
         annotations.containsKey(NotMatches.class)
             ? UTemplater.getValue(annotations.getInstance(NotMatches.class))
             : null;
-    Predicate<Tree.Kind> allowedKinds =
+    Predicate<Kind> allowedKinds =
         annotations.containsKey(OfKind.class)
             ? Predicates.<Tree.Kind>in(Arrays.asList(annotations.getInstance(OfKind.class).value()))
             : Predicates.<Tree.Kind>alwaysTrue();
@@ -74,7 +75,7 @@ abstract class PlaceholderMethod implements Serializable {
           return (allowsIdentity || !(t instanceof PlaceholderParamIdent))
               && (matchesClass == null || matchesClass.newInstance().matches(t, state))
               && (notMatchesClass == null || !notMatchesClass.newInstance().matches(t, state))
-              && allowedKinds.apply(t.getKind());
+              && allowedKinds.test(t.getKind());
         } catch (ReflectiveOperationException e) {
           throw new RuntimeException(e);
         }

@@ -18,7 +18,6 @@ package com.google.errorprone.refaster;
 
 import static java.util.logging.Level.FINE;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableClassToInstanceMap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -76,6 +75,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.logging.Logger;
 import org.jspecify.annotations.Nullable;
 
@@ -223,15 +223,15 @@ public abstract class Template<M extends TemplateMatch> implements Serializable 
       }
 
       if (!checkBounds(unifier, inliner, warner)) {
-        return Optional.absent();
+        return Optional.empty();
       }
       return Optional.of(unifier);
     } catch (CouldNotResolveImportException e) {
       logger.log(FINE, "Failure to resolve an import", e);
-      return Optional.absent();
+      return Optional.empty();
     } catch (InferException e) {
       logger.log(FINE, "No valid instantiation found: " + e.getMessage());
-      return Optional.absent();
+      return Optional.empty();
     }
   }
 

@@ -19,7 +19,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.auto.value.AutoValue;
 import com.google.common.base.Functions;
 import com.google.common.base.MoreObjects;
-import com.google.common.base.Optional;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -36,6 +35,7 @@ import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.List;
 import com.sun.tools.javac.util.Names;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * {@code UTree} representation of an invocation of a placeholder method.
@@ -180,19 +180,19 @@ public abstract class UPlaceholderExpression extends UExpression {
             if (prevBinding != null) {
               return prevBinding.toString().equals(state.result().toString())
                   ? Optional.of(resultUnifier)
-                  : Optional.<Unifier>absent();
+                  : Optional.<Unifier>empty();
             }
             JCExpression result = state.result();
             if (!placeholder()
                 .matcher()
                 .matches(result, UMatches.makeVisitorState(expr, resultUnifier))) {
-              return Optional.absent();
+              return Optional.empty();
             }
             result.type = expr.type;
             resultUnifier.putBinding(placeholder().exprKey(), result);
             return Optional.of(resultUnifier);
           } else {
-            return Optional.absent();
+            return Optional.empty();
           }
         });
   }

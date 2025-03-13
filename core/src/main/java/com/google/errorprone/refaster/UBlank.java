@@ -111,7 +111,7 @@ abstract class UBlank implements UStatement {
   public com.sun.tools.javac.util.List<JCStatement> inlineStatements(Inliner inliner) {
     ListBuffer<JCStatement> buffer = new ListBuffer<>();
     for (StatementTree stmt :
-        inliner.getOptionalBinding(key()).or(ImmutableList.<StatementTree>of())) {
+        inliner.getOptionalBinding(key()).orElse(ImmutableList.<StatementTree>of())) {
       buffer.add((JCStatement) stmt);
     }
     return buffer.toList();

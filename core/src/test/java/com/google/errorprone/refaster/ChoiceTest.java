@@ -17,10 +17,10 @@ package com.google.errorprone.refaster;
 import static com.google.common.truth.Truth.assertThat;
 
 import com.google.common.base.Functions;
-import com.google.common.base.Optional;
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import java.util.Optional;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -34,7 +34,7 @@ import org.junit.runners.JUnit4;
 public class ChoiceTest {
   @Test
   public void none() {
-    assertThat(Choice.none().findFirst()).isAbsent();
+    assertThat(Choice.none().findFirst()).isEmpty();
     assertThat(Choice.none().filter(Predicates.alwaysTrue())).isSameInstanceAs(Choice.none());
     assertThat(Choice.none().flatMap(Functions.constant(Choice.of("foo"))))
         .isSameInstanceAs(Choice.none());
@@ -46,7 +46,7 @@ public class ChoiceTest {
             Choice.from(ImmutableList.of(1, 2, 3))
                 .mapIfPresent(
                     Functions.forMap(
-                        ImmutableMap.of(2, Optional.of("foo")), Optional.<String>absent()))
+                        ImmutableMap.of(2, Optional.of("foo")), Optional.<String>empty()))
                 .asIterable())
         .containsExactly("foo");
   }

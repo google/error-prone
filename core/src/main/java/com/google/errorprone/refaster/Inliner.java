@@ -16,7 +16,6 @@
 
 package com.google.errorprone.refaster;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -45,6 +44,7 @@ import com.sun.tools.javac.util.ListBuffer;
 import com.sun.tools.javac.util.Name;
 import com.sun.tools.javac.util.Names;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -180,7 +180,7 @@ public final class Inliner {
   }
 
   public <V> Optional<V> getOptionalBinding(Bindings.Key<V> key) {
-    return Optional.fromNullable(bindings.getBinding(key));
+    return Optional.ofNullable(bindings.getBinding(key));
   }
 
   public <R> com.sun.tools.javac.util.List<R> inlineList(

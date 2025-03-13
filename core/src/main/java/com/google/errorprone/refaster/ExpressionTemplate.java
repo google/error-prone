@@ -22,7 +22,6 @@ import static java.util.logging.Level.SEVERE;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.base.Function;
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableClassToInstanceMap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -57,6 +56,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.lang.annotation.Annotation;
 import java.util.Map;
+import java.util.Optional;
 import java.util.logging.Logger;
 import org.jspecify.annotations.Nullable;
 
@@ -209,7 +209,7 @@ public abstract class ExpressionTemplate extends Template<ExpressionTemplateMatc
                       unifier, inliner, new Warner(target), expectedTypes, actualTypes);
                 } catch (CouldNotResolveImportException e) {
                   logger.log(FINE, "Failure to resolve import", e);
-                  return Optional.absent();
+                  return Optional.empty();
                 }
               }
             });

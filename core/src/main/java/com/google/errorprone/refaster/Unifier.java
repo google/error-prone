@@ -18,7 +18,6 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.base.Function;
-import com.google.common.base.Optional;
 import com.google.errorprone.SubContext;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.sun.tools.javac.code.Type;
@@ -29,6 +28,7 @@ import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.Context;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -173,11 +173,11 @@ public final class Unifier {
                 Optional<Unifier> forked =
                     repeated.unify((JCTree) targets.get(j), u.fork()).findFirst();
                 if (!forked.isPresent()) {
-                  return Optional.absent();
+                  return Optional.empty();
                 }
                 JCExpression boundExpr = repeated.getUnderlyingBinding(forked.get());
                 if (boundExpr == null) {
-                  return Optional.absent();
+                  return Optional.empty();
                 }
                 expressions.add(boundExpr);
               }

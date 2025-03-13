@@ -19,7 +19,6 @@ import static java.util.logging.Level.SEVERE;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.base.CharMatcher;
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableClassToInstanceMap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -38,6 +37,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.lang.annotation.Annotation;
 import java.util.Map;
+import java.util.Optional;
 import java.util.logging.Logger;
 
 /**
@@ -99,7 +99,7 @@ public abstract class BlockTemplate extends Template<BlockTemplateMatch> {
       ImmutableList<JCStatement> targetStatements = ImmutableList.copyOf(block.getStatements());
       return matchesStartingAnywhere(block, 0, targetStatements, context)
           .findFirst()
-          .or(List.<BlockTemplateMatch>nil());
+          .orElse(List.nil());
     }
     return ImmutableList.of();
   }
