@@ -68,16 +68,16 @@ loadScripts(document, 'script');</script>
 <li><a href="#none()" tabindex="0">none()</a></li>
 <li><a href="#of(T)" tabindex="0">of(T)</a></li>
 <li><a href="#condition(boolean,T)" tabindex="0">condition(boolean, T)</a></li>
-<li><a href="#fromOptional(com.google.common.base.Optional)" tabindex="0">fromOptional(Optional)</a></li>
+<li><a href="#fromOptional(java.util.Optional)" tabindex="0">fromOptional(Optional)</a></li>
 <li><a href="#from(java.util.Collection)" tabindex="0">from(Collection)</a></li>
 <li><a href="#iterator()" tabindex="0">iterator()</a></li>
 <li><a href="#toString()" tabindex="0">toString()</a></li>
 <li><a href="#findFirst()" tabindex="0">findFirst()</a></li>
-<li><a href="#flatMap(com.google.common.base.Function)" tabindex="0">flatMap(Function)</a></li>
-<li><a href="#mapIfPresent(com.google.common.base.Function)" tabindex="0">mapIfPresent(Function)</a></li>
-<li><a href="#map(com.google.common.base.Function)" tabindex="0">map(Function)</a></li>
+<li><a href="#flatMap(java.util.function.Function)" tabindex="0">flatMap(Function)</a></li>
+<li><a href="#mapIfPresent(java.util.function.Function)" tabindex="0">mapIfPresent(Function)</a></li>
+<li><a href="#map(java.util.function.Function)" tabindex="0">map(Function)</a></li>
 <li><a href="#concat(com.google.errorprone.refaster.Choice)" tabindex="0">concat(Choice)</a></li>
-<li><a href="#filter(com.google.common.base.Predicate)" tabindex="0">filter(Predicate)</a></li>
+<li><a href="#filter(java.util.function.Predicate)" tabindex="0">filter(Predicate)</a></li>
 </ol>
 </li>
 </ol>
@@ -131,17 +131,17 @@ loadScripts(document, 'script');</script>
  otherwise.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a><wbr>&lt;<a href="#type-param-T" title="type parameter in Choice">T</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#filter(com.google.common.base.Predicate)" class="member-name-link">filter</a><wbr>(com.google.common.base.Predicate&lt;? super <a href="#type-param-T" title="type parameter in Choice">T</a>&gt;&nbsp;predicate)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#filter(java.util.function.Predicate)" class="member-name-link">filter</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Predicate.html" title="class or interface in java.util.function" class="external-link">Predicate</a>&lt;? super <a href="#type-param-T" title="type parameter in Choice">T</a>&gt;&nbsp;predicate)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Filters the choices to those that satisfy the provided <code>Predicate</code>.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.google.common.base.Optional<wbr>&lt;<a href="#type-param-T" title="type parameter in Choice">T</a>&gt;</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="#type-param-T" title="type parameter in Choice">T</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#findFirst()" class="member-name-link">findFirst</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the first valid option from this <code>Choice</code>.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>&lt;R&gt;&nbsp;<a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a><wbr>&lt;R&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#flatMap(com.google.common.base.Function)" class="member-name-link">flatMap</a><wbr>(com.google.common.base.Function&lt;? super <a href="#type-param-T" title="type parameter in Choice">T</a>, <a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;R&gt;&gt;&nbsp;function)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#flatMap(java.util.function.Function)" class="member-name-link">flatMap</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;? super <a href="#type-param-T" title="type parameter in Choice">T</a>, <a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;R&gt;&gt;&nbsp;function)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns all the choices obtained by choosing from this <code>Choice</code> and then choosing from
  the <code>Choice</code> yielded by this function on the result.</div>
@@ -150,7 +150,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#from(java.util.Collection)" class="member-name-link">from</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;T&gt;&nbsp;choices)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static &lt;T&gt;&nbsp;<a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a><wbr>&lt;T&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fromOptional(com.google.common.base.Optional)" class="member-name-link">fromOptional</a><wbr>(com.google.common.base.Optional&lt;T&gt;&nbsp;optional)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fromOptional(java.util.Optional)" class="member-name-link">fromOptional</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;T&gt;&nbsp;optional)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns a choice of the optional value, if it is present, or the empty choice if it is absent.</div>
 </div>
@@ -158,12 +158,12 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#iterator()" class="member-name-link">iterator</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>&lt;R&gt;&nbsp;<a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a><wbr>&lt;R&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#map(com.google.common.base.Function)" class="member-name-link">map</a><wbr>(com.google.common.base.Function&lt;? super <a href="#type-param-T" title="type parameter in Choice">T</a>, R&gt;&nbsp;function)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#map(java.util.function.Function)" class="member-name-link">map</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;? super <a href="#type-param-T" title="type parameter in Choice">T</a>, R&gt;&nbsp;function)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Maps the choices with the specified function.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>&lt;R&gt;&nbsp;<a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a><wbr>&lt;R&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#mapIfPresent(com.google.common.base.Function)" class="member-name-link">mapIfPresent</a><wbr>(com.google.common.base.Function&lt;? super <a href="#type-param-T" title="type parameter in Choice">T</a>, com.google.common.base.Optional&lt;R&gt;&gt;&nbsp;function)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#mapIfPresent(java.util.function.Function)" class="member-name-link">mapIfPresent</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;? super <a href="#type-param-T" title="type parameter in Choice">T</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;R&gt;&gt;&nbsp;function)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns all the choices obtained by choosing from this <code>Choice</code> and yielding a present
  <code>Optional</code>.</div>
@@ -228,10 +228,10 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="fromOptional(com.google.common.base.Optional)">
+<section class="detail" id="fromOptional(java.util.Optional)">
 <h3>fromOptional</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;T&gt;</span>&nbsp;<span class="return-type"><a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;T&gt;</span>&nbsp;<span class="element-name">fromOptional</span><wbr><span class="parameters">(com.google.common.base.Optional&lt;T&gt;&nbsp;optional)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;T&gt;</span>&nbsp;<span class="return-type"><a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;T&gt;</span>&nbsp;<span class="element-name">fromOptional</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;T&gt;&nbsp;optional)</span></div>
 <div class="block">Returns a choice of the optional value, if it is present, or the empty choice if it is absent.</div>
 </div>
 </section>
@@ -269,16 +269,16 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="findFirst()">
 <h3>findFirst</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.google.common.base.Optional&lt;<a href="#type-param-T" title="type parameter in Choice">T</a>&gt;</span>&nbsp;<span class="element-name">findFirst</span>()</div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="#type-param-T" title="type parameter in Choice">T</a>&gt;</span>&nbsp;<span class="element-name">findFirst</span>()</div>
 <div class="block">Returns the first valid option from this <code>Choice</code>.</div>
 </div>
 </section>
 </li>
 <li>
-<section class="detail" id="flatMap(com.google.common.base.Function)">
+<section class="detail" id="flatMap(java.util.function.Function)">
 <h3>flatMap</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="type-parameters">&lt;R&gt;</span>&nbsp;<span class="return-type"><a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;R&gt;</span>&nbsp;<span class="element-name">flatMap</span><wbr><span class="parameters">(com.google.common.base.Function&lt;? super <a href="#type-param-T" title="type parameter in Choice">T</a>, <a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;R&gt;&gt;&nbsp;function)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="type-parameters">&lt;R&gt;</span>&nbsp;<span class="return-type"><a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;R&gt;</span>&nbsp;<span class="element-name">flatMap</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;? super <a href="#type-param-T" title="type parameter in Choice">T</a>, <a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;R&gt;&gt;&nbsp;function)</span></div>
 <div class="block">Returns all the choices obtained by choosing from this <code>Choice</code> and then choosing from
  the <code>Choice</code> yielded by this function on the result.
 
@@ -287,10 +287,10 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="mapIfPresent(com.google.common.base.Function)">
+<section class="detail" id="mapIfPresent(java.util.function.Function)">
 <h3>mapIfPresent</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="type-parameters">&lt;R&gt;</span>&nbsp;<span class="return-type"><a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;R&gt;</span>&nbsp;<span class="element-name">mapIfPresent</span><wbr><span class="parameters">(com.google.common.base.Function&lt;? super <a href="#type-param-T" title="type parameter in Choice">T</a>, com.google.common.base.Optional&lt;R&gt;&gt;&nbsp;function)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="type-parameters">&lt;R&gt;</span>&nbsp;<span class="return-type"><a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;R&gt;</span>&nbsp;<span class="element-name">mapIfPresent</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;? super <a href="#type-param-T" title="type parameter in Choice">T</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;R&gt;&gt;&nbsp;function)</span></div>
 <div class="block">Returns all the choices obtained by choosing from this <code>Choice</code> and yielding a present
  <code>Optional</code>.
 
@@ -299,10 +299,10 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="map(com.google.common.base.Function)">
+<section class="detail" id="map(java.util.function.Function)">
 <h3>map</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="type-parameters">&lt;R&gt;</span>&nbsp;<span class="return-type"><a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;R&gt;</span>&nbsp;<span class="element-name">map</span><wbr><span class="parameters">(com.google.common.base.Function&lt;? super <a href="#type-param-T" title="type parameter in Choice">T</a>, R&gt;&nbsp;function)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="type-parameters">&lt;R&gt;</span>&nbsp;<span class="return-type"><a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;R&gt;</span>&nbsp;<span class="element-name">map</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;? super <a href="#type-param-T" title="type parameter in Choice">T</a>, R&gt;&nbsp;function)</span></div>
 <div class="block">Maps the choices with the specified function.</div>
 </div>
 </section>
@@ -317,10 +317,10 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="filter(com.google.common.base.Predicate)">
+<section class="detail" id="filter(java.util.function.Predicate)">
 <h3>filter</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;<a href="#type-param-T" title="type parameter in Choice">T</a>&gt;</span>&nbsp;<span class="element-name">filter</span><wbr><span class="parameters">(com.google.common.base.Predicate&lt;? super <a href="#type-param-T" title="type parameter in Choice">T</a>&gt;&nbsp;predicate)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;<a href="#type-param-T" title="type parameter in Choice">T</a>&gt;</span>&nbsp;<span class="element-name">filter</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Predicate.html" title="class or interface in java.util.function" class="external-link">Predicate</a>&lt;? super <a href="#type-param-T" title="type parameter in Choice">T</a>&gt;&nbsp;predicate)</span></div>
 <div class="block">Filters the choices to those that satisfy the provided <code>Predicate</code>.</div>
 </div>
 </section>
