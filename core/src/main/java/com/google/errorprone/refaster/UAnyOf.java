@@ -64,7 +64,7 @@ public abstract class UAnyOf extends UExpression {
 
   @Override
   public <R, D> R accept(TreeVisitor<R, D> visitor, D data) {
-    return expressions().get(0).accept(visitor, data);
+    return visitor.visitOther(this, data);
   }
 
   @Override
