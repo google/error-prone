@@ -1675,12 +1675,13 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
       int offset = transformedBlockBuilder.length();
       transformedBlockBuilder.append(state.getSourceCode(), codeBlockStart, codeBlockEnd);
       transformedBlockBuilder.append("\n}");
-      ReturnTree returnTree = (ReturnTree) getLast(statements);
-      int start = getStartPosition(returnTree);
-      transformedBlockBuilder.replace(
-          offset + start - codeBlockStart,
-          offset + start - codeBlockStart + "return".length(),
-          "yield");
+      if (getLast(statements) instanceof ReturnTree returnTree) {
+        int start = getStartPosition(returnTree);
+        transformedBlockBuilder.replace(
+            offset + start - codeBlockStart,
+            offset + start - codeBlockStart + "return".length(),
+            "yield");
+      }
     } else if (statements.size() == 1 && statements.get(0).getKind().equals(RETURN)) {
       // For "return x;", we want to take source starting after the "return"
       int unused = extractLhsComments(caseTree, state, transformedBlockBuilder);

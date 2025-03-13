@@ -2236,6 +2236,64 @@ public final class StatementSwitchToExpressionSwitchTest {
   }
 
   @Test
+  public void switchByEnum_multipleStatementsAndTheLastNotReturn_error() {
+
+    // Check correct generated code
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              enum Side {
+                HEART,
+                SPADE,
+                DIAMOND,
+                CLUB
+              };
+
+              public int foo(Side side) {
+                switch (side) {
+                  case HEART:
+                  case DIAMOND:
+                    return 1;
+                  case SPADE:
+                    System.out.println("hello");
+                    throw new RuntimeException();
+                  default:
+                    throw new NullPointerException();
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              enum Side {
+                HEART,
+                SPADE,
+                DIAMOND,
+                CLUB
+              };
+
+              public int foo(Side side) {
+                return switch (side) {
+                  case HEART, DIAMOND -> 1;
+                  case SPADE -> {
+                    System.out.println("hello");
+                    throw new RuntimeException();
+                  }
+                  default -> throw new NullPointerException();
+                };
+              }
+            }
+            """)
+        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion")
+        .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
+        .doTest();
+  }
+
+  @Test
   public void switchByEnum_returnSwitchWithShouldNeverHappen_error() {
 
     // Check correct generated code
