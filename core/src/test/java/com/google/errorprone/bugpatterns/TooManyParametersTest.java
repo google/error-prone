@@ -114,7 +114,10 @@ public class TooManyParametersTest {
               public ConstructorTest(int a, int b, int c) {}
 
               @Inject
-              ConstructorTest(int a, int b, int c, int d) {}
+              public ConstructorTest(int a, int b, int c, int d) {}
+
+              // BUG: Diagnostic contains: 4 parameters
+              public ConstructorTest(short a, short b, short c, short d) {}
             }
             """)
         .doTest();
@@ -136,7 +139,15 @@ public class TooManyParametersTest {
             """
             @com.google.auto.factory.AutoFactory
             public class Test {
-              Test(int a, int b, int c, int d) {}
+              public Test(int a, int b, int c, int d) {}
+            }
+            """)
+        .addSourceLines(
+            "TestWithoutAutoFactory.java",
+            """
+            public class TestWithoutAutoFactory {
+              // BUG: Diagnostic contains: 4 parameters
+              public TestWithoutAutoFactory(int a, int b, int c, int d) {}
             }
             """)
         .doTest();
