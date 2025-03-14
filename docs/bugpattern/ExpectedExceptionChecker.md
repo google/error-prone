@@ -36,4 +36,4 @@ public void testRemoveFails() {
 }
 ```
 
-[`ExpectedException`]: http://junit.org/junit4/javadoc/latest/org/junit/rules/ExpectedException.html
+[`ExpectedException`]: https://junit.org/junit4/javadoc/latest/org/junit/rules/ExpectedException.html

@@ -272,7 +272,7 @@ public class ErrorProneAnalyzer implements TaskListener {
         case IMPORT -> {
           // The spec disallows mixing imports and empty top-level declarations (";"), but
           // javac has a bug that causes it to accept empty declarations interspersed with imports:
-          // http://mail.openjdk.java.net/pipermail/compiler-dev/2013-August/006968.html
+          // https://mail.openjdk.java.net/pipermail/compiler-dev/2013-August/006968.html
           //
           // Any import declarations after the first semi are incorrectly added to the list
           // of type declarations, so we have to skip over them here.

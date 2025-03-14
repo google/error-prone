@@ -105,7 +105,7 @@ public class FloggerWithCauseTest {
         .doTest();
   }
 
-  // regression test for http://b/29131466
+  // regression test for https://b/29131466
   @Test
   public void breakBeforeWithCause() {
     BugCheckerRefactoringTestHelper.newInstance(FloggerWithCause.class, getClass())

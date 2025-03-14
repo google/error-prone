@@ -34,7 +34,7 @@ import javax.lang.model.element.ElementKind;
 
 /**
  * Replacement of misleading <a
- * href="http://developer.android.com/reference/android/R.string.html">android.R.string</a>
+ * href="https://developer.android.com/reference/android/R.string.html">android.R.string</a>
  * constants with more intuitive ones.
  *
  * @author kmb@google.com (Kevin Bierhoff)

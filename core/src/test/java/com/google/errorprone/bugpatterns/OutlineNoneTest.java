@@ -40,7 +40,7 @@ import com.google.gwt.safehtml.client.SafeHtmlTemplates.Template;
 interface Test {
   // BUG: Diagnostic contains: OutlineNone
   @Template(
-      ".body {color: red;outline: 0px;}<a href=http://outlinenone.com style=\\"outline:none\\">")
+      ".body {color: red;outline: 0px;}<a href=https://outlinenone.com style=\\"outline:none\\">")
   SafeHtml myElement();
 
   // BUG: Diagnostic contains: OutlineNone
@@ -62,7 +62,7 @@ import com.google.gwt.safehtml.client.SafeHtmlTemplates.Template;
 
 interface Test {
   // BUG: Diagnostic contains: OutlineNone
-  @Template(".body {color: red;}\\n" + "<a href=http://outlinenone.com style=\\"outline:none\\">")
+  @Template(".body {color: red;}\\n" + "<a href=https://outlinenone.com style=\\"outline:none\\">")
   SafeHtml myElement();
 }
 """)

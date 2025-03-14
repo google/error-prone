@@ -146,6 +146,6 @@ if (set.contains(hi)) {
 }
 ```
 
-[equalstester]: http://static.javadoc.io/com.google.guava/guava-testlib/19.0/com/google/common/testing/EqualsTester.html
+[equalstester]: https://static.javadoc.io/com.google.guava/guava-testlib/19.0/com/google/common/testing/EqualsTester.html
 [objeq]: https://docs.oracle.com/javase/7/docs/api/java/lang/Object.html#equals(java.lang.Object)
 [av]: https://github.com/google/auto/blob/master/value/userguide/index.md
