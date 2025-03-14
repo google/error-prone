@@ -31,7 +31,7 @@ verify(mock.execute()); // oops!
 
 For more information, see the [Mockito documentation][docs].
 
-[docs]: http://github.com/mockito/mockito/wiki/FAQ#what-are-unfinished-verificationstubbing-errors
+[docs]: https://github.com/mockito/mockito/wiki/FAQ#what-are-unfinished-verificationstubbing-errors
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("MockitoUsage")` to the enclosing element.

@@ -28,7 +28,7 @@ where they are within the page, therefore making the page inaccessible.
 Caveat: `outline` is not the *only* way to emphasize selected elements. You may
 instead choose to change the background color, add an underline, or otherwise
 make them visually distinct. Learn more & get alternative suggestions at
-[OutlineNone.com](http://outlinenone.com).
+[OutlineNone.com](https://outlinenone.com).
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("OutlineNone")` to the enclosing element.

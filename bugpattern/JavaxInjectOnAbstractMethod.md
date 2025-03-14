@@ -24,7 +24,7 @@ frameworks may allow this, since the default methods are not abstract.
 
 See the [Guice wiki] page on JSR-330 for more.
 
-[`Inject`]: http://javax-inject.github.io/javax-inject/api/javax/inject/Inject.html
+[`Inject`]: https://javax-inject.github.io/javax-inject/api/javax/inject/Inject.html
 [OverridesJavaxInjectableMethod]: OverridesJavaxInjectableMethod
 [Guice wiki]: https://github.com/google/guice/wiki/JSR330
 

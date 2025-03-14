@@ -177,7 +177,7 @@ synchronized (this) {
 ## More information
 
 See Java Concurrency in Practice section 14.2.2, "Waking up too soon,"
-[the Javadoc for `Object.wait()`](http://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait-long-),
+[the Javadoc for `Object.wait()`](https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#wait-long-),
 and the "Implementation Considerations" section in
 [the Javadoc for `Condition`](https://docs.oracle.com/javase/7/docs/api/java/util/concurrent/locks/Condition.html).
 
