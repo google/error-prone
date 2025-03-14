@@ -664,4 +664,38 @@ public final class PatternMatchingInstanceofTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void returnTarget() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test<T> {
+              private String val;
+
+              public Class stringify(Object o) {
+                if (o instanceof Class<?>) {
+                  return (Class) o;
+                }
+                return null;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test<T> {
+              private String val;
+
+              public Class stringify(Object o) {
+                if (o instanceof Class<?> c) {
+                  return c;
+                }
+                return null;
+              }
+            }
+            """)
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+  }
 }

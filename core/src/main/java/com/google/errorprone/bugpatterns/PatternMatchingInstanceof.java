@@ -41,6 +41,7 @@ import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.IfTree;
 import com.sun.source.tree.InstanceOfTree;
+import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TypeCastTree;
@@ -112,7 +113,7 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
           // anything in scope, but that's effort.
           name = generateVariableName(targetType, state);
         }
-        if (typeArgCount != 0) {
+        if (typeArgCount != 0 && !(instanceOfTree.getType() instanceof ParameterizedTypeTree)) {
           fix.postfixWith(
               instanceOfTree.getType(),
               nCopies(typeArgCount, "?").stream().collect(joining(",", "<", ">")));
@@ -244,7 +245,7 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
               if (v.equals(symbol)
                   && state.getTypes().isSubtype(targetType, getType(node.getType()))) {
                 usages.add(
-                    getCurrentPath().getParentPath().getLeaf() instanceof ParenthesizedTree p
+                    getCurrentPath().getParentPath().getLeaf() instanceof ParenthesizedTree
                         ? getCurrentPath().getParentPath()
                         : getCurrentPath());
               }
@@ -253,7 +254,7 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
           }
         };
     for (Tree tree : trees) {
-      scanner.scan(new TreePath(new TreePath(state.getPath().getCompilationUnit()), tree), null);
+      scanner.scan(new TreePath(state.getPath(), tree), null);
     }
     return usages.build();
   }
