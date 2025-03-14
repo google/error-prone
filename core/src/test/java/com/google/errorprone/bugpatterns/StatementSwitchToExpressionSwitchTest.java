@@ -2675,7 +2675,8 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void switchByEnum_returnSwitchWithShouldNeverHappen_errorAndRemoveShouldNeverHappen() {
-    // The switch has a case for each enum and "should never happen" error handling
+    // The switch has a case for each enum and "should never happen" error handling for code after
+    // the switch in the same block. The "should never happen" code should be removed.
     helper
         .addSourceLines(
             "Test.java",
@@ -2809,6 +2810,193 @@ public final class StatementSwitchToExpressionSwitchTest {
                 }
                 System.out.println("don't delete 2");
                 return 0;
+              }
+            }
+            """)
+        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion")
+        .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+  }
+
+  @Test
+  public void switchByEnum_deadCodeAnalysis_error() {
+    // Code after the return switch in the same block should be removed, as well as certain code in
+    // the parent block(s)
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              enum Side {
+                HEART,
+                SPADE,
+                DIAMOND,
+                CLUB
+              };
+
+              public Test(int foo) {}
+
+              public int foo(Side side) {
+                System.out.println("don't delete 0");
+                try {
+                  System.out.println("don't delete 1");
+                  System.out.println("don't delete 11");
+                  switch (side) {
+                    case HEART:
+                    case DIAMOND:
+                    case SPADE:
+                      return 1;
+                    case CLUB:
+                      throw new NullPointerException();
+                  }
+                  System.out.println("delete me");
+                } catch (Throwable e) {
+                  throw new RuntimeException("rethrew");
+                }
+
+                // Becomes unreachable
+                System.out.println("uh-oh");
+                return -1;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              enum Side {
+                HEART,
+                SPADE,
+                DIAMOND,
+                CLUB
+              };
+
+              public Test(int foo) {}
+
+              public int foo(Side side) {
+                System.out.println("don't delete 0");
+                try {
+                  System.out.println("don't delete 1");
+                  System.out.println("don't delete 11");
+                  return switch (side) {
+                    case HEART, DIAMOND, SPADE -> 1;
+                    case CLUB -> throw new NullPointerException();
+                  };
+
+                } catch (Throwable e) {
+                  throw new RuntimeException("rethrew");
+                }
+
+                // Becomes unreachable
+
+              }
+            }
+            """)
+        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion")
+        .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+  }
+
+  @Test
+  public void switchByEnum_deadCodeAnalysis2_error() {
+    // This test case is similar to switchByEnum_deadCodeAnalysis_error, but with additional
+    // complexity and language elements such as synchronized(), if(), ...
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              enum Side {
+                HEART,
+                SPADE,
+                DIAMOND,
+                CLUB
+              };
+
+              public Test(int foo) {}
+
+              int x = 3;
+
+              public int foo(Side side) {
+                if (x < 4) {
+                  try {
+                    System.out.println("don't delete 0");
+                    synchronized (this) {
+                      try {
+                        System.out.println("don't delete 1");
+                        System.out.println("don't delete 11");
+                        switch (side) {
+                          case HEART:
+                          case DIAMOND:
+                          case SPADE:
+                            return 1;
+                          case CLUB:
+                            throw new NullPointerException();
+                        }
+                        System.out.println("delete me");
+                      } catch (Throwable e) {
+                        throw new RuntimeException("rethrew");
+                      }
+                    }
+
+                    // Becomes unreachable
+                    System.out.println("uh-oh");
+                  } catch (Throwable e) {
+                    throw new RuntimeException("rethrew");
+                  }
+                  // Also becomes unreachable
+                  System.out.println("delete me too");
+                  System.out.println("delete me three");
+                  return 3;
+                }
+                System.out.println("I'm always reachable");
+                return 4;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              enum Side {
+                HEART,
+                SPADE,
+                DIAMOND,
+                CLUB
+              };
+
+              public Test(int foo) {}
+
+              int x = 3;
+
+              public int foo(Side side) {
+                if (x < 4) {
+                  try {
+                    System.out.println("don't delete 0");
+                    synchronized (this) {
+                      try {
+                        System.out.println("don't delete 1");
+                        System.out.println("don't delete 11");
+                        return switch (side) {
+                          case HEART, DIAMOND, SPADE -> 1;
+                          case CLUB -> throw new NullPointerException();
+                        };
+
+                      } catch (Throwable e) {
+                        throw new RuntimeException("rethrew");
+                      }
+                    }
+
+                    // Becomes unreachable
+
+                  } catch (Throwable e) {
+                    throw new RuntimeException("rethrew");
+                  }
+                  // Also becomes unreachable
+
+                }
+                System.out.println("I'm always reachable");
+                return 4;
               }
             }
             """)

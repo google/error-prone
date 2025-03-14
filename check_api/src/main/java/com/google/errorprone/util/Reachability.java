@@ -22,6 +22,7 @@ import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isSwitchDefault;
 import static java.util.Objects.requireNonNull;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.sun.source.tree.AssertTree;
 import com.sun.source.tree.BlockTree;
@@ -66,7 +67,20 @@ public class Reachability {
    * <p>An exception is made for {@code System.exit}, which cannot complete normally in practice.
    */
   public static boolean canCompleteNormally(StatementTree statement) {
-    return statement.accept(new CanCompleteNormallyVisitor(), null);
+    return statement.accept(new CanCompleteNormallyVisitor(/* patches= */ ImmutableMap.of()), null);
+  }
+
+  /**
+   * Returns {@code true} if the given statement can complete normally, as defined by JLS 14.21,
+   * when taking into account the given {@code patches}. The patches are a (possibly empty) map from
+   * {@code Tree} to a boolean indicating whether that specific {@code Tree} can complete normally.
+   * All relevant tree(s) not present in the patches will be analyzed as per the JLS.
+   *
+   * <p>An exception is made for {@code System.exit}, which cannot complete normally in practice.
+   */
+  public static boolean canCompleteNormally(
+      StatementTree statement, ImmutableMap<Tree, Boolean> patches) {
+    return statement.accept(new CanCompleteNormallyVisitor(patches), null);
   }
 
   /**
@@ -100,10 +114,21 @@ public class Reachability {
     /** Trees that are the target of a reachable continue statement. */
     private final Set<Tree> continues = new HashSet<>();
 
+    /** Trees that are patched to have a specific completion result. */
+    private final ImmutableMap<Tree, Boolean> patches;
+
+    public CanCompleteNormallyVisitor(ImmutableMap<Tree, Boolean> patches) {
+      this.patches = patches;
+    }
+
     boolean scan(List<? extends StatementTree> trees) {
       boolean completes = true;
       for (StatementTree tree : trees) {
-        completes = scan(tree);
+        if (patches.containsKey(tree)) {
+          completes = patches.get(tree);
+        } else {
+          completes = scan(tree);
+        }
       }
       return completes;
     }
@@ -118,6 +143,9 @@ public class Reachability {
     /* A break statement cannot complete normally. */
     @Override
     public Boolean visitBreak(BreakTree tree, Void unused) {
+      if (patches.containsKey(tree)) {
+        return patches.get(tree);
+      }
       breaks.add(skipLabel(requireNonNull(((JCTree.JCBreak) tree).target)));
       return false;
     }
@@ -126,6 +154,9 @@ public class Reachability {
     @Override
     public Boolean visitContinue(ContinueTree tree, Void unused) {
       continues.add(skipLabel(requireNonNull(((JCTree.JCContinue) tree).target)));
+      if (patches.containsKey(tree)) {
+        return patches.get(tree);
+      }
       return false;
     }
 
@@ -135,29 +166,44 @@ public class Reachability {
 
     @Override
     public Boolean visitBlock(BlockTree tree, Void unused) {
+      if (patches.containsKey(tree)) {
+        return patches.get(tree);
+      }
       return scan(tree.getStatements());
     }
 
     /* A local class declaration statement can complete normally iff it is reachable. */
     @Override
     public Boolean visitClass(ClassTree tree, Void unused) {
+      if (patches.containsKey(tree)) {
+        return patches.get(tree);
+      }
       return true;
     }
 
     /* A local variable declaration statement can complete normally iff it is reachable. */
     @Override
     public Boolean visitVariable(VariableTree tree, Void unused) {
+      if (patches.containsKey(tree)) {
+        return patches.get(tree);
+      }
       return true;
     }
 
     /* An empty statement can complete normally iff it is reachable. */
     @Override
     public Boolean visitEmptyStatement(EmptyStatementTree tree, Void unused) {
+      if (patches.containsKey(tree)) {
+        return patches.get(tree);
+      }
       return true;
     }
 
     @Override
     public Boolean visitLabeledStatement(LabeledStatementTree tree, Void unused) {
+      if (patches.containsKey(tree)) {
+        return patches.get(tree);
+      }
       // break/continue targets have already been resolved by javac, so
       // there's nothing to do here
       return scan(tree.getStatement());
@@ -166,6 +212,9 @@ public class Reachability {
     /* An expression statement can complete normally iff it is reachable. */
     @Override
     public Boolean visitExpressionStatement(ExpressionStatementTree tree, Void unused) {
+      if (patches.containsKey(tree)) {
+        return patches.get(tree);
+      }
       if (isSystemExit(tree.getExpression())) {
         // The spec doesn't have any special handling for {@code System.exit}, but in practice it
         // cannot complete normally
@@ -198,6 +247,9 @@ public class Reachability {
      */
     @Override
     public Boolean visitIf(IfTree tree, Void unused) {
+      if (patches.containsKey(tree)) {
+        return patches.get(tree);
+      }
       boolean thenCompletes = scan(tree.getThenStatement());
       boolean elseCompletes = tree.getElseStatement() == null || scan(tree.getElseStatement());
       return thenCompletes || elseCompletes;
@@ -206,6 +258,9 @@ public class Reachability {
     /* An assert statement can complete normally iff it is reachable. */
     @Override
     public Boolean visitAssert(AssertTree tree, Void unused) {
+      if (patches.containsKey(tree)) {
+        return patches.get(tree);
+      }
       return true;
     }
 
@@ -232,6 +287,10 @@ public class Reachability {
      */
     @Override
     public Boolean visitSwitch(SwitchTree tree, Void unused) {
+      if (patches.containsKey(tree)) {
+        return patches.get(tree);
+      }
+
       // (1)
       if (tree.getCases().stream().noneMatch(c -> isSwitchDefault(c))) {
         return true;
@@ -294,6 +353,9 @@ public class Reachability {
      */
     @Override
     public Boolean visitWhileLoop(WhileLoopTree tree, Void unused) {
+      if (patches.containsKey(tree)) {
+        return patches.get(tree);
+      }
       Boolean condValue = ASTHelpers.constValue(tree.getCondition(), Boolean.class);
       if (!Objects.equals(condValue, false)) {
         scan(tree.getStatement());
@@ -333,6 +395,9 @@ public class Reachability {
      */
     @Override
     public Boolean visitDoWhileLoop(DoWhileLoopTree that, Void unused) {
+      if (patches.containsKey(that)) {
+        return patches.get(that);
+      }
       boolean completes = scan(that.getStatement());
       boolean conditionIsAlwaysTrue =
           firstNonNull(ASTHelpers.constValue(that.getCondition(), Boolean.class), false);
@@ -367,6 +432,9 @@ public class Reachability {
      */
     @Override
     public Boolean visitForLoop(ForLoopTree that, Void unused) {
+      if (patches.containsKey(that)) {
+        return patches.get(that);
+      }
       Boolean condValue = ASTHelpers.constValue(that.getCondition(), Boolean.class);
       if (!Objects.equals(condValue, false)) {
         scan(that.getStatement());
@@ -385,6 +453,9 @@ public class Reachability {
     /* An enhanced for statement can complete normally iff it is reachable. */
     @Override
     public Boolean visitEnhancedForLoop(EnhancedForLoopTree that, Void unused) {
+      if (patches.containsKey(that)) {
+        return patches.get(that);
+      }
       scan(that.getStatement());
       return true;
     }
@@ -392,12 +463,18 @@ public class Reachability {
     /* A return statement cannot complete normally. */
     @Override
     public Boolean visitReturn(ReturnTree tree, Void unused) {
+      if (patches.containsKey(tree)) {
+        return patches.get(tree);
+      }
       return false;
     }
 
     /* A throw statement cannot complete normally. */
     @Override
     public Boolean visitThrow(ThrowTree tree, Void unused) {
+      if (patches.containsKey(tree)) {
+        return patches.get(tree);
+      }
       return false;
     }
 
@@ -410,6 +487,9 @@ public class Reachability {
      */
     @Override
     public Boolean visitSynchronized(SynchronizedTree tree, Void unused) {
+      if (patches.containsKey(tree)) {
+        return patches.get(tree);
+      }
       return scan(tree.getBlock());
     }
 
@@ -424,6 +504,9 @@ public class Reachability {
      */
     @Override
     public Boolean visitTry(TryTree that, Void unused) {
+      if (patches.containsKey(that)) {
+        return patches.get(that);
+      }
       boolean completes = scan(that.getBlock());
       // assume all catch blocks are reachable; javac has already rejected unreachable
       // checked exception handlers
