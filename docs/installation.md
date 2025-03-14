@@ -9,12 +9,12 @@ can still be used to build Java 8 code by setting the appropriate `-source` /
 `-target` / `-bootclasspath` flags.)
 
 Please join our
-[mailing list](http://groups.google.com/group/error-prone-announce) to know when
+[mailing list](https://groups.google.com/group/error-prone-announce) to know when
 a new version is released!
 
 ## Bazel
 
-Error Prone works out of the box with [Bazel](http://bazel.io).
+Error Prone works out of the box with [Bazel](https://bazel.io).
 
 ```
 java_library(
@@ -29,7 +29,7 @@ ERROR: example/myproject/BUILD:29:1: Java compilation in rule '//example/myproje
 examples/maven/error_prone_should_flag/src/main/java/Main.java:20: error: [DeadException] Exception created but not thrown
     new Exception();
     ^
-    (see http://errorprone.info/bugpattern/DeadException)
+    (see https://errorprone.info/bugpattern/DeadException)
   Did you mean 'throw new Exception();'?
 1 error
 BazelJavaBuilder threw exception: java compilation returned status ERROR
@@ -111,7 +111,7 @@ file:
 --add-opens jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED
 ```
 
-See the [flags documentation](http://errorprone.info/docs/flags#maven) for
+See the [flags documentation](https://errorprone.info/docs/flags#maven) for
 details on how to customize the plugin's behavior.
 
 ## Gradle
@@ -214,7 +214,7 @@ javac \
 ShortSet.java:8: error: [CollectionIncompatibleType] Argument 'i - 1' should not be passed to this method; its type int is not compatible with its collection's type argument Short
       s.remove(i - 1);
               ^
-    (see http://errorprone.info/bugpattern/CollectionIncompatibleType)
+    (see https://errorprone.info/bugpattern/CollectionIncompatibleType)
 1 error
 ```
 

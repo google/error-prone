@@ -55,7 +55,7 @@ new EqualsTester()
 Although consider omitting an explicit comparison with a different type, as
 `EqualsTester` does this already by default.
 
-[javadoc]: http://static.javadoc.io/com.google.guava/guava-testlib/21.0/com/google/common/testing/EqualsTester.html
+[javadoc]: https://static.javadoc.io/com.google.guava/guava-testlib/21.0/com/google/common/testing/EqualsTester.html
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("TruthIncompatibleType")` to the enclosing element.
