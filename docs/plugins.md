@@ -97,7 +97,7 @@ dependencies {
 
 Plugin checkers can accept additional configuration flags by defining
 a single-argument constructor taking an `ErrorProneFlags` object (see
-the [flags docs](http://errorprone.info/docs/flags)).  However, note
+the [flags docs](https://errorprone.info/docs/flags)).  However, note
 that plugin checkers must also define a zero-argument constructor, as
 they are loaded by a `ServiceLoader`.  The actual checker instance
 used by Error Prone will be constructed using the `ErrorProneFlags`

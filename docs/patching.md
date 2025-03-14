@@ -11,7 +11,7 @@ In addition to reporting errors as part of your regular compile phase, Error Pro
 error: [DeadException] Exception created but not thrown
     new RuntimeException();
     ^
-    (see http://errorprone.info/bugpattern/DeadException)
+    (see https://errorprone.info/bugpattern/DeadException)
   Did you mean 'throw new RuntimeException();'?
 1 error
 ```
