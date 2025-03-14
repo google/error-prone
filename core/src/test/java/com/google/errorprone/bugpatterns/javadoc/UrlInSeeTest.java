@@ -36,14 +36,14 @@ public final class UrlInSeeTest {
             "Test.java",
             """
             /**
-             * @see http://foo for more details
+             * @see https://foo for more details
              */
             class Test {}
             """)
         .addOutputLines(
             "Test.java",
             """
-            /** See http://foo for more details */
+            /** See https://foo for more details */
             class Test {}
             """)
         .doTest(TEXT_MATCH);

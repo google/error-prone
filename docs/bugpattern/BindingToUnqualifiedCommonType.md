@@ -36,5 +36,5 @@ bind(Integer.class).toInstance(80);
 To avoid confusion in these circumstances, please use a Qualifier annotation
 when binding simple value types.
 
-[`@Qualifier`]: http://docs.oracle.com/javaee/6/api/javax/inject/Qualifier.html
+[`@Qualifier`]: https://docs.oracle.com/javaee/6/api/javax/inject/Qualifier.html
 [`@BindingAnnotation`]: https://github.com/google/guice/wiki/BindingAnnotations

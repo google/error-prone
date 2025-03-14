@@ -35,7 +35,7 @@ public final class SourceCodeEscapers {
   // For each xxxEscaper() method, please add links to external reference pages
   // that are considered authoritative for the behavior of that escaper.
 
-  // From: http://en.wikipedia.org/wiki/ASCII#ASCII_printable_characters
+  // From: https://en.wikipedia.org/wiki/ASCII#ASCII_printable_characters
   private static final char PRINTABLE_ASCII_MIN = 0x20; // ' '
   private static final char PRINTABLE_ASCII_MAX = 0x7E; // '~'
 
@@ -46,7 +46,7 @@ public final class SourceCodeEscapers {
    * safely be included in either a Java character literal or string literal. This is the preferred
    * way to escape Java characters for use in String or character literals.
    *
-   * <p>See: <a href= "http://java.sun.com/docs/books/jls/third_edition/html/lexical.html#101089"
+   * <p>See: <a href= "https://java.sun.com/docs/books/jls/third_edition/html/lexical.html#101089"
    * >The Java Language Specification</a> for more details.
    */
   public static CharEscaper javaCharEscaper() {
@@ -93,7 +93,7 @@ public final class SourceCodeEscapers {
               '\\', "\\\\"));
 
   // This escaper does not produce octal escape sequences. See:
-  // http://java.sun.com/docs/books/jls/third_edition/html/lexical.html#101089
+  // https://java.sun.com/docs/books/jls/third_edition/html/lexical.html#101089
   //  "Octal escapes are provided for compatibility with C, but can express
   //   only Unicode values \u0000 through \u00FF, so Unicode escapes are
   //   usually preferred."

@@ -27,5 +27,5 @@ NOTE: Even for dependency injection frameworks traditionally considered to be
 compile-time dependent, the JSR-330 specification still requires runtime
 retention for both [`Qualifier`] and [`Scope`].
 
-[`Qualifier`]: http://docs.oracle.com/javaee/6/api/javax/inject/Qualifier.html
-[`Scope`]: http://docs.oracle.com/javaee/6/api/javax/inject/Scope.html
+[`Qualifier`]: https://docs.oracle.com/javaee/6/api/javax/inject/Qualifier.html
+[`Scope`]: https://docs.oracle.com/javaee/6/api/javax/inject/Scope.html

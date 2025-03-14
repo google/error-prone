@@ -133,8 +133,8 @@ public class DescriptionTest {
         new CustomLinkChecker()
             .buildDescription((DiagnosticPosition) new MockTree())
             .setMessage("custom message")
-            .setLinkUrl("http://foo")
+            .setLinkUrl("https://foo")
             .build();
-    assertThat(description.getMessage()).contains("http://foo");
+    assertThat(description.getMessage()).contains("https://foo");
   }
 }

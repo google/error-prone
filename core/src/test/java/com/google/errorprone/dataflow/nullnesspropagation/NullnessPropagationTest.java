@@ -1609,7 +1609,7 @@ public class NullnessPropagationTransferCases6 {
          * We'd prefer for this to be non-null, but we don't run the analysis over the enclosing
          * class's enclosing method, so our captured-variable handling is limited to compile-time
          * constants, which include only primitives and strings:
-         * http://docs.oracle.com/javase/specs/jls/se7/html/jls-15.html#jls-15.28
+         * https://docs.oracle.com/javase/specs/jls/se7/html/jls-15.html#jls-15.28
          */
         // BUG: Diagnostic contains: (Nullable)
         triggerNullnessChecker(nonnull);

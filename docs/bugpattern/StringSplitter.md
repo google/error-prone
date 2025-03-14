@@ -1,6 +1,6 @@
 `String.split(String)` and `Pattern.split(CharSequence)` have surprising
 behaviour. For example, consider the following puzzler from
-http://konigsberg.blogspot.com/2009/11/final-thoughts-java-puzzler-splitting.html:
+https://konigsberg.blogspot.com/2009/11/final-thoughts-java-puzzler-splitting.html:
 
 ```java
 String[] nothing = "".split(":");
