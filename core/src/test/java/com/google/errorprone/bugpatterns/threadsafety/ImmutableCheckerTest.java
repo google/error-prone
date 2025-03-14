@@ -690,7 +690,7 @@ class A {
         .doTest();
   }
 
-  @Ignore("http://b/72495910")
+  @Ignore("https://b/72495910")
   @Test
   public void containerOf_extendsImmutable() {
     compilationHelper

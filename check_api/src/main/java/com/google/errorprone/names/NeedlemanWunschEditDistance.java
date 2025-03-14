@@ -26,7 +26,7 @@ import com.google.common.primitives.Ints;
  * that, for example editing {@code Christopher} into {@code Chris} (dropping 6 characters) is not 6
  * times as expensive as editing {@code Christopher} into {@code Christophe}.
  *
- * <p>See http://en.wikipedia.org/wiki/Needleman-Wunsch_algorithm
+ * <p>See https://en.wikipedia.org/wiki/Needleman-Wunsch_algorithm
  *
  * @author alanw@google.com (Alan Wendt)
  */

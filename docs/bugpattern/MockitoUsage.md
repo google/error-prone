@@ -16,4 +16,4 @@ verify(mock.execute()); // oops!
 
 For more information, see the [Mockito documentation][docs].
 
-[docs]: http://github.com/mockito/mockito/wiki/FAQ#what-are-unfinished-verificationstubbing-errors
+[docs]: https://github.com/mockito/mockito/wiki/FAQ#what-are-unfinished-verificationstubbing-errors

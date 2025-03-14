@@ -14,4 +14,4 @@ To test the implementation of an `equals` method, use
 [Guava's EqualsTester][javadoc], or explicitly call `equals` as part of the
 test.
 
-[javadoc]: http://static.javadoc.io/com.google.guava/guava-testlib/21.0/com/google/common/testing/EqualsTester.html
+[javadoc]: https://static.javadoc.io/com.google.guava/guava-testlib/21.0/com/google/common/testing/EqualsTester.html
