@@ -590,6 +590,9 @@ The lambda passed to assertThrows should contain exactly one statement
 __[AssertionFailureIgnored](bugpattern/AssertionFailureIgnored)__<br>
 This assertion throws an AssertionError if it fails, which will be caught by an enclosing try block.
 
+__[AssignmentExpression](bugpattern/AssignmentExpression)__<br>
+The use of an assignment expression can be surprising and hard to read; consider factoring out the assignment to a separate statement.
+
 __[AssistedInjectAndInjectOnSameConstructor](bugpattern/AssistedInjectAndInjectOnSameConstructor)__<br>
 @AssistedInject and @Inject cannot be used on the same constructor.
 
