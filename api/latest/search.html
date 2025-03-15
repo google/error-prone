@@ -48,7 +48,7 @@ loadScripts(document, 'script');</script>
 <main role="main">
 <h1 class="title">Search</h1>
 <div>
-<input type="text" id="page-search-input" disabled placeholder="Search" aria-label="Search in documentation" autocomplete="off">
+<input type="text" id="page-search-input" disabled placeholder="Search documentation (type /)" aria-label="Search in documentation" autocomplete="off" spellcheck="false">
 <input type="reset" id="page-search-reset" disabled value="Reset" style="margin: 6px;">
 <details class="page-search-details">
 <summary id="page-search-expand">Additional resources</summary>
@@ -56,7 +56,15 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="page-search-info">
 <p>The <a href="help-doc.html#search">help page</a> provides an introduction to the scope and syntax of JavaDoc search.</p>
-<p>You can use the &lt;ctrl&gt; or &lt;cmd&gt; keys in combination with the left and right arrow keys to switch between result tabs in this page.</p>
+<p>You can use the 
+<kbd>Ctrl</kbd>
+ or 
+<kbd>Cmd</kbd>
+ key in combination with the 
+<kbd>&leftarrow;</kbd>
+/
+<kbd>&rightarrow;</kbd>
+ arrow keys to switch between result tabs in this page while searching.</p>
 <p>The URL template below may be used to configure this page as a search engine in browsers that support this feature. It has been tested to work in Google Chrome and Mozilla Firefox. Note that other browsers may not support this feature or require a different URL format.</p>
 <span id="page-search-link">link</span><button id="page-search-copy" class="copy" aria-label="Copy URL"><img src="resource-files/copy.svg" alt="Copy URL"><span data-copied="Copied!">Copy</span></button>
 <p>

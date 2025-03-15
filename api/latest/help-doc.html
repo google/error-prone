@@ -40,7 +40,7 @@ loadScripts(document, 'script');</script>
 <div class="nav-content">
 <ol class="sub-nav-list"></ol>
 <div class="nav-list-search">
-<input type="text" id="search-input" disabled placeholder="Search" aria-label="Search in documentation" autocomplete="off">
+<input type="text" id="search-input" disabled placeholder="Search documentation (type /)" aria-label="Search in documentation" autocomplete="off" spellcheck="false">
 <input type="reset" id="reset-search" disabled value="Reset">
 </div>
 </div>
@@ -51,13 +51,13 @@ loadScripts(document, 'script');</script>
 <div class="main-grid">
 <nav role="navigation" class="toc" aria-label="Table of contents">
 <div class="toc-header">Contents</div>
-<button class="hide-sidebar"><span>Hide sidebar&nbsp;</span>&#10094;</button><button class="show-sidebar">&#10095;<span>&nbsp;Show sidebar</span></button>
-<ol class="toc-list">
+<ol class="toc-list" tabindex="-1">
 <li><a href="#" tabindex="0">JavaDoc Help</a>
 <ol class="toc-list">
 <li><a href="#help-navigation" tabindex="0">Navigation</a>
 <ol class="toc-list">
 <li><a href="#search" tabindex="0">Search</a></li>
+<li><a href="#help-keyboard-navigation" tabindex="0">Keyboard Navigation</a></li>
 </ol>
 </li>
 <li><a href="#help-pages" tabindex="0">Kinds of Pages</a>
@@ -80,7 +80,7 @@ loadScripts(document, 'script');</script>
 </ol>
 </li>
 </ol>
-</nav>
+<button class="hide-sidebar"><span>Hide sidebar&nbsp;</span><img src="resource-files/left.svg" alt="Hide sidebar"></button><button class="show-sidebar"><img src="resource-files/right.svg" alt="Show sidebar"><span>&nbsp;Show sidebar</span></button></nav>
 <main role="main">
 <h1 class="title">JavaDoc Help</h1>
 <hr>
@@ -96,6 +96,33 @@ Starting from the <a href="index.html">Overview</a> page, you can browse the doc
 <li><code>"math exact long"</code> matches "java.lang.Math.absExact(long)"</li>
 </ol>
 <p>Refer to the <a href="https://docs.oracle.com/en/java/javase/25/docs/specs/javadoc/javadoc-search-spec.html">Javadoc Search Specification</a> for a full description of search features.</p>
+</section>
+<section class="help-section" id="help-keyboard-navigation">
+<h3>Keyboard Navigation</h3>
+<p>Documentation pages provide keyboard shortcuts to facilitate access to common navigation tasks.</p>
+<ul>
+<li>Type 
+<kbd>/</kbd>
+ to access the search input field in any page.</li>
+<li>Type 
+<kbd>.</kbd>
+ to access the filter input field in the sidebar of class  pages.</li>
+<li>Type 
+<kbd>Esc</kbd>
+ to clear the input and release keyboard focus in any input field.</li>
+<li>Type 
+<kbd>Tab</kbd>
+/
+<kbd>&downarrow;</kbd>
+/
+<kbd>&uparrow;</kbd>
+ to select list items after entering a search term in a search or filter input field.</li>
+<li>Type 
+<kbd>&leftarrow;</kbd>
+/
+<kbd>&rightarrow;</kbd>
+ to switch between tabs in tabbed summary tables.</li>
+</ul>
 </section>
 </div>
 <hr>

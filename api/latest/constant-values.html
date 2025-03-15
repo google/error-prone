@@ -40,7 +40,7 @@ loadScripts(document, 'script');</script>
 <div class="nav-content">
 <ol class="sub-nav-list"></ol>
 <div class="nav-list-search">
-<input type="text" id="search-input" disabled placeholder="Search" aria-label="Search in documentation" autocomplete="off">
+<input type="text" id="search-input" disabled placeholder="Search documentation (type /)" aria-label="Search in documentation" autocomplete="off" spellcheck="false">
 <input type="reset" id="reset-search" disabled value="Reset">
 </div>
 </div>
@@ -51,18 +51,17 @@ loadScripts(document, 'script');</script>
 <div class="main-grid">
 <nav role="navigation" class="toc" aria-label="Table of contents">
 <div class="toc-header">Contents&nbsp;
-<input type="text" class="filter-input" disabled placeholder="Filter" aria-label="Filter table of contents" autocomplete="off">
-<input type="reset" class="reset-filter" disabled value="Reset">
+<input type="text" class="filter-input" disabled placeholder="Filter contents (type .)" aria-label="Filter table of contents" autocomplete="off" spellcheck="false">
+<input type="reset" class="reset-filter" disabled tabindex="-1" value="Reset">
 </div>
-<button class="hide-sidebar"><span>Hide sidebar&nbsp;</span>&#10094;</button><button class="show-sidebar">&#10095;<span>&nbsp;Show sidebar</span></button>
-<ol class="toc-list">
+<ol class="toc-list" tabindex="-1">
 <li><a href="#" tabindex="0">Constant Field Values</a>
 <ol class="toc-list">
 <li><a href="#com.google" tabindex="0">com.google.*</a></li>
 </ol>
 </li>
 </ol>
-</nav>
+<button class="hide-sidebar"><span>Hide sidebar&nbsp;</span><img src="resource-files/left.svg" alt="Hide sidebar"></button><button class="show-sidebar"><img src="resource-files/right.svg" alt="Show sidebar"><span>&nbsp;Show sidebar</span></button></nav>
 <main role="main">
 <div class="header">
 <h1 title="Constant Field Values" class="title">Constant Field Values</h1>
