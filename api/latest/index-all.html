@@ -1722,6 +1722,11 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns true if the given statement can complete normally, as defined by JLS 14.21.</div>
 </dd>
+<dt><a href="com/google/errorprone/util/Reachability.html#canCompleteNormally(com.sun.source.tree.StatementTree,com.google.common.collect.ImmutableMap)" class="member-name-link">canCompleteNormally(StatementTree, ImmutableMap&lt;Tree, Boolean&gt;)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/Reachability.html" title="class in com.google.errorprone.util">Reachability</a></dt>
+<dd>
+<div class="block">Returns whether the given statement can complete normally, as defined by JLS 14.21, when taking
+ into account the given <code>patches</code>.</div>
+</dd>
 <dt><a href="com/google/errorprone/util/Reachability.html#canFallThrough(com.sun.source.tree.CaseTree)" class="member-name-link">canFallThrough(CaseTree)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/Reachability.html" title="class in com.google.errorprone.util">Reachability</a></dt>
 <dd>
 <div class="block">Returns true if the given case tree can fall through to the next case tree.</div>
