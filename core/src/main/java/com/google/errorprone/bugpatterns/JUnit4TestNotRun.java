@@ -110,11 +110,14 @@ public class JUnit4TestNotRun extends BugChecker implements ClassTreeMatcher {
         suspiciousMethods.put(getSymbol(methodTree), methodTree);
       }
     }
-    if (suspiciousMethods.isEmpty()) {
-      return NO_MATCH;
-    }
     tree.accept(
         new TreeScanner<Void, Void>() {
+          @Override
+          public Void scan(Tree tree, Void unused) {
+            // stop when there are no more suspicious methods
+            return suspiciousMethods.isEmpty() ? null : super.scan(tree, null);
+          }
+
           @Override
           public Void visitMethodInvocation(
               MethodInvocationTree methodInvocationTree, Void unused) {
