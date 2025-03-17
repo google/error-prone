@@ -22,6 +22,7 @@ import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isSwitchDefault;
 import static java.util.Objects.requireNonNull;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.sun.source.tree.AssertTree;
 import com.sun.source.tree.BlockTree;
@@ -66,7 +67,20 @@ public class Reachability {
    * <p>An exception is made for {@code System.exit}, which cannot complete normally in practice.
    */
   public static boolean canCompleteNormally(StatementTree statement) {
-    return statement.accept(new CanCompleteNormallyVisitor(), null);
+    return new CanCompleteNormallyVisitor(/* patches= */ ImmutableMap.of()).scan(statement);
+  }
+
+  /**
+   * Returns whether the given statement can complete normally, as defined by JLS 14.21, when taking
+   * into account the given {@code patches}. The patches are a (possibly empty) map from {@code
+   * Tree} to a boolean indicating whether that specific {@code Tree} can complete normally. All
+   * relevant tree(s) not present in the patches will be analyzed as per the JLS.
+   *
+   * <p>An exception is made for {@code System.exit}, which cannot complete normally in practice.
+   */
+  public static boolean canCompleteNormally(
+      StatementTree statement, ImmutableMap<Tree, Boolean> patches) {
+    return new CanCompleteNormallyVisitor(patches).scan(statement);
   }
 
   /**
@@ -100,6 +114,13 @@ public class Reachability {
     /** Trees that are the target of a reachable continue statement. */
     private final Set<Tree> continues = new HashSet<>();
 
+    /** Trees that are patched to have a specific completion result. */
+    private final ImmutableMap<Tree, Boolean> patches;
+
+    public CanCompleteNormallyVisitor(ImmutableMap<Tree, Boolean> patches) {
+      this.patches = patches;
+    }
+
     boolean scan(List<? extends StatementTree> trees) {
       boolean completes = true;
       for (StatementTree tree : trees) {
@@ -112,6 +133,9 @@ public class Reachability {
     // don't otherwise affect the result of the reachability analysis.
     @CanIgnoreReturnValue
     private boolean scan(Tree tree) {
+      if (patches.containsKey(tree)) {
+        return patches.get(tree);
+      }
       return tree.accept(this, null);
     }
 

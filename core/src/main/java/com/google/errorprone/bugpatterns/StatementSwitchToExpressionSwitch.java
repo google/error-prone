@@ -20,6 +20,7 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Iterables.getOnlyElement;
+import static com.google.common.collect.Streams.stream;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
@@ -39,6 +40,7 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.ImmutableBiMap;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Streams;
@@ -1082,17 +1084,43 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     // Close the switch statement
     replacementCodeBuilder.append("\n};");
 
-    // Statements in the same block following the switch are currently reachable but will become
-    // unreachable, which would lead to a compile-time error. Therefore, suggest that they be
-    // removed.
-    statementsToDelete.addAll(followingStatementsInBlock(switchTree, state));
+    // The transformed code can cause other existing code to become dead code.  So, we must analyze
+    // and delete such dead code, otherwise the suggested autofix could fail to compile.
+
+    // The `return switch ...` will always return or throw
+    Tree cannotCompleteNormallyTree = switchTree;
+    // Search up the AST for enclosing statement blocks, marking any newly-dead code for deletion
+    // along the way
+    for (Tree tree : state.getPath()) {
+      if (tree instanceof BlockTree blockTree) {
+        TreePath rootToCurrentPath = TreePath.getPath(state.getPath(), switchTree);
+        int indexInBlock = findBlockStatementIndex(rootToCurrentPath, blockTree);
+        // A single mock of the immediate child statement block (or switch) is sufficient to
+        // analyze reachability here; deeper-nested statements are not relevant.
+        boolean nextStatementReachable =
+            Reachability.canCompleteNormally(
+                blockTree.getStatements().get(indexInBlock),
+                ImmutableMap.of(cannotCompleteNormallyTree, false));
+        // If we continue to the ancestor statement block, it will be because the end of this
+        // statement block is not reachable
+        cannotCompleteNormallyTree = blockTree;
+        if (nextStatementReachable) {
+          break;
+        }
+
+        // If the next statement is not reachable, then none of the following statements in this
+        // block are either.  So, we need to delete them all.
+        statementsToDelete.addAll(
+            blockTree.getStatements().subList(indexInBlock + 1, blockTree.getStatements().size()));
+      }
+    }
 
     SuggestedFix.Builder suggestedFixBuilder = SuggestedFix.builder();
     if (removeDefault) {
       suggestedFixBuilder.setShortDescription(REMOVE_DEFAULT_CASE_SHORT_DESCRIPTION);
     }
     suggestedFixBuilder.replace(switchTree, replacementCodeBuilder.toString());
-    // Delete trailing statements, leaving comments where feasible
+    // Delete dead code, leaving comments where feasible
     statementsToDelete.forEach(deleteMe -> suggestedFixBuilder.replace(deleteMe, ""));
     return suggestedFixBuilder.build();
   }
@@ -1132,53 +1160,13 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
   }
 
   /**
-   * Retrieves a list of all statements (if any) following the supplied {@code SwitchTree} in its
-   * lowest-ancestor statement block (if any).
-   */
-  private static List<StatementTree> followingStatementsInBlock(
-      SwitchTree switchTree, VisitorState state) {
-    List<StatementTree> followingStatements = new ArrayList<>();
-
-    // NOMUTANTS--for performance/early return only; correctness unchanged
-    if (!Matchers.nextStatement(Matchers.<StatementTree>anything()).matches(switchTree, state)) {
-      // No lowest-ancestor block or no following statements
-      return followingStatements;
-    }
-
-    // Fetch the lowest ancestor statement block
-    TreePath pathToEnclosing = state.findPathToEnclosing(BlockTree.class);
-    // NOMUTANTS--should early return above
-    if (pathToEnclosing != null) {
-      Tree enclosing = pathToEnclosing.getLeaf();
-      if (enclosing instanceof BlockTree blockTree) {
-        // Path from root -> switchTree
-        TreePath rootToSwitchPath = TreePath.getPath(pathToEnclosing, switchTree);
-
-        for (int i = findBlockStatementIndex(rootToSwitchPath, blockTree) + 1;
-            (i >= 0) && (i < blockTree.getStatements().size());
-            i++) {
-          followingStatements.add(blockTree.getStatements().get(i));
-        }
-      }
-    }
-    return followingStatements;
-  }
-
-  /**
    * Search through the provided {@code BlockTree} to find which statement in that block tree lies
    * along the supplied {@code TreePath}. Returns the index (zero-based) of the matching statement
    * in the block tree, or -1 if not found.
    */
   private static int findBlockStatementIndex(TreePath treePath, BlockTree blockTree) {
-    for (int i = 0; i < blockTree.getStatements().size(); i++) {
-      StatementTree thisStatement = blockTree.getStatements().get(i);
-      // Look for thisStatement along the path from the root to the switch tree
-      TreePath pathFromRootToThisStatement = TreePath.getPath(treePath, thisStatement);
-      if (pathFromRootToThisStatement != null) {
-        return i;
-      }
-    }
-    return -1;
+    return Iterables.indexOf(
+        blockTree.getStatements(), stmt -> stream(treePath).anyMatch(t -> t == stmt));
   }
 
   /**
