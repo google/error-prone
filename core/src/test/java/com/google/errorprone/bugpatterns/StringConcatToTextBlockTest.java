@@ -243,4 +243,32 @@ public class StringConcatToTextBlockTest {
             """)
         .doTest(TEXT_MATCH);
   }
+
+  @Test
+  public void annotationString() {
+    refactoringHelper
+        .addInputLines(
+            "Anno.java",
+            """
+            import java.lang.annotation.Documented;
+            import java.lang.annotation.ElementType;
+            import java.lang.annotation.Retention;
+            import java.lang.annotation.RetentionPolicy;
+            import java.lang.annotation.Target;
+
+            @Retention(RetentionPolicy.RUNTIME)
+            @Target({ElementType.METHOD, ElementType.CONSTRUCTOR})
+            @interface Anno {}
+            """)
+        .expectUnchanged()
+        .addInputLines(
+            "Test.java",
+            """
+            import java.util.StringJoiner;
+
+            record Test(@SuppressWarnings("foo") @Anno int foo) {}
+            """)
+        .expectUnchanged()
+        .doTest(TEXT_MATCH);
+  }
 }

@@ -28,6 +28,7 @@ import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.hasExplicitSource;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static java.util.stream.Collectors.joining;
 
@@ -83,6 +84,9 @@ public class StringConcatToTextBlock extends BugChecker
         // concat expression
         return NO_MATCH;
       }
+    }
+    if (!hasExplicitSource(tree, state)) {
+      return NO_MATCH;
     }
     ImmutableList<ErrorProneToken> tokens = state.getTokensForNode(tree);
     ImmutableList<String> strings =
