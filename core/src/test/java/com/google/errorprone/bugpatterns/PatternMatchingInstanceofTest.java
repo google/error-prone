@@ -698,4 +698,33 @@ public final class PatternMatchingInstanceofTest {
             """)
         .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
+
+  @Test
+  public void switchExpression() {
+    assume().that(Runtime.version().feature()).isAtLeast(21);
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class T {
+              interface Filter {
+                Object child();
+              }
+
+              int f(Object o) {
+                return switch (o) {
+                  case Filter filter -> {
+                    if (!(filter.child() instanceof Integer)) {
+                      yield 0;
+                    }
+                    yield 1;
+                  }
+                  default -> 2;
+                };
+              }
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
 }

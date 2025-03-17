@@ -50,6 +50,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.TryTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
+import com.sun.source.tree.YieldTree;
 import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.tree.JCTree;
@@ -419,6 +420,12 @@ public class Reachability {
       return false;
     }
 
+    /* A yield statement cannot complete normally. */
+    @Override
+    public Boolean visitYield(YieldTree tree, Void unused) {
+      return false;
+    }
+
     /* A throw statement cannot complete normally. */
     @Override
     public Boolean visitThrow(ThrowTree tree, Void unused) {
@@ -458,6 +465,11 @@ public class Reachability {
         completes = false;
       }
       return completes;
+    }
+
+    @Override
+    protected Boolean defaultAction(Tree tree, Void unused) {
+      throw new IllegalStateException(tree.getKind().toString());
     }
   }
 }
