@@ -22,13 +22,16 @@ import static com.google.common.base.Verify.verify;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.Iterables.getOnlyElement;
+import static com.google.common.collect.MoreCollectors.onlyElement;
 import static com.google.common.collect.Streams.stream;
+import static com.google.common.collect.Streams.zip;
 import static com.google.errorprone.VisitorState.memoize;
 import static com.google.errorprone.matchers.JUnitMatchers.JUNIT4_RUN_WITH_ANNOTATION;
 import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
 import static com.sun.tools.javac.code.Scope.LookupKind.NON_RECURSIVE;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toCollection;
+import static javax.lang.model.element.ElementKind.CONSTRUCTOR;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
@@ -833,9 +836,29 @@ public class ASTHelpers {
   /**
    * Returns whether the given {@link Symbol} is a record, a record's canonical constructor or a
    * member that is part of a record's state vector.
+   *
+   * <p>Health warning: some things are flagged within a compilation, but won't be flagged across
+   * compilation boundaries, like canonical constructors.
    */
   public static boolean isRecord(Symbol symbol) {
     return (symbol.flags() & RECORD_FLAG) == RECORD_FLAG;
+  }
+
+  /** Finds the canonical constructor on a record. */
+  public static MethodSymbol canonicalConstructor(ClassSymbol record, VisitorState state) {
+    var fieldTypes =
+        record.getRecordComponents().stream().map(rc -> rc.type).collect(toImmutableList());
+    return stream(record.members().getSymbols(s -> s.getKind() == CONSTRUCTOR))
+        .map(c -> (MethodSymbol) c)
+        .filter(
+            c ->
+                c.getParameters().size() == fieldTypes.size()
+                    && zip(
+                            c.getParameters().stream(),
+                            fieldTypes.stream(),
+                            (a, b) -> isSameType(a.type, b, state))
+                        .allMatch(x -> x))
+        .collect(onlyElement());
   }
 
   /**

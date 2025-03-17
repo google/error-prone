@@ -21,7 +21,9 @@ import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assertWithMessage;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.util.ASTHelpers.canonicalConstructor;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.LOCAL_VARIABLE;
@@ -2099,6 +2101,65 @@ class Test {
                 f(i);
                 // BUG: Diagnostic contains: {T=[java.lang.String]}
                 g(s);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @BugPattern(summary = "", severity = WARNING)
+  public static final class CanonicalConstructorFinder extends BugChecker
+      implements MethodTreeMatcher {
+    @Override
+    public Description matchMethod(MethodTree tree, VisitorState state) {
+      return canonicalConstructor((ClassSymbol) getSymbol(tree).owner, state) == getSymbol(tree)
+          ? describeMatch(tree)
+          : Description.NO_MATCH;
+    }
+  }
+
+  @Test
+  public void canonicalConstructors_found() {
+    CompilationTestHelper.newInstance(CanonicalConstructorFinder.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.util.List;
+            import java.util.Set;
+
+            class Test {
+              record A(int x) {}
+
+              record B(long y) {
+                // BUG: Diagnostic contains:
+                B {}
+              }
+
+              record C(long y) {
+                // BUG: Diagnostic contains:
+                C {}
+
+                C(int z) {
+                  this((long) (z + 1));
+                }
+              }
+
+              record D(List<Integer> xs) {
+                // BUG: Diagnostic contains:
+                D {}
+
+                D(Set<Integer> s) {
+                  this(List.of(1));
+                }
+              }
+
+              record E() {
+                // BUG: Diagnostic contains:
+                E {}
+
+                E(int x) {
+                  this();
+                }
               }
             }
             """)
