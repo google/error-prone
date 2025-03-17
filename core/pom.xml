@@ -52,12 +52,6 @@
     <dependency>
       <!-- Apache 2.0 -->
       <groupId>com.google.errorprone</groupId>
-      <artifactId>error_prone_type_annotations</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <!-- Apache 2.0 -->
-      <groupId>com.google.errorprone</groupId>
       <artifactId>error_prone_check_api</artifactId>
       <version>${project.version}</version>
     </dependency>
@@ -424,7 +418,6 @@
                   <include>com.github.kevinstern:software-and-algorithms</include>
                   <include>com.google.errorprone:error_prone_annotation</include>
                   <include>com.google.errorprone:error_prone_annotations</include>
-                  <include>com.google.errorprone:error_prone_type_annotations</include>
                   <include>com.google.errorprone:error_prone_check_api</include>
                   <include>org.pcollections:pcollections</include>
                   <include>com.google.guava:guava</include>
