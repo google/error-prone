@@ -38,6 +38,7 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.matchers.Matchers;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
@@ -50,6 +51,7 @@ import com.sun.tools.javac.code.Symbol;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Optional;
+import java.util.concurrent.Executor;
 
 /** See summary for details. */
 @BugPattern(
@@ -58,18 +60,24 @@ import java.util.Optional;
 public final class FutureTransformAsync extends BugChecker implements MethodInvocationTreeMatcher {
 
   private enum Method {
-    TRANSFORM_ASYNC(TRANSFORM_ASYNC_MATCHER, "transform", false),
-    CALL_ASYNC(CALL_ASYNC_MATCHER, "call", true);
+    TRANSFORM_ASYNC(TRANSFORM_ASYNC_MATCHER, "transformAsync", "transform", false),
+    CALL_ASYNC(CALL_ASYNC_MATCHER, "callAsync", "call", true),
+    SUBMIT_ASYNC(SUBMIT_ASYNC_MATCHER, "submitAsync", "submit", true);
 
     @SuppressWarnings("ImmutableEnumChecker")
     private final Matcher<ExpressionTree> matcher;
 
+    private final String asyncName;
     private final String fixedName;
     private final boolean canThrowCheckedException;
 
     private Method(
-        Matcher<ExpressionTree> matcher, String fixedName, boolean canThrowCheckedException) {
+        Matcher<ExpressionTree> matcher,
+        String asyncName,
+        String fixedName,
+        boolean canThrowCheckedException) {
       this.matcher = matcher;
+      this.asyncName = asyncName;
       this.fixedName = fixedName;
       this.canThrowCheckedException = canThrowCheckedException;
     }
@@ -81,9 +89,6 @@ public final class FutureTransformAsync extends BugChecker implements MethodInvo
   private static final ImmutableSet<String> CLASSES_WITH_TRANSFORM_ASYNC_INSTANCE_METHOD =
       ImmutableSet.of(ClosingFuture.class.getName(), FluentFuture.class.getName());
 
-  private static final ImmutableSet<String> CLASSES_WITH_CALL_ASYNC_INSTANCE_METHOD =
-      ImmutableSet.of(Futures.FutureCombiner.class.getName());
-
   private static final Matcher<ExpressionTree> TRANSFORM_ASYNC_MATCHER =
       anyOf(
           staticMethod()
@@ -94,7 +99,12 @@ public final class FutureTransformAsync extends BugChecker implements MethodInvo
               .named("transformAsync"));
 
   private static final Matcher<ExpressionTree> CALL_ASYNC_MATCHER =
-      instanceMethod().onExactClassAny(CLASSES_WITH_CALL_ASYNC_INSTANCE_METHOD).named("callAsync");
+      instanceMethod()
+          .onExactClassAny(ImmutableSet.of(Futures.FutureCombiner.class.getName()))
+          .named("callAsync");
+
+  private static final Matcher<ExpressionTree> SUBMIT_ASYNC_MATCHER =
+      staticMethod().onClassAny(ImmutableSet.of(Futures.class.getName())).named("submitAsync");
 
   private static final Matcher<ExpressionTree> IMMEDIATE_FUTURE =
       staticMethod()
@@ -112,6 +122,9 @@ public final class FutureTransformAsync extends BugChecker implements MethodInvo
                   CLASSES_WITH_TRANSFORM_ASYNC_INSTANCE_METHOD))
           .named("immediateVoidFuture");
 
+  private static final Matcher<LambdaExpressionTree> EXECUTOR =
+      Matchers.isSubtypeOf(Executor.class.getName());
+
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     return getMethod(tree, state)
@@ -121,16 +134,20 @@ public final class FutureTransformAsync extends BugChecker implements MethodInvo
 
   private Description matchMethodInvocation(
       Method method, MethodInvocationTree tree, VisitorState state) {
-    // Find the lambda expression. The transformAsync() / callAsync() methods might have different
-    // number of arguments, but they all have a single lambda. In case of transformAsync(), discard
-    // the lambdas that throw checked exceptions, since they cannot be supported by transform().
+    // Find the lambda expression. The transformAsync() / callAsync() / submitAsync() methods might
+    // have different number of arguments, but they all normally have a single lambda. In case of
+    // transformAsync(), discard the lambdas that throw checked exceptions, since they cannot be
+    // supported by transform().
+    // Also ignore the rare cases where the executor is passed as a lambda parameter.
     Optional<LambdaExpressionTree> lambda =
         tree.getArguments().stream()
             .filter(LambdaExpressionTree.class::isInstance)
             .map(arg -> (LambdaExpressionTree) arg)
             .filter(
                 lambdaTree ->
-                    method.canThrowCheckedException || !throwsCheckedException(lambdaTree, state))
+                    !EXECUTOR.matches(lambdaTree, state)
+                        && (method.canThrowCheckedException
+                            || !throwsCheckedException(lambdaTree, state)))
             .findFirst();
 
     return lambda
@@ -209,10 +226,10 @@ public final class FutureTransformAsync extends BugChecker implements MethodInvo
   private static void suggestFixTransformAsyncToTransform(
       Method method, MethodInvocationTree tree, VisitorState state, SuggestedFix.Builder fix) {
     ExpressionTree methodSelect = tree.getMethodSelect();
-    if (state.getSourceForNode(methodSelect).equals("transformAsync")) {
+    if (state.getSourceForNode(methodSelect).equals(method.asyncName)) {
       Symbol symbol = getSymbol(methodSelect);
       String className = enclosingClass(symbol).getQualifiedName().toString();
-      fix.addStaticImport(className + "." + "transform");
+      fix.addStaticImport(className + "." + method.fixedName);
     }
     fix.merge(SuggestedFixes.renameMethodInvocation(tree, method.fixedName, state));
   }

@@ -716,4 +716,155 @@ class Test {
             """)
         .doTest();
   }
+
+  @Test
+  public void submitAsync_expressionLambda() {
+    refactoringHelper
+        .addInputLines(
+            "in/Test.java",
+            """
+            import com.google.common.util.concurrent.Futures;
+            import com.google.common.util.concurrent.ListenableFuture;
+            import java.util.concurrent.Executor;
+
+            class Test {
+              private Executor executor;
+
+              ListenableFuture<String> test() {
+                ListenableFuture<String> future =
+                    Futures.submitAsync(() -> Futures.immediateFuture("Done"), executor);
+                return future;
+              }
+            }
+            """)
+        .addOutputLines(
+            "out/Test.java",
+            """
+            import com.google.common.util.concurrent.Futures;
+            import com.google.common.util.concurrent.ListenableFuture;
+            import java.util.concurrent.Executor;
+
+            class Test {
+              private Executor executor;
+
+              ListenableFuture<String> test() {
+                ListenableFuture<String> future = Futures.submit(() -> "Done", executor);
+                return future;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void submitAsync_statementLambda() {
+    refactoringHelper
+        .addInputLines(
+            "in/Test.java",
+            """
+            import com.google.common.util.concurrent.Futures;
+            import com.google.common.util.concurrent.ListenableFuture;
+            import java.util.concurrent.Executor;
+
+            class Test {
+              private Executor executor;
+
+              ListenableFuture<String> test() {
+                ListenableFuture<String> future =
+                    Futures.submitAsync(
+                        () -> {
+                          return Futures.immediateFuture("Done");
+                        },
+                        executor);
+                return future;
+              }
+            }
+            """)
+        .addOutputLines(
+            "out/Test.java",
+            """
+            import com.google.common.util.concurrent.Futures;
+            import com.google.common.util.concurrent.ListenableFuture;
+            import java.util.concurrent.Executor;
+
+            class Test {
+              private Executor executor;
+
+              ListenableFuture<String> test() {
+                ListenableFuture<String> future =
+                    Futures.submit(
+                        () -> {
+                          return "Done";
+                        },
+                        executor);
+                return future;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void submitAsync_staticImports() {
+    refactoringHelper
+        .addInputLines(
+            "in/Test.java",
+            """
+            import static com.google.common.util.concurrent.Futures.immediateFuture;
+            import static com.google.common.util.concurrent.Futures.submitAsync;
+            import com.google.common.util.concurrent.Futures;
+            import com.google.common.util.concurrent.ListenableFuture;
+            import java.util.concurrent.Executor;
+
+            class Test {
+              private Executor executor;
+
+              ListenableFuture<String> test() {
+                return submitAsync(() -> immediateFuture("Done"), executor);
+              }
+            }
+            """)
+        .addOutputLines(
+            "out/Test.java",
+            """
+            import static com.google.common.util.concurrent.Futures.immediateFuture;
+            import static com.google.common.util.concurrent.Futures.submit;
+            import static com.google.common.util.concurrent.Futures.submitAsync;
+            import com.google.common.util.concurrent.Futures;
+            import com.google.common.util.concurrent.ListenableFuture;
+            import java.util.concurrent.Executor;
+
+            class Test {
+              private Executor executor;
+
+              ListenableFuture<String> test() {
+                return submit(() -> "Done", executor);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void submitAsync_executorAsLambdaParameter() {
+    compilationHelper
+        .addSourceLines(
+            "in/Test.java",
+            """
+            import com.google.common.util.concurrent.AsyncCallable;
+            import com.google.common.util.concurrent.Futures;
+            import com.google.common.util.concurrent.ListenableFuture;
+            import java.util.concurrent.Executor;
+
+            class Test {
+              private Executor executor;
+
+              ListenableFuture<String> test() {
+                AsyncCallable<String> asyncCallable = () -> Futures.immediateFuture("Done");
+                return Futures.submitAsync(asyncCallable, runnable -> {});
+              }
+            }
+            """)
+        .doTest();
+  }
 }
