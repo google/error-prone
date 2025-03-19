@@ -71,7 +71,7 @@ Use the Error Prone javac JAR and the Error Prone Refaster JAR to compile the
 Refaster template, using JDK 9 or newer:
 
 ```shell
-wget http://repo1.maven.org/maven2/com/google/errorprone/error_prone_refaster/2.3.1/error_prone_refaster-2.3.1.jar
+wget https://repo1.maven.org/maven2/com/google/errorprone/error_prone_refaster/2.3.1/error_prone_refaster-2.3.1.jar
 
 javac \
   -cp error_prone_refaster-2.3.1.jar \

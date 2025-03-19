@@ -69,7 +69,7 @@ We no longer support the old-style Error Prone disabling flags that used the
 
 There are a couple of flags for configuration of patching in suggested fixes,
 e.g. `-XepPatchChecks:VALUE` and `-XepPatchLocation:VALUE`. See the
-[patching docs](http://errorprone.info/docs/patching) for more info.
+[patching docs](https://errorprone.info/docs/patching) for more info.
 
 ### Pass Additional Info to BugCheckers
 

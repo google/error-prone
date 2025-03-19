@@ -47,7 +47,7 @@ ShortSet.java:6: error: [CollectionIncompatibleType] Argument 'i - 1' should not
 its type int is not compatible with its collection's type argument Short
       s.remove(i - 1);
               ^
-    (see http://errorprone.info/bugpattern/CollectionIncompatibleType)
+    (see https://errorprone.info/bugpattern/CollectionIncompatibleType)
 1 error
 ```
 

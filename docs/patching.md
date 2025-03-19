@@ -11,11 +11,13 @@ In addition to reporting errors as part of your regular compile phase, Error Pro
 error: [DeadException] Exception created but not thrown
     new RuntimeException();
     ^
-    (see http://errorprone.info/bugpattern/DeadException)
+    (see https://errorprone.info/bugpattern/DeadException)
   Did you mean 'throw new RuntimeException();'?
 1 error
 ```
-Here, Error Prone is suggesting to fix this issue by prepending a `throw` keyword to the code.
+
+Here, Error Prone is suggesting to fix this issue by prepending a `throw`
+keyword to the code.
 
 While you can, of course, manually make these changes to your source code, you can also use Error Prone to modify the source code with the suggested replacements. This is useful when first adding Error Prone enforcement to an existing codebase, or for fixing warning-level issues that don't break the build (like [MissingOverride] or [DefaultCharset]).
 
