@@ -47,6 +47,26 @@ public final class MockIllegalThrowsTest {
   }
 
   @Test
+  public void positive_multipleThrows() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import static org.mockito.Mockito.when;
+
+            abstract class Test {
+              abstract Object foo();
+
+              void test(Test t) {
+                // BUG: Diagnostic contains: only unchecked
+                when(t.foo()).thenThrow(new IllegalStateException(), new Exception());
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void positiveWithSpecificType() {
     compilationHelper
         .addSourceLines(
@@ -102,6 +122,25 @@ public final class MockIllegalThrowsTest {
 
               void test(Test t) throws Exception {
                 when(t.foo()).thenThrow(new Exception());
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void nothingThrown_noFinding() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import static org.mockito.Mockito.when;
+
+            abstract class Test {
+              abstract Object foo() throws Exception;
+
+              void test(Test t) throws Exception {
+                when(t.foo()).thenThrow();
               }
             }
             """)
