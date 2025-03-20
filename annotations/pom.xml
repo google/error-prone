@@ -29,11 +29,6 @@
 
   <dependencies>
     <dependency>
-      <groupId>com.google.errorprone</groupId>
-      <artifactId>error_prone_type_annotations</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>${junit.version}</version>
