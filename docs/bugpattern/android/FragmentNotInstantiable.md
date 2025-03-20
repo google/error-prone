@@ -10,7 +10,7 @@ the fragment is re-instantiated; instead, arguments should be supplied with
 `setArguments(Bundle)` and retrieved with `getArguments()`.
 
 For more information, please see the documentation for
-[Fragment](http://developer.android.com/reference/android/app/Fragment.html#Fragment\(\)).
+[Fragment](https://developer.android.com/reference/android/app/Fragment.html#Fragment\(\)).
 
 This check is an adaptation of the `ValidFragment` rule of
-[Android Lint](http://tools.android.com/tips/lint-checks).
+[Android Lint](https://tools.android.com/tips/lint-checks).

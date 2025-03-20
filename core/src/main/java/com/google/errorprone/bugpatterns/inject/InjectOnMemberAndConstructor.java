@@ -82,7 +82,7 @@ public class InjectOnMemberAndConstructor extends BugChecker implements ClassTre
     if (ctorsWithInject.size() != 1) {
       // Injection frameworks don't support multiple @Inject ctors.
       // There is already an ERROR check for it.
-      // http://errorprone.info/bugpattern/MoreThanOneInjectableConstructor
+      // https://errorprone.info/bugpattern/MoreThanOneInjectableConstructor
       return Description.NO_MATCH;
     }
 

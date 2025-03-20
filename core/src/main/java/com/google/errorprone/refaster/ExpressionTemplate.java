@@ -264,7 +264,7 @@ public abstract class ExpressionTemplate extends Template<ExpressionTemplateMatc
 
     if (parent instanceof JCConditional conditional) {
       // This intentionally differs from Pretty, because Pretty appears buggy:
-      // http://mail.openjdk.java.net/pipermail/compiler-dev/2013-September/007303.html
+      // https://mail.openjdk.java.net/pipermail/compiler-dev/2013-September/007303.html
       return TreeInfo.condPrec + ((conditional.cond == leaf) ? 1 : 0);
     } else if (parent instanceof JCAssign assign) {
       return TreeInfo.assignPrec + ((assign.lhs == leaf) ? 1 : 0);

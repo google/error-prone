@@ -15,7 +15,7 @@
  */
 
 /**
- * Bug patterns related to <a href="http://en.wikipedia.org/wiki/Dependency_injection">dependency
+ * Bug patterns related to <a href="https://en.wikipedia.org/wiki/Dependency_injection">dependency
  * injection</a> and <a href="https://jcp.org/en/jsr/detail?id=330">JSR 330</a>. See the various
  * subpackages for checks related to specific DI frameworks.
  */

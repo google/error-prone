@@ -70,7 +70,7 @@ public class BugPatternValidatorTest {
         explanation = "linkType none but includes link",
         severity = SeverityLevel.ERROR,
         linkType = LinkType.NONE,
-        link = "http://foo")
+        link = "https://foo")
     final class BugPatternTestClass {}
 
     BugPattern annotation = BugPatternTestClass.class.getAnnotation(BugPattern.class);
@@ -85,7 +85,7 @@ public class BugPatternValidatorTest {
         explanation = "linkType custom and includes link",
         severity = SeverityLevel.ERROR,
         linkType = LinkType.CUSTOM,
-        link = "http://foo")
+        link = "https://foo")
     final class BugPatternTestClass {}
 
     BugPattern annotation = BugPatternTestClass.class.getAnnotation(BugPattern.class);
