@@ -352,7 +352,7 @@ public class FloggerArgumentToString extends BugChecker implements MethodInvocat
     if (!fixed) {
       return NO_MATCH;
     }
-    fix.replace(tree.getArguments().get(0), state.getConstantExpression(sb.toString()));
+    fix.replace(tree.getArguments().get(0), state.getConstantExpression(sb));
     return describeMatch(tree, fix.build());
   }
 
