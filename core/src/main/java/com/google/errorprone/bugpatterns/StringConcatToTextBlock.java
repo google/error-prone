@@ -173,6 +173,9 @@ public class StringConcatToTextBlock extends BugChecker
                 (s, orig) -> s + " ".repeat(orig.length() - SPACE.trimTrailingFrom(orig).length()))
             .collect(toImmutableList());
     LineMap lineMap = state.getPath().getCompilationUnit().getLineMap();
+    if (lineMap == null) {
+      return NO_MATCH;
+    }
     String indent = " ".repeat((int) lineMap.getColumnNumber(replaceFrom) - 1);
     String suffix = trailingNewline ? "" : "\\";
     String replacement =

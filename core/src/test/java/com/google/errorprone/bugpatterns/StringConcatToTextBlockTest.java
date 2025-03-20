@@ -271,4 +271,19 @@ public class StringConcatToTextBlockTest {
         .expectUnchanged()
         .doTest(TEXT_MATCH);
   }
+
+  @Test
+  public void noDebug() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              String s = "hello\\n" + "world\\n";
+            }
+            """)
+        .expectUnchanged()
+        .setArgs("-g:none")
+        .doTest(TEXT_MATCH);
+  }
 }
