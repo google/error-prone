@@ -61,6 +61,7 @@ public final class PrivateConstructorForUtilityClass extends BugChecker
       ImmutableSet.of(
           "org.junit.runner.RunWith",
           "org.robolectric.annotation.Implements",
+          "org.springframework.boot.autoconfigure.SpringBootApplication",
           "com.google.auto.value.AutoValue");
 
   @Override
