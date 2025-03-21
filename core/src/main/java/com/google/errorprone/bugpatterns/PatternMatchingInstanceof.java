@@ -244,10 +244,7 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
             if (getSymbol(node.getExpression()) instanceof VarSymbol v) {
               if (v.equals(symbol)
                   && state.getTypes().isSubtype(targetType, getType(node.getType()))) {
-                usages.add(
-                    getCurrentPath().getParentPath().getLeaf() instanceof ParenthesizedTree
-                        ? getCurrentPath().getParentPath()
-                        : getCurrentPath());
+                usages.add(getUsage(getCurrentPath()));
               }
             }
             return super.visitTypeCast(node, null);
@@ -257,6 +254,29 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
       scanner.scan(new TreePath(state.getPath(), tree), null);
     }
     return usages.build();
+  }
+
+  private static TreePath getUsage(TreePath currentPath) {
+    TreePath parentPath = currentPath.getParentPath();
+    return parentPath.getLeaf() instanceof ParenthesizedTree && !requiresParentheses(parentPath)
+        ? parentPath
+        : currentPath;
+  }
+
+  private static boolean requiresParentheses(TreePath path) {
+    // This isn't ASTHelpers.requiresParentheses, because we want to know if parens are needed when
+    // replacing a cast with the cast's expression, i.e. `((Foo) bar)` -> `(bar)`
+    return switch (path.getParentPath().getLeaf().getKind()) {
+      case IDENTIFIER,
+          MEMBER_SELECT,
+          METHOD_INVOCATION,
+          ARRAY_ACCESS,
+          PARENTHESIZED,
+          NEW_CLASS,
+          MEMBER_REFERENCE ->
+          false;
+      default -> true;
+    };
   }
 
   private static boolean isReassigned(VarSymbol symbol, Iterable<Tree> trees) {

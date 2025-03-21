@@ -764,4 +764,70 @@ public final class PatternMatchingInstanceofTest {
         .expectUnchanged()
         .doTest();
   }
+
+  // https://github.com/google/error-prone/issues/4923
+  @Test
+  public void requiredParentheses_retainedInFix() {
+    assume().that(Runtime.version().feature()).isAtLeast(21);
+    helper
+        .addInputLines(
+            "Test1.java",
+            """
+            public class Test1 {
+
+              int test_switch() {
+                Object o = 1;
+                if (o instanceof Integer) {
+                  // Next line will be turned into "return switch i {".
+                  return switch ((Integer) o) {
+                    case 0 -> 0;
+                    default -> 1;
+                  };
+                }
+                return 0;
+              }
+
+              boolean test_if() {
+                Object o = false;
+                if (o instanceof Boolean) {
+                  // Next line will be turned into "if b {".
+                  if ((Boolean) o) {
+                    return (Boolean) o;
+                  }
+                }
+                return false;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test1.java",
+            """
+            public class Test1 {
+
+              int test_switch() {
+                Object o = 1;
+                if (o instanceof Integer i) {
+                  // Next line will be turned into "return switch i {".
+                  return switch (i) {
+                    case 0 -> 0;
+                    default -> 1;
+                  };
+                }
+                return 0;
+              }
+
+              boolean test_if() {
+                Object o = false;
+                if (o instanceof Boolean b) {
+                  // Next line will be turned into "if b {".
+                  if (b) {
+                    return b;
+                  }
+                }
+                return false;
+              }
+            }
+            """)
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+  }
 }
