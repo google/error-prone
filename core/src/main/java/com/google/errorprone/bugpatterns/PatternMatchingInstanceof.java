@@ -29,6 +29,7 @@ import static java.util.stream.Collectors.joining;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.InstanceOfTreeMatcher;
 import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions;
@@ -64,9 +65,13 @@ import org.jspecify.annotations.Nullable;
 public final class PatternMatchingInstanceof extends BugChecker implements InstanceOfTreeMatcher {
   private final ConstantExpressions constantExpressions;
 
+  private final boolean enableNegatedMatches;
+
   @Inject
-  PatternMatchingInstanceof(ConstantExpressions constantExpressions) {
+  PatternMatchingInstanceof(ConstantExpressions constantExpressions, ErrorProneFlags flags) {
     this.constantExpressions = constantExpressions;
+    this.enableNegatedMatches =
+        flags.getBoolean("PatternMatchingInstanceof:EnableNegatedMatches").orElse(true);
   }
 
   @Override
@@ -169,7 +174,7 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
   }
 
   /** Finds trees which are implied by the {@code instanceOfTree}. */
-  private static ImmutableList<Tree> findImpliedStatements(
+  private ImmutableList<Tree> findImpliedStatements(
       InstanceOfTree tree, VisitorState state) {
     Tree last = tree;
     boolean negated = false;
@@ -204,19 +209,23 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
           if (ifTree.getCondition() != last) {
             return impliedStatements.build();
           }
-          StatementTree positiveBranch =
-              negated ? ifTree.getElseStatement() : ifTree.getThenStatement();
-          if (positiveBranch != null) {
-            impliedStatements.add(positiveBranch);
-          }
-          StatementTree negativeBranch =
-              negated ? ifTree.getThenStatement() : ifTree.getElseStatement();
-          if (negativeBranch != null && !Reachability.canCompleteNormally(negativeBranch)) {
-            if (parentPath.getParentPath().getLeaf() instanceof BlockTree blockTree) {
-              var index = blockTree.getStatements().indexOf(ifTree);
-              impliedStatements.addAll(
-                  blockTree.getStatements().subList(index + 1, blockTree.getStatements().size()));
+          if (enableNegatedMatches) {
+            StatementTree positiveBranch =
+                negated ? ifTree.getElseStatement() : ifTree.getThenStatement();
+            if (positiveBranch != null) {
+              impliedStatements.add(positiveBranch);
             }
+            StatementTree negativeBranch =
+                negated ? ifTree.getThenStatement() : ifTree.getElseStatement();
+            if (negativeBranch != null && !Reachability.canCompleteNormally(negativeBranch)) {
+              if (parentPath.getParentPath().getLeaf() instanceof BlockTree blockTree) {
+                var index = blockTree.getStatements().indexOf(ifTree);
+                impliedStatements.addAll(
+                    blockTree.getStatements().subList(index + 1, blockTree.getStatements().size()));
+              }
+            }
+          } else if (!negated) {
+            impliedStatements.add(ifTree.getThenStatement());
           }
           return impliedStatements.build();
         }

@@ -58,6 +58,36 @@ public final class PatternMatchingInstanceofTest {
   }
 
   @Test
+  public void positive_disabledNegation() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                if (o instanceof Test) {
+                  Test test = (Test) o;
+                  test(test);
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                if (o instanceof Test test) {
+                  test(test);
+                }
+              }
+            }
+            """)
+        .setArgs("-XepOpt:PatternMatchingInstanceof:EnableNegatedMatches=false")
+        .doTest();
+  }
+
+  @Test
   public void negatedIf() {
     helper
         .addInputLines(
@@ -85,6 +115,27 @@ public final class PatternMatchingInstanceofTest {
               }
             }
             """)
+        .doTest();
+  }
+
+  @Test
+  public void negatedIf_disabledNegation() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                if (!(o instanceof Test)) {
+                } else {
+                  Test test = (Test) o;
+                  test(test);
+                }
+              }
+            }
+            """)
+        .expectUnchanged()
+        .setArgs("-XepOpt:PatternMatchingInstanceof:EnableNegatedMatches=false")
         .doTest();
   }
 
@@ -184,6 +235,27 @@ public final class PatternMatchingInstanceofTest {
               }
             }
             """)
+        .doTest();
+  }
+
+  @Test
+  public void negatedIfWithReturn_disabledNegation() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                if (!(o instanceof Test)) {
+                  return;
+                }
+                Test test = (Test) o;
+                test(test);
+              }
+            }
+            """)
+        .expectUnchanged()
+        .setArgs("-XepOpt:PatternMatchingInstanceof:EnableNegatedMatches=false")
         .doTest();
   }
 
@@ -615,6 +687,47 @@ public final class PatternMatchingInstanceofTest {
               }
             }
             """)
+        .doTest();
+  }
+
+  @Test
+  public void withinIfCondition_andUsedAfter_disabledNegation() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              private final int x = 0;
+              private final int y = 1;
+
+              @Override
+              public boolean equals(Object o) {
+                if (!(o instanceof Test) || ((Test) o).x != this.x) {
+                  return false;
+                }
+                Test other = (Test) o;
+                return other.y == this.y;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              private final int x = 0;
+              private final int y = 1;
+
+              @Override
+              public boolean equals(Object o) {
+                if (!(o instanceof Test test) || test.x != this.x) {
+                  return false;
+                }
+                Test other = (Test) o;
+                return other.y == this.y;
+              }
+            }
+            """)
+        .setArgs("-XepOpt:PatternMatchingInstanceof:EnableNegatedMatches=false")
         .doTest();
   }
 
