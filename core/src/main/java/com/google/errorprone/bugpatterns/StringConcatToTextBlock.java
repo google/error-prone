@@ -30,6 +30,7 @@ import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasExplicitSource;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
+import static com.google.errorprone.util.SourceVersion.supportsTextBlocks;
 import static java.util.stream.Collectors.joining;
 
 import com.google.common.base.CharMatcher;
@@ -71,6 +72,9 @@ public class StringConcatToTextBlock extends BugChecker
 
   @Override
   public Description matchLiteral(LiteralTree tree, VisitorState state) {
+    if (!supportsTextBlocks(state.context)) {
+      return NO_MATCH;
+    }
     // javac constant folds string concat during parsing, so we don't need to handle binary
     // expressions
     // see -XDallowStringFolding=false
@@ -120,6 +124,9 @@ public class StringConcatToTextBlock extends BugChecker
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+    if (!supportsTextBlocks(state.context)) {
+      return NO_MATCH;
+    }
     if (JOINER_JOIN.matches(tree, state)) {
       return joiner(tree, state);
     }
