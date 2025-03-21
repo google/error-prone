@@ -30,6 +30,7 @@ import static java.util.stream.Collectors.joining;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.InstanceOfTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -55,6 +56,7 @@ import com.sun.tools.javac.code.TypeTag;
 import java.util.HashSet;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Stream;
+import javax.inject.Inject;
 import javax.lang.model.SourceVersion;
 import org.jspecify.annotations.Nullable;
 
@@ -63,6 +65,14 @@ import org.jspecify.annotations.Nullable;
     severity = WARNING,
     summary = "This code can be simplified to use a pattern-matching instanceof.")
 public final class PatternMatchingInstanceof extends BugChecker implements InstanceOfTreeMatcher {
+
+  private final boolean enableNegatedMatches;
+
+  @Inject
+  PatternMatchingInstanceof(ErrorProneFlags flags) {
+    this.enableNegatedMatches =
+        flags.getBoolean("PatternMatchingInstanceof:EnableNegatedMatches").orElse(true);
+  }
 
   @Override
   public Description matchInstanceOf(InstanceOfTree instanceOfTree, VisitorState state) {
@@ -162,7 +172,7 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
   }
 
   /** Finds trees which are implied by the {@code instanceOfTree}. */
-  private static ImmutableList<Tree> findImpliedStatements(
+  private ImmutableList<Tree> findImpliedStatements(
       InstanceOfTree tree, VisitorState state) {
     Tree last = tree;
     boolean negated = false;
@@ -198,15 +208,18 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
             return impliedStatements.build();
           }
           if (negated) {
-            if (ifTree.getElseStatement() != null) {
-              impliedStatements.add(ifTree.getElseStatement());
-            }
-            if (!Reachability.canCompleteNormally(ifTree.getThenStatement())) {
-              var pparent = parentPath.getParentPath().getLeaf();
-              if (pparent instanceof BlockTree blockTree) {
-                var index = blockTree.getStatements().indexOf(ifTree);
-                impliedStatements.addAll(
-                    blockTree.getStatements().subList(index + 1, blockTree.getStatements().size()));
+            if (enableNegatedMatches) {
+              if (ifTree.getElseStatement() != null) {
+                impliedStatements.add(ifTree.getElseStatement());
+              }
+              if (!Reachability.canCompleteNormally(ifTree.getThenStatement())) {
+                var pparent = parentPath.getParentPath().getLeaf();
+                if (pparent instanceof BlockTree blockTree) {
+                  var index = blockTree.getStatements().indexOf(ifTree);
+                  impliedStatements.addAll(
+                      blockTree.getStatements().subList(
+                          index + 1, blockTree.getStatements().size()));
+                }
               }
             }
           } else {
