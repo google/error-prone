@@ -89,6 +89,43 @@ public final class PatternMatchingInstanceofTest {
   }
 
   @Test
+  public void withinIf_elseCannotCompleteNormally_variableInScopeForStatementsAfter() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                if (o instanceof Test) {
+                } else if (true) {
+                  throw new AssertionError();
+                } else {
+                  return;
+                }
+                Test test = (Test) o;
+                test(test);
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                if (o instanceof Test test) {
+                } else if (true) {
+                  throw new AssertionError();
+                } else {
+                  return;
+                }
+                test(test);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void negatedIf_withOrs() {
     helper
         .addInputLines(

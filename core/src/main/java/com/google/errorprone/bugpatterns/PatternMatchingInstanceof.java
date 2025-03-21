@@ -43,6 +43,7 @@ import com.sun.source.tree.IfTree;
 import com.sun.source.tree.InstanceOfTree;
 import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.ParenthesizedTree;
+import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TypeCastTree;
 import com.sun.source.tree.VariableTree;
@@ -197,20 +198,19 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
           if (ifTree.getCondition() != last) {
             return impliedStatements.build();
           }
-          if (negated) {
-            if (ifTree.getElseStatement() != null) {
-              impliedStatements.add(ifTree.getElseStatement());
+          StatementTree positiveBranch =
+              negated ? ifTree.getElseStatement() : ifTree.getThenStatement();
+          if (positiveBranch != null) {
+            impliedStatements.add(positiveBranch);
+          }
+          StatementTree negativeBranch =
+              negated ? ifTree.getThenStatement() : ifTree.getElseStatement();
+          if (negativeBranch != null && !Reachability.canCompleteNormally(negativeBranch)) {
+            if (parentPath.getParentPath().getLeaf() instanceof BlockTree blockTree) {
+              var index = blockTree.getStatements().indexOf(ifTree);
+              impliedStatements.addAll(
+                  blockTree.getStatements().subList(index + 1, blockTree.getStatements().size()));
             }
-            if (!Reachability.canCompleteNormally(ifTree.getThenStatement())) {
-              var pparent = parentPath.getParentPath().getLeaf();
-              if (pparent instanceof BlockTree blockTree) {
-                var index = blockTree.getStatements().indexOf(ifTree);
-                impliedStatements.addAll(
-                    blockTree.getStatements().subList(index + 1, blockTree.getStatements().size()));
-              }
-            }
-          } else {
-            impliedStatements.add(ifTree.getThenStatement());
           }
           return impliedStatements.build();
         }
