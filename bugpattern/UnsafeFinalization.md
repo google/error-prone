@@ -81,7 +81,7 @@ object instead.
 
 ## References
 
-*   [Boehm, "Destructors, finalizers, and synchronization." POPL 2003.](http://www.hpl.hp.com/techreports/2002/HPL-2002-335.html)
+*   [Boehm, "Destructors, finalizers, and synchronization." POPL 2003.](https://www.hpl.hp.com/techreports/2002/HPL-2002-335.html)
     Section 3.4 discusses this problem.
 *   [Java Language Specification 12.6.2, "Interaction with the Memory Model."](https://docs.oracle.com/javase/specs/jls/se9/html/jls-12.html#jls-12.6.2)
 

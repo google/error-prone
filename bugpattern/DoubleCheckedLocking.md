@@ -19,8 +19,8 @@ thread-safe.
 If the field is not volatile, the compiler may re-order the code in the
 accessor. For more information, see:
 
-*   http://jeremymanson.blogspot.com/2008/05/double-checked-locking.html
-*   http://www.cs.umd.edu/~pugh/java/memoryModel/DoubleCheckedLocking.html
+*   https://jeremymanson.blogspot.com/2008/05/double-checked-locking.html
+*   https://www.cs.umd.edu/~pugh/java/memoryModel/DoubleCheckedLocking.html
 *   Java Concurrency in Practice, §16.2.4
 *   [Effective Java 3rd Edition §83][ej3e-83]
 
@@ -98,7 +98,7 @@ static Object get() {
 ## Double-checked locking and immutability
 
 If the object being initialized with double-checked locking is
-[immutable](http://jeremymanson.blogspot.com/2008/04/immutability-in-java.html),
+[immutable](https://jeremymanson.blogspot.com/2008/04/immutability-in-java.html),
 then it is safe for the field to be non-volatile. *However*, the use of volatile
 is still encouraged because it is almost free on x86 and makes the code more
 obviously correct.
