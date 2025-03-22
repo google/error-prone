@@ -15,4 +15,4 @@ Class.forName(someString).asSubclass(Foo.class).getDeclaredConstructor(...).newI
 
 This has caused issues in the past:
 
-CVE-2014-7911 - http://seclists.org/fulldisclosure/2014/Nov/51
+CVE-2014-7911 - https://seclists.org/fulldisclosure/2014/Nov/51

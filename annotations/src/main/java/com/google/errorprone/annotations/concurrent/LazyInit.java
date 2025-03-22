@@ -48,7 +48,7 @@ import java.lang.annotation.Target;
  * }</pre>
  *
  * <p>The need for using the {@code local} variable is detailed in
- * http://jeremymanson.blogspot.com/2008/12/benign-data-races-in-java.html (see, particularly, the
+ * https://jeremymanson.blogspot.com/2008/12/benign-data-races-in-java.html (see, particularly, the
  * part after "Now, let's break the code").
  *
  * <p>Also note that {@code LazyInit} must not be used on 64-bit primitives ({@code long}s and

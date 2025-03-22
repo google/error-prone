@@ -41,7 +41,7 @@ public final class InvalidLinkTest {
             "Test.java",
             """
             interface Test {
-              /** {@link http://foo/bar/baz} */
+              /** {@link https://foo/bar/baz} */
               void foo();
             }
             """)
@@ -49,7 +49,7 @@ public final class InvalidLinkTest {
             "Test.java",
             """
             interface Test {
-              /** <a href="http://foo/bar/baz">link</a> */
+              /** <a href="https://foo/bar/baz">link</a> */
               void foo();
             }
             """)
@@ -63,7 +63,7 @@ public final class InvalidLinkTest {
             "Test.java",
             """
             interface Test {
-              /** {@link http://foo/bar/baz foo} */
+              /** {@link https://foo/bar/baz foo} */
               void foo();
             }
             """)
@@ -71,7 +71,7 @@ public final class InvalidLinkTest {
             "Test.java",
             """
             interface Test {
-              /** <a href="http://foo/bar/baz">foo</a> */
+              /** <a href="https://foo/bar/baz">foo</a> */
               void foo();
             }
             """)

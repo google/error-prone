@@ -22,7 +22,7 @@ import java.util.Optional;
 /**
  * The precedence for an operator kind in the {@link com.sun.source.tree} API.
  *
- * <p>As documented at: http://docs.oracle.com/javase/tutorial/java/nutsandbolts/operators.html
+ * <p>As documented at: https://docs.oracle.com/javase/tutorial/java/nutsandbolts/operators.html
  */
 public enum OperatorPrecedence {
   POSTFIX(14),

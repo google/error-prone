@@ -1,5 +1,5 @@
 `java.util.IdentityHashMap` uses reference equality to compare keys. This is
-[in violation of the contract of `java.util.Map`](http://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/IdentityHashMap.html),
+[in violation of the contract of `java.util.Map`](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/IdentityHashMap.html),
 which states that object equality (the keys' `equals` methods) should be used
 for key comparison. This peculiarity can lead to confusion and subtle bugs,
 especially when the two types of maps are used together. This check attempts to

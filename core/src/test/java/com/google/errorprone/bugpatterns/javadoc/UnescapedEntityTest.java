@@ -295,7 +295,7 @@ public final class UnescapedEntityTest {
 
             interface Test {
               /**
-               * @see <a href="http://google.com">google</a>
+               * @see <a href="https://google.com">google</a>
                */
               void foo(List<Integer> foos);
             }

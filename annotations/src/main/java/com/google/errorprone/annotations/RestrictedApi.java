@@ -48,7 +48,7 @@ import java.lang.annotation.Target;
  * public class Foo {
  *   @RestrictedApi(
  *      explanation="You could shoot yourself in the foot with Foo.bar if you aren't careful",
- *      link="http://edsger.dijkstra/foo_bar_consider_harmful.html",
+ *      link="https://edsger.dijkstra/foo_bar_consider_harmful.html",
  *      allowedOnPath="testsuite/.*", // Unsafe behavior in tests is ok.
  *      allowlistAnnotations = {ReviewedFooBar.class},
  *      allowlistWithWarningAnnotations = {LegacyUnsafeFooBar.class})

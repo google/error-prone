@@ -582,7 +582,7 @@ public final class TimeUnitMismatch extends BugChecker
       return null;
     }
 
-    // http://grepcode.com/file/repo1.maven.org/maven2/mysql/mysql-connector-java/5.1.33/com/mysql/jdbc/TimeUtil.java#336
+    // https://grepcode.com/file/repo1.maven.org/maven2/mysql/mysql-connector-java/5.1.33/com/mysql/jdbc/TimeUtil.java#336
     if (name.equals("secondsPart")) {
       return NANOSECONDS;
     }
