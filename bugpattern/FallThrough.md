@@ -28,7 +28,7 @@ switch (input) {
   case 1:
   case 2:
     prepareOneOrTwo();
-    // fall through
+  // fall through
   case 3:
     handleOneTwoOrThree();
     break;
